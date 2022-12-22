@@ -16,6 +16,9 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
     private keyVaultName;
     private keyVaultUrl;
 
+    private readonly retriableErrorCodes = ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN", "EAI_AGAIN"];
+    private readonly retriableStatusCodes = [408, 409, 500, 502, 503, 504];
+    
     constructor(credentials: msRestAzure.ApplicationTokenCredentials,
         subscriptionId: string,
         keyVaultName: string,
@@ -28,49 +31,85 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         this.apiVersion = '2016-10-01';
     }
 
-    public async invokeRequest(request: webClient.WebRequest): Promise<webClient.WebResponse> {
+    public async invokeRequest(request: webClient.WebRequest): Promise<webClient.WebResponse>
+    {
         const maxRetryCount: number = 5;
         const retryIntervalInSeconds: number = 2;
-        const retriableErrorCodes = ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN", "EAI_AGAIN"];
-        const retriableStatusCodes = [408, 409, 500, 502, 503, 504];
-        let timeToWait: number = retryIntervalInSeconds;
+
         let retryCount: number = 0;
 
-        while(true) {
-            try {
-                var response = await this.beginRequest(request);
-                if (response.statusCode == 401) {
-                    var vaultResourceId = this.getValidVaultResourceId(response);
-                    if(!!vaultResourceId) {
+        while (true)
+        {
+            try
+            {
+                let response = await this.beginRequest(request);
+                if (response.statusCode == 401)
+                {
+                    const vaultResourceId = this.getValidVaultResourceId(response);
+                    if (!!vaultResourceId)
+                    {
                         console.log(tl.loc("RetryingWithVaultResourceIdFromResponse", vaultResourceId));
 
                         this.getCredentials().activeDirectoryResourceId = vaultResourceId; // update vault resource Id
                         this.getCredentials().getToken(true); // Refresh authorization token in cache
-                        var response = await this.beginRequest(request);
+                        response = await this.beginRequest(request);
                     }
                 }
 
-                if (retriableStatusCodes.indexOf(response.statusCode) != -1 && ++retryCount < maxRetryCount) {
-                    tl.debug(util.format("Encountered a retriable status code: %s. Message: '%s'.", response.statusCode, response.statusMessage));
-                    await webClient.sleepFor(timeToWait);
-                    timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
-                    continue;
+                if (this.retriableStatusCodes.indexOf(response.statusCode) === -1)
+                {
+                    return response;
                 }
 
-                return response;
-            } catch(error) {
-                if ((retriableErrorCodes.indexOf(error.code) != -1
-                || !!error.message && (error.message.startsWith('Request timeout: ') || error.message.startsWith('getaddrinfo ')))
-                && ++retryCount < maxRetryCount) {
-                    tl.debug(util.format("Encountered an error. Will retry. Error:%s. Message: %s.", error.code, error.message));
-                    await webClient.sleepFor(timeToWait);
-                    timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
+                if (++retryCount >= maxRetryCount)
+                {
+                    return response;
                 }
-                else {
+
+                tl.debug(`Encountered a retriable status code: ${response.statusCode}. Message: '${response.statusMessage}'.`);              
+            }
+            catch (error)
+            {
+                if (++retryCount >= maxRetryCount)
+                {
                     throw error;
                 }
+
+                if (!this.isRetriableError(error))
+                {
+                    throw error;
+                }
+
+                tl.debug(`Encountered an error. Will retry. Error: ${error.code}. Message: ${error.message}.`);                
             }
+
+            await webClient.sleepFor(retryIntervalInSeconds);
         }
+    }
+
+    private isRetriableError(error: any): boolean
+    {
+        if (this.retriableErrorCodes.indexOf(error.code) !== -1)
+        {
+            return true;
+        }
+
+        if (!error.message)
+        {
+            return false;
+        }
+
+        if (error.message.startsWith("Request timeout: "))
+        {
+            return true;
+        }
+
+        if (error.message.startsWith("getaddrinfo "))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     public getValidVaultResourceId(response: webClient.WebResponse) {

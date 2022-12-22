@@ -72,7 +72,7 @@ export class KeyVault {
         this.provisionKeyVaultSecretsScript = util.format(scriptContentFormat, this.taskParameters.subscriptionId, this.taskParameters.servicePrincipalId, this.taskParameters.keyVaultName);
     }
 
-    public downloadSecrets(secretsToErrorsMap: SecretsToErrorsMapping): Promise<void> {
+    public async downloadSecrets(secretsToErrorsMap: SecretsToErrorsMapping): Promise<void> {
 
         var downloadAllSecrets = false;
         if (this.taskParameters.secretsFilter && this.taskParameters.secretsFilter.length > 0)
@@ -90,10 +90,13 @@ export class KeyVault {
         // Key vault task explicitly handles multi line masking - hence setting SYSTEM_UNSAFEALLOWMULTILINESECRET to true
         tl.setVariable("SYSTEM_UNSAFEALLOWMULTILINESECRET", "true");
 
-        if (downloadAllSecrets) {
-            return this.downloadAllSecrets(secretsToErrorsMap);
-        } else {
-            return this.downloadSelectedSecrets(this.taskParameters.secretsFilter, secretsToErrorsMap);
+        if (downloadAllSecrets)
+        {
+            return await this.downloadAllSecrets(secretsToErrorsMap);
+        }
+        else
+        {
+            return await this.downloadSelectedSecrets(this.taskParameters.secretsFilter, secretsToErrorsMap);
         }
     }
 
@@ -112,50 +115,46 @@ export class KeyVault {
                 }
 
                 console.log(tl.loc("NumberOfSecretsFound", this.taskParameters.keyVaultName, listOfSecrets.length));
-                listOfSecrets = this.filterDisabledAndExpiredSecrets(listOfSecrets);
-                console.log(tl.loc("NumberOfEnabledSecretsFound", this.taskParameters.keyVaultName, listOfSecrets.length));
-
-                var getSecretValuePromises: Promise<any>[] = [];
-                listOfSecrets.forEach((secret: armKeyVault.AzureKeyVaultSecret, index: number) => {
-                    getSecretValuePromises.push(this.downloadSecretValue(secret.name, secretsToErrorsMap));
-                });
-
-                Promise.all(getSecretValuePromises).then(() =>{
+                const secrets = this.filterDisabledAndExpiredSecrets(listOfSecrets).map(secret => secret.name);
+                console.log(tl.loc("NumberOfEnabledSecretsFound", this.taskParameters.keyVaultName, secrets.length));
+                
+                this.downloadSelectedSecrets(secrets, secretsToErrorsMap).then(() => {
                     return resolve();
                 });
             });
         });
     }
 
-    private downloadSelectedSecrets(selectedSecrets: string[], secretsToErrorsMap: SecretsToErrorsMapping): Promise<void> {
+    private async downloadSelectedSecrets(secrets: string[], secretsToErrorsMap: SecretsToErrorsMapping) : Promise<void>
+    {
         tl.debug(util.format("Downloading selected secrets from subscriptionId: %s, vault: %s", this.taskParameters.subscriptionId, this.taskParameters.keyVaultName));
 
-        return new Promise<void>((resolve, reject) => {
-            var getSecretValuePromises: Promise<any>[] = [];
-            selectedSecrets.forEach((secretName: string, index: number) => {
-                getSecretValuePromises.push(this.downloadSecretValue(secretName, secretsToErrorsMap));
-            });
-
-            Promise.all(getSecretValuePromises).then(() =>{
-                return resolve();
-            });
-        });
+        const chunkSize = 20;
+        for(let i = 0; i < secrets.length; i += chunkSize)
+        {         
+            const start = new Date().getTime();   
+            
+            tl.debug(`Downloading part [${i} - ${Math.min(secrets.length, i + chunkSize)}] (total ${secrets.length} secrets)`);
+            const secretPromises: Promise<void>[] = [];
+            for(let j = i; j < secrets.length && j < i + chunkSize; j++)
+            {
+                secretPromises.push(this.downloadSecretValue(secrets[j], secretsToErrorsMap));
+            }
+            
+            await Promise.all(secretPromises);
+            const end = new Date().getTime();
+            tl.debug(`Downloaded part [${i} - ${i + secretPromises.length}] (took ${end - start} ms) (total ${secrets.length} secrets)`);
+        }
     }
 
-    private filterDisabledAndExpiredSecrets(listOfSecrets: armKeyVault.AzureKeyVaultSecret[]): armKeyVault.AzureKeyVaultSecret[] {
-        var result: armKeyVault.AzureKeyVaultSecret[] = [];
-        var now: Date = new Date();
-
-        listOfSecrets.forEach((value: armKeyVault.AzureKeyVaultSecret, index: number) => {
-            if (value.enabled && (!value.expires || value.expires > now)) {
-                result.push(value);
-            }
-        });
-        
+    private filterDisabledAndExpiredSecrets(listOfSecrets: armKeyVault.AzureKeyVaultSecret[]): armKeyVault.AzureKeyVaultSecret[]
+    {
+        const now: Date = new Date();
+        const result = listOfSecrets.filter((value, _) => value.enabled && (!value.expires || value.expires > now));        
         return result;
     }
 
-    private downloadSecretValue(secretName: string, secretsToErrorsMap: SecretsToErrorsMapping): Promise<any> {
+    private downloadSecretValue(secretName: string, secretsToErrorsMap: SecretsToErrorsMapping): Promise<void> {
         tl.debug(util.format("Promise for downloading secret value for: %s", secretName));
         secretName = secretName.trim();
 
