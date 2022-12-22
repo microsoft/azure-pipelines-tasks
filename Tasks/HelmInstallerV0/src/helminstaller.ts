@@ -41,7 +41,8 @@ export async function downloadHelm(version: string): Promise<string> {
         throw new Error(tl.loc("HelmNotFoundInFolder", cachedToolpath))
     }
 
-    fs.chmodSync(helmpath, "777");
+    // For owner needs to keep the executable permission
+    fs.chmodSync(helmpath, "744");
     return helmpath;
 }
 

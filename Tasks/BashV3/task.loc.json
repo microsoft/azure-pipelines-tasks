@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 201,
-    "Patch": 1
+    "Minor": 214,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.115.0",
@@ -105,6 +105,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "bash.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "bash.js",
       "argumentFormat": ""
     }

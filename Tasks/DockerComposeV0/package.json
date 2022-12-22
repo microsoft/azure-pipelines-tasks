@@ -7,7 +7,7 @@
     "azure-pipelines-task-lib": "3.0.6-preview.0",
     "azure-pipelines-tasks-docker-common-v2": "2.0.1-preview.0",
     "esprima": "2.7.1",
-    "js-yaml": "3.6.1"
+    "js-yaml": "3.13.1"
   },
   "devDependencies": {
     "typescript": "4.0.2"
