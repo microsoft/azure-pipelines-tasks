@@ -10,7 +10,7 @@
   "version": {
     "Major": 2,
     "Minor": 214,
-    "Patch": 3
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -540,6 +540,8 @@
     "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion",
-    "Error_NugetFailedWithCodeAndErr": "ms-resource:loc.messages.Error_NugetFailedWithCodeAndErr"
+    "Error_NugetFailedWithCodeAndErr": "ms-resource:loc.messages.Error_NugetFailedWithCodeAndErr",
+    "Warning_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Warning_IncludeNuGetOrgEnabled",
+    "Error_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Error_IncludeNuGetOrgEnabled"
   }
 }
