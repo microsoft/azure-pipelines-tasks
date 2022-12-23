@@ -1,0 +1,461 @@
+{
+  "id": "DEE316A2-586F-4DEF-BE79-488A1F503DFE",
+  "name": "KubernetesManifest",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/azpipes-k8s-manifest-tsg",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 216,
+    "Patch": 0
+  },
+  "demands": [],
+  "groups": [],
+  "inputs": [
+    {
+      "name": "action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.action",
+      "required": false,
+      "defaultValue": "deploy",
+      "options": {
+        "bake": "bake",
+        "createSecret": "create secret",
+        "delete": "delete",
+        "deploy": "deploy",
+        "patch": "patch",
+        "promote": "promote",
+        "scale": "scale",
+        "reject": "reject"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.action"
+    },
+    {
+      "name": "connectionType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.connectionType",
+      "defaultValue": "Azure Resource Manager",
+      "required": true,
+      "options": {
+        "Azure Resource Manager": "Azure Resource Manager",
+        "Kubernetes Service Connection": "Kubernetes Service Connection"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.connectionType"
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "required": true
+    },
+    {
+      "name": "azureResourceGroup",
+      "label": "ms-resource:loc.input.label.azureResourceGroup",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "kubernetesCluster",
+      "label": "ms-resource:loc.input.label.kubernetesCluster",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesCluster",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "useClusterAdmin",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useClusterAdmin",
+      "defaultValue": "false",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "helpMarkDown": "ms-resource:loc.input.help.useClusterAdmin"
+    },
+    {
+      "name": "kubernetesServiceEndpoint",
+      "aliases": [
+        "kubernetesServiceConnection"
+      ],
+      "type": "connectedService:kubernetes",
+      "label": "ms-resource:loc.input.label.kubernetesServiceEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceEndpoint",
+      "visibleRule": "action != bake && connectionType = Kubernetes Service Connection",
+      "required": true
+    },
+    {
+      "name": "namespace",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.namespace",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.namespace"
+    },
+    {
+      "name": "strategy",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.strategy",
+      "required": false,
+      "defaultValue": "none",
+      "options": {
+        "canary": "Canary",
+        "none": "None"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.strategy",
+      "visibleRule": "action = deploy || action = promote || action = reject"
+    },
+    {
+      "name": "trafficSplitMethod",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.trafficSplitMethod",
+      "required": false,
+      "defaultValue": "pod",
+      "options": {
+        "pod": "Pod",
+        "smi": "SMI"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.trafficSplitMethod",
+      "visibleRule": "strategy = canary"
+    },
+    {
+      "name": "percentage",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.percentage",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.percentage",
+      "defaultValue": 0,
+      "visibleRule": "strategy = Canary && action = deploy",
+      "validation": {
+        "expression": "isMatch(value, '(^(([0-9]|[1-9][0-9]|100)(\\.\\d*)?)$)','Multiline')",
+        "message": "Enter valid percentage value i.e between 0 to 100."
+      }
+    },
+    {
+      "name": "baselineAndCanaryReplicas",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.baselineAndCanaryReplicas",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.baselineAndCanaryReplicas",
+      "defaultValue": 1,
+      "visibleRule": "strategy = Canary && action = deploy && trafficSplitMethod = SMI",
+      "validation": {
+        "expression": "isMatch(value, '(^([0-9]|([1-9]\\d*))$)','Multiline')",
+        "message": "Enter valid value for baseline and canary replica count."
+      }
+    },
+    {
+      "name": "manifests",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.manifests",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.manifests",
+      "visibleRule": "action = deploy || action = promote || action = reject"
+    },
+    {
+      "name": "containers",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.containers",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.containers",
+      "visibleRule": "action = deploy || action = promote || action = bake"
+    },
+    {
+      "name": "imagePullSecrets",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.imagePullSecrets",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.imagePullSecrets",
+      "visibleRule": "action = deploy || action = promote"
+    },
+    {
+      "name": "renderType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.renderType",
+      "required": false,
+      "defaultValue": "helm",
+      "visibleRule": "action = bake",
+      "options": {
+        "helm": "Helm",
+        "kompose": "Kompose",
+        "kustomize": "Kustomize"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.renderType"
+    },
+    {
+      "name": "dockerComposeFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.dockerComposeFile",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "action = bake && renderType = kompose",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerComposeFile"
+    },
+    {
+      "name": "helmChart",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.helmChart",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.helmChart",
+      "visibleRule": "action = bake && renderType = helm"
+    },
+    {
+      "name": "releaseName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.releaseName",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseName",
+      "visibleRule": "action = bake && renderType = helm"
+    },
+    {
+      "name": "overrideFiles",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.overrideFiles",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.overrideFiles",
+      "visibleRule": "action = bake && renderType = helm"
+    },
+    {
+      "name": "overrides",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.overrides",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.overrides",
+      "visibleRule": "action = bake && renderType = helm"
+    },
+    {
+      "name": "kustomizationPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.kustomizationPath",
+      "required": false,
+      "visibleRule": "action = bake && renderType = kustomize",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.kustomizationPath"
+    },
+    {
+      "name": "resourceToPatch",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.resourceToPatch",
+      "required": true,
+      "defaultValue": "file",
+      "options": {
+        "file": "file",
+        "name": "name"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.resourceToPatch",
+      "visibleRule": "action = patch"
+    },
+    {
+      "name": "resourceFileToPatch",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.resourceFileToPatch",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.resourceFileToPatch",
+      "visibleRule": "action = patch && resourceToPatch = file"
+    },
+    {
+      "name": "kind",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.kind",
+      "required": true,
+      "defaultValue": "",
+      "options": {
+        "deployment": "deployment",
+        "replicaset": "replicaset",
+        "statefulset": "statefulset"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.kind",
+      "visibleRule": "action = scale || resourceToPatch = name"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.name",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.name",
+      "visibleRule": "action = scale || resourceToPatch = name"
+    },
+    {
+      "name": "replicas",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.replicas",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.replicas",
+      "visibleRule": "action = scale"
+    },
+    {
+      "name": "mergeStrategy",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.mergeStrategy",
+      "required": true,
+      "defaultValue": "strategic",
+      "options": {
+        "json": "json",
+        "merge": "merge",
+        "strategic": "strategic"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.mergeStrategy",
+      "visibleRule": "action = patch"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments",
+      "visibleRule": "action = delete"
+    },
+    {
+      "name": "patch",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.patch",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.patch",
+      "visibleRule": "action = patch"
+    },
+    {
+      "name": "secretType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.secretType",
+      "defaultValue": "dockerRegistry",
+      "required": true,
+      "visibleRule": "action = createSecret",
+      "options": {
+        "dockerRegistry": "dockerRegistry",
+        "generic": "generic"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.secretType"
+    },
+    {
+      "name": "secretName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.secretName",
+      "required": false,
+      "visibleRule": "action = createSecret",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.secretName"
+    },
+    {
+      "name": "secretArguments",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "2",
+        "editorExtension": "ms.vss-services-azure.kubernetes-parameters-grid"
+      },
+      "label": "ms-resource:loc.input.label.secretArguments",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.secretArguments",
+      "visibleRule": "action = createSecret && secretType = generic"
+    },
+    {
+      "name": "dockerRegistryEndpoint",
+      "type": "connectedService:dockerregistry",
+      "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
+      "visibleRule": "action = createSecret && secretType = dockerRegistry"
+    },
+    {
+      "name": "rolloutStatusTimeout",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.rolloutStatusTimeout",
+      "defaultValue": "0",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rolloutStatusTimeout",
+      "visibleRule": "action = deploy || action = patch || action = scale || action = promote",
+      "validation": {
+        "expression": "isMatch(value, '(^\\d*$)','Multiline')",
+        "message": "Enter a valid value for timeout."
+      }
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "kubernetesCluster",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{{{name}}}"
+    },
+    {
+      "target": "azureResourceGroup",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "outputVariables": [
+    {
+      "name": "manifestsBundle",
+      "description": "The location of the manifest bundles created by bake action"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "src//run.js"
+    }
+  },
+  "messages": {
+    "DownloadPathForStableTxt": "ms-resource:loc.messages.DownloadPathForStableTxt",
+    "DownloadKubeCtlFailed": "ms-resource:loc.messages.DownloadKubeCtlFailed",
+    "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
+    "DockerComposeFilePathNotSupplied": "ms-resource:loc.messages.DockerComposeFilePathNotSupplied",
+    "UsingLatestStableVersion": "ms-resource:loc.messages.UsingLatestStableVersion",
+    "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
+    "ManifestFileNotFound": "ms-resource:loc.messages.ManifestFileNotFound",
+    "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
+    "UnknownRenderType": "ms-resource:loc.messages.UnknownRenderType",
+    "ResourceKindNotDefined": "ms-resource:loc.messages.ResourceKindNotDefined",
+    "NullInputObject": "ms-resource:loc.messages.NullInputObject",
+    "ArgumentsInputNotSupplied": "ms-resource:loc.messages.ArgumentsInputNotSupplied",
+    "NullInputObjectMetadata": "ms-resource:loc.messages.NullInputObjectMetadata",
+    "InvalidRejectActionDeploymentStrategy": "ms-resource:loc.messages.InvalidRejectActionDeploymentStrategy",
+    "InvalidPromotetActionDeploymentStrategy": "ms-resource:loc.messages.InvalidPromotetActionDeploymentStrategy",
+    "AllContainersNotInReadyState": "ms-resource:loc.messages.AllContainersNotInReadyState",
+    "CouldNotDeterminePodStatus": "ms-resource:loc.messages.CouldNotDeterminePodStatus",
+    "KubectlShouldBeUpgraded": "ms-resource:loc.messages.KubectlShouldBeUpgraded",
+    "CouldNotDetermineServiceStatus": "ms-resource:loc.messages.CouldNotDetermineServiceStatus",
+    "waitForServiceIpAssignment": "ms-resource:loc.messages.waitForServiceIpAssignment",
+    "waitForServiceIpAssignmentTimedOut": "ms-resource:loc.messages.waitForServiceIpAssignmentTimedOut",
+    "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP",
+    "UnableToCreateTrafficSplitManifestFile": "ms-resource:loc.messages.UnableToCreateTrafficSplitManifestFile",
+    "StableSpecSelectorNotExist": "ms-resource:loc.messages.StableSpecSelectorNotExist",
+    "InvalidPercentage": "ms-resource:loc.messages.InvalidPercentage",
+    "InvalidBaselineAndCanaryReplicas": "ms-resource:loc.messages.InvalidBaselineAndCanaryReplicas",
+    "InvalidTimeoutValue": "ms-resource:loc.messages.InvalidTimeoutValue",
+    "RolloutStatusTimedout": "ms-resource:loc.messages.RolloutStatusTimedout",
+    "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink"
+  }
+}
