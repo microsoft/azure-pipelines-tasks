@@ -1,9 +1,7 @@
-import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common');
-import azureServiceClient = require("azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClient");
-import azureServiceClientBase = require("azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase");
-import util = require("util");
+import { ServiceClient } from "azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClient";
+import { ToError, ApiCallback, ApiResult} from "azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase";
 import tl = require('azure-pipelines-task-lib/task');
-import webClient = require("azure-pipelines-tasks-azure-arm-rest-v2/webClient");
+import { WebRequest, WebResponse, sleepFor } from "azure-pipelines-tasks-azure-arm-rest-v2/webClient";
 
 export class AzureKeyVaultSecret {
     name: string;
@@ -12,26 +10,17 @@ export class AzureKeyVaultSecret {
     contentType: string;
 }
 
-export class KeyVaultClient extends azureServiceClient.ServiceClient {
-    private keyVaultName;
-    private keyVaultUrl;
-
+export class KeyVaultClient
+{
+    private readonly apiVersion = "2016-10-01";
     private readonly retriableErrorCodes = ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN", "EAI_AGAIN"];
     private readonly retriableStatusCodes = [408, 409, 500, 502, 503, 504];
-    
-    constructor(credentials: msRestAzure.ApplicationTokenCredentials,
-        subscriptionId: string,
-        keyVaultName: string,
-        keyVaultUrl: string) {
 
-        super(credentials, subscriptionId);
-
-        this.keyVaultName = keyVaultName;
-        this.keyVaultUrl = keyVaultUrl;
-        this.apiVersion = '2016-10-01';
+    constructor(private client: ServiceClient, private keyVaultUrl: string)
+    {
     }
 
-    public async invokeRequest(request: webClient.WebRequest): Promise<webClient.WebResponse>
+    private async invokeRequest(request: WebRequest): Promise<WebResponse>
     {
         const maxRetryCount: number = 5;
         const retryIntervalInSeconds: number = 2;
@@ -42,7 +31,7 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         {
             try
             {
-                let response = await this.beginRequest(request);
+                let response = await this.client.beginRequest(request);
                 if (response.statusCode == 401)
                 {
                     const vaultResourceId = this.getValidVaultResourceId(response);
@@ -50,9 +39,9 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
                     {
                         console.log(tl.loc("RetryingWithVaultResourceIdFromResponse", vaultResourceId));
 
-                        this.getCredentials().activeDirectoryResourceId = vaultResourceId; // update vault resource Id
-                        this.getCredentials().getToken(true); // Refresh authorization token in cache
-                        response = await this.beginRequest(request);
+                        this.client.getCredentials().activeDirectoryResourceId = vaultResourceId; // update vault resource Id
+                        this.client.getCredentials().getToken(true); // Refresh authorization token in cache
+                        response = await this.client.beginRequest(request);
                     }
                 }
 
@@ -83,7 +72,7 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
                 tl.debug(`Encountered an error. Will retry. Error: ${error.code}. Message: ${error.message}.`);                
             }
 
-            await webClient.sleepFor(retryIntervalInSeconds);
+            await sleepFor(retryIntervalInSeconds);
         }
     }
 
@@ -112,7 +101,7 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         return false;
     }
 
-    public getValidVaultResourceId(response: webClient.WebResponse) {
+    private getValidVaultResourceId(response: WebResponse) {
         if (!!response.headers) {
             var authenticateHeader = response.headers['www-authenticate'];
             if (!!authenticateHeader) {
@@ -131,7 +120,8 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         return null;
     }
 
-    public getSecrets(nextLink: string, callback: azureServiceClientBase.ApiCallback) {
+    public getSecrets(nextLink: string, callback: ApiCallback)
+    {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
@@ -140,21 +130,22 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         var url = nextLink;
         if (!url)
         {
-            url = this.getRequestUriForBaseUri(
+            url = this.client.getRequestUriForBaseUri(
                 this.keyVaultUrl,
                 '/secrets',
                 {},
-                ['maxresults=25']);
+                ['maxresults=25'],
+                this.apiVersion);
         }
 
-        var httpRequest = new webClient.WebRequest();
+        var httpRequest = new WebRequest();
         httpRequest.method = 'GET';
         httpRequest.headers = {};
         httpRequest.uri = url;
 
         console.log(tl.loc("DownloadingSecretsUsing", url));
 
-        this.invokeRequest(httpRequest).then(async (response: webClient.WebResponse) => {
+        this.invokeRequest(httpRequest).then(async (response: WebResponse) => {
             var result = [];
             if (response.statusCode == 200) {
                 if (response.body.value) {
@@ -162,57 +153,60 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
                 }
 
                 if (response.body.nextLink) {
-                    var nextResult = await this.accumulateResultFromPagedResult(response.body.nextLink);
+                    var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) {
-                        return new azureServiceClientBase.ApiResult(nextResult.error);
+                        return new ApiResult(nextResult.error);
                     }
                     result = result.concat(nextResult.result);
 
                     var listOfSecrets = this.convertToAzureKeyVaults(result);
-                    return new azureServiceClientBase.ApiResult(null, listOfSecrets);
+                    return new ApiResult(null, listOfSecrets);
                 }
                 else {
                     var listOfSecrets = this.convertToAzureKeyVaults(result);
-                    return new azureServiceClientBase.ApiResult(null, listOfSecrets);
+                    return new ApiResult(null, listOfSecrets);
                 }
             }
             else {
-                return new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response));
+                return new ApiResult(ToError(response));
             }
-        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 
-    public getSecretValue(secretName: string, callback: azureServiceClientBase.ApiCallback) {
+    public getSecretValue(secretName: string, callback: ApiCallback)
+    {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
 
         // Create HTTP transport objects
-        var httpRequest = new webClient.WebRequest();
+        var httpRequest = new WebRequest();
         httpRequest.method = 'GET';
         httpRequest.headers = {};
-        httpRequest.uri = this.getRequestUriForBaseUri(
+        httpRequest.uri = this.client.getRequestUriForBaseUri(
             this.keyVaultUrl,
             '/secrets/{secretName}',
             {
                 '{secretName}': secretName
-            }
+            },
+            [],
+            this.apiVersion
         );
 
         console.log(tl.loc("DownloadingSecretValue", secretName));
-        this.invokeRequest(httpRequest).then(async (response: webClient.WebResponse) => {
+        this.invokeRequest(httpRequest).then(async (response: WebResponse) => {
             if (response.statusCode == 200) {
                 var result = response.body.value;
-                return new azureServiceClientBase.ApiResult(null, result);
+                return new ApiResult(null, result);
             }
             else if (response.statusCode == 400) {
-                return new azureServiceClientBase.ApiResult(tl.loc('GetSecretFailedBecauseOfInvalidCharacters', secretName));
+                return new ApiResult(tl.loc('GetSecretFailedBecauseOfInvalidCharacters', secretName));
             }
             else {
-                return new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response));
+                return new ApiResult(ToError(response));
             }
-        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
+        }).then((apiResult: ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
 

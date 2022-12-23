@@ -1,12 +1,13 @@
-import keyVaultTaskParameters = require("../models/KeyVaultTaskParameters");
-import armKeyVault = require("./azure-arm-keyvault");
 import util = require("util");
 import tl = require("azure-pipelines-task-lib/task");
-
 import * as path from 'path';
 import * as fs from 'fs';
+import { KeyVaultTaskParameters } from "../models/KeyVaultTaskParameters";
+import { AzureKeyVaultSecret, KeyVaultClient } from "./azure-arm-keyvault";
+import { ServiceClient } from "azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClient";
 
-export class SecretsToErrorsMapping { 
+export class SecretsToErrorsMapping
+{ 
     public errorsMap: { [key: string]: string; };
 
     constructor() {
@@ -38,30 +39,29 @@ export class SecretsToErrorsMapping {
     }
 }
 
-export class KeyVault {
-
-    private taskParameters: keyVaultTaskParameters.KeyVaultTaskParameters;
-    private keyVaultClient: armKeyVault.KeyVaultClient;
+export class KeyVault
+{
+    //private keyVaultClient: KeyVaultClient;
     private provisionKeyVaultSecretsScript: string;
 
-    constructor(taskParameters: keyVaultTaskParameters.KeyVaultTaskParameters) {
-        this.taskParameters = taskParameters;
+    constructor(private parameters: KeyVaultTaskParameters, private keyVaultClient: KeyVaultClient) {
 
-        this.keyVaultClient = new armKeyVault.KeyVaultClient(
-            this.taskParameters.vaultCredentials, 
-            this.taskParameters.subscriptionId,
-            this.taskParameters.keyVaultName,
-            this.taskParameters.keyVaultUrl);
+
+        const client = new ServiceClient(parameters.vaultCredentials, parameters.subscriptionId);
+        this.keyVaultClient = new KeyVaultClient(client, parameters.keyVaultUrl);
 
         let scriptContentFormat;
-        if(this.taskParameters.scheme === "ManagedServiceIdentity") {
+        if(this.parameters.scheme === "ManagedServiceIdentity")
+        {
             scriptContentFormat = `$ErrorActionPreference=\"Stop\";
             Login-AzureRmAccount -SubscriptionId %s;
             $vmMetadata = Invoke-RestMethod -Headers @{"Metadata"="true"} -URI http://169.254.169.254/metadata/instance?api-version=2017-08-01 -Method get
             $vm = Get-AzureRmVM -ResourceGroupName $vmMetadata.compute.resourceGroupName  -Name  $vmMetadata.compute.name
             $spn=(Get-AzureRmADServicePrincipal -SPN %s);
             Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $vm.Identity.PrincipalId -PermissionsToSecrets get,list;`;
-        } else {
+        }
+        else
+        {
             scriptContentFormat = `$ErrorActionPreference=\"Stop\";
             Login-AzureRmAccount -SubscriptionId %s;
             $spn=(Get-AzureRmADServicePrincipal -SPN %s);
@@ -69,66 +69,71 @@ export class KeyVault {
             Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -PermissionsToSecrets get,list;`;
         }
 
-        this.provisionKeyVaultSecretsScript = util.format(scriptContentFormat, this.taskParameters.subscriptionId, this.taskParameters.servicePrincipalId, this.taskParameters.keyVaultName);
+        this.provisionKeyVaultSecretsScript = util.format(scriptContentFormat, this.parameters.subscriptionId, this.parameters.servicePrincipalId, this.parameters.keyVaultName);
     }
 
-    public async downloadSecrets(secretsToErrorsMap: SecretsToErrorsMapping): Promise<void> {
-
+    public async downloadSecrets(): Promise<SecretsToErrorsMapping>
+    {
         var downloadAllSecrets = false;
-        if (this.taskParameters.secretsFilter && this.taskParameters.secretsFilter.length > 0)
+        if (this.parameters.secretsFilter && this.parameters.secretsFilter.length > 0)
         {
-            if (this.taskParameters.secretsFilter.length === 1 && this.taskParameters.secretsFilter[0] === "*") {
+            if (this.parameters.secretsFilter.length === 1 && this.parameters.secretsFilter[0] === "*") {
                 downloadAllSecrets = true;
             }
-        } else {
+        }
+        else
+        {
             downloadAllSecrets = true;
         }
 
-        console.log(tl.loc("SubscriptionIdLabel", this.taskParameters.subscriptionId));
-        console.log(tl.loc("KeyVaultNameLabel", this.taskParameters.keyVaultName));
+        console.log(tl.loc("SubscriptionIdLabel", this.parameters.subscriptionId));
+        console.log(tl.loc("KeyVaultNameLabel", this.parameters.keyVaultName));
 
         // Key vault task explicitly handles multi line masking - hence setting SYSTEM_UNSAFEALLOWMULTILINESECRET to true
         tl.setVariable("SYSTEM_UNSAFEALLOWMULTILINESECRET", "true");
 
         if (downloadAllSecrets)
         {
-            return await this.downloadAllSecrets(secretsToErrorsMap);
+            return await this.downloadAllSecrets();
         }
         else
         {
-            return await this.downloadSelectedSecrets(this.taskParameters.secretsFilter, secretsToErrorsMap);
+            return await this.downloadSelectedSecrets(this.parameters.secretsFilter);
         }
     }
 
-    private downloadAllSecrets(secretsToErrorsMap: SecretsToErrorsMapping): Promise<void> {
-        tl.debug(util.format("Downloading all secrets from subscriptionId: %s, vault: %s", this.taskParameters.subscriptionId, this.taskParameters.keyVaultName));
+    private downloadAllSecrets(): Promise<SecretsToErrorsMapping> {
+        tl.debug(util.format("Downloading all secrets from subscriptionId: %s, vault: %s", this.parameters.subscriptionId, this.parameters.keyVaultName));
 
-        return new Promise<void>((resolve, reject) => {
-            this.keyVaultClient.getSecrets("", (error, listOfSecrets, request, response) => {
-                if (error) {
+        return new Promise<SecretsToErrorsMapping>((resolve, reject) =>
+        {
+            this.keyVaultClient.getSecrets("", (error, listOfSecrets, request, response) =>
+            {
+                if (error)
+                {
                     return reject(tl.loc("GetSecretsFailed", this.getError(error)));
                 }
 
-                if (listOfSecrets.length == 0) {
-                    console.log(tl.loc("NoSecretsFound", this.taskParameters.keyVaultName));
-                    return resolve();
+                if (listOfSecrets.length == 0)
+                {
+                    console.log(tl.loc("NoSecretsFound", this.parameters.keyVaultName));
+                    return resolve(new SecretsToErrorsMapping());
                 }
 
-                console.log(tl.loc("NumberOfSecretsFound", this.taskParameters.keyVaultName, listOfSecrets.length));
+                console.log(tl.loc("NumberOfSecretsFound", this.parameters.keyVaultName, listOfSecrets.length));
                 const secrets = this.filterDisabledAndExpiredSecrets(listOfSecrets).map(secret => secret.name);
-                console.log(tl.loc("NumberOfEnabledSecretsFound", this.taskParameters.keyVaultName, secrets.length));
+                console.log(tl.loc("NumberOfEnabledSecretsFound", this.parameters.keyVaultName, secrets.length));
                 
-                this.downloadSelectedSecrets(secrets, secretsToErrorsMap).then(() => {
-                    return resolve();
-                });
+                this.downloadSelectedSecrets(secrets).then(errors => resolve(errors));
             });
         });
     }
 
-    private async downloadSelectedSecrets(secrets: string[], secretsToErrorsMap: SecretsToErrorsMapping) : Promise<void>
+    private async downloadSelectedSecrets(secrets: string[]) : Promise<SecretsToErrorsMapping>
     {
-        tl.debug(util.format("Downloading selected secrets from subscriptionId: %s, vault: %s", this.taskParameters.subscriptionId, this.taskParameters.keyVaultName));
+        tl.debug(util.format("Downloading selected secrets from subscriptionId: %s, vault: %s", this.parameters.subscriptionId, this.parameters.keyVaultName));
 
+        const secretsToErrorsMap = new SecretsToErrorsMapping();
         const chunkSize = 20;
         for(let i = 0; i < secrets.length; i += chunkSize)
         {         
@@ -145,26 +150,33 @@ export class KeyVault {
             const end = new Date().getTime();
             tl.debug(`Downloaded part [${i} - ${i + secretPromises.length}] (took ${end - start} ms) (total ${secrets.length} secrets)`);
         }
+
+        return secretsToErrorsMap;
     }
 
-    private filterDisabledAndExpiredSecrets(listOfSecrets: armKeyVault.AzureKeyVaultSecret[]): armKeyVault.AzureKeyVaultSecret[]
+    private filterDisabledAndExpiredSecrets(listOfSecrets: AzureKeyVaultSecret[]): AzureKeyVaultSecret[]
     {
         const now: Date = new Date();
         const result = listOfSecrets.filter((value, _) => value.enabled && (!value.expires || value.expires > now));        
         return result;
     }
 
-    private downloadSecretValue(secretName: string, secretsToErrorsMap: SecretsToErrorsMapping): Promise<void> {
+    private downloadSecretValue(secretName: string, secretsToErrorsMap: SecretsToErrorsMapping): Promise<void>
+    {
         tl.debug(util.format("Promise for downloading secret value for: %s", secretName));
         secretName = secretName.trim();
 
-        return new Promise<void>((resolve, reject) => {
-            this.keyVaultClient.getSecretValue(secretName, (error, secretValue, request, response) => {
-                if (error) {
-                    let errorMessage = this.getError(error);
+        return new Promise<void>((resolve, reject) => 
+        {
+            this.keyVaultClient.getSecretValue(secretName, (error, secretValue, request, response) => 
+            {
+                if (error)
+                {
+                    const errorMessage = this.getError(error);
                     secretsToErrorsMap.addError(secretName, errorMessage);
                 }
-                else {
+                else
+                {
                     this.setVaultVariable(secretName, secretValue);
                 }
                 
