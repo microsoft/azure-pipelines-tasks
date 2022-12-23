@@ -19,7 +19,8 @@ const kubectlPath = shared.formatPath('newUserDir/kubectl.exe');
 const taskPath = path.join(__dirname, '../src', 'run.js');
 const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput('kubernetesServiceConnection', 'kubernetesConnection');
+tr.setInput('connectionType', 'Kubernetes Service Connection');
+tr.setInput('kubernetesServiceEndpoint', 'kubernetesConnection');
 tr.setInput('namespace', process.env[shared.TestEnvVars.namespace] || '');
 tr.setInput('action', process.env[shared.TestEnvVars.action] || 'deploy');
 tr.setInput('strategy', process.env[shared.TestEnvVars.strategy] || 'None');

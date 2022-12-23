@@ -19,7 +19,12 @@ export const dockerRegistryEndpoint: string = tl.getInput('dockerRegistryEndpoin
 export const rolloutStatusTimeout: string = tl.getInput('rolloutStatusTimeout', false);
 
 if (!namespace) {
-    const kubConnection = tl.getInput('kubernetesServiceConnection', false);
+    const connectionType = tl.getInput('connecitonType', false) || '';
+    const endPoint = connectionType === 'Azure Resource Manager'
+        ? 'azureSubscriptionEndpoint'
+        : 'kubernetesServiceEndpoint';
+
+    const kubConnection = tl.getInput(endPoint, false);
     if (kubConnection) {
         namespace = tl.getEndpointDataParameter(kubConnection, 'namespace', true);
     }

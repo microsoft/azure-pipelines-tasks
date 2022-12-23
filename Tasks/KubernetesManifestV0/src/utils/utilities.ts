@@ -2,10 +2,10 @@
 
 import * as tl from 'azure-pipelines-task-lib/task';
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
-import * as kubectlutility from 'azure-pipelines-tasks-kubernetes-common-v2/kubectlutility';
 import { Kubectl } from 'azure-pipelines-tasks-kubernetes-common-v2/kubectl-object-model';
+import * as kubectlutility from 'azure-pipelines-tasks-kubernetes-common-v2/kubectlutility';
 import { pipelineAnnotations } from 'azure-pipelines-tasks-kubernetes-common-v2/kubernetesconstants';
-import { KubernetesConnection } from 'azure-pipelines-tasks-kubernetes-common-v2/kubernetesconnection';
+import ClusterConnection from './ClusterConnection';
 import * as filehelper from './FileHelper';
 
 export function getManifestFiles(manifestFilePaths: string | string[]): string[] {
@@ -18,10 +18,9 @@ export function getManifestFiles(manifestFilePaths: string | string[]): string[]
     return files;
 }
 
-export function getConnection(): KubernetesConnection {
-    const kubernetesServiceConnection = tl.getInput('kubernetesServiceConnection', true);
+export function getConnection(): ClusterConnection {
     const tempPath = filehelper.getNewUserDirPath();
-    const connection = new KubernetesConnection(kubernetesServiceConnection, tempPath);
+    const connection = new ClusterConnection(tempPath);
     return connection;
 }
 

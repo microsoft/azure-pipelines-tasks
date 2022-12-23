@@ -3,18 +3,18 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
 import * as utils from './utils/utilities';
 
-import { deploy } from './actions/deploy';
 import { bake } from './actions/bake';
-import { scale } from './actions/scale';
-import { patch } from './actions/patch';
+import { createSecret } from './actions/createSecret';
 import { deleteResources } from './actions/delete';
+import { deploy } from './actions/deploy';
+import { patch } from './actions/patch';
 import { promote } from './actions/promote';
 import { reject } from './actions/reject';
-import { createSecret } from './actions/createSecret';
+import { scale } from './actions/scale';
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
-function run(): Promise<void> {
+async function run(): Promise<void> {
     const action = tl.getInput('action');
     if (action === 'bake') {
         return bake();
@@ -47,7 +47,7 @@ function run(): Promise<void> {
             tl.setResult(tl.TaskResult.Failed, 'Not a supported action, choose from "bake", "deploy", "patch", "scale", "delete", "promote", "reject"');
             process.exit(1);
     }
-    connection.open();
+    await connection.open();
     return action_func(connection.ignoreSSLErrors)
         .then(() => connection.close())
         .catch((error) => {
