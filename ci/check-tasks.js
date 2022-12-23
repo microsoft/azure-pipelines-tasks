@@ -4,6 +4,7 @@ const path = require('path');
 
 const fileToJson = util.fileToJson;
 const buildTasksPath = util.buildTasksPath;
+const GITHUB_LINK = 'https://github.com/microsoft/azure-pipelines-tasks/blob/master/docs/migrateNode16.md';
 
 /**
  * Function walking through directories and looking for 
@@ -93,7 +94,9 @@ function findNonUniqueTaskLib() {
 
     const haveDependencies = findWithFsFromPaths(scanningTasks);
     if (haveDependencies.length > 0) {
-        throw new Error('The following tasks have duplicate azure-pipelines-task-lib: ' + JSON.stringify(haveDependencies, null, 2));
+        throw new Error(`The following tasks have duplicate azure-pipelines-task-lib: 
+            ${JSON.stringify(haveDependencies, null, 2)}
+            Please examine the following link: ${GITHUB_LINK}`);
     }
 
     console.log('No duplicates found.');

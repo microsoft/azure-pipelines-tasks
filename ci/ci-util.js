@@ -88,6 +88,8 @@ var statOrNullSync = function (path) {
 exports.statOrNullSync = statOrNullSync;
 
 var run = function (cl, inheritStreams) {
+    console.log('');
+    console.log(`> ${cl}`);
     var options = {
         stdio: inheritStreams ? 'inherit' : 'pipe'
     };
