@@ -26,7 +26,7 @@
   "loc.input.label.EnvironmentNameRM": "Resource Group",
   "loc.input.help.EnvironmentNameRM": "Name of the target Resource Group for copying files to.",
   "loc.input.label.ResourceFilteringMethod": "Select Machines By",
-  "loc.input.help.ResourceFilteringMethod": "Optionally, select a subset of VMs in resource group either by providing VMs host name or tags. [Tags](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) are supported for resources created via the Azure Resource Manager only.",
+  "loc.input.help.ResourceFilteringMethod": "Optionally, select a subset of VMs in resource group either by providing VMs host name or tags. [Tags](https://learn.microsoft.com/en-us/azure/virtual-machines/tag-template/) are supported for resources created via the Azure Resource Manager only.",
   "loc.input.label.MachineNames": "Filter Criteria",
   "loc.input.help.MachineNames": "Provide a list of VMs host name like ffweb, ffdb, or tags like Role:DB, Web; OS:Win8.1. Note the delimiters used for tags are &#44;(comma), &#58;(colon) and &#59;(semicolon). If multiple tags are provided, then the task will run in all the VMs with the specified tags. The default is to run the task in all the VMs.",
   "loc.input.label.vmsAdminUserName": "Admin Login",
