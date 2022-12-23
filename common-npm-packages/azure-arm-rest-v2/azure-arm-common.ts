@@ -157,7 +157,7 @@ export class ApplicationTokenCredentials {
         const release = await this.tokenMutex.acquire();
 
         try {
-            let promisedTokenResult = this.useMSAL ? this.getMSALToken(force) : this.getADALToken(force);
+            const promisedTokenResult = this.useMSAL ? this.getMSALToken(force) : this.getADALToken(force);
             return await promisedTokenResult;
         } finally {
             // release it for every situation
@@ -176,10 +176,12 @@ export class ApplicationTokenCredentials {
 
     private buildMSAL(): msal.ConfidentialClientApplication {
         // default configuration
+        const authorityURL = (new URL(this.tenantId, this.authorityUrl)).toString();
+
         const msalConfig: msal.Configuration = {
             auth: {
                 clientId: this.clientId,
-                authority: (new URL(this.tenantId, this.authorityUrl)).toString(),
+                authority: authorityURL
             },
             system: {
                 loggerOptions: {
@@ -191,6 +193,19 @@ export class ApplicationTokenCredentials {
                 }
             }
         };
+
+        // proxy usage
+        const rawAgentProxyURL: string = tl.getVariable("agent.proxyurl");
+        if(rawAgentProxyURL) {
+            const agentProxyUsername: string = tl.getVariable("agent.proxyusername");
+            const agentProxyPassword: string = tl.getVariable("agent.proxypassword");
+            const agentProxyBypassHosts = tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null;
+
+            const parsedAgentProxyURL = new URL(rawAgentProxyURL);
+            const proxyURL = `${parsedAgentProxyURL.protocol}//${agentProxyUsername}:${agentProxyPassword}@${parsedAgentProxyURL.host}`
+
+            msalConfig.system.proxyUrl = proxyURL;
+        }
 
         let msalInstance: msal.ConfidentialClientApplication;
 
