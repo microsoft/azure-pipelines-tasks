@@ -6,12 +6,13 @@ import { ServiceClient } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServ
 import { ToError } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase';
 import { uploadFileToSasUrl } from './azure-storage';
 import https = require('https');
-import { parse } from 'azure-pipelines-tasks-webdeployment-common-v4/ParameterParserUtility';
+import { parse } from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
 
 export const SourceType = {
     JAR: "Jar",
     SOURCE_DIRECTORY: "Source",
-    DOT_NET_CORE_ZIP: "NetCoreZip"
+    DOT_NET_CORE_ZIP: "NetCoreZip",
+    CUSTOM_CONTAINER: "Container"
 }
 
 class UploadTarget {
@@ -30,6 +31,20 @@ class UploadTarget {
     public get relativePath(): string {
         return this._relativePath;
     }
+}
+
+interface ImageRegistryCredential {
+    username?: string;
+    password?: string;
+}
+
+interface CustomContainer {
+    args?: string[];
+    command?: string[];
+    containerImage: string;
+    imageRegistryCredential?: ImageRegistryCredential;
+    languageFramework?: string;
+    server?: string;
 }
 
 const ASYNC_OPERATION_HEADER = 'azure-asyncoperation';
@@ -80,12 +95,63 @@ export class AzureSpringCloud {
         try {
             const deploymentTarget = await this.getUploadTarget(appName);
             await uploadFileToSasUrl(deploymentTarget.sasUrl, artifactToUpload);
-
-            const deploymentUpdateRequestBody = this.prepareDeploymentUpdateRequestBody(deploymentTarget.relativePath, sourceType, runtime, jvmOptions, environmentVariables, dotNetCoreMainEntryPath, version);
+            const deploymentUpdateRequestBody = this.prepareDeploymentUpdateRequestBody(deploymentTarget.relativePath, sourceType, runtime, jvmOptions, environmentVariables, dotNetCoreMainEntryPath, version, null, null);
             await this.applyDeploymentModifications(appName, deploymentName, deploymentUpdateRequestBody, createDeployment);
         } catch (error) {
             throw error;
         }
+    }
+
+    /**
+     * Deploys a custom image to an Azure Spring Cloud deployment
+     * @param appName 
+     * @param deploymentName 
+     * @param createDeployment If true, a new deployment will be created or the prior one will be completely overriden. If false, only the changes to the prior deployment will be applied.
+     * @param environmentVariables 
+     */
+     public async deployCustomContainer(appName: string, deploymentName: string, createDeployment: boolean,
+        registryServer?: string,
+        registryUsername?: string,
+        registryPassword?: string,
+        imageName?: string,
+        imageCommand?: string,
+        imageArgs?: string,
+        imageLanguageFramework?: string,
+        environmentVariables?: string,
+        version?: string): Promise<void> {
+        try {
+            let customContainer: CustomContainer = {
+                containerImage: imageName,
+            };
+            if (imageArgs) {
+                customContainer.args = this.splitCommands(imageArgs);
+            }
+            if (imageCommand) {
+                customContainer.command = this.splitCommands(imageCommand);
+            }
+            if (registryUsername || registryPassword) {
+                customContainer.imageRegistryCredential = {
+                    username: registryUsername,
+                    password: registryPassword,
+                };
+            }
+            if (imageLanguageFramework) {
+                customContainer.languageFramework = imageLanguageFramework;
+            }
+            if (registryServer) {
+                customContainer.server = registryServer;
+            }
+            tl.debug('Deploying custom container: ' + JSON.stringify(customContainer));
+
+            const deploymentUpdateRequestBody = this.prepareDeploymentUpdateRequestBody(null, SourceType.CUSTOM_CONTAINER, null, null, environmentVariables, null, version, null, customContainer);
+            await this.applyDeploymentModifications(appName, deploymentName, deploymentUpdateRequestBody, createDeployment);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    private splitCommands(input: string): string[] {
+        return input.split(' ').filter(s => s != '');
     }
 
     public async deployWithBuildService(artifactToUpload: string, sourceType: string, appName: string, deploymentName: string, createDeployment: boolean,
@@ -99,7 +165,7 @@ export class AzureSpringCloud {
             const triggeredBuildResult = await this.updateKPackBuild(appName, deploymentTarget.relativePath, builder);
             await this.waitBuildFinish(triggeredBuildResult);
 
-            const deploymentUpdateRequestBody = this.prepareDeploymentUpdateRequestBody(deploymentTarget.relativePath, sourceType, runtime, jvmOptions, environmentVariables, dotNetCoreMainEntryPath, version, triggeredBuildResult);
+            const deploymentUpdateRequestBody = this.prepareDeploymentUpdateRequestBody(deploymentTarget.relativePath, sourceType, runtime, jvmOptions, environmentVariables, dotNetCoreMainEntryPath, version, triggeredBuildResult, null);
             await this.applyDeploymentModifications(appName, deploymentName, deploymentUpdateRequestBody, createDeployment);
         } catch (error) {
             throw error;
@@ -324,7 +390,8 @@ export class AzureSpringCloud {
      * Prepares a body for a deployment update request.
      */
     private prepareDeploymentUpdateRequestBody(resourcePath: string, sourceType: string,
-        runtime?: string, jvmOptions?: string, environmentVariables?: string, dotNetCoreMainEntryPath?: string, version?: string, buildResultId?: string) {
+        runtime?: string, jvmOptions?: string, environmentVariables?: string, dotNetCoreMainEntryPath?: string, version?: string,
+        buildResultId?: string, customContainer?: CustomContainer) {
 
         //Populate optional deployment settings
         var deploymentSettings = {};
@@ -359,7 +426,12 @@ export class AzureSpringCloud {
             sourceSettings = {
                 buildResultId: buildResultId,
                 type: "BuildResult"
-            }
+            };
+        } else if (customContainer) {
+            sourceSettings = {
+                type: sourceType,
+                customContainer: customContainer,
+            };
         } else {
             sourceSettings = {
                 relativePath: resourcePath,
@@ -403,9 +475,9 @@ export class AzureSpringCloud {
             tl.debug('Error when sending app update request');
             throw (error);
         }
-        console.log(response.body);
+        console.log(JSON.stringify(response.body, null, 2));
 
-        let expectedStatusCodes: number[] = createDeployment ? [201, 202] : [202];
+        let expectedStatusCodes: number[] = createDeployment ? [200, 201, 202] : [200, 202];
         if (!expectedStatusCodes.includes(response.statusCode)) {
             console.error(`${tl.loc('StatusCode')}: ${response.statusCode}`);
             console.error(response.statusMessage);
@@ -487,8 +559,8 @@ export class AzureSpringCloud {
 
         //A potentially infinite loop, but tasks can have timeouts.throw (`${response.body.error.code}`)
         while (statusCode == 202) {
-            //Sleep for a 1.5 seconds
-            await new Promise(r => setTimeout(r, 1500));
+            //Sleep for a 5 seconds
+            await new Promise(r => setTimeout(r, 5000));
             //Get status
             response = await this.sendRequest('GET', operationStatusUrl);
             statusCode = response.statusCode;

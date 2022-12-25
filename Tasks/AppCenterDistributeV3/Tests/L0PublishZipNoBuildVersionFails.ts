@@ -57,7 +57,7 @@ nock('https://example.test')
     .reply(200, {
     });
 
-mockFs();
+const mockedFs = {...fs, ...mockFs()};
 
 mockAzure();
 
@@ -76,25 +76,25 @@ tmr.setAnswers(a);
 
 let fsos = fs.openSync;
 
-fs.openSync = (path: string, flags: string) => {
+mockedFs.openSync = (path: string, flags: string) => {
     if (path.endsWith("test.zip")){
         return 1234567.89;
     }
     return fsos(path, flags);
 };
 
-fs.statSync = (s: string) => {
+mockedFs.statSync = (s: string) => {
     const stat = new Stats;
     stat.isFile = () => s.endsWith('.txt') || s.endsWith('.zip');
     stat.isDirectory = () => !s.endsWith('.txt') && !s.endsWith('.zip');
     stat.size = 100;
     return stat;
 }
-fs.lstatSync = fs.statSync;
+mockedFs.lstatSync = mockedFs.statSync;
 
 tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
-tmr.registerMock('fs', fs);
+tmr.registerMock('fs', mockedFs);
 tmr.run();
 
-mockery.deregisterMock('fs', fs);
-mockery.deregisterMock('azure-blob-upload-helper', azureBlobUploadHelper);
+mockery.deregisterMock('fs');
+mockery.deregisterMock('azure-blob-upload-helper');
