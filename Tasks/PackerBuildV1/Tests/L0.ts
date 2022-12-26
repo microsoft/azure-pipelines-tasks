@@ -673,7 +673,7 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/1.2.4/packer_1.2.4_linux_amd64.zip to /tmp/tempdir/100/packer.zip") != -1, "should download to correct staging dir");
             assert(tr.stdout.indexOf("extracting from zip /tmp/tempdir/100/packer.zip to /tmp/tempdir/100/packer") != -1, "should extract from and to correct path");
             assert(tr.stdout.indexOf("Packer path to be used by task: /tmp/tempdir/100/packer/packer") != -1, "should show message that packer will be downloaded");
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;isOutput=false;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
             done();
         });
 
@@ -695,7 +695,7 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/1.2.4/packer_1.2.4_linux_amd64.zip to /tmp/tempdir/100/packer.zip") != -1, "should download to correct staging dir");
             assert(tr.stdout.indexOf("extracting from zip /tmp/tempdir/100/packer.zip to /tmp/tempdir/100/packer") != -1, "should extract from and to correct path");
             assert(tr.stdout.indexOf("Packer path to be used by task: /tmp/tempdir/100/packer/packer") != -1, "should show message that packer will be downloaded");
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;isOutput=false;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
             done();
         });
 
