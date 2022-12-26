@@ -332,7 +332,7 @@ exports.ensureTool = ensureTool;
 var installNode = function (nodeVersion) {
     switch (nodeVersion || '') {
         case '16':
-            nodeVersion = 'v16.15.1';
+            nodeVersion = 'v16.17.1';
             break;
         case '14':
             nodeVersion = 'v14.10.1';
@@ -628,6 +628,10 @@ var addPath = function (directory) {
 
     var existing = process.env['PATH'];
     if (existing) {
+        // move directory to top
+        if (existing.indexOf(directory) !== -1) {
+            existing = existing.replace(directory + separator, '');
+        }
         process.env['PATH'] = directory + separator + existing;
     }
     else {
