@@ -40,7 +40,7 @@ describe('PackerBuild Suite V1', function() {
     });
 
     if(tl.osType().match(/^Win/)) {
-        it('Runs successfully for windows template', (done:MochaDone) => {
+        it('Runs successfully for windows template', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -52,7 +52,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Writes packer var file successfully for windows template', (done:MochaDone) => {
+        it('Writes packer var file successfully for windows template', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             let match1 = 'writing to file C:\\somefolder\\somevarfile.json content: {"subscription_id":"sId","client_id":"spId","client_secret":"spKey","tenant_id":"tenant"}';
@@ -65,7 +65,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Runs successfully for windows template with managed image', (done:MochaDone) => {
+        it('Runs successfully for windows template with managed image', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0WindowsManaged.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -76,7 +76,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Runs successfully for custom template', (done:MochaDone) => {
+        it('Runs successfully for custom template', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0CustomTemplate.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -88,7 +88,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Writes packer var file successfully for custom template', (done:MochaDone) => {
+        it('Writes packer var file successfully for custom template', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0CustomTemplate.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             let match1 = 'writing to file C:\\somefolder\\somevarfile.json content: {"client_id":"abcdef","drop-location":"C:\\\\folder 1\\\\folder-2"}';
@@ -103,7 +103,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Runs successfully for windows custom image', (done:MochaDone) => {
+        it('Runs successfully for windows custom image', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0WindowsCustomImage.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -115,7 +115,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Var file for packer tool is successfully created for custom image template', (done:MochaDone) => {
+        it('Var file for packer tool is successfully created for custom image template', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0WindowsCustomImage.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             let match1 = 'writing to file C:\\somefolder\\somevarfile.json content: {"resource_group":"testrg","storage_account":"teststorage","image_url":"https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/vsts-buildimagetask/Release-1-osDisk.2d175222-b257-405f-a07f-0af4dc4b3dc4.vhd","location":"South India","capture_name_prefix":"Release-1","skip_clean":"true","script_relative_path":"dir3\\\\somedir\\\\deploy.ps1","package_path":"C:\\\\dir1\\\\somedir\\\\dir2","package_name":"dir2","script_arguments":"-target \\"subdir 1\\" -shouldFail false"}';
@@ -130,7 +130,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Creates output variables from packer log', (done:MochaDone) => {
+        it('Creates output variables from packer log', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -142,7 +142,7 @@ describe('PackerBuild Suite V1', function() {
             }, tr, done);
         });
 
-        it('Creates output variables from packer log for managed disk image', (done:MochaDone) => {
+        it('Creates output variables from packer log for managed disk image', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0WindowsManaged.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -154,7 +154,7 @@ describe('PackerBuild Suite V1', function() {
             }, tr, done);
         });
 
-        it('Creates output variables from packer log for custom template', (done:MochaDone) => {
+        it('Creates output variables from packer log for custom template', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0CustomTemplate.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -167,7 +167,7 @@ describe('PackerBuild Suite V1', function() {
             }, tr, done);
         });
 
-        it('Creates output variables from packer log for custom template generating managed image', (done:MochaDone) => {
+        it('Creates output variables from packer log for custom template generating managed image', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0CustomManagedTemplate.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -180,7 +180,7 @@ describe('PackerBuild Suite V1', function() {
             }, tr, done);
         });
 
-        it('Creates output variables from packer log for custom windows base image', (done:MochaDone) => {
+        it('Creates output variables from packer log for custom windows base image', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0WindowsCustomImage.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -192,7 +192,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Should copy builtin template to temp location for windows template', (done:MochaDone) => {
+        it('Should copy builtin template to temp location for windows template', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -204,7 +204,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Should copy builtin template to temp location for windows template', (done:MochaDone) => {
+        it('Should copy builtin template to temp location for windows template', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0WindowsCustomImage.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -216,7 +216,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Should invoke three packer commands - fix, validate and build', (done:MochaDone) => {
+        it('Should invoke three packer commands - fix, validate and build', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -230,7 +230,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Should write output of packer fix to updated template file', (done:MochaDone) => {
+        it('Should write output of packer fix to updated template file', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -242,7 +242,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Should cleanup temp template folder', (done:MochaDone) => {
+        it('Should cleanup temp template folder', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -252,7 +252,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('should fail if builtin template does not exist or copy fails', (done:MochaDone) => {
+        it('should fail if builtin template does not exist or copy fails', (done:Mocha.Done) => {
             process.env["__copy_fails__"] = "true";
             let tp = path.join(__dirname, 'L0WindowsFail.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -264,7 +264,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('should fail if custom windows base image template does not exist or copy fails', (done:MochaDone) => {
+        it('should fail if custom windows base image template does not exist or copy fails', (done:Mocha.Done) => {
             process.env["__copy_fails__"] = "true";
             let tp = path.join(__dirname, 'L0WindowsCustomImage.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -276,7 +276,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('should fail if os type is not supported', (done:MochaDone) => {
+        it('should fail if os type is not supported', (done:Mocha.Done) => {
             process.env["__ostype__"] = "random";
             let tp = path.join(__dirname, 'L0WindowsFail.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -288,7 +288,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('should fail if deploy package path cannot be globbed', (done:MochaDone) => {
+        it('should fail if deploy package path cannot be globbed', (done:Mocha.Done) => {
             process.env["__deploy_package_found__"] = "false";
             let tp = path.join(__dirname, 'L0WindowsFail.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -300,7 +300,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('should fail if packer fix exits with non zero code', (done:MochaDone) => {
+        it('should fail if packer fix exits with non zero code', (done:Mocha.Done) => {
             process.env["__packer_fix_fails__"] = "true";
             let tp = path.join(__dirname, 'L0WindowsFail.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -314,7 +314,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('should fail if packer validate exits with non zero code', (done:MochaDone) => {
+        it('should fail if packer validate exits with non zero code', (done:Mocha.Done) => {
             process.env["__packer_validate_fails__"] = "true";
             let tp = path.join(__dirname, 'L0WindowsFail.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -327,7 +327,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('should fail if packer build exits with non zero code', (done:MochaDone) => {
+        it('should fail if packer build exits with non zero code', (done:Mocha.Done) => {
             process.env["__packer_validate_fails__"] = "false";
             process.env["__packer_build_fails__"] = "true";
             let tp = path.join(__dirname, 'L0WindowsFail.js');
@@ -341,7 +341,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('should fail if packer build exits with non zero code for custom template', (done:MochaDone) => {
+        it('should fail if packer build exits with non zero code for custom template', (done:Mocha.Done) => {
             process.env["__packer_build_fails__"] = "true";
             let tp = path.join(__dirname, 'L0CustomTemplate.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -354,7 +354,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('should fail if output variables cannot be parsed from packer log', (done:MochaDone) => {
+        it('should fail if output variables cannot be parsed from packer log', (done:Mocha.Done) => {
             process.env["__packer_build_no_output__"] = "true";
             process.env["__packer_build_fails__"] = "false";
             let tp = path.join(__dirname, 'L0WindowsFail.js');
@@ -369,7 +369,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('should not fail if output variables cannot be parsed from packer log but output variables has not been set by user', (done:MochaDone) => {
+        it('should not fail if output variables cannot be parsed from packer log but output variables has not been set by user', (done:Mocha.Done) => {
             process.env["__no_output_vars__"] = "true";
             process.env["__packer_build_no_output__"] = "true";
 
@@ -385,7 +385,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('parser should parse LF and CR', (done:MochaDone) => {
+        it('parser should parse LF and CR', (done:Mocha.Done) => {
             process.env["__build_output__"] = "Executed Successfully\nOSDiskUri:   https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\rStorageAccountLocation: SouthIndia\r some random string\n";
             let tp = path.join(__dirname, 'L0Parser.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -395,7 +395,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('copyFiles should not create dest if it exists', (done:MochaDone) => {
+        it('copyFiles should not create dest if it exists', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Utilities.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -405,7 +405,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('copyFiles should create dest if it does not exist', (done:MochaDone) => {
+        it('copyFiles should create dest if it does not exist', (done:Mocha.Done) => {
             process.env["__dest_path_exists__"] = "false";
 
             let tp = path.join(__dirname, 'L0Utilities.js');
@@ -418,7 +418,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('isGreaterVersion should compare correctly', (done:MochaDone) => {
+        it('isGreaterVersion should compare correctly', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Utilities.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -433,7 +433,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Downloads packer for windows agent if packer not exists', (done:MochaDone) => {
+        it('Downloads packer for windows agent if packer not exists', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0WindowsInstallPacker.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -450,7 +450,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Downloads packer for windows agent if packer of lower version exists', (done:MochaDone) => {
+        it('Downloads packer for windows agent if packer of lower version exists', (done:Mocha.Done) => {
             process.env["__packer_exists__"] = "true";
             process.env["__lower_version__"] = "true";
 
@@ -472,7 +472,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Should cleanup staging folder on windows agent', (done:MochaDone) => {
+        it('Should cleanup staging folder on windows agent', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0WindowsInstallPacker.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -482,7 +482,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Downloads packer failure should fail the task', (done:MochaDone) => {
+        it('Downloads packer failure should fail the task', (done:Mocha.Done) => {
             process.env["__packer_exists__"] = "true";
             process.env["__lower_version__"] = "true";
             process.env["__download_fails__"] = "true";
@@ -500,7 +500,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Packer zip extraction failure should fail the task', (done:MochaDone) => {
+        it('Packer zip extraction failure should fail the task', (done:Mocha.Done) => {
             process.env["__extract_fails__"] = "true";
 
             let tp = path.join(__dirname, 'L0WindowsInstallPacker.js');
@@ -514,7 +514,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Should add additional parameters to builder section in builtin template', (done:MochaDone) => {
+        it('Should add additional parameters to builder section in builtin template', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0WindowsBuiltinTemplateAdditionalParameters.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -527,7 +527,7 @@ describe('PackerBuild Suite V1', function() {
         });
 
     } else {
-        it('Runs successfully for linux template', (done:MochaDone) => {
+        it('Runs successfully for linux template', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -539,7 +539,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Runs successfully for linux template with managed image', (done:MochaDone) => {
+        it('Runs successfully for linux template with managed image', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0LinuxManaged.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -551,7 +551,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Runs successfully for linux custom image', (done:MochaDone) => {
+        it('Runs successfully for linux custom image', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0LinuxCustomImage.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -563,7 +563,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Creates output variables from packer log for linux', (done:MochaDone) => {
+        it('Creates output variables from packer log for linux', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -575,7 +575,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Creates output variables from packer log for linux for managed disk image', (done:MochaDone) => {
+        it('Creates output variables from packer log for linux for managed disk image', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0LinuxManaged.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -587,7 +587,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Creates output variables from packer log for custom linuxbase image', (done:MochaDone) => {
+        it('Creates output variables from packer log for custom linuxbase image', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0LinuxCustomImage.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -599,7 +599,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Should copy builtin template to temp location for linux template', (done:MochaDone) => {
+        it('Should copy builtin template to temp location for linux template', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -612,7 +612,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Should not fetch SPN object for linux VM even if service endpoint does not contain it', (done:MochaDone) => {
+        it('Should not fetch SPN object for linux VM even if service endpoint does not contain it', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -625,7 +625,7 @@ describe('PackerBuild Suite V1', function() {
 
         });
 
-        it('Should cleanup temp template folder on linux', (done:MochaDone) => {
+        it('Should cleanup temp template folder on linux', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -635,7 +635,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('should fail if custom linux base image template does not exist or copy fails', (done:MochaDone) => {
+        it('should fail if custom linux base image template does not exist or copy fails', (done:Mocha.Done) => {
             process.env["__copy_fails__"] = "true";
             let tp = path.join(__dirname, 'L0LinuxCustomImage.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -647,7 +647,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('should fail if packer build exits with non zero code for linux', (done:MochaDone) => {
+        it('should fail if packer build exits with non zero code for linux', (done:Mocha.Done) => {
             process.env["__packer_build_fails__"] = "true";
             let tp = path.join(__dirname, 'L0Linux.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -660,7 +660,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Downloads packer for linux agent if packer not exists', (done:MochaDone) => {
+        it('Downloads packer for linux agent if packer not exists', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0LinuxInstallPacker.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -677,7 +677,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Downloads packer for linux agent if packer of lower version exists', (done:MochaDone) => {
+        it('Downloads packer for linux agent if packer of lower version exists', (done:Mocha.Done) => {
             process.env["__packer_exists__"] = "true";
             process.env["__lower_version__"] = "true";
 
@@ -699,7 +699,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Should cleanup staging folder on linux agent', (done:MochaDone) => {
+        it('Should cleanup staging folder on linux agent', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0LinuxInstallPacker.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -709,7 +709,7 @@ describe('PackerBuild Suite V1', function() {
             done();
         });
 
-        it('Should add additional parameters to builder section in builtin template', (done:MochaDone) => {
+        it('Should add additional parameters to builder section in builtin template', (done:Mocha.Done) => {
             let tp = path.join(__dirname, 'L0LinuxBuiltinTemplateAdditionalParameters.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
