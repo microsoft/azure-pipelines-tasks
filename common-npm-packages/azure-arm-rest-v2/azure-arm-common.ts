@@ -210,11 +210,6 @@ export class ApplicationTokenCredentials {
                 proxyURL = `${parsedAgentProxyURL.protocol}//${agentProxyUsername}:${agentProxyPassword}@${parsedAgentProxyURL.host}`;
             }
             
-            if(agentProxyUsername) {
-                const parsedAgentProxyURL = new URL(rawAgentProxyURL);
-                proxyURL = `${parsedAgentProxyURL.protocol}//${agentProxyUsername}:${agentProxyPassword}@${parsedAgentProxyURL.host}`;
-            }
-            
             tl.debug(`MSAL - Proxy setup is: ${proxyURL}`);
             msalConfig.system.proxyUrl = proxyURL;
         }
@@ -272,6 +267,7 @@ export class ApplicationTokenCredentials {
             return providerResultPromise;
         };
 
+        // need to be set a value even, although it is not used (library requirement)
         msalConfig.auth.clientSecret = "dummy-value";
         let msalInstance = new msal.ConfidentialClientApplication(msalConfig);
         msalInstance.SetAppTokenProvider(accessTokenProvider);
