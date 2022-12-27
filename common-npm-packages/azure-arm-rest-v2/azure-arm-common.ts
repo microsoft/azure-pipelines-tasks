@@ -210,6 +210,11 @@ export class ApplicationTokenCredentials {
                 proxyURL = `${parsedAgentProxyURL.protocol}//${agentProxyUsername}:${agentProxyPassword}@${parsedAgentProxyURL.host}`;
             }
             
+            if(agentProxyUsername) {
+                const parsedAgentProxyURL = new URL(rawAgentProxyURL);
+                proxyURL = `${parsedAgentProxyURL.protocol}//${agentProxyUsername}:${agentProxyPassword}@${parsedAgentProxyURL.host}`;
+            }
+            
             tl.debug(`MSAL - Proxy setup is: ${proxyURL}`);
             msalConfig.system.proxyUrl = proxyURL;
         }
