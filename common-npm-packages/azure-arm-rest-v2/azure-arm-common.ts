@@ -196,14 +196,21 @@ export class ApplicationTokenCredentials {
 
         // proxy usage
         const rawAgentProxyURL: string = tl.getVariable("agent.proxyurl");
+        // TODO: bypass will be implemented
+        const agentProxyBypassHosts = tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null;
         if(rawAgentProxyURL) {
+            tl.debug('MSAL - Proxy will be used.');
+            let proxyURL = rawAgentProxyURL;
+
             const agentProxyUsername: string = tl.getVariable("agent.proxyusername");
             const agentProxyPassword: string = tl.getVariable("agent.proxypassword");
-            const agentProxyBypassHosts = tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null;
-
-            const parsedAgentProxyURL = new URL(rawAgentProxyURL);
-            const proxyURL = `${parsedAgentProxyURL.protocol}//${agentProxyUsername}:${agentProxyPassword}@${parsedAgentProxyURL.host}`
-
+            
+            if(agentProxyUsername) {
+                const parsedAgentProxyURL = new URL(rawAgentProxyURL);
+                proxyURL = `${parsedAgentProxyURL.protocol}//${agentProxyUsername}:${agentProxyPassword}@${parsedAgentProxyURL.host}`;
+            }
+            
+            tl.debug(`MSAL - Proxy setup is: ${proxyURL}`);
             msalConfig.system.proxyUrl = proxyURL;
         }
 
