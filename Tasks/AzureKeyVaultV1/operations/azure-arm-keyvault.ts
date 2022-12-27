@@ -16,7 +16,7 @@ export class KeyVaultClient
     private readonly retriableErrorCodes = ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN", "EAI_AGAIN"];
     private readonly retriableStatusCodes = [408, 409, 500, 502, 503, 504];
 
-    constructor(private client: ServiceClient, private keyVaultUrl: string)
+    constructor(private readonly client: ServiceClient, private readonly keyVaultUrl: string)
     {
     }
 
@@ -120,12 +120,8 @@ export class KeyVaultClient
         return null;
     }
 
-    public getSecrets(nextLink: string, callback: ApiCallback)
+    public async getSecrets(nextLink: string) : Promise<AzureKeyVaultSecret[]>
     {
-        if (!callback) {
-            throw new Error(tl.loc("CallbackCannotBeNull"));
-        }
-
         // Create HTTP transport objects
         var url = nextLink;
         if (!url)
@@ -145,41 +141,36 @@ export class KeyVaultClient
 
         console.log(tl.loc("DownloadingSecretsUsing", url));
 
-        this.invokeRequest(httpRequest).then(async (response: WebResponse) => {
-            var result = [];
-            if (response.statusCode == 200) {
-                if (response.body.value) {
-                    result = result.concat(response.body.value);
-                }
+        let response: WebResponse;
 
-                if (response.body.nextLink) {
-                    var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
-                    if (nextResult.error) {
-                        return new ApiResult(nextResult.error);
-                    }
-                    result = result.concat(nextResult.result);
+        response = await this.invokeRequest(httpRequest);
 
-                    var listOfSecrets = this.convertToAzureKeyVaults(result);
-                    return new ApiResult(null, listOfSecrets);
-                }
-                else {
-                    var listOfSecrets = this.convertToAzureKeyVaults(result);
-                    return new ApiResult(null, listOfSecrets);
-                }
-            }
-            else {
-                return new ApiResult(ToError(response));
-            }
-        }).then((apiResult: ApiResult) => callback(apiResult.error, apiResult.result),
-            (error) => callback(error));
-    }
-
-    public getSecretValue(secretName: string, callback: ApiCallback)
-    {
-        if (!callback) {
-            throw new Error(tl.loc("CallbackCannotBeNull"));
+        let result = [];
+        if (response.statusCode !== 200)
+        {
+            throw ToError(response);
         }
 
+        if (response.body.value)
+        {
+            result = result.concat(response.body.value);
+        }
+
+        if (response.body.nextLink)
+        {
+            const nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
+            if (nextResult.error)
+            {
+                throw new Error(nextResult.error);
+            }
+            result = result.concat(nextResult.result);   
+        }
+
+        return this.convertToAzureKeyVaults(result);
+    }
+
+    public async getSecretValue(secretName: string) : Promise<string>
+    {
         // Create HTTP transport objects
         var httpRequest = new WebRequest();
         httpRequest.method = 'GET';
@@ -195,19 +186,20 @@ export class KeyVaultClient
         );
 
         console.log(tl.loc("DownloadingSecretValue", secretName));
-        this.invokeRequest(httpRequest).then(async (response: WebResponse) => {
-            if (response.statusCode == 200) {
-                var result = response.body.value;
-                return new ApiResult(null, result);
-            }
-            else if (response.statusCode == 400) {
-                return new ApiResult(tl.loc('GetSecretFailedBecauseOfInvalidCharacters', secretName));
-            }
-            else {
-                return new ApiResult(ToError(response));
-            }
-        }).then((apiResult: ApiResult) => callback(apiResult.error, apiResult.result),
-            (error) => callback(error));
+        const response = await this.invokeRequest(httpRequest);
+        
+        if (response.statusCode == 200)
+        {
+            return response.body.value;
+        }
+        else if (response.statusCode == 400)
+        {
+            throw new Error(tl.loc('GetSecretFailedBecauseOfInvalidCharacters', secretName));
+        }
+        else
+        {
+            throw ToError(response);
+        }
     }
 
     private convertToAzureKeyVaults(result: any[]): AzureKeyVaultSecret[] {
