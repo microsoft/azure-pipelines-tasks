@@ -10,6 +10,8 @@ import jwt = require('jsonwebtoken');
 import msal = require('@azure/msal-node');
 import crypto = require("crypto");
 import { Mutex } from 'async-mutex';
+import HttpsProxyAgent = require('https-proxy-agent');
+import fetch = require('node-fetch');
 
 tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
@@ -174,6 +176,47 @@ export class ApplicationTokenCredentials {
         return this.msalInstance;
     }
 
+    private getProxyClient(agentProxyURL: URL): msal.INetworkModule {
+        let proxyURL = `${agentProxyURL.protocol}//${agentProxyURL.host}`;
+
+        const agentProxyUsername: string = tl.getVariable("agent.proxyusername");
+        const agentProxyPassword: string = tl.getVariable("agent.proxypassword");
+        
+        // basic auth
+        if (agentProxyUsername) {
+            proxyURL = `${agentProxyURL.protocol}//${agentProxyUsername}:${agentProxyPassword}@${agentProxyURL.host}`;
+        }
+
+        tl.debug(`MSAL - Proxy setup is: ${proxyURL}`);
+
+        // direct usage of msalConfig.system.proxyUrl is not available at the moment due to the fact that Object.fromEntries requires >=Node12
+        const proxyAgent = new HttpsProxyAgent(proxyURL);
+
+        const proxyNetworkClient: msal.INetworkModule = {
+            async sendGetRequestAsync(url, options) {
+                const customOptions = { ...options, ...{ method: "GET", agent: proxyAgent } }
+                const response = await fetch(url, customOptions);
+                return {
+                    status: response.status,
+                    headers: Object.create(Object.prototype, response.headers.raw()),
+                    body: await response.json()
+                }
+            },
+            async sendPostRequestAsync(url, options) {
+
+                const customOptions = { ...options, ...{ method: "POST", agent: proxyAgent } }
+                const response = await fetch(url, customOptions);
+                return {
+                    status: response.status,
+                    headers: Object.create(Object.prototype, response.headers.raw()),
+                    body: await response.json()
+                }
+            }
+        };
+
+        return proxyNetworkClient;
+    }
+
     private buildMSAL(): msal.ConfidentialClientApplication {
         // default configuration
         const authorityURL = (new URL(this.tenantId, this.authorityUrl)).toString();
@@ -195,23 +238,16 @@ export class ApplicationTokenCredentials {
         };
 
         // proxy usage
-        const rawAgentProxyURL: string = tl.getVariable("agent.proxyurl");
-        // TODO: bypass will be implemented
+        const agentProxyURL = tl.getVariable("agent.proxyurl") ? new URL(tl.getVariable("agent.proxyurl")) : null;
         const agentProxyBypassHosts = tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null;
-        if(rawAgentProxyURL) {
-            tl.debug('MSAL - Proxy will be used.');
-            let proxyURL = rawAgentProxyURL;
-
-            const agentProxyUsername: string = tl.getVariable("agent.proxyusername");
-            const agentProxyPassword: string = tl.getVariable("agent.proxypassword");
-            
-            if(agentProxyUsername) {
-                const parsedAgentProxyURL = new URL(rawAgentProxyURL);
-                proxyURL = `${parsedAgentProxyURL.protocol}//${agentProxyUsername}:${agentProxyPassword}@${parsedAgentProxyURL.host}`;
+        const shouldProxyBypass = !(agentProxyBypassHosts?.includes(new URL(authorityURL).host));
+        if (agentProxyURL) {
+            if (shouldProxyBypass) {
+                tl.debug(`MSAL - Proxy is set but will be bypassed for ${authorityURL}`);
+            } else {
+                tl.debug('MSAL - Proxy will be used.');
+                msalConfig.system.networkClient = this.getProxyClient(agentProxyURL);
             }
-            
-            tl.debug(`MSAL - Proxy setup is: ${proxyURL}`);
-            msalConfig.system.proxyUrl = proxyURL;
         }
 
         let msalInstance: msal.ConfidentialClientApplication;
