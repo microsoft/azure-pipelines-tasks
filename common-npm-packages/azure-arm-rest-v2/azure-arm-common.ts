@@ -240,7 +240,7 @@ export class ApplicationTokenCredentials {
         // proxy usage
         const agentProxyURL = tl.getVariable("agent.proxyurl") ? new URL(tl.getVariable("agent.proxyurl")) : null;
         const agentProxyBypassHosts = tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null;
-        const shouldProxyBypass = !(agentProxyBypassHosts?.includes(new URL(authorityURL).host));
+        const shouldProxyBypass = agentProxyBypassHosts?.includes(new URL(authorityURL).host);
         if (agentProxyURL) {
             if (shouldProxyBypass) {
                 tl.debug(`MSAL - Proxy is set but will be bypassed for ${authorityURL}`);
