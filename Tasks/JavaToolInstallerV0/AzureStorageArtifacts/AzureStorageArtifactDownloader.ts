@@ -64,10 +64,25 @@ export class AzureStorageArtifactDownloader {
     const tenantId: string = tl.getEndpointAuthorizationParameter(this.connectedService, "tenantid", false);
     const armUrl: string = tl.getEndpointUrl(this.connectedService, true);
     let envAuthorityUrl: string = tl.getEndpointDataParameter(this.connectedService, 'environmentAuthorityUrl', true);
-    envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
+    envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.microsoftonline.com/";
     let activeDirectoryResourceId: string = tl.getEndpointDataParameter(this.connectedService, 'activeDirectoryServiceEndpointResourceId', false);
     activeDirectoryResourceId = (activeDirectoryResourceId != null) ? activeDirectoryResourceId : armUrl;
-    const credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, armUrl, envAuthorityUrl, activeDirectoryResourceId, false);
+    const credentials = new msRestAzure.ApplicationTokenCredentials(
+      servicePrincipalId,
+      tenantId,
+      servicePrincipalKey,
+      armUrl,
+      envAuthorityUrl,
+      activeDirectoryResourceId,
+      false,
+      undefined, // scheme
+      undefined, // msiClientId
+      undefined, // authType
+      undefined, // certFilePath
+      undefined, // isADFSEnabled
+      undefined, // access_token
+      true       // Force set useMSAL = true
+    );
     return credentials;
   }
 }
