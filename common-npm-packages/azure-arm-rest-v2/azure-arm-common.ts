@@ -203,7 +203,6 @@ export class ApplicationTokenCredentials {
                 }
             },
             async sendPostRequestAsync(url, options) {
-
                 const customOptions = { ...options, ...{ method: "POST", agent: proxyAgent } }
                 const response = await fetch(url, customOptions);
                 return {
