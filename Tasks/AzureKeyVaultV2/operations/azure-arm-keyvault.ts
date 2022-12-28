@@ -32,23 +32,18 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         this.apiVersion = '2016-10-01';
     }
 
-    public async invokeRequest(request: webClient.WebRequest): Promise<webClient.WebResponse>
-    {
+    public async invokeRequest(request: webClient.WebRequest): Promise<webClient.WebResponse> {
         const maxRetryCount: number = 5;
         const retryIntervalInSeconds: number = 2;
 
         let retryCount: number = 0;
 
-        while (true)
-        {
-            try
-            {
+        while (true) {
+            try {
                 let response = await this.beginRequest(request);
-                if (response.statusCode == 401)
-                {
+                if (response.statusCode == 401) {
                     const vaultResourceId = this.getValidVaultResourceId(response);
-                    if (!!vaultResourceId)
-                    {
+                    if (!!vaultResourceId) {
                         console.log(tl.loc("RetryingWithVaultResourceIdFromResponse", vaultResourceId));
 
                         this.getCredentials().activeDirectoryResourceId = vaultResourceId; // update vault resource Id
@@ -57,31 +52,26 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
                     }
                 }
 
-                if (this.retriableStatusCodes.indexOf(response.statusCode) === -1)
-                {
+                if (this.retriableStatusCodes.indexOf(response.statusCode) === -1) {
                     return response;
                 }
 
-                if (++retryCount >= maxRetryCount)
-                {
+                if (++retryCount >= maxRetryCount) {
                     return response;
                 }
 
-                tl.debug(`Encountered a retriable status code: ${response.statusCode}. Message: '${response.statusMessage}'.`);              
+                tl.debug(`Encountered a retriable status code: ${response.statusCode}. Message: '${response.statusMessage}'.`);
             }
-            catch (error)
-            {
-                if (++retryCount >= maxRetryCount)
-                {
+            catch (error) {
+                if (++retryCount >= maxRetryCount) {
                     throw error;
                 }
 
-                if (!this.isRetriableError(error))
-                {
+                if (!this.isRetriableError(error)) {
                     throw error;
                 }
 
-                tl.debug(`Encountered an error. Will retry. Error: ${error.code}. Message: ${error.message}.`);                
+                tl.debug(`Encountered an error. Will retry. Error: ${error.code}. Message: ${error.message}.`);
             }
 
             await webClient.sleepFor(retryIntervalInSeconds);
@@ -104,13 +94,13 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         if (!!response.headers) {
             var authenticateHeader = response.headers['www-authenticate'];
             if (!!authenticateHeader) {
-                var parsedParams = authenticateHeader.split(",").map(pair => pair.split("=").map(function(item) {
+                var parsedParams = authenticateHeader.split(",").map(pair => pair.split("=").map(function (item) {
                     return item.trim();
                 }));
 
                 const properties = {};
-                parsedParams.forEach(([key,value]) => properties[key] = value);
-                if(properties['resource']) {
+                parsedParams.forEach(([key, value]) => properties[key] = value);
+                if (properties['resource']) {
                     return properties['resource'].split('"').join('');
                 }
             }
@@ -126,8 +116,7 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
 
         // Create HTTP transport objects
         var url = nextLink;
-        if (!url)
-        {
+        if (!url) {
             url = this.getRequestUriForBaseUri(
                 this.keyVaultUrl,
                 '/secrets',
@@ -208,8 +197,7 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         var listOfSecrets: AzureKeyVaultSecret[] = [];
         result.forEach((value: any, index: number) => {
             var expires;
-            if (value.attributes.exp)
-            {
+            if (value.attributes.exp) {
                 expires = new Date(0);
                 expires.setSeconds(parseInt(value.attributes.exp));
             }
