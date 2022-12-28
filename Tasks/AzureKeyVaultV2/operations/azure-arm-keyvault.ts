@@ -18,6 +18,7 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
 
     private readonly retriableErrorCodes = ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN", "EAI_AGAIN"];
     private readonly retriableStatusCodes = [408, 409, 500, 502, 503, 504];
+    private readonly retriableErrorMessages = ["Request timeout: ", "getaddrinfo "];
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials,
         subscriptionId: string,
@@ -87,29 +88,16 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         }
     }
 
-    private isRetriableError(error: any): boolean
-    {
-        if (this.retriableErrorCodes.indexOf(error.code) !== -1)
-        {
+    private isRetriableError(error: any): boolean {
+        if (this.retriableErrorCodes.indexOf(error.code) !== -1) {
             return true;
         }
 
-        if (!error.message)
-        {
+        if (!error.message) {
             return false;
         }
 
-        if (error.message.startsWith("Request timeout: "))
-        {
-            return true;
-        }
-
-        if (error.message.startsWith("getaddrinfo "))
-        {
-            return true;
-        }
-
-        return false;
+        return this.retriableErrorMessages.some(m => error.message.startsWith(m));
     }
 
     public getValidVaultResourceId(response: webClient.WebResponse) {
