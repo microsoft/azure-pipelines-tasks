@@ -52,8 +52,16 @@ steps:
 # Check diff for task sources
 - script: node ./ci/verify-source-changes.js "$(task_pattern)"
   displayName: Verify task source changes
-  condition: ne(variables['numTasks'], 0)
-
+  condition: |
+    and(
+      succeeded(),
+      in(variables['build.reason'], 'IndividualCI', 'BatchedCI', 'Manual'),
+      ne(variables['Build.SourceBranch'], 'refs/heads/master'),
+      ne(variables['CI_DISABLE_DIFF_CHECK'], 'true'),      
+      ne(variables['COURTESY_PUSH'], 'true'),
+      ne(variables['numTasks'], 0)
+    )
+  
 # Only on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
 

@@ -13,16 +13,19 @@ taskList.forEach(function(taskName) {
     var diffString = util.run(`git diff --name-only ${taskSourcePath}`);
     var diffList = diffString.split("\n").filter(Boolean);
     if (diffList.length) {
-        console.error(`Uncommitted changes found:`);
+        console.log(``);
+        console.log(`Uncommitted changes found:`);
+        console.log(``);
         diffList.forEach(function(item){
-            console.log(``);
-            console.error(` ${item}`);
+            console.log(` - ${item}`);
         });
+        console.log(``);
+        console.log(`Please validate your changes locally. Make sure that you build tasks using an NPM version lower than 7`);
+        console.log(``);
 
         process.exit(1);
     };
 
     console.log(`No uncommitted changes found`);
     console.log(``);
-    console.log(`Done`);
 });
