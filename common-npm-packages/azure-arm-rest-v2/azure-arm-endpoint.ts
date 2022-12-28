@@ -30,6 +30,20 @@ export class AzureRMEndpoint {
             return this.endpoint;
         }
         else {
+            
+            const rawUseMSAL = tl.getVariable("USE_MSAL");
+            if(rawUseMSAL) {
+                try {
+                    tl.debug(`USE_MSAL override is found: ${rawUseMSAL}`);
+                    if(typeof JSON.parse(rawUseMSAL) !== "boolean") {
+                        throw new Error("Value is not a boolean");
+                    }
+                    useMSAL = JSON.parse(rawUseMSAL);
+                } catch (error) {
+                    tl.error(`Couldn't parse USE_MSAL variable ${rawUseMSAL} due to error ${error}. useMSAL=${useMSAL} is used instead`);
+                }
+            }
+
             let endpointAuthScheme = tl.getEndpointAuthorizationScheme(this._connectedServiceName, true);
             if (endpointAuthScheme && endpointAuthScheme.toLowerCase() == constants.AzureRmEndpointAuthenticationScheme.PublishProfile) {
 
