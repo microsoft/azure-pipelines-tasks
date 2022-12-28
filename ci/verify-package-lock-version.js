@@ -14,15 +14,16 @@ taskList.forEach(function(taskName) {
     var taskSourcePath = path.join(util.tasksSourcePath, taskName);
     
     var packageLockJsonPath = path.join(taskSourcePath, 'package-lock.json');
-    if (!fs.existsSync(packageLockJsonPath)) {
-        throw new Error(`Unable to find package-lock.json (${taskSourcePath})`);
+    if (fs.existsSync(packageLockJsonPath)) {
+        var packageLockJson = JSON.parse(fs.readFileSync(packageLockJsonPath));
+        if (!semver.eq(packageLockJson.version, expectedPackageLocVersion)) {
+            throw new Error(`Expected package-lock version should be ${expectedPackageLocVersion} (${taskSourcePath})`);
+        }
+    
+        console.log(`Package-lock version is correct (${taskSourcePath})`);
+    } else {
+        console.log(`Package-lock doesn't exist (${taskSourcePath})`);
     }
 
-    var packageLockJson = JSON.parse(fs.readFileSync(packageLockJsonPath));
-    if (!semver.eq(packageLockJson.version, expectedPackageLocVersion)) {
-        throw new Error(`Expected package-lock version should be ${expectedPackageLocVersion} (${taskSourcePath})`);
-    }
-
-    console.log(`Package-lock version is correct (${taskSourcePath})`);
     console.log(`Done`);
 });
