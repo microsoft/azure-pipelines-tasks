@@ -1,10 +1,9 @@
 var fs = require('fs');
-var semver = require('semver');
 var path = require('path');
 var process = require("process");
 var util = require('./ci-util');
 
-var expectedPackageLocVersion = "1.0.0";
+var expectedPackageLocVersion = 1;
 
 taskList = util.resolveTaskList(process.argv[2]);
 
@@ -16,13 +15,14 @@ taskList.forEach(function(taskName) {
     var packageLockJsonPath = path.join(taskSourcePath, 'package-lock.json');
     if (fs.existsSync(packageLockJsonPath)) {
         var packageLockJson = JSON.parse(fs.readFileSync(packageLockJsonPath));
-        if (!semver.eq(packageLockJson.version, expectedPackageLocVersion)) {
-            throw new Error(`Expected package-lock version should be ${expectedPackageLocVersion} (${taskSourcePath})`);
+        var packageLockVersion = packageLockJson.lockfileVersion;
+        if (parseInt(packageLockVersion) != expectedPackageLocVersion) {
+            throw new Error(`Expected package-lock version should be ${expectedPackageLocVersion} got ${packageLockVersion} (${taskSourcePath})`);
         }
     
         console.log(`Package-lock version is correct (${taskSourcePath})`);
     } else {
-        console.log(`Package-lock doesn't exist (${taskSourcePath})`);
+        console.warn(`Package-lock doesn't exist (${taskSourcePath})`);
     }
 
     console.log(`Done`);
