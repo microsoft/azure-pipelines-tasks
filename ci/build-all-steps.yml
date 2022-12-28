@@ -55,9 +55,7 @@ steps:
   condition: |
     and(
       succeeded(),
-      in(variables['build.reason'], 'IndividualCI', 'BatchedCI', 'Manual'),
-      ne(variables['Build.SourceBranch'], 'refs/heads/master'),
-      ne(variables['CI_DISABLE_DIFF_CHECK'], 'true'),      
+      ne(variables['Build.SourceBranch'], 'refs/heads/master'),     
       ne(variables['COURTESY_PUSH'], 'true'),
       ne(variables['numTasks'], 0)
     )
