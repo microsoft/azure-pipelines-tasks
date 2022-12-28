@@ -2,13 +2,13 @@ import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvid
 import tl = require('azure-pipelines-task-lib/task');
 import { AzureAppService } from '../azure-arm-rest/azure-arm-app-service';
 import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
-import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/packageUtility';
-import { sleepFor } from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/webClient';
+import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
+import { sleepFor } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/webClient';
 import Q = require('q');
-var webCommonUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/utility.js');
-var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/ziputility.js');
+var webCommonUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/utility.js');
+var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/ziputility.js');
 var azureStorage = require('azure-storage');
-import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/ParameterParserUtility';
+import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon/operations/ParameterParserUtility';
 import { TaskParameters, DeploymentType } from '../taskparameters';
 
 export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider {
