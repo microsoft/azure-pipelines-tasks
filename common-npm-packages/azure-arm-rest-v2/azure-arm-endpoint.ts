@@ -35,10 +35,11 @@ export class AzureRMEndpoint {
             if (rawUseMSAL) {
                 try {
                     tl.debug(`MSAL - USE_MSAL override is found: ${rawUseMSAL}`);
-                    if (typeof JSON.parse(rawUseMSAL) !== "boolean") {
+                    const parsedUseMSAL = JSON.parse(rawUseMSAL);
+                    if (typeof parsedUseMSAL !== "boolean") {
                         throw new Error("Value is not a boolean");
                     }
-                    useMSAL = JSON.parse(rawUseMSAL);
+                    useMSAL = parsedUseMSAL;
                 } catch (error) {
                     // this is not a blocker error, so we're informing
                     tl.debug(`MSAL - USE_MSAL couldn't be parsed due to error ${error}. useMSAL=${useMSAL} is used instead`);
