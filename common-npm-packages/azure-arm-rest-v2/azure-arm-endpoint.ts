@@ -30,12 +30,12 @@ export class AzureRMEndpoint {
             return this.endpoint;
         }
         else {
-            
+
             const rawUseMSAL = tl.getVariable("USE_MSAL");
-            if(rawUseMSAL) {
+            if (rawUseMSAL) {
                 try {
                     tl.debug(`MSAL - USE_MSAL override is found: ${rawUseMSAL}`);
-                    if(typeof JSON.parse(rawUseMSAL) !== "boolean") {
+                    if (typeof JSON.parse(rawUseMSAL) !== "boolean") {
                         throw new Error("Value is not a boolean");
                     }
                     useMSAL = JSON.parse(rawUseMSAL);
@@ -127,19 +127,19 @@ export class AzureRMEndpoint {
 
                 let access_token: string = tl.getEndpointAuthorizationParameter(this._connectedServiceName, "apitoken", true);
                 this.endpoint.applicationTokenCredentials = new ApplicationTokenCredentials(
-                    this.endpoint.servicePrincipalClientID, 
-                    this.endpoint.tenantID, 
+                    this.endpoint.servicePrincipalClientID,
+                    this.endpoint.tenantID,
                     this.endpoint.servicePrincipalKey,
-                    this.endpoint.url, 
-                    this.endpoint.environmentAuthorityUrl, 
-                    this.endpoint.activeDirectoryResourceID, 
-                    !!this.endpoint.environment && this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack, 
-                    this.endpoint.scheme, 
-                    this.endpoint.msiClientId, 
-                    this.endpoint.authenticationType, 
-                    this.endpoint.servicePrincipalCertificatePath, 
-                    this.endpoint.isADFSEnabled, 
-                    access_token, 
+                    this.endpoint.url,
+                    this.endpoint.environmentAuthorityUrl,
+                    this.endpoint.activeDirectoryResourceID,
+                    !!this.endpoint.environment && this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack,
+                    this.endpoint.scheme,
+                    this.endpoint.msiClientId,
+                    this.endpoint.authenticationType,
+                    this.endpoint.servicePrincipalCertificatePath,
+                    this.endpoint.isADFSEnabled,
+                    access_token,
                     useMSAL
                 );
             }

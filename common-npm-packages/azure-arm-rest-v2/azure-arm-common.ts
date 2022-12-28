@@ -181,7 +181,7 @@ export class ApplicationTokenCredentials {
 
         const agentProxyUsername: string = tl.getVariable("agent.proxyusername");
         const agentProxyPassword: string = tl.getVariable("agent.proxypassword");
-        
+
         // basic auth
         if (agentProxyUsername) {
             proxyURL = `${agentProxyURL.protocol}//${agentProxyUsername}:${agentProxyPassword}@${agentProxyURL.host}`;
