@@ -54,6 +54,11 @@ steps:
   displayName: Build
   condition: ne(variables['numTasks'], 0)
 
+# Check diff for task sources
+- script: node ./ci/verify-source-changes.js "$(task_pattern)"
+  displayName: Verify task source changes
+  condition: ne(variables['numTasks'], 0)
+
 # Only on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
 

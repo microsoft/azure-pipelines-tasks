@@ -1,13 +1,16 @@
-const fs = require('fs');
-const semver = require('semver');
-const path = require('path');
-const process = require("process");
-const util = require('./ci-util');
+var fs = require('fs');
+var semver = require('semver');
+var path = require('path');
+var process = require("process");
+var util = require('./ci-util');
 
 var expectedPackageLocVersion = "1.0.0";
 
 taskList = util.resolveTaskList(process.argv[2]);
+
+console.log(`Checking tasks package-lock version...`);
 taskList.forEach(function(taskName) {
+    console.log(`====================${taskName}====================`);
     var taskSourcePath = path.join(util.tasksSourcePath, taskName);
     
     var packageLockJsonPath = path.join(taskSourcePath, 'package-lock.json');
@@ -21,4 +24,5 @@ taskList.forEach(function(taskName) {
     }
 
     console.log(`Package-lock version is correct (${taskSourcePath})`);
+    console.log(`Done`);
 });
