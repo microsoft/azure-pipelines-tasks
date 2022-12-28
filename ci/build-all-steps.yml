@@ -44,11 +44,6 @@ steps:
     PACKAGE_ENDPOINT: $(Package.Endpoint)
     PACKAGE_TOKEN: $(Package.Token)
 
-# Check package-lock version
-- script: node ./ci/verify-package-lock-version.js "$(task_pattern)"
-  displayName: Verify package-lock version
-  condition: ne(variables['numTasks'], 0)
-
 # Build
 - script: node make.js build --task "$(task_pattern)"
   displayName: Build

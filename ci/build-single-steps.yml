@@ -33,10 +33,6 @@ steps:
 - script: node ./ci/verifyMinAgentDemands/index.js
   displayName: Verify min agent demands
 
-# Check package-lock version
-- script: node ./ci/verify-package-lock-version.js "${{ parameters.task }}"
-  displayName: Verify package-lock version
-
 # Build
 - script: node make.js build --task "${{ parameters.task }}"
   displayName: Build
