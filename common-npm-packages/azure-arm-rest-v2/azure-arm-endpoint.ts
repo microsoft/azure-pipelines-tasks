@@ -40,7 +40,8 @@ export class AzureRMEndpoint {
                     }
                     useMSAL = JSON.parse(rawUseMSAL);
                 } catch (error) {
-                    tl.error(`MSAL - USE_MSAL couldn't be parsed due to error ${error}. useMSAL=${useMSAL} is used instead`);
+                    // this is not a blocker error, so we're informing
+                    tl.debug(`MSAL - USE_MSAL couldn't be parsed due to error ${error}. useMSAL=${useMSAL} is used instead`);
                 }
             }
 
