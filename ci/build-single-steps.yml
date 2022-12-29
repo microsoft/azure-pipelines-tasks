@@ -56,7 +56,7 @@ steps:
   displayName: Publish Code Coverage Results
   inputs:
     codeCoverageTool: Cobertura
-    summaryFileLocation: $(System.DefaultWorkingDirectory)\_build\Tasks\${{ parameters.task }}\coverage
+    summaryFileLocation: $(System.DefaultWorkingDirectory)\_build\Tasks\${{ parameters.task }}\coverage\cobertura-coverage.xml
 
 # Stage tasks individually into the package directory
 - script: node ./ci/stage-package.js ${{ not(parameters.push) }} individually
