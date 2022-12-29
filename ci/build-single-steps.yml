@@ -51,6 +51,13 @@ steps:
     testRunTitle: Node 6 Test Results
     searchFolder: $(System.DefaultWorkingDirectory)/testresults
 
+# Publish code coverage result
+- task: PublishCodeCoverageResults@1
+  displayName: Publish Code Coverage Results
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: $(System.DefaultWorkingDirectory)\_build\Tasks\${{ parameters.task }}\coverage
+
 # Stage tasks individually into the package directory
 - script: node ./ci/stage-package.js ${{ not(parameters.push) }} individually
   displayName: Stage tasks individually into the package directory
