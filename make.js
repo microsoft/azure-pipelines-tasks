@@ -318,7 +318,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
     console.log('> copying ps test lib resources');
     mkdir('-p', path.join(buildTestsPath, 'lib'));
     matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(testsPath, 'lib'), path.join(buildTestsPath, 'lib'));
-
+    cd('..');
     var suiteType = argv.suite || 'L0';
     function runTaskTests(taskName) {
         banner('Testing: ' + taskName);
@@ -348,8 +348,14 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
                 banner('Run Mocha Suits for node ' + nodeVersion);
                 // setup the version of node to run the tests
                 util.installNode(nodeVersion);
-        
-                run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+				
+				if (nodeVersion == 16) {
+					var taskCoveragePath = path.join(buildTasksPath, taskName, 'coverage');
+					run('c8 --reports-dir ' + taskCoveragePath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+				}
+				else {
+					run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+				}
             }  catch (e) {
                 console.error(e);
                 process.exit(1);
