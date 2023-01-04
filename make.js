@@ -52,6 +52,7 @@ var binPath = path.join(__dirname, 'node_modules', '.bin');
 var makeOptionsPath = path.join(__dirname, 'make-options.json');
 var gendocsPath = path.join(__dirname, '_gendocs');
 var packagePath = path.join(__dirname, '_package');
+var coverageTasksPath = path.join(buildPath, 'coverage');
 
 var CLI = {};
 
@@ -341,7 +342,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
             return;
         }
 
-        nodeVersions.forEach(function (nodeVersion) {
+        nodeVersions.forEach(function (nodeVersion, index) {
             try {
 
                 nodeVersion = String(nodeVersion);
@@ -349,9 +350,9 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
                 // setup the version of node to run the tests
                 util.installNode(nodeVersion);
 				
-				if (nodeVersion == 16) {
-					var taskCoveragePath = path.join(buildTasksPath, taskName, 'coverage');
-					run('c8 --reports-dir ' + taskCoveragePath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+				if (nodeVersions.length - 1 === index) {
+					run('c8 --reports-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+					renameCoedCoverageOutput(coverageTasksPath, taskName);					//cd('..');
 				}
 				else {
 					run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
@@ -399,6 +400,22 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
         run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
     } else {
         console.warn("No common tests found");
+    }
+}
+
+function renameCoedCoverageOutput(coveragePath, taskName) {
+    if (!coveragePath) return;
+    try {
+        if (fs.existsSync(coveragePath)) {
+            if (fs.existsSync(path.join(coveragePath, "cobertura-coverage.xml"))) {
+                fs.renameSync(path.join(coveragePath, "cobertura-coverage.xml"), path.join(coveragePath, `${taskName}-cobertura-coverage.xml`));				
+            }
+            if (fs.existsSync(path.join(coveragePath, "coverage-summary.json"))) {
+                fs.renameSync(path.join(coveragePath, "coverage-summary.json"), path.join(coveragePath, `${taskName}-coverage-summary.json`));				
+            }
+        }
+    } catch (e) {
+        console.log(e)
     }
 }
 
