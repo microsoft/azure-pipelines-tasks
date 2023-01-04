@@ -2,7 +2,7 @@ import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common
 
 export class Inputs {
     public static readonly connectedServiceName = 'ConnectedServiceName';
-    public static readonly azureSpringCloud = 'AzureSpringCloud';
+    public static readonly azureSpringApps = 'AzureSpringCloud';
     public static readonly action = 'Action';
     public static readonly appName = 'AppName';
     public static readonly deploymentType = 'DeploymentType';
@@ -23,7 +23,6 @@ export class Inputs {
     public static readonly imageCommand = "ImageCommand";
     public static readonly imageArgs = "ImageArgs";
     public static readonly imageLanguageFramework = "ImageLanguageFramework";
-
 }
 
 export class Actions {
@@ -50,7 +49,7 @@ export class TaskParametersUtility {
         console.log("global['_vsts_task_lib_loaded'] = " + global['_vsts_task_lib_loaded']);
         var taskParameters: TaskParameters = {
             ConnectedServiceName: tl.getInput(Inputs.connectedServiceName, true),
-            AzureSpringCloud: tl.getInput(Inputs.azureSpringCloud, true),
+            AzureSpringApps: tl.getInput(Inputs.azureSpringApps, true),
             Action: tl.getInput(Inputs.action, true),
             AppName: tl.getInput(Inputs.appName, true),
             DeploymentType: tl.getInput(Inputs.deploymentType, false),
@@ -86,7 +85,7 @@ export class TaskParametersUtility {
 export interface TaskParameters {
     ConnectedServiceName?: string;
     Action: string;
-    AzureSpringCloud: string; //Could be resource ID or name
+    AzureSpringApps: string; //Could be resource ID or name
     AppName: string;
     DeploymentType?: string;
     UseStagingDeployment?: boolean;

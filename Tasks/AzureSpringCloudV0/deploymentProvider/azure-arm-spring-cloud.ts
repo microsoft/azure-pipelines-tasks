@@ -51,7 +51,7 @@ const ASYNC_OPERATION_HEADER = 'azure-asyncoperation';
 const API_VERSION = '2022-03-01-preview';
 const LOCATION_HEADER = 'location';
 
-export class AzureSpringCloud {
+export class AzureSpringApps {
     private _resourceId: string;
     private _client: ServiceClient;
 
