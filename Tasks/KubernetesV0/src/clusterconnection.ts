@@ -6,7 +6,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as utils from "./utilities";
 import * as os from "os";
-import kubectlutility = require("azure-pipelines-tasks-kubernetes-common-v2/kubectlutility");
+import kubectlutility = require("azure-pipelines-tasks-kubernetes-common/kubectlutility");
 
 export default class ClusterConnection {
     private kubectlPath: string;
