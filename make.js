@@ -352,7 +352,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
 				
 				if (nodeVersions.length - 1 === index) {
 					run('c8 --reports-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
-					renameCoedCoverageOutput(coverageTasksPath, taskName);					//cd('..');
+					renameCodeCoverageOutput(coverageTasksPath, taskName);					//cd('..');
 				}
 				else {
 					run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
@@ -403,7 +403,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
     }
 }
 
-function renameCoedCoverageOutput(coveragePath, taskName) {
+function renameCodeCoverageOutput(coveragePath, taskName) {
     if (!coveragePath) return;
     try {
         if (fs.existsSync(coveragePath)) {
