@@ -388,7 +388,7 @@ export class AzureAppServiceUtility {
 
                     //can be because function app is outside VNet
                     if (isFuncVNet == "false"){
-                        tl.error("Function app is NOT VNet integrated.");
+                        console.log("NOTE: Function app is NOT VNet integrated.");
                     }
                 }   
             }            
@@ -480,56 +480,62 @@ export class AzureAppServiceUtility {
             let connectionDetails = {};
             connectionDetails['ConnectionString'] = appSettings.properties.AzureWebJobsStorage;                
             connectionDetails['Type'] = 'StorageAccount';
-            let validation: any = await this._appService.getConnectionStringValidation(connectionDetails);
-            tl.debug(`Connection string check: ${JSON.stringify(validation)}`);
 
-            /* Status enums as of Sep 2021
-            *  Success,
-            *  AuthFailure,
-            *  ContentNotFound,
-            *  Forbidden,
-            *  UnknownResponse,
-            *  EndpointNotReachable,
-            *  ConnectionFailure,
-            *  DnsLookupFailed,
-            *  MsiFailure,
-            *  EmptyConnectionString,
-            *  MalformedConnectionString,
-            *  UnknownError
-            */
-            if (validation && validation.StatusText && validation.StatusText != "Success"){                
-                switch (validation.StatusText)
-                {
-                    case "MalformedConnectionString":
-                        errormessage = `Invalid connection string - The "${propertyName}" connection string configured is invalid (e.g. missing some required elements). Please check the value of the app setting "${propertyName}".`;
-                        break;
-                    case "EmptyConnectionString":
-                        errormessage = `Empty connection string - The app setting "${propertyName}" was not found or is set to a blank value`;
-                        break;
-                    case "DnsLookupFailed":
-                        errormessage = `Resource not found - The Storage Account resource specified in the "${propertyName}" connection string was not found.  Please check the value of the app setting "${propertyName}".`;
-                        break;
-                    case "AuthFailure":
-                        errormessage = `Authentication failure - The credentials in the "${propertyName}" connection string are either invalid or expired. Please update the app setting "${propertyName}" with a valid connection string.`;
-                        break;
-                    case "Forbidden":
-                        // Some authentication failures come through as Forbidden so check the exception data
-                        if(validation.Exception != undefined && 
-                            validation.Exception.RequestInformation != undefined && 
-                            JSON.stringify(validation.Exception.RequestInformation).includes("AuthenticationFailed")) {
-                                errormessage = `Authentication failure - The credentials in the "${propertyName}" connection string are either invalid or expired. Please update the app setting "${propertyName}" with a valid connection string.`;
-                        } else {
-                            errormessage = `Access Restrictions - Access to the "${propertyName}" Storage Account resource is restricted. This can be due to firewall rules on the resource. Please check if you have configured firewall rules or a private endpoint and that they correctly allow access from the Function App. Relevant documentation: `
-                                + `https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security?tabs=azure-portal`;
-                        }
-                        break;
-                    default:
-                        errormessage = `Validation of the "${propertyName}" connection string failed due to an unknown error.`;
-                        break;
+            if(connectionDetails['ConnectionString'].includes('@Microsoft.KeyVault')){
+                console.log("NOTE: Skipping AzureWebJobsStorage connection string validation since Key Vault reference is used.");
+            }
+            else{
+                let validation: any = await this._appService.getConnectionStringValidation(connectionDetails);
+                tl.debug(`Connection string check: ${JSON.stringify(validation)}`);
+
+                /* Status enums as of Sep 2021
+                *  Success,
+                *  AuthFailure,
+                *  ContentNotFound,
+                *  Forbidden,
+                *  UnknownResponse,
+                *  EndpointNotReachable,
+                *  ConnectionFailure,
+                *  DnsLookupFailed,
+                *  MsiFailure,
+                *  EmptyConnectionString,
+                *  MalformedConnectionString,
+                *  UnknownError
+                */
+                if (validation && validation.StatusText && validation.StatusText != "Success"){                
+                    switch (validation.StatusText)
+                    {
+                        case "MalformedConnectionString":
+                            errormessage = `Invalid connection string - The "${propertyName}" connection string configured is invalid (e.g. missing some required elements). Please check the value of the app setting "${propertyName}".`;
+                            break;
+                        case "EmptyConnectionString":
+                            errormessage = `Empty connection string - The app setting "${propertyName}" was not found or is set to a blank value`;
+                            break;
+                        case "DnsLookupFailed":
+                            errormessage = `Resource not found - The Storage Account resource specified in the "${propertyName}" connection string was not found.  Please check the value of the app setting "${propertyName}".`;
+                            break;
+                        case "AuthFailure":
+                            errormessage = `Authentication failure - The credentials in the "${propertyName}" connection string are either invalid or expired. Please update the app setting "${propertyName}" with a valid connection string.`;
+                            break;
+                        case "Forbidden":
+                            // Some authentication failures come through as Forbidden so check the exception data
+                            if(validation.Exception != undefined && 
+                                validation.Exception.RequestInformation != undefined && 
+                                JSON.stringify(validation.Exception.RequestInformation).includes("AuthenticationFailed")) {
+                                    errormessage = `Authentication failure - The credentials in the "${propertyName}" connection string are either invalid or expired. Please update the app setting "${propertyName}" with a valid connection string.`;
+                            } else {
+                                errormessage = `Access Restrictions - Access to the "${propertyName}" Storage Account resource is restricted. This can be due to firewall rules on the resource. Please check if you have configured firewall rules or a private endpoint and that they correctly allow access from the Function App. Relevant documentation: `
+                                    + `https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security?tabs=azure-portal`;
+                            }
+                            break;
+                        default:
+                            errormessage = `Validation of the "${propertyName}" connection string failed due to an unknown error.`;
+                            break;
+                    }
+                    // Show the exception message as it contains useful information to fix the issue.  Don't show it unless its accompanied with other explanations.
+                    errormessage += (errormessage != "" && validation.Exception ? `\r\n\r\nException encountered while connecting: ${validation.Exception.Message}` : undefined);
                 }
-                // Show the exception message as it contains useful information to fix the issue.  Don't show it unless its accompanied with other explanations.
-                errormessage += (errormessage != "" && validation.Exception ? `\r\n\r\nException encountered while connecting: ${validation.Exception.Message}` : undefined);
-            } 
+            }             
         }    
         return errormessage;        
     }

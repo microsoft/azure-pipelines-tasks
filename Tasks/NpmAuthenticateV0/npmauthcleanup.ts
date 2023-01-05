@@ -6,8 +6,9 @@ import * as path from 'path';
 
 async function run() {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
-    let indexFile = path.join(tl.getVariable("SAVE_NPMRC_PATH"), 'index.json');
-    if (tl.exist(indexFile)) {
+    const npmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
+    let indexFile = npmrcPath && path.join(npmrcPath, 'index.json');
+    if (indexFile && tl.exist(indexFile)) {
         let indexFileText = fs.readFileSync(indexFile, 'utf8');
         let jsonObject = JSON.parse(indexFileText);
         let npmrcIndex = JSON.stringify(jsonObject[tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile)]);
