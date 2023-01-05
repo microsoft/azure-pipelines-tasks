@@ -16,6 +16,7 @@ List of already migrated packages:
 8. [x] AzureRmDeploy-common-v3
 9. [x] webdeployment-common-v4
 10. [x] utility-common-v2
+11. [x] kubernetes-common-v2
 
 TODO:
 
@@ -24,7 +25,6 @@ TODO:
 3.  [ ] azure-arm-rest
 4.  [ ] docker-common-v2
 5.  [ ] docker-common
-6.  [ ] kubernetes-common-v2
 
 
 # Getting rid of -v2, -v3 folders
@@ -55,3 +55,4 @@ Missed versions were re-published to the original packages.
 | AzureRmDeploy-common-v3 | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17444) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17435) |
 | webdeployment-common-v4 | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17430) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17379) |
 | utility-common-v2       | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17445) |                                                                     |
+| kubernetes-common-v2 | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17559) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17557) |
