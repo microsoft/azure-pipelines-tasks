@@ -4,7 +4,7 @@
   "dependencies": {
     "@types/node": "^10.17.0",
     "azure-pipelines-task-lib": "^3.0.6-preview.0",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.213.0",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.216.2",
     "moment": "^2.29.4",
     "typed-rest-client": "^1.8.9"
   },
