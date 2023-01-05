@@ -128,11 +128,11 @@
       }
     },
     "azure-pipelines-tasks-azure-arm-rest-v2": {
-      "version": "3.216.1",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-azure-arm-rest-v2/-/azure-pipelines-tasks-azure-arm-rest-v2-3.216.1.tgz",
-      "integrity": "sha512-rOZce80bggUt9XFxXmCBZwsJavtHYZtIbjRLZ/QfQEPyg/Y3pEXmVh138D1f5SVNWaWYybefarNVQAu81s16FA==",
+      "version": "3.216.2",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-azure-arm-rest-v2/-/azure-pipelines-tasks-azure-arm-rest-v2-3.216.2.tgz",
+      "integrity": "sha512-AkPPqVRFV8j9wlvG52h3j4TqOgugarEBQq56Yk5NuVoGO4qVqHQ1XTZpyWGt2xrfuPgtPXW4Cvac2mRuh+jlJA==",
       "requires": {
-        "@azure/msal-node": "^1.14.2",
+        "@azure/msal-node": "^1.14.5",
         "@types/jsonwebtoken": "^8.5.8",
         "@types/mocha": "^5.2.7",
         "@types/node": "^10.17.0",

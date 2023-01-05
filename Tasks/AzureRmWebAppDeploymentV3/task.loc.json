@@ -624,9 +624,6 @@
   "execution": {
     "Node10": {
       "target": "azurermwebappdeployment.js"
-    },
-    "Node16": {
-        "target": "azurermwebappdeployment.js"
     }
   },
   "messages": {
