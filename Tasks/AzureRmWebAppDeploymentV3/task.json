@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 215,
+        "Minor": 216,
         "Patch": 0
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
@@ -623,6 +623,9 @@
     "instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
     "execution": {
         "Node10": {
+            "target": "azurermwebappdeployment.js"
+        },
+        "Node16": {
             "target": "azurermwebappdeployment.js"
         }
     },
