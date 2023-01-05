@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 216,
-    "Patch": 0
+    "Patch": 1
   },
   "satisfies": [
     "Java",
@@ -204,6 +204,7 @@
     "JavaNotPreinstalled": "ms-resource:loc.messages.JavaNotPreinstalled",
     "UsePreinstalledJava": "ms-resource:loc.messages.UsePreinstalledJava",
     "WrongArchiveStructure": "ms-resource:loc.messages.WrongArchiveStructure",
+    "WrongArchiveFile": "ms-resource:loc.messages.WrongArchiveFile",
     "ShareAccessError": "ms-resource:loc.messages.ShareAccessError",
     "UnsupportedDMGStructure": "ms-resource:loc.messages.UnsupportedDMGStructure",
     "NoPKGFile": "ms-resource:loc.messages.NoPKGFile",
