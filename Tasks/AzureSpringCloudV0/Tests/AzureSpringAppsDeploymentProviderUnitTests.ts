@@ -1,9 +1,9 @@
 import assert = require('assert');
-import { AzureSpringAppsDeploymentProvider } from "../deploymentProvider/AzureSpringCloudDeploymentProvider"
+import { AzureSpringAppsDeploymentProvider } from "../deploymentProvider/AzureSpringAppsDeploymentProvider"
 import { TaskParameters } from "../operations/taskparameters"
 
 
-export class AzureSpringCloudUnitTests {
+export class AzureSpringAppsUnitTests {
 
     public static pathTraversalAttackTest = (done: Mocha.Done) => {
         const resourceIdWithPathAttack = '/subscriptions/mocksubid/resourceGroups/mockresouorcegroup/providers/Microsoft.AppPlatform/Spring/authorized-name/../unauthorized-name';

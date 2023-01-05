@@ -2,6 +2,8 @@ import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common
 
 export class Inputs {
     public static readonly connectedServiceName = 'ConnectedServiceName';
+    // The AzureSpringCloud here is kept as it was after 
+    // changing service name to AzureSpringApps to prevent experience breaking
     public static readonly azureSpringApps = 'AzureSpringCloud';
     public static readonly action = 'Action';
     public static readonly appName = 'AppName';

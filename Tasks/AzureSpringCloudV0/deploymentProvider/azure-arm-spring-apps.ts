@@ -554,8 +554,6 @@ export class AzureSpringApps {
      * @param operationStatusUrl The status URL of the Azure operation
      */
     async awaitOperationCompletion(operationStatusUrl: string) {
-
-
         tl.debug('Checking operation status at ' + operationStatusUrl);
         var statusCode = 202;
         var message = '';

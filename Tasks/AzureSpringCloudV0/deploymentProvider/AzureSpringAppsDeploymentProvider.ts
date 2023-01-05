@@ -2,7 +2,7 @@ import path = require('path');
 import { v4 as uuidv4 } from 'uuid';
 import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { Actions, DeploymentType, TaskParameters } from '../operations/taskparameters';
-import { SourceType, AzureSpringApps } from './azure-arm-spring-cloud';
+import { SourceType, AzureSpringApps } from './azure-arm-spring-apps';
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 import tl = require('azure-pipelines-task-lib/task');
 import tar = require('tar');

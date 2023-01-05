@@ -4,7 +4,7 @@ import { Resources } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-res
 
 export class AzureResourceFilterUtility {
     public static async getAzureSpringAppsResourceId(endpoint: AzureEndpoint, resourceName: string): Promise<string> {
-        tl.debug('Looking up Azure Spring Cloud Instance ' + resourceName);
+        tl.debug('Looking up Azure Spring Apps Instance ' + resourceName);
         var azureResources: Resources = new Resources(endpoint);
         var filteredResources: Array<any> = await azureResources.getResources('Microsoft.AppPlatform/Spring', resourceName);
         let resourceId: string;

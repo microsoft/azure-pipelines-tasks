@@ -2,7 +2,7 @@
 import tl = require('azure-pipelines-task-lib/task');
 import { TaskParameters, TaskParametersUtility } from './operations/taskparameters';
 
-import { AzureSpringAppsDeploymentProvider } from './deploymentProvider/AzureSpringCloudDeploymentProvider'
+import { AzureSpringAppsDeploymentProvider } from './deploymentProvider/AzureSpringAppsDeploymentProvider'
 import path = require('path');
 
 export async function main() {

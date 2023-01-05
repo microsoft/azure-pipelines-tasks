@@ -1,6 +1,6 @@
 import * as path from 'path';
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import { setEndpointData, setAgentsData, mockTaskArgument, nock, MOCK_SUBSCRIPTION_ID, mockAzureSpringCloudExists, mockCommonAzureAPIs, API_VERSION  } from './mock_utils';
+import { setEndpointData, setAgentsData, mockTaskArgument, nock, MOCK_SUBSCRIPTION_ID, mockAzureSpringAppsExists, mockCommonAzureAPIs, API_VERSION  } from './mock_utils';
 import { ASC_RESOURCE_TYPE, MOCK_RESOURCE_GROUP_NAME } from './mock_utils'
 import assert = require('assert');
 
@@ -17,12 +17,12 @@ export class DeploymentToStagingSucceedsWithBuildServiceL0 {
 
     public static startTest() {
         console.log(`running ${this.TEST_NAME}`);
-        let taskPath = path.join(__dirname, '..', 'azurespringclouddeployment.js');
+        let taskPath = path.join(__dirname, '..', 'azurespringappsdeployment.js');
         let taskMockRunner: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
         setEndpointData();
         setAgentsData();
         mockCommonAzureAPIs();
-        mockAzureSpringCloudExists(this.TEST_NAME);
+        mockAzureSpringAppsExists(this.TEST_NAME);
         this.mockTwoDeployments();
         let nockScope = this.mockDeploymentApis();
 

@@ -1,5 +1,5 @@
 import fs = require('fs');
-import { AzureSpringCloudUnitTests } from './AzureSpringCloudUnitTests';
+import { AzureSpringAppsUnitTests } from './AzureSpringAppsUnitTests';
 import { nock } from './mock_utils';
 import { CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist } from './CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist';
 import { CreateNamedDeploymentFailsWhenTwoDeploymentsExist } from './CreateNamedDeploymentFailsWhenTwoDeploymentsExist';
@@ -14,7 +14,7 @@ import { DeploymentToStagingSucceedsWithBuildService } from './DeploymentToStagi
 import { DeploymentFailsWhenBuilderNotExist } from './DeploymentFailsWhenBuilderNotExist';
 import { DeploymentCustomImageToStagingSucceeds } from './DeploymentCustomImageToStagingSucceeds'
 
-describe('Azure Spring Cloud deployment Suite', function () {
+describe('Azure Spring Apps deployment Suite', function () {
     afterEach(() => {
         nock.cleanAll();
     });
@@ -22,8 +22,8 @@ describe('Azure Spring Cloud deployment Suite', function () {
     this.timeout(900000);
 
     // /*************** Unit Tests ***************/
-    it('Azure Spring Cloud wrapper behaves according to expectations', AzureSpringCloudUnitTests.testDeploymentNameRetrieval);
-    it('Prevents a path traversal attack in the Azure Spring Cloud Resource ID', AzureSpringCloudUnitTests.testDeploymentNameRetrieval);
+    it('Azure Spring Apps wrapper behaves according to expectations', AzureSpringAppsUnitTests.testDeploymentNameRetrieval);
+    it('Prevents a path traversal attack in the Azure Spring Apps Resource ID', AzureSpringAppsUnitTests.testDeploymentNameRetrieval);
 
     /*************** Deployment tests ************/
     it('Correctly errors out when attempting to use staging deployment and no staging deployment exists', DeploymentFailsWithInsufficientDeployments.mochaTest);

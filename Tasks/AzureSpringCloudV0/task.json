@@ -303,7 +303,7 @@
     "instanceNameFormat": "Azure Spring Apps $(Action): $(AppName)",
     "execution": {
         "Node10": {
-            "target": "azurespringclouddeployment.js"
+            "target": "azurespringappsdeployment.js"
         }
     },
     "messages": {
