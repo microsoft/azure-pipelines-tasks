@@ -154,12 +154,16 @@ export class ApplicationTokenCredentials {
         return this.clientId;
     }
 
+    public getUseMSAL(): boolean {
+        return this.useMSAL;
+    }
+
     public async getToken(force?: boolean): Promise<string> {
         // run exclusively to prevent race conditions
         const release = await this.tokenMutex.acquire();
 
         try {
-            const promisedTokenResult = this.useMSAL ? this.getMSALToken(force) : this.getADALToken(force);
+            const promisedTokenResult = this.getUseMSAL() ? this.getMSALToken(force) : this.getADALToken(force);
             return await promisedTokenResult;
         } finally {
             // release it for every situation
