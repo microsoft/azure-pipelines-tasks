@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 214,
+    "Minor": 216,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -496,6 +496,9 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {
+      "target": "azurermwebappdeployment.js"
+    },
+    "Node16": {
       "target": "azurermwebappdeployment.js"
     }
   },
