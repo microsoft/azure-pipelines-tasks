@@ -9,11 +9,11 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 0,
-    "Minor": 214,
+    "Minor": 215,
     "Patch": 0
   },
   "demands": [],
-  "minimumAgentVersion": "1.99.0",
+  "minimumAgentVersion": "2.144.0",
   "inputs": [
     {
       "name": "feed",
@@ -90,6 +90,10 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {
+      "target": "download.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "download.js",
       "argumentFormat": ""
     }
