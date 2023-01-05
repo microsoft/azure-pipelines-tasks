@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 215,
+        "Minor": 216,
         "Patch": 0
     },
     "runsOn": [
@@ -25,6 +25,15 @@
             "helpMarkDown": "Path to the config.toml file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/.cargo/config.toml\".",
             "type": "filePath",
             "required": true
+        },
+        {
+            "name": "cargoServiceConnections",
+            "label": "Credentials for registries outside this organization/collection",
+            "helpMarkDown": "Credentials to use for external registries located in the project's config.toml. For registries in this organization/collection, leave this blank; the build’s credentials are used automatically.",
+            "type": "connectedService:externalcargoregistry",
+            "properties": {
+                "MultiSelectFlatList": "true"
+            }
         }
     ],
     "execution": {
@@ -41,6 +50,7 @@
         "ConfigTomlDoesNotExist": "The config.toml file you selected at %s does not currently exist.",
         "ConfigTomlMissingRegistry": "The config.toml file you selected must contain registries table",
         "AuthenticatingThisConfigToml": "Adding authentication for registry listed in this config.toml file at %s",
-        "AddingAuthRegistry": "Adding auth for registry: %s with token name: %s"
+        "AddingAuthRegistry": "Adding auth for registry: %s with token name: %s",
+        "AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s"
     }
 }
