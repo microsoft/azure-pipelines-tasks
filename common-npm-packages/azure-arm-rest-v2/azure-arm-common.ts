@@ -329,10 +329,20 @@ export class ApplicationTokenCredentials {
                     const certDecoded = Buffer.from(certEncoded, "base64");
                     const thumbprint = crypto.createHash("sha1").update(certDecoded).digest("hex").toUpperCase();
 
-                    // privatekey
-                    const privateKey = certFile.match(/-----BEGIN PRIVATE KEY-----\s*([\s\S]+?)\s*-----END PRIVATE KEY-----/i)[0];
+                    if (!thumbprint) {
+                        throw new Error("MSAL - certificate - thumbprint couldn't be generated!");
+                    }
 
                     tl.debug("MSAL - ServicePrincipal - certificate thumbprint creation is successful: " + thumbprint);
+
+                    // privatekey
+                    const privateKey = certFile.match(/-----BEGIN (.)*PRIVATE KEY-----\s*([\s\S]+?)\s*-----END (.)*PRIVATE KEY-----/i)[0];
+                    
+                    if (!privateKey) {
+                        throw new Error("MSAL - certificate - private key couldn't read!");
+                    }
+
+                    tl.debug("MSAL - ServicePrincipal - certificate private key reading is successful.");
 
                     msalConfig.auth.clientCertificate = {
                         thumbprint: thumbprint,
