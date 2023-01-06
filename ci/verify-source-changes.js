@@ -4,6 +4,8 @@ var util = require('./ci-util');
 
 taskList = util.resolveTaskList(process.argv[2]);
 
+var totalDiffList = [];
+
 console.log(`Checking tasks sources for uncommitted changes...`);
 taskList.forEach(function(taskName) {
     console.log(`====================${taskName}====================`);
@@ -17,15 +19,25 @@ taskList.forEach(function(taskName) {
         console.log(`Uncommitted changes found:`);
         console.log(``);
         diffList.forEach(function(item){
+            totalDiffList.push(item);
+            console.log(` - ${item}`);
+            console.log(``);
+        });
+    } else {
+        console.log(``);
+        console.log(`No uncommitted changes found`);
+        console.log(``);
+    };
+});
+
+if (totalDiffList.length) {
+        console.log(``);
+        console.log(`Please build your tasks locally and commit specified changes. Make sure that you using an NPM version lower than 7`);
+        console.log(``);
+
+        totalDiffList.forEach(function(item){
             console.log(` - ${item}`);
         });
-        console.log(``);
-        console.log(`Please validate your changes locally. Make sure that you build tasks using an NPM version lower than 7`);
-        console.log(``);
 
         process.exit(1);
-    };
-
-    console.log(`No uncommitted changes found`);
-    console.log(``);
-});
+};
