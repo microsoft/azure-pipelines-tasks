@@ -32,12 +32,16 @@ taskList.forEach(function(taskName) {
 
 if (totalDiffList.length) {
         console.log(``);
-        console.log(`Please build your tasks locally and commit specified changes. Make sure that you using an NPM version lower than 7`);
+        console.log(`Please build your tasks locally and commit specified changes:`);
         console.log(``);
 
         totalDiffList.forEach(function(item){
             console.log(` - ${item}`);
         });
+
+        console.log(``);
+        console.log(`Make sure that you using an NPM version lower than 7`);
+        console.log(``);
 
         process.exit(1);
 };
