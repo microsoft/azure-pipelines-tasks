@@ -7,6 +7,7 @@ taskList = util.resolveTaskList(process.argv[2]);
 var totalDiffList = [];
 
 console.log(`Checking tasks sources for uncommitted changes...`);
+console.log(``);
 taskList.forEach(function(taskName) {
     console.log(`====================${taskName}====================`);
 
