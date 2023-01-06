@@ -41,7 +41,7 @@ if (totalDiffList.length) {
         });
 
         console.log(``);
-        console.log(`Make sure that you using an NPM version lower than 7`);
+        console.log(`Make sure you using Node 10 and NPM 6. For more details check our contribution guide - https://github.com/microsoft/azure-pipelines-tasks/blob/master/docs/contribute.md`);
         console.log(``);
 
         process.exit(1);
