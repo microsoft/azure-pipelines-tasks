@@ -61,12 +61,17 @@ async function main(): Promise<void> {
                 let currentRegistry : string;
                 if (serviceConnections && serviceConnections.length > 0) {
                     for (let serviceConnection of serviceConnections) {  
-                        if (util.toNerfDart(serviceConnection.packageSource.uri + "/") == util.toNerfDart(result.registries[registry].index.replace("sparse+", ""))) {
+                        if (url.parse(serviceConnection.packageSource.uri).href === url.parse(result.registries[registry].index.replace("sparse+", "")).href) {
                             let serviceConnectionAccessToken : string;
                             switch (serviceConnection.authType) {
+                                case (ServiceConnectionAuthType.UsernamePassword):
+                                    const usernamePasswordAuthInfo = serviceConnection as UsernamePasswordServiceConnection;
+                                    serviceConnectionAccessToken = `Basic ${base64.encode(utf8.encode(`${usernamePasswordAuthInfo.username}:${usernamePasswordAuthInfo.password}`))}`;   
+                                    tl.debug(`Detected username/password or PAT credentials for '${serviceConnection.packageSource.uri}'`);
+                                    break;
                                 case (ServiceConnectionAuthType.Token):
                                     const tokenAuthInfo = serviceConnection as TokenServiceConnection;
-                                    serviceConnectionAccessToken = `Basic ${base64.encode(utf8.encode(`AzureDevOps:${tokenAuthInfo.token}`))}`;
+                                    serviceConnectionAccessToken = tokenAuthInfo.token;
                                     tl.debug(`Detected token credentials for '${serviceConnection.packageSource.uri}'`);
                                     break;
                                 default:
