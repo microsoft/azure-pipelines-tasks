@@ -66,6 +66,14 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Installs the x86 version of Node regardless of the CPU architecture of the agent."
+        },
+        {
+          "name": "nodejsMirror",
+          "type": "string",
+          "label": "Set an alternative source for Node.js binaries",
+          "defaultValue": "https://nodejs.org/dist",
+          "required": false,
+          "helpMarkDown": "Use an alternative installation mirror when sourcing the Node.js binaries."
         }
     ],
     "execution": {

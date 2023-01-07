@@ -66,6 +66,14 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.force32bit"
+    },
+    {
+      "name": "nodejsMirror",
+      "type": "string",
+      "label": "Set an alternative source for Node.js binaries",
+      "defaultValue": "https://nodejs.org/dist",
+      "required": false,
+      "helpMarkDown": "Use an alternative installation mirror when sourcing the Node.js binaries."
     }
   ],
   "execution": {

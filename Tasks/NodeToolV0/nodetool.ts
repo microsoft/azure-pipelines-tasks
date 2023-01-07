@@ -16,6 +16,7 @@ async function run() {
         let versionSource = taskLib.getInput('versionSource', true);
         let versionSpecInput = taskLib.getInput('versionSpec', versionSource == 'spec');
         let versionFilePathInput = taskLib.getInput('versionFilePath', versionSource == 'fromFile');
+        let nodejsMirror = taskLib.getInput('nodejsMirror', false);
         let versionSpec = getNodeVersion(versionSource, versionSpecInput, versionFilePathInput);
         let checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
         await getNode(versionSpec, checkLatest);
