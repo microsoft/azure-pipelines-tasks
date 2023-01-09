@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 5,
-        "Minor": 209,
-        "Patch": 0
+        "Minor": 216,
+        "Patch": 1
     },
     "releaseNotes": "Added support for Az Module and cross platform agents.",
     "groups": [

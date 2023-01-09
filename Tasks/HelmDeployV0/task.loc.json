@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 212,
-    "Patch": 0
+    "Minor": 216,
+    "Patch": 1
   },
   "demands": [],
   "groups": [
@@ -518,6 +518,9 @@
   },
   "postjobexecution": {
     "Node10": {
+      "target": "src//deletesecurefiles.js"
+    },
+    "Node16": {
       "target": "src//deletesecurefiles.js"
     }
   },
