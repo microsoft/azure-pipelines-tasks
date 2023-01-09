@@ -65,7 +65,7 @@ export async function downloadBuildctl(version: string): Promise<string> {
 
     tl.debug('Buildctl path: ' + buildctlpath);
 
-    fs.chmodSync(buildctlpath, "644");
+    fs.chmodSync(buildctlpath, "777");
     return buildctlpath;
 }
 
