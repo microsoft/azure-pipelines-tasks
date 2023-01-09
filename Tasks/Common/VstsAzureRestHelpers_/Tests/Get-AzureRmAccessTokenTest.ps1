@@ -58,6 +58,8 @@ $endpointWithMSIScheme = @{
     }
 }
 
+Register-Mock Get-VstsTaskVariable { "false" } -- -Name "USE_MSAL"
+
 Register-Mock Add-Tls12InSession
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 
@@ -83,6 +85,9 @@ $result = & $module Get-AzureRmAccessToken -Endpoint $endpointWithMSIScheme
 Assert-WasCalled Get-MsiAccessToken -Times 1
 
 # Test 4 - MSAL case
+Unregister-Mock Get-VstsTaskVariable
+Register-Mock Get-VstsTaskVariable { "true" } -- -Name "USE_MSAL"
+
 $resultMSAL = @{
     TokenType = "Bearer";
     AccessToken = "AccessToken";

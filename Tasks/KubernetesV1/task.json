@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 213,
-        "Patch": 1
+        "Minor": 216,
+        "Patch": 0
     },
     "demands": [],
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
@@ -451,6 +451,9 @@
     ],
     "execution": {
         "Node10": {
+            "target": "src//kubernetes.js"
+        },
+        "Node16": {
             "target": "src//kubernetes.js"
         }
     },
