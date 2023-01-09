@@ -2,14 +2,14 @@ import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
 import path = require('path');
 
-import { AzureDeployPackageArtifactAlias } from 'azure-pipelines-tasks-azurermdeploycommon-v3/Constants';
-import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/constants';
+import { AzureDeployPackageArtifactAlias } from 'azure-pipelines-tasks-azurermdeploycommon/Constants';
+import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/constants';
 import { Kudu } from '../azure-arm-rest/azure-arm-app-service-kudu';
 
-import webClient = require('azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/webClient');
+import webClient = require('azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/webClient');
 
-var deployUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/utility.js');
-var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/ziputility.js');
+var deployUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/utility.js');
+var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/ziputility.js');
 const physicalRootPath: string = '/site/wwwroot';
 const deploymentFolder: string = 'site/deployments';
 const manifestFileName: string = 'manifest';

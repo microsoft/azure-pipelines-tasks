@@ -1,9 +1,9 @@
 import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import util = require('util');
-import webClient = require('azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/webClient');
-import { WebJob, SiteExtension } from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/azureModels';
-import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/constants';
+import webClient = require('azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/webClient');
+import { WebJob, SiteExtension } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
+import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/constants';
 
 export class KuduServiceManagementClient {
     private _scmUri;
@@ -663,7 +663,8 @@ export class Kudu {
                 },
             };            
             let requestOptions = new webClient.WebRequestOptions();
-            requestOptions.retryCount = 1;
+            requestOptions.retriableStatusCodes = [500, 502, 503, 504];
+            requestOptions.retryIntervalInSeconds = 5;
 
             let response = await this._client.beginRequest(httpRequest, requestOptions, 'application/octet-stream');
             if(response.statusCode == 200) {
