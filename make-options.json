@@ -151,6 +151,7 @@
         "PowerShellOnTargetMachinesV3",
         "PublishBuildArtifactsV1",
         "PublishCodeCoverageResultsV1",
+        "PublishCodeCoverageResultsV2",
         "PublishPipelineArtifactV0",
         "PublishPipelineArtifactV1",
         "PublishPipelineMetadataV0",
