@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 210,
-        "Patch": 0
+        "Minor": 216,
+        "Patch": 1
     },
     "demands": [],
     "releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",
@@ -126,6 +126,10 @@
     "instanceNameFormat": "Publish Test Results $(testResultsFiles)",
     "execution": {
         "Node10": {
+            "target": "publishtestresults.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "publishtestresults.js",
             "argumentFormat": ""
         }
