@@ -26,7 +26,7 @@
     "@types/node": "^10.17.0",
     "@types/q": "1.0.7",
     "JSONPath": "^0.11.2",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.213.0",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.216.3",
     "moment": "^2.29.4",
     "nock": "9.0.11",
     "q": "1.4.1",
