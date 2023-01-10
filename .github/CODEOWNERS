@@ -305,7 +305,7 @@ Tasks/NpmV0/      @phil-hodgson    @aasim
 
 Tasks/NpmV1/      @phil-hodgson    @aasim
 
-Tasks/NpmAuthenticateV0/       @phil-hodgson    @aasim
+Tasks/NpmAuthenticateV0/       @microsoft/azure-artifacts-packages
 
 Tasks/NuGetV0/     @phil-hodgson    @aasim
 
