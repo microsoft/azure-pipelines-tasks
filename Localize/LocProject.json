@@ -10,12 +10,6 @@
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "common-npm-packages\\azure-arm-rest\\Strings\\resources.resjson\\en-US\\resources.resjson",
-            "CopyOption": "LangIDOnPath",
-            "OutputPath": "common-npm-packages\\azure-arm-rest\\Strings\\resources.resjson"
-          },
-          {
-            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "common-npm-packages\\azure-arm-rest-v2\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "common-npm-packages\\azure-arm-rest-v2\\Strings\\resources.resjson"
