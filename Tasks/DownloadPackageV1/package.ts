@@ -154,13 +154,11 @@ export abstract class Package {
         return new Promise<string>(async (resolve, reject) => {
             this.getPackageMetadata(this.feedConnection, routeValues, queryParams, this.getPackagesAreaId)
             .then(packages => {
-                if(packages["id"] == packageId){
+                if(packages["id"] == packageId) {
                     let versions = packages["versions"];
                     tl.debug("Found " + versions?.length + " packages matching search pattern " + packageId);
-                    for (let i = 0; i < versions?.length; i++) {
-                        if (versions[i]["isLatest"] && versions[i]["isListed"]) {
-                            return resolve(versions[i]["normalizedVersion"]);
-                        }
+                    if (versions[0]["isListed"]) {
+                        return resolve(versions[0]["normalizedVersion"]);
                     }
                 }
                 return reject("Latest version not found."); 
