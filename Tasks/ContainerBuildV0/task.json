@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 216,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "satisfies": [
@@ -66,6 +66,9 @@
     "instanceNameFormat": "Container Build Task",
     "execution": {
         "Node10": {
+            "target": "src//buildcontainer.js"
+        },
+        "Node16": {
             "target": "src//buildcontainer.js"
         }
     },
