@@ -55,4 +55,4 @@ Missed versions were re-published to the original packages.
 | webdeployment-common-v4 | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17430) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17379) |
 | utility-common-v2       | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17445) |                                                                     |
 | kubernetes-common-v2    | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17559) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17557) |
-| docker-common           | [PR](TODO) |
+| docker-common           | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17597) |
