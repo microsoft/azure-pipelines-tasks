@@ -2,6 +2,7 @@ var path = require('path');
 var process = require("process");
 var util = require('./ci-util');
 
+// The filtered list of tasks to build is stored in $(task_pattern) environment variable
 taskList = util.resolveTaskList(process.argv[2]);
 
 var totalDiffList = [];

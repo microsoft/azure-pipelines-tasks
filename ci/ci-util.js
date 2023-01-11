@@ -91,6 +91,12 @@ var statOrNullSync = function (path) {
 }
 exports.statOrNullSync = statOrNullSync;
 
+/** 
+ * Executes the specified command in system shell and returns the stdout from the command.
+ * @param {String} cl - The name or path of the executable file to run.
+ * @param {String} inheritStreams - Configure the pipes that are established between the parent and child process. Default value: pipe.
+ * @returns {String} - The stdout from the command.
+ */
 var run = function (cl, inheritStreams) {
     console.log('');
     console.log(`> ${cl}`);
@@ -403,6 +409,13 @@ exports.createTasksZip = createTasksZip;
 // Check functions
 //------------------------------------------------------------------------------
 
+/** 
+ * Wrapper for minmatch. Match against the list of files, in the style of fnmatch or glob.
+ * @param {String} pattern - The search pattern.
+ * @param {String} root - The root path.
+ * @param {String} options - The search options.
+ * @returns {Array} - The list of matches.
+ */
 var matchFind = function (pattern, root, options) {
     assert(pattern, 'pattern');
     assert(root, 'root');
@@ -439,6 +452,11 @@ var matchFind = function (pattern, root, options) {
     return minimatch.match(items, pattern, options);
 }
 
+/** 
+ * Parses the sources folder and gets the list of task source directories paths according to the specified pattern.
+ * @param {String} taskPattern - The search pattern. Uses the minimatch regex pattern.
+ * @returns {Array} - The list of paths to the specified tasks.
+ */
 var resolveTaskList = function(taskPattern) {
     var taskList;
     if (taskPattern) {
