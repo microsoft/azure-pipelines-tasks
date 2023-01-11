@@ -18,7 +18,7 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 215,
+        "Minor": 217,
         "Patch": 0
     },
     "preview": true,
@@ -134,6 +134,13 @@
             "label": "Application target port",
             "required": false,
             "helpMarkDown": "The designated port for the application to run on. If not provided, this value is 80 for Python applications, and 8080 for all other supposed platforms."
+        },
+        {
+            "name": "environmentVariables",
+            "type": "string",
+            "label": "Environment variables",
+            "required": false,
+            "helpMarkDown": "A list of environment variable(s) for the container. Space-separated values in 'key=value' format. Empty string to clear existing values. Prefix value with 'secretref:' to reference a secret."
         }
     ],
     "execution": {

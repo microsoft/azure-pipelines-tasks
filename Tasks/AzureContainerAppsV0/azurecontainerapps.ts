@@ -137,6 +137,12 @@ export class azurecontainerapps {
             if (!!targetPort) {
                 optionalCmdArgs.push(`--target-port ${targetPort}`);
             }
+            
+            // Add user specified environment variables
+            const environmentVariables: string = tl.getInput('environmentVariables', false);
+            if (!!environmentVariables) {
+                optionalCmdArgs.push(`--env-vars ${environmentVariables}`);
+            }
 
             // If using the Oryx++ Builder to produce an image, create a runnable application image
             if (!dockerfilePath && shouldBuildAndPushImage) {

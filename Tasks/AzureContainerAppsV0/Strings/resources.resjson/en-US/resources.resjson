@@ -32,6 +32,8 @@
   "loc.input.help.runtimeStack": "The platform version stack that the application runs in when deployed to the Azure Container App. This should be provided in the form of <platform>:<version>. If not provided, this value is determined by Oryx based on the contents of the provided application. Please view the following document for more information on the supported runtime stacks for Oryx: https://github.com/microsoft/Oryx/blob/main/doc/supportedRuntimeVersions.md",
   "loc.input.label.targetPort": "Application target port",
   "loc.input.help.targetPort": "The designated port for the application to run on. If not provided, this value is 80 for Python applications, and 8080 for all other supposed platforms.",
+  "loc.input.label.environmentVariables": "Environment variables",
+  "loc.input.help.environmentVariables": "A list of environment variable(s) for the container. Space-separated values in 'key=value' format. Empty string to clear existing values. Prefix value with 'secretref:' to reference a secret.",
   "loc.messages.AcrAccessTokenAuthFailed": "Unable to authenticate against ACR instance '%s.azurecr.io' with access token.",
   "loc.messages.AcrAccessTokenLoginMessage": "Logging in to Azure Container Registry using access token to be generated via Azure CLI.",
   "loc.messages.AcrUsernamePasswordAuthFailed": "Unable to authenticate against ACR instance '%s.azurecr.io' with username/password.",

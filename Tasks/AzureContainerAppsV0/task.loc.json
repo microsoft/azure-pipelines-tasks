@@ -18,7 +18,7 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 215,
+    "Minor": 217,
     "Patch": 0
   },
   "preview": true,
@@ -134,6 +134,13 @@
       "label": "ms-resource:loc.input.label.targetPort",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.targetPort"
+    },
+    {
+      "name": "environmentVariables",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.environmentVariables",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.environmentVariables"
     }
   ],
   "execution": {
