@@ -13,7 +13,7 @@
     "@types/uuid": "^8.3.0",
     "artifact-engine": "1.1.0",
     "azure-pipelines-task-lib": "^4.0.0-preview",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.216.2",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.216.3",
     "azure-storage": "2.10.4",
     "decompress-zip": "0.3.3",
     "fs-extra": "5.0.0",
