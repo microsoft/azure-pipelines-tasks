@@ -120,7 +120,9 @@ function Get-JobResults {
                     $jobInfo.JobRetrievelCount = 0
                     $jobState = $job.State.ToString().ToLowerInvariant()
                     Write-Verbose "JobId: '$jobid', JobState: '$jobState', ComputerName: '$computerName'"
-                    Write-Host "================================================ $computerName ================================================"
+                    if($jobsInfo.Count -gt 1) {
+                        Write-Host "================================================ $computerName ================================================"
+                    }
                     Receive-Job -Job $job |
                         ForEach-Object {
                             if($_.VstsRemoteDeployerJobResult -eq $true) { 
