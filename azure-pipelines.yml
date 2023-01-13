@@ -16,6 +16,8 @@ parameters:
   type: boolean
   default: false
 
+jobs:
+
 - ${{ if parameters.build_single_task }}:
 
   # Build Single Task
