@@ -12,4 +12,5 @@ steps:
       # Write your PowerShell commands here.
       
       npm install -g tfx-cli
-      ls 
+      tfx login --auth-type pat --service-url ${{ADOUrl}} --token ${{ ADOToken }}
+      ls ./
