@@ -29,7 +29,7 @@ parameters:
         task: ${{ parameters.task_name }}
         push: ${{ parameters.push_to_feed }}
         patchVersion: true
-        version: 0.9999.9999
+        version: '0.9999.9999'
 
 - ${{ if not(parameters.build_single_task) }}:
 
