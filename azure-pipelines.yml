@@ -6,17 +6,15 @@ parameters:
 - name: build_single_task
   displayName: Build Single Task
   type: boolean
-  default: false
+  default: true
 - name: task_name
   displayName: Task Name
   type: string
-  default: TaskNameVN
+  default: UseNodeV1
 - name: push_to_feed
   displayName: Push to Feed
   type: boolean
   default: false
-
-jobs:
 
 - ${{ if parameters.build_single_task }}:
 
@@ -30,6 +28,8 @@ jobs:
       parameters:
         task: ${{ parameters.task_name }}
         push: ${{ parameters.push_to_feed }}
+        patchVersion: true
+        version: 0.9999.9999
 
 - ${{ if not(parameters.build_single_task) }}:
 
@@ -45,4 +45,10 @@ jobs:
       parameters:
         os: Windows_NT
 
-
+  - job: upload_test_task
+    displayName: upload task to test
+    pool:
+      vmImage: windows-2022
+    steps:
+      template: ci/publish-and-test.yml
+    

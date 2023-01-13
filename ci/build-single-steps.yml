@@ -3,6 +3,10 @@ parameters:
   type: string
 - name: push
   type: boolean
+- name: patchVersion
+  type: boolean
+- name: version
+  type: string
 
 steps:
 
@@ -23,6 +27,12 @@ steps:
 # npm install
 - script: npm install
   displayName: npm install
+
+
+- ${{ if parameters.patchVersion }}:
+
+- script: node ci/canary-test/patch-task-version.js --task=${{ parameters.task }} --version=${{ parameters.version }}
+  displayName: patchTaskVersion
 
 # Verify min agent demands
 - script: |
