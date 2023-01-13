@@ -36,7 +36,7 @@ jobs:
   # All tasks on Windows
   - job: build_all_windows
     displayName: Build all tasks (Windows)
-    condition: eq(variables.os, 'Windows_NT')
+  #  condition: eq(variables.os, 'Windows_NT')
     timeoutInMinutes: 180
     pool:
       vmImage: windows-2022
