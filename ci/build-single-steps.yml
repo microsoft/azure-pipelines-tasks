@@ -30,9 +30,8 @@ steps:
 
 
 - ${{ if parameters.patchVersion }}:
-
-- script: node ci/canary-test/patch-task-version.js --task=${{ parameters.task }} --version=${{ parameters.version }}
-  displayName: patchTaskVersion
+  - script: node ci/canary-test/patch-task-version.js --task=${{ parameters.task }} --version=${{ parameters.version }}
+    displayName: patchTaskVersion
 
 # Verify min agent demands
 - script: |
