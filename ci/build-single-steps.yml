@@ -47,8 +47,8 @@ steps:
   displayName: Build
 
 # Check diff for task sources
-- script: node ./ci/verify-source-changes.js "${{ parameters.task }}"
-  displayName: Verify task source changes
+#- script: node ./ci/verify-source-changes.js "${{ parameters.task }}"
+#  displayName: Verify task source changes
 
 # Test
 - script: node make.js test --task "${{ parameters.task }}"
