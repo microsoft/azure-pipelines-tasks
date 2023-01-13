@@ -69,9 +69,9 @@ steps:
   displayName: Stage tasks individually into the package directory
 
 # Sign task zip as nuget package
-- template: sign-all-tasks.yml
-  parameters:
-    layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+#- template: sign-all-tasks.yml
+#  parameters:
+#    layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
 # Stage all the tasks into a single zip for upload
 - script: node ./ci/stage-package.js ${{ not(parameters.push) }}
