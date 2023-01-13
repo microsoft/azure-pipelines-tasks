@@ -12,3 +12,4 @@ steps:
       # Write your PowerShell commands here.
       
       npm install -g tfx-cli
+      ls 
