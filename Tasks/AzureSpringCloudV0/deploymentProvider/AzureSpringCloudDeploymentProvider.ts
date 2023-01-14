@@ -1,6 +1,6 @@
 import path = require('path');
 import { v4 as uuidv4 } from 'uuid';
-import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
+import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { Actions, DeploymentType, TaskParameters } from '../operations/taskparameters';
 import { SourceType, AzureSpringCloud } from './azure-arm-spring-cloud';
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
@@ -22,7 +22,14 @@ export class AzureSpringCloudDeploymentProvider {
     }
 
     public async PreDeploymentStep() {
-        const azureEndpoint = await new AzureRMEndpoint(this.taskParameters.ConnectedServiceName).getEndpoint();
+        // TODO: temporary fix for tests are failing with MSAL
+        let useMSAL:boolean = true;
+        let useMSALEnv = tl.getEndpointAuthorizationParameter("AzureRM", "USEMSAL", true);
+        if(useMSALEnv !== undefined) {
+            useMSAL = JSON.parse(useMSALEnv);
+        }
+
+        const azureEndpoint = await new AzureRMEndpoint(this.taskParameters.ConnectedServiceName).getEndpoint(false, useMSAL);
 
         //The Azure Spring Cloud parameter can be a resource ID (if selected from the picklist) or
         //a name (if entered manually). This is to avoid requiring the user to enter an otherwise unnecessary user

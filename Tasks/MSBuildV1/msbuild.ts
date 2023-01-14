@@ -1,7 +1,7 @@
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
-import msbuildHelpers = require('azure-pipelines-tasks-msbuildhelpers-v3/msbuildhelpers');
+import msbuildHelpers = require('azure-pipelines-tasks-msbuildhelpers/msbuildhelpers');
 import { TelemetryPayload, emitTelemetry } from './telemetryHelper';
 
 async function run() {
