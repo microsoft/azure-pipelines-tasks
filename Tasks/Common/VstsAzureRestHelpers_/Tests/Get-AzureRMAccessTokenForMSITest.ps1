@@ -37,6 +37,8 @@ $response = @{
     StatusDescription = 'OK'
 };
 
+Register-Mock Get-VstsTaskVariable { "false" } -- -Name "USE_MSAL"
+
 foreach ($variableSet in $variableSets) {
 
     Write-Verbose ('-' * 80)
