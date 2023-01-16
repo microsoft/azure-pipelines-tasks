@@ -13,7 +13,7 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 215,
+    "Minor": 217,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -73,6 +73,9 @@
   "dataSourceBindings": [],
   "execution": {
     "Node10": {
+      "target": "main.js"
+    },
+    "Node16": {
       "target": "main.js"
     }
   },

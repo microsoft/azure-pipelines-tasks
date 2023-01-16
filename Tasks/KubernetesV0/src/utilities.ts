@@ -82,7 +82,7 @@ export async function downloadKubectl(version: string, kubectlPath: string): Pro
     var kubectlPathTmp = kubectlPath+".tmp";
     return downloadutility.download(kubectlURL, kubectlPathTmp, false, true).then( (res) => {
             tl.cp(kubectlPathTmp, kubectlPath, "-f");
-            fs.chmodSync(kubectlPath, "644");
+            fs.chmodSync(kubectlPath, "777");
             assertFileExists(kubectlPath);
             return kubectlPath;
     },
