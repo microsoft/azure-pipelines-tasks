@@ -1,9 +1,0 @@
-{
-  "name": "java-common",
-  "dependencies": {},
-  "globalDependencies": {
-    "node": "registry:dt/node#6.0.0+20160915134512",
-    "q": "registry:dt/q#0.0.0+20160613154756",
-    "semver": "registry:dt/semver#4.3.4+20160608054219"
-  }
-}

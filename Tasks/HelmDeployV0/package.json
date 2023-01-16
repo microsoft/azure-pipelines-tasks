@@ -1,11 +1,11 @@
 {
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^10.17.0",
+    "@types/node": "^16.11.39",
     "@types/q": "^1.5.0",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-task-lib": "^3.0.6-preview.0",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "^2.210.0",
+    "azure-pipelines-task-lib": "^4.0.0-preview",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.216.3",
     "azure-pipelines-tasks-kubernetes-common-v2": "^2.212.0",
     "azure-pipelines-tasks-securefiles-common": "^2.207.0",
     "azure-pipelines-tasks-utility-common": "^3.210.0",

@@ -49,6 +49,12 @@ export class PackageUrlsBuilder {
                 this.packageProtocolAreaName = "maven";
                 this.getRouteParams = this.getMavenRouteParams;
                 break;
+            case "cargo":
+                this.packagingMetadataAreaId = "7A20D846-C929-4ACC-9EA2-0D5A7DF1B197";
+                this.packageProtocolDownloadAreadId = "BCEB7750-5D24-4BEA-A2C8-1E3155DCEFA3";
+                this.packageProtocolAreaName = "Cargo";
+                this.extension = ".crate";
+                break;
             default:
                 throw new Error(tl.loc("PackageTypeNotSupported"));
         }
@@ -119,6 +125,8 @@ export class PackageUrlsBuilder {
             case "pypi":
             case "maven":
                 return new MultiFilePackage(this);
+            case "cargo":
+                return new SingleFilePackage(this);
             default:
                 throw new Error(tl.loc("PackageTypeNotSupported"));
         }
