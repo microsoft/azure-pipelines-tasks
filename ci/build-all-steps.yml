@@ -49,6 +49,10 @@ steps:
   displayName: Build
   condition: ne(variables['numTasks'], 0)
 
+- script: node ./ci/check-tasks.js
+  displayName: Check that tasks has no duplicated libs
+  condition: and(succeeded(), eq(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
+
 # Check diff for task sources
 - script: node ./ci/verify-source-changes.js "$(task_pattern)"
   displayName: Verify task source changes
