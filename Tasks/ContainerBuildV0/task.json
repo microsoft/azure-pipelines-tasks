@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 198,
-        "Patch": 0
+        "Minor": 216,
+        "Patch": 1
     },
     "demands": [],
     "satisfies": [
@@ -66,6 +66,9 @@
     "instanceNameFormat": "Container Build Task",
     "execution": {
         "Node10": {
+            "target": "src//buildcontainer.js"
+        },
+        "Node16": {
             "target": "src//buildcontainer.js"
         }
     },

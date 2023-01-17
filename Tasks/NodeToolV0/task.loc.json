@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 200,
+    "Minor": 213,
     "Patch": 0
   },
   "satisfies": [
@@ -26,12 +26,30 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
+      "name": "versionSource",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.versionSource",
+      "required": true,
+      "defaultValue": "spec",
+      "options": {
+        "spec": "Specify Node version",
+        "fromFile": "Get version from file"
+      }
+    },
+    {
       "name": "versionSpec",
       "type": "string",
       "label": "ms-resource:loc.input.label.versionSpec",
       "defaultValue": "6.x",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
+      "helpMarkDown": "ms-resource:loc.input.help.versionSpec",
+      "visibleRule": "versionSource = spec"
+    },
+    {
+      "name": "versionFilePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionFilePath",
+      "helpMarkDown": "ms-resource:loc.input.help.versionFilePath",
+      "visibleRule": "versionSource = fromFile"
     },
     {
       "name": "checkLatest",
@@ -54,6 +72,10 @@
     "Node10": {
       "target": "nodetool.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "nodetool.js",
+      "argumentFormat": ""
     }
   },
   "restrictions": {
@@ -67,6 +89,10 @@
     }
   },
   "messages": {
-    "ToolFailed": "ms-resource:loc.messages.ToolFailed"
+    "ToolFailed": "ms-resource:loc.messages.ToolFailed",
+    "TryRosetta": "ms-resource:loc.messages.TryRosetta",
+    "NodeVersionNotFound": "ms-resource:loc.messages.NodeVersionNotFound",
+    "UnexpectedOS": "ms-resource:loc.messages.UnexpectedOS",
+    "AgentTempDirNotSet": "ms-resource:loc.messages.AgentTempDirNotSet"
   }
 }

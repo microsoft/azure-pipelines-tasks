@@ -17,7 +17,7 @@ import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import { Kubectl, Resource } from 'azure-pipelines-tasks-kubernetes-common-v2/kubectl-object-model';
 import { isEqual, StringComparer } from './StringComparison';
 import { getDeploymentMetadata, getPublishDeploymentRequestUrl, isDeploymentEntity, getManifestUrls } from 'azure-pipelines-tasks-kubernetes-common-v2/image-metadata-helper';
-import { WebRequest, sendRequest } from 'utility-common-v2/restutilities';
+import { WebRequest, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
 import { deployPodCanary } from './PodCanaryDeploymentHelper';
 import { deploySMICanary } from './SMICanaryDeploymentHelper';
 

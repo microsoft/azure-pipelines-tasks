@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 208,
+        "Minor": 214,
         "Patch": 0
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -404,6 +404,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "maventask.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "maventask.js",
             "argumentFormat": ""
         }

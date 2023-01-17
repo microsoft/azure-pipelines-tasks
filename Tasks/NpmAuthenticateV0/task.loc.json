@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 208,
+    "Minor": 216,
     "Patch": 0
   },
   "runsOn": [
@@ -23,7 +23,8 @@
       "name": "workingFile",
       "label": "ms-resource:loc.input.label.workingFile",
       "helpMarkDown": "ms-resource:loc.input.help.workingFile",
-      "type": "filePath"
+      "type": "filePath",
+      "required": true
     },
     {
       "name": "customEndpoint",
@@ -36,8 +37,21 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "npmauth.js"
+    },
+    "Node16": {
+      "target": "npmauth.js"
+    }
+  },
+  "postjobexecution": {
+    "Node10": {
+      "target": "npmauthcleanup.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "npmauthcleanup.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -59,11 +73,5 @@
     "NoIndexJsonFile": "ms-resource:loc.messages.NoIndexJsonFile",
     "RevertedChangesToNpmrc": "ms-resource:loc.messages.RevertedChangesToNpmrc",
     "NpmrcDoesNotExist": "ms-resource:loc.messages.NpmrcDoesNotExist"
-  },
-  "postjobexecution": {
-    "Node": {
-      "target": "npmauthcleanup.js",
-      "argumentFormat": ""
-    }
   }
 }

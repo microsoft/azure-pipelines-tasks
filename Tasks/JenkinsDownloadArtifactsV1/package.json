@@ -9,16 +9,16 @@
   "license": "MIT",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^10.17.0",
+    "@types/node": "^16.11.39",
     "@types/uuid": "^8.3.0",
     "artifact-engine": "1.1.0",
-    "azure-pipelines-task-lib": "^3.1.7",
-    "azure-pipelines-tasks-azure-arm-rest": "1.205.0",
+    "azure-pipelines-task-lib": "^4.0.0-preview",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.216.3",
     "azure-storage": "2.10.4",
     "decompress-zip": "0.3.3",
     "fs-extra": "5.0.0",
     "handlebars": "^4.7.7",
-    "moment": "2.21.0"
+    "moment": "^2.29.4"
   },
   "devDependencies": {
     "typescript": "4.0.2"

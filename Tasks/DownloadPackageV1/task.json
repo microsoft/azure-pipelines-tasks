@@ -9,12 +9,12 @@
     "author": "ms-vscs-rm",
     "version": {
         "Major": 1,
-        "Minor": 208,
+        "Minor": 216,
         "Patch": 0
     },
     "demands": [],
     "releaseNotes": "Adds support to download Maven, Python, Universal and Npm packages.",
-    "minimumAgentVersion": "2.115.0",
+    "minimumAgentVersion": "2.144.0",
     "groups": [
         {
             "name": "advancedOptions",
@@ -34,7 +34,8 @@
                 "npm": "Npm",
                 "nuget": "NuGet",
                 "pypi": "Python",
-                "upack": "Universal"
+                "upack": "Universal",
+                "cargo": "Cargo"
             }
         },
         {
@@ -165,6 +166,10 @@
     "instanceNameFormat": "Download Package $(definition)",
     "execution": {
         "Node10": {
+            "target": "main.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "main.js",
             "argumentFormat": ""
         }

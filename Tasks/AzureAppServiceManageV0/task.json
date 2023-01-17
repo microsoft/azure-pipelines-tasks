@@ -18,8 +18,8 @@
     "demands": [],
     "version": {
         "Major": 0,
-        "Minor": 206,
-        "Patch": 0
+        "Minor": 216,
+        "Patch": 1
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -287,7 +287,10 @@
     "execution": {
         "Node10": {
             "target": "azureappservicemanage.js"
-        }
+        },
+        "Node16": {
+            "target": "azureappservicemanage.js"
+          }
     },
     "messages": {
         "ErrorNoSuchDeployingMethodExists": "Error : Deploy method MSDeploy does not exists for Azure Web App: %s",

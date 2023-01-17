@@ -1,4 +1,4 @@
-import * as util from 'packaging-common/util';
+import * as util from 'azure-pipelines-tasks-packaging-common-v3/util';
 import * as constants from './constants';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as fs from 'fs';
@@ -6,8 +6,9 @@ import * as path from 'path';
 
 async function run() {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
-    let indexFile = path.join(tl.getVariable("SAVE_NPMRC_PATH"), 'index.json');
-    if (tl.exist(indexFile)) {
+    const npmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
+    let indexFile = npmrcPath && path.join(npmrcPath, 'index.json');
+    if (indexFile && tl.exist(indexFile)) {
         let indexFileText = fs.readFileSync(indexFile, 'utf8');
         let jsonObject = JSON.parse(indexFileText);
         let npmrcIndex = JSON.stringify(jsonObject[tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile)]);

@@ -8,8 +8,8 @@
         "@types/node": "^10.17.0",
         "@types/q": "1.0.7",
         "azure-pipelines-task-lib": "3.1.10",
-        "azure-pipelines-tasks-utility-common": "^3.0.3",
-        "azure-pipelines-tasks-azure-arm-rest-v2": "^2.0.6"
+        "azure-pipelines-tasks-azure-arm-rest-v2": "^3.216.3",
+        "azure-pipelines-tasks-utility-common": "^3.0.3"
     },
     "devDependencies": {
         "typescript": "4.0.2"

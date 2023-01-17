@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 198,
+        "Minor": 216,
         "Patch": 0
     },
     "demands": [],
@@ -134,6 +134,9 @@
     "instanceNameFormat": "Deploy IIS Website/App: $(WebDeployPackage)",
     "execution": {
         "Node10": {
+            "target": "deployiiswebapp.js"
+        },
+        "Node16": {
             "target": "deployiiswebapp.js"
         }
     },

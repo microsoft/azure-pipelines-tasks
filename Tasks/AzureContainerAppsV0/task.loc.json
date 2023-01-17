@@ -1,0 +1,175 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+  "id": "cad8dd6a-de28-4d89-a7db-1bc20a2fbb2d",
+  "name": "AzureContainerApps",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "version": {
+    "Major": 0,
+    "Minor": 215,
+    "Patch": 0
+  },
+  "preview": true,
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "showEnvironmentVariables": false,
+  "inputs": [
+    {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
+      "name": "appSourcePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.appSourcePath",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.appSourcePath"
+    },
+    {
+      "name": "connectedServiceNameARM",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.connectedServiceNameARM",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM",
+      "properties": {
+        "EndpointFilterRule": ""
+      }
+    },
+    {
+      "name": "acrName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.acrName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.acrName"
+    },
+    {
+      "name": "acrUsername",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.acrUsername",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.acrUsername"
+    },
+    {
+      "name": "acrPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.acrPassword",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.acrPassword"
+    },
+    {
+      "name": "dockerfilePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.dockerfilePath",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.dockerfilePath"
+    },
+    {
+      "name": "imageToBuild",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.imageToBuild",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.imageToBuild"
+    },
+    {
+      "name": "imageToDeploy",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.imageToDeploy",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.imageToDeploy"
+    },
+    {
+      "name": "containerAppName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.containerAppName",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.containerAppName"
+    },
+    {
+      "name": "resourceGroup",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.resourceGroup",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.resourceGroup"
+    },
+    {
+      "name": "containerAppEnvironment",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.containerAppEnvironment",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.containerAppEnvironment"
+    },
+    {
+      "name": "runtimeStack",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.runtimeStack",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runtimeStack"
+    },
+    {
+      "name": "targetPort",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.targetPort",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.targetPort"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "azurecontainerapps.js"
+    },
+    "Node16": {
+      "target": "azurecontainerapps.js"
+    }
+  },
+  "messages": {
+    "AcrAccessTokenAuthFailed": "ms-resource:loc.messages.AcrAccessTokenAuthFailed",
+    "AcrAccessTokenLoginMessage": "ms-resource:loc.messages.AcrAccessTokenLoginMessage",
+    "AcrUsernamePasswordAuthFailed": "ms-resource:loc.messages.AcrUsernamePasswordAuthFailed",
+    "AcrUsernamePasswordLoginMessage": "ms-resource:loc.messages.AcrUsernamePasswordLoginMessage",
+    "BashCommandFailed": "ms-resource:loc.messages.BashCommandFailed",
+    "CheckForAppSourceDockerfileMessage": "ms-resource:loc.messages.CheckForAppSourceDockerfileMessage",
+    "ContainerAppEnvironmentUsedMessage": "ms-resource:loc.messages.ContainerAppEnvironmentUsedMessage",
+    "CreateImageWithBuilderFailed": "ms-resource:loc.messages.CreateImageWithBuilderFailed",
+    "CreateImageWithBuilderMessage": "ms-resource:loc.messages.CreateImageWithBuilderMessage",
+    "CreateImageWithDockerfileFailed": "ms-resource:loc.messages.CreateImageWithDockerfileFailed",
+    "CreateImageWithDockerfileMessage": "ms-resource:loc.messages.CreateImageWithDockerfileMessage",
+    "CreateOrUpdateContainerAppFailed": "ms-resource:loc.messages.CreateOrUpdateContainerAppFailed",
+    "DefaultContainerAppNameMessage": "ms-resource:loc.messages.DefaultContainerAppNameMessage",
+    "DefaultImageToBuildMessage": "ms-resource:loc.messages.DefaultImageToBuildMessage",
+    "DefaultImageToDeployMessage": "ms-resource:loc.messages.DefaultImageToDeployMessage",
+    "DefaultResourceGroupMessage": "ms-resource:loc.messages.DefaultResourceGroupMessage",
+    "DefaultRuntimeStackMessage": "ms-resource:loc.messages.DefaultRuntimeStackMessage",
+    "DefaultTargetPortMessage": "ms-resource:loc.messages.DefaultTargetPortMessage",
+    "DetermineRuntimeStackFailed": "ms-resource:loc.messages.DetermineRuntimeStackFailed",
+    "ErrorCodeFormat": "ms-resource:loc.messages.ErrorCodeFormat",
+    "ErrorMessageFormat": "ms-resource:loc.messages.ErrorMessageFormat",
+    "FoundAppSourceDockerfileMessage": "ms-resource:loc.messages.FoundAppSourceDockerfileMessage",
+    "InvalidArgumentsMessage": "ms-resource:loc.messages.InvalidArgumentsMessage",
+    "PackCliInstallFailed": "ms-resource:loc.messages.PackCliInstallFailed",
+    "PushImageToAcrFailed": "ms-resource:loc.messages.PushImageToAcrFailed",
+    "SetDefaultBuilderFailed": "ms-resource:loc.messages.SetDefaultBuilderFailed"
+  }
+}

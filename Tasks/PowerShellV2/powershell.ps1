@@ -35,6 +35,7 @@ try {
     $input_informationPreference = Get-ActionPreference -VstsInputName 'informationPreference' -DefaultAction 'Default'
     $input_verbosePreference = Get-ActionPreference -VstsInputName 'verbosePreference' -DefaultAction 'Default'
     $input_debugPreference = Get-ActionPreference -VstsInputName 'debugPreference' -DefaultAction 'Default'
+    $input_progressPreference = Get-ActionPreference -VstsInputName 'progressPreference' -DefaultAction 'SilentlyContinue'
 
     $input_showWarnings = Get-VstsInput -Name 'showWarnings' -AsBool
     $input_failOnStderr = Get-VstsInput -Name 'failOnStderr' -AsBool
@@ -83,6 +84,9 @@ try {
     }
     if ($input_debugPreference -ne 'Default') {
         $contents += "`$DebugPreference = '$input_debugPreference'"
+    }
+    if ($input_progressPreference -ne 'Default') {
+        $contents += "`$ProgressPreference = '$input_progressPreference'"
     }
     # Change default error view to normal view. We need this for error handling since we pipe stdout and stderr to the same stream
     # and we rely on PowerShell piping back NormalView error records (required because PowerShell Core changed the default to ConciseView)

@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 208,
-    "Patch": 0
+    "Minor": 216,
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -104,9 +104,9 @@
         "webAppLinux": "Web App on Linux",
         "webAppContainer": "Web App for Containers (Linux)",
         "webAppHyperVContainer": "Web App for Containers (Windows)",
-        "functionApp": "Function App on Windows",
-        "functionAppLinux": "Function App on Linux",
-        "functionAppContainer": "Function App for Containers (Linux)",
+        "functionApp": "Function App on Windows (Not Recommended, Use Azure Functions Task)",
+        "functionAppLinux": "Function App on Linux (Not Recommended, Use Azure Functions Task)",
+        "functionAppContainer": "Function App for Containers (Linux) (Not Recommended, Use Azure Functions for container Task)",
         "apiApp": "API App",
         "mobileApp": "Mobile App"
       },
@@ -496,6 +496,9 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {
+      "target": "azurermwebappdeployment.js"
+    },
+    "Node16": {
       "target": "azurermwebappdeployment.js"
     }
   },

@@ -9,14 +9,14 @@
     "category": "Package",
     "version": {
         "Major": 0,
-        "Minor": 208,
+        "Minor": 214,
         "Patch": 0
     },
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
-    "minimumAgentVersion": "2.115.0",
+    "minimumAgentVersion": "2.144.0",
     "instanceNameFormat": "Twine Authenticate $(message)",
     "groups": [
         {
@@ -81,7 +81,11 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
+            "target": "twineauthenticatemain.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "twineauthenticatemain.js",
             "argumentFormat": ""
         }
@@ -106,7 +110,11 @@
         "Warning_SessionCreationFailed": "Could not create provenance session: %s"
     },
     "postjobexecution": {
-        "Node": {
+        "Node10": {
+            "target": "authcleanup.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "authcleanup.js",
             "argumentFormat": ""
         }
