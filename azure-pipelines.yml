@@ -47,10 +47,10 @@ jobs:
       parameters:
         os: Windows_NT
 
-  - job: upload_test_task
-    displayName: upload task to test
-    pool:
-      vmImage: windows-2022
-    steps:
-      template: ci/publish-and-test.yml
+- job: upload_test_task
+  displayName: upload task to test
+  pool:
+    vmImage: windows-2022
+  steps:
+    template: ci/publish-and-test.yml
     
