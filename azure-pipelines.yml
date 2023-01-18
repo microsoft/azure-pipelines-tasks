@@ -34,7 +34,7 @@ steps:
 - script: |
     export nodeVersion=$(node -v)
     export npmVersion=$(npm -v)
-    echo "node.js version is $nodeVersion, npm version is $(npmVersion)"
+    echo "node.js version is $nodeVersion, npm version is $npmVersion"
   displayName: 'Display node and npm versions'
 
 - script: |
