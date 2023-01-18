@@ -213,18 +213,6 @@ export class azureclitask {
 
         return response.idToken;
     }
-
-    private static getSystemAccessToken() : string {
-        tl.debug('Getting credentials for local feeds');
-        const auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
-        if (auth.scheme === 'OAuth') {
-            tl.debug('Got auth token');
-            return auth.parameters['AccessToken'];
-        }
-        else {
-            tl.warning('Could not determine credentials to use');
-        }
-    }
 }
 
 tl.setResourcePath(path.join(__dirname, "task.json"));
