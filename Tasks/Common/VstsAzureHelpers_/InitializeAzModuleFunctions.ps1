@@ -219,6 +219,7 @@ function Retry-Command {
                 Write-Verbose("Command [{0}] failed the maximum number of {1} times." -f $command, $retryCount)
                 throw
             } else {
+                $secondsDelay = [math]::Pow(2, retryCount)
                 Write-Verbose("Command [{0}] failed. Retrying in {1} seconds." -f $command, $secondsDelay)
                 Start-Sleep $secondsDelay
                 $retryCount++
