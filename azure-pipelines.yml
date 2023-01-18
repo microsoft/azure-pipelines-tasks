@@ -2,6 +2,14 @@ trigger:
 - master
 
 steps:
+- script: git status
+  displayName: 'Run git status'
+
+- script: |
+    export num=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.BuildId) $(Build.SourceBranchName))
+    echo "node.js returned $num"
+  displayName: 'Run get_recently_updated_taskname.js'
+
 - script: |
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
@@ -26,17 +34,8 @@ steps:
     echo "node.js returned $value"
   displayName: 'Run return_object.js'
 
-- script: 
-    git status
-  displayName: 'Run git status'
-
 - script: |
     export nodeVersion=$(node -v)
     export npmVersion=$(npm -v)
     echo "node.js version is $nodeVersion, npm version is $npmVersion"
   displayName: 'Display node and npm versions'
-
-- script: |
-    export num=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.BuildId) $(Build.SourceBranchName))
-    echo "node.js returned $num"
-  displayName: 'Run get_recently_updated_taskname.js'
