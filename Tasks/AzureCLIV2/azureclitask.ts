@@ -206,12 +206,12 @@ export class azureclitask {
         const authHandler = getHandlerFromToken(token);
         const connection = new WebApi(uri, authHandler);
         const api: ITaskApi = await connection.getTaskApi();
-        const response = await api.createIdToken({}, projectId, hub, planId, jobId, connectedService);
+        const response = await api.createOidcToken({}, projectId, hub, planId, jobId, connectedService);
         if (response == null) {
             return null;
         }
 
-        return response.idToken;
+        return response.oidcToken;
     }
 }
 

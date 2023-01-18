@@ -20,9 +20,9 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^16.11.39",
     "@types/q": "1.0.7",
-    "azure-devops-node-api": "file:azure-devops-node-api-11.3.1.tgz",
+    "azure-devops-node-api": "^12.0.0",
     "azure-pipelines-task-lib": "^4.1.0",
-    "azure-pipelines-tasks-artifacts-common": "2.212.0"
+    "azure-pipelines-tasks-artifacts-common": "^2.212.0"
   },
   "devDependencies": {
     "typescript": "4.0.2"
