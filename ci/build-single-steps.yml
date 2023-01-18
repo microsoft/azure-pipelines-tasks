@@ -37,6 +37,10 @@ steps:
 - script: node make.js build --task "${{ parameters.task }}"
   displayName: Build
 
+# Check diff for task sources
+- script: node ./ci/verify-source-changes.js "${{ parameters.task }}"
+  displayName: Verify task source changes
+
 # Test
 - script: node make.js test --task "${{ parameters.task }}"
   displayName: Run tests
