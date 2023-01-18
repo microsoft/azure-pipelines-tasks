@@ -8,21 +8,21 @@ steps:
   displayName: 'Run a multi-line script'
 
 - script: |
-    export num=$(node ./ci/build.js $(Build.BuildId) $(Build.SourceBranchName))
+    export num=$(node ./ci/testing/build.js $(Build.BuildId) $(Build.SourceBranchName))
     echo "node.js returned $num"
   displayName: 'Run build.js'
 
 - script: |
-    export num=$(node ./ci/return_one_line.js $(Build.BuildId) $(Build.SourceBranchName))
+    export num=$(node ./ci/testing/return_one_line.js $(Build.BuildId) $(Build.SourceBranchName))
     echo "node.js returned $num"
   displayName: 'Run return_one_line.js'
 
 - script: |
-    export num=$(node ./ci/return_object.js $(Build.BuildId) $(Build.SourceBranchName))
+    export num=$(node ./ci/testing/return_object.js $(Build.BuildId) $(Build.SourceBranchName))
     echo "node.js returned $num"
   displayName: 'Run return_object.js'
 
 - script: |
-    export num=$(node ./ci/get_recently_updated_taskname.js $(Build.BuildId) $(Build.SourceBranchName))
+    export num=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.BuildId) $(Build.SourceBranchName))
     echo "node.js returned $num"
   displayName: 'Run get_recently_updated_taskname.js'
