@@ -2,6 +2,9 @@ trigger:
 - master
 
 steps:
+- script: ls
+  displayName: 'Run dir'
+
 - script: git status
   displayName: 'Run git status'
 
