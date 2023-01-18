@@ -19,12 +19,16 @@
     "string": "3.3.1",
     "uuid": "3.1.0",
     "vso-node-api": "6.0.4-preview",
-    "azure-pipelines-task-lib": "2.8.0",
+    "azure-pipelines-task-lib": "^4.1.0",
     "xml2js": "0.4.16",
-    "@types/node": "^6.0.101",
+    "@types/node": "^16.11.39",
+    "@types/mocha": "^5.2.7",
     "@types/q": "^1.5.0"
   },
   "optionalDependencies": {
     "regedit": "2.2.6"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }
