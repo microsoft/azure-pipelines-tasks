@@ -10,7 +10,7 @@ steps:
 - script: |
     export buildNumber=$(node ./ci/testing/build.js $(Build.BuildId) $(Build.SourceBranchName))
     echo "node.js returned $buildNumber"
-    echo "##vso[build.updatebuildnumber]$num"
+    echo "##vso[build.updatebuildnumber]$buildNumber"
   displayName: 'Run build.js'
 
 - script:  echo "new buildnumber ~>$(Build.BuildNumber)"
@@ -30,6 +30,12 @@ steps:
     export value=$(node ./ci/testing/return_object.js)
     echo "node.js returned $value"
   displayName: 'Run return_object.js'
+
+- script: |
+    export nodeVersion=$(node -v)
+    export npmVersion=$(npm -v)
+    echo "node.js version is $nodeVersion, npm version is $(npmVersion)"
+  displayName: 'Display node and npm versions'
 
 - script: |
     export num=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.BuildId) $(Build.SourceBranchName))
