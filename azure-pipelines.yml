@@ -11,6 +11,12 @@ steps:
 - script: git status
   displayName: 'git status'
 
+- script: git checkout develop
+  displayName: 'git checkout develop'
+  
+- script: git status
+  displayName: 'git status'
+
 - script: git remote -v
   displayName: 'git remote -v'
 
