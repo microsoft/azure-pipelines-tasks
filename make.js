@@ -349,14 +349,14 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
                 banner('Run Mocha Suits for node ' + nodeVersion);
                 // setup the version of node to run the tests
                 util.installNode(nodeVersion);
-				
-				if (nodeVersions.length - 1 === index) {
-					run('c8 --reports-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
-					renameCodeCoverageOutput(coverageTasksPath, taskName);					//cd('..');
-				}
-				else {
-					run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
-				}
+
+                if (nodeVersions.length - 1 === index) {
+                    run('nyc --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+                    renameCodeCoverageOutput(coverageTasksPath, taskName);
+                }
+                else {
+                    run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+                }
             }  catch (e) {
                 console.error(e);
                 process.exit(1);
@@ -374,6 +374,16 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
                 runTaskTests(taskName);
             }
         });
+
+        try {
+            util.rm(path.join(coverageTasksPath, '*coverage-summary.json'));
+            util.run(`nyc merge ${coverageTasksPath} ${path.join(coverageTasksPath, 'mergedcoverage.json')}`, true);
+            util.rm(path.join(coverageTasksPath, '*-coverage.json'));
+            util.run(`nyc report -t ${coverageTasksPath} --report-dir ${coverageTasksPath} --reporter=cobertura`, true);
+            util.rm(path.join(coverageTasksPath, 'mergedcoverage.json'));
+        } catch (e) {
+            console.log('Error while generating coverage report')
+        }
 
         banner('Running common library tests');
         var commonLibPattern = path.join(buildTasksPath, 'Common', '*', 'Tests', suiteType + '.js');
@@ -407,11 +417,11 @@ function renameCodeCoverageOutput(coveragePath, taskName) {
     if (!coveragePath) return;
     try {
         if (fs.existsSync(coveragePath)) {
-            if (fs.existsSync(path.join(coveragePath, "cobertura-coverage.xml"))) {
-                fs.renameSync(path.join(coveragePath, "cobertura-coverage.xml"), path.join(coveragePath, `${taskName}-cobertura-coverage.xml`));				
+            if (fs.existsSync(path.join(coveragePath, "coverage-final.json"))) {
+                fs.renameSync(path.join(coveragePath, "coverage-final.json"), path.join(coveragePath, `${taskName}-coverage.json`));
             }
             if (fs.existsSync(path.join(coveragePath, "coverage-summary.json"))) {
-                fs.renameSync(path.join(coveragePath, "coverage-summary.json"), path.join(coveragePath, `${taskName}-coverage-summary.json`));				
+                fs.renameSync(path.join(coveragePath, "coverage-summary.json"), path.join(coveragePath, `${taskName}-coverage-summary.json`));
             }
         }
     } catch (e) {

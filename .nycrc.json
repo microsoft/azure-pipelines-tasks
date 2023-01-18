@@ -10,7 +10,7 @@
   },
   "reporter": [
 	"text",
-	"cobertura",
+	"json",
 	"json-summary"
   ]
 }

@@ -33,12 +33,12 @@
   "devDependencies": {
     "adm-zip": "0.4.13",
     "azure-devops-node-api": "^10.2.2",
-    "c8": "^7.12.0",
     "js-yaml": "^3.13.1",
     "minimatch": "3.0.2",
     "minimist": "^1.2.6",
     "mocha": "^6.2.3",
     "node-uuid": "1.4.6",
+    "nyc": "^15.1.0",
     "q": "1.4.1",
     "semver": "4.3.3",
     "shelljs": "^0.8.5",

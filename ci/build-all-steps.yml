@@ -90,7 +90,6 @@ steps:
   inputs:
     codeCoverageTool: Cobertura
     summaryFileLocation: $(System.DefaultWorkingDirectory)/_build/coverage/*coverage.xml
-    additionalCodeCoverageFiles: $(System.DefaultWorkingDirectory)/_build/coverage/*coverage-summary.json
 
 # Only when building on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
