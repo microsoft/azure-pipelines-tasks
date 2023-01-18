@@ -119,7 +119,7 @@ export class DeploymentScopeBase {
             var servicePrincipalObject = await graphClient.servicePrincipals.GetServicePrincipal(null);
             return !!servicePrincipalObject ? servicePrincipalObject.appDisplayName : "";    
         } catch (error) {
-            tl.debug(tl.loc("ServicePrincipalFetchFailed", error));
+            tl.debug(tl.loc("ServicePrincipalFetchFailed", (error.message || error)));
             return "";
         }
     }

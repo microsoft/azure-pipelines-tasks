@@ -9,7 +9,7 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 215,
+    "Minor": 216,
     "Patch": 0
   },
   "demands": [],
@@ -34,7 +34,8 @@
         "npm": "Npm",
         "nuget": "NuGet",
         "pypi": "Python",
-        "upack": "Universal"
+        "upack": "Universal",
+        "cargo": "Cargo"
       }
     },
     {
