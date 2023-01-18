@@ -7,6 +7,9 @@ steps:
 
 - script: git status
   displayName: 'Run git status'
+  
+- script: git diff --name-only master
+  displayName: 'Run git diff --name-only master'
 
 - script: |
     export num=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.BuildId) $(Build.SourceBranchName))
