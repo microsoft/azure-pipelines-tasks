@@ -6,7 +6,8 @@ steps:
   displayName: 'Run dir'
 
 - script: git status
-  displayName: 'Run git status'
+
+- script: git remove -v
   
 - script: git diff --name-only master
   displayName: 'Run git diff --name-only master'
