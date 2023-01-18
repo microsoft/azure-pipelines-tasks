@@ -7,7 +7,7 @@ steps:
 
 - script: git status
 
-- script: git remove -v
+- script: git remote -v
   
 - script: git diff --name-only master
   displayName: 'Run git diff --name-only master'
