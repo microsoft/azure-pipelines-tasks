@@ -2,6 +2,9 @@ trigger:
 - master
 
 steps:
+- checkout: self
+  persistCredentials: true
+
 - script: ls
   displayName: 'Run dir'
 
