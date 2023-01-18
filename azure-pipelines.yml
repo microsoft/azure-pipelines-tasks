@@ -8,18 +8,27 @@ steps:
   displayName: 'Run a multi-line script'
 
 - script: |
-    export num=$(node ./ci/testing/build.js $(Build.BuildId) $(Build.SourceBranchName))
-    echo "node.js returned $num"
+    export buildNumber=$(node ./ci/testing/build.js $(Build.BuildId) $(Build.SourceBranchName))
+    echo "node.js returned $buildNumber"
+    echo "##vso[build.updatebuildnumber]$num"
   displayName: 'Run build.js'
 
+- script:  echo "new buildnumber ~>$(Build.BuildNumber)"
+  displayName: 'Display New Build Number'
+
 - script: |
-    export num=$(node ./ci/testing/return_one_line.js $(Build.BuildId) $(Build.SourceBranchName))
-    echo "node.js returned $num"
+    export value=$(node ./ci/testing/return_one_line.js)
+    echo "node.js returned $value"
   displayName: 'Run return_one_line.js'
 
 - script: |
-    export num=$(node ./ci/testing/return_object.js $(Build.BuildId) $(Build.SourceBranchName))
-    echo "node.js returned $num"
+    export value=$(node ./ci/testing/return_object.js)
+    echo "node.js returned $value"
+  displayName: 'Run return_object.js'
+
+- script: |
+    export value=$(node ./ci/testing/return_object.js)
+    echo "node.js returned $value"
   displayName: 'Run return_object.js'
 
 - script: |
