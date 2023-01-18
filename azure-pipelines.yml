@@ -1,21 +1,6 @@
 trigger:
 - master
 
-
-parameters:
-- name: build_single_task
-  displayName: Build Single Task
-  type: boolean
-  default: true
-- name: task_name
-  displayName: Task Name
-  type: string
-  default: UseNodeV1
-- name: push_to_feed
-  displayName: Push to Feed
-  type: boolean
-  default: false
-
 steps:
 - script: |
     echo Add other tasks to build, test, and deploy your project.
@@ -23,6 +8,6 @@ steps:
   displayName: 'Run a multi-line script'
 
 - script: |
-    export num=$(node ./build.js $(Build.BuildId) $(Build.SourceBranchName))
+    export num=$(node ./ci/build.js $(Build.BuildId) $(Build.SourceBranchName))
     echo "node.js returned $num"
   displayName: 'Run build.js'
