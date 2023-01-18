@@ -11,6 +11,13 @@ steps:
 - script: git remote -v
   displayName: 'git remote -v'
 
+- script: git branch -r
+  displayName: 'git branch -r'
+
+- script: git diff origin/master
+  displayName: 'git diff origin/master'
+
+
 - script: git diff --name-only master
   displayName: 'Run git diff --name-only master'
 
