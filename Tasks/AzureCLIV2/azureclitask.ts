@@ -201,17 +201,17 @@ export class azureclitask {
         const projectId = tl.getVariable("System.TeamProjectId");
         const hub = tl.getVariable("System.HostType");
         const uri = tl.getVariable("system.collectionUri");
-        const token = this.getSystemAccessToken();
+        const token = getSystemAccessToken();
 
         const authHandler = getHandlerFromToken(token);
         const connection = new WebApi(uri, authHandler);
         const api: ITaskApi = await connection.getTaskApi();
-        const response = await api.createIdToken({}, projectId, hub, planId, jobId, connectedService);
+        const response = await api.createOidcToken({}, projectId, hub, planId, jobId, connectedService);
         if (response == null) {
             return null;
         }
 
-        return response.idToken;
+        return response.oidcToken;
     }
 }
 
