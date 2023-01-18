@@ -26,10 +26,9 @@ steps:
     echo "node.js returned $value"
   displayName: 'Run return_object.js'
 
-- script: |
-    export value=$(node ./ci/testing/return_object.js)
-    echo "node.js returned $value"
-  displayName: 'Run return_object.js'
+- script: 
+    git status
+  displayName: 'Run git status'
 
 - script: |
     export nodeVersion=$(node -v)
