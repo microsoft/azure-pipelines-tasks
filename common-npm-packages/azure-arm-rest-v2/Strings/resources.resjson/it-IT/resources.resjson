@@ -4,6 +4,8 @@
   "loc.messages.SecretCannotBeEmpty": "secret non deve essere una stringa vuota.",
   "loc.messages.armUrlCannotBeEmpty": "L'URL di ARM non deve essere una stringa vuota.",
   "loc.messages.authorityUrlCannotBeEmpty": "authority non deve essere una stringa vuota.",
+  "loc.messages.serviceConnectionIdCannotBeEmpty": "serviceConnectionId non deve essere una stringa vuota.",
+  "loc.messages.CouldNotFetchAccessTokenforAAD": "Non è stato possibile recuperare il token di accesso per AAD. Codice di stato: %s. Messaggio di stato: %s",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Non è stato possibile recuperare il token di accesso per Azure. Codice di stato: %s. Messaggio di stato: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Non è stato possibile recuperare il token di accesso per l'entità servizio gestita. Configurare l'identità del servizio gestita per la macchina virtuale 'https://aka.ms/azure-msi-docs'. Codice di stato: %s. Messaggio di stato: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Non è stato possibile recuperare il token di accesso per l'entità servizio gestita. Codice di stato: %s. Messaggio di stato: %s",
