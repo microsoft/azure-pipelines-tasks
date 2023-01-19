@@ -30,6 +30,21 @@ export class AzureRMEndpoint {
             return this.endpoint;
         }
         else {
+            const rawUseMSAL = tl.getVariable("USE_MSAL");
+            if (rawUseMSAL) {
+                try {
+                    tl.debug(`MSAL - USE_MSAL override is found: ${rawUseMSAL}`);
+                    const parsedUseMSAL = JSON.parse(rawUseMSAL);
+                    if (typeof parsedUseMSAL !== "boolean") {
+                        throw new Error("Value is not a boolean");
+                    }
+                    useMSAL = parsedUseMSAL;
+                } catch (error) {
+                    // this is not a blocker error, so we're informing
+                    tl.debug(`MSAL - USE_MSAL couldn't be parsed due to error ${error}. useMSAL=${useMSAL} is used instead`);
+                }
+            }
+
             let endpointAuthScheme = tl.getEndpointAuthorizationScheme(this._connectedServiceName, true);
             if (endpointAuthScheme && endpointAuthScheme.toLowerCase() == constants.AzureRmEndpointAuthenticationScheme.PublishProfile) {
 
@@ -70,7 +85,7 @@ export class AzureRMEndpoint {
                 tl.debug('MSAL - getEndpoint - connectedServiceName=' + this._connectedServiceName);
 
                 if (useGraphActiveDirectoryResource) {
-                    const fallbackURL = useMSAL ? "https://graph.microsoft.com/v1.0/" : "https://graph.microsoft.com/";
+                    const fallbackURL = "https://graph.microsoft.com/";
                     var activeDirectoryResourceId: string = tl.getEndpointDataParameter(this._connectedServiceName, useMSAL ? 'microsoftGraphUrl' : 'graphUrl', true);
                     activeDirectoryResourceId = activeDirectoryResourceId != null ? activeDirectoryResourceId : fallbackURL;
                     this.endpoint.activeDirectoryResourceID = activeDirectoryResourceId;
@@ -112,19 +127,19 @@ export class AzureRMEndpoint {
 
                 let access_token: string = tl.getEndpointAuthorizationParameter(this._connectedServiceName, "apitoken", true);
                 this.endpoint.applicationTokenCredentials = new ApplicationTokenCredentials(
-                    this.endpoint.servicePrincipalClientID, 
-                    this.endpoint.tenantID, 
+                    this.endpoint.servicePrincipalClientID,
+                    this.endpoint.tenantID,
                     this.endpoint.servicePrincipalKey,
-                    this.endpoint.url, 
-                    this.endpoint.environmentAuthorityUrl, 
-                    this.endpoint.activeDirectoryResourceID, 
-                    !!this.endpoint.environment && this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack, 
-                    this.endpoint.scheme, 
-                    this.endpoint.msiClientId, 
-                    this.endpoint.authenticationType, 
-                    this.endpoint.servicePrincipalCertificatePath, 
-                    this.endpoint.isADFSEnabled, 
-                    access_token, 
+                    this.endpoint.url,
+                    this.endpoint.environmentAuthorityUrl,
+                    this.endpoint.activeDirectoryResourceID,
+                    !!this.endpoint.environment && this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack,
+                    this.endpoint.scheme,
+                    this.endpoint.msiClientId,
+                    this.endpoint.authenticationType,
+                    this.endpoint.servicePrincipalCertificatePath,
+                    this.endpoint.isADFSEnabled,
+                    access_token,
                     useMSAL
                 );
             }
