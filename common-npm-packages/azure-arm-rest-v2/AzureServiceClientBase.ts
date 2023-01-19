@@ -36,13 +36,13 @@ export interface ApiCallback {
 export function ToError(response: webClient.WebResponse): AzureError {
     var error = new AzureError();
     error.statusCode = response.statusCode;
-    error.message = response.body
+    error.message = response.body;
     if (response.body && response.body.error) {
         error.code = response.body.error.code;
         error.message = response.body.error.message;
         error.details = response.body.error.details;
 
-        console.log("##vso[task.logissue type=error;code="+error.code+";]");
+        console.log("##vso[task.logissue type=error;code=" + error.code + ";]");
     }
 
     return error;
@@ -82,7 +82,8 @@ export class AzureServiceClientBase {
 
         // process query paramerters
         queryParameters = queryParameters || [];
-        queryParameters.push('api-version=' + encodeURIComponent(apiVersion || this.apiVersion));
+        const currentApiVersion = apiVersion || this.apiVersion;
+        if (currentApiVersion) { queryParameters.push('api-version=' + encodeURIComponent(currentApiVersion)); }
         if (queryParameters.length > 0) {
             requestUri += '?' + queryParameters.join('&');
         }
@@ -114,8 +115,7 @@ export class AzureServiceClientBase {
 
         var httpResponse = null;
 
-        try
-        {
+        try {
             httpResponse = await webClient.sendRequest(request);
             if (httpResponse.statusCode === 401 && httpResponse.body && httpResponse.body.error && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
                 // The access token might have expire. Re-issue the request after refreshing the token.
@@ -124,21 +124,21 @@ export class AzureServiceClientBase {
                 httpResponse = await webClient.sendRequest(request);
             }
 
-            if(!!httpResponse.headers[CorrelationIdInResponse]) {
+            if (!!httpResponse.headers[CorrelationIdInResponse]) {
                 tl.debug(`Correlation ID from ARM api call response : ${httpResponse.headers[CorrelationIdInResponse]}`);
             }
-        } catch(exception) {
+        } catch (exception) {
             let exceptionString: string = exception.toString();
-            if(exceptionString.indexOf("Hostname/IP doesn't match certificates's altnames") != -1
+            if (exceptionString.indexOf("Hostname/IP doesn't match certificates's altnames") != -1
                 || exceptionString.indexOf("unable to verify the first certificate") != -1
                 || exceptionString.indexOf("unable to get local issuer certificate") != -1) {
-                    tl.warning(tl.loc('ASE_SSLIssueRecommendation'));
+                tl.warning(tl.loc('ASE_SSLIssueRecommendation'));
             }
 
             throw exception;
         }
 
-        if(httpResponse.headers["azure-asyncoperation"] || httpResponse.headers["location"])
+        if (httpResponse.headers["azure-asyncoperation"] || httpResponse.headers["location"])
             tl.debug(request.uri + " ==> " + httpResponse.headers["azure-asyncoperation"] || httpResponse.headers["location"])
 
         return httpResponse;
@@ -159,7 +159,7 @@ export class AzureServiceClientBase {
             try {
                 response = await this.beginRequest(request);
                 tl.debug(`Response status code : ${response.statusCode}`);
-                if (response.statusCode === 202 || (response.body && (response.body.status == "Accepted" || response.body.status == "Running" || response.body.status == "InProgress"))) {
+                if (response.statusCode === 202 || (response.body && (response.body.status == "Accepted" || response.body.status == "Running" || response.body.status == "InProgress" || response.body.status == "DeploymentNotFound"))) {
                     if (response.body && response.body.status) {
                         tl.debug(`Response status : ${response.body.status}`);
                     }
@@ -180,7 +180,7 @@ export class AzureServiceClientBase {
             }
             catch (error) {
                 let errorString: string = (!!error && error.toString()) || "";
-                if(!!errorString && errorString.toLowerCase().indexOf("request timeout") >= 0 && ignoreTimeoutErrorThreshold > 0) {
+                if (!!errorString && errorString.toLowerCase().indexOf("request timeout") >= 0 && ignoreTimeoutErrorThreshold > 0) {
                     // Ignore Request Timeout error and continue polling operation
                     tl.debug(`Request Timeout: ${request.uri}`);
                     ignoreTimeoutErrorThreshold--;
@@ -196,15 +196,15 @@ export class AzureServiceClientBase {
 
     public async beginRequestExpBackoff(request: webClient.WebRequest, maxAttempt: number): Promise<webClient.WebResponse> {
         var sleepDuration = 1;
-        for(var i = 1; true; i++) {
-            var response : webClient.WebResponse = await this.beginRequest(request);
+        for (var i = 1; true; i++) {
+            var response: webClient.WebResponse = await this.beginRequest(request);
             //not a server error;
-            if(response.statusCode <500) {
+            if (response.statusCode < 500) {
                 return response;
             }
 
             // response of last attempt
-            if(i == maxAttempt) {
+            if (i == maxAttempt) {
                 return response;
             }
 
@@ -244,14 +244,14 @@ export class AzureServiceClientBase {
     public isNameValid(name: string): boolean {
         if (name === null || name === undefined || typeof name.valueOf() !== 'string') {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
     public getFormattedError(error: any): string {
-        if(error && error.message) {
-            if(error.statusCode) {
+        if (error && error.message) {
+            if (error.statusCode) {
                 var errorMessage = typeof error.message.valueOf() == 'string' ? error.message
                     : (error.message.Code || error.message.code) + " - " + (error.message.Message || error.message.message)
                 error.message = `${errorMessage} (CODE: ${error.statusCode})`

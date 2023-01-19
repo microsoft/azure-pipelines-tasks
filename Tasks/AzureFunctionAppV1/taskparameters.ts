@@ -4,7 +4,7 @@ import { Package, PackageType } from 'azure-pipelines-tasks-azurermdeploycommon/
 var webCommonUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/utility.js');
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
 import { AzureResourceFilterUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureResourceFilterUtility';
-import { AzureAppService } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
+import { AzureAppService } from './azure-arm-rest/azure-arm-app-service';
 const skuDynamicValue: string = 'dynamic';
 const skuElasticPremiumValue: string = 'elasticpremium';
 
@@ -36,6 +36,11 @@ export class TaskParametersUtility {
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParameters.WebAppName));
 
+        if(taskParameters.AppSettings && taskParameters.AppSettings !== null)
+        {
+            taskParameters.AppSettings = taskParameters.AppSettings.replace('\n',' ');
+        }
+        
         var appDetails = await this.getWebAppKind(taskParameters);
         taskParameters.ResourceGroupName = appDetails["resourceGroupName"];
         taskParameters.WebAppKind = appDetails["webAppKind"];

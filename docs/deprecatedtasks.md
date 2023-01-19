@@ -2,9 +2,9 @@
 
 ## Overview
 
-Provide the ability to deprecate a task. 
+Provides the ability to deprecate a task. 
 
-To mark a task as deprecated:
+To mark a task as deprecated - you may need to specify the following property to the task.json definition file:
 
 >"deprecated": true
 

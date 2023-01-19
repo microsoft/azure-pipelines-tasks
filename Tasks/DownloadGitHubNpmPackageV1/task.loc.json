@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 5
+    "Minor": 215,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -19,7 +19,7 @@
   "demands": [
     "npm"
   ],
-  "minimumAgentVersion": "2.115.0",
+  "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -71,7 +71,11 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
+      "target": "npm.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "npm.js",
       "argumentFormat": ""
     }

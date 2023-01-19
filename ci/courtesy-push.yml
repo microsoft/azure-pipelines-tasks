@@ -1,26 +1,20 @@
 steps:
 - task: NuGetToolInstaller@0
   inputs:
-    versionSpec: '5.4.0'
-  displayName: 'Install nuget'
-  condition: and(succeeded(), eq(variables['WEEK'], '3'))
+    versionSpec: 6.0.0
+  displayName: Install nuget
 
 - task: DownloadBuildArtifacts@0
   inputs:
     artifactName: IndividualNugetPackages
-    downloadPath: 'IndividualNugetPackagesDownloaded'
-  displayName: 'Download Artifact'
-  condition: and(succeeded(), eq(variables['WEEK'], '3'))
+    downloadPath: IndividualNugetPackagesDownloaded
+  displayName: Download Artifact
 
 - script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
-  displayName: 'Update unified deps'
-  condition: and(succeeded(), eq(variables['WEEK'], '3'))
+  displayName: Update unified deps
 
 - task: NuGetAuthenticate@0
-  inputs:
-    nuGetServiceConnections: 'Codex-Deps'
-  displayName: 'Authenticate with nuget'
-  condition: and(succeeded(), eq(variables['WEEK'], '3'))
+  displayName: Authenticate with nuget
 
 # Everything until this point is idempotent (other than pushing tasks release branch which will get overwritten if we re-do this anyways).
 # Note: Pushing the tasks release branch has to happen in the first job in case commits are pushed between now and then.
@@ -29,12 +23,11 @@ steps:
     cd IndividualNugetPackagesDownloaded
     cd IndividualNugetPackages
     push.cmd
-  displayName: 'Push Nuget packages'
-  condition: and(succeeded(), eq(variables['WEEK'], '3'))
+  displayName: Push Nuget packages
 
 - powershell: |
     # Build the release branch name
-    $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"= "application/json"} | ConvertFrom-Json).sprint
+    $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"="application/json"} | ConvertFrom-Json).sprint
     $releaseBranch = "users/$(username)/m" + $currentSprint + "/courtesyPush"
 
     # Push branch to git
@@ -45,21 +38,20 @@ steps:
     git config --global user.name "$(username)"
     git add .nuget\externals\UnifiedDependencies.xml
     git commit -m "Courtesy bump of tasks"
-    git push origin $releaseBranch
+    git push origin $releaseBranch --force
     Write-Host "Creating Pull Request"
     cd ..\azure-pipelines-tasks\ci\courtesy-push
     npm install
     node open-courtesy-push-pull-request.js $releaseBranch
-    
+
     # Sleep 30 seconds to let PR be created
     Start-Sleep -Seconds 30
   displayName: Create PR in Azure DevOps
   env:
-    TOKEN: $(Package.Token) 
-  condition: and(succeeded(), eq(variables['WEEK'], '3'))
+    TOKEN: $(Package.Token)
 
-- powershell: |
-    $body = '{"text": "Created tasks courtesy push PR. Someone please approve/merge this :please-puss-in-boots: ' + $env:PrLink + '"}'
-    Invoke-RestMethod -Uri $(slackUri) -Method Post -Body $body -ContentType 'application/json'
-  displayName: 'Send Slack notification'
-  condition: and(succeeded(), eq(variables['WEEK'], '3'))
+- powershell: .\azure-pipelines-tasks\ci\courtesy-push\send-notification.ps1
+  displayName: Send MS Teams notification
+  condition: eq(variables['build.reason'], 'Schedule')
+  env:
+    TEAMS_WEBHOOK: $(MSTeamsUri)

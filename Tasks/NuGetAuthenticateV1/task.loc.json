@@ -1,0 +1,52 @@
+{
+  "id": "f5fd8599-ccfa-4d6e-b965-4d14bed7097b",
+  "name": "NuGetAuthenticate",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://aka.ms/NuGetAuthenticateTask",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "version": {
+    "Major": 1,
+    "Minor": 213,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "nuGetServiceConnections",
+      "type": "connectedService:ExternalNuGetFeed",
+      "label": "ms-resource:loc.input.label.nuGetServiceConnections",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.nuGetServiceConnections",
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "True"
+      }
+    },
+    {
+      "name": "forceReinstallCredentialProvider",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.forceReinstallCredentialProvider",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.forceReinstallCredentialProvider"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {}
+}

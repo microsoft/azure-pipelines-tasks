@@ -6,7 +6,26 @@ import os = require('os');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 
+// path to creating archive
+let expectedArchivePath: undefined | string = undefined;
+
 describe('ArchiveFiles L0 Suite', function () {
+    function deleteFolderRecursive (directoryPath) {
+        if (fs.existsSync(directoryPath)) {
+            fs.readdirSync(directoryPath).forEach((file, index) => {
+              const curPath = path.join(directoryPath, file);
+              if (fs.lstatSync(curPath).isDirectory()) {
+               // recurse
+                deleteFolderRecursive(curPath);
+              } else {
+                // delete file
+                fs.unlinkSync(curPath);
+              }
+            });
+            fs.rmdirSync(directoryPath);
+          }
+        };
+
     function runValidations(validator: () => void, tr, done) {
         try {
             validator();
@@ -27,6 +46,31 @@ describe('ArchiveFiles L0 Suite', function () {
         const testOutput = path.join(__dirname, 'test_output');
         if (!fs.existsSync(testOutput)) {
             fs.mkdirSync(testOutput);
+        }
+
+        const replaceTestOutput = path.join(__dirname, 'test_output', 'replace_test');
+        if (!fs.existsSync(replaceTestOutput)) {
+            fs.mkdirSync(replaceTestOutput);
+        }
+    })
+
+    this.afterEach(() => {        
+        try {
+            if (expectedArchivePath) fs.unlinkSync(expectedArchivePath);
+            expectedArchivePath = undefined;
+        } catch (err) {
+            console.log('Cannot remove created archive: ' + expectedArchivePath);
+        }
+    });
+
+    this.afterAll(() => {
+        const testTemp = path.join(__dirname, 'test_temp');
+        if (fs.existsSync(testTemp)) {
+            deleteFolderRecursive(testTemp);
+        }
+        const testOutput = path.join(__dirname, 'test_output');
+        if (fs.existsSync(testOutput)) {
+            deleteFolderRecursive(testTemp);
         }
     })
 
@@ -56,7 +100,7 @@ describe('ArchiveFiles L0 Suite', function () {
         process.env['archiveType'] = 'zip';
         process.env['archiveFile'] = 'myZip';
         process.env['includeRootFolder'] = 'true';
-        const expectedArchivePath = path.join(__dirname, 'test_output', 'myZip.zip');
+        expectedArchivePath = path.join(__dirname, 'test_output', 'myZip.zip');
 
         let tp: string = path.join(__dirname, 'L0CreateArchive.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -83,7 +127,7 @@ describe('ArchiveFiles L0 Suite', function () {
         process.env['archiveType'] = 'tar';
         process.env['archiveFile'] = 'myTar';
         process.env['includeRootFolder'] = 'true';
-        let expectedArchivePath = path.join(__dirname, 'test_output', 'myTar.gz');
+        expectedArchivePath = path.join(__dirname, 'test_output', 'myTar.gz');
         if (process.platform.indexOf('win32') < 0) {
             expectedArchivePath = path.join(__dirname, 'test_output', 'myTar');
         }
@@ -106,7 +150,7 @@ if (process.platform.indexOf('darwin') < 0) {
         process.env['archiveType'] = '7z';
         process.env['archiveFile'] = 'my7z';
         process.env['includeRootFolder'] = 'true';
-        const expectedArchivePath = path.join(__dirname, 'test_output', 'my7z.7z');
+        expectedArchivePath = path.join(__dirname, 'test_output', 'my7z.7z');
 
         let tp: string = path.join(__dirname, 'L0CreateArchive.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -124,7 +168,7 @@ if (process.platform.indexOf('darwin') < 0) {
         process.env['archiveType'] = 'wim';
         process.env['archiveFile'] = 'mywim';
         process.env['includeRootFolder'] = 'true';
-        let expectedArchivePath = path.join(__dirname, 'test_output', 'myWim.wim');
+        expectedArchivePath = path.join(__dirname, 'test_output', 'myWim.wim');
         if (process.platform.indexOf('win') < 0) {
             expectedArchivePath = path.join(__dirname, 'test_output', 'mywim.wim');
         }
@@ -135,6 +179,37 @@ if (process.platform.indexOf('darwin') < 0) {
         tr.run();
 
         runValidations(() => {
+                assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
+                assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
+        }, tr, done);
+    });
+
+    it('Replace archive file in the root folder', function(done: Mocha.Done) {
+        const archiveName = "archive.zip";
+        const replaceTestDir =  path.join(__dirname, 'test_output', 'replace_test');
+        const archivePath = path.join(replaceTestDir, archiveName);
+        this.timeout(5000);
+        process.env['archiveType'] = 'zip';
+        process.env['archiveFile'] = archiveName;
+        process.env['includeRootFolder'] = 'false';
+        process.env['rootFolderOrFile'] = replaceTestDir;
+
+        fs.writeFileSync(path.join(replaceTestDir, 'test_file.txt'), 'test data');
+
+        fs.copyFileSync(
+            path.join(__dirname, 'resources', archiveName),
+            path.join(archivePath)
+        );
+
+        expectedArchivePath = archivePath;
+
+        let tp: string = path.join(__dirname, 'L0ReplaceArchiveInRootFolder.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        console.info(tr.stdout);
+        runValidations(() => {
+                assert(tr.succeeded, "Task should succeed");
                 assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
                 assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
         }, tr, done);

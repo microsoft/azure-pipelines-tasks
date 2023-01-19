@@ -1,5 +1,0 @@
-{
-  "loc.messages.LocateJVMBasedOnVersionAndArch": "JAVA_HOME für Java %s %s finden",
-  "loc.messages.UnsupportedJdkWarning": "JDK 9 und JDK 10 werden nicht unterstützt. Wechseln Sie in Ihrem Projekt und Ihrer Pipeline zu einer neueren Version. Es wird versucht, die Erstellung mit JDK 11 durchzuführen...",
-  "loc.messages.FailedToLocateSpecifiedJVM": "Fehler bei der Suche nach der angegebenen JDK-Version. Stellen Sie sicher, dass die angegebene JDK-Version auf dem Agent installiert und die Umgebungsvariable \"%s\" vorhanden und auf den Speicherort eines entsprechenden JDK festgelegt ist. Alternativ können Sie mit dem [Java-Toolinstaller](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) das gewünschte JDK installieren."
-}

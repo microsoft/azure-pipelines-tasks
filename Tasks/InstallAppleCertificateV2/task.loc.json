@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 189,
+    "Minor": 214,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -106,6 +106,14 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.signingIdentity",
       "groupName": "advanced"
+    },
+    {
+      "name": "setUpPartitionIdACLForPrivateKey",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.setUpPartitionIdACLForPrivateKey",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.setUpPartitionIdACLForPrivateKey",
+      "groupName": "advanced"
     }
   ],
   "outputVariables": [
@@ -122,10 +130,18 @@
     "Node10": {
       "target": "preinstallcert.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "preinstallcert.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
     "Node10": {
+      "target": "postinstallcert.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "postinstallcert.js",
       "argumentFormat": ""
     }

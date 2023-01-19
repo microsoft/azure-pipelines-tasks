@@ -12,5 +12,5 @@ $actual = Select-VSVersion -PreferredVersion '15.0'
 
 # Assert.
 Assert-WasCalled Write-Warning
-Assert-WasCalled Get-VSPath -Times 3
+Assert-WasCalled Get-VSPath -Times 4
 Assert-AreEqual -Expected '14.0' -Actual $actual

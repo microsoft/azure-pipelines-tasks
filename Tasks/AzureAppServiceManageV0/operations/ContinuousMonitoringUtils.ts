@@ -24,8 +24,16 @@ export async function enableContinuousMonitoring(endpoint: AzureEndpoint, appSer
         }
 
         appInsightsResource.tags["hidden-link:" + appDetails.id] = "Resource";
+        tl.debug('Modifying request to call update API');
+        var appInsightsResourceTemp=appInsightsResource;
+        if(appInsightsResourceTemp.properties.WorkspaceResourceId ){
+            delete appInsightsResourceTemp.properties.WorkspaceResourceId;
+        }  
+        if(appInsightsResourceTemp.properties.IngestionMode ){
+            delete appInsightsResourceTemp.properties.IngestionMode;
+        }
         tl.debug('Link app insights with app service via tag');
-        await appInsights.update(appInsightsResource);
+        await appInsights.update(appInsightsResourceTemp);
         tl.debug('Link app service with app insights via instrumentation key');
         await appService.patchApplicationSettings({
             "APPINSIGHTS_INSTRUMENTATIONKEY": appInsightsResource.properties['InstrumentationKey']

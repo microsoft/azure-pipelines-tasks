@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Ligne de commande",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkID=613735)",
   "loc.description": "Exécuter un script de ligne de commande via Bash sur Linux et macOS, et cmd.exe sur Windows",
   "loc.instanceNameFormat": "Script de ligne de commande",
   "loc.releaseNotes": "Cohérence de la tâche de script. Ajout de la prise en charge de plusieurs lignes.",

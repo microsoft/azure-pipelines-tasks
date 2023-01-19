@@ -10,12 +10,12 @@
         "Agent",
         "DeploymentGroup"
     ],
-    "minimumAgentVersion": "2.115.0",
+    "minimumAgentVersion": "2.144.0",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 179,
-        "Patch": 1
+        "Minor": 215,
+        "Patch": 0
     },
     "preview": false,
     "satisfies": [
@@ -41,10 +41,14 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "nugettoolinstaller.js",
             "argumentFormat": ""
-        }
+        },
+        "Node16": {
+            "target": "nugettoolinstaller.js",
+            "argumentFormat": ""
+        } 
     },
     "messages": {
         "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",

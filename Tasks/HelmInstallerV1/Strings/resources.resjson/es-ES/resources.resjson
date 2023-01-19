@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Instalador de la herramienta Helm",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "Instala Helm en una máquina de agente.",
   "loc.instanceNameFormat": "Instalar Helm $(helmVersionToInstall)",
   "loc.input.label.helmVersionToInstall": "Especificación de versión de Helm",

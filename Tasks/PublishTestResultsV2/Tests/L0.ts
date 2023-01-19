@@ -36,7 +36,7 @@ describe('PublishTestResults Suite', function() {
     after(function () {
     });
 
-    it('TestResultsPublisher.exe is called on Windows OS', (done: MochaDone) => {
+    it('TestResultsPublisher.exe is called on Windows OS', (done: Mocha.Done) => {
         console.log('TestCaseName: TestResultsPublisher.exe is called on Windows OS');
 
         // Setup the mock runner
@@ -72,7 +72,7 @@ describe('PublishTestResults Suite', function() {
         done();
     });
 
-    it('TestResultsPublisher.exe is not called on non-Windows OS', (done: MochaDone) => {
+    it('TestResultsPublisher.exe is not called on non-Windows OS', (done: Mocha.Done) => {
         console.log('TestCaseName: TestResultsPublisher.exe is not called on non-Windows OS');
 
         // Setup the mock runner
@@ -108,7 +108,7 @@ describe('PublishTestResults Suite', function() {
         done();
     });
 
-    it('Command should be called when exe returns with exit code for feature flag off', (done: MochaDone) => {
+    it('Command should be called when exe returns with exit code for feature flag off', (done: Mocha.Done) => {
         console.log('TestCaseName: Command should be called when exe returns with exit code for feature flag off');
 
         // Setup the mock runner
@@ -148,7 +148,7 @@ describe('PublishTestResults Suite', function() {
         done();
     });
 
-    it('Command should not be called when exe returns with exit code for feature flag on', (done: MochaDone) => {
+    it('Command should not be called when exe returns with exit code for feature flag on', (done: Mocha.Done) => {
         console.log('TestCaseName: Command should not be called when exe returns with exit code for feature flag on');
 
         // Setup the mock runner

@@ -12,9 +12,10 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 152,
-    "Patch": 3
+    "Minor": 214,
+    "Patch": 0
   },
+  "minimumAgentVersion": "2.144.0",
   "groups": [
     {
       "name": "prepare",
@@ -485,7 +486,11 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
+      "target": "appcentertest.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "appcentertest.js",
       "argumentFormat": ""
     }

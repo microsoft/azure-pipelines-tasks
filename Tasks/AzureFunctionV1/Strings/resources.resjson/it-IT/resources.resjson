@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Richiama funzione di Azure",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870235)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?linkid=870235)",
   "loc.description": "Richiama una funzione di Azure",
   "loc.instanceNameFormat": "Funzione di Azure: $(function)",
   "loc.group.displayName.completionOptions": "Avanzate",
@@ -17,7 +17,7 @@
   "loc.input.label.body": "Corpo",
   "loc.input.help.body": "Corpo del messaggio in formato JSON per la richiesta.",
   "loc.input.label.waitForCompletion": "Evento di completamento",
-  "loc.input.help.waitForCompletion": "Valore predefinito \"ApiResponse\". I valori disponibili sono \"ApiResponse\" e \"Callback\", ovvero una chiamata in cui viene richiamata la funzione di Azure per aggiornare il record della sequenza temporale.",
+  "loc.input.help.waitForCompletion": "Valore predefinito \"Callback\". I valori disponibili sono \"ApiResponse\" e \"Callback\", ovvero una chiamata in cui viene richiamata la funzione di Azure per aggiornare il record della sequenza temporale.",
   "loc.input.label.successCriteria": "Criteri di superamento",
   "loc.input.help.successCriteria": "Criteri che consentono di definire quando passare l'attività. L'assenza di criteri indica che il contenuto della risposta non influisce sul risultato. Esempio: per la risposta {\"status\" : \"successful\"}, l'espressione può essere eq(root['status'], 'successful'). [Altre informazioni](https://go.microsoft.com/fwlink/?linkid=842996)"
 }

@@ -99,7 +99,10 @@ try {
         [string]$SymbolsProduct = Get-VstsInput -Name 'SymbolsProduct' -Default (Get-VstsTaskVariable -Name 'Build.DefinitionName' -Require)
         [string]$SymbolsVersion = Get-VstsInput -Name 'SymbolsVersion' -Default (Get-VstsTaskVariable -Name 'Build.BuildNumber' -Require)
         [string]$SymbolsArtifactName = Get-VstsInput -Name 'SymbolsArtifactName'
+    } elseif ($symbolServerType -eq "TeamServices") {
+        [int]$SymbolExpirationInDays = Get-VstsInput -Name 'SymbolExpirationInDays' -AsInt -Default '36530'
     }
+
     [bool]$SkipIndexing = -not (Get-VstsInput -Name 'IndexSources' -AsBool)
     [bool]$CompressSymbols = (Get-VstsInput -Name 'CompressSymbols' -AsBool)
     [bool]$TreatNotIndexedAsWarning = Get-VstsInput -Name 'TreatNotIndexedAsWarning' -AsBool
@@ -161,9 +164,7 @@ try {
         } else {
             Write-Verbose "SymbolsPath was not set, publish symbols step was skipped."
         }
-    }
-    elseif ($symbolServerType -eq "TeamServices") {
-
+    } elseif ($symbolServerType -eq "TeamServices") {
         [string]$RequestName = (Get-VstsTaskVariable -Name 'System.TeamProject' -Require) + "/" + 
                                (Get-VstsTaskVariable -Name 'Build.DefinitionName' -Require)  + "/" + 
                                (Get-VstsTaskVariable -Name 'Build.BuildNumber' -Require)  + "/" + 
@@ -177,6 +178,7 @@ try {
         [string]$asAccountName = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.AccountName')
         [string]$PersonalAccessToken = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.PAT')
         [bool]$UseAad = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.UseAad' -AsBool)
+        [string]$IndexableFileFormats = (Get-VstsInput -Name 'IndexableFileFormats')
 
         if ( $asAccountName ) {
             if ( $PersonalAccessToken ) {
@@ -227,7 +229,15 @@ try {
         [string] $requestUrl = "#$SymbolServiceUri/_apis/Symbol/requests?requestName=$encodedRequestName"
         Write-VstsAssociateArtifact -Name "$RequestName" -Path $requestUrl -Type "SymbolRequest" -Properties @{}
 
-        & "$PSScriptRoot\Publish-Symbols.ps1" -SymbolServiceUri $SymbolServiceUri -RequestName $RequestName -SourcePath $SourcePath -SourcePathListFileName $tmpFileName -PersonalAccessToken $PersonalAccessToken -ExpirationInDays 36530 -DetailedLog $DetailedLog
+        & "$PSScriptRoot\Publish-Symbols.ps1" `
+            -SymbolServiceUri $SymbolServiceUri `
+            -RequestName $RequestName `
+            -SourcePath $SourcePath `
+            -SourcePathListFileName $tmpFileName `
+            -IndexableFileFormats `"$IndexableFileFormats`" `
+            -PersonalAccessToken $PersonalAccessToken `
+            -ExpirationInDays $SymbolExpirationInDays `
+            -DetailedLog $DetailedLog
 
         if (Test-Path -Path $tmpFileName) {
             del $tmpFileName

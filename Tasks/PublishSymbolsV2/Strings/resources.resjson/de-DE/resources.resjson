@@ -18,6 +18,8 @@
   "loc.input.help.SymbolsPath": "Die Dateifreigabe, in der Ihre Symbole gehostet werden. Dieser Wert wird im Aufruf von \"symstore.exe add\" als Parameter \"/s\" verwendet.",
   "loc.input.label.CompressSymbols": "Symbole komprimieren",
   "loc.input.help.CompressSymbols": "Komprimieren Sie Symbole bei der Veröffentlichung in einer Dateifreigabe.",
+  "loc.input.label.IndexableFileFormats": "Zu veröffentlichende Symboldateiformate",
+  "loc.input.help.IndexableFileFormats": "Die Debugformate, die auf dem Symbolserver veröffentlicht werden sollen",
   "loc.input.label.DetailedLog": "Ausführliche Protokollierung",
   "loc.input.help.DetailedLog": "Verwenden Sie die ausführliche Protokollierung.",
   "loc.input.label.TreatNotIndexedAsWarning": "Warnen, wenn nicht indiziert",

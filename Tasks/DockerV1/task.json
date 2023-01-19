@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 187,
-        "Patch": 2
+        "Minor": 215,
+        "Patch": 0
     },
     "demands": [],
     "releaseNotes": "Simplified the task by:<br/>&nbsp;- Providing an option to simply select or type a command.<br/>&nbsp;- Retaining the useful input fields and providing an option to pass the rest as an argument to the command.",
@@ -376,13 +376,16 @@
         },
         {
             "name": "DockerOutputPath",
-            "description": "The path of the file which contains the output of the build command." 
+            "description": "The path of the file which contains the output of the build command."
         }
     ],
     "instanceNameFormat": "$(command)",
     "showEnvironmentVariables": true,
     "execution": {
         "Node10": {
+            "target": "container.js"
+        },
+        "Node16": {
             "target": "container.js"
         }
     },

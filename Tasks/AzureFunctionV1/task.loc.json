@@ -17,8 +17,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 12
+    "Minor": 217,
+    "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -102,7 +102,7 @@
       "name": "waitForCompletion",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.waitForCompletion",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.waitForCompletion",
       "groupName": "completionOptions",

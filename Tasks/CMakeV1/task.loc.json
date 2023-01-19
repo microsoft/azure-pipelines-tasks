@@ -21,7 +21,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 188,
+    "Minor": 212,
     "Patch": 0
   },
   "minimumAgentVersion": "1.91.0",
@@ -58,6 +58,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "cmaketask.js",
+      "argumentFormat": ""
+    }, 
+    "Node16": {
       "target": "cmaketask.js",
       "argumentFormat": ""
     }

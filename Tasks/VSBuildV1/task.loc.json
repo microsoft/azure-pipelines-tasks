@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 187,
+    "Minor": 214,
     "Patch": 0
   },
   "demands": [
@@ -45,6 +45,7 @@
       "defaultValue": "latest",
       "options": {
         "latest": "Latest",
+        "17.0": "Visual Studio 2022",
         "16.0": "Visual Studio 2019",
         "15.0": "Visual Studio 2017",
         "14.0": "Visual Studio 2015",
@@ -157,6 +158,15 @@
       "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.enableDefaultLogger",
+      "groupName": "advanced"
+    },
+    {
+      "name": "customVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customVersion",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.customVersion",
       "groupName": "advanced"
     }
   ],

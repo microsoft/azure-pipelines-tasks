@@ -13,12 +13,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 179,
+    "Minor": 216,
     "Patch": 0
   },
   "preview": true,
   "demands": [],
-  "minimumAgentVersion": "2.0.0",
+  "minimumAgentVersion": "2.144.0",
   "groups": [
     {
       "name": "containerRepository",
@@ -81,7 +81,11 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
+      "target": "containerstructuretest.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "containerstructuretest.js",
       "argumentFormat": ""
     }

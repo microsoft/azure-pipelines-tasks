@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 189,
+    "Minor": 214,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -94,25 +94,21 @@
       "groupName": "advanced"
     },
     {
-      "name": "noProfile",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.noProfile",
-      "defaultValue": "true",
+      "name": "bashEnvValue",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.bashEnvValue",
+      "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.noProfile",
-      "groupName": "advanced"
-    },
-    {
-      "name": "noRc",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.noRc",
-      "defaultValue": "true",
-      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.bashEnvValue",
       "groupName": "advanced"
     }
   ],
   "execution": {
     "Node10": {
+      "target": "bash.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "bash.js",
       "argumentFormat": ""
     }
@@ -124,6 +120,7 @@
     "JS_InvalidFilePath": "ms-resource:loc.messages.JS_InvalidFilePath",
     "JS_ScriptContents": "ms-resource:loc.messages.JS_ScriptContents",
     "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
-    "JS_TranslatePathFailed": "ms-resource:loc.messages.JS_TranslatePathFailed"
+    "JS_TranslatePathFailed": "ms-resource:loc.messages.JS_TranslatePathFailed",
+    "JS_BashEnvAlreadyDefined": "ms-resource:loc.messages.JS_BashEnvAlreadyDefined"
   }
 }

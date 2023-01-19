@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 189,
+        "Minor": 212,
         "Patch": 0
     },
     "demands": [],
@@ -82,6 +82,16 @@
             "groupName": "advanced"
         },
         {
+            "name": "cleanHiddenFilesInTarget",
+            "type": "boolean",
+            "label": "Remove hidden files in target folder",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Remove hidden files in the target folder.",
+            "groupName": "advanced",
+            "visibleRule": "cleanTargetFolder = true"
+        },
+        {
             "name": "readyTimeout",
             "type": "string",
             "label": "SSH handshake timeout",
@@ -124,6 +134,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "copyfilesoverssh.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "copyfilesoverssh.js",
             "argumentFormat": ""
         }

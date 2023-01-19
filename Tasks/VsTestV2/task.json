@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 170,
-        "Patch": 1
+        "Minor": 215,
+        "Patch": 0
     },
     "demands": [
         "vstest"
@@ -546,7 +546,10 @@
     ],
     "instanceNameFormat": "VsTest - $(testSelector)",
     "execution": {
-        "Node": {
+        "Node10": {
+            "target": "runvstest.js"
+        },
+        "Node16": {
             "target": "runvstest.js"
         }
     },

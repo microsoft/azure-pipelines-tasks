@@ -43,6 +43,7 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
             await this.kuduServiceUtility.warmpUp();
         }
 
+        await this.kuduServiceUtility.getZipDeployValidation(webPackage); 
         this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(webPackage);
 
         await this.PostDeploymentStep();

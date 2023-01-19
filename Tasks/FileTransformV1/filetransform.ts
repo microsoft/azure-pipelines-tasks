@@ -1,9 +1,9 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import { Package } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
-var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
-var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility.js');
-var fileTransformationsUtility = require('azure-pipelines-tasks-webdeployment-common/fileTransformationsUtility.js');
+import { generateTemporaryFolderForDeployment } from 'azure-pipelines-tasks-webdeployment-common/utility';
+import { archiveFolder } from 'azure-pipelines-tasks-webdeployment-common/ziputility';
+import { advancedFileTransformations } from 'azure-pipelines-tasks-webdeployment-common/fileTransformationsUtility';
 
 async function main() {
     tl.setResourcePath(path.join( __dirname, 'task.json'));
@@ -18,16 +18,16 @@ async function main() {
     if (applyFileTransformFlag) {
         let isFolderBasedDeployment: boolean = tl.stats(packagePath).isDirectory();
         if(!isFolderBasedDeployment) {
-            var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, packagePath, webPackage.getPackageType());
-            fileTransformationsUtility.advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, folderPath, xmlTransformationRules);
-            await zipUtility.archiveFolder(folderPath, path.dirname(packagePath), path.basename(packagePath));
+            let folderPath = await generateTemporaryFolderForDeployment(isFolderBasedDeployment, packagePath, webPackage.getPackageType());
+            advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, folderPath, xmlTransformationRules);
+            await archiveFolder(folderPath, path.dirname(packagePath), path.basename(packagePath));
         }
         else {
-            fileTransformationsUtility.advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, packagePath, xmlTransformationRules);
+            advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, packagePath, xmlTransformationRules);
         }
     }
     else {
-        tl.debug('File Tranformation not enabled');
+        tl.debug('File Transformation not enabled');
     }
 }
 

@@ -6,11 +6,12 @@
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-fileshare-artifacts",
     "helpMarkDown": "",
     "category": "Utility",
+    "minimumAgentVersion": "2.144.0",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 154,
-        "Patch": 2
+        "Minor": 206,
+        "Patch": 0
     },
     "groups": [
         {
@@ -68,7 +69,7 @@
     ],
     "instanceNameFormat": "Download artifacts from a file share",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "main.js",
             "argumentFormat": ""
         }

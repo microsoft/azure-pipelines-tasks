@@ -14,7 +14,7 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 189,
+        "Minor": 217,
         "Patch": 0
     },
     "groups": [
@@ -24,6 +24,7 @@
             "isExpanded": true
         }
     ],
+    "minimumAgentVersion":  "2.144.0",
     "instanceNameFormat": "Queue Jenkins job: $(jobName)",
     "inputs": [
         {
@@ -101,6 +102,33 @@
                 "resizable": "true",
                 "rows": "4"
             }
+        },
+        {
+            "name": "failOnUnstableResult",
+            "type": "boolean",
+            "label": "Fail on unstable result",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Specifies strictness of a success definition: whether to consider unstable as a failure or not. False for non-strict, and true for strict version.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "retryCount",
+            "type": "string",
+            "label": "Number of retries for failed connection",
+            "defaultValue": "3",
+            "required": false,
+            "helpMarkDown": "Specify number of retries on errors or failures",
+            "groupName": "advanced"
+        },
+        {
+            "name": "delayBetweenRetries",
+            "type": "string",
+            "label": "Time between retries",
+            "defaultValue": "60",
+            "required": false,
+            "helpMarkDown": "Specify time between retries. This is specified in seconds",
+            "groupName": "advanced"
         }
     ],
     "outputVariables": [
@@ -111,6 +139,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "jenkinsqueuejobtask.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "jenkinsqueuejobtask.js",
             "argumentFormat": ""
         }

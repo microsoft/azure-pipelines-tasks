@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 190,
+        "Minor": 217,
         "Patch": 0
     },
     "groups": [
@@ -172,7 +172,7 @@
         },
         {
             "name": "cleanDestinationFolder",
-            "type":"boolean",
+            "type": "boolean",
             "label": "Clean destination folder",
             "defaultValue": false,
             "helpMarkDown": "Delete all existing files in destination folder before artifact download"
@@ -266,6 +266,10 @@
         "Node10": {
             "target": "main.js",
             "argumentFormat": ""
+        },
+        "Node16": {
+            "target": "main.js",
+            "argumentFormat": ""
         }
     },
     "messages": {
@@ -302,7 +306,7 @@
     "outputVariables": [
         {
             "name": "BuildNumber",
-            "description": "Stores the build number of the build artifact source.<br />Please note that in fact it returns <b>BuildId</b> due to backward compatibility <p>[More Information](https://docs.microsoft.com/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services)</p>" 
+            "description": "Stores the build number of the build artifact source.<br />Please note that in fact it returns <b>BuildId</b> due to backward compatibility <p>[More Information](https://docs.microsoft.com/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services)</p>"
         }
     ]
 }

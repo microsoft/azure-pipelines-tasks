@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 179,
-        "Patch": 2
+        "Minor": 213,
+        "Patch": 0
     },
     "satisfies": [
         "Node",
@@ -56,9 +56,17 @@
         "Node10": {
             "target": "usenode.js",
             "argumentFormat": ""
+        },
+        "Node16": {
+            "target": "usenode.js",
+            "argumentFormat": ""
         }
     },
     "messages": {
-        "ToolFailed": "Node install failed: %s"
+        "ToolFailed": "Node install failed: %s",
+        "TryRosetta": "Unable to find Node for platform %s and architecture %s. Trying to install with Rosetta2",
+        "NodeVersionNotFound": "Unable to find Node version %s for platform %s and architecture %s.",
+        "UnexpectedOS": "Unexpected OS %s",
+        "AgentTempDirNotSet": "Expected Agent.TempDirectory to be set."
     }
 }

@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 189,
+        "Minor": 214,
         "Patch": 0
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -114,7 +114,7 @@
             "defaultValue": "true",
             "groupName": "junitTestResults",
             "helpMarkDown": "Set false to fail build when task finds broken symbolic link during publishing tests result",
-            "visibleRule":"publishJUnitResults = true"
+            "visibleRule": "publishJUnitResults = true"
         },
         {
             "name": "codeCoverageTool",
@@ -227,6 +227,7 @@
             "visibleRule": "javaHomeSelection = JDKVersion",
             "options": {
                 "default": "default",
+                "1.17": "JDK 17",
                 "1.11": "JDK 11",
                 "1.10": "JDK 10 (out of support)",
                 "1.9": "JDK 9 (out of support)",
@@ -348,7 +349,7 @@
             "required": false,
             "groupName": "CodeAnalysis",
             "helpMarkDown": "Use XML Jacoco reports for SonarQube analysis. [More info](https://docs.sonarqube.org/latest/analysis/coverage/)",
-            "visibleRule": "and(sqAnalysisEnabled = true, codeCoverageTool = JaCoCo) "
+            "visibleRule": "sqAnalysisEnabled = true && codeCoverageTool = JaCoCo"
         },
         {
             "name": "sqMavenPluginVersionChoice",
@@ -403,6 +404,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "maventask.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "maventask.js",
             "argumentFormat": ""
         }

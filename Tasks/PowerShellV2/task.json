@@ -17,13 +17,18 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 190,
+        "Minor": 212,
         "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
     "minimumAgentVersion": "2.115.0",
     "showEnvironmentVariables": true,
     "groups": [
+        {
+            "name": "preferenceVariables",
+            "displayName": "Preference Variables",
+            "isExpanded": false
+        },
         {
             "name": "advanced",
             "displayName": "Advanced",
@@ -82,11 +87,88 @@
             "required": false,
             "defaultValue": "stop",
             "options": {
+                "default": "Default",
                 "stop": "Stop",
                 "continue": "Continue",
                 "silentlyContinue": "SilentlyContinue"
             },
-            "helpMarkDown": "Prepends the line `$ErrorActionPreference = 'VALUE'` at the top of your script."
+            "helpMarkDown": "When not `Default`, prepends the line `$ErrorActionPreference = 'VALUE'` at the top of your script.",
+            "groupName": "preferenceVariables"
+        },
+        {
+            "name": "warningPreference",
+            "type": "pickList",
+            "label": "WarningPreference",
+            "required": false,
+            "defaultValue": "default",
+            "options": {
+                "default": "Default",
+                "stop": "Stop",
+                "continue": "Continue",
+                "silentlyContinue": "SilentlyContinue"
+            },
+            "helpMarkDown": "When not `Default`, prepends the line `$WarningPreference = 'VALUE'` at the top of your script.",
+            "groupName": "preferenceVariables"
+        },
+        {
+            "name": "informationPreference",
+            "type": "pickList",
+            "label": "InformationPreference",
+            "required": false,
+            "defaultValue": "default",
+            "options": {
+                "default": "Default",
+                "stop": "Stop",
+                "continue": "Continue",
+                "silentlyContinue": "SilentlyContinue"
+            },
+            "helpMarkDown": "When not `Default`, prepends the line `$InformationPreference = 'VALUE'` at the top of your script.",
+            "groupName": "preferenceVariables"
+        },
+        {
+            "name": "verbosePreference",
+            "type": "pickList",
+            "label": "VerbosePreference",
+            "required": false,
+            "defaultValue": "default",
+            "options": {
+                "default": "Default",
+                "stop": "Stop",
+                "continue": "Continue",
+                "silentlyContinue": "SilentlyContinue"
+            },
+            "helpMarkDown": "When not `Default`, prepends the line `$VerbosePreference = 'VALUE'` at the top of your script.",
+            "groupName": "preferenceVariables"
+        },
+        {
+            "name": "debugPreference",
+            "type": "pickList",
+            "label": "DebugPreference",
+            "required": false,
+            "defaultValue": "default",
+            "options": {
+                "default": "Default",
+                "stop": "Stop",
+                "continue": "Continue",
+                "silentlyContinue": "SilentlyContinue"
+            },
+            "helpMarkDown": "When not `Default`, prepends the line `$DebugPreference = 'VALUE'` at the top of your script.",
+            "groupName": "preferenceVariables"
+        },
+        {
+            "name": "progressPreference",
+            "type": "pickList",
+            "label": "ProgressPreference",
+            "required": false,
+            "defaultValue": "silentlyContinue",
+            "options": {
+                "default": "Default",
+                "stop": "Stop",
+                "continue": "Continue",
+                "silentlyContinue": "SilentlyContinue"
+            },
+            "helpMarkDown": "When not `Default`, prepends the line `$ProgressPreference = 'VALUE'` at the top of your script.",
+            "groupName": "preferenceVariables"
         },
         {
             "name": "failOnStderr",
@@ -154,19 +236,23 @@
         "Node10": {
             "target": "powershell.js",
             "argumentFormat": ""
+        },
+        "Node16": {
+            "target": "powershell.js",
+            "argumentFormat": ""
         }
     },
     "messages": {
         "GeneratingScript": "Generating script.",
         "JS_ExitCode": "PowerShell exited with code '%s'.",
         "JS_FormattedCommand": "Formatted command: %s",
-        "JS_InvalidErrorActionPreference": "Invalid ErrorActionPreference '%s'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
+        "JS_InvalidActionPreference": "Invalid action preference for %s: '%s'. The value must be one of: %s",
         "JS_InvalidFilePath": "Invalid file path '%s'. A path to a .ps1 file is required.",
         "JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
         "JS_InvalidTargetType": "Invalid target type '%s'. The value must be one of: 'filepath' or 'inline'",
         "PS_ExitCode": "PowerShell exited with code '{0}'.",
         "PS_FormattedCommand": "Formatted command: {0}",
-        "PS_InvalidErrorActionPreference": "Invalid ErrorActionPreference '{0}'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
+        "PS_InvalidActionPreference": "Invalid action preference for {0}: '{1}'. The value must be one of: {2}",
         "PS_InvalidFilePath": "Invalid file path '{0}'. A path to a .ps1 file is required.",
         "PS_UnableToDetermineExitCode": "Unexpected exception. Unable to determine the exit code from powershell.",
         "PS_InvalidTargetType": "Invalid target type '{0}'. The value must be one of: 'filepath' or 'inline'"

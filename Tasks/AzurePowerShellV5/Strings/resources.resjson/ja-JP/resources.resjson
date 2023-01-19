@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure PowerShell",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "Azure 環境内で PowerShell スクリプトを実行します",
   "loc.instanceNameFormat": "Azure PowerShell スクリプト: $(ScriptType)",
   "loc.releaseNotes": "Az モジュールとクロス プラットフォームのエージェントのサポートが追加されました。",
@@ -21,9 +21,9 @@
   "loc.input.label.FailOnStandardError": "標準エラーで失敗",
   "loc.input.help.FailOnStandardError": "これが true の場合、何らかのエラーがエラー パイプラインに書き込まれるか、何らかのデータが標準エラー ストリームに書き込まれる場合、このタスクは失敗します。",
   "loc.input.label.TargetAzurePs": "Azure PowerShell バージョン",
-  "loc.input.help.TargetAzurePs": "In case of hosted agents, the supported Azure PowerShell Version is: 1.0.0, 1.6.0, 2.3.2, 2.6.0, 3.1.0 (Hosted VS2017 Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\"",
+  "loc.input.help.TargetAzurePs": "ホステッド エージェントの場合、サポートされている Azure PowerShell のバージョンは、1.0.0、1.6.0、2.3.2、2.6.0、3.1.0 (ホステッド VS2017 キュー) です。\nエージェントで利用可能な最新バージョンを選ぶには、[Latest installed version](インストールされている最新バージョン) を選択します。\n\nプライベート エージェントの場合は、[Specify version](バージョンを指定する) を使用して優先されるバージョンの Azure PowerShell を指定できます。",
   "loc.input.label.CustomTargetAzurePs": "優先される Azure PowerShell バージョン",
-  "loc.input.help.CustomTargetAzurePs": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Az module version: 1.0.0, 1.6.0, 2.3.2, 2.6.0, 3.1.0",
+  "loc.input.help.CustomTargetAzurePs": "優先される Azure PowerShell バージョンは、1.2.3 などの適切なセマンティック バージョンである必要があります。2.\\*、2.3.\\* などの正規表現はサポートされていません。ホステッド VS2017 プールは、現在次の Az モジュール バージョンをサポートしています: 1.0.0、1.6.0、2.3.2、2.6.0、3.1.0",
   "loc.input.label.pwsh": "PowerShell Core を使用する",
   "loc.input.help.pwsh": "これが true の場合、Windows 上のタスクは powershell.exe ではなく PATH からの pwsh.exe を使用します。",
   "loc.input.label.workingDirectory": "作業ディレクトリ",
@@ -35,6 +35,6 @@
   "loc.messages.InvalidAzurePsVersion": "指定した Azure PowerShell バージョン '{0}' は、形式が正しくありません。形式をご確認ください。正しい形式の例は、1.0.1 です",
   "loc.messages.JS_ExitCode": "PowerShell がコード '%s' で終了しました。",
   "loc.messages.JS_Stderr": "PowerShell が標準エラー ストリームに 1 行以上を書き込みました。",
-  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことを確認してください。",
   "loc.messages.PS_ExitCode": "PowerShell がコード '{0}' で終了しました。"
 }

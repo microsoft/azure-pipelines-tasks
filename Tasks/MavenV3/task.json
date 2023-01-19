@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 190,
+        "Minor": 214,
         "Patch": 0
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -114,7 +114,7 @@
             "defaultValue": "true",
             "groupName": "junitTestResults",
             "helpMarkDown": "Set false to fail build when task finds broken symbolic link during publishing tests result",
-            "visibleRule":"publishJUnitResults = true"
+            "visibleRule": "publishJUnitResults = true"
         },
         {
             "name": "codeCoverageTool",
@@ -227,9 +227,7 @@
             "visibleRule": "javaHomeSelection = JDKVersion",
             "options": {
                 "default": "default",
-                "1.14": "JDK 14",
-                "1.13": "JDK 13",
-                "1.12": "JDK 12",
+                "1.17": "JDK 17",
                 "1.11": "JDK 11",
                 "1.10": "JDK 10 (out of support)",
                 "1.9": "JDK 9 (out of support)",
@@ -363,7 +361,7 @@
             "required": false,
             "groupName": "CodeAnalysis",
             "helpMarkDown": "Use XML Jacoco reports for SonarQube analysis. [More info](https://docs.sonarqube.org/latest/analysis/coverage/)",
-            "visibleRule": "and(sqAnalysisEnabled = true, codeCoverageTool = JaCoCo) "
+            "visibleRule": "sqAnalysisEnabled = true && codeCoverageTool = JaCoCo"
         },
         {
             "name": "sqMavenPluginVersionChoice",
@@ -414,10 +412,67 @@
             "defaultValue": "false",
             "groupName": "CodeAnalysis",
             "helpMarkDown": "Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts."
+        },
+        {
+            "name": "spotBugsAnalysisEnabled",
+            "aliases": [
+                "spotBugsRunAnalysis"
+            ],
+            "type": "boolean",
+            "label": "Run SpotBugs analysis",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "CodeAnalysis",
+            "helpMarkDown": "Enable this option to run spotBugs code analysis plugin. [More info](https://spotbugs.github.io/spotbugs-maven-plugin)"
+        },
+        {
+            "name": "spotBugsMavenPluginVersion",
+            "aliases": [
+                "spotBugsVersion"
+            ],
+            "type": "string",
+            "label": "Version number",
+            "required": false,
+            "defaultValue": "4.5.3.0",
+            "helpMarkDown": "Refer to https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-maven-plugin for all available versions.",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "spotBugsAnalysisEnabled = true"
+        },
+        {
+            "name": "spotBugsGoal",
+            "type": "pickList",
+            "label": "The goal for the spotbugs plugin",
+            "required": false,
+            "defaultValue": "spotbugs",
+            "options": {
+                "spotbugs": "\"spotbugs\" - Creates a report on found bugs",
+                "check": "\"check\" - Pipeline fails if bugs were detected"
+            },
+            "helpMarkDown": "Select the goal of the plugin. Refer https://spotbugs.readthedocs.io/en/stable/maven.html#goals-of-spotbugs-maven-plugin to for more detailed description.",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "spotBugsAnalysisEnabled = true"
+        },
+        {
+            "name": "spotBugsFailWhenBugsFound",
+            "aliases": [
+                "failWhenBugsFound",
+                "sbFailWhenBugsFound"
+            ],
+            "type": "boolean",
+            "label": "Fail when bugs are found with spotbugs:check",
+            "required": false,
+            "defaultValue": "true",
+            "helpMarkDown": "Fail when the bugs found when check goal specified. Refers to https://spotbugs.github.io/spotbugs-maven-plugin/check-mojo.html#failonerror for more detailed description.",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "spotBugsAnalysisEnabled = true && spotBugsGoal = check"
         }
     ],
     "execution": {
         "Node10": {
+            "target": "maventask.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "maventask.js",
             "argumentFormat": ""
         }

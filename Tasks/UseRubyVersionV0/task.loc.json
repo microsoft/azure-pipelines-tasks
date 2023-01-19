@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 188,
+    "Minor": 213,
     "Patch": 0
   },
   "demands": [],
@@ -47,6 +47,10 @@
     "Node10": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -58,14 +62,14 @@
     "ExactVersionNotRecommended": "ms-resource:loc.messages.ExactVersionNotRecommended"
   },
   "restrictions": {
-      "commands": {
-          "mode": "restricted"
-      },
-      "settableVariables": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
       "allowed": [
         "rubyLocation",
         "PATH"
       ]
-      }
+    }
   }
 }

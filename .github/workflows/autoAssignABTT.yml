@@ -17,4 +17,4 @@ jobs:
         contains(github.event.issue.labels.*.name, 'Area: ABTT')
       with:
         project: 'https://github.com/orgs/microsoft/projects/48'
-        column_name: 'Ready for work (prioritised)'
+        column_name: 'Ready for work (ordered by priority)'

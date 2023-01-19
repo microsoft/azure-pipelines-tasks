@@ -6,6 +6,8 @@ import trm = require('azure-pipelines-task-lib/toolrunner');
 var extend = require('util')._extend;
 import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
 import { logError } from 'azure-pipelines-tasks-packaging-common/util';
+import {IExecSyncResult} from 'azure-pipelines-task-lib/toolrunner';
+import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 
 interface EnvironmentDictionary { [key: string]: string; }
 
@@ -26,11 +28,13 @@ async function executeTask() {
 
     var npmRunner = tl.tool(tl.which('npm', true));
     npmRunner.arg(command);
-    npmRunner.line(tl.getInput('arguments', false));
+    var args = tl.getInput('arguments', false); 
+    npmRunner.line(args);
 
-
+    
     if(shouldUseDeprecatedTask()) {
-
+        
+        await _logNpmStartupVariables(command, args);
         // deprecated version of task, which just runs the npm command with NO auth support.
         try{
             var code : number = await npmRunner.exec();
@@ -40,33 +44,34 @@ async function executeTask() {
             tl.setResult(tl.TaskResult.Failed, tl.loc('NpmFailed', err.message));
         }
     } else {
-
         // new task version with auth support
         try{
-
+            
             var npmrcPath: string = path.join(cwd, '.npmrc');
             var tempNpmrcPath : string = getTempNpmrcPath();
-
+            
             var debugLog: boolean = tl.getVariable('system.debug') && tl.getVariable('system.debug').toLowerCase() === 'true';
-
+            
             var shouldRunAuthHelper: boolean = tl.osType().toLowerCase() === 'windows_nt' && tl.exist(npmrcPath); 
             if(shouldRunAuthHelper) {
                 copyUserNpmrc(tempNpmrcPath);
                 await runNpmAuthHelperAsync(getNpmAuthHelperRunner(npmrcPath, tempNpmrcPath, debugLog));
             }
-
+            
             // set required environment variables for npm execution
             var npmExecOptions = <trm.IExecOptions>{
                 env: extend({}, process.env)
             };
-
+            
             if(shouldRunAuthHelper){
                 npmExecOptions.env['npm_config_userconfig'] = tempNpmrcPath;
             }
-
+            
             if(debugLog) {
                 npmExecOptions.env['npm_config_loglevel'] =  'verbose';
             }
+            
+            await _logNpmStartupVariables(command, args, npmrcPath, debugLog, shouldRunAuthHelper);
 
             await tryRunNpmConfigAsync(getNpmConfigRunner(debugLog), npmExecOptions);
             var code : number =  await runNpmCommandAsync(npmRunner, npmExecOptions);
@@ -223,4 +228,32 @@ async function addBuildCredProviderEnv(env: EnvironmentDictionary) : Promise<Env
     env['NPM_CREDENTIALPROVIDERS_PATH'] =  credProviderPath;
     env['VSS_DISABLE_DEFAULTCREDENTIALPROVIDER'] = '1';
     return env;
+}
+
+async function _logNpmStartupVariables(command: string, args?: string, npmrcPath?: string, debugLog?: boolean, shouldRunAuthHelper?: boolean) {
+    try {
+        // Log the NPM version
+        let version: string;
+        try {
+            const syncResult: IExecSyncResult = tl.execSync('npm', '--version');
+            if (syncResult.stdout) {
+                version = syncResult.stdout.trim();
+            }
+        } catch (err) {
+            tl.debug(`Unable to get NPM config info. Err:( ${err} )`);
+        }
+
+        const npmTelem = {
+            'command': command,
+            'arguments': args || null,
+            'USE_DEPRECATED_TASK_VERSION': tl.getVariable('USE_DEPRECATED_TASK_VERSION'),
+            'npmrcPath': npmrcPath || null,
+            'debugLog': debugLog || null,
+            'npmVersion': version,
+        };
+
+        telemetry.emitTelemetry('Packaging', 'npm', npmTelem);
+    } catch (err) {
+        tl.debug(`Unable to log NPM task telemetry. Err:( ${err} )`);
+    }
 }

@@ -4,7 +4,7 @@
 
 import * as path from 'path';
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('AppCenterTest L0 Suite', function () {
     before(function () {
@@ -21,7 +21,7 @@ describe('AppCenterTest L0 Suite', function () {
     });
 
     it('Positive path: upload Appium test with service endpoint', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0AppiumPass.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);

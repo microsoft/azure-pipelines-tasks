@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 189,
+    "Minor": 212,
     "Patch": 0
   },
   "demands": [
@@ -251,6 +251,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "anttask.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "anttask.js",
       "argumentFormat": ""
     }

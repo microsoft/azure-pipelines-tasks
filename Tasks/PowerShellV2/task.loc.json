@@ -17,13 +17,18 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 190,
+    "Minor": 212,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.115.0",
   "showEnvironmentVariables": true,
   "groups": [
+    {
+      "name": "preferenceVariables",
+      "displayName": "ms-resource:loc.group.displayName.preferenceVariables",
+      "isExpanded": false
+    },
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
@@ -82,11 +87,88 @@
       "required": false,
       "defaultValue": "stop",
       "options": {
+        "default": "Default",
         "stop": "Stop",
         "continue": "Continue",
         "silentlyContinue": "SilentlyContinue"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.errorActionPreference"
+      "helpMarkDown": "ms-resource:loc.input.help.errorActionPreference",
+      "groupName": "preferenceVariables"
+    },
+    {
+      "name": "warningPreference",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.warningPreference",
+      "required": false,
+      "defaultValue": "default",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.warningPreference",
+      "groupName": "preferenceVariables"
+    },
+    {
+      "name": "informationPreference",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.informationPreference",
+      "required": false,
+      "defaultValue": "default",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.informationPreference",
+      "groupName": "preferenceVariables"
+    },
+    {
+      "name": "verbosePreference",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.verbosePreference",
+      "required": false,
+      "defaultValue": "default",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.verbosePreference",
+      "groupName": "preferenceVariables"
+    },
+    {
+      "name": "debugPreference",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.debugPreference",
+      "required": false,
+      "defaultValue": "default",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.debugPreference",
+      "groupName": "preferenceVariables"
+    },
+    {
+      "name": "progressPreference",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.progressPreference",
+      "required": false,
+      "defaultValue": "silentlyContinue",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.progressPreference",
+      "groupName": "preferenceVariables"
     },
     {
       "name": "failOnStderr",
@@ -154,19 +236,23 @@
     "Node10": {
       "target": "powershell.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "powershell.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
     "GeneratingScript": "ms-resource:loc.messages.GeneratingScript",
     "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
     "JS_FormattedCommand": "ms-resource:loc.messages.JS_FormattedCommand",
-    "JS_InvalidErrorActionPreference": "ms-resource:loc.messages.JS_InvalidErrorActionPreference",
+    "JS_InvalidActionPreference": "ms-resource:loc.messages.JS_InvalidActionPreference",
     "JS_InvalidFilePath": "ms-resource:loc.messages.JS_InvalidFilePath",
     "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
     "JS_InvalidTargetType": "ms-resource:loc.messages.JS_InvalidTargetType",
     "PS_ExitCode": "ms-resource:loc.messages.PS_ExitCode",
     "PS_FormattedCommand": "ms-resource:loc.messages.PS_FormattedCommand",
-    "PS_InvalidErrorActionPreference": "ms-resource:loc.messages.PS_InvalidErrorActionPreference",
+    "PS_InvalidActionPreference": "ms-resource:loc.messages.PS_InvalidActionPreference",
     "PS_InvalidFilePath": "ms-resource:loc.messages.PS_InvalidFilePath",
     "PS_UnableToDetermineExitCode": "ms-resource:loc.messages.PS_UnableToDetermineExitCode",
     "PS_InvalidTargetType": "ms-resource:loc.messages.PS_InvalidTargetType"

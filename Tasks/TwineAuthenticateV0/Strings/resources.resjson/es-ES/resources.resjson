@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Autenticación de la carga de Python con Twine",
-  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate) or [see the Twine documentation](https://twine.readthedocs.io/)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate) o [consultar la documentación de Twine](https://twine.readthedocs.io/)",
   "loc.description": "Realice la autenticación para cargar distribuciones de Python con Twine. Agregue \"-r FeedName/EndpointName --config-file $(PYPIRC_PATH)\" al comando de carga de Twine. Para las fuentes presentes en la organización, use el nombre de la fuente como repositorio (-r). De lo contrario, use el nombre del punto de conexión definido en la conexión de servicio.",
   "loc.instanceNameFormat": "Autenticación de Twine $(message)",
   "loc.group.displayName.feedAuthentication": "Fuentes y autenticación",
@@ -13,7 +13,7 @@
   "loc.input.help.publishPackageMetadata": "Asocie los metadatos de esta canalización de compilación o versión (n.º de ejecución, información del código fuente) con el paquete al cargar en Mis fuentes.",
   "loc.messages.Info_AddingInternalFeeds": "Agregando información de autenticación para las fuentes internas %s.",
   "loc.messages.Info_AddingExternalFeeds": "Agregando información de autenticación para el punto de conexión externo %s.",
-  "loc.messages.Info_AddingAuthForRegistry": "Adding authentication to configuration for registry %s",
+  "loc.messages.Info_AddingAuthForRegistry": "Agregando autenticación a la configuración del registro %s",
   "loc.messages.Info_SuccessAddingAuth": "La autenticación para las fuentes internas %s y el punto de conexión externo %s se ha agregado correctamente.",
   "loc.messages.Info_AddingPasswordAuthEntry": "Agregando la entrada de autenticación de contraseña del nombre de usuario para la fuente %s.",
   "loc.messages.Info_AddingTokenAuthEntry": "Agregando la entrada de autenticación de token para la fuente %s.",

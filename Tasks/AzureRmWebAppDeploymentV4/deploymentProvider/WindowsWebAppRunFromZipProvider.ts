@@ -46,7 +46,6 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
         if(!isNewValueUpdated) {
             await this.kuduServiceUtility.warmpUp();
         }
-
         await this.kuduServiceUtility.deployUsingRunFromZip(webPackage, 
             { slotName: this.appService.getSlot() });
 
@@ -64,5 +63,6 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
             console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
             tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
         }
+     
     }
 }

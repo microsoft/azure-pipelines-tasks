@@ -52,6 +52,11 @@ v4.2.0
 5.6.0
 ```
 
+**Note:** to recent Node versions will not work with all of the tooling in this
+repository. Before we improve it to support latest versions, consider using
+Node 10. You can use [Volta](https://volta.sh) to manage multiple Node versions
+on your system.
+
 To install npm separately:
 
 ```
@@ -76,6 +81,9 @@ The instructions below demonstrate how to build and test either all or a specifi
 the `_build` directory.  You can then use the tfx client to upload this to your server for testing.
 
 The build will also generate a `tasks.loc.json` and an english strings file under `Strings` in your source tree. You should check these back in. Another localization process will create the other strings files.
+
+Note: if you see some issues with externals downloading - you may probably need to downgrade NodeJS version to 8 to build task.
+You can use [nvm](https://github.com/nvm-sh/nvm) to install and use several NodeJS versions on your environment.
 
 ## Build All Tasks (this can take a while):
 

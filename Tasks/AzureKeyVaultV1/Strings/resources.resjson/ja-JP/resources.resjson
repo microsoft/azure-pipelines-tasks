@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Key Vault",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848891)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=848891)",
   "loc.description": "Azure Key Vault のシークレットをダウンロードします",
   "loc.instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
   "loc.releaseNotes": "クロスプラットフォーム エージェント (Linux、macOS、Windows) に対応",
@@ -10,6 +10,8 @@
   "loc.input.help.KeyVaultName": "既存のキー コンテナーの名前を指定します",
   "loc.input.label.SecretsFilter": "シークレットのフィルター",
   "loc.input.help.SecretsFilter": "選択したキー コンテナーからダウンロードするシークレット名のコンマ区切りのリスト (すべてのシークレット名をダウンロードする場合は \"*\" のままにします)。",
+  "loc.input.label.RunAsPreJob": "ジョブ全体に対してシークレットを使用できるようにする",
+  "loc.input.help.RunAsPreJob": "ジョブの実行が開始される前にタスクを実行します。これに続くタスクだけでなく、ジョブ内のすべてのタスクにシークレットを公開します。",
   "loc.messages.ClientIdCannotBeEmpty": "clientId は空ではない文字列にする必要があります。",
   "loc.messages.DomainCannotBeEmpty": "domain を空の文字列にすることはできません。",
   "loc.messages.SecretCannotBeEmpty": "secret を空の文字列にすることはできません。",
@@ -44,5 +46,5 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。仮想マシンのマネージド サービス ID (MSI) を構成してください 'https://aka.ms/azure-msi-docs'。状態コード: %s、ステータス メッセージ: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。状態コード: %s、ステータス メッセージ: %s",
   "loc.messages.RetryingWithVaultResourceIdFromResponse": "応答から取得したコンテナー リソース ID で再試行しています: %s",
-  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことをご確認ください。"
+  "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことを確認してください。"
 }

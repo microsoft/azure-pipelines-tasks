@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 179,
-    "Patch": 2
+    "Minor": 213,
+    "Patch": 0
   },
   "satisfies": [
     "Node",
@@ -56,9 +56,17 @@
     "Node10": {
       "target": "usenode.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "usenode.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
-    "ToolFailed": "ms-resource:loc.messages.ToolFailed"
+    "ToolFailed": "ms-resource:loc.messages.ToolFailed",
+    "TryRosetta": "ms-resource:loc.messages.TryRosetta",
+    "NodeVersionNotFound": "ms-resource:loc.messages.NodeVersionNotFound",
+    "UnexpectedOS": "ms-resource:loc.messages.UnexpectedOS",
+    "AgentTempDirNotSet": "ms-resource:loc.messages.AgentTempDirNotSet"
   }
 }

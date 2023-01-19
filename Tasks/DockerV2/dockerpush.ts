@@ -6,7 +6,7 @@ import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containe
 import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
 import * as utils from "./utils";
 import { findDockerFile } from "azure-pipelines-tasks-docker-common-v2/fileutils";
-import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
+import { WebRequest, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
 import { getBaseImageName, getResourceName, getBaseImageNameFromDockerFile } from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
 import * as pipelineUtils from "azure-pipelines-tasks-docker-common-v2/pipelineutils";
 

@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 187,
-        "Patch": 2
+        "Minor": 214,
+        "Patch": 0
     },
     "demands": [],
     "preview": "false",
@@ -336,14 +336,17 @@
         },
         {
             "name": "DockerOutputPath",
-            "description": "The path of the file which contains the output of the build command." 
+            "description": "The path of the file which contains the output of the build command."
         }
     ],
     "instanceNameFormat": "$(action)",
     "execution": {
         "Node10": {
             "target": "container.js"
-        }
+        },
+        "Node16": {
+            "target": "container.js"
+          }
     },
     "messages": {
         "ContainerPatternFound": "Pattern found in docker filepath parameter",

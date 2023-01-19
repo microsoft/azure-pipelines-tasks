@@ -1,13 +1,13 @@
-import * as pkgLocationUtils from "packaging-common/locationUtilities";
-import {ProvenanceHelper} from "packaging-common/provenance";
-import { getProjectAndFeedIdFromInputParam } from 'packaging-common/util';
-import * as telemetry from "utility-common/telemetry";
+import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
+import { ProvenanceHelper } from "azure-pipelines-tasks-packaging-common/provenance";
+import { getProjectAndFeedIdFromInputParam } from 'azure-pipelines-tasks-packaging-common/util';
+import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import * as tl from "azure-pipelines-task-lib";
-import {IExecOptions, IExecSyncResult} from "azure-pipelines-task-lib/toolrunner";
-import * as artifactToolRunner from "packaging-common/universal/ArtifactToolRunner";
-import * as artifactToolUtilities from "packaging-common/universal/ArtifactToolUtilities";
-import * as auth from "packaging-common/universal/Authentication";
-import { logError } from 'packaging-common/util';
+import { IExecOptions, IExecSyncResult } from "azure-pipelines-task-lib/toolrunner";
+import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner";
+import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
+import * as auth from "azure-pipelines-tasks-packaging-common/universal/Authentication";
+import { logError } from 'azure-pipelines-tasks-packaging-common/util';
 
 const packageAlreadyExistsError = 17;
 const numRetries = 1;
@@ -18,8 +18,7 @@ export async function run(artifactToolPath: string): Promise<void> {
     try {
         // Get directory to publish
         const publishDir: string = tl.getInput("publishDirectory");
-        if (publishDir.length < 1)
-        {
+        if (publishDir.length < 1) {
             tl.debug(tl.loc("Info_PublishDirectoryNotFound"));
             return;
         }
@@ -53,8 +52,7 @@ export async function run(artifactToolPath: string): Promise<void> {
 
         [serviceUri, packageName, feedId, projectId, accessToken] = authSetup(feedType);
 
-        if (feedType === "internal")
-        {
+        if (feedType === "internal") {
             internalAuthInfo = new auth.InternalAuthInfo([], accessToken);
 
             toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = internalAuthInfo.accessToken;
@@ -88,10 +86,10 @@ export async function run(artifactToolPath: string): Promise<void> {
             toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = accessToken;
         }
 
-        if (versionRadio === "custom"){
+        if (versionRadio === "custom") {
             version = tl.getInput("versionPublish");
         }
-        else{
+        else {
             feedUri = await pkgLocationUtils.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
             version = await getNextPackageVersion(feedUri, accessToken, projectId, feedId, packageName);
         }
@@ -146,7 +144,7 @@ export async function run(artifactToolPath: string): Promise<void> {
             tl.debug(tl.loc("Info_PublishingRetry", publishOptions.packageName, version, newVersion));
             execResult = publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
             version = newVersion;
-            retries++; 
+            retries++;
         }
 
         if (execResult != null && execResult.code === packageAlreadyExistsError) {
@@ -218,7 +216,7 @@ async function getNextPackageVersion(
     accessToken: string,
     projectId: string,
     feedId: string,
-    packageName: string)  {
+    packageName: string) {
     let version: string;
     const highestVersion = await artifactToolUtilities.getHighestPackageVersionFromFeed(
         feedUri,
@@ -227,11 +225,11 @@ async function getNextPackageVersion(
         feedId,
         packageName);
 
-    if(highestVersion != null) {
-        version= artifactToolUtilities.getVersionUtility(tl.getInput("versionPublishSelector"), highestVersion);
+    if (highestVersion != null) {
+        version = artifactToolUtilities.getVersionUtility(tl.getInput("versionPublishSelector"), highestVersion);
     }
 
-    if(version == null) {
+    if (version == null) {
         throw new Error(tl.loc("FailedToGetLatestPackageVersion"));
     }
 
@@ -240,7 +238,7 @@ async function getNextPackageVersion(
 
 function authSetup(
     feedType: string
-)   {
+) {
 
     let serviceUri: string;
     let packageName: string;
@@ -249,7 +247,7 @@ function authSetup(
     let accessToken: string;
 
     if (feedType == "internal") {
-        
+
         // getting inputs
         serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
@@ -264,7 +262,7 @@ function authSetup(
 
     else {
         const externalAuthInfo = auth.GetExternalAuthInfo("externalEndpoints");
-        if (!externalAuthInfo)  {
+        if (!externalAuthInfo) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("Error_NoSourceSpecifiedForPublish"));
             return;
         }
@@ -281,7 +279,7 @@ function authSetup(
         accessToken = (externalAuthInfo as auth.TokenExternalAuthInfo).token;
     }
     return [
-        serviceUri, 
+        serviceUri,
         packageName,
         feedId,
         projectId,

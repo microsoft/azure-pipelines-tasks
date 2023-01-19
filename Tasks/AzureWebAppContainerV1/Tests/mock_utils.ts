@@ -170,6 +170,32 @@ export function mockContainerDeploySettings() {
             "content-type": "application/json; charset=utf-8",
             "user-agent": "TFS_useragent"
         }
+    }).put("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/config/slotConfigNames?api-version=2016-08-01")
+    .reply(200, {
+        "id": null,
+        "name": "eava1234",
+        "type": "Microsoft.Web/sites",
+        "location": "Central US",
+        "properties": {
+            "connectionStringNames": [
+            "key 4",
+            "check",
+            "cckey"
+            ],
+            "appSettingNames": [
+            "ccddee",
+            "ghgv"
+            ],
+            "azureStorageConfigNames": []
+        }
+    }).persist();
+
+    nock('https://management.azure.com', {
+        reqheaders: {
+            "authorization": "Bearer DUMMY_ACCESS_TOKEN",
+            "content-type": "application/json; charset=utf-8",
+            "user-agent": "TFS_useragent"
+        }
     }).put("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/config/appsettings?api-version=2016-08-01", JSON.stringify(appSettings))
     .reply(200, {
         id: "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/appsettings",

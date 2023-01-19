@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
@@ -23,7 +23,7 @@ nock('https://example.test')
     .post('/v0.1/apps/testuser/testapp/uploads/releases', body => body.build_version)
     .reply(404, {
         upload_id: 1,
-        upload_url: 'https://example.upload.test/release_upload'
+        upload_url: 'https://example.upload.test/uploads/releases'
     });
 
 //begin symbol upload
@@ -52,29 +52,29 @@ tmr.setAnswers(a);
 
 mockAzure();
 
-mockFs();
+const mockedFs = {...fs, ...mockFs()};
 
 let fsos = fs.openSync;
-fs.openSync = (path: string, flags: string) => {
+mockedFs.openSync = (path: string, flags: string) => {
     if (path.endsWith("my.apk")){
         return 1234567.89;
     }
     return fsos(path, flags);
 };
 
-fs.statSync = (s: string) => {
+mockedFs.statSync = (s: string) => {
     const stat = new Stats;
     stat.isFile = () => s.endsWith('.txt') || s.endsWith('.apk');
     stat.isDirectory = () => !s.endsWith('.txt') && !s.endsWith('.apk');
     stat.size = 100;
     return stat;
 }
-fs.lstatSync = fs.statSync;
+mockedFs.lstatSync = mockedFs.statSync;
 
 tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
-tmr.registerMock('fs', fs);
+tmr.registerMock('fs', mockedFs);
 
 tmr.run();
-mockery.deregisterMock('fs', fs);
-mockery.deregisterMock('azure-blob-upload-helper', azureBlobUploadHelper);
+mockery.deregisterMock('fs');
+mockery.deregisterMock('azure-blob-upload-helper');
 

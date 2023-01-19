@@ -7,14 +7,11 @@ import * as task from 'azure-pipelines-task-lib/task';
 import * as tool from 'azure-pipelines-tool-lib/tool';
 
 import { Platform } from './taskutil';
+import { installPythonVersion } from './installpythonversion';
 import * as toolUtil  from './toolutil';
-import { desugarDevVersion, pythonVersionToSemantic, isExactVersion } from './versionspec';
 
-interface TaskParameters {
-    versionSpec: string,
-    addToPath: boolean,
-    architecture: string
-}
+import { desugarDevVersion, pythonVersionToSemantic, isExactVersion } from './versionspec';
+import { TaskParameters } from './interfaces';
 
 // Python has "scripts" or "bin" directories where command-line tools that come with packages are installed.
 // This is where pip is, along with anything that pip installs.
@@ -37,7 +34,7 @@ function binDir(installDir: string, platform: Platform): string {
     }
 }
 
-function pypyNotFoundError(versionSpec: '2' | '3.6') {
+function pypyNotFoundError(versionSpec: string) {
     throw new Error([
         task.loc('PyPyNotFound', versionSpec),
         // 'Python' is intentional here
@@ -52,9 +49,16 @@ function pypyNotFoundError(versionSpec: '2' | '3.6') {
 // For example, PyPy 7.0 contains Python 2.7, 3.5, and 3.6-alpha.
 // We only care about the Python version, so we don't use the PyPy version for the tool cache.
 
-function usePyPy(versionSpec: '2' | '3.6', parameters: TaskParameters, platform: Platform): void {
+function usePyPy(versionSpec: string, parameters: TaskParameters, platform: Platform): void {
     const findPyPy = tool.findLocalTool.bind(undefined, 'PyPy', versionSpec);
     let installDir: string | null = findPyPy(parameters.architecture);
+
+    const desugaredVersionSpec: string = desugarDevVersion(versionSpec);
+    const semanticVersionSpec: string = pythonVersionToSemantic(desugaredVersionSpec);
+
+    if (isExactVersion(semanticVersionSpec)) {
+        task.warning(task.loc("ExactVersionPyPyNotRecommended"));
+    }
 
     if (!installDir && platform === Platform.Windows) {
         // PyPy only precompiles binaries for x86, but the architecture parameter defaults to x64.
@@ -90,11 +94,35 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
     const semanticVersionSpec = pythonVersionToSemantic(desugaredVersionSpec);
     task.debug(`Semantic version spec of ${parameters.versionSpec} is ${semanticVersionSpec}`);
 
+    // Throw warning if Python version is 3.5
+    if (semver.satisfies(semver.coerce(parameters.versionSpec), "3.5.*")) {
+        task.warning(task.loc('PythonVersionRetirement'));
+    }
+
     if (isExactVersion(semanticVersionSpec)) {
         task.warning(task.loc('ExactVersionNotRecommended'));
     }
 
-    const installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+    let installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+    // Python version not found in local cache, try to download and install
+    
+    if (!installDir) {
+        task.debug(`Could not find a local python installation matching ${semanticVersionSpec}.`);
+        if (!parameters.disableDownloadFromRegistry) {
+            try {
+                task.debug('Trying to download python from registry.');
+                await installPythonVersion(semanticVersionSpec, parameters);
+                installDir = tool.findLocalTool('Python', semanticVersionSpec, parameters.architecture);
+                if (installDir) {
+                    task.debug(`Successfully installed python from registry to ${installDir}.`);
+                }
+            } catch (err) {
+                task.error(task.loc('DownloadFailed', err.toString()));
+            }
+        }
+    }
+
+    // If still not found, then both local check and download have failed
     if (!installDir) {
         // Fail and list available versions
         const x86Versions = tool.findLocalToolVersions('Python', 'x86')
@@ -136,13 +164,12 @@ async function useCpythonVersion(parameters: Readonly<TaskParameters>, platform:
 }
 
 export async function usePythonVersion(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
-    switch (parameters.versionSpec.toUpperCase()) {
-        case 'PYPY2':
-            return usePyPy('2', parameters, platform);
-        case 'PYPY3':
-            // keep pypy3 pointing to 3.6 for backward compatibility
-            return usePyPy('3.6', parameters, platform);
-        default:
-            return await useCpythonVersion(parameters, platform);
+    const fullVersionSpec: string = parameters.versionSpec.toUpperCase();
+
+    if (fullVersionSpec.startsWith("PYPY")) {
+    //Trim off the beginning PYPY and look for it by version
+        return usePyPy(fullVersionSpec.substring(4), parameters, platform);
+    } else {
+        return useCpythonVersion(parameters, platform);
     }
 }

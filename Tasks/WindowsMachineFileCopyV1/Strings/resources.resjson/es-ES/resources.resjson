@@ -9,7 +9,7 @@
   "loc.input.label.EnvironmentName": "Equipos",
   "loc.input.help.EnvironmentName": "Proporcione una lista separada por comas de direcciones IP de equipos o nombres de dominio completos.<br>Ejemplo: dbserver.fabrikam.com,192.168.12.34 <br>O bien proporcione la variable de salida de otras tareas. Ejemplo: $(nombreDeVariable)",
   "loc.input.label.AdminUserName": "Inicio de sesión del administrador",
-  "loc.input.help.AdminUserName": "Inicio de sesión del administrador para los equipos de destino.",
+  "loc.input.help.AdminUserName": "Inicio de sesión de administrador para los equipos de destino.",
   "loc.input.label.AdminPassword": "Contraseña",
   "loc.input.help.AdminPassword": "Contraseña de inicio de sesión del administrador para las máquinas de destino. <br>Admite la variable definida en las canalizaciones de compilación o de versión como \"$(passwordVariable)\". <br>Para proteger la variable, puede marcarla como \"secret\". ",
   "loc.input.label.TargetPath": "Carpeta de destino",

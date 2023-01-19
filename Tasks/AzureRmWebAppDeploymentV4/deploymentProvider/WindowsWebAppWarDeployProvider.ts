@@ -19,10 +19,11 @@ export class WindowsWebAppWarDeployProvider extends AzureRmWebAppDeploymentProvi
 
         this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(), 
             { slotName: this.appService.getSlot() }, warName);
-
+       
         await this.PostDeploymentStep();
     }
-    
+
+
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
         if(this.kuduServiceUtility) {
             await super.UpdateDeploymentStatus(isDeploymentSuccess);
@@ -30,5 +31,6 @@ export class WindowsWebAppWarDeployProvider extends AzureRmWebAppDeploymentProvi
                 await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
             }
         }
+       
     }
 }

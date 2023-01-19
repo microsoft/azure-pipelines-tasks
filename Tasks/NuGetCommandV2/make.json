@@ -1,26 +1,10 @@
 {
-    "common": [
-        {
-            "module": "../Common/utility-common",
-            "type": "node",
-            "compile": true
-        },
-        {
-            "module": "../Common/packaging-common",
-            "type": "node",
-            "compile": true
-        }
-    ],
-    "rm": [       
+    "rm": [
         {
             "items": [
-                "node_modules/packaging-common/node_modules/azure-pipelines-task-lib"
-            ],
-            "options": "-Rf"
-        },
-        {
-            "items": [
-                "node_modules/utility-common/node_modules/vsts-task-lib"
+                "node_modules/azure-pipelines-tasks-packaging-common/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-utility-common/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tool-lib/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }
@@ -56,7 +40,7 @@
                 "dest": "./CredentialProvider/"
             },
             {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/0.1.24/c.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/0.1.28/c.zip",
                 "dest": "./CredentialProviderV2/"
             }
         ]

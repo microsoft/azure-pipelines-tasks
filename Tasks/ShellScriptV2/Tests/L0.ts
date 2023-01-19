@@ -7,6 +7,7 @@ import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('ShellScript L0 Suite', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 200000);
     before(() => {
 
     });
@@ -15,7 +16,7 @@ describe('ShellScript L0 Suite', function () {
 
     });
 
-    it('runs shellscript in cwd', (done: MochaDone) => {
+    it('runs shellscript in cwd', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'L0runsInCwd.js');
@@ -31,7 +32,7 @@ describe('ShellScript L0 Suite', function () {
         done();
     });
 
-	it('fails if script returns 1', (done: MochaDone) => {
+	it('fails if script returns 1', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'L0failIfReturns1.js');
@@ -50,7 +51,7 @@ describe('ShellScript L0 Suite', function () {
         done();
 	})
 
-	it('fails if failOnStdErr and script writes to stderr', (done: MochaDone) => {
+	it('fails if failOnStdErr and script writes to stderr', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'L0failIfStdErr.js');
@@ -65,7 +66,7 @@ describe('ShellScript L0 Suite', function () {
         done();
 	})
 
-	it('fails if cwd not set', (done: MochaDone) => {
+	it('fails if cwd not set', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'L0failNoCwd.js');
@@ -78,7 +79,7 @@ describe('ShellScript L0 Suite', function () {
         done();
 	})
 
-	it('fails if script not found', (done: MochaDone) => {
+	it('fails if script not found', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'L0failIfScriptNotFound.js');

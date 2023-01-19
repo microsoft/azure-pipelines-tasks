@@ -2,6 +2,19 @@
 param()
 
 Trace-VstsEnteringInvocation $MyInvocation
+$vsBuildTelemetry = [PSCustomObject]@{
+    VsVersion = ""
+    CustomVersion = ""
+    Platform = ""
+    Configuration = ""
+    MSBuildExecutionTimeSeconds = ""
+}
+
+# Import the helpers.
+. $PSScriptRoot\Get-VSPath.ps1
+. $PSScriptRoot\Select-VSVersion.ps1
+Import-Module -Name "$PSScriptRoot\node_modules\azure-pipelines-tasks-msbuildhelpers\MSBuildHelpers.psm1"
+
 try {
     Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
@@ -22,6 +35,7 @@ try {
     [bool]$createLogFile = Get-VstsInput -Name CreateLogFile -AsBool
     [string]$logFileVerbosity = if ($debug) { "diagnostic" } else { Get-VstsInput -Name LogFileVerbosity }
     [bool]$enableDefaultLogger = Get-VstsInput -Name EnableDefaultLogger -AsBool
+    [string]$customVersion = Get-VstsInput -Name customVersion
 
     # Warn if deprecated inputs were specified.
     if ([string]$vsLocation = Get-VstsInput -Name VSLocation) {
@@ -39,21 +53,27 @@ try {
         $msBuildVersion = $null
     }
 
-    # Import the helpers.
-    . $PSScriptRoot\Get-VSPath.ps1
-    . $PSScriptRoot\Select-VSVersion.ps1
-    Import-Module -Name $PSScriptRoot\ps_modules\MSBuildHelpers\MSBuildHelpers.psm1
+    $vsBuildTelemetry.VsVersion = "$vsVersion"
+    $vsBuildTelemetry.CustomVersion = "$customVersion"
+    $vsBuildTelemetry.Platform = "$platform"
+    $vsBuildTelemetry.Configuration = "$configuration"
+    $vsBuildTelemetry.MSBuildExecutionTimeSeconds = ""
 
     # Resolve match patterns.
     $solutionFiles = Get-SolutionFiles -Solution $Solution
 
     # Resolve a VS version.
-    $vsVersion = Select-VSVersion -PreferredVersion $vsVersion
+    if ($customVersion) {
+        $vsVersion = Select-VSVersion -PreferredVersion $customVersion
+    } else {
+        $vsVersion = Select-VSVersion -PreferredVersion $vsVersion
+    }
 
     # Translate to MSBuild version.
     $msBuildVersion = $null;
     switch ("$vsVersion") {
         '' { $msBuildVersion = '14.0' ; break } # VS wasn't found. Attempt to find MSBuild 14.0 or lower.
+        '17.0' { $msBuildVersion = '17.0' ; break }
         '16.0' { $msBuildVersion = '16.0' ; break }
         '15.0' { $msBuildVersion = '15.0' ; break }
         '14.0' { $msBuildVersion = '14.0' ; break }
@@ -76,8 +96,15 @@ try {
     # "Write-VstsSetResult" on nuget.exe/msbuild.exe failure.
     $global:ErrorActionPreference = 'Continue'
 
+    $stopwatch = New-Object System.Diagnostics.Stopwatch
+    $stopwatch.Start()
+
     # Build each solution.
     Invoke-BuildTools -NuGetRestore:$RestoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $MSBuildLocation -MSBuildArguments $MSBuildArgs -Clean:$Clean -NoTimelineLogger:(!$LogProjectEvents) -CreateLogFile:$createLogFile -LogFileVerbosity:$logFileVerbosity -IsDefaultLoggerEnabled:$enableDefaultLogger
+
+    $stopwatch.Stop()
+    $vsBuildTelemetry.MSBuildExecutionTimeSeconds = $stopwatch.ElapsedMilliseconds / 1000
 } finally {
+    EmitTelemetry -TelemetryPayload $vsBuildTelemetry -TaskName "VSBuildV1"
     Trace-VstsLeavingInvocation $MyInvocation
 }

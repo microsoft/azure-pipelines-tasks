@@ -11,14 +11,18 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 183,
+        "Minor": 216,
         "Patch": 0
     },
+    "minimumAgentVersion": "2.144.0",
     "preview": true,
     "instanceNameFormat": "Publishing Metadata for pipeline $(System.DefinitionName) to Evidence store",
     "showEnvironmentVariables": true,
     "execution": {
         "Node10": {
+            "target": "publishmetadata.js"
+        },
+        "Node16": {
             "target": "publishmetadata.js"
         }
     }

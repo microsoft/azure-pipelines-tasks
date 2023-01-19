@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 189,
+        "Minor": 217,
         "Patch": 0
     },
     "satisfies": [
@@ -156,6 +156,10 @@
         "Node10": {
             "target": "javatoolinstaller.js",
             "argumentFormat": ""
+        },
+        "Node16": {
+            "target": "javatoolinstaller.js",
+            "argumentFormat": ""
         }
     },
     "restrictions": {
@@ -163,7 +167,10 @@
             "mode": "restricted"
         },
         "settableVariables": {
-            "allowed": ["PATH", "JAVA_HOME*"]
+            "allowed": [
+                "PATH",
+                "JAVA_HOME*"
+            ]
         }
     },
     "messages": {
@@ -197,6 +204,7 @@
         "JavaNotPreinstalled": "Java %s is not preinstalled on this agent",
         "UsePreinstalledJava": "Use preinstalled JDK from %s",
         "WrongArchiveStructure": "JDK file is not valid. Verify if JDK file contains only one root folder with 'bin' inside.",
+        "WrongArchiveFile": "Archive file is wrong. There is not any folder which contains JDK",
         "ShareAccessError": "Network shared resource not available: (%s)",
         "UnsupportedDMGStructure": "JDK file is not supported. Verify if JDK file contains exactly one folder inside.",
         "NoPKGFile": "Could not find PKG file.",

@@ -13,10 +13,10 @@
   "preview": false,
   "version": {
     "Major": 2,
-    "Minor": 172,
+    "Minor": 215,
     "Patch": 0
   },
-  "minimumAgentVersion": "1.95.0",
+  "minimumAgentVersion": "2.144.0",
   "groups": [
     {
       "name": "advanced",
@@ -90,6 +90,30 @@
       "visibleRule": "SymbolServerType = FileShare"
     },
     {
+      "name": "SymbolExpirationInDays",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SymbolExpirationInDays",
+      "defaultValue": "36530",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SymbolExpirationInDays",
+      "visibleRule": "PublishSymbols = true && SymbolServerType = TeamServices"
+    },
+    {
+      "name": "IndexableFileFormats",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.IndexableFileFormats",
+      "defaultValue": "Default",
+      "helpMarkDown": "ms-resource:loc.input.help.IndexableFileFormats",
+      "options": {
+        "Default": "The Default set of symbols to upload",
+        "Pdb": "Only Pdb based symbols Windows pdb's and managed Portable pdb's.",
+        "SourceMap": "Only JavaScript based SourceMap symbols (*.js.map)",
+        "All": "All supported symbol formats"
+      },
+      "groupName": "advanced",
+      "visibleRule": "PublishSymbols = true && SymbolServerType = TeamServices"
+    },
+    {
       "name": "DetailedLog",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.DetailedLog",
@@ -105,6 +129,15 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.TreatNotIndexedAsWarning",
+      "groupName": "advanced"
+    },
+    {
+      "name": "UseNetCoreClientTool",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.UseNetCoreClientTool",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.UseNetCoreClientTool",
       "groupName": "advanced"
     },
     {
@@ -145,22 +178,50 @@
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "prejobexecution": {
+    "Node10": {
+      "target": "PreJobExecutionPublishSymbols.js"
+    },
+    "Node16": {
+      "target": "PreJobExecutionPublishSymbols.js"
+    }
+  },
   "execution": {
     "PowerShell3": {
-      "target": "PublishSymbols.ps1"
+      "target": "PublishSymbols.ps1",
+      "platforms": [
+        "windows"
+      ]
+    },
+    "Node10": {
+      "target": "clienttoolmain.js"
+    },
+    "Node16": {
+      "target": "clienttoolmain.js"
     }
   },
   "messages": {
     "CleanedUpSemaphoreFile0": "ms-resource:loc.messages.CleanedUpSemaphoreFile0",
     "CleanUpSemaphoreFile0Error1": "ms-resource:loc.messages.CleanUpSemaphoreFile0Error1",
     "Error0AccessingSemaphoreFile1Retrying2Seconds": "ms-resource:loc.messages.Error0AccessingSemaphoreFile1Retrying2Seconds",
+    "Error_UnexpectedErrorSymbolsPublishing": "ms-resource:loc.messages.Error_UnexpectedErrorSymbolsPublishing",
+    "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized",
+    "Error_SymbolPublishingToolNotFound": "ms-resource:loc.messages.Error_SymbolPublishingToolNotFound",
     "FailedToLoadDbghelpDllFrom0ErrorCode1": "ms-resource:loc.messages.FailedToLoadDbghelpDllFrom0ErrorCode1",
+    "FailedToPublishSymbols": "ms-resource:loc.messages.FailedToPublishSymbols",
+    "FailedToRunClientTool": "ms-resource:loc.messages.FailedToRunClientTool",
     "Found0Files": "ms-resource:loc.messages.Found0Files",
+    "FoundNFiles": "ms-resource:loc.messages.FoundNFiles",
     "FreeLibraryDbghelpDllError0": "ms-resource:loc.messages.FreeLibraryDbghelpDllError0",
+    "IndexingNotSupported": "ms-resource:loc.messages.IndexingNotSupported",
+    "Info_RetrievingClientToolUri": "ms-resource:loc.messages.Info_RetrievingClientToolUri",
+    "Info_ClientTool": "ms-resource:loc.messages.Info_ClientTool",
     "NoFilesForIndexing": "ms-resource:loc.messages.NoFilesForIndexing",
     "NoFilesForPublishing": "ms-resource:loc.messages.NoFilesForPublishing",
     "NoSourcePathsIn0": "ms-resource:loc.messages.NoSourcePathsIn0",
     "OneOrMoreSourceFilesNotIndexedFor0": "ms-resource:loc.messages.OneOrMoreSourceFilesNotIndexedFor0",
+    "PreJobFailedToExecute": "ms-resource:loc.messages.PreJobFailedToExecute",
+    "PublishOptionNotSet": "ms-resource:loc.messages.PublishOptionNotSet",
     "ReachedPublishingMaxWaitTime0Seconds": "ms-resource:loc.messages.ReachedPublishingMaxWaitTime0Seconds",
     "SemaphoreFile0ExistsRetrying1Seconds": "ms-resource:loc.messages.SemaphoreFile0ExistsRetrying1Seconds",
     "SemaphoreFile0Minutes1AttemptingCleanup": "ms-resource:loc.messages.SemaphoreFile0Minutes1AttemptingCleanup",
@@ -168,6 +229,7 @@
     "SourceFolderDeprecated0": "ms-resource:loc.messages.SourceFolderDeprecated0",
     "SourceInfoNotRetrievedFrom0Message1": "ms-resource:loc.messages.SourceInfoNotRetrievedFrom0Message1",
     "SpacesInTemp": "ms-resource:loc.messages.SpacesInTemp",
+    "SymbolsPublishedSuccessfully": "ms-resource:loc.messages.SymbolsPublishedSuccessfully",
     "SymbolStoreLastIdTxtNotFoundAt0": "ms-resource:loc.messages.SymbolStoreLastIdTxtNotFoundAt0",
     "UnableToDetermineWorkspaceFromSourceFolder0": "ms-resource:loc.messages.UnableToDetermineWorkspaceFromSourceFolder0",
     "UnableToIndexSources": "ms-resource:loc.messages.UnableToIndexSources",

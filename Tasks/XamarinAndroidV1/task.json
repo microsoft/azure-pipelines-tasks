@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 189,
+        "Minor": 214,
         "Patch": 0
     },
     "demands": [
@@ -114,6 +114,7 @@
             "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead. On macOS, xbuild (Mono) or MSBuild (Visual Studio for Mac) will be used.",
             "options": {
                 "latest": "Latest",
+                "17.0": "MSBuild 17.0",
                 "16.0": "MSBuild 16.0",
                 "15.0": "MSBuild 15.0",
                 "14.0": "MSBuild 14.0",
@@ -239,6 +240,10 @@
             ]
         },
         "Node10": {
+            "target": "xamarinandroid.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "xamarinandroid.js",
             "argumentFormat": ""
         }

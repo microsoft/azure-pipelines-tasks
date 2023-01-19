@@ -40,7 +40,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     ResourcesTests.ResourcesTests(); 
     
     if (tl.osType().match(/^Win/)) {
-        it('Runs successfully with XML Transformation (L1)', (done:MochaDone) => {
+        it('Runs successfully with XML Transformation (L1)', (done:Mocha.Done) => {
             this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
             let tp = path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests","L1XdtTransform.js");
@@ -53,7 +53,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             done();
         });
 
-        it('Validate MSDeploy parameters', (done:MochaDone) => {
+        it('Validate MSDeploy parameters', (done:Mocha.Done) => {
             let tp = path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests","L0MSDeployUtility.js");
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -69,7 +69,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         });
     }
 
-    it('Validate operations.ParameterParserUtility.parse()', (done:MochaDone) => {
+    it('Validate operations.ParameterParserUtility.parse()', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'L0ParameterParserUtility.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -80,7 +80,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
 
-    it('Runs successfully with XML variable substitution', (done:MochaDone) => {
+    it('Runs successfully with XML variable substitution', (done:Mocha.Done) => {
         let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -98,7 +98,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
 
-    it('Runs successfully with JSON variable substitution', (done:MochaDone) => {
+    it('Runs successfully with JSON variable substitution', (done:Mocha.Done) => {
         let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1JsonVarSub.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -115,7 +115,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
 
-    it('Runs successfully with JSON variable substitution V2', (done:MochaDone) => {
+    it('Runs successfully with JSON variable substitution V2', (done:Mocha.Done) => {
         let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1JsonVarSubV2.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -135,7 +135,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
 
-    it('Validate File Encoding', (done:MochaDone) => {
+    it('Validate File Encoding', (done:Mocha.Done) => {
         let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1ValidateFileEncoding.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -157,7 +157,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
 
-    it('Validate azure-pipelines-tasks-webdeployment-common.utility.copyDirectory()', (done:MochaDone) => {
+    it('Validate azure-pipelines-tasks-webdeployment-common.utility.copyDirectory()', (done:Mocha.Done) => {
         let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L0CopyDirectory.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -167,7 +167,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
 
-    it('AzureRmWebAppDeploymentV4 DeploymentFactoryTests', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV4 DeploymentFactoryTests', (done: Mocha.Done) => {
         let tp = path.join(__dirname,'DeploymentFactoryTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -188,7 +188,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 AzureRmWebAppDeploymentProviderTests', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV4 AzureRmWebAppDeploymentProviderTests', (done: Mocha.Done) => {
         let tp = path.join(__dirname,'AzureRmWebAppDeploymentProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -204,7 +204,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 BuiltInLinuxWebAppDeploymentProviderTests', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV4 BuiltInLinuxWebAppDeploymentProviderTests', (done: Mocha.Done) => {
         let tp = path.join(__dirname,'BuiltInLinuxWebAppDeploymentProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -226,7 +226,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 ContainerWebAppDeploymentProviderTests', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV4 ContainerWebAppDeploymentProviderTests', (done: Mocha.Done) => {
         let tp = path.join(__dirname,'ContainerWebAppDeploymentProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -246,7 +246,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 WindowsWebAppRunFromZipProviderTests', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV4 WindowsWebAppRunFromZipProviderTests', (done: Mocha.Done) => {
         let tp = path.join(__dirname,'WindowsWebAppRunFromZipProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -256,6 +256,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdOutContained('set AppServiceApplicationUrl=http://mytestapp.azurewebsites.net'), 'Should have printed: set AppServiceApplicationUrl=http://mytestapp.azurewebsites.net');
             assert(tr.stdOutContained('Active DeploymentId :MOCK_DEPLOYMENT_ID'), 'Should have printed: Active DeploymentId :MOCK_DEPLOYMENT_ID.');
             assert(tr.stdOutContained('DeployWebAppStep for run from zip steps with zip package succeeded'), 'Should have printed: DeployWebAppStep for run from zip steps with zip package succeeded.')
+            assert(tr.stdOutContained('DeployWebAppStep for run from zip steps with zip package succeeded'), 'Should have printed: DeployWebAppStep for run from zip steps with zip package succeeded.');
             assert(tr.stdOutContained('loc_mock_UpdatingAppServiceApplicationSettings {"WEBSITE_RUN_FROM_PACKAGE":"1"}'), 'Should have printed: loc_mock_UpdatingAppServiceApplicationSettings {"WEBSITE_RUN_FROM_PACKAGE":"1"}');
             assert(tr.stdOutContained('loc_mock_UpdatedAppServiceApplicationSettings') || tr.stdOutContained('loc_mock_AppServiceApplicationSettingsAlreadyPresent'), 'Should have printed: loc_mock_UpdatedAppServiceApplicationSettings or loc_mock_AppServiceApplicationSettingsAlreadyPresent');
             assert(tr.stdOutContained('loc_mock_PackageDeploymentSuccess'), 'Should have printed: loc_mock_PackageDeploymentSuccess.');
@@ -268,7 +269,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 WindowsWebAppWarDeployProviderTests', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV4 WindowsWebAppWarDeployProviderTests', (done: Mocha.Done) => {
         let tp = path.join(__dirname,'WindowsWebAppWarDeployProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -276,7 +277,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdOutContained('PreDeployment steps for war deploy should succeeded'), 'Should have printed: PreDeployment steps for war deploy should succeeded');
             assert(tr.stdOutContained('PreDeployment steps for war deploy with slot enabled should succeeded'), 'Should have printed: PreDeployment steps for war deploy with slot enabled should succeeded');
             assert(tr.stdOutContained('set AppServiceApplicationUrl=http://mytestapp.azurewebsites.net'), 'Should have printed: set AppServiceApplicationUrl=http://mytestapp.azurewebsites.net');
-            assert(tr.stdOutContained('Active DeploymentId :MOCK_DEPLOYMENT_ID'), 'Should have printed: Active DeploymentId :MOCK_DEPLOYMENT_ID.');   
+            assert(tr.stdOutContained('Active DeploymentId :MOCK_DEPLOYMENT_ID'), 'Should have printed: Active DeploymentId :MOCK_DEPLOYMENT_ID.'); 
             assert(tr.stdOutContained('DeployWebAppStep for war deploy steps with war package succeeded'), 'Should have printed: DeployWebAppStep for war deploy steps with war package succeeded.')
             assert(tr.stdOutContained('loc_mock_AppServiceApplicationURL http://mytestapp.azurewebsites.net'), 'Should have printed: loc_mock_AppServiceApplicationURL http://mytestapp.azurewebsites.net');
             assert(tr.stdOutContained('loc_mock_WarPackageDeploymentInitiated'), 'Should have printed: loc_mock_WarPackageDeploymentInitiated.');
@@ -288,7 +289,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 WindowsWebAppZipDeployProviderTests', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV4 WindowsWebAppZipDeployProviderTests', (done: Mocha.Done) => {
         let tp = path.join(__dirname,'WindowsWebAppZipDeployProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -310,7 +311,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     });
 
     
-    it('AzureRmWebAppDeploymentV4 WindowsWebAppWebDeployProviderTests', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV4 WindowsWebAppWebDeployProviderTests', (done: Mocha.Done) => {
         let tp = path.join(__dirname,'WindowsWebAppWebDeployProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -319,7 +320,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdOutContained('PreDeployment steps for web deploy with slot enabled should succeeded'), 'Should have printed: PreDeployment steps for web deploy with slot enabled should succeeded');
             assert(tr.stdOutContained('set AppServiceApplicationUrl=http://mytestapp.azurewebsites.net'), 'Should have printed: set AppServiceApplicationUrl=http://mytestapp.azurewebsites.net');
             assert(tr.stdOutContained('Active DeploymentId :MOCK_DEPLOYMENT_ID'), 'Should have printed: Active DeploymentId :MOCK_DEPLOYMENT_ID.');
-            assert(tr.stdOutContained('DeployWebAppStep for web deploy steps with zip package succeeded'), 'Should have printed: DeployWebAppStep for web deploy steps with zip package succeeded.')
+            assert(tr.stdOutContained('DeployWebAppStep for web deploy steps with zip package succeeded'), 'Should have printed: DeployWebAppStep for web deploy steps with zip package succeeded.');
+            assert(tr.stdOutContained('DeployWebAppStep for web deploy steps with zip package succeeded'), 'Should have printed: DeployWebAppStep for web deploy steps with zip package succeeded.');
             assert(tr.stdOutContained('loc_mock_GotconnectiondetailsforazureRMWebApp0 mytestapp'), 'Should have printed: loc_mock_GotconnectiondetailsforazureRMWebApp0 mytestapp');
             assert(tr.stdOutContained('loc_mock_AppServiceApplicationURL http://mytestapp.azurewebsites.net'), 'Should have printed: loc_mock_AppServiceApplicationURL http://mytestapp.azurewebsites.net.');
             assert(tr.stdOutContained('loc_mock_Successfullydeployedpackageusingkuduserviceat webAppPkg.zip /site/wwwroot'), 'Should have printed: loc_mock_Successfullydeployedpackageusingkuduserviceat webAppPkg.zip /site/wwwroot.');
@@ -332,7 +334,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 PublishProfileWebAppDeploymentProviderTests', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV4 PublishProfileWebAppDeploymentProviderTests', (done: Mocha.Done) => {
         let tp = path.join(__dirname,'PublishProfileWebAppDeploymentProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -348,7 +350,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 Validate TaskParameters', (done: MochaDone) => {
+    it('AzureRmWebAppDeploymentV4 Validate TaskParameters', (done: Mocha.Done) => {
         let tp = path.join(__dirname,'TaskParametersTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {

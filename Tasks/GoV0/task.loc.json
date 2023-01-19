@@ -13,8 +13,8 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 4,
-    "Patch": 2
+    "Minor": 216,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -72,6 +72,9 @@
   "dataSourceBindings": [],
   "execution": {
     "Node10": {
+      "target": "main.js"
+    },
+    "Node16": {
       "target": "main.js"
     }
   },

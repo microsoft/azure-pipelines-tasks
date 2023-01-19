@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 186,
+    "Minor": 211,
     "Patch": 0
   },
   "demands": [],
@@ -106,6 +106,10 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {
+      "target": "publishbuildartifacts.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "publishbuildartifacts.js",
       "argumentFormat": ""
     }

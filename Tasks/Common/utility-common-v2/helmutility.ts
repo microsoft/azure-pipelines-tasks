@@ -51,13 +51,13 @@ function findHelm(rootFolder: string) {
 function getHelmDownloadURL(version: string): string {
     switch (os.type()) {
         case 'Linux':
-            return util.format("https://storage.googleapis.com/kubernetes-helm/helm-%s-linux-amd64.zip", version);
+            return util.format("https://get.helm.sh/helm-%s-linux-amd64.zip", version);
 
         case 'Darwin':
-            return util.format("https://storage.googleapis.com/kubernetes-helm/helm-%s-darwin-amd64.zip", version);
+            return util.format("https://get.helm.sh/helm-%s-darwin-amd64.zip", version);
 
         case 'Windows_NT':
-            return util.format("https://storage.googleapis.com/kubernetes-helm/helm-%s-windows-amd64.zip", version);
+            return util.format("https://get.helm.sh/helm-%s-windows-amd64.zip", version);
 
         default:
             throw Error("Unknown OS type");

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.iOS",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613729) or [see the Xamarin iOS documentation](https://docs.microsoft.com/xamarin/ios/)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?LinkID=613729)或[參閱 Xamarin iOS 文件](https://docs.microsoft.com/xamarin/ios/)",
   "loc.description": "在 macOS 上使用 Xamarin 建置 iOS 應用程式",
   "loc.instanceNameFormat": "建置 Xamarin.iOS 方案 $(solution)",
   "loc.releaseNotes": "iOS 簽署設定已從工作中移除。請使用 [安全檔案] 搭配支援的工作 [安裝 Apple Certificate] 與 [安裝 Apple 佈建設定檔] 來設定簽署。已更新選項，以搭配 `Visual Studio for Mac` 運作得更順暢。",

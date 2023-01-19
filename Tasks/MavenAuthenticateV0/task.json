@@ -9,14 +9,14 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 177,
-        "Patch": 1
+        "Minor": 213,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
-    "minimumAgentVersion": "2.120.0",
+    "minimumAgentVersion": "2.144.0",
     "instanceNameFormat": "Maven Authenticate",
     "inputs": [
         {
@@ -50,12 +50,19 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
+            "target": "mavenauth.js"
+        },
+        "Node16": {
             "target": "mavenauth.js"
         }
     },
     "postjobexecution": {
-        "Node": {
+        "Node10": {
+            "target": "cleanup.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "cleanup.js",
             "argumentFormat": ""
         }

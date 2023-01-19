@@ -1,4 +1,4 @@
-var check = require('validator');
+var check = require('validator').default;
 var fs = require('fs');
 var makeOptions = require('./make-options.json');
 var minimatch = require('minimatch');
@@ -24,7 +24,7 @@ var allowedTypescriptVersions = ['2.3.4', '4.0.2'];
 var shellAssert = function () {
     var errMsg = shell.error();
     if (errMsg) {
-        throw new Error(errMsg);
+        throw new Error(errMsg.toString());
     }
 }
 
@@ -103,7 +103,7 @@ var banner = function (message, noBracket) {
 exports.banner = banner;
 
 var rp = function (relPath) {
-    return path.join(pwd() + '', relPath);
+    return path.join(shell.pwd() + '', relPath);
 }
 exports.rp = rp;
 
@@ -153,7 +153,7 @@ var getCommonPackInfo = function (modOutDir) {
 exports.getCommonPackInfo = getCommonPackInfo;
 
 var buildNodeTask = function (taskPath, outDir) {
-    var originalDir = pwd();
+    var originalDir = shell.pwd().toString();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
     var overrideTscPath;
@@ -246,7 +246,7 @@ var matchFind = function (pattern, root, options) {
             });
     }
     else {
-        items = find(root)
+        items = shell.find(root)
             .filter(function (item) { // filter out the root folder
                 return path.normalize(item) != root;
             });
@@ -308,20 +308,20 @@ exports.run = run;
 
 var ensureTool = function (name, versionArgs, validate) {
     console.log(name + ' tool:');
-    var toolPath = which(name);
+    var toolPath = shell.which(name);
     if (!toolPath) {
         fail(name + ' not found.  might need to run npm install');
     }
 
     if (versionArgs) {
-        var result = exec(name + ' ' + versionArgs);
+        var result = shell.exec(name + ' ' + versionArgs);
         if (typeof validate == 'string') {
-            if (result.output.trim() != validate) {
+            if (result.stdout.trim() != validate) {
                 fail('expected version: ' + validate);
             }
         }
         else {
-            validate(result.output.trim());
+            validate(result.stdout.trim());
         }
     }
 
@@ -331,6 +331,9 @@ exports.ensureTool = ensureTool;
 
 var installNode = function (nodeVersion) {
     switch (nodeVersion || '') {
+        case '16':
+            nodeVersion = 'v16.17.1';
+            break;
         case '14':
             nodeVersion = 'v14.10.1';
             break;
@@ -345,7 +348,7 @@ var installNode = function (nodeVersion) {
             nodeVersion = 'v5.10.1';
             break;
         default:
-            fail(`Unexpected node version '${nodeVersion}'. Expected 5 or 6.`);
+            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14`);
     }
 
     if (nodeVersion === run('node -v')) {
@@ -444,7 +447,11 @@ var downloadArchive = function (url, omitExtensionCheck) {
 
     // skip if already downloaded and extracted
     var scrubbedUrl = url.replace(/[/\:?]/g, '_');
-    var targetPath = path.join(downloadPath, 'archive', scrubbedUrl);
+
+    var crypto = require('crypto');
+    var newScrubbedUrl = crypto.createHash('md5').update(scrubbedUrl).digest('hex');
+
+    var targetPath = path.join(downloadPath, 'archive', newScrubbedUrl);
     var marker = targetPath + '.completed';
     if (!test('-f', marker)) {
         // download the archive
@@ -621,6 +628,10 @@ var addPath = function (directory) {
 
     var existing = process.env['PATH'];
     if (existing) {
+        // move directory to top
+        if (existing.indexOf(directory) !== -1) {
+            existing = existing.replace(directory + separator, '');
+        }
         process.env['PATH'] = directory + separator + existing;
     }
     else {
@@ -1672,20 +1683,17 @@ var getTaskNodeVersion = function(buildPath, taskName) {
     var taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
     var taskJson = JSON.parse(taskJsonContents);
     var execution = taskJson['execution'] || taskJson['prejobexecution'];
+    const nodes = [];
     for (var key of Object.keys(execution)) {
-        if (key.toLowerCase() == 'node14') {
-            // Prefer node 14 and return immediately.
-            return 14;
-        } else if (key.toLowerCase() == 'node10') {
-            // Prefer node 10 and return immediately.
-            return 10;
-        } else if (key.toLowerCase() == 'node') {
-            return 6;
-        }
+        const executor = key.toLocaleLowerCase();
+        if (!executor.startsWith('node')) continue;
+        
+        const version = executor.replace('node', '');
+        nodes.push(parseInt(version) || 6);
     }
 
     console.warn('Unable to determine execution type from task.json, defaulting to use Node 10');
-    return 10;
+    return nodes.length ? nodes : [10];
 }
 exports.getTaskNodeVersion = getTaskNodeVersion;
 

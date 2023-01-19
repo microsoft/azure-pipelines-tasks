@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 187,
-    "Patch": 2
+    "Minor": 215,
+    "Patch": 0
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -383,6 +383,9 @@
   "showEnvironmentVariables": true,
   "execution": {
     "Node10": {
+      "target": "container.js"
+    },
+    "Node16": {
       "target": "container.js"
     }
   },

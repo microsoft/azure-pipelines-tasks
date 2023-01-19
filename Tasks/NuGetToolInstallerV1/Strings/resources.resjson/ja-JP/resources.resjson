@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet ツール インストーラー",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=852538) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=852538)、または [NuGet のドキュメントを参照](https://docs.microsoft.com/nuget/)",
   "loc.description": "特定のバージョンの NuGet をインターネットまたはツールのキャッシュから取得し、PATH に追加してください。このタスクを使用すると、NuGet タスクで使う NuGet のバージョンを変えることができます。",
   "loc.instanceNameFormat": "NuGet $(versionSpec) の使用",
   "loc.group.displayName.advanced": "詳細設定",
