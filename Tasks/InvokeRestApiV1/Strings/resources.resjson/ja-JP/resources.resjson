@@ -18,7 +18,7 @@
   "loc.input.label.urlSuffix": "URL サフィックスとパラメーター",
   "loc.input.help.urlSuffix": "指定した文字列が URL に追加されます。例: サービス接続 URL が「https:...TestProj/_apis/Release/releases」で、URL サフィックスが「/2/environments/1」の場合、サービス接続 URL は「https:.../TestProj/_apis/Release/releases/2/environments/1」になります。URL サフィックスが「?definitionId=1&releaseCount=1」の場合、サービス接続 URL は「https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1」になります。",
   "loc.input.label.waitForCompletion": "完了イベント",
-  "loc.input.help.waitForCompletion": "既定値は \"ApiResponse\" です。使用可能な値: \"ApiResponse\"、\"Callback\" 呼び出し (REST API によってタイムライン レコードの更新をコールバックする場合)。",
+  "loc.input.help.waitForCompletion": "既定値は \"Callback\" です。使用可能な値: \"ApiResponse\"、\"Callback\" 呼び出し (REST API によってタイムライン レコードの更新をコールバックする場合)。",
   "loc.input.label.successCriteria": "成功の条件",
   "loc.input.help.successCriteria": "いつタスクを渡すかを定義する条件。条件を指定しない場合、応答の内容は結果には影響しません。例: - 応答 {\"status\" : \"successful\"} の場合、式は eq(root['status'], 'successful') とすることができます。[詳細](https://go.microsoft.com/fwlink/?linkid=842996)"
 }
