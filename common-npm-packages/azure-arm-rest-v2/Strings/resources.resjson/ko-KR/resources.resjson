@@ -5,7 +5,7 @@
   "loc.messages.armUrlCannotBeEmpty": "arm URL은 비어 있지 않은 문자열이어야 합니다.",
   "loc.messages.authorityUrlCannotBeEmpty": "authority는 비어 있지 않은 문자열이어야 합니다.",
   "loc.messages.serviceConnectionIdCannotBeEmpty": "serviceConnectionId는 비어 있지 않은 문자열이어야 합니다.",
-  "loc.messages.CouldNotFetchAccessTokenforAAD": "AAD에 대한 액세스 토큰을 페치할 수 없습니다. 상태 코드: %s, 상태 메시지: %s",
+  "loc.messages.CouldNotFetchAccessTokenforAAD": "AAD에 대한 액세스 토큰을 페치할 수 없습니다.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Azure에 대한 액세스 토큰을 페치할 수 없습니다. 상태 코드: %s, 상태 메시지: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "관리 서비스 주체에 대한 액세스 토큰을 페치할 수 없습니다. 가상 머신에 대한 MSI(관리 서비스 ID)를 구성하세요('https://aka.ms/azure-msi-docs'). 상태 코드: %s, 상태 메시지: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "관리 서비스 주체에 대한 액세스 토큰을 페치할 수 없습니다. 상태 코드: %s, 상태 메시지: %s",

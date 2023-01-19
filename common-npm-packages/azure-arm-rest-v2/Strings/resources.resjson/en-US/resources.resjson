@@ -5,7 +5,7 @@
   "loc.messages.armUrlCannotBeEmpty": "arm Url must be a non empty string.",
   "loc.messages.authorityUrlCannotBeEmpty": "authority must be a non empty string.",
   "loc.messages.serviceConnectionIdCannotBeEmpty": "serviceConnectionId must be a non empty string.",
-  "loc.messages.CouldNotFetchAccessTokenforAAD": "Could not fetch access token for AAD. Status code: %s, status message: %s",
+  "loc.messages.CouldNotFetchAccessTokenforAAD": "Could not fetch access token for AAD.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",

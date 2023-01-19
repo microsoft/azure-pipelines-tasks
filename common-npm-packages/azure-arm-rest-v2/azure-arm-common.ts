@@ -202,8 +202,8 @@ export class ApplicationTokenCredentials {
                             this.oidc_token = response.oidcToken;
                             deferred.resolve();
                         }
-                        else if (response.statusCode == 429 || response.statusCode == 500) {
-                            if (retyCount < 5) {
+                        else if (response.oidcToken == null) {
+                            if (retyCount < 3) {
                                 let waitedTime = timeToWait;
                                 retyCount += 1;
                                 setTimeout(() => {
@@ -211,11 +211,8 @@ export class ApplicationTokenCredentials {
                                 }, waitedTime);
                             }
                             else {
-                                deferred.reject(tl.loc('CouldNotFetchAccessTokenforAAD', response.statusCode, response.statusMessage));
+                                deferred.reject(tl.loc('CouldNotFetchAccessTokenforAAD'));
                             }
-                        }
-                        else {
-                            deferred.reject(tl.loc('CouldNotFetchAccessTokenforAAD', response.statusCode, response.statusMessage));
                         }
                     },
                     (error) => {

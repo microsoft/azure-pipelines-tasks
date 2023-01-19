@@ -5,7 +5,7 @@
   "loc.messages.armUrlCannotBeEmpty": "armUrl doit être une chaîne non vide.",
   "loc.messages.authorityUrlCannotBeEmpty": "authority doit être une chaîne non vide.",
   "loc.messages.serviceConnectionIdCannotBeEmpty": "serviceConnectionId doit être une chaîne non vide.",
-  "loc.messages.CouldNotFetchAccessTokenforAAD": "Impossible de récupérer (fetch) le jeton d'accès pour AAD. Code d'état : %s, message d'état : %s",
+  "loc.messages.CouldNotFetchAccessTokenforAAD": "Impossible de récupérer (fetch) le jeton d'accès pour AAD.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Impossible de récupérer (fetch) le jeton d'accès pour Azure. Code d'état : %s, message d'état : %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Impossible de récupérer (fetch) le jeton d'accès pour le principal du service managé. Configurez MSI (Managed Service Identity) pour la machine virtuelle 'https://aka.ms/azure-msi-docs'. Code d'état : %s, message d'état : %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Impossible de récupérer (fetch) le jeton d'accès pour le principal du service managé. Code d'état : %s, message d'état : %s",

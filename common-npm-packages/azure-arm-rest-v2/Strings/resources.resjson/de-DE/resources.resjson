@@ -5,7 +5,7 @@
   "loc.messages.armUrlCannotBeEmpty": "\"arm Url\" darf keine leere Zeichenfolge sein.",
   "loc.messages.authorityUrlCannotBeEmpty": "\"authority\" darf keine leere Zeichenfolge sein.",
   "loc.messages.serviceConnectionIdCannotBeEmpty": "\"serviceConnectionId\" darf keine leere Zeichenfolge sein.",
-  "loc.messages.CouldNotFetchAccessTokenforAAD": "Ein Zugriffstoken für AAD konnte nicht abgerufen werden. Statuscode: %s, Statusmeldung: %s",
+  "loc.messages.CouldNotFetchAccessTokenforAAD": "Ein Zugriffstoken für AAD konnte nicht abgerufen werden.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Ein Zugriffstoken für Azure konnte nicht abgerufen werden. Statuscode: %s, Statusmeldung: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Konfigurieren Sie die verwaltete Dienstidentität (MSI) für den virtuellen Computer (https://aka.ms/azure-msi-docs). Statuscode: %s, Statusmeldung: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Statuscode: %s, Statusmeldung: %s",
