@@ -17,7 +17,7 @@
   "loc.input.label.body": "本文",
   "loc.input.help.body": "要求的 JSON 格式訊息本文。",
   "loc.input.label.waitForCompletion": "完成事件",
-  "loc.input.help.waitForCompletion": "預設值 \"ApiResponse\"。可用值: \"ApiResponse\"、\"Callback\" 呼叫，Azure 函式回呼以更新時間軸記錄。",
+  "loc.input.help.waitForCompletion": "預設值 \"Callback\"。可用值: \"ApiResponse\"、\"Callback\" 呼叫，Azure 函式回呼以更新時間軸記錄。",
   "loc.input.label.successCriteria": "成功準則",
   "loc.input.help.successCriteria": "定義何時傳遞工作的準則。沒有準則表示回應內容不會影響結果。範例:- 對於回應 {\"status\" : \"successful\"}，運算式可以是 eq(root['status'], 'successful')。[詳細資訊](https://go.microsoft.com/fwlink/?linkid=842996)​"
 }

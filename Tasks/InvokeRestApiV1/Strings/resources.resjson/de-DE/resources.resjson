@@ -18,7 +18,7 @@
   "loc.input.label.urlSuffix": "URL-Suffix und Parameter",
   "loc.input.help.urlSuffix": "Die angegebene Zeichenfolge wird an die URL gehängt. Beispiel: Wenn die Dienstverbindungs-URL https:...TestProj/_apis/Release/releases und das URL-Suffix \"/2/environments/1\" lautet, wird die Dienstverbindungs-URL zu https:.../TestProj/_apis/Release/releases/2/environments/1. Wenn das URL-Suffix \"?definitionId=1&releaseCount=1\" lautet, wird die Dienstverbindungs-URL zu https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1.",
   "loc.input.label.waitForCompletion": "Abschlussereignis",
-  "loc.input.help.waitForCompletion": "Der Standardwert lautet \"ApiResponse\". Mögliche Werte: \"ApiResponse\" bzw. \"Callback\", wenn die REST-API einen Rückruf zum Aktualisieren des Zeitachsendatensatzes ausführt.",
+  "loc.input.help.waitForCompletion": "Der Standardwert lautet \"Callback\". Mögliche Werte: \"ApiResponse\" bzw. \"Callback\", wenn die REST-API einen Rückruf zum Aktualisieren des Zeitachsendatensatzes ausführt.",
   "loc.input.label.successCriteria": "Erfolgskriterien",
   "loc.input.help.successCriteria": "Kriterien, die definieren, wann die Aufgabe übergeben wird. Ohne Kriterium hat der Antwortinhalt keinen Einfluss auf das Ergebnis. Beispiel: Für die Antwort \"{\"status\" : \"successful\"}\" kann der Ausdruck \"eq(root['status'], 'successful')\" lauten. [Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=842996)"
 }

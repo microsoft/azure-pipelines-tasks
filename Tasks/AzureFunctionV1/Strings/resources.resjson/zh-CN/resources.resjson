@@ -17,7 +17,7 @@
   "loc.input.label.body": "正文",
   "loc.input.help.body": "请求的 JSON 格式消息正文。",
   "loc.input.label.waitForCompletion": "完成事件",
-  "loc.input.help.waitForCompletion": "默认值 \"ApiResponse\"。可用值: \"ApiResponse\"，“回调”调用，Azure 函数在其中回调以更新时间线记录。",
+  "loc.input.help.waitForCompletion": "默认值 \"Callback\"。可用值: \"ApiResponse\"，“回调”调用，Azure 函数在其中回调以更新时间线记录。",
   "loc.input.label.successCriteria": "成功标准",
   "loc.input.help.successCriteria": "用于定义何时传递任务的条件。无条件意味着响应内容不会影响结果。示例: - 对于响应 {\"status\" : \"successful\"}，该表达式可以是 eq(root['status'], 'successful')。[详细信息](https://go.microsoft.com/fwlink/?linkid=842996)"
 }
