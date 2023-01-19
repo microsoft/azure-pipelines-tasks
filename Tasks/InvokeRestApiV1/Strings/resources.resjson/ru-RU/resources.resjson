@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Вызвать REST API",
-  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=870236)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870236)",
   "loc.description": "Вызовите REST API в рамках конвейера.",
   "loc.instanceNameFormat": "Вызвать REST API: $(method)",
   "loc.group.displayName.completionOptions": "Дополнительно",
@@ -18,7 +18,7 @@
   "loc.input.label.urlSuffix": "Суффикс и параметры URL-адреса",
   "loc.input.help.urlSuffix": "Добавление указанной строки к URL-адресу. Пример: если URL-адрес подключения к службе имеет вид https:...TestProj/_apis/Release/releases, а суффикс URL-адреса — /2/environments/1, URL-адрес подключения к службе принимает вид https:.../TestProj/_apis/Release/releases/2/environments/1. Если суффикс URL-адреса — ?definitionId=1&releaseCount=1, URL-адрес подключения к службе принимает вид https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1.",
   "loc.input.label.waitForCompletion": "Событие завершения",
-  "loc.input.help.waitForCompletion": "Значение по умолчанию: \"Callback\". Доступные значения: \"ApiResponse\", \"Callback\"; последнее — вызов, при котором REST API совершает обратный вызов, чтобы обновить запись временной шкалы.",
+  "loc.input.help.waitForCompletion": "Default value \"Callback\". Available values :  \"ApiResponse\", \"Callback\" call where the REST API calls back to update the timeline record​.",
   "loc.input.label.successCriteria": "Критерии успеха",
   "loc.input.help.successCriteria": "Условие, которое определяет, когда должна передаваться задача. Отсутствие условия означает, что содержимое ответа не влияет на результат. Пример: для ответа {\"status\" : \"successful\"} выражением может быть eq(root['status'], 'successful'). [Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=842996)​"
 }

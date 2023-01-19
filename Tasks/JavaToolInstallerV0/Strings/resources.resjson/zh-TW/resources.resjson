@@ -56,6 +56,7 @@
   "loc.messages.JavaNotPreinstalled": "JAVA %s 未預先安裝在此代理程式上",
   "loc.messages.UsePreinstalledJava": "從 %s 使用預先安裝的 JDK",
   "loc.messages.WrongArchiveStructure": "JDK 檔案無效。請驗證 JDK 檔案是否只包含一個 'bin' 的根資料夾。",
+  "loc.messages.WrongArchiveFile": "Archive file is wrong. There is not any folder which contains JDK",
   "loc.messages.ShareAccessError": "無法使用網路共用資源: (%s)",
   "loc.messages.UnsupportedDMGStructure": "不支援 JDK 檔案。請驗證 JDK 檔案是否正好只包含一個資料夾。",
   "loc.messages.NoPKGFile": "找不到 PKG 檔案。",
