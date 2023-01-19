@@ -18,12 +18,12 @@ steps:
   persistCredentials: true
   clean: true
 
-- script: git pull
-  displayName: 'git pull'
-
 - script: git checkout develop
   continueOnError: true
   displayName: 'git checkout develop'
+
+- script: git pull
+  displayName: 'git pull'
 
 - script: git status
   displayName: 'git status'
