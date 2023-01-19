@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "NuGet 認証",
+  "loc.helpMarkDown": "[このタスクの詳細](https://aka.ms/NuGetAuthenticateTask)",
+  "loc.description": "Azure Artifacts およびその他の NuGet リポジトリで認証するように NuGet ツールを構成します。NuGet 4.8.5385 以降、dotnet 6 以降、または MSBuild 15.8.166.59604 以降が必要です",
+  "loc.instanceNameFormat": "NuGet 認証",
+  "loc.input.label.nuGetServiceConnections": "この組織外のフィードへのサービス接続の資格情報",
+  "loc.input.help.nuGetServiceConnections": "この組織またはコレクション外のフィードへの NuGet サービス接続名のコンマ区切りリストです。この組織またはコレクション内のフィードの場合は空白のままにします。ビルドの資格情報が自動的に使用されます。",
+  "loc.input.label.forceReinstallCredentialProvider": "資格情報プロバイダーが既にインストールされている場合でも再インストールする",
+  "loc.input.help.forceReinstallCredentialProvider": "資格情報プロバイダーがユーザー プロファイルに既にインストールされている場合に、タスクで指定された資格情報プロバイダーでそれを上書きするかどうかを決定します。これにより、資格情報プロバイダーがアップグレード (場合によってはダウングレード) されることがあります。"
+}
