@@ -1,6 +1,5 @@
 trigger:
 - master
-- development
 
 # hosted agent at windows 11
 #pool: local-dev-pool 
@@ -19,10 +18,10 @@ steps:
   clean: true
 
 - script: git pull
+  continueOnError: true
   displayName: 'git pull'
 
 - script: git checkout develop
-  continueOnError: true
   displayName: 'git checkout develop'
 
 - script: git status
