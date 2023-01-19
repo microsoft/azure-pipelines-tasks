@@ -34,7 +34,7 @@ describe('Azure Key Vault', function () {
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret1;isOutput=false;issecret=true;]secret1-value") > 0, "##vso[task.setvariable variable=secret1;isOutput=false;issecret=true;]secret1-value");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret2;isOutput=false;issecret=true;]secret2-value") > 0, "##vso[task.setvariable variable=secret2;isOutput=false;issecret=true;]secret2-value");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret3;isOutput=false;issecret=true;]secret3-value") > 0, "##vso[task.setvariable variable=secret3;isOutput=false;issecret=true;]secret3-value");
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret5_%AZP25AZP253B;isOutput=false;issecret=true;]secret5_%AZP25AZP253B-value") > 0, "##vso[task.setvariable variable=secret5_%AZP25AZP253B;isOutput=false;issecret=true;]secret5_%AZP25AZP253B-value");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret5_%AZP253B;isOutput=false;issecret=true;]secret5_%AZP253B-value") > 0, "##vso[task.setvariable variable=secret5_%AZP253B;isOutput=false;issecret=true;]secret5_%AZP253B-value");
             
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=secret4;isOutput=false;issecret=true;]secret4-value") < 0, "secret4 value should not be set");
 
