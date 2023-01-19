@@ -3,7 +3,7 @@ trigger:
 - development
 
 # hosted agent at windows 11
-pool: local-dev-pool 
+#pool: local-dev-pool 
 
 steps:
 - script: git config --list
