@@ -1,6 +1,5 @@
-const { spawn, exec } = require('node:child_process');
+const { spawn } = require('node:child_process');
 const git = spawn('git', ['diff', '--name-only', 'master'], {cwd: '..', shell: true});
-
 
 let gitDiffOutput = "";
 
@@ -15,11 +14,9 @@ git.stderr.on('data', (data) => {
 });
 
 git.on('close', (code) => {
-  console.log(`git child process exited with code ${code}`);
-  console.log('Full output of script: ', gitDiffOutput);
-
-  console.log('--------------------------------------------')
-  console.log(gitDiffOutput);
+  if (code != 0) {
+    console.log(`git child process exited with code ${code}`);
+  }
 
   getTaskNamesFromOutput(gitDiffOutput);
 });
@@ -32,8 +29,10 @@ function getTaskNamesFromOutput(output) {
   taskLines.forEach(pathToFile => {
     let taskName = pathToFile.slice(6); // remove Tasks/ prefix
     taskName = taskName.slice(0, taskName.indexOf('/')); // remove path after task name
-    console.log('taskName', taskName)
+    taskNames.add(taskName);
   })
 
-  console.log(taskLines);
+  console.log('----------------------------------------------------------------')
+  console.log('Tasks with changes:', ...taskNames)
+  console.log([...taskNames]);
 }
