@@ -1,6 +1,8 @@
 trigger:
 - master
 
+pool: local-dev-pool
+
 steps:
 - script: git config --list
   displayName: 'git config --list'
