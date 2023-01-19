@@ -2,11 +2,26 @@ trigger:
 - master
 
 steps:
+- script: git config --list
+  displayName: 'git config --list'
+
+- script: |
+    git config --global user.email "pavloandriiesh@github.com"
+    git config --global user.name "Pavlo Andriiesh"
+  displayName: 'config'
+  
+- script: git config --list
+  displayName: 'git config --list'
+
 - checkout: self
   persistCredentials: true
+  clean: true
 
 - script: ls
   displayName: 'Run dir'
+
+- script: git ls-files
+  displayName: 'git ls-files'
 
 - script: git status
   displayName: 'git status'
