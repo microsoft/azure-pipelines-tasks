@@ -5,7 +5,7 @@
   "loc.messages.armUrlCannotBeEmpty": "URL-адрес ARM должен быть непустой строкой.",
   "loc.messages.authorityUrlCannotBeEmpty": "Параметр authority должен быть непустой строкой.",
   "loc.messages.serviceConnectionIdCannotBeEmpty": "Параметр serviceConnectionId должен быть непустой строкой.",
-  "loc.messages.CouldNotFetchAccessTokenforAAD": "Не удалось получить маркер доступа для AAD. Код состояния: %s, сообщение о состоянии: %s",
+  "loc.messages.CouldNotFetchAccessTokenforAAD": "Не удалось получить маркер доступа для AAD.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Не удалось получить маркер доступа для Azure. Код состояния: %s, сообщение о состоянии: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Настройте управляемое удостоверение службы (MSI) для виртуальной машины \"https://aka.ms/azure-msi-docs\". Код состояния: %s; сообщения о состоянии: %s.",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Код состояния: %s, сообщение о состоянии: %s.",
