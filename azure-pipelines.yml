@@ -2,7 +2,8 @@ trigger:
 - master
 - development
 
-pool: local-dev-pool
+# hosted agent at windows 11
+pool: local-dev-pool 
 
 steps:
 - script: git config --list
@@ -13,43 +14,23 @@ steps:
     git config --global user.name "Pavlo Andriiesh"
   displayName: 'config'
   
-- script: git config --list
-  displayName: 'git config --list'
-
 - checkout: self
   persistCredentials: true
   clean: true
 
-- script: dir
-  displayName: 'Run dir'
-
-- script: git ls-files
-  displayName: 'git ls-files'
-
-- script: git status
-  displayName: 'git status'
+- script: git pull
+  displayName: 'git pull'
 
 - script: git checkout develop
   continueOnError: true
   displayName: 'git checkout develop'
-  
+
 - script: git status
   displayName: 'git status'
 
-- script: git remote -v
-  displayName: 'git remote -v'
-
-- script: git branch -r
-  displayName: 'git branch -r'
-
-- script: git diff origin/master
+- script: git diff --name-only origin/master
   continueOnError: true
-  displayName: 'git diff origin/master'
-
-
-- script: git diff --name-only master
-  continueOnError: true
-  displayName: 'Run git diff --name-only master'
+  displayName: 'git diff --name-only origin/master'
 
 - script: |
     export num=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.BuildId) $(Build.SourceBranchName))
