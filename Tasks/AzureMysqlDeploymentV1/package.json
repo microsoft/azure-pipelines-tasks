@@ -21,7 +21,7 @@
     "@types/node": "^10.17.0",
     "@types/q": "1.0.7",
     "azure-pipelines-task-lib": "^3.1.0",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.216.3",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.217.0",
     "azure-pipelines-tasks-webdeployment-common": "4.208.0",
     "compress-commons": "1.1.0",
     "crc32-stream": "1.0.0",
