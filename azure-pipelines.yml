@@ -19,7 +19,7 @@ steps:
   persistCredentials: true
   clean: true
 
-- script: ls
+- script: dir
   displayName: 'Run dir'
 
 - script: git ls-files
