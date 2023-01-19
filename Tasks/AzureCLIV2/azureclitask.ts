@@ -200,7 +200,7 @@ export class azureclitask {
         const planId = tl.getVariable("System.PlanId");
         const projectId = tl.getVariable("System.TeamProjectId");
         const hub = tl.getVariable("System.HostType");
-        const uri = tl.getVariable("system.collectionUri");
+        const uri = tl.getVariable("System.TeamFoundationCollectionUri");
         const token = getSystemAccessToken();
 
         const authHandler = getHandlerFromToken(token);
