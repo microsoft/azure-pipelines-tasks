@@ -2,6 +2,7 @@ const { spawn } = require('node:child_process');
 const git = spawn('git', ['diff', '--name-only', 'master'], {cwd: '..', shell: true});
 
 console.log('process.argv')
+
 console.log(process.argv)
 
 let gitDiffOutput = "";
