@@ -14,7 +14,7 @@ describe('VsTest Suite', function() {
         done();
     });
 
-    it('InputDataContract parity between task and dtaExecutionhost', (done: MochaDone) => {
+    it('InputDataContract parity between task and dtaExecutionhost', (done: Mocha.Done) => {
         console.log('TestCaseName: InputDataContract parity between task and dtaExecutionhost');
 
         console.log('\n');
