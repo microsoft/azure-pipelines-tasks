@@ -27,6 +27,7 @@ steps:
   displayName: 'git status'
 
 - script: git checkout develop
+  continueOnError: true
   displayName: 'git checkout develop'
   
 - script: git status
