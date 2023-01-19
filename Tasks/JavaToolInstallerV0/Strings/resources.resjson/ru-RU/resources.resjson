@@ -56,6 +56,7 @@
   "loc.messages.JavaNotPreinstalled": "ПО Java %s не предустановлено на этом агенте.",
   "loc.messages.UsePreinstalledJava": "Использовать предварительно установленное ПО JDK из %s.",
   "loc.messages.WrongArchiveStructure": "Недопустимый файл JDK. Убедитесь, что файл JDK содержит только одну корневую папку с \"bin\".",
+  "loc.messages.WrongArchiveFile": "Archive file is wrong. There is not any folder which contains JDK",
   "loc.messages.ShareAccessError": "Общий сетевой ресурс недоступен: (%s).",
   "loc.messages.UnsupportedDMGStructure": "Файл JDK не поддерживается. Убедитесь в том, что файл JDK содержит только одну папку.",
   "loc.messages.NoPKGFile": "Не удалось найти файл PKG.",

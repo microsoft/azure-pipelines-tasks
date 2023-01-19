@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Appeler l'API REST",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=870236)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870236)",
   "loc.description": "Appelez une API REST dans le cadre de votre pipeline.",
   "loc.instanceNameFormat": "Appeler l'API REST : $(method)",
   "loc.group.displayName.completionOptions": "Avancé",
@@ -18,7 +18,7 @@
   "loc.input.label.urlSuffix": "Suffixe et paramètres d'URL",
   "loc.input.help.urlSuffix": "La chaîne donnée est ajoutée à l'URL. Exemple : si l'URL de la connexion de service est https:...TestProj/_apis/Release/releases et si le suffixe de l'URL est /2/environments/1, l'URL de la connexion de service devient https:.../TestProj/_apis/Release/releases/2/environments/1. Si le suffixe de l'URL est ?definitionId=1&releaseCount=1 l'URL de la connexion de service devient https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1.",
   "loc.input.label.waitForCompletion": "Événement de complétion",
-  "loc.input.help.waitForCompletion": "La valeur par défaut est \"Callback\". Valeurs disponibles : \"ApiResponse\", \"Callback\" quand l'API REST effectue un rappel pour mettre à jour l'enregistrement de chronologie​.",
+  "loc.input.help.waitForCompletion": "Default value \"Callback\". Available values :  \"ApiResponse\", \"Callback\" call where the REST API calls back to update the timeline record​.",
   "loc.input.label.successCriteria": "Critères de réussite",
   "loc.input.help.successCriteria": "Critères qui définissent la réussite de la tâche. L'absence de critères signifie que le contenu de la réponse n'influence pas le résultat. Exemple : - Pour une réponse de type {\"état\" : \"réussite\"}, l'expression peut être eq(root['état'], 'réussite'). [Plus d'informations](https://go.microsoft.com/fwlink/?linkid=842996)​"
 }

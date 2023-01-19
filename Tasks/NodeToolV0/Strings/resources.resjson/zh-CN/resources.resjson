@@ -3,11 +3,18 @@
   "loc.helpMarkDown": "[详细了解此任务](https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/node-js)或[参阅 Node 文档](https://nodejs.org/docs/latest/api/documentation.html)",
   "loc.description": "查找或下载并缓存指定的 Node.js 版本规范，并将其添加到 PATH",
   "loc.instanceNameFormat": "使用节点 $(versionSpec)",
+  "loc.input.label.versionSource": "版本源",
   "loc.input.label.versionSpec": "版本规范",
   "loc.input.help.versionSpec": "要获取的版本的版本规范。例如: 6.x, 4.x, 6.10.0, >=6.10.0",
+  "loc.input.label.versionFilePath": ".nvmrc 文件的路径",
+  "loc.input.help.versionFilePath": "用于获取版本的文件路径。示例: src/.nvmrc",
   "loc.input.label.checkLatest": "检查是否有最新版本",
   "loc.input.help.checkLatest": "始终联机检查是否有满足版本规范的最新可用版本。这通常无法实现，除非有特定的解决方案可以始终获取最新版本。这样会在可能没有必要的情况下，特别是在使用托管生成池时产生下载费用。",
   "loc.input.label.force32bit": "在 x64 代理上使用 32 位版本",
   "loc.input.help.force32bit": "安装 x86 版本的 Node，不考虑代理的 CPU 体系结构。",
-  "loc.messages.ToolFailed": "工具安装失败: %s"
+  "loc.messages.ToolFailed": "工具安装失败: %s",
+  "loc.messages.TryRosetta": "找不到平台 %s 和体系结构 %s 的节点。尝试使用 Rosetta2 进行安装",
+  "loc.messages.NodeVersionNotFound": "找不到平台 %s 和体系结构 %s 的节点版本 %s。",
+  "loc.messages.UnexpectedOS": "意外的 OS %s",
+  "loc.messages.AgentTempDirNotSet": "应设置 Agent.TempDirectory。"
 }

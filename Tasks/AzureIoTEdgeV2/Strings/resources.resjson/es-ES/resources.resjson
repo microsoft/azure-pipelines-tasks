@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure IoT Edge",
-  "loc.helpMarkDown": "Visite la [documentación](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) para obtener ayuda",
+  "loc.helpMarkDown": "Visite la [documentación](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment) para obtener ayuda.",
   "loc.description": "Compila e implementa una imagen de Azure IoT Edge.",
   "loc.instanceNameFormat": "Azure IoT Edge: $(action)",
   "loc.group.displayName.advanced_push": "Avanzado",
@@ -40,7 +40,7 @@
   "loc.input.label.deploymentManifestOutputPath": "Ruta de acceso de salida",
   "loc.input.help.deploymentManifestOutputPath": "Ruta de acceso de salida del manifiesto de implementación generado",
   "loc.input.label.validateGeneratedDeploymentManifest": "Validar el esquema del manifiesto de implementación generado",
-  "loc.input.help.validateGeneratedDeploymentManifest": "Indique que este paso es erróneo si el manifiesto de implementación generado no supera la validación de esquema. Puede buscar \"Azure IoT Edge Deployment\" en el [almacenamiento del esquema JSON] (http://schemastore.org/json/) para buscar el esquema más reciente.",
+  "loc.input.help.validateGeneratedDeploymentManifest": "Fail this step if the generated deployment manifest does not pass schema validation. You can search `Azure IoT Edge deployment` in [JSON Schema Store](http://schemastore.org/json/) to find latest schema.",
   "loc.input.label.bypassModules": "Omitir módulos",
   "loc.input.help.bypassModules": "Seleccione los módulos que **NO** es necesario compilar o insertar en .template.json, especifique los nombres de módulo y sepárelos con comas.\n Ejemplo: Si tiene dos módulos (**MóduloEjemplo1,MóduloEjemplo2**) en .template.json pero solo quiere compilar o insertar **MóduloEjemplo1**, establezca **MóduloEjemplo2** en la opción para omitir módulos. Déjelo en blanco si quiere compilar todos los módulos de .template.json.",
   "loc.messages.BuildingModules": "Compilando imágenes del módulo...",

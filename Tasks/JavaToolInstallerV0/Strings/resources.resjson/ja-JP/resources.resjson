@@ -56,6 +56,7 @@
   "loc.messages.JavaNotPreinstalled": "Java %s はこのエージェントにプレインストールされていません",
   "loc.messages.UsePreinstalledJava": "%s からプレインストールされた JDK を使用します",
   "loc.messages.WrongArchiveStructure": "JDK ファイルが有効ではありません。JDK ファイルに 'bin' が含まれるルート フォルダーが 1 つだけ含まれているかどうかを確認してください。",
+  "loc.messages.WrongArchiveFile": "Archive file is wrong. There is not any folder which contains JDK",
   "loc.messages.ShareAccessError": "ネットワーク共有リソースを使用できません: (%s)",
   "loc.messages.UnsupportedDMGStructure": "JDK ファイルはサポートされていません。JDK ファイルにフォルダーが 1 つだけ含まれているかどうかを確認してください。",
   "loc.messages.NoPKGFile": "PKG ファイルが見つかりませんでした。",

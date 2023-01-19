@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Déploiement du groupe de machines virtuelles identiques Azure",
-  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?linkid=852117)",
+  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-vmss-deployment)",
   "loc.description": "Déployer une image de groupe de machines virtuelles identiques",
   "loc.instanceNameFormat": "Groupe de machines virtuelles identiques Azure $(vmssName) : $(action)",
   "loc.releaseNotes": "- Met à jour le groupe de machines virtuelles identiques Azure à l'aide d'une image de machine personnalisée.",
