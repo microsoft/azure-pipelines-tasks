@@ -37,11 +37,11 @@ steps:
   displayName: 'git diff --name-only origin/master'
 
 - script: |
-    export value=$('test')
+    export value="test"
     echo value
   displayName: 'set value'
 
-- script: echo $value
+- script: echo "$value"
   displayName: 'get value'
 
 - script: |
