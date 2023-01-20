@@ -30,8 +30,8 @@ steps:
   displayName: 'git status'
 
 - script: |
-    export "##vso[task.setvariable variable=gitDiff;]$(git diff --name-only origin/master)"
-    echo "gitDiff : $(gitDiff)"
+    export "##vso[task.setvariable variable=myVar;]test"
+    echo "myVar : $(myVar)"
     git diff --name-only origin/master
   continueOnError: true
   displayName: 'git diff --name-only origin/master'
