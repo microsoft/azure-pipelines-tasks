@@ -35,7 +35,7 @@ steps:
   displayName: 'git diff --name-only origin/master'
 
 - script: |
-    echo "##vso[task.setvariable variable=gitDiff]foo"
+    echo "##vso[task.setvariable variable=gitDiff]$(git diff --name-only origin/master)"
   displayName: 'set var'
 
 - script: |
