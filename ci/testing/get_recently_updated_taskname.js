@@ -36,7 +36,7 @@ function getTaskNamesFromOutput(output) {
     taskNames.add(taskName);
   })
 
-  console.log('----------------------------------------------------------------')
-  console.log('Tasks with changes:', ...taskNames)
+  console.log('----------------------------------------------------------------');
+  console.log('Tasks with changes:', ...taskNames);
   console.log([...taskNames]);
 }
