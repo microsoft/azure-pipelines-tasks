@@ -30,14 +30,12 @@ steps:
   displayName: 'git status'
 
 - script: |
-    export "##vso[task.setvariable variable=myVar;]test"
-    echo "myVar : $(myVar)"
     git diff --name-only origin/master
   continueOnError: true
   displayName: 'git diff --name-only origin/master'
 
 - script: |
-    echo "##vso[task.setvariable variable=myVar;]foo"
+    echo "##vso[task.setvariable variable=myVar]foo"
   displayName: 'set var'
 
 - script: |
