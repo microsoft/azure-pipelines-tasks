@@ -7,21 +7,7 @@ trigger:
 #pool: local-dev-pool 
 
 steps:
-- script: git config --list
-  displayName: 'git config --list'
 
-- script: |
-    git config --global user.email "pavloandriiesh@github.com"
-    git config --global user.name "Pavlo Andriiesh"
-  displayName: 'config'
-  
-- checkout: self
-  persistCredentials: true
-  clean: true
-
-- script: git pull
-  continueOnError: true
-  displayName: 'git pull'
 
 - script: git checkout develop
   displayName: 'git checkout develop'
@@ -45,20 +31,9 @@ steps:
 #condition: eq(variables['build.reason'], 'PullRequest')
 - script: |
     echo $gitDiff
-    export num=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.Reason) $(System.PullRequest.TargetBranch) $(git diff --name-only origin/master))
-    echo "node.js returned $num"
-  continueOnError: true
-  displayName: 'Run get_recently_updated_taskname.js'
-
-- script: |
-    export buildNumber=$(node ./ci/testing/build.js $(Build.BuildId) $(Build.SourceBranchName))
-    echo "node.js returned $buildNumber"
-    echo "##vso[build.updatebuildnumber]$buildNumber"
-  continueOnError: true
-  displayName: 'Run build.js'
-
-- script:  echo "new buildnumber ~>$(Build.BuildNumber)"
-  displayName: 'Display New Build Number'
+    export tasks=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.Reason) $(System.PullRequest.TargetBranch) $(git diff --name-only origin/master))
+    echo "node.js returned $tasks"
+  displayName: 'Get task names'
 
 - script: |
     export value=$(node ./ci/testing/return_one_line.js)
