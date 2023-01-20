@@ -36,9 +36,13 @@ steps:
   continueOnError: true
   displayName: 'git diff --name-only origin/master'
 
-- script: echo "gitDiff $gitDiff"
-  continueOnError: true
-  displayName: 'git diff --name-only origin/master'
+- script: |
+    export value=$('test')
+    echo value
+  displayName: 'set value'
+
+- script: echo $value
+  displayName: 'get value'
 
 - script: |
     echo $gitDiff
