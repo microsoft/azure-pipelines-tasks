@@ -36,11 +36,10 @@ if (reason !== 'PullRequest') {
 // });
 
 
-function getTaskNamesFromOutput(output) {
+function getTaskNamesFromOutput(gitDiffOutput) {
   const taskNames = new Set();
-  const lines = output.split(/\r?\n/).filter(s => s);
-  const taskLines = lines.filter(line => line.startsWith('Tasks/'));
-  taskLines.forEach(pathToFile => {
+  const lines = gitDiffOutput.filter(line => line.startsWith('Tasks/'));
+  lines.forEach(pathToFile => {
     let taskName = pathToFile.slice(6); // remove Tasks/ prefix
     taskName = taskName.slice(0, taskName.indexOf('/')); // remove path after task name
     taskNames.add(taskName);
