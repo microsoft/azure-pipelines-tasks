@@ -4,6 +4,17 @@ const { spawn } = require('node:child_process');
 console.log('process.argv')
 console.log(process.argv)
 
+const reason = process.argv[2];
+const sourceBranch = process.argv[3];
+const targetBranch = process.argv[4];
+const gitDiffOutput = process.argv.slice(4);
+
+if (reason !== 'PullRequest') {
+  console.log(`Cancel script that is not "PullRequest". Current reason: "${reason}"`)
+} else {
+  getTaskNamesFromOutput(gitDiffOutput)
+}
+
 // let gitDiffOutput = "";
 
 // git.stdout.setEncoding('utf8');
