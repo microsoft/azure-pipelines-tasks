@@ -29,12 +29,15 @@ steps:
 - script: git status
   displayName: 'git status'
 
-- script: export diff=$(git diff --name-only origin/master)
+- script: |
+    export gitDiff=$(git diff --name-only origin/master)
+    echo gitDiff: $gitDiff
+    git diff --name-only origin/master
   continueOnError: true
   displayName: 'git diff --name-only origin/master'
 
 - script: |
-    echo diff: $diff
+    echo gitDiff: $gitDiff
     export num=$(node ./ci/testing/get_recently_updated_taskname.js $(diff) $(Build.Repository.Name) $(Build.SourceBranchName) $(System.PullRequest.SourceBranch) $(System.PullRequest.TargetBranch) 'test2')
     echo "node.js returned $num"
   continueOnError: true
