@@ -30,7 +30,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     }
 
     // TODO: temporary fix for tests are failing with MSAL
-    public async PreDeploymentStep(useMSAL: boolean = true) {
+    public async PreDeploymentStep(useMSAL: boolean = false) {
 
         if (this.taskParams.WebAppKind.includes("functionAppContainer")){
             tl.warning(`Recommendation: Use Azure Functions for container Task to deploy Function app.`);
