@@ -44,7 +44,7 @@ steps:
 
 - script: |
     echo $gitDiff
-    export num=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.Repository.Name) $(Build.Reason) $(System.PullRequest.SourceBranch) $(System.PullRequest.TargetBranch) 'diff' $(git diff --name-only origin/master))
+    export num=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.Reason) $(System.PullRequest.SourceBranch) $(System.PullRequest.TargetBranch) $(git diff --name-only origin/master))
     echo "node.js returned $num"
   continueOnError: true
   displayName: 'Run get_recently_updated_taskname.js'
