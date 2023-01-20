@@ -33,9 +33,8 @@ steps:
   continueOnError: true
   displayName: 'git diff --name-only origin/master'
 
-  #condition: and(succeeded(), eq(variables['System.PullRequest.TargetBranch'], 'refs/heads/master'))
 - script: |
-    export num=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.SourceBranchName) $(System.PullRequest.SourceBranch) $(System.PullRequest.TargetBranch) $('test'))
+    export num=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.SourceBranchName) $(System.PullRequest.SourceBranch) $(System.PullRequest.TargetBranch) 'test')
     echo "node.js returned $num"
   continueOnError: true
   displayName: 'Run get_recently_updated_taskname.js'
