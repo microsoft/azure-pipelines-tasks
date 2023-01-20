@@ -1,29 +1,28 @@
 const { spawn } = require('node:child_process');
-const git = spawn('git', ['diff', '--name-only', 'master'], {cwd: '..', shell: true});
+//const git = spawn('git', ['diff', '--name-only', 'master'], {cwd: '..', shell: true});
 
 console.log('process.argv')
-
 console.log(process.argv)
 
-let gitDiffOutput = "";
+// let gitDiffOutput = "";
 
-git.stdout.setEncoding('utf8');
-git.stdout.on('data', (data) => {
-  gitDiffOutput += data.toString();
-});
+// git.stdout.setEncoding('utf8');
+// git.stdout.on('data', (data) => {
+//   gitDiffOutput += data.toString();
+// });
 
 
-git.stderr.on('data', (data) => {
-  console.error(`git stderr: ${data}`);
-});
+// git.stderr.on('data', (data) => {
+//   console.error(`git stderr: ${data}`);
+// });
 
-git.on('close', (code) => {
-  if (code != 0) {
-    console.log(`git child process exited with code ${code}`);
-  }
+// git.on('close', (code) => {
+//   if (code != 0) {
+//     console.log(`git child process exited with code ${code}`);
+//   }
 
-  getTaskNamesFromOutput(gitDiffOutput);
-});
+//   getTaskNamesFromOutput(gitDiffOutput);
+// });
 
 
 function getTaskNamesFromOutput(output) {
