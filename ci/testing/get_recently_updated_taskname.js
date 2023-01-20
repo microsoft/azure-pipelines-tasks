@@ -1,39 +1,17 @@
-const { spawn } = require('node:child_process');
-//const git = spawn('git', ['diff', '--name-only', 'master'], {cwd: '..', shell: true});
-
 console.log('process.argv')
 console.log(process.argv)
 
 const reason = process.argv[2];
-const sourceBranch = process.argv[3];
-const targetBranch = process.argv[4];
+const targetBranch = process.argv[3];
 const gitDiffOutput = process.argv.slice(4);
 
 if (reason !== 'PullRequest') {
-  console.log(`Cancel script that is not "PullRequest". Current reason: "${reason}"`)
+  console.log(`Skip since reason is not "PullRequest". Current reason is "${reason}"`)
+} else if (targetBranch !== 'master') {
+  console.log(`Skip since target branch is not "master". Current target branch is "${targetBranch}"`)
 } else {
   getTaskNamesFromOutput(gitDiffOutput)
 }
-
-// let gitDiffOutput = "";
-
-// git.stdout.setEncoding('utf8');
-// git.stdout.on('data', (data) => {
-//   gitDiffOutput += data.toString();
-// });
-
-
-// git.stderr.on('data', (data) => {
-//   console.error(`git stderr: ${data}`);
-// });
-
-// git.on('close', (code) => {
-//   if (code != 0) {
-//     console.log(`git child process exited with code ${code}`);
-//   }
-
-//   getTaskNamesFromOutput(gitDiffOutput);
-// });
 
 
 function getTaskNamesFromOutput(gitDiffOutput) {
