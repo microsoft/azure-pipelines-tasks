@@ -34,6 +34,7 @@ steps:
   displayName: 'git diff --name-only origin/master'
 
 - script: |
+    echo  variables: $(Build.Repository.Name) $(Build.SourceBranchName) $(System.PullRequest.SourceBranch) $(System.PullRequest.TargetBranch) 'test2'
     export num=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.Repository.Name) $(Build.SourceBranchName) $(System.PullRequest.SourceBranch) $(System.PullRequest.TargetBranch) 'test2')
     echo "node.js returned $num"
   continueOnError: true
