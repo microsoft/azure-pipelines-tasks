@@ -37,12 +37,12 @@ steps:
   displayName: 'git diff --name-only origin/master'
 
 - script: |
-    export value="test"
-    echo value
-  displayName: 'set value'
+    echo "##vso[task.setvariable variable=myVar;]foo"
+  displayName: 'set var'
 
-- script: echo "$value"
-  displayName: 'get value'
+- script: |
+    echo "You can use macro syntax for variables: $(myVar)"
+  displayName: 'get var'
 
 - script: |
     echo $gitDiff
