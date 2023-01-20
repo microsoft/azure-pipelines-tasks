@@ -287,7 +287,7 @@ function Get-AzureRMAccessToken {
     param(
         [Parameter(Mandatory = $true)] $endpoint,
         [parameter(Mandatory = $false)] $overrideResourceType = $null,
-        [parameter(Mandatory = $false)] $useMSAL = $true
+        [parameter(Mandatory = $false)] $useMSAL = $false
     )
 
     $accessToken = @{
