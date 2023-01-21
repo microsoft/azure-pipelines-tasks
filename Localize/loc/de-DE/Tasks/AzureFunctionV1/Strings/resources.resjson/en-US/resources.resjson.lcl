@@ -110,10 +110,13 @@
       </Item>
       <Item ItemId=";loc.input.help.waitForCompletion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Default value "ApiResponse". Available values: "ApiResponse", "Callback" call where the Azure function calls back to update the timeline record​.]]></Val>
+          <Val><![CDATA[Default value "Callback". Available values: "ApiResponse", "Callback" call where the Azure function calls back to update the timeline record​.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Standardwert "ApiResponse". Mögliche Werte: "ApiResponse" bzw. "Callback", wenn die Azure-Funktion einen Rückruf zum Aktualisieren des Zeitachsendatensatzes ausführt.]]></Val>
+            <Val><![CDATA[Standardwert "Callback". Mögliche Werte: "ApiResponse" bzw. "Callback", wenn die Azure-Funktion einen Rückruf zum Aktualisieren des Zeitachsendatensatzes ausführt.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Default value "ApiResponse". Available values: "ApiResponse", "Callback" call where the Azure function calls back to update the timeline record​.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
