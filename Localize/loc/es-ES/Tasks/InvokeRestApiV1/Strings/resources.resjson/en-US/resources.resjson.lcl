@@ -38,10 +38,13 @@
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[[More information]5D;(https://go.microsoft.com/fwlink/?linkid=870236)]]></Val>
+          <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?linkid=870236)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[Más información]5D;(https://go.microsoft.com/fwlink/?linkid=870236)]]></Val>
+            <Val><![CDATA[[Obtener más información acerca de esta tarea]5D;(https://go.microsoft.com/fwlink/?linkid=870236)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[[More information]5D;(https://go.microsoft.com/fwlink/?linkid=870236)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -110,10 +113,13 @@
       </Item>
       <Item ItemId=";loc.input.help.waitForCompletion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Default value "ApiResponse". Available values :  "ApiResponse", "Callback" call where the REST API calls back to update the timeline record​.]]></Val>
+          <Val><![CDATA[Default value "Callback". Available values :  "ApiResponse", "Callback" call where the REST API calls back to update the timeline record​.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Valor predeterminado "ApiResponse". Valores disponibles: "ApiResponse", llamada "Callback" en la que la API de REST devuelve una llamada para actualizar el registro de la escala de tiempo.]]></Val>
+            <Val><![CDATA[Valor predeterminado "Devolución de llamada". Valores disponibles :  "ApiResponse", "Devolución de llamada" en la que la API de REST llama de nuevo para actualizar el registro de línea temporal.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Default value "ApiResponse". Available values :  "ApiResponse", "Callback" call where the REST API calls back to update the timeline record​.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
