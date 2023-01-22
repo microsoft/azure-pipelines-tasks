@@ -38,10 +38,13 @@
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[[More information]5D;(https://go.microsoft.com/fwlink/?linkid=870236)]]></Val>
+          <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?linkid=870236)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[详细信息]5D;(https://go.microsoft.com/fwlink/?linkid=870236)]]></Val>
+            <Val><![CDATA[[详细了解此任务]5D;(https://go.microsoft.com/fwlink/?linkid=870236)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[[More information]5D;(https://go.microsoft.com/fwlink/?linkid=870236)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -110,10 +113,13 @@
       </Item>
       <Item ItemId=";loc.input.help.waitForCompletion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Default value "ApiResponse". Available values :  "ApiResponse", "Callback" call where the REST API calls back to update the timeline record​.]]></Val>
+          <Val><![CDATA[Default value "Callback". Available values :  "ApiResponse", "Callback" call where the REST API calls back to update the timeline record​.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[默认值 "ApiResponse"。可用值: "ApiResponse"，"Callback" 调用 REST API 回调到的位置来更新时间线记录。]]></Val>
+            <Val><![CDATA[默认值 "Callback"。可用值: "ApiResponse"，"Callback" 调用 REST API 回调到的位置来更新时间线记录。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Default value "ApiResponse". Available values :  "ApiResponse", "Callback" call where the REST API calls back to update the timeline record​.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
