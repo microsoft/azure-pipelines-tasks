@@ -38,10 +38,13 @@
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[[More information]5D;(https://go.microsoft.com/fwlink/?linkid=870236)]]></Val>
+          <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?linkid=870236)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[Дополнительные сведения]5D;(https://go.microsoft.com/fwlink/?linkid=870236)]]></Val>
+            <Val><![CDATA[[Подробнее об этой задаче]5D;(https://go.microsoft.com/fwlink/?linkid=870236)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[[More information]5D;(https://go.microsoft.com/fwlink/?linkid=870236)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -110,10 +113,13 @@
       </Item>
       <Item ItemId=";loc.input.help.waitForCompletion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Default value "ApiResponse". Available values :  "ApiResponse", "Callback" call where the REST API calls back to update the timeline record​.]]></Val>
+          <Val><![CDATA[Default value "Callback". Available values :  "ApiResponse", "Callback" call where the REST API calls back to update the timeline record​.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Значение по умолчанию: "ApiResponse". Доступные значения: "ApiResponse", "Callback"; последнее — вызов, при котором REST API совершает обратный вызов, чтобы обновить запись временной шкалы.]]></Val>
+            <Val><![CDATA[Значение по умолчанию: "Callback". Доступные значения: "ApiResponse", "Callback"; последнее — вызов, при котором REST API совершает обратный вызов, чтобы обновить запись временной шкалы.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Default value "ApiResponse". Available values :  "ApiResponse", "Callback" call where the REST API calls back to update the timeline record​.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
