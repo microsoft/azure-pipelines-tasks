@@ -1,7 +1,11 @@
-pr:
-  branches:
-    exclude:
-      - master
+#trigger:
+#  - none
+#pr:
+#  branches:
+#    include:
+#      - '*'
+#    exclude:
+#      - master
 
 
 jobs:
