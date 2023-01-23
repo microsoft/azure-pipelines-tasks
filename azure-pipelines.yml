@@ -1,10 +1,13 @@
 trigger:
+  - none
+pr:
   branches:
     include:
-    - '*'
+      - '*'
     exclude:
       - master
-      
+
+
 jobs:
 - job: get_tasks
   condition: eq(variables['Build.Reason'], 'PullRequest')
