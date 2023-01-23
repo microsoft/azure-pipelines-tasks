@@ -1,48 +1,53 @@
 # hosted agent at windows 11
 #pool: local-dev-pool 
 
-steps:
-- script: git pull
-  continueOnError: true
-  displayName: 'git pull'
+jobs:
+- job: build
+  pool:
+    name: Default
+  condition: eq(variables['build.reason'], 'PullRequest')  
+  steps:
+  - script: git pull
+    continueOnError: true
+    displayName: 'git pull'
 
-- script: git checkout develop
-  displayName: 'git checkout develop'
+  - script: git checkout develop
+    displayName: 'git checkout develop'
 
-- script: git status
-  displayName: 'git status'
+  - script: git status
+    displayName: 'git status'
 
-- script: |
-    git diff --name-only origin/master
-  continueOnError: true
-  displayName: 'git diff --name-only origin/master'
+  - script: |
+      git diff --name-only origin/master
+    continueOnError: true
+    displayName: 'git diff --name-only origin/master'
 
-- script: |
-    echo "##vso[task.setvariable variable=gitDiff]$(git diff --name-only origin/master)"
-  displayName: 'set var'
+  - script: |
+      echo "##vso[task.setvariable variable=gitDiff]$(git diff --name-only origin/master)"
+    displayName: 'set var'
 
-- script: |
-    echo "$(gitDiff)"
-  displayName: 'get var'
+  - script: |
+      echo "$(gitDiff)"
+    displayName: 'get var'
 
-  condition: eq(variables['build.reason'], 'PullRequest')
-- script: |
-    export tasks=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.Reason) $(System.PullRequest.TargetBranch) $(git diff --name-only origin/master))
-    echo "##vso[task.setvariable variable=tasks]$tasks"
-  displayName: 'Get task names'
+  - script: |
+      export tasks=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.Reason) $(System.PullRequest.TargetBranch) $(git diff --name-only origin/master))
+      echo "##vso[task.setvariable variable=tasks]$tasks"
+    displayName: 'Get task names'
+    condition: eq(variables['build.reason'], 'PullRequest')
 
-- script: |
-    echo "$(tasks)"
-    ret=$(node ./ci/testing/return_one_line.js $(tasks))
-  displayName: 'Use task names'
+  - script: |
+      echo "$(tasks)"
+      ret=$(node ./ci/testing/return_one_line.js $(tasks))
+    displayName: 'Use task names'
 
-- script: |
-    export value=$(node ./ci/testing/return_object.js)
-    echo "node.js returned $value"
-  displayName: 'Run return_object.js'
+  - script: |
+      export value=$(node ./ci/testing/return_object.js)
+      echo "node.js returned $value"
+    displayName: 'Run return_object.js'
 
-- script: |
-    export nodeVersion=$(node -v)
-    export npmVersion=$(npm -v)
-    echo "node.js version is $nodeVersion, npm version is $npmVersion"
-  displayName: 'Display node and npm versions'
+  - script: |
+      export nodeVersion=$(node -v)
+      export npmVersion=$(npm -v)
+      echo "node.js version is $nodeVersion, npm version is $npmVersion"
+    displayName: 'Display node and npm versions'
