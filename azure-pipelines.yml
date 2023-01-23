@@ -28,12 +28,12 @@ steps:
 #condition: eq(variables['build.reason'], 'PullRequest')
 - script: |
     export tasks=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.Reason) $(System.PullRequest.TargetBranch) $(git diff --name-only origin/master))
-    echo "##vso[task.setvariable variable=tasksVar]$tasks"
+    echo "##vso[task.setvariable variable=tasks]$tasks"
   displayName: 'Get task names'
 
 - script: |
-    echo "$(tasksVar)"
-    ret=$(node ./ci/testing/return_one_line.js $(tasksVar))
+    echo "$(tasks)"
+    ret=$(node ./ci/testing/return_one_line.js $(tasks))
   displayName: 'Use task names'
 
 - script: |
