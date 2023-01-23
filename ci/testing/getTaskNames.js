@@ -10,10 +10,14 @@ const { Octokit } = require("@octokit/core");
 
 const octokit = new Octokit({ auth: githubPAT });
 
-const response = await octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', {
+const response = octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', {
   owner: 'PavloAndriiesh',
   repo: 'azure-pipelines-tasks',
   basehead: 'master...develop'
+}).then(res => {
+  console.log(res);
+}).catch(err => {
+  console.error(err);
 })
 
 console.log(response)
