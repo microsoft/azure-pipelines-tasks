@@ -1,7 +1,7 @@
-trigger:
-  - none
 pr:
   branches:
+    include:
+      - '*'
     exclude:
       - master
 
