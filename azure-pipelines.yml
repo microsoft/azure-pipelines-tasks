@@ -24,8 +24,7 @@ jobs:
       echo "-------------------"
       echo "$(tasks)"
       echo "-------------------"
-      echo "$(tasksVar)"
+      echo "$tasksVar"
       echo "-------------------"
       echo "$(tasksVar)"
-      ret=$(node ./ci/testing/useTaskNames.js $(tasksVar))
     displayName: 'Use tasks names'
