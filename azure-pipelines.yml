@@ -20,11 +20,13 @@ jobs:
       echo "##vso[task.setvariable variable=var2;isoutput=true]$var1"
       echo "$var1" # this line correctly shows the expected output in logs
       echo "$var2" # this line correctly shows the expected output in logs
-    displayName: 'Get tasks'
+    displayName: 'Script1'
 
   - script: |
       echo "$var1" # this line show empty variable
       echo "$var2" # this line show empty variable
+      echo "$Script1.var1" # this line show empty variable
+      echo "$Script1.var2" # this line show empty variable
 
   - script: |
       echo "##vso[task.setvariable variable=foo;]bar"
