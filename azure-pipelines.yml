@@ -1,5 +1,5 @@
 jobs:
-- job: build
+- job: getTasks
   condition: and(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['System.PullRequest.TargetBranch'], 'master'))
   steps:
   - script: git pull
