@@ -22,14 +22,15 @@ jobs:
     displayName: 'GetTasks'
 
   - script: |
+      echo "$(tasks)"
+
+  - script: |
       echo "Tasks changed: $tasks"
       node ./ci/testing/useTaskNames.js "test"
     displayName: 'Use tasks names'
-
-
 
   - script: |
       ##vso[task.setvariable variable=foo]$bar
 
   - script: |
-      echo $(foo)
+      echo "$(foo)"
