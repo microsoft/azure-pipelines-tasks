@@ -15,7 +15,7 @@ jobs:
 
   - script: |
       export tasks=$(node ./ci/testing/getTaskNames.js $(git diff --name-only origin/master))
-      ##vso[task.setvariable variable=tasks]$tasks
+      ##vso[task.setvariable variable=tasks;]$tasks
       echo "Tasks changed: $tasks"
       echo "##vso[task.setvariable variable=myVar;]foo"
     displayName: 'Get changed tasks names'
