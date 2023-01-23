@@ -14,8 +14,8 @@ jobs:
     displayName: 'git checkout develop'
 
   - script: |
-      echo variables['Build.Reason']
-      echo variables['System.PullRequest.SourceBranch']
+      echo $(Build.Reason)
+      echo $(System.PullRequest.SourceBranch)
 
   - script: |
       export tasks=$(node ./ci/testing/getTaskNames.js $(git diff --name-only origin/master))
