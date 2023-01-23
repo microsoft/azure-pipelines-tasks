@@ -1,6 +1,6 @@
 jobs:
 - job: getTasks
-  condition: eq(variables['Build.Reason'], 'PullRequest'))
+  condition: eq(variables['Build.Reason'], 'PullRequest')
   steps:
   - script: git pull
     continueOnError: true
