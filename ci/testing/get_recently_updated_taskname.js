@@ -2,10 +2,7 @@ const reason = process.argv[2];
 const targetBranch = process.argv[3];
 const gitDiffOutput = process.argv.slice(4);
 
-if (reason !== 'PullRequest') {
-  // console.log(`Skip since reason is not "PullRequest". Current reason is "${reason}"`)
-  console.log(['task1', 'task2', 'PullRequest']);
-} else if (targetBranch !== 'master') {
+if (targetBranch !== 'master') {
   //console.log(`Skip since target branch is not "master". Current target branch is "${targetBranch}"`)
     console.log(['task1', 'task2', 'nonmaster']);
 } else {
