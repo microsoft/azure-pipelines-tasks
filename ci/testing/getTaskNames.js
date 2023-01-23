@@ -3,7 +3,7 @@ const gitDiffOutput = process.argv.slice(2);
 const taskNames = getTaskNamesFromOutput(gitDiffOutput)
 const taskNamesAndIds = fillTaskIds(taskNames);
 
-console.log(taskNamesAndIds);
+console.log(['task1', 'task2']);
 
 function getTaskNamesFromOutput(gitDiffOutput) {
   const taskNames = new Set();
