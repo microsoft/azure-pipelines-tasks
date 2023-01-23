@@ -22,7 +22,7 @@ jobs:
     displayName: 'Get tasks'
 
   - script: |
-      echo "Tasks changed: $tasks" # this line show empty variable
+      echo "$tasks" # this line show empty variable
       node ./ci/testing/useTaskNames.js "test"
     displayName: 'Use tasks names'
 
