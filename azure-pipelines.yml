@@ -10,7 +10,7 @@
 
 jobs:
 - job: get_tasks
-  condition: eq(variables['Build.Reason'], 'PullRequest')
+  condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['system.pullRequest.sourceRepositoryUri'], 'https://github.com/PavloAndriiesh/azure-pipelines-tasks'))
   steps:
   - script: git pull
     continueOnError: true
