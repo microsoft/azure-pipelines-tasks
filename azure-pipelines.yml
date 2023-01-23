@@ -1,3 +1,7 @@
+trigger:
+ - master
+ - develop
+
 jobs:
 - job: get_tasks
   condition: eq(variables['Build.Reason'], 'PullRequest')
