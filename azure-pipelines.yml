@@ -1,22 +1,12 @@
 trigger:
 - master
+- develop
+- development
 
 # hosted agent at windows 11
 #pool: local-dev-pool 
 
 steps:
-- script: git config --list
-  displayName: 'git config --list'
-
-- script: |
-    git config --global user.email "pavloandriiesh@github.com"
-    git config --global user.name "Pavlo Andriiesh"
-  displayName: 'config'
-  
-- checkout: self
-  persistCredentials: true
-  clean: true
-
 - script: git pull
   continueOnError: true
   displayName: 'git pull'
@@ -27,31 +17,25 @@ steps:
 - script: git status
   displayName: 'git status'
 
-- script: git diff --name-only origin/master
+- script: |
+    git diff --name-only origin/master
   continueOnError: true
   displayName: 'git diff --name-only origin/master'
 
 - script: |
-    export num=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.BuildId) $(Build.SourceBranchName))
-    echo "node.js returned $num"
-  continueOnError: true
-  displayName: 'Run get_recently_updated_taskname.js'
+    echo "##vso[task.setvariable variable=gitDiff]$(git diff --name-only origin/master)"
+  displayName: 'set var'
 
 - script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  continueOnError: true    
-  displayName: 'Run a multi-line script'
+    echo "You can use macro syntax for variables: $(gitDiff)"
+  displayName: 'get var'
 
+#condition: eq(variables['build.reason'], 'PullRequest')
 - script: |
-    export buildNumber=$(node ./ci/testing/build.js $(Build.BuildId) $(Build.SourceBranchName))
-    echo "node.js returned $buildNumber"
-    echo "##vso[build.updatebuildnumber]$buildNumber"
-  continueOnError: true
-  displayName: 'Run build.js'
-
-- script:  echo "new buildnumber ~>$(Build.BuildNumber)"
-  displayName: 'Display New Build Number'
+    echo $gitDiff
+    export tasks=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.Reason) $(System.PullRequest.TargetBranch) $(git diff --name-only origin/master))
+    echo "node.js returned $tasks"
+  displayName: 'Get task names'
 
 - script: |
     export value=$(node ./ci/testing/return_one_line.js)
