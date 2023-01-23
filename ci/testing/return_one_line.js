@@ -1,1 +1,2 @@
-console.log('Returned this line')
+console.log('process.argv');
+console.log(process.argv);
