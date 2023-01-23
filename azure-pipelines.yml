@@ -17,12 +17,12 @@ jobs:
 
   - script: |
       export tasks=$(node ./ci/testing/getTaskNames.js $(PAT_Github))
-      ##vso[task.setvariable variable=tasks;isoutput=true]$tasks
-      echo "Tasks changed: $tasks"
-    displayName: 'GetTasks'
+      "##vso[task.setvariable variable=tasks;isoutput=true]$tasks"
+      echo "$tasks" # this line correctly shows the expected output in logs
+    displayName: 'Get tasks'
 
   - script: |
-      echo "Tasks changed: $tasks"
+      echo "Tasks changed: $tasks" # this line show empty variable
       node ./ci/testing/useTaskNames.js "test"
     displayName: 'Use tasks names'
 
