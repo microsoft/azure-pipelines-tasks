@@ -4,7 +4,7 @@ jobs:
 - job: build
   pool:
     name: Default
-  condition: and(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['System.PullRequest.TargetBranch'], 'master'))
+  #condition: and(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['System.PullRequest.TargetBranch'], 'master'))
   steps:
   - script: git pull
     continueOnError: true
