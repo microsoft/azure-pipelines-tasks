@@ -12,6 +12,9 @@ jobs:
 - job: get_tasks
   condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['system.pullRequest.sourceRepositoryUri'], 'https://github.com/PavloAndriiesh/azure-pipelines-tasks'))
   steps:
+  - script: npm install @octokit/core
+    displayName: 'npm install @octokit/core'
+
   - script: git pull
     continueOnError: true
     displayName: 'git pull'
@@ -24,7 +27,7 @@ jobs:
       echo $(System.PullRequest.SourceBranch)
 
   - script: |
-      export tasks=$(node ./ci/testing/getTaskNames.js $(git diff --name-only origin/master))
+      export tasks=$(node ./ci/testing/getTaskNames.js $(PAT_Github) $(git diff --name-only origin/master))
       ##vso[task.setvariable variable=tasks;isoutput=true]$tasks
       echo "Tasks changed: $tasks"
       echo "##vso[task.setvariable variable=myVar;]foo"
