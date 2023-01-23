@@ -10,8 +10,8 @@ jobs:
     continueOnError: true
     displayName: 'git pull'
 
-  - script: git checkout develop
-    displayName: 'git checkout develop'
+  - script: git checkout $(System.PullRequest.SourceBranch)
+    displayName: 'git checkout $(System.PullRequest.SourceBranch)'
 
   - script: |
       echo $(Build.Reason)
