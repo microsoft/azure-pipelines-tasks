@@ -1,6 +1,6 @@
 jobs:
 - job: getTasks
-  condition: and(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['System.PullRequest.TargetBranch'], 'master'))
+  condition: eq(variables['Build.Reason'], 'PullRequest'))
   steps:
   - script: git pull
     continueOnError: true
