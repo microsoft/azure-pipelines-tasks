@@ -23,5 +23,5 @@ jobs:
 
   - script: |
       echo "Tasks changed: $tasks"
-      ret=$(node ./ci/testing/useTaskNames.js $tasks)
+      node ./ci/testing/useTaskNames.js "test"
     displayName: 'Use tasks names'
