@@ -33,15 +33,8 @@ steps:
 
 - script: |
     echo "$(tasksVar)"
-    echo "----------"
-    echo "$tasksVar"
-    ret=$(node ./ci/testing/get_recently_updated_taskname.js $(tasksVar))
+    ret=$(node ./ci/testing/return_one_line.js $(tasksVar))
   displayName: 'Use task names'
-
-- script: |
-    export value=$(node ./ci/testing/return_one_line.js)
-    echo "node.js returned $value"
-  displayName: 'Run return_one_line.js'
 
 - script: |
     export value=$(node ./ci/testing/return_object.js)
