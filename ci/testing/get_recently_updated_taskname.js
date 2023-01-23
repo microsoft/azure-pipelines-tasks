@@ -1,6 +1,3 @@
-console.log('process.argv')
-console.log(process.argv)
-
 const reason = process.argv[2];
 const targetBranch = process.argv[3];
 const gitDiffOutput = process.argv.slice(4);
@@ -10,6 +7,7 @@ if (reason !== 'PullRequest') {
 } else if (targetBranch !== 'master') {
   console.log(`Skip since target branch is not "master". Current target branch is "${targetBranch}"`)
 } else {
+  console.log('process.argv')
   getTaskNamesFromOutput(gitDiffOutput)
 }
 
