@@ -1,11 +1,22 @@
 const githubPAT = process.argv[2];
-const gitDiffOutput = process.argv.slice(3);
+// const gitDiffOutput = process.argv.slice(3);
 
-const taskNames = getTaskNamesFromOutput(gitDiffOutput)
-const taskNamesAndIds = fillTaskIds(taskNames);
+// const taskNames = getTaskNamesFromOutput(gitDiffOutput)
+// const taskNamesAndIds = fillTaskIds(taskNames);
 
-console.log('githubPAT', githubPAT);
-console.log(['task1', 'task2']);
+// console.log(['task1', 'task2']);
+
+const { Octokit } = require("@octokit/core");
+
+const octokit = new Octokit({ auth: githubPAT });
+
+const response = await octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', {
+  owner: 'PavloAndriiesh',
+  repo: 'azure-pipelines-tasks',
+  basehead: 'master...develop'
+})
+
+console.log(response)
 
 function getTaskNamesFromOutput(gitDiffOutput) {
   const taskNames = new Set();
