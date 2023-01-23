@@ -21,7 +21,5 @@ function getTaskNamesFromOutput(gitDiffOutput) {
     taskNames.add(taskName);
   })
 
-  console.log('----------------------------------------------------------------');
-  console.log('Tasks with changes:', ...taskNames);
   console.log([...taskNames]);
 }
