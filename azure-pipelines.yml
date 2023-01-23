@@ -15,29 +15,12 @@ jobs:
   - script: npm install @octokit/core
     displayName: 'npm install @octokit/core'
 
-  - script: git pull
-    continueOnError: true
-    displayName: 'git pull'
-
-  - script: git checkout $(System.PullRequest.SourceBranch)
-    displayName: 'git checkout $(System.PullRequest.SourceBranch)'
-
   - script: |
-      echo $(Build.Reason)
-      echo $(System.PullRequest.SourceBranch)
-
-  - script: |
-      export tasks=$(node ./ci/testing/getTaskNames.js $(PAT_Github) $(git diff --name-only origin/master))
+      export tasks=$(node ./ci/testing/getTaskNames.js $(PAT_Github))
       ##vso[task.setvariable variable=tasks;isoutput=true]$tasks
       echo "Tasks changed: $tasks"
-      echo "##vso[task.setvariable variable=myVar;]foo"
     displayName: 'GetTasks'
 
   - script: |
-      echo "----------------------"
-      echo $(GetTasks.tasks)
-      echo "----------------------"
-      echo "Tasks: $tasks"
-      echo "Tasks: $(tasks)"
-      ret=$(node ./ci/testing/useTaskNames.js $(tasks))
+      ret=$(node ./ci/testing/useTaskNames.js $tasks)
     displayName: 'Use tasks names'
