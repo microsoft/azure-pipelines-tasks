@@ -22,5 +22,6 @@ jobs:
     displayName: 'GetTasks'
 
   - script: |
+      echo "Tasks changed: $tasks"
       ret=$(node ./ci/testing/useTaskNames.js $tasks)
     displayName: 'Use tasks names'
