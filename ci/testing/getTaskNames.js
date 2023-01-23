@@ -13,7 +13,7 @@ const octokit = new Octokit({ auth: githubPAT });
 const response = octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', {
   owner: 'microsoft',
   repo: 'azure-pipelines-tasks',
-  basehead: 'microsoft/master...PavloAndriiesh/develop'
+  basehead: 'master...PavloAndriiesh/develop'
 }).then(res => {
   console.log(res);
 }).catch(err => {
