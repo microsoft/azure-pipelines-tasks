@@ -7,10 +7,6 @@ trigger:
 #pool: local-dev-pool 
 
 steps:
-- checkout: self
-  persistCredentials: true
-  clean: true
-
 - script: git pull
   continueOnError: true
   displayName: 'git pull'
