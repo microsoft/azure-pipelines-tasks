@@ -27,7 +27,7 @@ jobs:
     displayName: 'Use tasks names'
 
   - script: |
-      echo "##vso[task.setvariable variable=foo]$bar"
+      echo "##vso[task.setvariable variable=foo;]bar"
 
   - script: |
       echo "$(foo)"
