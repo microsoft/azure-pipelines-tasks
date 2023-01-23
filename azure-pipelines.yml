@@ -15,11 +15,11 @@ jobs:
     displayName: 'git checkout develop'
 
   - script: |
-      export tasks=$(node ./ci/testing/get_recently_updated_taskname.js $(System.PullRequest.TargetBranch) $(git diff --name-only origin/master))
+      export tasks=$(node ./ci/testing/get_tasks_names.js $(git diff --name-only origin/master))
       echo "##vso[task.setvariable variable=tasks]$tasks"
     displayName: 'Get task names'
 
   - script: |
       echo "$(tasks)"
-      ret=$(node ./ci/testing/use_task_names.js $(tasks))
+      ret=$(node ./ci/testing/use_tasks_names.js $(tasks))
     displayName: 'Use task names'
