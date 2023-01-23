@@ -1,5 +1,5 @@
 jobs:
-- job: getTasks
+- job: get_tasks
   condition: eq(variables['Build.Reason'], 'PullRequest')
   steps:
   - script: git pull
