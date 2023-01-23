@@ -15,7 +15,10 @@ jobs:
 
   - script: |
       export tasks=$(node ./ci/testing/get_tasks_names.js $(git diff --name-only origin/master))
-      echo "##vso[task.setvariable variable=tasks]$tasks"
+      ##vso[task.setvariable variable=tasks]$tasks
+      echo "$tasks"
+      echo "---------------"
+      echo "$(tasks)"
     displayName: 'Get task names'
 
   - script: |
