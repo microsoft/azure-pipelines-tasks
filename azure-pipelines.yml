@@ -1,5 +1,4 @@
-# hosted agent at windows 11
-#pool: local-dev-pool 
+pool: azure-pipelines
 
 jobs:
 - job: build
