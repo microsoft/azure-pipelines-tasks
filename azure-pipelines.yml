@@ -21,7 +21,7 @@ jobs:
     displayName: 'Get changed tasks names'
 
   - script: |
-      echo "The var: $(myVar)""
+      echo "The var: $(myVar)"
       echo "Tasks: $tasks"
       echo "Tasks: $(tasks)"
       ret=$(node ./ci/testing/useTaskNames.js $(tasks))
