@@ -1,8 +1,10 @@
-const gitDiffOutput = process.argv.slice(2);
+const githubPAT = process.argv[2];
+const gitDiffOutput = process.argv.slice(3);
 
 const taskNames = getTaskNamesFromOutput(gitDiffOutput)
 const taskNamesAndIds = fillTaskIds(taskNames);
 
+console.log('githubPAT', githubPAT);
 console.log(['task1', 'task2']);
 
 function getTaskNamesFromOutput(gitDiffOutput) {
