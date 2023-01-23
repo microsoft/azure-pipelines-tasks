@@ -1,8 +1,3 @@
-trigger:
-- master
-- develop
-- development
-
 # hosted agent at windows 11
 #pool: local-dev-pool 
 
@@ -33,14 +28,14 @@ steps:
 #condition: eq(variables['build.reason'], 'PullRequest')
 - script: |
     export tasks=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.Reason) $(System.PullRequest.TargetBranch) $(git diff --name-only origin/master))
-    echo "$tasks"
+    echo "##vso[task.setvariable variable=tasksVar]$tasks"
   displayName: 'Get task names'
 
 - script: |
-    echo "$(tasks)"
+    echo "$(tasksVar)"
     echo "----------"
-    echo "$tasks"
-    tasks=$(node ./ci/testing/get_recently_updated_taskname.js $(tasks))
+    echo "$tasksVar"
+    ret=$(node ./ci/testing/get_recently_updated_taskname.js $(tasksVar))
   displayName: 'Use task names'
 
 - script: |
