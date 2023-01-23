@@ -27,15 +27,19 @@ steps:
   displayName: 'set var'
 
 - script: |
-    echo "You can use macro syntax for variables: $(gitDiff)"
+    echo "$(gitDiff)"
   displayName: 'get var'
 
 #condition: eq(variables['build.reason'], 'PullRequest')
 - script: |
-    echo $gitDiff
     export tasks=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.Reason) $(System.PullRequest.TargetBranch) $(git diff --name-only origin/master))
     echo "node.js returned $tasks"
   displayName: 'Get task names'
+
+- script: |
+    echo "Use task names: $(tasks)"
+    tasks=$(node ./ci/testing/get_recently_updated_taskname.js $(tasks))
+  displayName: 'Use task names'
 
 - script: |
     export value=$(node ./ci/testing/return_one_line.js)
