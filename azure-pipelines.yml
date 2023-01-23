@@ -33,11 +33,13 @@ steps:
 #condition: eq(variables['build.reason'], 'PullRequest')
 - script: |
     export tasks=$(node ./ci/testing/get_recently_updated_taskname.js $(Build.Reason) $(System.PullRequest.TargetBranch) $(git diff --name-only origin/master))
-    echo "node.js returned $tasks"
+    echo "$tasks"
   displayName: 'Get task names'
 
 - script: |
-    echo "Use task names: $(tasks)"
+    echo "$(tasks)"
+    echo "----------"
+    echo "$tasks"
     tasks=$(node ./ci/testing/get_recently_updated_taskname.js $(tasks))
   displayName: 'Use task names'
 
