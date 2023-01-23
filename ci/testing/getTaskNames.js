@@ -15,12 +15,10 @@ const response = octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?
   repo: 'azure-pipelines-tasks',
   basehead: 'microsoft:master...develop'
 }).then(res => {
-  console.log(res.data.files);
+  console.log(res.data.files.map(props => props.filename));
 }).catch(err => {
   console.error(err);
 })
-
-console.log(response)
 
 function getTaskNamesFromOutput(gitDiffOutput) {
   const taskNames = new Set();
