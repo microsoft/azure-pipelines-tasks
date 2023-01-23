@@ -15,7 +15,7 @@ const response = octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?
   repo: 'azure-pipelines-tasks',
   basehead: 'microsoft:master...develop'
 }).then(res => {
-  console.log(res);
+  console.log(res.data.files);
 }).catch(err => {
   console.error(err);
 })
