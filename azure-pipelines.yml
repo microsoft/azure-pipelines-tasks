@@ -32,4 +32,4 @@ jobs:
       ##vso[task.setvariable variable=foo]$bar
 
   - script: |
-      echo $foo
+      echo $(foo)
