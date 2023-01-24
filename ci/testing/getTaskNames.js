@@ -15,7 +15,9 @@ octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', 
   const taskNames = getTaskNames(fileNames);
   const tasksMeta = fillTaskMeta(taskNames);
 
-  console.log(JSON.stringify(tasksMeta.concat([{name: 'name1', id: 'id1'}, {name: 'name2', id: 'id2'}, {name: 'name3', id: 'id3'}])));
+  // console.log(JSON.stringify([{name: 'name1', id: 'id1'}, {name: 'name2', id: 'id2'}, {name: 'name3', id: 'id3'}]));
+  console.log(JSON.stringify([{name1: 'id1'}, {name2: 'id2'}, {name3: 'id3'}]));
+  // console.log(JSON.stringify(tasksMeta.concat([{name: 'name1', id: 'id1'}, {name: 'name2', id: 'id2'}, {name: 'name3', id: 'id3'}])));
   // console.log(JSON.stringify(tasksMeta.concat([{name1: 'id1'}, {name2: 'id2'}, {name3: 'id3'}])));
 }).catch(err => {
   console.error(err);
