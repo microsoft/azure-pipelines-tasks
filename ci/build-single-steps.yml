@@ -133,5 +133,5 @@ steps:
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)\_package\tasks.zip'
-      ArtifactName: '$(task)'
+      ArtifactName: '${{ parameters.task }}'
       publishLocation: 'Container'
