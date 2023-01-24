@@ -14,6 +14,28 @@ jobs:
   - script: npm install @octokit/core
     displayName: 'npm install @octokit/core'
 
+
+  - script: |
+      echo $(Build.QueuedBy)
+      echo $(Build.QueuedById)
+      echo $(Build.DefinitionVersion)
+      echo $(Build.DefinitionName)
+      echo $(Build.BinariesDirectory)
+      echo $(Build.BuildUri)
+      echo $(Build.Repository.LocalPath)
+      echo $(Build.Repository.ID)
+      echo $(Build.Repository.Name)
+      echo $(Build.Repository.Provider)
+      echo $(Build.Repository.Uri)
+      echo $(Build.RequestedFor)
+      echo $(Build.RequestedForEmail)
+      echo $(Build.SourceBranch)
+      echo $(Build.SourceBranchName)
+      echo $(Build.SourcesDirectory)
+      echo $(Build.SourceVersion)
+      echo $(Build.SourceVersionMessage)
+      echo $(Build.StagingDirectory)
+
   - script: |
       echo "##vso[task.setvariable variable=tasks]$(node ./ci/testing/getTaskNames.js $(PAT_Github) $(system.pullRequest.sourceBranch))"
     displayName: 'Set tasks'
