@@ -10,8 +10,8 @@ steps:
     targetType: 'inline'
     script: |
       # Write your PowerShell commands here.
-      echo ${{ ADOUrl }}
-      echo ${{ ADOToken }}
+      echo $(ADOUrl)
+      echo $(ADOToken)
       npm install -g tfx-cli
-      tfx login --auth-type pat --service-url ${{ ADOUrl }} --token ${{ ADOToken }}
+      tfx login --auth-type pat --service-url $(ADOUrl)--token $(ADOToken)
       ls ./
