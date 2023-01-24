@@ -20,7 +20,6 @@ jobs:
 
 - ${{ if parameters.build_single_task }}:
   - ${{ each var in split(parameters.task_names, ', ') }}:
-  # Build Single Task
     - job: build_single_task
       displayName: Build Single Task
       pool:
@@ -33,26 +32,26 @@ jobs:
           patchVersion: true
           version: '0.9999.9999'
 
-  - ${{ if not(parameters.build_single_task) }}:
+    - ${{ if not(parameters.build_single_task) }}:
 
-    # All tasks on Windows
-    - job: build_all_windows
-      displayName: Build all tasks (Windows)
-    #  condition: eq(variables.os, 'Windows_NT')
-      timeoutInMinutes: 180
+      # All tasks on Windows
+      - job: build_all_windows
+        displayName: Build all tasks (Windows)
+      #  condition: eq(variables.os, 'Windows_NT')
+        timeoutInMinutes: 180
+        pool:
+          vmImage: windows-2022
+        steps:
+        - template: ci/build-all-steps.yml
+          parameters:
+            os: Windows_NT
+
+    - job: upload_test_task
+      displayName: upload task to test
       pool:
         vmImage: windows-2022
       steps:
-      - template: ci/build-all-steps.yml
-        parameters:
-          os: Windows_NT
-
-  - job: upload_test_task
-    displayName: upload task to test
-    pool:
-      vmImage: windows-2022
-    steps:
-      template: ci/publish-and-test.yml
+        template: ci/publish-and-test.yml
       
 # - job: validate_uploaded_task
 #    displayName: Validate uploaded task
