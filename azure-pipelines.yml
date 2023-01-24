@@ -16,13 +16,19 @@ jobs:
     displayName: 'npm install @octokit/core'
 
   - script: |
-      export tasks=$(node ./ci/testing/getTaskNames.js $(PAT_Github))
+      export tasks=$(node ./ci/testing/scriptThatOutPut.js $(PAT_Github))
       echo "##vso[task.setvariable variable=tasks;isoutput=true]$tasks"
       echo "$tasks" # this line correctly shows the expected output in logs
-    displayName: 'Get tasks'
+    displayName: 'Get tasks names'
 
   - script: |
       echo "$tasks" # this line show empty variable
+
+  - script: |
+      export tasks=$(node ./ci/testing/scriptThatOutPut.js $(PAT_Github))
+      echo "##vso[task.setvariable variable=tasks;isoutput=true]$tasks"
+      echo "$tasks" # this line correctly shows the expected output in logs
+    displayName: 'Get task ids'
 
   - script: |
       echo "##vso[task.setvariable variable=foo;]bar"

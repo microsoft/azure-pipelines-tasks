@@ -19,10 +19,10 @@ octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', 
   console.error(err);
 })
 
-function getTaskNamesFromOutput(gitDiffOutput) {
+function getTaskNamesFromOutput(files) {
   const taskNames = new Set();
-  const lines = gitDiffOutput.filter(line => line.startsWith('Tasks/'));
-  lines.forEach(pathToFile => {
+  const taskFiles = files.filter(line => line.startsWith('Tasks/'));
+  taskFiles.forEach(pathToFile => {
     let taskName = pathToFile.slice(6); // remove Tasks/ prefix
     taskName = taskName.slice(0, taskName.indexOf('/')); // remove path after task name
     taskNames.add(taskName);
