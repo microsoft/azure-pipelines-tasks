@@ -4,14 +4,15 @@ const { Octokit } = require("@octokit/core");
 console.log('process.argv', process.argv);
 
 const githubPAT = process.argv[2];
-const sourceBranch = process.argv[3];
+const SourceVersionMessage = process.argv[3];
 const octokit = new Octokit({ auth: githubPAT });
+const source = SourceVersionMessage.split(' ')[1];
+const target = SourceVersionMessage.split(' ')[3];
 
 octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', {
-  owner: 'PavloAndriiesh',
+  owner: 'PavloAndriiesh', // TODO: replace to 'microsoft'
   repo: 'azure-pipelines-tasks',
-  basehead: 'master...' + sourceBranch
-//  basehead: 'microsoft:master...develop'
+  basehead: target + '...' + source
 }).then(res => {
   const fileNames = res.data.files.map(props => props.filename);
   const taskNames = getTaskNames(fileNames);
