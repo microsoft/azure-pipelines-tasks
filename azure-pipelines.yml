@@ -20,7 +20,7 @@ jobs:
 
 - ${{ if parameters.build_single_task }}:
   - ${{ each var in split(parameters.task_names, ', ') }}:
-    - job: build_single_task_$(var.value)
+    - job: build_single_task_${{ var.value }}
       displayName: Build Single Task
       pool:
         vmImage: windows-2022
@@ -32,7 +32,7 @@ jobs:
           patchVersion: true
           version: '0.9999.9999'
     - job: upload_test_task
-      displayName: upload task to test_$(var.value)
+      displayName: upload task to test_${{ var.value }}
       pool:
         vmImage: windows-2022
       steps:
