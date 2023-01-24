@@ -1,4 +1,4 @@
-const files = process.argvs.lice(2);
+const files = process.argvs.slice(2);
 
 console.log(files);
 
