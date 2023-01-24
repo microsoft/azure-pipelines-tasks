@@ -1,12 +1,11 @@
 const fs = require('fs');
 const { Octokit } = require("@octokit/core");
 
-console.log(process.argv);
+console.log('process.argv', process.argv);
+
 const githubPAT = process.argv[2];
 const sourceBranch = process.argv[3];
 const octokit = new Octokit({ auth: githubPAT });
-
-console.log('BuildSourceBranch', BuildSourceBranch, BuildSourceBranchName);
 
 octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', {
   owner: 'PavloAndriiesh',
