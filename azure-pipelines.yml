@@ -16,11 +16,15 @@ parameters:
   type: boolean
   default: false
 
+  variables:
+    - name: task_names
+      value: MavenV3, UseNodeV1
+
 jobs:
 
 - ${{ if parameters.build_single_task }}:
-  - ${{ each var in split(parameters.task_names, ', ') }}:
-    - job: build_single_task_${{ var.value }}
+  - ${{ each var in split(variables.task_names, ', ') }}:
+    - job: ${{ var.value }}_build_single_task
       displayName: Build Single Task
       pool:
         vmImage: windows-2022
@@ -31,8 +35,8 @@ jobs:
           push: ${{ parameters.push_to_feed }}
           patchVersion: true
           version: '0.9999.9999'
-    - job: upload_test_task
-      displayName: upload task to test_${{ var.value }}
+    - job: ${{ var.value }}_upload_test_task
+      displayName: upload task to test
       pool:
         vmImage: windows-2022
       steps:
