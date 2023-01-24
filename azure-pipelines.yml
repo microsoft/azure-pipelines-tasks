@@ -36,7 +36,7 @@ jobs:
       pool:
         vmImage: windows-2022
       steps:
-        template: ci/publish-and-test.yml
+      - template: ci/publish-and-test.yml
 
     - ${{ if not(parameters.build_single_task) }}:
       - job: build_all_windows
