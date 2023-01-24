@@ -27,8 +27,8 @@ jobs:
 
   - script: |
       export taskIds=$(node ./ci/testing/getTaskIds.js $(git ls-files))
-      echo "$taskIds"
       echo "##vso[task.setvariable variable=taskIds]$taskIds"
+      echo "Output:"
       echo "$taskIds"
     displayName: 'Set taskIds'
 
