@@ -1,9 +1,12 @@
 const fs = require('fs');
 const { Octokit } = require("@octokit/core");
 
-const githubPAT = process.argv[2];
+const BuildSourceBranch = process.argv[2];
+const BuildSourceBranchName = process.argv[2];
+const githubPAT = process.argv[4];
 const octokit = new Octokit({ auth: githubPAT });
 
+console.log('BuildSourceBranch', BuildSourceBranch, BuildSourceBranchName);
 
 octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', {
   owner: 'PavloAndriiesh',
@@ -15,8 +18,6 @@ octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', 
   const taskNames = getTaskNames(fileNames);
   const tasksMeta = fillTaskMeta(taskNames);
 
-  // console.log(JSON.stringify([{name: 'name1', id: 'id1'}, {name: 'name2', id: 'id2'}, {name: 'name3', id: 'id3'}]));
-  // console.log(JSON.stringify([{name1: 'id1'}, {name2: 'id2'}, {name3: 'id3'}]));
   console.log(JSON.stringify(tasksMeta));
 }).catch(err => {
   console.error(err);
@@ -38,7 +39,6 @@ function fillTaskMeta(taskNames) {
     const rawdata = fs.readFileSync(filePath);
     const taskJsonFile = JSON.parse(rawdata);
 
-    return {name: taskJsonFile.id}
-    // return {[name], id: taskJsonFile.id}
+    return {[name]: taskJsonFile.id}
   })
 }
