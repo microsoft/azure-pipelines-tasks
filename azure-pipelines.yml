@@ -24,10 +24,13 @@ jobs:
 
 - ${{ if parameters.build_single_task }}:
   - ${{ each var in split(variables.task_names, ', ') }}:
-    - script: |
-        echo ${{ var }}
-        echo ${{ var.key }}
-        echo ${{ var.value }}
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          echo ${{ var }}
+          echo ${{ var.key }}
+          echo ${{ var.value }}
   # - job: ${{ var.value }}_build_single_task
   #   displayName: Build Single Task
   #   pool:
