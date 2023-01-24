@@ -37,6 +37,7 @@ jobs:
         parameters:
           task: ${{ var }}
           push: ${{ parameters.push_to_feed }}
+          publishArtifact: true
           patchVersion: true
           version: '0.9999.9999'
     - job: ${{ var }}_upload_test_task

@@ -7,6 +7,8 @@ parameters:
   type: boolean
 - name: version
   type: string
+- name: publishArtifact
+  type: boolean
 
 steps:
 
@@ -126,3 +128,12 @@ steps:
 - powershell: ./ci/stop-collect-diagnostics.ps1
   displayName: Stop collect diagnostics
   condition: always()
+
+- ${{ if parameters.publishArtifact }}:
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '_build\Tasks\$(task)'
+      includeRootFolder: true
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(task).zip'
+      replaceExistingArchive: true

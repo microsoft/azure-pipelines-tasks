@@ -7,7 +7,13 @@ steps:
   displayName: Use node 8
   inputs:
     versionSpec: 10.x
-    
+
+- task: DownloadBuildArtifacts@1
+  inputs:
+    buildType: 'current'
+    downloadType: 'single'
+    artifactName: '$(task).zip'
+    downloadPath: '$(System.ArtifactsDirectory)'
 
 - task: PowerShell@2
   inputs:
