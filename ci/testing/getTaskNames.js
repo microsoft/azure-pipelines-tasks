@@ -36,6 +36,6 @@ function fillTaskMeta(taskNames) {
     const rawdata = fs.readFileSync(filePath);
     const taskJsonFile = JSON.parse(rawdata);
 
-    return {name, id: taskJsonFile.id}
+    return {name: taskJsonFile.id}
   })
 }
