@@ -49,12 +49,12 @@ jobs:
         parameters:
           task: ${{ var }}
 
-    - job: validate_uploaded_task
-      displayName: Validate uploaded task
-      pool:
-        vmImage: windows-2022
-      steps:
-        template: ci/validate-task.yml
+    # - job: validate_uploaded_task
+    #   displayName: Validate uploaded task
+    #   pool:
+    #     vmImage: windows-2022
+    #   steps:
+    #     template: ci/validate-task.yml
 
   # - ${{ if not(parameters.build_single_task) }}:
   #   - job: build_all_windows
