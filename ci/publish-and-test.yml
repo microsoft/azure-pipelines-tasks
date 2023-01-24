@@ -1,3 +1,7 @@
+parameters:
+  - name: task
+    type: string
+
 steps:
 - task: NodeTool@0
   displayName: Use node 8
@@ -13,5 +17,21 @@ steps:
       echo $(ADOUrl)
       echo $(ADOToken)
       npm install -g tfx-cli
-      tfx login --auth-type pat --service-url $(ADOUrl)--token $(ADOToken)
-      ls ./
+      tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken) --no-prompt
+      tfx build tasks upload --task-path .\_build\Tasks\${{ parameters.task }}
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      curl -X POST POST $(ADOUrl)/tasks-canary/_apis/pipelines/3/runs?api-version=7.0
+      -u v-kivlev:$(ADOToken)
+      -H "Content-Type: multipart/form-data"
+      
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      tfx tasks delete --task-id AC4EE482-65DA-4485-A532-7B085873E532
+      tfx tasks delete --task-id 31C75BBB-BCDF-4706-8D7C-4DA6A1959BC2
