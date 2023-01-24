@@ -20,14 +20,11 @@ variables:
   - name: task_names
     value: MavenV3, UseNodeV1
 
-jobs:
+steps:
 
 - ${{ if parameters.build_single_task }}:
   - ${{ each var in split(variables.task_names, ', ') }}:
-    - task: PowerShell@2
-      inputs:
-        targetType: 'inline'
-        script: |
+    - script: |
           echo ${{ var }}
           echo ${{ var.key }}
           echo ${{ var.value }}
