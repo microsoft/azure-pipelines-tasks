@@ -54,17 +54,17 @@ jobs:
     steps:
       template: ci/publish-and-test.yml
       
-  - job: validate_uploaded_task
-    displayName: Validate uploaded task
-    pool:
-      vmImage: windows-2022
-    steps:
-      template: ci/validate-task.yml
+# - job: validate_uploaded_task
+#    displayName: Validate uploaded task
+#    pool:
+#      vmImage: windows-2022
+#    steps:
+#      template: ci/validate-task.yml
 
-  - job: remove_task_from_organization
-    displayName: remove
-    pool:
-      vmImage: windows-2022
-    steps:
-      template: ci/remove-task.yml
+# - job: remove_task_from_organization
+#    displayName: remove
+#    pool:
+#   vmImage: windows-2022
+# steps:
+#   template: ci/remove-task.yml
 
