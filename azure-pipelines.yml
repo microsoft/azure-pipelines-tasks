@@ -14,7 +14,6 @@ jobs:
   - script: npm install @octokit/core
     displayName: 'npm install @octokit/core'
 
-
   - script: |
       echo "$(PAT_Github)"
       echo "$(Build.SourceVersionMessage)"

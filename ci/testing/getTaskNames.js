@@ -7,7 +7,9 @@ const githubPAT = process.argv[2];
 const source =  process.argv[4];
 const target =  process.argv[6];
 
-if (!githubPAT) {
+if(process.argv.length < 7) {
+  throw new Error('Missing github PAT or Build.SourceVersionMessage arguments', process.argv);
+} else if (!githubPAT) {
   throw new Error('Github PAT is missing');
 } else if (!source || source.length !== commitHashLength || !target || target.length !== commitHashLength) { 
   throw new Error('Build.SourceVersionMessage is invalid. Expected similar to "Merge 03030baaa23bad9c201711375827a80f36120fc7 into 04aa704021853c2a79620ce544b0ade5252d34c7"');
