@@ -130,10 +130,8 @@ steps:
   condition: always()
 
 - ${{ if parameters.publishArtifact }}:
-  - task: ArchiveFiles@2
+  - task: PublishBuildArtifacts@1
     inputs:
-      rootFolderOrFile: '_build\Tasks\$(task)'
-      includeRootFolder: true
-      archiveType: 'zip'
-      archiveFile: '$(Build.ArtifactStagingDirectory)/$(task).zip'
-      replaceExistingArchive: true
+      PathtoPublish: '$(Build.SourcesDirectory)\_package\tasks.zip'
+      ArtifactName: '$(task)'
+      publishLocation: 'Container'
