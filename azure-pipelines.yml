@@ -7,7 +7,6 @@
 #    exclude:
 #      - master
 
-
 jobs:
 - job: get_tasks
   condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['system.pullRequest.sourceRepositoryUri'], 'https://github.com/PavloAndriiesh/azure-pipelines-tasks'))
@@ -21,6 +20,6 @@ jobs:
 
   - script: |
       echo "$(tasks)"
-      node ./ci/testing/useTaskNames.js $("[{name:name1,id:id1},{name:name2,id:id2},{name:name3,id:id3}]")
+      node ./ci/testing/useTaskNames.js $(tasks)
     displayName: 'Use "tasks" variable in next steps'
 
