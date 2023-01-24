@@ -16,8 +16,6 @@
   "loc.input.help.Parallel": "Select whether to copy files in parallel using multiple threads for greater potential throughput. If this setting is not enabled, one thread will be used.",
   "loc.input.label.ParallelCount": "Parallel count",
   "loc.input.help.ParallelCount": "Enter the degree of parallelism, or number of threads used, to perform the copy. The value must be at least 1 and not greater than 128.",
-  "loc.input.label.FileCopyOptions": "File copy options",
-  "loc.input.help.FileCopyOptions": "Pass additional options to the Robocopy command.",
   "loc.input.label.StoreAsTar": "Tar the artifact before uploading",
   "loc.input.help.StoreAsTar": "Add all files from the publish path to a tar archive before uploading. This allows you to preserve the UNIX file permissions. Use `extractTars` option of DownloadBuildArtifacts task to extract the downloaded items automatically.",
   "loc.messages.ErrorFileShareLinux": "Publishing artifacts from a Linux or macOS agent to a file share is not supported. Change the artifact type to `Azure Pipelines` or use a Windows agent.",
