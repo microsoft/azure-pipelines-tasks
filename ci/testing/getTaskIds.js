@@ -13,6 +13,6 @@ function getTaskIds(files) {
     const rawdata = fs.readFileSync(path);
     const taskJsonFile = JSON.parse(rawdata);
 
-    return {name: taskJsonFile.name, id: taskJsonFile.id, folderName: path.slice('/')[1]}
+    return {name: taskJsonFile.name, id: taskJsonFile.id, folderName: path.split('/')[1]}
   })
 }
