@@ -31,8 +31,8 @@ jobs:
     displayName: 'Get task ids'
 
   - script: |
-      echo "$(foo)"
-      
+      echo "$(taskIds)"
+
   - script: |
       echo "##vso[task.setvariable variable=foo;]bar"
 
