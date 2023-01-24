@@ -20,7 +20,7 @@ variables:
   - name: task_names
     value: MavenV3, UseNodeV1
 
-jobs:
+steps:
 
 - ${{ if parameters.build_single_task }}:
   - ${{ each var in split(variables.task_names, ', ') }}:
