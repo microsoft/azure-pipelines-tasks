@@ -41,6 +41,7 @@ jobs:
           version: '0.9999.9999'
     - job: ${{ var }}_upload_test_task
       displayName: Upload ${{ var }}
+      dependsOn: ${{ var }}_build_single_task
       pool:
         vmImage: windows-2022
       steps:
