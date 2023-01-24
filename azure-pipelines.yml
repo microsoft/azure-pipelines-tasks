@@ -19,7 +19,7 @@ jobs:
       export tasks=$(node ./ci/testing/getTaskNames.js $(PAT_Github))
       echo "##vso[task.setvariable variable=tasks;isoutput=true]$tasks"
       echo "$tasks"
-    displayName: 'Get tasks names'
+    displayName: 'Set tasks'
 
   - script: |
       echo "$tasks"
