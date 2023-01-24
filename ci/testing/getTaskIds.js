@@ -1,21 +1,21 @@
+
+const fs = require('fs');
+
+
+
 const files = process.argv.slice(2);
-
-console.log(files);
-
-const taskNames = getTaskNamesFromOutput(filenames)
-const taskNamesAndIds = fillTaskIds(taskNames);
+const taskIds = getTaskIds(files);
 
 
-function getTaskNamesFromOutput(files) {
-  const taskNames = new Set();
-  const lines = files.filter(line => line.startsWith('Tasks/'));
-  lines.forEach(pathToFile => {
-    let taskName = pathToFile.slice(6); // remove Tasks/ prefix
-    taskName = taskName.slice(0, taskName.indexOf('/')); // remove path after task name
-    taskNames.add(taskName);
+function getTaskIds(files) {
+  const taskJsonFiles = files.filter(line => line.startsWith('Tasks/') && line.split('/').length === 3 && line.endsWith('/task.json'));
+
+  taskJsonFiles.forEach(taskJsonFile => {
+    // const rawdata = fs.readFileSync('student.json');
+    // const student = JSON.parse(rawdata);
+
   })
-
-  return [...taskNames];
+  console.log(taskJsonFiles);
 }
 
 function fillTaskIds(taskNames) {
