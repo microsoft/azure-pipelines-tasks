@@ -21,6 +21,6 @@ jobs:
 
   - script: |
       echo "$(tasks)"
-      node ./ci/testing/useTaskNames.js $(tasks)
+      node ./ci/testing/useTaskNames.js $("[{name:name1,id:id1},{name:name2,id:id2},{name:name3,id:id3}]")
     displayName: 'Use "tasks" variable in next steps'
 
