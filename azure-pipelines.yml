@@ -31,10 +31,14 @@ jobs:
           push: ${{ parameters.push_to_feed }}
           patchVersion: true
           version: '0.9999.9999'
+    - job: upload_test_task
+      displayName: upload task to test
+      pool:
+        vmImage: windows-2022
+      steps:
+        template: ci/publish-and-test.yml
 
     - ${{ if not(parameters.build_single_task) }}:
-
-      # All tasks on Windows
       - job: build_all_windows
         displayName: Build all tasks (Windows)
       #  condition: eq(variables.os, 'Windows_NT')
@@ -46,12 +50,7 @@ jobs:
           parameters:
             os: Windows_NT
 
-    - job: upload_test_task
-      displayName: upload task to test
-      pool:
-        vmImage: windows-2022
-      steps:
-        template: ci/publish-and-test.yml
+
       
 # - job: validate_uploaded_task
 #    displayName: Validate uploaded task
