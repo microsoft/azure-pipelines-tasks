@@ -16,9 +16,9 @@ parameters:
   type: boolean
   default: false
 
-  variables:
-    - name: task_names
-      value: MavenV3, UseNodeV1
+variables:
+  - name: task_names
+    value: MavenV3, UseNodeV1
 
 jobs:
 
