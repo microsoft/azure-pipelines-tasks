@@ -26,8 +26,6 @@ octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', 
   const tasksMeta = fillTaskMeta(taskNames);
 
   console.log(JSON.stringify(tasksMeta));
-}).catch(err => {
-  console.error(err);
 })
 
 function getTaskNames(files) {
