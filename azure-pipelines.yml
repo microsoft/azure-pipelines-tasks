@@ -28,7 +28,7 @@ jobs:
       steps:
       - template: ci/build-single-steps.yml
         parameters:
-          task: ${{ parameters.task_name }}
+          task: ${{ var.value }}
           push: ${{ parameters.push_to_feed }}
           patchVersion: true
           version: '0.9999.9999'
