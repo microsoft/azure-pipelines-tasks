@@ -15,7 +15,6 @@ if (!githubPAT) {
 
 const octokit = new Octokit({ auth: githubPAT });
 
-
 octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', {
   owner: 'PavloAndriiesh', // TODO: replace to 'microsoft'
   repo: 'azure-pipelines-tasks',
