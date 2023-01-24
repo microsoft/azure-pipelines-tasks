@@ -11,12 +11,12 @@ octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', 
   basehead: 'master...develop'
 //  basehead: 'microsoft:master...develop'
 }).then(res => {
-  const filenames = res.data.files.map(props => props.filename);
-  const tasksJsonFiles = filterTaskJsonFiles(filenames)
-  const tasksMeta = fillTaskMeta(tasksJsonFiles);
+  const fileNames = res.data.files.map(props => props.filename);
+  const taskNames = getTaskNames(fileNames);
+  const tasksMeta = fillTaskMeta(taskNames);
 
-  console.log('res.data.files', res.data.files);
-  console.log('tasksJsonFiles', tasksJsonFiles);
+  console.log('filenames', filenames);
+  console.log('taskNames', taskNames);
   console.log('tasksMeta', JSON.stringify(tasksMeta));
 
   console.log(JSON.stringify(tasksMeta));
@@ -24,15 +24,22 @@ octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', 
   console.error(err);
 })
 
-function filterTaskJsonFiles(files) {
-  return files.filter(line => line.startsWith('Tasks/') && line.endsWith('/task.json') && line.split('/').length === 3);
+function getTaskNames(files) {
+  const taskNames = new Set();
+
+  files.filter(filePath => filePath.startsWith('Tasks/')).forEach(filePath => {
+    taskNames.add(filePath.split('/')[1]);
+  });
+
+  return taskNames;
 }
 
-function fillTaskMeta(taskJsonFiles) {
-  return taskJsonFiles.map(path => {
-    const rawdata = fs.readFileSync(path);
+function fillTaskMeta(taskNames) {
+  return taskNames.map(name => {
+    const filePath = 'Tasks/' + name + '/task.json';
+    const rawdata = fs.readFileSync(filePath);
     const taskJsonFile = JSON.parse(rawdata);
 
-    return {name: taskJsonFile.name, id: taskJsonFile.id, folderName: path.split('/')[1]}
+    return {name, id: taskJsonFile.id}
   })
 }
