@@ -1,8 +1,10 @@
 const fs = require('fs');
 const { Octokit } = require("@octokit/core");
 
+console.log(process.argv);
+
 const BuildSourceBranch = process.argv[2];
-const BuildSourceBranchName = process.argv[2];
+const BuildSourceBranchName = process.argv[3];
 const githubPAT = process.argv[4];
 const octokit = new Octokit({ auth: githubPAT });
 
