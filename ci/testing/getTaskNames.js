@@ -1,25 +1,35 @@
 const fs = require('fs');
 const { Octokit } = require("@octokit/core");
 
-console.log('process.argv', process.argv);
+const commitHashLength = 40;
 
 const githubPAT = process.argv[2];
-const sourceBranch = process.argv[3];
+const source =  process.argv[4];
+const target =  process.argv[6];
+
+if (!githubPAT) {
+  throw new Error('Github PAT is missing');
+} else if (!source || source.length !== commitHashLength || !target || target.length !== commitHashLength) { 
+  throw new Error('Build.SourceVersionMessage is invalid. Expected similar to "Merge 03030baaa23bad9c201711375827a80f36120fc7 into 04aa704021853c2a79620ce544b0ade5252d34c7"');
+}
+
 const octokit = new Octokit({ auth: githubPAT });
 
+
 octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', {
-  owner: 'PavloAndriiesh',
+  owner: 'PavloAndriiesh', // TODO: replace to 'microsoft'
   repo: 'azure-pipelines-tasks',
-  basehead: 'master...' + sourceBranch
-//  basehead: 'microsoft:master...develop'
+  basehead: target + '...' + source
 }).then(res => {
   const fileNames = res.data.files.map(props => props.filename);
   const taskNames = getTaskNames(fileNames);
   const tasksMeta = fillTaskMeta(taskNames);
 
-  console.log(JSON.stringify(tasksMeta));
-}).catch(err => {
-  console.error(err);
+  if (tasksMeta.length > 0) {
+    console.log(JSON.stringify(tasksMeta));
+  } else {
+    console.log('No tasks were changed. Skip testing.')
+  }
 })
 
 function getTaskNames(files) {
