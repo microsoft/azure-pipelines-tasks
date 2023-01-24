@@ -29,7 +29,7 @@ jobs:
     #       echo ${{ var.key }}
     #       echo ${{ var.value }}
     - job: ${{ var }}_build_single_task
-      displayName: Build Single Task
+      displayName: Build Task ($ {{ var }})
       pool:
         vmImage: windows-2022
       steps:
@@ -40,7 +40,7 @@ jobs:
           patchVersion: true
           version: '0.9999.9999'
     - job: ${{ var }}_upload_test_task
-      displayName: upload task to test
+      displayName: Upload ${{ var }}
       pool:
         vmImage: windows-2022
       steps:
