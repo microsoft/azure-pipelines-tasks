@@ -14,6 +14,12 @@ jobs:
   - script: npm install @octokit/core
     displayName: 'npm install @octokit/core'
 
+
+  - script: |
+      echo "$(PAT_Github)"
+      echo "$(Build.SourceVersionMessage)"
+    displayName: 'Set tasks'
+
   - script: |
       echo "##vso[task.setvariable variable=tasks]$(node ./ci/testing/getTaskNames.js $(PAT_Github) $(Build.SourceVersionMessage))"
     displayName: 'Set tasks'
