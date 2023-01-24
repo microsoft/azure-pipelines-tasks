@@ -12,7 +12,7 @@ steps:
   inputs:
     buildType: 'current'
     downloadType: 'single'
-    artifactName: '$(task).zip'
+    artifactName: '${{ parameters.task }}.zip'
     downloadPath: '$(System.ArtifactsDirectory)'
 
 - task: ExtractFiles@1
