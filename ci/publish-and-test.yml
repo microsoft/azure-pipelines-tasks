@@ -12,7 +12,7 @@ steps:
   inputs:
     buildType: 'current'
     downloadType: 'single'
-    artifactName: '${{ parameters.task }}/tasks.zip'
+    artifactName: '${{ parameters.task }'
     downloadPath: '$(System.ArtifactsDirectory)'
 
 - task: ExtractFiles@1
@@ -32,6 +32,7 @@ steps:
       npm install -g tfx-cli
       tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken) --no-prompt
       ls -l
+      ls -l $(System.ArtifactsDirectory)
       tfx build tasks upload --task-path .\task-$(task)
 
 - task: Bash@3
