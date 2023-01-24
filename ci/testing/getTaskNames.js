@@ -31,7 +31,7 @@ function getTaskNames(files) {
     taskNames.add(filePath.split('/')[1]);
   });
 
-  return taskNames;
+  return [...taskNames];
 }
 
 function fillTaskMeta(taskNames) {
