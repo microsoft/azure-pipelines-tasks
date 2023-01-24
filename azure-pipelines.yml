@@ -1,24 +1,26 @@
-pool: azure-pipelines
+#trigger:
+#  - none
+#pr:
+#  branches:
+#    include:
+#      - '*'
+#    exclude:
+#      - master
 
 jobs:
-- job: build
-  pool:
-    name: Default
-  condition: and(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['System.PullRequest.TargetBranch'], 'master'))
+- job: get_tasks
+  condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['system.pullRequest.sourceRepositoryUri'], 'https://github.com/PavloAndriiesh/azure-pipelines-tasks'))
   steps:
-  - script: git pull
-    continueOnError: true
-    displayName: 'git pull'
-
-  - script: git checkout develop
-    displayName: 'git checkout develop'
+  - script: npm install @octokit/core
+    displayName: 'npm install @octokit/core'
 
   - script: |
-      export tasks=$(node ./ci/testing/get_tasks_names.js $(git diff --name-only origin/master))
-      echo "##vso[task.setvariable variable=tasks]$tasks"
-    displayName: 'Get task names'
+      echo "##vso[task.setvariable variable=tasks]$(node ./ci/testing/getTaskNames.js $(PAT_Github) $(system.pullRequest.sourceBranch))"
+    displayName: 'Set tasks'
 
   - script: |
       echo "$(tasks)"
-      ret=$(node ./ci/testing/use_tasks_names.js $(tasks))
-    displayName: 'Use task names'
+      node ./ci/testing/useTaskNames.js $(tasks)
+    displayName: 'Use "tasks" variable in next steps'
+
+
