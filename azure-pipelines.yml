@@ -7,10 +7,10 @@ parameters:
   displayName: Build Single Task
   type: boolean
   default: true
-- name: task_name
+- name: task_names
   displayName: Task Name
   type: string
-  default: UseNodeV1
+  default: MavenV3, UseNodeV1
 - name: push_to_feed
   displayName: Push to Feed
   type: boolean
@@ -19,38 +19,52 @@ parameters:
 jobs:
 
 - ${{ if parameters.build_single_task }}:
-
+  - ${{ each var in split(parameters.task_names, ', ') }}:
   # Build Single Task
-  - job: build_single_task
-    displayName: Build Single Task
+    - job: build_single_task
+      displayName: Build Single Task
+      pool:
+        vmImage: windows-2022
+      steps:
+      - template: ci/build-single-steps.yml
+        parameters:
+          task: ${{ parameters.task_name }}
+          push: ${{ parameters.push_to_feed }}
+          patchVersion: true
+          version: '0.9999.9999'
+
+  - ${{ if not(parameters.build_single_task) }}:
+
+    # All tasks on Windows
+    - job: build_all_windows
+      displayName: Build all tasks (Windows)
+    #  condition: eq(variables.os, 'Windows_NT')
+      timeoutInMinutes: 180
+      pool:
+        vmImage: windows-2022
+      steps:
+      - template: ci/build-all-steps.yml
+        parameters:
+          os: Windows_NT
+
+  - job: upload_test_task
+    displayName: upload task to test
     pool:
       vmImage: windows-2022
     steps:
-    - template: ci/build-single-steps.yml
-      parameters:
-        task: ${{ parameters.task_name }}
-        push: ${{ parameters.push_to_feed }}
-        patchVersion: true
-        version: '0.9999.9999'
-
-- ${{ if not(parameters.build_single_task) }}:
-
-  # All tasks on Windows
-  - job: build_all_windows
-    displayName: Build all tasks (Windows)
-  #  condition: eq(variables.os, 'Windows_NT')
-    timeoutInMinutes: 180
+      template: ci/publish-and-test.yml
+      
+  - job: validate_uploaded_task
+    displayName: Validate uploaded task
     pool:
       vmImage: windows-2022
     steps:
-    - template: ci/build-all-steps.yml
-      parameters:
-        os: Windows_NT
+      template: ci/validate-task.yml
 
-- job: upload_test_task
-  displayName: upload task to test
-  pool:
-    vmImage: windows-2022
-  steps:
-    template: ci/publish-and-test.yml
-    
+  - job: remove_task_from_organization
+    displayName: remove
+    pool:
+      vmImage: windows-2022
+    steps:
+      template: ci/remove-task.yml
+
