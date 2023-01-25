@@ -1,21 +1,22 @@
 const fs = require('fs');
 const { Octokit } = require("@octokit/core");
 
-const commitHashLength = 40;
-
 const githubPAT = process.argv[2];
-const source =  process.argv[4];
-const target =  process.argv[6];
+const {BUILD_SOURCEVERSIONMESSAGE, BUILD_SOURCEVERSIONAUTHOR, SYSTEM_PULLREQUEST_SOURCEBRANCH, SYSTEM_PULLREQUEST_TARGETBRANCH} = process.env
 
-if(process.argv.length < 7) {
-  throw new Error('Missing github PAT or Build.SourceVersionMessage arguments', process.argv);
-} else if (!githubPAT) {
+if (!githubPAT) {
   throw new Error('Github PAT is missing');
-} else if (!source || source.length !== commitHashLength || !target || target.length !== commitHashLength) { 
-  throw new Error('Build.SourceVersionMessage is invalid. Expected similar to "Merge 03030baaa23bad9c201711375827a80f36120fc7 into 04aa704021853c2a79620ce544b0ade5252d34c7"');
 }
 
-const octokit = new Octokit();
+if (BUILD_SOURCEVERSIONAUTHOR && SYSTEM_PULLREQUEST_SOURCEBRANCH && SYSTEM_PULLREQUEST_TARGETBRANCH) {
+  basehead = buildBasehead(BUILD_SOURCEVERSIONAUTHOR, SYSTEM_PULLREQUEST_SOURCEBRANCH, SYSTEM_PULLREQUEST_TARGETBRANCH)
+} else if (isSourceVersionMessageValid(BUILD_SOURCEVERSIONMESSAGE)) {
+  basehead = buildBaseheadFromSourceVersionMessage(BUILD_SOURCEVERSIONMESSAGE)
+} else {
+  throw new Error('Cannot build basehead for git compare', process.env)
+}
+
+const octokit = new Octokit({ auth: githubPAT });
 
 octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', {
   owner: 'PavloAndriiesh', // TODO: replace to 'microsoft'
@@ -32,6 +33,31 @@ octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', 
     console.log('No tasks were changed. Skip testing.')
   }
 })
+
+// should be like this: "Merge 38aa95016d4bdb90600f43a284bd1bc1fbfdf9c0 into b8a2212ce63c56d3a6ad07d7b3a2d24ecbc472bd"
+function isSourceVersionMessageValid(msg) {
+  if(msg.length !== 92) {
+    return false;
+  }
+  if (msg.split(' ') != 4) {
+    return false;
+  }
+  if (msg.split(' ')[0] !== 'Merge' || msg.split(' ')[2] !== 'into') {
+    return false;
+  }
+
+  return true;
+}
+
+function buildBasehead(sourceAuthor, sourceBranch, targetBranch) {
+  return `${targetBranch}...${sourceAuthor}:${sourceBranch}`;
+}
+
+function buildBaseheadFromSourceVersionMessage(msg) {
+  const target = msg.split(' ')[3];
+  const source = msg.split(' ')[1];
+  return `${target}...${source}`;
+}
 
 function getTaskNames(files) {
   const taskNames = new Set();
@@ -52,3 +78,4 @@ function fillTaskMeta(taskNames) {
     return {[name]: taskJsonFile.id}
   })
 }
+
