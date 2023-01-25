@@ -31,6 +31,7 @@ steps:
       echo $(ADOToken)
       npm install -g tfx-cli
       tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken) --no-prompt
+      find ./
       ls tasks-${{ parameters.task }}
       tfx build tasks upload --task-path .\task-${{ parameters.task }}
 
