@@ -30,7 +30,7 @@ octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', 
   if (tasksMeta.length > 0) {
     console.log(JSON.stringify(tasksMeta));
   } else {
-    console.log('No tasks were changed. Skip testing.')
+    throw new Error('No tasks were changed. Skip testing.')
   }
 })
 
