@@ -22,7 +22,7 @@ steps:
     cleanDestinationFolder: true
     overwriteExistingFiles: true
 
-- task: PowerShell@2
+- task: Bash@2
   inputs:
     targetType: 'inline'
     script: |
