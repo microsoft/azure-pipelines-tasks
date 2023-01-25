@@ -22,13 +22,10 @@ steps:
     cleanDestinationFolder: true
     overwriteExistingFiles: true
 
-- task: Bash@2
+- task: Bash@3
   inputs:
     targetType: 'inline'
     script: |
-      # Write your PowerShell commands here.
-      echo $(ADOUrl)
-      echo $(ADOToken)
       npm install -g tfx-cli
       tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken) --no-prompt
       find ./
