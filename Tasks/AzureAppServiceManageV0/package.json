@@ -18,9 +18,9 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^16.11.39",
+    "@types/node": "^10.17.0",
     "@types/q": "1.0.7",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.213.0",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.217.0",
     "azure-pipelines-tasks-utility-common": "^3.0.3",
     "q": "1.4.1",
     "xml2js": "0.4.13"

@@ -154,12 +154,16 @@ export class ApplicationTokenCredentials {
         return this.clientId;
     }
 
+    public getUseMSAL(): boolean {
+        return this.useMSAL;
+    }
+
     public async getToken(force?: boolean): Promise<string> {
         // run exclusively to prevent race conditions
         const release = await this.tokenMutex.acquire();
 
         try {
-            const promisedTokenResult = this.useMSAL ? this.getMSALToken(force) : this.getADALToken(force);
+            const promisedTokenResult = this.getUseMSAL() ? this.getMSALToken(force) : this.getADALToken(force);
             return await promisedTokenResult;
         } finally {
             // release it for every situation
@@ -325,10 +329,20 @@ export class ApplicationTokenCredentials {
                     const certDecoded = Buffer.from(certEncoded, "base64");
                     const thumbprint = crypto.createHash("sha1").update(certDecoded).digest("hex").toUpperCase();
 
-                    // privatekey
-                    const privateKey = certFile.match(/-----BEGIN PRIVATE KEY-----\s*([\s\S]+?)\s*-----END PRIVATE KEY-----/i)[0];
+                    if (!thumbprint) {
+                        throw new Error("MSAL - certificate - thumbprint couldn't be generated!");
+                    }
 
                     tl.debug("MSAL - ServicePrincipal - certificate thumbprint creation is successful: " + thumbprint);
+
+                    // privatekey
+                    const privateKey = certFile.match(/-----BEGIN (.)*PRIVATE KEY-----\s*([\s\S]+?)\s*-----END (.)*PRIVATE KEY-----/i)[0];
+                    
+                    if (!privateKey) {
+                        throw new Error("MSAL - certificate - private key couldn't read!");
+                    }
+
+                    tl.debug("MSAL - ServicePrincipal - certificate private key reading is successful.");
 
                     msalConfig.auth.clientCertificate = {
                         thumbprint: thumbprint,

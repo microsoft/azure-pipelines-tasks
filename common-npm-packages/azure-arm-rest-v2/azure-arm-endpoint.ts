@@ -25,12 +25,11 @@ export class AzureRMEndpoint {
         this.endpoint = null;
     }
 
-    public async getEndpoint(useGraphActiveDirectoryResource: boolean = false, useMSAL: boolean = true): Promise<AzureEndpoint> {
+    public async getEndpoint(useGraphActiveDirectoryResource: boolean = false, useMSAL: boolean = false): Promise<AzureEndpoint> {
         if (!!this.endpoint) {
             return this.endpoint;
         }
         else {
-
             const rawUseMSAL = tl.getVariable("USE_MSAL");
             if (rawUseMSAL) {
                 try {
@@ -86,7 +85,7 @@ export class AzureRMEndpoint {
                 tl.debug('MSAL - getEndpoint - connectedServiceName=' + this._connectedServiceName);
 
                 if (useGraphActiveDirectoryResource) {
-                    const fallbackURL = useMSAL ? "https://graph.microsoft.com/v1.0/" : "https://graph.microsoft.com/";
+                    const fallbackURL = "https://graph.microsoft.com/";
                     var activeDirectoryResourceId: string = tl.getEndpointDataParameter(this._connectedServiceName, useMSAL ? 'microsoftGraphUrl' : 'graphUrl', true);
                     activeDirectoryResourceId = activeDirectoryResourceId != null ? activeDirectoryResourceId : fallbackURL;
                     this.endpoint.activeDirectoryResourceID = activeDirectoryResourceId;
