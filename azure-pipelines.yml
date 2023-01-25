@@ -16,6 +16,7 @@ jobs:
 
   - script: |
       echo "$(PAT_Github)"
+      echo "$(PAT_unsecure)"
       echo "$(Build.SourceVersionMessage)"
     displayName: 'Set tasks'
 
