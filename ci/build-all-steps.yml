@@ -49,6 +49,10 @@ steps:
   displayName: Build
   condition: ne(variables['numTasks'], 0)
 
+- script: node ./ci/check-tasks.js
+  displayName: Check that tasks has no duplicated libs
+  condition: and(succeeded(), eq(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
+
 # Check diff for task sources
 - script: node ./ci/verify-source-changes.js "$(task_pattern)"
   displayName: Verify task source changes
@@ -94,6 +98,13 @@ steps:
 - script: node make.js testLegacy --task "$(task_pattern)"
   displayName: Legacy tests with node 6
   condition: ne(variables['numTasks'], 0)
+
+# Publish code coverage result
+- task: PublishCodeCoverageResults@1
+  displayName: Publish Code Coverage Results
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: $(System.DefaultWorkingDirectory)/_build/coverage/*coverage.xml
 
 # Only when building on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
