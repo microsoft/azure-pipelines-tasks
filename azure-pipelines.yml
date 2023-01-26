@@ -7,50 +7,95 @@ parameters:
   displayName: Build Single Task
   type: boolean
   default: true
-- name: task_name
+- name: task_names
   displayName: Task Name
   type: string
-  default: UseNodeV1
+  default: MavenV3, UseNodeV1
 - name: push_to_feed
   displayName: Push to Feed
   type: boolean
   default: false
 
+variables:
+  - name: task_names
+    value: MavenV3, UseNodeV1
+
 jobs:
 
 - ${{ if parameters.build_single_task }}:
-
-  # Build Single Task
-  - job: build_single_task
-    displayName: Build Single Task
-    pool:
-      vmImage: windows-2022
+  - job: get_tasks
+    # we only test tasks on a PR and ignore forks since for security reasosns PAT tokens pipeline variable will not be available for fork's PRs.
+    condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['System.PullRequest.IsFork'], 'False'))
     steps:
-    - template: ci/build-single-steps.yml
-      parameters:
-        task: ${{ parameters.task_name }}
-        push: ${{ parameters.push_to_feed }}
-        patchVersion: true
-        version: '0.9999.9999'
+    - script: npm install @octokit/core
+      displayName: 'npm install @octokit/core'
+    - script: |
+        echo "##vso[task.setvariable variable=tasks]$(node ./ci/testing/getTaskNames.js $(PAT_Github))"
+      displayName: 'Set tasks'
+      
+    - script: |
+        echo "$(tasks)"
+        node ./ci/testing/useTaskNames.js $(tasks)
+      displayName: 'Use "tasks" variable in next steps'
+      
+  - ${{ each var in split(variables.task_names, ', ') }}:
+    # - script: |
+    #       echo ${{ var }}
+    #       echo ${{ var.key }}
+    #       echo ${{ var.value }}
+    - job: ${{ var }}_build_single_task
+      displayName: Build Task (${{ var }})
+      pool:
+        vmImage: windows-2022
+      steps:
+      - template: ci/build-single-steps.yml
+        parameters:
+          task: ${{ var }}
+          push: ${{ parameters.push_to_feed }}
+          publishArtifact: true
+          patchVersion: true
+          version: '0.9999.9999'
+    - job: ${{ var }}_upload_test_task
+      displayName: Upload (${{ var }})
+      dependsOn: ${{ var }}_build_single_task
+      pool:
+        vmImage: windows-2022
+      steps:
+      - template: ci/publish-and-test.yml
+        parameters:
+          task: ${{ var }}
 
-- ${{ if not(parameters.build_single_task) }}:
+    # - job: validate_uploaded_task
+    #   displayName: Validate uploaded task
+    #   pool:
+    #     vmImage: windows-2022
+    #   steps:
+    #     template: ci/validate-task.yml
 
-  # All tasks on Windows
-  - job: build_all_windows
-    displayName: Build all tasks (Windows)
-  #  condition: eq(variables.os, 'Windows_NT')
-    timeoutInMinutes: 180
-    pool:
-      vmImage: windows-2022
-    steps:
-    - template: ci/build-all-steps.yml
-      parameters:
-        os: Windows_NT
+  # - ${{ if not(parameters.build_single_task) }}:
+  #   - job: build_all_windows
+  #     displayName: Build all tasks (Windows)
+  #   #  condition: eq(variables.os, 'Windows_NT')
+  #     timeoutInMinutes: 180
+  #     pool:
+  #       vmImage: windows-2022
+  #     steps:
+  #     - template: ci/build-all-steps.yml
+  #       parameters:
+  #         os: Windows_NT
 
-- job: upload_test_task
-  displayName: upload task to test
-  pool:
-    vmImage: windows-2022
-  steps:
-    template: ci/publish-and-test.yml
-    
+
+      
+# - job: validate_uploaded_task
+#    displayName: Validate uploaded task
+#    pool:
+#      vmImage: windows-2022
+#    steps:
+#      template: ci/validate-task.yml
+
+# - job: remove_task_from_organization
+#    displayName: remove
+#    pool:
+#   vmImage: windows-2022
+# steps:
+#   template: ci/remove-task.yml
