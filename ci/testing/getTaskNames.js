@@ -1,4 +1,3 @@
-const fs = require('fs');
 const { Octokit } = require("@octokit/core");
 
 const githubPAT = process.argv[2];
@@ -19,16 +18,15 @@ if (BUILD_SOURCEVERSIONAUTHOR && SYSTEM_PULLREQUEST_SOURCEBRANCH && SYSTEM_PULLR
 const octokit = new Octokit({ auth: githubPAT });
 
 octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', {
-  owner: 'PavloAndriiesh', // TODO: replace to 'microsoft'
+  owner: 'kirill-ivlev', // TODO: replace to 'microsoft'
   repo: 'azure-pipelines-tasks',
   basehead
 }).then(res => {
   const fileNames = res.data.files.map(props => props.filename);
   const taskNames = getTaskNames(fileNames);
-  const tasksMeta = fillTaskMeta(taskNames);
 
-  if (tasksMeta.length > 0) {
-    console.log(JSON.stringify(tasksMeta));
+  if (taskNames.length > 0) {
+    console.log(taskNames.join(','));
   } else {
     throw new Error('No tasks were changed. Skip testing.')
   }
@@ -69,13 +67,4 @@ function getTaskNames(files) {
   return [...taskNames];
 }
 
-function fillTaskMeta(taskNames) {
-  return taskNames.map(name => {
-    const filePath = 'Tasks/' + name + '/task.json';
-    const rawdata = fs.readFileSync(filePath);
-    const taskJsonFile = JSON.parse(rawdata);
-
-    return {[name]: taskJsonFile.id}
-  })
-}
 
