@@ -25,7 +25,7 @@ export class AzureRMEndpoint {
         this.endpoint = null;
     }
 
-    public async getEndpoint(useGraphActiveDirectoryResource: boolean = false, useMSAL: boolean = true): Promise<AzureEndpoint> {
+    public async getEndpoint(useGraphActiveDirectoryResource: boolean = false, useMSAL: boolean = false): Promise<AzureEndpoint> {
         if (!!this.endpoint) {
             return this.endpoint;
         }
