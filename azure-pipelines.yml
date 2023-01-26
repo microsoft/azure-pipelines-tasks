@@ -38,11 +38,7 @@ jobs:
         node ./ci/testing/useTaskNames.js $(tasks)
       displayName: 'Use "tasks" variable in next steps'
       
-  - ${{ each var in split(variables.task_names, ', ') }}:
-    # - script: |
-    #       echo ${{ var }}
-    #       echo ${{ var.key }}
-    #       echo ${{ var.value }}
+  - ${{ each var in split($(tasks), ', ') }}:
     - job: ${{ var }}_build_single_task
       displayName: Build Task (${{ var }})
       pool:
