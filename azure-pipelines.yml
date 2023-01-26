@@ -23,6 +23,21 @@ variables:
 jobs:
 
 - ${{ if parameters.build_single_task }}:
+  - job: get_tasks
+    # we only test tasks on a PR and ignore forks since for security reasosns PAT tokens pipeline variable will not be available for fork's PRs.
+    condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['System.PullRequest.IsFork'], 'False'))
+    steps:
+    - script: npm install @octokit/core
+      displayName: 'npm install @octokit/core'
+    - script: |
+        echo "##vso[task.setvariable variable=tasks]$(node ./ci/testing/getTaskNames.js $(PAT_Github))"
+      displayName: 'Set tasks'
+      
+    - script: |
+        echo "$(tasks)"
+        node ./ci/testing/useTaskNames.js $(tasks)
+      displayName: 'Use "tasks" variable in next steps'
+      
   - ${{ each var in split(variables.task_names, ', ') }}:
     # - script: |
     #       echo ${{ var }}
@@ -84,4 +99,3 @@ jobs:
 #   vmImage: windows-2022
 # steps:
 #   template: ci/remove-task.yml
-
