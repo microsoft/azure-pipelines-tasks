@@ -28,7 +28,10 @@ steps:
     script: |
       npm install -g tfx-cli
       tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken) --no-prompt
-      find ./
+      # delete task if they exist from the collection
+      TASKID=$(node ci/canary-tests/patch-task-version.js ./task-${{ parameters.task }}/${{parameters.task}}/task.json)
+      echo $TASKID
+      tfx build tasks delete --task-id $TASKID
       tfx build tasks upload --task-path ./task-${{ parameters.task }}/${{parameters.task}}
 
 - task: Bash@3
@@ -40,6 +43,6 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      # Write your PowerShell commands here.
+      echo "Deleting task"
       tfx build tasks delete --task-id AC4EE482-65DA-4485-A532-7B085873E532
       tfx build tasks delete --task-id 31C75BBB-BCDF-4706-8D7C-4DA6A1959BC2
