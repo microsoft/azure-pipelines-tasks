@@ -1,15 +1,7 @@
-#trigger:
-#  - none
-#pr:
-#  branches:
-#    include:
-#      - '*'
-#    exclude:
-#      - master
-
 jobs:
 - job: get_tasks
-  condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['system.pullRequest.sourceRepositoryUri'], 'https://github.com/PavloAndriiesh/azure-pipelines-tasks'))
+  # we only test tasks on a PR and ignore forks since for security reasosns PAT tokens pipeline variable will not be available for fork's PRs.
+  condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['System.PullRequest.IsFork'], 'False'))
   steps:
   - script: npm install @octokit/core
     displayName: 'npm install @octokit/core'

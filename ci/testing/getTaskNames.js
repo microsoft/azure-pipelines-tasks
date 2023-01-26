@@ -34,7 +34,7 @@ octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', 
   }
 })
 
-// should be like this: "Merge 38aa95016d4bdb90600f43a284bd1bc1fbfdf9c0 into b8a2212ce63c56d3a6ad07d7b3a2d24ecbc472bd"
+// msg should be similar to "Merge 38aa95016d4bdb90600f43a284bd1bc1fbfdf9c0 into b8a2212ce63c56d3a6ad07d7b3a2d24ecbc472bd"
 function isSourceVersionMessageValid(msg) {
   if(msg.length !== 92) {
     return false;
@@ -54,9 +54,9 @@ function buildBasehead(sourceAuthor, sourceBranch, targetBranch) {
 }
 
 function buildBaseheadFromSourceVersionMessage(msg) {
-  const target = msg.split(' ')[3];
-  const source = msg.split(' ')[1];
-  return `${target}...${source}`;
+  const targetHash = msg.split(' ')[3];
+  const sourceHash = msg.split(' ')[1];
+  return `${targetHash}...${sourceHash}`;
 }
 
 function getTaskNames(files) {
