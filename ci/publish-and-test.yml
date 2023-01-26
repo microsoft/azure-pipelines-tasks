@@ -1,16 +1,45 @@
+parameters:
+  - name: task
+    type: string
+
 steps:
 - task: NodeTool@0
   displayName: Use node 8
   inputs:
     versionSpec: 10.x
-    
 
+- task: DownloadBuildArtifacts@1
+  inputs:
+    buildType: 'current'
+    downloadType: 'single'
+    artifactName: '${{ parameters.task }}'
+    downloadPath: '$(System.ArtifactsDirectory)'
+
+- task: ExtractFiles@1
+  inputs:
+    archiveFilePatterns: '$(System.ArtifactsDirectory)/${{parameters.task}}/tasks.zip'
+    destinationFolder: 'task-${{ parameters.task }}'
+    cleanDestinationFolder: true
+    overwriteExistingFiles: true
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      npm install -g tfx-cli
+      tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken) --no-prompt
+      find ./
+      tfx build tasks upload --task-path ./task-${{ parameters.task }}/${{parameters.task}}
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      curl  --user '':'$(ADOToken)' --header "Content-Type: application/json" --header "Accept:application/json" https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/3/runs?api-version=7 -X POST -d '{}'      
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
     script: |
       # Write your PowerShell commands here.
-      
-      npm install -g tfx-cli
-      tfx login --auth-type pat --service-url ${{ADOUrl}} --token ${{ ADOToken }}
-      ls ./
+      tfx build tasks delete --task-id AC4EE482-65DA-4485-A532-7B085873E532
+      tfx build tasks delete --task-id 31C75BBB-BCDF-4706-8D7C-4DA6A1959BC2
