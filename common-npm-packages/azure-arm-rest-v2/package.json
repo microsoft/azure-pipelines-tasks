@@ -13,7 +13,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "@azure/msal-node": "^1.14.5",
+    "@azure/msal-node": "1.14.5",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.17.0",
