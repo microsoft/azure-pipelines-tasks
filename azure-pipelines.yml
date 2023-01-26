@@ -27,7 +27,10 @@ jobs:
       displayName: 'npm install @octokit/core'
     - script: |
         echo "##vso[task.setvariable variable=tasks]$(node ./ci/testing/extractTaskNames.js $(PAT_Github))"
+        echo $(tasks)
         echo "$(tasks)"
+        echo "${{tasks}}"
+        echo "$[tasks]"
       displayName: 'Extract task names'
       
     - script: |
