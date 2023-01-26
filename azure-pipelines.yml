@@ -1,12 +1,3 @@
-#trigger:
-#  - none
-#pr:
-#  branches:
-#    include:
-#      - '*'
-#    exclude:
-#      - master
-
 jobs:
 - job: get_tasks
   condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['System.PullRequest.IsFork'], 'False'))
