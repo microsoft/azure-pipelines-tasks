@@ -5,7 +5,8 @@ const {BUILD_SOURCEVERSIONMESSAGE, BUILD_SOURCEVERSIONAUTHOR, SYSTEM_PULLREQUEST
 
 if (!githubPAT || githubPAT === 'PAT_placeholder') {
   // TODO: replace next line with uncommented line after it before moving to prod. Testing until PAT token is added
-  return console.log('UseNodeV1,MavenV4');
+  console.log('UseNodeV1,MavenV4');
+  return;
   //throw new Error('Github PAT is missing');
 }
 
