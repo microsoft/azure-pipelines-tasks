@@ -48,8 +48,7 @@ jobs:
             Write-Host "The selected Instance Name is - $($Instance)"
           }
     - ${{ each var in split(variables.task_names, ',') }}:
-      - script: |
-          echo var
+    - script: echo (${{var}}) ${{var}}
 
     # - job: ${{ var }}_build_single_task
     #   displayName: Build Task (${{ var }})
