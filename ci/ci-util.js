@@ -2,6 +2,8 @@ var fs = require('fs');
 var path = require('path');
 var ncp = require('child_process');
 var semver = require('semver');
+var minimatch = require('minimatch');
+var shell = require('shelljs');
 
 //------------------------------------------------------------------------------
 // global paths
@@ -11,6 +13,7 @@ var buildTasksPath = path.join(__dirname, '..', '_build', 'Tasks');
 var packagePath = path.join(__dirname, '..', '_package');
 var tasksLayoutPath = path.join(packagePath, 'tasks-layout');
 var tasksZipPath = path.join(packagePath, 'tasks.zip');
+var tasksSourcePath = path.join(__dirname, '..', 'Tasks');
 var hotfixLayoutPath = path.join(packagePath, 'hotfix-layout');
 var milestoneLayoutPath = path.join(packagePath, 'milestone-layout');
 var milestonePackSourcePath = path.join(packagePath, 'milestone-pack-source');
@@ -29,6 +32,7 @@ exports.buildTasksPath = buildTasksPath;
 exports.packagePath = packagePath;
 exports.tasksLayoutPath = tasksLayoutPath;
 exports.tasksZipPath = tasksZipPath;
+exports.tasksSourcePath = tasksSourcePath;
 exports.hotfixLayoutPath = hotfixLayoutPath;
 exports.milestoneLayoutPath = milestoneLayoutPath;
 exports.milestonePackSourcePath = milestonePackSourcePath;
@@ -87,6 +91,12 @@ var statOrNullSync = function (path) {
 }
 exports.statOrNullSync = statOrNullSync;
 
+/** 
+ * Executes the specified command in system shell and returns the stdout from the command.
+ * @param {String} cl - The name or path of the executable file to run.
+ * @param {String} inheritStreams - Configure the pipes that are established between the parent and child process. Default value: pipe.
+ * @returns {String} - The stdout from the command.
+ */
 var run = function (cl, inheritStreams) {
     console.log('');
     console.log(`> ${cl}`);
@@ -394,3 +404,79 @@ var createTasksZip = function () {
     compressTasks(tasksLayoutPath, tasksZipPath);
 }
 exports.createTasksZip = createTasksZip;
+
+var fileToJson = function (file) {
+    var jsonFromFile = JSON.parse(fs.readFileSync(file).toString());
+    return jsonFromFile;
+}
+exports.fileToJson = fileToJson;
+
+//------------------------------------------------------------------------------
+// Check functions
+//------------------------------------------------------------------------------
+
+/** 
+ * Wrapper for minmatch. Match against the list of files, in the style of fnmatch or glob.
+ * @param {String} pattern - The search pattern.
+ * @param {String} root - The root path.
+ * @param {String} options - The search options.
+ * @returns {Array} - The list of matches.
+ */
+var matchFind = function (pattern, root, options) {
+    assert(pattern, 'pattern');
+    assert(root, 'root');
+
+    // create a copy of the options
+    var clone = {};
+    Object.keys(options || {}).forEach(function (key) {
+        clone[key] = options[key];
+    });
+    options = clone;
+
+    // determine whether to recurse
+    var noRecurse = options.hasOwnProperty('noRecurse') && options.noRecurse;
+    delete options.noRecurse;
+
+    // normalize first, so we can substring later
+    root = path.resolve(root);
+
+    // determine the list of items
+    var items;
+    if (noRecurse) {
+        items = fs.readdirSync(root)
+            .map(function (name) {
+                return path.join(root, name);
+            });
+    }
+    else {
+        items = shell.find(root)
+            .filter(function (item) { // filter out the root folder
+                return path.normalize(item) != root;
+            });
+    }
+
+    return minimatch.match(items, pattern, options);
+}
+
+/** 
+ * Parses the sources folder and gets the list of task source directories paths according to the specified pattern.
+ * @param {String} taskPattern - The search pattern. Uses the minimatch regex pattern.
+ * @returns {Array} - The list of paths to the specified tasks.
+ */
+var resolveTaskList = function(taskPattern) {
+    var taskList;
+    if (taskPattern) {
+        taskList =  matchFind(taskPattern, tasksSourcePath, { noRecurse: true, matchBase: true})
+            .map(function (item) {
+                return path.basename(item);
+            });
+        if (!taskList.length) {
+            throw new Error(`Unable to find any tasks matching pattern ${taskPattern}`);
+        }
+    } else {
+        throw new Error(`Task pattern is not set`);
+    }
+
+    return taskList;
+}
+exports.resolveTaskList = resolveTaskList;
