@@ -38,7 +38,16 @@ jobs:
         node ./ci/testing/useTaskNames.js $(tasks)
       displayName: 'Use "tasks" variable in next steps'
       
-  - ${{ each var in split($[tasks], ',') }}:
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          echo $(tasks)
+          $results = "$(tasks)".split(",")
+          foreach ($instance in $results) {
+            Write-Host "The selected Instance Name is - $($Instance)"
+          }
+  - ${{ each var in split(variables.task_names, ',') }}:
     - job: ${{ var }}_build_single_task
       displayName: Build Task (${{ var }})
       pool:
