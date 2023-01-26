@@ -17,7 +17,7 @@ const osArch: string = (os.arch() === 'ia32' || force32bit) ? 'x86' : os.arch();
 const osPlatform: string = os.platform();
 
 export async function setupNode(targetNodeVersion: string) {
-    const installedArch = osArch;
+    let installedArch = osArch;
 
     let targetNodePath: string;
 
@@ -27,12 +27,17 @@ export async function setupNode(targetNodeVersion: string) {
     // In case if it's darwin arm and toolPath is empty trying to find x64 version
     if (!targetNodePath && isDarwinArm(osPlatform, installedArch)) {
         targetNodePath = toolLib.findLocalTool('node', installedArch, 'x64');
+        installedArch = 'x64';
     }
 
     if (!targetNodePath) {
         // download, extract, cache
         const cleanVersion = toolLib.cleanVersion(targetNodeVersion);
-        targetNodePath = await downloadNode(cleanVersion, installedArch);
+        targetNodePath = taskLib.retry(
+            async () => await downloadNode(cleanVersion, installedArch),
+            undefined,
+            { retryCount: 3, continueOnError: false }
+        );
     }
 
     const resultNodePath = await copyNodeToAgentExternals(targetNodePath, 'node');

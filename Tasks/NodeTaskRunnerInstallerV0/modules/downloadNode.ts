@@ -10,17 +10,32 @@ const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
 const osArch: string = (os.arch() === 'ia32' || force32bit) ? 'x86' : os.arch();
 
 /** Installs target node from online
- * @returns installed node path
+ * @param {string} version Node version to install
+ * @param {string} installedArch PC Architecture
+ * @returns Installed node path
  */
 export async function downloadNode(version: string, installedArch: string): Promise<string> {
 
     let downloadNodePath: string;
 
-    if (osPlatform === 'win32') {
-        downloadNodePath = await downloadWindowsNode(version);
-    } else {
-        // OSX, Linux
-        downloadNodePath = await downloadUnixNode(version, installedArch);
+    try {
+        if (osPlatform === 'win32') {
+            downloadNodePath = await downloadWindowsNode(version);
+        } else {
+            // OSX, Linux
+            downloadNodePath = await downloadUnixNode(version, installedArch);
+        }
+
+    } catch (err) {
+        if (err.httpStatusCode) {
+            if (err.httpStatusCode === 404) {
+                throw new Error("Target node version not found. Please contact with task support. Error: " + err)
+            } else {
+                throw new Error("Something went wrong. Error: " + err);
+            }
+        }
+
+        throw err;
     }
 
     taskLib.debug('Downloaded node path: ' + downloadNodePath);
@@ -44,26 +59,12 @@ async function downloadWindowsNode(version: string): Promise<string> {
     const tempDownloadFolder: string = 'temp_' + Math.floor(Math.random() * 2000000000);
     const downloadPath: string = path.join(taskLib.getVariable('agent.tempDirectory'), tempDownloadFolder);
     taskLib.mkdirP(downloadPath);
-    let exeUrl: string;
-    let libUrl: string;
-    try {
-        exeUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.exe`;
-        libUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.lib`;
 
-        await toolLib.downloadTool(exeUrl, path.join(downloadPath, 'node.exe'));
-        await toolLib.downloadTool(libUrl, path.join(downloadPath, 'node.lib'));
-    } catch (err) {
-        if (err.httpStatusCode &&
-            err.httpStatusCode === 404) {
-            exeUrl = `https://nodejs.org/dist/v${version}/node.exe`;
-            libUrl = `https://nodejs.org/dist/v${version}/node.lib`;
+    const exeUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.exe`;
+    const libUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.lib`;
 
-            await toolLib.downloadTool(exeUrl, path.join(downloadPath, 'node.exe'));
-            await toolLib.downloadTool(libUrl, path.join(downloadPath, 'node.lib'));
-        } else {
-            throw err;
-        }
-    }
+    await toolLib.downloadTool(exeUrl, path.join(downloadPath, 'node.exe'));
+    await toolLib.downloadTool(libUrl, path.join(downloadPath, 'node.lib'));
 
     return downloadPath;
 }
