@@ -27,7 +27,7 @@ function Get-AzureStorageKeyFromARM
         # get azure storage account resource group name
         $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
 
-        Write-Verbose "[Azure Call]Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceid"
+        Write-Verbose "[Azure Call]Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceGroupName"
         
         $storageKeyDetails = Get-AzRMStorageKeys $azureResourceGroupName $storageAccountName $serviceEndpoint
         $storageKey = $storageKeyDetails.Key1
