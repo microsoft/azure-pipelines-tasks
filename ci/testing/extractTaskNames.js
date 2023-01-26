@@ -3,7 +3,7 @@ const { Octokit } = require("@octokit/core");
 const githubPAT = process.argv[2];
 const {BUILD_SOURCEVERSIONMESSAGE, BUILD_SOURCEVERSIONAUTHOR, SYSTEM_PULLREQUEST_SOURCEBRANCH, SYSTEM_PULLREQUEST_TARGETBRANCH} = process.env
 
-if (!githubPAT) {
+if (!githubPAT || githubPAT === 'PAT_placeholder') {
   // TODO: replace next line with uncommented line after it before moving to prod. Testing until PAT token is added
   return 'UseNodeV1,MavenV4';
   //throw new Error('Github PAT is missing');
