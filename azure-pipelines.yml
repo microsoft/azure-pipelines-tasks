@@ -9,7 +9,7 @@
 
 jobs:
 - job: get_tasks
-  condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['system.pullRequest.sourceRepositoryUri'], 'https://github.com/PavloAndriiesh/azure-pipelines-tasks'))
+  condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['System.PullRequest.IsFork'], 'True'))
   steps:
   - script: npm install @octokit/core
     displayName: 'npm install @octokit/core'
