@@ -3,7 +3,7 @@
     "name": "DownloadSecureFile",
     "friendlyName": "Download secure file",
     "description": "Download a secure file to the agent machine",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/download-secure-file-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=862069)",
     "category": "Utility",
     "visibility": [

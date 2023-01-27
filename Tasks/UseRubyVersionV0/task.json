@@ -3,7 +3,7 @@
     "name": "UseRubyVersion",
     "friendlyName": "Use Ruby version",
     "description": "Use the specified version of Ruby from the tool cache, optionally adding it to the PATH",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/use-ruby-version",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/use-ruby-version-v0",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2005989) or [see the Ruby documentation](https://www.ruby-lang.org/)",
     "category": "Tool",
     "runsOn": [

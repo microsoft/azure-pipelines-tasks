@@ -3,7 +3,7 @@
     "name": "AzurePolicyCheckGate",
     "friendlyName": "Check Azure Policy compliance",
     "description": "Security and compliance assessment for Azure Policy",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-policy-check-gate",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-policy-check-gate-v0-check-gate",
     "helpMarkDown": "",
     "category": "Deploy",
     "visibility": [

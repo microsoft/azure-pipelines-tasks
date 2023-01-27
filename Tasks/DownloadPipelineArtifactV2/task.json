@@ -4,7 +4,7 @@
     "friendlyName": "Download Pipeline Artifacts",
     "description": "Download build and pipeline artifacts",
     "helpMarkDown": "Download one or more published build or pipeline artifacts.",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-pipeline-artifact",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/download-pipeline-artifact-v2",
     "category": "Utility",
     "author": "Microsoft Corporation",
     "version": {

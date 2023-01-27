@@ -3,8 +3,8 @@
     "name": "NuGetInstaller",
     "friendlyName": "NuGet Installer",
     "description": "Installs or restores missing NuGet packages. Use NuGetAuthenticate@0 task for latest capabilities.",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget",
-    "helpMarkDown": "[More Information](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/nuget-command-v2",
+    "helpMarkDown": "[More Information](https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/nuget-command-v2)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {

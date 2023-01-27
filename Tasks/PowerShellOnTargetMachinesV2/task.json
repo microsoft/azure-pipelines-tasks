@@ -3,7 +3,7 @@
     "name": "PowerShellOnTargetMachines",
     "friendlyName": "PowerShell on target machines",
     "description": "Execute PowerShell scripts on remote machines",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/powershell-on-target-machines",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/powershell-on-target-machines-v2",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=627414)",
     "category": "Deploy",
     "visibility": [

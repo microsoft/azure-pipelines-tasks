@@ -4,7 +4,7 @@
     "friendlyName": "Invoke REST API",
     "description": "Invoke a REST API as a part of your pipeline.",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/http-rest-api",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/invoke-rest-api-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870236)",
     "category": "Deploy",
     "visibility": [

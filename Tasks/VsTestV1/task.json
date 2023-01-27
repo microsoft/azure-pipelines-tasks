@@ -3,7 +3,7 @@
     "name": "VSTest",
     "friendlyName": "Visual Studio Test",
     "description": "Run tests with Visual Studio test runner",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/vstest",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/vstest-v2",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=624539)",
     "category": "Test",
     "visibility": [

@@ -3,7 +3,7 @@
     "name": "ServiceFabricComposeDeploy",
     "friendlyName": "Service Fabric Compose deploy",
     "description": "Deploy a Docker Compose application to an Azure Service Fabric cluster",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/service-fabric-compose-deploy",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/service-fabric-compose-deploy-v0",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=847030)",
     "category": "Deploy",
     "visibility": [

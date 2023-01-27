@@ -3,7 +3,7 @@
     "name": "ManualIntervention",
     "friendlyName": "Manual intervention",
     "description": "Pause deployment and wait for manual intervention",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/manual-intervention",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/manual-intervention-v8",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870234)",
     "category": "Deploy",
     "visibility": [

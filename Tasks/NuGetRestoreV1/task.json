@@ -3,8 +3,8 @@
     "name": "NuGetRestore",
     "friendlyName": "NuGet Restore",
     "description": "Restores NuGet packages in preparation for a Visual Studio Build step.",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget",
-    "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/nuget-command-v2",
+    "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/nuget-command-v2) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {

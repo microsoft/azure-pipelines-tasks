@@ -3,7 +3,7 @@
     "name": "Go",
     "friendlyName": "Go",
     "description": "Get, build, or test a Go application, or run a custom Go command",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/go",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/go-v0",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=867582)",
     "author": "Microsoft Corporation",
     "category": "Build",

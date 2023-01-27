@@ -3,7 +3,7 @@
     "name": "CopyFiles",
     "friendlyName": "Copy files",
     "description": "Copy files from a source folder to a target folder using patterns matching file paths (not folder paths)",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/copy-files",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/copy-files-v2",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=708389)",
     "category": "Utility",
     "visibility": [

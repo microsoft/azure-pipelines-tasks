@@ -3,7 +3,7 @@
     "name": "DownloadBuildArtifacts",
     "friendlyName": "Download build artifacts",
     "description": "Download files that were saved as artifacts of a completed build",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-build-artifacts",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/download-build-artifacts-v1",
     "helpMarkDown": "",
     "category": "Utility",
     "author": "Microsoft Corporation",

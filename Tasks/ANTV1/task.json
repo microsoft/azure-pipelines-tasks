@@ -3,7 +3,7 @@
     "name": "Ant",
     "friendlyName": "Ant",
     "description": "Build with Apache Ant",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/ant",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/ant-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613718) or [see the Ant documentation](http://ant.apache.org/)",
     "category": "Build",
     "visibility": [

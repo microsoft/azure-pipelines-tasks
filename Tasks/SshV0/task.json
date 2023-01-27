@@ -3,7 +3,7 @@
     "name": "SSH",
     "friendlyName": "SSH",
     "description": "Run shell commands or a script on a remote machine using SSH",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/ssh",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/ssh-v0",
     "helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=821892)",
     "category": "Deploy",
     "visibility": [

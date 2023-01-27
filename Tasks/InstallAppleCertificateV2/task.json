@@ -3,7 +3,7 @@
     "name": "InstallAppleCertificate",
     "friendlyName": "Install Apple certificate",
     "description": "Install an Apple certificate required to build on a macOS agent machine",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/install-apple-certificate",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/install-apple-certificate-v2",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=862067)",
     "category": "Utility",
     "visibility": [

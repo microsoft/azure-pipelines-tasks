@@ -3,7 +3,7 @@
     "name": "Xcode",
     "friendlyName": "Xcode",
     "description": "Build, test, or archive an Xcode workspace on macOS. Optionally package an app.",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/xcode",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/xcode-v5",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613730) or [see the Xcode documentation](https://developer.apple.com/xcode/)",
     "category": "Build",
     "visibility": [

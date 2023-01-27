@@ -6,7 +6,7 @@
     "category": "Package",
     "author": "Microsoft Corporation",
     "preview": "true",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/nuget-command-v2",
     "helpMarkDown": "",
     "version": {
         "Major": 0,

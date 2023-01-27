@@ -4,7 +4,7 @@
     "friendlyName": "Update Service Fabric manifests",
     "description": "Automatically update portions of application and service manifests in a packaged Azure Service Fabric application",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/service-fabric-versioning",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/service-fabric-update-manifests-v2",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820529)",
     "category": "Utility",
     "visibility": [

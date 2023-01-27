@@ -3,7 +3,7 @@
     "name": "IISWebAppDeploymentOnMachineGroup",
     "friendlyName": "IIS web app deploy",
     "description": "Deploy a website or web application using Web Deploy",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/iis-web-app-deployment-on-machine-group",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/iisweb-app-deployment-on-machine-group-v0",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=866789)",
     "category": "Deploy",
     "visibility": [

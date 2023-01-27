@@ -3,7 +3,7 @@
     "name": "CondaEnvironment",
     "friendlyName": "Conda environment",
     "description": "This task is deprecated. Use `conda` directly in script to work with Anaconda environments.",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/conda-environment",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/conda-environment-v1",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/pipelines-anaconda-guide)<br>[Task documentation](https://go.microsoft.com/fwlink/?linkid=873466)",
     "category": "Package",
     "runsOn": [

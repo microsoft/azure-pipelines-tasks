@@ -3,7 +3,7 @@
     "name": "BatchScript",
     "friendlyName": "Batch script",
     "description": "Run a Windows command or batch script and optionally allow it to change the environment",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/batch-script",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/batch-script-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613733).\n\nPlease note: this task is not compatible with Windows containers. If you need to run a batch script on a Windows container, use the [CmdLine task](https://go.microsoft.com/fwlink/?LinkID=613735) instead.",
     "category": "Utility",
     "visibility": [

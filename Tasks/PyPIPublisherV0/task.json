@@ -4,7 +4,7 @@
     "friendlyName": "PyPI publisher",
     "description": "Create and upload an sdist or wheel to a PyPI-compatible index using Twine",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/pypi-publisher",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/py-pi-publisher-v0",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=875289)",
     "category": "Package",
     "visibility": [

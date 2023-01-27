@@ -3,7 +3,7 @@
     "name": "DownloadPipelineArtifact",
     "friendlyName": "Download pipeline artifact",
     "description": "Downloads an artifact associated with a pipeline",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-pipeline-artifact",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/download-pipeline-artifact-v2",
     "helpMarkDown": "Download named artifact from a pipeline to a local path.",
     "category": "Utility",
     "author": "Microsoft Corporation",

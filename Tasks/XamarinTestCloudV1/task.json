@@ -3,7 +3,7 @@
     "name": "XamarinTestCloud",
     "friendlyName": "Xamarin Test Cloud",
     "description": "[Deprecated] Test mobile apps with Xamarin Test Cloud using Xamarin.UITest. Instead, use the 'App Center test' task.",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/xamarin-test-cloud",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/xamarin-test-cloud-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613744)",
     "category": "Test",
     "visibility": [

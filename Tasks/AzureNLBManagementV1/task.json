@@ -4,7 +4,7 @@
     "friendlyName": "Azure Network Load Balancer",
     "description": "Connect or disconnect an Azure virtual machine's network interface to a Load Balancer's back end address pool",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-nlb-management",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-nlb-management-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=837723)",
     "category": "Utility",
     "visibility": [

@@ -4,7 +4,7 @@
     "friendlyName": "Extract files",
     "description": "Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/extract-files",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/extract-files-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=800269)",
     "category": "Utility",
     "visibility": [

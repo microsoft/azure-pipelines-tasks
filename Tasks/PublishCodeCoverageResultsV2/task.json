@@ -3,7 +3,7 @@
     "name": "PublishCodeCoverageResults",
     "friendlyName": "Publish code coverage results",
     "description": "Publish any of the code coverage results from a build",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-code-coverage-results",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
     "category": "Test",
     "visibility": [

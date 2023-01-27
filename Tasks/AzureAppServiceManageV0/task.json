@@ -4,7 +4,7 @@
     "friendlyName": "Azure App Service manage",
     "description": "Start, stop, restart, slot swap, slot delete, install site extensions or enable continuous monitoring for an Azure App Service",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-app-service-manage",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-app-service-manage-v0",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=831573)",
     "category": "Deploy",
     "visibility": [

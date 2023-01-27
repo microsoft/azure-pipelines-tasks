@@ -3,7 +3,7 @@
     "name": "AppCenterTest",
     "friendlyName": "App Center test",
     "description": "Test app packages with Visual Studio App Center",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/app-center-test",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/app-center-test-v1",
     "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport).",
     "category": "Test",
     "visibility": [

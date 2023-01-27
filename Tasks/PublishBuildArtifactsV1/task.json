@@ -3,7 +3,7 @@
     "name": "PublishBuildArtifacts",
     "friendlyName": "Publish build artifacts",
     "description": "Publish build artifacts to Azure Pipelines or a Windows file share",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-build-artifacts",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/publish-build-artifacts-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=708390)",
     "category": "Utility",
     "visibility": [

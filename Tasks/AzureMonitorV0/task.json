@@ -4,7 +4,7 @@
     "friendlyName": "Query Classic Azure Monitor alerts",
     "description": "Observe the configured classic Azure Monitor rules for active alerts",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-monitor",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-monitor-v0",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870240)",
     "category": "Utility",
     "deprecated": true,

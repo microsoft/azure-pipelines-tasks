@@ -3,7 +3,7 @@
     "name": "UsePythonVersion",
     "friendlyName": "Use Python version",
     "description": "Use the specified version of Python from the tool cache, optionally adding it to the PATH",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/use-python-version",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/use-python-version-v0",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=871498) or [see the Python documentation](https://www.python.org/doc/)",
     "category": "Tool",
     "runsOn": [

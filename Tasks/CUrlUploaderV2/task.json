@@ -3,7 +3,7 @@
     "name": "cURLUploader",
     "friendlyName": "cURL upload files",
     "description": "Use cURL's supported protocols to upload files",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/curl-upload-files",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/curl-uploader-v2",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627418)",
     "category": "Utility",
     "author": "Microsoft Corporation",

@@ -3,7 +3,7 @@
     "name": "Bash",
     "friendlyName": "Bash",
     "description": "Run a Bash script on macOS, Linux, or Windows",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/bash",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/bash-v3",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2132213) or [see the Bash documentation](https://www.gnu.org/software/bash/manual/)",
     "category": "Utility",
     "visibility": [

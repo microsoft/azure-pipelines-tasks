@@ -3,7 +3,7 @@
     "name": "PublishPipelineArtifact",
     "friendlyName": "Publish pipeline artifact",
     "description": "Publish a local directory or file as a named artifact for the current pipeline",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-pipeline-artifact",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/publish-pipeline-artifact-v1",
     "helpMarkDown": "Publish a local directory or file as a named artifact for the current pipeline.",
     "category": "Utility",
     "author": "Microsoft Corporation",
