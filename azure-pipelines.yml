@@ -40,8 +40,23 @@ jobs:
           $results = "$(tasks)".split(",")
           foreach ($task in $results) {
             Write-Host "The selected task Name is - $($task)"
-            - script: "echo proceeding with task - $($task)"
           }
+    
+    - script: |
+        echo ${{ variables.task_names }}
+      continueOnError: true
+
+    - script: |
+        echo $(variables.tasks)
+      continueOnError: true        
+
+    - script: |
+        echo $(variables.tasks)
+      continueOnError: true
+
+    - script: |
+        echo ${{ variables.tasks }}
+      continueOnError: true
 
   - ${{ each var in split(variables.task_names, ',') }}:
     - job: ${{ var }}_build_single_task
