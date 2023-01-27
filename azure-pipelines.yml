@@ -46,6 +46,7 @@ jobs:
     - ${{ each var in split(variables.$tasks, ',') }}:
     - script: |
         echo "$(tasks)"
+        echo "${{tasks}}"
       continueOnError: true
 
     # - job: ${{ var }}_build_single_task
