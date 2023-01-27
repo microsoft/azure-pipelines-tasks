@@ -12,9 +12,9 @@ parameters:
   type: boolean
   default: false
 
-# variables:
-#   - name: tasks
-#     value: MavenV3,UseNodeV1,MavenV2
+variables:
+  - name: tasks_names
+    value: MavenV3,UseNodeV1,MavenV2
 
 jobs:
 
@@ -36,7 +36,7 @@ jobs:
     #     node ./ci/testing/useTaskNames.js $(variables.tasks)
     #   displayName: 'Use "tasks" variable in next steps'
     
-    - ${{ each var in split(variables.tasks, ',') }}:
+    - ${{ each var in split(variables.tasks_names, ',') }}:
       script: |
         echo "Test"
       continueOnError: true
