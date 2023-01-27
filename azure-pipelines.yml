@@ -26,7 +26,7 @@ jobs:
     - script: npm install @octokit/core
       displayName: 'npm install @octokit/core'
     #- script: echo "##vso[task.setvariable variable=tasks;isOutput=true]$(node ./ci/testing/extractTaskNames.js $(PAT_Github))"
-    - script: echo "##vso[task.setvariable variable=tasks;isOutput=true]MavenV3"
+    - bash: tasks=MavenV2
     #  displayName: 'Extract task names'
       
     - script: |
