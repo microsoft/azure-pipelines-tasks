@@ -12,6 +12,10 @@ parameters:
   type: boolean
   default: false
 
+# variables:
+#   - name: tasks
+#     value: MavenV3,UseNodeV1,MavenV2
+
 jobs:
 
 - ${{ if parameters.build_single_task }}:
@@ -27,8 +31,8 @@ jobs:
     #  displayName: 'Extract task names'
       
     - script: |
-        echo "$(tasks)"
-        node ./ci/testing/useTaskNames.js $(tasks)
+        echo "$(variables.tasks)"
+        node ./ci/testing/useTaskNames.js $(variables.tasks)
       displayName: 'Use "tasks" variable in next steps'
     
     # echo MavenV3,UseNodeV1
