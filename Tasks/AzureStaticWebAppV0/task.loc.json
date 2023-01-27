@@ -152,6 +152,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.production_branch"
+    },
+    {
+      "name": "data_api_location",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.data_api_location",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.data_api_location"
     }
   ],
   "execution": {
