@@ -20,10 +20,6 @@ jobs:
 
 - ${{ if parameters.build_single_task }}:
   - ${{ each var in split(variables.task_names, ', ') }}:
-    - script: |
-          echo ${{ var }}
-          echo ${{ var.key }}
-          echo ${{ var.value }}
     - job: ${{ var }}_build_single_task
       displayName: Build Task (${{ var }})
       pool:
