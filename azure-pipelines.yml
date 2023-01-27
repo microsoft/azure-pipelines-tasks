@@ -44,7 +44,7 @@ jobs:
     
     # 
     - script: |
-        echo ${{tasks}}
+        echo ${{variables.tasks}}
       continueOnError: true
 
     # # line 1: variables.tasks: command not found
