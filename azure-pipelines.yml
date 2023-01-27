@@ -63,12 +63,13 @@ jobs:
       continueOnError: true
 
   - ${{ each var in split(variables.task_names, ',') }}:
-    - job: ${{ var }}_build_single_task
-      displayName: Build Task (${{ var }})
-      pool:
-        vmImage: windows-2022
-      steps:
-      - script: echo Building task
+    - script: echo Building task ${{ var }}
+    # - job: ${{ var }}_build_single_task
+    #   displayName: Build Task (${{ var }})
+    #   pool:
+    #     vmImage: windows-2022
+    #   steps:
+    #   - script: echo Building task
 
       # - template: ci/build-single-steps.yml
       #   parameters:
