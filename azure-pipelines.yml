@@ -47,7 +47,7 @@ jobs:
       continueOnError: true
 
     - script: |
-        echo $(variables.tasks)
+        echo $(variables.task_names)
       continueOnError: true        
 
     - script: |
@@ -56,6 +56,10 @@ jobs:
 
     - script: |
         echo ${{ variables.tasks }}
+      continueOnError: true
+
+    - script: |
+        echo $(variables)
       continueOnError: true
 
   - ${{ each var in split(variables.task_names, ',') }}:
