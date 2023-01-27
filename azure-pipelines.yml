@@ -6,7 +6,7 @@ parameters:
 - name: task_names
   displayName: Task Name
   type: string
-  default: MavenV3, UseNodeV1
+  default: MavenV3,UseNodeV1
 - name: push_to_feed
   displayName: Push to Feed
   type: boolean
@@ -62,7 +62,7 @@ jobs:
     #     echo "${{ variables.tasks }}"
     #   continueOnError: true
 
-  - ${{ each var in split(variables.tasks_names, ',') }}:
+  - ${{ each var in split(variables.tasks, ',') }}:
     - script: |
         echo "Test"
       continueOnError: true
