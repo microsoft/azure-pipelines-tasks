@@ -3,7 +3,7 @@
     "name": "NuGetPublisher",
     "friendlyName": "NuGet publisher",
     "description": "Deprecated: use the “NuGet” task instead. It works with the new Tool Installer framework so you can easily use new versions of NuGet without waiting for a task update, provides better support for authenticated feeds outside this organization/collection, and uses NuGet 4 by default.",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/prev-versions/nuget-publisher-0",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/package/prev-versions/nuget-publisher-0",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627417) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
     "category": "Package",
     "author": "Lawrence Gripper",

@@ -4,7 +4,7 @@
     "friendlyName": "FTP upload",
     "description": "Upload files using FTP",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/ftp-upload",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/utility/ftp-upload",
     "helpMarkDown": "Upload files to a remote machine using the File Transfer Protocol (FTP), or securely with FTPS.  [More Information](http://go.microsoft.com/fwlink/?LinkId=809084).",
     "category": "Utility",
     "visibility": [

@@ -3,7 +3,7 @@
     "name": "CopyFilesOverSSH",
     "friendlyName": "Copy files over SSH",
     "description": "Copy files or build artifacts to a remote machine over SSH",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/copy-files-over-ssh-v0",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/copy-files-over-ssh-v0",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=821894)",
     "category": "Deploy",
     "visibility": [

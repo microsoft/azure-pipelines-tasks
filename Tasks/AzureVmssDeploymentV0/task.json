@@ -3,8 +3,8 @@
     "name": "AzureVmssDeployment",
     "friendlyName": "Azure VM scale set deployment",
     "description": "Deploy a virtual machine scale set image",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-vmss-deployment-v0",
-    "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-vmss-deployment-v0)",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-vmss-deployment-v0",
+    "helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-vmss-deployment-v0)",
     "category": "Deploy",
     "releaseNotes": "- Updates Azure Virtual Machine scale set with a custom machine image.",
     "visibility": [

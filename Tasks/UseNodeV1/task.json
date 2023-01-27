@@ -3,7 +3,7 @@
     "name": "UseNode",
     "friendlyName": "Use Node.js ecosystem",
     "description": "Set up a Node.js environment and add it to the PATH, additionally providing proxy support",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks",
     "helpMarkDown": "",
     "category": "Tool",
     "preview": true,

@@ -3,7 +3,7 @@
     "name": "AzurePowerShell",
     "friendlyName": "Azure PowerShell",
     "description": "Run a PowerShell script within an Azure environment",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-powershell-v5",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-powershell-v5",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
     "category": "Deploy",
     "visibility": [

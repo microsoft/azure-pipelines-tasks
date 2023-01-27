@@ -3,7 +3,7 @@
   "name": "PackerBuild",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/packer-build-v0",
+  "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/packer-build-v0",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "releaseNotes": "ms-resource:loc.releaseNotes",

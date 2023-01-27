@@ -4,7 +4,7 @@
     "friendlyName": "Azure CLI",
     "description": "Run Azure CLI commands against an Azure subscription in a PowerShell Core/Shell script when running on Linux agent or PowerShell/PowerShell Core/Batch script when running on Windows agent.",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2",
     "helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureCLIV2/Readme.md) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
     "releaseNotes": "What's new in Version 2.0:\n- Support for PowerShell and PowerShell Core script. \n- PowerShell Core works with cross-platform agents (Linux, macOS, or Windows), make sure the agent has PowerShell version 6 or more. \n- Powershell script works with only Windows agent, make sure the agent has PowerShell version 5 or below.",
     "category": "Deploy",

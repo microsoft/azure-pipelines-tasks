@@ -3,7 +3,7 @@
     "name": "InstallSSHKey",
     "friendlyName": "Install SSH key",
     "description": "Install an SSH key prior to a build or deployment",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/install-ssh-key-v0",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/install-ssh-key-v0",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=875267)",
     "category": "Utility",
     "visibility": [

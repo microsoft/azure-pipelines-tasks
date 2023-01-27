@@ -3,7 +3,7 @@
     "name": "MSBuild",
     "friendlyName": "MSBuild",
     "description": "Build with MSBuild",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/msbuild-v1",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/msbuild-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613724)",
     "category": "Build",
     "visibility": [
@@ -132,7 +132,7 @@
             "defaultValue": "false",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "This option is deprecated. To restore NuGet packages, add a [NuGet](https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/nuget-command-v2) task before the build."
+            "helpMarkDown": "This option is deprecated. To restore NuGet packages, add a [NuGet](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/nuget-command-v2) task before the build."
         },
         {
             "name": "logProjectEvents",

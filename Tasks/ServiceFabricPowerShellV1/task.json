@@ -3,7 +3,7 @@
     "name": "ServiceFabricPowerShell",
     "friendlyName": "Service Fabric PowerShell",
     "description": "Run a PowerShell script in the context of an Azure Service Fabric cluster connection",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/service-fabric-powershell-v1",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/service-fabric-powershell-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=841538)",
     "category": "Utility",
     "visibility": [

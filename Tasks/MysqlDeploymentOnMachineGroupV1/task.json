@@ -3,7 +3,7 @@
     "name": "MysqlDeploymentOnMachineGroup",
     "friendlyName": "MySQL database deploy",
     "description": "Run scripts and make changes to a MySQL Database",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/mysql-deployment-on-machine-group)",
     "category": "Deploy",
     "visibility": [

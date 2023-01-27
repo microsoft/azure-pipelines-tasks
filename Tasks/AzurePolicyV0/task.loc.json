@@ -3,7 +3,7 @@
   "name": "AzurePolicyCheckGate",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-policy-check-gate-v0-check-gate",
+  "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-policy-check-gate-v0-check-gate",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [

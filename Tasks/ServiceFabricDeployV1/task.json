@@ -4,7 +4,7 @@
     "friendlyName": "Service Fabric application deployment",
     "description": "Deploy an Azure Service Fabric application to a cluster",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/service-fabric-deploy-v1",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/service-fabric-deploy-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820528)",
     "category": "Deploy",
     "visibility": [

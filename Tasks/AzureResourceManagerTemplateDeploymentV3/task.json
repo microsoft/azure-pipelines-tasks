@@ -3,7 +3,7 @@
     "name": "AzureResourceManagerTemplateDeployment",
     "friendlyName": "ARM template deployment",
     "description": "Deploy an Azure Resource Manager (ARM) template to all the deployment scopes",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-resource-group-deployment-v2",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-resource-group-deployment-v2",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/armtaskreadme)",
     "category": "Deploy",
     "releaseNotes": "- Added support for deployment at all the deployment scopes.\n- Removed all the VM related actions.",

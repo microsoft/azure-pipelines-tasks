@@ -3,7 +3,7 @@
     "name": "Npm",
     "friendlyName": "npm",
     "description": "Install and publish npm packages, or run an npm command. Supports npmjs.com and authenticated registries like Azure Artifacts.",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/npm-v1",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/npm-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613746) or [see the npm documentation](https://docs.npmjs.com/)",
     "category": "Package",
     "author": "Microsoft Corporation",

@@ -3,7 +3,7 @@
     "name": "SqlServerDacpacDeployment",
     "friendlyName": "[Deprecated] SQL Server database deploy",
     "description": "Deploy a SQL Server database using DACPAC",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/sql-azure-dacpac-deployment-vt",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/sql-azure-dacpac-deployment-vt",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/sqlserverdacpackdeprecatedreadme)",
     "category": "Deploy",
     "visibility": [

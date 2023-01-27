@@ -4,7 +4,7 @@
     "friendlyName": "Azure Monitor alerts (Deprecated)",
     "description": "Configure alerts on available metrics for an Azure resource (Deprecated)",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-monitor-alerts-v0",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-monitor-alerts-v0",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=859947)",
     "category": "Deploy",
     "visibility": [

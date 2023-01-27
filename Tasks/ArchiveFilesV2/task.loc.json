@@ -4,7 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/archive-files-v2",
+  "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/archive-files-v2",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [

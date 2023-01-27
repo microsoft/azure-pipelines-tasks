@@ -3,7 +3,7 @@
     "name": "NuGetCommand",
     "friendlyName": "NuGet",
     "description": "Restore, pack, or push NuGet packages, or run a NuGet command. Supports NuGet.org and authenticated feeds like Azure Artifacts and MyGet. Uses NuGet.exe and works with .NET Framework apps. For .NET Core and .NET Standard apps, use the .NET Core task.",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/nuget-command-v2",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/nuget-command-v2",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613747) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
     "category": "Package",
     "author": "Microsoft Corporation",

@@ -3,7 +3,7 @@
     "name": "ApacheJMeterLoadTest",
     "friendlyName": "Cloud-based Apache JMeter load test",
     "description": "Run an Apache JMeter load test in the cloud",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/run-jmeter-load-test",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/test/run-jmeter-load-test",
     "helpMarkDown": "This task can be used to trigger an Apache JMeter load test in cloud using Azure Pipelines. [Learn more](https://go.microsoft.com/fwlink/?LinkId=784929)",
     "category": "Test",
     "visibility": [

@@ -3,7 +3,7 @@
     "name": "QuickPerfTest",
     "friendlyName": "Cloud-based web performance test",
     "description": "Run a quick web performance test in the cloud with Azure Pipelines",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/cloud-based-web-performance-test",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/test/cloud-based-web-performance-test",
     "helpMarkDown": "Triggers a cloud-based load test using Azure Pipelines. [Learn more](https://go.microsoft.com/fwlink/?linkid=613203)",
     "category": "Test",
     "visibility": [

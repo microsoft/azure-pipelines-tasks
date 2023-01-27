@@ -3,7 +3,7 @@
     "name": "AzureCloudPowerShellDeployment",
     "friendlyName": "Azure Cloud Service deployment",
     "description": "Deploy an Azure Cloud Service",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cloud-powershell-deployment-v1",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cloud-powershell-deployment-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613748)",
     "category": "Deploy",
     "visibility": [

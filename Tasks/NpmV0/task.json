@@ -3,7 +3,7 @@
     "name": "Npm",
     "friendlyName": "npm",
     "description": "Run an npm command. Use NpmAuthenticate@0 task for latest capabilities.",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/npm-v1",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/npm-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613746)",
     "category": "Package",
     "author": "Microsoft Corporation",

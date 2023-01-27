@@ -3,7 +3,7 @@
   "name": "PythonScript",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/python-script-v0",
+  "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/python-script-v0",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [

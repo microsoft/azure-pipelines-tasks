@@ -3,7 +3,7 @@
   "name": "NuGetRestore",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/nuget-command-v2",
+  "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/nuget-command-v2",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",

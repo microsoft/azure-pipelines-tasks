@@ -3,7 +3,7 @@
     "name": "DownloadGithubNpmPackage",
     "friendlyName": "Download Github Npm Package",
     "description": "Install npm packages from GitHub.",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/npm-v1",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/npm-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613746) or [see the npm documentation](https://docs.npmjs.com/)",
     "category": "Package",
     "author": "Microsoft Corporation",

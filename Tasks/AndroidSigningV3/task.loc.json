@@ -3,7 +3,7 @@
   "name": "AndroidSigning",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/android-signing-v3",
+  "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/android-signing-v3",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [

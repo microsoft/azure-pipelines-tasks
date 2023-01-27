@@ -3,7 +3,7 @@
     "name": "JenkinsDownloadArtifacts",
     "friendlyName": "Jenkins download artifacts",
     "description": "Download artifacts produced by a Jenkins job",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/jenkins-download-artifacts-v1",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/jenkins-download-artifacts-v1",
     "helpMarkDown": "Download artifacts produced by a [Jenkins](https://jenkins.io/) job.",
     "category": "Utility",
     "visibility": [

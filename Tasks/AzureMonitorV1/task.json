@@ -4,7 +4,7 @@
     "friendlyName": "Query Azure Monitor alerts",
     "description": "Observe the configured Azure Monitor rules for active alerts",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-monitor-v1",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-monitor-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870240)",
     "category": "Utility",
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added support for query unified Azure monitor alerts.",

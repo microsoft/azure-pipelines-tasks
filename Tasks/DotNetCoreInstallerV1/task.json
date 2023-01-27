@@ -3,7 +3,7 @@
     "name": "DotNetCoreInstaller",
     "friendlyName": ".NET Core sdk/runtime installer",
     "description": "Acquire a specific version of the .NET Core SDK from the internet or local cache and add it to the PATH",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/use-dotnet-v2",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/use-dotnet-v2",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/AA4ihfi)",
     "category": "Tool",
     "runsOn": [

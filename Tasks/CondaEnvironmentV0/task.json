@@ -3,7 +3,7 @@
     "name": "CondaEnvironment",
     "friendlyName": "Conda environment",
     "description": "Create and activate a Conda environment",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/conda-environment-v0",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/conda-environment-v0",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=873466)",
     "category": "Package",
     "runsOn": [

@@ -3,7 +3,7 @@
     "name": "CocoaPods",
     "friendlyName": "CocoaPods",
     "description": "Install CocoaPods dependencies for Swift and Objective-C Cocoa projects",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/cocoa-pods-v0",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/cocoa-pods-v0",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613745)",
     "category": "Package",
     "visibility": [

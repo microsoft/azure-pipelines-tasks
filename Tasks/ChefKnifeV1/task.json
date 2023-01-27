@@ -3,7 +3,7 @@
     "name": "ChefKnife",
     "friendlyName": "Chef Knife",
     "description": "Run scripts with Knife commands on your Chef workstation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/chef-v1-knife",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/chef-v1-knife",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/chef-knife-readme)",
     "category": "Deploy",
     "visibility": [

@@ -3,7 +3,7 @@
     "name": "WindowsMachineFileCopy",
     "friendlyName": "Windows machine file copy",
     "description": "Copy files to remote Windows machines",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/windows-machine-file-copy",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/deploy/windows-machine-file-copy",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=627415)",
     "category": "Deploy",
     "visibility": [

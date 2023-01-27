@@ -4,8 +4,8 @@
     "friendlyName": "Python twine upload authenticate",
     "description": "Authenticate for uploading Python distributions using twine. Add '-r FeedName/EndpointName --config-file $(PYPIRC_PATH)' to your twine upload command. For feeds present in this organization, use the feed name as the repository (-r). Otherwise, use the endpoint name defined in the service connection.",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/twine-authenticate-v0",
-    "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/twine-authenticate-v0) or [see the Twine documentation](https://twine.readthedocs.io/)",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/twine-authenticate-v0",
+    "helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/twine-authenticate-v0) or [see the Twine documentation](https://twine.readthedocs.io/)",
     "category": "Package",
     "version": {
         "Major": 0,

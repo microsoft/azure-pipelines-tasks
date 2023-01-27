@@ -3,7 +3,7 @@
     "name": "PublishSymbols",
     "friendlyName": "Index sources and publish symbols",
     "description": "Index your source code and publish symbols to a file share or Azure Artifacts symbol server",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/publish-symbols-v2",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-symbols-v2",
     "helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task.",
     "category": "Build",
     "visibility": [

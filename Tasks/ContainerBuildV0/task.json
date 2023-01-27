@@ -3,7 +3,7 @@
     "name": "ContainerBuild",
     "friendlyName": "Container Build",
     "description": "Container Build Task",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2107300)",
     "category": "Build",
     "visibility": [

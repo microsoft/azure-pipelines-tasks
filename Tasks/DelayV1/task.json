@@ -3,7 +3,7 @@
     "name": "Delay",
     "friendlyName": "Delay",
     "description": "Delay further execution of a workflow by a fixed time",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/delay-v1",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/delay-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870239)",
     "category": "Utility",
     "visibility": [

@@ -3,7 +3,7 @@
     "name": "AzureAppServiceSettings",
     "friendlyName": "Azure App Service Settings",
     "description": "Update/Add App settings an Azure Web App for Linux or Windows",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/AA5wsgy)",
     "category": "Deploy",
     "visibility": [

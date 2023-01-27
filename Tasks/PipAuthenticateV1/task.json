@@ -4,8 +4,8 @@
     "friendlyName": "Python pip authenticate",
     "description": "Authentication task for the pip client used for installing Python distributions",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/pip-authenticate-v1",
-    "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/pip-authenticate-v1) or [see the pip documentation](https://pip.pypa.io/en/stable/reference/pip_install/)",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/pip-authenticate-v1",
+    "helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/pip-authenticate-v1) or [see the pip documentation](https://pip.pypa.io/en/stable/reference/pip_install/)",
     "category": "Package",
     "version": {
         "Major": 1,

@@ -3,7 +3,7 @@
     "name": "npmAuthenticate",
     "friendlyName": "npm authenticate (for task runners)",
     "description": "Don't use this task if you're also using the npm task. Provides npm credentials to an .npmrc file in your repository for the scope of the build. This enables npm task runners like gulp and Grunt to authenticate with private registries.",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/npm-v1-authenticate",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/npm-v1-authenticate",
     "helpMarkDown": "",
     "category": "Package",
     "author": "Microsoft Corporation",

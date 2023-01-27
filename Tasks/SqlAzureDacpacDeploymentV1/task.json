@@ -3,7 +3,7 @@
     "name": "SqlAzureDacpacDeployment",
     "friendlyName": "Azure SQL Database deployment",
     "description": "Deploy an Azure SQL Database using DACPAC or run scripts using SQLCMD",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/sql-azure-dacpac-deployment-v1",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/sql-azure-dacpac-deployment-v1",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/sqlazuredeployreadme)",
     "category": "Deploy",
     "visibility": [

@@ -3,7 +3,7 @@
     "name": "Docker",
     "friendlyName": "Docker",
     "description": "Build, tag, push, or run Docker images, or run a Docker command",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/docker-v2",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/docker-v2",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006)",
     "category": "Build",
     "visibility": [

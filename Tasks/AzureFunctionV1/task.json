@@ -4,7 +4,7 @@
     "friendlyName": "Invoke Azure Function",
     "description": "Invoke an Azure Function",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-function-v1",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-function-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870235)",
     "category": "Utility",
     "visibility": [

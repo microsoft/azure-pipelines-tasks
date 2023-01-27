@@ -3,7 +3,7 @@
   "name": "DownloadPipelineArtifact",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/download-pipeline-artifact-v0",
+  "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/download-pipeline-artifact-v0",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "author": "Microsoft Corporation",

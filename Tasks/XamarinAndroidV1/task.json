@@ -3,7 +3,7 @@
     "name": "XamarinAndroid",
     "friendlyName": "Xamarin.Android",
     "description": "Build an Android app with Xamarin",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/xamarin-android-v1",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/xamarin-android-v1",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613728) or [see the Xamarin Android documentation](https://docs.microsoft.com/xamarin/android/)",
     "category": "Build",
     "visibility": [

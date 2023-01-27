@@ -3,7 +3,7 @@
     "name": "CloudLoadTest",
     "friendlyName": "Cloud-based load test",
     "description": "Run a load test in the cloud with Azure Pipelines",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/cloud-based-load-test",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/test/cloud-based-load-test",
     "helpMarkDown": "This task triggers a cloud-based load test using Azure Pipelines. [Learn more](https://go.microsoft.com/fwlink/?linkid=546976)",
     "category": "Test",
     "visibility": [

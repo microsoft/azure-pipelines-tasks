@@ -3,7 +3,7 @@
   "name": "InstallSSHKey",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/install-ssh-key-v0",
+  "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/install-ssh-key-v0",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [

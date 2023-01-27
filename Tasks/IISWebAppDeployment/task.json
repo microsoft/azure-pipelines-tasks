@@ -3,7 +3,7 @@
     "name": "IISWebAppDeployment",
     "friendlyName": "[Deprecated] IIS Web App deployment",
     "description": "Deploy using MSDeploy, then create/update websites and app pools",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/iiswebappdeploydeprecatedreadme)",
     "category": "Deploy",
     "visibility": [

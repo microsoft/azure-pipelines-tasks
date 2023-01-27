@@ -3,7 +3,7 @@
   "name": "Go",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/go-v0",
+  "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/go-v0",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "author": "Microsoft Corporation",
   "category": "Build",

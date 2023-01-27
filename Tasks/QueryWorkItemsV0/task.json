@@ -4,7 +4,7 @@
     "friendlyName": "Query work items",
     "description": "Execute a work item query and check the number of items returned",
     "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/query-work-items-v0",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/query-work-items-v0",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870238)",
     "category": "Utility",
     "visibility": [

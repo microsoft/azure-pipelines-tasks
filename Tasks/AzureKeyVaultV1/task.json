@@ -3,7 +3,7 @@
     "name": "AzureKeyVault",
     "friendlyName": "Azure Key Vault",
     "description": "Download Azure Key Vault secrets",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-key-vault-v2",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-key-vault-v2",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848891)",
     "category": "Deploy",
     "releaseNotes": "Works with cross-platform agents (Linux, macOS, or Windows)",
