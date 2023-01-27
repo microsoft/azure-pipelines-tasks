@@ -37,9 +37,22 @@ jobs:
       inputs:
         targetType: 'inline'
         script: |
+          echo $(InstancesName)
+          $results = "$(InstancesName)".split(",")
+          foreach ($instance in $results) {
+            Write-Host "The selected Instance Name is - $($Instance)"
+          }
+      continueOnError: true
+
+            
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          echo $(tasks)
           $results = "$(tasks)".split(",")
-          foreach ($task in $results) {
-            Write-Host "The selected task Name is - $($task)"
+          foreach ($instance in $results) {
+            Write-Host "The selected Instance Name is - $($Instance)"
           }
       continueOnError: true
     
