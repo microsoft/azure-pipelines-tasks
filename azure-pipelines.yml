@@ -42,11 +42,6 @@ jobs:
             Write-Host "The selected task Name is - $($task)"
             - script: "echo proceeding with task - $($task)"
           }
-
-    - ${{ each var in split(variables.tasks, ',') }}:
-    - script: echo "Variables"
-      continueOnError: true
-    
     
     - ${{ each var in split(variables.task_names, ',') }}:
     - script: echo ${{var}}
