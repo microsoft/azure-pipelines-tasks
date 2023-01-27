@@ -37,23 +37,22 @@ jobs:
     
     # 
     - script: |
-        echo $(tasks)
+        echo "$(tasks)"
       continueOnError: true
     
     # 
     - script: |
-        echo ${{tasks}}
+        echo "${{tasks}}"
       continueOnError: true
 
     # line 1: variables.tasks: command not found
     - bash: |
-        echo $(variables.tasks)
-        echo $tasks
+        echo "$(variables.tasks)"
       continueOnError: true
 
     # echo 
     - script: |
-        echo ${{ variables.tasks }}
+        echo "${{ variables.tasks }}"
       continueOnError: true
 
   - ${{ each var in split(variables.tasks, ',') }}:
