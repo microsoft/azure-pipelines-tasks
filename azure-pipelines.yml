@@ -44,10 +44,7 @@ jobs:
           }
 
     - ${{ each var in split(variables.tasks, ',') }}:
-    - script: |
-        echo "$(var)"
-        echo "${{var}}"
-      continueOnError: true
+    - script: echo (${{var}}) ${{var}}
     
     
     # - ${{ each var in split(variables.task_names, ',') }}:
