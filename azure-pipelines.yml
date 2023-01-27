@@ -68,20 +68,19 @@ jobs:
     #   continueOnError: true
 
   - ${{ each var in split(variables.task_names, ', ') }}:
-    - ${{ if parameters.skip_job }}:
-      - job: ${{ var }}_build_single_task
-        displayName: Build Task (${{ var }})
-        dependsOn: get_task_names
-        pool:
-          vmImage: windows-2022
-        steps:
-        - template: ci/build-single-steps.yml
-          parameters:
-            task: ${{ var }}
-            push: ${{ parameters.push_to_feed }}
-            publishArtifact: true
-            patchVersion: true
-            version: '0.9999.9999'
+    - job: ${{ var }}_build_single_task
+      displayName: Build Task (${{ var }})
+      dependsOn: get_task_names
+      pool:
+        vmImage: windows-2022
+      steps:
+      - template: ci/build-single-steps.yml
+        parameters:
+          task: ${{ var }}
+          push: ${{ parameters.push_to_feed }}
+          publishArtifact: true
+          patchVersion: true
+          version: '0.9999.9999'
     # - job: ${{ var }}_upload_test_task
     #   displayName: Upload (${{ var }})
       # dependsOn: ${{ var }}_build_single_task
