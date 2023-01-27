@@ -3,7 +3,7 @@
   "name": "AzureResourceManagerTemplateDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-resource-group-deployment-v2",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "releaseNotes": "ms-resource:loc.releaseNotes",

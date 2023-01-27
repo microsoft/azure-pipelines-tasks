@@ -3,7 +3,7 @@
   "name": "UseRubyVersion",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/use-ruby-version",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/use-ruby-version-v0",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "runsOn": [

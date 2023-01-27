@@ -3,7 +3,7 @@
   "name": "ServiceFabricComposeDeploy",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/service-fabric-compose-deploy",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/service-fabric-compose-deploy-v0",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [

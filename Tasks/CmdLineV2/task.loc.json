@@ -3,7 +3,7 @@
   "name": "CmdLine",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/command-line",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/cmd-line-v2",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [

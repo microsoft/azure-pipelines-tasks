@@ -3,7 +3,7 @@
   "name": "BatchScript",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/batch-script",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/batch-script-v1",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [

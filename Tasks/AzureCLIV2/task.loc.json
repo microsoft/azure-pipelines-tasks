@@ -4,7 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "category": "Deploy",

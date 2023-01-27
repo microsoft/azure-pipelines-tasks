@@ -3,7 +3,7 @@
   "name": "AzureFileCopy",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-file-copy",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-file-copy-v5",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [

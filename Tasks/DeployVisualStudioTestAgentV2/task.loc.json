@@ -3,7 +3,7 @@
   "name": "DeployVisualStudioTestAgent",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/visual-studio-test-agent-deployment",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/deploy-visual-studio-test-agent-v2",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [

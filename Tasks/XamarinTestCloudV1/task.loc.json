@@ -3,7 +3,7 @@
   "name": "XamarinTestCloud",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/xamarin-test-cloud",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/xamarin-test-cloud-v1",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [

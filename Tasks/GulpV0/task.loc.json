@@ -3,7 +3,7 @@
   "name": "gulp",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/gulp",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/gulp-v0",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [

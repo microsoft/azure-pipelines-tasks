@@ -3,7 +3,7 @@
   "name": "JavaToolInstaller",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/java-tool-installer",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/java-tool-installer-v0",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "runsOn": [

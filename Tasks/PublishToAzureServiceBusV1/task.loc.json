@@ -4,7 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "category": "Utility",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-to-azure-service-bus",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/publish-to-azure-service-bus-v1",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "visibility": [
     "Build",

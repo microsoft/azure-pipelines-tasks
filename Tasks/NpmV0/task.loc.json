@@ -3,7 +3,7 @@
   "name": "Npm",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/npm-v0",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",

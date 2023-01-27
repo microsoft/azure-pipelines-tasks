@@ -3,7 +3,7 @@
   "name": "VisualStudioTestPlatformInstaller",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/vstest-platform-tool-installer",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/visual-studio-test-platform-installer-v1",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "runsOn": [

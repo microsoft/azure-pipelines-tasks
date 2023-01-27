@@ -3,7 +3,7 @@
   "name": "PublishTestResults",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/publish-test-results-v1",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Test",
   "visibility": [

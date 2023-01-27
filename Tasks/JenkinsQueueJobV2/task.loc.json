@@ -3,7 +3,7 @@
   "name": "JenkinsQueueJob",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/jenkins-queue-job",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/jenkins-queue-job-v2",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [

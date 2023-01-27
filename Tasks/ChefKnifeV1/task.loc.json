@@ -3,7 +3,7 @@
   "name": "ChefKnife",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/chef-knife",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/chef-v1-knife",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [

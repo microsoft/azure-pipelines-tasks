@@ -3,7 +3,7 @@
   "name": "Delay",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/delay",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/delay-v1",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [

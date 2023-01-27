@@ -3,7 +3,7 @@
   "name": "PowerShellOnTargetMachines",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/powershell-on-target-machines",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/powershell-on-target-machines-v3",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [

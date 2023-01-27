@@ -3,7 +3,7 @@
   "name": "CMake",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/cmake",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/cmake-v1",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Build",
   "visibility": [

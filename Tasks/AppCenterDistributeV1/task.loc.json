@@ -3,7 +3,7 @@
   "name": "AppCenterDistribute",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/app-center-distribute",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/app-center-distribute-v1",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "deprecated": true,
