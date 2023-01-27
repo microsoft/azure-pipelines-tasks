@@ -13,7 +13,7 @@ parameters:
   default: false
 
 variables:
-  - name: task_names
+  - name: tasks
     value: MavenV3,UseNodeV1
 
 jobs:
@@ -25,36 +25,13 @@ jobs:
     steps:
     - script: npm install @octokit/core
       displayName: 'npm install @octokit/core'
-    - script: echo "##vso[task.setvariable variable=tasks;isOutput=true]$(node ./ci/testing/extractTaskNames.js $(PAT_Github))"
+    - script: echo "##vso[task.setvariable variable=tasks]$(node ./ci/testing/extractTaskNames.js $(PAT_Github))"
       displayName: 'Extract task names'
       
     - script: |
         echo "$(tasks)"
         node ./ci/testing/useTaskNames.js $(tasks)
       displayName: 'Use "tasks" variable in next steps'
-      
-    - task: PowerShell@2
-      inputs:
-        targetType: 'inline'
-        script: |
-          echo $(InstancesName)
-          $results = "$(InstancesName)".split(",")
-          foreach ($instance in $results) {
-            Write-Host "The selected Instance Name is - $($Instance)"
-          }
-      continueOnError: true
-
-            
-    - task: PowerShell@2
-      inputs:
-        targetType: 'inline'
-        script: |
-          echo $(tasks)
-          $results = "$(tasks)".split(",")
-          foreach ($instance in $results) {
-            Write-Host "The selected Instance Name is - $($Instance)"
-          }
-      continueOnError: true
     
     # echo MavenV3,UseNodeV1
     - script: |
@@ -76,7 +53,7 @@ jobs:
         echo ${{ variables.tasks }}
       continueOnError: true
 
-  # - ${{ each var in split(variables.task_names, ',') }}:
+  - ${{ each var in split(variables.task_names, ',') }}:
   #   - job: ${{ var }}_build_single_task
   #     displayName: Build Task (${{ var }})
   #     dependsOn: get_task_names
