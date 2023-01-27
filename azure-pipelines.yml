@@ -43,11 +43,15 @@ jobs:
             - script: "echo proceeding with task - $($task)"
           }
 
-    - ${{ each var in split(${{variables.tasks}}, ',') }}:
+    - ${{ each var in split(variables.tasks, ',') }}:
     - script: |
         echo "$(var)"
         echo "${{var}}"
       continueOnError: true
+    
+    
+    # - ${{ each var in split(variables.task_names, ',') }}:
+    # - script: echo (${{var}}) ${{var}}
 
     # - job: ${{ var }}_build_single_task
     #   displayName: Build Task (${{ var }})
