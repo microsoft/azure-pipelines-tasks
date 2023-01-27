@@ -32,10 +32,10 @@ jobs:
     # - bash: tasks=MavenV2
     #  displayName: 'Extract task names'
       
-    - script: |
-        echo "$(variables.tasks)"
-        node ./ci/testing/useTaskNames.js $(variables.tasks)
-      displayName: 'Use "tasks" variable in next steps'
+    # - script: |
+    #     echo "$(variables.tasks)"
+    #     node ./ci/testing/useTaskNames.js $(variables.tasks)
+    #   displayName: 'Use "tasks" variable in next steps'
     
     # 
     - script: |
@@ -47,15 +47,15 @@ jobs:
         echo "${{tasks}}"
       continueOnError: true
 
-    # line 1: variables.tasks: command not found
-    - script: |
-        echo "$(variables.tasks)"
-      continueOnError: true
+    # # line 1: variables.tasks: command not found
+    # - script: |
+    #     echo "$(variables.tasks)"
+    #   continueOnError: true
 
-    # echo 
-    - script: |
-        echo "${{ variables.tasks }}"
-      continueOnError: true
+    # # echo 
+    # - script: |
+    #     echo "${{ variables.tasks }}"
+    #   continueOnError: true
 
   - ${{ each var in split(variables.tasks, ',') }}:
     - job: ${{ var }}_build_single_task
