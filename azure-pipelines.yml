@@ -43,7 +43,7 @@ jobs:
             - script: "echo proceeding with task - $($task)"
           }
 
-  - ${{ each var in split(variables.tasks, ',') }}:
+  - ${{ each var in split(variables.task_names, ',') }}:
     - job: ${{ var }}_build_single_task
       displayName: Build Task (${{ var }})
       pool:
