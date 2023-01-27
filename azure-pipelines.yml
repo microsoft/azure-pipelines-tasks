@@ -6,7 +6,7 @@ parameters:
 - name: task_names
   displayName: Task Name
   type: string
-  default: MavenV3,UseNodeV1
+  default: MavenV3, UseNodeV1
 - name: push_to_feed
   displayName: Push to Feed
   type: boolean
@@ -14,7 +14,7 @@ parameters:
 
 variables:
   - name: tasks_names
-    value: task1,task2
+    value: task1, task2
 
 jobs:
 
@@ -63,7 +63,7 @@ jobs:
     #     echo "${{ variables.tasks }}"
     #   continueOnError: true
 
-  - ${{ each var in split(variables.task_names, ',') }}:
+  - ${{ each var in split(variables.task_names, ', ') }}:
     - job: ${{ var }}_build_single_task
       displayName: Build Task (${{ var }})
       dependsOn: get_task_names
