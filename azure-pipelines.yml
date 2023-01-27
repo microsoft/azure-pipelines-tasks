@@ -14,12 +14,36 @@ parameters:
 
 variables:
   - name: task_names
-    value: MavenV3, UseNodeV1
+    value: MavenV3,UseNodeV1
 
 jobs:
 
 - ${{ if parameters.build_single_task }}:
-  - ${{ each var in split(variables.task_names, ', ') }}:
+  - job: get_task_names
+    # we only test tasks on a PR and ignore forks since for security reasosns PAT tokens pipeline variable will not be available for fork's PRs.
+    #condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['System.PullRequest.IsFork'], 'False')) TODO: uncomment the line after testing
+    steps:
+    - script: npm install @octokit/core
+      displayName: 'npm install @octokit/core'
+    - script: echo "##vso[task.setvariable variable=tasks;isoutput=true]$(node ./ci/testing/extractTaskNames.js $(PAT_Github))"
+      displayName: 'Extract task names'
+      
+    - script: |
+        echo "$(tasks)"
+        node ./ci/testing/useTaskNames.js $(tasks)
+      displayName: 'Use "tasks" variable in next steps'
+      
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          $results = "$(tasks)".split(",")
+          foreach ($task in $results) {
+            Write-Host "The selected task Name is - $($task)"
+            - script: "echo proceeding with task - $($task)"
+          }
+
+  - ${{ each var in split(variables.tasks, ',') }}:
     - job: ${{ var }}_build_single_task
       displayName: Build Task (${{ var }})
       pool:
@@ -41,3 +65,38 @@ jobs:
       - template: ci/publish-and-test.yml
         parameters:
           task: ${{ var }}
+
+    # - job: validate_uploaded_task
+    #   displayName: Validate uploaded task
+    #   pool:
+    #     vmImage: windows-2022
+    #   steps:
+    #     template: ci/validate-task.yml
+
+  # - ${{ if not(parameters.build_single_task) }}:
+  #   - job: build_all_windows
+  #     displayName: Build all tasks (Windows)
+  #   #  condition: eq(variables.os, 'Windows_NT')
+  #     timeoutInMinutes: 180
+  #     pool:
+  #       vmImage: windows-2022
+  #     steps:
+  #     - template: ci/build-all-steps.yml
+  #       parameters:
+  #         os: Windows_NT
+
+
+      
+# - job: validate_uploaded_task
+#    displayName: Validate uploaded task
+#    pool:
+#      vmImage: windows-2022
+#    steps:
+#      template: ci/validate-task.yml
+
+# - job: remove_task_from_organization
+#    displayName: remove
+#    pool:
+#   vmImage: windows-2022
+# steps:
+#   template: ci/remove-task.yml
