@@ -14,7 +14,7 @@ parameters:
 
 variables:
   - name: task_names
-    value: MavenV3, UseNodeV1
+    value: MavenV3,UseNodeV1
 
 jobs:
 
@@ -45,10 +45,12 @@ jobs:
 
     - ${{ each var in split(variables.tasks, ',') }}:
     - script: echo "Variables"
+      continueOnError: true
     
     
     - ${{ each var in split(variables.task_names, ',') }}:
-    - script: echo (${{var}}) ${{var}}
+    - script: echo ${{var}}
+      continueOnError: true
 
     # - job: ${{ var }}_build_single_task
     #   displayName: Build Task (${{ var }})
