@@ -20,4 +20,24 @@ jobs:
 
 - ${{ if parameters.build_single_task }}:
   - ${{ each var in split(variables.task_names, ', ') }}:
-
+    - job: ${{ var }}_build_single_task
+      displayName: Build Task (${{ var }})
+      pool:
+        vmImage: windows-2022
+      steps:
+      - template: ci/build-single-steps.yml
+        parameters:
+          task: ${{ var }}
+          push: ${{ parameters.push_to_feed }}
+          publishArtifact: true
+          patchVersion: true
+          version: '0.9999.9999'
+    - job: ${{ var }}_upload_test_task
+      displayName: Upload (${{ var }})
+      dependsOn: ${{ var }}_build_single_task
+      pool:
+        vmImage: windows-2022
+      steps:
+      - template: ci/publish-and-test.yml
+        parameters:
+          task: ${{ var }}
