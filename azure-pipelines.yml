@@ -27,9 +27,7 @@ jobs:
       displayName: 'npm install @octokit/core'
     # - script: echo "##vso[task.setvariable variable=tasks;isoutput=true]$(node ./ci/testing/extractTaskNames.js $(PAT_Github))"
     - script: |
-          echo "##vso[task.setvariable variable=tasks;]Maven2"
-          echo $(tasks)
-          echo ${{variables.tasks}}
+          echo "##vso[task.setvariable variable=tasks;isoutput=true;]Maven2"
     # - bash: tasks=MavenV2
     #  displayName: 'Extract task names'
       
@@ -38,6 +36,12 @@ jobs:
     #     node ./ci/testing/useTaskNames.js $(variables.tasks)
     #   displayName: 'Use "tasks" variable in next steps'
     
+    - ${{ each var in split(variables.tasks, ',') }}:
+      script: |
+        echo "Test"
+      continueOnError: true
+
+
     # 
     - script: |
         echo $(tasks)
