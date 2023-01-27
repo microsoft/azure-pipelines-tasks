@@ -44,7 +44,7 @@ jobs:
           }
 
     - ${{ each var in split(variables.tasks, ',') }}:
-    - script: echo (${{var}}) ${{var}}
+    - script: echo "Variables"
     
     
     # - ${{ each var in split(variables.task_names, ',') }}:
