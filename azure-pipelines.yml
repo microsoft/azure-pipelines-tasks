@@ -44,23 +44,19 @@ jobs:
       continueOnError: true
     
     - script: |
-        echo ${{ variables.task_names }}
+        echo ${{ variables.task_names }} // echo MavenV3,UseNodeV1
       continueOnError: true
 
     - script: |
-        echo $(variables.task_names)
+        echo $(variables.task_names) // line 1: variables.task_names: command not found
       continueOnError: true        
 
     - script: |
-        echo $(variables.tasks)
+        echo $(variables.tasks) // line 1: variables.tasks: command not found
       continueOnError: true
 
     - script: |
-        echo ${{ variables.tasks }}
-      continueOnError: true
-
-    - script: |
-        echo $(variables)
+        echo ${{ variables.tasks }}  // echo 
       continueOnError: true
 
   # - ${{ each var in split(variables.task_names, ',') }}:
