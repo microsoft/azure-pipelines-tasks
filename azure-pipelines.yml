@@ -34,7 +34,7 @@ jobs:
       displayName: 'Use "tasks" variable in next steps'
     
     - ${{ each var in split(variables.task_names, ', ') }}:
-    - script: echo ${{var}}
+    - script: echo "Variable"
       continueOnError: true
 
     # - job: ${{ var }}_build_single_task
