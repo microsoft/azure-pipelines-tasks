@@ -12,10 +12,6 @@ parameters:
   type: boolean
   default: false
 
-variables:
-  - name: tasks
-    value: MavenV3,UseNodeV1,MavenV2
-
 jobs:
 
 - ${{ if parameters.build_single_task }}:
