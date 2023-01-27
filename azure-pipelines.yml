@@ -14,7 +14,7 @@ parameters:
 
 variables:
   - name: task_names
-    value: MavenV3,UseNodeV1
+    value: MavenV3, UseNodeV1
 
 jobs:
 
@@ -32,18 +32,8 @@ jobs:
         echo "$(tasks)"
         node ./ci/testing/useTaskNames.js $(tasks)
       displayName: 'Use "tasks" variable in next steps'
-      
-    - task: PowerShell@2
-      inputs:
-        targetType: 'inline'
-        script: |
-          $results = "$(tasks)".split(",")
-          foreach ($task in $results) {
-            Write-Host "The selected task Name is - $($task)"
-            - script: "echo proceeding with task - $($task)"
-          }
     
-    - ${{ each var in split(variables.task_names, ',') }}:
+    - ${{ each var in split(variables.task_names, ', ') }}:
     - script: echo ${{var}}
       continueOnError: true
 
