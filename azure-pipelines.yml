@@ -43,20 +43,24 @@ jobs:
           }
       continueOnError: true
     
+    # echo MavenV3,UseNodeV1
     - script: |
-        echo ${{ variables.task_names }} // echo MavenV3,UseNodeV1
+        echo ${{ variables.task_names }}
       continueOnError: true
 
+    # line 1: variables.task_names: command not found
     - script: |
-        echo $(variables.task_names) // line 1: variables.task_names: command not found
+        echo $(variables.task_names) 
       continueOnError: true        
 
+    # line 1: variables.tasks: command not found
     - script: |
-        echo $(variables.tasks) // line 1: variables.tasks: command not found
+        echo $(variables.tasks)
       continueOnError: true
 
+    # echo 
     - script: |
-        echo ${{ variables.tasks }}  // echo 
+        echo ${{ variables.tasks }}
       continueOnError: true
 
   # - ${{ each var in split(variables.task_names, ',') }}:
