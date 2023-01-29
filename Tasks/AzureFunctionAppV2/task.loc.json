@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 208,
+    "Minor": 216,
     "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -27,7 +27,7 @@
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "appType != functionAppLinux && appType != \"\" && package NotEndsWith .war && Package NotEndsWith .jar"
+      "visibleRule": "appType != \"\" && package NotEndsWith .war && Package NotEndsWith .jar"
     },
     {
       "name": "ApplicationAndConfigurationSettings",
@@ -53,7 +53,8 @@
       "options": {
         "functionApp": "Function App on Windows",
         "functionAppLinux": "Function App on Linux"
-      }
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.appType"
     },
     {
       "name": "appName",
@@ -120,6 +121,7 @@
         "DOTNET|2.2": "DOTNET|2.2 (functionapp v2)",
         "DOTNET|3.1": "DOTNET|3.1 (functionapp v3)",
         "DOTNET|6.0": "DOTNET|6.0 (functionapp v4)",
+        "DOTNET-ISOLATED|7.0": "DOTNET-ISOLATED|7.0 (functionapp v4)",
         "JAVA|8": "JAVA|8 (functionapp v2/v3/v4)",
         "JAVA|11": "JAVA|11  (functionapp v3/v4)",
         "NODE|8": "NODE|8 (functionapp v2)",
@@ -352,6 +354,7 @@
     "FailedToSyncTriggers": "ms-resource:loc.messages.FailedToSyncTriggers",
     "SyncingFunctionTriggers": "ms-resource:loc.messages.SyncingFunctionTriggers",
     "SyncFunctionTriggersSuccess": "ms-resource:loc.messages.SyncFunctionTriggersSuccess",
-    "UpdatedRunFromPackageSettings": "ms-resource:loc.messages.UpdatedRunFromPackageSettings"
+    "UpdatedRunFromPackageSettings": "ms-resource:loc.messages.UpdatedRunFromPackageSettings",
+    "DeploymentTypeNotSupportedForLinuxConsumption": "ms-resource:loc.messages.DeploymentTypeNotSupportedForLinuxConsumption"
   }
 }

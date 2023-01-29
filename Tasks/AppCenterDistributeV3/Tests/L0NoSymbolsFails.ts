@@ -1,6 +1,6 @@
 
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import azureBlobUploadHelper = require('../azure-blob-upload-helper');
 import { basicSetup, mockAzure } from './UnitTests/TestHelpers';
@@ -44,4 +44,4 @@ tmr.setAnswers(a);
 
 tmr.run();
 
-mockery.deregisterMock('azure-blob-upload-helper', azureBlobUploadHelper);
+mockery.deregisterMock('azure-blob-upload-helper');

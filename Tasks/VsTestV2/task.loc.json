@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 205,
+    "Minor": 215,
     "Patch": 0
   },
   "demands": [
@@ -546,7 +546,10 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
+      "target": "runvstest.js"
+    },
+    "Node16": {
       "target": "runvstest.js"
     }
   },

@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 208,
-    "Patch": 0
+    "Minor": 217,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -77,7 +77,7 @@
       "options": {
         "app": "Web App",
         "applinux": "Linux Web App",
-        "functionapp": "Function App",
+        "functionapp": "Function App (Not Recommended, Use Azure Functions Task)",
         "api": "API App",
         "mobileapp": "Mobile App"
       },

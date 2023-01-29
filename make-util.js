@@ -331,6 +331,9 @@ exports.ensureTool = ensureTool;
 
 var installNode = function (nodeVersion) {
     switch (nodeVersion || '') {
+        case '16':
+            nodeVersion = 'v16.17.1';
+            break;
         case '14':
             nodeVersion = 'v14.10.1';
             break;
@@ -444,7 +447,11 @@ var downloadArchive = function (url, omitExtensionCheck) {
 
     // skip if already downloaded and extracted
     var scrubbedUrl = url.replace(/[/\:?]/g, '_');
-    var targetPath = path.join(downloadPath, 'archive', scrubbedUrl);
+
+    var crypto = require('crypto');
+    var newScrubbedUrl = crypto.createHash('md5').update(scrubbedUrl).digest('hex');
+
+    var targetPath = path.join(downloadPath, 'archive', newScrubbedUrl);
     var marker = targetPath + '.completed';
     if (!test('-f', marker)) {
         // download the archive
@@ -621,6 +628,10 @@ var addPath = function (directory) {
 
     var existing = process.env['PATH'];
     if (existing) {
+        // move directory to top
+        if (existing.indexOf(directory) !== -1) {
+            existing = existing.replace(directory + separator, '');
+        }
         process.env['PATH'] = directory + separator + existing;
     }
     else {
@@ -1672,20 +1683,17 @@ var getTaskNodeVersion = function(buildPath, taskName) {
     var taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
     var taskJson = JSON.parse(taskJsonContents);
     var execution = taskJson['execution'] || taskJson['prejobexecution'];
+    const nodes = [];
     for (var key of Object.keys(execution)) {
-        if (key.toLowerCase() == 'node14') {
-            // Prefer node 14 and return immediately.
-            return 14;
-        } else if (key.toLowerCase() == 'node10') {
-            // Prefer node 10 and return immediately.
-            return 10;
-        } else if (key.toLowerCase() == 'node') {
-            return 6;
-        }
+        const executor = key.toLocaleLowerCase();
+        if (!executor.startsWith('node')) continue;
+        
+        const version = executor.replace('node', '');
+        nodes.push(parseInt(version) || 6);
     }
 
     console.warn('Unable to determine execution type from task.json, defaulting to use Node 10');
-    return 10;
+    return nodes.length ? nodes : [10];
 }
 exports.getTaskNodeVersion = getTaskNodeVersion;
 
