@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Authentification NuGet",
   "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://aka.ms/NuGetAuthenticateTask)",
-  "loc.description": "Cette version de la tâche est déconseillée. Utilisez NuGetAuthenticateV1 à la place. Configurez les outils NuGet pour s’authentifier auprès de Azure Artifacts et d’autres référentiels NuGet. Nécessite NuGet >= 4.8.5385, dotnet >= 2.1.400 ou MSBuild >= 15.8.166.59604.",
+  "loc.description": "Configurez les outils NuGet pour l'authentification auprès d'Azure Artifacts et d'autres dépôts NuGet. Nécessite NuGet >= 4.8.5385, dotnet >= 6 ou MSBuild >= 15.8.166.59604",
   "loc.instanceNameFormat": "Authentification NuGet",
   "loc.input.label.nuGetServiceConnections": "Informations d'identification de connexion de service pour les flux situés en dehors de cette organisation",
   "loc.input.help.nuGetServiceConnections": "Liste d'éléments séparés par des virgules correspondant à des noms de connexions de service NuGet pour les flux situés en dehors de cette organisation/collection. Pour les flux présents dans cette organisation/collection, n'indiquez aucune valeur. Les informations d'identification de la build sont utilisées automatiquement.",
