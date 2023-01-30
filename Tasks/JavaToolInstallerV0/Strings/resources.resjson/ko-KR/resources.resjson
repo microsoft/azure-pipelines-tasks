@@ -56,6 +56,7 @@
   "loc.messages.JavaNotPreinstalled": "Java %s이(가) 이 에이전트에 사전 설치되지 않음",
   "loc.messages.UsePreinstalledJava": "%s에서 사전 설치된 JDK 사용",
   "loc.messages.WrongArchiveStructure": "JDK 파일이 잘못되었습니다. JDK 파일 안에 'bin'이 포함된 루트 폴더가 하나만 포함되어 있는지 확인하세요.",
+  "loc.messages.WrongArchiveFile": "보관 파일이 잘못되었습니다. JDK를 포함하는 폴더가 없습니다.",
   "loc.messages.ShareAccessError": "네트워크 공유 리소스를 사용할 수 없음: (%s)",
   "loc.messages.UnsupportedDMGStructure": "JDK 파일이 지원되지 않습니다. JDK 파일 안에 정확하게 폴더가 하나 포함되어 있는지 확인하세요.",
   "loc.messages.NoPKGFile": "PKG 파일을 찾을 수 없습니다.",

@@ -56,6 +56,7 @@
   "loc.messages.JavaNotPreinstalled": "Java %s no está preinstalado en este agente.",
   "loc.messages.UsePreinstalledJava": "Usar JDK preinstalado desde %s",
   "loc.messages.WrongArchiveStructure": "El archivo JDK no es válido. Compruebe si dicho archivo contiene solo una carpeta raíz con \"bin\" incluido.",
+  "loc.messages.WrongArchiveFile": "El archivo de almacenamiento es incorrecto. No hay ninguna carpeta que contenga JDK",
   "loc.messages.ShareAccessError": "Recurso compartido de red no disponible: (%s)",
   "loc.messages.UnsupportedDMGStructure": "No se admite el archivo JDK. Compruebe si dicho archivo contiene una carpeta exactamente.",
   "loc.messages.NoPKGFile": "No se encontró el archivo .pkg.",
