@@ -1,0 +1,6 @@
+parameters:
+- name: tasks
+  displayName: Build Single Task
+  type: string
+  default: UseNodeV1, MavenV3
+
