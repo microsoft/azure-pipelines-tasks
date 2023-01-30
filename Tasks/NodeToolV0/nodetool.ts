@@ -19,7 +19,7 @@ async function run() {
         let nodejsMirror = taskLib.getInput('nodejsMirror', false);
         let versionSpec = getNodeVersion(versionSource, versionSpecInput, versionFilePathInput);
         let checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
-        await getNode(versionSpec, checkLatest, nodejsMirror);
+        await getNode(versionSpec, checkLatest, nodejsMirror.replace(/\/$/, ''));
         telemetry.emitTelemetry('TaskHub', 'NodeToolV0', { versionSource, versionSpec, checkLatest, force32bit });
     }
     catch (error) {
