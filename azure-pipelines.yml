@@ -57,7 +57,7 @@ jobs:
       continueOnError: true
 
 
-  - ${{ each var in split($[variables.tasks_names], ', ') }}:
+  - ${{ each var in split(variables.task_names, ', ') }}:
     - job: ${{ var }}_build_single_task
       displayName: Build Task (${{ var }})
       dependsOn: get_task_names
