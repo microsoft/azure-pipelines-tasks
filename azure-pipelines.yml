@@ -48,11 +48,11 @@ jobs:
     #   continueOnError: true
 
 
-    - script: |
+    - bash: |
         echo $(tasks)
       continueOnError: true
     
-    - script: |
+    - bash: |
         echo ${{variables.tasks}}
       continueOnError: true
 
