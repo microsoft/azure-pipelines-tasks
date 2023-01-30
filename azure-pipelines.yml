@@ -49,12 +49,9 @@ jobs:
 
 
     - bash: |
-        echo $[variables.tasks_names]
+        echo $(task_names)
       continueOnError: true
     
-    - bash: |
-        echo ${{variables.tasks}}
-      continueOnError: true
 
 
   - ${{ each var in split(variables.task_names, ', ') }}:
