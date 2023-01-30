@@ -64,7 +64,7 @@ jobs:
       pool:
         vmImage: windows-2022
       steps:
-        script: echo ${{ var }}
+        - script: echo ${{ var }}
       # - template: ci/build-single-steps.yml
       #   parameters:
       #     task: ${{ var }}
