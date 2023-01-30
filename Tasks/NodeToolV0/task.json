@@ -24,6 +24,13 @@
     "demands": [],
     "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Use Node $(versionSpec)",
+    "groups": [
+      {
+        "name": "advanced",
+        "displayName": "Advanced",
+        "isExpanded": false
+      }
+    ],
     "inputs": [
         {
             "name": "versionSource",
@@ -73,6 +80,7 @@
           "label": "Set source for Node.js binaries",
           "defaultValue": "https://nodejs.org/dist",
           "required": false,
+          "groupName": "advanced",
           "helpMarkDown": "Use an alternative installation mirror when sourcing the Node.js binaries."
         }
     ],
