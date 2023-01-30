@@ -7,17 +7,13 @@ parameters:
   displayName: Skip this job for faster testing
   type: boolean
   default: false
-- name: task_names
-  displayName: Task Name
-  type: string
-  default: MavenV3, UseNodeV1
 - name: push_to_feed
   displayName: Push to Feed
   type: boolean
   default: false
 
 variables:
-  - name: tasks_names
+  - name: tasksnames
     value: task1, task2
 
 jobs:
@@ -30,7 +26,7 @@ jobs:
     - script: npm install @octokit/core
       displayName: 'npm install @octokit/core'
     - script: |
-        echo "##vso[task.setvariable variable=tasks_names;isoutput=true]$(node ./ci/testing/extractTaskNames.js $(PAT_Github))"
+        echo "##vso[task.setvariable variable=tasksnames;isoutput=true]$(node ./ci/testing/extractTaskNames.js $(PAT_Github))"
     #       echo "##vso[task.setvariable variable=tasks;isoutput=true;]task1,task2,task3"
       displayName: 'Extract task names'
 
@@ -49,12 +45,12 @@ jobs:
 
 
     - bash: |
-        echo $(task_names)
+        echo $(tasksnames)
       continueOnError: true
     
 
 
-  - ${{ each var in split(variables.task_names, ', ') }}:
+  - ${{ each var in split(variables.tasksnames, ', ') }}:
     - job: ${{ var }}_build_single_task
       displayName: Build Task (${{ var }})
       dependsOn: get_task_names
