@@ -70,7 +70,7 @@
         {
           "name": "nodejsMirror",
           "type": "string",
-          "label": "The server from which the Node.js binaries are installed",
+          "label": "Set source for Node.js binaries",
           "defaultValue": "https://nodejs.org/dist",
           "required": false,
           "helpMarkDown": "Use an alternative installation mirror when sourcing the Node.js binaries."
