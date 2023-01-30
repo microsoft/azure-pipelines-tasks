@@ -30,7 +30,7 @@
             "name": "cargoServiceConnections",
             "label": "Credentials for registries outside this organization/collection",
             "helpMarkDown": "Credentials to use for external registries located in the project's config.toml. For registries in this organization/collection, leave this blank; the build’s credentials are used automatically.",
-            "type": "connectedService:externalcargoregistry",
+            "type": "connectedService:externalcargorepository",
             "properties": {
                 "MultiSelectFlatList": "true"
             }

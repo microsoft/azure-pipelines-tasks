@@ -30,7 +30,7 @@
       "name": "cargoServiceConnections",
       "label": "ms-resource:loc.input.label.cargoServiceConnections",
       "helpMarkDown": "ms-resource:loc.input.help.cargoServiceConnections",
-      "type": "connectedService:externalcargoregistry",
+      "type": "connectedService:externalcargorepository",
       "properties": {
         "MultiSelectFlatList": "true"
       }
