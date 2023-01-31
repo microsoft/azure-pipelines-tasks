@@ -38,8 +38,9 @@ async function start(tasks) {
 
 function getPipelines() {
   return axios.get(`https://dev.azure.com/${organization}/${project}/_apis/pipelines?api-version=7.0`, { 
-    headers: {
-       Authorization: `Basic ${AUTH_TOKEN}`
+    auth: {
+       username: 'Basic',
+       password: AUTH_TOKEN
     }
   });
 }
