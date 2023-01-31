@@ -52,7 +52,6 @@ var binPath = path.join(__dirname, 'node_modules', '.bin');
 var makeOptionsPath = path.join(__dirname, 'make-options.json');
 var gendocsPath = path.join(__dirname, '_gendocs');
 var packagePath = path.join(__dirname, '_package');
-var coverageTasksPath = path.join(buildPath, 'coverage');
 
 var CLI = {};
 
@@ -337,7 +336,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
     console.log('> copying ps test lib resources');
     mkdir('-p', path.join(buildTestsPath, 'lib'));
     matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(testsPath, 'lib'), path.join(buildTestsPath, 'lib'));
-    cd('..');
+
     var suiteType = argv.suite || 'L0';
     function runTaskTests(taskName) {
         banner('Testing: ' + taskName);
@@ -360,21 +359,15 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
             return;
         }
 
-        nodeVersions.forEach(function (nodeVersion, index) {
+        nodeVersions.forEach(function (nodeVersion) {
             try {
 
                 nodeVersion = String(nodeVersion);
                 banner('Run Mocha Suits for node ' + nodeVersion);
                 // setup the version of node to run the tests
                 util.installNode(nodeVersion);
-
-                if (nodeVersions.length - 1 === index) {
-                    run('nyc --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
-                    renameCodeCoverageOutput(coverageTasksPath, taskName);
-                }
-                else {
-                    run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
-                }
+        
+                run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
             }  catch (e) {
                 console.error(e);
                 process.exit(1);
@@ -392,16 +385,6 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
                 runTaskTests(taskName);
             }
         });
-
-        try {
-            util.rm(path.join(coverageTasksPath, '*coverage-summary.json'));
-            util.run(`nyc merge ${coverageTasksPath} ${path.join(coverageTasksPath, 'mergedcoverage.json')}`, true);
-            util.rm(path.join(coverageTasksPath, '*-coverage.json'));
-            util.run(`nyc report -t ${coverageTasksPath} --report-dir ${coverageTasksPath} --reporter=cobertura`, true);
-            util.rm(path.join(coverageTasksPath, 'mergedcoverage.json'));
-        } catch (e) {
-            console.log('Error while generating coverage report')
-        }
 
         banner('Running common library tests');
         var commonLibPattern = path.join(buildTasksPath, 'Common', '*', 'Tests', suiteType + '.js');
@@ -428,22 +411,6 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
         run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
     } else {
         console.warn("No common tests found");
-    }
-}
-
-function renameCodeCoverageOutput(coveragePath, taskName) {
-    if (!coveragePath) return;
-    try {
-        if (fs.existsSync(coveragePath)) {
-            if (fs.existsSync(path.join(coveragePath, "coverage-final.json"))) {
-                fs.renameSync(path.join(coveragePath, "coverage-final.json"), path.join(coveragePath, `${taskName}-coverage.json`));
-            }
-            if (fs.existsSync(path.join(coveragePath, "coverage-summary.json"))) {
-                fs.renameSync(path.join(coveragePath, "coverage-summary.json"), path.join(coveragePath, `${taskName}-coverage-summary.json`));
-            }
-        }
-    } catch (e) {
-        console.log(e)
     }
 }
 
