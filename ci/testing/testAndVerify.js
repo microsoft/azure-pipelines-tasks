@@ -2,12 +2,12 @@ const axios = require('axios');
 const hostname = 'https://dev.azure.com';
 const organization = 'canary2-poc';
 const project = 'tasks-canary';
-const apiVersion = 'a7';
+const apiVersion = '7';
 const url = 'https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7';
 
 const AUTH_TOKEN = process.argv[2];
 const tasks = process.argv[3];
-axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+axios.defaults.headers.common['Authorization'] = `Basic ${AUTH_TOKEN}`;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 if (tasks) {
