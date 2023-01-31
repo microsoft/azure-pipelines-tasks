@@ -28,7 +28,7 @@ jobs:
     - script: npm install @octokit/core
       displayName: 'npm install @octokit/core'
     - bash: |
-        TASKS=`node ./ci/testing/extractTaskNames.js $(PAT_Github) | tr -d '\r'`
+        TASKS=`node ./ci/testing/extractTaskNames.js $(PAT_Github) | tr -d '\n\r' | tr -d '\r'`
         echo $TASKS
         OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7" -X POST -d "{\"templateParameters\": { \"tasks\": \"$TASKS\"}}"`
         echo $OUTPUT
