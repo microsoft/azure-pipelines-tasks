@@ -1,12 +1,29 @@
-// const axios = require('axios');
-// const url = 'https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7';
+const axios = require('axios');
+console.log(axios.isCancel('something'));
 
-// const ADOToken = process.argv[2];
-// const tasks = process.argv[3];
+const url = 'https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7';
 
-console.log(process.argv);
+const ADOToken = process.argv[2];
+const tasks = process.argv[3];
 
-// console.log(axios.isCancel('something'));
+if (tasks) {
+  const taskNames = tasks.split(',');
+
+  taskNames.forEach(taskName => {
+    const pipeline = triggerTestPipeline(taskName);
+    return observeTestPipeline(taskName, pipeline);
+  })
+}
+
+
+function triggerTestPipeline(taskName) {
+  console.log(`Trigger test pipeline for ${taskName} task`);
+}
+
+function observeTestPipeline(taskName, pipeline) {
+  console.log(`Observe test pipeline for ${taskName} task`);
+}
+
 
 
 

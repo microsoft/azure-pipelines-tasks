@@ -26,7 +26,7 @@ jobs:
     #condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['System.PullRequest.IsFork'], 'False')) TODO: uncomment the line after testing
     steps:
     - script: npm install @octokit/core axios
-      displayName: 'npm install @octokit/core'
+      displayName: 'npm install @octokit/core axios'
     
     - script: |
         echo "##vso[task.setvariable variable=tasks]$(node ./ci/testing/extractTaskNames.js $(PAT_Github))"
