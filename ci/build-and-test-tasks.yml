@@ -4,3 +4,34 @@ parameters:
   type: string
   default: UseNodeV1, MavenV3
 
+jobs:
+  - ${{ each var in split(variables.tasksnames, ', ') }}:
+    - job: ${{ var }}_build_single_task
+      displayName: Build Task (${{ var }})
+      pool:
+        vmImage: windows-2022
+      steps:
+      - template: ci/build-single-steps.yml
+        parameters:
+          task: ${{ var }}
+          push: false
+          publishArtifact: true
+          patchVersion: true
+          version: '0.9999.9999'
+
+    - job: ${{ var }}_upload_test_task
+      displayName: Upload (${{ var }})
+      dependsOn: ${{ var }}_build_single_task
+      pool:
+        vmImage: windows-2022
+      steps:
+      - template: ci/publish-and-test.yml
+        parameters:
+          task: ${{ var }}
+
+    - job: validate_uploaded_task
+      displayName: Validate uploaded task
+      pool:
+        vmImage: windows-2022
+      steps:
+        template: ci/validate-task.yml
