@@ -1,4 +1,8 @@
 const axios = require('axios');
+const hostname = 'https://dev.azure.com';
+const organization = 'canary2-poc';
+const project = 'tasks-canary';
+const apiVersion = 'a7';
 const url = 'https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7';
 
 const AUTH_TOKEN = process.argv[2];
@@ -7,19 +11,42 @@ axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 if (tasks) {
+  start(tasks);
+} else {
+  console.log('Skip test verification');
+}
+
+async function start(tasks) {
   const taskNames = tasks.split(',');
 
+  const pipelines = await getPipelines();
+  console.log(pipelines);
+
   taskNames.forEach(taskName => {
-    const pipeline = triggerTestPipeline(taskName);
-    return observeTestPipeline(taskName, pipeline);
+    return triggerTestPipeline(taskName).then(res => {
+      console.log(res);
+
+      return observeTestPipeline(taskName, res);
+    })
+    .catch(function (error) {
+      // handle error
+      console.log(error);
+    })
+    .finally(function () {
+      // always executed
+    });;
   })
+}
+
+function getPipelines() {
+  return axios.get(`https://dev.azure.com/${organization}/${project}/_apis/pipelines?api-version=7.0`)
 }
 
 
 function triggerTestPipeline(taskName) {
   console.log(`Trigger test pipeline for ${taskName} task`);
 
-  axios.post(url, {
+  return axios.post(url, {
     templateParameters: {}
   },{ 
     headers: {
@@ -27,17 +54,6 @@ function triggerTestPipeline(taskName) {
       'Accept': 'application/json'
     }
   })
-  .then(function (response) {
-    // handle success
-    console.log(response);
-  })
-  .catch(function (error) {
-    // handle error
-    console.log(error);
-  })
-  .finally(function () {
-    // always executed
-  });
 }
 
 function observeTestPipeline(taskName, pipeline) {
