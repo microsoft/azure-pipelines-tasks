@@ -7,7 +7,7 @@ const url = 'https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/ru
 
 const AUTH_TOKEN = process.argv[2];
 const tasks = process.argv[3];
-axios.defaults.headers.common['Authorization'] = `Basic ${Buffer.from(AUTH_TOKEN, 'base64')}`;
+axios.defaults.headers.common['Authorization'] = `Basic ${btoa(AUTH_TOKEN)}`;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 if (tasks) {
