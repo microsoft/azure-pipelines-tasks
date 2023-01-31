@@ -30,7 +30,7 @@ jobs:
     
     - script: |
         echo "##vso[task.setvariable variable=tasks]$(node ./ci/testing/extractTaskNames.js $(PAT_Github))"
-      displayName: 'Set tasks'
+      displayName: 'Exract tasks'
 
     - script: |
         echo "$(tasks)"

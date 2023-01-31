@@ -1,8 +1,8 @@
-const axios = require('axios');
-const url = 'https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7';
+// const axios = require('axios');
+// const url = 'https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7';
 
-const ADOToken = process.argv[2];
-const tasks = process.argv[3];
+// const ADOToken = process.argv[2];
+// const tasks = process.argv[3];
 
 console.log(process.argv);
 
