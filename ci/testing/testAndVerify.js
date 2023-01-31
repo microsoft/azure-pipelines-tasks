@@ -20,20 +20,21 @@ async function start(tasks) {
   const pipelines = await getPipelines();
   console.log(pipelines);
 
-  // taskNames.forEach(taskName => {
-  //   return triggerTestPipeline(taskName).then(res => {
-  //     console.log(res);
+  const map = mapPipelines(pipelines);
+  const promises = tasks.map(async task => {
+    const pipelineBuild = await runTestPipeline(map[task]);    
+    await verifyTestRunResults(pipelineBuild);    
+  });
+}
 
-  //     return observeTestPipeline(taskName, res);
-  //   })
-  //   .catch(function (error) {
-  //     // handle error
-  //     console.log(error);
-  //   })
-  //   .finally(function () {
-  //     // always executed
-  //   });;
-  // })
+function mapPipelines(pipelines) { 
+  const map = {};
+
+  pipelines.forEach(data => {
+    map[data.name] = data;
+  })
+
+  return map;
 }
 
 function getPipelines() {
@@ -42,17 +43,18 @@ function getPipelines() {
        username: 'Basic',
        password: AUTH_TOKEN
     }
-  }).then(res => res.data)
+  })
+  .then(res => res.data)
   .catch(err => {
     console.error(err);
     throw err;
   });
 }
 
-function triggerTestPipeline(taskName) {
+function runTestPipeline(data) {
   console.log(`Trigger test pipeline for ${taskName} task`);
 
-  return axios.post(url, {
+  return axios.post(`https://dev.azure.com/${organization}/${project}/_apis/pipelines${data.id}/runs?api-version=7.0`, {
     templateParameters: {}
   },{ 
     headers: {
@@ -62,7 +64,7 @@ function triggerTestPipeline(taskName) {
   })
 }
 
-function observeTestPipeline(taskName, pipeline) {
+function verifyTestRunResults(taskName, pipeline) {
   console.log(`Observe test pipeline for ${taskName} task`);
 }
 
