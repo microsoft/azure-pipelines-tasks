@@ -36,6 +36,11 @@ jobs:
         echo "$(tasks)"
         node ./ci/testing/testAndVerify.js $(ADOToken) $(tasks)
       displayName: 'Trigger testing pipelines for each task and verify results'
+    
+    - script: |
+        echo "$(tasks)"
+        curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7" -X POST -d "{}"
+      displayName: 'Manually run pipeline 5'
 
     # - bash: |
     #     TASKS=`node ./ci/testing/extractTaskNames.js $(PAT_Github) | xargs`
