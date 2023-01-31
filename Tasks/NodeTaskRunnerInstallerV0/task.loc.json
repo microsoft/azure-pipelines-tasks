@@ -56,6 +56,7 @@
     "NodeVersionNotFound": "ms-resource:loc.messages.NodeVersionNotFound",
     "UnexpectedOS": "ms-resource:loc.messages.UnexpectedOS",
     "SameRunnersError": "ms-resource:loc.messages.SameRunnersError",
-    "NotAllowedNodeVersion": "ms-resource:loc.messages.NotAllowedNodeVersion"
+    "NotAllowedNodeVersion": "ms-resource:loc.messages.NotAllowedNodeVersion",
+    "AGENT_HOMEDIRECTORY_NotAvailable": "ms-resource:loc.messages.AGENT_HOMEDIRECTORY_NotAvailable"
   }
 }
