@@ -2,12 +2,15 @@
   "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
   "id": "31C75B2B-BCDF-4706-8D7C-4DA6A1959BC2",
   "name": "NodeTaskRunnerInstaller",
-  "friendlyName": "Install Node.js to run tasks",
-  "description": "TDB",
+  "friendlyName": "Node.js tasks runner installer",
+  "description": "Install specific Node.js version to run node tasks",
   "helpUrl": "TDB",
   "helpMarkDown": "TDB",
   "category": "Utility",
-  "runsOn": ["Agent", "DeploymentGroup"],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
@@ -21,7 +24,10 @@
   "inputs": [
     {
       "name": "runnerVersion",
-      "aliases": ["nodeVersion", "installVersion"],
+      "aliases": [
+        "nodeVersion",
+        "installVersion"
+      ],
       "type": "pickList",
       "label": "Version of runner to install",
       "required": true,

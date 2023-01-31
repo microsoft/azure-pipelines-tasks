@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Install Node.js to run tasks",
+  "loc.friendlyName": "Node.js tasks runner installer",
   "loc.helpMarkDown": "TDB",
-  "loc.description": "TDB",
+  "loc.description": "Install specific Node.js version to run node tasks",
   "loc.instanceNameFormat": "Install node runner $(runnerVersion)",
   "loc.input.label.runnerVersion": "Version of runner to install",
   "loc.input.help.runnerVersion": "Select the node version to install.",
