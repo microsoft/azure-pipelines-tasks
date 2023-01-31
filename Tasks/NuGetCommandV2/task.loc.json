@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 211,
+    "Minor": 216,
     "Patch": 0
   },
   "runsOn": [
@@ -475,6 +475,10 @@
     "Node10": {
       "target": "nugetcommandmain.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "nugetcommandmain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -536,6 +540,8 @@
     "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion",
-    "Error_NugetFailedWithCodeAndErr": "ms-resource:loc.messages.Error_NugetFailedWithCodeAndErr"
+    "Error_NugetFailedWithCodeAndErr": "ms-resource:loc.messages.Error_NugetFailedWithCodeAndErr",
+    "Warning_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Warning_IncludeNuGetOrgEnabled",
+    "Error_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Error_IncludeNuGetOrgEnabled"
   }
 }

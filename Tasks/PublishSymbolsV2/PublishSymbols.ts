@@ -2,8 +2,8 @@ import * as fs from "fs";
 import * as path from "path";
 import * as uuidV4 from 'uuid/v4';
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
-import * as clientToolUtils from "azure-pipelines-tasks-packaging-common-v3/universal/ClientToolUtilities";
-import * as clientToolRunner from "azure-pipelines-tasks-packaging-common-v3/universal/ClientToolRunner";
+import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
+import * as clientToolRunner from "azure-pipelines-tasks-packaging-common/universal/ClientToolRunner";
 import * as tl from "azure-pipelines-task-lib/task";
 import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
 

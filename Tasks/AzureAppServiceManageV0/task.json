@@ -18,8 +18,8 @@
     "demands": [],
     "version": {
         "Major": 0,
-        "Minor": 210,
-        "Patch": 0
+        "Minor": 217,
+        "Patch": 2
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
