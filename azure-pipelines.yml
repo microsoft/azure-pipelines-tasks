@@ -28,8 +28,13 @@ jobs:
     - script: npm install @octokit/core
       displayName: 'npm install @octokit/core'
     - script: |
-        echo "$(variables.tasks)"
-        node ./ci/testing/testAndVerify.js $(variables.tasks)
+        echo "##vso[task.setvariable variable=tasks]$(node ./ci/testing/extractTaskNames.js $(PAT_Github))"
+      displayName: 'Set tasks'
+      
+    - script: |
+        echo "$(tasks)"
+        node ./ci/testing/useTaskNames.js $(tasks)
+      displayName: 'Use "tasks" variable in next steps'
 
     - bash: |
         TASKS=`node ./ci/testing/extractTaskNames.js $(PAT_Github) | xargs`
