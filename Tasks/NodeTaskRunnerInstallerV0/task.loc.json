@@ -35,8 +35,8 @@
       "defaultValue": "6",
       "helpMarkDown": "ms-resource:loc.input.help.runnerVersion",
       "options": {
-        "6": "Node.js 6",
-        "10": "Node.js 10"
+        "node6": "Node.js 6.17.1",
+        "node10": "Node.js 10.24.1"
       }
     }
   ],
@@ -50,5 +50,10 @@
       "argumentFormat": ""
     }
   },
-  "messages": {}
+  "messages": {
+    "ToolFailed": "ms-resource:loc.messages.ToolFailed",
+    "TryRosetta": "ms-resource:loc.messages.TryRosetta",
+    "NodeVersionNotFound": "ms-resource:loc.messages.NodeVersionNotFound",
+    "UnexpectedOS": "ms-resource:loc.messages.UnexpectedOS"
+  }
 }

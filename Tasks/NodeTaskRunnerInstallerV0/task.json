@@ -29,8 +29,8 @@
       "defaultValue": "6",
       "helpMarkDown": "Select the node version to install.",
       "options": {
-        "6": "Node.js 6",
-        "10": "Node.js 10"
+        "node6": "Node.js 6.17.1",
+        "node10": "Node.js 10.24.1"
       }
     }
   ],
@@ -44,5 +44,10 @@
       "argumentFormat": ""
     }
   },
-  "messages": {}
+  "messages": {
+    "ToolFailed": "Node install failed: %s",
+    "TryRosetta": "Unable to find Node for platform %s and architecture %s. Trying to install with Rosetta2",
+    "NodeVersionNotFound": "Unable to find Node version %s for platform %s and architecture %s.",
+    "UnexpectedOS": "Unexpected OS %s"
+  }
 }

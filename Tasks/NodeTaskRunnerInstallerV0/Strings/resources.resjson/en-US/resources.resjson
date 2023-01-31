@@ -4,5 +4,9 @@
   "loc.description": "TDB",
   "loc.instanceNameFormat": "Install node runner $(runnerVersion)",
   "loc.input.label.runnerVersion": "Version of runner to install",
-  "loc.input.help.runnerVersion": "Select the node version to install."
+  "loc.input.help.runnerVersion": "Select the node version to install.",
+  "loc.messages.ToolFailed": "Node install failed: %s",
+  "loc.messages.TryRosetta": "Unable to find Node for platform %s and architecture %s. Trying to install with Rosetta2",
+  "loc.messages.NodeVersionNotFound": "Unable to find Node version %s for platform %s and architecture %s.",
+  "loc.messages.UnexpectedOS": "Unexpected OS %s"
 }
