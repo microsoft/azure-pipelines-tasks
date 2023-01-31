@@ -21,8 +21,8 @@ async function start(tasks) {
   console.log(pipelines);
 
   const map = mapPipelines(pipelines);
-  const promises = tasks.map(async task => {
-    const pipelineBuild = await runTestPipeline(map[task]);    
+  const promises = taskNames.map(async taskName => {
+    const pipelineBuild = await runTestPipeline(map[taskName]);    
     await verifyTestRunResults(pipelineBuild);    
   });
 }
