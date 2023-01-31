@@ -4,6 +4,7 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as os from 'os';
 
 import { extractArchive } from '../utils/extractArchive';
+import { isDarwinArm } from '../utils/isDarwinArm';
 
 const osPlatform: string = os.platform();
 const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
@@ -29,9 +30,9 @@ export async function downloadNode(version: string, installedArch: string): Prom
     } catch (err) {
         if (err.httpStatusCode) {
             if (err.httpStatusCode === 404) {
-                throw new Error("Target node version not found. Please contact with task support. Error: " + err)
+                throw new Error('Target node version not found. Please contact with task support. Error: ' + err);
             } else {
-                throw new Error("Something went wrong. Error: " + err);
+                throw new Error('Something went wrong. Error: ' + err);
             }
         }
 
@@ -44,6 +45,12 @@ export async function downloadNode(version: string, installedArch: string): Prom
 }
 
 async function downloadUnixNode(version: string, installedArch: string): Promise<string> {
+
+    if (!version && isDarwinArm(osPlatform, installedArch)) {
+        // nodejs.org does not have an arm64 build for macOS, so we fall back to x64
+        console.log(taskLib.loc('TryRosetta', osPlatform, installedArch));
+        installedArch = 'x64';
+    }
 
     const urlFileName = `node-v${version}-${osPlatform}-${installedArch}.tar.gz`;
     const downloadUrl = 'https://nodejs.org/dist/v' + version + '/' + urlFileName;
