@@ -42,6 +42,10 @@ function getPipelines() {
        username: 'Basic',
        password: AUTH_TOKEN
     }
+  }).then(res => res.data)
+  .catch(err => {
+    console.error(err);
+    throw err;
   });
 }
 
