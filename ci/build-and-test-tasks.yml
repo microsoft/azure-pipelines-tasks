@@ -7,7 +7,7 @@ parameters:
 trigger: none
 
 jobs:
-  - ${{ each var in split(variables.tasksnames, ', ') }}:
+  - ${{ each var in split(parameters.tasksnames, ', ') }}:
     - job: ${{ var }}_build_single_task
       displayName: Build Task (${{ var }})
       pool:
