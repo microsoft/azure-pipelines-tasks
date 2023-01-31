@@ -174,7 +174,7 @@ export class ApplicationTokenCredentials {
         }
     }
 
-    public initOIDCToken(connection: WebApi, projectId: string, hub: string, planId: string, jobId: string, serviceConnectionId: string, retyCount: number, timeToWait: number): Q.Promise<string> {
+    private static initOIDCToken(connection: WebApi, projectId: string, hub: string, planId: string, jobId: string, serviceConnectionId: string, retryCount: number, timeToWait: number): Q.Promise<string> {
         var deferred = Q.defer<string>();
         connection.getTaskApi().then(
             (taskApi: ITaskApi) => {
@@ -185,11 +185,11 @@ export class ApplicationTokenCredentials {
                             deferred.resolve(response.oidcToken);
                         }
                         else if (response.oidcToken == null) {
-                            if (retyCount < 3) {
+                            if (retryCount < 3) {
                                 let waitedTime = timeToWait;
-                                retyCount += 1;
+                                retryCount += 1;
                                 setTimeout(() => {
-                                    deferred.resolve(this.initOIDCToken(connection, projectId, hub, planId, jobId, serviceConnectionId, retyCount, waitedTime));
+                                    deferred.resolve(this.initOIDCToken(connection, projectId, hub, planId, jobId, serviceConnectionId, retryCount, waitedTime));
                                 }, waitedTime);
                             }
                             else {
@@ -428,7 +428,15 @@ export class ApplicationTokenCredentials {
         const token = ApplicationTokenCredentials.getSystemAccessToken();
         const authHandler = getHandlerFromToken(token);
         const connection = new WebApi(uri, authHandler);
-        const oidc_token: string = await this.initOIDCToken(connection, projectId, hub, planId, jobId, serviceConnectionId, 0, 2000);
+        const oidc_token: string = await ApplicationTokenCredentials.initOIDCToken(
+            connection,
+            projectId,
+            hub,
+            planId,
+            jobId,
+            serviceConnectionId,
+            0,
+            2000);
 
         msalConfig.auth.protocolMode = msal.ProtocolMode.OIDC;
         msalConfig.auth.authority = "https://app.vstoken.visualstudio.com";
