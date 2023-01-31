@@ -52,7 +52,7 @@ function getPipelines() {
 }
 
 function runTestPipeline(data) {
-  console.log(`Trigger test pipeline for ${taskName} task`);
+  console.log(`Trigger test pipeline for ${data} task`);
 
   return axios.post(`https://dev.azure.com/${organization}/${project}/_apis/pipelines${data.id}/runs?api-version=7.0`, {
     templateParameters: {}
