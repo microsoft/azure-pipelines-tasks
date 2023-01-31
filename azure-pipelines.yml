@@ -31,8 +31,8 @@ jobs:
         TASKS=`node ./ci/testing/extractTaskNames.js $(PAT_Github)`
         echo $TASKS
         TOKEN="$(ADOToken)"
-        curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7" -X POST -d "{\"templateParameters\": { \"tasks\": \"$TASKS\"}}" -o out.txt
-        cat out.txt
+        OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7" -X POST -d "{\"templateParameters\": { \"tasks\": \"$TASKS\"}}"`
+        echo $OUTPUT
       displayName: 'Extract task names'
 
     # - script: |
