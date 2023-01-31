@@ -24,6 +24,13 @@ async function runTask() {
     }
 
     const osPlatform: NodeOsPlatform = os.platform();
+
+    const supportedOsList: NodeOsPlatform[] = ['linux', 'darwin', 'win32']
+
+    if (!supportedOsList.includes(osPlatform)) {
+        throw new Error(taskLib.loc('UnexpectedOS', osPlatform, supportedOsList.join(', ')));
+    }
+
     const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
     const osArch = ((os.arch() === 'ia32' || force32bit) ? 'x86' : os.arch()) as NodeOsArch;
 
