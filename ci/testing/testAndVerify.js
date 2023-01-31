@@ -7,8 +7,6 @@ const url = 'https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/ru
 
 const AUTH_TOKEN = process.argv[2];
 const tasks = process.argv[3];
-// axios.defaults.headers.common['Authorization'] = `Basic ${AUTH_TOKEN}`;
-axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 if (tasks) {
   start(tasks);
@@ -39,10 +37,9 @@ async function start(tasks) {
 }
 
 function getPipelines() {
-  return axios.get(`https://dev.azure.com/${organization}/${project}/_apis/pipelines?api-version=7.0`, {}, {
-    auth: {
-      username: 'Basic',
-      password: AUTH_TOKEN
+  return axios.get(`https://dev.azure.com/${organization}/${project}/_apis/pipelines?api-version=7.0`, { 
+    headers: {
+       Authorization: `Basic ${AUTH_TOKEN}`
     }
   });
 }
