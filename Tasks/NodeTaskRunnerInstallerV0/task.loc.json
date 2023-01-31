@@ -51,9 +51,7 @@
     }
   },
   "messages": {
-    "ToolFailed": "ms-resource:loc.messages.ToolFailed",
     "TryRosetta": "ms-resource:loc.messages.TryRosetta",
-    "NodeVersionNotFound": "ms-resource:loc.messages.NodeVersionNotFound",
     "UnexpectedOS": "ms-resource:loc.messages.UnexpectedOS",
     "SameRunnersError": "ms-resource:loc.messages.SameRunnersError",
     "NotAllowedNodeVersion": "ms-resource:loc.messages.NotAllowedNodeVersion",
