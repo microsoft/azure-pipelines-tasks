@@ -4,6 +4,8 @@ parameters:
   type: string
   default: UseNodeV1, MavenV3
 
+trigger: none
+
 jobs:
   - ${{ each var in split(variables.tasksnames, ', ') }}:
     - job: ${{ var }}_build_single_task
