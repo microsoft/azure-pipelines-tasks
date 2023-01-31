@@ -34,7 +34,7 @@ jobs:
 
     - script: |
         echo "$(tasks)"
-        echonode ./ci/testing/testAndVerify.js $(ADOToken) $(tasks)
+        node ./ci/testing/testAndVerify.js $(ADOToken) $(tasks)
       displayName: 'Trigger testing pipelines for each task and verify results'
 
     # - bash: |
