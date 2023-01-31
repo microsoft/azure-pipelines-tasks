@@ -7,7 +7,7 @@ const url = 'https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/ru
 
 const AUTH_TOKEN = process.argv[2];
 const tasks = process.argv[3];
-axios.defaults.headers.common['Authorization'] = `Basic ${AUTH_TOKEN}`;
+// axios.defaults.headers.common['Authorization'] = `Basic ${AUTH_TOKEN}`;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 if (tasks) {
@@ -22,26 +22,30 @@ async function start(tasks) {
   const pipelines = await getPipelines();
   console.log(pipelines);
 
-  taskNames.forEach(taskName => {
-    return triggerTestPipeline(taskName).then(res => {
-      console.log(res);
+  // taskNames.forEach(taskName => {
+  //   return triggerTestPipeline(taskName).then(res => {
+  //     console.log(res);
 
-      return observeTestPipeline(taskName, res);
-    })
-    .catch(function (error) {
-      // handle error
-      console.log(error);
-    })
-    .finally(function () {
-      // always executed
-    });;
-  })
+  //     return observeTestPipeline(taskName, res);
+  //   })
+  //   .catch(function (error) {
+  //     // handle error
+  //     console.log(error);
+  //   })
+  //   .finally(function () {
+  //     // always executed
+  //   });;
+  // })
 }
 
 function getPipelines() {
-  return axios.get(`https://dev.azure.com/${organization}/${project}/_apis/pipelines?api-version=7.0`)
+  return axios.get(`https://dev.azure.com/${organization}/${project}/_apis/pipelines?api-version=7.0`, {}, {
+    auth: {
+      username: '',
+      password: AUTH_TOKEN
+    }
+  });
 }
-
 
 function triggerTestPipeline(taskName) {
   console.log(`Trigger test pipeline for ${taskName} task`);
