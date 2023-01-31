@@ -1,6 +1,10 @@
+import * as os from 'os';
+
 import * as taskLib from 'azure-pipelines-task-lib/task';
-import { NODE_INPUT_VERSIONS } from './models/targetNodeVersions';
-import { setupNode } from './modules/setupNode';
+
+import { NodeOsArch, NodeOsPlatform } from './interfaces/os-types';
+import { installNodeRunner } from './modules/installNodeRunner';
+import { NODE_INPUT_VERSIONS } from './constants';
 
 async function runTask() {
 
@@ -12,7 +16,13 @@ async function runTask() {
         throw new Error(`Target node version not matches with allowed versions. Possible variants: ${Object.keys(NODE_INPUT_VERSIONS)}`);
     }
 
-    await setupNode(targetNodeVersion);
+    // Don't use `os.arch()` to construct download URLs,
+    // Node.js uses a different set of arch identifiers for those.
+    const osPlatform: NodeOsPlatform = os.platform();
+    const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
+    const osArch = ((os.arch() === 'ia32' || force32bit) ? 'x86' : os.arch()) as NodeOsArch;
+
+    await installNodeRunner(targetNodeVersion, { osArch, osPlatform });
 }
 
 runTask();

@@ -1,23 +1,16 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
-import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs';
 
 import { downloadNode } from './downloadNode';
-import { isDarwinArm } from '../utils/isDarwinArm';
+import { isDarwinArmWithRosetta } from '../utils/isDarwinArmWithRosetta';
 import { getAgentExternalsPath } from '../utils/getAgentExternalsPath';
 import { getDirContent } from '../utils/getDirContent';
+import { NodeOsPlatform, TargetOsInfo } from '../interfaces/os-types';
 
-// Don't use `os.arch()` to construct download URLs,
-// Node.js uses a different set of arch identifiers for those.
-const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
-const osArch: string = (os.arch() === 'ia32' || force32bit) ? 'x86' : os.arch();
-
-const osPlatform: string = os.platform();
-
-export async function setupNode(targetNodeVersion: string) {
-    let installedArch = osArch;
+export async function installNodeRunner(targetNodeVersion: string, osInfo: TargetOsInfo) {
+    let installedArch = osInfo.osArch;
 
     let targetNodePath: string;
 
@@ -25,7 +18,7 @@ export async function setupNode(targetNodeVersion: string) {
     targetNodePath = toolLib.findLocalTool('node', targetNodeVersion, installedArch);
 
     // In case if it's darwin arm and toolPath is empty trying to find x64 version
-    if (!targetNodePath && isDarwinArm(osPlatform, installedArch)) {
+    if (!targetNodePath && isDarwinArmWithRosetta(osInfo.osPlatform, installedArch)) {
         targetNodePath = toolLib.findLocalTool('node', installedArch, 'x64');
         installedArch = 'x64';
     }
@@ -39,14 +32,14 @@ export async function setupNode(targetNodeVersion: string) {
         );
     }
 
-    const resultNodePath = await copyNodeToAgentExternals(targetNodePath, 'node');
+    const resultNodePath = await copyNodeToAgentExternals(targetNodePath, 'node', osInfo.osPlatform);
 
     taskLib.debug('resultNodePath = ' + resultNodePath);
 
     getDirContent(resultNodePath);
 }
 
-async function copyNodeToAgentExternals(nodePath: string, targetNodeDir: string): Promise<string> {
+async function copyNodeToAgentExternals(nodePath: string, targetNodeDir: string, osPlatform: NodeOsPlatform): Promise<string> {
     const externalsPath = getAgentExternalsPath();
 
     const targetNodePath = path.join(externalsPath, targetNodeDir);

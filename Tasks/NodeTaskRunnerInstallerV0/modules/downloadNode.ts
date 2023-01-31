@@ -4,18 +4,19 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as os from 'os';
 
 import { extractArchive } from '../utils/extractArchive';
-import { isDarwinArm } from '../utils/isDarwinArm';
+import { isDarwinArmWithRosetta } from '../utils/isDarwinArmWithRosetta';
+import { NodeOsArch, NodeOsPlatform } from '../interfaces/os-types';
 
-const osPlatform: string = os.platform();
+const osPlatform: NodeOsPlatform = os.platform();
 const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
-const osArch: string = (os.arch() === 'ia32' || force32bit) ? 'x86' : os.arch();
+const osArch = ((os.arch() === 'ia32' || force32bit) ? 'x86' : os.arch()) as NodeOsArch;
 
 /** Installs target node from online
  * @param {string} version Node version to install
  * @param {string} installedArch PC Architecture
  * @returns Installed node path
  */
-export async function downloadNode(version: string, installedArch: string): Promise<string> {
+export async function downloadNode(version: string, installedArch: NodeOsArch): Promise<string> {
 
     let downloadNodePath: string;
 
@@ -44,9 +45,9 @@ export async function downloadNode(version: string, installedArch: string): Prom
     return downloadNodePath;
 }
 
-async function downloadUnixNode(version: string, installedArch: string): Promise<string> {
+async function downloadUnixNode(version: string, installedArch: NodeOsArch): Promise<string> {
 
-    if (!version && isDarwinArm(osPlatform, installedArch)) {
+    if (!version && isDarwinArmWithRosetta(osPlatform, installedArch)) {
         // nodejs.org does not have an arm64 build for macOS, so we fall back to x64
         console.log(taskLib.loc('TryRosetta', osPlatform, installedArch));
         installedArch = 'x64';
