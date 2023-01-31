@@ -39,7 +39,7 @@ jobs:
     
     - script: |
         curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines?api-version=7" -X GET
-      displayName: 'API" list pipelines'
+      displayName: 'API: list pipelines'
     
     # - script: |
     #     curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7" -X POST -d "{}"
