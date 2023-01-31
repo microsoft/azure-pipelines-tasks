@@ -31,9 +31,8 @@ export async function setupNode(targetNodeVersion: string) {
     }
 
     if (!targetNodePath) {
-        // download, extract, cache
         const cleanVersion = toolLib.cleanVersion(targetNodeVersion);
-        targetNodePath = taskLib.retry(
+        targetNodePath = await taskLib.retry(
             async () => await downloadNode(cleanVersion, installedArch),
             undefined,
             { retryCount: 3, continueOnError: false }
