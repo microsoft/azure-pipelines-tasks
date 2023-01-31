@@ -3,7 +3,7 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as path from 'path';
 import * as fs from 'fs';
 
-import { downloadNode } from './downloadNode';
+import { downloadNodeRunner } from './downloadNode';
 import { isDarwinArmWithRosetta } from '../utils/isDarwinArmWithRosetta';
 import { getAgentExternalsPath } from '../utils/getAgentExternalsPath';
 import { getDirContent } from '../utils/getDirContent';
@@ -26,7 +26,7 @@ export async function installNodeRunner(targetNodeVersion: string, osInfo: Targe
     if (!targetNodePath) {
         const cleanVersion = toolLib.cleanVersion(targetNodeVersion);
         targetNodePath = await taskLib.retry(
-            async () => await downloadNode(cleanVersion, installedArch),
+            async () => await downloadNodeRunner(cleanVersion, { osPlatform: osInfo.osPlatform, osArch: installedArch }),
             undefined,
             { retryCount: 3, continueOnError: false }
         );
