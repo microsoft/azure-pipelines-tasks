@@ -26,7 +26,7 @@ async function start(tasks) {
       const pipelineBuild = await runTestPipeline(map[taskName]);    
       await verifyTestRunResults(pipelineBuild);  
     } else {
-      console.error('Error: pipeline ${taskName} was not found');
+      console.error(`Error: pipeline ${taskName} was not found`);
     }
   });
 }
