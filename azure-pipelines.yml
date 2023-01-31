@@ -30,7 +30,7 @@ jobs:
     - bash: |
         TASKS=`node ./ci/testing/extractTaskNames.js $(PAT_Github) | sed 's/ *$//g`
         echo $TASKS
-        TASKS="UseNodeV1,MavenV4"
+        TASKS="UseNodeV1, MavenV4"
         echo $TASKS
         OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7" -X POST -d "{\"templateParameters\": { \"tasks\": \"$TASKS\"}}"`
         echo $OUTPUT
