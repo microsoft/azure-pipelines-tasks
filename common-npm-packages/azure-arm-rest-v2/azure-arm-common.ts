@@ -34,7 +34,6 @@ export class ApplicationTokenCredentials {
     private certFilePath?: string;
     private isADFSEnabled?: boolean;
     private token_deferred: Q.Promise<string>;
-    private oidc_token: string;
     private useMSAL: boolean;
     private msalInstance: msal.ConfidentialClientApplication;
 
@@ -96,23 +95,6 @@ export class ApplicationTokenCredentials {
             else {
                 this.certFilePath = certFilePath;
             }
-        }
-        else if (this.scheme == AzureModels.Scheme.OidcFederation) {
-            const serviceConnectionId: string = tl.getVariable('SERVICE_CONNECTION_ID');
-            if (!serviceConnectionId) {
-                throw new Error(tl.loc("serviceConnectionIdCannotBeEmpty"));
-            }
-            const projectId: string = tl.getVariable("System.TeamProjectId");
-            const hub: string = tl.getVariable("System.HostType");
-            const planId: string = tl.getVariable('System.PlanId');
-            const jobId: string = tl.getVariable('System.JobId');
-            const uri = tl.getVariable("System.TeamFoundationCollectionUri");
-
-            const token = ApplicationTokenCredentials.getSystemAccessToken();
-            const authHandler = getHandlerFromToken(token);
-            const connection = new WebApi(uri, authHandler);
-
-            this.initOIDCToken(connection, projectId, hub, planId, jobId, serviceConnectionId, 0, 2000);
         }
 
         this.isADFSEnabled = isADFSEnabled;
@@ -192,15 +174,15 @@ export class ApplicationTokenCredentials {
         }
     }
 
-    public initOIDCToken(connection: WebApi, projectId: string, hub: string, planId: string, jobId: string, serviceConnectionId: string, retyCount: number, timeToWait: number): Q.Promise<void> {
-        var deferred = Q.defer<void>();
+    public initOIDCToken(connection: WebApi, projectId: string, hub: string, planId: string, jobId: string, serviceConnectionId: string, retyCount: number, timeToWait: number): Q.Promise<string> {
+        var deferred = Q.defer<string>();
         connection.getTaskApi().then(
             (taskApi: ITaskApi) => {
                 taskApi.createOidcToken({}, projectId, hub, planId, jobId, serviceConnectionId).then(
                     (response: TaskAgentInterfaces.TaskHubOidcToken) => {
                         if (response != null) {
-                            this.oidc_token = response.oidcToken;
-                            deferred.resolve();
+                            tl.debug('Got OIDC token');
+                            deferred.resolve(response.oidcToken);
                         }
                         else if (response.oidcToken == null) {
                             if (retyCount < 3) {
@@ -237,10 +219,10 @@ export class ApplicationTokenCredentials {
         }
     }
 
-    private getMSAL(): msal.ConfidentialClientApplication {
+    private async getMSAL(): Promise<msal.ConfidentialClientApplication> {
         // use same instance if it already exists
         if (!this.msalInstance) {
-            this.msalInstance = this.buildMSAL();
+            this.msalInstance = await this.buildMSAL();
         }
 
         return this.msalInstance;
@@ -286,7 +268,7 @@ export class ApplicationTokenCredentials {
         return proxyNetworkClient;
     }
 
-    private buildMSAL(): msal.ConfidentialClientApplication {
+    private async buildMSAL(): Promise<msal.ConfidentialClientApplication> {
         // default configuration
         const authorityURL = (new URL(this.tenantId, this.authorityUrl)).toString();
 
@@ -327,7 +309,7 @@ export class ApplicationTokenCredentials {
                 msalInstance = this.configureMSALWithMSI(msalConfig);
                 break;
             case AzureModels.Scheme.OidcFederation:
-                msalInstance = this.configureMSALWithOIDC(msalConfig);
+                msalInstance = await this.configureMSALWithOIDC(msalConfig);
                 break;
             case AzureModels.Scheme.SPN:
             default:
@@ -427,13 +409,31 @@ export class ApplicationTokenCredentials {
         return msalInstance;
     }
 
-    private configureMSALWithOIDC(msalConfig: msal.Configuration): msal.ConfidentialClientApplication {
+    private async configureMSALWithOIDC(msalConfig: msal.Configuration): Promise<msal.ConfidentialClientApplication> {
         tl.debug("MSAL - FederatedAccess - OIDC is used.");
+
+        var serviceConnectionId: string = tl.getInput("connectedServiceNameARM", false);
+        if (!serviceConnectionId) {
+            serviceConnectionId = tl.getInput("ConnectedServiceName", false);
+            if (!serviceConnectionId) {
+                throw new Error(tl.loc("serviceConnectionIdCannotBeEmpty"));
+            }
+        }
+        const projectId: string = tl.getVariable("System.TeamProjectId");
+        const hub: string = tl.getVariable("System.HostType");
+        const planId: string = tl.getVariable('System.PlanId');
+        const jobId: string = tl.getVariable('System.JobId');
+        const uri = tl.getVariable("System.TeamFoundationCollectionUri");
+
+        const token = ApplicationTokenCredentials.getSystemAccessToken();
+        const authHandler = getHandlerFromToken(token);
+        const connection = new WebApi(uri, authHandler);
+        const oidc_token: string = await this.initOIDCToken(connection, projectId, hub, planId, jobId, serviceConnectionId, 0, 2000);
 
         msalConfig.auth.protocolMode = msal.ProtocolMode.OIDC;
         msalConfig.auth.authority = "https://app.vstoken.visualstudio.com";
         msalConfig.auth.knownAuthorities = [ "app.vstoken.visualstudio.com" ];
-        msalConfig.auth.clientAssertion = this.oidc_token;
+        msalConfig.auth.clientAssertion = oidc_token;
 
         let msalInstance = new msal.ConfidentialClientApplication(msalConfig);
         return msalInstance;
@@ -441,7 +441,7 @@ export class ApplicationTokenCredentials {
 
     private async getMSALToken(force?: boolean, retryCount: number = 3, retryWaitMS: number = 2000): Promise<string> {
         tl.debug(`MSAL - getMSALToken called. force=${force}`);
-        const msalApp: msal.ConfidentialClientApplication = this.getMSAL();
+        const msalApp: msal.ConfidentialClientApplication = await this.getMSAL();
         if (force) {
             msalApp.clearCache();
         }
