@@ -24,6 +24,13 @@
   "demands": [],
   "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "versionSource",
@@ -70,10 +77,11 @@
     {
       "name": "nodejsMirror",
       "type": "string",
-      "label": "Set an alternative source for Node.js binaries",
+      "label": "ms-resource:loc.input.label.nodejsMirror",
       "defaultValue": "https://nodejs.org/dist",
       "required": false,
-      "helpMarkDown": "Use an alternative installation mirror when sourcing the Node.js binaries."
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.nodejsMirror"
     }
   ],
   "execution": {
