@@ -30,7 +30,7 @@ jobs:
         node ./ci/testing/extractTaskNames.js $(PAT_Github)
         TASKS=`node ./ci/testing/extractTaskNames.js $(PAT_Github)`
         echo $TASKS
-        curl  --user '':'$(ADOToken)' --header "Content-Type: application/json" --header "Accept:application/json" "https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7" -X POST -d '{"templateParameters": { "tasks": "$(TASKS)"}}' -o "output.txt" 
+        curl  --user '':'$(ADOToken)' --header "Content-Type: application/json" --header "Accept:application/json" "https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7" -X POST -d '{"templateParameters": { "tasks": "MavenV4"}}' -o "output.txt" 
         cat output.txt   
     #    echo "##vso[task.setvariable variable=tasksnames;isoutput=true]$(node ./ci/testing/extractTaskNames.js $(PAT_Github))"
       displayName: 'Extract task names'
