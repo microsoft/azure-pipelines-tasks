@@ -10,14 +10,19 @@ async function runTask() {
 
     const inputVersion: string = taskLib.getInputRequired('runnerVersion');
 
-    const targetNodeVersion = NODE_INPUT_VERSIONS[inputVersion];
+    const targetNodeVersion: string = NODE_INPUT_VERSIONS[inputVersion];
 
     if (!targetNodeVersion) {
-        throw new Error(`Target node version not matches with allowed versions. Possible variants: ${Object.keys(NODE_INPUT_VERSIONS)}`);
+        throw new Error(taskLib.loc('NotAllowedNodeVersion', Object.keys(NODE_INPUT_VERSIONS).join(", ")));
     }
 
-    // Don't use `os.arch()` to construct download URLs,
-    // Node.js uses a different set of arch identifiers for those.
+    const currentRunner = process.versions.node;
+    taskLib.debug("Current runner version = " + currentRunner)
+
+    if (currentRunner === targetNodeVersion) {
+        throw new Error(taskLib.loc("SameRunnersError", currentRunner));
+    }
+
     const osPlatform: NodeOsPlatform = os.platform();
     const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
     const osArch = ((os.arch() === 'ia32' || force32bit) ? 'x86' : os.arch()) as NodeOsArch;

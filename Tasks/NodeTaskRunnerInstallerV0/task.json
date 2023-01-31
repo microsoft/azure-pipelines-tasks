@@ -35,8 +35,8 @@
       "defaultValue": "6",
       "helpMarkDown": "Select the node version to install.",
       "options": {
-        "node6": "Node.js 6.17.1",
-        "node10": "Node.js 10.24.1"
+        "6": "Node.js 6.17.1",
+        "10": "Node.js 10.24.1"
       }
     }
   ],
@@ -54,6 +54,8 @@
     "ToolFailed": "Node install failed: %s",
     "TryRosetta": "Unable to find Node for platform %s and architecture %s. Trying to install with Rosetta2",
     "NodeVersionNotFound": "Unable to find Node version %s for platform %s and architecture %s.",
-    "UnexpectedOS": "Unexpected OS %s"
+    "UnexpectedOS": "Unexpected OS %s",
+    "SameRunnersError":"You cannot specify a similar version of runner that is currently in use. The current version of runner: %s",
+    "NotAllowedNodeVersion":"The version of the target node does not match the allowed versions. Possible variants: %s"
   }
 }

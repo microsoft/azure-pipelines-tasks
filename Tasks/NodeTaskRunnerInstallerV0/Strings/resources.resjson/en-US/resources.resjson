@@ -8,5 +8,7 @@
   "loc.messages.ToolFailed": "Node install failed: %s",
   "loc.messages.TryRosetta": "Unable to find Node for platform %s and architecture %s. Trying to install with Rosetta2",
   "loc.messages.NodeVersionNotFound": "Unable to find Node version %s for platform %s and architecture %s.",
-  "loc.messages.UnexpectedOS": "Unexpected OS %s"
+  "loc.messages.UnexpectedOS": "Unexpected OS %s",
+  "loc.messages.SameRunnersError": "You cannot specify a similar version of runner that is currently in use. The current version of runner: %s",
+  "loc.messages.NotAllowedNodeVersion": "The version of the target node does not match the allowed versions. Possible variants: %s"
 }
