@@ -9,8 +9,6 @@ trigger: none
 jobs:
   - ${{ each var in split(parameters.tasks, ',') }}:
     - job: ${{ var }}_build_single_task
-      strategy:
-        parallel: 2
       displayName: Build Task (${{ var }})
       pool:
         vmImage: windows-2022
@@ -24,8 +22,6 @@ jobs:
           version: '0.9999.9999'
 
     - job: ${{ var }}_upload_test_task
-      strategy:
-        parallel: 2
       displayName: Upload (${{ var }})
       dependsOn: ${{ var }}_build_single_task
       pool:
