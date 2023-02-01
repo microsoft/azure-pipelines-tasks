@@ -522,9 +522,6 @@
   "postjobexecution": {
     "Node10": {
       "target": "src//deletesecurefiles.js"
-    },
-    "Node16": {
-      "target": "src//deletesecurefiles.js"
     }
   },
   "messages": {
