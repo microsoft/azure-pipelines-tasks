@@ -39,9 +39,6 @@
   "execution": {
     "Node10": {
       "target": "cargoauthenticatemain.js"
-    },
-    "Node16": {
-      "target": "cargoauthenticatemain.js"
     }
   },
   "messages": {
