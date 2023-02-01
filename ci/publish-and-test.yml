@@ -29,7 +29,7 @@ steps:
       npm install -g tfx-cli
       tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken) --no-prompt
       find ./
-      TASKID=`node ./ci/canary-tests/get-task-guid.js ./task-${{ parameters.task }}/${{parameters.task}}/task.json`
+      TASKID=`node ./ci/canary-test/get-task-guid.js ./task-${{ parameters.task }}/${{parameters.task}}/task.json`
       echo $TASKID
       tfx build tasks delete --task-id $TASKID --no-prompt
       tfx build tasks upload --task-path ./task-${{ parameters.task }}/${{parameters.task}} --no-prompt
