@@ -58,8 +58,7 @@ function getPipelines() {
 function runTestPipeline(pipeline) {
   console.log(`Run test pipeline for ${pipeline.name} task, pipelineId: ${pipeline.id}`);
 
-  return axios.post(`https://dev.azure.com/${organization}/${project}/_apis/pipelines${pipeline.id}/runs?api-version=7.0`, {
-  },{
+  return axios.post(`https://dev.azure.com/${organization}/${project}/_apis/pipelines/${pipeline.id}/runs?api-version=7.0`, {},{
     auth: {
       username: 'Basic',
       password: AUTH_TOKEN
