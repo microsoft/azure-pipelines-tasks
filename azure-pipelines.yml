@@ -25,25 +25,26 @@ jobs:
     # we only test tasks on a PR and ignore forks since for security reasosns PAT tokens pipeline variable will not be available for fork's PRs.
     #condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['System.PullRequest.IsFork'], 'False')) TODO: uncomment the line after testing
     steps:
-    - script: npm install @octokit/core
-      displayName: 'npm install @octokit/core'
-    - bash: |
-        TASKS=`node ./ci/testing/extractTaskNames.js $(PAT_Github) | sed 's/ *$//g`
-        echo $TASKS
-        TASKS="UseNodeV1, MavenV4"
-        echo $TASKS
-        OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7" -X POST -d "{\"templateParameters\": { \"tasks\": \"$TASKS\"}}"`
-        echo $OUTPUT
-      displayName: 'Extract task names'
-
-    # - script: |
-    # - bash: tasks=MavenV2
-      
-    # - script: |
-    #     echo "$(variables.tasks)"
-    #     node ./ci/testing/useTaskNames.js $(variables.tasks)
-    #   displayName: 'Use "tasks" variable in next steps'
+    - script: npm install @octokit/core axios
+      displayName: 'npm install @octokit/core axios'
     
+    - script: |
+        echo "##vso[task.setvariable variable=tasks]$(node ./ci/testing/extractTaskNames.js $(PAT_Github))"
+      displayName: 'Exract task names for testing'
+
+    - script: |
+        echo "Tasks: $(tasks)"
+        node ./ci/testing/testAndVerify.js $(ADOToken) $(tasks)
+      displayName: 'Run testing pipelines for each task and verify results'
+    
+
+    # - bash: |
+    #     TASKS=`node ./ci/testing/extractTaskNames.js $(PAT_Github) | xargs`
+    #     echo $TASKS
+    #     OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7" -X POST -d "{\"templateParameters\": { \"tasks\": \"$TASKS\"}}"`
+    #     echo $OUTPUT
+    #   displayName: 'Extract task names'
+
     # - ${{ each var in split(variables.tasks_names, ',') }}:
     #   script: |
     #     echo "Test"
