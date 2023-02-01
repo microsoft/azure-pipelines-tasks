@@ -31,7 +31,7 @@ steps:
   displayName: 'Upload task'  
 
 - script: npm install @octokit/core axios
-      displayName: 'npm install @octokit/core axios'
+  displayName: 'npm install @octokit/core axios'
 
 - script: |
     echo "Tasks: ${{ parameters.task }}"
