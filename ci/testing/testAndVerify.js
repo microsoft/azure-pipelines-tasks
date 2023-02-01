@@ -73,7 +73,7 @@ function verifyTestRunResults(pipelineBuild) {
       verifyBuildStatus(pipelineBuild, interval, resolve, reject);
     }, intervalDelayMs)
   
-    console.log(`Check status for build ${pipelineBuild.name}, id: ${pipelineBuild.id} task...`);
+    console.log(`Check status for build ${pipelineBuild.name}, id: ${pipelineBuild.id}:`);
   })
 }
 
@@ -92,10 +92,10 @@ async function verifyBuildStatus(pipelineBuild, timeout, resolve, reject) {
   }
 
   clearTimeout(timeout);
-  console.log(`Pipeline build finished with status ${data.result}`);
+  console.log(`${pipelineBuild.name} (id:${pipelineBuild.id}) build finished with status ${data.result}`);
   if (data.result === 'failed') {
-    reject(`${pipelineBuild.name} pipeline build ${pipelineBuild.id} failed`)
+    reject(`${pipelineBuild.name} pipeline build ${pipelineBuild.id} failed with result ${data.result}`)
   } else {
-    resolve(`${pipelineBuild.name} pipeline build ${pipelineBuild.id} succeeded`)
+    resolve(`${pipelineBuild.name} pipeline build ${pipelineBuild.id} finished with result ${data.result}`)
   }
 }
