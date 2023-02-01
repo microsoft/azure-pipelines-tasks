@@ -14,7 +14,10 @@ const auth = {
 const intervalDelayMs = 30000;
 
 if (task) {
-  return start(task);
+  return start(task).catch(err => {
+    console.error(err);
+    throw err;
+  });
 } else {
   throw new Error('Task name was not provided');
 }
@@ -27,7 +30,7 @@ async function start(taskName) {
     const pipelineBuild = await runTestPipeline(pipeline);
     return verifyTestRunResults(pipelineBuild);  
   } else {
-    console.error(`Error: cannot build and run tests for task ${taskName} - corresponding pipeline was not found`);
+    throw new Error(`Cannot build and run tests for task ${taskName} - corresponding pipeline was not found`);
   }
 }
 
@@ -76,10 +79,14 @@ async function verifyBuildStatus(pipelineBuild, timeout, resolve, reject) {
   }
 
   clearTimeout(timeout);
-  console.log(`Build ${pipelineBuild.name} id:${pipelineBuild.id} build finished with status ${data.result}`);
+
+  const result = `Build ${pipelineBuild.name} id:${pipelineBuild.id} finished with status ${data.result} and result ${data.result}`;
+
   if (data.result === 'succeeded') {
-    resolve(`Build ${pipelineBuild.name} id:${pipelineBuild.id} finished with result ${data.result}`)
+    console.log(result);
+    resolve(result);
   } else {
-    reject(`Build ${pipelineBuild.name} id:${pipelineBuild.id} failed with result ${data.result}`)
+    console.error(result);
+    reject(result);
   }
 }

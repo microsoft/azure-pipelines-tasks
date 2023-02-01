@@ -35,9 +35,8 @@ steps:
 
 - script: |
     echo "Tasks: ${{ parameters.task }}"
-    node -v
     node ./ci/testing/testAndVerify.js $(ADOToken) ${{ parameters.task }}
-  displayName: 'Run testing pipelines for each task and verify results'  
+  displayName: 'Run testing pipelines for each task and verify results'
 
 - task: Bash@3
   inputs:
