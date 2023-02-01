@@ -29,7 +29,7 @@ octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}{?page,per_page}', 
   const taskNames = getTaskNames(fileNames);
 
   if (taskNames.length > 0) {
-    console.log(taskNames.join(','));
+    console.log(taskNames.join(', '));
   } else {
     throw new Error('No tasks were changed. Skip testing.')
   }
