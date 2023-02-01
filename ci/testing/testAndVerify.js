@@ -14,7 +14,9 @@ const auth = {
 const intervalDelayMs = 30000;
 
 if (task) {
-  return start(task).catch(err => {
+  return start(task)
+  .then(resultMessage => console.log(resultMessage))
+  .catch(err => {
     console.error(err);
     throw err;
   });
@@ -83,10 +85,8 @@ async function verifyBuildStatus(pipelineBuild, timeout, resolve, reject) {
   const result = `Build ${pipelineBuild.name} id:${pipelineBuild.id} finished with status ${data.result} and result ${data.result}`;
 
   if (data.result === 'succeeded') {
-    console.log(result);
     resolve(result);
   } else {
-    console.error(result);
     reject(result);
   }
 }

@@ -36,7 +36,7 @@ steps:
 - script: |
     echo "Tasks: ${{ parameters.task }}"
     node ./ci/testing/testAndVerify.js $(ADOToken) ${{ parameters.task }}
-  displayName: 'Run testing pipelines for each task and verify results'
+  displayName: 'Run tests and verify results'
 
 - task: Bash@3
   condition: always()
