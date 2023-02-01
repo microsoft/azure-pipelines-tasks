@@ -71,7 +71,7 @@ function runTestPipeline(pipeline) {
 }
 
 function verifyTestRunResults(pipelineBuild) {
-  console.log(`Observe test pipeline for ${pipeline.name} task`);
+  console.log(`Observe test pipeline for ${pipelineBuild.name} task`);
 }
 
 
