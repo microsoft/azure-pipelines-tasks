@@ -4,7 +4,6 @@ parameters:
 
 steps:
 - task: Bash@3
-  condition: always()
   inputs:
     targetType: 'inline'
     script: |
