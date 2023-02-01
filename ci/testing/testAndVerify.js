@@ -23,7 +23,7 @@ async function start(tasks) {
   const map = mapPipelines(pipelines);
   const promises = taskNames.map(async taskName => {
     if (map[taskName]) {
-      const pipelineBuild = await runTestPipeline(map[taskName]);    
+      const pipelineBuild = await runTestPipeline(map[taskName]);
       await verifyTestRunResults(pipelineBuild);  
     } else {
       console.error(`Error: pipeline ${taskName} was not found`);
@@ -71,6 +71,8 @@ function runTestPipeline(pipeline) {
 }
 
 function verifyTestRunResults(pipelineBuild) {
+  console.log('pipelineBuild')
+  console.log(pipelineBuild)
   console.log(`Observe test pipeline for ${pipelineBuild.name} task`);
 }
 
