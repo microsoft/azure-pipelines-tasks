@@ -21,14 +21,14 @@ async function start(tasks) {
   console.log(pipelines);
 
   const map = mapPipelines(pipelines);
-  const promises = taskNames.map(async taskName => {
+  return Promise.all(taskNames.map(async taskName => {
     if (map[taskName]) {
       const pipelineBuild = await runTestPipeline(map[taskName]);
-      await verifyTestRunResults(pipelineBuild);  
+      return verifyTestRunResults(pipelineBuild);  
     } else {
       console.error(`Error: pipeline ${taskName} was not found`);
     }
-  });
+  }))
 }
 
 function mapPipelines(pipelines) { 
@@ -69,15 +69,17 @@ function runTestPipeline(pipeline) {
 }
 
 function verifyTestRunResults(pipelineBuild) {
-  const timeout = setTimeout(() => {
-    verifyBuildStatus(pipelineBuild, timeout);
-  }, 1000)
-
-  console.log(pipelineBuild)
-  console.log(`Observe test pipeline for ${pipelineBuild.name} task`);
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      verifyBuildStatus(pipelineBuild, timeout, resolve, reject);
+    }, 1000)
+  
+    console.log(pipelineBuild)
+    console.log(`Observe test pipeline for ${pipelineBuild.name} task`);
+  })
 }
 
-async function verifyBuildStatus(pipelineBuild) {
+async function verifyBuildStatus(pipelineBuild, timeout, resolve, reject) {
   const response = await axios.get(pipelineBuild.url, {
     auth: {
       username: 'Basic',
@@ -90,7 +92,13 @@ async function verifyBuildStatus(pipelineBuild) {
     return;
   }
 
+  clearTimeout(timeout);
   console.log(`Pipeline build finished with status ${response.data.result}`);
+  if (response.data.result === 'failed') {
+    reject('Test pipeline build failed')
+  } else {
+    resolve('Test pipeline build succeeded')
+  }
 }
 
 
