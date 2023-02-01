@@ -30,12 +30,12 @@ jobs:
     
     - script: |
         echo "##vso[task.setvariable variable=tasks]$(node ./ci/testing/extractTaskNames.js $(PAT_Github))"
-      displayName: 'Exract tasks'
+      displayName: 'Exract task names for testing'
 
     - script: |
         echo "Tasks: $(tasks)"
         node ./ci/testing/testAndVerify.js $(ADOToken) $(tasks)
-      displayName: 'Trigger testing pipelines for each task and verify results'
+      displayName: 'Run testing pipelines for each task and verify results'
     
 
     # - bash: |
