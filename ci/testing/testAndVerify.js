@@ -59,16 +59,11 @@ function runTestPipeline(pipeline) {
   console.log(`Run test pipeline for ${pipeline.name} task, pipelineId: ${pipeline.id}`);
 
   return axios.post(`https://dev.azure.com/${organization}/${project}/_apis/pipelines${pipeline.id}/runs?api-version=7.0`, {
-    templateParameters: {}
   },{
     auth: {
       username: 'Basic',
       password: AUTH_TOKEN
-   },
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    }
+   }
   })
   .then(res => {
     console.log('run response')
