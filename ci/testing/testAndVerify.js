@@ -36,8 +36,7 @@ async function start(tasks) {
     })).then(() => {
       console.log('Testing finished succesfully');
     }).catch(err => {
-      console.error('Testing failed', err);
-      throw err;
+      console.error('Testing failed:', err);
     })
   }
 }
