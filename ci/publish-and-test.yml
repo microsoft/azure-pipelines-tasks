@@ -3,11 +3,6 @@ parameters:
     type: string
 
 steps:
-- task: NodeTool@0
-  displayName: Use node 8
-  inputs:
-    versionSpec: 10.x
-
 - task: DownloadBuildArtifacts@1
   inputs:
     buildType: 'current'
@@ -28,7 +23,6 @@ steps:
     script: |
       npm install -g tfx-cli
       tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken) --no-prompt
-      find ./
       TASKID=`node ./ci/canary-test/get-task-guid.js ./task-${{ parameters.task }}/${{parameters.task}}/task.json`
       echo $TASKID
       echo "##vso[task.setvariable variable=TASKID;]$TASKID"
@@ -40,7 +34,8 @@ steps:
       displayName: 'npm install @octokit/core axios'
 
 - script: |
-    echo "Tasks: $(tasks)"
+    echo "Tasks: ${{ parameters.task }}"
+    node -v
     node ./ci/testing/testAndVerify.js $(ADOToken) ${{ parameters.task }}
   displayName: 'Run testing pipelines for each task and verify results'  
 
