@@ -33,7 +33,7 @@ jobs:
       displayName: 'Exract tasks'
 
     - script: |
-        echo "$(tasks)"
+        echo "Tasks: $(tasks)"
         node ./ci/testing/testAndVerify.js $(ADOToken) $(tasks)
       displayName: 'Trigger testing pipelines for each task and verify results'
     
