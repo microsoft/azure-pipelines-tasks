@@ -11,6 +11,7 @@ const auth = {
   username: 'Basic',
   password: AUTH_TOKEN
 };
+const intervalDelayMs = 30000;
 
 if (tasks) {
   return start(tasks);
@@ -70,7 +71,7 @@ function verifyTestRunResults(pipelineBuild) {
   return new Promise((resolve, reject) => {
     const interval = setInterval(() => {
       verifyBuildStatus(pipelineBuild, interval, resolve, reject);
-    }, 1000)
+    }, intervalDelayMs)
   
     console.log(`Check status for build ${pipelineBuild.name}, id: ${pipelineBuild.id} task...`);
   })
@@ -93,8 +94,8 @@ async function verifyBuildStatus(pipelineBuild, timeout, resolve, reject) {
   clearTimeout(timeout);
   console.log(`Pipeline build finished with status ${data.result}`);
   if (data.result === 'failed') {
-    reject('Test pipeline build failed')
+    reject(`${pipelineBuild.name} pipeline build ${pipelineBuild.id} failed`)
   } else {
-    resolve('Test pipeline build succeeded')
+    resolve(`${pipelineBuild.name} pipeline build ${pipelineBuild.id} succeeded`)
   }
 }
