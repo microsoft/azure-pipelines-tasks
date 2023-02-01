@@ -66,7 +66,11 @@ function runTestPipeline(pipeline) {
       'Accept': 'application/json'
     }
   })
-  .then(res => res.data)
+  .then(res => {
+    console.log('run response')
+    console.log(res);
+    return res.data;
+  })
   .catch(err => err)
 }
 
