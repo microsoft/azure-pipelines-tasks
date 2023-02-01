@@ -2,9 +2,6 @@ parameters:
   - name: task
     type: string
 
-variables:
-  
-
 steps:
 - task: NodeTool@0
   displayName: Use node 8
