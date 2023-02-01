@@ -77,22 +77,22 @@ function verifyTestRunResults(pipelineBuild) {
 }
 
 async function verifyBuildStatus(pipelineBuild, timeout, resolve, reject) {
-  const response = await axios.get(pipelineBuild.url, { auth })
+  const data = await axios.get(pipelineBuild.url, { auth })
     .then(res => res.data)
     .catch(err => {
       console.error('Error verifying build status', err);
       throw err;
     })
   
-  console.log(`Verify build status... ${response.data.state}`);
+  console.log(`Verify build status... ${data.state}`);
   
-  if (response.data.state === 'inProgress') {
+  if (data.state === 'inProgress') {
     return;
   }
 
   clearTimeout(timeout);
-  console.log(`Pipeline build finished with status ${response.data.result}`);
-  if (response.data.result === 'failed') {
+  console.log(`Pipeline build finished with status ${data.result}`);
+  if (data.result === 'failed') {
     reject('Test pipeline build failed')
   } else {
     resolve('Test pipeline build succeeded')
