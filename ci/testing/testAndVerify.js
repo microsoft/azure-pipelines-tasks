@@ -64,18 +64,33 @@ function runTestPipeline(pipeline) {
       password: AUTH_TOKEN
    }
   })
-  .then(res => {
-    console.log('run response')
-    console.log(res);
-    return res.data;
-  })
+  .then(res => res.data)
   .catch(err => err)
 }
 
 function verifyTestRunResults(pipelineBuild) {
-  console.log('pipelineBuild')
+  const timeout = setTimeout(() => {
+    verifyBuildStatus(pipelineBuild, timeout);
+  }, 1000)
+
   console.log(pipelineBuild)
   console.log(`Observe test pipeline for ${pipelineBuild.name} task`);
+}
+
+async function verifyBuildStatus(pipelineBuild) {
+  const response = await axios.get(pipelineBuild.url, {
+    auth: {
+      username: 'Basic',
+      password: AUTH_TOKEN
+    }
+  })
+  
+  if (response.data.state === 'inProgress') {
+    console.log('Verify build status... in progress')
+    return;
+  }
+
+  console.log(`Pipeline build finished with status ${response.data.result}`);
 }
 
 
