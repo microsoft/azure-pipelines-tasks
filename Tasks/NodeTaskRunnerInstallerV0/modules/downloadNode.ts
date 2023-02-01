@@ -4,7 +4,7 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
 import { extractArchive } from '../utils/extractArchive';
 import { isDarwinArmWithRosetta } from '../utils/isDarwinArmWithRosetta';
-import { NodeOsArch, TargetOsInfo } from '../interfaces/os-types';
+import { NodeDistroOsArch, TargetOsInfo } from '../interfaces/os-types';
 
 /**
  * Installs target node runner from online.
@@ -42,10 +42,9 @@ export async function downloadNodeRunner(version: string, osInfo: TargetOsInfo):
 }
 
 async function downloadUnixNode(version: string, osInfo: TargetOsInfo): Promise<string> {
-
     let targetOsArch = osInfo.osArch;
 
-    if (!version && isDarwinArmWithRosetta(osInfo.osPlatform, targetOsArch)) {
+    if (!version && isDarwinArmWithRosetta(osInfo.osPlatform, osInfo.osArch)) {
         // nodejs.org does not have an arm64 build for macOS, so we fall back to x64
         console.log(taskLib.loc('TryRosetta', osInfo.osPlatform, targetOsArch));
         targetOsArch = 'x64';
@@ -60,7 +59,8 @@ async function downloadUnixNode(version: string, osInfo: TargetOsInfo): Promise<
     return extractedPath;
 }
 
-async function downloadWindowsNode(version: string, osArch: NodeOsArch): Promise<string> {
+async function downloadWindowsNode(version: string, osArch: NodeDistroOsArch): Promise<string> {
+
     // Create temporary folder to download in to
     const tempDownloadFolder: string = 'temp_' + Math.floor(Math.random() * 2000000000);
     const downloadPath: string = path.join(taskLib.getVariable('agent.tempDirectory'), tempDownloadFolder);

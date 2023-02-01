@@ -1,7 +1,7 @@
 // TODO: Reuse in node-installer-common
 import * as taskLib from 'azure-pipelines-task-lib/task';
 
-import { NodeOsArch, NodeOsPlatform } from '../interfaces/os-types';
+import { NodeDistroOsArch, NodeOsPlatform } from '../interfaces/os-types';
 
 /**
  * Check is the system is darwin ARM and rosetta is installed.
@@ -9,7 +9,7 @@ import { NodeOsArch, NodeOsPlatform } from '../interfaces/os-types';
  * @param installedArch OS architecture.
  * @returns `true` if it's darwin arm with rosetta installed, otherwise `false`
 */
-export function isDarwinArmWithRosetta(osPlatform: NodeOsPlatform, installedArch: NodeOsArch): boolean {
+export function isDarwinArmWithRosetta(osPlatform: NodeOsPlatform, installedArch: NodeDistroOsArch): boolean {
     if (osPlatform === 'darwin' && installedArch === 'arm64') {
 
         // Check that Rosetta is installed and returns some pid

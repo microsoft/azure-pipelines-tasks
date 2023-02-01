@@ -5,6 +5,7 @@ import * as taskLib from 'azure-pipelines-task-lib/task';
 import { NodeOsArch, NodeOsPlatform } from './interfaces/os-types';
 import { installNodeRunner } from './modules/installNodeRunner';
 import { NODE_INPUT_VERSIONS } from './constants';
+import { mapOsArchToDistroVariant } from './utils/mapOsArchToDistroVariant';
 
 async function runTask() {
 
@@ -31,8 +32,7 @@ async function runTask() {
         throw new Error(taskLib.loc('UnexpectedOS', osPlatform, supportedOsList.join(', ')));
     }
 
-    const force32bit: boolean = taskLib.getBoolInput('force32bit', false);
-    const osArch = ((os.arch() === 'ia32' || force32bit) ? 'x86' : os.arch()) as NodeOsArch;
+    const osArch = mapOsArchToDistroVariant(os.arch() as NodeOsArch);
 
     await installNodeRunner(targetNodeVersion, { osArch, osPlatform });
 }
