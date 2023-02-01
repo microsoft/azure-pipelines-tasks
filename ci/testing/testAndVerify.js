@@ -97,10 +97,10 @@ async function verifyBuildStatus(pipelineBuild, timeout, resolve, reject) {
   }
 
   clearTimeout(timeout);
-  console.log(`${pipelineBuild.name} (id:${pipelineBuild.id}) build finished with status ${data.result}`);
-  if (data.result === 'failed') {
-    reject(`${pipelineBuild.name} pipeline build ${pipelineBuild.id} failed with result ${data.result}`)
+  console.log(`Build ${pipelineBuild.name} id:${pipelineBuild.id} build finished with status ${data.result}`);
+  if (data.result === 'succeeded') {
+    resolve(`Build ${pipelineBuild.name} id:${pipelineBuild.id} finished with result ${data.result}`)
   } else {
-    resolve(`${pipelineBuild.name} pipeline build ${pipelineBuild.id} finished with result ${data.result}`)
+    reject(`Build ${pipelineBuild.name} id:${pipelineBuild.id} failed with result ${data.result}`)
   }
 }
