@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 198,
+    "Minor": 217,
     "Patch": 0
   },
   "groups": [
@@ -97,6 +97,14 @@
       "defaultValue": "false",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.waitForCompletion"
+    },
+    {
+      "name": "useDataContractSerializer",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useDataContractSerializer",
+      "required": true,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.useDataContractSerializer"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -115,6 +123,7 @@
         "sessionId": "$(sessionId)",
         "certificateString": "{{#notEquals signPayload 'false' 1}}{{#notEquals endpoint.signPayload 'false' 1}}$(certificateString){{/notEquals}}{{else}}{{/notEquals}}",
         "signaturePropertyKey": "$(signatureKey)",
+        "useDataContractSerializer": "$(useDataContractSerializer)",
         "messageProperties": {
           "PlanUrl": "$(system.CollectionUri)",
           "ProjectId": "$(system.TeamProjectId)",
