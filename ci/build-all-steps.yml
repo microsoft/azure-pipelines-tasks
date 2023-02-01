@@ -99,13 +99,6 @@ steps:
   displayName: Legacy tests with node 6
   condition: ne(variables['numTasks'], 0)
 
-# Publish code coverage result
-- task: PublishCodeCoverageResults@1
-  displayName: Publish Code Coverage Results
-  inputs:
-    codeCoverageTool: Cobertura
-    summaryFileLocation: $(System.DefaultWorkingDirectory)/_build/coverage/*coverage.xml
-
 # Only when building on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
 
