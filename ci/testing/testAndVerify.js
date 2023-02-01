@@ -33,7 +33,12 @@ async function start(tasks) {
       } else {
         console.error(`Error: cannot build and run tests for task ${taskName} - corresponding pipeline was not found`);
       }
-    }))
+    })).then(() => {
+      console.log('Testing finished succesfully');
+    }).catch(err => {
+      console.error('Testing failed', err);
+      throw err;
+    })
   }
 }
 
