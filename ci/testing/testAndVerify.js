@@ -21,9 +21,7 @@ if (task) {
 
 async function start(taskName) {
   const pipelines = await fetchPipelines();
-  console.log(JSON.stringify(pipelines));
-  const pipeline = pipelines.find(pipeline => pipeline.name = taskName);
-  console.log(JSON.stringify(pipeline));
+  const pipeline = pipelines.find(pipeline => pipeline.name === taskName);
 
   if (pipeline) {
     const pipelineBuild = await runTestPipeline(pipeline);
