@@ -14,19 +14,19 @@ async function runTask() {
     const targetNodeVersion: string = NODE_INPUT_VERSIONS[inputVersion];
 
     if (!targetNodeVersion) {
-        throw new Error(taskLib.loc('NotAllowedNodeVersion', Object.keys(NODE_INPUT_VERSIONS).join(", ")));
+        throw new Error(taskLib.loc('NotAllowedNodeVersion', Object.keys(NODE_INPUT_VERSIONS).join(', ')));
     }
 
     const currentRunner = process.versions.node;
-    taskLib.debug("Current runner version = " + currentRunner)
+    taskLib.debug('Current runner version = ' + currentRunner);
 
     if (currentRunner === targetNodeVersion) {
-        throw new Error(taskLib.loc("SameRunnersError", currentRunner));
+        throw new Error(taskLib.loc('SameRunnersError', currentRunner));
     }
 
     const osPlatform: NodeOsPlatform = os.platform();
 
-    const supportedOsList: NodeOsPlatform[] = ['linux', 'darwin', 'win32']
+    const supportedOsList: NodeOsPlatform[] = ['linux', 'darwin', 'win32'];
 
     if (!supportedOsList.includes(osPlatform)) {
         throw new Error(taskLib.loc('UnexpectedOS', osPlatform, supportedOsList.join(', ')));

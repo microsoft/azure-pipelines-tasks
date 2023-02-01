@@ -1,5 +1,5 @@
 import * as path from 'path';
-import * as taskLib from 'azure-pipelines-task-lib'
+import * as taskLib from 'azure-pipelines-task-lib';
 
 export function getAgentExternalsPath(): string {
 
