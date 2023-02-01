@@ -2,12 +2,12 @@ parameters:
 - name: tasks
   displayName: Build Single Task
   type: string
-  default: UseNodeV1, MavenV3
+  default: UseNodeV1,MavenV3
 
 trigger: none
 
 jobs:
-  - ${{ each var in split(parameters.tasks, ', ') }}:
+  - ${{ each var in split(parameters.tasks, ',') }}:
     - job: ${{ var }}_build_single_task
       displayName: Build Task (${{ var }})
       pool:
