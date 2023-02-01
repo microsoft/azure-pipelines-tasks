@@ -4,7 +4,7 @@ parameters:
 
 steps:
 - task: NodeTool@0
-  displayName: Use node 8
+  displayName: Use node 10
   inputs:
     versionSpec: 10.x
 
