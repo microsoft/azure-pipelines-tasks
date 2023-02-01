@@ -60,7 +60,11 @@ function runTestPipeline(pipeline) {
 
   return axios.post(`https://dev.azure.com/${organization}/${project}/_apis/pipelines${pipeline.id}/runs?api-version=7.0`, {
     templateParameters: {}
-  },{ 
+  },{
+    auth: {
+      username: 'Basic',
+      password: AUTH_TOKEN
+   },
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json'
