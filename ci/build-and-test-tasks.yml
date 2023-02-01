@@ -41,8 +41,8 @@ jobs:
         parameters:
           task: ${{ var }}
    
-      condition: always()
     - job: ${{ var }}_clean_up
+      condition: always()
       displayName: Clean up (${{ var }})
       dependsOn: ${{ var }}_test_task
       pool:
