@@ -40,6 +40,7 @@ steps:
   displayName: 'Run testing pipelines for each task and verify results'  
 
 - task: Bash@3
+  condition: always()
   inputs:
     targetType: 'inline'
     script: |
