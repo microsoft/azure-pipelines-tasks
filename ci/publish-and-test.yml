@@ -47,3 +47,4 @@ steps:
       echo $TASKID
       tfx build tasks delete --task-id $TASKID
   displayName: 'Delete task'  
+
