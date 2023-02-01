@@ -86,7 +86,7 @@ async function verifyBuildStatus(pipelineBuild, timeout, resolve, reject) {
   
   console.log(`Verify build status... ${data.state}`);
   
-  if (data.state === 'inProgress') {
+  if (data.state !== 'completed') {
     return;
   }
 
