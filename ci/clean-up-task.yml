@@ -1,0 +1,14 @@
+parameters:
+  - name: task
+    type: string
+
+steps:
+- task: Bash@3
+  condition: always()
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo "Deleting task"
+      echo $TASKID
+      tfx build tasks delete --task-id $TASKID
+  displayName: 'Delete task'  
