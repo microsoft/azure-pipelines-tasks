@@ -55,10 +55,10 @@ function getPipelines() {
   });
 }
 
-function runTestPipeline(data) {
-  console.log(`Trigger test pipeline for ${data} task`);
+function runTestPipeline(pipeline) {
+  console.log(`Run test pipeline for ${pipeline.name} task, pipelineId: ${pipeline.id}`);
 
-  return axios.post(`https://dev.azure.com/${organization}/${project}/_apis/pipelines${data.id}/runs?api-version=7.0`, {
+  return axios.post(`https://dev.azure.com/${organization}/${project}/_apis/pipelines${pipeline.id}/runs?api-version=7.0`, {
     templateParameters: {}
   },{ 
     headers: {
@@ -66,10 +66,12 @@ function runTestPipeline(data) {
       'Accept': 'application/json'
     }
   })
+  .then(res => res.data)
+  .catch(err => err)
 }
 
-function verifyTestRunResults(taskName, pipeline) {
-  console.log(`Observe test pipeline for ${taskName} task`);
+function verifyTestRunResults(pipelineBuild) {
+  console.log(`Observe test pipeline for ${pipeline.name} task`);
 }
 
 
