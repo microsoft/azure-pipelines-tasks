@@ -1,6 +1,5 @@
 const axios = require('axios');
 
-
 const HOSTNAME = 'https://dev.azure.com';
 const ORGANIZATION = 'canary2-poc';
 const PROJECT = 'tasks-canary';
