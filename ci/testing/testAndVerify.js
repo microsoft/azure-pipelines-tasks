@@ -7,49 +7,29 @@ const PROJECT = 'tasks-canary';
 const apiVersion = 'api-version=7.0';
 const apiUrl = `${HOSTNAME}/${ORGANIZATION}/${PROJECT}/_apis/pipelines`;
 const AUTH_TOKEN = process.argv[2];
-const tasks = process.argv[3];
+const task = process.argv[3];
 const auth = {
   username: 'Basic',
   password: AUTH_TOKEN
 };
 const intervalDelayMs = 30000;
 
-if (tasks) {
-  return start(tasks);
+if (task) {
+  return start(task);
 } else {
-  console.log('Skip test verification');
+  throw new Error('Task name was not provided');
 }
 
-async function start(tasks) {
-  const taskNames = tasks.split(',');
+async function start(taskName) {
+  const pipelines = await fetchPipelines();
+  const pipeline = pipelines.find(pipeline => pipeline.name = taskName);
 
-  if (taskNames.length) {
-    const pipelines = await fetchPipelines();
-    const map = mapPipelines(pipelines);
-  
-    return Promise.all(taskNames.map(async taskName => {
-      if (map[taskName]) {
-        const pipelineBuild = await runTestPipeline(map[taskName]);
-        return verifyTestRunResults(pipelineBuild);  
-      } else {
-        console.error(`Error: cannot build and run tests for task ${taskName} - corresponding pipeline was not found`);
-      }
-    })).then(() => {
-      console.log('Testing finished succesfully');
-    }).catch(err => {
-      console.error('Testing failed:', err);
-    })
+  if (pipeline) {
+    const pipelineBuild = await runTestPipeline(pipeline);
+    return verifyTestRunResults(pipelineBuild);  
+  } else {
+    console.error(`Error: cannot build and run tests for task ${taskName} - corresponding pipeline was not found`);
   }
-}
-
-function mapPipelines(pipelines) { 
-  const map = {};
-
-  pipelines.forEach(data => {
-    map[data.name] = data;
-  })
-
-  return map;
 }
 
 function fetchPipelines() {
