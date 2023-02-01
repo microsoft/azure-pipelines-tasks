@@ -35,15 +35,17 @@ steps:
       tfx build tasks delete --task-id $TASKID --no-prompt
       tfx build tasks upload --task-path ./task-${{ parameters.task }}/${{parameters.task}} --no-prompt
 
+
+- script: |
+    echo "Tasks: $(tasks)"
+    node ../ci/testing/testAndVerify.js $(ADOToken) ${{ parameters.task }}
+  displayName: 'Run testing pipelines for each task and verify results'  
+
 - task: Bash@3
   inputs:
     targetType: 'inline'
     script: |
-      curl  --user '':'$(ADOToken)' --header "Content-Type: application/json" --header "Accept:application/json" https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/3/runs?api-version=7 -X POST -d '{}'      
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: |
       echo "Deleting task"
+      echo $TASKID
       tfx build tasks delete --task-id AC4EE482-65DA-4485-A532-7B085873E532
       tfx build tasks delete --task-id 31C75BBB-BCDF-4706-8D7C-4DA6A1959BC2
