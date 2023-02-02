@@ -17,14 +17,14 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 210,
+    "Minor": 217,
     "Patch": 0
   },
   "demands": [
     "vstest"
   ],
   "releaseNotes": "<ul><li><b>Run tests using an agent job:</b> Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can distribute tests using the multi-agent job setting. The multi-config job setting can be used to replicate tests in different configurations. <a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Use the <b>Visual Studio Test Platform Installer task</b> to run tests without needing a full Visual Studio installation.</li></ul>",
-  "minimumAgentVersion": "2.103.0",
+  "minimumAgentVersion": "2.144.0",
   "groups": [
     {
       "name": "testSelection",
@@ -546,7 +546,10 @@
   ],
   "instanceNameFormat": "VsTest - $(testSelector)",
   "execution": {
-    "Node": {
+    "Node10": {
+      "target": "runvstest.js"
+    },
+    "Node16": {
       "target": "runvstest.js"
     }
   },

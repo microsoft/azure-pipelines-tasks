@@ -16,6 +16,10 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
     private keyVaultName;
     private keyVaultUrl;
 
+    private readonly retriableErrorCodes = ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN", "EAI_AGAIN"];
+    private readonly retriableStatusCodes = [408, 409, 500, 502, 503, 504];
+    private readonly retriableErrorMessages = ["Request timeout: ", "getaddrinfo "];
+
     constructor(credentials: msRestAzure.ApplicationTokenCredentials,
         subscriptionId: string,
         keyVaultName: string,
@@ -31,59 +35,72 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
     public async invokeRequest(request: webClient.WebRequest): Promise<webClient.WebResponse> {
         const maxRetryCount: number = 5;
         const retryIntervalInSeconds: number = 2;
-        const retriableErrorCodes = ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN", "EAI_AGAIN"];
-        const retriableStatusCodes = [408, 409, 500, 502, 503, 504];
-        let timeToWait: number = retryIntervalInSeconds;
+
         let retryCount: number = 0;
 
-        while(true) {
+        while (true) {
             try {
-                var response = await this.beginRequest(request);
+                let response = await this.beginRequest(request);
                 if (response.statusCode == 401) {
-                    var vaultResourceId = this.getValidVaultResourceId(response);
-                    if(!!vaultResourceId) {
+                    const vaultResourceId = this.getValidVaultResourceId(response);
+                    if (!!vaultResourceId) {
                         console.log(tl.loc("RetryingWithVaultResourceIdFromResponse", vaultResourceId));
 
                         this.getCredentials().activeDirectoryResourceId = vaultResourceId; // update vault resource Id
                         this.getCredentials().getToken(true); // Refresh authorization token in cache
-                        var response = await this.beginRequest(request);
+                        response = await this.beginRequest(request);
                     }
                 }
 
-                if (retriableStatusCodes.indexOf(response.statusCode) != -1 && ++retryCount < maxRetryCount) {
-                    tl.debug(util.format("Encountered a retriable status code: %s. Message: '%s'.", response.statusCode, response.statusMessage));
-                    await webClient.sleepFor(timeToWait);
-                    timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
-                    continue;
+                if (this.retriableStatusCodes.indexOf(response.statusCode) === -1) {
+                    return response;
                 }
 
-                return response;
-            } catch(error) {
-                if ((retriableErrorCodes.indexOf(error.code) != -1
-                || !!error.message && (error.message.startsWith('Request timeout: ') || error.message.startsWith('getaddrinfo ')))
-                && ++retryCount < maxRetryCount) {
-                    tl.debug(util.format("Encountered an error. Will retry. Error:%s. Message: %s.", error.code, error.message));
-                    await webClient.sleepFor(timeToWait);
-                    timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
+                if (++retryCount >= maxRetryCount) {
+                    return response;
                 }
-                else {
+
+                tl.debug(`Encountered a retriable status code: ${response.statusCode}. Message: '${response.statusMessage}'.`);
+            }
+            catch (error) {
+                if (++retryCount >= maxRetryCount) {
                     throw error;
                 }
+
+                if (!this.isRetriableError(error)) {
+                    throw error;
+                }
+
+                tl.debug(`Encountered an error. Will retry. Error: ${error.code}. Message: ${error.message}.`);
             }
+
+            await webClient.sleepFor(retryIntervalInSeconds);
         }
+    }
+
+    private isRetriableError(error: any): boolean {
+        if (this.retriableErrorCodes.indexOf(error.code) !== -1) {
+            return true;
+        }
+
+        if (!error.message) {
+            return false;
+        }
+
+        return this.retriableErrorMessages.some(m => error.message.startsWith(m));
     }
 
     public getValidVaultResourceId(response: webClient.WebResponse) {
         if (!!response.headers) {
             var authenticateHeader = response.headers['www-authenticate'];
             if (!!authenticateHeader) {
-                var parsedParams = authenticateHeader.split(",").map(pair => pair.split("=").map(function(item) {
+                var parsedParams = authenticateHeader.split(",").map(pair => pair.split("=").map(function (item) {
                     return item.trim();
                 }));
 
                 const properties = {};
-                parsedParams.forEach(([key,value]) => properties[key] = value);
-                if(properties['resource']) {
+                parsedParams.forEach(([key, value]) => properties[key] = value);
+                if (properties['resource']) {
                     return properties['resource'].split('"').join('');
                 }
             }
@@ -99,8 +116,7 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
 
         // Create HTTP transport objects
         var url = nextLink;
-        if (!url)
-        {
+        if (!url) {
             url = this.getRequestUriForBaseUri(
                 this.keyVaultUrl,
                 '/secrets',
@@ -181,8 +197,7 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         var listOfSecrets: AzureKeyVaultSecret[] = [];
         result.forEach((value: any, index: number) => {
             var expires;
-            if (value.attributes.exp)
-            {
+            if (value.attributes.exp) {
                 expires = new Date(0);
                 expires.setSeconds(parseInt(value.attributes.exp));
             }

@@ -9,12 +9,12 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 215,
+    "Minor": 217,
     "Patch": 0
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
-  "minimumAgentVersion": "2.144.0",
+  "minimumAgentVersion": "2.115.0",
   "groups": [
     {
       "name": "advancedOptions",
@@ -34,7 +34,8 @@
         "npm": "Npm",
         "nuget": "NuGet",
         "pypi": "Python",
-        "upack": "Universal"
+        "upack": "Universal",
+        "cargo": "Cargo"
       }
     },
     {
@@ -165,10 +166,6 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {
-      "target": "main.js",
-      "argumentFormat": ""
-    },
-    "Node16": {
       "target": "main.js",
       "argumentFormat": ""
     }
