@@ -30,7 +30,9 @@
         "azure-pipelines-tasks-artifacts-common": "1.0.1",
         "azure-pipelines-tasks-packaging-common": "3.214.0",
         "azure-pipelines-task-lib": "4.1.0",
-        "toml": "^3.0.0"
+        "toml": "^3.0.0",
+        "utf8": "^2.1.0",
+        "base-64": "^0.1.0"
     },
     "devDependencies": {
         "typescript": "4.0.2"

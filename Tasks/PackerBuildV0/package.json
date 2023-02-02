@@ -6,7 +6,7 @@
     "@types/node": "^16.11.39",
     "@types/q": "^1.0.7",
     "azure-pipelines-task-lib": "^4.2.0",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.217.0",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.217.1",
     "decompress-zip": "^0.3.3",
     "moment": "^2.29.4"
   },
