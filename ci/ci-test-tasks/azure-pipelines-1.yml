@@ -20,7 +20,7 @@ jobs:
   - bash: |
       echo $TASKS
       npm install @octokit/core
-      TASKS=`node ./ci/ci-test-tasks/detectUpdatedTasks.js $(PAT_Github) | xargs`
+      TASKS=`node ./ci/ci-test-tasks/detect-updated-tasks.js $(PAT_Github) | xargs`
       echo $TASKS
       OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7" -X POST -d "{\"templateParameters\": { \"tasks\": \"$TASKS\"}}"`
       echo $OUTPUT
