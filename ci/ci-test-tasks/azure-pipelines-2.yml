@@ -2,7 +2,7 @@ parameters:
 - name: tasks
   displayName: Tasks to process (separate by colons, no whitespaces)
   type: string
-  default: UseNodeV1,MavenV3
+  default: UseNodeV1,MavenV3,MavenV4
 
 trigger: none
 
