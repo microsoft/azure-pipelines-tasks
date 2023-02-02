@@ -9,7 +9,7 @@ jobs:
       npm install @octokit/core
       TASKS=`node ./ci/ci-test-tasks/detectUpdatedTasks.js $(PAT_Github) | xargs`
       echo $TASKS
-    displayName: 'Extract task names'
+    displayName: 'Detect updated tasks and extract task names'
 
 - job: run_build_and_test_pipelines
   dependsOn: extract_task_names
