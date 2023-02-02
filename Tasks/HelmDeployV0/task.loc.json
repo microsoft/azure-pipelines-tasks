@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 217,
-    "Patch": 0
+    "Patch": 3
   },
   "demands": [],
   "groups": [
@@ -475,7 +475,10 @@
     {
       "target": "azureResourceGroup",
       "endpointId": "$(azureSubscriptionEndpoint)",
-      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31&$skiptoken={{{skiptoken}}}",
+      "callbackContextTemplate": "{\"skiptoken\": \"{{#getTokenValue response.nextLink}}{{extractUrlQueryParameter %24skiptoken}}{{/getTokenValue}}\"}",
+      "callbackRequiredTemplate": "{{isTokenPresent response.nextLink}}",
+      "initialContextTemplate": "{\"skiptoken\": \"\"}",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
     },
@@ -518,9 +521,6 @@
   },
   "postjobexecution": {
     "Node10": {
-      "target": "src//deletesecurefiles.js"
-    },
-    "Node16": {
       "target": "src//deletesecurefiles.js"
     }
   },

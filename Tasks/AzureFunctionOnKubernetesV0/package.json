@@ -21,8 +21,7 @@
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^3.0.6-preview.0",
     "azure-pipelines-tasks-docker-common-v2": "^2.0.1-preview.0",
-    "azure-pipelines-tasks-kubernetes-common-v2": "^2.0.0-preview.0",
-    "js-yaml": "3.13.1",
-    "utility-common-v2": "file:../../_build/Tasks/Common/utility-common-v2-2.0.0.tgz"
+    "azure-pipelines-tasks-kubernetes-common-v2": "^2.212.0",
+    "js-yaml": "3.13.1"
   }
 }
