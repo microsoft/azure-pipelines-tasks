@@ -19,7 +19,7 @@
     "@types/mocha": "^9.1.1",
     "azure-pipelines-task-lib": "^4.0.1-preview",
     "collections": "3.0.0",
-    "minimatch": "^3.0.4"
+    "minimatch": "^3.0.5"
   },
   "devDependencies": {
     "typescript": "4.0.2"
