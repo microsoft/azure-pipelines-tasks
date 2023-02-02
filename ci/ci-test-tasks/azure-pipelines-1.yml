@@ -8,10 +8,10 @@ jobs:
   - bash: |
       npm install @octokit/core
       TASKS=`node ./ci/ci-test-tasks/detectUpdatedTasks.js $(PAT_Github) | xargs`
-      echo $TASKS
+      echo "##vso[task.setvariable variable=TASKS;]$TASKS"
     displayName: 'Detect updated tasks and extract task names'
 
-- job: run_build_and_test_pipelines
+- job: run_test_pipelines
   dependsOn: extract_task_names
   pool:
     vmImage: ubuntu-20.04
@@ -20,4 +20,4 @@ jobs:
       echo $TASKS
       OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7" -X POST -d "{\"templateParameters\": { \"tasks\": \"$TASKS\"}}"`
       echo $OUTPUT
-    displayName: 'Run build and test pipelines'
+    displayName: 'Run test pipelines'
