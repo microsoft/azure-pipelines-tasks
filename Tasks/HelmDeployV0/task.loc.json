@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 217,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "groups": [
@@ -521,9 +521,6 @@
   },
   "postjobexecution": {
     "Node10": {
-      "target": "src//deletesecurefiles.js"
-    },
-    "Node16": {
       "target": "src//deletesecurefiles.js"
     }
   },
