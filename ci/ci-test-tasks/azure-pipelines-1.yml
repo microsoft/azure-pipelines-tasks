@@ -9,6 +9,7 @@ jobs:
       npm install @octokit/core
       TASKS=`node ./ci/ci-test-tasks/detectUpdatedTasks.js $(PAT_Github) | xargs`
       echo "##vso[task.setvariable variable=TASKS;isoutput=true]$TASKS"
+      echo $TASKS
     displayName: 'Detect updated tasks and extract task names'
 
 - job: run_test_pipelines
