@@ -14,6 +14,7 @@ const configFileLocationInputName = 'config_file_location';
 const apiTokenInputName = 'azure_static_web_apps_api_token';
 const deploymentEnvironmentInputName = 'deployment_environment';
 const productionBranchInputName = 'production_branch';
+const dataApiLocationInputName = 'data_api_location';
 
 async function run() {
     const envVarFilePath: string = path.join(__dirname, 'env.list');
@@ -80,6 +81,7 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
     const configFileLocation: string = tl.getInput(configFileLocationInputName, false) || "";
     const deploymentEnvironment: string = tl.getInput(deploymentEnvironmentInputName, false) || "";
     const productionBranch: string = tl.getInput(productionBranchInputName, false) || "";
+    const dataApiLocation: string = tl.getInput(dataApiLocationInputName, false) || "";
 
     const skipAppBuild: boolean = tl.getBoolInput('skip_app_build', false);
     const skipApiBuild: boolean = tl.getBoolInput('skip_api_build', false);
@@ -104,6 +106,7 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
     addInputStringToString("CONFIG_FILE_LOCATION", configFileLocation, configFileLocationInputName);
     addInputStringToString("DEPLOYMENT_ENVIRONMENT", deploymentEnvironment, deploymentEnvironmentInputName);
     addInputStringToString("PRODUCTION_BRANCH", productionBranch, productionBranchInputName);
+    addInputStringToString("DATA_API_LOCATION", dataApiLocation, dataApiLocationInputName);
 
     addSystemVariableToString("SKIP_APP_BUILD", skipAppBuild.toString());
     addSystemVariableToString("SKIP_API_BUILD", skipApiBuild.toString());
