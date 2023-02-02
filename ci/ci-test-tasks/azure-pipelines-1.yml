@@ -13,7 +13,7 @@ jobs:
 #     displayName: 'Detect updated tasks and extract task names'
 
 - job: run_test_pipelines
-  dependsOn: extract_task_names
+  # dependsOn: extract_task_names
   pool:
     vmImage: ubuntu-20.04
   steps:
