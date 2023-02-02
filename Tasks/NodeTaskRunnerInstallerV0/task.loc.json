@@ -31,7 +31,6 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.runnerVersion",
       "required": true,
-      "groupName": "codeCoverage",
       "defaultValue": "6",
       "helpMarkDown": "ms-resource:loc.input.help.runnerVersion",
       "options": {

@@ -31,7 +31,6 @@
       "type": "pickList",
       "label": "Version of runner to install",
       "required": true,
-      "groupName": "codeCoverage",
       "defaultValue": "6",
       "helpMarkDown": "Select the node version to install.",
       "options": {
