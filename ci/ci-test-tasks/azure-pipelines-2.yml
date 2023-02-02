@@ -13,7 +13,7 @@ jobs:
       pool:
         vmImage: windows-2022
       steps:
-      - template: ./build-single-steps.yml
+      - template: ./build-task/build-task.yml
         parameters:
           task: ${{ var }}
           push: false

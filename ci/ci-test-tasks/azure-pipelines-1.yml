@@ -1,25 +1,22 @@
 jobs:
 - job: extract_task_names
-  pool:
-    vmImage: ubuntu-20.04
   # we only test tasks on a PR and ignore forks since for security reasosns PAT tokens pipeline variable will not be available for fork's PRs.
   #condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['System.PullRequest.IsFork'], 'False')) TODO: uncomment the line after testing
+  pool:
+    vmImage: ubuntu-20.04
   steps:
   - bash: |
       npm install @octokit/core
-      TASKS=`node ./ci/canary-test/extractTaskNames.js $(PAT_Github) | xargs`
+      TASKS=`node ./ci/ci-test-tasks/detectUpdatedTasks.js $(PAT_Github) | xargs`
       echo $TASKS
     displayName: 'Extract task names'
 
 - job: run_build_and_test_pipelines
   pool:
     vmImage: ubuntu-20.04
-  # we only test tasks on a PR and ignore forks since for security reasosns PAT tokens pipeline variable will not be available for fork's PRs.
-  #condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['System.PullRequest.IsFork'], 'False')) TODO: uncomment the line after testing
   steps:
   - bash: |
       echo $TASKS
       OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "https://dev.azure.com/canary2-poc/tasks-canary/_apis/pipelines/5/runs?api-version=7" -X POST -d "{\"templateParameters\": { \"tasks\": \"$TASKS\"}}"`
       echo $OUTPUT
     displayName: 'Run build and test pipelines'
-    
