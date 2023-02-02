@@ -12,6 +12,7 @@ jobs:
     displayName: 'Extract task names'
 
 - job: run_build_and_test_pipelines
+  dependsOn: extract_task_names
   pool:
     vmImage: ubuntu-20.04
   steps:
