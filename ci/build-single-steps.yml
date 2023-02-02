@@ -32,7 +32,7 @@ steps:
 
 
 - ${{ if parameters.patchVersion }}:
-  - script: node ci/canary-test/patch-task-version.js --task=${{ parameters.task }} --version=${{ parameters.version }}
+  - script: node ci/patch-task-version.js --task=${{ parameters.task }} --version=${{ parameters.version }}
     displayName: patchTaskVersion
 
 # Verify min agent demands
