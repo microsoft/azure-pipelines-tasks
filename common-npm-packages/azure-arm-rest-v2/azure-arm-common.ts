@@ -308,7 +308,7 @@ export class ApplicationTokenCredentials {
             case AzureModels.Scheme.ManagedServiceIdentity:
                 msalInstance = this.configureMSALWithMSI(msalConfig);
                 break;
-            case AzureModels.Scheme.OidcFederation:
+            case AzureModels.Scheme.WorkloadIdentityFederation:
                 msalInstance = await this.configureMSALWithOIDC(msalConfig);
                 break;
             case AzureModels.Scheme.SPN:
