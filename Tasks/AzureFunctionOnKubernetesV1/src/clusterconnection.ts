@@ -42,7 +42,7 @@ export default class ClusterConnection {
             // prepend the tools path. instructs the agent to prepend for future tasks
             if(!process.env['PATH'].toLowerCase().startsWith(path.dirname(this.kubectlPath.toLowerCase()))) {
                 toolLib.prependPath(path.dirname(this.kubectlPath));
-            }     
+            }
         });
     }
 
@@ -54,6 +54,7 @@ export default class ClusterConnection {
     // open kubernetes connection
     public async open() {
         var connectionType = tl.getInput("connectionType", true);
+        console.log("Connection type: " + connectionType);
         if (connectionType === "None") {
             return this.initialize();
         }
@@ -127,6 +128,9 @@ export default class ClusterConnection {
     }
 
     private async getKubectl() : Promise<string> {
+        if (this.kubectlPath) {
+            return this.kubectlPath;
+        }
         let versionOrLocation = tl.getInput("versionOrLocation");
         if( versionOrLocation === "location") {
             let pathToKubectl = tl.getPathInput("specifyLocation", true, true);

@@ -14,7 +14,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 216,
+        "Minor": 218,
         "Patch": 0
     },
     "demands": [],
@@ -53,9 +53,9 @@
             "helpMarkDown": "Select a Docker registry service connection."
         },
         {
-            "name": "kubernetesServiceConnection",
+            "name": "kubernetesServiceEndpoint",
             "aliases": [
-                "kubernetesServiceEndpoint"
+                "kubernetesServiceConnection"
             ],
             "type": "connectedService:kubernetes",
             "label": "Kubernetes service connection",
@@ -65,9 +65,9 @@
             "helpMarkDown": "Select a Kubernetes service connection."
         },
         {
-            "name": "azureSubscriptionConnection",
+            "name": "azureSubscriptionEndpoint",
             "aliases": [
-                "azureSubscriptionEndpoint"
+                "azureSubscriptionConnection"
             ],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
@@ -76,6 +76,32 @@
             "defaultValue": "",
             "groupName": "serviceConnections",
             "required": true
+        },
+        {
+            "name": "azureResourceGroup",
+            "label": "Resource group",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure resource group.",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "serviceConnections",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "kubernetesCluster",
+            "label": "Kubernetes cluster",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure managed cluster.",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "serviceConnections",
+            "properties": {
+                "EditableOptions": "True"
+            }
         },
         {
             "name": "namespace",
@@ -130,7 +156,22 @@
             "helpMarkDown": "Pass arguments to command. Ex:<br>--no-docker --service-type NodePort"
         }
     ],
-    "dataSourceBindings": [],
+    "dataSourceBindings": [
+        {
+            "target": "kubernetesCluster",
+            "endpointId": "$(azureSubscriptionEndpoint)",
+            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{{{name}}}"
+        },
+        {
+            "target": "azureResourceGroup",
+            "endpointId": "$(azureSubscriptionEndpoint)",
+            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
+        }
+    ],
     "instanceNameFormat": "Func on K8s - deploy",
     "execution": {
         "Node10": {
