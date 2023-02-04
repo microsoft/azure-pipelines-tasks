@@ -178,7 +178,7 @@
             "label": "az login output visibility",
             "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "If this is set to true, az login command will output to the task. Setting it to true will suppress the az login output",
+            "helpMarkDown": "If this is set to true, az login command will output to the task. Setting it to false will suppress the az login output",
             "groupName": "advanced"
         }        
     ],
