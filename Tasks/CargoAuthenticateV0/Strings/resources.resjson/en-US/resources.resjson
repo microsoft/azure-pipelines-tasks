@@ -5,10 +5,13 @@
   "loc.instanceNameFormat": "cargo Authenticate $(configFile)",
   "loc.input.label.configFile": "config.toml file to authenticate",
   "loc.input.help.configFile": "Path to the config.toml file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/.cargo/config.toml\".",
+  "loc.input.label.cargoServiceConnections": "Credentials for registries outside this organization/collection",
+  "loc.input.help.cargoServiceConnections": "Credentials to use for external registries located in the project's config.toml. For registries in this organization/collection, leave this blank; the build’s credentials are used automatically.",
   "loc.messages.FailedToAddAuthentication": "Failed to add authentication.",
   "loc.messages.ConfigTomlNotToml": "The file you selected to authenticate (%s) is not a valid .toml file.",
   "loc.messages.ConfigTomlDoesNotExist": "The config.toml file you selected at %s does not currently exist.",
   "loc.messages.ConfigTomlMissingRegistry": "The config.toml file you selected must contain registries table",
   "loc.messages.AuthenticatingThisConfigToml": "Adding authentication for registry listed in this config.toml file at %s",
-  "loc.messages.AddingAuthRegistry": "Adding auth for registry: %s with token name: %s"
+  "loc.messages.AddingAuthRegistry": "Adding auth for registry: %s with token name: %s",
+  "loc.messages.AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s"
 }
