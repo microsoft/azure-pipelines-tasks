@@ -22,7 +22,8 @@ async function runTask() {
     taskLib.debug('Current runner version = ' + currentRunner);
 
     if (currentRunner === targetNodeVersion) {
-        throw new Error(taskLib.loc('SameRunnersError', currentRunner));
+        console.log(taskLib.loc('RunnerAlreadyInUse', currentRunner));
+        return;
     }
 
     const osPlatform: NodeOsPlatform = os.platform();
