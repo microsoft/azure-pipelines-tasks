@@ -37,13 +37,10 @@ export default class ClusterConnection {
     }
 
     private async initialize(): Promise<void> {
-        return this.getKubectl().then((kubectlpath)=> {
-            this.kubectlPath = kubectlpath;
-            // prepend the tools path. instructs the agent to prepend for future tasks
-            if(!process.env['PATH'].toLowerCase().startsWith(path.dirname(this.kubectlPath.toLowerCase()))) {
-                toolLib.prependPath(path.dirname(this.kubectlPath));
-            }
-        });
+        // prepend the tools path. instructs the agent to prepend for future tasks
+        if(!process.env['PATH'].toLowerCase().startsWith(path.dirname(this.kubectlPath.toLowerCase()))) {
+            toolLib.prependPath(path.dirname(this.kubectlPath));
+        }
     }
 
     public createCommand(): tr.ToolRunner {
@@ -125,43 +122,5 @@ export default class ClusterConnection {
 
         tl.debug(tl.loc('ReturningToolRunnerExecPromise'));
         return promise;
-    }
-
-    private async getKubectl() : Promise<string> {
-        if (this.kubectlPath) {
-            return this.kubectlPath;
-        }
-        let versionOrLocation = tl.getInput("versionOrLocation");
-        if( versionOrLocation === "location") {
-            let pathToKubectl = tl.getPathInput("specifyLocation", true, true);
-            try {
-                fs.chmodSync(pathToKubectl, "644");
-            } catch (ex) {
-                tl.debug(`Could not chmod ${pathToKubectl}, exception: ${JSON.stringify(ex)}`)
-            }
-            return pathToKubectl;
-        }
-        else if (versionOrLocation === "version") {
-            var defaultVersionSpec = "1.13.2";
-            let versionSpec = tl.getInput("versionSpec");
-            let checkLatest: boolean = tl.getBoolInput('checkLatest', false);
-            var version = await utils.getKubectlVersion(versionSpec, checkLatest);
-            if (versionSpec != defaultVersionSpec || checkLatest)
-            {
-               tl.debug(tl.loc("DownloadingClient"));
-               return await utils.downloadKubectl(version); 
-            }
-
-            // Reached here => default version
-            // Now to handle back-compat, return the version installed on the machine
-            if(this.kubectlPath && fs.existsSync(this.kubectlPath))
-            {
-                return this.kubectlPath;
-            }
-            
-           // Download the default version
-           tl.debug(tl.loc("DownloadingClient"));
-           return await utils.downloadKubectl(version); 
-        }
     }
 }
