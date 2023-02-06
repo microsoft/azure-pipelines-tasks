@@ -10,19 +10,19 @@ import { isRunnerInstalled } from './modules/cache';
 
 async function runTask() {
 
-    const inputVersion: string = taskLib.getInputRequired('runnerVersion');
+    const runnerInputVersion: string = taskLib.getInputRequired('runnerVersion');
 
-    const targetNodeVersion: RunnerVersion = NODE_INPUT_VERSIONS[inputVersion];
+    const targetRunnerVersion: RunnerVersion = NODE_INPUT_VERSIONS[runnerInputVersion];
 
-    if (!targetNodeVersion) {
+    if (!targetRunnerVersion) {
         throw new Error(taskLib.loc('NotAllowedNodeVersion', Object.keys(NODE_INPUT_VERSIONS).join(', ')));
     }
 
-    const currentRunner = process.versions.node;
-    taskLib.debug('Current runner version = ' + currentRunner);
+    const currentRunnerVersion = process.versions.node;
+    taskLib.debug('Current runner version = ' + currentRunnerVersion);
 
-    if (currentRunner === targetNodeVersion) {
-        console.log(taskLib.loc('RunnerAlreadyInUse', currentRunner));
+    if (currentRunnerVersion === targetRunnerVersion) {
+        console.log(taskLib.loc('RunnerAlreadyInUse', currentRunnerVersion));
         return;
     }
 
@@ -34,14 +34,14 @@ async function runTask() {
         throw new Error(taskLib.loc('UnexpectedOS', osPlatform, supportedOsList.join(', ')));
     }
 
-    if (isRunnerInstalled(targetNodeVersion, osPlatform)) {
-        console.log(taskLib.loc('RunnerAlreadyInstalled', targetNodeVersion));
+    if (isRunnerInstalled(targetRunnerVersion, osPlatform)) {
+        console.log(taskLib.loc('RunnerAlreadyInstalled', targetRunnerVersion));
         return;
     }
 
     const osArch = mapOsArchToDistroVariant(os.arch() as NodeOsArch);
 
-    await installNodeRunner(targetNodeVersion, { osArch, osPlatform });
+    await installNodeRunner(targetRunnerVersion, { osArch, osPlatform });
 }
 
 runTask();
