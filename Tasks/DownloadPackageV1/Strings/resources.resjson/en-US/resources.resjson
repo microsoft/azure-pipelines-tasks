@@ -35,5 +35,5 @@
   "loc.messages.Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
   "loc.messages.Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
   "loc.messages.Info_UsingArtifactToolDownload": "Using artifact tool to download the package",
-  "loc.messages.Info_ResolveLatestVersion": "Resoved latest version to: %s"
+  "loc.messages.Info_DownloadingPackageIdVersion": "Downloading package id: %s package version: %s"
 }
