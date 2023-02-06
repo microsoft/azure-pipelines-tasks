@@ -9,5 +9,6 @@
   "loc.messages.UnexpectedOS": "Unexpected OS %s. Supported variants: %s",
   "loc.messages.SameRunnersError": "You cannot specify a similar version of runner that is currently in use. The current version of runner: %s",
   "loc.messages.NotAllowedNodeVersion": "The version of the target node does not match the allowed versions. Possible variants: %s",
-  "loc.messages.AGENT_HOMEDIRECTORY_NotAvailable": "Can't get AGENT_HOMEDIRECTORY environment varialbe."
+  "loc.messages.AGENT_HOMEDIRECTORY_NotAvailable": "Can't get AGENT_HOMEDIRECTORY environment varialbe.",
+  "loc.messages.RunnerAlreadyInstalled": "%s version of node runner already installed on the agent. Skipping..."
 }
