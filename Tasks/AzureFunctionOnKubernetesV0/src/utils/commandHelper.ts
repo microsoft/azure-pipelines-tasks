@@ -16,13 +16,13 @@ export class CommandHelper {
         this.kubectlPath = tl.which('kubectl', true);
     }
 
-    public execCommand(command: tr.ToolRunner, options?: tr.IExecOptions, warnIfError?: boolean) {
+    public execCommand(command: any, options?: tr.IExecOptions, warnIfError?: boolean) {
         const result: tr.IExecSyncResult = command.execSync(options);
         CommonUtils.checkForErrors([result], warnIfError);
         return result;
     }
     
-    public getFuncDeployCommand(dockerConnection: DockerConnection, secretName: string, appName: string, namespace: string, dockerHubNamespace: string, pullSecretName: string, args: string): tr.ToolRunner {
+    public getFuncDeployCommand(dockerConnection: DockerConnection, secretName: string, appName: string, namespace: string, dockerHubNamespace: string, pullSecretName: string, args: string) {
         const registry = dockerHubNamespace ? dockerHubNamespace : dockerConnection.getRegistry();
 
         if (!registry) {
