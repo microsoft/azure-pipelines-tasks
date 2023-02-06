@@ -331,7 +331,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
     rm('-Rf', buildTestsPath);
     mkdir('-p', path.join(buildTestsPath));
     cd(testsPath);
-    //run(`tsc --rootDir ${testsPath} --outDir ${buildTestsPath}`);
+    run(`tsc --rootDir ${testsPath} --outDir ${buildTestsPath}`);
     console.log();
     console.log('> copying ps test lib resources');
     mkdir('-p', path.join(buildTestsPath, 'lib'));
