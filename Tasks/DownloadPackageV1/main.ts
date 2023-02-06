@@ -74,8 +74,9 @@ async function main(): Promise<void> {
             tl.debug("Trying to resolve latest version for " + packageId);
             version = await p.resolveLatestVersion(feed.feedId, feed.projectId, packageId);
             tl.debug("Resolved version to: " + version);
+            console.log(tl.loc("Info_ResolveLatestVersion",version));
         }        
-
+        
         const packageFiles: PackageFile[] = await p.download(feed.feedId, feed.projectId, packageId, version, downloadPath, extractPackage);
 
         await Promise.all(packageFiles.map((p) => p.process()));
