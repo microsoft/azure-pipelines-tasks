@@ -1,0 +1,193 @@
+{
+  "id": "FD1AA5B9-400C-4F4B-9C0B-069BA74E53C6",
+  "name": "AzureFunctionOnKubernetes",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/func-k8s",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "preview": true,
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 217,
+    "Patch": 1
+  },
+  "demands": [],
+  "groups": [
+    {
+      "name": "serviceConnections",
+      "displayName": "ms-resource:loc.group.displayName.serviceConnections",
+      "isExpanded": true
+    },
+    {
+      "name": "commands",
+      "displayName": "ms-resource:loc.group.displayName.commands",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "connectionType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.connectionType",
+      "defaultValue": "Kubernetes Service Connection",
+      "required": true,
+      "options": {
+        "Azure Resource Manager": "Azure Resource Manager",
+        "Kubernetes Service Connection": "Kubernetes Service Connection"
+      },
+      "groupName": "serviceConnections",
+      "helpMarkDown": "ms-resource:loc.input.help.connectionType"
+    },
+    {
+      "name": "dockerRegistryServiceConnection",
+      "type": "connectedService:dockerregistry",
+      "label": "ms-resource:loc.input.label.dockerRegistryServiceConnection",
+      "required": true,
+      "groupName": "serviceConnections",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryServiceConnection"
+    },
+    {
+      "name": "kubernetesServiceEndpoint",
+      "aliases": [
+        "kubernetesServiceConnection"
+      ],
+      "type": "connectedService:kubernetes",
+      "label": "ms-resource:loc.input.label.kubernetesServiceEndpoint",
+      "visibleRule": "connectionType = Kubernetes Service Connection",
+      "required": true,
+      "groupName": "serviceConnections",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceEndpoint"
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "aliases": [
+        "azureSubscriptionConnection"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "groupName": "serviceConnections",
+      "required": true
+    },
+    {
+      "name": "azureResourceGroup",
+      "label": "ms-resource:loc.input.label.azureResourceGroup",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "serviceConnections",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "kubernetesCluster",
+      "label": "ms-resource:loc.input.label.kubernetesCluster",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesCluster",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "serviceConnections",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "namespace",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.namespace",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.namespace"
+    },
+    {
+      "name": "secretName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.secretName",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.secretName"
+    },
+    {
+      "name": "dockerHubNamespace",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.dockerHubNamespace",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerHubNamespace"
+    },
+    {
+      "name": "appName",
+      "type": "string",
+      "required": true,
+      "label": "ms-resource:loc.input.label.appName",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.appName"
+    },
+    {
+      "name": "functionRootDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.functionRootDirectory",
+      "required": false,
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.functionRootDirectory"
+    },
+    {
+      "name": "waitForStability",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.waitForStability",
+      "groupName": "commands",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.waitForStability"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "kubernetesCluster",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{{{name}}}"
+    },
+    {
+      "target": "azureResourceGroup",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "src//run.js"
+    }
+  },
+  "messages": {
+    "AllContainersNotInReadyState": "ms-resource:loc.messages.AllContainersNotInReadyState",
+    "CouldNotDeterminePodStatus": "ms-resource:loc.messages.CouldNotDeterminePodStatus",
+    "CouldNotDetermineServiceStatus": "ms-resource:loc.messages.CouldNotDetermineServiceStatus",
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
+    "KubectlClientVersion": "ms-resource:loc.messages.KubectlClientVersion",
+    "KubectlServerVersion": "ms-resource:loc.messages.KubectlServerVersion",
+    "KubernetesClusterResourceGroup": "ms-resource:loc.messages.KubernetesClusterResourceGroup",
+    "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
+    "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP",
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
+  }
+}
