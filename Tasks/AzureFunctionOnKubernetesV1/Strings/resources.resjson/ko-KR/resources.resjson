@@ -29,6 +29,7 @@
   "loc.messages.FileContentSynced": "파일 콘텐츠를 디스크에 동기화했습니다. 콘텐츠는 %s입니다.",
   "loc.messages.KubectlClientVersion": "Kubectl 클라이언트 버전",
   "loc.messages.KubectlServerVersion": "Kubectl 서버 버전",
+  "loc.messages.KubernetesClusterResourceGroup": "Kubernetes 클러스터 %s, 리소스 그룹 %s.",
   "loc.messages.NoDataWrittenOnFile": "데이터를 %s 파일에 쓰지 않았습니다.",
   "loc.messages.ServiceExternalIP": "서비스 %s 외부 IP가 %s입니다.",
   "loc.messages.WritingDockerConfigToTempFile": "임시 파일에 Docker 구성을 쓰는 중입니다. 파일 경로: %s, Docker 구성: %s"
