@@ -17,8 +17,11 @@
     },
     "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
     "dependencies": {
-        "azure-pipelines-task-lib": "2.8.0",
-        "packaging-common": "file:../../_build/Tasks/Common/packaging-common-1.0.1.tgz",
+        "azure-pipelines-task-lib": "^3.0.6-preview.0",
+        "azure-pipelines-tasks-packaging-common": "^3.214.0",
         "xmlreader": "^0.2.3"
+    },
+    "devDependencies": {
+        "typescript": "4.0.2"
     }
 }
