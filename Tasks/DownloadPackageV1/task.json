@@ -190,6 +190,7 @@
         "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
         "Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
         "Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
-        "Info_UsingArtifactToolDownload": "Using artifact tool to download the package"
+        "Info_UsingArtifactToolDownload": "Using artifact tool to download the package",
+        "Info_ResolvedLatestVersion": "Resolved latest package version: %s"
     }
 }
