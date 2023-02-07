@@ -29,6 +29,7 @@
   "loc.messages.FileContentSynced": "檔案內容已同步到磁碟。內容為 %s。",
   "loc.messages.KubectlClientVersion": "Kubectl 用戶端版本",
   "loc.messages.KubectlServerVersion": "Kubectl 伺服器版本",
+  "loc.messages.KubernetesClusterResourceGroup": "Kubernetes 叢集 %s，資源群組 %s。",
   "loc.messages.NoDataWrittenOnFile": "沒有任何資料寫入檔案 %s",
   "loc.messages.ServiceExternalIP": "服務 %s 的外部 IP 是 %s",
   "loc.messages.WritingDockerConfigToTempFile": "正在將 Docker 設定寫入暫存檔案。檔案路徑: %s，Docker 設定: %s"

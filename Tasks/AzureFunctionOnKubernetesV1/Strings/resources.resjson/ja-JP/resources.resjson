@@ -29,6 +29,7 @@
   "loc.messages.FileContentSynced": "ファイルの内容がディスクに同期されました。内容は %s です。",
   "loc.messages.KubectlClientVersion": "kubectl クライアント バージョン",
   "loc.messages.KubectlServerVersion": "kubectl サーバー バージョン",
+  "loc.messages.KubernetesClusterResourceGroup": "Kubernetes クラスター %s、リソース グループ %s。",
   "loc.messages.NoDataWrittenOnFile": "ファイル %s にデータが書き込まれませんでした",
   "loc.messages.ServiceExternalIP": "サービス %s の外部 IP は %s です",
   "loc.messages.WritingDockerConfigToTempFile": "Docker 構成を一時ファイルに書き込んでいます。ファイル パス: %s、Docker 構成: %s"

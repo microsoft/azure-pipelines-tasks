@@ -15,7 +15,7 @@
     "version": {
         "Major": 1,
         "Minor": 217,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "groups": [
@@ -185,6 +185,7 @@
         "FileContentSynced": "Synced the file content to the disk. The content is %s.",
         "KubectlClientVersion": "Kubectl Client Version",
         "KubectlServerVersion": "Kubectl Server Version",
+        "KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",
         "NoDataWrittenOnFile": "No data was written into the file %s",
         "ServiceExternalIP": "service %s external IP is %s",
         "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
