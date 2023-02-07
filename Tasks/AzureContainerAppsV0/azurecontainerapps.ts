@@ -35,12 +35,6 @@ export class azurecontainerapps {
                 throw Error(tl.loc('InvalidArgumentsMessage'));
             }
 
-            // Install the pack CLI
-            await new ContainerAppHelper().installPackCliAsync();
-
-            // Set the Azure CLI to dynamically install missing extensions
-            new Utility().setAzureCliDynamicInstall();
-
             // Log in to Azure with the service connection provided
             const connectedService: string = tl.getInput('connectedServiceNameARM', true);
             authHelper.loginAzureRM(connectedService);
@@ -64,6 +58,40 @@ export class azurecontainerapps {
                 console.log(tl.loc('AcrAccessTokenLoginMessage'));
                 await new ContainerRegistryHelper().loginAcrWithAccessTokenAsync(acrName);
             }
+
+            // Get the Container App environment if provided
+            const containerAppEnvironment: string = tl.getInput('containerAppEnvironment', false);
+            if (!!containerAppEnvironment) {
+                console.log(tl.loc('ContainerAppEnvironmentUsedMessage', containerAppEnvironment));
+                optionalCmdArgs.push(`--environment ${containerAppEnvironment}`);
+            }
+
+            // Get the Container App name if it was provided, or generate it from build variables
+            let containerAppName: string = tl.getInput('containerAppName', false);
+            if (!containerAppName) {
+                containerAppName = `ado-task-app-${buildId}-${buildNumber}`;
+                console.log(tl.loc('DefaultContainerAppNameMessage', containerAppName));
+            }
+
+            // Get the resource group to deploy to if it was provided, or generate it from the Container App name
+            let resourceGroup: string = tl.getInput('resourceGroup', false);
+            if (!resourceGroup) {
+                resourceGroup = `${containerAppName}-rg`;
+                console.log(tl.loc('DefaultResourceGroupMessage', resourceGroup));
+            }
+
+            // Set the Azure CLI to dynamically install missing extensions
+            new Utility().setAzureCliDynamicInstall();
+
+            if (imageToDeploy) {
+                // Create or update Azure Container App
+                new ContainerAppHelper().createOrUpdateContainerApp(containerAppName, resourceGroup, imageToDeploy, optionalCmdArgs);
+
+                return;
+            }
+
+            // Install the pack CLI
+            await new ContainerAppHelper().installPackCliAsync();
 
             // Get Dockerfile to build, if provided, or check if one exists at the root of the provided application
             let dockerfilePath: string = tl.getInput('dockerfilePath', false);
@@ -91,27 +119,6 @@ export class azurecontainerapps {
                 imageToDeploy = imageToBuild;
                 shouldBuildAndPushImage = true;
                 console.log(tl.loc('DefaultImageToDeployMessage', imageToDeploy));
-            }
-
-            // Get the Container App name if it was provided, or generate it from build variables
-            let containerAppName: string = tl.getInput('containerAppName', false);
-            if (!containerAppName) {
-                containerAppName = `ado-task-app-${buildId}-${buildNumber}`;
-                console.log(tl.loc('DefaultContainerAppNameMessage', containerAppName));
-            }
-
-            // Get the resource group to deploy to if it was provided, or generate it from the Container App name
-            let resourceGroup: string = tl.getInput('resourceGroup', false);
-            if (!resourceGroup) {
-                resourceGroup = `${containerAppName}-rg`;
-                console.log(tl.loc('DefaultResourceGroupMessage', resourceGroup));
-            }
-
-            // Get the Container App environment if provided
-            const containerAppEnvironment: string = tl.getInput('containerAppEnvironment', false);
-            if (!!containerAppEnvironment) {
-                console.log(tl.loc('ContainerAppEnvironmentUsedMessage', containerAppEnvironment));
-                optionalCmdArgs.push(`--environment ${containerAppEnvironment}`);
             }
 
             // Get the runtime stack if provided, or determine it using Oryx
