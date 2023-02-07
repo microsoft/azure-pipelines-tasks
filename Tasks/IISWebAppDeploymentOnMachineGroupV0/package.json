@@ -18,7 +18,7 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^16.11.39",
+    "@types/node": "^10.17.0",
     "@types/q": "1.0.7",
     "azure-pipelines-tasks-webdeployment-common": "4.208.0",
     "q": "1.4.1"
