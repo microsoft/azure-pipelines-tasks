@@ -29,6 +29,7 @@
   "loc.messages.FileContentSynced": "Synchronisation effectuée du contenu du fichier sur le disque. Le contenu est %s.",
   "loc.messages.KubectlClientVersion": "Version du client kubectl",
   "loc.messages.KubectlServerVersion": "Version du serveur kubectl",
+  "loc.messages.KubernetesClusterResourceGroup": "Cluster Kubernetes : %s, groupe de ressources : %s.",
   "loc.messages.NoDataWrittenOnFile": "Aucune donnée n'a été écrite dans le fichier %s",
   "loc.messages.ServiceExternalIP": "l'adresse IP externe du service %s est %s",
   "loc.messages.WritingDockerConfigToTempFile": "Écriture de la configuration Docker dans le fichier temporaire. Chemin de fichier : %s. Configuration Docker : %s"
