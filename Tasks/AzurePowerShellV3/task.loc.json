@@ -31,9 +31,9 @@
       "isExpanded": true
     },
     {
-        "name": "advanced",
-        "displayName": "ms-resource:loc.group.displayName.advanced",
-        "isExpanded": false
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
     }
   ],
   "minimumAgentVersion": "2.0.0",
@@ -178,14 +178,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.CustomTargetAzurePs"
     },
     {
-        "name":  "validateScriptSignature",
-        "type":  "boolean",
-        "label":  "ms-resource:loc.input.label.validateScriptSignature",
-        "required":  false,
-        "defaultValue":  "false",
-        "helpMarkDown":  "ms-resource:loc.input.label.validateScriptSignature",
-        "groupName":  "advanced",
-        "visibleRule":  "ScriptType = FilePath"
+      "name": "validateScriptSignature",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.validateScriptSignature",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.validateScriptSignature",
+      "groupName": "advanced",
+      "visibleRule": "ScriptType = FilePath"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

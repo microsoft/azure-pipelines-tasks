@@ -164,14 +164,14 @@
       "groupName": "advanced"
     },
     {
-        "name":  "validateScriptSignature",
-        "type":  "boolean",
-        "label":  "ms-resource:loc.input.label.validateScriptSignature",
-        "required":  false,
-        "defaultValue":  "false",
-        "helpMarkDown":  "ms-resource:loc.input.label.validateScriptSignature",
-        "groupName":  "advanced",
-        "visibleRule":  "ScriptType = FilePath"
+      "name": "validateScriptSignature",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.validateScriptSignature",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.validateScriptSignature",
+      "groupName": "advanced",
+      "visibleRule": "ScriptType = FilePath"
     },
     {
       "name": "workingDirectory",
