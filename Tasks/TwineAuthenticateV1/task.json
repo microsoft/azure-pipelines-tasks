@@ -9,7 +9,7 @@
     "category": "Package",
     "version": {
         "Major": 1,
-        "Minor": 213,
+        "Minor": 218,
         "Patch": 0
     },
     "runsOn": [
@@ -37,13 +37,13 @@
                 "artifactFeed"
             ],
             "type": "pickList",
-            "label": "My feed (select below)",
+            "label": "My feed name (select below)",
             "helpMarkDown": "Select a feed to authenticate present in this organization.",
             "defaultValue": "",
             "required": "false",
             "groupName": "feedAuthentication",
             "properties": {
-                "EditableOptions": "True"
+                "EditableOptions": "False"
             }
         },
         {
