@@ -6,7 +6,7 @@ This page is prepared for listing and planning possible migration of `npm packag
 
 Another [migration progress](../../common-npm-packages/MIGRATION_OF_COMMON_PACKAGES.md) is being tracked for **common-npm-packages** folder.
 
-# List of npm packages.
+# NPM Packages
 
 1. [ ] AzureRmDeploy-common
 2. [ ] coveragepublisher
@@ -15,7 +15,7 @@ Another [migration progress](../../common-npm-packages/MIGRATION_OF_COMMON_PACKA
 5. [X] utility-common-v2
 6. [ ] webdeployment-common-v2
 
-# List of PowerShell script modules.
+# PowerShell Script Modules
 
 These modules can be moved into [PowerShell Gallery](https://www.powershellgallery.com/) central repository.
 It is a necessary action to remove direct file references to Tasks/Common folder.
@@ -34,4 +34,4 @@ In addition to that, central repository usage will help us to maintain versionin
 
 | Package                 | Remove package folder                                               | Replace package in tasks                                            |
 | ----------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| utility-common-v2       | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/)      | No replacement, since there is no usage                             |
+| utility-common-v2       | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17730) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/16997) |
