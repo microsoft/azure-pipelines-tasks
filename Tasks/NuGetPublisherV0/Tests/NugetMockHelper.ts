@@ -47,7 +47,7 @@ export class NugetMockHelper {
     
     public registerNugetConfigMock() {
         var nchm = require('./NuGetConfigHelper-mock');
-        this.tmr.registerMock('packaging-common/nuget/NuGetConfigHelper', nchm);
+        this.tmr.registerMock('azure-pipelines-tasks-packaging-common/nuget/NuGetConfigHelper', nchm);
     }
     
     public registerToolRunnerMock() {
