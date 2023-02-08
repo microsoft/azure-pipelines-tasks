@@ -9,7 +9,7 @@
     "azure-pipelines-task-lib": "^4.0.1-preview",
     "azure-pipelines-tasks-azure-arm-rest-v2": "^2.210.0",
     "azure-pipelines-tasks-docker-common-v2": "^2.0.1-preview.0",
-    "azure-pipelines-tasks-kubernetes-common-v2": "^2.212.0",
+    "azure-pipelines-tasks-kubernetes-common": "^2.212.0",
     "azure-pipelines-tasks-utility-common": "^3.210.0",
     "azure-pipelines-tool-lib": "^2.0.0-preview",
     "del": "2.2.0",
