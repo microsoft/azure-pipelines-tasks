@@ -1,11 +1,6 @@
 {
     "common": [
         {
-            "module": "../Common/utility-common",
-            "type": "node",
-            "compile": true
-        },
-        {
             "module": "../Common/packaging-common",
             "type": "node",
             "compile": true
@@ -14,12 +9,7 @@
     "rm": [
         {
             "items": [
-                "node_modules/utility-common/node_modules/vsts-task-lib"
-            ],
-            "options": "-Rf"
-        },
-        {
-            "items": [
+                "node_modules/azure-pipelines-tasks-utility-common/node_modules/azure-pipelines-task-lib",
                 "node_modules/packaging-common/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
