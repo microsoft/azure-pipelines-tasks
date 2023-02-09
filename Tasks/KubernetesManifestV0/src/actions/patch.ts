@@ -1,9 +1,9 @@
 'use strict';
 
 import * as tl from 'azure-pipelines-task-lib/task';
-import { Kubectl } from 'azure-pipelines-tasks-kubernetes-common-v2/kubectl-object-model';
+import { Kubectl } from 'azure-pipelines-tasks-kubernetes-common/kubectl-object-model';
 import * as utils from '../utils/utilities';
-import * as constants from 'azure-pipelines-tasks-kubernetes-common-v2/kubernetesconstants';
+import * as constants from 'azure-pipelines-tasks-kubernetes-common/kubernetesconstants';
 import * as TaskParameters from '../models/TaskInputParameters';
 
 export async function patch(ignoreSslErrors?: boolean) {
