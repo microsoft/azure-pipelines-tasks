@@ -1,0 +1,29 @@
+{
+  "name": "azurefunctiononkubernetes",
+  "version": "1.0.0",
+  "description": "Deploy Azure Function on Kubernetes",
+  "main": "src//run.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "bugs": {
+    "url": "https://github.com/microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "devDependencies": {
+    "typescript": "4.0.2"
+  },
+  "dependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10.17.0",
+    "@types/q": "^1.5.0",
+    "@types/uuid": "^9.0.0",
+    "azure-pipelines-task-lib": "^3.1.0",
+    "azure-pipelines-tasks-docker-common-v2": "^2.211.0",
+    "azure-pipelines-tasks-kubernetes-common": "^2.212.0",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.217.3",
+    "azure-pipelines-tool-lib": "^2.0.0-preview",
+    "js-yaml": "3.13.1"
+  }
+}
