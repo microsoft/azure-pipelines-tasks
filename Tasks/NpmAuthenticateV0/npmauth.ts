@@ -132,6 +132,8 @@ function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url, adde
     let warned = false;
     for (let i = 0; i < redoneFile.length; i++) {
         if (file[i].indexOf(url.host) != -1 && file[i].indexOf(url.path) != -1 && file[i].indexOf('registry=') == -1) {
+            // Suppress the warning if it is the same registry from .npmrc
+            // E.g. registry={url} and @scope:registry={url} in .npmrc, the warning should not appear if both have the same url
             if (!warned && !addedRegistry.includes(url)) {
                 tl.warning(tl.loc('CheckedInCredentialsOverriden', url.host));
             }
