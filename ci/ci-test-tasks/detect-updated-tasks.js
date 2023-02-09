@@ -7,7 +7,7 @@ const allowedTasks = new Set(['DownloadPackageV1']); // TODO: remove after testi
 
 if (!githubPAT || githubPAT === 'PAT_placeholder') {
   // TODO: replace next two lines with uncommented exception throwing line after it before moving to prod. Testing until PAT token is added
-  console.log('UseNodeV1,MavenV3');
+  console.log('DownloadPackageV1');
   return;
   //throw new Error('Github PAT is missing');
 }
