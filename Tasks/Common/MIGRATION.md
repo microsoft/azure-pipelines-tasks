@@ -35,3 +35,4 @@ In addition to that, central repository usage will help us to maintain versionin
 | Package                 | Remove package folder                                               | Replace package in tasks                                            |
 | ----------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | utility-common-v2       | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17730) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/16997) |
+| utility-common       | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17734) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17734) |
