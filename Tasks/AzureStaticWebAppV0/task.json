@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": "0",
-    "Minor": "208",
+    "Minor": "217",
     "Patch": "0"
   },
   "preview": true,
@@ -152,6 +152,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Production branch. When specified and Deployment Environment is empty, deployments from other branches will be preview environments"
+    },
+    {
+      "name": "data_api_location",
+      "type": "string",
+      "label": "Data api location",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Directory location of the Data API source files relative to working directory"
     }
   ],
   "execution": {

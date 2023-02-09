@@ -45,6 +45,8 @@ Tasks/AzureFunctionAppContainerV1/    @vsebesta   @rvairavelu   @pipeline-enviro
 
 Tasks/AzureFunctionOnKubernetesV0/     @rvairavelu @manolerazvan
 
+Tasks/AzureFunctionOnKubernetesV1/     @rvairavelu @manolerazvan @vhavrysh
+
 Tasks/AzureFunctionV1/     @rvairavelu @manolerazvan
 
 Tasks/AzureIoTEdgeV2/     @marianan   @tameraw    @pprovost

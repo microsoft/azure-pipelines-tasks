@@ -4,6 +4,8 @@
   "loc.messages.SecretCannotBeEmpty": "secret debe ser una cadena no vacía.",
   "loc.messages.armUrlCannotBeEmpty": "arm Url debe ser una cadena no vacía.",
   "loc.messages.authorityUrlCannotBeEmpty": "authority debe ser una cadena no vacía.",
+  "loc.messages.serviceConnectionIdCannotBeEmpty": "serviceConnectionId debe ser una cadena no vacía.",
+  "loc.messages.CouldNotFetchAccessTokenforAAD": "No se pudo capturar el token de acceso para AAD.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "No se pudo capturar el token de acceso para Azure. Código de estado: %s. Mensaje de estado: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "No se pudo capturar el token de acceso para la entidad de servicio administrada. Configure Managed Service Identity (MSI) para la máquina virtual \"https://aka.ms/azure-msi-docs\". Código de estado: %s. Mensaje de estado: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "No se pudo capturar el token de acceso para la entidad de servicio administrada. Código de estado: %s. Mensaje de estado: %s",
