@@ -1,0 +1,9 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/types/npm-semver/e98b40dcb906211d06ea8272570719777cece453/typings.json",
+    "raw": "registry:npm/semver#5.0.0+20160723033700",
+    "main": "semver.d.ts",
+    "name": "semver"
+  }
+}
