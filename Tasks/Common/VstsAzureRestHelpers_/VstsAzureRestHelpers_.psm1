@@ -287,7 +287,7 @@ function Get-AzureRMAccessToken {
     param(
         [Parameter(Mandatory = $true)] $endpoint,
         [parameter(Mandatory = $false)] $overrideResourceType = $null,
-        [parameter(Mandatory = $false)] $useMSAL = $true
+        [parameter(Mandatory = $false)] $useMSAL = $false
     )
 
     $accessToken = @{
@@ -297,6 +297,19 @@ function Get-AzureRMAccessToken {
     }
 
     Write-Verbose "Get-AzureRMAccessToken - started - endpoint=$endpoint - scheme=$($endpoint.Auth.Scheme)"
+    $rawOverrideUseMSAL = Get-VstsTaskVariable -Name 'USE_MSAL'
+    try {
+        if($rawOverrideUseMSAL) {
+            Write-Verbose "MSAL - USE_MSAL override is found: $rawOverrideUseMSAL"
+            $useMSAL = [bool]::Parse($rawOverrideUseMSAL)
+        }
+    }
+    catch {
+        # this is not a blocker error, so we're informing
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "MSAL - USE_MSAL couldn't be parsed due to error $exceptionMessage. useMSAL=$useMSAL is used instead"
+    }
+
     Write-Verbose "MSAL - useMSAL = $useMSAL"
 
     # ManagedIdentity - access token

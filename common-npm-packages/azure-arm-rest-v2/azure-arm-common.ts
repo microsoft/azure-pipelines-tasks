@@ -9,6 +9,12 @@ import fs = require('fs');
 import jwt = require('jsonwebtoken');
 import msal = require('@azure/msal-node');
 import crypto = require("crypto");
+import { Mutex } from 'async-mutex';
+import HttpsProxyAgent = require('https-proxy-agent');
+import fetch = require('node-fetch');
+import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
+import { ITaskApi } from "azure-devops-node-api/TaskApi";
+import TaskAgentInterfaces = require("azure-devops-node-api/interfaces/TaskAgentInterfaces");
 
 tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
@@ -30,6 +36,8 @@ export class ApplicationTokenCredentials {
     private token_deferred: Q.Promise<string>;
     private useMSAL: boolean;
     private msalInstance: msal.ConfidentialClientApplication;
+
+    private readonly tokenMutex: Mutex;
 
     constructor(clientId: string, tenantId: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string, isADFSEnabled?: boolean, access_token?: string, useMSAL?: boolean) {
 
@@ -93,11 +101,11 @@ export class ApplicationTokenCredentials {
         this.accessToken = access_token;
 
         this.useMSAL = useMSAL;
+        this.tokenMutex = new Mutex();
     }
 
-
     /**
-     * @deprecated ADAL related methods are deprecated and will be removed. 
+     * @deprecated ADAL related methods are deprecated and will be removed.
      * Use Use `getMSALToken(force?: boolean)` instead.
      */
     public static getMSIAuthorizationToken(retyCount: number, timeToWait: number, baseUrl: string, msiClientId?: string): Q.Promise<string> {
@@ -149,21 +157,125 @@ export class ApplicationTokenCredentials {
         return this.clientId;
     }
 
-    public getToken(force?: boolean): Q.Promise<string> {
-        return this.useMSAL ? this.getMSALToken(force) : this.getADALToken(force);
+    public getUseMSAL(): boolean {
+        return this.useMSAL;
     }
 
-    private buildMSAL(): void {
-        // use same instance if it is already exist
-        if (this.msalInstance) {
-            return;
+    public async getToken(force?: boolean): Promise<string> {
+        // run exclusively to prevent race conditions
+        const release = await this.tokenMutex.acquire();
+
+        try {
+            const promisedTokenResult = this.getUseMSAL() ? this.getMSALToken(force) : this.getADALToken(force);
+            return await promisedTokenResult;
+        } finally {
+            // release it for every situation
+            release();
+        }
+    }
+
+    private static initOIDCToken(connection: WebApi, projectId: string, hub: string, planId: string, jobId: string, serviceConnectionId: string, retryCount: number, timeToWait: number): Q.Promise<string> {
+        var deferred = Q.defer<string>();
+        connection.getTaskApi().then(
+            (taskApi: ITaskApi) => {
+                taskApi.createOidcToken({}, projectId, hub, planId, jobId, serviceConnectionId).then(
+                    (response: TaskAgentInterfaces.TaskHubOidcToken) => {
+                        if (response != null) {
+                            tl.debug('Got OIDC token');
+                            deferred.resolve(response.oidcToken);
+                        }
+                        else if (response.oidcToken == null) {
+                            if (retryCount < 3) {
+                                let waitedTime = timeToWait;
+                                retryCount += 1;
+                                setTimeout(() => {
+                                    deferred.resolve(this.initOIDCToken(connection, projectId, hub, planId, jobId, serviceConnectionId, retryCount, waitedTime));
+                                }, waitedTime);
+                            }
+                            else {
+                                deferred.reject(tl.loc('CouldNotFetchAccessTokenforAAD'));
+                            }
+                        }
+                    },
+                    (error) => {
+                        deferred.reject(error);
+                    }
+                );
+            }
+        );
+
+        return deferred.promise;
+    }
+
+    private static getSystemAccessToken() : string {
+        tl.debug('Getting credentials for local feeds');
+        const auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
+        if (auth.scheme === 'OAuth') {
+            tl.debug('Got auth token');
+            return auth.parameters['AccessToken'];
+        }
+        else {
+            tl.warning('Could not determine credentials to use');
+        }
+    }
+
+    private async getMSAL(): Promise<msal.ConfidentialClientApplication> {
+        // use same instance if it already exists
+        if (!this.msalInstance) {
+            this.msalInstance = await this.buildMSAL();
         }
 
+        return this.msalInstance;
+    }
+
+    private getProxyClient(agentProxyURL: URL): msal.INetworkModule {
+        let proxyURL = `${agentProxyURL.protocol}//${agentProxyURL.host}`;
+
+        const agentProxyUsername: string = tl.getVariable("agent.proxyusername");
+        const agentProxyPassword: string = tl.getVariable("agent.proxypassword");
+
+        // basic auth
+        if (agentProxyUsername) {
+            proxyURL = `${agentProxyURL.protocol}//${agentProxyUsername}:${agentProxyPassword}@${agentProxyURL.host}`;
+        }
+
+        tl.debug(`MSAL - Proxy setup is: ${proxyURL}`);
+
+        // direct usage of msalConfig.system.proxyUrl is not available at the moment due to the fact that Object.fromEntries requires >=Node12
+        const proxyAgent = new HttpsProxyAgent(proxyURL);
+
+        const proxyNetworkClient: msal.INetworkModule = {
+            async sendGetRequestAsync(url, options) {
+                const customOptions = { ...options, ...{ method: "GET", agent: proxyAgent } }
+                const response = await fetch(url, customOptions);
+                return {
+                    status: response.status,
+                    headers: Object.create(Object.prototype, response.headers.raw()),
+                    body: await response.json()
+                }
+            },
+            async sendPostRequestAsync(url, options) {
+                const customOptions = { ...options, ...{ method: "POST", agent: proxyAgent } }
+                const response = await fetch(url, customOptions);
+                return {
+                    status: response.status,
+                    headers: Object.create(Object.prototype, response.headers.raw()),
+                    body: await response.json()
+                }
+            }
+        };
+
+        return proxyNetworkClient;
+    }
+
+    private async buildMSAL(): Promise<msal.ConfidentialClientApplication> {
         // default configuration
+        const authorityURL = (new URL(this.tenantId, this.authorityUrl)).toString();
+
         const msalConfig: msal.Configuration = {
             auth: {
                 clientId: this.clientId,
-                authority: (new URL(this.tenantId, this.authorityUrl)).toString(),
+                authority: authorityURL
             },
             system: {
                 loggerOptions: {
@@ -176,19 +288,39 @@ export class ApplicationTokenCredentials {
             }
         };
 
+        // proxy usage
+        const agentProxyURL = tl.getVariable("agent.proxyurl") ? new URL(tl.getVariable("agent.proxyurl")) : null;
+        const agentProxyBypassHosts = tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null;
+        const shouldProxyBypass = agentProxyBypassHosts?.includes(new URL(authorityURL).host);
+        if (agentProxyURL) {
+            if (shouldProxyBypass) {
+                tl.debug(`MSAL - Proxy is set but will be bypassed for ${authorityURL}`);
+            } else {
+                tl.debug('MSAL - Proxy will be used.');
+                msalConfig.system.networkClient = this.getProxyClient(agentProxyURL);
+            }
+        }
+
+        let msalInstance: msal.ConfidentialClientApplication;
+
         // setup msal according to parameters
         switch (this.scheme) {
             case AzureModels.Scheme.ManagedServiceIdentity:
-                this.configureMSALWithMSI(msalConfig);
+                msalInstance = this.configureMSALWithMSI(msalConfig);
+                break;
+            case AzureModels.Scheme.WorkloadIdentityFederation:
+                msalInstance = await this.configureMSALWithOIDC(msalConfig);
                 break;
             case AzureModels.Scheme.SPN:
             default:
-                this.configureMSALWithSP(msalConfig);
+                msalInstance = this.configureMSALWithSP(msalConfig);
                 break;
         }
+
+        return msalInstance;
     }
 
-    private configureMSALWithMSI(msalConfig: msal.Configuration) {
+    private configureMSALWithMSI(msalConfig: msal.Configuration): msal.ConfidentialClientApplication {
         let resourceId = this.activeDirectoryResourceId;
         let accessTokenProvider: msal.IAppTokenProvider = (appTokenProviderParameters: msal.AppTokenProviderParameters): Promise<msal.AppTokenProviderResult> => {
 
@@ -225,12 +357,14 @@ export class ApplicationTokenCredentials {
             return providerResultPromise;
         };
 
+        // need to be set a value even, although it is not used (library requirement)
         msalConfig.auth.clientSecret = "dummy-value";
-        this.msalInstance = new msal.ConfidentialClientApplication(msalConfig);
-        this.msalInstance.SetAppTokenProvider(accessTokenProvider);
+        let msalInstance = new msal.ConfidentialClientApplication(msalConfig);
+        msalInstance.SetAppTokenProvider(accessTokenProvider);
+        return msalInstance;
     }
 
-    private configureMSALWithSP(msalConfig: msal.Configuration) {
+    private configureMSALWithSP(msalConfig: msal.Configuration): msal.ConfidentialClientApplication {
         switch (this.authType) {
             case constants.AzureServicePrinicipalAuthentications.servicePrincipalKey:
                 tl.debug("MSAL - ServicePrincipal - clientSecret is used.");
@@ -246,10 +380,20 @@ export class ApplicationTokenCredentials {
                     const certDecoded = Buffer.from(certEncoded, "base64");
                     const thumbprint = crypto.createHash("sha1").update(certDecoded).digest("hex").toUpperCase();
 
-                    // privatekey
-                    const privateKey = certFile.match(/-----BEGIN PRIVATE KEY-----\s*([\s\S]+?)\s*-----END PRIVATE KEY-----/i)[0];
+                    if (!thumbprint) {
+                        throw new Error("MSAL - certificate - thumbprint couldn't be generated!");
+                    }
 
                     tl.debug("MSAL - ServicePrincipal - certificate thumbprint creation is successful: " + thumbprint);
+
+                    // privatekey
+                    const privateKey = certFile.match(/-----BEGIN (.)*PRIVATE KEY-----\s*([\s\S]+?)\s*-----END (.)*PRIVATE KEY-----/i)[0];
+
+                    if (!privateKey) {
+                        throw new Error("MSAL - certificate - private key couldn't read!");
+                    }
+
+                    tl.debug("MSAL - ServicePrincipal - certificate private key reading is successful.");
 
                     msalConfig.auth.clientCertificate = {
                         thumbprint: thumbprint,
@@ -261,41 +405,79 @@ export class ApplicationTokenCredentials {
                 break;
         }
 
-        this.msalInstance = new msal.ConfidentialClientApplication(msalConfig);
+        let msalInstance = new msal.ConfidentialClientApplication(msalConfig);
+        return msalInstance;
     }
 
-    private getMSALToken(force?: boolean): Q.Promise<string> {
-        tl.debug('MSAL - getMSALToken called. force=' + force);
+    private async configureMSALWithOIDC(msalConfig: msal.Configuration): Promise<msal.ConfidentialClientApplication> {
+        tl.debug("MSAL - FederatedAccess - OIDC is used.");
 
-        this.buildMSAL();
+        var serviceConnectionId: string = tl.getInput("connectedServiceNameARM", false);
+        if (!serviceConnectionId) {
+            serviceConnectionId = tl.getInput("ConnectedServiceName", false);
+            if (!serviceConnectionId) {
+                throw new Error(tl.loc("serviceConnectionIdCannotBeEmpty"));
+            }
+        }
+        const projectId: string = tl.getVariable("System.TeamProjectId");
+        const hub: string = tl.getVariable("System.HostType");
+        const planId: string = tl.getVariable('System.PlanId');
+        const jobId: string = tl.getVariable('System.JobId');
+        const uri = tl.getVariable("System.TeamFoundationCollectionUri");
 
-        let tokenDeferred = Q.defer<string>();
+        const token = ApplicationTokenCredentials.getSystemAccessToken();
+        const authHandler = getHandlerFromToken(token);
+        const connection = new WebApi(uri, authHandler);
+        const oidc_token: string = await ApplicationTokenCredentials.initOIDCToken(
+            connection,
+            projectId,
+            hub,
+            planId,
+            jobId,
+            serviceConnectionId,
+            0,
+            2000);
 
-        let request: msal.ClientCredentialRequest = {
-            scopes: [this.activeDirectoryResourceId + "/.default"]
-        };
+        msalConfig.auth.clientAssertion = oidc_token;
 
-        if (force) { this.msalInstance.clearCache(); }
+        let msalInstance = new msal.ConfidentialClientApplication(msalConfig);
+        return msalInstance;
+    }
 
-        let authResult = this.msalInstance.acquireTokenByClientCredential(request);
+    private async getMSALToken(force?: boolean, retryCount: number = 3, retryWaitMS: number = 2000): Promise<string> {
+        tl.debug(`MSAL - getMSALToken called. force=${force}`);
+        const msalApp: msal.ConfidentialClientApplication = await this.getMSAL();
+        if (force) {
+            msalApp.clearCache();
+        }
 
-        authResult.then(
-            (response: msal.AuthenticationResult) => {
-                tokenDeferred.resolve(response.accessToken);
-            }).catch((error) => {
+        try {
+            const request: msal.ClientCredentialRequest = {
+                scopes: [this.activeDirectoryResourceId + "/.default"]
+            };
+            const response = await msalApp.acquireTokenByClientCredential(request);
+            tl.debug(`MSAL - retrieved token - isFromCache?: ${response.fromCache}`);
+            return response.accessToken;
+        } catch (error) {
+            if (retryCount > 0) {
+                tl.debug(`MSAL - retrying getMSALToken - temporary error code: ${error.errorCode}`);
+                tl.debug(`MSAL - retrying getMSALToken - remaining attempts: ${retryCount}`);
+
+                await new Promise(r => setTimeout(r, retryWaitMS));
+                return await this.getMSALToken(force, (retryCount - 1), retryWaitMS);
+            }
+
+            if (error.errorMessage && error.errorMessage.toString().startsWith("7000222")) {
                 // additional error message when clientSecret has been expired
-                if (error.errorMessage && error.errorMessage.toString().startsWith("7000222")) {
-                    tl.error(tl.loc('ExpiredServicePrincipal'));
-                }
+                tl.error(tl.loc('ExpiredServicePrincipal'));
+            }
 
-                tokenDeferred.reject(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', error.errorCode, error.errorMessage));
-            });
-
-        return tokenDeferred.promise;
+            throw new Error(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', error.errorCode, error.errorMessage));
+        }
     }
 
     /**
-     * @deprecated ADAL related methods are deprecated and will be removed. 
+     * @deprecated ADAL related methods are deprecated and will be removed.
      * Use Use `getMSALToken(force?: boolean)` instead.
      */
     private getADALToken(force?: boolean): Q.Promise<string> {
@@ -319,7 +501,7 @@ export class ApplicationTokenCredentials {
     }
 
     /**
-     * @deprecated ADAL related methods are deprecated and will be removed. 
+     * @deprecated ADAL related methods are deprecated and will be removed.
      * Use Use `getMSALToken(force?: boolean)` instead.
      */
     private _getSPNAuthorizationToken(): Q.Promise<string> {
@@ -331,7 +513,7 @@ export class ApplicationTokenCredentials {
     }
 
     /**
-     * @deprecated ADAL related methods are deprecated and will be removed. 
+     * @deprecated ADAL related methods are deprecated and will be removed.
      * Use Use `getMSALToken(force?: boolean)` instead.
      */
     private _getSPNAuthorizationTokenFromCertificate(): Q.Promise<string> {
@@ -375,7 +557,7 @@ export class ApplicationTokenCredentials {
     }
 
     /**
-     * @deprecated ADAL related methods are deprecated and will be removed. 
+     * @deprecated ADAL related methods are deprecated and will be removed.
      * Use Use `getMSALToken(force?: boolean)` instead.
      */
     private _getSPNAuthorizationTokenFromKey(): Q.Promise<string> {
@@ -422,7 +604,7 @@ export class ApplicationTokenCredentials {
     }
 
     /**
-     * @deprecated ADAL related methods are deprecated and will be removed. 
+     * @deprecated ADAL related methods are deprecated and will be removed.
      * Use Use `getMSALToken(force?: boolean)` instead.
      */
     private _getSPNCertificateAuthorizationToken(): string {
@@ -464,7 +646,7 @@ export class ApplicationTokenCredentials {
 }
 
 /**
- * @deprecated ADAL related methods are deprecated and will be removed. 
+ * @deprecated ADAL related methods are deprecated and will be removed.
  * Use Use `getMSALToken(force?: boolean)` instead.
  */
 function getJWT(url: string, clientId: string, tenantId: string, pemFilePath: string, additionalHeaders, isADFSEnabled: boolean) {
