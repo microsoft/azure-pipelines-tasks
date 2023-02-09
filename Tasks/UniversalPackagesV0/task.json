@@ -366,7 +366,7 @@
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if projectId}}{{{projectId}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
         {
             "target": "packageListDownload",
@@ -394,7 +394,7 @@
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if projectId}}{{{projectId}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
         {
             "target": "packageListPublish",

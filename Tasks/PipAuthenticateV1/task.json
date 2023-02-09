@@ -73,7 +73,7 @@
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.name}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if projectName}}{{{projectName}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {
