@@ -1,0 +1,12 @@
+parameters:
+  - name: task
+    type: string
+
+steps:
+- script: npm install axios
+  displayName: 'npm install axios'
+
+- script: |
+    echo "Tasks: ${{ parameters.task }}"
+    node ./ci/ci-test-tasks/test-and-verify.js $(ADOToken) ${{ parameters.task }}
+  displayName: 'Run tests and verify results'
