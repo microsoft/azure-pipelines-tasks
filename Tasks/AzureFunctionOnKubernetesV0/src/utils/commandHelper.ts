@@ -1,8 +1,8 @@
 import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as tr from "azure-pipelines-task-lib/toolrunner";
-import * as FuncKubernetesUtility from 'azure-pipelines-tasks-kubernetes-common-v2/funckubernetesutility';
-import * as CommonUtils from 'azure-pipelines-tasks-kubernetes-common-v2/utility';
+import * as FuncKubernetesUtility from 'azure-pipelines-tasks-kubernetes-common/funckubernetesutility';
+import * as CommonUtils from 'azure-pipelines-tasks-kubernetes-common/utility';
 import { DockerConnection } from "../dockerConnection";
 
 export class CommandHelper {
