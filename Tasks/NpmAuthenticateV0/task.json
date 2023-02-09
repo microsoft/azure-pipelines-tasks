@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 214,
+        "Minor": 216,
         "Patch": 1
     },
     "runsOn": [
@@ -44,6 +44,16 @@
             "target": "npmauth.js"
         }
     },
+    "postjobexecution": {
+        "Node10": {
+            "target": "npmauthcleanup.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
+            "target": "npmauthcleanup.js",
+            "argumentFormat": ""
+        }
+    },
     "messages": {
         "FoundBuildCredentials": "Found build credentials",
         "NoBuildCredentials": "Could not find build credentials",
@@ -63,11 +73,5 @@
         "NoIndexJsonFile": "No index.json file was found and no files were restored",
         "RevertedChangesToNpmrc": "Reverted changes made to %s.",
         "NpmrcDoesNotExist": "The .npmrc file you selected at %s does not currently exist."
-    },
-    "postjobexecution": {
-        "Node10": {
-            "target": "npmauthcleanup.js",
-            "argumentFormat": ""
-        }
     }
 }

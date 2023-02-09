@@ -24,7 +24,6 @@ process.env["ENDPOINT_DATA_AzureRMSpn_AzureKeyVaultServiceEndpointResourceId"] =
 process.env["ENDPOINT_URL_AzureRMSpn"] = "https://management.azure.com/";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "C:\\a\\w\\";
 process.env["AGENT_TEMPDIRECTORY"] = process.cwd();
-process.env["DECODE_PERCENTS"] = "false";
 
 tr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-task-lib/mock-toolrunner'));
 tr.registerMock('./azure-arm-keyvault', require('./mock_node_modules/azure-arm-keyvault'));

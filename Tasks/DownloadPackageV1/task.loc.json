@@ -9,8 +9,8 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 214,
-    "Patch": 1
+    "Minor": 218,
+    "Patch": 0
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -34,7 +34,8 @@
         "npm": "Npm",
         "nuget": "NuGet",
         "pypi": "Python",
-        "upack": "Universal"
+        "upack": "Universal",
+        "cargo": "Cargo"
       }
     },
     {
@@ -185,6 +186,7 @@
     "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
     "Info_DownloadingArtifactTool": "ms-resource:loc.messages.Info_DownloadingArtifactTool",
     "Info_Downloading": "ms-resource:loc.messages.Info_Downloading",
-    "Info_UsingArtifactToolDownload": "ms-resource:loc.messages.Info_UsingArtifactToolDownload"
+    "Info_UsingArtifactToolDownload": "ms-resource:loc.messages.Info_UsingArtifactToolDownload",
+    "Info_ResolvedLatestVersion": "ms-resource:loc.messages.Info_ResolvedLatestVersion"
   }
 }

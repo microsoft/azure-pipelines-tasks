@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 214,
-    "Patch": 2
+    "Minor": 216,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -25,6 +25,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.configFile",
       "type": "filePath",
       "required": true
+    },
+    {
+      "name": "cargoServiceConnections",
+      "label": "ms-resource:loc.input.label.cargoServiceConnections",
+      "helpMarkDown": "ms-resource:loc.input.help.cargoServiceConnections",
+      "type": "connectedService:externalcargorepository",
+      "properties": {
+        "MultiSelectFlatList": "true"
+      }
     }
   ],
   "execution": {
@@ -38,6 +47,7 @@
     "ConfigTomlDoesNotExist": "ms-resource:loc.messages.ConfigTomlDoesNotExist",
     "ConfigTomlMissingRegistry": "ms-resource:loc.messages.ConfigTomlMissingRegistry",
     "AuthenticatingThisConfigToml": "ms-resource:loc.messages.AuthenticatingThisConfigToml",
-    "AddingAuthRegistry": "ms-resource:loc.messages.AddingAuthRegistry"
+    "AddingAuthRegistry": "ms-resource:loc.messages.AddingAuthRegistry",
+    "AddingAuthExternalRegistry": "ms-resource:loc.messages.AddingAuthExternalRegistry"
   }
 }
