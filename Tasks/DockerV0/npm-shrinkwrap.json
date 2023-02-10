@@ -105,9 +105,9 @@
         }
       }
     },
-    "azure-pipelines-tasks-docker-common-v2": {
+    "azure-pipelines-tasks-docker-common": {
       "version": "2.0.6",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-docker-common-v2/-/azure-pipelines-tasks-docker-common-v2-2.0.6.tgz",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-docker-common/-/azure-pipelines-tasks-docker-common-2.0.6.tgz",
       "integrity": "sha512-oWUutioIJ7uNrpn1oVyL7mQMme0XxlHIHVRznHZxA7k7zgUkjnLAqcCw3lmVf79/sKMM1PaOnXw7kHBJ93PQqQ==",
       "requires": {
         "@types/mocha": "^5.2.7",
