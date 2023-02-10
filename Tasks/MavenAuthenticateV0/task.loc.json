@@ -12,7 +12,10 @@
     "Minor": 218,
     "Patch": 1
   },
-  "runsOn": ["Agent", "DeploymentGroup"],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
