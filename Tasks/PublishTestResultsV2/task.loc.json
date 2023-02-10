@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 210,
-    "Patch": 0
+    "Minor": 216,
+    "Patch": 2
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -126,6 +126,10 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {
+      "target": "publishtestresults.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "publishtestresults.js",
       "argumentFormat": ""
     }

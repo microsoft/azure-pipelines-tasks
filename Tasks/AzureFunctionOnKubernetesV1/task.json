@@ -1,0 +1,193 @@
+{
+    "id": "FD1AA5B9-400C-4F4B-9C0B-069BA74E53C6",
+    "name": "AzureFunctionOnKubernetes",
+    "friendlyName": "Azure Function on Kubernetes",
+    "description": "Deploy Azure function to Kubernetes cluster.",
+    "helpUrl": "https://aka.ms/func-k8s",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/func-k8s) or [see Azure Functions on Kubernetes with KEDA](https://docs.microsoft.com/en-us/azure/azure-functions/functions-kubernetes-keda) or [check out sample-hello-world-azure-functions](https://github.com/kedacore/sample-hello-world-azure-functions)",
+    "category": "Deploy",
+    "preview": true,
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 218,
+        "Patch": 0
+    },
+    "demands": [],
+    "groups": [
+        {
+            "name": "serviceConnections",
+            "displayName": "Service Connections",
+            "isExpanded": true
+        },
+        {
+            "name": "commands",
+            "displayName": "Commands",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+        {
+            "name": "connectionType",
+            "type": "pickList",
+            "label": "Service connection type",
+            "defaultValue": "Kubernetes Service Connection",
+            "required": true,
+            "options": {
+                "Azure Resource Manager": "Azure Resource Manager",
+                "Kubernetes Service Connection": "Kubernetes Service Connection"
+            },
+            "groupName": "serviceConnections",
+            "helpMarkDown": "Select a Kubernetes service connection type."
+        },
+        {
+            "name": "dockerRegistryServiceConnection",
+            "type": "connectedService:dockerregistry",
+            "label": "Docker registry service connection",
+            "required": true,
+            "groupName": "serviceConnections",
+            "helpMarkDown": "Select a Docker registry service connection."
+        },
+        {
+            "name": "kubernetesServiceEndpoint",
+            "aliases": [
+                "kubernetesServiceConnection"
+            ],
+            "type": "connectedService:kubernetes",
+            "label": "Kubernetes service connection",
+            "visibleRule": "connectionType = Kubernetes Service Connection",
+            "required": true,
+            "groupName": "serviceConnections",
+            "helpMarkDown": "Select a Kubernetes service connection."
+        },
+        {
+            "name": "azureSubscriptionEndpoint",
+            "aliases": [
+                "azureSubscriptionConnection"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "helpMarkDown": "Select the Azure Resource Manager subscription, which contains Azure Container Registry.Note: To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Add' or 'Manage' button.",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "defaultValue": "",
+            "groupName": "serviceConnections",
+            "required": true
+        },
+        {
+            "name": "azureResourceGroup",
+            "label": "Resource group",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure resource group.",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "serviceConnections",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "kubernetesCluster",
+            "label": "Kubernetes cluster",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure managed cluster.",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "serviceConnections",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "namespace",
+            "type": "string",
+            "label": "Kubernetes namespace",
+            "groupName": "commands",
+            "helpMarkDown": "Kubernetes namespace"
+        },
+        {
+            "name": "secretName",
+            "type": "string",
+            "label": "Secret Name",
+            "groupName": "commands",
+            "helpMarkDown": "Kubernetes secret containing function config data (for ex. AzureWebJobsStorage: <Azure storage connection string>)"
+        },
+        {
+            "name": "dockerHubNamespace",
+            "type": "string",
+            "label": "Docker Hub namespace",
+            "groupName": "commands",
+            "helpMarkDown": "Docker Hub namespace. Required for private Docker Hub repository."
+        },
+        {
+            "name": "appName",
+            "type": "string",
+            "required": true,
+            "label": "Application Name",
+            "groupName": "commands",
+            "helpMarkDown": "Application Name. The Kubernetes objects created use this name. This should follow Kubernetes naming conventions for resource names."
+        },
+        {
+            "name": "functionRootDirectory",
+            "type": "filePath",
+            "label": "Function root directory",
+            "required": false,
+            "groupName": "commands",
+            "helpMarkDown": "Function root directory. Should contain host.json. Docker build and push is performed from this directory."
+        },
+        {
+            "name": "waitForStability",
+            "type": "boolean",
+            "label": "Wait for stability",
+            "groupName": "commands",
+            "defaultValue": "true",
+            "helpMarkDown": "Wait for the Kubernetes objects to reach the desired state."
+        },
+        {
+            "name": "arguments",
+            "type": "string",
+            "label": "Arguments",
+            "groupName": "commands",
+            "helpMarkDown": "Pass arguments to command. Ex:<br>--no-docker --service-type NodePort"
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "kubernetesCluster",
+            "endpointId": "$(azureSubscriptionEndpoint)",
+            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{{{name}}}"
+        },
+        {
+            "target": "azureResourceGroup",
+            "endpointId": "$(azureSubscriptionEndpoint)",
+            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
+        }
+    ],
+    "instanceNameFormat": "Func on K8s - deploy",
+    "execution": {
+        "Node10": {
+            "target": "src//run.js"
+        }
+    },
+    "messages": {
+        "AllContainersNotInReadyState": "All the containers are not in a ready state.",
+        "CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
+        "CouldNotDetermineServiceStatus": "Could not determine the service %s status due to the error: %s",
+        "FileContentSynced": "Synced the file content to the disk. The content is %s.",
+        "KubectlClientVersion": "Kubectl Client Version",
+        "KubectlServerVersion": "Kubectl Server Version",
+        "KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",
+        "NoDataWrittenOnFile": "No data was written into the file %s",
+        "ServiceExternalIP": "service %s external IP is %s",
+        "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
+    }
+}

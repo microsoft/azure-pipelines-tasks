@@ -1,6 +1,6 @@
 {
     "name": "java-tool-installer",
-    "version": "0.211.0",
+    "private": "true",
     "description": "Java Tool Installer",
     "main": "javaToolInstaller.js",
     "scripts": {
@@ -27,9 +27,9 @@
         "@types/mocha": "^5.2.7",
         "@types/node": "^16.11.59",
         "@types/q": "^1.0.7",
-        "azp-tasks-az-blobstorage-provider-v2": "2.206.0",
+        "azp-tasks-az-blobstorage-provider": "2.206.0",
         "azure-pipelines-task-lib": "^4.0.0-preview",
-        "azure-pipelines-tasks-azure-arm-rest-v2": "^2.208.0",
+        "azure-pipelines-tasks-azure-arm-rest-v2": "^3.217.1",
         "azure-pipelines-tasks-utility-common": "^3.0.3",
         "azure-pipelines-tool-lib": "^2.0.0-preview"
     },

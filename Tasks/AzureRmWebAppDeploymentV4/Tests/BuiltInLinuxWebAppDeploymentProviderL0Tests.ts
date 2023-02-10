@@ -28,7 +28,7 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
-            await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
+            await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep(false);
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps for built in linux web app should succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps for built in linux web app failed with error');
@@ -41,7 +41,7 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
             taskParameters.DeployToSlotOrASEFlag = true;
             taskParameters.ResourceGroupName = "MOCK_RESOURCE_GROUP_NAME";
             var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
-            await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
+            await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep(false);
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps for built in linux web app with slot enabled should succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps for built in linux web app with slot enabled failed with error');
@@ -52,7 +52,7 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
-            await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
+            await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep(false);
             await builtInLinuxWebAppDeploymentProvider.UpdateDeploymentStatus(true);
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'UpdateDeploymentStatus for built in linux web app steps should succeeded but failed with error');
@@ -63,7 +63,7 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
-            await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
+            await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep(false);
             await builtInLinuxWebAppDeploymentProvider.DeployWebAppStep();
             tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for built in linux web app steps with zip package succeeded');
         } catch(error) {
@@ -77,7 +77,7 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
             taskParameters.Package.getPackageType = () :PackageType => {return PackageType.folder};
             taskParameters.Package.getPath = () :string => { return "webAppPkg" };
             var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
-            await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
+            await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep(false);
             await builtInLinuxWebAppDeploymentProvider.DeployWebAppStep();
             tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for built in linux web app steps with folder package succeeded');
         } catch(error) {
@@ -91,7 +91,7 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
             taskParameters.Package.getPackageType = () :PackageType => {return PackageType.war};
             taskParameters.Package.getPath = () :string => { return "webAppPkg.war" };
             var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
-            await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
+            await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep(false);
             await builtInLinuxWebAppDeploymentProvider.DeployWebAppStep();
             tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for built in linux web app steps with war package succeeded');
         } catch(error) {
@@ -105,7 +105,7 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
             taskParameters.Package.getPackageType = () :PackageType => {return PackageType.jar};
             taskParameters.Package.getPath = () :string => { return "webAppPkg.jar" };
             var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
-            await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
+            await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep(false);
             await builtInLinuxWebAppDeploymentProvider.DeployWebAppStep();
             tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for built in linux web app steps with jar package succeeded');
         } catch(error) {

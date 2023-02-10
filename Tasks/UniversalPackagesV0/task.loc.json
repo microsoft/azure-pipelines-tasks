@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 214,
+    "Minor": 218,
     "Patch": 0
   },
   "runsOn": [
@@ -364,9 +364,9 @@
     {
       "target": "feedListDownload",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if projectId}}{{{projectId}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "packageListDownload",
@@ -392,9 +392,9 @@
     {
       "target": "feedListPublish",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if projectId}}{{{projectId}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "packageListPublish",
@@ -409,6 +409,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "universalmain.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "universalmain.js",
       "argumentFormat": ""
     }

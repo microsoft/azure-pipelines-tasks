@@ -17,10 +17,10 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 210,
+    "Minor": 217,
     "Patch": 0
   },
-  "minimumAgentVersion": "2.115.0",
+  "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -515,6 +515,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "dotnetcore.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "dotnetcore.js",
       "argumentFormat": ""
     }
