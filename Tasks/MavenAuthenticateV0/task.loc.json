@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 218,
-    "Patch": 0
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -44,7 +44,7 @@
     {
       "target": "artifactsFeeds",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
