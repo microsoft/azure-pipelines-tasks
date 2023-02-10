@@ -108,7 +108,7 @@
     "azure-pipelines-tasks-docker-common": {
       "version": "2.0.6",
       "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-docker-common/-/azure-pipelines-tasks-docker-common-2.0.6.tgz",
-      "integrity": "sha512-oWUutioIJ7uNrpn1oVyL7mQMme0XxlHIHVRznHZxA7k7zgUkjnLAqcCw3lmVf79/sKMM1PaOnXw7kHBJ93PQqQ==",
+      "integrity": "sha512-Zm8cTQecdvcgFbMTP8ZqKoU9XvM1Ck3CF59BkeaS5C7G0gNZWA4MkJTiC1qESMn8ptK5I33cqcMl7Ja4JtwaJA==",
       "requires": {
         "@types/mocha": "^5.2.7",
         "@types/node": "^10.17.0",
@@ -125,15 +125,15 @@
           "integrity": "sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug=="
         },
         "azure-pipelines-task-lib": {
-          "version": "3.1.7",
-          "resolved": "https://registry.npmjs.org/azure-pipelines-task-lib/-/azure-pipelines-task-lib-3.1.7.tgz",
-          "integrity": "sha512-1gLT06MWDK/1SyNL5nsci0YkVBOC5FM33xBuAoZrTvz6vpGyNcd5bSWSnvp45scOmvgPQic6KfY6tbHKOPB75g==",
+          "version": "3.4.0",
+          "resolved": "https://registry.npmjs.org/azure-pipelines-task-lib/-/azure-pipelines-task-lib-3.4.0.tgz",
+          "integrity": "sha512-3eC4OTFw+7xD7A2aUhxR/j+jRlTI+vVfS0CGxt1pCLs4c/KmY0tQWgbqjD3157kmiucWxELBvgZHaD2gCBe9fg==",
           "requires": {
-            "minimatch": "3.0.4",
-            "mockery": "^1.7.0",
+            "minimatch": "3.0.5",
+            "mockery": "^2.1.0",
             "q": "^1.5.1",
             "semver": "^5.1.0",
-            "shelljs": "^0.8.4",
+            "shelljs": "^0.8.5",
             "sync-request": "6.1.0",
             "uuid": "^3.0.1"
           },
@@ -141,9 +141,22 @@
             "q": {
               "version": "1.5.1",
               "resolved": "https://registry.npmjs.org/q/-/q-1.5.1.tgz",
-              "integrity": "sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc="
+              "integrity": "sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw=="
             }
           }
+        },
+        "minimatch": {
+          "version": "3.0.5",
+          "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.5.tgz",
+          "integrity": "sha512-tUpxzX0VAzJHjLu0xUfFv1gwVp9ba3IOuRAVH2EGuRW8a5emA2FlACLqiT/lDVtS1W+TGNwqz3sWaNyLgDJWuw==",
+          "requires": {
+            "brace-expansion": "^1.1.7"
+          }
+        },
+        "mockery": {
+          "version": "2.1.0",
+          "resolved": "https://registry.npmjs.org/mockery/-/mockery-2.1.0.tgz",
+          "integrity": "sha512-9VkOmxKlWXoDO/h1jDZaS4lH33aWfRiJiNT/tKj+8OGzrcFDLo8d0syGdbsc3Bc4GvRXPb+NMMvojotmuGJTvA=="
         }
       }
     },

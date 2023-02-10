@@ -221,7 +221,7 @@
     "azure-pipelines-tasks-docker-common": {
       "version": "2.0.1-preview.0",
       "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-docker-common/-/azure-pipelines-tasks-docker-common-2.0.1-preview.0.tgz",
-      "integrity": "sha512-3hZQQdxY6DJEuM+vXq/UKX13XtPQv4HlTRZ39Ghw/+Q2aTLEFOvrLAYvMM+wS3YHG1ZUT0MXFJpHUlSITvmStg==",
+      "integrity": "sha512-7bgoEVL5aUtylCq1m2XqvWHh6nE7IBaVPXeSxXIhaznqvVtqk6/wPO0UKqc0H1iamQeb8EiE7FunReMjPH9ftA==",
       "requires": {
         "@types/mocha": "^5.2.7",
         "@types/node": "^10.17.0",
