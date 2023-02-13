@@ -14,6 +14,6 @@ jobs:
  
   - script: |
       echo $TASKS
-      OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "https://buildcanary.visualstudio.com/buildcanary/PipelineCanary/_apis/pipelines/4704/runs?api-version=7" -X POST -d "{\"templateParameters\": { \"tasks\": \"$TASKS\"}}"`
+      OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "https://buildcanary.visualstudio.com/PipelineCanary/_apis/pipelines/4704/runs?api-version=7" -X POST -d "{\"templateParameters\": { \"tasks\": \"$TASKS\"}}"`
       echo $OUTPUT
     displayName: 'Run test pipelines'
