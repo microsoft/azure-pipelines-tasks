@@ -1,7 +1,7 @@
 jobs:
 - job: ci_test_tasks_init
   # we only test tasks on a PR and ignore forks since for security reasosns PAT tokens pipeline variable will not be available for fork's PRs.
-  #condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['System.PullRequest.IsFork'], 'False'))
+  condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['System.PullRequest.IsFork'], 'False'))
   pool:
     vmImage: ubuntu-20.04
   steps:
@@ -14,6 +14,6 @@ jobs:
  
   - script: |
       echo $TASKS
-      OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "https://buildcanary.visualstudio.com/buildcanary/PipelineCanary/_apis/pipelines/4704/runs?api-version=7" -X POST -d "{\"templateParameters\": { \"tasks\": \"$TASKS\"}}"`
+      OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "https://buildcanary.visualstudio.com/PipelineCanary/_apis/pipelines/4704/runs?api-version=7" -X POST -d "{\"templateParameters\": { \"tasks\": \"$TASKS\"}}"`
       echo $OUTPUT
     displayName: 'Run test pipelines'
