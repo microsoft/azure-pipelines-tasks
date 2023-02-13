@@ -4,7 +4,7 @@ import * as os from "os";
 import * as path from "path";
 import * as util from "util";
 import * as tl from "azure-pipelines-task-lib";
-import * as telemetry from "utility-common/telemetry";
+import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import * as auth from "./authentication";
 import * as utils from "./utilities";
 

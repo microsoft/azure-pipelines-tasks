@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 211,
+        "Minor": 218,
         "Patch": 0
     },
     "satisfies": [
@@ -24,6 +24,13 @@
     "demands": [],
     "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Use Node $(versionSpec)",
+    "groups": [
+      {
+        "name": "advanced",
+        "displayName": "Advanced",
+        "isExpanded": false
+      }
+    ],
     "inputs": [
         {
             "name": "versionSource",
@@ -66,10 +73,23 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Installs the x86 version of Node regardless of the CPU architecture of the agent."
+        },
+        {
+          "name": "nodejsMirror",
+          "type": "string",
+          "label": "Set source for Node.js binaries",
+          "defaultValue": "https://nodejs.org/dist",
+          "required": false,
+          "groupName": "advanced",
+          "helpMarkDown": "Use an alternative installation mirror when sourcing the Node.js binaries."
         }
     ],
     "execution": {
         "Node10": {
+            "target": "nodetool.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "nodetool.js",
             "argumentFormat": ""
         }

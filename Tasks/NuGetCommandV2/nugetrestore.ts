@@ -2,18 +2,18 @@ import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import {IExecOptions, IExecSyncResult} from "azure-pipelines-task-lib/toolrunner";
 
-import * as auth from "azure-pipelines-tasks-packaging-common-v3/nuget/Authentication";
-import * as commandHelper from "azure-pipelines-tasks-packaging-common-v3/nuget/CommandHelper";
-import {NuGetConfigHelper2} from "azure-pipelines-tasks-packaging-common-v3/nuget/NuGetConfigHelper2";
-import * as ngToolRunner from "azure-pipelines-tasks-packaging-common-v3/nuget/NuGetToolRunner2";
-import peParser = require("azure-pipelines-tasks-packaging-common-v3/pe-parser/index");
-import {VersionInfo} from "azure-pipelines-tasks-packaging-common-v3/pe-parser/VersionResource";
-import * as nutil from "azure-pipelines-tasks-packaging-common-v3/nuget/Utility";
-import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common-v3/locationUtilities";
+import * as auth from "azure-pipelines-tasks-packaging-common/nuget/Authentication";
+import * as commandHelper from "azure-pipelines-tasks-packaging-common/nuget/CommandHelper";
+import {NuGetConfigHelper2} from "azure-pipelines-tasks-packaging-common/nuget/NuGetConfigHelper2";
+import * as ngToolRunner from "azure-pipelines-tasks-packaging-common/nuget/NuGetToolRunner2";
+import peParser = require("azure-pipelines-tasks-packaging-common/pe-parser/index");
+import {VersionInfo} from "azure-pipelines-tasks-packaging-common/pe-parser/VersionResource";
+import * as nutil from "azure-pipelines-tasks-packaging-common/nuget/Utility";
+import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
-import INuGetCommandOptions from "azure-pipelines-tasks-packaging-common-v3/nuget/INuGetCommandOptions2";
-import { getProjectAndFeedIdFromInputParam } from "azure-pipelines-tasks-packaging-common-v3/util";
-import { logError } from "azure-pipelines-tasks-packaging-common-v3/util";
+import INuGetCommandOptions from "azure-pipelines-tasks-packaging-common/nuget/INuGetCommandOptions2";
+import { getProjectAndFeedIdFromInputParam } from "azure-pipelines-tasks-packaging-common/util";
+import { logError } from "azure-pipelines-tasks-packaging-common/util";
 
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
@@ -142,6 +142,8 @@ export async function run(nuGetPath: string): Promise<void> {
                     null);
 
         let credCleanup = () => { return; };
+        
+        let isNugetOrgBehaviorWarn = false;
 
         // Now that the NuGetConfigHelper was initialized with all the known information we can proceed
         // and check if the user picked the 'select' option to fill out the config file if needed
@@ -162,9 +164,20 @@ export async function run(nuGetPath: string): Promise<void> {
                     isInternal: true,
                 });
             }
-
+             
             const includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
             if (includeNuGetOrg) {
+                // If includeNuGetOrg is true, check the INCLUDE_NUGETORG_BEHAVIOR env variable to determine task result 
+                // this allows compliance checks to warn or break the task if consuming from nuget.org directly 
+                const nugetOrgBehavior = includeNuGetOrg ? tl.getVariable("INCLUDE_NUGETORG_BEHAVIOR") : undefined;
+                tl.debug(`NugetOrgBehavior: ${nugetOrgBehavior}`);
+
+                if(nugetOrgBehavior?.toLowerCase() == "fail"){
+                    throw new Error(tl.loc("Error_IncludeNuGetOrgEnabled"));
+                } else if (nugetOrgBehavior?.toLowerCase() == "warn"){
+                    isNugetOrgBehaviorWarn = true;
+                }
+
                 const nuGetSource: auth.IPackageSource = nuGetVersion.productVersion.a < 3
                                         ? auth.NuGetOrgV2PackageSource
                                         : auth.NuGetOrgV3PackageSource;
@@ -226,8 +239,10 @@ export async function run(nuGetPath: string): Promise<void> {
         } finally {
             credCleanup();
         }
-
-        tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesInstalledSuccessfully"));
+        
+        isNugetOrgBehaviorWarn 
+        ? tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Warning_IncludeNuGetOrgEnabled"))
+        : tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesInstalledSuccessfully"));
     } catch (err) {
         tl.error(err);
 

@@ -24,9 +24,9 @@
       "integrity": "sha512-NYrtPht0wGzhwe9+/idPaBB+TqkY9AhTvOLMkThm0IoEfLaiVQZwBwyJ5puCkO3AUCWrmcoePjp2mbFocKy4SQ=="
     },
     "@types/node": {
-      "version": "10.17.50",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.17.50.tgz",
-      "integrity": "sha512-vwX+/ija9xKc/z9VqMCdbf4WYcMTGsI0I/L/6shIF3qXURxZOhPQlPRHtjTpiNhAwn0paMJzlOQqw6mAGEQnTA=="
+      "version": "16.18.4",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.18.4.tgz",
+      "integrity": "sha512-9qGjJ5GyShZjUfx2ArBIGM+xExdfLvvaCyQR0t6yRXKPcWCVYF/WemtX/uIU3r7FYECXRXkIiw2Vnhn6y8d+pw=="
     },
     "@types/q": {
       "version": "1.5.1",
@@ -77,9 +77,9 @@
       "integrity": "sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q=="
     },
     "azure-pipelines-task-lib": {
-      "version": "4.0.0-preview",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-task-lib/-/azure-pipelines-task-lib-4.0.0-preview.tgz",
-      "integrity": "sha512-BK+VOo42Bec72Wic6Vsm2MaAJezNyF05OYAQS5FuZJM5Z972lZqYpujtSc4BFKUhC3HO+F/Yf4xhAV2tZCzN9Q==",
+      "version": "4.0.1-preview",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-task-lib/-/azure-pipelines-task-lib-4.0.1-preview.tgz",
+      "integrity": "sha512-yvxqTzBy6G1U4lDkQgvewGDtd4UxrFTTI49JBByS0vjz55lE/9hmOttFm/BSRCEeLkG0lp3t3ja54bsNBBM4cA==",
       "requires": {
         "minimatch": "3.0.5",
         "mockery": "^1.7.0",
@@ -114,6 +114,11 @@
         "q": "1.4.1"
       },
       "dependencies": {
+        "@types/node": {
+          "version": "10.17.60",
+          "resolved": "https://registry.npmjs.org/@types/node/-/node-10.17.60.tgz",
+          "integrity": "sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw=="
+        },
         "@types/q": {
           "version": "1.5.4",
           "resolved": "https://registry.npmjs.org/@types/q/-/q-1.5.4.tgz",
@@ -331,6 +336,13 @@
       "integrity": "sha512-bqX0XTF6fnXSQcEJ2Iuyr75yVakyjIDCqroJQ/aHfSdlM743Cwqoi2nDYMzLGWUcuTWGWy8AAvOKXTfiv6q9RA==",
       "requires": {
         "@types/node": "^10.0.3"
+      },
+      "dependencies": {
+        "@types/node": {
+          "version": "10.17.60",
+          "resolved": "https://registry.npmjs.org/@types/node/-/node-10.17.60.tgz",
+          "integrity": "sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw=="
+        }
       }
     },
     "inflight": {

@@ -1,0 +1,10 @@
+{
+  "rm": [
+      {
+          "items": [
+              "node_modules/artifact-engine/node_modules/azure-pipelines-task-lib"
+          ],
+          "options": "-Rf"
+      }
+  ]
+}

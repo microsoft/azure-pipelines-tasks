@@ -6,10 +6,10 @@
     "@types/node": "^10.17.0",
     "@types/q": "^1.5.0",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-task-lib": "2.8.0",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "^2.210.0",
-    "moment": "^2.29.4",
-    "vso-node-api": "6.0.1-preview"
+    "azure-devops-node-api": "11.2.0",
+    "azure-pipelines-task-lib": "^4.0.1-preview",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.217.1",
+    "moment": "^2.29.4"
   },
   "devDependencies": {
     "typescript": "4.0.2"

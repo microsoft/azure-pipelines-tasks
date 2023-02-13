@@ -1,13 +1,13 @@
-import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner";
-import * as nutil from "packaging-common/nuget/Utility";
+import * as ngToolRunner from "azure-pipelines-tasks-packaging-common/nuget/NuGetToolRunner";
+import * as nutil from "azure-pipelines-tasks-packaging-common/nuget/Utility";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as path from "path";
-import * as auth from "packaging-common/nuget/Authentication";
+import * as auth from "azure-pipelines-tasks-packaging-common/nuget/Authentication";
 
-import nuGetGetter = require("packaging-common/nuget/NuGetToolGetter");
-import peParser = require('packaging-common/pe-parser/index');
-import * as pkgLocationUtils from "packaging-common/locationUtilities";
-import { logError } from 'packaging-common/util';
+import nuGetGetter = require("azure-pipelines-tasks-packaging-common/nuget/NuGetToolGetter");
+import peParser = require('azure-pipelines-tasks-packaging-common/pe-parser/index');
+import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
+import { logError } from 'azure-pipelines-tasks-packaging-common/util';
 
 class NuGetExecutionOptions {
     constructor(

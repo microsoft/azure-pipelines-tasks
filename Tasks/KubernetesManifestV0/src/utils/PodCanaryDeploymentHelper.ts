@@ -1,6 +1,6 @@
 'use strict';
 
-import { Kubectl } from 'azure-pipelines-tasks-kubernetes-common-v2/kubectl-object-model';
+import { Kubectl } from 'azure-pipelines-tasks-kubernetes-common/kubectl-object-model';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';

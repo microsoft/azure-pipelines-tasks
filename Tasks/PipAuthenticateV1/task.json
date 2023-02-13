@@ -9,7 +9,7 @@
     "category": "Package",
     "version": {
         "Major": 1,
-        "Minor": 206,
+        "Minor": 218,
         "Patch": 0
     },
     "runsOn": [
@@ -71,13 +71,17 @@
         {
             "target": "artifactFeeds",
             "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.name}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if projectName}}{{{projectName}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {
         "Node10": {
+            "target": "pipauthenticatemain.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "pipauthenticatemain.js",
             "argumentFormat": ""
         }
