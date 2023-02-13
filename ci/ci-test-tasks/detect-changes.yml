@@ -1,7 +1,7 @@
 jobs:
 - job: ci_test_tasks_init
   # we only test tasks on a PR and ignore forks since for security reasosns PAT tokens pipeline variable will not be available for fork's PRs.
-  #condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['System.PullRequest.IsFork'], 'False'))
+  condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['System.PullRequest.IsFork'], 'False'))
   pool:
     vmImage: ubuntu-20.04
   steps:
