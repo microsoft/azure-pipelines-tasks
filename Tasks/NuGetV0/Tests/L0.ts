@@ -9,7 +9,7 @@ describe('NuGet Task Suite', function () {
     after(() => {
     });
 
-    it('Happy path', (done: Mocha.Done) => {
+    it('Happy path', (done: MochaDone) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'happypath.js')
