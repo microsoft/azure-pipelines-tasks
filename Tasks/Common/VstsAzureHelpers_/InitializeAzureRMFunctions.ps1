@@ -5,17 +5,19 @@ function Initialize-AzureRMModule {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)]
-        $Endpoint)
+        $Endpoint,
+        [Parameter(Mandatory=$true)]
+        [string] $connectedServiceNameARM,
+        [Parameter(Mandatory=$false)]
+        [Security.SecureString]$vstsAccessToken)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
-        if (!(Import-AzureRMModule))
-        {
+        Initialize-AzureRMSubscription -Endpoint $Endpoint -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
+        if (!(Import-AzureRMModule)) {
             throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList "Any version", "AzureRM")
         }
-
-        Initialize-AzureRMSubscription -Endpoint $Endpoint
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
@@ -72,11 +74,15 @@ function Initialize-AzureRMSubscription {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)]
-        $Endpoint)
+        $Endpoint,
+        [Parameter(Mandatory=$true)]
+        [string] $connectedServiceNameARM,
+        [Parameter(Mandatory=$false)]
+        [Security.SecureString]$vstsAccessToken)
 
     #Set UserAgent for Azure Calls
     Set-UserAgent
-    
+
     # Clear context
     if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal' -and (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue")) {
         Write-Host "##[command]Clear-AzureRmContext -Scope Process"
@@ -93,19 +99,15 @@ function Initialize-AzureRMSubscription {
             Add-AzureStackAzureRmEnvironment -endpoint $Endpoint -name "AzureStack"
         }
     }
-    
+
     $scopeLevel = "Subscription"
-    
-    If ($Endpoint.PSObject.Properties['Data'])
-    {
-        If ($Endpoint.Data.PSObject.Properties['scopeLevel'])
-        {
-            $scopeLevel = $Endpoint.Data.scopeLevel
-        }
+
+    If (($Endpoint.PSObject.Properties['Data']) -and ($Endpoint.Data.PSObject.Properties['scopeLevel'])) {
+        $scopeLevel = $Endpoint.Data.scopeLevel
     }
 
     if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal') {
-        
+
         if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
             $servicePrincipalCertificate = Add-Certificate -Endpoint $Endpoint -ServicePrincipal
         }
@@ -178,11 +180,28 @@ function Initialize-AzureRMSubscription {
             Write-VstsTaskError -Message $_.Exception.Message
             throw (New-Object System.Exception((Get-VstsLocString -Key AZ_MsiFailure), $_.Exception))
         }
-        
+
         Set-CurrentAzureRMSubscriptionV2 -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
-    }else {
+    } elseif ($Endpoint.Auth.Scheme -eq 'WorkloadIdentityFederation') {
+        $processScope = @{ Scope = "Process" }
+        $clientAssertionJwt = Get-VstsFederatedToken -serviceConnectionId $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
+        try {
+            Write-Host "##[command]Add-AzureRmAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -FederatedToken ****** -Environment $environmentName @processScope"
+            $null = Add-AzureRmAccount -ServicePrincipal `
+                -Tenant $Endpoint.Auth.Parameters.TenantId `
+                -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId `
+                -FederatedToken $clientAssertionJwt `
+                -Environment $environmentName @processScope -WarningAction SilentlyContinue
+        } catch {
+            # Provide an additional, custom, credentials-related error message.
+            Write-VstsTaskError -Message $_.Exception.Message
+            throw (New-Object System.Exception((Get-VstsLocString -Key AZ_FederatedTokenFailure), $_.Exception))
+        }
+
+        Set-CurrentAzureRMSubscriptionV2 -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+    } else {
         throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
-    } 
+    }
 }
 
 function Set-CurrentAzureRMSubscriptionV2 {

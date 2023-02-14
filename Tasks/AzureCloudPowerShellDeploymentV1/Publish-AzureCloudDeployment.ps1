@@ -32,7 +32,10 @@ try{
     if ($EnableAdvancedStorageOptions)
     {
         $endpoint = Get-VstsEndpoint -Name $ARMConnectedServiceName -Require
-        Initialize-AzureRMModule -Endpoint $endpoint
+        $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+        $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
+        $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
+        Initialize-AzureRMModule -Endpoint $endpoint -connectedServiceNameARM $ARMConnectedServiceName -vstsAccessToken $encryptedToken
     }
 
     # Load all dependent files for execution

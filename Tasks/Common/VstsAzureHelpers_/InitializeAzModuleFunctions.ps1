@@ -6,15 +6,20 @@ function Initialize-AzModule {
     param(
         [Parameter(Mandatory=$true)]
         $Endpoint,
-        [string] $azVersion)
+        [Parameter(Mandatory=$true)]
+        [string] $connectedServiceNameARM,
+        [Parameter(Mandatory=$false)]
+        [string] $azVersion,
+        [Parameter(Mandatory=$false)]
+        [Security.SecureString]$vstsAccessToken)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
-        Import-AzModule -azVersion $azVersion
+        Initialize-AzSubscription -Endpoint $Endpoint -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
 
         Write-Verbose "Initializing Az Module."
-        Initialize-AzSubscription -Endpoint $Endpoint
+        Import-AzModule -azVersion $azVersion
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
@@ -41,13 +46,13 @@ function Import-AzModule {
                 $azModulePath = Split-Path (Split-Path (Split-Path $moduleVal.Path -Parent) -Parent) -Parent
                 $azModulePath = $azModulePath + "\Az\*"
                 $azModuleVersion = split-path -path $azModulePath -Leaf -Resolve
-                if($azModuleVersion -eq $azVersion) {
+                if ($azModuleVersion -eq $azVersion) {
                     $module = $moduleVal
                     break
-                }   
+                }
             }
         }
-      
+
         if (!$module) {
             Write-Verbose "No module found with name: $moduleName"
             throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, "Az.Accounts")
@@ -57,57 +62,53 @@ function Import-AzModule {
         Write-Host "##[command]Import-Module -Name $($module.Path) -Global"
         $module = Import-Module -Name $module.Path -Global -PassThru -Force
         Write-Verbose "Imported module version: $($module.Version)"
-     } finally {
+    } finally {
         Trace-VstsLeavingInvocation $MyInvocation
-     }
+    }
 }
 
 function Initialize-AzSubscription {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)]
-        $Endpoint)
+        $Endpoint,
+        [Parameter(Mandatory=$true)]
+        [string] $connectedServiceNameARM,
+        [Parameter(Mandatory=$false)]
+        [Security.SecureString]$vstsAccessToken)
 
     #Set UserAgent for Azure Calls
     Set-UserAgent
-    
-    # Clear context
-    Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
-    $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
-    Write-Host "##[command]Clear-AzContext -Scope Process"
-    $null = Clear-AzContext -Scope Process
 
     $environmentName = "AzureCloud"
-    if($Endpoint.Data.Environment) {
+    if ($Endpoint.Data.Environment) {
         $environmentName = $Endpoint.Data.Environment
-        if($environmentName -eq "AzureStack")
-        {
+        if($environmentName -eq "AzureStack") {
             Add-AzureStackAzEnvironment -endpoint $Endpoint -name "AzureStack"
         }
     }
-    
-    $scopeLevel = "Subscription"
 
+    $scopeLevel = "Subscription"
     $processScope = @{ Scope = "Process" }
-    
-    If ($Endpoint.PSObject.Properties['Data'])
+    If (($Endpoint.PSObject.Properties['Data']) -and ($Endpoint.Data.PSObject.Properties['scopeLevel']))
     {
-        If ($Endpoint.Data.PSObject.Properties['scopeLevel'])
-        {
-            $scopeLevel = $Endpoint.Data.scopeLevel
-        }
+        $scopeLevel = $Endpoint.Data.scopeLevel
     }
 
     if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal') {
         try {
+            Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
+            $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+            Write-Host "##[command]Clear-AzContext -Scope Process"
+            $null = Clear-AzContext -Scope Process
             if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
                 $servicePrincipalCertificate = Add-CertificateForAz -Endpoint $Endpoint
 
                 Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName @processScope"
                 $null = Connect-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId `
-                -CertificateThumbprint $servicePrincipalCertificate.Thumbprint `
-                -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId `
-                -Environment $environmentName @processScope -WarningAction SilentlyContinue
+                    -CertificateThumbprint $servicePrincipalCertificate.Thumbprint `
+                    -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId `
+                    -Environment $environmentName @processScope -WarningAction SilentlyContinue
             }
             else {
                 $psCredential = New-Object System.Management.Automation.PSCredential(
@@ -120,21 +121,23 @@ function Initialize-AzSubscription {
                 -Environment $environmentName @processScope -WarningAction SilentlyContinue
             }
 
-        } 
+        }
         catch {
             # Provide an additional, custom, credentials-related error message.
             Write-VstsTaskError -Message $_.Exception.Message
             Assert-TlsError -exception $_.Exception
             throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ServicePrincipalError), $_.Exception))
         }
-            
-        if($scopeLevel -eq "Subscription")
-        {
+
+        if ($scopeLevel -eq "Subscription") {
             Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
         }
-
     } elseif ($Endpoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
         try {
+            Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
+            $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+            Write-Host "##[command]Clear-AzContext -Scope Process"
+            $null = Clear-AzContext -Scope Process
             Write-Host "##[command]Connect-AzAccount -Environment $environmentName -Identity @processScope"
             $null = Connect-AzAccount -Environment $environmentName -Identity @processScope
         } catch {
@@ -142,14 +145,41 @@ function Initialize-AzSubscription {
             Write-VstsTaskError -Message $_.Exception.Message
             throw (New-Object System.Exception((Get-VstsLocString -Key AZ_MsiFailure), $_.Exception))
         }
-        
+
+        if ($scopeLevel -ne "ManagementGroup")
+        {
+            Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+        }
+    } elseif ($Endpoint.Auth.Scheme -eq 'WorkloadIdentityFederation') {
+        try {
+            $clientAssertionJwt = Get-VstsFederatedToken -serviceConnectionId $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
+
+            Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
+            $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+            Write-Host "##[command]Clear-AzContext -Scope Process"
+            $null = Clear-AzContext -Scope Process
+            Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -FederatedToken ****** -Environment $environmentName @processScope"
+            $null = Connect-AzAccount -ServicePrincipal `
+                -Tenant $Endpoint.Auth.Parameters.TenantId `
+                -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId `
+                -FederatedToken $clientAssertionJwt `
+                -Environment $environmentName @processScope -WarningAction SilentlyContinue
+        } catch {
+            Write-VstsTaskError -Message $_.Exception.Message
+            throw (New-Object System.Exception((Get-VstsLocString -Key AZ_FederatedTokenFailure), $_.Exception))
+        }
+
         if($scopeLevel -ne "ManagementGroup")
         {
             Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
         }
     } else {
+        Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
+        $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+        Write-Host "##[command]Clear-AzContext -Scope Process"
+        $null = Clear-AzContext -Scope Process
         throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
-    } 
+    }
 }
 
 function Add-AzureStackAzEnvironment {
@@ -163,9 +193,9 @@ function Add-AzureStackAzEnvironment {
     $azureEnvironmentParams = Get-AzureStackEnvironment -endpoint $Endpoint -name $Name
 
     $armEnv = Get-AzEnvironment -Name $name
-    if($armEnv -ne $null) {
+    if ($null -ne $armEnv) {
         Write-Verbose "Updating Az environment $name" -Verbose
-        Remove-AzEnvironment -Name $name | Out-Null       
+        Remove-AzEnvironment -Name $name | Out-Null
     }
     else {
         Write-Verbose "Adding Az environment $name" -Verbose

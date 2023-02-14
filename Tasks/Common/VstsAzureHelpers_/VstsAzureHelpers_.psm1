@@ -40,6 +40,9 @@ function Initialize-Azure {
 
         $endpoint = Get-VstsEndpoint -Name $serviceName -Require
         $storageAccount = Get-VstsInput -Name StorageAccount
+        $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+        $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
+        $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
 
         # Determine which modules are preferred.
         $preferredModules = @( )
@@ -56,7 +59,8 @@ function Initialize-Azure {
         $currentWarningPreference = $WarningPreference
         $WarningPreference = "SilentlyContinue"
         Import-AzureModule -PreferredModule $preferredModules -azurePsVersion $azurePsVersion -strict:$strict
-        Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $storageAccount
+        Initialize-AzureSubscription -Endpoint $endpoint -connectedServiceNameARM $serviceName `
+            -vstsAccessToken $encryptedToken -StorageAccount $storageAccount
     } finally {
         if (![string]::IsNullOrEmpty($currentWarningPreference)) {
             $WarningPreference = $currentWarningPreference
