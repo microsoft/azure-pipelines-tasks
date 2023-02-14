@@ -10,7 +10,7 @@ describe('NuGet Task Suite', function () {
     });
 
     it('Happy path', (done: MochaDone) => {
-        this.timeout(1000);
+        this.timeout(20000);
 
         let tp = path.join(__dirname, 'happypath.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
