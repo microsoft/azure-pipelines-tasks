@@ -4,19 +4,23 @@ function Initialize-AzureSubscription {
     param(
         [Parameter(Mandatory=$true)]
         $Endpoint,
+        [Parameter(Mandatory=$true)]
+        [string] $connectedServiceNameARM,
+        [Parameter(Mandatory=$false)]
+        [Security.SecureString]$vstsAccessToken,
         [Parameter(Mandatory=$false)]
         [string]$StorageAccount)
 
     #Set UserAgent for Azure Calls
     Set-UserAgent
-    
+
     # Clear context only for Azure RM
     if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal' -and !$script:azureModule -and (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue")) {
         Write-Host "##[command]Clear-AzureRmContext -Scope Process"
         $null = Clear-AzureRmContext -Scope Process
     }
 
-    if (Get-Command -Name "Disable-AzureRmContextAutosave" -ErrorAction "SilentlyContinue") 
+    if (Get-Command -Name "Disable-AzureRmContextAutosave" -ErrorAction "SilentlyContinue")
     {
         try {
             Write-Host "##[command]Disable-AzureRmContextAutosave -ErrorAction Stop"
@@ -55,15 +59,11 @@ function Initialize-AzureSubscription {
             Add-AzureStackAzureRmEnvironment -endpoint $Endpoint -name "AzureStack"
         }
     }
-    
+
     $scopeLevel = "Subscription"
-    
-    If ($Endpoint.PSObject.Properties['Data'])
-    {
-        If ($Endpoint.Data.PSObject.Properties['scopeLevel'])
-        {
-            $scopeLevel = $Endpoint.Data.scopeLevel
-        }
+
+    If (($Endpoint.PSObject.Properties['Data']) -and ($Endpoint.Data.PSObject.Properties['scopeLevel'])) {
+        $scopeLevel = $Endpoint.Data.scopeLevel
     }
 
     if ($Endpoint.Auth.Scheme -eq 'Certificate') {
@@ -330,11 +330,28 @@ function Initialize-AzureSubscription {
             Write-VstsTaskError -Message $_.Exception.Message
             throw (New-Object System.Exception((Get-VstsLocString -Key AZ_MsiFailure), $_.Exception))
         }
-        
+
         Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
-    }else {
+    } elseif ($Endpoint.Auth.Scheme -eq 'WorkloadIdentityFederation') {
+        $processScope = @{ Scope = "Process" }
+        $clientAssertionJwt = Get-VstsFederatedToken -serviceConnectionId $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
+        try {
+            Write-Host "##[command]Add-AzureRmAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -FederatedToken ****** -Environment $environmentName @processScope"
+            $null = Add-AzureRmAccount -ServicePrincipal `
+                -Tenant $Endpoint.Auth.Parameters.TenantId `
+                -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId `
+                -FederatedToken $clientAssertionJwt `
+                -Environment $environmentName @processScope -WarningAction SilentlyContinue
+        } catch {
+            # Provide an additional, custom, credentials-related error message.
+            Write-VstsTaskError -Message $_.Exception.Message
+            throw (New-Object System.Exception((Get-VstsLocString -Key AZ_FederatedTokenFailure), $_.Exception))
+        }
+
+        Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+    } else {
         throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
-    } 
+    }
 }
 
 function Set-CurrentAzureSubscription {

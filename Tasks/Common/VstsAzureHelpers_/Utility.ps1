@@ -157,6 +157,94 @@ function Get-MsiAccessToken {
     while ($trialCount -le $retryLimit)
 }
 
+
+function Get-VstsFederatedToken {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$serviceConnectionId,
+        [Parameter(Mandatory=$true)]
+        [Security.SecureString]$vstsAccessToken
+    )
+
+    $OMDirectory = $PSScriptRoot
+
+    $newtonsoftDll = [System.IO.Path]::Combine($OMDirectory, "Newtonsoft.Json.dll")
+    if (!(Test-Path -LiteralPath $newtonsoftDll -PathType Leaf)) {
+        Write-Verbose "$newtonsoftDll not found."
+        throw
+    }
+    $jsAssembly = [System.Reflection.Assembly]::LoadFrom($newtonsoftDll)
+
+    $vsServicesDll = [System.IO.Path]::Combine($OMDirectory, "Microsoft.VisualStudio.Services.WebApi.dll")
+    if (!(Test-Path -LiteralPath $vsServicesDll -PathType Leaf)) {
+        Write-Verbose "$vsServicesDll not found."
+        throw
+    }
+    try {
+        Add-Type -LiteralPath $vsServicesDll
+    } catch {
+        # The requested type may successfully load now even though the assembly itself is not fully loaded.
+        Write-Verbose "$($_.Exception.GetType().FullName): $($_.Exception.Message)"
+    }
+
+    $onAssemblyResolve = [System.ResolveEventHandler] {
+        param($sender, $e)
+
+        if ($e.Name -like 'Newtonsoft.Json, *') {
+            return $jsAssembly
+        }
+
+        Write-Verbose "Unable to resolve assembly name '$($e.Name)'"
+        return $null
+    }
+    [System.AppDomain]::CurrentDomain.add_AssemblyResolve($onAssemblyResolve)
+
+    $taskHttpClient = $null;
+    try {
+        Write-Verbose "Trying again to construct the HTTP client."
+        $decriptedVstsToken = $null
+        if ($PSVersionTable.PSVersion.Major -lt 7) {
+            $bstr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($vstsAccessToken)
+            $decriptedVstsToken = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)
+        }
+        else {
+            $decriptedVstsToken = ConvertFrom-SecureString -SecureString $vstsAccessToken -AsPlainText
+        }
+        $federatedCredential = New-Object Microsoft.VisualStudio.Services.OAuth.VssOAuthAccessTokenCredential($decriptedVstsToken)
+        $vssCredentials = New-Object Microsoft.VisualStudio.Services.Common.VssCredentials(
+            (New-Object Microsoft.VisualStudio.Services.Common.WindowsCredential($false)), # Do not use default credentials.
+            $federatedCredential,
+            [Microsoft.VisualStudio.Services.Common.CredentialPromptType]::DoNotPrompt)
+        $taskHttpClient = Get-VstsVssHttpClient -OMDirectory $OMDirectory `
+            -TypeName Microsoft.TeamFoundation.DistributedTask.WebApi.TaskHttpClient `
+            -VssCredentials $vssCredentials
+    }
+    finally {
+        Write-Verbose "Removing assemlby resolver."
+        [System.AppDomain]::CurrentDomain.remove_AssemblyResolve($onAssemblyResolve)
+    }
+
+    $planId = Get-VstsTaskVariable -Name 'System.PlanId' -Require
+    $jobId = Get-VstsTaskVariable -Name 'System.JobId' -Require
+    $hub = Get-VstsTaskVariable -Name 'System.HostType' -Require
+    $projectId = Get-VstsTaskVariable -Name 'System.TeamProjectId' -Require
+
+    $tokenResponse = $taskHttpClient.CreateOidcTokenAsync(
+        $projectId,
+        $hub,
+        $planId,
+        $jobId,
+        $connectedServiceNameARM,
+        $null
+    ).Result
+    $federatedToken = $tokenResponse.OidcToken
+    if ($null -eq $federatedToken) {
+        Write-Verbose "Failed to create OIDC token."
+        throw (New-Object System.Exception(Get-VstsLocString -Key AZ_CouldNotGenerateOidcToken))
+    }
+    return $federatedToken
+}
+
 function Set-UserAgent {
     [CmdletBinding()]
     param()

@@ -533,11 +533,26 @@ var copyGroup = function (group, sourceRoot, destRoot) {
 
     // multiply by culture name (recursive call to self)
     if (group.dest && group.dest.indexOf('<CULTURE_NAME>') >= 0) {
+        var missingCultures = [];
         cultureNames.forEach(function (cultureName) {
-            // culture names do not contain any JSON-special characters, so this is OK (albeit a hack)
-            var localizedGroupJson = JSON.stringify(group).replace(/<CULTURE_NAME>/g, cultureName);
-            copyGroup(JSON.parse(localizedGroupJson), sourceRoot, destRoot);
+            try {
+                // culture names do not contain any JSON-special characters, so this is OK (albeit a hack)
+                var localizedGroupJson = JSON.stringify(group).replace(/<CULTURE_NAME>/g, cultureName);
+                copyGroup(JSON.parse(localizedGroupJson), sourceRoot, destRoot);
+            }
+            catch {
+                missingCultures.push(cultureName);
+            }
         });
+
+        // some cultures might not be present in certain dlls of TFS so just log and ignore
+        // fail in case none were present, as this indicates programmer error (or should not be copied at all)
+        if (missingCultures.length == cultureNames.length) {
+            throw new Error('Could not find a single culture even though make was instructed to copy them.');
+        }
+        if (missingCultures.length > 0) {
+            console.log('The following culture names could not be loaded as they do not exist: ' + missingCultures);
+        }
 
         return;
     }

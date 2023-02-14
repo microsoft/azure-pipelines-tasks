@@ -83,14 +83,18 @@ $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
 $endpoint = Get-VstsEndpoint -Name $serviceName -Require
 CleanUp-PSModulePathForHostedAgent
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
+$vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+$vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
+$encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
 
 # troubleshoot link
 $troubleshoot = "https://aka.ms/azurepowershelltroubleshooting"
-try 
+try
 {
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    Initialize-AzModule -Endpoint $endpoint -azVersion $targetAzurePs
+    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $serviceName `
+        -azVersion $targetAzurePs -vstsAccessToken $encryptedToken
     Write-Host "## Az module initialization Complete"
     $success = $true
 }

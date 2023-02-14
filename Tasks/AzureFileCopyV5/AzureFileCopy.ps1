@@ -67,12 +67,16 @@ $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 . "$PSScriptRoot\Utility.ps1"
 CleanUp-PSModulePathForHostedAgent
 
-if (Get-Module Az.Accounts -ListAvailable){
-    Initialize-AzModule -Endpoint $endpoint
+$vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+$vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
+$encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
+
+if (Get-Module Az.Accounts -ListAvailable) {
+    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $encryptedToken
 }
-else{    
+else {
     Write-Verbose "No module found with name: Az.Accounts"
-    throw ("Could not find the module Az.Accounts with given version. If the module was recently installed, retry after restarting the Azure Pipelines task agent.") 
+    throw ("Could not find the module Az.Accounts with given version. If the module was recently installed, retry after restarting the Azure Pipelines task agent.")
 }
 
 # Import the loc strings.
