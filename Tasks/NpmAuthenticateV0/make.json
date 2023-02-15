@@ -1,0 +1,10 @@
+{
+    "rm": [
+        {
+            "items": [
+                "node_modules/azure-pipelines-tasks-packaging-common-v3/node_modules/azure-pipelines-task-lib"
+            ],
+            "options": "-Rf"
+        }
+    ]
+}

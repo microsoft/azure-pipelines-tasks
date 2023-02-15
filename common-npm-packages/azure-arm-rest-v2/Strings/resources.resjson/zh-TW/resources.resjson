@@ -4,6 +4,8 @@
   "loc.messages.SecretCannotBeEmpty": "secret 不得為空字串。",
   "loc.messages.armUrlCannotBeEmpty": "arm Url 不得為空字串。",
   "loc.messages.authorityUrlCannotBeEmpty": "authority 不得為空字串。",
+  "loc.messages.serviceConnectionIdCannotBeEmpty": "serviceConnectionId 不得為空字串。",
+  "loc.messages.CouldNotFetchAccessTokenforAAD": "無法擷取 AAD 的存取權杖。",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "無法擷取 Azure 的存取權杖。狀態碼: %s，狀態訊息: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "無法擷取受控服務主體的存取權杖。請設定虛擬機器的受控服務識別 (MSI) (https://aka.ms/azure-msi-docs)。狀態碼: %s，狀態訊息: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "無法擷取受控服務主體的存取權杖。狀態碼: %s，狀態訊息: %s",

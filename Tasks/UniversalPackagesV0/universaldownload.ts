@@ -1,11 +1,11 @@
 import * as tl from "azure-pipelines-task-lib";
-import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common-v3/locationUtilities";
-import { getProjectAndFeedIdFromInputParam } from 'azure-pipelines-tasks-packaging-common-v3/util';
+import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
+import { getProjectAndFeedIdFromInputParam } from 'azure-pipelines-tasks-packaging-common/util';
 import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
-import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common-v3/universal/ArtifactToolRunner";
-import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common-v3/universal/ArtifactToolUtilities";
-import * as auth from "azure-pipelines-tasks-packaging-common-v3/universal/Authentication";
+import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner";
+import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
+import * as auth from "azure-pipelines-tasks-packaging-common/universal/Authentication";
 
 export async function run(artifactToolPath: string): Promise<void> {
     let buildIdentityDisplayName: string = null;

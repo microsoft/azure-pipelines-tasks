@@ -1,4 +1,12 @@
 {
+    "rm": [
+        {
+            "items": [
+                "node_modules/azure-pipelines-tasks-docker-common-v2/node_modules/azure-pipelines-task-lib"
+            ],
+            "options": "-Rf"
+        }
+    ],
     "externals": {
       "files": [
         {
@@ -6,19 +14,5 @@
           "dest": "container-structure-test"
         }
       ]
-    },
-    "common": [
-      {
-        "module": "../Common/utility-common",
-        "type": "node",
-        "dest": "./",
-        "compile": true
-      },
-      {
-        "module": "../Common/utility-common-v2",
-        "type": "node",
-        "dest" : "./",
-        "compile" : true
-      }
-    ]
+    }
 }

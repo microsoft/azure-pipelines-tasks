@@ -5,13 +5,12 @@
     "@types/q": "^1.5.0",
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^3.0.6-preview.0",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "^2.0.0-preview.0",
-    "azure-pipelines-tasks-kubernetes-common-v2": "^2.0.0-preview.0",
-    "azure-pipelines-tasks-securefiles-common": "^2.0.5-preview",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.217.1",
+    "azure-pipelines-tasks-kubernetes-common": "^2.212.0",
+    "azure-pipelines-tasks-securefiles-common": "^2.207.0",
+    "azure-pipelines-tasks-utility-common": "^3.210.0",
     "del": "2.2.0",
-    "moment": "^2.29.4",
-    "utility-common-v2": "file:../../_build/Tasks/Common/utility-common-v2-2.0.0.tgz",
-    "vsts-task-tool-lib": "0.4.0"
+    "moment": "^2.29.4"
   },
   "devDependencies": {
     "typescript": "4.0.2"

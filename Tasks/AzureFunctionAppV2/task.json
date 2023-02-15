@@ -1,7 +1,7 @@
 {
     "id": "501DD25D-1785-43E4-B4E5-A5C78CCC0573",
     "name": "AzureFunctionApp",
-    "friendlyName": "Azure Functions",
+    "friendlyName": "Azure Functions Deploy",
     "description": "Update a function app with .NET, Python, JavaScript, PowerShell, Java based web applications",
     "helpUrl": "https://aka.ms/azurefunctiontroubleshooting",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiondeployreadme)",
@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 208,
+        "Minor": 218,
         "Patch": 1
     },
     "releaseNotes": "What's new in version 2.* <br /> Removed WAR Deploy Support, setting Web.Config options, and the option for the Startup command for Linux Azure Function Apps.",
@@ -27,7 +27,7 @@
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
-            "visibleRule": "appType != functionAppLinux && appType != \"\" && package NotEndsWith .war && Package NotEndsWith .jar"
+            "visibleRule": "appType != \"\" && package NotEndsWith .war && Package NotEndsWith .jar"
         },
         {
             "name": "ApplicationAndConfigurationSettings",
@@ -52,8 +52,9 @@
             "required": true,
             "options": {
                 "functionApp": "Function App on Windows",
-                "functionAppLinux": "Function App on Linux"
-            }
+                "functionAppLinux": "Function App on Linux"                
+            },
+            "helpMarkDown": "Select the Azure Function App type for the deployment."
         },
         {
             "name": "appName",
@@ -120,6 +121,7 @@
                 "DOTNET|2.2": "DOTNET|2.2 (functionapp v2)",
                 "DOTNET|3.1": "DOTNET|3.1 (functionapp v3)",
                 "DOTNET|6.0": "DOTNET|6.0 (functionapp v4)",
+                "DOTNET-ISOLATED|7.0" :"DOTNET-ISOLATED|7.0 (functionapp v4)",
                 "JAVA|8": "JAVA|8 (functionapp v2/v3/v4)",
                 "JAVA|11": "JAVA|11  (functionapp v3/v4)",
                 "NODE|8": "NODE|8 (functionapp v2)",
@@ -127,6 +129,7 @@
                 "NODE|12": "NODE|12 (functionapp v3)",
                 "NODE|14": "NODE|14 (functionapp v3/v4)",
                 "NODE|16": "NODE|16 (functionapp v4)",
+                "NODE|18": "NODE|18 (functionapp v4)",
                 "PYTHON|3.6": "PYTHON|3.6 (functionapp v2/v3)",
                 "PYTHON|3.7": "PYTHON|3.7 (functionapp v2/v3/v4)",
                 "PYTHON|3.8": "PYTHON|3.8 (functionapp v3/v4)",
@@ -159,7 +162,7 @@
                 "zipDeploy": "Zip Deploy",
                 "runFromPackage": "Zip Deploy with Run From Package"
             },
-            "helpMarkDown": "Choose the deployment method for the app."
+            "helpMarkDown": "Choose the deployment method for your Function app. Please note that Linux Consumption apps do not support this configuration."
         }
     ],
     "outputVariables": [
@@ -352,6 +355,7 @@
         "FailedToSyncTriggers": "Failed to sync triggers for function app '%s'. Error: %s",
         "SyncingFunctionTriggers": "Syncing triggers for function app",
         "SyncFunctionTriggersSuccess": "Sync triggers for function app completed successfully",
-        "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s"
+        "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s",
+        "DeploymentTypeNotSupportedForLinuxConsumption": "The Deployment Type option does not apply for Linux Consumption."
     }
 }

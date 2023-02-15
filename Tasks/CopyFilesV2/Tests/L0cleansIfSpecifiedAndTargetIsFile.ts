@@ -25,39 +25,41 @@ answers.find[path.normalize('/srcDir')] = [
 answers.rmRF[path.join(path.normalize('/destDir'))] = { success: true };
 runner.setAnswers(answers);
 
-fs.existsSync = (itemPath: string) => {
-    switch (itemPath) {
-        case path.normalize('/srcDir'):
-        case path.normalize('/srcDir/someOtherDir'):
-        case path.normalize('/destDir'):
-        case path.normalize('/srcDir/someOtherDir/file1.file'):
-        case path.normalize('/srcDir/someOtherDir/file2.file'):
-            return true;
-        default:
-            return false;
-    }
-}
+const fsClone = Object.assign({}, fs);
+Object.assign(fsClone, {
+    existsSync(itemPath: string): boolean {
+        switch (itemPath) {
+            case path.normalize('/srcDir'):
+            case path.normalize('/srcDir/someOtherDir'):
+            case path.normalize('/destDir'):
+            case path.normalize('/srcDir/someOtherDir/file1.file'):
+            case path.normalize('/srcDir/someOtherDir/file2.file'):
+                return true;
+            default:
+                return false;
+        }
+    },
+    statSync(itemPath: string): fs.Stats {
+        const itemStats: fs.Stats = new fs.Stats();
+        switch (itemPath) {
+            case path.normalize('/srcDir'):
+            case path.normalize('/srcDir/someOtherDir'):
+                itemStats.isDirectory = () => true;
+                break;
+            case path.normalize('/destDir'):
+            case path.normalize('/srcDir/someOtherDir/file1.file'):
+            case path.normalize('/srcDir/someOtherDir/file2.file'):
+                itemStats.isDirectory = () => false;
+                break;
+            default:
+                throw { code: 'ENOENT' };
+        }
+        return itemStats;
+    },
+    // as a precaution, disable fs.chmodSync. it should not be called during this scenario.
+    chmodSync(p: fs.PathLike, mode: fs.Mode): void {}
+});
 
-fs.statSync = (itemPath: string) => {
-    const itemStats: fs.Stats = new fs.Stats();
-    switch (itemPath) {
-        case path.normalize('/srcDir'):
-        case path.normalize('/srcDir/someOtherDir'):
-            itemStats.isDirectory = () => true;
-            break;
-        case path.normalize('/destDir'):
-        case path.normalize('/srcDir/someOtherDir/file1.file'):
-        case path.normalize('/srcDir/someOtherDir/file2.file'):
-            itemStats.isDirectory = () => false;
-            break;
-        default:
-            throw { code: 'ENOENT' };
-    }
-    return itemStats;
-}
-
-// as a precaution, disable fs.chmodSync. it should not be called during this scenario.
-fs.chmodSync = null;
-runner.registerMock('fs', fs);
+runner.registerMock('fs', fsClone);
 
 runner.run();

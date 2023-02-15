@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 209,
+        "Minor": 218,
         "Patch": 0
     },
     "releaseNotes": "Added support for Az Module and cross platform agents.",
@@ -162,6 +162,16 @@
             "defaultValue": "false",
             "helpMarkDown": "If this is true, then on Windows the task will use pwsh.exe from your PATH instead of powershell.exe.",
             "groupName": "advanced"
+        },
+        {
+            "name":  "validateScriptSignature",
+            "type":  "boolean",
+            "label":  "Validate script signature",
+            "required":  false,
+            "defaultValue":  "false",
+            "helpMarkDown":  "If this is true, then the task will first check to make sure specified script is signed and valid before executing it.",
+            "groupName":  "advanced",
+            "visibleRule":  "ScriptType = FilePath"
         },
         {
             "name": "workingDirectory",

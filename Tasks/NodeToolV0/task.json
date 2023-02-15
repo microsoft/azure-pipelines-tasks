@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 200,
+        "Minor": 218,
         "Patch": 0
     },
     "satisfies": [
@@ -24,14 +24,39 @@
     "demands": [],
     "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Use Node $(versionSpec)",
+    "groups": [
+      {
+        "name": "advanced",
+        "displayName": "Advanced",
+        "isExpanded": false
+      }
+    ],
     "inputs": [
+        {
+            "name": "versionSource",
+            "type": "radio",
+            "label": "Source of version",
+            "required": true,
+            "defaultValue": "spec",
+            "options": {
+                "spec": "Specify Node version",
+                "fromFile": "Get version from file"
+            }
+        },
         {
             "name": "versionSpec",
             "type": "string",
             "label": "Version Spec",
             "defaultValue": "6.x",
-            "required": true,
-            "helpMarkDown": "Version Spec of version to get.  Examples: 6.x, 4.x, 6.10.0, >=6.10.0"
+            "helpMarkDown": "Version Spec of version to get.  Examples: 6.x, 4.x, 6.10.0, >=6.10.0",
+            "visibleRule": "versionSource = spec"
+        },
+        {
+            "name": "versionFilePath",
+            "type": "string",
+            "label": "Path to the .nvmrc file",
+            "helpMarkDown": "File path to get version.  Example: src/.nvmrc",
+            "visibleRule": "versionSource = fromFile"
         },
         {
             "name": "checkLatest",
@@ -48,10 +73,23 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Installs the x86 version of Node regardless of the CPU architecture of the agent."
+        },
+        {
+          "name": "nodejsMirror",
+          "type": "string",
+          "label": "Set source for Node.js binaries",
+          "defaultValue": "https://nodejs.org/dist",
+          "required": false,
+          "groupName": "advanced",
+          "helpMarkDown": "Use an alternative installation mirror when sourcing the Node.js binaries."
         }
     ],
     "execution": {
         "Node10": {
+            "target": "nodetool.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "nodetool.js",
             "argumentFormat": ""
         }
@@ -67,6 +105,10 @@
         }
     },
     "messages": {
-        "ToolFailed": "Tool install failed: %s"
+        "ToolFailed": "Tool install failed: %s",
+        "TryRosetta": "Unable to find Node for platform %s and architecture %s. Trying to install with Rosetta2",
+        "NodeVersionNotFound": "Unable to find Node version %s for platform %s and architecture %s.",
+        "UnexpectedOS": "Unexpected OS %s",
+        "AgentTempDirNotSet": "Expected Agent.TempDirectory to be set."
     }
 }
