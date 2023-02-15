@@ -1,3 +1,9 @@
+pr:
+  - master
+
+trigger: 
+  - master
+
 jobs:
 - job: ci_test_tasks_init
   # we only test tasks on a PR and ignore forks since for security reasosns PAT tokens pipeline variable will not be available for fork's PRs.
