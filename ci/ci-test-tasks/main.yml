@@ -5,6 +5,7 @@ parameters:
   default: ArchiveFilesV2
 
 trigger: none
+pr: none
 
 jobs:
   - ${{ each var in split(parameters.tasks, ',') }}:
