@@ -1,6 +1,7 @@
 pr:
   - master
 
+trigger: none
 
 jobs:
 - job: ci_test_tasks_init
