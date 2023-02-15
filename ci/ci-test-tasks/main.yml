@@ -9,7 +9,7 @@ trigger: none
 jobs:
   - ${{ each var in split(parameters.tasks, ',') }}:
     - job: ${{ var }}_build_task
-      condition: and(eq(variables['build.reason'], 'Manual'))
+      condition: eq(variables['build.reason'], 'Manual')
       displayName: Build Task (${{ var }})
       pool:
         vmImage: windows-2022
