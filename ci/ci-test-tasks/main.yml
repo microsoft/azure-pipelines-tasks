@@ -5,6 +5,7 @@ parameters:
   default: DownloadPackageV1
 
 trigger: none
+pr: none
 
 jobs:
   - ${{ each var in split(parameters.tasks, ',') }}:
