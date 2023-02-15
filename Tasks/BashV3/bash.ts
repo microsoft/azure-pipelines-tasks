@@ -4,29 +4,48 @@ import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
 var uuidV4 = require('uuid/v4');
 
-async function translateDirectoryPath(bashPath: string, directoryPath: string): Promise<string> {
-    let bashPwd = tl.tool(bashPath)
-        .arg('-c')
-        .arg('pwd');
+async function runBashPwd(bashPath: string, directoryPath: string): Promise<string> {
+    let pwdOutput = '';
+    const bashPwd = tl.tool(bashPath).arg('-c').arg('pwd');
+    bashPwd.on('stdout', data => pwdOutput += data.toString());
 
-    let bashPwdOptions = <tr.IExecOptions>{
+    const bashPwdOptions = <tr.IExecOptions>{
         cwd: directoryPath,
         failOnStdErr: true,
         errStream: process.stdout,
         outStream: process.stdout,
         ignoreReturnCode: false
     };
-    let pwdOutput = '';
-    bashPwd.on('stdout', (data) => {
-        pwdOutput += data.toString();
-    });
+
     await bashPwd.exec(bashPwdOptions);
+
     pwdOutput = pwdOutput.trim();
+
     if (!pwdOutput) {
         throw new Error(tl.loc('JS_TranslatePathFailed', directoryPath));
     }
 
-    return `${pwdOutput}`;
+    return pwdOutput;
+}
+
+async function translateDirectoryPath(bashPath: string, directoryPath: string): Promise<string> {
+    if (directoryPath.endsWith('\\')) {
+        directoryPath = directoryPath.slice(0, -1);
+    }
+
+    const directoryPathTranslated = await runBashPwd(bashPath, directoryPath);
+
+    const parentDirectoryPath = directoryPath.split('\\').slice(0, -1).join('\\');
+
+    if (parentDirectoryPath) {
+        const parentDirectoryPathTranslated = await runBashPwd(bashPath, parentDirectoryPath);
+
+        if (directoryPathTranslated == parentDirectoryPathTranslated) {
+            throw new Error(tl.loc('JS_TranslatePathFailed', directoryPath));
+        }
+    }
+
+    return directoryPathTranslated;
 }
 
 /**
