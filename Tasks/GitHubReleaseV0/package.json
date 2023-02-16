@@ -7,7 +7,7 @@
     "@types/node": "^10.17.0",
     "@types/q": "1.5.0",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-task-lib": "^3.0.6-preview.0",
+    "azure-pipelines-task-lib": "^3.4.0",
     "azure-pipelines-tasks-utility-common": "^3.210.0",
     "brace-expansion": "1.1.8",
     "browserify-mime": "1.2.9",
