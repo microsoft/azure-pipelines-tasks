@@ -26,5 +26,6 @@ export const AzureServicePrinicipalAuthentications = {
 export const AzureRmEndpointAuthenticationScheme = {
     "ServicePrincipal": "serviceprincipal",
     "ManagedServiceIdentity": "managedserviceidentity",
-    "PublishProfile": "publishprofile"
+    "PublishProfile": "publishprofile",
+    "WorkloadIdentityFederation": "workloadidentityfederation"
 }

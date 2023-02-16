@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 217,
+    "Minor": 218,
     "Patch": 0
   },
   "demands": [],
@@ -185,6 +185,7 @@
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
     "KubectlClientVersion": "ms-resource:loc.messages.KubectlClientVersion",
     "KubectlServerVersion": "ms-resource:loc.messages.KubectlServerVersion",
+    "KubernetesClusterResourceGroup": "ms-resource:loc.messages.KubernetesClusterResourceGroup",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
     "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP",
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
