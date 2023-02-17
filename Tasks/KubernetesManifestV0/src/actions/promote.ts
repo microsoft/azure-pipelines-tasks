@@ -7,7 +7,7 @@ import * as SMICanaryDeploymentHelper from '../utils/SMICanaryDeploymentHelper';
 import * as utils from '../utils/utilities';
 import * as TaskInputParameters from '../models/TaskInputParameters';
 
-import { Kubectl } from 'azure-pipelines-tasks-kubernetes-common-v2/kubectl-object-model';
+import { Kubectl } from 'azure-pipelines-tasks-kubernetes-common/kubectl-object-model';
 
 export async function promote(ignoreSslErrors?: boolean) {
     TaskInputParameters.validateTimeoutForRolloutStatus();

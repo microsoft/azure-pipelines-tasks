@@ -18,7 +18,7 @@
   "loc.input.label.urlSuffix": "URL 后缀和参数",
   "loc.input.help.urlSuffix": "将给定字符串追加到 URL。例如: 如果服务连接 URL 为 https:...TestProj/_apis/Release/releases，且 URL 后缀为 /2/environments/1，则服务连接 URL 变为 https:.../TestProj/_apis/Release/releases/2/environments/1。如果 URL 后缀为 ?definitionId=1&releaseCount=1，则服务连接 URL 变为 https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1。",
   "loc.input.label.waitForCompletion": "完成事件",
-  "loc.input.help.waitForCompletion": "默认值 \"ApiResponse\"。可用值: \"ApiResponse\"，\"Callback\" 调用 REST API 回调到的位置来更新时间线记录。",
+  "loc.input.help.waitForCompletion": "默认值 \"Callback\"。可用值: \"ApiResponse\"，\"Callback\" 调用 REST API 回调到的位置来更新时间线记录。",
   "loc.input.label.successCriteria": "成功标准",
   "loc.input.help.successCriteria": "定义何时传递任务的条件。无条件意味着响应内容不会影响结果。示例: - 对于响应 {\"status\" : \"successful\"}，该表达式可以是 eq(root['status'], 'successful')。[详细信息](https://go.microsoft.com/fwlink/?linkid=842996)"
 }
