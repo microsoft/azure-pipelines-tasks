@@ -12,7 +12,7 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
+    "Major": 1,
     "Minor": 218,
     "Patch": 0
   },
@@ -38,12 +38,61 @@
       "helpMarkDown": "ms-resource:loc.input.help.action"
     },
     {
-      "name": "kubernetesServiceConnection",
-      "type": "connectedService:kubernetes",
-      "label": "ms-resource:loc.input.label.kubernetesServiceConnection",
-      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceConnection",
+      "name": "connectionType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.connectionType",
+      "defaultValue": "kubernetesServiceConnection",
+      "options": {
+        "azureResourceManager": "Azure Resource Manager",
+        "kubernetesServiceConnection": "Kubernetes Service Connection"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.connectionType",
       "visibleRule": "action != bake",
       "required": true
+    },
+    {
+      "name": "kubernetesServiceEndpoint",
+      "type": "connectedService:kubernetes",
+      "label": "ms-resource:loc.input.label.kubernetesServiceEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceEndpoint",
+      "visibleRule": "action != bake && connectionType = kubernetesServiceConnection",
+      "required": true
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "aliases": [
+        "azureSubscriptionConnection"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "defaultValue": "",
+      "visibleRule": "action != bake && connectionType = azureResourceManager",
+      "required": true
+    },
+    {
+      "name": "azureResourceGroup",
+      "label": "ms-resource:loc.input.label.azureResourceGroup",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup",
+      "defaultValue": "",
+      "visibleRule": "action != bake && connectionType = azureResourceManager",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "kubernetesCluster",
+      "label": "ms-resource:loc.input.label.kubernetesCluster",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesCluster",
+      "defaultValue": "",
+      "visibleRule": "action != bake && connectionType = azureResourceManager",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "namespace",
@@ -340,7 +389,22 @@
       }
     }
   ],
-  "dataSourceBindings": [],
+  "dataSourceBindings": [
+    {
+      "target": "kubernetesCluster",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{{{name}}}"
+    },
+    {
+      "target": "azureResourceGroup",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
+    }
+  ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "outputVariables": [
     {

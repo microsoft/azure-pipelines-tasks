@@ -12,7 +12,7 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 0,
+        "Major": 1,
         "Minor": 218,
         "Patch": 0
     },
@@ -38,12 +38,61 @@
             "helpMarkDown": "Choose the action to be performed."
         },
         {
-            "name": "kubernetesServiceConnection",
+            "name": "connectionType",
+            "type": "pickList",
+            "label": "Service connection type",
+            "defaultValue": "kubernetesServiceConnection",
+            "options": {
+                "azureResourceManager": "Azure Resource Manager",
+                "kubernetesServiceConnection": "Kubernetes Service Connection"
+            },
+            "helpMarkDown": "Select a Kubernetes service connection type.",
+            "visibleRule": "action != bake",
+            "required": true
+        },
+        {
+            "name": "kubernetesServiceEndpoint",
             "type": "connectedService:kubernetes",
             "label": "Kubernetes service connection",
             "helpMarkDown": "Select a Kubernetes service connection.",
-            "visibleRule": "action != bake",
+            "visibleRule": "action != bake && connectionType = kubernetesServiceConnection",
             "required": true
+        },
+        {
+            "name": "azureSubscriptionEndpoint",
+            "aliases": [
+                "azureSubscriptionConnection"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "helpMarkDown": "Select the Azure Resource Manager subscription, which contains Azure Container Registry.Note: To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Add' or 'Manage' button.",
+            "defaultValue": "",
+            "visibleRule": "action != bake && connectionType = azureResourceManager",
+            "required": true
+        },
+        {
+            "name": "azureResourceGroup",
+            "label": "Resource group",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure resource group.",
+            "defaultValue": "",
+            "visibleRule": "action != bake && connectionType = azureResourceManager",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "kubernetesCluster",
+            "label": "Kubernetes cluster",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure managed cluster.",
+            "defaultValue": "",
+            "visibleRule": "action != bake && connectionType = azureResourceManager",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            }
         },
         {
             "name": "namespace",
@@ -340,7 +389,22 @@
             }
         }
     ],
-    "dataSourceBindings": [],
+    "dataSourceBindings": [
+        {
+            "target": "kubernetesCluster",
+            "endpointId": "$(azureSubscriptionEndpoint)",
+            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{{{name}}}"
+        },
+        {
+            "target": "azureResourceGroup",
+            "endpointId": "$(azureSubscriptionEndpoint)",
+            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
+        }
+    ],
     "instanceNameFormat": "$(action)",
     "outputVariables": [
         {
