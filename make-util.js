@@ -348,7 +348,7 @@ var installNode = function (nodeVersion) {
             nodeVersion = 'v5.10.1';
             break;
         default:
-            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14`);
+            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14, 16`);
     }
 
     if (nodeVersion === run('node -v')) {
@@ -1692,8 +1692,12 @@ var getTaskNodeVersion = function(buildPath, taskName) {
         nodes.push(parseInt(version) || 6);
     }
 
+    if (nodes.length) {
+        return nodes;
+    }
+
     console.warn('Unable to determine execution type from task.json, defaulting to use Node 10');
-    return nodes.length ? nodes : [10];
+    return 10;
 }
 exports.getTaskNodeVersion = getTaskNodeVersion;
 
