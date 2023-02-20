@@ -4,9 +4,9 @@
   "lockfileVersion": 1,
   "dependencies": {
     "@azure/msal-common": {
-      "version": "9.0.1",
-      "resolved": "https://registry.npmjs.org/@azure/msal-common/-/msal-common-9.0.1.tgz",
-      "integrity": "sha512-eNNHIW/cwPTZDWs9KtYgb1X6gtQ+cC+FGX2YN+t4AUVsBdUbqlMTnUs6/c/VBxC2AAGIhgLREuNnO3F66AN2zQ=="
+      "version": "9.1.1",
+      "resolved": "https://registry.npmjs.org/@azure/msal-common/-/msal-common-9.1.1.tgz",
+      "integrity": "sha512-we9xR8lvu47fF0h+J8KyXoRy9+G/fPzm3QEa2TrdR3jaVS3LKAyE2qyMuUkNdbVkvzl8Zr9f7l+IUSP22HeqXw=="
     },
     "@azure/msal-node": {
       "version": "1.14.5",
@@ -128,11 +128,11 @@
       }
     },
     "azure-pipelines-tasks-azure-arm-rest-v2": {
-      "version": "3.216.3",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-azure-arm-rest-v2/-/azure-pipelines-tasks-azure-arm-rest-v2-3.216.3.tgz",
-      "integrity": "sha512-EZfChH+0Qrl7cE8Xag+zHkCdswTkxTP33YlEPocoBZ0SycgWcwl0hg6KmIfcwnKZSNQ+zz70ahdJ1GMSpcSRxQ==",
+      "version": "3.217.1",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-azure-arm-rest-v2/-/azure-pipelines-tasks-azure-arm-rest-v2-3.217.1.tgz",
+      "integrity": "sha512-kozIoKwH8T85PaTyCoRBAGgw6UONPE3mswyoPGd9pN6hqH/dwpuuazG4QdW7DIePuivKg9UYNZn9qwJzdhTUtQ==",
       "requires": {
-        "@azure/msal-node": "^1.14.5",
+        "@azure/msal-node": "1.14.5",
         "@types/jsonwebtoken": "^8.5.8",
         "@types/mocha": "^5.2.7",
         "@types/node": "^10.17.0",
@@ -501,9 +501,9 @@
       "integrity": "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="
     },
     "node-fetch": {
-      "version": "2.6.7",
-      "resolved": "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.7.tgz",
-      "integrity": "sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==",
+      "version": "2.6.8",
+      "resolved": "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.8.tgz",
+      "integrity": "sha512-RZ6dBYuj8dRSfxpUSu+NsdF1dpPpluJxwOp+6IoDp/sH2QNDSvurYsAa+F1WxY2RjA1iP93xhcsUoYbF2XBqVg==",
       "requires": {
         "whatwg-url": "^5.0.0"
       }

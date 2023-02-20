@@ -1,0 +1,54 @@
+parameters:
+- name: tasks
+  displayName: Tasks to process (separate by colons, no whitespaces)
+  type: string
+  default: ArchiveFilesV2
+
+trigger: none
+
+jobs:
+  - ${{ each var in split(parameters.tasks, ',') }}:
+    - job: ${{ var }}_build_task
+      condition: eq(variables['build.reason'], 'Manual')
+      displayName: Build Task (${{ var }})
+      pool:
+        vmImage: windows-2022
+      steps:
+      - template: ./build-task.yml
+        parameters:
+          task: ${{ var }}
+          push: false
+          publishArtifact: true
+          patchVersion: true
+          version: '0.9999.9999'
+
+    - job: ${{ var }}_upload_task
+      displayName: Upload (${{ var }})
+      dependsOn: ${{ var }}_build_task
+      pool:
+        vmImage: windows-2022
+      steps:
+      - template: ./upload-task.yml
+        parameters:
+          task: ${{ var }}
+   
+    - job: ${{ var }}_test_task
+      displayName: Test (${{ var }})
+      dependsOn: ${{ var }}_upload_task
+      pool:
+        vmImage: windows-2022
+      steps:
+      - template: ./test-task.yml
+        parameters:
+          task: ${{ var }}
+   
+    - job: ${{ var }}_clean_up
+      condition: always()
+      displayName: Clean up (${{ var }})
+      dependsOn: ${{ var }}_test_task
+      pool:
+        vmImage: windows-2022
+      steps:
+      - template: ./clean-up-task.yml
+        parameters:
+          task: ${{ var }}

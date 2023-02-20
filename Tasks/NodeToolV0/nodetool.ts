@@ -16,9 +16,10 @@ async function run() {
         let versionSource = taskLib.getInput('versionSource', true);
         let versionSpecInput = taskLib.getInput('versionSpec', versionSource == 'spec');
         let versionFilePathInput = taskLib.getInput('versionFilePath', versionSource == 'fromFile');
+        let nodejsMirror = taskLib.getInput('nodejsMirror', false);
         let versionSpec = getNodeVersion(versionSource, versionSpecInput, versionFilePathInput);
         let checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
-        await getNode(versionSpec, checkLatest);
+        await getNode(versionSpec, checkLatest, nodejsMirror.replace(/\/$/, ''));
         telemetry.emitTelemetry('TaskHub', 'NodeToolV0', { versionSource, versionSpec, checkLatest, force32bit });
     }
     catch (error) {
@@ -51,7 +52,7 @@ interface INodeVersion {
 //              toolPath = cacheDir
 //      PATH = cacheDir + PATH
 //
-async function getNode(versionSpec: string, checkLatest: boolean) {
+async function getNode(versionSpec: string, checkLatest: boolean, nodejsMirror: string) {
     let installedArch = osArch;
     if (toolLib.isExplicitVersion(versionSpec)) {
         checkLatest = false; // check latest doesn't make sense when explicit version
@@ -75,13 +76,13 @@ async function getNode(versionSpec: string, checkLatest: boolean) {
             version = versionSpec;
         } else {
             // query nodejs.org for a matching version
-            version = await queryLatestMatch(versionSpec, installedArch);
+            version = await queryLatestMatch(versionSpec, installedArch, nodejsMirror);
 
             if (!version && isDarwinArm(osPlat, installedArch)) {
                 // nodejs.org does not have an arm64 build for macOS, so we fall back to x64
                 console.log(taskLib.loc('TryRosetta', osPlat, installedArch));
 
-                version = await queryLatestMatch(versionSpec, 'x64');
+                version = await queryLatestMatch(versionSpec, 'x64', nodejsMirror);
                 installedArch = 'x64';
             }
             
@@ -95,7 +96,7 @@ async function getNode(versionSpec: string, checkLatest: boolean) {
 
         if (!toolPath) {
             // download, extract, cache
-            toolPath = await acquireNode(version, installedArch);
+            toolPath = await acquireNode(version, installedArch, nodejsMirror);
         }
     }
 
@@ -114,7 +115,7 @@ async function getNode(versionSpec: string, checkLatest: boolean) {
     toolLib.prependPath(toolPath);
 }
 
-async function queryLatestMatch(versionSpec: string, installedArch: string): Promise<string> {
+async function queryLatestMatch(versionSpec: string, installedArch: string, nodejsMirror: string): Promise<string> {
     // node offers a json list of versions
     let dataFileName: string;
     switch (osPlat) {
@@ -125,7 +126,7 @@ async function queryLatestMatch(versionSpec: string, installedArch: string): Pro
     }
 
     let versions: string[] = [];
-    let dataUrl = "https://nodejs.org/dist/index.json";
+    let dataUrl = nodejsMirror + "/index.json";
     let rest: restm.RestClient = new restm.RestClient('vsts-node-tool');
     let nodeVersions: INodeVersion[] = (await rest.get<INodeVersion[]>(dataUrl)).result;
     nodeVersions.forEach((nodeVersion:INodeVersion) => {
@@ -146,7 +147,7 @@ async function queryLatestMatch(versionSpec: string, installedArch: string): Pro
     return nodeVersions.find(v => v.semanticVersion === latestVersion).version;
 }
 
-async function acquireNode(version: string, installedArch: string): Promise<string> {
+async function acquireNode(version: string, installedArch: string, nodejsMirror: string): Promise<string> {
     //
     // Download - a tool installer intimately knows how to get the tool (and construct urls)
     //
@@ -156,7 +157,7 @@ async function acquireNode(version: string, installedArch: string): Promise<stri
     let urlFileName: string = osPlat == 'win32'? fileName + '.7z':
                                                     fileName + '.tar.gz';  
 
-    let downloadUrl = 'https://nodejs.org/dist/v' + version + '/' + urlFileName;
+    let downloadUrl = nodejsMirror + '/v' + version + '/' + urlFileName;
 
     let downloadPath: string;
 
@@ -169,7 +170,7 @@ async function acquireNode(version: string, installedArch: string): Promise<stri
         if (err['httpStatusCode'] && 
             err['httpStatusCode'] == 404)
         {
-            return await acquireNodeFromFallbackLocation(version);
+            return await acquireNodeFromFallbackLocation(version, nodejsMirror);
         }
 
         throw err;
@@ -212,7 +213,7 @@ async function acquireNode(version: string, installedArch: string): Promise<stri
 // This method attempts to download and cache the resources from these alternative locations.
 // Note also that the files are normally zipped but in this case they are just an exe
 // and lib file in a folder, not zipped.
-async function acquireNodeFromFallbackLocation(version: string): Promise<string> {
+async function acquireNodeFromFallbackLocation(version: string, nodejsMirror: string): Promise<string> {
     // Create temporary folder to download in to
     let tempDownloadFolder: string = 'temp_' + Math.floor(Math.random() * 2000000000);
     let tempDir: string = path.join(taskLib.getVariable('agent.tempDirectory'), tempDownloadFolder);
@@ -220,8 +221,8 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
     let exeUrl: string;
     let libUrl: string;
     try {
-        exeUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.exe`;
-        libUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.lib`;
+        exeUrl = `${nodejsMirror}/v${version}/win-${osArch}/node.exe`;
+        libUrl = `${nodejsMirror}/v${version}/win-${osArch}/node.lib`;
 
         await toolLib.downloadTool(exeUrl, path.join(tempDir, "node.exe"));
         await toolLib.downloadTool(libUrl, path.join(tempDir, "node.lib"));
@@ -230,8 +231,8 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
         if (err['httpStatusCode'] && 
             err['httpStatusCode'] == 404)
         {
-            exeUrl = `https://nodejs.org/dist/v${version}/node.exe`;
-            libUrl = `https://nodejs.org/dist/v${version}/node.lib`;
+            exeUrl = `${nodejsMirror}/v${version}/node.exe`;
+            libUrl = `${nodejsMirror}/v${version}/node.lib`;
 
             await toolLib.downloadTool(exeUrl, path.join(tempDir, "node.exe"));
             await toolLib.downloadTool(libUrl, path.join(tempDir, "node.lib"));

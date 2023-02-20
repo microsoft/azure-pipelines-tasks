@@ -25,7 +25,7 @@ export class AzureRMEndpoint {
         this.endpoint = null;
     }
 
-    public async getEndpoint(useGraphActiveDirectoryResource: boolean = false, useMSAL: boolean = true): Promise<AzureEndpoint> {
+    public async getEndpoint(useGraphActiveDirectoryResource: boolean = false, useMSAL: boolean = false): Promise<AzureEndpoint> {
         if (!!this.endpoint) {
             return this.endpoint;
         }
@@ -63,6 +63,12 @@ export class AzureRMEndpoint {
                     resourceId: resourceId
                 } as AzureEndpoint;
             } else {
+
+                if(endpointAuthScheme && endpointAuthScheme.toLowerCase() == constants.AzureRmEndpointAuthenticationScheme.WorkloadIdentityFederation) {
+                    tl.debug(`Overriding useMSAL to ${true} as ${constants.AzureRmEndpointAuthenticationScheme.WorkloadIdentityFederation} supports only MSAL`);
+                    useMSAL = true;
+                }
+
                 this.endpoint = {
                     subscriptionID: tl.getEndpointDataParameter(this._connectedServiceName, 'subscriptionid', true),
                     subscriptionName: tl.getEndpointDataParameter(this._connectedServiceName, 'subscriptionname', true),
