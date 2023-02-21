@@ -10,7 +10,6 @@ import * as utils from "./utilities";
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, "task.json"));
-    tl.setResourcePath(path.join(__dirname, "node_modules/azure-pipelines-tasks-artifacts-common/module.json"));
 
     let internalFeedSuccessCount: number = 0;
     let externalFeedSuccessCount: number = 0;
