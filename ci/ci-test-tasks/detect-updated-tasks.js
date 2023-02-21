@@ -20,6 +20,6 @@ function getTaskNames(files) {
     taskNames.add(filePath.split('/')[1]);
   });
 
-  return [...taskNames];
+  return [...taskNames].slice(0,1);
 }
 
