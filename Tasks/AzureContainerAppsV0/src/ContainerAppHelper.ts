@@ -6,8 +6,7 @@ import { Utility } from './Utility';
 
 const ORYX_CLI_IMAGE: string = 'mcr.microsoft.com/oryx/cli:builder-debian-buster-20230208.1';
 const ORYX_BUILDER_IMAGE: string = 'mcr.microsoft.com/oryx/builder:20230208.1';
-const AGENT_OS: string = tl.getVariable('AGENT.OS');
-const IS_WINDOWS_AGENT: boolean = AGENT_OS == 'Windows_NT';
+const IS_WINDOWS_AGENT: boolean = os.platform() == 'win32';
 const PACK_CMD: string = IS_WINDOWS_AGENT ? path.join(os.tmpdir(), 'pack') : 'pack';
 
 export class ContainerAppHelper {
@@ -169,7 +168,7 @@ export class ContainerAppHelper {
                           `Expand-Archive -LiteralPath ${packZipDownloadFilePath} -DestinationPath ${PACK_CMD}; ` +
                           `Remove-Item -Path ${packZipDownloadFilePath}`;
             } else {
-                const tgzSuffix = AGENT_OS == 'Darwin' ? 'macos' : 'linux';
+                const tgzSuffix = os.platform() == 'darwin' ? 'macos' : 'linux';
                 command = `(curl -sSL \"https://github.com/buildpacks/pack/releases/download/v0.27.0/pack-v0.27.0-${tgzSuffix}.tgz\" | ` +
                                   'tar -C /usr/local/bin/ --no-same-owner -xzv pack)';
             }
