@@ -1,3 +1,3 @@
 AzureFunctionV1
 
-test
+tests
