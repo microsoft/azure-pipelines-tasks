@@ -153,6 +153,8 @@ function Initialize-AzSubscription {
             Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
         }
     } elseif ($Endpoint.Auth.Scheme -eq 'WorkloadIdentityFederation') {
+        $clientAssertionJwt = Get-VstsFederatedToken -serviceConnectionId $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
+
         Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
         $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
         Write-Host "##[command]Clear-AzContext -Scope Process"
