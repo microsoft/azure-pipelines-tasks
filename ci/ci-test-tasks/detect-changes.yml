@@ -2,7 +2,7 @@ pr:
   - master
 
 jobs:
-- job: ci_test_tasks_init
+- job: detect_changes
   # we only test tasks on a PR and ignore forks since for security reasosns PAT tokens pipeline variable will not be available for fork's PRs.
   condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['System.PullRequest.IsFork'], 'False'))
   pool:
@@ -20,4 +20,14 @@ jobs:
       echo $TASKS
       OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "$(CIMainUrl)" -X POST -d "{\"templateParameters\": { \"tasks\": \"$TASKS\"}}"`
       echo $OUTPUT
+    displayName: 'Run test pipelines'
+
+- job: run_main_test_pipeline
+  dependsOn: detect_changes
+  condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['System.PullRequest.IsFork'], 'False'))
+  pool:
+    vmImage: ubuntu-20.04
+  steps:
+  - script: |
+      echo $TASKS
     displayName: 'Run test pipelines'
