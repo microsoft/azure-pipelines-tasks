@@ -15,10 +15,9 @@ jobs:
       pool:
         vmImage: windows-2022
       steps:
-      - script: whoami
       - script: |
           npm install -g tfx-cli
-          set PATH=%PATH%;C:\Users\johnk\AppData\Roaming\npm
+          set PATH=%PATH%;C:\Users\%username%\AppData\Roaming\npm
         displayName: 'npm install -g tfx-cli' 
       - script: |
           tfx login --auth-type pat --service-url $(ADOUrl)/DefaultCollection --token $(ADOToken)
