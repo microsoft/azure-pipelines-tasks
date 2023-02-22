@@ -18,8 +18,7 @@ jobs:
     failOnStderr: true 
     displayName: 'Detect changed tasks'
     name: detect
-
-
+ 
 - job: run_main_test_pipeline
   displayName: Run main test pipeline
   dependsOn: detect_changes
