@@ -27,6 +27,6 @@ stages:
       continueOnError: true 
 
     - script: |
-        echo $(Build.newVar)
+        echo $(newVar)
       displayName: 'Print variable'
       continueOnError: true 
