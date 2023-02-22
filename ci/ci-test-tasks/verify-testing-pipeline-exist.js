@@ -11,12 +11,7 @@ const auth = {
 };
 
 if (task) {
-  return start(task)
-  .then(resultMessage => console.log(resultMessage))
-  .catch(err => {
-    console.error(err);
-    throw err;
-  });
+  return start(task);
 } else {
   throw new Error('Task name was not provided');
 }
@@ -26,7 +21,7 @@ async function start(taskName) {
   const pipeline = pipelines.find(pipeline => pipeline.name === taskName);
 
   if (!pipeline) {
-    console.error(`Testing pipeline ${taskName} is missing`);
+    throw new Error(`Testing pipeline ${taskName} is missing`);
   }
 }
 
