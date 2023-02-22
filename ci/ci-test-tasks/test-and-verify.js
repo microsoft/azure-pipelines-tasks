@@ -1,9 +1,10 @@
 const axios = require('axios');
 
 const AUTH_TOKEN = process.argv[2];
-const apiUrl = process.argv[3];
+const ADOUrl = process.argv[3];
 const task = process.argv[4];
 const apiVersion = 'api-version=7.0';
+const apiUrl = ADOUrl + '/PipelineTasks/_apis/pipelines';
 
 const auth = {
   username: 'Basic',
