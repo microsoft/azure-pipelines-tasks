@@ -8,26 +8,21 @@ stages:
   - job: Build
     # Define the tasks for the job
     steps:
-    - script: |
-        echo "##vso[task.setvariable variable=myVar;isOutput=true]myValue"
-      displayName: 'Set variable'
-      name: setVarStep
+      - bash: |
+          echo "##vso[task.setvariable variable=skipsubsequent;isOutput=true]true"
+        displayName: 'Set variable'
+        name: skipstep
     
     # Define a second job that depends on the first job
   - job: Test
     dependsOn: Build
     variables:
-      - name: newVar
-        value: $[dependencies.Build.outputs['setVariable.myVar']]
+      - name: skipMe
+        value: $[dependencies.Build.outputs['skipstep.skipsubsequent']]
     # Define the tasks for the job
     steps:
     - checkout: none
     - script: |
-        echo $(Build.myVar)
-      displayName: 'Print variable'
-      continueOnError: true 
-
-    - script: |
-        echo $(newVar)
+        echo $(skipMe)
       displayName: 'Print variable'
       continueOnError: true 
