@@ -13,37 +13,24 @@ jobs:
       git fetch ms master
       git diff --name-only ms/master
       echo "##vso[task.setvariable variable=TASKS;]$(node ./ci/ci-test-tasks/detect-updated-tasks.js $(git diff --name-only ms/master))"
-      echo "##vso[task.setvariable variable=TASKSOutput;isoutput=true]$(node ./ci/ci-test-tasks/detect-updated-tasks.js $(git diff --name-only ms/master))"
       echo Tasks to be tested: $(node ./ci/ci-test-tasks/detect-updated-tasks.js $(git diff --name-only ms/master))
       echo tasks: $TASKS
-      echo tasks: $TASKSOutput
     displayName: 'Detect updated tasks'
     name: detect
- 
-  - task: Bash@3
-    displayName: 'Set variable'
-    inputs:
-        targetType: 'inline'
-        script: |
-          echo "##vso[task.setvariable variable=myVar;]myValue"
 
-  - script: |
-      echo $TASKS
-      echo $TASKSOutput
-      OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "$(CIMainUrl)" -X POST -d "{\"templateParameters\": { \"tasks\": \"$TASKS\"}}"`
-      echo $OUTPUT
-    displayName: 'Run test pipelines'
+ 
 
 - job: run_main_test_pipeline
   dependsOn: detect_changes
   variables:
       - name: tasks
-        value: $[dependencies.detect_changes.outputs['detect.TASKSOutput']]
+        value: $[dependencies.detect_changes.outputs['detect.TASKS']]
   pool:
     vmImage: ubuntu-20.04
   steps:
   - checkout: none
   - script: |
-        echo $(tasks)
+      echo $(tasks)
+      OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "$(CIMainUrl)" -X POST -d "{\"templateParameters\": { \"tasks\": \"$(tasks)\"}}"`
+      echo $OUTPUT
     displayName: 'Run test pipelines'
-  
