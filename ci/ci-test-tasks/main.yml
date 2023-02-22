@@ -16,8 +16,10 @@ jobs:
         vmImage: windows-2022
       steps:
       - bash: |
-          npm install -g tfx-cli
+          echo $PATH
           echo 'export PATH="$PATH:$HOME/.npm-global/bin"' >> ~/.bashrc
+          echo $PATH
+          npm install -g tfx-cli
         displayName: 'npm install -g tfx-cli' 
       - bash: |
           tfx login --auth-type pat --service-url $(ADOUrl)/DefaultCollection --token $(ADOToken)
