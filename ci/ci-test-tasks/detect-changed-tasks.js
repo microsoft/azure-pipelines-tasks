@@ -17,4 +17,3 @@ function getTaskNames(files) {
 
   return [...taskNames];
 }
-
