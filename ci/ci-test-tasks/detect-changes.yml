@@ -28,5 +28,5 @@ jobs:
     vmImage: ubuntu-20.04
   steps:
   - script: |
-      echo $(dependencies.detect_changes.tasks)
+      echo $(dependencies.detect_changes.TASKS)
     displayName: 'Run test pipelines'
