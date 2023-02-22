@@ -5,9 +5,10 @@ if (taskNames.length > 0) {
   console.log(taskNames.join(','));
 } else {
   console.error('No tasks were changed. Skip testing.')
+  process.exit(1);
 }
 
-function getTaskNames(files) {
+function getTaskNames(files) {KeyboardEvent, m
   const taskNames = new Set();
 
   files.filter(filePath => filePath.startsWith('Tasks/')).forEach(filePath => {
