@@ -22,7 +22,7 @@ jobs:
  
 
 - job: run_main_test_pipeline
-  dispayName: Run main test pipeline
+  displayName: Run main test pipeline
   dependsOn: detect_changes
   variables:
       - name: tasks
