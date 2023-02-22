@@ -37,4 +37,3 @@ jobs:
       echo $OUTPUT
     displayName: 'Run test pipelines'
     condition: ne(variables.tasks,'No tasks were changed. Skip testing.')
-
