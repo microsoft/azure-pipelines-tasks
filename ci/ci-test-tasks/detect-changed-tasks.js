@@ -8,11 +8,11 @@ if (taskNames.length > 0) {
 }
 
 function getTaskNames(files) {
-  const taskNames = new Set();
+  const tasks = new Set();
 
   files.filter(filePath => filePath.startsWith('Tasks/')).forEach(filePath => {
-    taskNames.add(filePath.split('/')[1]);
+    tasks.add(filePath.split('/')[1]);
   });
 
-  return [...taskNames];
+  return [...tasks];
 }
