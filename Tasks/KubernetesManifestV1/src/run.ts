@@ -48,7 +48,7 @@ function run(): Promise<void> {
             process.exit(1);
     }
     connection.open();
-    return action_func(connection)
+    return action_func()
         .then(() => connection.close())
         .catch((error) => {
             connection.close();
