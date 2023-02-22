@@ -35,3 +35,4 @@ jobs:
       OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "$(CIMainUrl)" -X POST -d "{\"templateParameters\": { \"tasks\": \"$(tasks)\"}}"`
       echo $OUTPUT
     displayName: 'Run test pipelines'
+    condition: succeeded()
