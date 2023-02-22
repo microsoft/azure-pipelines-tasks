@@ -33,4 +33,5 @@ jobs:
   steps:
   - script: |
       echo $(dependencies.detect_changes.TASKS)
+      echo $(dependencies.detect_changes.TASKSOutput)
     displayName: 'Run test pipelines'
