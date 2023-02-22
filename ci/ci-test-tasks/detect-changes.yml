@@ -9,7 +9,7 @@ stages:
     # Define the tasks for the job
     steps:
     - script: |
-        echo "##vso[task.setvariable variable=myVar]myValue"
+        echo "##vso[task.setvariable variable=myVar;isoutput=true]myValue"
       displayName: 'Set variable'
       name: setVarStep
       # Define the output variable
@@ -19,8 +19,11 @@ stages:
     # Define a second job that depends on the first job
   - job: Test
     dependsOn: Build
+    variables:
+      - name: newVar
+      - value: $[dependencies.Build.outputs['Build.myValue']]
     # Define the tasks for the job
     steps:
     - script: |
-        echo $(Build.myVar)
+        echo $(Build.newVar)
       displayName: 'Print variable'
