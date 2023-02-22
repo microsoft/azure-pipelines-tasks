@@ -17,7 +17,7 @@ jobs:
       steps:
       - bash: |
           npm install -g tfx-cli
-          set PATH=%PATH%;C:\Users\%username%\AppData\Roaming\npm
+          echo 'export PATH="$PATH:$HOME/.npm-global/bin"' >> ~/.bashrc
         displayName: 'npm install -g tfx-cli' 
       - bash: |
           tfx login --auth-type pat --service-url $(ADOUrl)/DefaultCollection --token $(ADOToken)
