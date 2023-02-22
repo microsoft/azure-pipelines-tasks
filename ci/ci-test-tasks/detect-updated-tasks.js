@@ -1,10 +1,5 @@
-const childProcess = require('child_process');
-
-console.log('args');
-console.log(process.argv);
-
 try {
-  const files = ((childProcess.execSync('git diff --name-only ms/master') || '').toString().trim()).split(/\r?\n/);
+  const files = process.argv.slice(2);
   const taskNames = getTaskNames(files);
 
   if (taskNames.length > 0) {
