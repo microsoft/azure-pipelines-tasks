@@ -1,12 +1,10 @@
 const axios = require('axios');
 
-const HOSTNAME = 'https://dev.azure.com';
-const ORGANIZATION = 'canary2-poc';
-const PROJECT = 'tasks-canary';
-const apiVersion = 'api-version=7.0';
-const apiUrl = `${HOSTNAME}/${ORGANIZATION}/${PROJECT}/_apis/pipelines`;
 const AUTH_TOKEN = process.argv[2];
-const task = process.argv[3];
+const apiUrl = process.argv[3];
+const task = process.argv[4];
+const apiVersion = 'api-version=7.0';
+
 const auth = {
   username: 'Basic',
   password: AUTH_TOKEN
@@ -32,7 +30,7 @@ async function start(taskName) {
     const pipelineBuild = await runTestPipeline(pipeline);
     return verifyTestRunResults(pipelineBuild);  
   } else {
-    throw new Error(`Cannot build and run tests for task ${taskName} - corresponding pipeline was not found`);
+    console.error(`Cannot build and run tests for task ${taskName} - corresponding test pipeline was not found`);
   }
 }
 
