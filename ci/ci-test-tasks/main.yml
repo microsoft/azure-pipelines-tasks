@@ -15,17 +15,17 @@ jobs:
       pool:
         vmImage: windows-2022
       steps:
-      - script: |
+      - bash: |
           npm install -g tfx-cli
           set PATH=%PATH%;C:\Users\%username%\AppData\Roaming\npm
         displayName: 'npm install -g tfx-cli' 
-      - script: |
+      - bash: |
           tfx login --auth-type pat --service-url $(ADOUrl)/DefaultCollection --token $(ADOToken)
         displayName: 'tfx login' 
-      - script: |
+      - bash: |
           echo "##vso[task.setvariable variable=TaskId;]$(node ./ci/ci-test-tasks/get-task-guid.js ./task-${{ parameters.task }}/${{parameters.task}}/task.json)"
         displayName: 'Set TaskId id' 
-      - script: |
+      - bash: |
           echo $TaskId
           echo "Deleting task $TaskId"
           tfx build tasks delete --task-id $TaskId
