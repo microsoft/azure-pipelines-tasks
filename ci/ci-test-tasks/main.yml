@@ -45,7 +45,7 @@ jobs:
    
     - job: ${{ var }}_clean_up
       condition: in(dependencies.${{ var }}_upload_task.result, 'Succeeded', 'SucceededWithIssues', 'Failed')
-      displayName: Clean up (${{ var }})
+      displayName: Clean up the (${{ var }})
       dependsOn: ${{ var }}_test_task
       pool:
         vmImage: windows-2022
