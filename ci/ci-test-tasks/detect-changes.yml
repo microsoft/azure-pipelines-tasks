@@ -8,25 +8,19 @@ stages:
   - job: Build
     # Define the tasks for the job
     steps:
-    - task: Bash@3
+    - script: |
+        echo "##vso[task.setvariable variable=myVar]myValue"
       displayName: 'Set variable'
-      inputs:
-        targetType: 'inline'
-        script: |
-          echo "##vso[task.setvariable variable=myVar]myValue"
-        name: setVarTask
+      name: setVarStep
       # Define the output variable
       outputs:
-        myVar: $(setVarTask.variables.myVar)
+        myVar: $(setVarStep.variables.myVar)
     
     # Define a second job that depends on the first job
   - job: Test
     dependsOn: Build
     # Define the tasks for the job
     steps:
-    - task: Bash@3
+    - script: |
+        echo $(Build.myVar)
       displayName: 'Print variable'
-      inputs:
-        targetType: 'inline'
-        script: |
-          echo $(Build.myVar)
