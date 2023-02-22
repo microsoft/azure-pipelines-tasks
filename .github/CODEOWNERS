@@ -301,6 +301,8 @@ Tasks/MSBuildV1/   @microsoft/akvelon-build-task-team
 
 Tasks/MysqlDeploymentOnMachineGroupV1/     @vsebesta   @rvairavelu   @pipeline-environment-team
 
+Tasks/NodeTaskRunnerInstallerV0/    @microsoft/akvelon-build-task-team
+
 Tasks/NodeToolV0/ @microsoft/akvelon-build-task-team
 
 Tasks/NpmV0/      @microsoft/azure-artifacts-packages
