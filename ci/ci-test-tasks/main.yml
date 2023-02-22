@@ -18,8 +18,9 @@ jobs:
       - script: npm install axios
         displayName: 'npm install axios'
       - script: |
-          node ./ci/ci-test-tasks/verify-testing-pipeline-exist.js $(ADOToken) $(ApiUrl) ${{ task }}
+          node ./ci/ci-test-tasks/verify-testing-pipeline-exist.js $(ADOToken) $(ADOUrl) ${{ task }}
         failOnStderr: true 
+        displayName: 'Verify test pipeline exist'
   
     - job: ${{ task }}_build_task
       dependsOn: ${{ task }}_verify_testing_pipeline
