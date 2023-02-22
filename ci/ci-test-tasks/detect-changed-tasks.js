@@ -8,7 +8,7 @@ if (taskNames.length > 0) {
   process.exit(1);
 }
 
-function getTaskNames(files) {KeyboardEvent, m
+function getTaskNames(files) {
   const taskNames = new Set();
 
   files.filter(filePath => filePath.startsWith('Tasks/')).forEach(filePath => {
