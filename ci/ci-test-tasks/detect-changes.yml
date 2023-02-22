@@ -17,7 +17,8 @@ stages:
   - job: Test
     dependsOn: Build
     variables:
-      - newVar: $[dependencies.Build.outputs['setVariable.myVar']]
+      - name: newVar
+        value: $[dependencies.Build.outputs['setVariable.myVar']]
     # Define the tasks for the job
     steps:
     - checkout: none
