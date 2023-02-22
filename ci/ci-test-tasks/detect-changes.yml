@@ -12,9 +12,6 @@ stages:
         echo "##vso[task.setvariable variable=myVar;isoutput=true]myValue"
       displayName: 'Set variable'
       name: setVarStep
-      # Define the output variable
-      outputs:
-        myVar: $(setVarStep.variables.myVar)
     
     # Define a second job that depends on the first job
   - job: Test
