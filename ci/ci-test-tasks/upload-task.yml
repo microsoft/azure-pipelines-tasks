@@ -35,6 +35,6 @@ steps:
     tfx build tasks delete --task-id $TASKID --no-prompt
     echo "Uploading task $TASKID"
     tfx build tasks upload --task-path ./task-${{ parameters.task }}/${{parameters.task}} --no-prompt
-displayName: 'Upload task'
+  displayName: 'Upload task'
 
  
