@@ -19,16 +19,28 @@ steps:
     overwriteExistingFiles: true
 
 - script: |
-    TASKID=`node ./ci/ci-test-tasks/get-task-guid.js ./task-${{ parameters.task }}/${{parameters.task}}/task.json`
-    echo "Deleting task"
-    echo $TASKID
-    echo "Deleting task $TASKID"
     npm install -g tfx-cli
+  displayName: 'npm install -g tfx-cli' 
+
+- script: |
     tfx login --auth-type pat --service-url $(ADOUrl)/DefaultCollection --token $(ADOToken)
+  displayName: 'tfx login' 
+
+- script: |
+    echo "##vso[task.setvariable variable=TASKID;]$TASKID"
+    tfx build tasks delete --task-id $TASKID
+  displayName: 'npm install -g tfx-cli' 
+
+- script: |
+    echo "##vso[task.setvariable variable=TASKID;]$(node ./ci/ci-test-tasks/get-task-guid.js ./task-${{ parameters.task }}/${{parameters.task}}/task.json)"
+  displayName: 'Get task id' 
+
+- script: |
+    echo $TASKID
     echo "Deleting task $TASKID"
     tfx build tasks delete --task-id $TASKID
   displayName: 'Delete task' 
-
+  
 - script: |
     npm install -g tfx-cli
     tfx login --auth-type pat --service-url $(ADOUrl)/DefaultCollection --token $(ADOToken) --no-prompt
