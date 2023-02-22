@@ -27,4 +27,13 @@ export class Utility {
             tl.execSync('az', 'config set extension.use_dynamic_install=yes_without_prompt'),
             'Unable to set the Azure CLI to dynamically install missing extensions');
     }
+
+    /**
+     * Checks whether or not the provided string is null, undefined or empty.
+     * @param str - the string to validate
+     * @returns true if the string is null, undefined or empty, false otherwise
+     */
+    public isNullOrEmpty(str: string): boolean {
+        return str === null || str === undefined || str === "";
+    }
 }
