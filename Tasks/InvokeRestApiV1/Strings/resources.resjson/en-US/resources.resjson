@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Invoke REST API",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870236)",
+  "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=870236)",
   "loc.description": "Invoke a REST API as a part of your pipeline.",
   "loc.instanceNameFormat": "Invoke REST API: $(method)",
   "loc.group.displayName.completionOptions": "Advanced",
@@ -18,7 +18,7 @@
   "loc.input.label.urlSuffix": "URL suffix and parameters",
   "loc.input.help.urlSuffix": "Given string append to the URL. Example: If the service connection URL is https:...TestProj/_apis/Release/releases and the URL suffix is /2/environments/1, the service connection URL becomes https:.../TestProj/_apis/Release/releases/2/environments/1. If the URL suffix is ?definitionId=1&releaseCount=1 then the service connection URL becomes https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1.",
   "loc.input.label.waitForCompletion": "Completion event",
-  "loc.input.help.waitForCompletion": "Default value \"Callback\". Available values :  \"ApiResponse\", \"Callback\" call where the REST API calls back to update the timeline record​.",
+  "loc.input.help.waitForCompletion": "Default value \"ApiResponse\". Available values :  \"ApiResponse\", \"Callback\" call where the REST API calls back to update the timeline record​.",
   "loc.input.label.successCriteria": "Success criteria",
   "loc.input.help.successCriteria": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More information](https://go.microsoft.com/fwlink/?linkid=842996)​"
 }

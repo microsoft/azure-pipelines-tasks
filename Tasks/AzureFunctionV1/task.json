@@ -17,7 +17,7 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 217,
+        "Minor": 198,
         "Patch": 0
     },
     "instanceNameFormat": "Azure Function: $(function)",
@@ -102,9 +102,9 @@
             "name": "waitForCompletion",
             "type": "pickList",
             "label": "Completion event",
-            "defaultValue": "true",
+            "defaultValue": "false",
             "required": true,
-            "helpMarkDown": "Default value \"Callback\". Available values: \"ApiResponse\", \"Callback\" call where the Azure function calls back to update the timeline record​.",
+            "helpMarkDown": "Default value \"ApiResponse\". Available values: \"ApiResponse\", \"Callback\" call where the Azure function calls back to update the timeline record​.",
             "groupName": "completionOptions",
             "options": {
                 "true": "Callback",
