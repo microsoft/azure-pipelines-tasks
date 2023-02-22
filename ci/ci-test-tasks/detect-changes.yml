@@ -12,13 +12,13 @@ jobs:
       git remote add ms https://github.com/microsoft/azure-pipelines-tasks.git
       git fetch ms master
       git diff --name-only ms/master
-      echo "##vso[task.setvariable variable=tasks;isoutput=true]$(node ./ci/ci-test-tasks/detect-updated-tasks.js $(git diff --name-only ms/master))"
+      echo "##vso[task.setvariable variable=TASKS;isoutput=true]$(node ./ci/ci-test-tasks/detect-updated-tasks.js $(git diff --name-only ms/master))"
       echo $(node ./ci/ci-test-tasks/detect-updated-tasks.js $(git diff --name-only ms/master))
     displayName: 'Detect updated tasks'
  
   - script: |
-      echo $tasks
-      OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "$(CIMainUrl)" -X POST -d "{\"templateParameters\": { \"tasks\": \"$tasks\"}}"`
+      echo $TASKS
+      OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "$(CIMainUrl)" -X POST -d "{\"templateParameters\": { \"tasks\": \"$TASKS\"}}"`
       echo $OUTPUT
     displayName: 'Run test pipelines'
 
