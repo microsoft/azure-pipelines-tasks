@@ -6,8 +6,7 @@ steps:
 - script: |
     npm install -g tfx-cli
     tfx login --auth-type pat --service-url $(ADOUrl)/DefaultCollection --token $(ADOToken) --no-prompt
-    TASKID=`node ./ci/canary-test/get-task-guid.js ./task-${{ parameters.task }}/${{parameters.task}}/task.json`
-    echo "Deleting task"
-    echo $TASKID
+    TASKID=`node ./ci/ci-test-tasks/get-task-guid.js ./task-${{ parameters.task }}/${{parameters.task}}/task.json`
+    echo "Deleting task $TASKID"
     tfx build tasks delete --task-id $TASKID --no-prompt
   displayName: 'Delete task'  
