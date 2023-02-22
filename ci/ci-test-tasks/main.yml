@@ -18,7 +18,7 @@ jobs:
       - script: npm install axios
         displayName: 'npm install axios'
       - script: |
-          node ./ci/ci-test-tasks/verify-testing-pipeline-exist.js $(ADOToken) $(ApiUrl) ${{ parameters.task }}
+          node ./ci/ci-test-tasks/verify-testing-pipeline-exist.js $(ADOToken) $(ApiUrl) ${{ task }}
         failOnStderr: true 
   
     - job: ${{ var }}_build_task
@@ -29,7 +29,7 @@ jobs:
       steps:
       - template: ./build-task.yml
         parameters:
-          task: ${{ var }}
+          task: ${{ task }}
           push: false
           publishArtifact: true
           patchVersion: true
@@ -43,7 +43,7 @@ jobs:
       steps:
       - template: ./upload-task.yml
         parameters:
-          task: ${{ var }}
+          task: ${{ task }}
    
     - job: ${{ var }}_test_task
       displayName: Test (${{ var }})
@@ -53,7 +53,7 @@ jobs:
       steps:
       - template: ./test-task.yml
         parameters:
-          task: ${{ var }}
+          task: ${{ task }}
    
     - job: ${{ var }}_clean_up
       condition: in(dependencies.${{ var }}_upload_task.result, 'Succeeded', 'SucceededWithIssues', 'Failed')
@@ -64,4 +64,4 @@ jobs:
       steps:
       - template: ./clean-up-task.yml
         parameters:
-          task: ${{ var }}
+          task: ${{ task }}
