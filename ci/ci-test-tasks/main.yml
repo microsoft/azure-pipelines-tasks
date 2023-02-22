@@ -8,10 +8,10 @@ trigger: none
 pr: none
 
 jobs:
-  - ${{ each var in split(parameters.tasks, ',') }}:
-    - job: ${{ var }}_verify_testing_pipeline
+  - ${{ each task in split(parameters.tasks, ',') }}:
+    - job: ${{ task }}_verify_testing_pipeline
       condition: eq(variables['build.reason'], 'Manual')
-      displayName: Verify testing pipeline (${{ var }})
+      displayName: Verify testing pipeline (${{ task }})
       pool:
         vmImage: windows-2022
       steps:
@@ -21,9 +21,9 @@ jobs:
           node ./ci/ci-test-tasks/verify-testing-pipeline-exist.js $(ADOToken) $(ApiUrl) ${{ task }}
         failOnStderr: true 
   
-    - job: ${{ var }}_build_task
-      dependsOn: ${{ var }}_verify_testing_pipeline
-      displayName: Build Task (${{ var }})
+    - job: ${{ task }}_build_task
+      dependsOn: ${{ task }}_verify_testing_pipeline
+      displayName: Build Task (${{ task }})
       pool:
         vmImage: windows-2022
       steps:
@@ -35,9 +35,9 @@ jobs:
           patchVersion: true
           version: '0.9999.9999'
 
-    - job: ${{ var }}_upload_task
-      displayName: Upload (${{ var }})
-      dependsOn: ${{ var }}_build_task
+    - job: ${{ task }}_upload_task
+      displayName: Upload (${{ task }})
+      dependsOn: ${{ task }}_build_task
       pool:
         vmImage: windows-2022
       steps:
@@ -45,9 +45,9 @@ jobs:
         parameters:
           task: ${{ task }}
    
-    - job: ${{ var }}_test_task
-      displayName: Test (${{ var }})
-      dependsOn: ${{ var }}_upload_task
+    - job: ${{ task }}_test_task
+      displayName: Test (${{ task }})
+      dependsOn: ${{ task }}_upload_task
       pool:
         vmImage: windows-2022
       steps:
@@ -55,10 +55,10 @@ jobs:
         parameters:
           task: ${{ task }}
    
-    - job: ${{ var }}_clean_up
-      condition: in(dependencies.${{ var }}_upload_task.result, 'Succeeded', 'SucceededWithIssues', 'Failed')
-      displayName: Clean up (${{ var }})
-      dependsOn: ${{ var }}_test_task
+    - job: ${{ task }}_clean_up
+      condition: in(dependencies.${{ task }}_upload_task.result, 'Succeeded', 'SucceededWithIssues', 'Failed')
+      displayName: Clean up (${{ task }})
+      dependsOn: ${{ task }}_test_task
       pool:
         vmImage: windows-2022
       steps:
