@@ -1,21 +1,18 @@
 const files = process.argv.slice(2);
 const taskNames = getTaskNames(files);
 
+if (taskNames.length > 0) {
+  console.log(taskNames.join(','));
+} else {
+  console.error('No tasks were changed. Skip testing.')
+}
 
-console.error('Test error')
+function getTaskNames(files) {
+  const taskNames = new Set();
 
-// if (taskNames.length > 0) {
-//   console.log(taskNames.join(','));
-// } else {
-//   throw new Error('No tasks were changed. Skip testing.')
-// }
+  files.filter(filePath => filePath.startsWith('Tasks/')).forEach(filePath => {
+    taskNames.add(filePath.split('/')[1]);
+  });
 
-// function getTaskNames(files) {
-//   const taskNames = new Set();
-
-//   files.filter(filePath => filePath.startsWith('Tasks/')).forEach(filePath => {
-//     taskNames.add(filePath.split('/')[1]);
-//   });
-
-//   return [...taskNames];
-// }
+  return [...taskNames];
+}
