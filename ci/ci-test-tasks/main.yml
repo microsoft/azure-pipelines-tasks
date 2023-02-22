@@ -2,13 +2,14 @@ parameters:
 - name: tasks
   displayName: Tasks to process (separate by colons, no whitespaces)
   type: string
-  default: UseNodeV1,MavenV3,MavenV4
+  default: ArchiveFilesV2
 
 trigger: none
 
 jobs:
   - ${{ each var in split(parameters.tasks, ',') }}:
     - job: ${{ var }}_build_task
+      condition: eq(variables['build.reason'], 'Manual')
       displayName: Build Task (${{ var }})
       pool:
         vmImage: windows-2022
