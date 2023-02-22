@@ -9,8 +9,20 @@ pr: none
 
 jobs:
   - ${{ each var in split(parameters.tasks, ',') }}:
-    - job: ${{ var }}_build_task
+    - job: ${{ var }}_verify_testing_pipeline
       condition: eq(variables['build.reason'], 'Manual')
+      displayName: Verify testing pipeline (${{ var }})
+      pool:
+        vmImage: windows-2022
+      steps:
+      - script: npm install axios
+        displayName: 'npm install axios'
+      - script: |
+          node ./ci/ci-test-tasks/verify-testing-pipeline-exist.js $(ADOToken) $(ApiUrl) ${{ parameters.task }}
+        failOnStderr: true 
+  
+    - job: ${{ var }}_build_task
+      dependsOn: ${{ var }}_verify_testing_pipeline
       displayName: Build Task (${{ var }})
       pool:
         vmImage: windows-2022

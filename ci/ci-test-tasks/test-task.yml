@@ -10,4 +10,3 @@ steps:
     echo "Tasks: ${{ parameters.task }}"
     node ./ci/ci-test-tasks/test-and-verify.js $(ADOToken) $(ApiUrl) ${{ parameters.task }}
   displayName: 'Run tests and verify results'
-  failOnStderr: true 
