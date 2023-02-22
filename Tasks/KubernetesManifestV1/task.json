@@ -52,6 +52,9 @@
         },
         {
             "name": "kubernetesServiceEndpoint",
+            "aliases": [
+                "kubernetesServiceConnection"
+            ],
             "type": "connectedService:kubernetes",
             "label": "Kubernetes service connection",
             "helpMarkDown": "Select a Kubernetes service connection.",
@@ -436,6 +439,7 @@
         "AllContainersNotInReadyState": "All the containers are not in a ready state.",
         "CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
         "KubectlShouldBeUpgraded": "kubectl client version equal to v1.14 or higher is required to use kustomize features.",
+        "KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",
         "CouldNotDetermineServiceStatus": "Could not determine the service %s status due to the error: %s",
         "waitForServiceIpAssignment": "Waiting for service %s external IP assignment",
         "waitForServiceIpAssignmentTimedOut": "Wait for service %s external IP assignment timed out",

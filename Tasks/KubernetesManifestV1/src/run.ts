@@ -48,7 +48,7 @@ function run(): Promise<void> {
             process.exit(1);
     }
     connection.open();
-    return action_func(connection.ignoreSSLErrors)
+    return action_func(connection)
         .then(() => connection.close())
         .catch((error) => {
             connection.close();

@@ -5,8 +5,10 @@ import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import * as kubectlutility from 'azure-pipelines-tasks-kubernetes-common/kubectlutility';
 import { Kubectl } from 'azure-pipelines-tasks-kubernetes-common/kubectl-object-model';
 import { pipelineAnnotations } from 'azure-pipelines-tasks-kubernetes-common/kubernetesconstants';
-import { KubernetesConnection } from 'azure-pipelines-tasks-kubernetes-common/kubernetesconnection';
-import * as filehelper from './FileHelper';
+import ClusterConnection from '../clusterconnection';
+import * as os from "os";
+import * as path from "path";
+const fs = require('fs');
 
 export function getManifestFiles(manifestFilePaths: string | string[]): string[] {
     if (!manifestFilePaths) {
@@ -18,10 +20,8 @@ export function getManifestFiles(manifestFilePaths: string | string[]): string[]
     return files;
 }
 
-export function getConnection(): KubernetesConnection {
-    const kubernetesServiceConnection = tl.getInput('kubernetesServiceConnection', true);
-    const tempPath = filehelper.getNewUserDirPath();
-    const connection = new KubernetesConnection(kubernetesServiceConnection, tempPath);
+export function getConnection(): ClusterConnection {
+    const connection = new ClusterConnection();
     return connection;
 }
 
@@ -155,4 +155,30 @@ export function getTrafficSplitAPIVersion(kubectl: Kubectl) {
     }
     tl.debug("api-version: " + trafficSplitAPIVersion);
     return trafficSplitAPIVersion;
+}
+
+// cluster connection requirements
+export function getTempDirectory(): string {
+    return tl.getVariable('agent.tempDirectory') || os.tmpdir();
+}
+
+export function getNewUserDirPath(): string {
+    var userDir = path.join(getTempDirectory(), "kubectlTask");
+    ensureDirExists(userDir);
+
+    userDir = path.join(userDir, getCurrentTime().toString());
+    ensureDirExists(userDir);
+
+    return userDir;
+}
+
+export function getCurrentTime(): number {
+    return new Date().getTime();
+}
+
+function ensureDirExists(dirPath : string) : void
+{
+    if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath);
+    }
 }

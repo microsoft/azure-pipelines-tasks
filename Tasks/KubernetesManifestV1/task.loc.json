@@ -52,6 +52,9 @@
     },
     {
       "name": "kubernetesServiceEndpoint",
+      "aliases": [
+        "kubernetesServiceConnection"
+      ],
       "type": "connectedService:kubernetes",
       "label": "ms-resource:loc.input.label.kubernetesServiceEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceEndpoint",
@@ -436,6 +439,7 @@
     "AllContainersNotInReadyState": "ms-resource:loc.messages.AllContainersNotInReadyState",
     "CouldNotDeterminePodStatus": "ms-resource:loc.messages.CouldNotDeterminePodStatus",
     "KubectlShouldBeUpgraded": "ms-resource:loc.messages.KubectlShouldBeUpgraded",
+    "KubernetesClusterResourceGroup": "ms-resource:loc.messages.KubernetesClusterResourceGroup",
     "CouldNotDetermineServiceStatus": "ms-resource:loc.messages.CouldNotDetermineServiceStatus",
     "waitForServiceIpAssignment": "ms-resource:loc.messages.waitForServiceIpAssignment",
     "waitForServiceIpAssignmentTimedOut": "ms-resource:loc.messages.waitForServiceIpAssignmentTimedOut",
