@@ -3,6 +3,7 @@ parameters:
     type: string
 
 steps:
+- checkout: none
 - script: |
     npm install -g tfx-cli
     tfx login --auth-type pat --service-url $(ADOUrl)/DefaultCollection --token $(ADOToken) --no-prompt

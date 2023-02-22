@@ -14,7 +14,7 @@ const auth = {
 if (task) {
   return start(task);
 } else {
-  throw new Error('Task name was not provided');
+  console.error('Task name was not provided');
 }
 
 async function start(taskName) {
@@ -22,7 +22,7 @@ async function start(taskName) {
   const pipeline = pipelines.find(pipeline => pipeline.name === taskName);
 
   if (!pipeline) {
-    throw new Error(`Testing pipeline ${taskName} is missing`);
+    console.error(`Testing pipeline ${taskName} is missing`);
   }
 }
 
@@ -31,6 +31,5 @@ function fetchPipelines() {
   .then(res => res.data.value)
   .catch(err => {
     console.error('Error fetching pipelines', err);
-    throw err;
   });
 }
