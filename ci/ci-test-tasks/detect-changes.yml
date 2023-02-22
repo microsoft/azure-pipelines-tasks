@@ -17,7 +17,8 @@ jobs:
       echo Tasks: $(node ./ci/ci-test-tasks/detect-changed-tasks.js $(git diff --name-only ms/master))
     displayName: 'Detect changed tasks'
     name: detect
- 
+
+
 - job: run_main_test_pipeline
   displayName: Run main test pipeline
   dependsOn: detect_changes
