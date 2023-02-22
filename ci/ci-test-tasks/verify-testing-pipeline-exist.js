@@ -9,7 +9,6 @@ const auth = {
   username: 'Basic',
   password: AUTH_TOKEN
 };
-const intervalDelayMs = 30000;
 
 if (task) {
   return start(task)
@@ -26,11 +25,8 @@ async function start(taskName) {
   const pipelines = await fetchPipelines();
   const pipeline = pipelines.find(pipeline => pipeline.name === taskName);
 
-  if (pipeline) {
-    const pipelineBuild = await runTestPipeline(pipeline);
-    return verifyTestRunResults(pipelineBuild);  
-  } else {
-    console.error(`Cannot build and run tests for task ${taskName} - corresponding test pipeline was not found`);
+  if (!pipeline) {
+    console.error(`Testing pipeline ${taskName} is missing`);
   }
 }
 
@@ -42,50 +38,3 @@ function fetchPipelines() {
     throw err;
   });
 }
-
-function runTestPipeline(pipeline) {
-  console.log(`Run ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`);
-
-  return axios.post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, {}, { auth })
-  .then(res => res.data)
-  .catch(err => {
-    console.error(`Error running ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`, err)
-    throw err;
-  })
-}
-
-function verifyTestRunResults(pipelineBuild) {
-  return new Promise((resolve, reject) => {
-    const interval = setInterval(() => {
-      verifyBuildStatus(pipelineBuild, interval, resolve, reject);
-    }, intervalDelayMs)
-  
-    console.log(`Check status for build ${pipelineBuild.name}, id: ${pipelineBuild.id}:`);
-  })
-}
-
-async function verifyBuildStatus(pipelineBuild, timeout, resolve, reject) {
-  const data = await axios.get(pipelineBuild.url, { auth })
-    .then(res => res.data)
-    .catch(err => {
-      console.error('Error verifying build status', err);
-      throw err;
-    })
-  
-  console.log(`Verify build status... ${data.state}`);
-  
-  if (data.state !== 'completed') {
-    return;
-  }
-
-  clearTimeout(timeout);
-
-  const result = `Build ${pipelineBuild.name} id:${pipelineBuild.id} finished with status "${data.result}" and result "${data.result}"`;
-
-  if (data.result === 'succeeded') {
-    resolve(result);
-  } else {
-    reject(result);
-  }
-}
-
