@@ -1,5 +1,6 @@
 const files = process.argv.slice(2);
 const taskNames = getTaskNames(files);
+throw new Error('No tasks were changed. Skip testing.')
 
 if (taskNames.length > 0) {
   console.log(taskNames.join(','));
