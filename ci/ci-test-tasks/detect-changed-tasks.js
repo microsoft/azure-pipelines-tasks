@@ -5,7 +5,6 @@ if (taskNames.length > 0) {
   console.log(taskNames.join(','));
 } else {
   console.error('No tasks were changed. Skip testing.')
-  process.exit(1);
 }
 
 function getTaskNames(files) {
