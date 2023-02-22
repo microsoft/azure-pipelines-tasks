@@ -19,6 +19,13 @@ jobs:
       echo tasks: $TASKSOutput
     displayName: 'Detect updated tasks'
  
+  - task: Bash@3
+    displayName: 'Set variable'
+    inputs:
+        targetType: 'inline'
+        script: |
+          echo "##vso[task.setvariable variable=myVar;]myValue"
+
   - script: |
       echo $TASKS
       echo $TASKSOutput
@@ -35,3 +42,9 @@ jobs:
       echo $(dependencies.detect_changes.TASKS)
       echo $(dependencies.detect_changes.TASKSOutput)
     displayName: 'Run test pipelines'
+  - task: Bash@3
+    displayName: 'Print variable'
+    inputs:
+      targetType: 'inline'
+      script: |
+        echo $(myVar)
