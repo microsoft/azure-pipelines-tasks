@@ -15,15 +15,17 @@ jobs:
       pool:
         vmImage: windows-2022
       steps:
+      - script: whoami
       - script: |
           npm install -g tfx-cli
+          set PATH=%PATH%;C:\Users\johnk\AppData\Roaming\npm
         displayName: 'npm install -g tfx-cli' 
       - script: |
           tfx login --auth-type pat --service-url $(ADOUrl)/DefaultCollection --token $(ADOToken)
         displayName: 'tfx login' 
       - script: |
           echo "##vso[task.setvariable variable=TaskId;]$(node ./ci/ci-test-tasks/get-task-guid.js ./task-${{ parameters.task }}/${{parameters.task}}/task.json)"
-          displayName: 'Set TaskId id' 
+        displayName: 'Set TaskId id' 
       - script: |
           echo $TaskId
           echo "Deleting task $TaskId"
