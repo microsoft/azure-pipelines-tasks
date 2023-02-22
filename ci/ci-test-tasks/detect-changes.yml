@@ -18,11 +18,7 @@ jobs:
     failOnStderr: true 
     displayName: 'Detect changed tasks'
     name: detect
-<<<<<<< HEAD:ci/ci-test-tasks/detect-updated-tasks.yml
-
-=======
  
->>>>>>> 8a13a488d69c6a0ecb7a1369d0e050fd044f366a:ci/ci-test-tasks/detect-changes.yml
 - job: run_main_test_pipeline
   displayName: Run main test pipeline
   dependsOn: detect_changes
