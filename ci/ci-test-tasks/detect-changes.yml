@@ -23,6 +23,7 @@ jobs:
 
 - job: run_main_test_pipeline
   displayName: Run main test pipeline
+  condition: ne($[dependencies.detect_changes.outputs['detect.TASKS']],'No tasks were changed. Skip testing.')
   dependsOn: detect_changes
   variables:
       - name: tasks
