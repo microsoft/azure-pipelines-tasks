@@ -1,5 +1,6 @@
 const axios = require('axios');
 
+console.log(process.argv)
 const AUTH_TOKEN = process.argv[2];
 const ADOUrl = process.argv[3];
 const ProjectName = process.argv[4];
