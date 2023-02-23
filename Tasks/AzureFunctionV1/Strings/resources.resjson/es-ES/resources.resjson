@@ -17,7 +17,7 @@
   "loc.input.label.body": "Cuerpo",
   "loc.input.help.body": "Cuerpo del mensaje con formato JSON de la solicitud.",
   "loc.input.label.waitForCompletion": "Evento de finalización",
-  "loc.input.help.waitForCompletion": "Valor predeterminado \"Callback\". Valores disponibles: llamada \"ApiResponse\" o \"Callback\" donde la función devuelve la llamada para actualizar el registro de la escala de tiempo.",
+  "loc.input.help.waitForCompletion": "Valor predeterminado \"ApiResponse\". Valores disponibles: llamada \"ApiResponse\" o \"Callback\" donde la función devuelve la llamada para actualizar el registro de la escala de tiempo.",
   "loc.input.label.successCriteria": "Criterios de éxito",
   "loc.input.help.successCriteria": "Criterios que definen cuándo se debe pasar la tarea. Si no hay ningún criterio, significa que el contenido de la respuesta no influye en el resultado. Ejemplo: para la respuesta {\"status\" : \"successful\"}, la expresión puede ser eq(root['status'], 'successful'). [Más información](https://go.microsoft.com/fwlink/?linkid=842996)"
 }
