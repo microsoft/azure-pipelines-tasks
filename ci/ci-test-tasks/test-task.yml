@@ -3,7 +3,6 @@ parameters:
     type: string
 
 steps:
-- checkout: none
 - script: npm install axios
   displayName: 'npm install axios'
 
