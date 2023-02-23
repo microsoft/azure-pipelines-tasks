@@ -116,6 +116,7 @@
         "InstallAppleProvisioningProfileV1",
         "InstallSSHKeyV0",
         "InvokeRestApiV1",
+        "InvokeRestApiV2",
         "JavaToolInstallerV0",
         "JenkinsDownloadArtifactsV1",
         "JenkinsQueueJobV2",

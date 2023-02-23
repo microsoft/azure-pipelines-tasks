@@ -1,0 +1,162 @@
+{
+  "id": "9C3E8943-130D-4C78-AC63-8AF81DF62DFB",
+  "name": "InvokeRESTAPI",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/http-rest-api",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Server",
+    "ServerGate"
+  ],
+  "version": {
+    "Major": 2,
+    "Minor": 218,
+    "Patch": 0
+  },
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "completionOptions",
+      "displayName": "ms-resource:loc.group.displayName.completionOptions",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "connectedServiceNameSelector",
+      "aliases": [
+        "connectionType"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.connectedServiceNameSelector",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameSelector",
+      "defaultValue": "connectedServiceName",
+      "options": {
+        "connectedServiceName": "Generic",
+        "connectedServiceNameARM": "Azure Resource Manager"
+      }
+    },
+    {
+      "name": "connectedServiceName",
+      "aliases": [
+        "serviceConnection",
+        "genericService"
+      ],
+      "type": "connectedService:Generic",
+      "label": "ms-resource:loc.input.label.connectedServiceName",
+      "defaultValue": "",
+      "required": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName",
+      "visibleRule": "connectedServiceNameSelector = connectedServiceName"
+    },
+    {
+      "name": "connectedServiceNameARM",
+      "aliases": [
+        "azureServiceConnection",
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.connectedServiceNameARM",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM",
+      "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM"
+    },
+    {
+      "name": "method",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.method",
+      "required": "true",
+      "defaultValue": "POST",
+      "options": {
+        "OPTIONS": "OPTIONS",
+        "GET": "GET",
+        "HEAD": "HEAD",
+        "POST": "POST",
+        "PUT": "PUT",
+        "DELETE": "DELETE",
+        "TRACE": "TRACE",
+        "PATCH": "PATCH"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.method"
+    },
+    {
+      "name": "headers",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.headers",
+      "required": "false",
+      "defaultValue": "{\n\"Content-Type\":\"application/json\", \n\"PlanUrl\": \"$(system.CollectionUri)\", \n\"ProjectId\": \"$(system.TeamProjectId)\", \n\"HubName\": \"$(system.HostType)\", \n\"PlanId\": \"$(system.PlanId)\", \n\"JobId\": \"$(system.JobId)\", \n\"TimelineId\": \"$(system.TimelineId)\", \n\"TaskInstanceId\": \"$(system.TaskInstanceId)\", \n\"AuthToken\": \"$(system.AccessToken)\"\n}",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "2000"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.headers"
+    },
+    {
+      "name": "body",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.body",
+      "required": "false",
+      "defaultValue": "",
+      "properties": {
+        "resizable": "true",
+        "rows": "3",
+        "maxLength": "2000"
+      },
+      "visibleRule": "method != GET && method != HEAD"
+    },
+    {
+      "name": "urlSuffix",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.urlSuffix",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.urlSuffix"
+    },
+    {
+      "name": "waitForCompletion",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.waitForCompletion",
+      "defaultValue": "true",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.waitForCompletion",
+      "groupName": "completionOptions",
+      "options": {
+        "true": "Callback",
+        "false": "ApiResponse"
+      }
+    },
+    {
+      "name": "successCriteria",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.successCriteria",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.successCriteria",
+      "groupName": "completionOptions",
+      "visibleRule": "waitForCompletion = false"
+    }
+  ],
+  "execution": {
+    "HttpRequest": {
+      "Execute": {
+        "EndpointId": "TaskInputs[TaskInputs['connectedServiceNameSelector']]",
+        "EndpointUrl": "$(endpoint.url)$(urlSuffix)",
+        "Method": "$(method)",
+        "Body": "$(body)",
+        "Headers": "$(headers)",
+        "WaitForCompletion": "$(waitForCompletion)",
+        "Expression": "$(successCriteria)"
+      }
+    }
+  }
+}
