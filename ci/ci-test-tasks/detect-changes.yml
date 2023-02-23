@@ -19,12 +19,11 @@ jobs:
  
 - job: run_main_test_pipeline
   displayName: Run main test pipeline
-  # condition: gt(length(dependencies.detect_changes.outputs['detect.TASKS']), 0)
+  condition: gt(length(dependencies.detect_changes.outputs['detect.TASKS']), 0)
   dependsOn: detect_changes
   variables:
       - name: tasks
-        # value: $[dependencies.detect_changes.outputs['detect.TASKS']]
-        value: DownloadPackageV1
+        value: $[dependencies.detect_changes.outputs['detect.TASKS']]
   pool:
     vmImage: ubuntu-20.04
   steps:
