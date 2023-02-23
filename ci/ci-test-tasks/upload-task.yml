@@ -18,23 +18,23 @@ steps:
     overwriteExistingFiles: true
 
 - script: |
-    npm install -g tfx-cli
-    tfx login --auth-type pat --service-url $(ADOUrl)/DefaultCollection --token $(ADOToken) --no-prompt
-    TASKID=`node ./ci/ci-test-tasks/get-task-guid.js ./task-${{ parameters.task }}/${{parameters.task}}/task.json`
-    echo "Deleting task $TASKID"
-    tfx build tasks delete --task-id $TASKID --no-prompt
-  displayName: 'Delete task' 
+    npm install -g tfx-cli@0.14
+  displayName: 'npm install -g tfx-cli' 
 
 - script: |
-    npm install -g tfx-cli
-    tfx login --auth-type pat --service-url $(ADOUrl)/DefaultCollection --token $(ADOToken) --no-prompt
-    TASKID=`node ./ci/ci-test-tasks/get-task-guid.js ./task-${{ parameters.task }}/${{parameters.task}}/task.json`
-    echo $TASKID
-    echo "##vso[task.setvariable variable=TASKID;]$TASKID"
-    echo "Deleting task $TASKID"
-    tfx build tasks delete --task-id $TASKID --no-prompt
-    echo "Uploading task $TASKID"
+    tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken)
+  displayName: 'tfx login' 
+  
+- bash: |
+    echo "##vso[task.setvariable variable=TASKID]$(node ./ci/ci-test-tasks/get-task-guid.js ./Tasks/${{parameters.task}}/task.json)"
+  displayName: Get task id
+
+- bash: |
+    echo "Deleting task $(TASKID)"
+    tfx build tasks delete --task-id $(TASKID)
+  displayName: 'Delete task' 
+  
+- script: |
+    echo "Uploading task $(TASKID)"
     tfx build tasks upload --task-path ./task-${{ parameters.task }}/${{parameters.task}} --no-prompt
   displayName: 'Upload task'
-
- 

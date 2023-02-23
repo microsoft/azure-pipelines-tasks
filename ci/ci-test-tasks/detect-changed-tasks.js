@@ -14,5 +14,7 @@ function getTaskNames(files) {
     tasks.add(filePath.split('/')[1]);
   });
 
+  // skip Common folder as this is not a task folder
+  tasks.delete('Common');
   return [...tasks];
 }

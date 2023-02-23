@@ -5,7 +5,7 @@ jobs:
 - job: detect_changes
   displayName: Detect changes
   # we only test tasks on a PR and ignore forks since for security reasosns PAT tokens pipeline variable will not be available for fork's PRs.
-  condition: and(eq(variables['build.reason'], 'PullRequest'), eq(variables['System.PullRequest.IsFork'], 'False'))
+  condition: and(in(variables['build.reason'], 'PullRequest', 'Manual'), eq(variables['System.PullRequest.IsFork'], 'False'))
   pool:
     vmImage: ubuntu-20.04
   steps:
@@ -14,23 +14,25 @@ jobs:
       git fetch ms master > tmp 2>&1 || cat tmp > '/tmp/stderr-contents-git_fetch.txt'
       git diff --name-only ms/master
       echo "##vso[task.setvariable variable=TASKS;isoutput=true]$(node ./ci/ci-test-tasks/detect-changed-tasks.js $(git diff --name-only ms/master))"
-      echo Tasks: $(node ./ci/ci-test-tasks/detect-changed-tasks.js $(git diff --name-only ms/master))
-    failOnStderr: true 
     displayName: 'Detect changed tasks'
     name: detect
  
 - job: run_main_test_pipeline
   displayName: Run main test pipeline
+  # condition: gt(length(dependencies.detect_changes.outputs['detect.TASKS']), 0)
   dependsOn: detect_changes
   variables:
       - name: tasks
-        value: $[dependencies.detect_changes.outputs['detect.TASKS']]
+        # value: $[dependencies.detect_changes.outputs['detect.TASKS']]
+        value: DownloadPackageV1
   pool:
     vmImage: ubuntu-20.04
   steps:
-  - checkout: none
+  - script: |
+      npm i axios
+    displayName: npm i axios
   - script: |
       echo $(tasks)
-      OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "$(CIMainUrl)" -X POST -d "{\"templateParameters\": { \"tasks\": \"$(tasks)\"}}"`
-      echo $OUTPUT
-    displayName: 'Run test pipelines'
+      node ./ci/ci-test-tasks/run-main-and-verify.js $(ADOToken) $(ADOUrl) $(System.TeamProject) $(MainPipelineId) $(tasks)
+    displayName: 'Run test pipelines and verify results'
+    failOnStderr: true
