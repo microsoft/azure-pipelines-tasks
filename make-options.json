@@ -24,7 +24,7 @@
         "AzureFunctionOnKubernetesV0",
         "AzureFunctionOnKubernetesV1",
         "AzureFunctionV1",
-		    "AzureFunctionV2",
+	"AzureFunctionV2",
         "AzureIoTEdgeV2",
         "AzureKeyVaultV1",
         "AzureKeyVaultV2",
