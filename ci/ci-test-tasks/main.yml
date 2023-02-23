@@ -29,13 +29,12 @@ jobs:
         displayName: 'tfx version' 
 
       - bash: |
-          echo "##vso[task.setvariable variable=TaskId;]$(node ./ci/ci-test-tasks/get-task-guid.js ./task-${{ parameters.task }}/${{parameters.task}}/task.json)"
+          echo "##vso[task.setvariable variable=TaskId;]test)"
         displayName: 'Set TaskId variable'
 
       - bash: |
           echo $TaskId
           echo "Deleting task $TaskId"
-          tfx build tasks delete --task-id $TaskId
         displayName: 'Delete task'   
 
 
