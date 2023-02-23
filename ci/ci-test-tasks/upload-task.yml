@@ -3,7 +3,6 @@ parameters:
     type: string
 
 steps:
-- checkout: none
 - task: DownloadBuildArtifacts@1
   inputs:
     buildType: 'current'
