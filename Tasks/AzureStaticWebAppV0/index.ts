@@ -2,7 +2,7 @@ import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import trm = require('azure-pipelines-task-lib/toolrunner');
 import fs = require('fs');
-
+import * as os from ('os');
 const appLocationInputName = 'app_location';
 const appBuildCommandInputName = 'app_build_command';
 const outputLocationInputName = 'output_location';
@@ -22,6 +22,14 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
+        const osPlat: string = os.platform();
+
+        // Fail the task if os is windows
+        if (osPlat == 'win32') {
+            tl.setResult(tl.TaskResult.Failed, tl.loc('WindowsOsNotSupported'));
+            return;
+        }
+        
         var bash: trm.ToolRunner = tl.tool(tl.which('bash', true));
 
         var scriptPath: string = path.join(__dirname, 'launch-docker.sh');
