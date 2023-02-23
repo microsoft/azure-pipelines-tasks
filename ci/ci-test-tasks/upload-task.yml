@@ -33,7 +33,6 @@ steps:
     echo $(one)
   displayName: Print variable
 
-      
 
 - script: |
     echo ID: $(node ./ci/ci-test-tasks/get-task-guid.js ./task-${{ parameters.task }}/${{parameters.task}}/task.json)
