@@ -19,8 +19,11 @@ jobs:
           npm install -g tfx-cli@0.12.0
         displayName: 'npm install -g tfx-cli' 
       - bash: |
+          echo $(ADOUrl)
+          echo $(ADOToken)
           tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken)
         displayName: 'tfx login' 
+
       - bash: |
           tfx version
         displayName: 'tfx version' 
