@@ -28,13 +28,31 @@ jobs:
           tfx version
         displayName: 'tfx version' 
 
+      - script: |
+          echo "Hello, world!"
+          echo "Setting variable..."
+          echo "##vso[task.setvariable variable=myVariable]Hello from step 1"
+        displayName: 'Step 1'
+
+      - script: |
+          echo "Hello from step 2"
+          echo "My variable value is: ${{ variables.myVariable }}"
+        displayName: 'Step 1'
+
+
       - bash: |
-          echo "##vso[task.setvariable variable=TaskId;]test)"
+          echo "##vso[task.setvariable variable=TaskId;]$(node ./ci/ci-test-tasks/get-task-guid.js ./task-${{ parameters.task }}/${{parameters.task}}/task.json)"
+        displayName: 'Set TaskId variable'
+
+
+      - bash: |
+          echo "##vso[task.setvariable variable=TaskId;]$(node ./ci/ci-test-tasks/get-task-guid.js ./task-${{ parameters.task }}/${{parameters.task}}/task.json)"
         displayName: 'Set TaskId variable'
 
       - bash: |
           echo $TaskId
           echo "Deleting task $TaskId"
+          tfx build tasks delete --task-id $TaskId
         displayName: 'Delete task'   
 
 
