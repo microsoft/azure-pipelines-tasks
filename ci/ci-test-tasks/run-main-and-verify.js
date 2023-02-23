@@ -11,7 +11,7 @@ const auth = {
   username: 'Basic',
   password: AUTH_TOKEN
 };
-const intervalDelayMs = 30000;
+const intervalDelayMs = 15000;
 
 if (tasks) {
   return start(tasks)
