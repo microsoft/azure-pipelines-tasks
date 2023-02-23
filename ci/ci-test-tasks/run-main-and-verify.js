@@ -1,6 +1,5 @@
 const axios = require('axios');
 
-console.log(process.argv)
 const AUTH_TOKEN = process.argv[2];
 const ADOUrl = process.argv[3];
 const ProjectName = process.argv[4];
@@ -33,7 +32,7 @@ function runMainPipeline(id, tasks) {
   return axios.post(`${apiUrl}/${id}/runs?${apiVersion}`, {"templateParameters": {tasks}}, { auth })
   .then(res => res.data)
   .catch(err => {
-    console.error(`Error running ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`, err)
+    console.error(`Error running main pipeline`, err)
     throw err;
   })
 }
