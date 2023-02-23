@@ -29,9 +29,10 @@ jobs:
     vmImage: ubuntu-20.04
   steps:
   - script: |
-      echo $(tasks)
       npm i axios
+    displayName: npm i axios
+  - script: |
+      echo $(tasks)
       node ./ci/ci-test-tasks/run-main-and-verify.js $(ADOToken) $(ADOUrl) $(System.TeamProject) $(MainPipelineId) $(tasks)
     displayName: 'Run test pipelines and verify results'
-    name: run_main_and_verify
     failOnStderr: true
