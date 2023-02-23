@@ -17,7 +17,7 @@
   "loc.input.label.body": "Corps",
   "loc.input.help.body": "Corps du message de la requête au format JSON.",
   "loc.input.label.waitForCompletion": "Événement de complétion",
-  "loc.input.help.waitForCompletion": "La valeur par défaut est \"Callback\". Valeurs disponibles : \"ApiResponse\", \"Callback\" quand la fonction Azure effectue un rappel pour mettre à jour l'enregistrement de chronologie​.",
+  "loc.input.help.waitForCompletion": "La valeur par défaut est \"ApiResponse\". Valeurs disponibles : \"ApiResponse\", \"Callback\" quand la fonction Azure effectue un rappel pour mettre à jour l'enregistrement de chronologie​.",
   "loc.input.label.successCriteria": "Critères de réussite",
   "loc.input.help.successCriteria": "Critères qui définissent la réussite de la tâche. L'absence de critères signifie que le contenu de la réponse n'influence pas le résultat. Exemple : - Pour une réponse de type {\"état\" : \"réussite\"}, l'expression peut être eq(root['état'], 'réussite'). [Plus d'informations](https://go.microsoft.com/fwlink/?linkid=842996)​"
 }
