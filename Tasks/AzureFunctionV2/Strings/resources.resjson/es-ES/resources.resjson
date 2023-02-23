@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "Invocar función de Azure",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=870235)",
+  "loc.description": "Invoca una función de Azure.",
+  "loc.instanceNameFormat": "Función de Azure: $(function)",
+  "loc.group.displayName.completionOptions": "Avanzado",
+  "loc.input.label.function": "Dirección URL de la función de Azure",
+  "loc.input.help.function": "Dirección URL de la función de Azure que debe invocarse. Ejemplo:- https://azurefunctionapp.azurewebsites.net/api/HttpTriggerJS1",
+  "loc.input.label.key": "Tecla de función",
+  "loc.input.help.key": "Tecla de función o host para tener acceso a esta función. Para proteger la clave, defina una variable secreta y úsela aquí. Ejemplo:- $(myFunctionKey) donde myFunctionKey es una variable de canalización secreta con un valor de la clave secreta, como \" ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw ==\"",
+  "loc.input.label.method": "Método",
+  "loc.input.help.method": "Seleccione el método HTTP con el que debe invocarse la función.",
+  "loc.input.label.headers": "Encabezados",
+  "loc.input.help.headers": "Defina un encabezado en formato JSON. El encabezado se adjuntará a la solicitud que se envía.",
+  "loc.input.label.queryParameters": "Parámetros de la consulta",
+  "loc.input.help.queryParameters": "La cadena de parámetros de consulta para anexar a la dirección URL de la función. No debe comenzar con \"?\" ni \"&\".",
+  "loc.input.label.body": "Cuerpo",
+  "loc.input.help.body": "Cuerpo del mensaje con formato JSON de la solicitud.",
+  "loc.input.label.waitForCompletion": "Evento de finalización",
+  "loc.input.help.waitForCompletion": "Valor predeterminado \"Callback\". Valores disponibles: llamada \"ApiResponse\" o \"Callback\" donde la función devuelve la llamada para actualizar el registro de la escala de tiempo.",
+  "loc.input.label.successCriteria": "Criterios de éxito",
+  "loc.input.help.successCriteria": "Criterios que definen cuándo se debe pasar la tarea. Si no hay ningún criterio, significa que el contenido de la respuesta no influye en el resultado. Ejemplo: para la respuesta {\"status\" : \"successful\"}, la expresión puede ser eq(root['status'], 'successful'). [Más información](https://go.microsoft.com/fwlink/?linkid=842996)"
+}

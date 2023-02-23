@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "Richiama funzione di Azure",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?linkid=870235)",
+  "loc.description": "Richiama una funzione di Azure",
+  "loc.instanceNameFormat": "Funzione di Azure: $(function)",
+  "loc.group.displayName.completionOptions": "Avanzate",
+  "loc.input.label.function": "URL della funzione di Azure",
+  "loc.input.help.function": "URL della funzione di Azure che deve essere richiamata. Esempio: https://azurefunctionapp.azurewebsites.net/api/HttpTriggerJS1",
+  "loc.input.label.key": "Tasto funzione",
+  "loc.input.help.key": "Chiave della funzione o host con cui accedere a questa funzione. Per proteggere questa chiave, definire una variabile segreta e usarla qui. Esempio: - $(myFunctionKey) dove myFunctionKey è una variabile segreta della pipeline con un valore della chiave privata, ad esempio `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`",
+  "loc.input.label.method": "Metodo",
+  "loc.input.help.method": "Consente di selezionare il metodo HTTP con cui deve essere richiamata la funzione.",
+  "loc.input.label.headers": "Intestazioni",
+  "loc.input.help.headers": "Consente di definire un'intestazione in formato JSON. L'intestazione verrà allegata alla richiesta inviata.",
+  "loc.input.label.queryParameters": "Parametri di query",
+  "loc.input.help.queryParameters": "Stringa di parametri di query da accodare all'URL della funzione. Non deve iniziare con \"?\" o \"&\".",
+  "loc.input.label.body": "Corpo",
+  "loc.input.help.body": "Corpo del messaggio in formato JSON per la richiesta.",
+  "loc.input.label.waitForCompletion": "Evento di completamento",
+  "loc.input.help.waitForCompletion": "Valore predefinito \"Callback\". I valori disponibili sono \"ApiResponse\" e \"Callback\", ovvero una chiamata in cui viene richiamata la funzione di Azure per aggiornare il record della sequenza temporale.",
+  "loc.input.label.successCriteria": "Criteri di superamento",
+  "loc.input.help.successCriteria": "Criteri che consentono di definire quando passare l'attività. L'assenza di criteri indica che il contenuto della risposta non influisce sul risultato. Esempio: per la risposta {\"status\" : \"successful\"}, l'espressione può essere eq(root['status'], 'successful'). [Altre informazioni](https://go.microsoft.com/fwlink/?linkid=842996)"
+}

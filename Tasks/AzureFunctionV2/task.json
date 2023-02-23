@@ -1,0 +1,138 @@
+{
+    "id": "537FDB7A-A601-4537-AA70-92645A2B5CE4",
+    "name": "AzureFunction",
+    "friendlyName": "Invoke Azure Function",
+    "description": "Invoke an Azure Function",
+    "author": "Microsoft Corporation",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-function",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870235)",
+    "category": "Utility",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Server",
+        "ServerGate"
+    ],
+    "version": {
+        "Major": 2,
+        "Minor": 218,
+        "Patch": 0
+    },
+    "instanceNameFormat": "Azure Function: $(function)",
+    "groups": [
+        {
+            "name": "completionOptions",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "function",
+            "type": "string",
+            "label": "Azure function URL",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "URL of the Azure function that needs to be invoked​. Example:- https://azurefunctionapp.azurewebsites.net/api/HttpTriggerJS1"
+        },
+        {
+            "name": "key",
+            "type": "string",
+            "label": "Function key",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Function or Host key with which to access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is a secret pipeline variable with a value of the secret key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`"
+        },
+        {
+            "name": "method",
+            "type": "pickList",
+            "label": "Method",
+            "required": "true",
+            "defaultValue": "POST",
+            "options": {
+                "OPTIONS": "OPTIONS",
+                "GET": "GET",
+                "HEAD": "HEAD",
+                "POST": "POST",
+                "PUT": "PUT",
+                "DELETE": "DELETE",
+                "TRACE": "TRACE",
+                "PATCH": "PATCH"
+            },
+            "helpMarkDown": "Select the HTTP method with which the function should be invoked."
+        },
+        {
+            "name": "headers",
+            "type": "multiLine",
+            "label": "Headers",
+            "required": "false",
+            "defaultValue": "{\n\"Content-Type\":\"application/json\", \n\"PlanUrl\": \"$(system.CollectionUri)\", \n\"ProjectId\": \"$(system.TeamProjectId)\", \n\"HubName\": \"$(system.HostType)\", \n\"PlanId\": \"$(system.PlanId)\", \n\"JobId\": \"$(system.JobId)\", \n\"TimelineId\": \"$(system.TimelineId)\", \n\"TaskInstanceId\": \"$(system.TaskInstanceId)\", \n\"AuthToken\": \"$(system.AccessToken)\"\n}",
+            "properties": {
+                "resizable": "true",
+                "rows": "10",
+                "maxLength": "5000"
+            },
+            "helpMarkDown": "Define a header in JSON format. The header shall be attached to the request that is sent."
+        },
+        {
+            "name": "queryParameters",
+            "type": "string",
+            "label": "Query parameters",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Query parameters string to append to the function URL. It should not start with with \"?\" nor \"&\"."
+        },
+        {
+            "name": "body",
+            "type": "multiLine",
+            "label": "Body",
+            "required": "false",
+            "defaultValue": "",
+            "properties": {
+                "resizable": "true",
+                "rows": "3",
+                "maxLength": "2000"
+            },
+            "visibleRule": "method != GET && method != HEAD",
+            "helpMarkDown": "JSON-formatted message body for the request."
+        },
+        {
+            "name": "waitForCompletion",
+            "type": "pickList",
+            "label": "Completion event",
+            "defaultValue": "true",
+            "required": true,
+            "helpMarkDown": "Default value \"Callback\". Available values: \"ApiResponse\", \"Callback\" call where the Azure function calls back to update the timeline record​.",
+            "groupName": "completionOptions",
+            "options": {
+                "true": "Callback",
+                "false": "ApiResponse"
+            }
+        },
+        {
+            "name": "successCriteria",
+            "type": "string",
+            "label": "Success criteria",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Criteria which defines when to pass the task. No criteria means the response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More information](https://go.microsoft.com/fwlink/?linkid=842996)​",
+            "groupName": "completionOptions",
+            "visibleRule": "waitForCompletion = false"
+        }
+    ],
+    "execution": {
+        "HttpRequest": {
+            "Execute": {
+                "EndpointId": "",
+                "EndpointUrl": "$(function)?code=$(key)&$(queryParameters)",
+                "Method": "$(method)",
+                "Body": "$(body)",
+                "Headers": "$(headers)",
+                "WaitForCompletion": "$(waitForCompletion)",
+                "Expression": "$(successCriteria)"
+            }
+        }
+    }
+}

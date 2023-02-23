@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "Azure-Funktion aufrufen",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=870235)",
+  "loc.description": "Azure-Funktion aufrufen",
+  "loc.instanceNameFormat": "Azure-Funktion: $(function)",
+  "loc.group.displayName.completionOptions": "Erweitert",
+  "loc.input.label.function": "URL der Azure-Funktion",
+  "loc.input.help.function": "URL der Azure-Funktion, die aufgerufen werden soll. Beispiel:- https://azurefunctionapp.azurewebsites.net/api/HttpTriggerJS1",
+  "loc.input.label.key": "Funktionstaste",
+  "loc.input.help.key": "Funktions- oder Hostschlüssel, über den auf diese Funktion zugegriffen werden kann. Um den Schlüssel abzusichern, definieren Sie eine geheime Variable, und verwenden Sie sie hier. Beispiel: $(myFunctionKey). MyFunctionKey ist dabei eine geheime Pipelinevariable mit dem Wert des geheimen Schlüssels. Beispiel: ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==",
+  "loc.input.label.method": "Methode",
+  "loc.input.help.method": "Wählen Sie die HTTP-Methode aus, mit der die Funktion aufgerufen werden soll.",
+  "loc.input.label.headers": "Header",
+  "loc.input.help.headers": "Definieren Sie einen Header im JSON-Format. Der Header muss an die gesendete Anforderung angefügt werden.",
+  "loc.input.label.queryParameters": "Abfrageparameter",
+  "loc.input.help.queryParameters": "Abfrageparameterzeichenfolge zum Anfügen an die Funktions-URL. Darf nicht mit \"?\" und \"&\" beginnen.",
+  "loc.input.label.body": "Text",
+  "loc.input.help.body": "JSON-formatierter Nachrichtentext für die Anforderung.",
+  "loc.input.label.waitForCompletion": "Abschlussereignis",
+  "loc.input.help.waitForCompletion": "Standardwert \"Callback\". Mögliche Werte: \"ApiResponse\" bzw. \"Callback\", wenn die Azure-Funktion einen Rückruf zum Aktualisieren des Zeitachsendatensatzes ausführt.",
+  "loc.input.label.successCriteria": "Erfolgskriterien",
+  "loc.input.help.successCriteria": "Kriterien, die definieren, wann die Aufgabe übergeben wird. Ohne Kriterium hat der Antwortinhalt keinen Einfluss auf das Ergebnis. Beispiel: Für die Antwort \"{\"status\" : \"successful\"}\" kann der Ausdruck \"eq(root['status'], 'successful')\" lauten. [Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=842996)"
+}
