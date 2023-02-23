@@ -63,6 +63,6 @@ jobs:
       pool:
         vmImage: windows-2022
       steps:
-      - template: ./clean-up-task.yml
+      - template: ./clean-up.yml
         parameters:
           task: ${{ task }}
