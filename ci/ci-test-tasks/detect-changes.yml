@@ -15,7 +15,7 @@ jobs:
       git diff --name-only ms/master
       echo "##vso[task.setvariable variable=TASKS;isoutput=true]$(node ./ci/ci-test-tasks/detect-changed-tasks.js $(git diff --name-only ms/master))"
       echo Tasks: $(node ./ci/ci-test-tasks/detect-changed-tasks.js $(git diff --name-only ms/master))
-    failOnStderr: true 
+    failOnStderr: true
     displayName: 'Detect changed tasks'
     name: detect
  
@@ -31,6 +31,8 @@ jobs:
   - checkout: none
   - script: |
       echo $(tasks)
-      OUTPUT=`curl --user "":"$(ADOToken)" -H "Content-Type: application/json" -H "Accept:application/json" "$(CIMainUrl)" -X POST -d "{\"templateParameters\": { \"tasks\": \"$(tasks)\"}}"`
-      echo $OUTPUT
-    displayName: 'Run test pipelines'
+      npm i axios
+      node ./ci/ci-test-tasks/run-main-and-verify.js $(ADOToken) $(ADOUrl) $(System.TeamProject) $(MainPipelineId) $(tasks)
+    displayName: 'Run test pipelines and verify results'
+    name: run_main_and_verify
+    failOnStderr: true
