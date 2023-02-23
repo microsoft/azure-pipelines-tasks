@@ -15,24 +15,7 @@ jobs:
       pool:
         vmImage: windows-2022
       steps:
-      - bash: |
-          echo "##vso[task.setvariable variable=one]secondValue"
-          echo "##vso[task.setvariable variable=TASKS]$(node ./ci/ci-test-tasks/script.js)"
-          echo script output: $(node ./ci/ci-test-tasks/script.js)
-          echo $TASKS
-        displayName: Set new variable value
-
-      - script: |
-          echo $(one)
-          echo $TASKS
-          echo $(TASKS)
-        displayName: Print variable
-
-
-
-
-
-
+      - checkout: none
       - script: npm install axios
         displayName: 'npm install axios'
       - script: |
