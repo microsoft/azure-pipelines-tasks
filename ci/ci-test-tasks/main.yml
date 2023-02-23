@@ -15,7 +15,6 @@ jobs:
       pool:
         vmImage: windows-2022
       steps:
-      - checkout: none
       - script: npm install axios
         displayName: 'npm install axios'
       - script: |
