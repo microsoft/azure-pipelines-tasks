@@ -1,7 +1,7 @@
 {
   "name": "azure-function-tests",
   "version": "1.0.0",
-  "description": "Azure Pipelines Azure Function V1 Task Tests",
+  "description": "Azure Pipelines Azure Function V2 Task Tests",
   "main": "L0.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

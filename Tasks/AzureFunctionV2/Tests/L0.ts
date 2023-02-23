@@ -2,7 +2,7 @@ import fs = require('fs');
 import assert = require('assert');
 import path = require('path');
 
-describe('AzureFunctionV1 Suite', function () {
+describe('AzureFunctionV2 Suite', function () {
     before(() => {
     });
 
