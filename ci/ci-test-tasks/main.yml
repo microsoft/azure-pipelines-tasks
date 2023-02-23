@@ -19,7 +19,7 @@ jobs:
           npm install -g tfx-cli@0.12.0
         displayName: 'npm install -g tfx-cli' 
       - bash: |
-          tfx login --auth-type pat --service-url $(ADOUrl)/DefaultCollection --token $(ADOToken)
+          tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken)
         displayName: 'tfx login' 
       - bash: |
           tfx version
@@ -27,8 +27,8 @@ jobs:
 
       - bash: |
           echo "##vso[task.setvariable variable=TaskId;]$(node ./ci/ci-test-tasks/get-task-guid.js ./task-${{ parameters.task }}/${{parameters.task}}/task.json)"
-        displayName: 'Set TaskId id'
-        
+        displayName: 'Set TaskId variable'
+
       - bash: |
           echo $TaskId
           echo "Deleting task $TaskId"
