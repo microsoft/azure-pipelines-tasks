@@ -11,9 +11,8 @@ steps:
     tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken)
   displayName: 'tfx login' 
   
-- bash: ls
 - bash: |
-    echo "##vso[task.setvariable variable=TASKID]$(node ./ci/ci-test-tasks/get-task-guid.js ./task-${{ parameters.task }}/${{parameters.task}}/task.json)"
+    echo "##vso[task.setvariable variable=TASKID]$(node ./ci/ci-test-tasks/get-task-guid.js ./Tasks/${{ parameters.task }}/task.json)"
   displayName: Get task id
 
 - bash: |
