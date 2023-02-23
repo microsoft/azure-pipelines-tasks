@@ -8,5 +8,5 @@ steps:
 
 - script: |
     echo "Tasks: ${{ parameters.task }}"
-    node ./ci/ci-test-tasks/test-and-verify.js $(ADOToken) $(ADOUrl) ${{ parameters.task }}
+    node ./ci/ci-test-tasks/test-and-verify.js $(ADOToken) $(ADOUrl) $(ProjectName) ${{ parameters.task }}
   displayName: 'Run tests and verify results'
