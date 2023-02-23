@@ -1697,7 +1697,7 @@ var getTaskNodeVersion = function(buildPath, taskName) {
     }
 
     console.warn('Unable to determine execution type from task.json, defaulting to use Node 10');
-    return 10;
+    return [ 10 ];
 }
 exports.getTaskNodeVersion = getTaskNodeVersion;
 
