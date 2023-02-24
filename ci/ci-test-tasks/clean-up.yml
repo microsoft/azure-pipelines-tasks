@@ -1,0 +1,21 @@
+parameters:
+  - name: task
+    type: string
+
+steps:
+- script: |
+    npm install -g tfx-cli@0.14
+  displayName: 'npm install -g tfx-cli' 
+
+- script: |
+    tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken)
+  displayName: 'tfx login' 
+  
+- bash: |
+    echo "##vso[task.setvariable variable=TASKID]$(node ./ci/ci-test-tasks/get-task-guid.js ./Tasks/${{ parameters.task }}/task.json)"
+  displayName: Get task id
+
+- bash: |
+    echo "Deleting task $(TASKID)"
+    tfx build tasks delete --task-id $(TASKID)
+  displayName: 'Delete task'

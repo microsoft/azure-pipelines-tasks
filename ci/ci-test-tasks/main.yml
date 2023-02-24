@@ -1,0 +1,68 @@
+parameters:
+- name: tasks
+  displayName: Tasks to process (separate by colons, no whitespaces)
+  type: string
+  default: DownloadPackageV1
+
+trigger: none
+pr: none
+
+jobs:
+  - ${{ each task in split(parameters.tasks, ',') }}:
+    - job: ${{ task }}_verify_testing_pipeline
+      condition: eq(variables['build.reason'], 'Manual')
+      displayName: Verify testing pipeline (${{ task }})
+      pool:
+        vmImage: windows-2022
+      steps:
+      - script: npm install axios
+        displayName: 'npm install axios'
+      - script: |
+          node ./ci/ci-test-tasks/verify-testing-pipeline-exist.js $(ADOToken) $(ADOUrl) $(System.TeamProject) ${{ task }}
+        failOnStderr: true
+        displayName: 'Verify test pipeline exist'
+  
+    - job: ${{ task }}_build_task
+      dependsOn: ${{ task }}_verify_testing_pipeline
+      displayName: Build Task (${{ task }})
+      pool:
+        vmImage: windows-2022
+      steps:
+      - template: ./build-task.yml
+        parameters:
+          task: ${{ task }}
+          push: false
+          publishArtifact: true
+          patchVersion: true
+          version: '0.9999.9999'
+
+    - job: ${{ task }}_upload_task
+      displayName: Upload (${{ task }})
+      dependsOn: ${{ task }}_build_task
+      pool:
+        vmImage: windows-2022
+      steps:
+      - template: ./upload-task.yml
+        parameters:
+          task: ${{ task }}
+   
+    - job: ${{ task }}_test_task
+      displayName: Test (${{ task }})
+      dependsOn: ${{ task }}_upload_task
+      pool:
+        vmImage: windows-2022
+      steps:
+      - template: ./test-task.yml
+        parameters:
+          task: ${{ task }}
+   
+    - job: ${{ task }}_clean_up
+      condition: in(dependencies.${{ task }}_upload_task.result, 'Succeeded', 'SucceededWithIssues', 'Failed')
+      displayName: Clean up (${{ task }})
+      dependsOn: ${{ task }}_test_task
+      pool:
+        vmImage: windows-2022
+      steps:
+      - template: ./clean-up.yml
+        parameters:
+          task: ${{ task }}

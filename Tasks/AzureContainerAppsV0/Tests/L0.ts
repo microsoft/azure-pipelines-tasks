@@ -27,21 +27,21 @@ describe('AzureContainerAppsV0 Suite', function () {
 
         runValidations(() => {
             assert(tr.failed, 'AzureContainerAppsV0 task should have failed when neither appSourcePath or imageToDeploy arguments are provided.');
-            assert(tr.stdout.includes('InvalidArgumentsMessage'), 'AzureContainerAppsV0 task should have failed when neither appSourcePath or imageToDeploy arguments are provided.');
+            assert(tr.stdout.includes('MissingImageToDeployMessage'), 'AzureContainerAppsV0 task should have failed when neither appSourcePath or imageToDeploy arguments are provided.');
         }, tr, done);
     });
 
-    it('Fails for both appSourcePath and imageToDeploy arguments', (done: Done) => {
+    it('Fails for appSourcePath provided without acrName', (done: Done) => {
         this.timeout(5000);
 
-        const tp: string = path.join(__dirname, 'L0FailsForBothAppSourcePathAndImageToDeploy.js');
+        const tp: string = path.join(__dirname, 'L0FailsForAppSourcePathWithoutAcrName.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
 
         runValidations(() => {
-            assert(tr.failed, 'AzureContainerAppsV0 task should have failed when both appSourcePath and imageToDeploy arguments are provided.');
-            assert(tr.stdout.includes('InvalidArgumentsMessage'), 'AzureContainerAppsV0 task should have failed when both appSourcePath and imageToDeploy arguments are provided.');
+            assert(tr.failed, 'AzureContainerAppsV0 task should have failed when appSourcePath is provided without acrName.');
+            assert(tr.stdout.includes('MissingAcrNameMessage'), 'AzureContainerAppsV0 task should have failed when appSourcePath is provided without acrName.');
         }, tr, done);
     });
 
@@ -56,20 +56,6 @@ describe('AzureContainerAppsV0 Suite', function () {
         runValidations(() => {
             assert(tr.failed, 'AzureContainerAppsV0 task should have failed when no service connection argument is provided.');
             assert(tr.stdout.includes('Input required: connectedServiceNameARM'), 'AzureContainerAppsV0 task should have failed when no service connection argument is provided.');
-        }, tr, done);
-    });
-
-    it('Fails for no ACR name argument', (done: Done) => {
-        this.timeout(5000);
-
-        const tp: string = path.join(__dirname, 'L0FailsForNoAcrNameArgument.js');
-        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-
-        runValidations(() => {
-            assert(tr.failed, 'AzureContainerAppsV0 task should have failed when no ACR name argument is provided.');
-            assert(tr.stdout.includes('Input required: acrName'), 'AzureContainerAppsV0 task should have failed when no ACR name argument is provided.');
         }, tr, done);
     });
 
@@ -105,11 +91,9 @@ describe('AzureContainerAppsV0 Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'AzureContainerAppsV0 task should have succeeded when the minimum required arguments are provided.');
-            assert(tr.stdout.includes('AcrAccessTokenLoginMessage'), 'AzureContainerAppsV0 task should use ACR access token for minimum imageToDeploy run.');
             assert(tr.stdout.includes('DefaultImageToBuildMessage'), 'AzureContainerAppsV0 task should set the default build image for minimum imageToDeploy run.');
             assert(tr.stdout.includes('DefaultContainerAppNameMessage'), 'AzureContainerAppsV0 task should set the default Container App name for minimum imageToDeploy run.');
             assert(tr.stdout.includes('DefaultResourceGroupMessage'), 'AzureContainerAppsV0 task should set the default resource group for minimum imageToDeploy run.');
-            assert(tr.stdout.includes('DefaultTargetPortMessage'), 'AzureContainerAppsV0 task should set the default target port for minimum imageToDeploy run.');
         }, tr, done);
     });
 
