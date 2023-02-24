@@ -540,7 +540,7 @@ var copyGroup = function (group, sourceRoot, destRoot) {
                 var localizedGroupJson = JSON.stringify(group).replace(/<CULTURE_NAME>/g, cultureName);
                 copyGroup(JSON.parse(localizedGroupJson), sourceRoot, destRoot);
             }
-            catch {
+            catch (err) {
                 missingCultures.push(cultureName);
             }
         });
