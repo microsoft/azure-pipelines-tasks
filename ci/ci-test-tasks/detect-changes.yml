@@ -19,7 +19,7 @@ jobs:
  
 - job: run_main_test_pipeline
   displayName: Run main test pipeline
-  condition: gt(length(dependencies.detect_changes.outputs['detect.TASKS']), 0)
+  condition: and(succeeded(),gt(length(dependencies.detect_changes.outputs['detect.TASKS']), 0))
   dependsOn: detect_changes
   variables:
       - name: tasks
