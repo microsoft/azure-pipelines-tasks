@@ -1,8 +1,8 @@
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import VersionInfoVersion from 'packaging-common/pe-parser/VersionInfoVersion'
-import {VersionInfo} from 'packaging-common/pe-parser/VersionResource'
+import VersionInfoVersion from 'azure-pipelines-tasks-packaging-common-v3/pe-parser/VersionInfoVersion'
+import {VersionInfo} from 'azure-pipelines-tasks-packaging-common-v3/pe-parser/VersionResource'
 
-import * as pkgMock from 'packaging-common/Tests/MockHelper';
+import * as pkgMock from 'azure-pipelines-tasks-packaging-common-v3/Tests/MockHelper';
 
 export class NugetMockHelper {
     private defaultNugetVersion = '3.5.0';
@@ -24,7 +24,7 @@ export class NugetMockHelper {
     }
 
     public registerNugetToolGetterMock() {
-        this.tmr.registerMock('packaging-common/nuget/NuGetToolGetter', {
+        this.tmr.registerMock('azure-pipelines-tasks-packaging-common-v3/nuget/NuGetToolGetter', {
             getNuGet: function(versionSpec) {
                 return "c:\\from\\tool\\installer\\nuget.exe";
             },
@@ -33,7 +33,7 @@ export class NugetMockHelper {
     
     public registerNugetVersionMock(productVersion: string, versionInfoVersion: number[]) {
         this.registerNugetVersionMockInternal(productVersion, versionInfoVersion);
-        this.tmr.registerMock('packaging-common/pe-parser/index', {
+        this.tmr.registerMock('azure-pipelines-tasks-packaging-common-v3/pe-parser/index', {
             getFileVersionInfoAsync: function(nuGetExePath) {
                 let result: VersionInfo = { strings: {} };
                 result.fileVersion = new VersionInfoVersion(versionInfoVersion[0], versionInfoVersion[1], versionInfoVersion[2], versionInfoVersion[3]);
@@ -56,7 +56,7 @@ export class NugetMockHelper {
     }
     
     public registerNugetUtilityMock(projectFile: string[]) {
-        this.tmr.registerMock('packaging-common/nuget/Utility', {
+        this.tmr.registerMock('azure-pipelines-tasks-packaging-common-v3/nuget/Utility', {
             resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
                 return projectFile;
             },
