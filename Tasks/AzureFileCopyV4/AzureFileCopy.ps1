@@ -69,10 +69,9 @@ CleanUp-PSModulePathForHostedAgent
 
 $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
 $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
-$encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
 
 if (Get-Module Az.Accounts -ListAvailable) {
-    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $encryptedToken
+    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $vstsAccessToken
 }
 else {
     Initialize-AzureRMModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $encryptedToken

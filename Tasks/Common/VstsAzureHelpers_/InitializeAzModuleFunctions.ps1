@@ -11,12 +11,14 @@ function Initialize-AzModule {
         [Parameter(Mandatory=$false)]
         [string] $azVersion,
         [Parameter(Mandatory=$false)]
-        [Security.SecureString]$vstsAccessToken)
+        [string]$vstsAccessToken)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
-        Initialize-AzSubscription -Endpoint $Endpoint -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
+
+        $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
+        Initialize-AzSubscription -Endpoint $Endpoint -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $encryptedToken
 
         Write-Verbose "Initializing Az Module."
         Import-AzModule -azVersion $azVersion
