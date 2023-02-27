@@ -7,7 +7,7 @@ const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 // Set required arguments for the test
 tmr.setInput('cwd', '/fakecwd');
 tmr.setInput('appSourcePath', '/samplepath');
-tmr.setInput('imageToDeploy', 'imagetodeploy');
+tmr.setInput('disableTelemetry', 'true');
 
 const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);

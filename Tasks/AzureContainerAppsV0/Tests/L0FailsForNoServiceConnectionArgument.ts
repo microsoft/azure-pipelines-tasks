@@ -7,7 +7,8 @@ const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set required arguments for the test
 tmr.setInput('cwd', '/fakecwd');
-tmr.setInput('appSourcePath', '/samplepath');
+tmr.setInput('imageToDeploy', 'imageToDeploy');
+tmr.setInput('disableTelemetry', 'true');
 
 const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
@@ -32,6 +33,9 @@ tmr.registerMock('./src/Utility', {
         return {
             setAzureCliDynamicInstall: function() {
                 return;
+            },
+            isNullOrEmpty(str: string): boolean {
+                return str === null || str === undefined || str === "";
             }
         };
     }
