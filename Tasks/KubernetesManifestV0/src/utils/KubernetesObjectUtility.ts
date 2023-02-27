@@ -2,8 +2,8 @@
 import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as yaml from 'js-yaml';
-import { Resource } from 'azure-pipelines-tasks-kubernetes-common-v2/kubectl-object-model';
-import { KubernetesWorkload, deploymentTypes, workloadTypes, workloadTypesWithRolloutStatus } from 'azure-pipelines-tasks-kubernetes-common-v2/kubernetesconstants';
+import { Resource } from 'azure-pipelines-tasks-kubernetes-common/kubectl-object-model';
+import { KubernetesWorkload, deploymentTypes, workloadTypes, workloadTypesWithRolloutStatus } from 'azure-pipelines-tasks-kubernetes-common/kubernetesconstants';
 import { StringComparer, isEqual } from '../utils/StringComparison';
 
 export function isDeploymentEntity(kind: string): boolean {

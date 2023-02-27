@@ -43,7 +43,7 @@ export async function downloadDocker(version: string, releaseType: string): Prom
         throw new Error(tl.loc("DockerNotFoundInFolder", cachedToolpath))
     }
 
-    fs.chmodSync(Dockerpath, "777");
+    fs.chmodSync(Dockerpath, "755");
     return Dockerpath;
 }
 

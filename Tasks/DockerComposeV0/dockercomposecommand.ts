@@ -3,7 +3,7 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
 import * as utils from "./utils";
-import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
+import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common/dockercommandutils";
 
 export function run(connection: DockerComposeConnection, outputUpdate: (data: string) => any): any {
     var command = connection.createComposeCommand();

@@ -1,11 +1,11 @@
 'use strict';
 
-import { Kubectl } from 'azure-pipelines-tasks-kubernetes-common-v2/kubectl-object-model';
+import { Kubectl } from 'azure-pipelines-tasks-kubernetes-common/kubectl-object-model';
 import * as utils from '../utils/utilities';
 import * as TaskInputParameters from '../models/TaskInputParameters';
 import { StringComparer, isEqual } from '../utils/StringComparison';
-import AuthenticationToken from 'azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken';
-import { getDockerRegistryEndpointAuthenticationToken } from 'azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken';
+import AuthenticationToken from 'azure-pipelines-tasks-docker-common/registryauthenticationprovider/registryauthenticationtoken';
+import { getDockerRegistryEndpointAuthenticationToken } from 'azure-pipelines-tasks-docker-common/registryauthenticationprovider/registryauthenticationtoken';
 
 export async function createSecret(ignoreSslErrors?: boolean) {
     const kubectl = new Kubectl(await utils.getKubectl(), TaskInputParameters.namespace, ignoreSslErrors);

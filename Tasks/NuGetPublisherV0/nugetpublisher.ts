@@ -2,14 +2,14 @@ import * as path from "path";
 import * as Q  from "q";
 import * as tl from "azure-pipelines-task-lib/task";
 
-import * as auth from "packaging-common/nuget/Authentication";
-import INuGetCommandOptions from "packaging-common/nuget/INuGetCommandOptions";
-import {NuGetConfigHelper} from "packaging-common/nuget/NuGetConfigHelper";
-import * as ngToolGetter from "packaging-common/nuget/NuGetToolGetter";
-import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner";
-import * as nutil from "packaging-common/nuget/Utility";
-import * as pkgLocationUtils from "packaging-common/locationUtilities";
-import { logError } from 'packaging-common/util';
+import * as auth from "azure-pipelines-tasks-packaging-common/nuget/Authentication";
+import INuGetCommandOptions from "azure-pipelines-tasks-packaging-common/nuget/INuGetCommandOptions";
+import {NuGetConfigHelper} from "azure-pipelines-tasks-packaging-common/nuget/NuGetConfigHelper";
+import * as ngToolGetter from "azure-pipelines-tasks-packaging-common/nuget/NuGetToolGetter";
+import * as ngToolRunner from "azure-pipelines-tasks-packaging-common/nuget/NuGetToolRunner";
+import * as nutil from "azure-pipelines-tasks-packaging-common/nuget/Utility";
+import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
+import { logError } from 'azure-pipelines-tasks-packaging-common/util';
 
 class PublishOptions implements INuGetCommandOptions {
     constructor(
@@ -73,7 +73,7 @@ async function main(): Promise<void> {
         let nuGetPath = tl.getPathInput("nuGetPath", false, false);
         let nugetUxOption = tl.getInput("nuGetversion");
         let userNuGetProvided = false;
-        if (nuGetPath !== null && tl.filePathSupplied("nuGetPath")) {
+        if (nuGetPath !== undefined && tl.filePathSupplied("nuGetPath")) {
             nuGetPath = nutil.stripLeadingAndTrailingQuotes(nuGetPath);
             userNuGetProvided = true;
             if (nugetUxOption !== "custom")

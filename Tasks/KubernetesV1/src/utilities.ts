@@ -8,7 +8,7 @@ import * as os from "os";
 import * as util from "util";
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
-import kubectlutility = require("azure-pipelines-tasks-kubernetes-common-v2/kubectlutility");
+import kubectlutility = require("azure-pipelines-tasks-kubernetes-common/kubectlutility");
 import downloadutility = require("azure-pipelines-tasks-utility-common/downloadutility");
 
 export function getTempDirectory(): string {

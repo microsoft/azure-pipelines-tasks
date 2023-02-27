@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Publish code coverage results",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.friendlyName": "Publish code coverage results v2",
+  "loc.helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2?view=azure-pipelines)",
   "loc.description": "Publish any of the code coverage results from a build",
   "loc.instanceNameFormat": "Publish code coverage results",
   "loc.input.label.summaryFileLocation": "Path to summary files",
