@@ -1,7 +1,7 @@
 import { WebRequest, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
 let uuid = require('uuid');
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
+import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common/dockercommandutils";
 import { writeFileSync } from 'fs';
 import * as path from "path";
 import  * as semver from "semver"
