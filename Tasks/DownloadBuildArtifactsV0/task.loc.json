@@ -7,11 +7,17 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "author": "Microsoft Corporation",
-  "version": {
-    "Major": 0,
-    "Minor": 217,
-    "Patch": 1
-  },
+    "version": {
+        "Major": 0,
+        "Minor": 219,
+        "Patch": 1
+    },
+    "_buildConfigMapping":[
+        {
+            "Default":"0.219.1",
+            "Node16-218":"0.219.2"
+        }
+    ],
   "groups": [
     {
       "name": "advanced",

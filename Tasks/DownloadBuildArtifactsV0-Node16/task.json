@@ -9,10 +9,15 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 217,
-        "Patch": 2,
-        "SemVersion": "Node16"
+        "Minor": 219,
+        "Patch": 2
     },
+    "_buildConfigMapping":[
+        {
+            "Default":"0.219.1",
+            "Node16-219":"0.219.2"
+        }
+    ],
     "groups": [
         {
             "name": "advanced",
@@ -264,10 +269,6 @@
     ],
     "instanceNameFormat": "Download Build Artifacts",
     "execution": {
-        "Node10": {
-            "target": "main.js",
-            "argumentFormat": ""
-        },
         "Node16": {
             "target": "main.js",
             "argumentFormat": ""
@@ -309,5 +310,5 @@
             "name": "BuildNumber",
             "description": "Stores the build number of the build artifact source.<br />Please note that in fact it returns <b>BuildId</b> due to backward compatibility <p>[More Information](https://docs.microsoft.com/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services)</p>"
         }
-    ]
+    ]    
 }
