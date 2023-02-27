@@ -323,11 +323,11 @@
                 "mavenAuthenticateFeed"
             ],
             "type": "boolean",
-            "label": "Authenticate built-in Maven feeds",
+            "label": "Authenticate with Artifacts feeds",
             "required": true,
             "defaultValue": "false",
             "groupName": "advanced",
-            "helpMarkDown": "Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds."
+            "helpMarkDown": "Automatically authenticates with Azure Artifacts feeds. If Artifacts feeds are not in use, deselect this option for faster builds."
         },
         {
             "name": "skipEffectivePom",
@@ -335,11 +335,11 @@
                 "effectivePomSkip"
             ],
             "type": "boolean",
-            "label": "Skip generating effective POM while authenticating built-in feeds",
+            "label": "Skip generating effective POM while authenticating with Artifacts feeds",
             "required": true,
             "defaultValue": "false",
             "groupName": "advanced",
-            "helpMarkDown": "Authenticate built-in Maven feeds using the POM only, allowing parent POMs in Azure Artifacts/Azure DevOps Server [Package Management] feeds."
+            "helpMarkDown": "Authenticates with Artifacts feeds using the POM only."
         },
         {
             "name": "sqAnalysisEnabled",
@@ -512,8 +512,8 @@
         "NoCodeCoverage": "No code coverage results were found to publish.",
         "EntryAlreadyExists": "The settings for the feed or repository already exists in the xml file.",
         "EffectivePomInvalid": "Could not parse the effective POM.",
-        "AuthenticationNotNecessary": "No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.",
-        "UsingAuthFeed": "Using built-in feed: ",
+        "AuthenticationNotNecessary": "No Artifacts feeds requiring authentication were found. Disable 'Authenticate with Artifacts feeds' for faster builds.",
+        "UsingAuthFeed": "Using Artifacts feed: ",
         "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
     }
 }
