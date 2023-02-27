@@ -13,6 +13,8 @@ const auth = {
 };
 const intervalDelayMs = 15000;
 
+console.log(process.env);
+
 if (tasks) {
   return start(tasks)
   .then(resultMessage => console.log(resultMessage))
