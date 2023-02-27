@@ -14,7 +14,7 @@ import { createSecret } from './actions/createSecret';
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
-function run(): Promise<void> {
+async function run(): Promise<void> {
     const action = tl.getInput('action');
     if (action === 'bake') {
         return bake();
@@ -47,8 +47,9 @@ function run(): Promise<void> {
             tl.setResult(tl.TaskResult.Failed, 'Not a supported action, choose from "bake", "deploy", "patch", "scale", "delete", "promote", "reject"');
             process.exit(1);
     }
-    connection.open();
-    return action_func()
+    const ignoreSSLErrors = tl.getEndpointDataParameter(this.kubernetesServiceConnection, 'acceptUntrustedCerts', true) === 'true';
+    await connection.open();
+    return action_func(ignoreSSLErrors)
         .then(() => connection.close())
         .catch((error) => {
             connection.close();
