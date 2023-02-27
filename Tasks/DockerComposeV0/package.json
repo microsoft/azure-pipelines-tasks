@@ -5,7 +5,7 @@
     "@types/q": "^1.5.0",
     "del": "2.2.0",
     "azure-pipelines-task-lib": "3.0.6-preview.0",
-    "azure-pipelines-tasks-docker-common-v2": "2.0.1-preview.0",
+    "azure-pipelines-tasks-docker-common": "2.0.1-preview.0",
     "esprima": "2.7.1",
     "js-yaml": "3.13.1"
   },
