@@ -31,11 +31,12 @@ steps:
   displayName: npm install
 # npm install
 - bash: ls
-    continueOnError
+  continueOnError: true
 - bash: ls Tasks
-    continueOnError 
+  continueOnError: true
 - bash: ls Tasks/KubernetesManifestV1
-    continueOnError 
+  continueOnError: true
+
 
 
 - ${{ if parameters.patchVersion }}:
