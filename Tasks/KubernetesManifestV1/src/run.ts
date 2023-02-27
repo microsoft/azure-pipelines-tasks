@@ -47,7 +47,13 @@ async function run(): Promise<void> {
             tl.setResult(tl.TaskResult.Failed, 'Not a supported action, choose from "bake", "deploy", "patch", "scale", "delete", "promote", "reject"');
             process.exit(1);
     }
-    const ignoreSSLErrors = tl.getEndpointDataParameter(this.kubernetesServiceConnection, 'acceptUntrustedCerts', true) === 'true';
+
+    let ignoreSSLErrors: boolean = false;
+    const kubernetesServiceConnection = tl.getInput('kubernetesServiceConnection', false);
+    if (kubernetesServiceConnection) {
+        ignoreSSLErrors = tl.getEndpointDataParameter(kubernetesServiceConnection, 'acceptUntrustedCerts', true) === 'true';
+    }
+
     await connection.open();
     return action_func(ignoreSSLErrors)
         .then(() => connection.close())
