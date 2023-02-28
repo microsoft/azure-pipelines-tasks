@@ -14,12 +14,15 @@ const teamFoundationCollectionUri = 'https://abc.visualstudio.com/';
 const jobName = 'jobName';
 
 const testnamespaceWorkingDirectory: string = shared.formatPath('a/w');
+const newUserDirPath = shared.formatPath("newUserDir");
 const kubectlPath = shared.formatPath('newUserDir/kubectl.exe');
 
 const taskPath = path.join(__dirname, '../src', 'run.js');
 const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput('kubernetesServiceConnection', 'kubernetesConnection');
+tr.setInput('connectionType', process.env[shared.TestEnvVars.connectionType] || shared.KubernetesConnectionType);
+tr.setInput('kubernetesServiceEndpoint', process[shared.TestEnvVars.kubernetesServiceEndpoint] || shared.KubernetesConnectionEndpoint);
+tr.setInput('kubernetesServiceConnection', process[shared.TestEnvVars.kubernetesServiceEndpoint] || shared.KubernetesConnectionEndpoint);
 tr.setInput('namespace', process.env[shared.TestEnvVars.namespace] || '');
 tr.setInput('action', process.env[shared.TestEnvVars.action] || 'deploy');
 tr.setInput('strategy', process.env[shared.TestEnvVars.strategy] || 'None');
@@ -82,6 +85,16 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'which': {
         'helm': 'helm',
         'kompose': 'kompose'
+    },
+    "exist": {
+        [newUserDirPath]: true
+    },
+    "stats": {
+        [newUserDirPath]: {
+            isDirectory() {
+                return true;
+            }
+        }
     }
 };
 

@@ -76,6 +76,8 @@ export const ManifestFilesPath = path.join(__dirname, 'manifests', 'deployment.y
 export const CanaryManifestFilesPath = path.join(__dirname, 'manifests', 'deployment-canary.yaml');
 export const BaselineManifestFilesPath = path.join(__dirname, 'manifests', 'deployment-baseline.yaml');
 export const DeleteCmdArguments  = "deployment nginx-deployment";
+export const KubernetesConnectionType = "kubernetesServiceConnection";
+export const KubernetesConnectionEndpoint = "kubernetesConnection";
 
 /**
  * Formats the given path to be appropriate for the operating system.
