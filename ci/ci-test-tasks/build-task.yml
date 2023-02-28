@@ -9,12 +9,19 @@ parameters:
   type: string
 - name: publishArtifact
   type: boolean
+- name: BuildSourceVersion
+  type: string
 
 steps:
 
-# Clean
-- checkout: self
-  clean: true
+# Checkout
+- checkout: none
+- bash: |
+    git init
+    git remote add origin https://github.com/microsoft/azure-pipelines-tasks
+    git fetch --force --tags --prune --prune-tags --progress --no-recurse-submodules origin --depth=1 +${{ parameters.BuildSourceVersion }}:refs/remotes/origin/${{ parameters.BuildSourceVersion }}
+    git checkout --progress --force refs/remotes/origin/${{ parameters.BuildSourceVersion }}
+  displayName: Checkout ${{ parameters.BuildSourceVersion }}
 
 # Start collect diagnostics
 - powershell: ./ci/start-collect-diagnostics.ps1
