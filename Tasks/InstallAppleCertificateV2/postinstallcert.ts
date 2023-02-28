@@ -17,7 +17,7 @@ async function run() {
             let deleteCert: boolean = tl.getBoolInput('deleteCert');
             let hash: string = tl.getTaskVariable('APPLE_CERTIFICATE_SHA1HASH');
             if (deleteCert && hash) {
-                sign.deleteCert(keychainPath, hash);
+                await sign.deleteCert(keychainPath, hash);
             }
 
             let deleteKeychain: boolean = false;
