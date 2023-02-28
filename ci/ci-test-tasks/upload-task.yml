@@ -36,5 +36,6 @@ steps:
   
 - script: |
     echo "Uploading task $(TASKID)"
+    find ./task-${{ parameters.task }}
     tfx build tasks upload --task-path ./task-${{ parameters.task }}/${{parameters.task}} --no-prompt
   displayName: 'Upload task'
