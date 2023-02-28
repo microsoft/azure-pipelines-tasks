@@ -36,6 +36,7 @@ jobs:
           publishArtifact: true
           patchVersion: true
           version: '0.9999.9999'
+          BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
     - job: ${{ task }}_upload_task
       displayName: Upload (${{ task }})
