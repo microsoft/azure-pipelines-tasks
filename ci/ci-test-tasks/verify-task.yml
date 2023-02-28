@@ -15,6 +15,6 @@ steps:
 - script: npm install axios
   displayName: 'npm install axios'
 - script: |
-    node ./ci/ci-test-tasks/verify-testing-pipeline-exist.js $(ADOToken) $(ADOUrl) $(System.TeamProject) ${{ task }}
+    node ./ci/ci-test-tasks/verify-testing-pipeline-exist.js $(ADOToken) $(ADOUrl) $(System.TeamProject) ${{ parameters.task }}
   failOnStderr: true
   displayName: 'Verify test pipeline exist'
