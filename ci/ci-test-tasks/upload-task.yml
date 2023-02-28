@@ -12,7 +12,7 @@ steps:
 
 - task: ExtractFiles@1
   inputs:
-    archiveFilePatterns: '$(System.ArtifactsDirectory)/${{parameters.task}}/tasks.zip'
+    archiveFilePatterns: '$(System.ArtifactsDirectory)/${{parameters.task}}/task.zip'
     destinationFolder: 'task-${{ parameters.task }}'
     cleanDestinationFolder: true
     overwriteExistingFiles: true
