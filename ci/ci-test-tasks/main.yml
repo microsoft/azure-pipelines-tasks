@@ -21,7 +21,7 @@ jobs:
       - template: ./verify-task.yml
         parameters:
           task: ${{ task }}
-          BuildSourceVersion: ${{ BuildSourceVersion }}
+          BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
   
     - job: ${{ task }}_build_task
       dependsOn: ${{ task }}_verify_testing_pipeline
@@ -36,6 +36,7 @@ jobs:
           publishArtifact: true
           patchVersion: true
           version: '0.9999.9999'
+          BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
     - job: ${{ task }}_upload_task
       displayName: Upload (${{ task }})
@@ -46,6 +47,7 @@ jobs:
       - template: ./upload-task.yml
         parameters:
           task: ${{ task }}
+          BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
    
     - job: ${{ task }}_test_task
       displayName: Test (${{ task }})
@@ -56,6 +58,7 @@ jobs:
       - template: ./test-task.yml
         parameters:
           task: ${{ task }}
+          BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
    
     - job: ${{ task }}_clean_up
       condition: in(dependencies.${{ task }}_upload_task.result, 'Succeeded', 'SucceededWithIssues', 'Failed')
@@ -67,3 +70,4 @@ jobs:
       - template: ./clean-up.yml
         parameters:
           task: ${{ task }}
+          BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
