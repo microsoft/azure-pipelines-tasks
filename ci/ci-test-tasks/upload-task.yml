@@ -12,7 +12,7 @@ steps:
 
 - task: ExtractFiles@1
   inputs:
-    archiveFilePatterns: '$(System.ArtifactsDirectory)/${{parameters.task}}/tasks.zip'
+    archiveFilePatterns: '$(System.ArtifactsDirectory)/${{parameters.task}}/task.zip'
     destinationFolder: 'task-${{ parameters.task }}'
     cleanDestinationFolder: true
     overwriteExistingFiles: true
@@ -34,7 +34,7 @@ steps:
     tfx build tasks delete --task-id $(TASKID)
   displayName: 'Delete task' 
   
-- script: |
+- bash: |
     echo "Uploading task $(TASKID)"
-    tfx build tasks upload --task-path ./task-${{ parameters.task }}/${{parameters.task}} --no-prompt
+    tfx build tasks upload --task-path ./task-${{ parameters.task }} --no-prompt
   displayName: 'Upload task'
