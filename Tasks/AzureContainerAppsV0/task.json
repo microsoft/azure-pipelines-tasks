@@ -18,7 +18,7 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 215,
+        "Minor": 218,
         "Patch": 0
     },
     "preview": true,
@@ -62,7 +62,7 @@
             "name": "acrName",
             "type": "string",
             "label": "Azure Container Registry name",
-            "required": true,
+            "required": false,
             "helpMarkDown": "The name of the Azure Container Registry that the runnable application image will be pushed to."
         },
         {
@@ -70,14 +70,14 @@
             "type": "string",
             "label": "Azure Container Registry username",
             "required": false,
-            "helpMarkDown": "The username used to authenticate push requests to the provided Azure Contrainer Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests."
+            "helpMarkDown": "The username used to authenticate push requests to the provided Azure Container Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests."
         },
         {
             "name": "acrPassword",
             "type": "string",
             "label": "Azure Container Registry password",
             "required": false,
-            "helpMarkDown": "The password used to authenticate push requests to the provided Azure Contrainer Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests."
+            "helpMarkDown": "The password used to authenticate push requests to the provided Azure Container Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests."
         },
         {
             "name": "dockerfilePath",
@@ -134,6 +134,27 @@
             "label": "Application target port",
             "required": false,
             "helpMarkDown": "The designated port for the application to run on. If not provided, this value is 80 for Python applications, and 8080 for all other supposed platforms."
+        },
+        {
+            "name": "location",
+            "type": "string",
+            "label": "Location of the Container App",
+            "required": false,
+            "helpMarkDown": "The location that the Container App (and other created resources) will be deployed to."
+        },
+        {
+            "name": "environmentVariables",
+            "type": "string",
+            "label": "Environment variables",
+            "required": false,
+            "helpMarkDown": "A list of environment variable(s) for the container. Space-separated values in 'key=value' format. Empty string to clear existing values. Prefix value with 'secretref:' to reference a secret."
+        },
+        {
+            "name": "disableTelemetry",
+            "type": "boolean",
+            "label": "Disable telemetry",
+            "required": false,
+            "helpMarkDown": "If set to 'true', no telemetry will be collected by this Azure DevOps Task. If set to 'false', or if this argument is not provided, telemetry will be sent to Microsoft about the Container App build and deploy scenario targeted by this Azure DevOps Task."
         }
     ],
     "execution": {
@@ -167,7 +188,8 @@
         "ErrorCodeFormat": "Error Code: [%s]",
         "ErrorMessageFormat": "Error: %s",
         "FoundAppSourceDockerfileMessage": "Found existing Dockerfile in provided application source at path '%s'; image will be built from this Dockerfile.",
-        "InvalidArgumentsMessage": "Either appSourcePath or imageToDeploy must be provided, but not both.",
+        "MissingAcrNameMessage": "The acrName argument must also be provided if the appSourcePath argument is provided.",
+        "MissingImageToDeployMessage": "The argument imageToDeploy must be provided if neither appSourcePath nor acrName are provided.",
         "PackCliInstallFailed": "Unable to install pack CLI.",
         "PushImageToAcrFailed": "Unable to push image '%s' to ACR.",
         "SetDefaultBuilderFailed": "Unable to set the Oryx++ Builder as the default builder."
