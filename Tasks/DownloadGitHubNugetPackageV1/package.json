@@ -22,10 +22,10 @@
     "@types/q": "1.0.7",
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^4.1.0",
-    "azure-pipelines-tasks-packaging-common": "^2.198.1",
+    "azure-pipelines-tasks-packaging-common": "^3.214.0",
     "q": "^1.4.1",
     "typed-rest-client": "^1.8.9",
-    "azure-pipelines-tasks-utility-common": "^3.210.0"
+    "azure-pipelines-tasks-utility-common": "^3.212.0"
   },
   "devDependencies": {
     "typescript": "4.0.2"
