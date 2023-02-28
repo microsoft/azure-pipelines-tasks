@@ -12,6 +12,7 @@ const auth = {
   password: AUTH_TOKEN
 };
 const intervalDelayMs = 15000;
+const { BUILD_SOURCEVERSION } = process.env;
 
 console.log(process.env);
 
@@ -31,7 +32,7 @@ async function start(tasks) {
 }
 
 function runMainPipeline(id, tasks) {
-  return axios.post(`${apiUrl}/${id}/runs?${apiVersion}`, {"templateParameters": {tasks}}, { auth })
+  return axios.post(`${apiUrl}/${id}/runs?${apiVersion}`, {"templateParameters": {tasks, BuildSourceVersion: BUILD_SOURCEVERSION}}, { auth })
   .then(res => res.data)
   .catch(err => {
     console.error(`Error running main pipeline`, err)
