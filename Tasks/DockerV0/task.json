@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 214,
+        "Minor": 219,
         "Patch": 0
     },
     "demands": [],
@@ -346,7 +346,7 @@
         },
         "Node16": {
             "target": "container.js"
-          }
+        }
     },
     "messages": {
         "ContainerPatternFound": "Pattern found in docker filepath parameter",

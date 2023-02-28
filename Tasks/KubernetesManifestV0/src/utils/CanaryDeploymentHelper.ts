@@ -1,13 +1,13 @@
 'use strict';
 
-import { Kubectl } from 'azure-pipelines-tasks-kubernetes-common-v2/kubectl-object-model';
+import { Kubectl } from 'azure-pipelines-tasks-kubernetes-common/kubectl-object-model';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 
 import * as TaskInputParameters from '../models/TaskInputParameters';
 import * as helper from '../utils/KubernetesObjectUtility';
-import { KubernetesWorkload } from 'azure-pipelines-tasks-kubernetes-common-v2/kubernetesconstants';
+import { KubernetesWorkload } from 'azure-pipelines-tasks-kubernetes-common/kubernetesconstants';
 import { StringComparer, isEqual } from './StringComparison';
 import * as utils from '../utils/utilities';
 
