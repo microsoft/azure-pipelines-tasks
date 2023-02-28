@@ -1,8 +1,18 @@
 parameters:
   - name: task
     type: string
+  - name: BuildSourceVersion
+    type: string
 
 steps:
+- checkout: none
+- bash: |
+    git init
+    git remote add origin https://github.com/microsoft/azure-pipelines-tasks
+    git fetch --force --tags --prune --prune-tags --progress --no-recurse-submodules origin --depth=1 +${{ parameters.BuildSourceVersion }}:refs/remotes/origin/${{ parameters.BuildSourceVersion }}
+    git checkout --progress --force refs/remotes/origin/${{ parameters.BuildSourceVersion }}
+  displayName: Checkout ${{ parameters.BuildSourceVersion }}
+  
 - script: npm install axios
   displayName: 'npm install axios'
 
