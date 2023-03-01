@@ -49,11 +49,11 @@
   "loc.input.label.checkstyleAnalysisEnabled": "Exécuter Checkstyle",
   "loc.input.help.checkstyleAnalysisEnabled": "Exécutez l'outil Checkstyle avec les vérifications Sun par défaut. Les résultats sont chargés en tant qu'artefacts de build.",
   "loc.input.label.findbugsAnalysisEnabled": "Exécuter FindBugs",
-  "loc.input.help.findbugsAnalysisEnabled": "Utilisez l’outil d’analyse statique FindBugs pour rechercher des bogues dans le code. Les résultats sont chargés en tant qu’artefacts de build. Dans Gradle 6.0, ce plug-in a été supprimé. Utilisez plutôt le plug-in spotbugs. [Plus d’informations] (https://docs.gradle.org/current/userguide/upgrading_version_5.html#the_findbugs_plugin_has_been_removed)",
+  "loc.input.help.findbugsAnalysisEnabled": "Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts. In Gradle 6.0 this plugin was removed. Use spotbugs plugin instead. [More info](https://docs.gradle.org/current/userguide/upgrading_version_5.html#the_findbugs_plugin_has_been_removed)",
   "loc.input.label.pmdAnalysisEnabled": "Exécuter PMD",
   "loc.input.help.pmdAnalysisEnabled": "Utilisez l'outil d'analyse statique Java PMD pour rechercher des bogues dans le code. Les résultats sont chargés en tant qu'artefacts de build.",
   "loc.input.label.spotBugsAnalysisEnabled": "Exécuter des débogages",
-  "loc.input.help.spotBugsAnalysisEnabled": "Activez cette option pour exécuter des débogages. Ce plug-in fonctionne avec Gradle v5.6 ou une date ultérieure. [Plus d’informations] (https://spotbugs.readthedocs.io/en/stable/gradle.html#use-spotbugs-gradle-plugin)",
+  "loc.input.help.spotBugsAnalysisEnabled": "Enable this option to run spotBugs. This plugin works with Gradle v5.6 or later. [More info](https://spotbugs.readthedocs.io/en/stable/gradle.html#use-spotbugs-gradle-plugin)",
   "loc.input.label.spotBugsGradlePluginVersionChoice": "Version du plug-in Spotbugs",
   "loc.input.help.spotBugsGradlePluginVersionChoice": "Version du plug-in Spotbugs Gradle à utiliser. Vous pouvez le déclarer dans votre fichier de configuration Gradle, ou spécifier une version ici.",
   "loc.input.label.spotbugsGradlePluginVersion": "Numéro de version",
@@ -88,10 +88,11 @@
   "loc.messages.codeAnalysisDisabled": "L'analyse du code est désactivée en dehors de l'environnement de build. Valeur introuvable pour %s",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Localiser JAVA_HOME pour Java %s %s",
   "loc.messages.UnsupportedJdkWarning": "JDK 9 et JDK 10 ne sont plus pris en charge. Passez à une version plus récente de votre projet et de votre pipeline. Tentative de génération avec JDK 11...",
-  "loc.messages.FailedToLocateSpecifiedJVM": "Échec de la localisation de la version spécifiée du kit JDK. Vérifiez que la version spécifiée du kit JDK est installée sur l'agent, que la variable d'environnement '%s' existe et que sa valeur correspond à l'emplacement d'un kit JDK correspondant. Sinon, utilisez la tâche [Programme d'installation de l'outil Java] (https://go.microsoft.com/fwlink/?linkid=875287) pour installer le kit JDK souhaité.",
+  "loc.messages.FailedToLocateSpecifiedJVM": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://go.microsoft.com/fwlink/?linkid=875287) task to install the desired JDK.",
   "loc.messages.NoCodeCoverage": "Il n'existe aucun résultat de couverture du code à publier.",
   "loc.messages.InvalidBuildFile": "Fichier de build non valide ou non pris en charge",
   "loc.messages.FileNotFound": "Le fichier ou le dossier n'existe pas : %s",
   "loc.messages.FailedToAppendCC": "Impossible d'ajouter les données de couverture du code : %s",
-  "loc.messages.NoTestResults": "Les fichiers de résultats des tests correspondant à %s sont introuvables. La publication des résultats des tests JUnit est ignorée."
+  "loc.messages.NoTestResults": "Les fichiers de résultats des tests correspondant à %s sont introuvables. La publication des résultats des tests JUnit est ignorée.",
+  "loc.messages.chmodGradlew": "Méthode 'chmod' utilisée pour le fichier gradlew afin de le rendre exécutable."
 }
