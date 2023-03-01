@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Autenticazione NuGet",
   "loc.helpMarkDown": "[Altre informazioni su questa attività](https://aka.ms/NuGetAuthenticateTask)",
-  "loc.description": "Questa versione dell'attività è deprecata. In alternativa, usare NuGetAuthenticateV1. Configurare gli strumenti NuGet per l'autenticazione con Azure Artifacts e altri repository NuGet. Richiede NuGet >= 4.8.5385, dotnet >= 2.1.400 o MSBuild >= 15.8.166.59604.",
+  "loc.description": "Configura gli strumenti NuGet per l'autenticazione con Azure Artifacts e altri repository NuGet. Richiede NuGet >= 4.8.5385, dotnet >= 6 o MSBuild >= 15.8.166.59604",
   "loc.instanceNameFormat": "Autenticazione NuGet",
   "loc.input.label.nuGetServiceConnections": "Credenziali di connessione al servizio per feed esterni all'organizzazione",
   "loc.input.help.nuGetServiceConnections": "Elenco di nomi di connessione al servizio NuGet delimitato da virgole per i feed esterni a questa organizzazione/raccolta. Per i feed in questa organizzazione/raccolta, lasciare vuoto questo campo. Verranno usate automaticamente le credenziali della compilazione.",
