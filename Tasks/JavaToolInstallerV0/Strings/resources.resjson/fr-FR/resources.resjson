@@ -56,6 +56,7 @@
   "loc.messages.JavaNotPreinstalled": "Java %s n'est pas préinstallé sur cet agent",
   "loc.messages.UsePreinstalledJava": "Utiliser le kit JDK préinstallé à partir de %s",
   "loc.messages.WrongArchiveStructure": "Le fichier JDK n'est pas valide. Vérifiez si le fichier JDK comporte bien un seul dossier racine contenant 'bin'.",
+  "loc.messages.WrongArchiveFile": "Le fichier d’archive est incorrect. Aucun dossier ne contient de JDK",
   "loc.messages.ShareAccessError": "Ressource réseau partagée non disponible : (%s)",
   "loc.messages.UnsupportedDMGStructure": "Le fichier JDK n'est pas pris en charge. Vérifiez si le fichier JDK contient bien un seul dossier.",
   "loc.messages.NoPKGFile": "Le fichier PKG est introuvable.",
