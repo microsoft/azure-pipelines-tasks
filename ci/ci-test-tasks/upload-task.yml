@@ -1,8 +1,18 @@
 parameters:
   - name: task
     type: string
+  - name: BuildSourceVersion
+    type: string
 
 steps:
+- checkout: none
+- bash: |
+    git init
+    git remote add origin https://github.com/microsoft/azure-pipelines-tasks
+    git fetch --force --tags --prune --prune-tags --progress --no-recurse-submodules origin --depth=1 +${{ parameters.BuildSourceVersion }}:refs/remotes/origin/${{ parameters.BuildSourceVersion }}
+    git checkout --progress --force refs/remotes/origin/${{ parameters.BuildSourceVersion }}
+  displayName: Checkout ${{ parameters.BuildSourceVersion }}
+  
 - task: DownloadBuildArtifacts@1
   inputs:
     buildType: 'current'
@@ -12,7 +22,7 @@ steps:
 
 - task: ExtractFiles@1
   inputs:
-    archiveFilePatterns: '$(System.ArtifactsDirectory)/${{parameters.task}}/tasks.zip'
+    archiveFilePatterns: '$(System.ArtifactsDirectory)/${{parameters.task}}/task.zip'
     destinationFolder: 'task-${{ parameters.task }}'
     cleanDestinationFolder: true
     overwriteExistingFiles: true
@@ -34,7 +44,7 @@ steps:
     tfx build tasks delete --task-id $(TASKID)
   displayName: 'Delete task' 
   
-- script: |
+- bash: |
     echo "Uploading task $(TASKID)"
-    tfx build tasks upload --task-path ./task-${{ parameters.task }}/${{parameters.task}} --no-prompt
+    tfx build tasks upload --task-path ./task-${{ parameters.task }} --no-prompt
   displayName: 'Upload task'
