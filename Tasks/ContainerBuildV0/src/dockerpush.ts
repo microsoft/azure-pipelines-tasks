@@ -1,8 +1,8 @@
 "use strict";
 
 import * as tl from "azure-pipelines-task-lib/task";
-import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
-import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
+import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
+import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common/dockercommandutils";
 
 import Q = require('q');
 

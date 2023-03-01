@@ -1,11 +1,11 @@
 "use strict";
 import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
-import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
-import * as pipelineUtils from "azure-pipelines-tasks-docker-common-v2/pipelineutils";
-import * as fileUtils from "azure-pipelines-tasks-docker-common-v2/fileutils";
-import * as sourceUtils from "azure-pipelines-tasks-docker-common-v2/sourceutils";
-import * as imageUtils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
+import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
+import * as pipelineUtils from "azure-pipelines-tasks-docker-common/pipelineutils";
+import * as fileUtils from "azure-pipelines-tasks-docker-common/fileutils";
+import * as sourceUtils from "azure-pipelines-tasks-docker-common/sourceutils";
+import * as imageUtils from "azure-pipelines-tasks-docker-common/containerimageutils";
 import * as utils from "./utils";
 
 export function run(connection: ContainerConnection): any {

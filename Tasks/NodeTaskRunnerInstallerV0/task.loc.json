@@ -1,0 +1,60 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+  "id": "31C75B2B-BCDF-4706-8D7C-4DA6A1959BC2",
+  "name": "NodeTaskRunnerInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "TDB",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 218,
+    "Patch": 0
+  },
+  "preview": true,
+  "demands": [],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "runnerVersion",
+      "aliases": [
+        "nodeVersion",
+        "installVersion"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.runnerVersion",
+      "required": true,
+      "defaultValue": "6",
+      "helpMarkDown": "ms-resource:loc.input.help.runnerVersion",
+      "options": {
+        "6": "Node.js 6.17.1",
+        "10": "Node.js 10.24.1"
+      }
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "index.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "index.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "TryRosetta": "ms-resource:loc.messages.TryRosetta",
+    "UnexpectedOS": "ms-resource:loc.messages.UnexpectedOS",
+    "RunnerAlreadyInUse": "ms-resource:loc.messages.RunnerAlreadyInUse",
+    "NotAllowedNodeVersion": "ms-resource:loc.messages.NotAllowedNodeVersion",
+    "AGENT_HOMEDIRECTORY_NotAvailable": "ms-resource:loc.messages.AGENT_HOMEDIRECTORY_NotAvailable",
+    "RunnerAlreadyInstalled": "ms-resource:loc.messages.RunnerAlreadyInstalled"
+  }
+}
