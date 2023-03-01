@@ -72,11 +72,11 @@
   "loc.input.label.versionEnvVar": "環境変数",
   "loc.input.help.versionEnvVar": "$、$env、または % を使用せずに変数名を入力します。",
   "loc.input.label.requestedMajorVersion": "メジャー",
-  "loc.input.help.requestedMajorVersion": "バージョン [X.Y.Z] の 'X' (http://semver.org/spec/v1.0.0.html)",
+  "loc.input.help.requestedMajorVersion": "The 'X' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
   "loc.input.label.requestedMinorVersion": "マイナー",
-  "loc.input.help.requestedMinorVersion": "バージョン [X.Y.Z] の 'Y' (http://semver.org/spec/v1.0.0.html)",
+  "loc.input.help.requestedMinorVersion": "The 'Y' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
   "loc.input.label.requestedPatchVersion": "パッチ",
-  "loc.input.help.requestedPatchVersion": "バージョン [X.Y.Z] の 'Z' (http://semver.org/spec/v1.0.0.html)",
+  "loc.input.help.requestedPatchVersion": "The 'Z' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
   "loc.input.label.buildProperties": "追加のビルド プロパティ",
   "loc.input.help.buildProperties": "token = value のペアをセミコロンで区切って並べたリストを指定します。.nuspec ファイル内に出現する $token$ がそれぞれ指定された値で置き換えられます。引用符で囲んだ文字列を値として指定することもできます。",
   "loc.input.label.verbosityPack": "詳細",
@@ -136,5 +136,7 @@
   "loc.messages.Warning_UpdatingNuGetVersion": "NuGet.exe のバージョンを %s に更新しています (現在のバージョンは %s)。NuGet を新しいバージョンに更新すると、動作の変更やビルド ブレークを起こす変更が発生することがあります。これを避けるには、タスクの [最新バージョンのチェック] オプションを選択解除します。",
   "loc.messages.Net5Update": "情報: Azure Pipelines によってホストされているエージェントが更新されて、現在 LTS である以前の .Net Core バージョンと共に、.Net 5.x SDK またはランタイムが含まれるようになりました。プロジェクトの SDK バージョンをロックしていない限り 5.x SDK が選択されますが、これには以前のバージョンと比較した場合に破壊的な動作が伴うおそれがあります。破壊的変更の詳細については、次をご覧ください: https://docs.microsoft.com/ja-jp/dotnet/core/tools/ および https://docs.microsoft.com/ja-jp/dotnet/core/compatibility/。このような変更とトラブルシューティングの詳細については、次を参照してください: https://docs.microsoft.com/ja-jp/azure/devops/pipelines/tasks/build/dotnet-core-cli?view=azure-devops#troubleshooting",
   "loc.messages.Net5NugetVersionCompat": ".NET 5 には、旧バージョンの Nuget (5.7 以下) と互換性の問題があるため、復元に (dotnet CLI ではなく) 旧バージョンの Nuget を使用している場合、このような復元されたパッケージに依存する dotnet CLI コマンド (例: dotnet build) が失敗するおそれがあります。このようなエラーを軽減するには、次のいずれかを実行します: (1) - dotnet CLI を使用して復元する。(2) - Nuget バージョン 5.8 を使用して復元する。(3) - 旧バージョンの SDK (3 以下) が使用されている global.json を使ってビルドする。",
-  "loc.messages.DeprecatedDotnet2_2_And_3_0": "情報: .NET Core SDK またはランタイム 2.2 および 3.0 の有効期間は終了しており (EOL)、ホストされているすべてのエージェントから削除されました。ホストされているエージェントでこれらの SDK またはランタイムを使用している場合は EOL を迎えていない新しいバージョンにアップグレードし、それ以外の場合は UseDotNet タスクを使用して必要なバージョンをインストールしてください。"
+  "loc.messages.DeprecatedDotnet2_2_And_3_0": "情報: .NET Core SDK またはランタイム 2.2 および 3.0 の有効期間は終了しており (EOL)、ホストされているすべてのエージェントから削除されました。ホストされているエージェントでこれらの SDK またはランタイムを使用している場合は EOL を迎えていない新しいバージョンにアップグレードし、それ以外の場合は UseDotNet タスクを使用して必要なバージョンをインストールしてください。",
+  "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg は現在、このタスクに対して有効になっています。この警告を解決するには、ビルド タスクを編集し、'includeNuGetOrg' を 'false' に設定するか、'NuGet.org からパッケージを使用する' の選択を解除します。",
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "パッケージを復元できませんでした。ビルド タスクを編集し、'includeNuGetOrg' を 'false' に設定するか、'NuGet.org からパッケージを使用する' の選択を解除します。"
 }
