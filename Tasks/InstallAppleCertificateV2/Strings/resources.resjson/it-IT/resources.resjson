@@ -22,7 +22,7 @@
   "loc.input.label.signingIdentity": "Identità di firma del certificato",
   "loc.input.help.signingIdentity": "Nome comune del soggetto nel certificato di firma. Verrà eseguito un tentativo di analisi del nome comune se viene lasciato vuoto.",
   "loc.input.label.setUpPartitionIdACLForPrivateKey": "Configurare partition_id ACL per la chiave privata importata",
-  "loc.input.help.setUpPartitionIdACLForPrivateKey": "Se true- imposta l'ACL partition_id per la chiave privata importata, codesign non richiederà l'uso della chiave per la firma. Questa operazione non è necessaria per i keychain temporanei, almeno in MacOS High Sierra. Per altri dettagli, vedere il [link] (http://www.openradar.me/28524119).",
+  "loc.input.help.setUpPartitionIdACLForPrivateKey": "If true - sets the partition_id ACL for the imported private key, so codesign won't prompt to use the key for signing. This isn't necessary for temporary keychains, at least on MacOS High Sierra. See the [link](http://www.openradar.me/28524119) for more details.",
   "loc.messages.INVALID_P12": "L'hash SHA1 e il nome comune (CN) del certificato non sono stati trovati. Verificare che si tratti di un certificato P12 valido.",
   "loc.messages.NoP12PwdWarning": "Non è stata fornita alcuna password P12. Se per il file P12 è necessaria una password, è consigliabile fornirla come variabile di pipeline e contrassegnarla come segreta abilitando l'icona del lucchetto.",
   "loc.messages.P12PrivateKeyNameNotFound": "Non è stato possibile identificare il nome della chiave privata: %s",
