@@ -20,11 +20,12 @@ List of already migrated packages:
 12. [x] docker-common
 13. [x] az-blobstorage-provider-v2
 14. [x] azure-arm-rest
+15. [x] docker-common-v2
+
 
 TODO:
 
 1.  [ ] azure-arm-rest-v2
-2.  [ ] docker-common-v2
 
 # Getting rid of -v2, -v3 folders
 
@@ -58,3 +59,4 @@ Missed versions were re-published to the original packages.
 | docker-common              | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17597) |                                                                     |
 | azure-arm-rest             | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17562) |                                                                     |
 | az-blobstorage-provider-v2 | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17447) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17540) |
+| docker-common-v2           | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17748) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17746) |
