@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Вызвать REST API",
-  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=870236)",
+  "loc.helpMarkDown": "[Подробнее об этой задаче](https://go.microsoft.com/fwlink/?linkid=870236)",
   "loc.description": "Вызовите REST API в рамках конвейера.",
   "loc.instanceNameFormat": "Вызвать REST API: $(method)",
   "loc.group.displayName.completionOptions": "Дополнительно",

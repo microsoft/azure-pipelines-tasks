@@ -3,11 +3,18 @@
   "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/node-js) o [consultar la documentación de Node](https://nodejs.org/docs/latest/api/documentation.html)",
   "loc.description": "Busca o descarga y almacena en caché la especificación de versión indicada de Node.js y la agrega a PATH.",
   "loc.instanceNameFormat": "Usar Node $(versionSpec)",
+  "loc.input.label.versionSource": "Origen de la versión",
   "loc.input.label.versionSpec": "Especificación de versión",
   "loc.input.help.versionSpec": "Especificación de la versión que debe obtenerse. Ejemplos: 6.x, 4.x, 6.10.0, >=6.10.0",
+  "loc.input.label.versionFilePath": "Ruta de acceso al archivo .nvmrc",
+  "loc.input.help.versionFilePath": "Ruta de acceso del archivo para obtener la versión.  Ejemplo: src/.nvmrc",
   "loc.input.label.checkLatest": "Comprobar la última versión",
   "loc.input.help.checkLatest": "Comprueba siempre en línea la última versión disponible que cumple la especificación de versión. Este valor suele ser false a menos que tenga un escenario específico que deba obtener siempre la última versión. Esto dará lugar a costos de descarga, cuando puede que no sea necesario, especialmente con el grupo de compilación hospedado.",
   "loc.input.label.force32bit": "Usar la versión de 32 bits en agentes x64",
   "loc.input.help.force32bit": "Instala la versión x86 de Node, independientemente de la arquitectura de CPU del agente.",
-  "loc.messages.ToolFailed": "No se pudo instalar la herramienta: %s"
+  "loc.messages.ToolFailed": "No se pudo instalar la herramienta: %s",
+  "loc.messages.TryRosetta": "No se encuentra ningún node para la plataforma %s ni la arquitectura %s. Intentando instalar con Rosetta2",
+  "loc.messages.NodeVersionNotFound": "No se encuentra el %s de versión del nodo para la plataforma %s y la arquitectura %s.",
+  "loc.messages.UnexpectedOS": "Sistema operativo %s inesperado",
+  "loc.messages.AgentTempDirNotSet": "Se esperaba que Agent.TempDirectory estuviera establecido."
 }

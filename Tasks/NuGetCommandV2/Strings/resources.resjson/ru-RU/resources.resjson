@@ -133,5 +133,7 @@
   "loc.messages.NGCommon_UnableToFindTool": "Не удается найти средство \"%s\"",
   "loc.messages.Warning_SessionCreationFailed": "Не удалось создать сеанс происхождения: %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "Версия NuGet.exe обновляется с %s до %s. При обновлении версии NuGet возможны изменения в поведении или критические изменения. Если это нежелательно, отмените выбор параметра \"Проверить наличие последней версии\" в параметрах задачи.",
-  "loc.messages.Error_NugetFailedWithCodeAndErr": "Сбой команды NuGet. Код выхода: %s, ошибка: %s"
+  "loc.messages.Error_NugetFailedWithCodeAndErr": "Сбой команды NuGet. Код выхода: %s, ошибка: %s",
+  "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg сейчас включен для этой задачи. Чтобы устранить это предупреждение, измените задачу сборки и установите для \"includeNuGetOrg\" \"ЛОЖЬ\" или отключите \"Использовать пакеты из NuGet.org\".",
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Не удалось восстановить пакеты. Отредактируете задачу сборки и установите для \"includeNuGetOrg\" \"ЛОЖЬ\" или отключите \"Использовать пакеты из NuGet.org\"."
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Invocar API de REST",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=870236)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=870236)",
   "loc.description": "Invoque una API de REST como parte de la canalización.",
   "loc.instanceNameFormat": "Invocar la API de REST: $(method)",
   "loc.group.displayName.completionOptions": "Avanzado",
@@ -18,7 +18,7 @@
   "loc.input.label.urlSuffix": "Parámetros y sufijo de dirección URL",
   "loc.input.help.urlSuffix": "La cadena especificada se anexa a la dirección URL. Ejemplo: Si la dirección URL de la conexión de servicio es https:...TestProj/_apis/Release/releases and the URL suffix is /2/environments/1, dicha dirección pasa a ser https:.../TestProj/_apis/Release/releases/2/environments/1. Si el sufijo de la dirección URL es ?definitionId=1&releaseCount=1, la dirección URL de la conexión de servicio será https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1.",
   "loc.input.label.waitForCompletion": "Evento de finalización",
-  "loc.input.help.waitForCompletion": "Valor predeterminado \"Callback\". Valores disponibles: \"ApiResponse\", llamada \"Callback\" en la que la API de REST devuelve una llamada para actualizar el registro de la escala de tiempo.",
+  "loc.input.help.waitForCompletion": "Valor predeterminado \"Devolución de llamada\". Valores disponibles :  \"ApiResponse\", \"Devolución de llamada\" en la que la API de REST llama de nuevo para actualizar el registro de línea temporal.",
   "loc.input.label.successCriteria": "Criterios de éxito",
   "loc.input.help.successCriteria": "Criterios que definen cuándo se debe pasar la tarea. Si no hay ningún criterio, significa que el contenido de la respuesta no influye en el resultado. Ejemplo: Para la respuesta {\"status\" : \"successful\"}, la expresión puede ser eq(root['status'], 'successful'). [Más información](https://go.microsoft.com/fwlink/?linkid=842996)"
 }
