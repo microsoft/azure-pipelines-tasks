@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+      - name: edgecase
+        image: nginx-image:1.7.9
+      - name: untagged
+        image: mysql 
+      - name: untaggedonacr
+        image: myacr.azurecr.io/myimage 
+      - name: untaggedwithcomment
+        image: myimagewithcomment # this is a comment
+      - image: imagewithhyphen # this is a comment
+        name: imagewithhyphen
+      - name: untaggedinsamefoldera
+        image: myacr.azurecr.io/folder/image-a
+      - name: untaggedinsamefolderb
+        image: myacr.azurecr.io/folder/image-b
+      - name: imagewithsha256
+        image: mcr.microsoft.com/dotnet/core/sdk@sha256:1d5dd575dfebb6ed71d973b6a0be37f424306eda337a7dab09b6c0f53dffc2e3
+      - name: imagetoreplacewithsha256
+        image: mcr.microsoft.com/mssql/server:2019-CU9-ubuntu-16.04
+      imagePullSecrets:
+      - name: key1
+      initContainers:
+      - name: nginx-init-container
+        image: nginx-init:0.1.0
