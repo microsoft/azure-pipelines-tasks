@@ -52,7 +52,7 @@ foreach ($variableSet in $variableSets) {
     }
 
     # Act.
-    $result = & $module Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $variableSet.StorageAccount
+    $result = & $module Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $variableSet.StorageAccount -connectedServiceNameARM "some service name"
 
     # Assert.
     Assert-AreEqual $null $result

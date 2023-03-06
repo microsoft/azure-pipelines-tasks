@@ -12,4 +12,4 @@ $endpoint = @{ Auth = @{ Scheme = 'Certificate' } }
 
 Register-Mock Set-UserAgent
 # Act/Assert.
-Assert-Throws { & $module Initialize-AzureSubscription -Endpoint $endpoint } -MessagePattern AZ_CertificateAuthNotSupported
+Assert-Throws { & $module Initialize-AzureSubscription -Endpoint $endpoint -connectedServiceNameARM "some service name" } -MessagePattern AZ_CertificateAuthNotSupported

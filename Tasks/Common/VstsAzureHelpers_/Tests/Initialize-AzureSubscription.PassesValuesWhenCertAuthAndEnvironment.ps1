@@ -40,7 +40,7 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Set-UserAgent
 
     # Act.
-    & $module Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $variableSet.StorageAccount
+    & $module Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $variableSet.StorageAccount -connectedServiceNameARM "some service name"
 	
     if( $variableSet.Environment ){
         $environmentName = $variableSet.Environment

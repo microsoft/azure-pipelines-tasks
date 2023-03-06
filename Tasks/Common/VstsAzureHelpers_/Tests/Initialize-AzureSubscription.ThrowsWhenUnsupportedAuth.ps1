@@ -25,5 +25,5 @@ $endpoint = @{
 Register-Mock Set-UserAgent
 # Act/Assert.
 Assert-Throws {
-    & $module Initialize-AzureSubscription -Endpoint $endpoint
+    & $module Initialize-AzureSubscription -Endpoint $endpoint -connectedServiceNameARM "some service name"
 } -MessagePattern "AZ_UnsupportedAuthScheme0 Some unknown scheme"

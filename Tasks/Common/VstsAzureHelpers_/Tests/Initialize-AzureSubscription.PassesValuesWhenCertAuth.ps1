@@ -34,7 +34,7 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Set-UserAgent
 
     # Act.
-    & $module Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $variableSet.StorageAccount
+    & $module Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $variableSet.StorageAccount -connectedServiceNameARM "some service name"
 
     # Assert.
     Assert-WasCalled Add-Certificate -- -Endpoint $endpoint

@@ -34,6 +34,6 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Set-UserAgent
     # Act/Assert.
     Assert-Throws {
-        & $module Initialize-AzureSubscription -Endpoint $endpoint
+        & $module Initialize-AzureSubscription -Endpoint $endpoint -connectedServiceNameARM "some service name"
     } -MessagePattern "AZ_ServicePrincipalAuthNotSupportedAzureVersion0 $($variableSet.Version)"
 }

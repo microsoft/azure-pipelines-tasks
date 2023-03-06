@@ -32,6 +32,6 @@ Register-Mock Add-Certificate { }
 
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 
-$result = & $module Initialize-AzureSubscription -Endpoint $endpoint 
+$result = & $module Initialize-AzureSubscription -Endpoint $endpoint -connectedServiceNameARM "some service name"
 
 Assert-WasCalled Add-AzAccount
