@@ -81,6 +81,10 @@ $variableSets = @(
 )
 Register-Mock Import-AzureModule
 Register-Mock Initialize-AzureSubscription
+
+
+$systemVssConnection = @{ auth = @{ parameters = @{ AccessToken = 'access_token' } } }
+
 foreach ($variableSet in $variableSets) {
     Write-Verbose ('-' * 80)
     Unregister-Mock Get-VstsInput
@@ -91,11 +95,14 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Get-VstsInput { 'Some service name' } -- -Name $variableSet.ExpectedServiceNameInput -Default $variableSet.DeploymentEnvironmentName
     Register-Mock Get-VstsEndpoint { $variableSet.Endpoint } -- -Name 'Some service name' -Require
     Register-Mock Get-VstsInput { $variableSet.StorageAccount } -- -Name StorageAccount
+    Register-Mock Get-VstsEndpoint { $systemVssConnection } -- -Name SystemVssConnection -Require
 
     # Act.
     Initialize-Azure
 
     # Assert.
     Assert-WasCalled Import-AzureModule -- -PreferredModule $variableSet.ExpectedPreferredModule -azurePsVersion "" -strict:$false
-    Assert-WasCalled Initialize-AzureSubscription -- -Endpoint $variableSet.Endpoint -StorageAccount $variableSet.StorageAccount
+    Assert-WasCalled Initialize-AzureSubscription -ParametersEvaluator {
+        $Endpoint -eq $variableSet.Endpoint -and $StorageAccount -eq $variableSet.StorageAccount -and $vstsAccessToken -ne $null -and ($connectedServiceNameARM -eq 'Some service name' -or $variableSet.ConnectedServiceNameSelector -eq $null)
+    }
 }
