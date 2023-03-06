@@ -1,1 +1,15 @@
 blank_issues_enabled: false
+contact_links:
+  - name: Developer Community
+    url: https://developercommunity.visualstudio.com/AzureDevOps
+    about: Feature ideas and problem reports go here.
+  - name: Tasks issue
+    url: https://github.com/microsoft/azure-pipelines-tasks/issues/new
+    about: If you have issues with tasks, please place your issues here.
+  - name: Security issue
+    url: https://github.com/microsoft/azure-pipelines-agent/security/policy
+    about: For security issues, please check our policy
+  - name: Issue with YAML
+    url: https://github.com/Microsoft/azure-pipelines-yaml
+    about: Over there we discuss YAML templates, samples for Azure Pipelines, and designs for upcoming YAML features. Also a place for the community to share best practices, ideas, and so on. File suggestions and issues here if they're specific to YAML pipelines
+    
