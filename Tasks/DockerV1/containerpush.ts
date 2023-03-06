@@ -2,9 +2,9 @@
 
 import * as fs from "fs";
 import * as tl from "azure-pipelines-task-lib/task";
-import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
-import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
-import * as imageUtils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
+import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
+import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common/dockercommandutils";
+import * as imageUtils from "azure-pipelines-tasks-docker-common/containerimageutils";
 import * as utils from "./utils";
 
 function dockerPush(connection: ContainerConnection, image: string, imageDigestFile?: string, useMultiImageMode?: boolean, commandArguments?: string): any {

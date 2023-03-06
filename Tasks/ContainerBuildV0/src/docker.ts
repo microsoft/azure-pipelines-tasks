@@ -2,9 +2,9 @@
 
 import path = require('path');
 import * as tl from "azure-pipelines-task-lib/task";
-import RegistryAuthenticationToken from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
-import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
-import { getDockerRegistryEndpointAuthenticationToken } from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
+import RegistryAuthenticationToken from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/registryauthenticationtoken";
+import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
+import { getDockerRegistryEndpointAuthenticationToken } from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/registryauthenticationtoken";
 
 export async function dockerBuildAndPush() {
     let endpointId = tl.getInput("dockerRegistryServiceConnection");
