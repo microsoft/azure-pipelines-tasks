@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 216,
+        "Minor": 219,
         "Patch": 0
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -209,6 +209,7 @@
             "visibleRule": "javaHomeSelection = JDKVersion",
             "options": {
                 "default": "default",
+                "1.17": "JDK 17",
                 "1.11": "JDK 11",
                 "1.10": "JDK 10 (out of support)",
                 "1.9": "JDK 9 (out of support)",
