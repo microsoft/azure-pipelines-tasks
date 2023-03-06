@@ -2,7 +2,7 @@
     "id": "DEEA6198-ADF8-4B16-9939-7ADDF85708B2",
     "name": "GitHubComment",
     "friendlyName": "GitHub Comment",
-    "description": "Write a comment to your Github entity i.e. issue or a Pull Request (PR)",
+    "description": "Write a comment to your GitHub entity i.e. issue or a Pull Request (PR)",
     "category": "Utility",
     "visibility": [
         "Build",
