@@ -49,7 +49,7 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Invoke-WebRequest { $response }
     
     # Act.
-    $result = & $module Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $variableSet.StorageAccount
+    $result = & $module Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $variableSet.StorageAccount -connectedServiceNameARM "Some sevice name"
 
     Assert-AreEqual $null $result
     Assert-WasCalled Set-CurrentAzureRMSubscription -- -SubscriptionId $endpoint.Data.SubscriptionId -TenantId $endpoint.Auth.Parameters.TenantId
