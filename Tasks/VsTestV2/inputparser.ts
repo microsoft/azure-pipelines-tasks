@@ -243,8 +243,11 @@ function getTestPlatformSettings(inputDataContract : idc.InputDataContract) : id
 
             ci.publishEvent({ subFeature: 'ToolsInstallerInstallationSuccessful' });
 
-        } else if ((vsTestVersion !== '17.0') && (vsTestVersion !== '16.0') && (vsTestVersion !== '15.0') && (vsTestVersion !== '14.0')
-            && (vsTestVersion.toLowerCase() !== 'latest')) {
+        } else if ((vsTestVersion !== '17.0') 
+                && (vsTestVersion !== '16.0') 
+                && (vsTestVersion !== '15.0') 
+                && (vsTestVersion !== '14.0') 
+                && (vsTestVersion.toLowerCase() !== 'latest')) {
             throw new Error(tl.loc('vstestVersionInvalid', vsTestVersion));
         } else if (vsTestLocationMethod === utils.Constants.vsTestVersionString && vsTestVersion === '12.0') {
             throw (tl.loc('vs2013NotSupportedInDta'));
