@@ -2,7 +2,7 @@ blank_issues_enabled: false
 contact_links:
   - name: Developer Community
     url: https://developercommunity.visualstudio.com/AzureDevOps
-    about: Feature ideas and problem reports go here.
+    about: For other Azure DevOps issues
   - name: Tasks issue
     url: https://github.com/microsoft/azure-pipelines-tasks/issues/new
     about: If you have issues with tasks, please place your issues here.
