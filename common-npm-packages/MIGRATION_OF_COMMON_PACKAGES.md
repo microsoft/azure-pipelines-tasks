@@ -60,3 +60,5 @@ Missed versions were re-published to the original packages.
 | azure-arm-rest             | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17562) |                                                                     |
 | az-blobstorage-provider-v2 | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17447) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17540) |
 | docker-common-v2           | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17748) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17746) |
+| azure-arm-rest-v2          | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17870) | 
+                                  |
