@@ -285,6 +285,8 @@ Tasks/KubernetesV1/    @rvairavelu @manolerazvan
 
 Tasks/KubernetesManifestV0/    @rvairavelu @manolerazvan
 
+Tasks/KubernetesManifestV1/    @rvairavelu @manolerazvan
+
 Tasks/ManualInterventionV8/    @rvairavelu @manolerazvan
 
 Tasks/ManualValidationV0/    @rvairavelu @manolerazvan
@@ -300,6 +302,8 @@ Tasks/MavenV4/     @microsoft/akvelon-build-task-team
 Tasks/MSBuildV1/   @microsoft/akvelon-build-task-team
 
 Tasks/MysqlDeploymentOnMachineGroupV1/     @vsebesta   @rvairavelu   @pipeline-environment-team
+
+Tasks/NodeTaskRunnerInstallerV0/    @microsoft/akvelon-build-task-team
 
 Tasks/NodeToolV0/ @microsoft/akvelon-build-task-team
 
