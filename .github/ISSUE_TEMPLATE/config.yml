@@ -2,10 +2,10 @@ blank_issues_enabled: false
 contact_links:
   - name: Developer Community
     url: https://developercommunity.visualstudio.com/AzureDevOps
-    about: For other Azure DevOps issues
-  - name: Tasks issue
-    url: https://github.com/microsoft/azure-pipelines-tasks/issues/new
-    about: If you have issues with tasks, please place your issues here.
+    about: For other Azure DevOps issuesЫ
+  - name: Agent issue
+    url: https://github.com/microsoft/azure-pipelines-agent/issues/new
+    about: If you have issues with pipelines agent, please place your issues here.
   - name: Security issue
     url: https://github.com/microsoft/azure-pipelines-agent/security/policy
     about: For security issues, please check our policy
