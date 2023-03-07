@@ -12,6 +12,12 @@
     "Minor": 219,
     "Patch": 1
   },
+  "_buildConfigMapping": [
+    {
+      "Default": "0.219.1",
+      "Node16-218": "0.219.2"
+    }
+  ],
   "groups": [
     {
       "name": "advanced",
