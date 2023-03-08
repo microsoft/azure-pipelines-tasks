@@ -289,6 +289,6 @@
         "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
         "UnsupportedAuthScheme": "Unsupported authentication scheme '{0}' for endpoint.",
         "ServicePrincipalError": "There was an error with the service principal used for the deployment.",
-        "AzModuleNotFound":"Could not find the modules: 'Az.Accounts'. If the module was recently installed, retry after restarting the Azure Pipelines task agent."
+        "AzModuleNotFound": "Could not find the modules: 'Az.Accounts'. If the module was recently installed, retry after restarting the Azure Pipelines task agent."
     }
 }
