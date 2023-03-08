@@ -85,7 +85,7 @@ Tasks/AzureRmWebAppDeploymentV4/   @vsebesta   @rvairavelu   @pipeline-environme
 
 Tasks/AzureSpringCloudV0    @yevster
 
-Tasks/AzureStaticWebAppV0/  @miwebst    @brhopcra
+Tasks/AzureStaticWebAppV0/  @Azure/azure-app-service-static-apps
 
 Tasks/AzureWebAppV1/  @vsebesta @rvairavelu @pipeline-environment-team
 
