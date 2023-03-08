@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE _locDefinition SYSTEM "locXML.dtd">
+
+<!-- 
+	REVISION HISTORY:
+-->
+
+<_locDefinition>
+
+	
+	<!-- VB: DefaultContent.xml -->
+	<_locTag _loc="locNone">Context</_locTag>
+	<_locTag _loc="locNone">ContentAuthor</_locTag>
+	<_locTag _loc="locNone">ContentID</_locTag>
+	<_locTag _loc="locNone">ContentFileVersion</_locTag>
+	<_locTag _loc="locNone">Exception</_locTag>
+	<_locTag _loc="locNone">Type</_locTag>
+	<_locTag _loc="locNone">Demand</_locTag>
+	<_locTag _loc="locNone">Precondition</_locTag>
+
+</_locDefinition>
