@@ -43,7 +43,7 @@
   "loc.input.label.entrypoint": "入口点替代",
   "loc.input.help.entrypoint": "替代特定服务容器的默认入口点。",
   "loc.input.label.containerCommand": "命令",
-  "loc.input.help.containerCommand": "要在特定服务容器中运行的命令。例如，如果映像包含一个简单的 Python Flask Web 应用程序，则可以将 \"python app.py\" 指定为启动 Web 应用程序。",
+  "loc.input.help.containerCommand": "要在特定服务容器中运行的命令。例如，如果映像包含一个简单的 Python Flask Web 应用程序，则可以将“python app.py”指定为启动 Web 应用程序。",
   "loc.input.label.detached": "后台运行",
   "loc.input.help.detached": "后台运行服务容器。",
   "loc.input.label.abortOnContainerExit": "容器退出时中止",
