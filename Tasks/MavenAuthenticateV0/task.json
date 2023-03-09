@@ -1,82 +1,79 @@
 {
-    "id": "D4B964F9-EA90-41BB-9526-29589628AD90",
-    "name": "MavenAuthenticate",
-    "friendlyName": "Maven Authenticate",
-    "description": "Provides credentials for Azure Artifacts feeds and external maven repositories",
-    "helpUrl": "https://go.microsoft.com/fwlink/?linkid=2099968",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2099968)",
-    "category": "Package",
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 0,
-        "Minor": 213,
-        "Patch": 0
+  "id": "D4B964F9-EA90-41BB-9526-29589628AD90",
+  "name": "MavenAuthenticate",
+  "friendlyName": "Maven Authenticate",
+  "description": "Provides credentials for Azure Artifacts feeds and external maven repositories",
+  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=2099968",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2099968)",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 218,
+    "Patch": 1
+  },
+  "runsOn": ["Agent", "DeploymentGroup"],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "Maven Authenticate",
+  "inputs": [
+    {
+      "name": "artifactsFeeds",
+      "type": "pickList",
+      "label": "Feeds",
+      "defaultValue": "",
+      "helpMarkdown": "Select one or multiple feeds to authenticate.",
+      "properties": {
+        "EditableOptions": "true",
+        "MultiSelectFlatList": "true"
+      }
     },
-    "runsOn": [
-        "Agent",
-        "DeploymentGroup"
-    ],
-    "minimumAgentVersion": "2.144.0",
-    "instanceNameFormat": "Maven Authenticate",
-    "inputs": [
-        {
-            "name": "artifactsFeeds",
-            "type": "pickList",
-            "label": "Feeds",
-            "defaultValue": "",
-            "helpMarkdown": "Select one or multiple feeds to authenticate.",
-            "properties": {
-                "EditableOptions": "true",
-                "MultiSelectFlatList": "true"
-            }
-        },
-        {
-            "name": "mavenServiceConnections",
-            "label": "Credentials for repositories outside this organization/collection",
-            "helpMarkDown": "Credentials to use for external repositories located in the project's pom.xml.",
-            "type": "connectedService:externalmavenrepository",
-            "properties": {
-                "MultiSelectFlatList": "true"
-            }
-        }
-    ],
-    "dataSourceBindings": [
-        {
-            "target": "artifactsFeeds",
-            "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
-            "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
-        }
-    ],
-    "execution": {
-        "Node10": {
-            "target": "mavenauth.js"
-        },
-        "Node16": {
-            "target": "mavenauth.js"
-        }
-    },
-    "postjobexecution": {
-        "Node10": {
-            "target": "cleanup.js",
-            "argumentFormat": ""
-        },
-        "Node16": {
-            "target": "cleanup.js",
-            "argumentFormat": ""
-        }
-    },
-    "messages": {
-        "Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the users settings.xml file.",
-        "Warning_NoEndpointsToAuth": "No repositories were selected to authenticate, please check your task configuration.",
-        "Info_GeneratingExternalRepositories": "Generating configs for %s external repositories.",
-        "Info_GeneratingInternalFeeds": "Generating configs for %s internal feeds.",
-        "Info_M2FolderDoesntExist": ".m2 folder not found at location %s, creating new folder.",
-        "Info_SettingsXmlRead": "Adding authentication to settings file %s.",
-        "Info_CreatingSettingsXml": "Creating new settings.xml at path %s.",
-        "Info_WritingToSettingsXml": "Writing new settings.xml with added authentication.",
-        "Error_InvalidServiceConnection": "The service connection for %s is invalid.",
-        "Error_FailedCleanupM2": "Failed to delete credentials from the user settings.xml file: %s"
+    {
+      "name": "mavenServiceConnections",
+      "label": "Credentials for repositories outside this organization/collection",
+      "helpMarkDown": "Credentials to use for external repositories located in the project's pom.xml.",
+      "type": "connectedService:externalmavenrepository",
+      "properties": {
+        "MultiSelectFlatList": "true"
+      }
     }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "artifactsFeeds",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "mavenauth.js"
+    },
+    "Node16": {
+      "target": "mavenauth.js"
+    }
+  },
+  "postjobexecution": {
+    "Node10": {
+      "target": "cleanup.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "cleanup.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the users settings.xml file.",
+    "Warning_NoEndpointsToAuth": "No repositories were selected to authenticate, please check your task configuration.",
+    "Info_GeneratingExternalRepositories": "Generating configs for %s external repositories.",
+    "Info_GeneratingInternalFeeds": "Generating configs for %s internal feeds.",
+    "Info_M2FolderDoesntExist": ".m2 folder not found at location %s, creating new folder.",
+    "Info_SettingsXmlRead": "Adding authentication to settings file %s.",
+    "Info_CreatingSettingsXml": "Creating new settings.xml at path %s.",
+    "Info_WritingToSettingsXml": "Writing new settings.xml with added authentication.",
+    "Error_InvalidServiceConnection": "The service connection for %s is invalid.",
+    "Error_FailedCleanupM2": "Failed to delete credentials from the user settings.xml file: %s"
+  }
 }

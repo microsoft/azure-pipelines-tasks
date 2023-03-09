@@ -4,9 +4,9 @@
   "lockfileVersion": 1,
   "dependencies": {
     "@azure/msal-common": {
-      "version": "9.0.1",
-      "resolved": "https://registry.npmjs.org/@azure/msal-common/-/msal-common-9.0.1.tgz",
-      "integrity": "sha512-eNNHIW/cwPTZDWs9KtYgb1X6gtQ+cC+FGX2YN+t4AUVsBdUbqlMTnUs6/c/VBxC2AAGIhgLREuNnO3F66AN2zQ=="
+      "version": "9.1.1",
+      "resolved": "https://registry.npmjs.org/@azure/msal-common/-/msal-common-9.1.1.tgz",
+      "integrity": "sha512-we9xR8lvu47fF0h+J8KyXoRy9+G/fPzm3QEa2TrdR3jaVS3LKAyE2qyMuUkNdbVkvzl8Zr9f7l+IUSP22HeqXw=="
     },
     "@azure/msal-node": {
       "version": "1.14.5",
@@ -128,16 +128,17 @@
       }
     },
     "azure-pipelines-tasks-azure-arm-rest-v2": {
-      "version": "3.216.3",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-azure-arm-rest-v2/-/azure-pipelines-tasks-azure-arm-rest-v2-3.216.3.tgz",
-      "integrity": "sha512-EZfChH+0Qrl7cE8Xag+zHkCdswTkxTP33YlEPocoBZ0SycgWcwl0hg6KmIfcwnKZSNQ+zz70ahdJ1GMSpcSRxQ==",
+      "version": "3.218.1",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-azure-arm-rest-v2/-/azure-pipelines-tasks-azure-arm-rest-v2-3.218.1.tgz",
+      "integrity": "sha512-IDMYGNTtsiFQfNxgWOdjLCo2O+yVdyCNvLUdxsiIPzkdOMbkJRj5SLlxh84u0z+TfHLlCEgx7GgvgHsp9Me6Fw==",
       "requires": {
-        "@azure/msal-node": "^1.14.5",
+        "@azure/msal-node": "1.14.5",
         "@types/jsonwebtoken": "^8.5.8",
         "@types/mocha": "^5.2.7",
         "@types/node": "^10.17.0",
         "@types/q": "1.5.4",
         "async-mutex": "^0.4.0",
+        "azure-devops-node-api": "^12.0.0",
         "azure-pipelines-task-lib": "^3.1.0",
         "https-proxy-agent": "^4.0.0",
         "jsonwebtoken": "^8.5.1",
@@ -150,6 +151,15 @@
           "version": "1.5.4",
           "resolved": "https://registry.npmjs.org/@types/q/-/q-1.5.4.tgz",
           "integrity": "sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug=="
+        },
+        "azure-devops-node-api": {
+          "version": "12.0.0",
+          "resolved": "https://registry.npmjs.org/azure-devops-node-api/-/azure-devops-node-api-12.0.0.tgz",
+          "integrity": "sha512-S6Il++7dQeMlZDokBDWw7YVoPeb90tWF10pYxnoauRMnkuL91jq9M7SOYRVhtO3FUC5URPkB/qzGa7jTLft0Xw==",
+          "requires": {
+            "tunnel": "0.0.6",
+            "typed-rest-client": "^1.8.4"
+          }
         },
         "azure-pipelines-task-lib": {
           "version": "3.4.0",
@@ -216,7 +226,7 @@
     "concat-map": {
       "version": "0.0.1",
       "resolved": "https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz",
-      "integrity": "sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg=="
+      "integrity": "sha1-2Klr13/Wjfd5OnMDajug1UBdR3s="
     },
     "concat-stream": {
       "version": "1.6.2",
@@ -501,9 +511,9 @@
       "integrity": "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="
     },
     "node-fetch": {
-      "version": "2.6.7",
-      "resolved": "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.7.tgz",
-      "integrity": "sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==",
+      "version": "2.6.9",
+      "resolved": "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.9.tgz",
+      "integrity": "sha512-DJm/CJkZkRjKKj4Zi4BsKVZh3ValV5IR5s7LVZnW+6YMh0W1BfNA8XSs6DLMGYlId5F3KnA70uu2qepcR08Qqg==",
       "requires": {
         "whatwg-url": "^5.0.0"
       }
@@ -700,9 +710,9 @@
       "integrity": "sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw=="
     },
     "tslib": {
-      "version": "2.4.1",
-      "resolved": "https://registry.npmjs.org/tslib/-/tslib-2.4.1.tgz",
-      "integrity": "sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA=="
+      "version": "2.5.0",
+      "resolved": "https://registry.npmjs.org/tslib/-/tslib-2.5.0.tgz",
+      "integrity": "sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg=="
     },
     "tunnel": {
       "version": "0.0.6",

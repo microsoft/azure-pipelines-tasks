@@ -168,7 +168,8 @@ export enum ComputeResourceType {
 
 export enum Scheme {
     ManagedServiceIdentity,
-    SPN
+    SPN,
+    WorkloadIdentityFederation
 }
 
 export interface StorageAccountSku {

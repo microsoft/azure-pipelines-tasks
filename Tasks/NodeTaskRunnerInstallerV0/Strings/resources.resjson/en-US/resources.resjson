@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Node.js tasks runner installer",
+  "loc.helpMarkDown": "TDB",
+  "loc.description": "Install specific Node.js version to run node tasks",
+  "loc.instanceNameFormat": "Install node runner $(runnerVersion)",
+  "loc.input.label.runnerVersion": "Version of runner to install",
+  "loc.input.help.runnerVersion": "Select the node version to install.",
+  "loc.messages.TryRosetta": "Unable to find Node for platform %s and architecture %s. Trying to install with Rosetta2",
+  "loc.messages.UnexpectedOS": "Unexpected OS %s. Supported variants: %s",
+  "loc.messages.RunnerAlreadyInUse": "The specified Node runner ver.%s is already installed and currently in use. Skipping installation.",
+  "loc.messages.NotAllowedNodeVersion": "The version of the target node does not match the allowed versions. Possible variants: %s",
+  "loc.messages.AGENT_HOMEDIRECTORY_NotAvailable": "Can't get AGENT_HOMEDIRECTORY environment varialbe.",
+  "loc.messages.RunnerAlreadyInstalled": "%s version of node runner already installed on the agent. Skipping installation."
+}

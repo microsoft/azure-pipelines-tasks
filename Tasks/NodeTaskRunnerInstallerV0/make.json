@@ -1,0 +1,11 @@
+{
+  "externals": {
+    "archivePackages": [
+      {
+        "archiveName": "7zr.zip",
+        "url": "https://vstsagenttools.blob.core.windows.net/tools/7zr/1805_x86/7zr.zip",
+        "dest": "./"
+      }
+    ]
+  }
+}

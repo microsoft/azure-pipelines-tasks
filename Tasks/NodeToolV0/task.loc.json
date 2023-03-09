@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 213,
+    "Minor": 218,
     "Patch": 0
   },
   "satisfies": [
@@ -24,6 +24,13 @@
   "demands": [],
   "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "versionSource",
@@ -66,6 +73,15 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.force32bit"
+    },
+    {
+      "name": "nodejsMirror",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.nodejsMirror",
+      "defaultValue": "https://nodejs.org/dist",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.nodejsMirror"
     }
   ],
   "execution": {

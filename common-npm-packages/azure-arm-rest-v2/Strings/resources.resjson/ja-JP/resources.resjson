@@ -4,6 +4,8 @@
   "loc.messages.SecretCannotBeEmpty": "secret を空の文字列にすることはできません。",
   "loc.messages.armUrlCannotBeEmpty": "ARM URL を空の文字列にすることはできません。",
   "loc.messages.authorityUrlCannotBeEmpty": "機関を空の文字列にすることはできません。",
+  "loc.messages.serviceConnectionIdCannotBeEmpty": "serviceConnectionId を空の文字列にすることはできません。",
+  "loc.messages.CouldNotFetchAccessTokenforAAD": "AAD 用のアクセス トークンをフェッチできませんでした。",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Azure 用のアクセス トークンをフェッチできませんでした。状態コード: %s、状態メッセージ: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。仮想マシンのマネージド サービス ID (MSI) を構成してください 'https://aka.ms/azure-msi-docs'。状態コード: %s、ステータス メッセージ: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。状態コード: %s、ステータス メッセージ: %s",
