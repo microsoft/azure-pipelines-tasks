@@ -34,7 +34,7 @@ function runMainPipeline(id, tasks) {
   return axios.post(`${apiUrl}/${id}/runs?${apiVersion}`, {"templateParameters": {tasks, BuildSourceVersion: BUILD_SOURCEVERSION}}, { auth })
   .then(res => res.data)
   .catch(err => {
-    console.error(`Error running main pipeline`, err)
+    err.stack = 'Error running main pipeline: ' + err.stack;
     throw err;
   })
 }
@@ -67,16 +67,21 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
       if (err.response && err.response.status >= 500) {
         if (retryCount < maxRetries) {
           retryCount++;
-          console.error(`Server error ${err.message} - retry request. Retry count: ${retryCount}`);
+          console.log(`Server error ${err.message} - retry request. Retry count: ${retryCount}`);
           return;
         } else {
-          console.error('Server error, maximum retries reached. Cancel requests', err.message);
+          console.error('Server error, maximum retries reached. Cancel retries', err.message);
         }
       }
-      
-      console.error('Error verifying build status', err.message);
+    
       clearInterval(interval);
+      err.stack = 'Error verifying build status. ' + err.stack;
       reject(err); 
     })
   }, intervalDelayMs)
 }
+
+
+process.on('uncaughtException', err => {
+  console.error(err.stack);
+});

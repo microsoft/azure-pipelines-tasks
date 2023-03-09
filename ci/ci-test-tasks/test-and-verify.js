@@ -40,7 +40,7 @@ function fetchPipelines() {
   return axios.get(`${apiUrl}?${apiVersion}`, { auth })
   .then(res => res.data.value)
   .catch(err => {
-    console.error('Error fetching pipelines', err);
+    err.stack = 'Error fetching pipelines: ' + err.stack;
     throw err;
   });
 }
@@ -51,7 +51,7 @@ function runTestPipeline(pipeline) {
   return axios.post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, {}, { auth })
   .then(res => res.data)
   .catch(err => {
-    console.error(`Error running ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`, err)
+    err.stack = `Error running ${pipeline.name} pipeline, pipelineId: ${pipeline.id}` + err.stack;
     throw err;
   })
 }
@@ -84,16 +84,20 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
       if (err.response && err.response.status >= 500) {
         if (retryCount < maxRetries) {
           retryCount++;
-          console.error(`Server error ${err.message} - retry request. Retry count: ${retryCount}`);
+          console.log(`Server error ${err.message} - retry request. Retry count: ${retryCount}`);
           return;
         } else {
-          console.error('Server error, maximum retries reached. Cancel requests', err.message);
+          console.error('Server error, maximum retries reached. Cancel retries', err.message);
         }
       }
-      
-      console.error('Error verifying build status', err.message);
+    
       clearInterval(interval);
+      err.stack = 'Error verifying build status. ' + err.stack;
       reject(err); 
     })
   }, intervalDelayMs)
 }
+
+process.on('uncaughtException', err => {
+  console.error(err.stack);
+});
