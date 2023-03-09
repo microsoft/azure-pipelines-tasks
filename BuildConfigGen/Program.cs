@@ -42,35 +42,138 @@ class Program
         //packageNode.Dump();
 
         var paths = GetNonIgnoredFileListFromPath(taskTarget);
+        var targetPaths = new HashSet<string>(GetNonIgnoredFileListFromPath(taskOutput));
 
         foreach (var o in paths)
         {
             //Console.WriteLine(o);
             string sourcePath = Path.Combine(taskTarget, o);
             string targetPath = Path.Combine(taskOutput, o);
-            Console.WriteLine(targetPath);
-            //CopyFile(sourcePath, targetPath);
+            _ = targetPaths.Remove(o);
+
+            CopyFile(sourcePath, targetPath);
+        }
+
+        foreach (var b in targetPaths)
+        {
+            string targetPath = Path.Combine(taskOutput, b);
+            Console.WriteLine($"Adding .tmp extension to extra file in output directory (should cause it to be ignored by .gitignore): {b}");
+
+            string destFileName = targetPath + ".tmp";
+            if(File.Exists(destFileName))
+            {
+                throw new Exception($"{destFileName} already exists; please clean up");
+            }
+            File.Move(targetPath, destFileName);
 
         }
     }
 
     private static void CopyFile(string sourcePath, string targetPath)
     {
-        Console.WriteLine($"Copy from={sourcePath} to={targetPath}");
+        FileInfo fi = new FileInfo(targetPath);
+
+        if (!fi.Directory!.Exists)
+        {
+            fi.Directory!.Create();
+        }
+
+        Console.Write($"Copy from={sourcePath} to={targetPath}...");
+
+        if (FilesEqual(sourcePath, targetPath))
+        {
+            Console.WriteLine("files same, skipping");
+        }
+        else
+        {
+            File.Copy(sourcePath, targetPath, true);
+            Console.WriteLine("done");
+        }
+
+    }
+
+    private static bool FilesEqual(string sourcePath, string targetPath)
+    {
+        FileInfo fi = new FileInfo(sourcePath);
+        FileInfo fi2 = new FileInfo(targetPath);
+
+        if (!fi2.Exists)
+        {
+            return false;
+        }
+
+        if (fi.Length != fi2.Length)
+        {
+            return false;
+        }
+
+        byte[] buffer = new byte[4096 * 255];
+        byte[] buffer2 = new byte[4096 * 255];
+        using (var fs1 = fi.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+        {
+            using (var fs2 = fi2.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                int read;
+                read = fs1.Read(buffer, 0, buffer.Length);
+                if (read != fs2.Read(buffer2, 0, buffer2.Length))
+                {
+                    throw new Exception("unexpected number of bytes read from second file");
+                }
+
+                for (int i = 0; i < read; i++)
+                {
+                    if (buffer[i] != buffer2[i])
+                    {
+                        return false;
+                    }
+                }
+
+            }
+        }
+
+        return true;
     }
 
     private static IEnumerable<string> GetNonIgnoredFileListFromPath(string taskTarget)
     {
-        var output = GitLsFiles(taskTarget);
-        var untrackedOuput2 = GetUntrackedFiles(taskTarget);
+        var output = GitLsFiles(taskTarget).Select(FixupPath);
+        var untrackedOuput2 = GetUntrackedFiles(taskTarget).Select(FixupPath);
         var paths = output.Union(untrackedOuput2);
         return paths;
     }
 
+    private static string FixupPath(string s)
+    {
+        if (Path.DirectorySeparatorChar == '\\')
+        {
+            return s.Replace("/", "\\");
+        }
+
+        return s;
+    }
+
     private static IEnumerable<string> GetUntrackedFiles(string taskTarget)
     {
-        int exitCode2;
+        // get directory prefix
+        int exitCode3;
+        string[] revParseOut;
+        string revParsePrefix;
+        if ((exitCode3 = RunCommandWithExitCode("git", "rev-parse --show-prefix", taskTarget, out revParseOut)) == 0)
+        {
+            if (revParseOut.Length < 1)
+            {
+                throw new Exception("revParseOut.Length<1");
+            }
+
+            revParsePrefix = revParseOut[0];
+        }
+        else
+        {
+            throw new Exception("non-zero exit code");
+        }
+
         string[] untrackedOutput;
+        int exitCode2;
         const string gitaddDryRun = "add * --dry-run";
         if ((exitCode2 = RunCommandWithExitCode("git", gitaddDryRun, taskTarget, out untrackedOutput)) == 0)
         {
@@ -90,8 +193,15 @@ class Program
             Match? m = null;
             if (null != (m = re.Match(o)))
             {
-                //Console.WriteLine(m.Groups[fileNameGroup].Value);
-                untrackedOuput2.Add(m.Groups[fileNameGroup].Value);
+                string path = m.Groups[fileNameGroup].Value;
+                if(!path.StartsWith(revParsePrefix))
+                {
+                    throw new Exception($"expected {path} to start with ${revParsePrefix}");
+                }
+
+                path = path.Remove(0, revParsePrefix.Length);
+
+                untrackedOuput2.Add(path);
             }
             else
             {
