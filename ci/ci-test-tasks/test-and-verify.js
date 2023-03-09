@@ -1,27 +1,26 @@
 const axios = require('axios');
 
-const HOSTNAME = 'https://dev.azure.com';
-const ORGANIZATION = 'canary2-poc';
-const PROJECT = 'tasks-canary';
-const apiVersion = 'api-version=7.0';
-const apiUrl = `${HOSTNAME}/${ORGANIZATION}/${PROJECT}/_apis/pipelines`;
 const AUTH_TOKEN = process.argv[2];
-const task = process.argv[3];
+const ADOUrl = process.argv[3];
+const ProjectName = process.argv[4];
+const task = process.argv[5];
+const apiVersion = 'api-version=7.0';
+const apiUrl = `${ADOUrl}/${ProjectName}/_apis/pipelines`;
+
 const auth = {
   username: 'Basic',
   password: AUTH_TOKEN
 };
-const intervalDelayMs = 30000;
+const intervalDelayMs = 15000;
 
 if (task) {
   return start(task)
   .then(resultMessage => console.log(resultMessage))
   .catch(err => {
     console.error(err);
-    throw err;
   });
 } else {
-  throw new Error('Task name was not provided');
+  console.error('Task name was not provided');
 }
 
 async function start(taskName) {
@@ -32,7 +31,7 @@ async function start(taskName) {
     const pipelineBuild = await runTestPipeline(pipeline);
     return verifyTestRunResults(pipelineBuild);  
   } else {
-    throw new Error(`Cannot build and run tests for task ${taskName} - corresponding pipeline was not found`);
+    console.log(`Cannot build and run tests for task ${taskName} - corresponding test pipeline was not found`);
   }
 }
 
@@ -62,7 +61,7 @@ function verifyTestRunResults(pipelineBuild) {
       verifyBuildStatus(pipelineBuild, interval, resolve, reject);
     }, intervalDelayMs)
   
-    console.log(`Check status for build ${pipelineBuild.name}, id: ${pipelineBuild.id}:`);
+    console.log(`Check status for build ${pipelineBuild.name}, id: ${pipelineBuild.id}, url: ${pipelineBuild._links.web.href}`);
   })
 }
 
@@ -70,8 +69,9 @@ async function verifyBuildStatus(pipelineBuild, timeout, resolve, reject) {
   const data = await axios.get(pipelineBuild.url, { auth })
     .then(res => res.data)
     .catch(err => {
+      clearTimeout(timeout);
       console.error('Error verifying build status', err);
-      throw err;
+      reject(err);
     })
   
   console.log(`Verify build status... ${data.state}`);
@@ -82,7 +82,7 @@ async function verifyBuildStatus(pipelineBuild, timeout, resolve, reject) {
 
   clearTimeout(timeout);
 
-  const result = `Build ${pipelineBuild.name} id:${pipelineBuild.id} finished with status "${data.result}" and result "${data.result}"`;
+  const result = `Build ${pipelineBuild.name} id:${pipelineBuild.id} finished with status "${data.result}" and result "${data.result}", url: ${pipelineBuild._links.web.href}`;
 
   if (data.result === 'succeeded') {
     resolve(result);
@@ -90,4 +90,3 @@ async function verifyBuildStatus(pipelineBuild, timeout, resolve, reject) {
     reject(result);
   }
 }
-

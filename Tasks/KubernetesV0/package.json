@@ -7,7 +7,7 @@
     "@types/q": "^1.5.0",
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "3.3.1",
-    "azure-pipelines-tasks-docker-common-v2": "^2.211.0",
+    "azure-pipelines-tasks-docker-common": "^2.211.0",
     "azure-pipelines-tasks-kubernetes-common": "^2.212.0",
     "azure-pipelines-tasks-utility-common": "3.212.0",
     "del": "2.2.0",
