@@ -68,7 +68,7 @@ stages:
             task: ${{ task }}
             BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
-- stage: Clean up
+- stage: CleanUp
   jobs:
     - ${{ each task in split(parameters.tasks, ',') }}:    
       - job: ${{ task }}_clean_up
