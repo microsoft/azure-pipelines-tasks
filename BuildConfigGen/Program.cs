@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 
@@ -13,42 +14,58 @@ class Program
 
     static void Main()
     {
-        const string versionMapFile = @"C:\repos\azure-pipelines-tasks\_Generated\DownloadBuildArtifactsV0.versionmap.txt";
-        Dictionary<string, TaskVersion> versionMap = new();
-        TaskVersion? maxVersion = null;
-
-        if (File.Exists(versionMapFile))
-        {
-            var lines = File.ReadAllLines(versionMapFile);
-
-            foreach (var line in lines)
-            {
-                var s = line.Split('|');
-                TaskVersion version = new TaskVersion(s[1]);
-                versionMap.Add(s[0], version);
-
-                if (maxVersion is null)
-                {
-                    maxVersion = version;
-                }
-                else
-                {
-                    if (version > maxVersion)
-                    {
-                        maxVersion = version;
-                    }
-                }
-            }
-        }
-
         string taskTarget = @"C:\repos\azure-pipelines-tasks\Tasks\DownloadBuildArtifactsV0";
         string taskOutput = @"C:\repos\azure-pipelines-tasks\_generated\DownloadBuildArtifactsV0";
         string taskOutputNode16 = @"C:\repos\azure-pipelines-tasks\_generated\DownloadBuildArtifactsV0_Node16";
 
+        CopyConfigs(taskTarget, taskOutput);
+        CopyConfigs(taskTarget, taskOutputNode16);
+
+        UpdateVersions(taskTarget, taskOutput, taskOutputNode16);
+    }
+
+    private static void CopyConfigs(string taskTarget, string taskOutput)
+    {
+        var paths = GetNonIgnoredFileListFromPath(taskTarget);
+        var targetPaths = new HashSet<string>(GetNonIgnoredFileListFromPath(taskOutput));
+
+        foreach (var o in paths)
+        {
+            //Console.WriteLine(o);
+            string sourcePath = Path.Combine(taskTarget, o);
+            string targetPath = Path.Combine(taskOutput, o);
+            _ = targetPaths.Remove(o);
+
+            CopyFile(sourcePath, targetPath);
+        }
+
+        foreach (var b in targetPaths)
+        {
+            string targetPath = Path.Combine(taskOutput, b);
+            Console.WriteLine($"Adding .tmp extension to extra file in output directory (should cause it to be ignored by .gitignore): {b}");
+
+            string destFileName = targetPath + ".tmp";
+            if (File.Exists(destFileName))
+            {
+                throw new Exception($"{destFileName} already exists; please clean up");
+            }
+            File.Move(targetPath, destFileName);
+
+        }
+    }
+
+    private static void UpdateVersions(string taskTarget, string taskOutput, string taskOutputNode16)
+    {
+        const string versionMapFile = @"C:\repos\azure-pipelines-tasks\_Generated\DownloadBuildArtifactsV0.versionmap.txt";
+        Dictionary<string, TaskVersion> versionMap;
+        TaskVersion? maxVersion;
+        ReadVersionMap(versionMapFile, out versionMap, out maxVersion);
+
+
         string inputTaskPath = Path.Combine(taskTarget, "task.json");
         string outputTaskPath = Path.Combine(taskOutput, "task.json");
         string outputTaskLocPath = Path.Combine(taskOutput, "task.loc.json");
-        string outputPackagePath = Path.Combine(taskOutput, "package.json");
+        string outputNode16PackagePath = Path.Combine(taskOutputNode16, "package.json");
         string outputNode16TaskPath = Path.Combine(taskOutputNode16, "task.json");
 
 
@@ -57,14 +74,14 @@ class Program
         JsonNode inputTaskNode = JsonNode.Parse(File.ReadAllText(inputTaskPath))!;
         JsonNode outputTaskNode = JsonNode.Parse(File.ReadAllText(outputTaskPath))!;
         JsonNode outputTaskLocNode = JsonNode.Parse(File.ReadAllText(outputTaskLocPath))!;
-        JsonNode outputPackageNode = JsonNode.Parse(File.ReadAllText(outputPackagePath))!;
+        JsonNode outputNod16PackagePath = JsonNode.Parse(File.ReadAllText(outputNode16PackagePath))!;
         JsonNode outputNode16TaskNode = JsonNode.Parse(File.ReadAllText(outputNode16TaskPath))!;
 
         var major = inputTaskNode["version"]!["Major"]!.GetValue<int>();
         var minor = inputTaskNode["version"]!["Minor"]!.GetValue<int>();
         var patch = inputTaskNode["version"]!["Patch"]!.GetValue<int>();
 
-        TaskVersion inputVersion = new TaskVersion($"{major}.{minor}.{patch}");
+        TaskVersion inputVersion = new(major, minor, patch);
 
         if (!(maxVersion is null) && inputVersion < maxVersion)
         {
@@ -96,7 +113,7 @@ class Program
 
         outputNode16TaskNode["version"]!["Patch"] = node16PatchVersion.Patch;
         outputTaskNode["version"]!["Patch"] = defaultPatchVersion.Patch;
-        outputPackageNode["dependencies"]!["@types/node"] = "^16.11.39";
+        outputNod16PackagePath["dependencies"]!["@types/node"] = "^16.11.39";
 
 
         inputTaskNode["version"]!["Patch"] = defaultPatchVersion.Patch;
@@ -120,34 +137,50 @@ class Program
             ["Default"] = defaultPatchVersion.ToString()
         });
 
-        //taskNode.Dump();
-        //packageNode.Dump();
-
-        var paths = GetNonIgnoredFileListFromPath(taskTarget);
-        var targetPaths = new HashSet<string>(GetNonIgnoredFileListFromPath(taskOutput));
-
-        foreach (var o in paths)
+        using (var fs = File.Open(versionMapFile, FileMode.Create))
         {
-            //Console.WriteLine(o);
-            string sourcePath = Path.Combine(taskTarget, o);
-            string targetPath = Path.Combine(taskOutput, o);
-            _ = targetPaths.Remove(o);
-
-            CopyFile(sourcePath, targetPath);
+            using(var sw = new StreamWriter(fs))
+            {
+                sw.WriteLine(string.Concat("Default|", defaultPatchVersion));
+                sw.WriteLine(string.Concat("Node16|", node16PatchVersion));
+            }
         }
 
-        foreach (var b in targetPaths)
+
+        JsonSerializerOptions jso = new System.Text.Json.JsonSerializerOptions { WriteIndented = true };
+        File.WriteAllText(inputTaskPath, inputTaskNode.ToJsonString(jso));
+        File.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso));
+        File.WriteAllText(outputNode16PackagePath, outputNod16PackagePath.ToJsonString(jso));
+        File.WriteAllText(outputNode16TaskPath, outputNode16TaskNode.ToJsonString(jso));
+        File.WriteAllText(outputNode16TaskPath, outputNode16TaskNode.ToJsonString(jso));
+    }
+
+    private static void ReadVersionMap(string versionMapFile, out Dictionary<string, TaskVersion> versionMap, out TaskVersion? maxVersion)
+    {
+        versionMap = new();
+        maxVersion = null;
+        if (File.Exists(versionMapFile))
         {
-            string targetPath = Path.Combine(taskOutput, b);
-            Console.WriteLine($"Adding .tmp extension to extra file in output directory (should cause it to be ignored by .gitignore): {b}");
+            var lines = File.ReadAllLines(versionMapFile);
 
-            string destFileName = targetPath + ".tmp";
-            if (File.Exists(destFileName))
+            foreach (var line in lines)
             {
-                throw new Exception($"{destFileName} already exists; please clean up");
-            }
-            File.Move(targetPath, destFileName);
+                var s = line.Split('|');
+                TaskVersion version = new TaskVersion(s[1]);
+                versionMap.Add(s[0], version);
 
+                if (maxVersion is null)
+                {
+                    maxVersion = version;
+                }
+                else
+                {
+                    if (version > maxVersion)
+                    {
+                        maxVersion = version;
+                    }
+                }
+            }
         }
     }
 
@@ -238,6 +271,11 @@ class Program
 
     private static IEnumerable<string> GetUntrackedFiles(string taskTarget)
     {
+        if(!Directory.Exists(taskTarget))
+        {
+            return new string[0];
+        }
+
         // get directory prefix
         int exitCode3;
         string[] revParseOut;
@@ -298,6 +336,11 @@ class Program
 
     private static IEnumerable<string> GitLsFiles(string taskTarget)
     {
+        if(!Directory.Exists(taskTarget))
+        {
+            return new string[0]; 
+        }
+
         int exitCode;
         string[] output;
         if ((exitCode = RunCommandWithExitCode("git", "ls-files", taskTarget, out output)) == 0)
