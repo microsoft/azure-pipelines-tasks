@@ -1,41 +1,123 @@
 ﻿using System;
 using System.CommandLine;
 using System.Diagnostics;
+using System.Globalization;
 using System.Net.Http.Headers;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 
 class Program
 {
+
     static void Main()
     {
+        const string versionMapFile = @"C:\repos\azure-pipelines-tasks\_Generated\DownloadBuildArtifactsV0.versionmap.txt";
+        Dictionary<string, TaskVersion> versionMap = new();
+        TaskVersion? maxVersion = null;
+
+        if (File.Exists(versionMapFile))
+        {
+            var lines = File.ReadAllLines(versionMapFile);
+
+            foreach (var line in lines)
+            {
+                var s = line.Split('|');
+                TaskVersion version = new TaskVersion(s[1]);
+                versionMap.Add(s[0], version);
+
+                if (maxVersion is null)
+                {
+                    maxVersion = version;
+                }
+                else
+                {
+                    if (version > maxVersion)
+                    {
+                        maxVersion = version;
+                    }
+                }
+            }
+        }
+
         string taskTarget = @"C:\repos\azure-pipelines-tasks\Tasks\DownloadBuildArtifactsV0";
         string taskOutput = @"C:\repos\azure-pipelines-tasks\_generated\DownloadBuildArtifactsV0";
         string taskOutputNode16 = @"C:\repos\azure-pipelines-tasks\_generated\DownloadBuildArtifactsV0_Node16";
 
-        string taskPath = Path.Combine(taskTarget, "task.json");
-        string taskLocPath = Path.Combine(taskTarget, "task.loc.json");
-        string packagePath = Path.Combine(taskTarget, "package.json");
+        string inputTaskPath = Path.Combine(taskTarget, "task.json");
+        string outputTaskPath = Path.Combine(taskOutput, "task.json");
+        string outputTaskLocPath = Path.Combine(taskOutput, "task.loc.json");
+        string outputPackagePath = Path.Combine(taskOutput, "package.json");
+        string outputNode16TaskPath = Path.Combine(taskOutputNode16, "task.json");
 
-        var taskJson = File.ReadAllText(taskPath);
 
-        JsonNode taskNode = JsonNode.Parse(File.ReadAllText(taskPath))!;
-        JsonNode taskLocNode = JsonNode.Parse(File.ReadAllText(taskLocPath))!;
-        JsonNode packageNode = JsonNode.Parse(File.ReadAllText(packagePath))!;
+        var taskJson = File.ReadAllText(outputTaskPath);
 
-        var n = GetNodePath(taskNode, "version", "Patch");
-        n = "2";
+        JsonNode inputTaskNode = JsonNode.Parse(File.ReadAllText(inputTaskPath))!;
+        JsonNode outputTaskNode = JsonNode.Parse(File.ReadAllText(outputTaskPath))!;
+        JsonNode outputTaskLocNode = JsonNode.Parse(File.ReadAllText(outputTaskLocPath))!;
+        JsonNode outputPackageNode = JsonNode.Parse(File.ReadAllText(outputPackagePath))!;
+        JsonNode outputNode16TaskNode = JsonNode.Parse(File.ReadAllText(outputNode16TaskPath))!;
 
-        n = GetNodePath(packageNode, "dependencies", "@types/node");
-        n = "^16.11.39";
+        var major = inputTaskNode["version"]!["Major"]!.GetValue<int>();
+        var minor = inputTaskNode["version"]!["Minor"]!.GetValue<int>();
+        var patch = inputTaskNode["version"]!["Patch"]!.GetValue<int>();
 
-        taskNode.AsObject()?.Remove("_buildConfigMapping");
+        TaskVersion inputVersion = new TaskVersion($"{major}.{minor}.{patch}");
 
-        taskNode.AsObject().Add("_buildConfigMapping", new JsonObject
+        if (!(maxVersion is null) && inputVersion < maxVersion)
         {
-            ["Default"] = "0.219.1",
-            ["Node16"] = "0.219.2"
+            throw new Exception($"version specified in task {taskTarget} must not be less than maxversion {maxVersion} specified in {versionMapFile}");
+        }
+
+        TaskVersion node16PatchVersion;
+        TaskVersion defaultPatchVersion;
+
+        TaskVersion? defaultVersion = null;
+
+        if (versionMap.ContainsKey("Default"))
+        {
+            defaultVersion = versionMap["Default"];
+        }
+
+        if (!(defaultVersion is null) && inputVersion == defaultVersion)
+        {
+            node16PatchVersion = inputVersion.CloneWithPatch(versionMap["Node16"].Patch);
+            defaultPatchVersion = inputVersion.CloneWithPatch(defaultVersion.Patch);
+        }
+        else
+        {
+            node16PatchVersion = inputVersion.CloneWithPatch(patch);
+
+            // important: for backwards compatibilty, the greatest patch number must be the default
+            defaultPatchVersion = inputVersion.CloneWithPatch(node16PatchVersion.Patch + 1);
+        }
+
+        outputNode16TaskNode["version"]!["Patch"] = node16PatchVersion.Patch;
+        outputTaskNode["version"]!["Patch"] = defaultPatchVersion.Patch;
+        outputPackageNode["dependencies"]!["@types/node"] = "^16.11.39";
+
+
+        inputTaskNode["version"]!["Patch"] = defaultPatchVersion.Patch;
+        outputTaskNode["version"]!["Patch"] = defaultPatchVersion.Patch;
+        outputNode16TaskNode["version"]!["Patch"] = node16PatchVersion.Patch;
+
+
+        outputTaskNode.AsObject()?.Remove("_buildConfigMapping");
+
+        outputTaskNode.AsObject().Add("_buildConfigMapping", new JsonObject
+        {
+            ["Node16"] = node16PatchVersion.ToString(),
+            ["Default"] = defaultPatchVersion.ToString()
+        });
+
+        outputNode16TaskNode.AsObject()?.Remove("_buildConfigMapping");
+
+        outputNode16TaskNode.AsObject().Add("_buildConfigMapping", new JsonObject
+        {
+            ["Node16"] = node16PatchVersion.ToString(),
+            ["Default"] = defaultPatchVersion.ToString()
         });
 
         //taskNode.Dump();
@@ -60,7 +142,7 @@ class Program
             Console.WriteLine($"Adding .tmp extension to extra file in output directory (should cause it to be ignored by .gitignore): {b}");
 
             string destFileName = targetPath + ".tmp";
-            if(File.Exists(destFileName))
+            if (File.Exists(destFileName))
             {
                 throw new Exception($"{destFileName} already exists; please clean up");
             }
@@ -68,6 +150,8 @@ class Program
 
         }
     }
+
+    public record Version(int Major, int Minor, int Patch);
 
     private static void CopyFile(string sourcePath, string targetPath)
     {
@@ -194,7 +278,7 @@ class Program
             if (null != (m = re.Match(o)))
             {
                 string path = m.Groups[fileNameGroup].Value;
-                if(!path.StartsWith(revParsePrefix))
+                if (!path.StartsWith(revParsePrefix))
                 {
                     throw new Exception($"expected {path} to start with ${revParsePrefix}");
                 }
@@ -278,4 +362,249 @@ class Program
             return p.ExitCode;
         }
     }
+
+
+    public class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
+    {
+        public TaskVersion(String version)
+        {
+            Int32 major, minor, patch;
+            String? semanticVersion;
+
+            VersionParser.ParseVersion(version, out major, out minor, out patch, out semanticVersion);
+            Major = major;
+            Minor = minor;
+            Patch = patch;
+
+            if (semanticVersion != null)
+            {
+                if (semanticVersion.Equals("test", StringComparison.OrdinalIgnoreCase))
+                {
+                    IsTest = true;
+                }
+                else
+                {
+                    throw new ArgumentException("semVer");
+                }
+            }
+        }
+
+        private TaskVersion(TaskVersion taskVersionToClone)
+        {
+            this.IsTest = taskVersionToClone.IsTest;
+            this.Major = taskVersionToClone.Major;
+            this.Minor = taskVersionToClone.Minor;
+            this.Patch = taskVersionToClone.Patch;
+        }
+
+        public TaskVersion(int major, int minor, int overidePatch)
+        {
+            Major = major;
+            Minor = minor;
+            Patch = overidePatch;
+        }
+
+        public Int32 Major
+        {
+            get;
+            set;
+        }
+
+        public Int32 Minor
+        {
+            get;
+            set;
+        }
+
+        public Int32 Patch
+        {
+            get;
+            set;
+        }
+
+        public Boolean IsTest
+        {
+            get;
+            set;
+        }
+
+        public TaskVersion Clone()
+        {
+            return new TaskVersion(this);
+        }
+
+        public TaskVersion CloneWithPatch(int overridePatch)
+        {
+            return new TaskVersion(Major, Minor, overridePatch);
+        }
+
+        public static implicit operator String(TaskVersion version)
+        {
+            return version.ToString();
+        }
+
+        public override String ToString()
+        {
+            String suffix = String.Empty;
+            if (IsTest)
+            {
+                suffix = "-test";
+            }
+
+            return String.Format(CultureInfo.InvariantCulture, "{0}.{1}.{2}{3}", Major, Minor, Patch, suffix);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.ToString().GetHashCode();
+        }
+
+        public Int32 CompareTo(TaskVersion? other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException("other");
+            }
+
+            Int32 rc = Major.CompareTo(other.Major);
+            if (rc == 0)
+            {
+                rc = Minor.CompareTo(other.Minor);
+                if (rc == 0)
+                {
+                    rc = Patch.CompareTo(other.Patch);
+                    if (rc == 0 && this.IsTest != other.IsTest)
+                    {
+                        rc = this.IsTest ? -1 : 1;
+                    }
+                }
+            }
+
+            return rc;
+        }
+
+        public Boolean Equals(TaskVersion? other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            return this.CompareTo(other) == 0;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return Equals(obj as TaskVersion);
+        }
+
+        public static Boolean operator ==(TaskVersion v1, TaskVersion v2)
+        {
+            if (v1 is null)
+            {
+                return v2 is null;
+            }
+
+            return v1.Equals(v2);
+        }
+
+        public static Boolean operator !=(TaskVersion v1, TaskVersion v2)
+        {
+            if (v1 is null)
+            {
+                return !(v2 is null);
+            }
+
+            return !v1.Equals(v2);
+        }
+
+        public static Boolean operator <(TaskVersion v1, TaskVersion v2)
+        {
+            ArgumentUtility.CheckForNull(v1, nameof(v1));
+            ArgumentUtility.CheckForNull(v2, nameof(v2));
+            return v1.CompareTo(v2) < 0;
+        }
+
+        public static Boolean operator >(TaskVersion v1, TaskVersion v2)
+        {
+            ArgumentUtility.CheckForNull(v1, nameof(v1));
+            ArgumentUtility.CheckForNull(v2, nameof(v2));
+            return v1.CompareTo(v2) > 0;
+        }
+
+        public static Boolean operator <=(TaskVersion v1, TaskVersion v2)
+        {
+            ArgumentUtility.CheckForNull(v1, nameof(v1));
+            ArgumentUtility.CheckForNull(v2, nameof(v2));
+            return v1.CompareTo(v2) <= 0;
+        }
+
+        public static Boolean operator >=(TaskVersion v1, TaskVersion v2)
+        {
+            ArgumentUtility.CheckForNull(v1, nameof(v1));
+            ArgumentUtility.CheckForNull(v2, nameof(v2));
+            return v1.CompareTo(v2) >= 0;
+        }
+    }
+
+    public static class VersionParser
+    {
+        public static void ParseVersion(
+            String version,
+            out Int32 major,
+            out Int32 minor,
+            out Int32 patch,
+            out String? semanticVersion)
+        {
+            ArgumentUtility.CheckStringForNullOrEmpty(version, "version");
+
+            String[] segments = version.Split(new char[] { '.', '-' }, StringSplitOptions.None);
+            if (segments.Length < 3 || segments.Length > 4)
+            {
+                throw new ArgumentException("wrong number of segments");
+            }
+
+            if (!Int32.TryParse(segments[0], out major))
+            {
+                throw new ArgumentException("major");
+            }
+
+            if (!Int32.TryParse(segments[1], out minor))
+            {
+                throw new ArgumentException("minor");
+            }
+
+            if (!Int32.TryParse(segments[2], out patch))
+            {
+                throw new ArgumentException("patch");
+            }
+
+            semanticVersion = null;
+            if (segments.Length == 4)
+            {
+                semanticVersion = segments[3];
+            }
+        }
+    }
+
+    class ArgumentUtility
+    {
+        internal static void CheckForNull(TaskVersion? c, string v)
+        {
+            if (c is null)
+            {
+                throw new ArgumentNullException(v);
+            }
+        }
+
+        internal static void CheckStringForNullOrEmpty(string c, string v)
+        {
+            if (string.IsNullOrEmpty(v))
+            {
+                throw new ArgumentNullException(v);
+
+            }
+        }
+    }
 }
+
