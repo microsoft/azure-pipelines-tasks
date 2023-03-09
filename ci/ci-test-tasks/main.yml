@@ -41,6 +41,18 @@ stages:
             patchVersion: true
             version: '0.999.0'
             BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+- stage: PreDelete
+  jobs:
+    - ${{ each task in split(parameters.tasks, ',') }}:    
+      - job: ${{ task }}_pre_delete
+        displayName: Pre delete (${{ task }})
+        pool:
+          vmImage: windows-2022
+        steps:
+        - template: ./clean-up.yml
+          parameters:
+            task: ${{ task }}
+            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
 - stage: Upload
   jobs:
@@ -68,7 +80,7 @@ stages:
             task: ${{ task }}
             BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
-- stage: CleanUp
+- stage: PostDelete
   jobs:
     - ${{ each task in split(parameters.tasks, ',') }}:    
       - job: ${{ task }}_clean_up
