@@ -186,12 +186,12 @@ function Initialize-AzureRMSubscription {
         $processScope = @{ Scope = "Process" }
         $clientAssertionJwt = Get-VstsFederatedToken -serviceConnectionId $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
         try {
-            Write-Host "##[command]Add-AzureRmAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -FederatedToken ****** -Environment $environmentName @processScope"
+            Write-Host "##[command]Add-AzureRmAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -FederatedToken ****** -EnvironmentName $environmentName @processScope"
             $null = Add-AzureRmAccount -ServicePrincipal `
                 -Tenant $Endpoint.Auth.Parameters.TenantId `
                 -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId `
                 -FederatedToken $clientAssertionJwt `
-                -Environment $environmentName @processScope -WarningAction SilentlyContinue
+                -EnvironmentName $environmentName @processScope -WarningAction SilentlyContinue
         } catch {
             # Provide an additional, custom, credentials-related error message.
             Write-VstsTaskError -Message $_.Exception.Message

@@ -211,13 +211,14 @@ function Get-VstsFederatedToken {
             $decriptedVstsToken = ConvertFrom-SecureString -SecureString $vstsAccessToken -AsPlainText
         }
         $federatedCredential = New-Object Microsoft.VisualStudio.Services.OAuth.VssOAuthAccessTokenCredential($decriptedVstsToken)
+        $uri = Get-VstsTaskVariable -Name 'System.CollectionUri' -Require
         $vssCredentials = New-Object Microsoft.VisualStudio.Services.Common.VssCredentials(
             (New-Object Microsoft.VisualStudio.Services.Common.WindowsCredential($false)), # Do not use default credentials.
             $federatedCredential,
             [Microsoft.VisualStudio.Services.Common.CredentialPromptType]::DoNotPrompt)
         $taskHttpClient = Get-VstsVssHttpClient -OMDirectory $OMDirectory `
             -TypeName Microsoft.TeamFoundation.DistributedTask.WebApi.TaskHttpClient `
-            -VssCredentials $vssCredentials
+            -VssCredentials $vssCredentials -Uri $uri
     }
     finally {
         Write-Verbose "Removing assemlby resolver."
