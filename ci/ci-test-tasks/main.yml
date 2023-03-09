@@ -29,7 +29,6 @@ stages:
   jobs:
     - ${{ each task in split(parameters.tasks, ',') }}:
       - job: ${{ task }}_build_task
-        dependsOn: ${{ task }}_verify_testing_pipeline
         displayName: Build Task (${{ task }})
         pool:
           vmImage: windows-2022
@@ -48,7 +47,6 @@ stages:
     - ${{ each task in split(parameters.tasks, ',') }}:
       - job: ${{ task }}_upload_task
         displayName: Upload (${{ task }})
-        dependsOn: ${{ task }}_build_task
         pool:
           vmImage: windows-2022
         steps:
@@ -62,7 +60,6 @@ stages:
     - ${{ each task in split(parameters.tasks, ',') }}:
       - job: ${{ task }}_test_task
         displayName: Test (${{ task }})
-        dependsOn: ${{ task }}_upload_task
         pool:
           vmImage: windows-2022
         steps:
@@ -77,7 +74,6 @@ stages:
       - job: ${{ task }}_clean_up
         condition: in(dependencies.${{ task }}_upload_task.result, 'Succeeded', 'SucceededWithIssues', 'Failed')
         displayName: Clean up (${{ task }})
-        dependsOn: ${{ task }}_test_task
         pool:
           vmImage: windows-2022
         steps:
