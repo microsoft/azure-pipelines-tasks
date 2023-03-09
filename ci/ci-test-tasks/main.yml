@@ -84,7 +84,6 @@ stages:
   jobs:
     - ${{ each task in split(parameters.tasks, ',') }}:    
       - job: ${{ task }}_clean_up
-        condition: in(dependencies.${{ task }}_upload_task.result, 'Succeeded', 'SucceededWithIssues', 'Failed')
         displayName: Clean up (${{ task }})
         pool:
           vmImage: windows-2022
