@@ -5,6 +5,8 @@
   "loc.instanceNameFormat": "パイプライン成果物を公開します",
   "loc.input.label.artifactName": "この成果物の名前",
   "loc.input.help.artifactName": "この成果物の名前。",
+  "loc.input.label.customProperties": "カスタム プロパティ",
+  "loc.input.help.customProperties": "成果物に関連付けるカスタム プロパティを入力します。プレフィックス 'user-' を持つすべてのキーに有効な JSON 文字列が必要です",
   "loc.input.label.targetPath": "公開するためのパス",
   "loc.input.help.targetPath": "公開するフォルダーまたはファイルのパスです。これは、完全修飾パスまたはリポジトリのルートからの相対パスです。ワイルドカードはサポートされていません。[変数](https://go.microsoft.com/fwlink/?LinkID=550988) はサポートされています。"
 }
