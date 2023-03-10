@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 219,
-    "Patch": 3
+    "Patch": 2
   },
   "groups": [
     {
@@ -304,5 +304,9 @@
       "name": "BuildNumber",
       "description": "Stores the build number of the build artifact source.\u003Cbr /\u003EPlease note that in fact it returns \u003Cb\u003EBuildId\u003C/b\u003E due to backward compatibility \u003Cp\u003E[More Information](https://docs.microsoft.com/azure/devops/pipelines/build/variables?view=azure-devops\u0026tabs=yaml#build-variables-devops-services)\u003C/p\u003E"
     }
-  ]
+  ],
+  "_buildConfigMapping": {
+    "Node16": "0.219.2",
+    "Default": "0.219.3"
+  }
 }

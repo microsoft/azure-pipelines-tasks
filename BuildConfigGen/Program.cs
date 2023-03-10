@@ -12,16 +12,78 @@ using System.Text.RegularExpressions;
 class Program
 {
 
-    static void Main()
+    /// <param name="task">The task to generate build configs for</param>
+    static void Main(string task = "")
     {
-        string taskTarget = @"C:\repos\azure-pipelines-tasks\Tasks\DownloadBuildArtifactsV0";
-        string taskOutput = @"C:\repos\azure-pipelines-tasks\_generated\DownloadBuildArtifactsV0";
-        string taskOutputNode16 = @"C:\repos\azure-pipelines-tasks\_generated\DownloadBuildArtifactsV0_Node16";
+        if(string.IsNullOrEmpty(task))
+        {
+            throw new Exception("task expected!");
+        }
+
+        string currentDir = Environment.CurrentDirectory;
+
+        string gitRootPath = GetGitRootPath(currentDir);
+
+
+        //string task = "DownloadBuildArtifactsV0";
+
+        string taskTarget = Path.Combine(gitRootPath, @$"Tasks\{task}");
+        if(!Directory.Exists(taskTarget))
+        {
+            throw new Exception($"expected {taskTarget} to exist!");
+        }
+
+        string taskOutput = Path.Combine(gitRootPath, @$"_generated\{task}");
+        string taskOutputNode16 = Path.Combine(gitRootPath, @$"_generated\{task}_Node16");
 
         CopyConfigs(taskTarget, taskOutput);
         CopyConfigs(taskTarget, taskOutputNode16);
 
-        UpdateVersions(taskTarget, taskOutput, taskOutputNode16);
+        UpdateVersions(gitRootPath, task, taskTarget, taskOutput, taskOutputNode16);
+    }
+
+    private static string GetGitRootPath(string currentDir)
+    {
+        const string args = "rev-parse --git-dir";
+        string path = RunGitCommandScalar(currentDir, args);
+
+        path = FixupPath(path);
+
+        const string gitDir = ".git";
+        if (path.EndsWith(gitDir))
+        {
+            path = path.Substring(0, path.Length - gitDir.Length);
+
+            if (path == "")
+            {
+                return currentDir;
+            }
+
+            return path;
+        }
+        else
+        {
+            throw new Exception($"expected git {args} to return  ");
+        }
+    }
+
+    private static string RunGitCommandScalar(string currentDir, string args)
+    {
+        string[] output;
+        int exitCode;
+        if (0 != (exitCode = RunCommandWithExitCode("git", args, currentDir, out output)))
+        {
+            throw new Exception($"non-zero from git {exitCode}");
+        }
+
+        if (output.Length > 0)
+        {
+            return output[0];
+        }
+        else
+        {
+            throw new Exception($"no output from {args}");
+        }
     }
 
     private static void CopyConfigs(string taskTarget, string taskOutput)
@@ -54,9 +116,9 @@ class Program
         }
     }
 
-    private static void UpdateVersions(string taskTarget, string taskOutput, string taskOutputNode16)
+    private static void UpdateVersions(string gitRootPath, string task, string taskTarget, string taskOutput, string taskOutputNode16)
     {
-        const string versionMapFile = @"C:\repos\azure-pipelines-tasks\_Generated\DownloadBuildArtifactsV0.versionmap.txt";
+        string versionMapFile = Path.Combine(gitRootPath,@$"_Generated\{task}.versionmap.txt");
         Dictionary<string, TaskVersion> versionMap;
         TaskVersion? maxVersion;
         ReadVersionMap(versionMapFile, out versionMap, out maxVersion);
@@ -115,7 +177,6 @@ class Program
         outputTaskNode["version"]!["Patch"] = defaultPatchVersion.Patch;
         outputNod16PackagePath["dependencies"]!["@types/node"] = "^16.11.39";
 
-
         inputTaskNode["version"]!["Patch"] = defaultPatchVersion.Patch;
         outputTaskNode["version"]!["Patch"] = defaultPatchVersion.Patch;
         outputNode16TaskNode["version"]!["Patch"] = node16PatchVersion.Patch;
@@ -139,7 +200,7 @@ class Program
 
         using (var fs = File.Open(versionMapFile, FileMode.Create))
         {
-            using(var sw = new StreamWriter(fs))
+            using (var sw = new StreamWriter(fs))
             {
                 sw.WriteLine(string.Concat("Default|", defaultPatchVersion));
                 sw.WriteLine(string.Concat("Node16|", node16PatchVersion));
@@ -254,8 +315,12 @@ class Program
     private static IEnumerable<string> GetNonIgnoredFileListFromPath(string taskTarget)
     {
         var output = GitLsFiles(taskTarget).Select(FixupPath);
-        var untrackedOuput2 = GetUntrackedFiles(taskTarget).Select(FixupPath);
+        IEnumerable<string> untrackedOuput2;
+        IEnumerable<string> untrackedToRemove;
+        GetUntrackedFiles(taskTarget, out untrackedOuput2, out untrackedToRemove);
         var paths = output.Union(untrackedOuput2);
+        paths = paths.Except(untrackedToRemove);
+
         return paths;
     }
 
@@ -269,11 +334,13 @@ class Program
         return s;
     }
 
-    private static IEnumerable<string> GetUntrackedFiles(string taskTarget)
+    private static void GetUntrackedFiles(string taskTarget, out IEnumerable<string> toAdd, out IEnumerable<string> toRemove)
     {
-        if(!Directory.Exists(taskTarget))
+        if (!Directory.Exists(taskTarget))
         {
-            return new string[0];
+            toAdd =  new string[0];
+            toRemove = new string[0];
+            return;
         }
 
         // get directory prefix
@@ -296,7 +363,7 @@ class Program
 
         string[] untrackedOutput;
         int exitCode2;
-        const string gitaddDryRun = "add * --dry-run";
+        const string gitaddDryRun = "add . --dry-run";
         if ((exitCode2 = RunCommandWithExitCode("git", gitaddDryRun, taskTarget, out untrackedOutput)) == 0)
         {
 
@@ -306,24 +373,47 @@ class Program
             throw new Exception("non-zero exit code");
         }
         List<string> untrackedOuput2 = new();
+        List<string> untrackedOuputRemove = new();
         const string fileNameGroup = "fileNameGroup";
-
-        const string addPattern = $@"^add '(?<{fileNameGroup}>.*)'$";
+        const string action = "action";
+        const string addPattern = $@"^(?<{action}>add|remove) '(?<{fileNameGroup}>.*)'$";
         Regex re = new Regex(addPattern, RegexOptions.Singleline);
         foreach (var o in untrackedOutput)
         {
             Match? m = null;
             if (null != (m = re.Match(o)))
             {
-                string path = m.Groups[fileNameGroup].Value;
-                if (!path.StartsWith(revParsePrefix))
+                if (m.Success)
                 {
-                    throw new Exception($"expected {path} to start with ${revParsePrefix}");
+                    List<string> target;
+
+                    if (m.Groups[action].Value == "remove")
+                    {
+                        target = untrackedOuputRemove;
+                    }
+                    else
+                    {
+                        if (m.Groups[action].Value != "add")
+                        {
+                            throw new Exception($"expected add or remove in {o}");
+                        }
+                        target = untrackedOuput2;
+                    }
+
+                    string path = m.Groups[fileNameGroup].Value;
+                    if (!path.StartsWith(revParsePrefix))
+                    {
+                        throw new Exception($"expected {path} to start with ${revParsePrefix}");
+                    }
+
+                    path = path.Remove(0, revParsePrefix.Length);
+
+                    target.Add(FixupPath(path));
                 }
-
-                path = path.Remove(0, revParsePrefix.Length);
-
-                untrackedOuput2.Add(path);
+                else
+                {
+                    throw new Exception($"'{o}' did not match expected output");
+                }
             }
             else
             {
@@ -331,14 +421,15 @@ class Program
             }
         }
 
-        return untrackedOuput2;
+        toAdd = untrackedOuput2;
+        toRemove = untrackedOuputRemove;
     }
 
     private static IEnumerable<string> GitLsFiles(string taskTarget)
     {
-        if(!Directory.Exists(taskTarget))
+        if (!Directory.Exists(taskTarget))
         {
-            return new string[0]; 
+            return new string[0];
         }
 
         int exitCode;
