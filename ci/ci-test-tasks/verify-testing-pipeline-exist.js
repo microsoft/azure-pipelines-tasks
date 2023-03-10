@@ -31,7 +31,7 @@ function fetchPipelines() {
   return axios.get(`${apiUrl}?${apiVersion}`, { auth })
   .then(res => res.data.value)
   .catch(err => {
-    err.stack = 'Error fetching pipelines. ' + err.stack;
+    err.stack = 'Error fetching pipelines: ' + err.stack;
     throw err;
   });
 }

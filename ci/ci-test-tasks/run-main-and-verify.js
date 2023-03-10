@@ -75,7 +75,7 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
       }
     
       clearInterval(interval);
-      err.stack = 'Error verifying build status. ' + err.stack;
+      err.stack = 'Error verifying build status: ' + err.stack;
       reject(err); 
     })
   }, intervalDelayMs)

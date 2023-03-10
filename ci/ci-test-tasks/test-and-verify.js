@@ -51,7 +51,7 @@ function runTestPipeline(pipeline) {
   return axios.post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, {}, { auth })
   .then(res => res.data)
   .catch(err => {
-    err.stack = `Error running ${pipeline.name} pipeline, pipelineId: ${pipeline.id}` + err.stack;
+    err.stack = `Error running ${pipeline.name} pipeline, pipelineId ${pipeline.id}: ` + err.stack;
     throw err;
   })
 }
@@ -92,7 +92,7 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
       }
     
       clearInterval(interval);
-      err.stack = 'Error verifying build status. ' + err.stack;
+      err.stack = 'Error verifying build status: ' + err.stack;
       reject(err); 
     })
   }, intervalDelayMs)
