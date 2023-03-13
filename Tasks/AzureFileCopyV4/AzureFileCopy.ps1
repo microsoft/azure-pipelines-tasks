@@ -67,14 +67,13 @@ $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 . "$PSScriptRoot\Utility.ps1"
 CleanUp-PSModulePathForHostedAgent
 
-$vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
-$vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
-
 if (Get-Module Az.Accounts -ListAvailable) {
+    $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+    $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
     Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $vstsAccessToken
 }
 else {
-    Initialize-AzureRMModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $encryptedToken
+    Initialize-AzureRMModule -Endpoint $endpoint
 }
 
 # Import the loc strings.

@@ -21,23 +21,20 @@ try{
     $NewServiceCustomCertificates = Get-VstsInput -Name NewServiceCustomCertificates
 
     $EnableAdvancedStorageOptions = Get-VstsInput -Name EnableAdvancedStorageOptions -AsBool
+    $ARMConnectedServiceName = Get-VstsInput -Name ARMConnectedServiceName -Require
     $ARMStorageAccount = Get-VstsInput -Name ARMStorageAccount
 
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+    Initialize-Azure
 
+    $endpoint = null
     # Initialize Azure RM connection if required
     if ($EnableAdvancedStorageOptions)
     {
-        $ARMConnectedServiceName = Get-VstsInput -Name ARMConnectedServiceName -Require
         $endpoint = Get-VstsEndpoint -Name $ARMConnectedServiceName -Require
-        $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
-        $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
-        $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
-        Initialize-AzureRMModule -Endpoint $endpoint -connectedServiceNameARM $ARMConnectedServiceName -vstsAccessToken $encryptedToken
+        Initialize-AzureRMModule -Endpoint $endpoint
     }
-
-    Initialize-Azure
 
     # Load all dependent files for execution
     . $PSScriptRoot/Utility.ps1

@@ -182,23 +182,6 @@ function Initialize-AzureRMSubscription {
         }
 
         Set-CurrentAzureRMSubscriptionV2 -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
-    } elseif ($Endpoint.Auth.Scheme -eq 'WorkloadIdentityFederation') {
-        $processScope = @{ Scope = "Process" }
-        $clientAssertionJwt = Get-VstsFederatedToken -serviceConnectionId $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
-        try {
-            Write-Host "##[command]Add-AzureRmAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -FederatedToken ****** -EnvironmentName $environmentName @processScope"
-            $null = Add-AzureRmAccount -ServicePrincipal `
-                -Tenant $Endpoint.Auth.Parameters.TenantId `
-                -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId `
-                -FederatedToken $clientAssertionJwt `
-                -EnvironmentName $environmentName @processScope -WarningAction SilentlyContinue
-        } catch {
-            # Provide an additional, custom, credentials-related error message.
-            Write-VstsTaskError -Message $_.Exception.Message
-            throw (New-Object System.Exception((Get-VstsLocString -Key AZ_FederatedTokenFailure), $_.Exception))
-        }
-
-        Set-CurrentAzureRMSubscriptionV2 -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
     } else {
         throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
     }

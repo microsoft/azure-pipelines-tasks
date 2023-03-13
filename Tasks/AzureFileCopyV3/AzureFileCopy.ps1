@@ -64,15 +64,15 @@ Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 
 $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
-$vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
-$vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
 if (Get-Module Az.Accounts -ListAvailable) {
+    $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+    $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
     Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $vstsAccessToken
 }
 else {
     Update-PSModulePathForHostedAgentWithLatestModule -Endpoint $endpoint
-    Initialize-AzureRMModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $encryptedToken
+    Initialize-AzureRMModule -Endpoint $endpoint
 }
 
 # Import the loc strings.
