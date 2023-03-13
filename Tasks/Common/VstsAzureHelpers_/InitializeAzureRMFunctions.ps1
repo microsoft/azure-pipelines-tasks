@@ -5,19 +5,17 @@ function Initialize-AzureRMModule {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)]
-        $Endpoint,
-        [Parameter(Mandatory=$true)]
-        [string] $connectedServiceNameARM,
-        [Parameter(Mandatory=$false)]
-        [Security.SecureString]$vstsAccessToken)
+        $Endpoint)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
-        Initialize-AzureRMSubscription -Endpoint $Endpoint -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
-        if (!(Import-AzureRMModule)) {
+        if (!(Import-AzureRMModule))
+        {
             throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList "Any version", "AzureRM")
         }
+
+        Initialize-AzureRMSubscription -Endpoint $Endpoint
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
@@ -74,11 +72,7 @@ function Initialize-AzureRMSubscription {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)]
-        $Endpoint,
-        [Parameter(Mandatory=$true)]
-        [string] $connectedServiceNameARM,
-        [Parameter(Mandatory=$false)]
-        [Security.SecureString]$vstsAccessToken)
+        $Endpoint)
 
     #Set UserAgent for Azure Calls
     Set-UserAgent
@@ -118,9 +112,9 @@ function Initialize-AzureRMSubscription {
         }
 
         try {
-            if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {                    
+            if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {
                 if (CmdletHasMember -cmdlet "Add-AzureRMAccount" -memberName "EnvironmentName") {
-                        
+
                     if ($Endpoint.Auth.Parameters.AuthenticationType -eq "SPNCertificate") {
                         Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -EnvironmentName $environmentName"
                         $null = Add-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -EnvironmentName $environmentName
@@ -151,23 +145,23 @@ function Initialize-AzureRMSubscription {
                     $null = Connect-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
                 }
             }
-        } 
+        }
         catch {
             # Provide an additional, custom, credentials-related error message.
             Write-VstsTaskError -Message $_.Exception.Message
             Assert-TlsError -exception $_.Exception
             throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ServicePrincipalError), $_.Exception))
         }
-            
+
         if($scopeLevel -eq "Subscription")
         {
             Set-CurrentAzureRMSubscriptionV2 -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
         }
 
     } elseif ($Endpoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
-        $accountId = $env:BUILD_BUILDID 
+        $accountId = $env:BUILD_BUILDID
         if($env:RELEASE_RELEASEID){
-            $accountId = $env:RELEASE_RELEASEID 
+            $accountId = $env:RELEASE_RELEASEID
         }
         $date = Get-Date -Format o
         $accountId = -join($accountId, "-", $date)
@@ -182,7 +176,7 @@ function Initialize-AzureRMSubscription {
         }
 
         Set-CurrentAzureRMSubscriptionV2 -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
-    } else {
+    }else {
         throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
     }
 }
