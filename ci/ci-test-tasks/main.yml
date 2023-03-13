@@ -80,7 +80,8 @@ stages:
             task: ${{ task }}
             BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
-- stage: CleanUp
+- stage: PostDelete
+  condition: succeededOrFailed('Upload')
   jobs:
     - ${{ each task in split(parameters.tasks, ',') }}:    
       - job: ${{ task }}_clean_up
