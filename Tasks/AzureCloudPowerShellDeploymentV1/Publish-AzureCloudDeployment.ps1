@@ -21,14 +21,13 @@ try{
     $NewServiceCustomCertificates = Get-VstsInput -Name NewServiceCustomCertificates
 
     $EnableAdvancedStorageOptions = Get-VstsInput -Name EnableAdvancedStorageOptions -AsBool
-    $ARMConnectedServiceName = Get-VstsInput -Name ARMConnectedServiceName -Require
+    $ARMConnectedServiceName = Get-VstsInput -Name ARMConnectedServiceName
     $ARMStorageAccount = Get-VstsInput -Name ARMStorageAccount
 
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     Initialize-Azure
 
-    $endpoint = null
     # Initialize Azure RM connection if required
     if ($EnableAdvancedStorageOptions)
     {
