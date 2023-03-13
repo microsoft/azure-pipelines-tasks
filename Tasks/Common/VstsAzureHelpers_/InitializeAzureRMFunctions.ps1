@@ -76,7 +76,7 @@ function Initialize-AzureRMSubscription {
 
     #Set UserAgent for Azure Calls
     Set-UserAgent
-
+    
     # Clear context
     if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal' -and (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue")) {
         Write-Host "##[command]Clear-AzureRmContext -Scope Process"
@@ -93,15 +93,19 @@ function Initialize-AzureRMSubscription {
             Add-AzureStackAzureRmEnvironment -endpoint $Endpoint -name "AzureStack"
         }
     }
-
+    
     $scopeLevel = "Subscription"
-
-    If (($Endpoint.PSObject.Properties['Data']) -and ($Endpoint.Data.PSObject.Properties['scopeLevel'])) {
-        $scopeLevel = $Endpoint.Data.scopeLevel
+    
+    If ($Endpoint.PSObject.Properties['Data'])
+    {
+        If ($Endpoint.Data.PSObject.Properties['scopeLevel'])
+        {
+            $scopeLevel = $Endpoint.Data.scopeLevel
+        }
     }
 
     if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal') {
-
+        
         if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
             $servicePrincipalCertificate = Add-Certificate -Endpoint $Endpoint -ServicePrincipal
         }
@@ -112,9 +116,9 @@ function Initialize-AzureRMSubscription {
         }
 
         try {
-            if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {
+            if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {                    
                 if (CmdletHasMember -cmdlet "Add-AzureRMAccount" -memberName "EnvironmentName") {
-
+                        
                     if ($Endpoint.Auth.Parameters.AuthenticationType -eq "SPNCertificate") {
                         Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -EnvironmentName $environmentName"
                         $null = Add-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -EnvironmentName $environmentName
@@ -145,23 +149,23 @@ function Initialize-AzureRMSubscription {
                     $null = Connect-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
                 }
             }
-        }
+        } 
         catch {
             # Provide an additional, custom, credentials-related error message.
             Write-VstsTaskError -Message $_.Exception.Message
             Assert-TlsError -exception $_.Exception
             throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ServicePrincipalError), $_.Exception))
         }
-
+            
         if($scopeLevel -eq "Subscription")
         {
             Set-CurrentAzureRMSubscriptionV2 -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
         }
 
     } elseif ($Endpoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
-        $accountId = $env:BUILD_BUILDID
+        $accountId = $env:BUILD_BUILDID 
         if($env:RELEASE_RELEASEID){
-            $accountId = $env:RELEASE_RELEASEID
+            $accountId = $env:RELEASE_RELEASEID 
         }
         $date = Get-Date -Format o
         $accountId = -join($accountId, "-", $date)
@@ -174,11 +178,11 @@ function Initialize-AzureRMSubscription {
             Write-VstsTaskError -Message $_.Exception.Message
             throw (New-Object System.Exception((Get-VstsLocString -Key AZ_MsiFailure), $_.Exception))
         }
-
+        
         Set-CurrentAzureRMSubscriptionV2 -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
     }else {
         throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
-    }
+    } 
 }
 
 function Set-CurrentAzureRMSubscriptionV2 {
