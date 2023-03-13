@@ -60,7 +60,7 @@
   "loc.input.label.entrypointOverride": "入口点重写",
   "loc.input.help.entrypointOverride": "替代 Docker 容器的默认入口点。",
   "loc.input.label.containerCommand": "容器命令",
-  "loc.input.help.containerCommand": "docker 运行命令首先在指定的映像上创建一个可写容器层，然后使用指定的运行命令启动它。例如，如果映像包含一个简单的 Python Flask Web 应用程序，则可以指定 \"python app.py\" 来启动 Web 应用程序。",
+  "loc.input.help.containerCommand": "docker 运行命令首先在指定的映像上创建一个可写容器层，然后使用指定的运行命令启动它。例如，如果映像包含一个简单的 Python Flask Web 应用程序，则可以指定“python app.py”来启动 Web 应用程序。",
   "loc.input.label.runInBackground": "后台运行",
   "loc.input.help.runInBackground": "在后台运行 Docker 容器。",
   "loc.input.label.restartPolicy": "重启策略",
