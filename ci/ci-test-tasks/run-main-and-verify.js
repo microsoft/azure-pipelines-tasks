@@ -41,12 +41,16 @@ async function start(tasks) {
 }
 
 function runMainPipeline(id, tasks) {
-  return axios.post(`${apiUrl}/${id}/runs?${apiVersion}`, {"templateParameters": {tasks, BuildSourceVersion: BUILD_SOURCEVERSION}}, { auth })
-  .then(res => res.data)
-  .catch(err => {
-    err.stack = 'Error running main pipeline: ' + err.stack;
-    throw err;
-  })
+  if (tasks) {
+    return axios.post(`${apiUrl}/${id}/runs?${apiVersion}`, {"templateParameters": {tasks, BuildSourceVersion: BUILD_SOURCEVERSION}}, { auth })
+    .then(res => res.data)
+    .catch(err => {
+      err.stack = 'Error running main pipeline: ' + err.stack;
+      throw err;
+    })
+  } else {
+    console.log('Skip testing since no related testing pipelines were found')
+  }
 }
 
 async function verifyBuildStatus(pipelineBuild, resolve, reject) {
