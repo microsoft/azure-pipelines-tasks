@@ -35,22 +35,20 @@ async function start(tasks) {
   }
 
   const tasksToTest = tasks.filter(task => existingPipelineNames.has(task));
-  const pipelineBuild = await runMainPipeline(mainPipelineId, tasksToTest.join(','));
+  if (tasksToTest.length) {
+    const pipelineBuild = await runMainPipeline(mainPipelineId, tasksToTest.join(','));
 
-  return new Promise((resolve, reject) => verifyBuildStatus(pipelineBuild, resolve, reject));  
+    return new Promise((resolve, reject) => verifyBuildStatus(pipelineBuild, resolve, reject));  
+  }
 }
 
 function runMainPipeline(id, tasks) {
-  if (tasks) {
-    return axios.post(`${apiUrl}/${id}/runs?${apiVersion}`, {"templateParameters": {tasks, BuildSourceVersion: BUILD_SOURCEVERSION}}, { auth })
-    .then(res => res.data)
-    .catch(err => {
-      err.stack = 'Error running main pipeline: ' + err.stack;
-      throw err;
-    })
-  } else {
-    console.log('Skip testing since no related testing pipelines were found')
-  }
+  return axios.post(`${apiUrl}/${id}/runs?${apiVersion}`, {"templateParameters": {tasks, BuildSourceVersion: BUILD_SOURCEVERSION}}, { auth })
+  .then(res => res.data)
+  .catch(err => {
+    err.stack = 'Error running main pipeline: ' + err.stack;
+    throw err;
+  })
 }
 
 async function verifyBuildStatus(pipelineBuild, resolve, reject) {
