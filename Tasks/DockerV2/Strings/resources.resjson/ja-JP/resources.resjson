@@ -34,6 +34,7 @@
   "loc.messages.ContainerDockerFileNotFound": "%s に一致する Dockerfile は見つかりませんでした。",
   "loc.messages.CantWriteDataToFile": "ファイル %s にデータを書き込めません。エラー: %s",
   "loc.messages.CouldNotFindDockerConfig": "Docker 構成が見つかりませんでした。DOCKER_CONFIG 変数が設定されていないか、構成ファイルが一時ディレクトリ外にあるか、ファイルが存在しません。DOCKER_CONFIG: %s",
+  "loc.messages.MSIFetchError": "マネージド サービス プリンシパルのアクセス トークンをフェッチできませんでした。仮想マシンのマネージド サービス ID (MSI) を構成してください 'https://aka.ms/azure-msi-docs'。状態コード: %s、ステータス メッセージ: %s",
   "loc.messages.DockerHostVariableWarning": "DOCKER_HOST 変数が設定されています。Docker デーモンが %s で実行されていることをご確認ください",
   "loc.messages.DeletingDockerConfigDirectory": "Docker 構成ディレクトリを削除しています。パス: %s",
   "loc.messages.DeletingAuthDataFromDockerConfig": "Docker 構成ファイルからレジストリの認証データを削除しています。レジストリ: %s、新しい Docker 構成: %s",
