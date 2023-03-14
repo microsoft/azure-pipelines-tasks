@@ -35,9 +35,11 @@ async function start(tasks) {
   }
 
   const tasksToTest = tasks.filter(task => existingPipelineNames.has(task));
-  const pipelineBuild = await runMainPipeline(mainPipelineId, tasksToTest.join(','));
+  if (tasksToTest.length) {
+    const pipelineBuild = await runMainPipeline(mainPipelineId, tasksToTest.join(','));
 
-  return new Promise((resolve, reject) => verifyBuildStatus(pipelineBuild, resolve, reject));  
+    return new Promise((resolve, reject) => verifyBuildStatus(pipelineBuild, resolve, reject));  
+  }
 }
 
 function runMainPipeline(id, tasks) {
