@@ -16,7 +16,7 @@ const { BUILD_SOURCEVERSION } = process.env;
 const maxRetries = 10;
 
 if (tasks) {
-  return start(tasks)
+  return start(tasks.split(','))
   .then(resultMessage => console.log(resultMessage))
   .catch(err => {
     console.error(err);
@@ -26,7 +26,17 @@ if (tasks) {
 }
 
 async function start(tasks) {
-  const pipelineBuild = await runMainPipeline(mainPipelineId, tasks);
+  const existingPipelines = await fetchPipelines();
+  const existingPipelineNames = new Set(existingPipelines.map(pipeline => pipeline.name));
+  const missingTestPipelines = tasks.filter(task => !existingPipelineNames.has(task));
+
+  if (missingTestPipelines.length) {
+    reportMissingTestPipelines(missingTestPipelines)
+  }
+
+  const tasksToTest = tasks.filter(task => existingPipelineNames.has(task));
+  const pipelineBuild = await runMainPipeline(mainPipelineId, tasksToTest.join(','));
+
   return new Promise((resolve, reject) => verifyBuildStatus(pipelineBuild, resolve, reject));  
 }
 
@@ -81,6 +91,17 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
   }, intervalDelayMs)
 }
 
+function fetchPipelines() {
+  return axios.get(`${apiUrl}?${apiVersion}`, { auth })
+  .then(res => res.data.value)
+  .catch(err => {
+    console.error('Error fetching pipelines', err);
+  });
+}
+
+function reportMissingTestPipelines(missingTestPipelines) {
+  missingTestPipelines.forEach(name => console.log(`${name} pipeline is missing! Please make sure to create a corresponding test pipeline for the task ${name}`))
+}
 
 process.on('uncaughtException', err => {
   console.error(err.stack);
