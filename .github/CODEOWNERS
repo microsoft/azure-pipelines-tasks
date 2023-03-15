@@ -85,7 +85,7 @@ Tasks/AzureRmWebAppDeploymentV4/   @vsebesta   @rvairavelu   @pipeline-environme
 
 Tasks/AzureSpringCloudV0    @yevster
 
-Tasks/AzureStaticWebAppV0/  @miwebst    @brhopcra
+Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @mkarmark @joslinmicrosoft
 
 Tasks/AzureWebAppV1/  @vsebesta @rvairavelu @pipeline-environment-team
 
@@ -302,6 +302,8 @@ Tasks/MavenV4/     @microsoft/akvelon-build-task-team
 Tasks/MSBuildV1/   @microsoft/akvelon-build-task-team
 
 Tasks/MysqlDeploymentOnMachineGroupV1/     @vsebesta   @rvairavelu   @pipeline-environment-team
+
+Tasks/NodeTaskRunnerInstallerV0/    @microsoft/akvelon-build-task-team
 
 Tasks/NodeToolV0/ @microsoft/akvelon-build-task-team
 

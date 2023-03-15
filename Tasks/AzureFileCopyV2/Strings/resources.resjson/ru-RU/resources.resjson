@@ -27,7 +27,7 @@
   "loc.input.label.EnvironmentNameRM": "Группа ресурсов",
   "loc.input.help.EnvironmentNameRM": "Название целевой группы ресурсов, в которую копируются файлы.",
   "loc.input.label.ResourceFilteringMethod": "Выбор компьютеров по",
-  "loc.input.help.ResourceFilteringMethod": "Можно также выбрать подмножество виртуальных машин в группе ресурсов, указав имя узла виртуальных машин или теги. [Теги](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) поддерживаются для только ресурсов, созданных в диспетчере Azure Resource Manager.",
+  "loc.input.help.ResourceFilteringMethod": "Можно также выбрать подмножество виртуальных машин в группе ресурсов, указав имя узла виртуальных машин или теги. [Теги](https://learn.microsoft.com/en-us/azure/virtual-machines/tag-template/) поддерживаются только для ресурсов, созданных в Azure Resource Manager.",
   "loc.input.label.MachineNames": "Условия фильтра",
   "loc.input.help.MachineNames": "Укажите список имен узлов виртуальных машин (например, ffweb, ffdb) или тегов (например, Role:DB, Web; OS:Win8.1). Для тегов используются следующие разделители: &#44; (запятая), &#58; (двоеточие) и &#59; (точка с запятой). Если указывается несколько тегов, задача будет обрабатывать все виртуальные машины с указанными тегами. По умолчанию задача запускается на всех виртуальных машинах.",
   "loc.input.label.vmsAdminUserName": "Имя для входа администратора",
