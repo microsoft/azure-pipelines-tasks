@@ -9,7 +9,7 @@
     "author": "Lawrence Gripper",
     "version": {
         "Major": 0,
-        "Minor": 208,
+        "Minor": 218,
         "Patch": 1
     },
     "runsOn": [
@@ -19,7 +19,7 @@
     "demands": [
         "Cmd"
     ],
-    "minimumAgentVersion": "2.115.0",
+    "minimumAgentVersion": "2.144.0",
     "deprecated": true,
     "groups": [
         {
@@ -125,7 +125,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "nugetpublisher.js",
             "argumentFormat": ""
         }

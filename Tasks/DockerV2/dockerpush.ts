@@ -2,13 +2,13 @@
 
 import * as tl from "azure-pipelines-task-lib/task";
 import * as fs from 'fs';
-import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
-import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
+import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
+import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common/dockercommandutils";
 import * as utils from "./utils";
-import { findDockerFile } from "azure-pipelines-tasks-docker-common-v2/fileutils";
+import { findDockerFile } from "azure-pipelines-tasks-docker-common/fileutils";
 import { WebRequest, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
-import { getBaseImageName, getResourceName, getBaseImageNameFromDockerFile } from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
-import * as pipelineUtils from "azure-pipelines-tasks-docker-common-v2/pipelineutils";
+import { getBaseImageName, getResourceName, getBaseImageNameFromDockerFile } from "azure-pipelines-tasks-docker-common/containerimageutils";
+import * as pipelineUtils from "azure-pipelines-tasks-docker-common/pipelineutils";
 
 import Q = require('q');
 

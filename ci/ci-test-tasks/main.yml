@@ -1,0 +1,83 @@
+parameters:
+- name: tasks
+  displayName: Tasks to process (separate by colons, no whitespaces)
+  type: string
+  default: DownloadPackageV1
+- name: BuildSourceVersion
+  displayName: The latest version control change of the triggering repo that is included in this build.
+  type: string
+
+trigger: none
+pr: none
+
+stages:
+- stage: Build
+  condition: eq(variables['build.reason'], 'Manual')
+  jobs:
+    - ${{ each task in split(parameters.tasks, ',') }}:
+      - job: ${{ task }}_build_task
+        displayName: Build Task (${{ task }})
+        pool:
+          vmImage: windows-2022
+        steps:
+        - template: ./build-task.yml
+          parameters:
+            task: ${{ task }}
+            push: false
+            publishArtifact: true
+            patchVersion: true
+            version: '0.999.0'
+            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+
+- stage: PreDelete
+  jobs:
+    - ${{ each task in split(parameters.tasks, ',') }}:    
+      - job: ${{ task }}_pre_delete
+        displayName: PreDelete (${{ task }})
+        pool:
+          vmImage: windows-2022
+        steps:
+        - template: ./delete-task.yml
+          parameters:
+            task: ${{ task }}
+            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+
+- stage: Upload
+  jobs:
+    - ${{ each task in split(parameters.tasks, ',') }}:
+      - job: ${{ task }}_upload_task
+        displayName: Upload (${{ task }})
+        pool:
+          vmImage: windows-2022
+        steps:
+        - template: ./upload-task.yml
+          parameters:
+            task: ${{ task }}
+            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+
+- stage: Test
+  jobs:
+    - ${{ each task in split(parameters.tasks, ',') }}:
+      - job: ${{ task }}_test_task
+        displayName: Test (${{ task }})
+        pool:
+          vmImage: windows-2022
+        steps:
+        - template: ./test-task.yml
+          parameters:
+            task: ${{ task }}
+            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+
+- stage: PostDelete
+  condition: succeededOrFailed('Upload')
+  jobs:
+    - ${{ each task in split(parameters.tasks, ',') }}:    
+      - job: ${{ task }}_post_delete
+        displayName: PostDelete (${{ task }})
+        pool:
+          vmImage: windows-2022
+        steps:
+        - template: ./delete-task.yml
+          parameters:
+            task: ${{ task }}
+            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}

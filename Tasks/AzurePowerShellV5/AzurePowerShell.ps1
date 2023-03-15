@@ -12,6 +12,7 @@ $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
 $input_pwsh = Get-VstsInput -Name pwsh -AsBool
 $input_workingDirectory = Get-VstsInput -Name workingDirectory -Require
+$validateScriptSignature = Get-VstsInput -Name validateScriptSignature -AsBool
 
 # Validate the script path and args do not contains new-lines. Otherwise, it will
 # break invoking the script via Invoke-Expression.
@@ -47,6 +48,30 @@ if ($targetAzurePs -eq $latestVersion) {
 }
 
 . $PSScriptRoot\TryMakingModuleAvailable.ps1 -targetVersion "$targetAzurePs" -platform Windows
+
+if ($validateScriptSignature) {
+    try {
+        if ($scriptType -ne "InlineScript") {
+            Write-Host "## Validating Script Signature"
+
+            # Validate script is signed
+            $scriptSignature = Get-AuthenticodeSignature $scriptPath
+            if ($scriptSignature.Status -eq "NotSigned") {
+                throw "Object does not have a digital signature. Please ensure your script is signed and try again."
+            }
+            elseif ($scriptSignature.Status -ne "Valid") {
+                throw "Digital signature of the object did not verify. Please ensure your script is properly signed and try again."
+            }
+
+            Write-Host "## Validating Script Signature Complete" 
+        }
+    }
+    catch 
+    {
+        $errorMsg = $_.Exception.Message
+        throw "Unable to validate script signature: $errorMsg"
+    }
+}
 
 . "$PSScriptRoot\Utility.ps1"
 
