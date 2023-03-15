@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "NuGet 驗證",
   "loc.helpMarkDown": "[深入了解此工作](https://aka.ms/NuGetAuthenticateTask)",
-  "loc.description": "設定用來向 Azure Artifacts 及其他 NuGet 存放庫進行驗證的 NuGet 工具。需要 NuGet >= 4.8.5385、dotnet >= 2.1.400 或 MSBuild >= 15.8.166.59604",
+  "loc.description": "此版本的工作已過時，請改用 NuGetAuthenticateV1。設定 NuGet 工具以向 Azure Artifacts 及其他 NuGet 存放庫進行驗證。需要 NuGet >= 4.8.5385、dotnet >= 2.1.400 或 MSBuild >= 15.8.166.59604。",
   "loc.instanceNameFormat": "NuGet 驗證",
   "loc.input.label.nuGetServiceConnections": "此組織外部摘要的服務連線認證",
   "loc.input.help.nuGetServiceConnections": "此組織/集合外部摘要的 NuGet 服務連線名稱逗點分隔清單。如需此組織/集合中的摘要，請將此項保留空白; 系統會自動使用組建的認證。",
