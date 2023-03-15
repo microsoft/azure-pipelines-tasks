@@ -12,6 +12,7 @@ const auth = {
   password: AUTH_TOKEN
 };
 const intervalDelayMs = 15000;
+const maxRetries = 10;
 
 if (task) {
   return start(task)
@@ -29,7 +30,7 @@ async function start(taskName) {
 
   if (pipeline) {
     const pipelineBuild = await runTestPipeline(pipeline);
-    return verifyTestRunResults(pipelineBuild);  
+    return new Promise((resolve, reject) => verifyBuildStatus(pipelineBuild, resolve, reject));  
   } else {
     console.log(`Cannot build and run tests for task ${taskName} - corresponding test pipeline was not found`);
   }
@@ -39,7 +40,7 @@ function fetchPipelines() {
   return axios.get(`${apiUrl}?${apiVersion}`, { auth })
   .then(res => res.data.value)
   .catch(err => {
-    console.error('Error fetching pipelines', err);
+    err.stack = 'Error fetching pipelines: ' + err.stack;
     throw err;
   });
 }
@@ -50,43 +51,53 @@ function runTestPipeline(pipeline) {
   return axios.post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, {}, { auth })
   .then(res => res.data)
   .catch(err => {
-    console.error(`Error running ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`, err)
+    err.stack = `Error running ${pipeline.name} pipeline, pipelineId ${pipeline.id}: ` + err.stack;
     throw err;
   })
 }
 
-function verifyTestRunResults(pipelineBuild) {
-  return new Promise((resolve, reject) => {
-    const interval = setInterval(() => {
-      verifyBuildStatus(pipelineBuild, interval, resolve, reject);
-    }, intervalDelayMs)
-  
-    console.log(`Check status for build ${pipelineBuild.name}, id: ${pipelineBuild.id}, url: ${pipelineBuild._links.web.href}`);
-  })
-}
+async function verifyBuildStatus(pipelineBuild, resolve, reject) {
+  console.log(`Verify build ${pipelineBuild.name} status, url: ${pipelineBuild._links.web.href}`);
 
-async function verifyBuildStatus(pipelineBuild, timeout, resolve, reject) {
-  const data = await axios.get(pipelineBuild.url, { auth })
-    .then(res => res.data)
-    .catch(err => {
-      clearTimeout(timeout);
-      console.error('Error verifying build status', err);
-      reject(err);
+  let retryCount = 0;
+
+  const interval = setInterval(() => {
+    axios.get(pipelineBuild.url, { auth })
+    .then(({data}) => {
+      console.log(`Verify build status... ${data.state}`);
+  
+      if (data.state !== 'completed') {
+        return;
+      }
+    
+      clearInterval(interval);
+    
+      const result = `Build ${pipelineBuild.name} id:${pipelineBuild.id} finished with status "${data.result}" and result "${data.result}", url: ${pipelineBuild._links.web.href}`;
+    
+      if (data.result === 'succeeded') {
+        resolve(result);
+      } else {
+        reject(result);
+      }
     })
-  
-  console.log(`Verify build status... ${data.state}`);
-  
-  if (data.state !== 'completed') {
-    return;
-  }
-
-  clearTimeout(timeout);
-
-  const result = `Build ${pipelineBuild.name} id:${pipelineBuild.id} finished with status "${data.result}" and result "${data.result}", url: ${pipelineBuild._links.web.href}`;
-
-  if (data.result === 'succeeded') {
-    resolve(result);
-  } else {
-    reject(result);
-  }
+    .catch(err => {
+      if (err.response && err.response.status >= 500) {
+        if (retryCount < maxRetries) {
+          retryCount++;
+          console.log(`Server error ${err.message} - retry request. Retry count: ${retryCount}`);
+          return;
+        } else {
+          console.error('Server error, maximum retries reached. Cancel retries', err.message);
+        }
+      }
+    
+      clearInterval(interval);
+      err.stack = 'Error verifying build status: ' + err.stack;
+      reject(err); 
+    })
+  }, intervalDelayMs)
 }
+
+process.on('uncaughtException', err => {
+  console.error(err.stack);
+});
