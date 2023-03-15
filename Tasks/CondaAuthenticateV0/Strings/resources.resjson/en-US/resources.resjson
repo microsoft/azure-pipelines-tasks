@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Conda authenticate (for task runners)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Authentication task for the conda client",
+  "loc.instanceNameFormat": "conda Authenticate $(configFile)",
+  "loc.input.label.configFile": ".condarc file to authenticate",
+  "loc.input.help.configFile": "Path to the .condarc file with the PAT for the channels you want to authenticate",
+  "loc.messages.FailedToAddAuthentication": "Failed to add authentication.",
+  "loc.messages.CondarcNotCondarc": "The file you selected to authenticate (%s) is not a valid .condarc file.",
+  "loc.messages.ConfigCondarcDoesNotExist": "The .condarc file you selected at %s does not currently exist.",
+  "loc.messages.CondarcMissingChannels": "The .condarc file you selected must contain channels",
+  "loc.messages.AuthenticatingThisConfigCondarc": "Adding authentication for channels listed in this .condarc file at %s",
+  "loc.messages.AddingAuthChannel": "Adding auth for channel: %s with token name: %s"
+}

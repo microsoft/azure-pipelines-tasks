@@ -1,0 +1,49 @@
+{
+ "id": "543c39b2-11e9-4de8-8b9b-94eea1339891",
+ "name": "CondaAuthenticate",
+ "friendlyName": "Conda authenticate (for task runners)",
+ "description": "Authentication task for the conda client",
+ "helpUrl": "",
+ "helpMarkDown": "",
+ "category": "Package",
+ "author": "Microsoft Corporation",
+ "version": {
+     "Major": 0,
+     "Minor": 1,
+     "Patch": 0
+ },
+ "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+ ],
+ "minimumAgentVersion": "2.144.0",
+ "instanceNameFormat": "conda Authenticate $(configFile)",
+ "inputs": [
+     {
+         "name": "configFile",
+         "type": "filePath",
+         "label": ".condarc file to authenticate",
+         "required": true,
+         "helpMarkDown": "Path to the .condarc file with the PAT for the channels you want to authenticate"
+     }
+ ],
+ "execution": {
+    "Node10": {
+        "target": "condaauthenticatemain.js"
+    }
+  },
+  "messages": {
+    "FailedToAddAuthentication": "Failed to add authentication.",
+    "CondarcNotCondarc": "The file you selected to authenticate (%s) is not a valid .condarc file.",
+    "ConfigCondarcDoesNotExist": "The .condarc file you selected at %s does not currently exist.",
+    "CondarcMissingChannels": "The .condarc file you selected must contain channels",
+    "AuthenticatingThisConfigCondarc": "Adding authentication for channels listed in this .condarc file at %s",
+    "AddingAuthChannel": "Adding auth for channel: %s with token name: %s",
+    "InvalidCondarcFormat":  "Invalid format for %s property",
+    "EnvironmentVariableInUse":  "The environment variable for the alias %s is already in use and may be overwritten",
+    "DuplicateChannel": "The channel %s was listed multiple times",
+    "UseDefaultChannelsProperty": "Use the default_channels property to define custom default channels",
+    "DuplicateCustomName": "The custom channel or multichannel name %s was used multiple times",
+    "CircularMultichannel": "The custom multichannel %s has a circular reference"
+  }
+}
