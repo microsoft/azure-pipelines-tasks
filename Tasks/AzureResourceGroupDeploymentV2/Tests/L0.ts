@@ -9,7 +9,7 @@ function setResponseFile(name) {
 }
 
 describe('Azure Resource Group Deployment', function () {
-    this.timeout(90000);
+    this.timeout(30000);
     before((done) => {
         done();
     });
