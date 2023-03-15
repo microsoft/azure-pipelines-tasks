@@ -38,6 +38,12 @@
     "ConfigCondarcDoesNotExist": "ms-resource:loc.messages.ConfigCondarcDoesNotExist",
     "CondarcMissingChannels": "ms-resource:loc.messages.CondarcMissingChannels",
     "AuthenticatingThisConfigCondarc": "ms-resource:loc.messages.AuthenticatingThisConfigCondarc",
-    "AddingAuthChannel": "ms-resource:loc.messages.AddingAuthChannel"
+    "AddingAuthChannel": "ms-resource:loc.messages.AddingAuthChannel",
+    "InvalidCondarcFormat":  "Invalid format for %s property",
+    "EnvironmentVariableInUse":  "The environment variable for the alias %s is already in use and may be overwritten",
+    "DuplicateChannel": "The channel %s was listed multiple times",
+    "UseDefaultChannelsProperty": "Use the default_channels property to define custom default channels",
+    "DuplicateCustomName": "The custom channel or multichannel name %s was used multiple times",
+    "CircularMultichannel": "The custom multichannel %s has a circular reference"
   }
 }
