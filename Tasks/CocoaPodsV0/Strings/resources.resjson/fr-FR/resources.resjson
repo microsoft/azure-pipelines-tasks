@@ -12,5 +12,6 @@
   "loc.input.help.projectDirectory": "Vous pouvez éventuellement spécifier le chemin de la racine du répertoire du projet. Si rien n'est indiqué, le projet spécifié dans le fichier Podfile est utilisé. Si aucun projet n'est spécifié, la recherche d'un projet Xcode est effectuée. Si plusieurs projets Xcode sont trouvés, une erreur se produit.",
   "loc.messages.PodReturnCode": "Sortie de la commande 'pod' avec le code de retour : %d",
   "loc.messages.PodFailed": "Échec de la commande 'pod' avec l'erreur : %s",
-  "loc.messages.CocoaPodsNotFound": "La commande 'pod' est introuvable. Installez CocoaPods sur la machine agent (https://cocoapods.org/)."
+  "loc.messages.CocoaPodsNotFound": "La commande 'pod' est introuvable. Installez CocoaPods sur la machine agent (https://cocoapods.org/).",
+  "loc.messages.ProxyConfig": "Configuration du proxy détectée. Utilisation de l’hôte proxy : %s"
 }
