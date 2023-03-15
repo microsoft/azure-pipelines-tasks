@@ -351,9 +351,9 @@ tr.registerMock('../src/utils', {
     getHelmPathForACR: util.getHelmPathForACR
 });
 
-import * as webUtil from 'utility-common-v2/restutilities';
+import * as webUtil from 'azure-pipelines-tasks-utility-common/restutilities';
 import { command } from 'azure-pipelines-task-lib';
-tr.registerMock('utility-common-v2/restutilities', {
+tr.registerMock('azure-pipelines-tasks-utility-common/restutilities', {
     WebRequest: webUtil.WebRequest,
     WebResponse: webUtil.WebResponse,
     sendRequest: async function (request: webUtil.WebRequest) {

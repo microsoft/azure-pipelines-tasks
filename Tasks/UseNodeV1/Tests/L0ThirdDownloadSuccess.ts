@@ -45,7 +45,7 @@ tmr.registerMock('azure-pipelines-tool-lib/tool', {
         let version: string;
         for (let i = versions.length - 1; i >= 0; i--) {
             let potential: string = versions[i];
-            let satisfied: boolean = potential === 'v0.12.18';
+            let satisfied: boolean = potential === '0.12.18';
             if (satisfied) {
                 version = potential;
                 break;

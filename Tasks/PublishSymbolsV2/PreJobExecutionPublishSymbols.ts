@@ -1,5 +1,5 @@
 const path = require('path');
-const clientToolUtils = require('azure-pipelines-tasks-packaging-common-v3/universal/ClientToolUtilities');
+const clientToolUtils = require('azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities');
 const tl = require('azure-pipelines-task-lib');
 
 const toolName = "symbol";

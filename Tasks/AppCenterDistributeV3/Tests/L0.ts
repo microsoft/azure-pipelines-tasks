@@ -5,7 +5,7 @@
 import * as fs from 'fs'
 import * as path from 'path';
 import * as assert from 'assert';
-import * as ttm from 'vsts-task-lib/mock-test';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import { utilsUnitTests } from './L0UtilsUnitTests';
 import { spawnSync } from 'child_process';
 
@@ -26,7 +26,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         fs.writeFileSync(appxPath, "fileContent");
         fs.writeFileSync(zipPath, "fileContent");
         //Enable this for output
-        //process.env['TASK_TEST_TRACE'] = 1;
+        //process.env['TASK_TEST_TRACE'] = '1';
 
         //clean env variables
         delete process.env['BUILD_BUILDID'];

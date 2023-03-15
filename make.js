@@ -146,6 +146,8 @@ CLI.build = function() {
         }
     });
 
+    const removeNodeModules = taskList.length > 1;
+
     taskList.forEach(function(taskName) {
         banner('Building: ' + taskName);
         var taskPath = path.join(tasksPath, taskName);
@@ -294,6 +296,22 @@ CLI.build = function() {
         console.log();
         console.log('> copying task resources');
         copyTaskResources(taskMake, taskPath, outDir);
+
+        if (removeNodeModules) {
+            const taskNodeModulesPath = path.join(taskPath, 'node_modules');
+
+            if (fs.existsSync(taskNodeModulesPath)) {
+                console.log('\n> removing node modules');
+                rm('-Rf', taskNodeModulesPath);
+            }
+
+            const taskTestsNodeModulesPath = path.join(taskPath, 'Tests', 'node_modules');
+
+            if (fs.existsSync(taskTestsNodeModulesPath)) {
+                console.log('\n> removing task tests node modules');
+                rm('-Rf', taskTestsNodeModulesPath);
+            }
+        }
     });
 
     banner('Build successful', true);
@@ -323,7 +341,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
     function runTaskTests(taskName) {
         banner('Testing: ' + taskName);
         // find the tests
-        var nodeVersion = argv.node || getTaskNodeVersion(buildTasksPath, taskName) + "";
+        var nodeVersions = argv.node ? [argv.node] : getTaskNodeVersion(buildTasksPath, taskName);
         var pattern1 = path.join(buildTasksPath, taskName, 'Tests', suiteType + '.js');
         var pattern2 = path.join(buildTasksPath, 'Common', taskName, 'Tests', suiteType + '.js');
 
@@ -341,10 +359,20 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
             return;
         }
 
-        // setup the version of node to run the tests
-        util.installNode(nodeVersion);
+        nodeVersions.forEach(function (nodeVersion) {
+            try {
 
-        run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+                nodeVersion = String(nodeVersion);
+                banner('Run Mocha Suits for node ' + nodeVersion);
+                // setup the version of node to run the tests
+                util.installNode(nodeVersion);
+        
+                run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+            }  catch (e) {
+                console.error(e);
+                process.exit(1);
+            }
+        });
     }
 
     if (argv.task) {

@@ -1,9 +1,15 @@
 ﻿# Private module-scope variables.
 $script:jsonContentType = "application/json;charset=utf-8"
 $script:formContentType = "application/x-www-form-urlencoded;charset=utf-8"
-$script:defaultAuthUri = "https://login.microsoftonline.com/"
-$script:defaultEnvironmentAuthUri = "https://login.windows.net/"
 $script:certificateAccessToken = $null
+
+$script:defaultEnvironmentMSALAuthUri = "https://login.microsoftonline.com/"
+
+# @DEPRACATED "Use 'script:defaultEnvironmentMSALAuthUri' instead. This property will be removed."
+$script:defaultEnvironmentADALAuthUri = "https://login.windows.net/"
+
+# MsalInstance
+$script:msalClientInstance = $null
 
 # Connection Types
 $certificateConnection = 'Certificate'
@@ -11,7 +17,10 @@ $usernameConnection = 'UserNamePassword'
 $spnConnection = 'ServicePrincipal'
 $MsiConnection = 'ManagedServiceIdentity'
 
-# Well-Known ClientId
+<#
+    @DEPRECATED - DO NOT USE Well-Known ClientId
+    This flow isn't recommended - https://learn.microsoft.com/en-us/azure/active-directory/develop/scenario-desktop-acquire-token-username-password?tabs=dotnet
+#>
 $azurePsClientId = "1950a258-227b-4e31-a9cf-717495945fc2"
 
 # API-Version(s)
@@ -32,6 +41,15 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
 
 Import-Module $PSScriptRoot/../TlsHelper_
 Add-Tls12InSession
+
+function Print-MSALObsoleteMessage {
+    [CmdletBinding()]
+    param()
+    process {
+        $callerName = (Get-PSCallStack)[1].Command
+        Write-Host "INFO: The command '$callerName' is obsolete. We are updating the tasks to use 'Get-AccessTokenMSAL' instead. No action needed on end users."
+    }
+}
 
 function Get-AzureUri {
     param([object] [Parameter(Mandatory = $true)] $endpoint)
@@ -98,16 +116,20 @@ function Get-ConnectionType {
     Write-Verbose "Connection type used is $connectionType"
     return $connectionType
 }
-
-# Get the Bearer Access Token from the Endpoint
+<#
+    @DEPRECATED - Get the Bearer Access Token from the Endpoint - 
+    This flow isn't recommended - https://learn.microsoft.com/en-us/azure/active-directory/develop/scenario-desktop-acquire-token-username-password?tabs=dotnet
+#>
 function Get-UsernamePasswordAccessToken {
     [CmdletBinding()]
     param([Parameter(Mandatory = $true)] $endpoint)
 
+    Print-MSALObsoleteMessage
+
     # Well known Client-Id
     $password = $endpoint.Auth.Parameters.Password
     $username = $endpoint.Auth.Parameters.UserName
-    $authUrl = $script:defaultAuthUri
+    $authUrl = $script:defaultEnvironmentADALAuthUri
     if ($endpoint.Data.activeDirectoryAuthority) {
         $authUrl = $endpoint.Data.activeDirectoryAuthority
     }
@@ -135,20 +157,29 @@ function Get-UsernamePasswordAccessToken {
 
 function Get-EnvironmentAuthUrl {
     [CmdletBinding()]
-    param([Parameter(Mandatory = $true)] $endpoint)
+    param(
+        [Parameter(Mandatory = $true)] $endpoint,
+        [Parameter(Mandatory = $false)] $useMSAL = $false
+    )
 
-    if ($endpoint.Data.environmentAuthorityUrl) {
-        $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
-    }
-    else {
+    $envAuthUrl = if ($useMSAL) { $endpoint.Data.activeDirectoryAuthority } else { $endpoint.Data.environmentAuthorityUrl }
+
+    if ([string]::IsNullOrEmpty($envAuthUrl)) {
         if (($endpoint.Data.Environment) -and ($endpoint.Data.Environment -eq $azureStack)) {
+            Write-Verbose "MSAL - Get-EnvironmentAuthUrl - azureStack is used"
             $endpoint = Add-AzureStackDependencyData -Endpoint $endpoint
             $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
         } 
         else {
-            $envAuthUrl = $script:defaultEnvironmentAuthUri
+            Write-Verbose "MSAL - Get-EnvironmentAuthUrl - fallback is used"
+            # fallback
+            $envAuthUrl = if ($useMSAL) { $script:defaultEnvironmentMSALAuthUri } else { $script:defaultEnvironmentADALAuthUri }
         }
     }
+
+    Write-Verbose "MSAL - Get-EnvironmentAuthUrl - endpoint=$endpoint"
+    Write-Verbose "MSAL - Get-EnvironmentAuthUrl - useMSAL=$useMSAL"
+    Write-Verbose "MSAL - Get-EnvironmentAuthUrl - envAuthUrl=$envAuthUrl"
 
     return $envAuthUrl
 }
@@ -258,33 +289,156 @@ function Has-ObjectProperty {
     }
 }
 
+# Get access token - Main Point
 function Get-AzureRMAccessToken {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)] $endpoint,
-        [parameter(Mandatory = $false)] $overrideResourceType = $null
-    ) 
+        [parameter(Mandatory = $false)] $overrideResourceType = $null,
+        [parameter(Mandatory = $false)] $useMSAL = $false
+    )
 
-    if ($endpoint.Auth.Scheme -eq $MsiConnection ) {
-        Get-MsiAccessToken -endpoint $endpoint -retryCount 0 -timeToWait 0 -overrideResourceType $overrideResourceType
+    $accessToken = @{
+        token_type = $null
+        access_token = $null
+        expires_on = $null
     }
+
+    Write-Verbose "Get-AzureRMAccessToken - started - endpoint=$endpoint - scheme=$($endpoint.Auth.Scheme)"
+    $rawOverrideUseMSAL = Get-VstsTaskVariable -Name 'USE_MSAL'
+    try {
+        if($rawOverrideUseMSAL) {
+            Write-Verbose "MSAL - USE_MSAL override is found: $rawOverrideUseMSAL"
+            $useMSAL = [bool]::Parse($rawOverrideUseMSAL)
+        }
+    }
+    catch {
+        # this is not a blocker error, so we're informing
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "MSAL - USE_MSAL couldn't be parsed due to error $exceptionMessage. useMSAL=$useMSAL is used instead"
+    }
+
+    Write-Verbose "MSAL - useMSAL = $useMSAL"
+
+    # ManagedIdentity - access token
+    if ($endpoint.Auth.Scheme -eq $MsiConnection ) {
+        Write-Verbose "MSAL - ManagedIdentity is used"
+        $accessToken = Get-MsiAccessToken -endpoint $endpoint -retryCount 0 -timeToWait 0 -overrideResourceType $overrideResourceType
+    }
+    # MSAL - access token
+    elseif ($useMSAL) {
+        $result = Get-AccessTokenMSAL -endpoint $endpoint -overrideResourceType $overrideResourceType
+
+        $accessToken.token_type = $result.TokenType
+        $accessToken.access_token = $result.AccessToken
+        $accessToken.expires_on = $result.ExpiresOn.ToUnixTimeSeconds()
+    }
+    # ADAL - access token - @DEPRECATED - will be removed
     else {
         if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
-            Get-SpnAccessTokenUsingCertificate -endpoint $endpoint -overrideResourceType $overrideResourceType
+            $accessToken = Get-SpnAccessTokenUsingCertificate -endpoint $endpoint -overrideResourceType $overrideResourceType
         }
         else {
-            Get-SpnAccessToken -endpoint $endpoint -overrideResourceType $overrideResourceType
+            $accessToken = Get-SpnAccessToken -endpoint $endpoint -overrideResourceType $overrideResourceType
         }
-    }   
+    }
+
+    return $accessToken;
 }
 
-# Get the Bearer Access Token from the Endpoint
+function Build-MSALInstance {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)] $endpoint
+    )
+
+    $clientId = $endpoint.Auth.Parameters.ServicePrincipalId
+    $tenantId = $endpoint.Auth.Parameters.TenantId
+    $envAuthUrl = Get-EnvironmentAuthUrl -endpoint $endpoint -useMSAL $true
+
+    try {
+        # load the MSAL library
+        Add-Type -Path "$PSScriptRoot\msal\Microsoft.Identity.Client.dll"
+
+        $clientBuilder = [Microsoft.Identity.Client.ConfidentialClientApplicationBuilder]::Create($clientId)
+
+        if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
+            Write-Verbose "MSAL - ServicePrincipal - certificate is used.";
+
+            $pemFileContent = $endpoint.Auth.Parameters.ServicePrincipalCertificate
+            $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
+            $clientCertificate = Get-PfxCertificate -pfxFilePath $pfxFilePath -pfxFilePassword $pfxFilePassword
+            $msalClientInstance = $clientBuilder.WithTenantId($tenantId).WithCertificate($clientCertificate).Build()
+        } else {
+            Write-Verbose "MSAL - ServicePrincipal - clientSecret is used.";
+
+            $clientSecret = $endpoint.Auth.Parameters.ServicePrincipalKey
+            $msalClientInstance = $clientBuilder.WithTenantId($tenantId).WithClientSecret($clientSecret).Build()
+        }
+
+        return $msalClientInstance
+    }
+    catch {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Build-MSALInstance)"
+        throw (Get-VstsLocString -Key AZ_SpnAccessTokenFetchFailure -ArgumentList $tenantId)
+    }
+}
+
+function Get-MSALInstance {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)] $endpoint
+    )
+
+    # build MSAL if instance does not exist
+    if ($script:msalClientInstance -eq $null) {
+        $script:msalClientInstance = Build-MSALInstance $endpoint
+    }
+    
+    return $script:msalClientInstance
+}
+
+# Get the Bearer Access Token - MSAL
+function Get-AccessTokenMSAL {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)] $endpoint,
+        [parameter(Mandatory = $false)] $overrideResourceType
+    )
+
+    Get-MSALInstance $endpoint
+
+    # prepare MSAL scopes
+    [string] $azureActiveDirectoryResourceId = if ($overrideResourceType) { $overrideResourceType } else { (Get-AzureActiverDirectoryResourceId -endpoint $endpoint) }
+    $azureActiveDirectoryResourceId = $azureActiveDirectoryResourceId + "/.default"
+    $scopes = [Collections.Generic.List[string]]@($azureActiveDirectoryResourceId)
+    
+    try {
+        Write-Verbose "Fetching Access Token - MSAL"
+        $tokenResult = $script:msalClientInstance.AcquireTokenForClient($scopes).ExecuteAsync().GetAwaiter().GetResult()
+        return $tokenResult
+    }
+    catch {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        $parsedException = Parse-Exception($_.Exception)
+        if ($parsedException) {
+            $exceptionMessage = $parsedException
+        }
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AccessTokenMSAL)"
+        throw (Get-VstsLocString -Key AZ_SpnAccessTokenFetchFailure -ArgumentList $endpoint.Auth.Parameters.TenantId)
+    }
+}
+
+# @DEPRECATED
 function Get-SpnAccessToken {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)] $endpoint,
         [parameter(Mandatory = $false)] $overrideResourceType
     )
+
+    Print-MSALObsoleteMessage
 
     $principalId = $endpoint.Auth.Parameters.ServicePrincipalId
     $tenantId = $endpoint.Auth.Parameters.TenantId
@@ -326,7 +480,7 @@ function Get-SpnAccessToken {
     }
 }
 
-# Get the Bearer Access Token from the Endpoint
+# Get the Bearer Access Token from the Endpoint for Managed Identity
 function Get-MsiAccessToken {
     [CmdletBinding()]
     param(
@@ -392,11 +546,14 @@ function Get-MsiAccessToken {
     }
 }
 
+# @DEPRECATED
 function Get-SpnAccessTokenUsingCertificate {
     param(
         [Parameter(Mandatory = $true)] $endpoint,
         [Parameter(Mandatory = $false)] $overrideResourceType
     )
+
+    Print-MSALObsoleteMessage
 
     if ($script:certificateAccessToken -and $script:certificateAccessToken.expires_on) {
         # there exists a token cache
@@ -422,7 +579,7 @@ function Get-SpnAccessTokenUsingCertificate {
 
     $servicePrincipalId = $endpoint.Auth.Parameters.ServicePrincipalId
     $tenantId = $endpoint.Auth.Parameters.TenantId
-    $envAuthUrl = $script:defaultEnvironmentAuthUri
+    $envAuthUrl = $script:defaultEnvironmentADALAuthUri
     if ($endpoint.Data.environmentAuthorityUrl) {
         $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
     }
@@ -766,6 +923,7 @@ function Get-AzureSqlDatabaseServerResourceId {
     throw (Get-VstsLocString -Key AZ_NoValidResourceIdFound -ArgumentList $serverName, $serverType, $subscriptionId)
 }
 
+# @DEPRECATED - there is no usage, this method might be removed.
 function Add-LegacyAzureSqlServerFirewall {
     [CmdletBinding()]
     param([Object] [Parameter(Mandatory = $true)] $endpoint,
@@ -827,6 +985,7 @@ function Add-AzureRmSqlServerFirewall {
     Invoke-RestMethod -Uri $uri -Method PUT -Headers $headers -Body $body -ContentType $script:jsonContentType
 }
 
+# @DEPRECATED - there is no usage, this method might be removed.
 function Remove-LegacyAzureSqlServerFirewall {
     [CmdletBinding()]
     param([Object] [Parameter(Mandatory = $true)] $endpoint,

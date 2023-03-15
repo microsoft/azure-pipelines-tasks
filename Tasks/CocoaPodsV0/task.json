@@ -17,7 +17,7 @@
     "minimumAgentVersion": "2.182.1",
     "version": {
         "Major": 0,
-        "Minor": 207,
+        "Minor": 212,
         "Patch": 0
     },
     "groups": [
@@ -61,6 +61,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "cocoapods.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "cocoapods.js",
             "argumentFormat": ""
         }

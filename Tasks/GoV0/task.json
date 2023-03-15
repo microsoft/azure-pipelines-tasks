@@ -13,7 +13,7 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 198,
+        "Minor": 216,
         "Patch": 0
     },
     "runsOn": [
@@ -73,7 +73,10 @@
     "execution": {
         "Node10": {
             "target": "main.js"
-        }
+        },
+        "Node16": {
+            "target": "main.js"
+          }
     },
     "messages": {
         "TaskFailedWithError": "The Go task failed with an error: %s"

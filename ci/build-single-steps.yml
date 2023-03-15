@@ -1,3 +1,9 @@
+parameters:
+- name: task
+  type: string
+- name: push
+  type: boolean
+
 steps:
 
 # Clean
@@ -7,71 +13,107 @@ steps:
 # Start collect diagnostics
 - powershell: ./ci/start-collect-diagnostics.ps1
   displayName: Start collect diagnostics
-  condition: and(succeeded(), eq(variables.os, 'Windows_NT'), eq(variables.collect_diagnostics, 'true'))
 
 # Use node 8, npm 5
 - task: NodeTool@0
   displayName: Use node 8
   inputs:
-    versionSpec: "8.x"
+    versionSpec: 8.x
 
 # npm install
 - script: npm install
   displayName: npm install
 
-# Verify min agent version demands
-- task: Npm@1
-  inputs:
-    command: install
-    workingDir: ci/verifyMinAgentDemands
-  displayName: npm install min agent demands 
+# Verify min agent demands
+- script: |
+    cd ci/verifyMinAgentDemands
+    npm install
+  displayName: npm install min agent demands
 
 - script: node ./ci/verifyMinAgentDemands/index.js
-  displayName: Verify all min agent demands are valid (via npm)
+  displayName: Verify min agent demands
 
 # Build
-- script: node make.js build --task "$(task)"
+- script: node make.js build --task "${{ parameters.task }}"
   displayName: Build
 
-# Stage hotfix
-- script: node ./ci/stage-hotfix.js individually
-  condition: and(succeeded(), eq(variables.os, 'Windows_NT'))
-  displayName: Stage tasks individually into the package directory
-
-# Sign task zip as nuget packages
-- template: sign-all-tasks.yml
-  parameters:
-    layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
-
-# Stage hotfix
-- script: node ./ci/stage-hotfix.js
-  condition: and(succeeded(), eq(variables.os, 'Windows_NT'))
-  displayName: Stage all the tasks into a single zip for upload
-
-# Publish hotfix artifact
-- task: PublishBuildArtifacts@1
-  displayName: Publish hotfix artifact
-  condition: and(succeeded(), eq(variables.os, 'Windows_NT'))
-  inputs:
-    pathToPublish: _package/hotfix-layout
-    artifactName: hotfix
-    publishLocation: container
+# Check diff for task sources
+- script: node ./ci/verify-source-changes.js "${{ parameters.task }}"
+  displayName: Verify task source changes
 
 # Test
-- script: node make.js test
+- script: node make.js test --task "${{ parameters.task }}"
   displayName: Run tests
-- script: node make.js testLegacy --task "$(task)"
+- script: node make.js testLegacy --task "${{ parameters.task }}"
   displayName: Legacy tests with node 6
 
 # Publish test results
 - task: PublishTestResults@2
   displayName: Publish Test Results test-*.xml
   inputs:
-    testResultsFiles: 'test-*.xml'
-    testRunTitle: 'Node 6 Test Results'
-    searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
+    testResultsFiles: test-*.xml
+    testRunTitle: Node 6 Test Results
+    searchFolder: $(System.DefaultWorkingDirectory)/testresults
+
+# Stage tasks individually into the package directory
+- script: node ./ci/stage-package.js ${{ not(parameters.push) }} individually
+  displayName: Stage tasks individually into the package directory
+
+# Sign task zip as nuget package
+- template: sign-all-tasks.yml
+  parameters:
+    layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+
+# Stage all the tasks into a single zip for upload
+- script: node ./ci/stage-package.js ${{ not(parameters.push) }}
+  displayName: Stage all the tasks into a single zip for upload
+
+- ${{ if not(parameters.push) }}:
+
+  # Stage hotfix
+  - script: node ./ci/stage-hotfix.js "${{ parameters.task }}"
+    displayName: Stage hotfix
+
+  # Publish hotfix artifact
+  - task: PublishBuildArtifacts@1
+    displayName: Publish hotfix artifact
+    inputs:
+      pathToPublish: _package/hotfix-layout
+      artifactName: hotfix
+      publishLocation: container
+
+- ${{ if parameters.push }}:
+
+  # Set variables
+  - powershell: .\ci\set-publish-variables.ps1
+    displayName: Set publish variables
+
+  # Moving Package zip file to be consumed by Milestone staging task
+  - powershell: |
+      mkdir $env:SYSTEM_ARTIFACTSDIRECTORY\package
+      Copy-Item $(Build.SourcesDirectory)\_package\tasks.zip -Destination $env:SYSTEM_ARTIFACTSDIRECTORY\package\tasks.zip
+      Write-Host "Copying from '$(Build.SourcesDirectory)\_package\tasks.zip' to '$env:SYSTEM_ARTIFACTSDIRECTORY\package\tasks.zip'"
+    displayName: Move package zip file
+
+  # Stage Milestone task
+  - script: node .\ci\stage-milestone.js
+    displayName: Stage milestone
+
+  # Stage per task NuGet package
+  - script: npm run package
+    displayName: npm run package
+
+  # Authenticate 
+  - task: NuGetAuthenticate@0
+    displayName: Authenticate with nuget
+
+  # Push to feed
+  - script: |
+      cd $(Build.SourcesDirectory)\_package\nuget-packages\$(task)
+      push.cmd
+    displayName: Push Nuget package
 
 # Stop collect diagnostics
 - powershell: ./ci/stop-collect-diagnostics.ps1
   displayName: Stop collect diagnostics
-  condition: and(always(), eq(variables.os, 'Windows_NT'), eq(variables.collect_diagnostics, 'true'))
+  condition: always()

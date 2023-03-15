@@ -1,7 +1,7 @@
 import tl = require('azure-pipelines-task-lib');
 import { AzureRmWebAppDeploymentProvider } from '../azurermwebappdeploymentprovider';
 import { TaskParametersUtility, TaskParameters } from '../taskparameters';
-import { getMockEndpoint } from '../node_modules/azure-pipelines-tasks-azurermdeploycommon-v3/Tests/mock_utils';
+import { getMockEndpoint } from '../node_modules/azure-pipelines-tasks-azurermdeploycommon/Tests/mock_utils';
 import { mockAzureARMPreDeploymentSteps, mockContainerDeploySettings }  from "./mock_utils";
 
 getMockEndpoint();

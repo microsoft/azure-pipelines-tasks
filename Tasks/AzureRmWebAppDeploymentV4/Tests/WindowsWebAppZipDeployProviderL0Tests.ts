@@ -4,7 +4,7 @@ import { WindowsWebAppZipDeployProvider } from '../deploymentProvider/WindowsWeb
 import { IWebAppDeploymentProvider } from '../deploymentProvider/IWebAppDeploymentProvider';
 import { TaskParametersUtility, TaskParameters, DeploymentType } from '../operations/TaskParameters';
 import { stringify } from 'querystring';
-import { PackageType } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
+import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { getMockEndpoint } from '../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/mock_utils';
 import { mockAzureARMPreDeploymentSteps, mockZipDeploySettings }  from "./mock_utils";
 
@@ -26,7 +26,7 @@ export class WindowsWebAppZipDeployProviderL0Tests  {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             var windowsWebAppZipDeployProvider : WindowsWebAppZipDeployProvider  = new WindowsWebAppZipDeployProvider(taskParameters);
-            await windowsWebAppZipDeployProvider.PreDeploymentStep();
+            await windowsWebAppZipDeployProvider.PreDeploymentStep(false);
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps for zip deploy should succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps for zip deploy failed with error');
@@ -39,7 +39,7 @@ export class WindowsWebAppZipDeployProviderL0Tests  {
             taskParameters.DeployToSlotOrASEFlag = true;
             taskParameters.ResourceGroupName = "MOCK_RESOURCE_GROUP_NAME";
             var windowsWebAppZipDeployProvider : WindowsWebAppZipDeployProvider  = new WindowsWebAppZipDeployProvider(taskParameters);
-            await windowsWebAppZipDeployProvider.PreDeploymentStep();
+            await windowsWebAppZipDeployProvider.PreDeploymentStep(false);
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps for zip deploy with slot enabled should succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps for zip deploy with slot enabled failed with error');
@@ -51,7 +51,7 @@ export class WindowsWebAppZipDeployProviderL0Tests  {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             taskParameters.ScriptType = "Run Script";
             var windowsWebAppZipDeployProvider : WindowsWebAppZipDeployProvider  = new WindowsWebAppZipDeployProvider(taskParameters);
-            await windowsWebAppZipDeployProvider.PreDeploymentStep();
+            await windowsWebAppZipDeployProvider.PreDeploymentStep(false);
             await windowsWebAppZipDeployProvider.UpdateDeploymentStatus(true);
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'UpdateDeploymentStatus for zip deploy steps should succeeded but failed with error');
@@ -64,7 +64,7 @@ export class WindowsWebAppZipDeployProviderL0Tests  {
             taskParameters.Package.getPackageType = () :PackageType => {return PackageType.zip};
             taskParameters.Package.getPath = () :string => { return "webAppPkg.zip" };
             var windowsWebAppZipDeployProvider : WindowsWebAppZipDeployProvider  = new WindowsWebAppZipDeployProvider(taskParameters);
-            await windowsWebAppZipDeployProvider.PreDeploymentStep();
+            await windowsWebAppZipDeployProvider.PreDeploymentStep(false);
             await windowsWebAppZipDeployProvider.DeployWebAppStep();
             tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for zip deploy steps with zip package succeeded');
         } catch(error) {
@@ -78,7 +78,7 @@ export class WindowsWebAppZipDeployProviderL0Tests  {
             taskParameters.Package.getPackageType = () :PackageType => {return PackageType.folder};
             taskParameters.Package.getPath = () :string => { return "webAppPkg" };
             var windowsWebAppZipDeployProvider : WindowsWebAppZipDeployProvider  = new WindowsWebAppZipDeployProvider(taskParameters);
-            await windowsWebAppZipDeployProvider.PreDeploymentStep();
+            await windowsWebAppZipDeployProvider.PreDeploymentStep(false);
             await windowsWebAppZipDeployProvider.DeployWebAppStep();
             tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for zip deploy steps with folder package succeeded');
         } catch(error) {

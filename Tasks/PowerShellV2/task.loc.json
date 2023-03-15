@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 200,
+    "Minor": 212,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -156,6 +156,21 @@
       "groupName": "preferenceVariables"
     },
     {
+      "name": "progressPreference",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.progressPreference",
+      "required": false,
+      "defaultValue": "silentlyContinue",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.progressPreference",
+      "groupName": "preferenceVariables"
+    },
+    {
       "name": "failOnStderr",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.failOnStderr",
@@ -219,6 +234,10 @@
       ]
     },
     "Node10": {
+      "target": "powershell.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "powershell.js",
       "argumentFormat": ""
     }

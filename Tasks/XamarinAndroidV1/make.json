@@ -1,14 +1,9 @@
 {
-    "common": [
-        {
-            "module": "../Common/MSBuildHelpers",
-            "type": "ps"
-        }
-    ],
     "rm": [
         {
             "items": [
-                "node_modules/azure-pipelines-tasks-java-common/node_modules/azure-pipelines-task-lib"
+                "node_modules/azure-pipelines-tasks-java-common/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-msbuildhelpers/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }

@@ -1,6 +1,6 @@
 
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import { basicSetup } from './UnitTests/TestHelpers';
@@ -41,8 +41,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 
 tmr.setAnswers(a);
+const mockedFs = {...fs};
 
-fs.statSync = (s) => {
+mockedFs.statSync = (s) => {
     let stat = new Stats;
     stat.isFile = () => {
         return true;
@@ -51,8 +52,8 @@ fs.statSync = (s) => {
     return stat;
 };
 
-tmr.registerMock('fs', fs);
+tmr.registerMock('fs', mockedFs);
 
 tmr.run();
 
-mockery.deregisterMock('fs', fs);
+mockery.deregisterMock('fs');

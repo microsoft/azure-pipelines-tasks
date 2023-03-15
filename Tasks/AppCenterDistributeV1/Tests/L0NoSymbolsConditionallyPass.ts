@@ -1,6 +1,6 @@
 
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import fs = require('fs');
 import { basicSetup, mockFs } from './TestHelpers';
@@ -51,9 +51,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 tmr.setAnswers(a);
 
-mockFs();
+const mockedFs = {...fs, ...mockFs()};
 
-tmr.registerMock('fs', fs);
+tmr.registerMock('fs', mockedFs);
 
 tmr.run();
-mockery.deregisterMock('fs', fs);
+mockery.deregisterMock('fs');

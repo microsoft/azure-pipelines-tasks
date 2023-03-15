@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 200,
+        "Minor": 211,
         "Patch": 0
     },
     "demands": [
@@ -161,6 +161,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "gulptask.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "gulptask.js",
             "argumentFormat": ""
         }

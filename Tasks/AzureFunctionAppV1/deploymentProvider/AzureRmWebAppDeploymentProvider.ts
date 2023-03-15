@@ -1,14 +1,14 @@
 import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 import { TaskParameters } from '../taskparameters';
-import { KuduServiceUtility } from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/KuduServiceUtility';
-import { AzureAppService } from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/azure-arm-app-service';
-import { Kudu } from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/azure-arm-app-service-kudu';
-import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/AzureAppServiceUtility';
+import { KuduServiceUtility } from '../operations/KuduServiceUtility';
+import { AzureAppService } from '../azure-arm-rest/azure-arm-app-service';
+import { Kudu } from '../azure-arm-rest/azure-arm-app-service-kudu';
+import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 import tl = require('azure-pipelines-task-lib/task');
-import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/ParameterParserUtility'
-import { addReleaseAnnotation } from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/ReleaseAnnotationUtility';
-import { PackageUtility } from 'azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/packageUtility';
-import { AzureDeployPackageArtifactAlias } from 'azure-pipelines-tasks-azurermdeploycommon-v3/Constants';
+import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon/operations/ParameterParserUtility'
+import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
+import { PackageUtility } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
+import { AzureDeployPackageArtifactAlias } from 'azure-pipelines-tasks-azurermdeploycommon/Constants';
 
 export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvider {
     protected taskParams:TaskParameters;
@@ -32,6 +32,8 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
 
         this.kuduService = await this.appServiceUtility.getKuduService();
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
+
+        await this.appServiceUtility.getFuntionAppNetworkingCheck(this.taskParams.isLinuxApp);
     }
 
     public async DeployWebAppStep() {}

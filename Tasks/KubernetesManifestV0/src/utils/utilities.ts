@@ -2,10 +2,10 @@
 
 import * as tl from 'azure-pipelines-task-lib/task';
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
-import * as kubectlutility from 'azure-pipelines-tasks-kubernetes-common-v2/kubectlutility';
-import { Kubectl } from 'azure-pipelines-tasks-kubernetes-common-v2/kubectl-object-model';
-import { pipelineAnnotations } from 'azure-pipelines-tasks-kubernetes-common-v2/kubernetesconstants';
-import { KubernetesConnection } from 'azure-pipelines-tasks-kubernetes-common-v2/kubernetesconnection';
+import * as kubectlutility from 'azure-pipelines-tasks-kubernetes-common/kubectlutility';
+import { Kubectl } from 'azure-pipelines-tasks-kubernetes-common/kubectl-object-model';
+import { pipelineAnnotations } from 'azure-pipelines-tasks-kubernetes-common/kubernetesconstants';
+import { KubernetesConnection } from 'azure-pipelines-tasks-kubernetes-common/kubernetesconnection';
 import * as filehelper from './FileHelper';
 
 export function getManifestFiles(manifestFilePaths: string | string[]): string[] {

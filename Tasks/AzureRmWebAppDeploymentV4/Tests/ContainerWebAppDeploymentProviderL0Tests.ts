@@ -4,7 +4,7 @@ import { ContainerWebAppDeploymentProvider } from '../deploymentProvider/Contain
 import { IWebAppDeploymentProvider } from '../deploymentProvider/IWebAppDeploymentProvider';
 import { TaskParametersUtility, TaskParameters, DeploymentType } from '../operations/TaskParameters';
 import { stringify } from 'querystring';
-import { PackageType } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
+import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { getMockEndpoint } from '../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/mock_utils';
 import { mockAzureARMPreDeploymentSteps, mockContainerDeploySettings }  from "./mock_utils";
 
@@ -25,7 +25,7 @@ export class ContainerWebAppDeploymentProviderL0Tests  {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             var containerWebAppDeploymentProvider : ContainerWebAppDeploymentProvider  = new ContainerWebAppDeploymentProvider(taskParameters);
-            await containerWebAppDeploymentProvider.PreDeploymentStep();
+            await containerWebAppDeploymentProvider.PreDeploymentStep(false);
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps for container web app should succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps for container web app failed with error');
@@ -38,7 +38,7 @@ export class ContainerWebAppDeploymentProviderL0Tests  {
             taskParameters.DeployToSlotOrASEFlag = true;
             taskParameters.ResourceGroupName = "MOCK_RESOURCE_GROUP_NAME";
             var containerWebAppDeploymentProvider : ContainerWebAppDeploymentProvider  = new ContainerWebAppDeploymentProvider(taskParameters);
-            await containerWebAppDeploymentProvider.PreDeploymentStep();
+            await containerWebAppDeploymentProvider.PreDeploymentStep(false);
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps for container web app with slot enabled should succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps for container web app with slot enabled failed with error');
@@ -49,7 +49,7 @@ export class ContainerWebAppDeploymentProviderL0Tests  {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             var containerWebAppDeploymentProvider : ContainerWebAppDeploymentProvider  = new ContainerWebAppDeploymentProvider(taskParameters);
-            await containerWebAppDeploymentProvider.PreDeploymentStep();
+            await containerWebAppDeploymentProvider.PreDeploymentStep(false);
             await containerWebAppDeploymentProvider.UpdateDeploymentStatus(true);
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'UpdateDeploymentStatus for container web app steps should succeeded but failed with error');
@@ -61,7 +61,7 @@ export class ContainerWebAppDeploymentProviderL0Tests  {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             taskParameters.ScriptType = null;
             var containerWebAppDeploymentProvider : ContainerWebAppDeploymentProvider  = new ContainerWebAppDeploymentProvider(taskParameters);
-            await containerWebAppDeploymentProvider.PreDeploymentStep();
+            await containerWebAppDeploymentProvider.PreDeploymentStep(false);
             await containerWebAppDeploymentProvider.DeployWebAppStep();
             tl.setResult(tl.TaskResult.Succeeded, 'Web app Deployment steps for container should succeeded');
         } catch(error) {

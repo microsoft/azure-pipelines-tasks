@@ -2,9 +2,9 @@
 
 import * as tl from "azure-pipelines-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
-import * as sourceUtils from "azure-pipelines-tasks-docker-common-v2/sourceutils";
-import * as imageUtils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
-import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
+import * as sourceUtils from "azure-pipelines-tasks-docker-common/sourceutils";
+import * as imageUtils from "azure-pipelines-tasks-docker-common/containerimageutils";
+import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common/dockercommandutils";
 import * as utils from "./utils";
 
 function dockerPush(connection: DockerComposeConnection, imageName: string, onCommandOut: (output: any) => any) {

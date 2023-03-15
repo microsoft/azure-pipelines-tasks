@@ -8,9 +8,9 @@
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
   },
   "dependencies": {
-    "@types/node": "^10.17.0",
+    "@types/node": "^16.11.39",
     "@types/mocha": "^5.2.7",
-    "azure-pipelines-task-lib": "^3.1.6",
+    "azure-pipelines-task-lib": "^4.0.0-preview",
     "azure-pipelines-tasks-codecoverage-tools": "2.201.0",
     "azure-pipelines-tasks-java-common": "2.198.1",
     "azure-pipelines-tasks-codeanalysis-common": "2.0.3"

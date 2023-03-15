@@ -25,6 +25,8 @@ async function run() {
         let input_informationPreference: string = getActionPreference('informationPreference', 'Default');
         let input_verbosePreference: string = getActionPreference('verbosePreference', 'Default');
         let input_debugPreference: string = getActionPreference('debugPreference', 'Default');
+        let input_progressPreference: string = getActionPreference('progressPreference', 'SilentlyContinue');
+
         let input_showWarnings = tl.getBoolInput('showWarnings', false);
         let input_failOnStderr = tl.getBoolInput('failOnStderr', false);
         let input_ignoreLASTEXITCODE = tl.getBoolInput('ignoreLASTEXITCODE', false);
@@ -67,6 +69,10 @@ async function run() {
         if (input_debugPreference.toUpperCase() != 'DEFAULT') {
             contents.push(`$DebugPreference = '${input_debugPreference}'`);
         }
+        if (input_progressPreference.toUpperCase() != 'DEFAULT') {
+            contents.push(`$ProgressPreference = '${input_progressPreference}'`);
+        }
+
         let script = '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
             script = `. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim();

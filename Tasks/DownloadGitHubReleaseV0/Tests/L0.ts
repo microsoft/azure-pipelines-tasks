@@ -25,7 +25,7 @@ describe('DownloadGitHubReleaseV0 Suite', function () {
           console.log(err);
           done(err);
       };
-  });
+    }).timeout(20000);
 
   it('No user repository specified should fail', (done) => {
     const tp: string = path.join(__dirname, 'L0NoUserRepository.js');

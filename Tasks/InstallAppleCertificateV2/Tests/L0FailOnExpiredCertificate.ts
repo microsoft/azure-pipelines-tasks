@@ -41,7 +41,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/usr/bin/openssl": true
     },
     "exec": {
-        "/usr/bin/openssl pkcs12 -in /build/temp/mySecureFileId.filename -nokeys -passin pass:mycertPwd | /usr/bin/openssl x509 -noout -fingerprint -subject -dates -nameopt utf8,sep_semi_plus_space": {
+        "/usr/bin/openssl pkcs12 -in /build/temp/mySecureFileId.filename -nokeys -passin pass:mycertPwd | /usr/bin/openssl x509 -sha1 -noout -fingerprint -subject -dates -nameopt utf8,sep_semi_plus_space": {
             "code": 0,
             "stdout": `MAC verified OK\nSHA1 Fingerprint=BB:26:83:C6:AA:88:35:DE:36:94:F2:CF:37:0A:D4:60:BB:AE:87:0C\nsubject=UID=ZD34QB2EFN; CN=iPhone Developer: Madhuri Gummalla (HE432Y3E2Q); OU=A9M46DL4GH; O=Madhuri Gummalla; C=US\nnotBefore=Nov 13 03:37:42 2017 GMT\nnotAfter=${toOpensslString(expiredDate)}\n`
         }

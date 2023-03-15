@@ -4,8 +4,8 @@ import * as fs from "fs";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as yaml from "js-yaml";
 import DockerComposeConnection from "./dockercomposeconnection";
-import * as imageUtils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
-import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
+import * as imageUtils from "azure-pipelines-tasks-docker-common/containerimageutils";
+import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common/dockercommandutils";
 import * as utils from "./utils";
 
 async function dockerPull(connection: DockerComposeConnection, imageName: string, imageDigests: any, serviceName: string) : Promise<string> {

@@ -1,8 +1,8 @@
 import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as tr from "azure-pipelines-task-lib/toolrunner";
-import * as FuncKubernetesUtility from 'azure-pipelines-tasks-kubernetes-common-v2/funckubernetesutility';
-import * as CommonUtils from 'azure-pipelines-tasks-kubernetes-common-v2/utility';
+import * as FuncKubernetesUtility from 'azure-pipelines-tasks-kubernetes-common/funckubernetesutility';
+import * as CommonUtils from 'azure-pipelines-tasks-kubernetes-common/utility';
 import { DockerConnection } from "../dockerConnection";
 
 export class CommandHelper {
@@ -16,13 +16,13 @@ export class CommandHelper {
         this.kubectlPath = tl.which('kubectl', true);
     }
 
-    public execCommand(command: tr.ToolRunner, options?: tr.IExecOptions, warnIfError?: boolean) {
+    public execCommand(command: any, options?: tr.IExecOptions, warnIfError?: boolean) {
         const result: tr.IExecSyncResult = command.execSync(options);
         CommonUtils.checkForErrors([result], warnIfError);
         return result;
     }
     
-    public getFuncDeployCommand(dockerConnection: DockerConnection, secretName: string, appName: string, namespace: string, dockerHubNamespace: string, pullSecretName: string, args: string): tr.ToolRunner {
+    public getFuncDeployCommand(dockerConnection: DockerConnection, secretName: string, appName: string, namespace: string, dockerHubNamespace: string, pullSecretName: string, args: string) {
         const registry = dockerHubNamespace ? dockerHubNamespace : dockerConnection.getRegistry();
 
         if (!registry) {

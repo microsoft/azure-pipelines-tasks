@@ -8,7 +8,7 @@ steps:
 - task: NodeTool@0
   displayName: Use node 8
   inputs:
-    versionSpec: "8.x"
+    versionSpec: 8.x
 
 # Use NuGet 4
 - task: NuGetToolInstaller@0
@@ -50,5 +50,6 @@ steps:
     publishLocation: container
 
 # Update build number
-- script: "echo ##vso[build.updatebuildnumber]$(aggregate_version)"
+- powershell: |
+    Write-Host "##vso[build.updatebuildnumber]$(aggregate_version)"
   displayName: Update build number

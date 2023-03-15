@@ -5,6 +5,7 @@ import querystring = require("querystring");
 export const MOCK_SUBSCRIPTION_ID = 'mocksub';
 export const MOCK_RESOURCE_GROUP_NAME = 'mockrg';
 export const ASC_RESOURCE_TYPE = 'Microsoft.AppPlatform/Spring';
+export const API_VERSION = '2022-03-01-preview'
 
 
 export function setEndpointData() {
@@ -17,6 +18,7 @@ export function setEndpointData() {
     process.env["ENDPOINT_URL_AzureRM"] = "https://management.azure.com/";
     process.env["ENDPOINT_DATA_AzureRM_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
     process.env["ENDPOINT_DATA_AzureRM_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = "https://management.azure.com";
+    process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_USEMSAL"] = "false";
 }
 
 export function setAgentsData() {

@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 200,
+    "Minor": 218,
     "Patch": 0
   },
   "satisfies": [
@@ -24,14 +24,39 @@
   "demands": [],
   "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
+    {
+      "name": "versionSource",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.versionSource",
+      "required": true,
+      "defaultValue": "spec",
+      "options": {
+        "spec": "Specify Node version",
+        "fromFile": "Get version from file"
+      }
+    },
     {
       "name": "versionSpec",
       "type": "string",
       "label": "ms-resource:loc.input.label.versionSpec",
       "defaultValue": "6.x",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
+      "helpMarkDown": "ms-resource:loc.input.help.versionSpec",
+      "visibleRule": "versionSource = spec"
+    },
+    {
+      "name": "versionFilePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionFilePath",
+      "helpMarkDown": "ms-resource:loc.input.help.versionFilePath",
+      "visibleRule": "versionSource = fromFile"
     },
     {
       "name": "checkLatest",
@@ -48,10 +73,23 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.force32bit"
+    },
+    {
+      "name": "nodejsMirror",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.nodejsMirror",
+      "defaultValue": "https://nodejs.org/dist",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.nodejsMirror"
     }
   ],
   "execution": {
     "Node10": {
+      "target": "nodetool.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "nodetool.js",
       "argumentFormat": ""
     }
@@ -67,6 +105,10 @@
     }
   },
   "messages": {
-    "ToolFailed": "ms-resource:loc.messages.ToolFailed"
+    "ToolFailed": "ms-resource:loc.messages.ToolFailed",
+    "TryRosetta": "ms-resource:loc.messages.TryRosetta",
+    "NodeVersionNotFound": "ms-resource:loc.messages.NodeVersionNotFound",
+    "UnexpectedOS": "ms-resource:loc.messages.UnexpectedOS",
+    "AgentTempDirNotSet": "ms-resource:loc.messages.AgentTempDirNotSet"
   }
 }

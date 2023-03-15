@@ -1,37 +1,33 @@
-import * as AzureStorage from "azure-storage";
+import { BlockBlobClient } from '@azure/storage-blob'
+
 import * as Url from "url";
 
-import { inspect } from "util";
-
 export class AzureBlobUploadHelper {
-  constructor(private debug: Function) {}
+  constructor(private debug: Function) {
+  }
 
   public async upload(uploadUrl: string, zip: string): Promise<void> {
     const urlObject = Url.parse(uploadUrl);
-    const blobService = this.getBlobService(urlObject);
-    const [container, blob] = this.getContainerAndBlob(urlObject);
+    const [container, blob] = AzureBlobUploadHelper.getContainerAndBlob(urlObject);
+    const blobClient = AzureBlobUploadHelper.getBlobClient(urlObject, container, blob);
 
-    await this.uploadBlockBlob(blobService, container, blob, zip);
+    await this.uploadBlockBlob(blobClient, zip);
   }
 
-  private uploadBlockBlob(blobService: AzureStorage.BlobService, container: string, blob: string, file: string): Promise<void> {
-    return new Promise<void> ((resolve, reject) => {
-      blobService.createBlockBlobFromLocalFile(container, blob, file, {
-        contentSettings: {
-          contentType: "application/zip"
-        }
-      }, (error, result, response) => {
-        if (error) {
-          this.debug(`Failed to upload ZIP with symbols - ${inspect(error)}`);
-          reject(new Error("failed to upload ZIP with symbols"));
-        } else {
-          resolve();
-        }
-      });
+  private uploadBlockBlob(blobClient: BlockBlobClient, file: string) {
+    return blobClient.uploadFile(file, {
+      blobHTTPHeaders: {
+        blobContentType: "application/zip"
+      }
+    }).then(response => {
+      if (response._response.status < 200 || response._response.status >= 300) {
+        this.debug(`Failed to upload ZIP with symbols - ${blobClient.name}`);
+        throw new Error(`Failed to upload file ${file} to blob ${blobClient.name}`);
+      }
     });
   }
 
-  private getBlobService(urlObject: Url.Url): AzureStorage.BlobService {
+  private static getBlobClient(urlObject: Url.Url, container: string, blob: string): BlockBlobClient {
     const blobEndpoint = Url.format({
       protocol: urlObject.protocol,
       host: urlObject.host
@@ -40,10 +36,10 @@ export class AzureBlobUploadHelper {
 
     const connectionString = "BlobEndpoint=" + blobEndpoint + ";" + "SharedAccessSignature=" + sharedAccessSignature;
 
-    return new AzureStorage.BlobService(connectionString).withFilter(new AzureStorage.ExponentialRetryPolicyFilter());
+    return new BlockBlobClient(connectionString, container, blob);
   }
 
-  private getContainerAndBlob(urlObject: Url.Url): [string, string] {
+  private static getContainerAndBlob(urlObject: Url.Url): [string, string] {
     const splitPathName = urlObject.pathname.split("/");
     return [splitPathName[1], splitPathName[2]];
   }

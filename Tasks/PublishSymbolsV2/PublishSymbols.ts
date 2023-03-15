@@ -2,8 +2,8 @@ import * as fs from "fs";
 import * as path from "path";
 import * as uuidV4 from 'uuid/v4';
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
-import * as clientToolUtils from "azure-pipelines-tasks-packaging-common-v3/universal/ClientToolUtilities";
-import * as clientToolRunner from "azure-pipelines-tasks-packaging-common-v3/universal/ClientToolRunner";
+import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
+import * as clientToolRunner from "azure-pipelines-tasks-packaging-common/universal/ClientToolRunner";
 import * as tl from "azure-pipelines-task-lib/task";
 import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
 
@@ -49,6 +49,7 @@ export async function run(clientToolFilePath: string): Promise<void> {
             tl.getVariable("Build.BuildId")  + "/" +  
             uniqueId).toLowerCase();
 
+        let expirationInDays: string = tl.getInput("SymbolExpirationInDays", false) ? tl.getInput("SymbolExpirationInDays", false) : '36530';
         let detailedLog: boolean = tl.getBoolInput("DetailedLog");
 
         // Determine specific files to publish, if provided
@@ -62,7 +63,6 @@ export async function run(clientToolFilePath: string): Promise<void> {
             tl.setResult(tl.TaskResult.Succeeded, tl.loc("NoFilesForPublishing"));
         }
         else {
-            let expirationInDays: string = '36530';
             let execResult: IExecSyncResult;
             if (fs.existsSync(clientToolFilePath)) {
                 tl.debug("Publishing the symbols");

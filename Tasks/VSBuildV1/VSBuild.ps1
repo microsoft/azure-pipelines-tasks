@@ -13,7 +13,7 @@ $vsBuildTelemetry = [PSCustomObject]@{
 # Import the helpers.
 . $PSScriptRoot\Get-VSPath.ps1
 . $PSScriptRoot\Select-VSVersion.ps1
-Import-Module -Name $PSScriptRoot\ps_modules\MSBuildHelpers\MSBuildHelpers.psm1
+Import-Module -Name "$PSScriptRoot\node_modules\azure-pipelines-tasks-msbuildhelpers\MSBuildHelpers.psm1"
 
 try {
     Import-VstsLocStrings "$PSScriptRoot\Task.json"

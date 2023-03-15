@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 198,
+        "Minor": 217,
         "Patch": 0
     },
     "groups": [
@@ -97,6 +97,14 @@
             "defaultValue": "false",
             "required": true,
             "helpMarkDown": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."
+        },
+        {
+            "name": "useDataContractSerializer",
+            "type": "boolean",
+            "label": "Use .NET data contract serailizer",
+            "required": true,
+            "defaultValue": "true",
+            "helpMarkDown": "For more details go to task documentation"
         }
     ],
     "instanceNameFormat": "Publish to Azure Service Bus",
@@ -115,6 +123,7 @@
                 "sessionId": "$(sessionId)",
                 "certificateString": "{{#notEquals signPayload 'false' 1}}{{#notEquals endpoint.signPayload 'false' 1}}$(certificateString){{/notEquals}}{{else}}{{/notEquals}}",
                 "signaturePropertyKey": "$(signatureKey)",
+                "useDataContractSerializer": "$(useDataContractSerializer)",
                 "messageProperties": {
                     "PlanUrl": "$(system.CollectionUri)",
                     "ProjectId": "$(system.TeamProjectId)",

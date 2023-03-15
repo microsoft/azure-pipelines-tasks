@@ -73,4 +73,19 @@ describe('NodeTool Suite', function () {
         }, tr, done);
     });
 
+    it('Read node version from file', (done: Mocha.Done) => {
+        this.timeout(5000);
+
+        let tp: string = path.join(__dirname, 'L0ReadVersionFromFileSuccess.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        runValidations(() => {
+            assert(tr.succeeded, 'NodeTool should have succeeded.');
+            assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+        }, tr, done);
+    });
+
+
 });

@@ -1,6 +1,6 @@
 import * as path from 'path';
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import { setEndpointData, setAgentsData, mockTaskArgument, nock, MOCK_SUBSCRIPTION_ID, mockAzureSpringCloudExists, mockCommonAzureAPIs } from './mock_utils';
+import { setEndpointData, setAgentsData, mockTaskArgument, nock, MOCK_SUBSCRIPTION_ID, mockAzureSpringCloudExists, mockCommonAzureAPIs, API_VERSION } from './mock_utils';
 import { ASC_RESOURCE_TYPE, MOCK_RESOURCE_GROUP_NAME } from './mock_utils'
 import assert = require('assert');
 
@@ -19,7 +19,7 @@ export class SetProductionNamedDeploymentSucceedsL0 {
         mockCommonAzureAPIs();
         mockAzureSpringCloudExists(this.TEST_NAME);
         this.mockTwoDeployments();
-        this.mockDeploymentUpdateToSetActiveDeployment();
+        this.mockSetActiveDeployments();
         taskMockRunner.setAnswers(mockTaskArgument());
         taskMockRunner.run();
     }
@@ -35,7 +35,7 @@ export class SetProductionNamedDeploymentSucceedsL0 {
                 "content-type": "application/json; charset=utf-8",
                 "user-agent": "TFS_useragent"
             }
-        }).get(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/deployments?api-version=2020-07-01`)
+        }).get(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/deployments?api-version=${API_VERSION}`)
             .reply(200, {
                 "value": [
                     {
@@ -112,21 +112,23 @@ export class SetProductionNamedDeploymentSucceedsL0 {
             }).persist();
     }
 
-    private static mockDeploymentUpdateToSetActiveDeployment(){
+    /**
+     * Simulate set active deployments API
+     */
+    private static mockSetActiveDeployments() {
         nock('https://management.azure.com', {
             reqheaders: {
                 "authorization": "Bearer DUMMY_ACCESS_TOKEN",
                 "content-type": "application/json; charset=utf-8",
                 "user-agent": "TFS_useragent"
             }
-        }).patch(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}?api-version=2020-07-01`)
+        }).post(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/setActiveDeployments?api-version=${API_VERSION}`)
         .once()
-        .reply((uri, serializedRequestBody)=>{
-            let requestBody = JSON.parse(serializedRequestBody);
-            assert.equal(requestBody.properties.activeDeploymentName, 'theOtherOne');
-            return 200;
-        });
-        
+        .reply(200, {
+            activeDeploymentNames: [
+                'theOtherOne'
+            ]
+        })
     }
 }
 

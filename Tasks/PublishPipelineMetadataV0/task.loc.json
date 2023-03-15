@@ -11,14 +11,18 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 201,
+    "Minor": 216,
     "Patch": 0
   },
+  "minimumAgentVersion": "2.144.0",
   "preview": true,
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "showEnvironmentVariables": true,
   "execution": {
     "Node10": {
+      "target": "publishmetadata.js"
+    },
+    "Node16": {
       "target": "publishmetadata.js"
     }
   },

@@ -108,35 +108,54 @@ export function basicSetup() {
     };
 }
 
+// Need to return object with fs Methods, because in Node 16 statSync - readonly 
 export function mockFs() {
-
   let fsos = fs.openSync;
-  fs.openSync = (path: string, flags: string) => {
-    if (path.endsWith(".ipa")){
-        return 1234567.89;
-    }
-    return fsos(path, flags);
-  };
-
   let fsrs = fs.readSync;
-  fs.readSync = (fd: number, buffer: Buffer, offset: number, length: number, position: number)=> {
+
+  function overrideReadSync(fd: number, buffer: NodeJS.ArrayBufferView, opts?: fs.ReadSyncOptions): number;
+  function overrideReadSync(fd: number, buffer: NodeJS.ArrayBufferView, offset?: number | fs.ReadSyncOptions, length?: number, position?: fs.ReadPosition | null): number {
     if (fd == 1234567.89) {
         buffer = new Buffer(100);
         return;
     }
-    return fsrs(fd, buffer, offset, length, position);
-  };
 
-  fs.statSync = (s: string) => {
-    let stat = new Stats;
-    stat.isFile = () => {
-        return !s.toLowerCase().endsWith(".dsym");
+    if (typeof offset === 'object') {
+      return fsrs(fd, buffer, offset);
     }
-    stat.isDirectory = () => {
-        return s.toLowerCase().endsWith(".dsym");
+
+    return fsrs(fd, buffer, offset, length, position);
+  }
+
+  return {
+    createReadStream: (s: string) => {
+      let stream = new Readable;
+      stream.push(s);
+      stream.push(null);
+  
+      return stream;
+    },
+  
+    openSync: (path: string, flags: string) => {
+      if (path.endsWith(".ipa")){
+          return 1234567.89;
+      }
+      return fsos(path, flags);
+    },
+  
+    readSync: overrideReadSync,
+  
+    statSync: (s: string | Buffer | URL) => {
+      let stat = new Stats;
+      stat.isFile = () => {
+          return !String(s).toLowerCase().endsWith(".dsym");
+      }
+      stat.isDirectory = () => {
+          return String(s).toLowerCase().endsWith(".dsym");
+      }
+      stat.size = 100;
+      return stat;
     }
-    stat.size = 100;
-    return stat;
   }
 }
 

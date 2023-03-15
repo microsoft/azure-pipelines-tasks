@@ -26,7 +26,6 @@ export class SetNamedDeploymentFailsWhenDeploymentDoesNotExist {
     }
 
     public static mochaTestTargetDeploymentDoesNotExist = (done: mocha.Done) => {
-
         let taskPath = path.join(__dirname, 'SetNamedDeploymentFailsWhenDeploymentDoesNotExistL0.js');
         let mockTestRunner: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
         SetNamedDeploymentFailsWhenDeploymentDoesNotExist.mockTaskInputParameters('nonexistingDeployment');
