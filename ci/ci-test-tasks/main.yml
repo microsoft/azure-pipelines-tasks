@@ -11,21 +11,8 @@ trigger: none
 pr: none
 
 stages:
-- stage: Verify
-  jobs:
-    - ${{ each task in split(parameters.tasks, ',') }}:
-      - job: ${{ task }}_verify_testing_pipeline
-        condition: eq(variables['build.reason'], 'Manual')
-        displayName: Verify testing pipeline (${{ task }})
-        pool:
-          vmImage: windows-2022
-        steps:
-        - template: ./verify-task.yml
-          parameters:
-            task: ${{ task }}
-            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
-
 - stage: Build
+  condition: eq(variables['build.reason'], 'Manual')
   jobs:
     - ${{ each task in split(parameters.tasks, ',') }}:
       - job: ${{ task }}_build_task
@@ -41,15 +28,16 @@ stages:
             patchVersion: true
             version: '0.999.0'
             BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+
 - stage: PreDelete
   jobs:
     - ${{ each task in split(parameters.tasks, ',') }}:    
       - job: ${{ task }}_pre_delete
-        displayName: Pre delete (${{ task }})
+        displayName: PreDelete (${{ task }})
         pool:
           vmImage: windows-2022
         steps:
-        - template: ./clean-up.yml
+        - template: ./delete-task.yml
           parameters:
             task: ${{ task }}
             BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
@@ -84,12 +72,12 @@ stages:
   condition: succeededOrFailed('Upload')
   jobs:
     - ${{ each task in split(parameters.tasks, ',') }}:    
-      - job: ${{ task }}_clean_up
-        displayName: Clean up (${{ task }})
+      - job: ${{ task }}_post_delete
+        displayName: PostDelete (${{ task }})
         pool:
           vmImage: windows-2022
         steps:
-        - template: ./clean-up.yml
+        - template: ./delete-task.yml
           parameters:
             task: ${{ task }}
             BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
