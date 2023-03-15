@@ -43,8 +43,8 @@ export class NugetMockHelper {
             FORCE_NUGET_4_0_0: 'FORCE_NUGET_4_0_0',
             NUGET_VERSION_4_0_0: '4.0.0',
             NUGET_VERSION_4_0_0_PATH_SUFFIX: 'NuGet/4.0.0/',
-            DEFAULT_NUGET_VERSION: '4.1.0',
-            DEFAULT_NUGET_PATH_SUFFIX: 'NuGet/4.1.0/',
+            DEFAULT_NUGET_VERSION: '4.9.6',
+            DEFAULT_NUGET_PATH_SUFFIX: 'NuGet/4.9.6/',
             NUGET_EXE_TOOL_PATH_ENV_VAR: "NuGetExeToolPath"
         } )
     }
