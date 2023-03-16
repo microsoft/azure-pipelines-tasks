@@ -6,7 +6,7 @@
     "@types/uuid": "^8.3.0",
     "del": "2.2.0",
     "azure-pipelines-task-lib": "^4.0.1-preview",
-    "azure-pipelines-tasks-docker-common-v2": "2.0.6",
+    "azure-pipelines-tasks-docker-common": "2.0.6",
     "esprima": "2.7.1",
     "js-yaml": "4.1.0"
   },

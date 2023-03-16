@@ -56,6 +56,7 @@
   "loc.messages.JavaNotPreinstalled": "Java %s ist für diesen Agent nicht vorinstalliert.",
   "loc.messages.UsePreinstalledJava": "Vorinstalliertes JDK aus \"%s\" verwenden",
   "loc.messages.WrongArchiveStructure": "Die JDK-Datei ist ungültig. Stellen Sie sicher, dass die JDK-Datei nur einen Stammordner mit \"bin\" enthält.",
+  "loc.messages.WrongArchiveFile": "Die Archivdatei ist falsch. Es ist kein Ordner vorhanden, der JDK enthält.",
   "loc.messages.ShareAccessError": "Freigegebene Netzwerkressource nicht verfügbar: (%s)",
   "loc.messages.UnsupportedDMGStructure": "Die JDK-Datei wird nicht unterstützt. Stellen Sie sicher, dass die JDK-Datei genau einen Ordner enthält.",
   "loc.messages.NoPKGFile": "Die PKG-Datei wurde nicht gefunden.",

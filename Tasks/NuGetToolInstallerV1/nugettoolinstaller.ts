@@ -1,9 +1,9 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
-import * as nuGetGetter from 'packaging-common/nuget/NuGetToolGetter';
-import * as peParser from "packaging-common/pe-parser";
-import {VersionInfo} from "packaging-common/pe-parser/VersionResource";
-import * as telemetry from "utility-common/telemetry";
+import * as nuGetGetter from 'azure-pipelines-tasks-packaging-common/nuget/NuGetToolGetter';
+import * as peParser from "azure-pipelines-tasks-packaging-common/pe-parser";
+import {VersionInfo} from "azure-pipelines-tasks-packaging-common/pe-parser/VersionResource";
+import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 
 const DEFAULT_NUGET_VERSION = '>=4.9';
 

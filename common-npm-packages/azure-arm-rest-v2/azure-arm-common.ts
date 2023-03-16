@@ -438,9 +438,6 @@ export class ApplicationTokenCredentials {
             0,
             2000);
 
-        msalConfig.auth.protocolMode = msal.ProtocolMode.OIDC;
-        msalConfig.auth.authority = "https://app.vstoken.visualstudio.com";
-        msalConfig.auth.knownAuthorities = [ "app.vstoken.visualstudio.com" ];
         msalConfig.auth.clientAssertion = oidc_token;
 
         let msalInstance = new msal.ConfidentialClientApplication(msalConfig);

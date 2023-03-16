@@ -3,12 +3,12 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
-import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
-import * as fileUtils from "azure-pipelines-tasks-docker-common-v2/fileutils";
-import * as pipelineUtils from "azure-pipelines-tasks-docker-common-v2/pipelineutils";
-import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
-import * as sourceUtils from "azure-pipelines-tasks-docker-common-v2/sourceutils";
-import * as imageUtils from "azure-pipelines-tasks-docker-common-v2/containerimageutils";
+import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common/dockercommandutils";
+import * as fileUtils from "azure-pipelines-tasks-docker-common/fileutils";
+import * as pipelineUtils from "azure-pipelines-tasks-docker-common/pipelineutils";
+import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
+import * as sourceUtils from "azure-pipelines-tasks-docker-common/sourceutils";
+import * as imageUtils from "azure-pipelines-tasks-docker-common/containerimageutils";
 import * as utils from "./utils";
 
 export function run(connection: ContainerConnection): any {
