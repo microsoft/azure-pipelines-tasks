@@ -157,7 +157,7 @@ need to be provided in order for this task to successfully run using one of the 
 
 | Argument name             | Required | Description |
 | ------------------------- | -------- | ----------- |
-| `connectedServiceNameARM` | Yes      | Service connection linked to the user's Azure Subscription where the Container App will be created/updated. This service connection _must_ have proper permissions to make these changes within the subscription (_e.g._, Contributor role). |
+| `azureSubscription` | Yes      | Service connection linked to the user's Azure Subscription where the Container App will be created/updated. This service connection _must_ have proper permissions to make these changes within the subscription (_e.g._, Contributor role). |
 | `acrUsername`             | No       | The username used to authenticate push requests to the provided Azure Container Registry. If not provided, an access token will be generated via "az acr login" and provided to "docker login" to authenticate the requests. |
 | `acrPassword`             | No       | The password used to authenticate push requests to the provided Azure Container Registry. If not provided, an access token will be generated via "az acr login" and provided to "docker login" to authenticate the requests. |
 | `dockerfilePath`          | No       | Relative path (_without file prefixes, see example below_) to the Dockerfile in the provided application source that should be used to build the image that is then pushed to ACR and deployed to the Container App. If not provided, this task will check if there is a file named `Dockerfile` in the provided application source and use that to build the image. Otherwise, the Oryx++ Builder will be used to create the image. |
@@ -183,7 +183,7 @@ steps:
   - task: AzureContainerApps@0
     displayName: Build and deploy Container App
     inputs:
-      connectedServiceNameARM: 'azure-subscription-service-connection'
+      azureSubscription: 'azure-subscription-service-connection'
       appSourcePath: '$(System.DefaultWorkingDirectory)'
       acrName: 'mytestacr'
 ```
@@ -201,7 +201,7 @@ steps:
   - task: AzureContainerApps@0
     displayName: Build and deploy Container App
     inputs:
-      connectedServiceNameARM: 'azure-subscription-service-connection'
+      azureSubscription: 'azure-subscription-service-connection'
       imageToDeploy: mcr.microsoft.com/azuredocs/containerapps-helloworld:latest
 ```
 
@@ -217,7 +217,7 @@ steps:
   - task: AzureContainerApps@0
     displayName: Build and deploy Container App
     inputs:
-      connectedServiceNameARM: 'azure-subscription-service-connection'
+      azureSubscription: 'azure-subscription-service-connection'
       appSourcePath: '$(System.DefaultWorkingDirectory)'
       acrName: 'mytestacr'
       acrUsername: $(ACR_USERNAME_SECRET)
@@ -237,7 +237,7 @@ steps:
   - task: AzureContainerApps@0
     displayName: Build and deploy Container App
     inputs:
-      connectedServiceNameARM: 'azure-subscription-service-connection'
+      azureSubscription: 'azure-subscription-service-connection'
       appSourcePath: '$(System.DefaultWorkingDirectory)'
       acrName: 'mytestacr'
       containerAppName: 'my-test-container-app'
@@ -254,7 +254,7 @@ steps:
   - task: AzureContainerApps@0
     displayName: Build and deploy Container App
     inputs:
-      connectedServiceNameARM: 'azure-subscription-service-connection'
+      azureSubscription: 'azure-subscription-service-connection'
       appSourcePath: '$(System.DefaultWorkingDirectory)'
       acrName: 'mytestacr'
       resourceGroup: 'my-test-rg'
@@ -271,7 +271,7 @@ steps:
   - task: AzureContainerApps@0
     displayName: Build and deploy Container App
     inputs:
-      connectedServiceNameARM: 'azure-subscription-service-connection'
+      azureSubscription: 'azure-subscription-service-connection'
       appSourcePath: '$(System.DefaultWorkingDirectory)'
       acrName: 'mytestacr'
       containerAppName: 'my-test-container-app'
@@ -289,7 +289,7 @@ steps:
   - task: AzureContainerApps@0
     displayName: Build and deploy Container App
     inputs:
-      connectedServiceNameARM: 'azure-subscription-service-connection'
+      azureSubscription: 'azure-subscription-service-connection'
       appSourcePath: '$(System.DefaultWorkingDirectory)'
       acrName: 'mytestacr'
       containerAppEnvironment: 'my-test-container-app-env'
@@ -306,7 +306,7 @@ steps:
   - task: AzureContainerApps@0
     displayName: Build and deploy Container App
     inputs:
-      connectedServiceNameARM: 'azure-subscription-service-connection'
+      azureSubscription: 'azure-subscription-service-connection'
       appSourcePath: '$(System.DefaultWorkingDirectory)'
       acrName: 'mytestacr'
       runtimeStack: 'dotnetcore:7.0'
@@ -323,7 +323,7 @@ steps:
   - task: AzureContainerApps@0
     displayName: Build and deploy Container App
     inputs:
-      connectedServiceNameARM: 'azure-subscription-service-connection'
+      azureSubscription: 'azure-subscription-service-connection'
       appSourcePath: '$(System.DefaultWorkingDirectory)'
       acrName: 'mytestacr'
       dockerfilePath: 'test.Dockerfile'
@@ -345,7 +345,7 @@ steps:
   - task: AzureContainerApps@0
     displayName: Build and deploy Container App
     inputs:
-      connectedServiceNameARM: 'azure-subscription-service-connection'
+      azureSubscription: 'azure-subscription-service-connection'
       appSourcePath: '$(System.DefaultWorkingDirectory)'
       acrName: 'mytestacr'
       imageToBuild: 'mytestacr.azurecr.io/app:latest'
