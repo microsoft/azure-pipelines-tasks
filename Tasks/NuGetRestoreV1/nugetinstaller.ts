@@ -69,7 +69,7 @@ async function main(): Promise<void> {
         try {
             nuGetPath = tl.getVariable(nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR);
             if (!nuGetPath){
-                nuGetPath = await nuGetGetter.getNuGet("4.0.0");
+                nuGetPath = await nuGetGetter.getNuGet("4.9.6");
             }
             tl.debug(`Using NuGet in path: ${nuGetPath}`);
         }
