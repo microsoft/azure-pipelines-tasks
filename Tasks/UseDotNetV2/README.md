@@ -14,7 +14,7 @@ The tool installer approach also allows you to decouple from the agent update cy
 
 - Perfrom Multi-level lookup. This input is only applicable to Windows based agents. It configures the .Net Core's host process behviour for looking for a suitable shared framework on the machine. You can read more about it **[HERE](https://github.com/dotnet/core-setup/blob/master/Documentation/design-docs/multilevel-sharedfx-lookup.md)**
 
-- Installs NuGet version 4.4.1 and sets up proxy configuration if present in NuGet config.
+- Installs NuGet version 4.9.6 and sets up proxy configuration if present in NuGet config.
 
 ## Contact Information
 

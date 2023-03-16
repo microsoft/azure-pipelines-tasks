@@ -22,7 +22,7 @@ async function run() {
     let packageType = (tl.getInput('packageType') || "sdk").toLowerCase();;
     let versionSpec = tl.getInput('version');
     let vsVersionSpec = tl.getInput('vsVersion');
-    const nugetVersion = tl.getInput('nugetVersion') || '4.4.1';
+    const nugetVersion = tl.getInput('nugetVersion') || '4.9.6';
 
     let installationPath = tl.getInput('installationPath');
     if (!installationPath || installationPath.length == 0) {
@@ -44,7 +44,7 @@ async function run() {
 
     // Add dot net tools path to "PATH" environment variables, so that tools can be used directly.
     addDotNetCoreToolPath();
-    // Install NuGet version specified by user or 4.4.1 in case none is specified
+    // Install NuGet version specified by user or 4.9.6 in case none is specified
     // Also sets up the proxy configuration settings.
     await NuGetInstaller.installNuGet(nugetVersion);
 }
