@@ -42,7 +42,7 @@ async function main(): Promise<void> {
     try {
         nuGetPath = process.env[nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR];
         if (!nuGetPath){
-            nuGetPath = await nuGetGetter.getNuGet("4.0.0");
+            nuGetPath = await nuGetGetter.getNuGet("4.9.6");
         }
     }
     catch (error) {
