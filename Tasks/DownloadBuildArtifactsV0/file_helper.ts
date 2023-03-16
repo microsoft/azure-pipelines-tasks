@@ -15,12 +15,7 @@ import * as models from 'artifact-engine/Models';
 export function getFileSizeInBytes(path: string): number {
     let fileSize: number = 0;
 
-    // would be nice to have a preprocessor like follows: 
-//#IF NODE16    
-//    if (path.blah) {
-//#ELSE
     if (path) {
-//#END IF        
         // TODO: Add support of BigInt after migration on Node10
         const file: Stats = getFile(path);
         fileSize = file.size;
