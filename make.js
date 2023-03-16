@@ -52,6 +52,9 @@ var binPath = path.join(__dirname, 'node_modules', '.bin');
 var makeOptionsPath = path.join(__dirname, 'make-options.json');
 var gendocsPath = path.join(__dirname, '_gendocs');
 var packagePath = path.join(__dirname, '_package');
+var baseConfigToolPath = path.join(__dirname, 'BuildConfigGen');
+var genTaskPath = path.join(__dirname, '_generated');
+var genTaskCommonPath = path.join(__dirname, '_generated', 'Common');
 
 var CLI = {};
 
@@ -132,6 +135,27 @@ CLI.gendocs = function() {
     banner('Generating docs successful', true);
 }
 
+function getTaskList(taskList) {
+    let tasksToBuild = taskList;
+
+    if (!fs.existsSync(genTaskPath)) return tasksToBuild;
+
+    const generatedTaskFolders = fs.readdirSync(genTaskPath)
+        .filter((taskName) => {
+            return fs.statSync(path.join(genTaskPath, taskName)).isDirectory();
+        });
+
+    taskList.forEach((taskName) => {
+        generatedTaskFolders.forEach((generatedTaskName) => {
+            if (taskName !== generatedTaskName && generatedTaskName.startsWith(taskName)) {
+                tasksToBuild.push(generatedTaskName);
+            }
+        });
+    });
+
+    return tasksToBuild.sort();
+}
+
 //
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
@@ -147,10 +171,22 @@ CLI.build = function() {
     });
 
     const removeNodeModules = taskList.length > 1;
+    const allTasks = getTaskList(taskList);
 
-    taskList.forEach(function(taskName) {
+    allTasks.forEach(function(taskName) {
+        let isGeneratedTask = false;
         banner('Building: ' + taskName);
-        var taskPath = path.join(tasksPath, taskName);
+
+        // If we have the task in generated folder, prefer to build from there and add all generated tasks which starts with task name
+        var taskPath = path.join(genTaskPath, taskName);
+        if (fs.existsSync(taskPath)) {
+            // Need to add all tasks which starts with task name
+            console.log('Found generated task: ' + taskName);
+            isGeneratedTask = true;
+        } else {
+            taskPath = path.join(tasksPath, taskName);
+        }
+        
         ensureExists(taskPath);
 
         // load the task.json
@@ -199,6 +235,11 @@ CLI.build = function() {
 
                 if (!test('-d', modOutDir)) {
                     banner('Building module ' + modPath, true);
+
+                    // Ensure that Common folder exists for _generated tasks, otherwise copy it from Tasks folder
+                    if (!fs.existsSync(genTaskCommonPath) && isGeneratedTask) {
+                        cp('-Rf', path.resolve(tasksPath, "Common"), genTaskCommonPath);
+                    }
 
                     mkdir('-p', modOutDir);
 
@@ -314,6 +355,11 @@ CLI.build = function() {
         }
     });
 
+    // Remove Commons from _generated folder as it is not required
+    if (fs.existsSync(genTaskCommonPath)) {
+        rm('-Rf', genTaskCommonPath);
+    }
+
     banner('Build successful', true);
 }
 
@@ -375,17 +421,17 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
         });
     }
 
-    if (argv.task) {
-        runTaskTests(argv.task);
-    } else {
-        // Run tests for each task that exists
-        taskList.forEach(function(taskName) {
-            var taskPath = path.join(buildTasksPath, taskName);
-            if (fs.existsSync(taskPath)) {
-                runTaskTests(taskName);
-            }
-        });
+    // Run tests for each task that exists
+    const allTasks = getTaskList(taskList);
 
+    allTasks.forEach(function(taskName) {
+        var taskPath = path.join(buildTasksPath, taskName);
+        if (fs.existsSync(taskPath)) {
+            runTaskTests(taskName);
+        }
+    });
+
+    if (!argv.task) {
         banner('Running common library tests');
         var commonLibPattern = path.join(buildTasksPath, 'Common', '*', 'Tests', suiteType + '.js');
         var specs = [];
@@ -833,6 +879,29 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
     rm('-Rf', tempWorkspaceDirectory);
 
     console.log('\n# Completed creating sprintly zip.');
+}
+
+CLI.gentask = function() {
+    var programPath = "";
+    var configToolBuildUtility = "";
+
+    if (os.platform() === 'win32') {
+        programPath = path.join(baseConfigToolPath, 'bin', 'BuildConfigGen.exe');
+        configToolBuildUtility = path.join(baseConfigToolPath, "dev.cmd");
+    } else {
+        programPath = path.join(baseConfigToolPath, 'bin', 'BuildConfigGen');
+        configToolBuildUtility = path.join(baseConfigToolPath, "dev.sh");
+    }
+
+    if (!fs.existsSync(programPath)) {
+        console.log(`BuildConfigGen not found at ${programPath}. Starting build.`);
+        run(configToolBuildUtility);
+    }
+
+    taskList.forEach(function (taskName) {
+        banner('Generating: ' + taskName);
+        run(`${programPath} --task ${taskName}`, true);
+    });
 }
 
 var command  = argv._[0];
