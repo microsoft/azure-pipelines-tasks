@@ -25,7 +25,7 @@ async function run() {
                 taskLib.debug('Defaulting to 4.8.2 for msbuild version: ' + msbuildSemVer);
                 versionSpec = '4.8.2';
             } else {
-                versionSpec = '4.3.0';
+                versionSpec = '4.9.6';
             }
         }
         checkLatest = taskLib.getBoolInput('checkLatest', false);
