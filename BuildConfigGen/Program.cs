@@ -27,14 +27,31 @@ class Program
 
         //string task = "DownloadBuildArtifactsV0";
 
-        string taskTarget = Path.Combine(gitRootPath, @$"Tasks\{task}");
+        string taskTarget = Path.Combine(gitRootPath, "Tasks", task);
         if(!Directory.Exists(taskTarget))
         {
             throw new Exception($"expected {taskTarget} to exist!");
         }
 
-        string taskOutput = Path.Combine(gitRootPath, @$"_generated\{task}");
-        string taskOutputNode16 = Path.Combine(gitRootPath, @$"_generated\{task}_Node16");
+        string taskOutput = Path.Combine(gitRootPath, "_generated", task);
+        string taskOutputNode16 = Path.Combine(gitRootPath, "_generated", @$"{task}_Node16");
+        
+        string taskHandler = Path.Combine(taskTarget, "task.json");
+        JsonNode taskHandlerContents = JsonNode.Parse(File.ReadAllText(taskHandler))!;
+
+        // Task may not have nodejs or packages.json (example: AutomatedAnalysisV0) 
+        if (!hasNodeHandler(taskHandlerContents))
+        {
+            Console.WriteLine($"Skipping {task} because task doesn't have node handler does not exist");
+            return;
+        }
+
+        // If target task already has node16 handlers, skip it
+        if (taskHandlerContents["execution"]!["Node16"] != null)
+        {
+            Console.WriteLine($"Skipping {task} because it already has a Node16 handler");
+            return;
+        }
 
         CopyConfigs(taskTarget, taskOutput);
         CopyConfigs(taskTarget, taskOutputNode16);
@@ -42,6 +59,22 @@ class Program
         UpdateVersions(gitRootPath, task, taskTarget, taskOutput, taskOutputNode16);
     }
 
+    private static bool hasNodeHandler(JsonNode taskHandlerContents)
+    {
+        var handlers = taskHandlerContents["execution"]?.AsObject();
+        bool hasNodeHandler = false;
+        if (handlers == null) { return false; }
+
+        foreach (var k in handlers)
+        {
+            if (k.Key.ToLower().StartsWith("node"))
+            { 
+                hasNodeHandler = true; 
+                break; 
+            }
+        }
+        return hasNodeHandler;
+    }
     private static string GetGitRootPath(string currentDir)
     {
         const string args = "rev-parse --git-dir";
@@ -118,7 +151,7 @@ class Program
 
     private static void UpdateVersions(string gitRootPath, string task, string taskTarget, string taskOutput, string taskOutputNode16)
     {
-        string versionMapFile = Path.Combine(gitRootPath,@$"_Generated\{task}.versionmap.txt");
+        string versionMapFile = Path.Combine(gitRootPath,"_generated", @$"{task}.versionmap.txt");
         Dictionary<string, TaskVersion> versionMap;
         TaskVersion? maxVersion;
         ReadVersionMap(versionMapFile, out versionMap, out maxVersion);
@@ -129,19 +162,24 @@ class Program
         string outputTaskLocPath = Path.Combine(taskOutput, "task.loc.json");
         string outputNode16PackagePath = Path.Combine(taskOutputNode16, "package.json");
         string outputNode16TaskPath = Path.Combine(taskOutputNode16, "task.json");
+        string outputNode16TTaskLocPath = Path.Combine(taskOutputNode16, "task.loc.json");
 
-
-        var taskJson = File.ReadAllText(outputTaskPath);
 
         JsonNode inputTaskNode = JsonNode.Parse(File.ReadAllText(inputTaskPath))!;
         JsonNode outputTaskNode = JsonNode.Parse(File.ReadAllText(outputTaskPath))!;
         JsonNode outputTaskLocNode = JsonNode.Parse(File.ReadAllText(outputTaskLocPath))!;
         JsonNode outputNod16PackagePath = JsonNode.Parse(File.ReadAllText(outputNode16PackagePath))!;
         JsonNode outputNode16TaskNode = JsonNode.Parse(File.ReadAllText(outputNode16TaskPath))!;
+        JsonNode outputNode16TaskLocNode = JsonNode.Parse(File.ReadAllText(outputNode16TTaskLocPath))!;
 
-        var major = inputTaskNode["version"]!["Major"]!.GetValue<int>();
-        var minor = inputTaskNode["version"]!["Minor"]!.GetValue<int>();
-        var patch = inputTaskNode["version"]!["Patch"]!.GetValue<int>();
+        Int32 major;
+        Int32 minor;
+        Int32 patch;
+
+        // Need to parse it to a int because the version can be a string or an int (example: AzureStaticWebAppV0)
+        Int32.TryParse(inputTaskNode["version"]!["Major"]!.ToString(), out major);
+        Int32.TryParse(inputTaskNode["version"]!["Minor"]!.ToString(), out minor);
+        Int32.TryParse(inputTaskNode["version"]!["Patch"]!.ToString(), out patch);
 
         TaskVersion inputVersion = new(major, minor, patch);
 
@@ -173,13 +211,13 @@ class Program
             defaultPatchVersion = inputVersion.CloneWithPatch(node16PatchVersion.Patch + 1);
         }
 
-        outputNode16TaskNode["version"]!["Patch"] = node16PatchVersion.Patch;
-        outputTaskNode["version"]!["Patch"] = defaultPatchVersion.Patch;
         outputNod16PackagePath["dependencies"]!["@types/node"] = "^16.11.39";
 
         inputTaskNode["version"]!["Patch"] = defaultPatchVersion.Patch;
         outputTaskNode["version"]!["Patch"] = defaultPatchVersion.Patch;
+        outputTaskLocNode["version"]!["Patch"] = defaultPatchVersion.Patch;
         outputNode16TaskNode["version"]!["Patch"] = node16PatchVersion.Patch;
+        outputNode16TaskLocNode["version"]!["Patch"] = node16PatchVersion.Patch;
 
 
         outputTaskNode.AsObject()?.Remove("_buildConfigMapping");
@@ -207,13 +245,55 @@ class Program
             }
         }
 
+        addNode16handler(outputNode16TaskNode);
+        addNode16handler(outputNode16TaskLocNode);
 
         JsonSerializerOptions jso = new System.Text.Json.JsonSerializerOptions { WriteIndented = true };
         File.WriteAllText(inputTaskPath, inputTaskNode.ToJsonString(jso));
         File.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso));
+        File.WriteAllText(outputTaskLocPath, outputTaskLocNode.ToJsonString(jso));
         File.WriteAllText(outputNode16PackagePath, outputNod16PackagePath.ToJsonString(jso));
         File.WriteAllText(outputNode16TaskPath, outputNode16TaskNode.ToJsonString(jso));
-        File.WriteAllText(outputNode16TaskPath, outputNode16TaskNode.ToJsonString(jso));
+        File.WriteAllText(outputNode16TTaskLocPath, outputNode16TaskLocNode.ToJsonString(jso));
+    }
+
+    private static string getExecutionPath(JsonNode taskNode, string execution)
+    {
+        var handlers = taskNode[execution]?.AsObject();
+        if (handlers != null) {
+            foreach (var k in handlers)
+            {
+                if (k.Key.ToLower().StartsWith("node"))
+                {
+                    JsonNode? value = k.Value;
+                    string? val = value?["target"]?.GetValue<string>();
+                    if (val != null) return val;
+                }
+            }
+        }
+
+        throw new Exception("Execution block with Node not found.");
+    }
+
+    private static void addNode16handler(JsonNode taskNode)
+    {
+        taskNode["prejobexecution"]?.AsObject().Add("Node16", new JsonObject
+        {
+            ["target"] = getExecutionPath(taskNode, "prejobexecution"),
+            ["argumentFormat"] = ""
+        });
+
+        taskNode["execution"]?.AsObject().Add("Node16", new JsonObject
+        {
+            ["target"] = getExecutionPath(taskNode, "execution"),
+            ["argumentFormat"] = ""
+        });
+
+        taskNode["postjobexecution"]?.AsObject().Add("Node16", new JsonObject
+        {
+            ["target"] = getExecutionPath(taskNode, "postjobexecution"),
+            ["argumentFormat"] = ""
+        });
     }
 
     private static void ReadVersionMap(string versionMapFile, out Dictionary<string, TaskVersion> versionMap, out TaskVersion? maxVersion)
