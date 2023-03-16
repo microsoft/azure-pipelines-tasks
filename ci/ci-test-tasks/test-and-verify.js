@@ -72,7 +72,7 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
     
       clearInterval(interval);
     
-      const result = `Build ${pipelineBuild.name} id:${pipelineBuild.id} finished with status "${data.result}" and result "${data.result}", url: ${pipelineBuild._links.web.href}`;
+      const result = `Build ${pipelineBuild.name} id:${pipelineBuild.id} finished with status "${data.state}" and result "${data.result}", url: ${pipelineBuild._links.web.href}`;
     
       if (data.result === 'succeeded') {
         resolve(result);
