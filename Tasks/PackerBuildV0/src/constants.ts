@@ -37,7 +37,6 @@ export var TemplateVariablePackageName = "package_name";
 export var TemplateVariableSubscriptionIdName = "subscription_id";
 export var TemplateVariableClientIdName = "client_id";
 export var TemplateVariableClientSecretName = "client_secret";
-export var TemplateVariableClientSecretJwt = "client_jwt";
 export var TemplateVariableTenantIdName = "tenant_id";
 export var TemplateVariableObjectIdName = "object_id";
 export var TemplateVariableSkipCleanName = "skip_clean";
