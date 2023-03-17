@@ -18,7 +18,8 @@ if (task) {
   return start(task)
   .then(resultMessage => console.log(resultMessage))
   .catch(err => {
-    console.error(err);
+    console.error(err.message);
+    console.error(err.stack);
   });
 } else {
   console.error('Task name was not provided');
@@ -40,7 +41,12 @@ function fetchPipelines() {
   return axios.get(`${apiUrl}?${apiVersion}`, { auth })
   .then(res => res.data.value)
   .catch(err => {
-    err.message = 'Error fetching pipelines: ' + err.message;
+    err.stack = 'Error fetching pipelines: ' + err.stack;
+    console.error(err.stack);
+    if (err.response?.data) {
+      console.error(err.response.data);
+    }
+
     throw err;
   });
 }
@@ -51,7 +57,12 @@ function runTestPipeline(pipeline) {
   return axios.post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, {}, { auth })
   .then(res => res.data)
   .catch(err => {
-    err.message = `Error running ${pipeline.name} pipeline, pipelineId ${pipeline.id}: ` + err.message;
+    err.stack = `Error running ${pipeline.name} pipeline. ` + err.stack;
+    console.error(err.stack);
+    if (err.response?.data) {
+      console.error(err.response.data);
+    }
+
     throw err;
   })
 }
@@ -92,12 +103,19 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
       }
     
       clearInterval(interval);
-      err.message = 'Error verifying build status: ' + err.message;
+      err.stack = 'Error verifying build status: ' + err.stack;
+      console.error(err.stack);
+      if (err.response?.data) {
+        console.error(err.response.data);
+      }
+
       reject(err); 
     })
   }, intervalDelayMs)
 }
 
 process.on('uncaughtException', err => {
+  console.error('Uncought exception:');
   console.error(err.message);
+  console.error(err.stack);
 });
