@@ -19,7 +19,8 @@ if (tasks) {
   return start(tasks.split(','))
   .then(resultMessage => console.log(resultMessage))
   .catch(err => {
-    console.error(err);
+    console.error(err.message);
+    console.error(err.stack);
   });
 } else {
   console.error('Task name was not provided');
@@ -46,7 +47,12 @@ function runMainPipeline(id, tasks) {
   return axios.post(`${apiUrl}/${id}/runs?${apiVersion}`, {"templateParameters": {tasks, BuildSourceVersion: BUILD_SOURCEVERSION}}, { auth })
   .then(res => res.data)
   .catch(err => {
-    err.message = 'Error running main pipeline: ' + err.message;
+    err.stack = 'Error running main pipeline: ' + err.stack;
+    console.error(err.stack);
+    if (err.response?.data) {
+      console.error(err.response.data);
+    }
+
     throw err;
   })
 }
@@ -72,7 +78,7 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
       if (data.result === 'succeeded') {
         resolve(result);
       } else {
-        reject(result);
+        reject(new Error(result));
       }
     })
     .catch(err => {
@@ -87,7 +93,11 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
       }
     
       clearInterval(interval);
-      err.message = 'Error verifying build status: ' + err.message;
+      err.stack = 'Error verifying build status: ' + err.stack;
+      console.error(err.stack);
+      if (err.response?.data) {
+        console.error(err.response.data);
+      }
       reject(err); 
     })
   }, intervalDelayMs)
@@ -97,7 +107,13 @@ function fetchPipelines() {
   return axios.get(`${apiUrl}?${apiVersion}`, { auth })
   .then(res => res.data.value)
   .catch(err => {
-    console.error('Error fetching pipelines', err);
+    err.stack = 'Error fetching pipelines: ' + err.stack;
+    console.error(err.stack);
+    if (err.response?.data) {
+      console.error(err.response.data);
+    }
+
+    throw err;
   });
 }
 
@@ -106,5 +122,7 @@ function reportMissingTestPipelines(missingTestPipelines) {
 }
 
 process.on('uncaughtException', err => {
+  console.error('Uncought exception:');
   console.error(err.message);
+  console.error(err.stack);
 });
