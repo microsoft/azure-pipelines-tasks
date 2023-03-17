@@ -34,9 +34,16 @@ export default class AzureSpnTemplateVariablesProvider implements definitions.IT
         var subscriptionId: string = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true)
         this._spnVariables.set(constants.TemplateVariableSubscriptionIdName, subscriptionId);
         this._spnVariables.set(constants.TemplateVariableClientIdName, tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalid', false));
-        this._spnVariables.set(constants.TemplateVariableClientSecretName, tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalkey', false));
+        var authScheme = tl.getEndpointAuthorizationScheme(connectedService, false);
+        if ("WorkloadIdentityFederation" == authScheme) {
+            var credentials = await taskParameters.graphCredentialsPromise;
+            var jwtToken = await credentials.getToken();
+            this._spnVariables.set(constants.TemplateVariableClientSecretJwt, jwtToken);
+        }
+        else {
+            this._spnVariables.set(constants.TemplateVariableClientSecretName, tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalkey', false));
+        }
         this._spnVariables.set(constants.TemplateVariableTenantIdName, tl.getEndpointAuthorizationParameter(connectedService, 'tenantid', false));
-
 
         var spnObjectId = tl.getEndpointDataParameter(connectedService, "spnObjectId", true);
         // if we are creating windows VM and SPN object-id is not available in service endpoint, fetch it from Graph endpoint
