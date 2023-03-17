@@ -10,64 +10,74 @@ parameters:
 trigger: none
 pr: none
 
-jobs:
-  - ${{ each task in split(parameters.tasks, ',') }}:
-    - job: ${{ task }}_verify_testing_pipeline
-      condition: eq(variables['build.reason'], 'Manual')
-      displayName: Verify testing pipeline (${{ task }})
-      pool:
-        vmImage: windows-2022
-      steps:
-      - template: ./verify-task.yml
-        parameters:
-          task: ${{ task }}
-          BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
-  
-    - job: ${{ task }}_build_task
-      dependsOn: ${{ task }}_verify_testing_pipeline
-      displayName: Build Task (${{ task }})
-      pool:
-        vmImage: windows-2022
-      steps:
-      - template: ./build-task.yml
-        parameters:
-          task: ${{ task }}
-          push: false
-          publishArtifact: true
-          patchVersion: true
-          version: '0.9999.9999'
-          BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+stages:
+- stage: Build
+  condition: eq(variables['build.reason'], 'Manual')
+  jobs:
+    - ${{ each task in split(parameters.tasks, ',') }}:
+      - job: ${{ task }}_build_task
+        displayName: Build Task (${{ task }})
+        pool:
+          vmImage: windows-2022
+        steps:
+        - template: ./build-task.yml
+          parameters:
+            task: ${{ task }}
+            push: false
+            publishArtifact: true
+            patchVersion: true
+            version: '0.999.0'
+            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
-    - job: ${{ task }}_upload_task
-      displayName: Upload (${{ task }})
-      dependsOn: ${{ task }}_build_task
-      pool:
-        vmImage: windows-2022
-      steps:
-      - template: ./upload-task.yml
-        parameters:
-          task: ${{ task }}
-          BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
-   
-    - job: ${{ task }}_test_task
-      displayName: Test (${{ task }})
-      dependsOn: ${{ task }}_upload_task
-      pool:
-        vmImage: windows-2022
-      steps:
-      - template: ./test-task.yml
-        parameters:
-          task: ${{ task }}
-          BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
-   
-    - job: ${{ task }}_clean_up
-      condition: in(dependencies.${{ task }}_upload_task.result, 'Succeeded', 'SucceededWithIssues', 'Failed')
-      displayName: Clean up (${{ task }})
-      dependsOn: ${{ task }}_test_task
-      pool:
-        vmImage: windows-2022
-      steps:
-      - template: ./clean-up.yml
-        parameters:
-          task: ${{ task }}
-          BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+- stage: PreDelete
+  jobs:
+    - ${{ each task in split(parameters.tasks, ',') }}:    
+      - job: ${{ task }}_pre_delete
+        displayName: PreDelete (${{ task }})
+        pool:
+          vmImage: windows-2022
+        steps:
+        - template: ./delete-task.yml
+          parameters:
+            task: ${{ task }}
+            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+
+- stage: Upload
+  jobs:
+    - ${{ each task in split(parameters.tasks, ',') }}:
+      - job: ${{ task }}_upload_task
+        displayName: Upload (${{ task }})
+        pool:
+          vmImage: windows-2022
+        steps:
+        - template: ./upload-task.yml
+          parameters:
+            task: ${{ task }}
+            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+
+- stage: Test
+  jobs:
+    - ${{ each task in split(parameters.tasks, ',') }}:
+      - job: ${{ task }}_test_task
+        displayName: Test (${{ task }})
+        pool:
+          vmImage: windows-2022
+        steps:
+        - template: ./test-task.yml
+          parameters:
+            task: ${{ task }}
+            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+
+- stage: PostDelete
+  condition: succeededOrFailed('Upload')
+  jobs:
+    - ${{ each task in split(parameters.tasks, ',') }}:    
+      - job: ${{ task }}_post_delete
+        displayName: PostDelete (${{ task }})
+        pool:
+          vmImage: windows-2022
+        steps:
+        - template: ./delete-task.yml
+          parameters:
+            task: ${{ task }}
+            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
