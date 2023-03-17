@@ -45,7 +45,7 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 
 tr.setAnswers(a);
 
-tr.registerMock("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-storage", {
+tr.registerMock("azure-pipelines-tasks-azure-arm-rest/azure-arm-storage", {
     StorageManagementClient: function (A, B) {
         return {
             storageAccounts: {
@@ -72,7 +72,7 @@ tr.registerMock("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-storage", {
     }
 });
 
-tr.registerMock("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common", {
+tr.registerMock("azure-pipelines-tasks-azure-arm-rest/azure-arm-common", {
     ApplicationTokenCredentials: function(A,B,C,D,E,F,G) {
         return {};
     }
