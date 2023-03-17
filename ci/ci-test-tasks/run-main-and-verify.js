@@ -20,7 +20,7 @@ if (tasks) {
   .then(resultMessage => console.log(resultMessage))
   .catch(err => {
     console.error(err.message);
-    console.error(err.stack);
+    console.debug(err.stack);
   });
 } else {
   console.error('Task name was not provided');
@@ -124,5 +124,5 @@ function reportMissingTestPipelines(missingTestPipelines) {
 process.on('uncaughtException', err => {
   console.error('Uncought exception:');
   console.error(err.message);
-  console.error(err.stack);
+  console.debug(err.stack);
 });
