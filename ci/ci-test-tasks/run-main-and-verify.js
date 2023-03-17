@@ -46,7 +46,7 @@ function runMainPipeline(id, tasks) {
   return axios.post(`${apiUrl}/${id}/runs?${apiVersion}`, {"templateParameters": {tasks, BuildSourceVersion: BUILD_SOURCEVERSION}}, { auth })
   .then(res => res.data)
   .catch(err => {
-    err.stack = 'Error running main pipeline: ' + err.stack;
+    err.message = 'Error running main pipeline: ' + err.message;
     throw err;
   })
 }
@@ -67,7 +67,7 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
     
       clearInterval(interval);
     
-      const result = `Build ${pipelineBuild.name} id:${pipelineBuild.id} finished with status "${data.result}" and result "${data.result}", url: ${pipelineBuild._links.web.href}`;
+      const result = `Build ${pipelineBuild.name} id:${pipelineBuild.id} finished with status "${data.state}" and result "${data.result}", url: ${pipelineBuild._links.web.href}`;
     
       if (data.result === 'succeeded') {
         resolve(result);
@@ -87,7 +87,7 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
       }
     
       clearInterval(interval);
-      err.stack = 'Error verifying build status: ' + err.stack;
+      err.message = 'Error verifying build status: ' + err.message;
       reject(err); 
     })
   }, intervalDelayMs)
@@ -106,5 +106,5 @@ function reportMissingTestPipelines(missingTestPipelines) {
 }
 
 process.on('uncaughtException', err => {
-  console.error(err.stack);
+  console.error(err.message);
 });
