@@ -78,7 +78,7 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
       if (data.result === 'succeeded') {
         resolve(result);
       } else {
-        reject(result);
+        reject(new Error(result));
       }
     })
     .catch(err => {
