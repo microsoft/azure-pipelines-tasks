@@ -40,7 +40,7 @@ function fetchPipelines() {
   return axios.get(`${apiUrl}?${apiVersion}`, { auth })
   .then(res => res.data.value)
   .catch(err => {
-    err.stack = 'Error fetching pipelines: ' + err.stack;
+    err.message = 'Error fetching pipelines: ' + err.message;
     throw err;
   });
 }
@@ -51,7 +51,7 @@ function runTestPipeline(pipeline) {
   return axios.post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, {}, { auth })
   .then(res => res.data)
   .catch(err => {
-    err.stack = `Error running ${pipeline.name} pipeline, pipelineId ${pipeline.id}: ` + err.stack;
+    err.message = `Error running ${pipeline.name} pipeline, pipelineId ${pipeline.id}: ` + err.message;
     throw err;
   })
 }
@@ -92,12 +92,12 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
       }
     
       clearInterval(interval);
-      err.stack = 'Error verifying build status: ' + err.stack;
+      err.message = 'Error verifying build status: ' + err.message;
       reject(err); 
     })
   }, intervalDelayMs)
 }
 
 process.on('uncaughtException', err => {
-  console.error(err.stack);
+  console.error(err.message);
 });
