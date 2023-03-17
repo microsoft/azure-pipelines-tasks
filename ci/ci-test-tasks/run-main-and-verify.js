@@ -19,7 +19,8 @@ if (tasks) {
   return start(tasks.split(','))
   .then(resultMessage => console.log(resultMessage))
   .catch(err => {
-    console.error(err);
+    console.error(err.message);
+    console.error(err.stack);
   });
 } else {
   console.error('Task name was not provided');
@@ -47,6 +48,11 @@ function runMainPipeline(id, tasks) {
   .then(res => res.data)
   .catch(err => {
     err.stack = 'Error running main pipeline: ' + err.stack;
+    console.error(err.stack);
+    if (err.response?.data) {
+      console.error(err.response.data);
+    }
+
     throw err;
   })
 }
@@ -67,7 +73,7 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
     
       clearInterval(interval);
     
-      const result = `Build ${pipelineBuild.name} id:${pipelineBuild.id} finished with status "${data.result}" and result "${data.result}", url: ${pipelineBuild._links.web.href}`;
+      const result = `Build ${pipelineBuild.name} id:${pipelineBuild.id} finished with status "${data.state}" and result "${data.result}", url: ${pipelineBuild._links.web.href}`;
     
       if (data.result === 'succeeded') {
         resolve(result);
@@ -76,18 +82,22 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
       }
     })
     .catch(err => {
-      if (err.response && err.response.status >= 500) {
+      if (err.code === 'ETIMEDOUT' || (err.response && err.response.status >= 500)) {
         if (retryCount < maxRetries) {
           retryCount++;
-          console.log(`Server error ${err.message} - retry request. Retry count: ${retryCount}`);
+          console.log(`Error ${err.message} - retry request. Retry count: ${retryCount}`);
           return;
         } else {
-          console.error('Server error, maximum retries reached. Cancel retries', err.message);
+          console.error('Error, maximum retries reached. Cancel retries', err.message);
         }
       }
     
       clearInterval(interval);
       err.stack = 'Error verifying build status: ' + err.stack;
+      console.error(err.stack);
+      if (err.response?.data) {
+        console.error(err.response.data);
+      }
       reject(err); 
     })
   }, intervalDelayMs)
@@ -97,7 +107,13 @@ function fetchPipelines() {
   return axios.get(`${apiUrl}?${apiVersion}`, { auth })
   .then(res => res.data.value)
   .catch(err => {
-    console.error('Error fetching pipelines', err);
+    err.stack = 'Error fetching pipelines: ' + err.stack;
+    console.error(err.stack);
+    if (err.response?.data) {
+      console.error(err.response.data);
+    }
+
+    throw err;
   });
 }
 
@@ -106,5 +122,7 @@ function reportMissingTestPipelines(missingTestPipelines) {
 }
 
 process.on('uncaughtException', err => {
+  console.error('Uncought exception:');
+  console.error(err.message);
   console.error(err.stack);
 });
