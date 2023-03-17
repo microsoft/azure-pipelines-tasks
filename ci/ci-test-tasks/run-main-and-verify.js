@@ -76,13 +76,13 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
       }
     })
     .catch(err => {
-      if (err.response && err.response.status >= 500) {
+      if (err.code === 'ETIMEDOUT' || (err.response && err.response.status >= 500)) {
         if (retryCount < maxRetries) {
           retryCount++;
-          console.log(`Server error ${err.message} - retry request. Retry count: ${retryCount}`);
+          console.log(`Error ${err.message} - retry request. Retry count: ${retryCount}`);
           return;
         } else {
-          console.error('Server error, maximum retries reached. Cancel retries', err.message);
+          console.error('Error, maximum retries reached. Cancel retries', err.message);
         }
       }
     
