@@ -6,7 +6,7 @@ namespace BuildConfigGen
 {
     internal class Program
     {
-        static readonly JsonSerializerOptions jso = new System.Text.Json.JsonSerializerOptions { WriteIndented = true };
+        static readonly JsonSerializerOptions jso = new System.Text.Json.JsonSerializerOptions { WriteIndented = true, Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
 
         static class Config
         {
@@ -32,16 +32,21 @@ namespace BuildConfigGen
 
             ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
 
-            Main2(task, writeUpdates);
+            Main2(task);
 
+            ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: false);
+        }
+
+        private static void ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(string task, bool skipContentCheck)
+        {
             // if !writeUpdates, error if we have written any updates
-            var verifyErrors = ensureUpdateModeVerifier.GetVerifyErrors().ToList();
-            if(verifyErrors.Count!=0)
+            var verifyErrors = ensureUpdateModeVerifier!.GetVerifyErrors(skipContentCheck).ToList();
+            if (verifyErrors.Count != 0)
             {
                 Console.WriteLine("");
 
                 Console.WriteLine("Updates needed:");
-                foreach(var s in verifyErrors)
+                foreach (var s in verifyErrors)
                 {
                     Console.WriteLine(s);
                 }
@@ -50,21 +55,19 @@ namespace BuildConfigGen
             }
         }
 
-        private static void Main2(string task, bool writeUpdates)
+        private static void Main2(string task)
         {
             string currentDir = Environment.CurrentDirectory;
 
             string gitRootPath = GitUtil.GetGitRootPath(currentDir);
 
-            //string task = "DownloadBuildArtifactsV0";
-
-            string taskTarget = Path.Combine(gitRootPath, "Tasks", task);
-            if (!Directory.Exists(taskTarget))
+            string taskTargetPath = Path.Combine(gitRootPath, "Tasks", task);
+            if (!Directory.Exists(taskTargetPath))
             {
-                throw new Exception($"expected {taskTarget} to exist!");
+                throw new Exception($"expected {taskTargetPath} to exist!");
             }
 
-            string taskHandler = Path.Combine(taskTarget, "task.json");
+            string taskHandler = Path.Combine(taskTargetPath, "task.json");
             JsonNode taskHandlerContents = JsonNode.Parse(File.ReadAllText(taskHandler))!;
 
             // Task may not have nodejs or packages.json (example: AutomatedAnalysisV0) 
@@ -81,7 +84,7 @@ namespace BuildConfigGen
                 return;
             }
 
-            UpdateVersions(gitRootPath, task, taskTarget, out var configTaskVersionMapping, writeUpdates);
+            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping);
 
             foreach (var config in Config.Configs)
             {
@@ -95,20 +98,24 @@ namespace BuildConfigGen
                     taskOutput = Path.Combine(gitRootPath, "_generated", @$"{task}_{config.constMappingKey}");
                 }
 
-                CopyConfigs(taskTarget, taskOutput, writeUpdates);
+                CopyConfigs(taskTargetPath, taskOutput);
 
-                WriteInputTaskJson(taskTarget, configTaskVersionMapping, writeUpdates);
-                WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.json", writeUpdates);
-                WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.loc.json", writeUpdates);
+                // Check verifier errors (throw here to provide a more user friendly message; as Copy is skipped when Write-Updates isn't specified; files to update may be missing)
+                // Skip content check==true for files that existin destination as some of them will be updated and validated later
+                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: true);
+
+                WriteInputTaskJson(taskTargetPath, configTaskVersionMapping);
+                WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.json");
+                WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.loc.json");
 
                 if (config.isNode16)
                 {
-                    WriteNode16PackageJson(taskOutput, writeUpdates);
+                    WriteNode16PackageJson(taskOutput);
                 }
             }
         }
 
-        private static void WriteTaskJson(string taskPath, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, Config.ConfigRecord config, string path2, bool writeUpdates)
+        private static void WriteTaskJson(string taskPath, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, Config.ConfigRecord config, string path2)
         {
             string outputTaskPath = Path.Combine(taskPath, path2);
             JsonNode outputTaskNode = JsonNode.Parse(File.ReadAllText(outputTaskPath))!;
@@ -129,7 +136,7 @@ namespace BuildConfigGen
             ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso));
         }
 
-        private static void WriteNode16PackageJson(string taskOutputNode16, bool writeUpdates)
+        private static void WriteNode16PackageJson(string taskOutputNode16)
         {
             string outputNode16PackagePath = Path.Combine(taskOutputNode16, "package.json");
             JsonNode outputNod16PackagePath = JsonNode.Parse(File.ReadAllText(outputNode16PackagePath))!;
@@ -154,7 +161,7 @@ namespace BuildConfigGen
             return hasNodeHandler;
         }
 
-        private static void CopyConfigs(string taskTarget, string taskOutput, bool writeUpdates)
+        private static void CopyConfigs(string taskTarget, string taskOutput)
         {
             var paths = GitUtil.GetNonIgnoredFileListFromPath(taskTarget);
             var targetPaths = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(taskOutput));
@@ -183,7 +190,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, bool writeUpdates)
+        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping)
         {
             Dictionary<string, TaskVersion> versionMap;
             TaskVersion? maxVersion;
@@ -246,7 +253,7 @@ namespace BuildConfigGen
                 configTaskVersionMapping.Add(Config.Default, inputVersion.CloneWithPatch(inputVersion.Patch + c));
             }
 
-            WriteVersionMapFile(versionMapFile, configTaskVersionMapping, writeUpdates);
+            WriteVersionMapFile(versionMapFile, configTaskVersionMapping);
         }
 
         private static TaskVersion GetInputVersion(string taskTarget)
@@ -270,7 +277,7 @@ namespace BuildConfigGen
             return inputVersion;
         }
 
-        private static void WriteInputTaskJson(string taskTarget, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion, bool writeUpdates)
+        private static void WriteInputTaskJson(string taskTarget, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion)
         {
             string inputTaskPath = Path.Combine(taskTarget, "task.json");
             JsonNode inputTaskNode = JsonNode.Parse(File.ReadAllText(inputTaskPath))!;
@@ -280,7 +287,7 @@ namespace BuildConfigGen
             ensureUpdateModeVerifier!.WriteAllText(inputTaskPath, inputTaskNode.ToJsonString(jso));
         }
 
-        private static void WriteVersionMapFile(string versionMapFile, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion, bool writeUpdates)
+        private static void WriteVersionMapFile(string versionMapFile, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion)
         {
             StringBuilder sb = new StringBuilder();
             using (var sw = new StringWriter(sb))

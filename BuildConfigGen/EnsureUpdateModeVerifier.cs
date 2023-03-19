@@ -12,27 +12,30 @@ namespace BuildConfigGen
         private List<string> VerifyErrors = new List<string>();
         internal Dictionary<string, string> CopiedFilesToCheck = new Dictionary<string, string>();
 
-        public IEnumerable<string> GetVerifyErrors()
+        public IEnumerable<string> GetVerifyErrors(bool skipContentCheck)
         {
             foreach(var r in VerifyErrors)
             {
                 yield return r;
             }
 
-            foreach(var r in CopiedFilesToCheck)
+            if (!skipContentCheck)
             {
-                if (Helpers.FilesEqual(r.Value, r.Key))
+                foreach (var r in CopiedFilesToCheck)
                 {
-                    // if overwrite and content match, everything is good!  Verification passed.
-                }
-                else
-                {
-                    yield return $"Need to copy {r.Value} to {r.Key} (overwrite=true).  Dest file doesn't match source.";
+                    if (Helpers.FilesEqual(r.Value, r.Key))
+                    {
+                        // if overwrite and content match, everything is good!  Verification passed.
+                    }
+                    else
+                    {
+                        yield return $"Need to copy {r.Value} to {r.Key} (overwrite=true).  Dest file doesn't match source.";
+                    }
                 }
             }
         }
 
-        public FileVerifyChecker(bool verifyOnly)
+        public EnsureUpdateModeVerifier(bool verifyOnly)
         {
             this.verifyOnly = verifyOnly;
         }
