@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace BuildConfigGen
@@ -17,14 +18,40 @@ namespace BuildConfigGen
             public static ConfigRecord[] Configs = { Default, Node16 };
         }
 
+        // ensureUpdateModeVerifier wraps all writes.  if writeUpdate=false, it tracks writes that would have occured
+        static EnsureUpdateModeVerifier? ensureUpdateModeVerifier;
+
         /// <param name="task">The task to generate build configs for</param>
-        static void Main(string task = "")
+        /// <param name="writeUpdates">Write updates if true, else validate</param>
+        static void Main(string task = "", bool writeUpdates = false)
         {
             if (string.IsNullOrEmpty(task))
             {
                 throw new Exception("task expected!");
             }
 
+            ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
+
+            Main2(task, writeUpdates);
+
+            // if !writeUpdates, error if we have written any updates
+            var verifyErrors = ensureUpdateModeVerifier.GetVerifyErrors().ToList();
+            if(verifyErrors.Count!=0)
+            {
+                Console.WriteLine("");
+
+                Console.WriteLine("Updates needed:");
+                foreach(var s in verifyErrors)
+                {
+                    Console.WriteLine(s);
+                }
+
+                throw new Exception($"Updates needed, please run BuildConfigGen  --task {task} --write-updates");
+            }
+        }
+
+        private static void Main2(string task, bool writeUpdates)
+        {
             string currentDir = Environment.CurrentDirectory;
 
             string gitRootPath = GitUtil.GetGitRootPath(currentDir);
@@ -54,7 +81,7 @@ namespace BuildConfigGen
                 return;
             }
 
-            UpdateVersions(gitRootPath, task, taskTarget, out var configTaskVersionMapping);
+            UpdateVersions(gitRootPath, task, taskTarget, out var configTaskVersionMapping, writeUpdates);
 
             foreach (var config in Config.Configs)
             {
@@ -68,20 +95,20 @@ namespace BuildConfigGen
                     taskOutput = Path.Combine(gitRootPath, "_generated", @$"{task}_{config.constMappingKey}");
                 }
 
-                CopyConfigs(taskTarget, taskOutput);
+                CopyConfigs(taskTarget, taskOutput, writeUpdates);
 
-                WriteInputTaskJson(taskTarget, configTaskVersionMapping);
-                WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.json");
-                WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.loc.json");
+                WriteInputTaskJson(taskTarget, configTaskVersionMapping, writeUpdates);
+                WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.json", writeUpdates);
+                WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.loc.json", writeUpdates);
 
                 if (config.isNode16)
                 {
-                    WriteNode16PackageJson(taskOutput);
+                    WriteNode16PackageJson(taskOutput, writeUpdates);
                 }
             }
         }
 
-        private static void WriteTaskJson(string taskPath, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, Config.ConfigRecord config, string path2)
+        private static void WriteTaskJson(string taskPath, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, Config.ConfigRecord config, string path2, bool writeUpdates)
         {
             string outputTaskPath = Path.Combine(taskPath, path2);
             JsonNode outputTaskNode = JsonNode.Parse(File.ReadAllText(outputTaskPath))!;
@@ -99,15 +126,15 @@ namespace BuildConfigGen
                 AddNode16handler(outputTaskNode);
             }
 
-            File.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso));
+            ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso));
         }
 
-        private static void WriteNode16PackageJson(string taskOutputNode16)
+        private static void WriteNode16PackageJson(string taskOutputNode16, bool writeUpdates)
         {
             string outputNode16PackagePath = Path.Combine(taskOutputNode16, "package.json");
             JsonNode outputNod16PackagePath = JsonNode.Parse(File.ReadAllText(outputNode16PackagePath))!;
             outputNod16PackagePath["dependencies"]!["@types/node"] = "^16.11.39";
-            File.WriteAllText(outputNode16PackagePath, outputNod16PackagePath.ToJsonString(jso));
+            ensureUpdateModeVerifier!.WriteAllText(outputNode16PackagePath, outputNod16PackagePath.ToJsonString(jso));
         }
 
         private static bool hasNodeHandler(JsonNode taskHandlerContents)
@@ -126,15 +153,14 @@ namespace BuildConfigGen
             }
             return hasNodeHandler;
         }
-   
-        private static void CopyConfigs(string taskTarget, string taskOutput)
+
+        private static void CopyConfigs(string taskTarget, string taskOutput, bool writeUpdates)
         {
             var paths = GitUtil.GetNonIgnoredFileListFromPath(taskTarget);
             var targetPaths = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(taskOutput));
 
             foreach (var o in paths)
             {
-                //Console.WriteLine(o);
                 string sourcePath = Path.Combine(taskTarget, o);
                 string targetPath = Path.Combine(taskOutput, o);
                 _ = targetPaths.Remove(o);
@@ -152,12 +178,12 @@ namespace BuildConfigGen
                 {
                     throw new Exception($"{destFileName} already exists; please clean up");
                 }
-                File.Move(targetPath, destFileName);
 
+                ensureUpdateModeVerifier!.Move(targetPath, destFileName);
             }
         }
 
-        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping)
+        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, bool writeUpdates)
         {
             Dictionary<string, TaskVersion> versionMap;
             TaskVersion? maxVersion;
@@ -220,7 +246,7 @@ namespace BuildConfigGen
                 configTaskVersionMapping.Add(Config.Default, inputVersion.CloneWithPatch(inputVersion.Patch + c));
             }
 
-            WriteVersionMapFile(versionMapFile, configTaskVersionMapping);
+            WriteVersionMapFile(versionMapFile, configTaskVersionMapping, writeUpdates);
         }
 
         private static TaskVersion GetInputVersion(string taskTarget)
@@ -244,28 +270,28 @@ namespace BuildConfigGen
             return inputVersion;
         }
 
-        private static void WriteInputTaskJson(string taskTarget, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion)
+        private static void WriteInputTaskJson(string taskTarget, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion, bool writeUpdates)
         {
             string inputTaskPath = Path.Combine(taskTarget, "task.json");
             JsonNode inputTaskNode = JsonNode.Parse(File.ReadAllText(inputTaskPath))!;
 
             inputTaskNode["version"]!["Patch"] = configTaskVersion[Config.Default].Patch;
 
-            File.WriteAllText(inputTaskPath, inputTaskNode.ToJsonString(jso));
+            ensureUpdateModeVerifier!.WriteAllText(inputTaskPath, inputTaskNode.ToJsonString(jso));
         }
 
-        private static void WriteVersionMapFile(string versionMapFile, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion)
+        private static void WriteVersionMapFile(string versionMapFile, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion, bool writeUpdates)
         {
-            using (var fs = File.Open(versionMapFile, FileMode.Create))
+            StringBuilder sb = new StringBuilder();
+            using (var sw = new StringWriter(sb))
             {
-                using (var sw = new StreamWriter(fs))
+                foreach (var config in Config.Configs)
                 {
-                    foreach (var config in Config.Configs)
-                    {
-                        sw.WriteLine(string.Concat(config.constMappingKey, "|", configTaskVersion[config]));
-                    }
+                    sw.WriteLine(string.Concat(config.constMappingKey, "|", configTaskVersion[config]));
                 }
             }
+
+            ensureUpdateModeVerifier!.WriteAllText(versionMapFile, sb.ToString());
         }
 
         private static string GetExecutionPath(JsonNode taskNode, string execution)
@@ -289,23 +315,28 @@ namespace BuildConfigGen
 
         private static void AddNode16handler(JsonNode taskNode)
         {
-            taskNode["prejobexecution"]?.AsObject().Add("Node16", new JsonObject
-            {
-                ["target"] = GetExecutionPath(taskNode, "prejobexecution"),
-                ["argumentFormat"] = ""
-            });
+            AddHandler(taskNode, "prejobexecution");
+            AddHandler(taskNode, "execution");
+            AddHandler(taskNode, "postjobexecution");
+        }
 
-            taskNode["execution"]?.AsObject().Add("Node16", new JsonObject
-            {
-                ["target"] = GetExecutionPath(taskNode, "execution"),
-                ["argumentFormat"] = ""
-            });
+        private static void AddHandler(JsonNode taskNode, string target)
+        {
+            var targetNode = taskNode[target]?.AsObject();
 
-            taskNode["postjobexecution"]?.AsObject().Add("Node16", new JsonObject
+            if (targetNode != null)
             {
-                ["target"] = GetExecutionPath(taskNode, "postjobexecution"),
-                ["argumentFormat"] = ""
-            });
+                if (targetNode!.ContainsKey("Node16"))
+                {
+                    targetNode!.Remove("Node16");
+                }
+
+                targetNode!.Add("Node16", new JsonObject
+                {
+                    ["target"] = GetExecutionPath(taskNode, target),
+                    ["argumentFormat"] = ""
+                });
+            }
         }
 
         private static void ReadVersionMap(string versionMapFile, out Dictionary<string, TaskVersion> versionMap, out TaskVersion? maxVersion)
@@ -337,7 +368,6 @@ namespace BuildConfigGen
             }
         }
 
-
         private static void CopyFile(string sourcePath, string targetPath)
         {
             FileInfo fi = new FileInfo(targetPath);
@@ -349,60 +379,16 @@ namespace BuildConfigGen
 
             Console.Write($"Copy from={sourcePath} to={targetPath}...");
 
-            if (FilesEqual(sourcePath, targetPath))
+            if (Helpers.FilesEqual(sourcePath, targetPath))
             {
                 Console.WriteLine("files same, skipping");
             }
             else
             {
-                File.Copy(sourcePath, targetPath, true);
+                ensureUpdateModeVerifier!.Copy(sourcePath, targetPath, true);
                 Console.WriteLine("done");
             }
-
         }
-
-        private static bool FilesEqual(string sourcePath, string targetPath)
-        {
-            FileInfo fi = new FileInfo(sourcePath);
-            FileInfo fi2 = new FileInfo(targetPath);
-
-            if (!fi2.Exists)
-            {
-                return false;
-            }
-
-            if (fi.Length != fi2.Length)
-            {
-                return false;
-            }
-
-            byte[] buffer = new byte[4096 * 255];
-            byte[] buffer2 = new byte[4096 * 255];
-            using (var fs1 = fi.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                using (var fs2 = fi2.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                {
-                    int read;
-                    read = fs1.Read(buffer, 0, buffer.Length);
-                    if (read != fs2.Read(buffer2, 0, buffer2.Length))
-                    {
-                        throw new Exception("unexpected number of bytes read from second file");
-                    }
-
-                    for (int i = 0; i < read; i++)
-                    {
-                        if (buffer[i] != buffer2[i])
-                        {
-                            return false;
-                        }
-                    }
-
-                }
-            }
-
-            return true;
-        }
-
 
         private static JsonNode GetNodePath(JsonNode node, string path0, params string[] path)
         {
