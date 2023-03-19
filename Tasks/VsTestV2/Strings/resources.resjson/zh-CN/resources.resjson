@@ -34,7 +34,7 @@
   "loc.input.help.uiTests": "若要运行 UI 测试，请确保将代理设置为在交互模式下运行。必须在对生成/发布进行排队之前，将代理设置为交互运行。选中此框不会<b></b>自动在交互模式下配置代理。任务中的此选项仅作为对代理进行相应配置的提醒，以避免发生故障。<br><br>VS 2015 和 2017 池中的托管 Windows 代理可用于运行 UI 测试。<br> [详细信息](https://aka.ms/uitestmoreinfo)。",
   "loc.input.label.vstestLocationMethod": "通过以下方式选择测试平台",
   "loc.input.label.vsTestVersion": "测试平台版本",
-  "loc.input.help.vsTestVersion": "要使用的 Visual Studio 测试的版本。如果指定最新版，将选择 Visual Sutdio 2017 或 Visual Studio 2015，具体取决于所安装的版本。不支持 Visual Studio 2013。若要在无需 Visual Studio 的情况下在代理上运行测试，请使用“由工具安装程序安装”选项。请务必包含“Visual Studio 测试平台安装程序任务”以从 nuget 获取测试平台。",
+  "loc.input.help.vsTestVersion": "The version of Visual Studio test to use. If latest is specified it chooses latest Visual Studio version starting from VS2022 followed by VS2019, VS2017 and VS2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.",
   "loc.input.label.vstestLocation": "vstest.console.exe 的路径",
   "loc.input.help.vstestLocation": "可以提供 VSTest 的路径。",
   "loc.input.label.runSettingsFile": "设置文件",
