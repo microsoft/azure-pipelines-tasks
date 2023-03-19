@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function detect_platform_and_runtime_id ()
 {
     heading "Platform / RID detection"
@@ -40,7 +42,7 @@ function cmd_build ()
     dotnet build -o bin $SOLUTION_PATH || failed build
     #change execution flag to allow running with sudo
     if [[ ("$CURRENT_PLATFORM" == "linux") || ("$CURRENT_PLATFORM" == "darwin") ]]; then
-        chmod +x "/bin/BuildConfigGen"
+        chmod +x "bin/BuildConfigGen"
     fi
 
 }
