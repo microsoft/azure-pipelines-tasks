@@ -17,7 +17,7 @@
   "loc.input.label.body": "Text",
   "loc.input.help.body": "JSON-formatierter Nachrichtentext für die Anforderung.",
   "loc.input.label.waitForCompletion": "Abschlussereignis",
-  "loc.input.help.waitForCompletion": "Standardwert \"Callback\". Mögliche Werte: \"ApiResponse\" bzw. \"Callback\", wenn die Azure-Funktion einen Rückruf zum Aktualisieren des Zeitachsendatensatzes ausführt.",
+  "loc.input.help.waitForCompletion": "Standardwert \"ApiResponse\". Mögliche Werte: \"ApiResponse\" bzw. \"Callback\", wenn die Azure-Funktion einen Rückruf zum Aktualisieren des Zeitachsendatensatzes ausführt.",
   "loc.input.label.successCriteria": "Erfolgskriterien",
   "loc.input.help.successCriteria": "Kriterien, die definieren, wann die Aufgabe übergeben wird. Ohne Kriterium hat der Antwortinhalt keinen Einfluss auf das Ergebnis. Beispiel: Für die Antwort \"{\"status\" : \"successful\"}\" kann der Ausdruck \"eq(root['status'], 'successful')\" lauten. [Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=842996)"
 }

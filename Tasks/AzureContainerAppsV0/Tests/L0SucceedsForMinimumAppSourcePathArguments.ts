@@ -10,6 +10,7 @@ tmr.setInput('cwd', '/fakecwd');
 tmr.setInput('connectedServiceNameARM', 'test-connectedServiceNameARM');
 tmr.setInput('acrName', 'sampletestacr');
 tmr.setInput('appSourcePath', '/samplepath');
+tmr.setInput('disableTelemetry', 'true');
 
 const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
@@ -34,6 +35,9 @@ tmr.registerMock('./src/Utility', {
         return {
             setAzureCliDynamicInstall: function() {
                 return;
+            },
+            isNullOrEmpty(str: string): boolean {
+                return str === null || str === undefined || str === "";
             }
         };
     }

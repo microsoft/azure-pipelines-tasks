@@ -13,7 +13,7 @@ export class ManagementGroupManagementClient extends azureServiceClientBase.Azur
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, managementGroupId: string, options?: any) {
         super(credentials);
         this.validateInputs(managementGroupId);
-        this.apiVersion = '2021-04-01';
+        this.apiVersion = (credentials.isAzureStackEnvironment) ? '2016-06-01' : '2021-04-01';
         this.acceptLanguage = 'en-US';
         this.generateClientRequestId = true;
         if (!!options && !!options.longRunningOperationRetryTimeout) {

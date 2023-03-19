@@ -10,7 +10,7 @@
     "version": {
         "Major": 0,
         "Minor": 217,
-        "Patch": 0
+        "Patch": 1
     },
     "groups": [
         {
@@ -264,10 +264,6 @@
     "instanceNameFormat": "Download Build Artifacts",
     "execution": {
         "Node10": {
-            "target": "main.js",
-            "argumentFormat": ""
-        },
-        "Node16": {
             "target": "main.js",
             "argumentFormat": ""
         }

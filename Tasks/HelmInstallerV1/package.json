@@ -5,7 +5,7 @@
     "@types/q": "^1.5.0",
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^4.1.0",
-    "azure-pipelines-tasks-kubernetes-common-v2": "^2.209.1",
+    "azure-pipelines-tasks-kubernetes-common": "2.209.1",
     "azure-pipelines-tool-lib": "2.0.0-preview"
   },
   "devDependencies": {

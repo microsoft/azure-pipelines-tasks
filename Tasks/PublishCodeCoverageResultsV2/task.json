@@ -1,10 +1,10 @@
 {
     "id": "2A7EBC54-C13E-490E-81A5-D7561AB7CD97",
     "name": "PublishCodeCoverageResults",
-    "friendlyName": "Publish code coverage results",
+    "friendlyName": "Publish code coverage results v2",
     "description": "Publish any of the code coverage results from a build",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-code-coverage-results",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
+    "helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2?view=azure-pipelines)",
     "category": "Test",
     "visibility": [
         "Build"
@@ -15,7 +15,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 217,
+        "Minor": 218,
         "Patch": 0
     },
     "demands": [],

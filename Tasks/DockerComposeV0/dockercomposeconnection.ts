@@ -7,8 +7,8 @@ import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as yaml from "js-yaml";
 import * as DockerComposeUtils from "./dockercomposeutils";
 
-import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection"
-import AuthenticationToken from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken"
+import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection"
+import AuthenticationToken from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/registryauthenticationtoken"
 import * as Utils from "./utils";
 
 export default class DockerComposeConnection extends ContainerConnection {
