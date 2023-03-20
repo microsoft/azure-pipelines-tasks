@@ -2,9 +2,9 @@ name: Auto Assign ABTT to Project Board
 
 on:
   issues:
-    types: [opened, labeled]
-env:
-  MY_GITHUB_TOKEN: ${{ secrets.ABTT_TOKEN }}
+    types:
+      - opened
+      - labeled
 
 jobs:
   assign_one_project:
@@ -12,9 +12,8 @@ jobs:
     name: Assign to ABTT Project
     steps:
     - name: "Assign issues with 'Area: ABTT' label to project board"
-      uses: srggrs/assign-one-project-github-action@1.2.0
-      if: |
-        contains(github.event.issue.labels.*.name, 'Area: ABTT')
+      uses: actions/add-to-project@v0.4.1
       with:
-        project: 'https://github.com/orgs/microsoft/projects/48'
-        column_name: 'Ready for work (ordered by priority)'
+        project-url: https://github.com/orgs/microsoft/projects/755
+        github-token: ${{ secrets.ABTT_TOKEN }}
+        labeled: 'Area: ABTT'
