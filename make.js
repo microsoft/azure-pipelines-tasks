@@ -882,6 +882,11 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
 }
 
 CLI.gentask = function() {
+    if (argv.rebuild) {
+        rm("-Rf", genTaskPath);
+        rm("-Rf", path.join(baseConfigToolPath, "bin"));
+    }
+
     const programPath = util.getBuildConfigGenerator(baseConfigToolPath);
     let tasksToGen = taskList;
     let genTaskArg = "--write-updates";
