@@ -122,6 +122,11 @@ namespace BuildConfigGen
 
         internal static IEnumerable<string> GetNonIgnoredFileListFromPath(string taskTarget)
         {
+            if(!Directory.Exists(taskTarget))
+            {
+                throw new Exception($"{nameof(taskTarget)}=={taskTarget} doesn't exist");
+            }
+
             var output = GitLsFiles(taskTarget).Select(FixupPath);
             IEnumerable<string> untrackedOuput2;
             IEnumerable<string> untrackedToRemove;
@@ -137,7 +142,8 @@ namespace BuildConfigGen
         {
             if (!Directory.Exists(taskTarget))
             {
-                return new string[0];
+                throw new Exception($"{nameof(taskTarget)}=={taskTarget} doesn't exist");
+                //return new string[0];
             }
 
             int exitCode;
@@ -155,6 +161,12 @@ namespace BuildConfigGen
 
         private static string RunGitCommandScalar(string currentDir, string args)
         {
+            if (!Directory.Exists(currentDir))
+            {
+                throw new Exception($"{nameof(currentDir)}=={currentDir} doesn't exist");
+                //return new string[0];
+            }
+
             string[] output;
             int exitCode;
             if (0 != (exitCode = ProcessUtil.RunCommandWithExitCode("git", args, currentDir, out output)))

@@ -5,6 +5,17 @@ using System.Text.Json.Nodes;
 
 namespace BuildConfigGen
 {
+
+    internal class Tweak
+    {
+        public static readonly Tweak Default = new Tweak { SourceDirectoriesMustContainPlaceHolders = false };
+
+        // when true, Source Directories must contain _buildConfigs placeholders for each build config
+        // _buildConfigs are written to each directory when --write-updates is specified
+        // setting to false for now so we're not forced to check in a lot of placeholders to tasks that don't use them
+        public bool SourceDirectoriesMustContainPlaceHolders { get; init; }
+    }
+
     internal class Program
     {
         private const string filesOverriddenForConfigGoHereReadmeTxt = "FilesOverriddenForConfigGoHereREADME.txt";
@@ -25,7 +36,7 @@ namespace BuildConfigGen
         static EnsureUpdateModeVerifier? ensureUpdateModeVerifier;
 
         /// <param name="task">The task to generate build configs for</param>
-        /// <param name="writeUpdates">Write updates if true, else validate</param>
+        /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
         static void Main(string task = "", bool writeUpdates = false)
         {
             // error handling strategy:
@@ -139,10 +150,10 @@ namespace BuildConfigGen
 
             if (!Directory.Exists(path))
             {
-                ensureUpdateModeVerifier!.DirectoryCreateDirectory(path);
+                ensureUpdateModeVerifier!.DirectoryCreateDirectory(path, suppressValidationErrorIfTargetPathDoesntExist: !Tweak.Default.SourceDirectoriesMustContainPlaceHolders);
             }
 
-            ensureUpdateModeVerifier!.WriteAllText(readmeFile, "Place files overridden for this config in this directory");
+            ensureUpdateModeVerifier!.WriteAllText(readmeFile, "Place files overridden for this config in this directory", suppressValidationErrorIfTargetPathDoesntExist: !Tweak.Default.SourceDirectoriesMustContainPlaceHolders);
         }
 
         private static void GetBuildConfigFileOverridePaths(Config.ConfigRecord config, string taskTargetPath, out string path, out string readmeFile)
@@ -153,12 +164,23 @@ namespace BuildConfigGen
 
         private static void CopyConfigOverrides(string taskTargetPath, string taskOutput, Config.ConfigRecord config)
         {
-            string path;
-            GetBuildConfigFileOverridePaths(config, taskTargetPath, out path, out _);
+            string overridePathForBuildConfig;
+            GetBuildConfigFileOverridePaths(config, taskTargetPath, out overridePathForBuildConfig, out _);
 
-            CopyConfig(path, taskOutput, null, skipFileName: filesOverriddenForConfigGoHereReadmeTxt, removeExtraFiles: false);
+            bool skipCopy;
+            if (Tweak.Default.SourceDirectoriesMustContainPlaceHolders)
+            {
+                skipCopy = false;
+            } else
+            {
+                skipCopy = Directory.Exists(overridePathForBuildConfig);
+            }
+
+            if (skipCopy)
+            {
+                CopyConfig(overridePathForBuildConfig, taskOutput, null, skipFileName: filesOverriddenForConfigGoHereReadmeTxt, removeExtraFiles: false);
+            }
         }
-
 
         private static void WriteTaskJson(string taskPath, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, Config.ConfigRecord config, string path2)
         {
@@ -178,7 +200,7 @@ namespace BuildConfigGen
                 AddNode16handler(outputTaskNode);
             }
 
-            ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso));
+            ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
         private static void WriteNode16PackageJson(string taskOutputNode16)
@@ -186,7 +208,7 @@ namespace BuildConfigGen
             string outputNode16PackagePath = Path.Combine(taskOutputNode16, "package.json");
             JsonNode outputNod16PackagePath = JsonNode.Parse(File.ReadAllText(outputNode16PackagePath))!;
             outputNod16PackagePath["dependencies"]!["@types/node"] = "^16.11.39";
-            ensureUpdateModeVerifier!.WriteAllText(outputNode16PackagePath, outputNod16PackagePath.ToJsonString(jso));
+            ensureUpdateModeVerifier!.WriteAllText(outputNode16PackagePath, outputNod16PackagePath.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
         private static bool hasNodeHandler(JsonNode taskHandlerContents)
@@ -214,7 +236,7 @@ namespace BuildConfigGen
             foreach (var path in paths)
             {
                 string sourcePath = Path.Combine(taskTarget, path);
-                if (skipPathName!=null && sourcePath.Contains(string.Concat(skipPathName, Path.DirectorySeparatorChar)))
+                if (skipPathName != null && sourcePath.Contains(string.Concat(skipPathName, Path.DirectorySeparatorChar)))
                 {
                     // skip the path!  (this is used to skip _buildConfigs in the source task path)
                 }
@@ -230,7 +252,7 @@ namespace BuildConfigGen
                     }
                     else
                     {
-                        if(!File.Exists(targetPath))
+                        if (!File.Exists(targetPath))
                         {
                             throw new Exception($"Overriden file must exist in targetPath sourcePath={sourcePath} targetPath={targetPath}");
                         }
@@ -352,7 +374,7 @@ namespace BuildConfigGen
 
             inputTaskNode["version"]!["Patch"] = configTaskVersion[Config.Default].Patch;
 
-            ensureUpdateModeVerifier!.WriteAllText(inputTaskPath, inputTaskNode.ToJsonString(jso));
+            ensureUpdateModeVerifier!.WriteAllText(inputTaskPath, inputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
         private static void WriteVersionMapFile(string versionMapFile, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion)
@@ -366,7 +388,7 @@ namespace BuildConfigGen
                 }
             }
 
-            ensureUpdateModeVerifier!.WriteAllText(versionMapFile, sb.ToString());
+            ensureUpdateModeVerifier!.WriteAllText(versionMapFile, sb.ToString(), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
         private static string GetExecutionPath(JsonNode taskNode, string execution)

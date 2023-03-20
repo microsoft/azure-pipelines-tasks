@@ -14,7 +14,7 @@ namespace BuildConfigGen
 
         public IEnumerable<string> GetVerifyErrors(bool skipContentCheck)
         {
-            foreach(var r in VerifyErrors)
+            foreach (var r in VerifyErrors)
             {
                 yield return r;
             }
@@ -49,7 +49,12 @@ namespace BuildConfigGen
                     if (overwrite)
                     {
                         // we might check the content here, but we defer it in cause the content gets updated in WriteAllText
-                        CopiedFilesToCheck.Add(NormalizeFile(destFileName), NormalizeFile(sourceFileName));
+                        string normalizedDestFileName = NormalizeFile(destFileName);
+                        string normalizedSourceFileName = NormalizeFile(sourceFileName);
+                        if (!CopiedFilesToCheck.TryAdd(normalizedDestFileName, normalizedSourceFileName))
+                        {
+                            CopiedFilesToCheck[normalizedDestFileName] = normalizedSourceFileName;
+                        }
                     }
                     else
                     {
@@ -90,7 +95,7 @@ namespace BuildConfigGen
             }
         }
 
-        internal void WriteAllText(string path, string contents)
+        internal void WriteAllText(string path, string contents, bool suppressValidationErrorIfTargetPathDoesntExist)
         {
             if (verifyOnly)
             {
@@ -116,7 +121,16 @@ namespace BuildConfigGen
                 }
                 else
                 {
-                    VerifyErrors.Add($"Need to write content to {path} content.Length={contents.Length}, destination does not exist");
+                    string item = $"Need to write content to {path} content.Length={contents.Length}, destination does not exist";
+
+                    if (suppressValidationErrorIfTargetPathDoesntExist)
+                    {
+                        Console.WriteLine("Skipping adding validation warning due to suppressValidationErrorIfTargetPathDoesntExist: " + item);
+                    }
+                    else
+                    {
+                        VerifyErrors.Add(item);
+                    }
                 }
             }
             else
@@ -131,19 +145,27 @@ namespace BuildConfigGen
             return fi.FullName;
         }
 
-        internal void DirectoryCreateDirectory(string path)
+        internal void DirectoryCreateDirectory(string path, bool suppressValidationErrorIfTargetPathDoesntExist)
         {
             if (verifyOnly)
             {
                 if (!Directory.Exists(path))
                 {
-                    VerifyErrors.Add($"Need to create directory {path}");
+                    string item = $"Need to create directory {path}";
+                    if (suppressValidationErrorIfTargetPathDoesntExist)
+                    {
+                        Console.WriteLine("Skipping adding VerifyError due to suppressValidationErrorIfTargetPathDoesntExist=true:" + item);
+                    }
+                    else
+                    {
+                        VerifyErrors.Add(item);
+                    }
                 }
             }
             else
             {
                 Directory.CreateDirectory(path);
-            }                    
+            }
         }
     }
 }
