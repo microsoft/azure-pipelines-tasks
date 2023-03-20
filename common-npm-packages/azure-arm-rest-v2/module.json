@@ -5,6 +5,8 @@
         "SecretCannotBeEmpty": "secret must be a non empty string.",
         "armUrlCannotBeEmpty": "arm Url must be a non empty string.",
         "authorityUrlCannotBeEmpty": "authority must be a non empty string.",
+        "serviceConnectionIdCannotBeEmpty": "serviceConnectionId must be a non empty string.",
+        "CouldNotFetchAccessTokenforAAD": "Could not fetch access token for AAD.",
         "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",

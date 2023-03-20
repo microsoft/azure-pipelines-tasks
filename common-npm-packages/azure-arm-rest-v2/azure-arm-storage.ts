@@ -125,6 +125,24 @@ export class StorageAccounts {
          return deferred.promise;
      }
 
+    public async getClassicOrArmAccountByName(accountName: string, options: any): Promise<Model.StorageAccount> {
+        const httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'GET';
+        httpRequest.headers = this.client.setCustomHeaders(options);
+        // TODO: I think we should use newer api versions in the future?
+        httpRequest.uri = `https://management.azure.com/resources?api-version=2014-04-01-preview&%24filter=(subscriptionId%20eq%20'${this.client.subscriptionId}')%20and%20(resourceType%20eq%20'microsoft.storage%2Fstorageaccounts'%20or%20resourceType%20eq%20'microsoft.classicstorage%2Fstorageaccounts')%20and%20(name%20eq%20'${accountName}')`;
+
+        const res = await this.client.beginRequest(httpRequest);
+
+        if (res.statusCode == 200 && res.body.value) {
+            const storageAccounts: Model.StorageAccount[] = res.body.value;
+
+            return storageAccounts[0];
+        } else {
+            throw azureServiceClientBase.ToError(res);
+        }
+    }
+
     public async listKeys(resourceGroupName: string, accountName: string, options, storageAccountType?: string): Promise<string[]> {
         if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
             throw new Error(tl.loc("ResourceGroupCannotBeNull"));

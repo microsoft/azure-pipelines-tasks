@@ -1,7 +1,7 @@
-import RegistryAuthenticationToken from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
-import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
-import { getDockerRegistryEndpointAuthenticationToken } from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
-import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
+import RegistryAuthenticationToken from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/registryauthenticationtoken";
+import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
+import { getDockerRegistryEndpointAuthenticationToken } from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/registryauthenticationtoken";
+import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common/dockercommandutils";
 
 
 export class ContainerRegistry {

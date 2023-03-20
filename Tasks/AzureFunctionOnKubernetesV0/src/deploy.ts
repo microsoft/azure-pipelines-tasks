@@ -5,11 +5,11 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from "azure-pipelines-task-lib/toolrunner";
 import { CommandHelper } from './utils/commandHelper';
 import { DockerConnection } from './dockerConnection';
-import { Kubectl, Resource } from 'azure-pipelines-tasks-kubernetes-common-v2/kubectl-object-model';
+import { Kubectl, Resource } from 'azure-pipelines-tasks-kubernetes-common/kubectl-object-model';
 import * as FileHelper from './utils/fileHelper';
-import * as KubernetesConstants from 'azure-pipelines-tasks-kubernetes-common-v2/kubernetesconstants';
-import * as KubernetesManifestUtility from 'azure-pipelines-tasks-kubernetes-common-v2/kubernetesmanifestutility';
-import * as CommonUtils from 'azure-pipelines-tasks-kubernetes-common-v2/utility';
+import * as KubernetesConstants from 'azure-pipelines-tasks-kubernetes-common/kubernetesconstants';
+import * as KubernetesManifestUtility from 'azure-pipelines-tasks-kubernetes-common/kubernetesmanifestutility';
+import * as CommonUtils from 'azure-pipelines-tasks-kubernetes-common/utility';
 
 const secretName = tl.getInput('secretName');
 const appName = tl.getInput('appName', true);

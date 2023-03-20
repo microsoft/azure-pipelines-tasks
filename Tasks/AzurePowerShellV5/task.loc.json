@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 216,
-    "Patch": 1
+    "Minor": 218,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -154,6 +154,16 @@
       "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.pwsh",
       "groupName": "advanced"
+    },
+    {
+      "name": "validateScriptSignature",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.validateScriptSignature",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.validateScriptSignature",
+      "groupName": "advanced",
+      "visibleRule": "ScriptType = FilePath"
     },
     {
       "name": "workingDirectory",

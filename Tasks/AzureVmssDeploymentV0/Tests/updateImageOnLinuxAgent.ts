@@ -58,7 +58,7 @@ Date.now = function (): number {
 tr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-task-lib/mock-toolrunner'));
 tr.registerMock('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-compute', require('./mock_node_modules/azure-arm-compute'));
 tr.registerMock('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-storage', require('./mock_node_modules/azure-arm-storage'));
-tr.registerMock('azp-tasks-az-blobstorage-provider-v2/blobservice', require('./mock_node_modules/blobservice'));
+tr.registerMock('azp-tasks-az-blobstorage-provider/blobservice', require('./mock_node_modules/blobservice'));
 tr.registerMock('azure-pipelines-tasks-utility-common/compressutility', require('./mock_node_modules/compressutility'));
 
 tr.run();
