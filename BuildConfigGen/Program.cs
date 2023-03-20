@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -24,10 +23,10 @@ namespace BuildConfigGen
 
         static class Config
         {
-            public record ConfigRecord(string constMappingKey, bool isDefault, bool isNode16);
+            public record ConfigRecord(string constMappingKey, bool isDefault, bool isNode16, string preprocessorVariableName, string[] extensionsToPreprocess);
 
-            public static readonly ConfigRecord Default = new ConfigRecord(constMappingKey: nameof(Default), isDefault: true, isNode16: false);
-            public static readonly ConfigRecord Node16 = new ConfigRecord(constMappingKey: nameof(Node16), isDefault: false, isNode16: true);
+            public static readonly ConfigRecord Default = new ConfigRecord(constMappingKey: nameof(Default), isDefault: true, isNode16: false, preprocessorVariableName: "DEFAULT", extensionsToPreprocess: new[] { ".ts" });
+            public static readonly ConfigRecord Node16 = new ConfigRecord(constMappingKey: nameof(Node16), isDefault: false, isNode16: true, preprocessorVariableName: "NODE16", extensionsToPreprocess: new[] { ".ts" });
 
             public static ConfigRecord[] Configs = { Default, Node16 };
         }
@@ -139,6 +138,8 @@ namespace BuildConfigGen
 
                 CopyConfigOverrides(taskTargetPath, taskOutput, config);
 
+                HandlePreprocessingInTarget(taskOutput, config);
+
                 WriteInputTaskJson(taskTargetPath, configTaskVersionMapping, "task.json");
                 WriteInputTaskJson(taskTargetPath, configTaskVersionMapping, "task.loc.json");
                 WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.json");
@@ -150,6 +151,7 @@ namespace BuildConfigGen
                 }
             }
         }
+
 
         private static void EnsureBuildConfigFileOverrides(Config.ConfigRecord config, string taskTargetPath)
         {
@@ -179,14 +181,59 @@ namespace BuildConfigGen
             if (Tweak.Default.SourceDirectoriesMustContainPlaceHolders)
             {
                 skipCopy = false;
-            } else
+            }
+            else
             {
                 skipCopy = Directory.Exists(overridePathForBuildConfig);
             }
 
             if (skipCopy)
             {
-                CopyConfig(overridePathForBuildConfig, taskOutput, null, skipFileName: filesOverriddenForConfigGoHereReadmeTxt, removeExtraFiles: false, throwIfNotUpdatingFileForApplyingOverrides: true);
+                CopyConfig(overridePathForBuildConfig, taskOutput, skipPathName: null, skipFileName: filesOverriddenForConfigGoHereReadmeTxt, removeExtraFiles: false, throwIfNotUpdatingFileForApplyingOverrides: true);
+            }
+        }
+
+        private static void HandlePreprocessingInTarget(string taskOutput, Config.ConfigRecord config)
+        {
+            HashSet<string> extensions = new HashSet<string>(config.extensionsToPreprocess);
+            var nonIgnoredFilesInTarget = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(taskOutput));
+
+            foreach (var file in nonIgnoredFilesInTarget)
+            {
+                string taskOutputFile = Path.Combine(taskOutput, file);
+
+                if (extensions.Contains(Path.GetExtension(taskOutputFile)))
+                {
+                    Preprocess(taskOutputFile, config);
+                }
+            }
+        }
+
+        private static void Preprocess(string file, Config.ConfigRecord config)
+        {
+            Console.Write($"Preprocessing {file}...");
+
+            Preprocessor.Preprocess(file, File.ReadAllLines(file), new HashSet<string>(Config.Configs.Select(s => s.preprocessorVariableName)), config.preprocessorVariableName, out string processed, out var validationErrors, out bool madeChanges);
+
+            if (validationErrors.Count() != 0)
+            {
+                Console.WriteLine("Preprocessor validation errors:");
+                foreach (var error in validationErrors)
+                {
+                    Console.WriteLine(error);
+                }
+
+                throw new Exception("Preprocessor validation errors occured");
+            }
+
+            if (madeChanges)
+            {
+                ensureUpdateModeVerifier!.WriteAllText(file, processed, false);
+                Console.WriteLine("Done");
+            }
+            else
+            {
+                Console.WriteLine("No changes; skipping");
             }
         }
 
@@ -243,7 +290,7 @@ namespace BuildConfigGen
             var paths = GitUtil.GetNonIgnoredFileListFromPath(taskTarget);
 
             HashSet<string> pathsToRemoveFromOutput;
-            
+
             // In case if task was not generated yet, we don't need to get the list of files to remove, because taskOutput not exists yet
             if (Directory.Exists(taskOutput))
             {
