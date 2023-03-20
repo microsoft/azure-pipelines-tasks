@@ -37,7 +37,7 @@ namespace BuildConfigGen
 
         /// <param name="task">The task to generate build configs for</param>
         /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
-        static void Main(string task = "", bool writeUpdates = false)
+        static void Main(string task = "AzureIoTEdgeV2", bool writeUpdates = true)
         {
             // error handling strategy:
             // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
@@ -108,6 +108,13 @@ namespace BuildConfigGen
                 return;
             }
 
+            // If Directory for saved file doesn't exist, create it
+            string generatedFolder = Path.Combine(gitRootPath, "_generated");
+            if (!Directory.Exists(generatedFolder))
+            {
+                ensureUpdateModeVerifier!.DirectoryCreateDirectory(generatedFolder, true);
+            }
+
             UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping);
 
             foreach (var config in Config.Configs)
@@ -132,7 +139,8 @@ namespace BuildConfigGen
 
                 CopyConfigOverrides(taskTargetPath, taskOutput, config);
 
-                WriteInputTaskJson(taskTargetPath, configTaskVersionMapping);
+                WriteInputTaskJson(taskTargetPath, configTaskVersionMapping, "task.json");
+                WriteInputTaskJson(taskTargetPath, configTaskVersionMapping, "task.loc.json");
                 WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.json");
                 WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.loc.json");
 
@@ -182,9 +190,9 @@ namespace BuildConfigGen
             }
         }
 
-        private static void WriteTaskJson(string taskPath, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, Config.ConfigRecord config, string path2)
+        private static void WriteTaskJson(string taskPath, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, Config.ConfigRecord config, string fileName)
         {
-            string outputTaskPath = Path.Combine(taskPath, path2);
+            string outputTaskPath = Path.Combine(taskPath, fileName);
             JsonNode outputTaskNode = JsonNode.Parse(File.ReadAllText(outputTaskPath))!;
             outputTaskNode["version"]!["Patch"] = configTaskVersionMapping[config].Patch;
             outputTaskNode.AsObject()?.Remove("_buildConfigMapping");
@@ -233,7 +241,14 @@ namespace BuildConfigGen
         private static void CopyConfig(string taskTarget, string taskOutput, string? skipPathName, string? skipFileName, bool removeExtraFiles)
         {
             var paths = GitUtil.GetNonIgnoredFileListFromPath(taskTarget);
-            var pathsToRemoveFromOutput = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(taskOutput));
+
+            // In case if task was not generated yet, we don't need to get the list of files to remove, because taskOutput not exists yet
+            HashSet<string> pathsToRemoveFromOutput = new HashSet<string>{ }; 
+            if (Directory.Exists(taskOutput))
+            {
+                pathsToRemoveFromOutput = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(taskOutput));
+            }
+
 
             foreach (var path in paths)
             {
@@ -254,7 +269,13 @@ namespace BuildConfigGen
                     }
                     else
                     {
-                        if (!File.Exists(targetPath))
+                        /* 
+                           Not sure do we need to check only File.Exists(targetPath), 
+                           For example if someone add new file in the root of the task which suitable for all configs,
+                           maybe better to check if for _buildConfigs folder exists and if not - just copy all files from the root of the task
+                           Also when we generate task first time it cause an error because target path not exists yet for all files
+                        */ 
+                        if (!File.Exists(targetPath) && sourcePath.Contains(buildConfigs))
                         {
                             throw new Exception($"Overriden file must exist in targetPath sourcePath={sourcePath} targetPath={targetPath}");
                         }
@@ -369,9 +390,9 @@ namespace BuildConfigGen
             return inputVersion;
         }
 
-        private static void WriteInputTaskJson(string taskTarget, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion)
+        private static void WriteInputTaskJson(string taskTarget, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion, string fileName)
         {
-            string inputTaskPath = Path.Combine(taskTarget, "task.json");
+            string inputTaskPath = Path.Combine(taskTarget, fileName);
             JsonNode inputTaskNode = JsonNode.Parse(File.ReadAllText(inputTaskPath))!;
 
             inputTaskNode["version"]!["Patch"] = configTaskVersion[Config.Default].Patch;

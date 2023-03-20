@@ -882,32 +882,26 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
 }
 
 CLI.gentask = function() {
-    var programPath = "";
-    var configToolBuildUtility = "";
-
-    if (os.platform() === 'win32') {
-        programPath = path.join(baseConfigToolPath, 'bin', 'BuildConfigGen.exe');
-        configToolBuildUtility = path.join(baseConfigToolPath, "dev.cmd");
-    } else {
-        programPath = path.join(baseConfigToolPath, 'bin', 'BuildConfigGen');
-        configToolBuildUtility = path.join(baseConfigToolPath, "dev.sh");
+    if (argv.rebuild) {
+        rm("-Rf", genTaskPath);
+        rm("-Rf", path.join(baseConfigToolPath, "bin"));
     }
 
-    if (!fs.existsSync(programPath)) {
-        console.log(`BuildConfigGen not found at ${programPath}. Starting build.`);
-        run(configToolBuildUtility);
+    const programPath = util.getBuildConfigGenerator(baseConfigToolPath);
+    let tasksToGen = taskList;
+    let genTaskArg = "--write-updates";
+
+    if (argv.validate) {
+        genTaskArg = "";
+        tasksToGen = util.getTaskListForValidate(genTaskPath, taskList);
     }
 
-    let baseArgs = "";
-    const skippedArgs = ["_", "$0", "task"];
+    if (tasksToGen.length == 0) {
+        fail("No tasks which satisfy the criteria for generation were found.");
+    }
     
-    for (let argvKey in argv) {
-        if (skippedArgs.indexOf(argvKey) > -1) continue;
-        baseArgs += `--${argvKey} ${argv[argvKey]} `;
-    }
-
-    taskList.forEach(function (taskName) {
-        const args = baseArgs + ` --task ${taskName}`;
+    tasksToGen.forEach(function (taskName) {
+        const args = genTaskArg + ` --task ${taskName}`;
 
         banner('Generating: ' + taskName);
         run(`${programPath} ${args}` , true);
