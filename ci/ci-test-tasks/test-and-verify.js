@@ -19,7 +19,7 @@ if (task) {
   .then(resultMessage => console.log(resultMessage))
   .catch(err => {
     console.error(err.message);
-    console.error(err.stack);
+    console.debug(err.stack);
   });
 } else {
   console.error('Task name was not provided');
@@ -88,7 +88,7 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
       if (data.result === 'succeeded') {
         resolve(result);
       } else {
-        reject(result);
+        reject(new Error(result));
       }
     })
     .catch(err => {
@@ -117,5 +117,5 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
 process.on('uncaughtException', err => {
   console.error('Uncought exception:');
   console.error(err.message);
-  console.error(err.stack);
+  console.debug(err.stack);
 });
