@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -6,6 +7,8 @@ namespace BuildConfigGen
 {
     internal class Program
     {
+        private const string filesOverriddenForConfigGoHereReadmeTxt = "FilesOverriddenForConfigGoHereREADME.txt";
+        private const string buildConfigs = "_buildConfigs";
         static readonly JsonSerializerOptions jso = new System.Text.Json.JsonSerializerOptions { WriteIndented = true, Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
 
         static class Config
@@ -24,6 +27,16 @@ namespace BuildConfigGen
         /// <param name="task">The task to generate build configs for</param>
         /// <param name="writeUpdates">Write updates if true, else validate</param>
         static void Main(string task = "", bool writeUpdates = false)
+        {
+            // error handling strategy:
+            // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
+            // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
+            // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
+
+            Main3(task, writeUpdates);
+        }
+
+        private static void Main3(string task, bool writeUpdates)
         {
             if (string.IsNullOrEmpty(task))
             {
@@ -98,11 +111,15 @@ namespace BuildConfigGen
                     taskOutput = Path.Combine(gitRootPath, "_generated", @$"{task}_{config.constMappingKey}");
                 }
 
-                CopyConfigs(taskTargetPath, taskOutput);
+                EnsureBuildConfigFileOverrides(config, taskTargetPath);
+
+                CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true);
 
                 // Check verifier errors (throw here to provide a more user friendly message; as Copy is skipped when Write-Updates isn't specified; files to update may be missing)
                 // Skip content check==true for files that existin destination as some of them will be updated and validated later
                 ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: true);
+
+                CopyConfigOverrides(taskTargetPath, taskOutput, config);
 
                 WriteInputTaskJson(taskTargetPath, configTaskVersionMapping);
                 WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.json");
@@ -114,6 +131,34 @@ namespace BuildConfigGen
                 }
             }
         }
+
+        private static void EnsureBuildConfigFileOverrides(Config.ConfigRecord config, string taskTargetPath)
+        {
+            string path, readmeFile;
+            GetBuildConfigFileOverridePaths(config, taskTargetPath, out path, out readmeFile);
+
+            if (!Directory.Exists(path))
+            {
+                ensureUpdateModeVerifier!.DirectoryCreateDirectory(path);
+            }
+
+            ensureUpdateModeVerifier!.WriteAllText(readmeFile, "Place files overridden for this config in this directory");
+        }
+
+        private static void GetBuildConfigFileOverridePaths(Config.ConfigRecord config, string taskTargetPath, out string path, out string readmeFile)
+        {
+            path = Path.Combine(taskTargetPath, buildConfigs, config.constMappingKey);
+            readmeFile = Path.Combine(taskTargetPath, buildConfigs, config.constMappingKey, filesOverriddenForConfigGoHereReadmeTxt);
+        }
+
+        private static void CopyConfigOverrides(string taskTargetPath, string taskOutput, Config.ConfigRecord config)
+        {
+            string path;
+            GetBuildConfigFileOverridePaths(config, taskTargetPath, out path, out _);
+
+            CopyConfig(path, taskOutput, null, skipFileName: filesOverriddenForConfigGoHereReadmeTxt, removeExtraFiles: false);
+        }
+
 
         private static void WriteTaskJson(string taskPath, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, Config.ConfigRecord config, string path2)
         {
@@ -161,32 +206,55 @@ namespace BuildConfigGen
             return hasNodeHandler;
         }
 
-        private static void CopyConfigs(string taskTarget, string taskOutput)
+        private static void CopyConfig(string taskTarget, string taskOutput, string? skipPathName, string? skipFileName, bool removeExtraFiles)
         {
             var paths = GitUtil.GetNonIgnoredFileListFromPath(taskTarget);
-            var targetPaths = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(taskOutput));
+            var pathsToRemoveFromOutput = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(taskOutput));
 
-            foreach (var o in paths)
+            foreach (var path in paths)
             {
-                string sourcePath = Path.Combine(taskTarget, o);
-                string targetPath = Path.Combine(taskOutput, o);
-                _ = targetPaths.Remove(o);
+                string sourcePath = Path.Combine(taskTarget, path);
+                if (skipPathName!=null && sourcePath.Contains(string.Concat(skipPathName, Path.DirectorySeparatorChar)))
+                {
+                    // skip the path!  (this is used to skip _buildConfigs in the source task path)
+                }
+                else
+                {
+                    _ = pathsToRemoveFromOutput.Remove(path);
 
-                CopyFile(sourcePath, targetPath);
+                    string targetPath = Path.Combine(taskOutput, path);
+
+                    if (skipFileName != null && sourcePath.Contains(string.Concat(Path.DirectorySeparatorChar.ToString(), skipFileName), StringComparison.OrdinalIgnoreCase))
+                    {
+                        // e.g. skip filesOverriddenForConfigGoHereReadmeTxt
+                    }
+                    else
+                    {
+                        if(!File.Exists(targetPath))
+                        {
+                            throw new Exception($"Overriden file must exist in targetPath sourcePath={sourcePath} targetPath={targetPath}");
+                        }
+
+                        CopyFile(sourcePath, targetPath);
+                    }
+                }
             }
 
-            foreach (var b in targetPaths)
+            if (removeExtraFiles)
             {
-                string targetPath = Path.Combine(taskOutput, b);
-                Console.WriteLine($"Adding .tmp extension to extra file in output directory (should cause it to be ignored by .gitignore): {b}");
-
-                string destFileName = targetPath + ".tmp";
-                if (File.Exists(destFileName))
+                foreach (var pathToRemoveFromOutput in pathsToRemoveFromOutput)
                 {
-                    throw new Exception($"{destFileName} already exists; please clean up");
-                }
+                    string targetPath = Path.Combine(taskOutput, pathToRemoveFromOutput);
+                    Console.WriteLine($"Adding .tmp extension to extra file in output directory (should cause it to be ignored by .gitignore): {pathToRemoveFromOutput}");
 
-                ensureUpdateModeVerifier!.Move(targetPath, destFileName);
+                    string destFileName = targetPath + ".tmp";
+                    if (File.Exists(destFileName))
+                    {
+                        throw new Exception($"{destFileName} already exists; please clean up");
+                    }
+
+                    ensureUpdateModeVerifier!.Move(targetPath, destFileName);
+                }
             }
         }
 

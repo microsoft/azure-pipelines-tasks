@@ -116,7 +116,7 @@ namespace BuildConfigGen
                 }
                 else
                 {
-                    VerifyErrors.Add($"Need to write content to {path} content.Length={contents.Length}");
+                    VerifyErrors.Add($"Need to write content to {path} content.Length={contents.Length}, destination does not exist");
                 }
             }
             else
@@ -129,6 +129,21 @@ namespace BuildConfigGen
         {
             FileInfo fi = new FileInfo(file);
             return fi.FullName;
+        }
+
+        internal void DirectoryCreateDirectory(string path)
+        {
+            if (verifyOnly)
+            {
+                if (!Directory.Exists(path))
+                {
+                    VerifyErrors.Add($"Need to create directory {path}");
+                }
+            }
+            else
+            {
+                Directory.CreateDirectory(path);
+            }                    
         }
     }
 }
