@@ -37,7 +37,7 @@ namespace BuildConfigGen
 
         /// <param name="task">The task to generate build configs for</param>
         /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
-        static void Main(string task = "AzureIoTEdgeV2", bool writeUpdates = true)
+        static void Main(string task, bool writeUpdates = false)
         {
             // error handling strategy:
             // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
@@ -108,11 +108,11 @@ namespace BuildConfigGen
                 return;
             }
 
-            // If Directory for saved file doesn't exist, create it
+            // Create _generated
             string generatedFolder = Path.Combine(gitRootPath, "_generated");
             if (!Directory.Exists(generatedFolder))
             {
-                ensureUpdateModeVerifier!.DirectoryCreateDirectory(generatedFolder, true);
+                ensureUpdateModeVerifier!.DirectoryCreateDirectory(generatedFolder, false);
             }
 
             UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping);
@@ -131,7 +131,7 @@ namespace BuildConfigGen
 
                 EnsureBuildConfigFileOverrides(config, taskTargetPath);
 
-                CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true);
+                CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverrides: false);
 
                 // Check verifier errors (throw here to provide a more user friendly message; as Copy is skipped when Write-Updates isn't specified; files to update may be missing)
                 // Skip content check==true for files that existin destination as some of them will be updated and validated later
@@ -186,7 +186,7 @@ namespace BuildConfigGen
 
             if (skipCopy)
             {
-                CopyConfig(overridePathForBuildConfig, taskOutput, null, skipFileName: filesOverriddenForConfigGoHereReadmeTxt, removeExtraFiles: false);
+                CopyConfig(overridePathForBuildConfig, taskOutput, null, skipFileName: filesOverriddenForConfigGoHereReadmeTxt, removeExtraFiles: false, throwIfNotUpdatingFileForApplyingOverrides: true);
             }
         }
 
@@ -238,15 +238,20 @@ namespace BuildConfigGen
             return hasNodeHandler;
         }
 
-        private static void CopyConfig(string taskTarget, string taskOutput, string? skipPathName, string? skipFileName, bool removeExtraFiles)
+        private static void CopyConfig(string taskTarget, string taskOutput, string? skipPathName, string? skipFileName, bool removeExtraFiles, bool throwIfNotUpdatingFileForApplyingOverrides)
         {
             var paths = GitUtil.GetNonIgnoredFileListFromPath(taskTarget);
 
+            HashSet<string> pathsToRemoveFromOutput;
+            
             // In case if task was not generated yet, we don't need to get the list of files to remove, because taskOutput not exists yet
-            HashSet<string> pathsToRemoveFromOutput = new HashSet<string>{ }; 
             if (Directory.Exists(taskOutput))
             {
                 pathsToRemoveFromOutput = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(taskOutput));
+            }
+            else
+            {
+                pathsToRemoveFromOutput = new HashSet<string>();
             }
 
 
@@ -269,13 +274,7 @@ namespace BuildConfigGen
                     }
                     else
                     {
-                        /* 
-                           Not sure do we need to check only File.Exists(targetPath), 
-                           For example if someone add new file in the root of the task which suitable for all configs,
-                           maybe better to check if for _buildConfigs folder exists and if not - just copy all files from the root of the task
-                           Also when we generate task first time it cause an error because target path not exists yet for all files
-                        */ 
-                        if (!File.Exists(targetPath) && sourcePath.Contains(buildConfigs))
+                        if (throwIfNotUpdatingFileForApplyingOverrides && !File.Exists(targetPath))
                         {
                             throw new Exception($"Overriden file must exist in targetPath sourcePath={sourcePath} targetPath={targetPath}");
                         }
