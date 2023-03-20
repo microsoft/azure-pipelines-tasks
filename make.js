@@ -898,9 +898,19 @@ CLI.gentask = function() {
         run(configToolBuildUtility);
     }
 
+    let baseArgs = "";
+    const skippedArgs = ["_", "$0", "task"];
+    
+    for (let argvKey in argv) {
+        if (skippedArgs.indexOf(argvKey) > -1) continue;
+        baseArgs += `--${argvKey} ${argv[argvKey]} `;
+    }
+
     taskList.forEach(function (taskName) {
+        const args = baseArgs + ` --task ${taskName}`;
+
         banner('Generating: ' + taskName);
-        run(`${programPath} --task ${taskName}`, true);
+        run(`${programPath} ${args}` , true);
     });
 }
 
