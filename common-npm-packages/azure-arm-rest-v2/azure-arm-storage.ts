@@ -126,21 +126,34 @@ export class StorageAccounts {
      }
 
     public async getClassicOrArmAccountByName(accountName: string, options: any): Promise<Model.StorageAccount> {
-        const httpRequest = new webClient.WebRequest();
-        httpRequest.method = 'GET';
-        httpRequest.headers = this.client.setCustomHeaders(options);
-        // TODO: I think we should use newer api versions in the future?
-        httpRequest.uri = `https://management.azure.com/resources?api-version=2014-04-01-preview&%24filter=(subscriptionId%20eq%20'${this.client.subscriptionId}')%20and%20(resourceType%20eq%20'microsoft.storage%2Fstorageaccounts'%20or%20resourceType%20eq%20'microsoft.classicstorage%2Fstorageaccounts')%20and%20(name%20eq%20'${accountName}')`;
+        const storageAccountsRequest = new webClient.WebRequest();
+        storageAccountsRequest.method = 'GET';
+        storageAccountsRequest.headers = this.client.setCustomHeaders(options);
+        storageAccountsRequest.uri = `https://management.azure.com/subscriptions/${this.client.subscriptionId}/providers/Microsoft.Storage/storageAccounts?api-version=2023-01-01`;
 
-        const res = await this.client.beginRequest(httpRequest);
+        let storageAccounts: Model.StorageAccount[]
 
-        if (res.statusCode == 200 && res.body.value) {
-            const storageAccounts: Model.StorageAccount[] = res.body.value;
-
-            return storageAccounts[0];
-        } else {
-            throw azureServiceClientBase.ToError(res);
+        let response = await this.client.beginRequest(storageAccountsRequest);
+        if (response.statusCode !== 200) {
+            throw azureServiceClientBase.ToError(response)
         }
+
+        storageAccounts = response.body.value;
+        const armStorageAccount = storageAccounts?.find(sa => sa.name === accountName);
+
+        if (armStorageAccount) {
+            return armStorageAccount;
+        }
+
+        storageAccountsRequest.uri = `https://management.azure.com/subscriptions/${this.client.subscriptionId}/providers/Microsoft.ClassicStorage/storageAccounts?api-version=2016-11-01`;
+
+        response = await this.client.beginRequest(storageAccountsRequest);
+        if (response.statusCode !== 200) {
+            throw azureServiceClientBase.ToError(response);
+        }
+
+        storageAccounts = response.body.value;
+        return storageAccounts.find(sa => sa.name === accountName);
     }
 
     public async listKeys(resourceGroupName: string, accountName: string, options, storageAccountType?: string): Promise<string[]> {
