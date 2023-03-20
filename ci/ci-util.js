@@ -405,6 +405,12 @@ var createTasksZip = function () {
 }
 exports.createTasksZip = createTasksZip;
 
+var fileToJson = function (file) {
+    var jsonFromFile = JSON.parse(fs.readFileSync(file).toString());
+    return jsonFromFile;
+}
+exports.fileToJson = fileToJson;
+
 //------------------------------------------------------------------------------
 // Check functions
 //------------------------------------------------------------------------------

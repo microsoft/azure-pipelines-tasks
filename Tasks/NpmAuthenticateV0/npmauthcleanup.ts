@@ -7,15 +7,17 @@ import * as path from 'path';
 async function run() {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const npmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
+    const workingFilePath = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
     let indexFile = npmrcPath && path.join(npmrcPath, 'index.json');
-    if (indexFile && tl.exist(indexFile)) {
+    if (indexFile && tl.exist(indexFile) && tl.exist(workingFilePath)) {
         let indexFileText = fs.readFileSync(indexFile, 'utf8');
         let jsonObject = JSON.parse(indexFileText);
         let npmrcIndex = JSON.stringify(jsonObject[tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile)]);
-        util.restoreFileWithName(tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile), npmrcIndex, tl.getVariable("SAVE_NPMRC_PATH"));
+        util.restoreFileWithName(workingFilePath, npmrcIndex, tl.getVariable("SAVE_NPMRC_PATH"));
         console.log(tl.loc("RevertedChangesToNpmrc", tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile)));
-        if (fs.readdirSync(tl.getVariable("SAVE_NPMRC_PATH")).length == 1) {
-            tl.rmRF(tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY"));
+        const tempDirectoryPath = tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY");
+        if (tl.exist(tempDirectoryPath) && fs.readdirSync(tl.getVariable("SAVE_NPMRC_PATH")).length == 1) {
+            tl.rmRF(tempDirectoryPath);
         }
     }
     else {

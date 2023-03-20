@@ -23,7 +23,7 @@ export class AzureSpringCloudDeploymentProvider {
 
     public async PreDeploymentStep() {
         // TODO: temporary fix for tests are failing with MSAL
-        let useMSAL:boolean = true;
+        let useMSAL:boolean = false;
         let useMSALEnv = tl.getEndpointAuthorizationParameter("AzureRM", "USEMSAL", true);
         if(useMSALEnv !== undefined) {
             useMSAL = JSON.parse(useMSALEnv);

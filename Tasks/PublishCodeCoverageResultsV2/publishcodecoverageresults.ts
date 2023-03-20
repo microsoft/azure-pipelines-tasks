@@ -16,7 +16,7 @@ async function run() {
 
         var resolvedSummaryFiles = resolveSummaryFiles(workingDirectory, summaryFileLocations)
 
-        if(resolvedSummaryFiles == []) {
+        if(resolvedSummaryFiles.length === 0) {
             if(failIfCoverageIsEmpty === true) {
                 throw taskLib.loc('NoCodeCoverage');
             } else {
