@@ -195,6 +195,8 @@ namespace BuildConfigGen
                 configMapping.Add(new(cfg.Key.constMappingKey, cfg.Value.ToString()));
             }
 
+            outputTaskNode.AsObject().Add("_buildConfigMapping", configMapping);
+
             if (config.isNode16)
             {
                 AddNode16handler(outputTaskNode);
