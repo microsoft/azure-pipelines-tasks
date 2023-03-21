@@ -132,7 +132,7 @@ export class StorageAccounts {
             options
         );
 
-        const armStorageAccount = storageAccounts?.find(sa => sa.name === accountName);
+        const armStorageAccount = storageAccounts[0];
         if (armStorageAccount) {
             return armStorageAccount;
         }
@@ -143,7 +143,7 @@ export class StorageAccounts {
             options
         );
 
-        return storageAccounts?.find(sa => sa.name === accountName);
+        return storageAccounts[0];
     }
 
     public async listKeys(resourceGroupName: string, accountName: string, options, storageAccountType?: string): Promise<string[]> {
@@ -220,7 +220,7 @@ export class StorageAccounts {
         return "";
     }
 
-    private async getStorageAccountsByUri(uri: string, filterName: string, options?: any): Promise<Model.StorageAccount[]> {
+    private async getStorageAccountsByUri(uri: string, filterName?: string, options?: any): Promise<Model.StorageAccount[]> {
         const request = new webClient.WebRequest();
         request.method = 'GET';
         request.headers = this.client.setCustomHeaders(options);
@@ -250,6 +250,12 @@ export class StorageAccounts {
             }
 
             storageAccounts.push(...nextResult.result);
+        }
+
+        if (filterName) {
+            const targetSA = storageAccounts.find(sa => sa.name === filterName);
+
+            return targetSA ? [targetSA] : [];
         }
 
         return storageAccounts;
