@@ -12,5 +12,6 @@
   "loc.input.help.projectDirectory": "可以选择指定项目目录的根路径。如果留空，将使用 Podfile 中指定的项目。如果未指定项目，则将搜索 Xcode 项目。如果找到多个 Xcode 项目，则会出现错误。",
   "loc.messages.PodReturnCode": "已退出\"pod\" 命令，返回代码为: %d",
   "loc.messages.PodFailed": "\"pod\" 命令失败，出现错误: %s",
-  "loc.messages.CocoaPodsNotFound": "找不到 \"pod\" 命令。请在代理计算机上安装 CocoaPods (https://cocoapods.org/)。"
+  "loc.messages.CocoaPodsNotFound": "找不到 \"pod\" 命令。请在代理计算机上安装 CocoaPods (https://cocoapods.org/)。",
+  "loc.messages.ProxyConfig": "检测到代理配置。使用代理主机: %s"
 }

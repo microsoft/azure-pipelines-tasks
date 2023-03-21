@@ -3,7 +3,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
-import * as fileutils from "azure-pipelines-tasks-docker-common-v2/fileutils";
+import * as fileutils from "azure-pipelines-tasks-docker-common/fileutils";
 
 export function getFinalComposeFileName(): string {
     return ".docker-compose." + Date.now() + ".yml"

@@ -4,9 +4,9 @@ import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as DockerComposeUtils from "./dockercomposeutils";
 
-import ACRAuthenticationTokenProvider from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/acrauthenticationtokenprovider"
+import ACRAuthenticationTokenProvider from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/acrauthenticationtokenprovider"
 import DockerComposeConnection from "./dockercomposeconnection";
-import { getDockerRegistryEndpointAuthenticationToken } from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
+import { getDockerRegistryEndpointAuthenticationToken } from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/registryauthenticationtoken";
 
 import Q = require('q');
 

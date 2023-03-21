@@ -1,0 +1,60 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+  "id": "31C75B2B-BCDF-4706-8D7C-4DA6A1959BC2",
+  "name": "NodeTaskRunnerInstaller",
+  "friendlyName": "Node.js tasks runner installer",
+  "description": "Install specific Node.js version to run node tasks",
+  "helpUrl": "TDB",
+  "helpMarkDown": "TDB",
+  "category": "Utility",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 218,
+    "Patch": 0
+  },
+  "preview": true,
+  "demands": [],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "Install node runner $(runnerVersion)",
+  "inputs": [
+    {
+      "name": "runnerVersion",
+      "aliases": [
+        "nodeVersion",
+        "installVersion"
+      ],
+      "type": "pickList",
+      "label": "Version of runner to install",
+      "required": true,
+      "defaultValue": "6",
+      "helpMarkDown": "Select the node version to install.",
+      "options": {
+        "6": "Node.js 6.17.1",
+        "10": "Node.js 10.24.1"
+      }
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "index.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "index.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "TryRosetta": "Unable to find Node for platform %s and architecture %s. Trying to install with Rosetta2",
+    "UnexpectedOS": "Unexpected OS %s. Supported variants: %s",
+    "RunnerAlreadyInUse":"The specified Node runner ver.%s is already installed and currently in use. Skipping installation.",
+    "NotAllowedNodeVersion":"The version of the target node does not match the allowed versions. Possible variants: %s",
+    "AGENT_HOMEDIRECTORY_NotAvailable": "Can't get AGENT_HOMEDIRECTORY environment varialbe.",
+    "RunnerAlreadyInstalled": "%s version of node runner already installed on the agent. Skipping installation."
+  }
+}
