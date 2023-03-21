@@ -236,7 +236,7 @@ export class StorageAccounts {
         storageAccounts.push(...response.body.value);
 
         if (filterName) {
-            const targetSA = storageAccounts.find(sa => sa.name = filterName);
+            const targetSA = storageAccounts.find(sa => sa.name === filterName);
 
             if (targetSA) {
                 return [targetSA];
