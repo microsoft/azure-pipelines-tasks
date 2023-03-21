@@ -2,8 +2,9 @@ import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
-import util = require("util");
 import os = require("os");
+import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
+import { ITaskApi } from "azure-devops-node-api/TaskApi";
 
 export class azureclitask {
     public static checkIfAzurePythonSdkIsInstalled() {
@@ -62,7 +63,7 @@ export class azureclitask {
             this.setConfigDirectory();
             this.setAzureCloudBasedOnServiceEndpoint();
             var connectedService: string = tl.getInput("connectedServiceNameARM", true);
-            this.loginAzureRM(connectedService);
+            await this.loginAzureRM(connectedService);
 
             tool.line(args); // additional args should always call line. line() parses quoted arg strings
 
@@ -76,7 +77,6 @@ export class azureclitask {
             else {
                 await tool.exec({ failOnStdErr: failOnStdErr });
             }
-
         }
         catch (err) {
             if (err.stderr) {
@@ -104,7 +104,7 @@ export class azureclitask {
             else {
                 tl.setResult(tl.TaskResult.Succeeded, tl.loc("ScriptReturnCode", 0));
             }
-            
+
             //Logout of Azure if logged in
             if (this.isLoggedIn) {
                 this.logoutAzure();
@@ -118,11 +118,11 @@ export class azureclitask {
     private static servicePrincipalKey: string = null;
     private static tenantId: string = null;
 
-    private static loginAzureRM(connectedService: string): void {
+    private static async loginAzureRM(connectedService: string):Promise<void> {
         var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
 
-        if(authScheme.toLowerCase() == "serviceprincipal") {
+        if (authScheme.toLowerCase() == "serviceprincipal") {
             let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
             let cliPassword: string = null;
             var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
@@ -149,9 +149,23 @@ export class azureclitask {
             //login using svn
             this.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}"`), tl.loc("LoginFailed"));
         }
-        else if(authScheme.toLowerCase() == "managedserviceidentity") {
+        else if (authScheme.toLowerCase() == "managedserviceidentity") {
             //login using msi
             this.throwIfError(tl.execSync("az", "login --identity"), tl.loc("MSILoginFailed"));
+        }
+        else if (authScheme.toLowerCase() == "workloadidentityfederation") {
+            var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+            var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+
+            const federatedToken = await this.getIdToken(connectedService);
+            tl.setSecret(federatedToken);
+            const args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
+
+            //login using OpenID Connect federation
+            this.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
+
+            this.servicePrincipalId = servicePrincipalId;
+            this.tenantId = tenantId;
         }
         else{
             throw tl.loc('AuthSchemeNotSupported', authScheme);
@@ -225,6 +239,37 @@ export class azureclitask {
                 //error while deleting should not result in task failure
                 console.error(err.toString());
             }
+        }
+    }
+
+    private static async getIdToken(connectedService: string) : Promise<string> {
+        const jobId = tl.getVariable("System.JobId");
+        const planId = tl.getVariable("System.PlanId");
+        const projectId = tl.getVariable("System.TeamProjectId");
+        const hub = tl.getVariable("System.HostType");
+        const uri = tl.getVariable("System.CollectionUri");
+        const token = this.getSystemAccessToken();
+
+        const authHandler = getHandlerFromToken(token);
+        const connection = new WebApi(uri, authHandler);
+        const api: ITaskApi = await connection.getTaskApi();
+        const response = await api.createOidcToken({}, projectId, hub, planId, jobId, connectedService);
+        if (response == null) {
+            return null;
+        }
+
+        return response.oidcToken;
+    }
+
+    private static getSystemAccessToken() : string {
+        tl.debug('Getting credentials for local feeds');
+        const auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
+        if (auth.scheme === 'OAuth') {
+            tl.debug('Got auth token');
+            return auth.parameters['AccessToken'];
+        }
+        else {
+            tl.warning('Could not determine credentials to use');
         }
     }
 }
