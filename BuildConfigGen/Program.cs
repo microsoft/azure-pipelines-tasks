@@ -23,10 +23,10 @@ namespace BuildConfigGen
 
         static class Config
         {
-            public record ConfigRecord(string constMappingKey, bool isDefault, bool isNode16, string preprocessorVariableName, string[] extensionsToPreprocess);
+            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode16, string preprocessorVariableName, string[] extensionsToPreprocess);
 
-            public static readonly ConfigRecord Default = new ConfigRecord(constMappingKey: nameof(Default), isDefault: true, isNode16: false, preprocessorVariableName: "DEFAULT", extensionsToPreprocess: new[] { ".ts" });
-            public static readonly ConfigRecord Node16 = new ConfigRecord(constMappingKey: nameof(Node16), isDefault: false, isNode16: true, preprocessorVariableName: "NODE16", extensionsToPreprocess: new[] { ".ts" });
+            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode16: false, preprocessorVariableName: "DEFAULT", extensionsToPreprocess: new[] { ".ts" });
+            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode16: true, preprocessorVariableName: "NODE16", extensionsToPreprocess: new[] { ".ts" });
 
             public static ConfigRecord[] Configs = { Default, Node16 };
         }
@@ -125,7 +125,7 @@ namespace BuildConfigGen
                 }
                 else
                 {
-                    taskOutput = Path.Combine(gitRootPath, "_generated", @$"{task}_{config.constMappingKey}");
+                    taskOutput = Path.Combine(gitRootPath, "_generated", @$"{task}_{config.name}");
                 }
 
                 EnsureBuildConfigFileOverrides(config, taskTargetPath);
@@ -168,8 +168,8 @@ namespace BuildConfigGen
 
         private static void GetBuildConfigFileOverridePaths(Config.ConfigRecord config, string taskTargetPath, out string path, out string readmeFile)
         {
-            path = Path.Combine(taskTargetPath, buildConfigs, config.constMappingKey);
-            readmeFile = Path.Combine(taskTargetPath, buildConfigs, config.constMappingKey, filesOverriddenForConfigGoHereReadmeTxt);
+            path = Path.Combine(taskTargetPath, buildConfigs, config.name);
+            readmeFile = Path.Combine(taskTargetPath, buildConfigs, config.name, filesOverriddenForConfigGoHereReadmeTxt);
         }
 
         private static void CopyConfigOverrides(string taskTargetPath, string taskOutput, Config.ConfigRecord config)
