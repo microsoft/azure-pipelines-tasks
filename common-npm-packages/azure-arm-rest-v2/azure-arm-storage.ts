@@ -128,6 +128,7 @@ export class StorageAccounts {
     public async getClassicOrArmAccountByName(accountName: string, options: any): Promise<Model.StorageAccount | undefined> {
         let storageAccounts = await this.getStorageAccountsByUri(
             `https://management.azure.com/subscriptions/${this.client.subscriptionId}/providers/Microsoft.Storage/storageAccounts?api-version=2023-01-01`,
+            accountName,
             options
         );
 
@@ -138,6 +139,7 @@ export class StorageAccounts {
 
         storageAccounts = await this.getStorageAccountsByUri(
             `https://management.azure.com/subscriptions/${this.client.subscriptionId}/providers/Microsoft.ClassicStorage/storageAccounts?api-version=2016-11-01`,
+            accountName,
             options
         );
 
@@ -218,7 +220,7 @@ export class StorageAccounts {
         return "";
     }
 
-    private async getStorageAccountsByUri(uri: string, options?: any): Promise<Model.StorageAccount[]> {
+    private async getStorageAccountsByUri(uri: string, filterName: string, options?: any): Promise<Model.StorageAccount[]> {
         const request = new webClient.WebRequest();
         request.method = 'GET';
         request.headers = this.client.setCustomHeaders(options);
@@ -231,6 +233,16 @@ export class StorageAccounts {
             throw azureServiceClientBase.ToError(response);
         }
 
+        storageAccounts.push(...response.body.value);
+
+        if (filterName) {
+            const targetSA = storageAccounts.find(sa => sa.name = filterName);
+
+            if (targetSA) {
+                return [targetSA];
+            }
+        }
+
         if (response.body.nextLink) {
             const nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
             if (nextResult.error) {
@@ -239,8 +251,6 @@ export class StorageAccounts {
 
             storageAccounts.push(...nextResult.result);
         }
-
-        storageAccounts.push(...response.body.value);
 
         return storageAccounts;
     }
