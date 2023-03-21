@@ -66,7 +66,7 @@ export class azurecontainerapps {
 
             // Log in to Azure with the service connection provided
             const connectedService: string = tl.getInput('connectedServiceNameARM', true);
-            authHelper.loginAzureRM(connectedService);
+            await authHelper.loginAzureRM(connectedService);
 
             const acrUsername: string = tl.getInput('acrUsername', false);
             const acrPassword: string = tl.getInput('acrPassword', false);
