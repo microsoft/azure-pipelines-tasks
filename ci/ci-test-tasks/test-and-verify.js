@@ -18,7 +18,8 @@ if (task) {
   return start(task)
   .then(resultMessage => console.log(resultMessage))
   .catch(err => {
-    console.error(err);
+    console.error(err.message);
+    console.debug(err.stack);
   });
 } else {
   console.error('Task name was not provided');
@@ -41,6 +42,11 @@ function fetchPipelines() {
   .then(res => res.data.value)
   .catch(err => {
     err.stack = 'Error fetching pipelines: ' + err.stack;
+    console.error(err.stack);
+    if (err.response?.data) {
+      console.error(err.response.data);
+    }
+
     throw err;
   });
 }
@@ -51,7 +57,12 @@ function runTestPipeline(pipeline) {
   return axios.post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, {}, { auth })
   .then(res => res.data)
   .catch(err => {
-    err.stack = `Error running ${pipeline.name} pipeline, pipelineId ${pipeline.id}: ` + err.stack;
+    err.stack = `Error running ${pipeline.name} pipeline. ` + err.stack;
+    console.error(err.stack);
+    if (err.response?.data) {
+      console.error(err.response.data);
+    }
+
     throw err;
   })
 }
@@ -72,32 +83,39 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
     
       clearInterval(interval);
     
-      const result = `Build ${pipelineBuild.name} id:${pipelineBuild.id} finished with status "${data.result}" and result "${data.result}", url: ${pipelineBuild._links.web.href}`;
+      const result = `Build ${pipelineBuild.name} id:${pipelineBuild.id} finished with status "${data.state}" and result "${data.result}", url: ${pipelineBuild._links.web.href}`;
     
       if (data.result === 'succeeded') {
         resolve(result);
       } else {
-        reject(result);
+        reject(new Error(result));
       }
     })
     .catch(err => {
-      if (err.response && err.response.status >= 500) {
+      if (err.code === 'ETIMEDOUT' || (err.response && err.response.status >= 500)) {
         if (retryCount < maxRetries) {
           retryCount++;
-          console.log(`Server error ${err.message} - retry request. Retry count: ${retryCount}`);
+          console.log(`Error ${err.message} - retry request. Retry count: ${retryCount}`);
           return;
         } else {
-          console.error('Server error, maximum retries reached. Cancel retries', err.message);
+          console.error('Error, maximum retries reached. Cancel retries', err.message);
         }
       }
     
       clearInterval(interval);
       err.stack = 'Error verifying build status: ' + err.stack;
+      console.error(err.stack);
+      if (err.response?.data) {
+        console.error(err.response.data);
+      }
+
       reject(err); 
     })
   }, intervalDelayMs)
 }
 
 process.on('uncaughtException', err => {
-  console.error(err.stack);
+  console.error('Uncought exception:');
+  console.error(err.message);
+  console.debug(err.stack);
 });
