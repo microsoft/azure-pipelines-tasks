@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Copia de archivos en máquina de Windows",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "Copia archivos en máquinas remotas de Windows.",
   "loc.instanceNameFormat": "Copiar archivos desde $(SourcePath)",
   "loc.releaseNotes": "Novedades de la versión 2.0: <br/>&nbsp;&nbsp;Se está agregando compatibilidad con el proxy. <br/>&nbsp;&nbsp; Se ha quitado la compatibilidad con las máquinas DTL heredadas.",
