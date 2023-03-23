@@ -181,9 +181,6 @@
   "prejobexecution": {
     "Node10": {
       "target": "PreJobExecutionPublishSymbols.js"
-    },
-    "Node16": {
-      "target": "PreJobExecutionPublishSymbols.js"
     }
   },
   "execution": {
@@ -194,9 +191,6 @@
       ]
     },
     "Node10": {
-      "target": "clienttoolmain.js"
-    },
-    "Node16": {
       "target": "clienttoolmain.js"
     }
   },
