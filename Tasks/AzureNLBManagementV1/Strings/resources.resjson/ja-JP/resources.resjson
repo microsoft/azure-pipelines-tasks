@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure ネットワーク ロード バランサー",
-  "loc.helpMarkDown": "[詳細情報](https://go.microsoft.com/fwlink/?linkid=837723)",
+  "loc.helpMarkDown": "[このタスクの詳細](https://go.microsoft.com/fwlink/?linkid=837723)",
   "loc.description": "Azure 仮想マシンのネットワーク インターフェイスを Load Balancer のバックエンド アドレス プールに接続するか、接続を切断します",
   "loc.instanceNameFormat": "Azure ネットワーク ロード バランサー: $(LoadBalancer) - $(Action)",
   "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",

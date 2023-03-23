@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure 网络负载均衡器",
-  "loc.helpMarkDown": "[更多信息](https://go.microsoft.com/fwlink/?linkid=837723)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?linkid=837723)",
   "loc.description": "将 Azure 虚拟机的网络接口连接到负载均衡器的后端地址池，或者断开与该地址池的连接",
   "loc.instanceNameFormat": "Azure 网络负载均衡器: $(LoadBalancer) - $(Action)",
   "loc.input.label.ConnectedServiceName": "Azure 订阅",
