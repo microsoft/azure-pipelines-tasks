@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure VM 擴展集部署",
-  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?linkid=852117)",
+  "loc.helpMarkDown": "[深入了解此工作](https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-vmss-deployment)",
   "loc.description": "部署虛擬機器擴展集映像",
   "loc.instanceNameFormat": "Azure VMSS $(vmssName): $(action)",
   "loc.releaseNotes": "- 使用自訂機器映像更新 Azure 虛擬機器擴展集。",
