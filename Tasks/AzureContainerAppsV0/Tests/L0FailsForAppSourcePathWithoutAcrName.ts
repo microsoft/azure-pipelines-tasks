@@ -26,5 +26,94 @@ tlClone.assertAgent = function(variable: string) {
 };
 tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
+/**
+ * ----------------------------------
+ * Mock out the common helper classes
+ * ----------------------------------
+ */
+
+// Mock out function calls for the AzureAuthenticationHelper class
+tmr.registerMock('./src/AzureAuthenticationHelper', {
+    AzureAuthenticationHelper: function() {
+        return {
+            loginAzureRM: function() {
+                console.log('[MOCK] loginAzureRM called');
+                return;
+            },
+            logoutAzure: function() {
+                console.log('[MOCK] logoutAzure called');
+                return;
+            }
+        };
+    }
+});
+
+// Mock out function calls for the ContainerRegistryHelper class
+tmr.registerMock('./src/ContainerRegistryHelper', {
+    ContainerRegistryHelper: function() {
+        return {
+            loginAcrWithUsernamePassword: function(acrName: string, acrUsername: string, acrPassword: string) {
+                console.log('[MOCK] loginAcrWithUsernamePassword called');
+                return;
+            },
+            loginAcrWithAccessTokenAsync: async function() {
+                console.log('[MOCK] loginAcrWithAccessTokenAsync called');
+                return;
+            },
+            pushImageToAcr: function() {
+                console.log('[MOCK] pushImageToAcr called');
+                return;
+            }
+        };
+    }
+});
+
+// Mock out function calls for the TelemetryHelper class
+tmr.registerMock('./src/TelemetryHelper', {
+    TelemetryHelper: function() {
+        return {
+            setSuccessfulResult: function() {
+                console.log('[MOCK] setSuccessfulResult called');
+                return;
+            },
+            setFailedResult: function(errorMessage: string) {
+                console.log('[MOCK] setFailedResult called');
+                return;
+            },
+            setBuilderScenario: function() {
+                console.log('[MOCK] setBuilderScenario called');
+                return;
+            },
+            setDockerfileScenario: function() {
+                console.log('[MOCK] setDockerfileScenario called');
+                return;
+            },
+            setImageScenario: function() {
+                console.log('[MOCK] setImageScenario called');
+                return;
+            },
+            sendLogs: function() {
+                console.log('[MOCK] sendLogs called');
+                return;
+            }
+        };
+    }
+});
+
+// Mock out function calls for the Utility class
+tmr.registerMock('./src/Utility', {
+    Utility: function() {
+        return {
+            setAzureCliDynamicInstall: function() {
+                console.log('[MOCK] setAzureCliDynamicInstall called');
+                return;
+            },
+            isNullOrEmpty(str: string): boolean {
+                return str === null || str === undefined || str === "";
+            }
+        };
+    }
+});
+
 // Run the mocked task test
 tmr.run();
