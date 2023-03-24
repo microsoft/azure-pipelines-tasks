@@ -36,6 +36,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.group.displayName.advanced" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Advanced]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Erweitert]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?LinkID=613749)]]></Val>
@@ -135,6 +144,12 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.validateScriptSignature" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If this is true, then the task will first check to make sure specified script is signed and valid before executing it.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.ConnectedServiceName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Azure Classic Subscription]]></Val>
@@ -231,6 +246,12 @@
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[ErrorActionPreference]]></Val>
           </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.validateScriptSignature" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Validate script signature]]></Val>
         </Str>
         <Disp Icon="Str" />
       </Item>

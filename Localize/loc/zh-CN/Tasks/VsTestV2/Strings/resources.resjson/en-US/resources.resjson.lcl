@@ -416,10 +416,13 @@
       </Item>
       <Item ItemId=";loc.input.help.vsTestVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The version of Visual Studio test to use. If latest is specified it chooses Visual Studio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.]]></Val>
+          <Val><![CDATA[The version of Visual Studio test to use. If latest is specified it chooses latest Visual Studio version starting from VS2022 followed by VS2019, VS2017 and VS2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[要使用的 Visual Studio 测试的版本。如果指定最新版，将选择 Visual Sutdio 2017 或 Visual Studio 2015，具体取决于所安装的版本。不支持 Visual Studio 2013。若要在无需 Visual Studio 的情况下在代理上运行测试，请使用“由工具安装程序安装”选项。请务必包含“Visual Studio 测试平台安装程序任务”以从 nuget 获取测试平台。]]></Val>
+            <Val><![CDATA[要使用的 Visual Studio 测试的版本。如果指定了最新版本，则会根据安装的内容选择从 VS2022 开始的最新 Visual Studio 版本，后跟 VS2019、VS2017 和 VS2015。不支持 Visual Studio 2013。若要运行测试而无需在代理上 Visual Studio，请使用“按工具安装安装程序”选项。请务必包括“Visual Studio 测试平台安装程序”任务，以便从 nuget 获取测试平台。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The version of Visual Studio test to use. If latest is specified it chooses Visual Studio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

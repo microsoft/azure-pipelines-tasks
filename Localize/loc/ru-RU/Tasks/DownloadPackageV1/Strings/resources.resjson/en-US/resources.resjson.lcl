@@ -252,6 +252,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Info_ResolvedLatestVersion" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Resolved latest package version: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Разрешенная последняя версия пакета: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Info_ResolvedToolFromCache" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Resolved from tool cache: %s]]></Val>

@@ -48,19 +48,25 @@
       </Item>
       <Item ItemId=";loc.input.help.acrPassword" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The password used to authenticate push requests to the provided Azure Contrainer Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
+          <Val><![CDATA[The password used to authenticate push requests to the provided Azure Container Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Пароль, используемый для проверки подлинности push-запросов к предоставленному реестру контейнеров Azure. Если он не указан, токен доступа будет создан через "az acr login" и предоставлен "docker login" для проверки подлинности запросов.]]></Val>
+            <Val><![CDATA[Пароль, используемый для проверки подлинности push-запросов к предоставленному реестру контейнеров Azure. Если он не указан, маркер доступа будет создан посредством "az acr login" и предоставлен "docker login" для проверки подлинности запросов.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The password used to authenticate push requests to the provided Azure Contrainer Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.acrUsername" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The username used to authenticate push requests to the provided Azure Contrainer Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
+          <Val><![CDATA[The username used to authenticate push requests to the provided Azure Container Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Имя пользователя, используемое для проверки подлинности push-запросов к предоставленному реестру контейнеров Azure. Если оно не указано, токен доступа будет создан через "az acr login" и предоставлен "docker login" для проверки подлинности запросов.]]></Val>
+            <Val><![CDATA[Имя пользователя, используемое для проверки подлинности push-запросов к предоставленному реестру контейнеров Azure. Если оно не указано, маркер доступа будет создан посредством "az acr login" и предоставлен "docker login" для проверки подлинности запросов.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The username used to authenticate push requests to the provided Azure Contrainer Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -109,11 +115,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.disableTelemetry" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If set to 'true', no telemetry will be collected by this Azure DevOps Task. If set to 'false', or if this argument is not provided, telemetry will be sent to Microsoft about the Container App build and deploy scenario targeted by this Azure DevOps Task.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Если задано значение true, данные телеметрии не будут собираться этой задачей Azure DevOps. Если задано значение false или этот аргумент не указан, в корпорацию Майкрософт будет отправляться телеметрия о сборке приложении-контейнера и развертывании сценария, на который нацелена эта задача Azure DevOps.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.dockerfilePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Relative path to the Dockerfile in the provided application source that should be used to build the image that is then pushed to ACR and deployed to the Container App. If not provided, this task will check if there is a file named 'Dockerfile' at the root of the provided application source and use that to build the image. Otherwise, the Oryx++ Builder will be used to create the image.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Относительный путь к файлу Dockerfile в предоставленном источнике приложения, который следует использовать для создания образа, далее передаваемого в ACR и развертываемого в приложении-контейнере. Если он не указан, эта задача проверит, есть ли файл с именем "Dockerfile" в корне предоставленного источника приложения, и использует его для создания образа. В противном случае для создания образа будет использоваться Построитель Oryx++.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.environmentVariables" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A list of environment variable(s) for the container. Space-separated values in 'key=value' format. Empty string to clear existing values. Prefix value with 'secretref:' to reference a secret.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Список переменных среды для контейнера. Значения, разделенные пробелами, в формате "key=value". Пустая строка для очистки существующих значений. Добавьте к значению префикс "secretref:" для ссылки на секрет.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -132,6 +156,15 @@
           <Val><![CDATA[The custom name of the image that has already been pushed to ACR and will be deployed to the Container App by this task. Note: the image name should include the ACR server; e.g., <acr-name>.azurecr.io/<repo>:<tag>. If this argument is not provided, the value provided (or determined) for the 'imageToBuild' argument will be used.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Пользовательское имя образа, который уже был отправлен в ACR и будет развернут в приложении-контейнере этой задачей. Примечание: имя образа должно включать в себя сервер ACR; например, <acr-name>.azurecr.io/<repo>:<tag>. Если этот аргумент не указан, будет использоваться значение, предоставленное (или определенное) для аргумента "imageToBuild".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.location" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The location that the Container App (and other created resources) will be deployed to.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Расположение, в котором будет развернуто приложение-контейнер (и другие созданные ресурсы).]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -235,11 +268,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.disableTelemetry" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Disable telemetry]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Отключить телеметрию]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.dockerfilePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Dockerfile path]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Путь к Dockerfile]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.environmentVariables" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Environment variables]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Переменные среды]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -258,6 +309,15 @@
           <Val><![CDATA[Docker image to deploy]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Образ Docker для развертывания]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.location" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Location of the Container App]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Расположение приложения-контейнера]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -496,11 +556,20 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.InvalidArgumentsMessage" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.messages.MissingAcrNameMessage" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Either appSourcePath or imageToDeploy must be provided, but not both.]]></Val>
+          <Val><![CDATA[The acrName argument must also be provided if the appSourcePath argument is provided.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Необходимо указать appSourcePath или imageToDeploy, но не оба параметра одновременно.]]></Val>
+            <Val><![CDATA[Аргумент acrName также должен быть указан, если указан аргумент appSourcePath.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.MissingImageToDeployMessage" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The argument imageToDeploy must be provided if neither appSourcePath nor acrName are provided.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Требуется указать аргумент imageToDeploy, если не указано ни appSourcePath, ни acrName.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

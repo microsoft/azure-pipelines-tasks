@@ -416,10 +416,13 @@
       </Item>
       <Item ItemId=";loc.input.help.vsTestVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The version of Visual Studio test to use. If latest is specified it chooses Visual Studio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.]]></Val>
+          <Val><![CDATA[The version of Visual Studio test to use. If latest is specified it chooses latest Visual Studio version starting from VS2022 followed by VS2019, VS2017 and VS2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[使用する Visual Studio テストのバージョンです。最新バージョンが指定されている場合、インストールされているバージョンに応じて、Visual Studio 2017 または Visual Studio 2015 が選択されます。Visual Studio 2013 はサポートされていません。エージェントで Visual Studio を必要とせずにテストを実行するには、[ツール インストーラーを使用してインストールする]5D; オプションを使用します。NuGet からテスト プラットフォームを取得するには、[Visual Studio テスト プラットフォーム インストーラー]5D; タスクを含めてください。]]></Val>
+            <Val><![CDATA[使用する Visual Studio テストのバージョンです。最新バージョンが指定されている場合、インストールされているバージョンに応じて、VS2022、VS2019、VS2017、VS2015 の順に選択されます。Visual Studio 2013 はサポートされていません。エージェントで Visual Studio を必要とせずにテストを実行するには、[ツール インストーラーを使用してインストール済み]5D; オプションを使用します。NuGet からテスト プラットフォームを取得するには、[Visual Studio テスト プラットフォーム インストーラー]5D; タスクを含めてください。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The version of Visual Studio test to use. If latest is specified it chooses Visual Studio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

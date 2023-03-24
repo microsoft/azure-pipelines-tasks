@@ -27,6 +27,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.group.displayName.advanced" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Advanced]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[高级]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[[Learn more about this task]5D;(https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/node-js) or [see the Node documentation]5D;(https://nodejs.org/docs/latest/api/documentation.html)]]></Val>
@@ -50,6 +59,15 @@
           <Val><![CDATA[Installs the x86 version of Node regardless of the CPU architecture of the agent.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[安装 x86 版本的 Node，不考虑代理的 CPU 体系结构。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.nodejsMirror" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Use an alternative installation mirror when sourcing the Node.js binaries.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[在采购 Node.js 二进制文件时，请使用备用安装镜像。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -86,6 +104,15 @@
           <Val><![CDATA[Use 32 bit version on x64 agents]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[在 x64 代理上使用 32 位版本]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.nodejsMirror" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set source for Node.js binaries]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[设置 Node.js 二进制文件的源]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
