@@ -74,10 +74,13 @@
       </Item>
       <Item ItemId=";loc.input.label.artifactFeed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[My feed (select below)]]></Val>
+          <Val><![CDATA[My feed name (select below)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Мой веб-канал (выберите ниже)]]></Val>
+            <Val><![CDATA[Имя моего канала (выберите ниже)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[My feed (select below)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
