@@ -245,7 +245,8 @@ namespace BuildConfigGen
             outputTaskNode.AsObject()?.Remove("_buildConfigMapping");
 
             JsonObject configMapping = new JsonObject();
-            foreach (var cfg in configTaskVersionMapping)
+            var configTaskVersionMappingSortedByConfig = configTaskVersionMapping.OrderBy(x => x.Key.name);
+            foreach (var cfg in configTaskVersionMappingSortedByConfig)
             {
                 configMapping.Add(new(cfg.Key.constMappingKey, cfg.Value.ToString()));
             }
