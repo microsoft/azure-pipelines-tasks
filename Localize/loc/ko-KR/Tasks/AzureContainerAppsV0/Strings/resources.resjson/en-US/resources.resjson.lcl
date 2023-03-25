@@ -48,19 +48,25 @@
       </Item>
       <Item ItemId=";loc.input.help.acrPassword" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The password used to authenticate push requests to the provided Azure Contrainer Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
+          <Val><![CDATA[The password used to authenticate push requests to the provided Azure Container Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[제공된 Azure Container Registry에 대한 푸시 요청을 인증하는 데 사용되는 암호입니다. 제공되지 않은 경우 액세스 토큰이 'az acr login'을 통해 생성되고 요청을 인증하기 위해 'docker 로그인'에 제공됩니다.]]></Val>
+            <Val><![CDATA[제공된 Azure Container Registry에 대한 푸시 요청을 인증하는 데 사용되는 암호입니다. 제공하지 않으면 액세스 토큰이 'az acr login'을 통해 생성되고 요청을 인증하기 위해 'docker login'에 제공됩니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The password used to authenticate push requests to the provided Azure Contrainer Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.acrUsername" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The username used to authenticate push requests to the provided Azure Contrainer Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
+          <Val><![CDATA[The username used to authenticate push requests to the provided Azure Container Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[제공된 Azure Contrainer Registry에 대한 푸시 요청을 인증하는 데 사용되는 사용자 이름입니다. 제공하지 않으면 액세스 토큰이 'az acr login'을 통해 생성되고 요청을 인증하기 위해 'docker 로그인'에 제공됩니다.]]></Val>
+            <Val><![CDATA[제공된 Azure Contrainer Registry에 대한 푸시 요청을 인증하는 데 사용되는 사용자 이름입니다. 제공하지 않으면 액세스 토큰이 'az acr login'을 통해 생성되고 요청을 인증하기 위해 'docker login'에 제공됩니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The username used to authenticate push requests to the provided Azure Contrainer Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -109,11 +115,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.disableTelemetry" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If set to 'true', no telemetry will be collected by this Azure DevOps Task. If set to 'false', or if this argument is not provided, telemetry will be sent to Microsoft about the Container App build and deploy scenario targeted by this Azure DevOps Task.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['true'로 설정하면 이 Azure DevOps 작업에서 원격 분석을 수집하지 않습니다. 'false'로 설정하거나 이 인수를 제공하지 않으면 이 Azure DevOps 작업에서 대상으로 지정한 컨테이너 앱 빌드 및 배포 시나리오에 대한 원격 분석이 Microsoft로 전송됩니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.dockerfilePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Relative path to the Dockerfile in the provided application source that should be used to build the image that is then pushed to ACR and deployed to the Container App. If not provided, this task will check if there is a file named 'Dockerfile' at the root of the provided application source and use that to build the image. Otherwise, the Oryx++ Builder will be used to create the image.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[제공된 애플리케이션 원본의 Dockerfile에 대한 상대 경로로, 이미지를 빌드하는 데 사용해야 하며, 그런 다음 이 경로는 ACR에 푸시되고 컨테이너 앱에 배포됩니다. 제공되지 않은 경우 이 작업은 제공된 애플리케이션 원본의 루트에 'Dockerfile'이라는 파일이 있는지 확인하고 이를 사용하여 이미지를 빌드합니다. 그렇지 않으면 Oryx++ Builder를 사용하여 이미지를 만듭니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.environmentVariables" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A list of environment variable(s) for the container. Space-separated values in 'key=value' format. Empty string to clear existing values. Prefix value with 'secretref:' to reference a secret.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[컨테이너의 환경 변수 목록입니다. 'key=value' 형식의 공백으로 구분된 값입니다. 기존 값을 지우려면 문자열을 비웁니다. 비밀을 참조하려면 값에 'secretref:' 접두사를 사용합니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -132,6 +156,15 @@
           <Val><![CDATA[The custom name of the image that has already been pushed to ACR and will be deployed to the Container App by this task. Note: the image name should include the ACR server; e.g., <acr-name>.azurecr.io/<repo>:<tag>. If this argument is not provided, the value provided (or determined) for the 'imageToBuild' argument will be used.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[이미 ACR로 푸시되었으며 이 작업을 통해 컨테이너 앱에 배포될 이미지의 사용자 지정 이름입니다. 참고: 이미지 이름에는 ACR 서버가 포함되어야 합니다. 예: <acr-name>.azurecr.io/<repo>:<tag>. 이 인수를 제공하지 않으면 'imageToBuild' 인수에 대해 제공된(또는 결정된) 값이 사용됩니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.location" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The location that the Container App (and other created resources) will be deployed to.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[컨테이너 앱(및 기타 생성된 리소스)이 배포될 위치입니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -235,11 +268,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.disableTelemetry" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Disable telemetry]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[원격 분석 사용 안 함]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.dockerfilePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Dockerfile path]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Dockerfile 경로]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.environmentVariables" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Environment variables]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[환경 변수]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -258,6 +309,15 @@
           <Val><![CDATA[Docker image to deploy]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[배포할 Docker 이미지]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.location" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Location of the Container App]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[컨테이너 앱의 위치]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -496,11 +556,20 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.InvalidArgumentsMessage" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.messages.MissingAcrNameMessage" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Either appSourcePath or imageToDeploy must be provided, but not both.]]></Val>
+          <Val><![CDATA[The acrName argument must also be provided if the appSourcePath argument is provided.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[appSourcePath 또는 imageToDeploy 중 하나를 제공해야 하지만 둘 다 제공해서는 안 됩니다.]]></Val>
+            <Val><![CDATA[appSourcePath 인수가 제공된 경우 acrName 인수도 제공해야 합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.MissingImageToDeployMessage" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The argument imageToDeploy must be provided if neither appSourcePath nor acrName are provided.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[appSourcePath와 acrName이 모두 제공되지 않은 경우 imageToDeploy 인수를 제공해야 합니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

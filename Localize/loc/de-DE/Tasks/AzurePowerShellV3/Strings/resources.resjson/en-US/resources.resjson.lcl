@@ -147,6 +147,9 @@
       <Item ItemId=";loc.input.help.validateScriptSignature" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If this is true, then the task will first check to make sure specified script is signed and valid before executing it.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Wenn dies der Fall ist, überprüft die Aufgabe zunächst, ob das angegebene Skript signiert und gültig ist, bevor es ausgeführt wird.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -252,6 +255,9 @@
       <Item ItemId=";loc.input.label.validateScriptSignature" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Validate script signature]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Skriptsignatur überprüfen]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

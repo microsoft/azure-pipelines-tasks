@@ -66,6 +66,9 @@
       <Item ItemId=";loc.input.help.nodejsMirror" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Use an alternative installation mirror when sourcing the Node.js binaries.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Use un reflejo de instalación alternativo al obtener los archivos binarios de Node.js.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -108,6 +111,9 @@
       <Item ItemId=";loc.input.label.nodejsMirror" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Set source for Node.js binaries]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Establecimiento del origen de los archivos binarios de Node.js]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
