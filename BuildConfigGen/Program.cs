@@ -130,7 +130,7 @@ namespace BuildConfigGen
 
                 EnsureBuildConfigFileOverrides(config, taskTargetPath);
 
-                CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverrides: false);
+                CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
 
                 // Check verifier errors (throw here to provide a more user friendly message; as Copy is skipped when Write-Updates isn't specified; files to update may be missing)
                 // Skip content check==true for files that existin destination as some of them will be updated and validated later
@@ -189,53 +189,71 @@ namespace BuildConfigGen
 
             if (skipCopy)
             {
-                CopyConfig(overridePathForBuildConfig, taskOutput, skipPathName: null, skipFileName: filesOverriddenForConfigGoHereReadmeTxt, removeExtraFiles: false, throwIfNotUpdatingFileForApplyingOverrides: true);
+                CopyConfig(overridePathForBuildConfig, taskOutput, skipPathName: null, skipFileName: filesOverriddenForConfigGoHereReadmeTxt, removeExtraFiles: false, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: true, config: config, allowPreprocessorDirectives: false);
             }
         }
 
         private static void HandlePreprocessingInTarget(string taskOutput, Config.ConfigRecord config)
         {
-            HashSet<string> extensions = new HashSet<string>(config.extensionsToPreprocess);
             var nonIgnoredFilesInTarget = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(taskOutput));
 
             foreach (var file in nonIgnoredFilesInTarget)
             {
                 string taskOutputFile = Path.Combine(taskOutput, file);
 
-                if (extensions.Contains(Path.GetExtension(taskOutputFile)))
-                {
-                    Preprocess(taskOutputFile, config);
-                }
+                PreprocessIfExtensionEnabledInConfig(taskOutputFile, config, validateAndWriteChanges: true, out _);
             }
         }
 
-        private static void Preprocess(string file, Config.ConfigRecord config)
+        private static void PreprocessIfExtensionEnabledInConfig(string file, Config.ConfigRecord config, bool validateAndWriteChanges, out bool madeChanges)
         {
-            Console.Write($"Preprocessing {file}...");
-
-            Preprocessor.Preprocess(file, File.ReadAllLines(file), new HashSet<string>(Config.Configs.Select(s => s.preprocessorVariableName)), config.preprocessorVariableName, out string processed, out var validationErrors, out bool madeChanges);
-
-            if (validationErrors.Count() != 0)
+            HashSet<string> extensions = new HashSet<string>(config.extensionsToPreprocess);
+            bool preprocessExtension = extensions.Contains(Path.GetExtension(file));
+            if (preprocessExtension)
             {
-                Console.WriteLine("Preprocessor validation errors:");
-                foreach (var error in validationErrors)
+                if (validateAndWriteChanges)
                 {
-                    Console.WriteLine(error);
+                    Console.WriteLine($"Preprocessing {file}...");
+                }
+                else
+                {
+                    Console.WriteLine($"Checking if {file} has preprocessor directives ...");
                 }
 
-                throw new Exception("Preprocessor validation errors occured");
-            }
+                Preprocessor.Preprocess(file, File.ReadAllLines(file), new HashSet<string>(Config.Configs.Select(s => s.preprocessorVariableName)), config.preprocessorVariableName, out string processedOutput, out var validationErrors, out madeChanges);
 
-            if (madeChanges)
-            {
-                ensureUpdateModeVerifier!.WriteAllText(file, processed, false);
-                Console.WriteLine("Done");
+                if (validateAndWriteChanges)
+                {
+                    if (validationErrors.Count() != 0)
+                    {
+                        Console.WriteLine("Preprocessor validation errors:");
+                        foreach (var error in validationErrors)
+                        {
+                            Console.WriteLine(error);
+                        }
+
+                        throw new Exception("Preprocessor validation errors occured");
+                    }
+
+                    if (madeChanges)
+                    {
+                        ensureUpdateModeVerifier!.WriteAllText(file, processedOutput, false);
+                        Console.WriteLine("Done");
+                    }
+                    else
+                    {
+                        // assert that the files are the same for the validator (they might not match exactly due to line endings)
+                        ensureUpdateModeVerifier!.WriteAllTextAssertFilesSame(file);
+                        Console.WriteLine("No changes; skipping");
+                    }
+                }
             }
             else
             {
-                Console.WriteLine("No changes; skipping");
+                madeChanges = false;
             }
         }
+
 
         private static void WriteTaskJson(string taskPath, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, Config.ConfigRecord config, string fileName)
         {
@@ -286,7 +304,7 @@ namespace BuildConfigGen
             return hasNodeHandler;
         }
 
-        private static void CopyConfig(string taskTarget, string taskOutput, string? skipPathName, string? skipFileName, bool removeExtraFiles, bool throwIfNotUpdatingFileForApplyingOverrides)
+        private static void CopyConfig(string taskTarget, string taskOutput, string? skipPathName, string? skipFileName, bool removeExtraFiles, bool throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor, Config.ConfigRecord config, bool allowPreprocessorDirectives)
         {
             var paths = GitUtil.GetNonIgnoredFileListFromPath(taskTarget);
 
@@ -302,10 +320,24 @@ namespace BuildConfigGen
                 pathsToRemoveFromOutput = new HashSet<string>();
             }
 
-
             foreach (var path in paths)
             {
                 string sourcePath = Path.Combine(taskTarget, path);
+
+                if (allowPreprocessorDirectives)
+                {
+                    // do nothing
+                }
+                else
+                { 
+                    PreprocessIfExtensionEnabledInConfig(sourcePath, config, validateAndWriteChanges: false, out bool hasPreprocessorDirectives);
+
+                    if (hasPreprocessorDirectives)
+                    {
+                        throw new Exception($"Preprocessor directives not supported in files in _buildConfigs sourcePath={sourcePath}");
+                    }
+                }
+
                 if (skipPathName != null && sourcePath.Contains(string.Concat(skipPathName, Path.DirectorySeparatorChar)))
                 {
                     // skip the path!  (this is used to skip _buildConfigs in the source task path)
@@ -322,7 +354,7 @@ namespace BuildConfigGen
                     }
                     else
                     {
-                        if (throwIfNotUpdatingFileForApplyingOverrides && !File.Exists(targetPath))
+                        if (throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor && !File.Exists(targetPath))
                         {
                             throw new Exception($"Overriden file must exist in targetPath sourcePath={sourcePath} targetPath={targetPath}");
                         }
@@ -541,7 +573,7 @@ namespace BuildConfigGen
 
             if (!fi.Directory!.Exists)
             {
-                fi.Directory!.Create();
+                ensureUpdateModeVerifier!.DirectoryCreateDirectory(fi.Directory.FullName, false);
             }
 
             Console.Write($"Copy from={sourcePath} to={targetPath}...");

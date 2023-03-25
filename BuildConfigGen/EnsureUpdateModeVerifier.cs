@@ -103,12 +103,7 @@ namespace BuildConfigGen
                 {
                     string destContent = File.ReadAllText(path);
 
-                    // we're checking the contents here, no need to check it later
-                    string noramlizedPath = NormalizeFile(path);
-                    if (CopiedFilesToCheck.ContainsKey(noramlizedPath))
-                    {
-                        CopiedFilesToCheck.Remove(noramlizedPath);
-                    }
+                    WriteAllTextAssertFilesSame(path);
 
                     if (destContent == contents)
                     {
@@ -136,6 +131,16 @@ namespace BuildConfigGen
             else
             {
                 File.WriteAllText(path, contents);
+            }
+        }
+
+        internal void WriteAllTextAssertFilesSame(string path)
+        {
+            // we're checking the contents here, no need to check it later
+            string noramlizedPath = NormalizeFile(path);
+            if (CopiedFilesToCheck.ContainsKey(noramlizedPath))
+            {
+                CopiedFilesToCheck.Remove(noramlizedPath);
             }
         }
 

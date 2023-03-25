@@ -8,6 +8,9 @@
             FileInfo fi = new FileInfo(sourcePath);
             FileInfo fi2 = new FileInfo(targetPath);
 
+            int mismatchChars = 10;
+            bool ret = true;
+
             if (!fi2.Exists)
             {
                 return false;
@@ -15,6 +18,7 @@
 
             if (fi.Length != fi2.Length)
             {
+                Console.WriteLine($"mismatch {fi.Length}!={fi2.Length}");
                 return false;
             }
 
@@ -27,6 +31,7 @@
             {
                 do
                 {
+                    // use BinaryReader.ReadBytes to guarantee the size of the buffer matches between buffer1 and buffer2.  Stream.ReadBytes doesn’t guarantee reading up to bufferSize
                     byte[] buffer = br1.ReadBytes(bufferSize);
                     byte[] buffer2 = br2.ReadBytes(bufferSize);
 
@@ -39,7 +44,13 @@
                     {
                         if (buffer[i] != buffer2[i])
                         {
-                            return false;
+                            Console.WriteLine($"mismatch buffer[i={i}]={(int)buffer[i]} != {(int)buffer2[i]}");
+                            ret = false;
+                            mismatchChars--;
+                            if (mismatchChars < 1)
+                            {
+                                return false;
+                            }
                         }
                     }
 
@@ -48,7 +59,7 @@
                 } while (!eof);
             }
 
-            return true;
+            return ret;
         }
     }
 }

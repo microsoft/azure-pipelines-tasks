@@ -17,7 +17,7 @@ namespace BuildConfigGen
         private static partial Regex elseAndEndIfPreprocess();
 
 
-        internal static void Preprocess(string file, IEnumerable<string> lines, ISet<string> configreprocessorVariableName, string configName, out string processed, out List<string> validationErrors, out bool madeChanges)
+        internal static void Preprocess(string file, IEnumerable<string> lines, ISet<string> configreprocessorVariableName, string configName, out string processedOutput, out List<string> validationErrors, out bool madeChanges)
         {
             const string ifCommand = "if";
             const string elseIfCommand = "elseif";
@@ -203,7 +203,11 @@ namespace BuildConfigGen
                         }
                 */
 
-                if (!lineIsDirective)
+                if (lineIsDirective)
+                {
+                    madeChanges = true;
+                }
+                else
                 {
                     if (inIfBlock)
                     {
@@ -241,7 +245,7 @@ namespace BuildConfigGen
             }
 
             //File.WriteAllText(file, output.ToString());
-            processed = output.ToString();
+            processedOutput = output.ToString();
         }
    
     }
