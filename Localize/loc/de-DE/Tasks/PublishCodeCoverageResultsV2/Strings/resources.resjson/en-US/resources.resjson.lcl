@@ -20,19 +20,25 @@
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Publish code coverage results]]></Val>
+          <Val><![CDATA[Publish code coverage results v2]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Code Coverage-Ergebnisse veröffentlichen]]></Val>
+            <Val><![CDATA[Code Coverage-Ergebnisse v2 veröffentlichen]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Publish code coverage results]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?LinkID=626485)]]></Val>
+          <Val><![CDATA[[Learn more about this task]5D;(https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2?view=azure-pipelines)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[Weitere Informationen zu dieser Aufgabe]5D;(https://go.microsoft.com/fwlink/?LinkID=626485)]]></Val>
+            <Val><![CDATA[[Weitere Informationen zu dieser Aufgabe]5D;(https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2?view=azure-pipelines)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?LinkID=626485)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

@@ -417,10 +417,13 @@
       </Item>
       <Item ItemId=";loc.input.help.vsTestVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The version of Visual Studio test to use. If latest is specified it chooses Visual Studio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.]]></Val>
+          <Val><![CDATA[The version of Visual Studio test to use. If latest is specified it chooses latest Visual Studio version starting from VS2022 followed by VS2019, VS2017 and VS2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[사용할 Visual Studio 테스트 버전입니다. 최신 버전을 지정하면 설치된 버전에 따라 Visual Studio 2017 또는 Visual Studio 2015가 선택됩니다. Visual Studio 2013은 지원되지 않습니다. 에이전트에 Visual Studio를 요구하지 않고 테스트를 실행하려면 '도구 설치 관리자로 설치' 옵션을 사용합니다. nuget에서 테스트 플랫폼을 획득하려면 'Visual Studio 테스트 플랫폼 설치 관리자' 작업을 포함해야 합니다.]]></Val>
+            <Val><![CDATA[사용할 Visual Studio 테스트의 버전입니다. 최신 버전을 지정하면 설치된 버전에 따라 VS2022부터 시작하여 VS2019, VS2017, VS2015 순으로 최신 Visual Studio 버전을 선택합니다. Visual Studio 2013은 지원되지 않습니다. 에이전트에 Visual Studio 없이 테스트를 실행하려면 '도구 설치 프로그램으로 설치됨' 옵션을 사용합니다. NuGet에서 테스트 플랫폼을 가져오려면 'Visual Studio 테스트 플랫폼 설치 프로그램' 작업을 포함해야 합니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The version of Visual Studio test to use. If latest is specified it chooses Visual Studio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
