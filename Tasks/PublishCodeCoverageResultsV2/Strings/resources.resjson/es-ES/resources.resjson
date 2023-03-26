@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Publish code coverage results v2",
+  "loc.friendlyName": "Publicar resultados de cobertura de código v2",
   "loc.helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2?view=azure-pipelines)",
   "loc.description": "Publicar cualquiera de los resultados de la cobertura de código de una compilación",
   "loc.instanceNameFormat": "Publicar resultados de cobertura de código",

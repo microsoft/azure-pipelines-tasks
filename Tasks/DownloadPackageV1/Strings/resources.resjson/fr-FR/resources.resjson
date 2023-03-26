@@ -35,5 +35,5 @@
   "loc.messages.Info_DownloadingArtifactTool": "Téléchargement de l'outil d'artefact à partir de %s",
   "loc.messages.Info_Downloading": "Téléchargement du package %s, version %s, à l'aide de l'ID de flux %s du projet %s",
   "loc.messages.Info_UsingArtifactToolDownload": "Utilisation de l'outil d'artefact pour télécharger le package",
-  "loc.messages.Info_ResolvedLatestVersion": "Resolved latest package version: %s"
+  "loc.messages.Info_ResolvedLatestVersion": "Dernière version du package résolue : %s"
 }

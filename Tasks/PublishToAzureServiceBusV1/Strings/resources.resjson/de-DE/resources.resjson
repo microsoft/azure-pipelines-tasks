@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Im Azure Service Bus veröffentlichen",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870237)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=870237)",
   "loc.description": "Hiermit wird über eine Dienstverbindung eine Nachricht an Azure Service Bus gesendet (kein Agent erforderlich).",
   "loc.instanceNameFormat": "Im Azure Service Bus veröffentlichen",
   "loc.group.displayName.advancedProperties": "Erweitert",
@@ -18,6 +18,6 @@
   "loc.input.help.signatureKey": "Der Schlüssel für die Signatur in den Nachrichteneigenschaften. Ist dieser Wert leer, wird in den Nachrichteneigenschaften standardmäßig \"signature\" verwendet.",
   "loc.input.label.waitForCompletion": "Auf Abschluss der Aufgabe warten",
   "loc.input.help.waitForCompletion": "Bei \"true\" wartet die Aufgabe für die Dauer des angegebenen Aufgabenzeitlimits auf das TaskCompleted-Ereignis.",
-  "loc.input.label.useDataContractSerializer": "Use .NET data contract serailizer",
-  "loc.input.help.useDataContractSerializer": "For more details go to task documentation"
+  "loc.input.label.useDataContractSerializer": "Serailizer für .NET-Datenverträge verwenden",
+  "loc.input.help.useDataContractSerializer": "Weitere Informationen finden Sie in der Aufgabendokumentation."
 }
