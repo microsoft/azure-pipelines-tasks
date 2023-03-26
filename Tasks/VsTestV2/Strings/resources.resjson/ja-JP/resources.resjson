@@ -34,7 +34,7 @@
   "loc.input.help.uiTests": "UI テストを実行するには、エージェントが対話モードで実行されるように設定されていることを確認します。ビルド/リリースをキューに登録する前に、エージェントを対話的に実行する設定を行う必要があります。このチェック ボックスをオンにしても、エージェントは自動的に対話モードに設定<b>されません</b>。タスクのこのオプションは、エラーを回避するためにエージェントを適切に構成するリマインダーとしてのみ使えます。<br><br> VS 2015 と 2017 プールからの Hosted Windows エージェントを、UI テストを実行するために使用できます。<br> [詳細情報](https://aka.ms/uitestmoreinfo)。",
   "loc.input.label.vstestLocationMethod": "次を使用してテスト プラットフォームを選択",
   "loc.input.label.vsTestVersion": "テスト プラットフォームのバージョン",
-  "loc.input.help.vsTestVersion": "The version of Visual Studio test to use. If latest is specified it chooses latest Visual Studio version starting from VS2022 followed by VS2019, VS2017 and VS2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.",
+  "loc.input.help.vsTestVersion": "使用する Visual Studio テストのバージョンです。最新バージョンが指定されている場合、インストールされているバージョンに応じて、VS2022、VS2019、VS2017、VS2015 の順に選択されます。Visual Studio 2013 はサポートされていません。エージェントで Visual Studio を必要とせずにテストを実行するには、[ツール インストーラーを使用してインストール済み] オプションを使用します。NuGet からテスト プラットフォームを取得するには、[Visual Studio テスト プラットフォーム インストーラー] タスクを含めてください。",
   "loc.input.label.vstestLocation": "vstest.console.exe へのパス",
   "loc.input.help.vstestLocation": "必要に応じて、VSTest へのパスを指定します。",
   "loc.input.label.runSettingsFile": "設定ファイル",
