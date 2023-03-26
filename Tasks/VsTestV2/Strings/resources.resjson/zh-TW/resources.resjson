@@ -34,7 +34,7 @@
   "loc.input.help.uiTests": "若要執行 UI 測試，請確認代理程式已設定為在互動式模式中執行。再將組建 / 版本排入佇列前，必須先將代理程式設定為互動式執行。選取此方塊<b>不會</b>自動將代理程式設定為互動式模式。此選項在工作中僅作為適當設定代理程式以避免失敗的提醒。<br><br>VS 2015 和 2017 集區的託管 Windows 代理程式可用來執行 UI 測試。<br>[詳細資訊](https://aka.ms/uitestmoreinfo)。",
   "loc.input.label.vstestLocationMethod": "選取測試平台，使用",
   "loc.input.label.vsTestVersion": "測試平台版本",
-  "loc.input.help.vsTestVersion": "要使用的 Visual Studio Test 版本。若指定最新版本，其會根據已安裝項目來選擇 Visual Studio 2017 或 Visual Studio 2015。不支援 Visual Studio 2013。若希望在代理程式上沒有 Visual Studio 時也能執行測試，請使用 ‘Installed by tools installer’ 選項。請務必包含 ‘Visual Studio Test Platform Installer’ 工作以從 NuGet 取得測試平台。",
+  "loc.input.help.vsTestVersion": "要使用的 Visual Studio 測試版本。若指定最新版本，它會選擇最新的 Visual Studio 版本，從 VS2022 開始，然後是 VS2019、VS2017 和 VS2015，具體取決於安裝的版本。不支援 Visual Studio 2013。若希望在代理程式上沒有 Visual Studio 時也能執行測試，請使用 [由工具安裝程式安裝] 選項。請務必包含 [Visual Studio 測試平台安裝程式] 工作以從 NuGet 取得測試平台。",
   "loc.input.label.vstestLocation": "vstest.console.exe 的路徑",
   "loc.input.help.vstestLocation": "選擇性地提供 VSTest 的路徑。",
   "loc.input.label.runSettingsFile": "設定檔案",

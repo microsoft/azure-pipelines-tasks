@@ -26,6 +26,8 @@
   "loc.input.help.CustomTargetAzurePs": "기본 Azure PowerShell 버전은 올바른 의미 체계 버전(예: 1.2.3)이어야 합니다. 2.\\*,2.3.\\*와 같은 Regex는 지원되지 않습니다. Hosted VS2017 풀은 현재 Az 모듈 버전 1.0.0, 1.6.0, 2.3.2, 2.6.0, 3.1.0을 지원합니다.",
   "loc.input.label.pwsh": "PowerShell Core 사용",
   "loc.input.help.pwsh": "true이면, Windows에서 작업이 powershell.exe 대신 PATH의 pwsh.exe를 사용합니다.",
+  "loc.input.label.validateScriptSignature": "스크립트 서명 유효성 검사",
+  "loc.input.help.validateScriptSignature": "true이면 작업을 실행하기 전에 먼저 지정한 스크립트가 서명되어 있고 유효한지 확인합니다.",
   "loc.input.label.workingDirectory": "작업 디렉터리",
   "loc.input.help.workingDirectory": "스크립트가 실행되는 작업 디렉터리입니다.",
   "loc.messages.GeneratingScript": "스크립트를 생성 중입니다.",

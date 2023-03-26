@@ -38,10 +38,13 @@
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[[More Information]5D;(https://go.microsoft.com/fwlink/?linkid=870237)]]></Val>
+          <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?linkid=870237)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[詳細]5D;(https://go.microsoft.com/fwlink/?linkid=870237)]]></Val>
+            <Val><![CDATA[[このタスクの詳細]5D;(https://go.microsoft.com/fwlink/?linkid=870237)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[[More Information]5D;(https://go.microsoft.com/fwlink/?linkid=870237)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -95,6 +98,15 @@
           <Val><![CDATA[Key where you want signature to be in Message Properties. If left Empty, default is 'signature' in message properties]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[メッセージのプロパティの署名を配置するキー。空のままにする場合、既定はメッセージのプロパティの 'signature' です]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.useDataContractSerializer" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[For more details go to task documentation]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[詳細については、タスクのドキュメントを参照してください]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -158,6 +170,15 @@
           <Val><![CDATA[Signature Property Key]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[署名のプロパティ キー]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.useDataContractSerializer" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Use .NET data contract serailizer]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[.NET データ コントラクト シリアライザーの使用]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

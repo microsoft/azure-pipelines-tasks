@@ -417,10 +417,13 @@
       </Item>
       <Item ItemId=";loc.input.help.vsTestVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The version of Visual Studio test to use. If latest is specified it chooses Visual Studio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.]]></Val>
+          <Val><![CDATA[The version of Visual Studio test to use. If latest is specified it chooses latest Visual Studio version starting from VS2022 followed by VS2019, VS2017 and VS2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[要使用的 Visual Studio 測試版本。若指定最新版本，其會根據已安裝項目來選擇 Visual Studio 2017 或 Visual Studio 2015。不支援 Visual Studio 2013。若希望在代理程式上沒有 Visual Studio 時也能執行測試，請使用 [由工具安裝程式安裝]5D; 選項。請務必包含 [Visual Studio 測試平台安裝程式]5D; 工作以從 NuGet 取得測試平台。]]></Val>
+            <Val><![CDATA[要使用的 Visual Studio 測試版本。若指定最新版本，它會選擇最新的 Visual Studio 版本，從 VS2022 開始，然後是 VS2019、VS2017 和 VS2015，具體取決於安裝的版本。不支援 Visual Studio 2013。若希望在代理程式上沒有 Visual Studio 時也能執行測試，請使用 [由工具安裝程式安裝]5D; 選項。請務必包含 [Visual Studio 測試平台安裝程式]5D; 工作以從 NuGet 取得測試平台。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The version of Visual Studio test to use. If latest is specified it chooses Visual Studio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

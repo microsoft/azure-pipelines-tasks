@@ -34,5 +34,6 @@
   "loc.messages.Info_ResolvedToolFromCache": "Se resolvió desde la memoria caché de herramientas: %s",
   "loc.messages.Info_DownloadingArtifactTool": "Descargando la herramienta de artefacto de %s",
   "loc.messages.Info_Downloading": "Descargando el paquete: %s; versión: %s, con el identificador de fuente: %s; proyecto: %s",
-  "loc.messages.Info_UsingArtifactToolDownload": "Usando la herramienta de artefacto para descargar el paquete"
+  "loc.messages.Info_UsingArtifactToolDownload": "Usando la herramienta de artefacto para descargar el paquete",
+  "loc.messages.Info_ResolvedLatestVersion": "Versión del paquete más reciente resuelta: %s"
 }

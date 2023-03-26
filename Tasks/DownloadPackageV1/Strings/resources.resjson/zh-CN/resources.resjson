@@ -34,5 +34,6 @@
   "loc.messages.Info_ResolvedToolFromCache": "已从工具缓存 %s 中解析",
   "loc.messages.Info_DownloadingArtifactTool": "正在从 %s 下载项目工具",
   "loc.messages.Info_Downloading": "正在下载包: %s，版本: %s 使用源 ID: %s，项目: %s",
-  "loc.messages.Info_UsingArtifactToolDownload": "正在使用项目工具下载包"
+  "loc.messages.Info_UsingArtifactToolDownload": "正在使用项目工具下载包",
+  "loc.messages.Info_ResolvedLatestVersion": "已解析的最新包版本: %s"
 }

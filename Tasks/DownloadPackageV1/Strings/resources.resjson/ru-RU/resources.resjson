@@ -34,5 +34,6 @@
   "loc.messages.Info_ResolvedToolFromCache": "Разрешено из кэша инструментов: %s",
   "loc.messages.Info_DownloadingArtifactTool": "Скачивается инструмент артефакта из %s",
   "loc.messages.Info_Downloading": "Скачивается пакет %s версии %s с помощью идентификатора веб-канала: %s, проект: %s",
-  "loc.messages.Info_UsingArtifactToolDownload": "Используется инструмент артефакта для скачивания пакета"
+  "loc.messages.Info_UsingArtifactToolDownload": "Используется инструмент артефакта для скачивания пакета",
+  "loc.messages.Info_ResolvedLatestVersion": "Разрешенная последняя версия пакета: %s"
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Invocar API de REST",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=870236)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=870236)",
   "loc.description": "Invoque una API de REST como parte de la canalización.",
   "loc.instanceNameFormat": "Invocar la API de REST: $(method)",
   "loc.group.displayName.completionOptions": "Avanzado",

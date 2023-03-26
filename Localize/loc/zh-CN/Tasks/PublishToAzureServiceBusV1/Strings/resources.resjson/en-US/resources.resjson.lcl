@@ -38,10 +38,13 @@
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[[More Information]5D;(https://go.microsoft.com/fwlink/?linkid=870237)]]></Val>
+          <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?linkid=870237)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[详细信息]5D;(https://go.microsoft.com/fwlink/?linkid=870237)]]></Val>
+            <Val><![CDATA[[详细了解此任务]5D;(https://go.microsoft.com/fwlink/?linkid=870237)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[[More Information]5D;(https://go.microsoft.com/fwlink/?linkid=870237)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -95,6 +98,15 @@
           <Val><![CDATA[Key where you want signature to be in Message Properties. If left Empty, default is 'signature' in message properties]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[希望签名在消息属性中所在的键。如果留空，则默认值为消息属性中的“签名”]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.useDataContractSerializer" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[For more details go to task documentation]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[有关更多详细信息，请转到任务文档]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -158,6 +170,15 @@
           <Val><![CDATA[Signature Property Key]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[签名属性键]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.useDataContractSerializer" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Use .NET data contract serailizer]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[使用 .NET 数据协定分隔符]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

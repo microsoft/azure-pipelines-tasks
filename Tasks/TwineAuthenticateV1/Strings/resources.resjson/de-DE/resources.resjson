@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Twine-Authentifizierung: $(message)",
   "loc.group.displayName.feedAuthentication": "Feeds und Authentifizierung",
   "loc.group.displayName.advanced": "Erweitert",
-  "loc.input.label.artifactFeed": "Mein Feed (Auswahl unten)",
+  "loc.input.label.artifactFeed": "Mein Feedname (unten auswählen)",
   "loc.input.help.artifactFeed": "Wählen Sie einen Feed für die Authentifizierung innerhalb dieser Organisation aus.",
   "loc.input.label.pythonUploadServiceConnection": "Feed aus externen Organisationen",
   "loc.input.help.pythonUploadServiceConnection": "Wählen Sie einen Endpunkt für die Authentifizierung außerhalb dieser Organisation aus. Stellen Sie sicher, dass der Endpunkt über Berechtigungen zum Paketupload verfügen.",

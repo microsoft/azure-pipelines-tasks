@@ -38,10 +38,13 @@
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[[More Information]5D;(https://go.microsoft.com/fwlink/?linkid=870237)]]></Val>
+          <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?linkid=870237)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[詳細資訊]5D;(https://go.microsoft.com/fwlink/?linkid=870237)]]></Val>
+            <Val><![CDATA[[深入了解此工作]5D;(https://go.microsoft.com/fwlink/?linkid=870237)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[[More Information]5D;(https://go.microsoft.com/fwlink/?linkid=870237)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -95,6 +98,15 @@
           <Val><![CDATA[Key where you want signature to be in Message Properties. If left Empty, default is 'signature' in message properties]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[特徵標記在 [訊息屬性]5D; 中會出現的索引鍵位置。若留空，訊息屬性中的預設即為 'signature']]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.useDataContractSerializer" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[For more details go to task documentation]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[如需詳細資料，請移至工作文件]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -158,6 +170,15 @@
           <Val><![CDATA[Signature Property Key]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[簽章屬性金鑰]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.useDataContractSerializer" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Use .NET data contract serailizer]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[使用 .NET 資料合約彙總器]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

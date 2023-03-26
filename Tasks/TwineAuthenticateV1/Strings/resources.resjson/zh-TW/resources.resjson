@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Twine 驗證 $(message)",
   "loc.group.displayName.feedAuthentication": "摘要與驗證",
   "loc.group.displayName.advanced": "進階",
-  "loc.input.label.artifactFeed": "我的摘要 (於下方選取)",
+  "loc.input.label.artifactFeed": "我的摘要名稱 (於下方選取)",
   "loc.input.help.artifactFeed": "選取此組織中要驗證的摘要。",
   "loc.input.label.pythonUploadServiceConnection": "來自外部組織的摘要",
   "loc.input.help.pythonUploadServiceConnection": "選取此組織外要驗證的端點。請確定端點有權上傳套件。",

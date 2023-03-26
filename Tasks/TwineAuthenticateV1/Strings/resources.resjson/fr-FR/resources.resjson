@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Authentification Twine $(message)",
   "loc.group.displayName.feedAuthentication": "Flux et authentification",
   "loc.group.displayName.advanced": "Avancé",
-  "loc.input.label.artifactFeed": "Mon flux (à sélectionner ci-dessous)",
+  "loc.input.label.artifactFeed": "Mon nom de flux (sélectionnez ci-dessous)",
   "loc.input.help.artifactFeed": "Sélectionner un flux d'authentification présent dans cette organisation.",
   "loc.input.label.pythonUploadServiceConnection": "Flux d'organisations externes",
   "loc.input.help.pythonUploadServiceConnection": "Sélectionnez un point de terminaison pour permettre l'authentification en dehors de cette organisation. Vérifiez que le point de terminaison dispose d'autorisations relatives au chargement de packages.",

@@ -26,6 +26,8 @@
   "loc.input.help.CustomTargetAzurePs": "La versión preferida de Azure PowerShell debe ser una versión de semántica adecuada, por ejemplo, 1.2.3. No se admite una notación regex como 2.\\*,2.3.\\*. El grupo Hosted VS2017 Pool es compatible con las versiones del módulo Az 1.0.0, 1.6.0, 2.3.2, 2.6.0 y 3.1.0",
   "loc.input.label.pwsh": "Usar PowerShell Core",
   "loc.input.help.pwsh": "Si es true, la tarea usará pwsh.exe desde PATH en lugar de powershell.exe en Windows.",
+  "loc.input.label.validateScriptSignature": "Validación de la firma del script",
+  "loc.input.help.validateScriptSignature": "Si es true, la tarea comprobará primero para asegurarse de que el script especificado está firmado y es válido antes de ejecutarlo.",
   "loc.input.label.workingDirectory": "Directorio de trabajo",
   "loc.input.help.workingDirectory": "Directorio de trabajo donde se ejecuta el script.",
   "loc.messages.GeneratingScript": "Generando script.",

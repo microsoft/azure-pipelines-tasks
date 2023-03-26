@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "發佈程式碼涵蓋範圍結果",
-  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.friendlyName": "發佈程式碼涵蓋範圍結果 v2",
+  "loc.helpMarkDown": "[深入了解此工作](https://learn.microsoft.com/zh-tw/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2?view=azure-pipelines)",
   "loc.description": "從組建發行任何程式碼涵蓋範圍結果",
   "loc.instanceNameFormat": "發佈程式碼涵蓋範圍結果",
   "loc.input.label.summaryFileLocation": "摘要檔案路徑",

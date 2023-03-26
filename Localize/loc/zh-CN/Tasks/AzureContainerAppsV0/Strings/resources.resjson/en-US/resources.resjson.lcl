@@ -48,19 +48,25 @@
       </Item>
       <Item ItemId=";loc.input.help.acrPassword" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The password used to authenticate push requests to the provided Azure Contrainer Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
+          <Val><![CDATA[The password used to authenticate push requests to the provided Azure Container Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[用于对所提供的 Azure 容器注册表的推送请求进行身份验证的密码。如果未提供，将通过 “az acr login” 生成访问令牌，并将其提供给 “docker login” 以对请求进行身份验证。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The password used to authenticate push requests to the provided Azure Contrainer Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.acrUsername" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The username used to authenticate push requests to the provided Azure Contrainer Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
+          <Val><![CDATA[The username used to authenticate push requests to the provided Azure Container Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[用于对所提供的 Azure 容器注册表的推送请求进行身份验证的用户名。如果未提供，将通过 “az acr login” 生成访问令牌，并将其提供给 “docker login” 以对请求进行身份验证。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The username used to authenticate push requests to the provided Azure Contrainer Registry. If not provided, an access token will be generated via 'az acr login' and provided to 'docker login' to authenticate the requests.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -109,11 +115,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.disableTelemetry" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[If set to 'true', no telemetry will be collected by this Azure DevOps Task. If set to 'false', or if this argument is not provided, telemetry will be sent to Microsoft about the Container App build and deploy scenario targeted by this Azure DevOps Task.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[如果设置为“true”，则此 Azure DevOps 任务不会收集遥测数据。如果设置为“false”，或者未提供此参数，则会向 Microsoft 发送有关此 Azure DevOps 任务所针对的容器应用生成和部署方案的遥测数据。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.dockerfilePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Relative path to the Dockerfile in the provided application source that should be used to build the image that is then pushed to ACR and deployed to the Container App. If not provided, this task will check if there is a file named 'Dockerfile' at the root of the provided application source and use that to build the image. Otherwise, the Oryx++ Builder will be used to create the image.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[所提供的应用程序源中 Dockerfile 的相对路径，该路径应用于生成映像，然后将其推送到 ACR 并部署到容器应用。如果未提供，此任务将检查所提供的应用程序源的根目录中是否存在名为“Dockerfile”的文件，并使用该文件生成映像。否则，Oryx++ Builder 将用于创建映像。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.environmentVariables" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A list of environment variable(s) for the container. Space-separated values in 'key=value' format. Empty string to clear existing values. Prefix value with 'secretref:' to reference a secret.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[容器的环境变量列表。以 "key=value" 格式分隔的值。用于清除现有值的空字符串。前缀值为“secretref:”，用于引用机密。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -132,6 +156,15 @@
           <Val><![CDATA[The custom name of the image that has already been pushed to ACR and will be deployed to the Container App by this task. Note: the image name should include the ACR server; e.g., <acr-name>.azurecr.io/<repo>:<tag>. If this argument is not provided, the value provided (or determined) for the 'imageToBuild' argument will be used.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[映像的自定义名称，该映像已推送到 ACR，并将通过此任务部署到容器应用。注意: 映像名称应包括 ACR 服务器; 例如，<acr-name>.azurecr.io/<repo>:<tag>。如果未提供此参数，则将使用为“imageToBuild”参数提供的(或确定的)值。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.location" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The location that the Container App (and other created resources) will be deployed to.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[容器应用(和其他已创建的资源)将部署到的位置。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -235,11 +268,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.disableTelemetry" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Disable telemetry]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[禁用遥测]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.dockerfilePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Dockerfile path]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Dockerfile 路径]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.environmentVariables" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Environment variables]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[环境变量]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -258,6 +309,15 @@
           <Val><![CDATA[Docker image to deploy]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[要部署的 Docker 映像]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.location" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Location of the Container App]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[容器应用的位置]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -496,11 +556,20 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.InvalidArgumentsMessage" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.messages.MissingAcrNameMessage" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Either appSourcePath or imageToDeploy must be provided, but not both.]]></Val>
+          <Val><![CDATA[The acrName argument must also be provided if the appSourcePath argument is provided.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[必须提供 appSourcePath 或 imageToDeploy，但不能同时提供两者。]]></Val>
+            <Val><![CDATA[如果提供了 appSourcePath 参数，则还必须提供 acrName 参数。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.MissingImageToDeployMessage" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The argument imageToDeploy must be provided if neither appSourcePath nor acrName are provided.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[如果未提供 appSourcePath 和 acrName，则必须提供参数 imageToDeploy。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

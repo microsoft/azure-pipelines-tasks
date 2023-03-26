@@ -34,5 +34,6 @@
   "loc.messages.Info_ResolvedToolFromCache": "Risoluzione dalla cache dello strumento: %s",
   "loc.messages.Info_DownloadingArtifactTool": "Download dello strumento dell'artefatto da %s",
   "loc.messages.Info_Downloading": "Download del pacchetto %s versione %s con ID feed %s e progetto %s",
-  "loc.messages.Info_UsingArtifactToolDownload": "Uso dello strumento dell'artefatto per scaricare il pacchetto"
+  "loc.messages.Info_UsingArtifactToolDownload": "Uso dello strumento dell'artefatto per scaricare il pacchetto",
+  "loc.messages.Info_ResolvedLatestVersion": "È stata risolta l'ultima versione del pacchetto: %s"
 }

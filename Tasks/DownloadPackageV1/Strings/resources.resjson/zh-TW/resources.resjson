@@ -34,5 +34,6 @@
   "loc.messages.Info_ResolvedToolFromCache": "已從工具快取中解析: %s",
   "loc.messages.Info_DownloadingArtifactTool": "正在從 %s 下載成品工具",
   "loc.messages.Info_Downloading": "正在使用摘要識別碼: %s、專案: %s 下載套件: %s、版本: %s",
-  "loc.messages.Info_UsingArtifactToolDownload": "使用成品工具來下載套件"
+  "loc.messages.Info_UsingArtifactToolDownload": "使用成品工具來下載套件",
+  "loc.messages.Info_ResolvedLatestVersion": "已解決的最新套件版本: %s"
 }

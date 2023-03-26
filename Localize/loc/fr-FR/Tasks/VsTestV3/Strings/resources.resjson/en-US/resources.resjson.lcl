@@ -417,10 +417,13 @@
       </Item>
       <Item ItemId=";loc.input.help.vsTestVersion" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The version of Visual Studio test to use. If latest is specified it chooses Visual Studio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.]]></Val>
+          <Val><![CDATA[The version of Visual Studio test to use. If latest is specified it chooses latest Visual Studio version starting from VS2022 followed by VS2019, VS2017 and VS2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Version de Visual Studio Test à utiliser. Si une version ultérieure est spécifiée, Visual Studio 2017 ou Visual Studio 2015 est choisi en fonction de ce qui est installé. Visual Studio 2013 n'est pas pris en charge. Pour exécuter les tests sans avoir besoin de Visual Studio sur l'agent, utilisez l'option 'Installé par le programme d'installation des outils'. Veillez à inclure la tâche 'Programme d'installation de Visual Studio Test Platform' pour acquérir la plateforme de test à partir de NuGet.]]></Val>
+            <Val><![CDATA[Version de Visual Studio test à utiliser. Si la dernière version est spécifiée, elle choisit la dernière version Visual Studio à partir de VS2022, suivi de VS2019, VS2017 et VS2015 en fonction de ce qui est installé. Visual Studio 2013 n’est pas pris en charge. Pour exécuter des tests sans avoir à Visual Studio sur l’agent, utilisez l’option ‘Installer par les outils’ . Veillez à inclure la ‘tâche Visual Studio Programme d’installation de la plateforme’ de test pour acquérir la plateforme de test à partir de nuget.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The version of Visual Studio test to use. If latest is specified it chooses Visual Studio 2017 or Visual Studio 2015 depending on what is installed. Visual Studio 2013 is not supported. To run tests without needing Visual Studio on the agent, use the ‘Installed by tools installer’ option. Be sure to include the ‘Visual Studio Test Platform Installer’ task to acquire the test platform from nuget.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
