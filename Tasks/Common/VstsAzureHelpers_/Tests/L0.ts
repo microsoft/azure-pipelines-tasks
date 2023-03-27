@@ -114,5 +114,8 @@ describe('Common-VstsAzureHelpers_ Suite', function () {
         it('(Get-MsiAccessToken) tests', (done) => {
             psr.run(path.join(__dirname, 'Get-MsiAccessTokenTests.ps1'), done);
         });
+        it('(Initialize-AzureSubscription) workload identity federation should pass', (done) => {
+            psr.run(path.join(__dirname, 'Initialize-AzureSubscription.WorkloadIdentityFederation.ps1'), done);
+        });
     }
 });
