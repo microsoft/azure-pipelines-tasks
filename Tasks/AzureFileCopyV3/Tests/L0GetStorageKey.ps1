@@ -12,5 +12,5 @@ Register-Mock Write-Telemetry { }
 # Test 1 "should throw if storage not found"
 $invalidRGStorage = "invalidRGStorage"
 Assert-Throws {
-    Get-StorageKey -storageAccountName $invalidRGStorage -endpoint @{} -connectedServiceNameARM "some service name"
+    Get-StorageKey -storageAccountName $invalidRGStorage -endpoint @{}
 } -MessagePattern "Storage account: $invalidRGStorage not found. Selected Connection 'ServicePrincipal' supports storage account of Azure Resource Manager type only."
