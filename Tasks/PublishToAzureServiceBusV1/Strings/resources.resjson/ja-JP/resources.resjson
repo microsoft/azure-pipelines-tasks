@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Service Bus への発行",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=870237)",
+  "loc.helpMarkDown": "[このタスクの詳細](https://go.microsoft.com/fwlink/?linkid=870237)",
   "loc.description": "サービス接続を使って Azure Service Bus にメッセージを送信します (エージェントは不要です)",
   "loc.instanceNameFormat": "Azure Service Bus に発行する",
   "loc.group.displayName.advancedProperties": "詳細",
@@ -17,5 +17,7 @@
   "loc.input.label.signatureKey": "署名のプロパティ キー",
   "loc.input.help.signatureKey": "メッセージのプロパティの署名を配置するキー。空のままにする場合、既定はメッセージのプロパティの 'signature' です",
   "loc.input.label.waitForCompletion": "タスクの完了を待機する",
-  "loc.input.help.waitForCompletion": "これが true の場合、このタスクは、タスクのタイムアウトに指定された期間 TaskCompleted イベントを待機します。"
+  "loc.input.help.waitForCompletion": "これが true の場合、このタスクは、タスクのタイムアウトに指定された期間 TaskCompleted イベントを待機します。",
+  "loc.input.label.useDataContractSerializer": ".NET データ コントラクト シリアライザーの使用",
+  "loc.input.help.useDataContractSerializer": "詳細については、タスクのドキュメントを参照してください"
 }
