@@ -65,7 +65,7 @@ function Get-AzureUri {
 function Get-AzureActiverDirectoryResourceId {
     param([object] [Parameter(Mandatory = $true)] $endpoint)
     $activeDirectoryResourceid = $null;
-   
+
     if (($endpoint.Data.Environment) -and ($endpoint.Data.Environment -eq $azureStack)) {
         if (!$endpoint.Data.ActiveDirectoryServiceEndpointResourceId) {
             $endpoint = Add-AzureStackDependencyData -Endpoint $endpoint
@@ -118,7 +118,7 @@ function Get-ConnectionType {
     return $connectionType
 }
 <#
-    @DEPRECATED - Get the Bearer Access Token from the Endpoint - 
+    @DEPRECATED - Get the Bearer Access Token from the Endpoint -
     This flow isn't recommended - https://learn.microsoft.com/en-us/azure/active-directory/develop/scenario-desktop-acquire-token-username-password?tabs=dotnet
 #>
 function Get-UsernamePasswordAccessToken {
@@ -170,7 +170,7 @@ function Get-EnvironmentAuthUrl {
             Write-Verbose "MSAL - Get-EnvironmentAuthUrl - azureStack is used"
             $endpoint = Add-AzureStackDependencyData -Endpoint $endpoint
             $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
-        } 
+        }
         else {
             Write-Verbose "MSAL - Get-EnvironmentAuthUrl - fallback is used"
             # fallback
@@ -211,12 +211,12 @@ function Add-AzureStackDependencyData {
     $AzureKeyVaultDnsSuffix = "vault.$($stackdomain)".ToLowerInvariant()
     $AzureKeyVaultServiceEndpointResourceId = $("https://vault.$stackdomain".ToLowerInvariant())
     $StorageEndpointSuffix = ($stackdomain).ToLowerInvariant()
-    
+
     $azureStackEndpointUri = $EndpointURI.ToString().TrimEnd('/') + "/metadata/endpoints?api-version=2015-01-01"
 
     Write-Verbose "Retrieving endpoints from the $ResourceManagerEndpoint"
     $endpointData = Invoke-RestMethod -Uri $azureStackEndpointUri -Method Get -ErrorAction Stop
-    
+
     if ($endpointData) {
         $graphEndpoint = $endpointData.graphEndpoint
         $galleryEndpoint = $endpointData.galleryEndpoint
@@ -270,7 +270,7 @@ function Add-AzureStackDependencyData {
             $Endpoint.Data.activeDirectoryServiceEndpointResourceId = $activeDirectoryServiceEndpointResourceId
             $Endpoint.Data.AzureKeyVaultDnsSuffix = $AzureKeyVaultDnsSuffix
         }
-    } 
+    }
     else {
         throw "Unable to fetch Azure Stack Dependency Data."
     }
@@ -280,7 +280,7 @@ function Add-AzureStackDependencyData {
 function Has-ObjectProperty {
     [CmdletBinding()]
     param([Parameter(Mandatory = $true)] $object,
-        [Parameter(Mandatory = $true)] $propertyName) 
+        [Parameter(Mandatory = $true)] $propertyName)
 
     if (Get-Member -inputobject $object -name $propertyName -Membertype Properties) {
         return $true
@@ -295,7 +295,7 @@ function Get-AzureRMAccessToken {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)] $endpoint,
-        [string][Parameter(Mandatory=$true)] $connectedServiceNameARM,
+        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM,
         [string][Parameter(Mandatory=$false)] $vstsAccessToken,
         [parameter(Mandatory = $false)] $overrideResourceType = $null,
         [parameter(Mandatory = $false)] $useMSAL = $false
@@ -358,7 +358,7 @@ function Build-MSALInstance {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)] $endpoint,
-        [string][Parameter(Mandatory=$true)] $connectedServiceNameARM,
+        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM,
         [string][Parameter(Mandatory=$false)] $vstsAccessToken
     )
 
@@ -407,7 +407,7 @@ function Get-MSALInstance {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)] $endpoint,
-        [string][Parameter(Mandatory=$true)] $connectedServiceNameARM,
+        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM,
         [string][Parameter(Mandatory=$false)] $vstsAccessToken
     )
 
@@ -424,7 +424,7 @@ function Get-AccessTokenMSAL {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)] $endpoint,
-        [string][Parameter(Mandatory=$true)] $connectedServiceNameARM,
+        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM,
         [string][Parameter(Mandatory=$false)] $vstsAccessToken,
         [parameter(Mandatory = $false)] $overrideResourceType
     )
@@ -486,7 +486,7 @@ function Get-SpnAccessToken {
 
     # Call Rest API to fetch AccessToken
     Write-Verbose "Fetching Access Token"
-    
+
     try {
         $accessToken = Invoke-RestMethod -Uri $authUri -Method $method -Body $body -ContentType $script:formContentType
         return $accessToken
@@ -527,15 +527,15 @@ function Get-MsiAccessToken {
     $method = "GET"
     $apiVersion = "2018-02-01";
     $authUri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + $apiVersion + "&resource=" + $endPointUrl + $msiClientId;
-    
+
     # Call Rest API to fetch AccessToken
     Write-Verbose "Fetching Access Token For MSI"
-    
+
     try {
         $retryLimit = 5;
         $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata = "true" } -UseBasicParsing
 
-        # Action on the based of response 
+        # Action on the based of response
         if (($response.StatusCode -eq 429) -or ($response.StatusCode -eq 500)) {
             if ($retryCount -lt $retryLimit) {
                 $retryCount += 1
@@ -554,7 +554,7 @@ function Get-MsiAccessToken {
         else {
             throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
         }
-        
+
     }
     catch {
         $exceptionMessage = $_.Exception.Message.ToString()
@@ -590,13 +590,13 @@ function Get-SpnAccessTokenUsingCertificate {
     }
 
     Write-Verbose "Fetching access token using client certificate."
-    
-    # load the ADAL library 
+
+    # load the ADAL library
     Add-Type -Path $PSScriptRoot\Microsoft.IdentityModel.Clients.ActiveDirectory.dll
 
     $pemFileContent = $endpoint.Auth.Parameters.ServicePrincipalCertificate
     $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
-    
+
     $clientCertificate = Get-PfxCertificate -pfxFilePath $pfxFilePath -pfxFilePassword $pfxFilePassword
 
     $servicePrincipalId = $endpoint.Auth.Parameters.ServicePrincipalId
@@ -653,7 +653,7 @@ function Get-SpnAccessTokenUsingCertificate {
 
 function Get-PfxCertificate {
     param(
-        [string][Parameter(Mandatory = $true)] $pfxFilePath, 
+        [string][Parameter(Mandatory = $true)] $pfxFilePath,
         [string][Parameter(Mandatory = $true)] $pfxFilePassword
     )
 
@@ -679,7 +679,7 @@ function Get-AzStorageKeys {
     [CmdletBinding()]
     param([String] [Parameter(Mandatory = $true)] $storageAccountName,
         [Object] [Parameter(Mandatory = $true)] $endpoint)
-    
+
     try {
         $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
         $azureUri = Get-AzureUri $endpoint
@@ -695,7 +695,7 @@ function Get-AzStorageKeys {
     }
     catch {
         $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Verbose "Exception : $exceptionMessage" 
+        Write-Verbose "Exception : $exceptionMessage"
         $parsedException = Parse-Exception($_.Exception)
         if ($parsedException) {
             $exceptionMessage = $parsedException
@@ -710,7 +710,7 @@ function Get-AzRMStorageKeys {
     param([string] [Parameter(Mandatory = $true)] $resourceGroupName,
         [string] [Parameter(Mandatory = $true)] $storageAccountName,
         [object] [Parameter(Mandatory = $true)] $endpoint,
-        [string][Parameter(Mandatory=$true)] $connectedServiceNameARM,
+        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM,
         [string][Parameter(Mandatory=$false)] $vstsAccessToken)
 
     try {
@@ -729,7 +729,7 @@ function Get-AzRMStorageKeys {
     }
     catch {
         $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Verbose "Exception : $exceptionMessage" 
+        Write-Verbose "Exception : $exceptionMessage"
         $parsedException = Parse-Exception($_.Exception)
         if ($parsedException) {
             $exceptionMessage = $parsedException
@@ -745,7 +745,7 @@ function Get-AzRmVmCustomScriptExtension {
         [String] [Parameter(Mandatory = $true)] $vmName,
         [String] [Parameter(Mandatory = $true)] $Name,
         [Object] [Parameter(Mandatory = $true)] $endpoint,
-        [string] [Parameter(Mandatory=$true)] $connectedServiceNameARM,
+        [string] [Parameter(Mandatory=$false)] $connectedServiceNameARM,
         [string] [Parameter(Mandatory=$false)] $vstsAccessToken)
 
     try {
@@ -771,7 +771,7 @@ function Get-AzRmVmCustomScriptExtension {
     }
     catch {
         $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Verbose "Exception : $exceptionMessage" 
+        Write-Verbose "Exception : $exceptionMessage"
         $parsedException = Parse-Exception($_.Exception)
         if ($parsedException) {
             $exceptionMessage = $parsedException
@@ -787,7 +787,7 @@ function Remove-AzRmVmCustomScriptExtension {
         [String] [Parameter(Mandatory = $true)] $vmName,
         [String] [Parameter(Mandatory = $true)] $Name,
         [Object] [Parameter(Mandatory = $true)] $endpoint,
-        [string] [Parameter(Mandatory=$true)] $connectedServiceNameARM,
+        [string] [Parameter(Mandatory=$false)] $connectedServiceNameARM,
         [string] [Parameter(Mandatory=$false)] $vstsAccessToken)
 
     try {
@@ -806,7 +806,7 @@ function Remove-AzRmVmCustomScriptExtension {
     }
     catch {
         $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Verbose "Exception : $exceptionMessage" 
+        Write-Verbose "Exception : $exceptionMessage"
         $parsedException = Parse-Exception($_.Exception)
         if ($parsedException) {
             $exceptionMessage = $parsedException
@@ -836,7 +836,7 @@ function Get-AzStorageAccount {
     }
     catch {
         $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Verbose "Exception : $exceptionMessage" 
+        Write-Verbose "Exception : $exceptionMessage"
         $parsedException = Parse-Exception($_.Exception)
         if ($parsedException) {
             $exceptionMessage = $parsedException
@@ -851,7 +851,7 @@ function Get-AzRmStorageAccount {
     param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
         [String] [Parameter(Mandatory = $true)] $storageAccountName,
         [Object] [Parameter(Mandatory = $true)] $endpoint,
-        [string] [Parameter(Mandatory=$true)] $connectedServiceNameARM,
+        [string] [Parameter(Mandatory=$false)] $connectedServiceNameARM,
         [string] [Parameter(Mandatory=$false)] $vstsAccessToken)
 
     try {
@@ -867,7 +867,7 @@ function Get-AzRmStorageAccount {
         $storageAccountUnformatted = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
 
         Write-Verbose "Constructing the storage account object"
-        
+
         $storageAccount = New-Object -TypeName PSObject
         $storageAccount | Add-Member -type NoteProperty -name id -value $storageAccountUnformatted.id
         $storageAccount | Add-Member -type NoteProperty -name kind -value $storageAccountUnformatted.kind
@@ -885,7 +885,7 @@ function Get-AzRmStorageAccount {
     }
     catch {
         $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Verbose "Exception : $exceptionMessage" 
+        Write-Verbose "Exception : $exceptionMessage"
         $parsedException = Parse-Exception($_.Exception)
         if ($parsedException) {
             $exceptionMessage = $parsedException
@@ -914,7 +914,7 @@ function Get-AzRmResourceGroup {
     }
     catch {
         $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Verbose "Exception : $exceptionMessage" 
+        Write-Verbose "Exception : $exceptionMessage"
         $parsedException = Parse-Exception($_.Exception)
         if ($parsedException) {
             $exceptionMessage = $parsedException
@@ -997,7 +997,7 @@ function Add-AzureRmSqlServerFirewall {
         [String] [Parameter(Mandatory = $true)] $endIPAddress,
         [String] [Parameter(Mandatory = $true)] $serverName,
         [String] [Parameter(Mandatory = $true)] $firewallRuleName,
-        [string] [Parameter(Mandatory = $true)] $connectedServiceNameARM,
+        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM,
         [string] [Parameter(Mandatory = $false)] $vstsAccessToken)
 
     $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM $vstsAccessToken
@@ -1048,7 +1048,7 @@ function Remove-AzureRmSqlServerFirewall {
     param([Object] [Parameter(Mandatory = $true)] $endpoint,
         [String] [Parameter(Mandatory = $true)] $serverName,
         [String] [Parameter(Mandatory = $true)] $firewallRuleName,
-        [string] [Parameter(Mandatory = $true)] $connectedServiceNameARM,
+        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM,
         [string] [Parameter(Mandatory = $false)] $vstsAccessToken)
 
     $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM $vstsAccessToken
@@ -1070,7 +1070,7 @@ function Add-AzureSqlDatabaseServerFirewallRule {
         [String] [Parameter(Mandatory = $true)] $endIPAddress,
         [String] [Parameter(Mandatory = $true)] $serverName,
         [String] [Parameter(Mandatory = $true)] $firewallRuleName,
-        [string] [Parameter(Mandatory = $true)] $connectedServiceNameARM,
+        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM,
         [string] [Parameter(Mandatory = $false)] $vstsAccessToken)
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -1107,7 +1107,7 @@ function Remove-AzureSqlDatabaseServerFirewallRule {
     param([Object] [Parameter(Mandatory = $true)] $endpoint,
         [String] [Parameter(Mandatory = $true)] $serverName,
         [String] [Parameter(Mandatory = $true)] $firewallRuleName,
-        [string] [Parameter(Mandatory = $true)] $connectedServiceNameARM,
+        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM,
         [string] [Parameter(Mandatory = $false)] $vstsAccessToken)
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -1175,11 +1175,11 @@ function Parse-Exception($exception) {
                     $exceptionMessage = $responseBody
                 }
                 if ($response.statusCode -eq 404 -or (-not $exceptionMessage)) {
-                    $exceptionMessage += " Please verify request URL : $($response.ResponseUri)" 
+                    $exceptionMessage += " Please verify request URL : $($response.ResponseUri)"
                 }
                 return $exceptionMessage
             }
-        } 
+        }
         catch {
             Write-verbose "Unable to parse exception: " + $_.Exception.ToString()
         }
@@ -1191,7 +1191,7 @@ function Get-AzureNetworkInterfaceDetails {
     [CmdletBinding()]
     param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
         [Object] [Parameter(Mandatory = $true)] $endpoint,
-        [string] [Parameter(Mandatory=$true)] $connectedServiceNameARM,
+        [string] [Parameter(Mandatory=$false)] $connectedServiceNameARM,
         [string] [Parameter(Mandatory=$false)] $vstsAccessToken)
 
     $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM $vstsAccessToken
@@ -1220,7 +1220,7 @@ function Get-AzurePublicIpAddressDetails {
     [CmdletBinding()]
     param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
         [Object] [Parameter(Mandatory = $true)] $endpoint,
-        [string] [Parameter(Mandatory = $true)] $connectedServiceNameARM,
+        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM,
         [string] [Parameter(Mandatory = $false)] $vstsAccessToken)
 
     $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM $vstsAccessToken
@@ -1249,7 +1249,7 @@ function Get-AzureLoadBalancersDetails {
     [CmdletBinding()]
     param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
         [Object] [Parameter(Mandatory = $true)] $endpoint,
-        [string] [Parameter(Mandatory = $true)] $connectedServiceNameARM,
+        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM,
         [string] [Parameter(Mandatory = $false)] $vstsAccessToken)
 
     $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM $vstsAccessToken
@@ -1279,7 +1279,7 @@ function Get-AzureLoadBalancerDetails {
     param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
         [String] [Parameter(Mandatory = $true)] $name,
         [Object] [Parameter(Mandatory = $true)] $endpoint,
-        [string] [Parameter(Mandatory = $true)] $connectedServiceNameARM,
+        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM,
         [string] [Parameter(Mandatory = $false)] $vstsAccessToken)
 
     $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM $vstsAccessToken
@@ -1292,11 +1292,11 @@ function Get-AzureLoadBalancerDetails {
     $headers = @{Authorization = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token) }
 
     $loadBalancerDetails = Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType
-    
+
     if ($loadBalancerDetails) {
         return $loadBalancersDetails | ForEach-Object { Add-PropertiesToRoot -rootObject $_ }
     }
-    
+
     return $loadBalancerDetails
 }
 
@@ -1318,7 +1318,7 @@ function Get-AzureRMLoadBalancerInboundNatRuleConfigDetails {
     param([Object] [Parameter(Mandatory = $true)] $loadBalancer)
 
     $inboundNatRules = $loadBalancer.inboundNatRules
-    
+
     if ($inboundNatRules) {
         return Add-PropertiesToRoot -rootObject $inboundNatRules
     }
@@ -1351,7 +1351,7 @@ function ConvertTo-Pfx {
     else {
         $pemFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pem"
         $pfxFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"
-        $pfxPasswordFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificatepassword.txt"    
+        $pfxPasswordFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificatepassword.txt"
     }
 
     # save the PEM certificate to a PEM file

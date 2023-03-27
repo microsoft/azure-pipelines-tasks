@@ -4,7 +4,7 @@ param
     [String] [Parameter(Mandatory = $true)]
     $endpoint,
 
-    [String] [Parameter(Mandatory = $true)]
+    [String] [Parameter(Mandatory = $false)]
     $connectedServiceNameARM,
 
     [String] [Parameter(Mandatory = $false)]

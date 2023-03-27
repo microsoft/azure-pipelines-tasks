@@ -6,7 +6,7 @@ function Initialize-AzModule {
     param(
         [Parameter(Mandatory=$true)]
         $Endpoint,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$false)]
         [string] $connectedServiceNameARM,
         [Parameter(Mandatory=$false)]
         [string] $azVersion,
@@ -37,7 +37,7 @@ function Import-AzModule {
         $moduleName = "Az.Accounts"
         # Attempt to resolve the module.
         Write-Verbose "Attempting to find the module '$moduleName' from the module path."
-        
+
         if($azVersion -eq ""){
             $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
         }
@@ -74,7 +74,7 @@ function Initialize-AzSubscription {
     param(
         [Parameter(Mandatory=$true)]
         $Endpoint,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$false)]
         [string] $connectedServiceNameARM,
         [Parameter(Mandatory=$false)]
         [Security.SecureString]$vstsAccessToken)
@@ -125,7 +125,7 @@ function Initialize-AzSubscription {
                     Credential=$psCredential;
                     Environment=$environmentName;
                     ServicePrincipal=$true;
-                } 
+                }
             }
 
         }
@@ -173,7 +173,7 @@ function Initialize-AzSubscription {
 
         if ($scopeLevel -ne "ManagementGroup") {
             Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
-        }     
+        }
     } else {
         Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
         $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
@@ -233,7 +233,7 @@ function Retry-Command {
         [Parameter(Mandatory=$false)][int]$retries=5,
         [Parameter(Mandatory=$false)][int]$secondsDelay=5
     )
-    
+
     $retryCount = 0
     $completed = $false
 
