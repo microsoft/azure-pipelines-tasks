@@ -11,14 +11,17 @@ Register-Mock Add-AzureSqlDatabaseServerFirewallRule { throw "IPAddress mentione
 Register-Mock Add-AzureSqlDatabaseServerFirewallRule { throw "Sql Database Server: '$invalidAzureSqlServerName' not found."} -ParametersEvaluator { $serverName -eq $invalidAzureSqlServerName }
 
 Assert-Throws {
-    Create-AzureSqlDatabaseServerFirewallRule -startIp $outOfRangeIPAddress -endIP $endIP -serverName $azureSqlServerName -endpoint $usernameEndpoint  
+    Create-AzureSqlDatabaseServerFirewallRule -startIp $outOfRangeIPAddress -endIP $endIP -serverName $azureSqlServerName -endpoint $usernameEndpoint `
+        -connectedServiceNameARM "connected service name"
 } -MessagePattern "IPAddress mentioned is not a valid IPv4 address."
 
 Assert-Throws {
-    Create-AzureSqlDatabaseServerFirewallRule -startIp $startIP -endIP $endIP -serverName $invalidAzureSqlServerName -endpoint $usernameEndpoint 
+    Create-AzureSqlDatabaseServerFirewallRule -startIp $startIP -endIP $endIP -serverName $invalidAzureSqlServerName -endpoint $usernameEndpoint `
+        -connectedServiceNameARM "connected service name"
 } -MessagePattern "Sql Database Server: '$invalidAzureSqlServerName' not found."
 
-$azureSqlDatabaseServerFirewallRule = Create-AzureSqlDatabaseServerFirewallRule -startIp $startIP -endIP $endIP -serverName $azureSqlServerName -endpoint $usernameEndpoint
+$azureSqlDatabaseServerFirewallRule = Create-AzureSqlDatabaseServerFirewallRule -startIp $startIP -endIP $endIP -serverName $azureSqlServerName `
+    -endpoint $usernameEndpoint -connectedServiceNameARM "connected service name"
 
 Assert-IsNotNullOrEmpty $azureSqlDatabaseServerFirewallRule "Firewall Rule - certificate end point cannot be null"
 Assert-IsNotNullOrEmpty $azureSqlDatabaseServerFirewallRule.RuleName "Firewall Rule - username end point 'Rule Name' cannot be null"
