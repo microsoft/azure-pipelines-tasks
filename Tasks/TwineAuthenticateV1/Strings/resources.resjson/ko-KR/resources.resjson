@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Twine 인증 $(message)",
   "loc.group.displayName.feedAuthentication": "피드 및 인증",
   "loc.group.displayName.advanced": "고급",
-  "loc.input.label.artifactFeed": "내 피드(아래에서 선택)",
+  "loc.input.label.artifactFeed": "내 피드 이름(아래에서 선택)",
   "loc.input.help.artifactFeed": "이 조직에 있는, 인증할 피드를 선택합니다.",
   "loc.input.label.pythonUploadServiceConnection": "외부 조직의 피드",
   "loc.input.help.pythonUploadServiceConnection": "이 조직 외부에 있는, 인증할 엔드포인트를 선택합니다. 엔드포인트에 패키지 업로드 권한이 있는지 확인합니다.",
