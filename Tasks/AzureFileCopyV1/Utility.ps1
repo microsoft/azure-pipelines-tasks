@@ -1448,3 +1448,11 @@ function Check-ContainerNameAndArgs
         Write-Warning (Get-vstsLocString -Key "AFC_RootContainerAndDirectory")
     }
 }
+
+function Validate-AdditionalArguments([string]$additionalArguments)
+{
+    if($additionalArguments -match "[&;]")
+    {
+        ThrowError -errorMessage (Get-VstsLocString -Key "AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters" -ArgumentList $value)
+    }
+}

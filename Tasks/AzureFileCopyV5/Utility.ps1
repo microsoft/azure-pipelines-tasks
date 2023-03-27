@@ -1354,3 +1354,11 @@ function CleanUp-PSModulePathForHostedAgent {
         $env:PSModulePath = ($azPSModulePath + ";" + $newEnvPSModulePath).Trim(";")
     }
 }
+
+function Validate-AdditionalArguments([string]$additionalArguments)
+{
+    if($additionalArguments -match "[&;]")
+    {
+        ThrowError -errorMessage (Get-VstsLocString -Key "AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters" -ArgumentList $value)
+    }
+}
