@@ -13,5 +13,5 @@ $invalidRGStorage = "invalidRGStorage"
 
 # Test 1 "Should throw if Blob storage not found"
 Assert-Throws {
-    Get-blobStorageEndpoint -storageAccountName $invalidRGStorage -endpoint @{}
+    Get-blobStorageEndpoint -storageAccountName $invalidRGStorage -endpoint @{} -connectedServiceNameARM "some service name"
 } -MessagePattern "Unable to find storage type $invalidRGStorage with Connection SPN"
