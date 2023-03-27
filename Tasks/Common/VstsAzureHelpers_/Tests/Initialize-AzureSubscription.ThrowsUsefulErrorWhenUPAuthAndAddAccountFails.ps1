@@ -49,7 +49,7 @@ foreach ($variableSet in $variableSets) {
 
     # Act/Assert.
     Assert-Throws {
-        & $module Initialize-AzureSubscription -Endpoint $endpoint -connectedServiceNameARM "some service name"
+        & $module Initialize-AzureSubscription -Endpoint $endpoint
     } -MessagePattern AZ_CredentialsError
 
     # Assert.
