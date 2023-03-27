@@ -36,6 +36,6 @@ $script:azureModule = $null
 $script:azureRMProfileModule = @{ Version = [version]'1.2.3.4' }
 }
 
-$result = & $module Initialize-AzureSubscription -Endpoint $endpoint
+$result = & $module Initialize-AzureSubscription -Endpoint $endpoint 
 
 Assert-WasCalled Add-AzureRMAccount

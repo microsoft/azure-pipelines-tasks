@@ -41,20 +41,20 @@ foreach ($variableSet in $variableSets) {
 
     # Act.
     & $module Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $variableSet.StorageAccount
-
+	
     if( $variableSet.Environment ){
         $environmentName = $variableSet.Environment
     }else{
         $environmentName =  'AzureCloud'
     }
-
+	
 	# setting environment to endpoint
 	$endpoint.Data.Environment = $variableSet.Environment
-
+	
     # Assert.
     Assert-WasCalled Add-Certificate -- -Endpoint $endpoint
     if ($variableSet.StorageAccount) {
-        # The CurrentStorageAccountName parameter ends in ":" for the assertion because it's splatted.
+        # The CurrentStorageAccountName parameter ends in ":" for the assertion because it's splatted. 
         Assert-WasCalled Set-AzureSubscription -- -SubscriptionName $endpoint.Data.SubscriptionName -SubscriptionId $endpoint.Data.SubscriptionId -Certificate $certificate -Environment $environmentName -CurrentStorageAccountName: $variableSet.StorageAccount
     } else {
         Assert-WasCalled Set-AzureSubscription -- -SubscriptionName $endpoint.Data.SubscriptionName -SubscriptionId $endpoint.Data.SubscriptionId -Certificate $certificate -Environment $environmentName

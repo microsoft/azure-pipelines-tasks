@@ -47,7 +47,7 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Set-CurrentAzureRMSubscription
     Register-Mock Set-UserAgent
     Register-Mock Invoke-WebRequest { $response }
-
+    
     # Act.
     $result = & $module Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $variableSet.StorageAccount
 
