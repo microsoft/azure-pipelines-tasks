@@ -89,7 +89,7 @@
     "Node10": {
       "target": "installprovprofile.js",
       "argumentFormat": ""
-    }, 
+    },
     "Node16": {
       "target": "installprovprofile.js",
       "argumentFormat": ""
