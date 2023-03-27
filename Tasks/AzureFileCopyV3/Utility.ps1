@@ -60,7 +60,7 @@ function Get-StorageKey
 {
     param([string][Parameter(Mandatory=$true)]$storageAccountName,
         [object][Parameter(Mandatory=$true)]$endpoint,
-        [string][Parameter(Mandatory=$true)]$connectedServiceNameARM,
+        [string][Parameter(Mandatory=$false)]$connectedServiceNameARM,
         [string][Parameter(Mandatory=$false)]$vstsAccessToken)
 
     $storageAccountName = $storageAccountName.Trim()
@@ -78,7 +78,7 @@ function Get-blobStorageEndpoint
 {
     param([string][Parameter(Mandatory=$true)]$storageAccountName,
         [object][Parameter(Mandatory=$true)]$endpoint,
-        [string][Parameter(Mandatory=$true)]$connectedServiceNameARM,
+        [string][Parameter(Mandatory=$false)]$connectedServiceNameARM,
         [string][Parameter(Mandatory=$false)]$vstsAccessToken)
 
     $storageAccountName = $storageAccountName.Trim()
@@ -93,7 +93,7 @@ function Get-StorageAccountType
 {
     param([string][Parameter(Mandatory=$true)]$storageAccountName,
         [object][Parameter(Mandatory=$true)]$endpoint,
-        [string][Parameter(Mandatory=$true)]$connectedServiceNameARM,
+        [string][Parameter(Mandatory=$false)]$connectedServiceNameARM,
         [string][Parameter(Mandatory=$false)]$vstsAccessToken)
 
     $storageAccountName = $storageAccountName.Trim()

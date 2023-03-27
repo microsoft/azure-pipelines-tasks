@@ -40,7 +40,7 @@ function Create-AzureSqlDatabaseServerFirewallRule {
         [String] [Parameter(Mandatory = $true)] $endIp,
         [String] [Parameter(Mandatory = $true)] $serverName,
         [Object] [Parameter(Mandatory = $true)] $endpoint,
-        [string] [Parameter(Mandatory = $true)] $connectedServiceNameARM,
+        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM,
         [string] [Parameter(Mandatory = $false)] $vstsAccessToken)
 
     [HashTable]$FirewallSettings = @{}
@@ -61,7 +61,7 @@ function Delete-AzureSqlDatabaseServerFirewallRule {
         [String] $isFirewallConfigured,
         [String] [Parameter(Mandatory = $true)] $deleteFireWallRule,
         [Object] [Parameter(Mandatory = $true)] $endpoint,
-        [string] [Parameter(Mandatory = $true)] $connectedServiceNameARM,
+        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM,
         [string] [Parameter(Mandatory = $false)] $vstsAccessToken)
 
     if ($deleteFireWallRule -eq "true" -and $isFirewallConfigured -eq "true") {

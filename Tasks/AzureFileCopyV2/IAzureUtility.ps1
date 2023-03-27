@@ -18,7 +18,7 @@ function Get-AzureStorageKeyFromARM
 {
     param([string]$storageAccountName,
         [object]$endpoint,
-        [string][Parameter(Mandatory=$true)]$connectedServiceNameARM,
+        [string][Parameter(Mandatory=$false)]$connectedServiceNameARM,
         [string][Parameter(Mandatory=$false)]$vstsAccessToken)
 }
 
