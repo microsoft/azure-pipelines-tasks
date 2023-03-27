@@ -24,6 +24,8 @@
   "loc.input.help.interactiveSession": "Если выбран этот параметр, будет запущен интерактивный сеанс. При наличии запроса на пароль будет указан пароль пользователя. Это может быть удобно для выполнения таких команд, как \"sudo\".",
   "loc.input.label.readyTimeout": "Время ожидания подтверждения SSH",
   "loc.input.help.readyTimeout": "Время (в миллисекундах) для ожидания завершения подтверждения SSH.",
+  "loc.input.label.interactiveKeyboardAuthentication": "Использовать проверку подлинности с помощью интерактивной клавиатуры",
+  "loc.input.help.interactiveKeyboardAuthentication": "Используйте это значение, если параметр PasswordAuthentication отключен на целевом компьютере",
   "loc.messages.ConnectionFailed": "Не удалось подключиться к удаленному компьютеру. Проверьте сведения о подключении к службе SSH. Ошибка: %s.",
   "loc.messages.FailedToWriteScript": "Не удалось записать скрипт на диск: %s",
   "loc.messages.RemoteCmdExecutionErr": "Сбой команды с ошибками на удаленном компьютере.",
