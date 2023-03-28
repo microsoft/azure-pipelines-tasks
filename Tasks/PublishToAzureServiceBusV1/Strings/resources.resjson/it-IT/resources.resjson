@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Pubblica nel bus di servizio di Azure",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=870237)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?linkid=870237)",
   "loc.description": "Invia un messaggio al bus di servizio di Azure usando una connessione di servizio (non è richiesto alcun agente)",
   "loc.instanceNameFormat": "Pubblica nel bus di servizio di Azure",
   "loc.group.displayName.advancedProperties": "Avanzate",
@@ -17,5 +17,7 @@
   "loc.input.label.signatureKey": "Chiave della proprietà della firma",
   "loc.input.help.signatureKey": "Chiave in cui deve essere inserita la firma nelle proprietà del messaggio. Se viene lasciata vuota, il valore predefinito è 'signature' nelle proprietà del messaggio",
   "loc.input.label.waitForCompletion": "Attendi il completamento dell'attività",
-  "loc.input.help.waitForCompletion": "Se è impostata su true, questa attività attenderà l'evento TaskCompleted per il timeout attività specificato."
+  "loc.input.help.waitForCompletion": "Se è impostata su true, questa attività attenderà l'evento TaskCompleted per il timeout attività specificato.",
+  "loc.input.label.useDataContractSerializer": "Usare il serializzatore del contratto di dati .NET",
+  "loc.input.help.useDataContractSerializer": "Per altri dettagli, vedere la documentazione dell'attività"
 }
