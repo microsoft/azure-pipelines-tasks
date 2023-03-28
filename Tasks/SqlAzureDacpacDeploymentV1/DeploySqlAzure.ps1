@@ -58,7 +58,7 @@ try {
     # Telemetry for endpoint id
     $encodedServerName = GetSHA256String($serverName)
     $encodedDatabaseName = GetSHA256String($databaseName)
-    $telemetryJsonContent = -join ("{`"endpointId`":`"$connectedServiceName`",", 
+    $telemetryJsonContent = -join ("{`"endpointId`":`"$connectedServiceName`",",
         "`"subscriptionId`":`"$subscriptionId`",",
         "`"serverName`": `"$encodedServerName`",",
         "`"databaseName`": `"$encodedDatabaseName`"}")
