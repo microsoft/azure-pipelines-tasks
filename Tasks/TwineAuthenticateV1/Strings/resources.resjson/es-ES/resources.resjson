@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Autenticación de Twine $(message)",
   "loc.group.displayName.feedAuthentication": "Fuentes y autenticación",
   "loc.group.displayName.advanced": "Avanzado",
-  "loc.input.label.artifactFeed": "Mi fuente (seleccionar a continuación)",
+  "loc.input.label.artifactFeed": "Mi nombre de fuente (selecciónelo a continuación)",
   "loc.input.help.artifactFeed": "Seleccione una fuente para autenticar que esté presente en la organización.",
   "loc.input.label.pythonUploadServiceConnection": "Fuente de organizaciones externas",
   "loc.input.help.pythonUploadServiceConnection": "Seleccione un punto de conexión para autenticarse fuera de la organización y asegúrese de que este tiene permisos de carga de paquetes.",
