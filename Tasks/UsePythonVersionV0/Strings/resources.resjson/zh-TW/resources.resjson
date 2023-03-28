@@ -6,6 +6,12 @@
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.versionSpec": "版本規格",
   "loc.input.help.versionSpec": "所要使用的 Python 版本之版本範圍或確切版本，會使用 semver 的版本範圍語法。[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=2006180)",
+  "loc.input.label.disableDownloadFromRegistry": "停用從 GitHub 登錄下載版本",
+  "loc.input.help.disableDownloadFromRegistry": "是否要停用從 [Github Actions 登錄](https://github.com/actions/python-versions)下載遺失的 Python 版本。如果您只想要使用本機預先安裝的 Python，請檢查此設定。",
+  "loc.input.label.allowUnstable": "允許下載不穩定的版本",
+  "loc.input.help.allowUnstable": "允許從 [Github Actions python 版本登錄](https://github.com/actions/python-versions) 下載不穩定的 python 版本。",
+  "loc.input.label.githubToken": "適用於 GitHub Actions python 登錄的 GitHub 權杖",
+  "loc.input.help.githubToken": "需要 GitHub 權杖，才能避免匿名要求限制 [Github Actions python 版本登錄](https://github.com/actions/python-versions)。若保留此空白，可能會導致下載失敗。如果您只使用本機安裝的 Python，則不需要此功能。",
   "loc.input.label.addToPath": "新增至 PATH",
   "loc.input.help.addToPath": "是否要在 PATH 環境變數前加上擷取的 Python 版本，以便後續工作或指令碼使用而不需要使用輸出變數。",
   "loc.input.label.architecture": "架構",
@@ -17,6 +23,11 @@
   "loc.messages.ToolNotFoundMicrosoftHosted": "如果這是 Microsoft 裝載的代理程式，請確認此映像支援並存版本 %s (位於 %s)。",
   "loc.messages.ToolNotFoundSelfHosted": "如果這是自我裝載式代理程式，請於以下位置了解如何設定並存 %s 版本: %s。",
   "loc.messages.VersionNotFound": "架構 %s 的版本規格 %s 不符合 Agent.ToolsDirectory 中的任何版本。",
-  "loc.messages.ExactVersionNotRecommended": "不建議在 Microsoft 裝載的代理程式上指定確切的版本。您可以在不另行通知的情況下，由裝載的代理程式上的新版 Python 取代修補程式版本，這會造成未預期的失敗。建議只指定主要或主要和次要版本 (例如: '3' 或 '3.6')",
-  "loc.messages.PythonVersionRetirement": "Python 3.5 已達生命週期結尾，將於 1 月 24 日從 MS 託管的映像中移除。如果您使用 MS 託管的代理程式，請更新 Python 版本。如需此動作的詳細資訊，請參閱 - https://github.com/actions/virtual-environments"
+  "loc.messages.ExactVersionNotRecommended": "不建議在 Microsoft 裝載的代理程式上指定確切的版本。您可以在不另行通知的情況下，由裝載的代理程式上的新版 Python 取代修補程式版本，這會造成未預期的失敗。建議只指定主要或主要和次要版本 (例如: '3' 或 '3.9')",
+  "loc.messages.ExactVersionPyPyNotRecommended": "不建議在 Microsoft 裝載的代理程式上指定確切的版本。您可以在不另行通知的情況下，由裝載的代理程式上的新版 PyPy 取代修補程式版本，這會造成未預期的失敗。建議只指定主要或主要和次要版本 (例如: '3' 或 '3.9')",
+  "loc.messages.PythonVersionRetirement": "Python 3.5 已達生命週期結尾，將於 1 月 24 日從 MS 託管的映像中移除。如果您使用 MS 託管的代理程式，請更新 Python 版本。如需此動作的詳細資訊，請參閱 - https://github.com/actions/virtual-environments",
+  "loc.messages.MissingGithubToken": "若要下載 python 版本，應提供 GitHub 權杖。否則，您可能會達到 GitHub 匿名下載限制。",
+  "loc.messages.DownloadNotFound": "在 Python 版本登錄中找不到符合規格 %s (%s)的 Python。請注意，只有 Github Actions python 版本資訊清單 (https://github.com/actions/python-versions/blob/main/versions-manifest.json) 中所列的系統適合下載 Python 正式發行前小眾測試版。此外，不支援 Proxy。",
+  "loc.messages.ManifestDownloadFailed": "無法從 Github Actions Python 登錄 (https://github.com/actions/python-versions)下載 Python 版本資訊清單。不正確 GitHub 權杖可能導致此問題。",
+  "loc.messages.DownloadFailed": "無法從 Github Actions python 登錄 (https://github.com/actions/python-versions) 下載 Python。錯誤: %s"
 }
