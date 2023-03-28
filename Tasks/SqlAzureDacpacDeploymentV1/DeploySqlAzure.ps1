@@ -105,7 +105,7 @@ try {
         $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
         $token = Get-AzureRMAccessToken -endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $vstsAccessToken -overrideResourceType $dbUrl
         $accessToken = $token.access_token
-        Write-Debug "Access token: $accessToken"
+        Write-Verbose "Access token: $accessToken"
     }
 
     # Checks for the very basic consistency of the Server Name

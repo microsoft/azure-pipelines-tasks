@@ -439,7 +439,6 @@ function Get-AccessTokenMSAL {
     try {
         Write-Verbose "Fetching Access Token - MSAL"
         $tokenResult = $script:msalClientInstance.AcquireTokenForClient($scopes).ExecuteAsync().GetAwaiter().GetResult()
-        Write-Verbose "Acquired Access Token with type: $($tokenResult.TokenType)"
         return $tokenResult
     }
     catch {
