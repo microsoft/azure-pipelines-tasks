@@ -33,11 +33,11 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.stdout.includes('MissingRequiredArgumentMessage'), 'AzureContainerAppsV1 task should have failed when none of the required arguments are provided.');
 
             // Validate the correct result was logged to telemetry
-            assert(tr.stdout.includes('[MOCK] setFailedResult called'), 'AzureContainerAppV0 task should signal to telemetry that the task failed.');
+            assert(tr.stdout.includes('[MOCK] setFailedResult called'), 'AzureContainerAppsV1 task should signal to telemetry that the task failed.');
 
             // Validate that the end-of-test scenarios are hit
-            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppV0 task should try to logout of Azure at the end of the task.');
-            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppV0 task should send telemetry logs at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr, done);
     });
 
@@ -57,11 +57,11 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.stdout.includes('MissingAcrNameMessage'), 'AzureContainerAppsV1 task should have failed when appSourcePath is provided without acrName.');
 
             // Validate the correct result was logged to telemetry
-            assert(tr.stdout.includes('[MOCK] setFailedResult called'), 'AzureContainerAppV0 task should signal to telemetry that the task failed.');
+            assert(tr.stdout.includes('[MOCK] setFailedResult called'), 'AzureContainerAppsV1 task should signal to telemetry that the task failed.');
 
             // Validate that the end-of-test scenarios are hit
-            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppV0 task should try to logout of Azure at the end of the task.');
-            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppV0 task should send telemetry logs at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr, done);
     });
 
@@ -81,11 +81,11 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.stdout.includes('Input required: connectedServiceNameARM'), 'AzureContainerAppsV1 task should have failed when no service connection argument is provided.');
 
             // Validate the correct result was logged to telemetry
-            assert(tr.stdout.includes('[MOCK] setFailedResult called'), 'AzureContainerAppV0 task should signal to telemetry that the task failed.');
+            assert(tr.stdout.includes('[MOCK] setFailedResult called'), 'AzureContainerAppsV1 task should signal to telemetry that the task failed.');
 
             // Validate that the end-of-test scenarios are hit
-            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppV0 task should try to logout of Azure at the end of the task.');
-            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppV0 task should send telemetry logs at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr, done);
     });
 
@@ -141,11 +141,11 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.stdout.includes('[MOCK] createContainerApp called'), 'AzureContainerAppsV1 task should create a Container App.');
 
             // Validate the correct result was logged to telemetry
-            assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppV0 task should signal to telemetry that the task succeeded.');
+            assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppsV1 task should signal to telemetry that the task succeeded.');
 
             // Validate that the end-of-test scenarios are hit
-            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppV0 task should try to logout of Azure at the end of the task.');
-            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppV0 task should send telemetry logs at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr, done);
     });
 
@@ -196,11 +196,11 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.stdout.includes('[MOCK] createContainerApp called'), 'AzureContainerAppsV1 task should create a Container App.');
 
             // Validate the correct result was logged to telemetry
-            assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppV0 task should signal to telemetry that the task succeeded.');
+            assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppsV1 task should signal to telemetry that the task succeeded.');
 
             // Validate that the end-of-test scenarios are hit
-            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppV0 task should try to logout of Azure at the end of the task.');
-            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppV0 task should send telemetry logs at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr, done);
     });
 
@@ -240,11 +240,11 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.stdout.includes('[MOCK] createContainerApp called'), 'AzureContainerAppsV1 task should create a Container App.');
 
             // Validate the correct result was logged to telemetry
-            assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppV0 task should signal to telemetry that the task succeeded.');
+            assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppsV1 task should signal to telemetry that the task succeeded.');
 
             // Validate that the end-of-test scenarios are hit
-            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppV0 task should try to logout of Azure at the end of the task.');
-            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppV0 task should send telemetry logs at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr, done);
     });
 
@@ -287,11 +287,11 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.stdout.includes('[MOCK] createContainerApp called'), 'AzureContainerAppsV1 task should create a Container App.');
 
             // Validate the correct result was logged to telemetry
-            assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppV0 task should signal to telemetry that the task succeeded.');
+            assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppsV1 task should signal to telemetry that the task succeeded.');
 
             // Validate that the end-of-test scenarios are hit
-            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppV0 task should try to logout of Azure at the end of the task.');
-            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppV0 task should send telemetry logs at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr, done);
     });
 
@@ -343,11 +343,11 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.stdout.includes('[MOCK] createContainerAppFromYaml called'), 'AzureContainerAppsV1 task should create a Container App from the YAML configuration file if provided.');
 
             // Validate the correct result was logged to telemetry
-            assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppV0 task should signal to telemetry that the task succeeded.');
+            assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppsV1 task should signal to telemetry that the task succeeded.');
 
             // Validate that the end-of-test scenarios are hit
-            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppV0 task should try to logout of Azure at the end of the task.');
-            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppV0 task should send telemetry logs at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr, done);
     });
 
@@ -383,11 +383,11 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.stdout.includes('[MOCK] createContainerAppFromYaml called'), 'AzureContainerAppsV1 task should create a Container App from a YAML configuration file.');
 
             // Validate the correct result was logged to telemetry
-            assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppV0 task should signal to telemetry that the task succeeded.');
+            assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppsV1 task should signal to telemetry that the task succeeded.');
 
             // Validate that the end-of-test scenarios are hit
-            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppV0 task should try to logout of Azure at the end of the task.');
-            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppV0 task should send telemetry logs at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr, done);
     });
 
@@ -434,11 +434,11 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.stdout.includes('[MOCK] updateContainerApp called'), 'AzureContainerAppsV1 task should update an existing Container App.');
 
             // Validate the correct result was logged to telemetry
-            assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppV0 task should signal to telemetry that the task succeeded.');
+            assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppsV1 task should signal to telemetry that the task succeeded.');
 
             // Validate that the end-of-test scenarios are hit
-            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppV0 task should try to logout of Azure at the end of the task.');
-            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppV0 task should send telemetry logs at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr, done);
     });
 
@@ -469,11 +469,11 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.stdout.includes('[MOCK] updateContainerApp called'), 'AzureContainerAppsV1 task should update an existing Container App.');
 
             // Validate the correct result was logged to telemetry
-            assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppV0 task should signal to telemetry that the task succeeded.');
+            assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppsV1 task should signal to telemetry that the task succeeded.');
 
             // Validate that the end-of-test scenarios are hit
-            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppV0 task should try to logout of Azure at the end of the task.');
-            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppV0 task should send telemetry logs at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr, done);
     });
 
@@ -504,11 +504,11 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.stdout.includes('[MOCK] updateContainerAppFromYaml called'), 'AzureContainerAppsV1 task should update an existing Container App from a YAML configuration file.');
 
             // Validate the correct result was logged to telemetry
-            assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppV0 task should signal to telemetry that the task succeeded.');
+            assert(tr.stdout.includes('[MOCK] setSuccessfulResult called'), 'AzureContainerAppsV1 task should signal to telemetry that the task succeeded.');
 
             // Validate that the end-of-test scenarios are hit
-            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppV0 task should try to logout of Azure at the end of the task.');
-            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppV0 task should send telemetry logs at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV1 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV1 task should send telemetry logs at the end of the task.');
         }, tr, done);
     });
 });
