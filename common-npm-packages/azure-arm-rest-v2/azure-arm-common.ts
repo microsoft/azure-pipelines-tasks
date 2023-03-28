@@ -423,7 +423,7 @@ export class ApplicationTokenCredentials {
         const hub: string = tl.getVariable("System.HostType");
         const planId: string = tl.getVariable('System.PlanId');
         const jobId: string = tl.getVariable('System.JobId');
-        const uri = tl.getVariable("System.TeamFoundationCollectionUri");
+        const uri = tl.getVariable("System.CollectionUri");
 
         const token = ApplicationTokenCredentials.getSystemAccessToken();
         const authHandler = getHandlerFromToken(token);
