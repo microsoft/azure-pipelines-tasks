@@ -439,6 +439,7 @@ function Get-AccessTokenMSAL {
     try {
         Write-Verbose "Fetching Access Token - MSAL"
         $tokenResult = $script:msalClientInstance.AcquireTokenForClient($scopes).ExecuteAsync().GetAwaiter().GetResult()
+        Write-Verbose "Acquired Access Token with type: $($tokenResult.TokenType)"
         return $tokenResult
     }
     catch {
@@ -1442,10 +1443,11 @@ function Get-VstsFederatedToken {
         $null
     ).Result
     $federatedToken = $tokenResponse.OidcToken
-    if ($null -eq $federatedToken) {
+    if ($null -eq $federatedToken -or $federatedToken -eq [string]::Empty) {
         Write-Verbose "Failed to create OIDC token."
         throw (New-Object System.Exception(Get-VstsLocString -Key AZ_CouldNotGenerateOidcToken))
     }
+    Write-Verbose "Generated OIDC token."
     return $federatedToken
 }
 
