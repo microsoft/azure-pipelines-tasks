@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Publier sur Azure Service Bus",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=870237)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?linkid=870237)",
   "loc.description": "Envoie un message à Azure Service Bus à l'aide d'une connexion de service (aucun agent n'est nécessaire)",
   "loc.instanceNameFormat": "Publier sur Azure Service Bus",
   "loc.group.displayName.advancedProperties": "Avancé",
@@ -17,5 +17,7 @@
   "loc.input.label.signatureKey": "Clé de propriété de signature",
   "loc.input.help.signatureKey": "Clé où doit se trouver la signature dans les propriétés du message. En l'absence d'informations, la valeur par défaut est 'signature' dans les propriétés du message",
   "loc.input.label.waitForCompletion": "Attendre l'exécution de la tâche",
-  "loc.input.help.waitForCompletion": "Si la valeur est true, cette tâche attend l'événement TaskCompleted jusqu'au délai d'expiration de tâche spécifié."
+  "loc.input.help.waitForCompletion": "Si la valeur est true, cette tâche attend l'événement TaskCompleted jusqu'au délai d'expiration de tâche spécifié.",
+  "loc.input.label.useDataContractSerializer": "Utiliser le sérialiseur de contrat de données .NET",
+  "loc.input.help.useDataContractSerializer": "Pour plus d’informations, consultez la documentation sur les tâches"
 }

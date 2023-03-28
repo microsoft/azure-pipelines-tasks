@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 200,
-        "Patch": 0
+        "Minor": 220,
+        "Patch": 1
     },
     "releaseNotes": "What's new in Version 2.0: <br/>&nbsp;&nbsp;Proxy support is being added. <br/>&nbsp;&nbsp; Removed support of legacy DTL machines.",
     "minimumAgentVersion": "1.104.0",
@@ -107,6 +107,7 @@
         "WFC_CopyingRecurivelyFrom0to1MachineSucceed": "Copying recursively from {0} to {1} on machine {2} succeeded.",
         "WFC_SourcePathDoesNotExist": "Source path '{0}' does not exist.",
         "WFC_RemoteDestinationPathCannotContainEnvironmentVariables": "Remote destination path '{0}' cannot contain environment variables.",
+        "WFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "Additional arguments can't include separator characters '&' and ';'. Please verify input. To learn more about argument validation, please check https://aka.ms/azdo-task-argument-validation",
         "WFC_CopyStartedFor0": "Copy started for - {0}",
         "WFC_NoMachineExistsUnderEnvironment": "No machine exists under environment: '{0}' for deployment",
         "WFC_NoMachineExistsUnderEnvironment0ForDeployment": "No machine exists under environment: '{0}' for deployment",
