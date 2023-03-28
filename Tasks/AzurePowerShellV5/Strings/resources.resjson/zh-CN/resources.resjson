@@ -26,6 +26,8 @@
   "loc.input.help.CustomTargetAzurePs": "首选 Azure PowerShell 版本需为正确的语义版本，例如 1.2.3。不支持 2.\\*、2.3.\\* 等正则表达式。托管 VS2017 池当前支持 Azure 模块版本: 1.0.0、1.6.0、2.3.2、2.6.0、3.1.0",
   "loc.input.label.pwsh": "使用 PowerShell Core",
   "loc.input.help.pwsh": "如果为 true，则在 Windows 上，任务将使用来自 PATH 的 pwsh.exe，而不是 powershell.exe。",
+  "loc.input.label.validateScriptSignature": "验证脚本签名",
+  "loc.input.help.validateScriptSignature": "如果为 true，则任务将首先检查以确保指定的脚本已签名并且在执行前有效。",
   "loc.input.label.workingDirectory": "工作目录",
   "loc.input.help.workingDirectory": "在其中运行脚本的工作目录。",
   "loc.messages.GeneratingScript": "正在生成脚本。",
