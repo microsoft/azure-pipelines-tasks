@@ -5,14 +5,15 @@ using System.Text.Json.Nodes;
 namespace BuildConfigGen
 {
 
-    internal class Tweak
+    internal class Knob
     {
-        public static readonly Tweak Default = new Tweak { SourceDirectoriesMustContainPlaceHolders = false };
+        public static readonly Knob Default = new Knob { SourceDirectoriesMustContainPlaceHolders = false, EnableBuildConfigOverrides = false };
 
         // when true, Source Directories must contain _buildConfigs placeholders for each build config
         // _buildConfigs are written to each directory when --write-updates is specified
         // setting to false for now so we're not forced to check in a lot of placeholders to tasks that don't use them
         public bool SourceDirectoriesMustContainPlaceHolders { get; init; }
+        public bool EnableBuildConfigOverrides { get; init; }
     }
 
     internal class Program
@@ -128,7 +129,10 @@ namespace BuildConfigGen
                     taskOutput = Path.Combine(gitRootPath, "_generated", @$"{task}_{config.name}");
                 }
 
-                EnsureBuildConfigFileOverrides(config, taskTargetPath);
+                if (Knob.Default.EnableBuildConfigOverrides)
+                {
+                    EnsureBuildConfigFileOverrides(config, taskTargetPath);
+                }
 
                 CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
 
@@ -136,7 +140,10 @@ namespace BuildConfigGen
                 // Skip content check==true for files that existin destination as some of them will be updated and validated later
                 ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: true);
 
-                CopyConfigOverrides(taskTargetPath, taskOutput, config);
+                if (Knob.Default.EnableBuildConfigOverrides)
+                {
+                    CopyConfigOverrides(taskTargetPath, taskOutput, config);
+                }
 
                 HandlePreprocessingInTarget(taskOutput, config);
 
@@ -155,30 +162,45 @@ namespace BuildConfigGen
 
         private static void EnsureBuildConfigFileOverrides(Config.ConfigRecord config, string taskTargetPath)
         {
+            if(!Knob.Default.EnableBuildConfigOverrides)
+            {
+                throw new Exception("BUG: should not get here: !Knob.Default.EnableBuildConfigOverrides");
+            }
+
             string path, readmeFile;
             GetBuildConfigFileOverridePaths(config, taskTargetPath, out path, out readmeFile);
 
             if (!Directory.Exists(path))
             {
-                ensureUpdateModeVerifier!.DirectoryCreateDirectory(path, suppressValidationErrorIfTargetPathDoesntExist: !Tweak.Default.SourceDirectoriesMustContainPlaceHolders);
+                ensureUpdateModeVerifier!.DirectoryCreateDirectory(path, suppressValidationErrorIfTargetPathDoesntExist: !Knob.Default.SourceDirectoriesMustContainPlaceHolders);
             }
 
-            ensureUpdateModeVerifier!.WriteAllText(readmeFile, "Place files overridden for this config in this directory", suppressValidationErrorIfTargetPathDoesntExist: !Tweak.Default.SourceDirectoriesMustContainPlaceHolders);
+            ensureUpdateModeVerifier!.WriteAllText(readmeFile, "Place files overridden for this config in this directory", suppressValidationErrorIfTargetPathDoesntExist: !Knob.Default.SourceDirectoriesMustContainPlaceHolders);
         }
 
         private static void GetBuildConfigFileOverridePaths(Config.ConfigRecord config, string taskTargetPath, out string path, out string readmeFile)
         {
+            if (!Knob.Default.EnableBuildConfigOverrides)
+            {
+                throw new Exception("BUG: should not get here: !Knob.Default.EnableBuildConfigOverrides");
+            }
+
             path = Path.Combine(taskTargetPath, buildConfigs, config.name);
             readmeFile = Path.Combine(taskTargetPath, buildConfigs, config.name, filesOverriddenForConfigGoHereReadmeTxt);
         }
 
         private static void CopyConfigOverrides(string taskTargetPath, string taskOutput, Config.ConfigRecord config)
         {
+            if (!Knob.Default.EnableBuildConfigOverrides)
+            {
+                throw new Exception("BUG: should not get here: !Knob.Default.EnableBuildConfigOverrides");
+            }
+
             string overridePathForBuildConfig;
             GetBuildConfigFileOverridePaths(config, taskTargetPath, out overridePathForBuildConfig, out _);
 
             bool skipCopy;
-            if (Tweak.Default.SourceDirectoriesMustContainPlaceHolders)
+            if (Knob.Default.SourceDirectoriesMustContainPlaceHolders)
             {
                 skipCopy = false;
             }
