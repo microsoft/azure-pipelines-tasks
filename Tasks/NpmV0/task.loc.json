@@ -50,6 +50,10 @@
     "Node10": {
       "target": "npmtask.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "npmtask.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
