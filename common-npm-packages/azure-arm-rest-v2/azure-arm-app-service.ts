@@ -30,6 +30,7 @@ export class AzureAppService {
     private _appServiceConfigurationDetails: AzureAppServiceConfigurationDetails;
     private _appServicePublishingProfile: any;
     private _appServiceApplicationSetings: AzureAppServiceConfigurationDetails;
+    private _appServiceConfigurationSettings: AzureAppServiceConfigurationDetails;
 
     constructor(endpoint: AzureEndpoint, resourceGroup: string, name: string, slot?: string, appKind?: string) {
         this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
@@ -130,7 +131,7 @@ export class AzureAppService {
             throw Error(tl.loc('FailedToDeleteAppServiceSlot', this._getFormattedName(), this._client.getFormattedError(error)));
         }
     }
-    
+
     public async swap(slotName: string, preserveVNet?: boolean): Promise<void> {
         try {
             var webRequest = new webClient.WebRequest();
@@ -152,7 +153,7 @@ export class AzureAppService {
             if(response.statusCode == 202) {
                 response= await this._client.getLongRunningOperationResult(response);
             }
-            
+
             if(response.statusCode != 200) {
                 throw ToError(response);
             }
@@ -182,7 +183,7 @@ export class AzureAppService {
 
             console.log(tl.loc('SwappingAppServiceSlotSlotsPhase1', this._name, this.getSlot(), slotName));
             var response = await this._client.beginRequest(webRequest);
-            
+
             if(response.statusCode != 200) {
                 throw ToError(response);
             }
@@ -208,7 +209,7 @@ export class AzureAppService {
 
             console.log(tl.loc('CancelSwapAppServiceSlotSlotsPhase1', this._name, this.getSlot()));
             var response = await this._client.beginRequest(webRequest);
-            
+
             if(response.statusCode != 200) {
                 throw ToError(response);
             }
@@ -224,7 +225,7 @@ export class AzureAppService {
         if(force || !this._appServiceConfigurationDetails) {
             this._appServiceConfigurationDetails = await this._get();
         }
-        
+
         return this._appServiceConfigurationDetails;
     }
 
@@ -246,7 +247,7 @@ export class AzureAppService {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,
             }, null, '2016-08-01');
-            
+
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {
                 throw ToError(response);
@@ -278,7 +279,7 @@ export class AzureAppService {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,
             }, null, '2016-08-01');
-            
+
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {
                 throw ToError(response);
@@ -316,7 +317,83 @@ export class AzureAppService {
 
         return isNewValueUpdated;
     }
-    
+
+    public async patchApplicationSettingsSlot(addProperties: any): Promise<any> {
+        var appSettingsSlotSettings = await this.getSlotConfigurationNames();
+        let appSettingNames = appSettingsSlotSettings.properties.appSettingNames;
+        var isNewValueUpdated: boolean = false;
+        for(var key in addProperties) {
+            if(!appSettingNames) {
+                appSettingsSlotSettings.properties.appSettingNames = [];
+                appSettingNames = appSettingsSlotSettings.properties.appSettingNames;
+            }
+            if(addProperties[key].slotSetting == true) {
+                if((appSettingNames.length == 0) || (!appSettingNames.includes(addProperties[key].name))) {
+                    appSettingNames.push(addProperties[key].name);
+                }
+                tl.debug(`Slot setting updated for key : ${addProperties[key].name}`);
+                isNewValueUpdated = true;
+            }
+        }
+
+        if(isNewValueUpdated) {
+            await this.updateSlotConfigSettings(appSettingsSlotSettings);
+        }
+    }
+
+    private async getSlotConfigurationNames(force?: boolean): Promise<AzureAppServiceConfigurationDetails> {
+        if(force || !this._appServiceConfigurationSettings) {
+            this._appServiceConfigurationSettings = await this._getSlotConfigurationNames();
+        }
+
+        return this._appServiceConfigurationSettings;
+    }
+
+    private async _getSlotConfigurationNames(): Promise<AzureAppServiceConfigurationDetails> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'GET';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/config/slotConfigNames`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2016-08-01');
+
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            return response.body;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToGetAppServiceSlotConfigurationNames', this._getFormattedName(), this._client.getFormattedError(error)));
+        }
+    }
+
+    private async updateSlotConfigSettings(SlotConfigSettings: any): Promise<AzureAppServiceConfigurationDetails> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'PUT';
+            httpRequest.body = JSON.stringify(SlotConfigSettings);
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/config/slotConfigNames`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2016-08-01');
+
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            return response.body;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToUpdateAppServiceConfigSlotSettings', this._getFormattedName(), this._client.getFormattedError(error)));
+        }
+    }
+
     public async getConfiguration(): Promise<AzureAppServiceConfigurationDetails> {
         try {
             var httpRequest = new webClient.WebRequest();
@@ -327,7 +404,7 @@ export class AzureAppService {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,
             }, null, '2018-02-01');
-            
+
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {
                 throw ToError(response);
@@ -351,7 +428,7 @@ export class AzureAppService {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,
             }, null, '2018-02-01');
-            
+
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {
                 throw ToError(response);
@@ -375,7 +452,7 @@ export class AzureAppService {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,
             }, null, '2018-02-01');
-            
+
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {
                 throw ToError(response);
@@ -399,7 +476,7 @@ export class AzureAppService {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,
             }, null, '2016-08-01');
-            
+
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {
                 throw ToError(response);
@@ -423,7 +500,7 @@ export class AzureAppService {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,
             }, null, '2016-08-01');
-            
+
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {
                 throw ToError(response);
@@ -435,7 +512,7 @@ export class AzureAppService {
             throw Error(tl.loc('FailedToUpdateAppServiceMetadata', this._getFormattedName(), this._client.getFormattedError(error)));
         }
     }
-    
+
     public async patchMetadata(properties): Promise<void> {
         var applicationSettings = await this.getMetadata();
         for(var key in properties) {
@@ -444,11 +521,11 @@ export class AzureAppService {
 
         await this.updateMetadata(applicationSettings);
     }
-    
+
     public getSlot(): string {
         return this._slot ? this._slot : "production";
     }
-    
+
     private async _getPublishingProfileWithSecrets(): Promise<any> {
         try {
             var httpRequest = new webClient.WebRequest();
@@ -459,7 +536,7 @@ export class AzureAppService {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,
             }, null, '2016-08-01');
-            
+
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {
                 throw ToError(response);
@@ -483,7 +560,7 @@ export class AzureAppService {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,
             }, null, '2016-08-01');
-            
+
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {
                 throw ToError(response);
@@ -506,7 +583,7 @@ export class AzureAppService {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,
             }, null, '2016-08-01');
-            
+
             var response = await this._client.beginRequest(httpRequest);
             if(response.statusCode != 200) {
                 throw ToError(response);
