@@ -10,7 +10,7 @@
     "version": {
         "Major": 0,
         "Minor": 220,
-        "Patch": 0
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
@@ -48,10 +48,6 @@
     ],
     "execution": {
         "Node10": {
-            "target": "npmtask.js",
-            "argumentFormat": ""
-        },
-        "Node16": {
             "target": "npmtask.js",
             "argumentFormat": ""
         }
