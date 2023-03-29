@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 218,
+        "Minor": 220,
         "Patch": 0
     },
     "runsOn": [
@@ -50,6 +50,10 @@
         "Node10": {
             "target": "npmtask.js",
             "argumentFormat": ""
+        },
+        "Node16": {
+            "target": "npmtask.js",
+            "argumentFormat": ""
         }
     },
     "messages": {
@@ -59,5 +63,9 @@
         "NpmConfigFailed": "Failed to log the npm config information. Error : %s",
         "NpmAuthFailed": "Failed to get the required authentication tokens for npm. Error: %s",
         "BuildCredentialsWarn": "Could not determine credentials to use for npm"
+    },
+    "_buildConfigMapping": {
+        "Default": "0.220.1",
+        "Node16-219": "0.220.0"
     }
 }
