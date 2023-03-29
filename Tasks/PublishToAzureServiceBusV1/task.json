@@ -101,7 +101,7 @@
         {
             "name": "useDataContractSerializer",
             "type": "boolean",
-            "label": "Use .NET data contract serailizer",
+            "label": "Use .NET data contract serializer",
             "required": true,
             "defaultValue": "true",
             "helpMarkDown": "For more details go to task documentation"
