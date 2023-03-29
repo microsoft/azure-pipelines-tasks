@@ -23,6 +23,7 @@ export declare class AzureAppService {
     getApplicationSettings(force?: boolean): Promise<AzureAppServiceConfigurationDetails>;
     updateApplicationSettings(applicationSettings: any): Promise<AzureAppServiceConfigurationDetails>;
     patchApplicationSettings(addProperties: any, deleteProperties?: any): Promise<boolean>;
+    patchApplicationSettingsSlot(addProperties: any): Promise<any>;
     getConfiguration(): Promise<AzureAppServiceConfigurationDetails>;
     updateConfiguration(applicationSettings: any): Promise<AzureAppServiceConfigurationDetails>;
     patchConfiguration(properties: any): Promise<any>;
