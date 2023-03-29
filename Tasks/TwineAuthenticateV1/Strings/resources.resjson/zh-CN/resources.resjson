@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Twine 身份验证 $(message)",
   "loc.group.displayName.feedAuthentication": "源和身份验证",
   "loc.group.displayName.advanced": "高级",
-  "loc.input.label.artifactFeed": "我的源(在下方选择)",
+  "loc.input.label.artifactFeed": "我的源名称(在下面选择)",
   "loc.input.help.artifactFeed": "选择用于验证是否存在于此组织中的源。",
   "loc.input.label.pythonUploadServiceConnection": "来自外部组织的源",
   "loc.input.help.pythonUploadServiceConnection": "选择用于在此组织外部进行身份验证的终结点。确保该终结点具有包上传权限。",
