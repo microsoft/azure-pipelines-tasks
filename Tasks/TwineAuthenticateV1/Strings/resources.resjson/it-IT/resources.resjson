@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Autenticazione Twine $(message)",
   "loc.group.displayName.feedAuthentication": "Feed e autenticazione",
   "loc.group.displayName.advanced": "Avanzate",
-  "loc.input.label.artifactFeed": "Feed personale (selezionare sotto)",
+  "loc.input.label.artifactFeed": "Nome del feed personale (selezionare sotto)",
   "loc.input.help.artifactFeed": "Selezionare un feed da autenticare presente in questa organizzazione.",
   "loc.input.label.pythonUploadServiceConnection": "Feed di organizzazioni esterne",
   "loc.input.help.pythonUploadServiceConnection": "Selezionare un endpoint da autenticare all'esterno di questa organizzazione. Assicurarsi che all'endpoint siano assegnate le autorizzazioni per il caricamento di pacchetti.",

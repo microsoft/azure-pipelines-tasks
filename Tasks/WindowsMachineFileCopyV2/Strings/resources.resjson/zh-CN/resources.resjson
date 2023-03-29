@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Windows 计算机文件复制",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "将文件复制到远程 Windows 计算机",
   "loc.instanceNameFormat": "从 $(SourcePath)复制文件",
   "loc.releaseNotes": "版本 2.0 中的新增功能: <br/>&nbsp;&nbsp;将添加代理支持。<br/>&nbsp;&nbsp;已删除对旧 DTL 计算机的支持。",
