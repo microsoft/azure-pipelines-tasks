@@ -54,11 +54,21 @@ namespace BuildConfigGen
                 throw new Exception("task expected!");
             }
 
-            ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
+            try
+            {
+                ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
 
-            Main2(task);
+                Main2(task);
 
-            ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: false);
+                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: false);
+            }
+            finally
+            {
+                if (ensureUpdateModeVerifier != null)
+                {
+                    ensureUpdateModeVerifier.CleanupTempFiles();
+                }
+            }
         }
 
         private static void ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(string task, bool skipContentCheck)
@@ -92,7 +102,7 @@ namespace BuildConfigGen
             }
 
             string taskHandler = Path.Combine(taskTargetPath, "task.json");
-            JsonNode taskHandlerContents = JsonNode.Parse(File.ReadAllText(taskHandler))!;
+            JsonNode taskHandlerContents = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(taskHandler))!;
 
             // Task may not have nodejs or packages.json (example: AutomatedAnalysisV0) 
             if (!hasNodeHandler(taskHandlerContents))
@@ -136,14 +146,16 @@ namespace BuildConfigGen
 
                 CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
 
-                // Check verifier errors (throw here to provide a more user friendly message; as Copy is skipped when Write-Updates isn't specified; files to update may be missing)
-                // Skip content check==true for files that existin destination as some of them will be updated and validated later
-                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: true);
+
 
                 if (Knob.Default.EnableBuildConfigOverrides)
                 {
                     CopyConfigOverrides(taskTargetPath, taskOutput, config);
                 }
+
+                // if some files aren't present in destination, stop as following code assumes they're present and we'll just get a FileNotFoundException
+                // don't check content as preprocessor hasn't run
+                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: true);
 
                 HandlePreprocessingInTarget(taskOutput, config);
 
@@ -199,17 +211,17 @@ namespace BuildConfigGen
             string overridePathForBuildConfig;
             GetBuildConfigFileOverridePaths(config, taskTargetPath, out overridePathForBuildConfig, out _);
 
-            bool skipCopy;
+            bool doCopy;
             if (Knob.Default.SourceDirectoriesMustContainPlaceHolders)
             {
-                skipCopy = false;
+                doCopy = false;
             }
             else
             {
-                skipCopy = Directory.Exists(overridePathForBuildConfig);
+                doCopy = Directory.Exists(overridePathForBuildConfig);
             }
 
-            if (skipCopy)
+            if (doCopy)
             {
                 CopyConfig(overridePathForBuildConfig, taskOutput, skipPathName: null, skipFileName: filesOverriddenForConfigGoHereReadmeTxt, removeExtraFiles: false, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: true, config: config, allowPreprocessorDirectives: false);
             }
@@ -239,10 +251,15 @@ namespace BuildConfigGen
                 }
                 else
                 {
+                    if (!Knob.Default.EnableBuildConfigOverrides)
+                    {
+                        throw new Exception("BUG: should not get here: !Knob.Default.EnableBuildConfigOverrides");
+                    }
+
                     Console.WriteLine($"Checking if {file} has preprocessor directives ...");
                 }
 
-                Preprocessor.Preprocess(file, File.ReadAllLines(file), new HashSet<string>(Config.Configs.Select(s => s.preprocessorVariableName)), config.preprocessorVariableName, out string processedOutput, out var validationErrors, out madeChanges);
+                Preprocessor.Preprocess(file, ensureUpdateModeVerifier!.FileReadAllLines(file), new HashSet<string>(Config.Configs.Select(s => s.preprocessorVariableName)), config.preprocessorVariableName, out string processedOutput, out var validationErrors, out madeChanges);
 
                 if (validateAndWriteChanges)
                 {
@@ -264,8 +281,6 @@ namespace BuildConfigGen
                     }
                     else
                     {
-                        // assert that the files are the same for the validator (they might not match exactly due to line endings)
-                        ensureUpdateModeVerifier!.WriteAllTextAssertFilesSame(file);
                         Console.WriteLine("No changes; skipping");
                     }
                 }
@@ -280,7 +295,7 @@ namespace BuildConfigGen
         private static void WriteTaskJson(string taskPath, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, Config.ConfigRecord config, string fileName)
         {
             string outputTaskPath = Path.Combine(taskPath, fileName);
-            JsonNode outputTaskNode = JsonNode.Parse(File.ReadAllText(outputTaskPath))!;
+            JsonNode outputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputTaskPath))!;
             outputTaskNode["version"]!["Patch"] = configTaskVersionMapping[config].Patch;
             outputTaskNode.AsObject()?.Remove("_buildConfigMapping");
 
@@ -304,7 +319,7 @@ namespace BuildConfigGen
         private static void WriteNode16PackageJson(string taskOutputNode16)
         {
             string outputNode16PackagePath = Path.Combine(taskOutputNode16, "package.json");
-            JsonNode outputNod16PackagePath = JsonNode.Parse(File.ReadAllText(outputNode16PackagePath))!;
+            JsonNode outputNod16PackagePath = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNode16PackagePath))!;
             outputNod16PackagePath["dependencies"]!["@types/node"] = "^16.11.39";
             ensureUpdateModeVerifier!.WriteAllText(outputNode16PackagePath, outputNod16PackagePath.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
@@ -351,7 +366,12 @@ namespace BuildConfigGen
                     // do nothing
                 }
                 else
-                { 
+                {
+                    if (!Knob.Default.EnableBuildConfigOverrides)
+                    {
+                        throw new Exception("BUG: should not get here: !Knob.Default.EnableBuildConfigOverrides");
+                    }
+
                     PreprocessIfExtensionEnabledInConfig(sourcePath, config, validateAndWriteChanges: false, out bool hasPreprocessorDirectives);
 
                     if (hasPreprocessorDirectives)
@@ -476,7 +496,7 @@ namespace BuildConfigGen
             TaskVersion inputVersion;
 
             string inputTaskPath = Path.Combine(taskTarget, "task.json");
-            JsonNode inputTaskNode = JsonNode.Parse(File.ReadAllText(inputTaskPath))!;
+            JsonNode inputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(inputTaskPath))!;
 
             Int32 major;
             Int32 minor;
@@ -494,7 +514,7 @@ namespace BuildConfigGen
         private static void WriteInputTaskJson(string taskTarget, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion, string fileName)
         {
             string inputTaskPath = Path.Combine(taskTarget, fileName);
-            JsonNode inputTaskNode = JsonNode.Parse(File.ReadAllText(inputTaskPath))!;
+            JsonNode inputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(inputTaskPath))!;
 
             inputTaskNode["version"]!["Patch"] = configTaskVersion[Config.Default].Patch;
 
@@ -566,7 +586,7 @@ namespace BuildConfigGen
             maxVersion = null;
             if (File.Exists(versionMapFile))
             {
-                var lines = File.ReadAllLines(versionMapFile);
+                var lines = ensureUpdateModeVerifier!.FileReadAllLines(versionMapFile);
 
                 foreach (var line in lines)
                 {

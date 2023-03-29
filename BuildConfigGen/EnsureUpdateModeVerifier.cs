@@ -1,4 +1,6 @@
-﻿using System.Security.AccessControl;
+﻿using System.ComponentModel.Design;
+using System.Diagnostics;
+using System.Security.AccessControl;
 
 namespace BuildConfigGen
 {
@@ -11,6 +13,12 @@ namespace BuildConfigGen
         private readonly bool verifyOnly;
         private List<string> VerifyErrors = new List<string>();
         internal Dictionary<string, string> CopiedFilesToCheck = new Dictionary<string, string>();
+        internal Dictionary<string, string> RedirectedToTempl = new Dictionary<string, string>();
+
+        public EnsureUpdateModeVerifier(bool verifyOnly)
+        {
+            this.verifyOnly = verifyOnly;
+        }
 
         public IEnumerable<string> GetVerifyErrors(bool skipContentCheck)
         {
@@ -21,23 +29,49 @@ namespace BuildConfigGen
 
             if (!skipContentCheck)
             {
+
                 foreach (var r in CopiedFilesToCheck)
                 {
-                    if (Helpers.FilesEqual(r.Value, r.Key))
+                    string? sourceFile;
+                    string procesed = "";
+
+                    if (RedirectedToTempl.TryGetValue(r.Key, out sourceFile))
+                    {
+                        procesed = "(processed) ";
+                    }
+                    else
+                    {
+                        sourceFile = r.Value;
+                    }
+
+                    if (Helpers.FilesEqual(sourceFile, r.Key))
                     {
                         // if overwrite and content match, everything is good!  Verification passed.
                     }
                     else
                     {
-                        yield return $"Need to copy {r.Value} to {r.Key} (overwrite=true).  Dest file doesn't match source.";
+                        yield return $"Content doesn't match {r.Value} {procesed}to {r.Key} (overwrite=true).  Dest file doesn't match {procesed}source.";
                     }
                 }
             }
         }
 
-        public EnsureUpdateModeVerifier(bool verifyOnly)
+        public void CleanupTempFiles()
         {
-            this.verifyOnly = verifyOnly;
+            int count = 0;
+            foreach (var f in RedirectedToTempl.Values)
+            {
+                count++;
+                if (File.Exists(f))
+                {
+                    File.Delete(f);
+                }
+            }
+
+            if (count > 0 && !verifyOnly)
+            {
+                throw new Exception("Expected RedirectedToTemp to be empty when !verifyOnly");
+            }
         }
 
         internal void Copy(string sourceFileName, string destFileName, bool overwrite)
@@ -101,18 +135,16 @@ namespace BuildConfigGen
             {
                 if (File.Exists(path))
                 {
-                    string destContent = File.ReadAllText(path);
+                    string? tempFilePath;
 
-                    WriteAllTextAssertFilesSame(path);
+                    if (!RedirectedToTempl.TryGetValue(path, out tempFilePath))
+                    {
+                        tempFilePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                        RedirectedToTempl.Add(path, tempFilePath);
+                    }
 
-                    if (destContent == contents)
-                    {
-                        // content matches content in destination file.  Verification passes!
-                    }
-                    else
-                    {
-                        VerifyErrors.Add($"Need to write content to {path} content.Length={contents.Length}.  Existing content.Lenth={destContent.Length} needs update.");
-                    }
+                    //Console.WriteLine($"writing to tempFilePath={tempFilePath}");
+                    File.WriteAllText(tempFilePath, contents);
                 }
                 else
                 {
@@ -131,16 +163,6 @@ namespace BuildConfigGen
             else
             {
                 File.WriteAllText(path, contents);
-            }
-        }
-
-        internal void WriteAllTextAssertFilesSame(string path)
-        {
-            // we're checking the contents here, no need to check it later
-            string noramlizedPath = NormalizeFile(path);
-            if (CopiedFilesToCheck.ContainsKey(noramlizedPath))
-            {
-                CopiedFilesToCheck.Remove(noramlizedPath);
             }
         }
 
@@ -171,6 +193,51 @@ namespace BuildConfigGen
             {
                 Directory.CreateDirectory(path);
             }
+        }
+
+        internal string FileReadAllText(string filePath)
+        {
+            if (verifyOnly)
+            {
+                string targetFile = ResolveFile(filePath);
+
+                return File.ReadAllText(targetFile);
+            }
+            else
+            {
+                return File.ReadAllText(filePath);
+            }
+        }
+
+        internal string [] FileReadAllLines(string filePath)
+        {
+            if (verifyOnly)
+            {
+                string targetFile = ResolveFile(filePath);
+
+                return File.ReadAllLines(targetFile);
+            }
+            else
+            {
+                return File.ReadAllLines(filePath);
+            }
+        }
+
+        private string ResolveFile(string filePath)
+        {
+            filePath = NormalizeFile(filePath);
+
+            string? sourceFile = null, tempFile = null;
+            if (CopiedFilesToCheck.TryGetValue(filePath, out sourceFile))
+            {
+                if (RedirectedToTempl.TryGetValue(sourceFile, out tempFile))
+                {
+                    // do nothing
+                }
+            }
+
+            string targetFile = tempFile ?? sourceFile ?? filePath;
+            return targetFile;
         }
     }
 }
