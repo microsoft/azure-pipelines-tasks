@@ -26,7 +26,7 @@ export class KuduServiceManagementClient {
         if(!request.headers['Content-Type']) {
             request.headers['Content-Type'] = 'application/json; charset=utf-8';
         }
-        
+
         if(!!this._cookie) {
             tl.debug(`setting affinity cookie ${JSON.stringify(this._cookie)}`);
             request.headers['Cookie'] = this._cookie;
@@ -109,6 +109,10 @@ export class Kudu {
         }
     }
 
+    public getKuduStackTraceUrl(): string {
+        let stackTraceUrl = this._client.getRequestUri(`/api/vfs/LogFiles/kudu/trace`);
+        return stackTraceUrl;
+    }
 
     public async getContinuousJobs(): Promise<Array<WebJob>> {
         var httpRequest = new webClient.WebRequest();
@@ -366,7 +370,7 @@ export class Kudu {
             if([200, 201, 204].indexOf(response.statusCode) != -1) {
                 return response.body;
             }
-            
+
             throw response;
         }
         catch(error) {
@@ -390,7 +394,7 @@ export class Kudu {
             if([200, 201, 204].indexOf(response.statusCode) != -1) {
                 return response.body;
             }
-            
+
             throw response;
         }
         catch(error) {
