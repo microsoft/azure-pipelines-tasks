@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "發行到 Azure 服務匯流排",
-  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=870237)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?linkid=870237)",
   "loc.description": "使用服務連線傳送訊息到 Azure 服務匯流排 (不需要代理程式)",
   "loc.instanceNameFormat": "發行到 Azure 服務匯流排",
   "loc.group.displayName.advancedProperties": "進階",
@@ -17,5 +17,7 @@
   "loc.input.label.signatureKey": "簽章屬性金鑰",
   "loc.input.help.signatureKey": "特徵標記在 [訊息屬性] 中會出現的索引鍵位置。若留空，訊息屬性中的預設即為 'signature'",
   "loc.input.label.waitForCompletion": "等候工作完成",
-  "loc.input.help.waitForCompletion": "如果這為 true，此工作會在指定的工作逾時內等候 TaskCompleted 事件。"
+  "loc.input.help.waitForCompletion": "如果這為 true，此工作會在指定的工作逾時內等候 TaskCompleted 事件。",
+  "loc.input.label.useDataContractSerializer": "使用 .NET 資料合約彙總器",
+  "loc.input.help.useDataContractSerializer": "如需詳細資料，請移至工作文件"
 }

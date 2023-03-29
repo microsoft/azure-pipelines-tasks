@@ -35,6 +35,9 @@ describe('WindowsMachineFileCopy Suite', function () {
         it('Throw error if Destination Path is invalid or empty', (done) => {
             psr.run(path.join(__dirname, 'L0ValidateDestinationPath.ps1'), done);
         });
+        it('Throw error if Additional Arguments is invalid or empty', (done) => {
+            psr.run(path.join(__dirname, 'L0ValidateAdditionalArguments.ps1'), done);
+        });
         it('Should copy on local machine when no machine name is given', (done) => {
             psr.run(path.join(__dirname, 'L0ShouldCopyOnLocalMachine.ps1'), done);
         });

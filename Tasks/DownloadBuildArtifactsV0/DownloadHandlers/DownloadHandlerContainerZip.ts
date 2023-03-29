@@ -22,7 +22,7 @@ export class DownloadHandlerContainerZip extends DownloadHandler {
 
     constructor(handlerConfig: IContainerHandlerZipConfig) {
         super(handlerConfig);
-        this.archiveUrl = `${this.config.endpointUrl}/${this.config.projectId}/_apis/build/builds/${this.config.buildId}/artifacts?artifactName=${this.config.artifactInfo.name}&$format=zip`;
+        this.archiveUrl = `${this.config.endpointUrl}/${this.config.projectId}/_apis/build/builds/${this.config.buildId}/artifacts?artifactName=${encodeURIComponent(this.config.artifactInfo.name)}&$format=zip`;
         this.zipLocation = path.join(this.config.downloadPath, `${this.config.artifactInfo.name}.zip`);
     }
 
