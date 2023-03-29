@@ -1,8 +1,8 @@
 {
     "name": "condaauthenticate",
-    "version": "0.1.0",
-    "description": "Authenticate cargo client.",
-    "main": "cargoAuthenticateMain.js",
+    "version": "0.220.0",
+    "description": "Authenticate conda client.",
+    "main": "condaAuthenticateMain.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
@@ -14,8 +14,6 @@
         "Azure",
         "Pipelines",
         "Tasks",
-        "Cargo",
-        "Rust",
         "Conda"
     ],
     "author": "Microsoft Corporation",
@@ -31,7 +29,7 @@
         "azure-pipelines-tasks-artifacts-common": "1.0.1",
         "azure-pipelines-tasks-packaging-common": "3.214.0",
         "azure-pipelines-task-lib": "4.1.0",
-        "yaml": "^2.2.1"
+        "js-yaml": "^4.1.0"
     },
     "devDependencies": {
         "typescript": "4.0.2"
