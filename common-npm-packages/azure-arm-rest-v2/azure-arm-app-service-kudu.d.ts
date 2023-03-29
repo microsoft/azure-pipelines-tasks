@@ -34,6 +34,7 @@ export declare class Kudu {
     getDeploymentLogs(log_url: string): Promise<any>;
     deleteFile(physicalPath: string, fileName: string): Promise<void>;
     deleteFolder(physicalPath: string): Promise<void>;
+    getKuduStackTraceUrl(): string;
     private _getDeploymentDetailsFromPollURL(pollURL);
     private _getFormattedError(error);
 }
