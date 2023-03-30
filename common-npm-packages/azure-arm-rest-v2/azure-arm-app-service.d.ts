@@ -29,7 +29,7 @@ export declare class AzureAppService {
     getPublishingCredentials(): Promise<any>;
     getApplicationSettings(force?: boolean): Promise<AzureAppServiceConfigurationDetails>;
     updateApplicationSettings(applicationSettings: any): Promise<AzureAppServiceConfigurationDetails>;
-    patchApplicationSettings(addProperties: any, deleteProperties?: any): Promise<boolean>;
+    patchApplicationSettings(addProperties: any, deleteProperties?: any, formatJSON?: boolean): Promise<boolean>;
     patchApplicationSettingsSlot(addProperties: any): Promise<any>;
     getConfiguration(): Promise<AzureAppServiceConfigurationDetails>;
     updateConfiguration(applicationSettings: any): Promise<AzureAppServiceConfigurationDetails>;
@@ -44,6 +44,7 @@ export declare class AzureAppService {
     getSitePrivateEndpointConnections(): Promise<any>;
     getConnectionStringValidation(connectionDetails): Promise<any>;
     getName(): string;
+    syncFunctionTriggers(): Promise<any>;
     private _getPublishingProfileWithSecrets();
     private _getApplicationSettings();
     private _get();

@@ -429,7 +429,6 @@ export class AzureAppService {
         }
     }
 
-
     private async _getConnectionStrings(force?: boolean): Promise<AzureAppServiceConfigurationDetails> {
         if(force || !this._appServiceConnectionString) {
             try {
@@ -751,6 +750,46 @@ export class AzureAppService {
         }
         catch(error) {
             throw Error(`Failed to get Connection String Validation. Error: ${this._client.getFormattedError(error)}`);
+        }
+    }
+
+    public async syncFunctionTriggers(): Promise<any> {
+        try {
+            let i = 0;
+            let retryCount = 5;
+            let retryIntervalInSeconds = 2;
+            let timeToWait: number = retryIntervalInSeconds;
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'POST';
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/syncfunctiontriggers`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2016-08-01');
+
+            while(true) {
+                var response = await this._client.beginRequest(httpRequest);
+                if(response.statusCode == 200) {
+                    return response.body;
+                }
+                else if(response.statusCode == 400) {
+                    if (++i < retryCount) {
+                        await webClient.sleepFor(timeToWait);
+                        timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
+                        continue;
+                    }
+                    else {
+                        throw ToError(response);
+                    }
+                }
+                else {
+                    throw ToError(response);
+                }
+            }
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToSyncTriggers', this._getFormattedName(), this._client.getFormattedError(error)));
         }
     }
 
