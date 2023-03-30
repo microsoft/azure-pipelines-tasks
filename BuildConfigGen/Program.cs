@@ -24,41 +24,61 @@ namespace BuildConfigGen
 
         static class Config
         {
-            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode16, string preprocessorVariableName, string[] extensionsToPreprocess);
+            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode16, bool isWif, string preprocessorVariableName, string[] extensionsToPreprocess);
 
-            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode16: false, preprocessorVariableName: "DEFAULT", extensionsToPreprocess: new[] { ".ts" });
-            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode16: true, preprocessorVariableName: "NODE16", extensionsToPreprocess: new[] { ".ts" });
+            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode16: false, isWif: false, preprocessorVariableName: "DEFAULT", extensionsToPreprocess: new[] { ".ts" });
+            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode16: true, isWif: false, preprocessorVariableName: "NODE16", extensionsToPreprocess: new[] { ".ts" });
+            public static readonly ConfigRecord WindowsIdentityFederation = new ConfigRecord(name: nameof(WindowsIdentityFederation), constMappingKey: "WindowsIdentityFederation", isDefault: false, isNode16: true, isWif: true, preprocessorVariableName: "WINDOWSIDENTITYFEDERATION", extensionsToPreprocess: new[] { ".ps1", ".json" });
 
-            public static ConfigRecord[] Configs = { Default, Node16 };
+            public static ConfigRecord[] Configs = { Default, Node16, WindowsIdentityFederation };
         }
 
         // ensureUpdateModeVerifier wraps all writes.  if writeUpdate=false, it tracks writes that would have occured
         static EnsureUpdateModeVerifier? ensureUpdateModeVerifier;
 
         /// <param name="task">The task to generate build configs for</param>
+        /// <param name="configs">List of configs to generate seperated by |</param>
         /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
-        static void Main(string task, bool writeUpdates = false)
+        static void Main(string task, string configs, bool writeUpdates = false)
         {
             // error handling strategy:
             // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
             // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
             // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
 
-            Main3(task, writeUpdates);
+            Main3(task, configs, writeUpdates);
         }
 
-        private static void Main3(string task, bool writeUpdates)
+        private static void Main3(string task, string configsString, bool writeUpdates)
         {
             if (string.IsNullOrEmpty(task))
             {
                 throw new Exception("task expected!");
             }
 
+            string [] configs = configsString.Split("|");
+
+            Dictionary<string, Config.ConfigRecord> configdefs = new(Config.Configs.Where(x => !x.isDefault).Select(x => new KeyValuePair<string, Config.ConfigRecord>(x.name, x)));
+            HashSet<Config.ConfigRecord> targetConfigs = new HashSet<Config.ConfigRecord>();
+            targetConfigs.Add(Config.Default);
+            foreach (var config in configs)
+            {
+                if (configdefs.TryGetValue(config, out var matchedConfig))
+                {
+                    targetConfigs.Add(matchedConfig);
+                }
+                else
+                {
+                    string configsList = "Configs specified must be one of: " + string.Join(',', Config.Configs.Where(x=>!x.isDefault).Select(x => x.name));
+                    throw new Exception(configsList);
+                }
+            }
+
             try
             {
                 ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
 
-                Main2(task);
+                Main2(task, targetConfigs);
 
                 ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: false);
             }
@@ -89,7 +109,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void Main2(string task)
+        private static void Main2(string task, HashSet<Config.ConfigRecord> targetConfigs)
         {
             string currentDir = Environment.CurrentDirectory;
 
@@ -125,9 +145,9 @@ namespace BuildConfigGen
                 ensureUpdateModeVerifier!.DirectoryCreateDirectory(generatedFolder, false);
             }
 
-            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping);
+            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping, targetConfigs: targetConfigs);
 
-            foreach (var config in Config.Configs)
+            foreach (var config in targetConfigs)
             {
                 string taskOutput;
                 if (config.isDefault)
@@ -424,7 +444,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping)
+        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs)
         {
             Dictionary<string, TaskVersion> versionMap;
             TaskVersion? maxVersion;
@@ -444,7 +464,7 @@ namespace BuildConfigGen
 
             // copy the mappings.  As we go check if any configs not mapped. If so, invalidate.
             bool allConfigsMappedAndValid = true;
-            foreach (var config in Config.Configs)
+            foreach (var config in targetConfigs)
             {
                 if (versionMap.ContainsKey(config.constMappingKey))
                 {
@@ -474,7 +494,7 @@ namespace BuildConfigGen
             {
                 configTaskVersionMapping.Clear();
 
-                foreach (var config in Config.Configs)
+                foreach (var config in targetConfigs)
                 {
                     if (!config.isDefault)
                     {
@@ -487,7 +507,7 @@ namespace BuildConfigGen
                 configTaskVersionMapping.Add(Config.Default, inputVersion.CloneWithPatch(inputVersion.Patch + c));
             }
 
-            WriteVersionMapFile(versionMapFile, configTaskVersionMapping);
+            WriteVersionMapFile(versionMapFile, configTaskVersionMapping, targetConfigs: targetConfigs);
         }
 
         private static TaskVersion GetInputVersion(string taskTarget)
@@ -521,12 +541,12 @@ namespace BuildConfigGen
             ensureUpdateModeVerifier!.WriteAllText(inputTaskPath, inputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
-        private static void WriteVersionMapFile(string versionMapFile, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion)
+        private static void WriteVersionMapFile(string versionMapFile, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion, HashSet<Config.ConfigRecord> targetConfigs)
         {
             StringBuilder sb = new StringBuilder();
             using (var sw = new StringWriter(sb))
             {
-                foreach (var config in Config.Configs)
+                foreach (var config in targetConfigs)
                 {
                     sw.WriteLine(string.Concat(config.constMappingKey, "|", configTaskVersion[config]));
                 }
