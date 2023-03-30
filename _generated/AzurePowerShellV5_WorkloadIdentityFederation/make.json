@@ -1,7 +1,7 @@
 {
     "common": [
         {
-            "module": "../Common/VstsAzureHelpers_WIP",
+            "module": "../Common/VstsAzureHelpers_WIF",
             "type": "ps"
         },
         {
