@@ -1,0 +1,13 @@
+{
+  "loc.messages.AZ_UnsupportedAuthScheme0": "Lo schema di autenticazione '{0}' non è supportato per l'endpoint di Azure.",
+  "loc.messages.AZ_SpnAccessTokenFetchFailure": "Non è possibile recuperare il token per l'ID tenant {0}.",
+  "loc.messages.AZ_UserAccessTokenFetchFailure": "Non è possibile recuperare il token per l'utente specificato.",
+  "loc.messages.AZ_NoValidResourceIdFound": "Non è stata trovata alcuna risorsa con nome del server {0} e tipo di server {1} nella sottoscrizione {2}. Specificare la combinazione corretta di nome e tipo di server, quindi riprovare.",
+  "loc.messages.AZ_UnableToFetchLoadbalancerDetails": "Non è possibile recuperare i dettagli del bilanciamento del carico",
+  "loc.messages.AZ_UnableToFetchPublicIPAddressesDetails": "Non è possibile recuperare i dettagli degli indirizzi IP pubblici",
+  "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "Non è possibile recuperare i dettagli delle interfacce di rete",
+  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Non è stato possibile recuperare il token di accesso per l'entità servizio gestita. Configurare l'identità del servizio gestita per la macchina virtuale 'https://aka.ms/azure-msi-docs'. Codice di stato: {0}. Messaggio di stato: {1}",
+  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Non è stato possibile recuperare il token di accesso per l'entità servizio gestita. Codice di stato: {0}. Messaggio di stato: {1}",
+  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailure": "Non è stato possibile ottenere il token di accesso usando il certificato client per l'ID entità servizio: {0}. {1}",
+  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailureTokenNull": "Non è stato possibile ottenere il token di accesso usando il certificato client per l'ID entità servizio: {0}. tokenResult è Null."
+}

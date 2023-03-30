@@ -1,0 +1,15 @@
+{
+  "loc.messages.AZ_AzureRMProfileModuleNotFound": "Das Modul \"AzureRM.Profile\" wurde nicht gefunden. Das Modul \"AzureRM\" ist ggf. nicht vollständig installiert. Das Ausführen der folgenden PowerShell-Befehle aus einer Sitzung mit erhöhten Rechten behebt dieses Problem möglicherweise: \"Import-Module AzureRM\", \"Install-AzureRM\".",
+  "loc.messages.AZ_CertificateAuthNotSupported": "Zertifikatbasierte Authentifizierung wird nicht unterstützt. Das Azure PowerShell-Modul wurde nicht gefunden.",
+  "loc.messages.AZ_CredentialsError": "Fehler mit den für die Bereitstellung verwendeten Azure-Anmeldeinformationen.",
+  "loc.messages.AZ_ModuleNotFound": "Die Module \"{1}\" der Version {0} wurden nicht gefunden. Wenn das Modul vor kurzem installiert wurde, wiederholen Sie den Vorgang nach einem Neustart des Azure Pipelines-Task-Agents.",
+  "loc.messages.AZ_RequiresMinVersion0": "Die erforderliche Mindestversion ({0}) des Azure PowerShell-Moduls ist nicht installiert.",
+  "loc.messages.AZ_ServicePrincipalError": "Fehler im für die Bereitstellung verwendeten Dienstprinzipal.",
+  "loc.messages.AZ_ServicePrincipalAuthNotSupportedAzureVersion0": "Dienstprinzipalauthentifizierung wird in Version \"{0}\" des Azure-Moduls nicht unterstützt.",
+  "loc.messages.AZ_UnsupportedAuthScheme0": "Nicht unterstütztes Authentifizierungsschema \"{0}\" für den Azure-Endpunkt.",
+  "loc.messages.AZ_AvailableModules": "Die Liste verfügbarer {0}-Module:",
+  "loc.messages.AZ_InvalidARMEndpoint": "Der angegebene AzureRM-Endpunkt ist ungültig.",
+  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Für die verwaltete Identität konnte kein Zugriffstoken abgerufen werden. Konfigurieren Sie die verwaltete Identität für die VM, siehe https://aka.ms/azure-msi-docs. Statuscode: {0}, Fehlermeldung: {1}",
+  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Für die verwaltete Identität konnte kein Zugriffstoken abgerufen werden. Statuscode: {0}, Fehlermeldung: {1}",
+  "loc.messages.AZ_MsiFailure": "Für die verwaltete Identität konnte kein Zugriffstoken abgerufen werden. {0}"
+}
