@@ -5,7 +5,7 @@ export declare class KuduServiceManagementClient {
     private _accesssToken;
     private _cookie;
     constructor(scmUri: string, accessToken: string);
-    beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions): Promise<webClient.WebResponse>;
+    beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions, contentType?: string): Promise<webClient.WebResponse>;
     getRequestUri(uriFormat: string, queryParameters?: Array<string>): string;
     getScmUri(): string;
 }
