@@ -89,6 +89,15 @@ function Validate-DestinationPath(
         ThrowError -errorMessage (Get-LocalizedString -Key "Remote destination path '{0}' cannot contain environment variables." -ArgumentList $value)
     }
 }
+
+function Validate-AdditionalArguments([string]$additionalArguments)
+{    
+    if($additionalArguments -match "[&;]")
+    {
+        ThrowError -errorMessage (Get-LocalizedString -Key "Additional arguments can't include separator characters '&' and ';'. Please verify input. To learn more about argument validation, please check https://aka.ms/azdo-task-argument-validation")
+    }
+}
+
 # $sourcePath, $targetPath, $credential, $cleanTargetBeforeCopy, $additionalArguments
 # $adminUserName, $adminPassword
 function Copy-OnLocalMachine(
