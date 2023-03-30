@@ -67,7 +67,7 @@ export class Resources {
         }
     }
 
-    public async getAppDetails(endpoint: AzureEndpoint, resourceName: string): Promise<any> {
+    public async getAppDetails(resourceName: string): Promise<any> {
         var filteredResources: Array<any> = await this.getResources('Microsoft.Web/Sites', resourceName);
         let resourceGroupName: string;
         let kind: string;
