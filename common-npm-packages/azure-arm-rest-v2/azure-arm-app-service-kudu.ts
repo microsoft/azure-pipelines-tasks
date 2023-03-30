@@ -494,6 +494,50 @@ export class Kudu {
         }
     }
 
+    public async validateZipDeploy(webPackage: string, queryParameters?: Array<string>): Promise<any> {
+        try {
+            var stats = fs.statSync(webPackage);
+            var fileSizeInBytes = stats.size;
+            let httpRequest: webClient.WebRequest = {
+                method: 'POST',
+                uri: this._client.getRequestUri(`/api/zipdeploy/validate`, queryParameters),
+                body: fs.createReadStream(webPackage),
+                headers: {
+                    'Content-Length': fileSizeInBytes
+                },
+            };
+            let requestOptions = new webClient.WebRequestOptions();
+            requestOptions.retriableStatusCodes = [500, 502, 503, 504];
+            requestOptions.retryIntervalInSeconds = 5;
+
+            let response = await this._client.beginRequest(httpRequest, requestOptions, 'application/octet-stream');
+            if(response.statusCode == 200) {
+                tl.debug(`Validation passed response: ${JSON.stringify(response)}`);
+                if (response.body && response.body.result){
+                    tl.warning(`${JSON.stringify(response.body.result)}`);
+                }
+                return null;
+            }
+            else if(response.statusCode == 400) {
+                tl.debug(`Validation failed response: ${JSON.stringify(response)}`);
+                throw response;
+            }
+            else {
+                tl.debug(`Skipping validation with status: ${response.statusCode}`);
+                return null;
+            }
+        }
+        catch(error) {
+            if (error && error.body && error.body.result && typeof error.body.result.valueOf() == 'string' && error.body.result.includes('ZipDeploy Validation ERROR')) {
+                throw Error(JSON.stringify(error.body.result));
+            }
+            else {
+                tl.debug(`Skipping validation with error: ${error}`);
+                return null;
+            }
+        }
+    }
+
     public async warDeploy(webPackage: string, queryParameters?: Array<string>): Promise<any> {
         let httpRequest = new webClient.WebRequest();
         httpRequest.method = 'POST';

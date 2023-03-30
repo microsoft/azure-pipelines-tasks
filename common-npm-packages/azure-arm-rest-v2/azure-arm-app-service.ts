@@ -21,19 +21,60 @@ var parseString = require('xml2js').parseString;
 
 tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
+export class ServiceClient_1 extends ServiceClient{
+    public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions): Promise<webClient.WebResponse> {
+        var token = await this.getCredentials().getToken();
+
+        request.headers = request.headers || {};
+        request.headers["Authorization"] = "Bearer " + token;
+        if (this.acceptLanguage) {
+            request.headers['accept-language'] = this.acceptLanguage;
+        }
+        request.headers['Content-Type'] = 'application/json; charset=utf-8';
+
+        var httpResponse = null;
+
+        try
+        {
+            httpResponse = await webClient.sendRequest(request, reqOptions);
+            if (httpResponse.statusCode === 401 && httpResponse.body && httpResponse.body.error && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
+                // The access token might have expire. Re-issue the request after refreshing the token.
+                token = await this.getCredentials().getToken(true);
+                request.headers["Authorization"] = "Bearer " + token;
+                httpResponse = await webClient.sendRequest(request, reqOptions);
+            }
+
+            if(!!httpResponse.headers[CorrelationIdInResponse]) {
+                tl.debug(`Correlation ID from ARM api call response : ${httpResponse.headers[CorrelationIdInResponse]}`);
+            }
+        } catch(exception) {
+            let exceptionString: string = exception.toString();
+            if(exceptionString.indexOf("Hostname/IP doesn't match certificates's altnames") != -1
+                || exceptionString.indexOf("unable to verify the first certificate") != -1
+                || exceptionString.indexOf("unable to get local issuer certificate") != -1) {
+                    tl.warning(tl.loc('ASE_SSLIssueRecommendation'));
+            }
+
+            throw exception;
+        }
+
+        return httpResponse;
+    }
+}
+
 export class AzureAppService {
     private _resourceGroup: string;
     private _name: string;
     private _slot: string;
     private _appKind: string;
-    public _client: ServiceClient;
+    public _client: ServiceClient_1;
     private _appServiceConfigurationDetails: AzureAppServiceConfigurationDetails;
     private _appServicePublishingProfile: any;
     private _appServiceApplicationSetings: AzureAppServiceConfigurationDetails;
     private _appServiceConfigurationSettings: AzureAppServiceConfigurationDetails;
 
     constructor(endpoint: AzureEndpoint, resourceGroup: string, name: string, slot?: string, appKind?: string) {
-        this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
+        this._client = new ServiceClient_1(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
         this._resourceGroup = resourceGroup;
         this._name = name;
         this._slot = (slot && slot.toLowerCase() == constants.productionSlot) ? null : slot;
@@ -524,6 +565,82 @@ export class AzureAppService {
 
     public getSlot(): string {
         return this._slot ? this._slot : "production";
+    }
+
+    public async getSiteVirtualNetworkConnections(): Promise<any> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'GET';
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/virtualNetworkConnections`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2022-03-01');
+            let requestOptions = new webClient.WebRequestOptions();
+            requestOptions.retryCount = 1;
+
+            var response = await this._client.beginRequest(httpRequest, requestOptions);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            return response.body;
+        }
+        catch(error) {
+            throw Error(`Failed to get Virtual Network Connections. Error: ${this._client.getFormattedError(error)}`);
+        }
+    }
+
+    public async getSitePrivateEndpointConnections(): Promise<any> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'GET';
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/privateEndpointConnections`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2022-03-01');
+            let requestOptions = new webClient.WebRequestOptions();
+            requestOptions.retryCount = 1;
+
+            var response = await this._client.beginRequest(httpRequest, requestOptions);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            return response.body;
+        }
+        catch(error) {
+            throw Error(`Failed to get Private Endpoint Connections. Error: ${this._client.getFormattedError(error)}`);
+        }
+    }
+
+    public async getConnectionStringValidation(connectionDetails): Promise<any> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'POST';
+            httpRequest.body = JSON.stringify(connectionDetails);
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/extensions/DaaS/api/connectionstringvalidation/validate/`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2022-03-01');
+            let requestOptions = new webClient.WebRequestOptions();
+            requestOptions.retryCount = 1;
+
+            var response = await this._client.beginRequest(httpRequest, requestOptions);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            return response.body;
+        }
+        catch(error) {
+            throw Error(`Failed to get Connection String Validation. Error: ${this._client.getFormattedError(error)}`);
+        }
     }
 
     private async _getPublishingProfileWithSecrets(): Promise<any> {

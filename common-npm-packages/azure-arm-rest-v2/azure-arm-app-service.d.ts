@@ -31,6 +31,9 @@ export declare class AzureAppService {
     updateMetadata(applicationSettings: any): Promise<AzureAppServiceConfigurationDetails>;
     patchMetadata(properties: any): Promise<void>;
     getSlot(): string;
+    getSiteVirtualNetworkConnections(): Promise<any>;
+    getSitePrivateEndpointConnections(): Promise<any>;
+    getConnectionStringValidation(connectionDetails): Promise<any>;
     private _getPublishingProfileWithSecrets();
     private _getApplicationSettings();
     private _get();
