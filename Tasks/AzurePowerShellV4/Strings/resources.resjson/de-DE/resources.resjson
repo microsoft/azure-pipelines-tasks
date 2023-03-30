@@ -28,6 +28,8 @@
   "loc.input.help.CustomTargetAzurePs": "Die bevorzugte Azure PowerShell-Version muss einem ordnungsgemäßen semantischen Versionsmuster folgen, z. B. \"1.2.3\". Reguläre Ausdrücke wie 2.\\*,2.3.\\* werden nicht unterstützt. Der gehostete VS2017-Pool unterstützt aktuell die folgenden Az-Modulversionen: 1.0.0, 1.6.0, 2.3.2, 2.6.0, 3.1.0",
   "loc.input.label.pwsh": "PowerShell Core verwenden",
   "loc.input.help.pwsh": "Sofern TRUE, verwendet die Aufgabe unter Windows anstelle von \"powershell.exe\" die in PATH festgelegte \"pwsh.exe\".",
+  "loc.input.label.validateScriptSignature": "Skriptsignatur überprüfen",
+  "loc.input.help.validateScriptSignature": "Wenn dies der Fall ist, überprüft die Aufgabe zunächst, ob das angegebene Skript signiert und gültig ist, bevor es ausgeführt wird.",
   "loc.input.label.workingDirectory": "Arbeitsverzeichnis",
   "loc.input.help.workingDirectory": "Arbeitsverzeichnis zum Ausführen des Skripts.",
   "loc.messages.GeneratingScript": "Skript wird erstellt.",
