@@ -41,6 +41,15 @@ function Validate-DestinationPath(
         ThrowError -errorMessage (Get-VstsLocString -Key "WFC_RemoteDestinationPathCannotContainEnvironmentVariables" -ArgumentList $value)
     }
 }
+
+function Validate-AdditionalArguments([string]$additionalArguments)
+{
+    if($additionalArguments -match "[&;]")
+    {
+        ThrowError -errorMessage (Get-VstsLocString -Key "WFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters" -ArgumentList $value)
+    }
+}
+
 # $sourcePath, $targetPath, $credential, $cleanTargetBeforeCopy, $additionalArguments
 # $adminUserName, $adminPassword
 function Copy-OnLocalMachine(
