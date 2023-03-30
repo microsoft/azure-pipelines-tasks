@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -24,13 +25,15 @@ namespace BuildConfigGen
 
         static class Config
         {
-            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode16, bool isWif, string preprocessorVariableName, string[] extensionsToPreprocess);
+            public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".ps1", ".json" };
 
-            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode16: false, isWif: false, preprocessorVariableName: "DEFAULT", extensionsToPreprocess: new[] { ".ts" });
-            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode16: true, isWif: false, preprocessorVariableName: "NODE16", extensionsToPreprocess: new[] { ".ts" });
-            public static readonly ConfigRecord WindowsIdentityFederation = new ConfigRecord(name: nameof(WindowsIdentityFederation), constMappingKey: "WindowsIdentityFederation", isDefault: false, isNode16: true, isWif: true, preprocessorVariableName: "WINDOWSIDENTITYFEDERATION", extensionsToPreprocess: new[] { ".ps1", ".json" });
+            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode16, bool isWif, string preprocessorVariableName);
 
-            public static ConfigRecord[] Configs = { Default, Node16, WindowsIdentityFederation };
+            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode16: false, isWif: false, preprocessorVariableName: "DEFAULT");
+            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode16: true, isWif: false, preprocessorVariableName: "NODE16");
+            public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode16: true, isWif: true, preprocessorVariableName: "WORKLOADIDENTITYFEDERATION");
+
+            public static ConfigRecord[] Configs = { Default, Node16, WorkloadIdentityFederation };
         }
 
         // ensureUpdateModeVerifier wraps all writes.  if writeUpdate=false, it tracks writes that would have occured
@@ -261,7 +264,7 @@ namespace BuildConfigGen
 
         private static void PreprocessIfExtensionEnabledInConfig(string file, Config.ConfigRecord config, bool validateAndWriteChanges, out bool madeChanges)
         {
-            HashSet<string> extensions = new HashSet<string>(config.extensionsToPreprocess);
+            HashSet<string> extensions = new HashSet<string>(Config.ExtensionsToPreprocess);
             bool preprocessExtension = extensions.Contains(Path.GetExtension(file));
             if (preprocessExtension)
             {

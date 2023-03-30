@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BuildConfigGen": {
+      "commandName": "Project",
+      "commandLineArgs": "--task AzurePowerShellV4 --configs WorkloadIdentityFederation --write-updates"
+    }
+  }
+}
