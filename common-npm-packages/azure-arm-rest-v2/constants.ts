@@ -8,6 +8,8 @@ export const productionSlot: string = "production";
 
 export const mysqlApiVersion: string = '2017-12-01';
 
+export const AzureDeployPackageArtifactAlias = "Azure_App_Service_Deploy_PackageArtifactAlias";
+
 export const APIVersions = {
     azure_arm_appinsights: '2015-05-01',
     azure_arm_metric_alerts: '2016-03-01'
