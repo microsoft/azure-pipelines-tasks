@@ -2,7 +2,7 @@
     "common": [
         {
 #if WORKLOADIDENTITYFEDERATION
-            "module": "../Common/VstsAzureHelpers_WIP",
+            "module": "../Common/VstsAzureHelpers_WIF",
 #else
             "module": "../Common/VstsAzureHelpers_",
 #endif
