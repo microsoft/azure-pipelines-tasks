@@ -14,6 +14,8 @@ export declare class AzureAppService {
     private _appServiceConfigurationDetails;
     private _appServicePublishingProfile;
     private _appServiceApplicationSetings;
+    private _appServiceConfigurationSettings;
+    private _appServiceConnectionString;
     constructor(endpoint: AzureEndpoint, resourceGroup: string, name: string, slot?: string, appKind?: string, isConsumptionApp?: boolean);
     start(): Promise<void>;
     stop(): Promise<void>;
@@ -35,13 +37,17 @@ export declare class AzureAppService {
     getMetadata(): Promise<AzureAppServiceConfigurationDetails>;
     updateMetadata(applicationSettings: any): Promise<AzureAppServiceConfigurationDetails>;
     patchMetadata(properties: any): Promise<void>;
+    patchConnectionString(addProperties: any): Promise<any>;
+    patchConnectionStringSlot(addProperties: any): Promise<any>;
     getSlot(): string;
     getSiteVirtualNetworkConnections(): Promise<any>;
     getSitePrivateEndpointConnections(): Promise<any>;
     getConnectionStringValidation(connectionDetails): Promise<any>;
+    getName(): string;
     private _getPublishingProfileWithSecrets();
     private _getApplicationSettings();
     private _get();
     private _getFormattedName();
-    getName(): string;
+    private _getConnectionStrings(force?: boolean);
+    private _updateConnectionStrings(connectionStringSettings: any);
 }

@@ -1,6 +1,5 @@
 import msRestAzure = require('./azure-arm-common');
 import tl = require('azure-pipelines-task-lib/task');
-import util = require('util');
 import webClient = require('./webClient');
 import Q = require('q');
 import path = require('path');
@@ -8,14 +7,12 @@ import {
     AzureEndpoint,
     AzureAppServiceConfigurationDetails
 } from './azureModels';
-
 import {
     ServiceClient
 } from './AzureServiceClient';
 import {
     ToError
 } from './AzureServiceClientBase';
-import { Kudu } from './azure-arm-app-service-kudu';
 import constants = require('./constants');
 var parseString = require('xml2js').parseString;
 
@@ -75,6 +72,7 @@ export class AzureAppService {
     private _appServicePublishingProfile: any;
     private _appServiceApplicationSetings: AzureAppServiceConfigurationDetails;
     private _appServiceConfigurationSettings: AzureAppServiceConfigurationDetails;
+    private _appServiceConnectionString: AzureAppServiceConfigurationDetails;
 
     constructor(endpoint: AzureEndpoint, resourceGroup: string, name: string, slot?: string, appKind?: string, isConsumptionApp?: boolean) {
         this._client = new ServiceClient_1(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
@@ -397,7 +395,7 @@ export class AzureAppService {
         }
 
         if(isNewValueUpdated) {
-            await this.updateSlotConfigSettings(appSettingsSlotSettings);
+            await this._updateSlotConfigSettings(appSettingsSlotSettings);
         }
     }
 
@@ -431,7 +429,101 @@ export class AzureAppService {
         }
     }
 
-    private async updateSlotConfigSettings(SlotConfigSettings: any): Promise<AzureAppServiceConfigurationDetails> {
+
+    private async _getConnectionStrings(force?: boolean): Promise<AzureAppServiceConfigurationDetails> {
+        if(force || !this._appServiceConnectionString) {
+            try {
+                var httpRequest = new webClient.WebRequest();
+                httpRequest.method = 'POST';
+                var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+                httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/connectionstrings/list`,
+                {
+                    '{resourceGroupName}': this._resourceGroup,
+                    '{name}': this._name,
+                }, null, '2016-08-01');
+
+                var response = await this._client.beginRequest(httpRequest);
+                if(response.statusCode != 200) {
+                    throw ToError(response);
+                }
+
+                this._appServiceConnectionString = response.body;
+            }
+            catch(error) {
+                throw Error(tl.loc('FailedToGetAppServiceConnectionStrings', this._getFormattedName(), this._client.getFormattedError(error)));
+            }
+        }
+
+        return this._appServiceConnectionString;
+    }
+
+    public async patchConnectionString(addProperties: any): Promise<any> {
+        var connectionStringSettings = await this._getConnectionStrings();
+        var isNewValueUpdated: boolean = false;
+        for(var key in addProperties) {
+            if(JSON.stringify(connectionStringSettings.properties[key]) != JSON.stringify(addProperties[key])) {
+                tl.debug(`Value of ${key} has been changed to ${JSON.stringify(addProperties[key])}`);
+                isNewValueUpdated = true;
+            }
+            else {
+                tl.debug(`${key} is already present.`);
+            }
+            connectionStringSettings.properties[key] = addProperties[key];
+        }
+
+        if(isNewValueUpdated) {
+            await this._updateConnectionStrings(connectionStringSettings);
+        }
+    }
+
+    private async _updateConnectionStrings(connectionStringSettings: any): Promise<AzureAppServiceConfigurationDetails> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'PUT';
+            httpRequest.body = JSON.stringify(connectionStringSettings);
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/connectionstrings`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2016-08-01');
+
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            return response.body;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToUpdateAppServiceConnectionStrings', this._getFormattedName(), this._client.getFormattedError(error)));
+        }
+    }
+
+    public async patchConnectionStringSlot(addProperties: any): Promise<any> {
+        var connectionStringSlotSettings = await this.getSlotConfigurationNames();
+        let connectionStringNames = connectionStringSlotSettings.properties.connectionStringNames;
+        var isNewValueUpdated: boolean = false;
+        for(var key in addProperties) {
+            if(!connectionStringNames) {
+                connectionStringSlotSettings.properties.connectionStringNames = [];
+                connectionStringNames = connectionStringSlotSettings.properties.connectionStringNames;
+            }
+            if(addProperties[key].slotSetting == true) {
+                if((connectionStringNames.length == 0) || (!connectionStringNames.includes(key))) {
+                    connectionStringNames.push(key);
+                }
+                tl.debug(`Slot setting updated for key : ${key}`);
+                isNewValueUpdated = true;
+            }
+        }
+
+        if(isNewValueUpdated) {
+            await this._updateSlotConfigSettings(connectionStringSlotSettings);
+        }
+    }
+
+    private async _updateSlotConfigSettings(SlotConfigSettings: any): Promise<AzureAppServiceConfigurationDetails> {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'PUT';
