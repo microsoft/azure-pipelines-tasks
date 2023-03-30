@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 200,
-    "Patch": 0
+    "Minor": 220,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "1.104.0",
@@ -107,6 +107,7 @@
     "WFC_CopyingRecurivelyFrom0to1MachineSucceed": "ms-resource:loc.messages.WFC_CopyingRecurivelyFrom0to1MachineSucceed",
     "WFC_SourcePathDoesNotExist": "ms-resource:loc.messages.WFC_SourcePathDoesNotExist",
     "WFC_RemoteDestinationPathCannotContainEnvironmentVariables": "ms-resource:loc.messages.WFC_RemoteDestinationPathCannotContainEnvironmentVariables",
+    "WFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "ms-resource:loc.messages.WFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters",
     "WFC_CopyStartedFor0": "ms-resource:loc.messages.WFC_CopyStartedFor0",
     "WFC_NoMachineExistsUnderEnvironment": "ms-resource:loc.messages.WFC_NoMachineExistsUnderEnvironment",
     "WFC_NoMachineExistsUnderEnvironment0ForDeployment": "ms-resource:loc.messages.WFC_NoMachineExistsUnderEnvironment0ForDeployment",
