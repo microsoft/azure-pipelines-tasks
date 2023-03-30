@@ -1,2 +1,2 @@
-Default|5.220.1
-WorkloadIdentityFederation|5.220.0
+Default|5.220.3
+WorkloadIdentityFederation|5.220.2
