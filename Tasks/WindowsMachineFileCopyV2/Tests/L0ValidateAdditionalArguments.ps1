@@ -6,10 +6,20 @@ param()
 
 . $PSScriptRoot\..\Utility.ps1
 
+# Arrange
+
+$additionalArgumentsValidationErrorMessage = "WFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters";
+
+# Assert
+
 Assert-Throws {
    Validate-AdditionalArguments $invalidAdditionalArgumentsWithSemicolon
-} -Message "WFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters"
+} -Message $additionalArgumentsValidationErrorMessage
 
 Assert-Throws {
     Validate-AdditionalArguments $invalidAdditionalArgumentsWithAmpersand
- } -Message "WFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters"
+ } -Message $additionalArgumentsValidationErrorMessage
+
+Assert-Throws {
+   Validate-AdditionalArguments $invalidAdditionalArgumentsWithVerticalBar
+} -Message $additionalArgumentsValidationErrorMessage
