@@ -19,6 +19,8 @@ import { Kudu } from './azure-arm-app-service-kudu';
 import constants = require('./constants');
 var parseString = require('xml2js').parseString;
 
+const CorrelationIdInResponse = "x-ms-correlation-request-id";
+
 tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class ServiceClient_1 extends ServiceClient{

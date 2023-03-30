@@ -20,12 +20,10 @@ export class KuduServiceManagementClient {
         this._scmUri = scmUri;
     }
 
-    public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions): Promise<webClient.WebResponse> {
+    public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions, contentType?: string): Promise<webClient.WebResponse> {
         request.headers = request.headers || {};
         request.headers["Authorization"] = "Basic " + this._accesssToken;
-        if(!request.headers['Content-Type']) {
-            request.headers['Content-Type'] = 'application/json; charset=utf-8';
-        }
+        request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
 
         if(!!this._cookie) {
             tl.debug(`setting affinity cookie ${JSON.stringify(this._cookie)}`);
@@ -61,7 +59,6 @@ export class KuduServiceManagementClient {
                 throw new Error(exceptionString);
             }
         }
-
     }
 
     public getRequestUri(uriFormat: string, queryParameters?: Array<string>) {
