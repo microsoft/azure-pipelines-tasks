@@ -28,6 +28,8 @@
   "loc.input.help.CustomTargetAzurePs": "優先される Azure PowerShell バージョンは、1.2.3 などの適切なセマンティック バージョンである必要があります。2.\\*、2.3.\\* などの正規表現はサポートされていません。ホステッド VS2017 プールは、現在次の Az モジュール バージョンをサポートしています: 1.0.0、1.6.0、2.3.2、2.6.0、3.1.0",
   "loc.input.label.pwsh": "PowerShell Core を使用する",
   "loc.input.help.pwsh": "これが true の場合、Windows 上のタスクは powershell.exe ではなく PATH からの pwsh.exe を使用します。",
+  "loc.input.label.validateScriptSignature": "スクリプトの署名を検証する",
+  "loc.input.help.validateScriptSignature": "これが true の場合、タスクはまず、指定されたスクリプトが署名され、有効であることを確認してからこれを実行します。",
   "loc.input.label.workingDirectory": "作業ディレクトリ",
   "loc.input.help.workingDirectory": "スクリプトが実行される作業ディレクトリ。",
   "loc.messages.GeneratingScript": "スクリプトを生成しています。",
