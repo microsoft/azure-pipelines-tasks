@@ -1,15 +1,20 @@
+import webClient = require('./webClient');
 import { AzureEndpoint, AzureAppServiceConfigurationDetails } from './azureModels';
 import { ServiceClient } from './AzureServiceClient';
+export declare class ServiceClient_1 extends ServiceClient {
+    beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions): Promise<webClient.WebResponse>
+}
 export declare class AzureAppService {
     private _resourceGroup;
     private _name;
     private _slot;
     private _appKind;
+    private _isConsumptionApp;
     _client: ServiceClient;
     private _appServiceConfigurationDetails;
     private _appServicePublishingProfile;
     private _appServiceApplicationSetings;
-    constructor(endpoint: AzureEndpoint, resourceGroup: string, name: string, slot?: string, appKind?: string);
+    constructor(endpoint: AzureEndpoint, resourceGroup: string, name: string, slot?: string, appKind?: string, isConsumptionApp?: boolean);
     start(): Promise<void>;
     stop(): Promise<void>;
     restart(): Promise<void>;

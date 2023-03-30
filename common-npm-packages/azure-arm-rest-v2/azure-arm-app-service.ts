@@ -23,7 +23,7 @@ const CorrelationIdInResponse = "x-ms-correlation-request-id";
 
 tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
-export class ServiceClient_1 extends ServiceClient{
+export class ServiceClient_1 extends ServiceClient {
     public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions): Promise<webClient.WebResponse> {
         var token = await this.getCredentials().getToken();
 
@@ -69,18 +69,20 @@ export class AzureAppService {
     private _name: string;
     private _slot: string;
     private _appKind: string;
+    private _isConsumptionApp: boolean;
     public _client: ServiceClient_1;
     private _appServiceConfigurationDetails: AzureAppServiceConfigurationDetails;
     private _appServicePublishingProfile: any;
     private _appServiceApplicationSetings: AzureAppServiceConfigurationDetails;
     private _appServiceConfigurationSettings: AzureAppServiceConfigurationDetails;
 
-    constructor(endpoint: AzureEndpoint, resourceGroup: string, name: string, slot?: string, appKind?: string) {
+    constructor(endpoint: AzureEndpoint, resourceGroup: string, name: string, slot?: string, appKind?: string, isConsumptionApp?: boolean) {
         this._client = new ServiceClient_1(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
         this._resourceGroup = resourceGroup;
         this._name = name;
         this._slot = (slot && slot.toLowerCase() == constants.productionSlot) ? null : slot;
         this._appKind = appKind;
+        this._isConsumptionApp = isConsumptionApp;
     }
 
     public async start(): Promise<void> {
@@ -335,13 +337,27 @@ export class AzureAppService {
         }
     }
 
-    public async patchApplicationSettings(addProperties: any, deleteProperties?: any): Promise<boolean> {
+    public async patchApplicationSettings(addProperties: any, deleteProperties?: any, formatJSON?: boolean): Promise<boolean> {
         var applicationSettings = await this.getApplicationSettings();
         var isNewValueUpdated: boolean = false;
         for(var key in addProperties) {
-            if(applicationSettings.properties[key] != addProperties[key]) {
-                tl.debug(`old value : ${applicationSettings.properties[key]}. new value: ${addProperties[key]}`);
-                isNewValueUpdated = true;
+            if(formatJSON) {
+                if(JSON.stringify(applicationSettings.properties[key]) != JSON.stringify(addProperties[key])) {
+                    tl.debug(`Value of ${key} has been changed to ${JSON.stringify(addProperties[key])}`);
+                    isNewValueUpdated = true;
+                }
+                else {
+                    tl.debug(`${key} is already present.`);
+                }
+            }
+            else {
+                if(applicationSettings.properties[key] != addProperties[key]) {
+                    tl.debug(`Value of ${key} has been changed to ${addProperties[key]}`);
+                    isNewValueUpdated = true;
+                }
+                else {
+                    tl.debug(`${key} is already present.`);
+                }
             }
 
             applicationSettings.properties[key] = addProperties[key];
@@ -355,6 +371,7 @@ export class AzureAppService {
         }
 
         if(isNewValueUpdated) {
+            applicationSettings.properties[constants.WebsiteEnableSyncUpdateSiteKey] =  this._isConsumptionApp ? 'false' : 'true';
             await this.updateApplicationSettings(applicationSettings);
         }
 
