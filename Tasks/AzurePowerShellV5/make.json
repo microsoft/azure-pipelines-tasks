@@ -1,7 +1,11 @@
 {
     "common": [
         {
+#if WORKLOADIDENTITYFEDERATION
+            "module": "../Common/VstsAzureHelpers_WIP",
+#else
             "module": "../Common/VstsAzureHelpers_",
+#endif
             "type": "ps"
         },
         {
