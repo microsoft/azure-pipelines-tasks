@@ -1445,7 +1445,7 @@ function Get-InvokeRemoteScriptParameters
 
 function Validate-AdditionalArguments([string]$additionalArguments)
 {
-    if($additionalArguments -match "[&;]")
+    if($additionalArguments -match "[&;|]")
     {
         ThrowError -errorMessage (Get-VstsLocString -Key "AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters" -ArgumentList $value)
     }
