@@ -1,18 +1,10 @@
-import msRestAzure = require('./azure-arm-common');
 import tl = require('azure-pipelines-task-lib/task');
 import webClient = require('./webClient');
 import Q = require('q');
 import path = require('path');
-import {
-    AzureEndpoint,
-    AzureAppServiceConfigurationDetails
-} from './azureModels';
-import {
-    ServiceClient
-} from './AzureServiceClient';
-import {
-    ToError
-} from './AzureServiceClientBase';
+import { AzureEndpoint, AzureAppServiceConfigurationDetails } from './azureModels';
+import { ServiceClient } from './AzureServiceClient';
+import { ToError } from './AzureServiceClientBase';
 import constants = require('./constants');
 
 const CorrelationIdInResponse = "x-ms-correlation-request-id";
@@ -28,7 +20,9 @@ export class ServiceClient_1 extends ServiceClient {
         if (this.acceptLanguage) {
             request.headers['accept-language'] = this.acceptLanguage;
         }
-        request.headers['Content-Type'] = 'application/json; charset=utf-8';
+        if (!request.headers['Content-Type']) {
+            request.headers['Content-Type'] = 'application/json; charset=utf-8';
+        }
 
         var httpResponse = null;
 
@@ -42,12 +36,12 @@ export class ServiceClient_1 extends ServiceClient {
                 httpResponse = await webClient.sendRequest(request, reqOptions);
             }
 
-            if(!!httpResponse.headers[CorrelationIdInResponse]) {
+            if (!!httpResponse.headers[CorrelationIdInResponse]) {
                 tl.debug(`Correlation ID from ARM api call response : ${httpResponse.headers[CorrelationIdInResponse]}`);
             }
         } catch(exception) {
             let exceptionString: string = exception.toString();
-            if(exceptionString.indexOf("Hostname/IP doesn't match certificates's altnames") != -1
+            if (exceptionString.indexOf("Hostname/IP doesn't match certificates's altnames") != -1
                 || exceptionString.indexOf("unable to verify the first certificate") != -1
                 || exceptionString.indexOf("unable to get local issuer certificate") != -1) {
                     tl.warning(tl.loc('ASE_SSLIssueRecommendation'));
@@ -94,7 +88,7 @@ export class AzureAppService {
 
             console.log(tl.loc('StartingAppService', this._getFormattedName()));
             var response = await this._client.beginRequest(webRequest);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -117,7 +111,7 @@ export class AzureAppService {
 
             console.log(tl.loc('StoppingAppService', this._getFormattedName()));
             var response = await this._client.beginRequest(webRequest);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -140,7 +134,7 @@ export class AzureAppService {
 
             console.log(tl.loc('RestartingAppService', this._getFormattedName()));
             var response = await this._client.beginRequest(webRequest);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -163,7 +157,7 @@ export class AzureAppService {
 
             console.log(tl.loc('DeletingAppServiceSlot', this._getFormattedName()));
             var response = await this._client.beginRequest(webRequest);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -192,11 +186,11 @@ export class AzureAppService {
 
             console.log(tl.loc('SwappingAppServiceSlotSlots', this._name, this.getSlot(), slotName));
             var response = await this._client.beginRequest(webRequest);
-            if(response.statusCode == 202) {
+            if (response.statusCode == 202) {
                 response= await this._client.getLongRunningOperationResult(response);
             }
 
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -226,7 +220,7 @@ export class AzureAppService {
             console.log(tl.loc('SwappingAppServiceSlotSlotsPhase1', this._name, this.getSlot(), slotName));
             var response = await this._client.beginRequest(webRequest);
 
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -252,7 +246,7 @@ export class AzureAppService {
             console.log(tl.loc('CancelSwapAppServiceSlotSlotsPhase1', this._name, this.getSlot()));
             var response = await this._client.beginRequest(webRequest);
 
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -264,7 +258,7 @@ export class AzureAppService {
     }
 
     public async get(force?: boolean): Promise<AzureAppServiceConfigurationDetails> {
-        if(force || !this._appServiceConfigurationDetails) {
+        if (force || !this._appServiceConfigurationDetails) {
             this._appServiceConfigurationDetails = await this._get();
         }
 
@@ -272,7 +266,7 @@ export class AzureAppService {
     }
 
     public async getPublishingProfileWithSecrets(force?: boolean): Promise<any>{
-        if(force || !this._appServicePublishingProfile) {
+        if (force || !this._appServicePublishingProfile) {
             this._appServicePublishingProfile = await this._getPublishingProfileWithSecrets();
         }
 
@@ -291,7 +285,7 @@ export class AzureAppService {
             }, null, '2016-08-01');
 
             var response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -303,7 +297,7 @@ export class AzureAppService {
     }
 
     public async getApplicationSettings(force?: boolean): Promise<AzureAppServiceConfigurationDetails> {
-        if(force || !this._appServiceApplicationSetings) {
+        if (force || !this._appServiceApplicationSetings) {
             this._appServiceApplicationSetings = await this._getApplicationSettings();
         }
 
@@ -323,7 +317,7 @@ export class AzureAppService {
             }, null, '2016-08-01');
 
             var response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -338,8 +332,8 @@ export class AzureAppService {
         var applicationSettings = await this.getApplicationSettings();
         var isNewValueUpdated: boolean = false;
         for(var key in addProperties) {
-            if(formatJSON) {
-                if(JSON.stringify(applicationSettings.properties[key]) != JSON.stringify(addProperties[key])) {
+            if (formatJSON) {
+                if (JSON.stringify(applicationSettings.properties[key]) != JSON.stringify(addProperties[key])) {
                     tl.debug(`Value of ${key} has been changed to ${JSON.stringify(addProperties[key])}`);
                     isNewValueUpdated = true;
                 }
@@ -348,7 +342,7 @@ export class AzureAppService {
                 }
             }
             else {
-                if(applicationSettings.properties[key] != addProperties[key]) {
+                if (applicationSettings.properties[key] != addProperties[key]) {
                     tl.debug(`Value of ${key} has been changed to ${addProperties[key]}`);
                     isNewValueUpdated = true;
                 }
@@ -360,14 +354,14 @@ export class AzureAppService {
             applicationSettings.properties[key] = addProperties[key];
         }
         for(var key in deleteProperties) {
-            if(key in applicationSettings.properties) {
+            if (key in applicationSettings.properties) {
                 delete applicationSettings.properties[key];
                 tl.debug(`Removing app setting : ${key}`);
                 isNewValueUpdated = true;
             }
         }
 
-        if(isNewValueUpdated) {
+        if (isNewValueUpdated) {
             applicationSettings.properties[constants.WebsiteEnableSyncUpdateSiteKey] =  this._isConsumptionApp ? 'false' : 'true';
             await this.updateApplicationSettings(applicationSettings);
         }
@@ -380,12 +374,12 @@ export class AzureAppService {
         let appSettingNames = appSettingsSlotSettings.properties.appSettingNames;
         var isNewValueUpdated: boolean = false;
         for(var key in addProperties) {
-            if(!appSettingNames) {
+            if (!appSettingNames) {
                 appSettingsSlotSettings.properties.appSettingNames = [];
                 appSettingNames = appSettingsSlotSettings.properties.appSettingNames;
             }
-            if(addProperties[key].slotSetting == true) {
-                if((appSettingNames.length == 0) || (!appSettingNames.includes(addProperties[key].name))) {
+            if (addProperties[key].slotSetting == true) {
+                if ((appSettingNames.length == 0) || (!appSettingNames.includes(addProperties[key].name))) {
                     appSettingNames.push(addProperties[key].name);
                 }
                 tl.debug(`Slot setting updated for key : ${addProperties[key].name}`);
@@ -393,13 +387,13 @@ export class AzureAppService {
             }
         }
 
-        if(isNewValueUpdated) {
+        if (isNewValueUpdated) {
             await this._updateSlotConfigSettings(appSettingsSlotSettings);
         }
     }
 
     private async getSlotConfigurationNames(force?: boolean): Promise<AzureAppServiceConfigurationDetails> {
-        if(force || !this._appServiceConfigurationSettings) {
+        if (force || !this._appServiceConfigurationSettings) {
             this._appServiceConfigurationSettings = await this._getSlotConfigurationNames();
         }
 
@@ -417,7 +411,7 @@ export class AzureAppService {
             }, null, '2016-08-01');
 
             var response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -429,7 +423,7 @@ export class AzureAppService {
     }
 
     private async _getConnectionStrings(force?: boolean): Promise<AzureAppServiceConfigurationDetails> {
-        if(force || !this._appServiceConnectionString) {
+        if (force || !this._appServiceConnectionString) {
             try {
                 var httpRequest = new webClient.WebRequest();
                 httpRequest.method = 'POST';
@@ -441,7 +435,7 @@ export class AzureAppService {
                 }, null, '2016-08-01');
 
                 var response = await this._client.beginRequest(httpRequest);
-                if(response.statusCode != 200) {
+                if (response.statusCode != 200) {
                     throw ToError(response);
                 }
 
@@ -459,7 +453,7 @@ export class AzureAppService {
         var connectionStringSettings = await this._getConnectionStrings();
         var isNewValueUpdated: boolean = false;
         for(var key in addProperties) {
-            if(JSON.stringify(connectionStringSettings.properties[key]) != JSON.stringify(addProperties[key])) {
+            if (JSON.stringify(connectionStringSettings.properties[key]) != JSON.stringify(addProperties[key])) {
                 tl.debug(`Value of ${key} has been changed to ${JSON.stringify(addProperties[key])}`);
                 isNewValueUpdated = true;
             }
@@ -469,7 +463,7 @@ export class AzureAppService {
             connectionStringSettings.properties[key] = addProperties[key];
         }
 
-        if(isNewValueUpdated) {
+        if (isNewValueUpdated) {
             await this._updateConnectionStrings(connectionStringSettings);
         }
     }
@@ -487,7 +481,7 @@ export class AzureAppService {
             }, null, '2016-08-01');
 
             var response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -503,12 +497,12 @@ export class AzureAppService {
         let connectionStringNames = connectionStringSlotSettings.properties.connectionStringNames;
         var isNewValueUpdated: boolean = false;
         for(var key in addProperties) {
-            if(!connectionStringNames) {
+            if (!connectionStringNames) {
                 connectionStringSlotSettings.properties.connectionStringNames = [];
                 connectionStringNames = connectionStringSlotSettings.properties.connectionStringNames;
             }
-            if(addProperties[key].slotSetting == true) {
-                if((connectionStringNames.length == 0) || (!connectionStringNames.includes(key))) {
+            if (addProperties[key].slotSetting == true) {
+                if ((connectionStringNames.length == 0) || (!connectionStringNames.includes(key))) {
                     connectionStringNames.push(key);
                 }
                 tl.debug(`Slot setting updated for key : ${key}`);
@@ -516,7 +510,7 @@ export class AzureAppService {
             }
         }
 
-        if(isNewValueUpdated) {
+        if (isNewValueUpdated) {
             await this._updateSlotConfigSettings(connectionStringSlotSettings);
         }
     }
@@ -533,7 +527,7 @@ export class AzureAppService {
             }, null, '2016-08-01');
 
             var response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -556,7 +550,7 @@ export class AzureAppService {
             }, null, '2018-02-01');
 
             var response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -580,7 +574,7 @@ export class AzureAppService {
             }, null, '2018-02-01');
 
             var response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -589,6 +583,26 @@ export class AzureAppService {
         catch(error) {
             throw Error(tl.loc('FailedToUpdateAppServiceConfiguration', this._getFormattedName(), this._client.getFormattedError(error)));
         }
+    }
+
+    public async updateConfigurationSettings(properties: any, formatJSON?: boolean) : Promise<void> {
+        if (formatJSON) {
+            var configurationSettingsProperties = properties[0];
+            console.log(tl.loc('UpdatingAppServiceConfigurationSettings', JSON.stringify(configurationSettingsProperties)));
+            await this.patchConfiguration({'properties': configurationSettingsProperties});
+        }
+        else
+        {
+            for(var property in properties) {
+                if (!!properties[property] && properties[property].value !== undefined) {
+                    properties[property] = properties[property].value;
+                }
+            }
+
+            console.log(tl.loc('UpdatingAppServiceConfigurationSettings', JSON.stringify(properties)));
+            await this.patchConfiguration({'properties': properties});
+        }
+        console.log(tl.loc('UpdatedAppServiceConfigurationSettings'));
     }
 
     public async patchConfiguration(properties: any): Promise<any> {
@@ -604,7 +618,7 @@ export class AzureAppService {
             }, null, '2018-02-01');
 
             var response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -628,7 +642,7 @@ export class AzureAppService {
             }, null, '2016-08-01');
 
             var response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -652,7 +666,7 @@ export class AzureAppService {
             }, null, '2016-08-01');
 
             var response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -690,7 +704,7 @@ export class AzureAppService {
             requestOptions.retryCount = 1;
 
             var response = await this._client.beginRequest(httpRequest, requestOptions);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -715,7 +729,7 @@ export class AzureAppService {
             requestOptions.retryCount = 1;
 
             var response = await this._client.beginRequest(httpRequest, requestOptions);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -741,7 +755,7 @@ export class AzureAppService {
             requestOptions.retryCount = 1;
 
             var response = await this._client.beginRequest(httpRequest, requestOptions);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -769,10 +783,10 @@ export class AzureAppService {
 
             while(true) {
                 var response = await this._client.beginRequest(httpRequest);
-                if(response.statusCode == 200) {
+                if (response.statusCode == 200) {
                     return response.body;
                 }
-                else if(response.statusCode == 400) {
+                else if (response.statusCode == 400) {
                     if (++i < retryCount) {
                         await webClient.sleepFor(timeToWait);
                         timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
@@ -804,7 +818,7 @@ export class AzureAppService {
             }, null, '2016-08-01');
 
             var response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -828,7 +842,7 @@ export class AzureAppService {
             }, null, '2016-08-01');
 
             var response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
@@ -851,7 +865,7 @@ export class AzureAppService {
             }, null, '2016-08-01');
 
             var response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 

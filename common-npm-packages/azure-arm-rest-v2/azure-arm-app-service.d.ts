@@ -34,6 +34,7 @@ export declare class AzureAppService {
     getConfiguration(): Promise<AzureAppServiceConfigurationDetails>;
     updateConfiguration(applicationSettings: any): Promise<AzureAppServiceConfigurationDetails>;
     patchConfiguration(properties: any): Promise<any>;
+    updateConfigurationSettings(properties: any, formatJSON?: boolean) : Promise<void>;
     getMetadata(): Promise<AzureAppServiceConfigurationDetails>;
     updateMetadata(applicationSettings: any): Promise<AzureAppServiceConfigurationDetails>;
     patchMetadata(properties: any): Promise<void>;

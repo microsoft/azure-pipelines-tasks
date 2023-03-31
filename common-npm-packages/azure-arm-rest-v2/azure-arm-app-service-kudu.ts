@@ -1,7 +1,6 @@
 import msRestAzure = require('./azure-arm-common');
 import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
-import util = require('util');
 import webClient = require('./webClient');
 import Q = require('q');
 import { WebJob, SiteExtension } from './azureModels';
@@ -32,7 +31,7 @@ export class KuduServiceManagementClient {
             request.headers['Cookie'] = this._cookie;
         }
 
-        let retryCount = reqOptions && util.isNumber(reqOptions.retryCount) ? reqOptions.retryCount : 5;
+        let retryCount = reqOptions && (typeof reqOptions.retryCount === 'number') ? reqOptions.retryCount : 5;
 
         while(retryCount >= 0) {
             try {
@@ -82,7 +81,7 @@ export class Kudu {
     private _client: KuduServiceManagementClient;
 
     constructor(scmUri: string, username: string, password: string) {
-        var base64EncodedCredential = (new Buffer(username + ':' + password).toString('base64'));
+        var base64EncodedCredential = (Buffer.from(username + ':' + password).toString('base64'));
         this._client = new KuduServiceManagementClient(scmUri, base64EncodedCredential);
     }
 
