@@ -2,7 +2,7 @@
   "profiles": {
     "BuildConfigGen": {
       "commandName": "Project",
-      "commandLineArgs": "--task AzurePowerShellV4 --configs WorkloadIdentityFederation --write-updates"
+      "commandLineArgs": "--task AzureFileCopyV1,AzureFileCopyV2,AzureFileCopyV3,AzureFileCopyV4,AzureFileCopyV5,AzurePowerShellV2,AzurePowerShellV4,AzurePowerShellV5,SqlAzureDacpacDeploymentV1,SqlAzureDacpacDeploymentV1 --configs WorkloadIdentityFederation  --write-updates"
     }
   }
 }

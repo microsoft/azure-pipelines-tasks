@@ -90,11 +90,13 @@ try
     }
 
     $CoreAzArgument = $null;
+
     if ($targetAzurePs) {
         $CoreAzArgument = "-endpoint '$endpoint' -connectedServiceNameARM $serviceName -targetAzurePs $targetAzurePs -vstsAccessToken $vstsAccessToken"
     } else {
         $CoreAzArgument = "-endpoint '$endpoint' -connectedServiceNameARM $serviceName -vstsAccessToken $vstsAccessToken"
     }    
+
     $contents += ". '$PSScriptRoot\CoreAz.ps1' $CoreAzArgument"
 
     if ($scriptType -eq "InlineScript") {

@@ -84,6 +84,7 @@ $endpoint = Get-VstsEndpoint -Name $serviceName -Require
 CleanUp-PSModulePathForHostedAgent
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
 
+
 # troubleshoot link
 $troubleshoot = "https://aka.ms/azurepowershelltroubleshooting"
 try 

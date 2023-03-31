@@ -4,6 +4,7 @@ param
     [String] [Parameter(Mandatory = $true)]
     $endpoint,
 
+
     [String] [Parameter(Mandatory = $false)]
     $connectedServiceNameARM,
 
@@ -24,5 +25,6 @@ Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
 
 $endpointObject =  ConvertFrom-Json  $endpoint
 Import-Module "$PSScriptRoot\ps_modules\VstsAzureHelpers_"
+
 Initialize-AzModule -Endpoint $endpointObject -connectedServiceNameARM $connectedServiceNameARM `
     -azVersion $targetAzurePs -vstsAccessToken $vstsAccessToken

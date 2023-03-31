@@ -1,371 +1,371 @@
 {
-    "id": "CE85A08B-A538-4D2B-8589-1D37A9AB970F",
-    "name": "SqlAzureDacpacDeployment",
-    "friendlyName": "Azure SQL Database deployment",
-    "description": "Deploy an Azure SQL Database using DACPAC or run scripts using SQLCMD",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/sql-azure-dacpac-deployment",
-    "helpMarkDown": "[Learn more about this task](https://aka.ms/sqlazuredeployreadme)",
-    "category": "Deploy",
-    "visibility": [
-        "Build",
-        "Release"
-    ],
-    "runsOn": [
-        "Agent"
-    ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 1,
-        "Minor": 219,
-        "Patch": 0
+  "id": "CE85A08B-A538-4D2B-8589-1D37A9AB970F",
+  "name": "SqlAzureDacpacDeployment",
+  "friendlyName": "Azure SQL Database deployment",
+  "description": "Deploy an Azure SQL Database using DACPAC or run scripts using SQLCMD",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/sql-azure-dacpac-deployment",
+  "helpMarkDown": "[Learn more about this task](https://aka.ms/sqlazuredeployreadme)",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 220,
+    "Patch": 2
+  },
+  "demands": [
+    "sqlpackage"
+  ],
+  "minimumAgentVersion": "1.103.0",
+  "groups": [
+    {
+      "name": "target",
+      "displayName": "SQL Database",
+      "isExpanded": true
     },
-    "demands": [
-        "sqlpackage"
-    ],
-    "minimumAgentVersion": "1.103.0",
-    "groups": [
-        {
-            "name": "target",
-            "displayName": "SQL Database",
-            "isExpanded": true
-        },
-        {
-            "name": "taskDetails",
-            "displayName": "Deployment Package",
-            "isExpanded": true
-        },
-        {
-            "name": "firewall",
-            "displayName": "Firewall",
-            "isExpanded": false
-        }
-    ],
-    "inputs": [
-        {
-            "name": "ConnectedServiceNameSelector",
-            "aliases": [
-                "azureConnectionType"
-            ],
-            "type": "pickList",
-            "label": "Azure Service Connection Type",
-            "required": false,
-            "helpMarkDown": "",
-            "defaultValue": "ConnectedServiceNameARM",
-            "options": {
-                "ConnectedServiceName": "Azure Classic",
-                "ConnectedServiceNameARM": "Azure Resource Manager"
-            }
-        },
-        {
-            "name": "ConnectedServiceName",
-            "aliases": [
-                "azureClassicSubscription"
-            ],
-            "type": "connectedService:Azure",
-            "label": "Azure Classic Subscription",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Target Azure Classic subscription for deploying SQL files",
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
-        },
-        {
-            "name": "ConnectedServiceNameARM",
-            "aliases": [
-                "azureSubscription"
-            ],
-            "type": "connectedService:AzureRM",
-            "label": "Azure Subscription",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Target Azure Resource Manager subscription for deploying SQL files",
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
-        },
-        {
-            "name": "AuthenticationType",
-            "type": "pickList",
-            "label": "Authentication Type",
-            "required": true,
-            "groupName": "target",
-            "defaultValue": "server",
-            "options": {
-                "server": "SQL Server Authentication",
-                "aadAuthenticationPassword": "Active Directory - Password",
-                "aadAuthenticationIntegrated": "Active Directory - Integrated",
-                "connectionString": "Connection String",
-                "servicePrincipal": "Service Principal"
-            },
-            "helpMarkDown": "Specify the option to connect to the Azure SQL Server Database. The options are either to provide the Azure SQL Server Database details, or the SQL Server connection string, or AAD Authentication password or integrated or use a Service Principal. For SQL server authentication, use SQL server's user credentials and for AD authentication, use credentials of AD user configured to SQL server."
-        },
-        {
-            "name": "ServerName",
-            "type": "string",
-            "label": "Azure SQL Server",
-            "required": true,
-            "groupName": "target",
-            "defaultValue": "",
-            "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated || AuthenticationType = servicePrincipal",
-            "helpMarkDown": "Azure SQL Server name, like Fabrikam.database.windows.net,1433 or Fabrikam.database.windows.net."
-        },
-        {
-            "name": "DatabaseName",
-            "type": "string",
-            "label": "Database",
-            "required": true,
-            "groupName": "target",
-            "defaultValue": "",
-            "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated || AuthenticationType = servicePrincipal",
-            "helpMarkDown": "Name of the Azure SQL Database, where the files will be deployed."
-        },
-        {
-            "name": "SqlUsername",
-            "type": "string",
-            "label": "Login",
-            "required": true,
-            "groupName": "target",
-            "defaultValue": "",
-            "visibleRule": "AuthenticationType = server",
-            "helpMarkDown": "Specify the Azure SQL Server administrator login."
-        },
-        {
-            "name": "SqlPassword",
-            "type": "string",
-            "label": "Password",
-            "required": true,
-            "groupName": "target",
-            "defaultValue": "",
-            "visibleRule": "AuthenticationType = server",
-            "helpMarkDown": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
-        },
-        {
-            "name": "aadSqlUsername",
-            "type": "string",
-            "label": "Login",
-            "required": true,
-            "groupName": "target",
-            "defaultValue": "",
-            "visibleRule": "AuthenticationType = aadAuthenticationPassword",
-            "helpMarkDown": "Specify the Active directory username."
-        },
-        {
-            "name": "aadSqlPassword",
-            "type": "string",
-            "label": "Password",
-            "required": true,
-            "groupName": "target",
-            "defaultValue": "",
-            "visibleRule": "AuthenticationType = aadAuthenticationPassword",
-            "helpMarkDown": "Password for the Active directory user.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
-        },
-        {
-            "name": "ConnectionString",
-            "type": "multiLine",
-            "label": "Connection String",
-            "required": true,
-            "groupName": "target",
-            "defaultValue": "",
-            "visibleRule": "AuthenticationType = connectionString",
-            "helpMarkDown": "Specify the Azure SQL Server connection string like \"Server=testServer.database.windows.net;Database=testdb;User ID=sqluser;Password=$(securePassword);\"."
-        },
-        {
-            "name": "TaskNameSelector",
-            "aliases": [
-                "deployType"
-            ],
-            "type": "pickList",
-            "label": "Deploy type",
-            "required": true,
-            "helpMarkDown": "",
-            "groupName": "taskDetails",
-            "defaultValue": "DacpacTask",
-            "options": {
-                "DacpacTask": "SQL DACPAC File",
-                "SqlTask": "SQL Script File",
-                "InlineSqlTask": "Inline SQL Script"
-            }
-        },
-        {
-            "name": "DeploymentAction",
-            "type": "picklist",
-            "label": "Action",
-            "required": true,
-            "groupName": "taskDetails",
-            "defaultValue": "Publish",
-            "options": {
-                "Publish": "Publish",
-                "Extract": "Extract",
-                "Export": "Export",
-                "Import": "Import",
-                "Script": "Script",
-                "DriftReport": "Drift Report",
-                "DeployReport": "Deploy Report"
-            },
-            "visibleRule": "TaskNameSelector = DacpacTask",
-            "helpMarkDown": "Choose one of the SQL Actions from the list. For more details refer <a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">link</a>.​"
-        },
-        {
-            "name": "DacpacFile",
-            "type": "filePath",
-            "label": "DACPAC File",
-            "required": true,
-            "groupName": "taskDetails",
-            "defaultValue": "",
-            "helpMarkDown": "Location of the DACPAC file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
-            "visibleRule": "DeploymentAction = Publish || DeploymentAction = Script || DeploymentAction = DeployReport"
-        },
-        {
-            "name": "BacpacFile",
-            "type": "filePath",
-            "label": "BACPAC File",
-            "required": true,
-            "groupName": "taskDetails",
-            "defaultValue": "",
-            "helpMarkDown": "Location of the BACPAC file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.bacpac. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
-            "visibleRule": "DeploymentAction = Import"
-        },
-        {
-            "name": "SqlFile",
-            "type": "filePath",
-            "label": "SQL Script",
-            "required": true,
-            "groupName": "taskDetails",
-            "defaultValue": "",
-            "helpMarkDown": "Location of the SQL script file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
-            "visibleRule": "TaskNameSelector = SqlTask"
-        },
-        {
-            "name": "SqlInline",
-            "type": "multiLine",
-            "label": "Inline SQL Script",
-            "required": true,
-            "groupName": "taskDetails",
-            "defaultValue": "",
-            "helpMarkDown": "Enter the SQL script to execute on the Database selected above.",
-            "visibleRule": "TaskNameSelector = InlineSqlTask",
-            "properties": {
-                "resizable": "true",
-                "rows": "10"
-            }
-        },
-        {
-            "name": "PublishProfile",
-            "type": "filePath",
-            "label": "Publish Profile",
-            "required": false,
-            "groupName": "taskDetails",
-            "defaultValue": "",
-            "helpMarkDown": "Publish profile provides fine-grained control over Azure SQL Database creation or upgrades. Specify the path to the Publish profile XML file on the automation agent or on a UNC share. Predefined system variables like, $(agent.buildDirectory) or $(agent.releaseDirectory) can also be used here.",
-            "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Script || DeploymentAction = DeployReport"
-        },
-        {
-            "name": "AdditionalArguments",
-            "type": "string",
-            "label": "Additional SqlPackage.exe Arguments",
-            "required": false,
-            "groupName": "taskDetails",
-            "defaultValue": "",
-            "helpMarkDown": "Additional SqlPackage.exe arguments that will be applied when deploying the Azure SQL Database, in case DACPAC option is selected like, /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. These arguments will override the settings in the Publish profile XML file (if provided).",
-            "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Extract || DeploymentAction = Export || DeploymentAction = Import || DeploymentAction = Script || DeploymentAction = DeployReport || DeploymentAction = DriftReport"
-        },
-        {
-            "name": "SqlAdditionalArguments",
-            "type": "string",
-            "label": "Additional Invoke-Sqlcmd Arguments",
-            "required": false,
-            "groupName": "taskDetails",
-            "defaultValue": "",
-            "helpMarkDown": "Additional Invoke-Sqlcmd arguments that will be applied when executing the given SQL query on the Azure SQL Database like, -ConnectionTimeout 100 -OutputSqlErrors.",
-            "visibleRule": "TaskNameSelector = SqlTask"
-        },
-        {
-            "name": "InlineAdditionalArguments",
-            "type": "string",
-            "label": "Additional Invoke-Sqlcmd Arguments",
-            "required": false,
-            "groupName": "taskDetails",
-            "defaultValue": "",
-            "helpMarkDown": "Additional Invoke-Sqlcmd arguments that will be applied when executing the given SQL query on the Azure SQL Database like, -ConnectionTimeout 100 -OutputSqlErrors",
-            "visibleRule": "TaskNameSelector = InlineSqlTask"
-        },
-        {
-            "name": "IpDetectionMethod",
-            "type": "pickList",
-            "label": "Specify Firewall Rules Using",
-            "required": true,
-            "groupName": "firewall",
-            "defaultValue": "AutoDetect",
-            "options": {
-                "AutoDetect": "AutoDetect",
-                "IPAddressRange": "IPAddressRange"
-            },
-            "helpMarkDown": "For the task to run, the IP Address of the automation agent has to be added to the 'Allowed IP Addresses' in the Azure SQL Server's Firewall. Select auto-detect to automatically add firewall exception for range of possible IP Address of automation agent or specify the range explicitly."
-        },
-        {
-            "name": "StartIpAddress",
-            "type": "string",
-            "label": "Start IP Address",
-            "required": true,
-            "groupName": "firewall",
-            "defaultValue": "",
-            "visibleRule": "IpDetectionMethod = IPAddressRange",
-            "helpMarkDown": "The starting IP Address of the automation agent machine pool like 196.21.30.50."
-        },
-        {
-            "name": "EndIpAddress",
-            "type": "string",
-            "label": "End IP Address",
-            "required": true,
-            "groupName": "firewall",
-            "defaultValue": "",
-            "visibleRule": "IpDetectionMethod = IPAddressRange",
-            "helpMarkDown": "The ending IP Address of the automation agent machine pool like 196.21.30.65."
-        },
-        {
-            "name": "DeleteFirewallRule",
-            "type": "boolean",
-            "label": "Delete Rule After Task Ends",
-            "required": false,
-            "groupName": "firewall",
-            "defaultValue": "true",
-            "helpMarkDown": "If selected, then after the task ends, the IP Addresses specified here are deleted from the 'Allowed IP Addresses' list of the Azure SQL Server's Firewall."
-        }
-    ],
-    "outputVariables": [
-        {
-            "name": "SqlDeploymentOutputFile",
-            "description": "Generated output file path when deployment package action is either of Extract, Export, Script, Drift Report, Deploy Report."
-        }
-    ],
-    "instanceNameFormat": "Azure SQL $(TaskNameSelector)",
-    "execution": {
-        "PowerShell3": {
-            "target": "DeploySqlAzure.ps1"
-        }
+    {
+      "name": "taskDetails",
+      "displayName": "Deployment Package",
+      "isExpanded": true
     },
-    "messages": {
-        "SAD_InvalidServerAddress": "Either the IP address mentioned is not a valid IPv4 address or SQL database server '{0}' does not exist.",
-        "SAD_ServerNotFound": "SQL database server '{0}' was not found.",
-        "SAD_InvalidIPv4Address": "The IP address mentioned is not a valid IPv4 address.",
-        "SAD_FoundMoreFiles": "Found more than one file to deploy with search pattern {0}. There can be only one.",
-        "SAD_NoFilesMatch": "No files were found to deploy with search pattern {0}",
-        "SAD_InvalidDacpacFile": "Invalid DACPAC file provided: '{0}'",
-        "SAD_InvalidAuthenticationInputs": "Invalid authentication inputs. Failed to detect authentication type.",
-        "SAD_InvalidSqlFile": "Invalid SQL file provided: '{0}'",
-        "SAD_NoPassword": "No password specified for the SQL User: '{0}'",
-        "SAD_InvalidPublishProfile": "Invalid publish profile provided: '{0}'",
-        "SAD_InvalidServerNameFormat": "Server name '{0}' is not in the correct format. Use a fully qualified domain name format like '{1}'",
-        "SAD_AzureSQLDacpacTaskFailed": "The Azure SQL DACPAC task failed. SqlPackage.exe exited with code {0}.",
-        "SAD_TroubleshootingLink": "Check out how to troubleshoot failures at https://aka.ms/sqlazuredeployreadme#troubleshooting-",
-        "SAD_InvalidDeploymentAction": "Invalid deployment action: {0}",
-        "SAD_InvalidDeploymentActionForSQLOperations": "Invalid deployment action: {0}. For SQL query operations, deployment actions should be set to value `Publish`.",
-        "SAD_SetOutputVariable": "Setting output variable '{0}' to '{1}'",
-        "SAD_TemporaryInlineSqlFile": "Temporary inline SQL file: {0}",
-        "SAD_GeneratedFile": "Generated file {0}. Uploading file to the logs.",
-        "SAD_InvalidPublishOption": "Invalid option selected for the publish action: {0}",
-        "SAD_DacpacFilePath": "DACPAC file path:",
-        "SAD_BacpacFilePath": "BACPAC file path:",
-        "SAD_PublishProfilePath": "Publish profile path:",
-        "SAD_DriftReportWarning": "While generating a Drift Report of the database, ensure that the database is registered as a Data-tier Application.",
-        "SAD_InvokeSQLCmdNotSupportingConnectionString": "Imported Invoke-Sqlcmd doesn't support connectionString. Install SQLServer PS module.",
-        "SAD_NoServerSpecified": "No server specified. Please specify a source or a target server."
+    {
+      "name": "firewall",
+      "displayName": "Firewall",
+      "isExpanded": false
     }
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceNameSelector",
+      "aliases": [
+        "azureConnectionType"
+      ],
+      "type": "pickList",
+      "label": "Azure Service Connection Type",
+      "required": false,
+      "helpMarkDown": "",
+      "defaultValue": "ConnectedServiceNameARM",
+      "options": {
+        "ConnectedServiceName": "Azure Classic",
+        "ConnectedServiceNameARM": "Azure Resource Manager"
+      }
+    },
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureClassicSubscription"
+      ],
+      "type": "connectedService:Azure",
+      "label": "Azure Classic Subscription",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Target Azure Classic subscription for deploying SQL files",
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+    },
+    {
+      "name": "ConnectedServiceNameARM",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure Subscription",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Target Azure Resource Manager subscription for deploying SQL files",
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
+    },
+    {
+      "name": "AuthenticationType",
+      "type": "pickList",
+      "label": "Authentication Type",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "server",
+      "options": {
+        "server": "SQL Server Authentication",
+        "aadAuthenticationPassword": "Active Directory - Password",
+        "aadAuthenticationIntegrated": "Active Directory - Integrated",
+        "connectionString": "Connection String",
+        "servicePrincipal": "Service Principal"
+      },
+      "helpMarkDown": "Specify the option to connect to the Azure SQL Server Database. The options are either to provide the Azure SQL Server Database details, or the SQL Server connection string, or AAD Authentication password or integrated or use a Service Principal. For SQL server authentication, use SQL server's user credentials and for AD authentication, use credentials of AD user configured to SQL server."
+    },
+    {
+      "name": "ServerName",
+      "type": "string",
+      "label": "Azure SQL Server",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated || AuthenticationType = servicePrincipal",
+      "helpMarkDown": "Azure SQL Server name, like Fabrikam.database.windows.net,1433 or Fabrikam.database.windows.net."
+    },
+    {
+      "name": "DatabaseName",
+      "type": "string",
+      "label": "Database",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated || AuthenticationType = servicePrincipal",
+      "helpMarkDown": "Name of the Azure SQL Database, where the files will be deployed."
+    },
+    {
+      "name": "SqlUsername",
+      "type": "string",
+      "label": "Login",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "AuthenticationType = server",
+      "helpMarkDown": "Specify the Azure SQL Server administrator login."
+    },
+    {
+      "name": "SqlPassword",
+      "type": "string",
+      "label": "Password",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "AuthenticationType = server",
+      "helpMarkDown": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
+    },
+    {
+      "name": "aadSqlUsername",
+      "type": "string",
+      "label": "Login",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "AuthenticationType = aadAuthenticationPassword",
+      "helpMarkDown": "Specify the Active directory username."
+    },
+    {
+      "name": "aadSqlPassword",
+      "type": "string",
+      "label": "Password",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "AuthenticationType = aadAuthenticationPassword",
+      "helpMarkDown": "Password for the Active directory user.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
+    },
+    {
+      "name": "ConnectionString",
+      "type": "multiLine",
+      "label": "Connection String",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "AuthenticationType = connectionString",
+      "helpMarkDown": "Specify the Azure SQL Server connection string like \"Server=testServer.database.windows.net;Database=testdb;User ID=sqluser;Password=$(securePassword);\"."
+    },
+    {
+      "name": "TaskNameSelector",
+      "aliases": [
+        "deployType"
+      ],
+      "type": "pickList",
+      "label": "Deploy type",
+      "required": true,
+      "helpMarkDown": "",
+      "groupName": "taskDetails",
+      "defaultValue": "DacpacTask",
+      "options": {
+        "DacpacTask": "SQL DACPAC File",
+        "SqlTask": "SQL Script File",
+        "InlineSqlTask": "Inline SQL Script"
+      }
+    },
+    {
+      "name": "DeploymentAction",
+      "type": "picklist",
+      "label": "Action",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "Publish",
+      "options": {
+        "Publish": "Publish",
+        "Extract": "Extract",
+        "Export": "Export",
+        "Import": "Import",
+        "Script": "Script",
+        "DriftReport": "Drift Report",
+        "DeployReport": "Deploy Report"
+      },
+      "visibleRule": "TaskNameSelector = DacpacTask",
+      "helpMarkDown": "Choose one of the SQL Actions from the list. For more details refer <a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">link</a>.​"
+    },
+    {
+      "name": "DacpacFile",
+      "type": "filePath",
+      "label": "DACPAC File",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "Location of the DACPAC file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
+      "visibleRule": "DeploymentAction = Publish || DeploymentAction = Script || DeploymentAction = DeployReport"
+    },
+    {
+      "name": "BacpacFile",
+      "type": "filePath",
+      "label": "BACPAC File",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "Location of the BACPAC file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.bacpac. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
+      "visibleRule": "DeploymentAction = Import"
+    },
+    {
+      "name": "SqlFile",
+      "type": "filePath",
+      "label": "SQL Script",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "Location of the SQL script file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
+      "visibleRule": "TaskNameSelector = SqlTask"
+    },
+    {
+      "name": "SqlInline",
+      "type": "multiLine",
+      "label": "Inline SQL Script",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "Enter the SQL script to execute on the Database selected above.",
+      "visibleRule": "TaskNameSelector = InlineSqlTask",
+      "properties": {
+        "resizable": "true",
+        "rows": "10"
+      }
+    },
+    {
+      "name": "PublishProfile",
+      "type": "filePath",
+      "label": "Publish Profile",
+      "required": false,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "Publish profile provides fine-grained control over Azure SQL Database creation or upgrades. Specify the path to the Publish profile XML file on the automation agent or on a UNC share. Predefined system variables like, $(agent.buildDirectory) or $(agent.releaseDirectory) can also be used here.",
+      "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Script || DeploymentAction = DeployReport"
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "string",
+      "label": "Additional SqlPackage.exe Arguments",
+      "required": false,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "Additional SqlPackage.exe arguments that will be applied when deploying the Azure SQL Database, in case DACPAC option is selected like, /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. These arguments will override the settings in the Publish profile XML file (if provided).",
+      "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Extract || DeploymentAction = Export || DeploymentAction = Import || DeploymentAction = Script || DeploymentAction = DeployReport || DeploymentAction = DriftReport"
+    },
+    {
+      "name": "SqlAdditionalArguments",
+      "type": "string",
+      "label": "Additional Invoke-Sqlcmd Arguments",
+      "required": false,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "Additional Invoke-Sqlcmd arguments that will be applied when executing the given SQL query on the Azure SQL Database like, -ConnectionTimeout 100 -OutputSqlErrors.",
+      "visibleRule": "TaskNameSelector = SqlTask"
+    },
+    {
+      "name": "InlineAdditionalArguments",
+      "type": "string",
+      "label": "Additional Invoke-Sqlcmd Arguments",
+      "required": false,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "Additional Invoke-Sqlcmd arguments that will be applied when executing the given SQL query on the Azure SQL Database like, -ConnectionTimeout 100 -OutputSqlErrors",
+      "visibleRule": "TaskNameSelector = InlineSqlTask"
+    },
+    {
+      "name": "IpDetectionMethod",
+      "type": "pickList",
+      "label": "Specify Firewall Rules Using",
+      "required": true,
+      "groupName": "firewall",
+      "defaultValue": "AutoDetect",
+      "options": {
+        "AutoDetect": "AutoDetect",
+        "IPAddressRange": "IPAddressRange"
+      },
+      "helpMarkDown": "For the task to run, the IP Address of the automation agent has to be added to the 'Allowed IP Addresses' in the Azure SQL Server's Firewall. Select auto-detect to automatically add firewall exception for range of possible IP Address of automation agent or specify the range explicitly."
+    },
+    {
+      "name": "StartIpAddress",
+      "type": "string",
+      "label": "Start IP Address",
+      "required": true,
+      "groupName": "firewall",
+      "defaultValue": "",
+      "visibleRule": "IpDetectionMethod = IPAddressRange",
+      "helpMarkDown": "The starting IP Address of the automation agent machine pool like 196.21.30.50."
+    },
+    {
+      "name": "EndIpAddress",
+      "type": "string",
+      "label": "End IP Address",
+      "required": true,
+      "groupName": "firewall",
+      "defaultValue": "",
+      "visibleRule": "IpDetectionMethod = IPAddressRange",
+      "helpMarkDown": "The ending IP Address of the automation agent machine pool like 196.21.30.65."
+    },
+    {
+      "name": "DeleteFirewallRule",
+      "type": "boolean",
+      "label": "Delete Rule After Task Ends",
+      "required": false,
+      "groupName": "firewall",
+      "defaultValue": "true",
+      "helpMarkDown": "If selected, then after the task ends, the IP Addresses specified here are deleted from the 'Allowed IP Addresses' list of the Azure SQL Server's Firewall."
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "SqlDeploymentOutputFile",
+      "description": "Generated output file path when deployment package action is either of Extract, Export, Script, Drift Report, Deploy Report."
+    }
+  ],
+  "instanceNameFormat": "Azure SQL $(TaskNameSelector)",
+  "execution": {
+    "PowerShell3": {
+      "target": "DeploySqlAzure.ps1"
+    }
+  },
+  "messages": {
+    "SAD_InvalidServerAddress": "Either the IP address mentioned is not a valid IPv4 address or SQL database server '{0}' does not exist.",
+    "SAD_ServerNotFound": "SQL database server '{0}' was not found.",
+    "SAD_InvalidIPv4Address": "The IP address mentioned is not a valid IPv4 address.",
+    "SAD_FoundMoreFiles": "Found more than one file to deploy with search pattern {0}. There can be only one.",
+    "SAD_NoFilesMatch": "No files were found to deploy with search pattern {0}",
+    "SAD_InvalidDacpacFile": "Invalid DACPAC file provided: '{0}'",
+    "SAD_InvalidAuthenticationInputs": "Invalid authentication inputs. Failed to detect authentication type.",
+    "SAD_InvalidSqlFile": "Invalid SQL file provided: '{0}'",
+    "SAD_NoPassword": "No password specified for the SQL User: '{0}'",
+    "SAD_InvalidPublishProfile": "Invalid publish profile provided: '{0}'",
+    "SAD_InvalidServerNameFormat": "Server name '{0}' is not in the correct format. Use a fully qualified domain name format like '{1}'",
+    "SAD_AzureSQLDacpacTaskFailed": "The Azure SQL DACPAC task failed. SqlPackage.exe exited with code {0}.",
+    "SAD_TroubleshootingLink": "Check out how to troubleshoot failures at https://aka.ms/sqlazuredeployreadme#troubleshooting-",
+    "SAD_InvalidDeploymentAction": "Invalid deployment action: {0}",
+    "SAD_InvalidDeploymentActionForSQLOperations": "Invalid deployment action: {0}. For SQL query operations, deployment actions should be set to value `Publish`.",
+    "SAD_SetOutputVariable": "Setting output variable '{0}' to '{1}'",
+    "SAD_TemporaryInlineSqlFile": "Temporary inline SQL file: {0}",
+    "SAD_GeneratedFile": "Generated file {0}. Uploading file to the logs.",
+    "SAD_InvalidPublishOption": "Invalid option selected for the publish action: {0}",
+    "SAD_DacpacFilePath": "DACPAC file path:",
+    "SAD_BacpacFilePath": "BACPAC file path:",
+    "SAD_PublishProfilePath": "Publish profile path:",
+    "SAD_DriftReportWarning": "While generating a Drift Report of the database, ensure that the database is registered as a Data-tier Application.",
+    "SAD_InvokeSQLCmdNotSupportingConnectionString": "Imported Invoke-Sqlcmd doesn't support connectionString. Install SQLServer PS module.",
+    "SAD_NoServerSpecified": "No server specified. Please specify a source or a target server."
+  }
 }

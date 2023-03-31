@@ -8,13 +8,12 @@ namespace BuildConfigGen
 
     internal class Knob
     {
-        public static readonly Knob Default = new Knob { SourceDirectoriesMustContainPlaceHolders = false, EnableBuildConfigOverrides = false };
+        public static readonly Knob Default = new Knob { SourceDirectoriesMustContainPlaceHolders = false };
 
         // when true, Source Directories must contain _buildConfigs placeholders for each build config
         // _buildConfigs are written to each directory when --write-updates is specified
         // setting to false for now so we're not forced to check in a lot of placeholders to tasks that don't use them
         public bool SourceDirectoriesMustContainPlaceHolders { get; init; }
-        public bool EnableBuildConfigOverrides { get; init; }
     }
 
     internal class Program
@@ -25,13 +24,13 @@ namespace BuildConfigGen
 
         static class Config
         {
-            public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".ps1", ".json" };
+            public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".json" };
 
-            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode16, bool isWif, string preprocessorVariableName);
+            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode16, bool isWif, string preprocessorVariableName, bool enableBuildConfigOverrides);
 
-            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode16: false, isWif: false, preprocessorVariableName: "DEFAULT");
-            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode16: true, isWif: false, preprocessorVariableName: "NODE16");
-            public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode16: true, isWif: true, preprocessorVariableName: "WORKLOADIDENTITYFEDERATION");
+            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode16: false, isWif: false, preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false);
+            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode16: true, isWif: false, preprocessorVariableName: "NODE16", enableBuildConfigOverrides: false);
+            public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode16: false, isWif: true, preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true);
 
             public static ConfigRecord[] Configs = { Default, Node16, WorkloadIdentityFederation };
         }
@@ -49,7 +48,10 @@ namespace BuildConfigGen
             // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
             // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
 
-            Main3(task, configs, writeUpdates);
+            foreach (var t in task.Split(','))
+            {
+                Main3(t, configs, writeUpdates);
+            }
         }
 
         private static void Main3(string task, string configsString, bool writeUpdates)
@@ -127,18 +129,21 @@ namespace BuildConfigGen
             string taskHandler = Path.Combine(taskTargetPath, "task.json");
             JsonNode taskHandlerContents = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(taskHandler))!;
 
-            // Task may not have nodejs or packages.json (example: AutomatedAnalysisV0) 
-            if (!hasNodeHandler(taskHandlerContents))
+            if (targetConfigs.Any(x => x.isNode16))
             {
-                Console.WriteLine($"Skipping {task} because task doesn't have node handler does not exist");
-                return;
-            }
+                // Task may not have nodejs or packages.json (example: AutomatedAnalysisV0) 
+                if (!hasNodeHandler(taskHandlerContents))
+                {
+                    Console.WriteLine($"Skipping {task} because task doesn't have node handler does not exist");
+                    return;
+                }
 
-            // If target task already has node16 handlers, skip it
-            if (taskHandlerContents["execution"]!["Node16"] != null)
-            {
-                Console.WriteLine($"Skipping {task} because it already has a Node16 handler");
-                return;
+                // If target task already has node16 handlers, skip it
+                if (taskHandlerContents["execution"]!["Node16"] != null)
+                {
+                    Console.WriteLine($"Skipping {task} because it already has a Node16 handler");
+                    return;
+                }
             }
 
             // Create _generated
@@ -162,7 +167,7 @@ namespace BuildConfigGen
                     taskOutput = Path.Combine(gitRootPath, "_generated", @$"{task}_{config.name}");
                 }
 
-                if (Knob.Default.EnableBuildConfigOverrides)
+                if (config.enableBuildConfigOverrides)
                 {
                     EnsureBuildConfigFileOverrides(config, taskTargetPath);
                 }
@@ -171,7 +176,7 @@ namespace BuildConfigGen
 
 
 
-                if (Knob.Default.EnableBuildConfigOverrides)
+                if (config.enableBuildConfigOverrides)
                 {
                     CopyConfigOverrides(taskTargetPath, taskOutput, config);
                 }
@@ -197,9 +202,9 @@ namespace BuildConfigGen
 
         private static void EnsureBuildConfigFileOverrides(Config.ConfigRecord config, string taskTargetPath)
         {
-            if(!Knob.Default.EnableBuildConfigOverrides)
+            if(!config.enableBuildConfigOverrides)
             {
-                throw new Exception("BUG: should not get here: !Knob.Default.EnableBuildConfigOverrides");
+                throw new Exception("BUG: should not get here: !config.enableBuildConfigOverrides");
             }
 
             string path, readmeFile;
@@ -215,9 +220,9 @@ namespace BuildConfigGen
 
         private static void GetBuildConfigFileOverridePaths(Config.ConfigRecord config, string taskTargetPath, out string path, out string readmeFile)
         {
-            if (!Knob.Default.EnableBuildConfigOverrides)
+            if (!config.enableBuildConfigOverrides)
             {
-                throw new Exception("BUG: should not get here: !Knob.Default.EnableBuildConfigOverrides");
+                throw new Exception("BUG: should not get here: !config.enableBuildConfigOverrides");
             }
 
             path = Path.Combine(taskTargetPath, buildConfigs, config.name);
@@ -226,9 +231,9 @@ namespace BuildConfigGen
 
         private static void CopyConfigOverrides(string taskTargetPath, string taskOutput, Config.ConfigRecord config)
         {
-            if (!Knob.Default.EnableBuildConfigOverrides)
+            if (!config.enableBuildConfigOverrides)
             {
-                throw new Exception("BUG: should not get here: !Knob.Default.EnableBuildConfigOverrides");
+                throw new Exception("BUG: should not get here: !config.enableBuildConfigOverrides");
             }
 
             string overridePathForBuildConfig;
@@ -274,9 +279,9 @@ namespace BuildConfigGen
                 }
                 else
                 {
-                    if (!Knob.Default.EnableBuildConfigOverrides)
+                    if (!config.enableBuildConfigOverrides)
                     {
-                        throw new Exception("BUG: should not get here: !Knob.Default.EnableBuildConfigOverrides");
+                        throw new Exception("BUG: should not get here: !config.enableBuildConfigOverrides");
                     }
 
                     Console.WriteLine($"Checking if {file} has preprocessor directives ...");
@@ -390,9 +395,9 @@ namespace BuildConfigGen
                 }
                 else
                 {
-                    if (!Knob.Default.EnableBuildConfigOverrides)
+                    if (!config.enableBuildConfigOverrides)
                     {
-                        throw new Exception("BUG: should not get here: !Knob.Default.EnableBuildConfigOverrides");
+                        throw new Exception("BUG: should not get here: !config.enableBuildConfigOverrides");
                     }
 
                     PreprocessIfExtensionEnabledInConfig(sourcePath, config, validateAndWriteChanges: false, out bool hasPreprocessorDirectives);

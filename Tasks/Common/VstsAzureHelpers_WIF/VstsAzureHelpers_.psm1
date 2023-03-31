@@ -13,6 +13,10 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
 
 [System.Net.WebRequest]::DefaultWebProxy = Get-VstsWebProxy
 
+if(-not (Get-Module -Name "Microsoft.PowerShell.Security"))
+{
+    Import-Module -Name Microsoft.PowerShell.Security
+}
 Import-Module $PSScriptRoot/../TlsHelper_
 Add-Tls12InSession
 

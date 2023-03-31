@@ -1,0 +1,375 @@
+{
+  "id": "CE85A08B-A538-4D2B-8589-1D37A9AB970F",
+  "name": "SqlAzureDacpacDeployment",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/sql-azure-dacpac-deployment",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 220,
+    "Patch": 1
+  },
+  "demands": [
+    "sqlpackage"
+  ],
+  "minimumAgentVersion": "1.103.0",
+  "groups": [
+    {
+      "name": "target",
+      "displayName": "ms-resource:loc.group.displayName.target",
+      "isExpanded": true
+    },
+    {
+      "name": "taskDetails",
+      "displayName": "ms-resource:loc.group.displayName.taskDetails",
+      "isExpanded": true
+    },
+    {
+      "name": "firewall",
+      "displayName": "ms-resource:loc.group.displayName.firewall",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceNameSelector",
+      "aliases": [
+        "azureConnectionType"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ConnectedServiceNameSelector",
+      "required": false,
+      "helpMarkDown": "",
+      "defaultValue": "ConnectedServiceNameARM",
+      "options": {
+        "ConnectedServiceName": "Azure Classic",
+        "ConnectedServiceNameARM": "Azure Resource Manager"
+      }
+    },
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureClassicSubscription"
+      ],
+      "type": "connectedService:Azure",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+    },
+    {
+      "name": "ConnectedServiceNameARM",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM",
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
+    },
+    {
+      "name": "AuthenticationType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AuthenticationType",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "server",
+      "options": {
+        "server": "SQL Server Authentication",
+        "aadAuthenticationPassword": "Active Directory - Password",
+        "aadAuthenticationIntegrated": "Active Directory - Integrated",
+        "connectionString": "Connection String",
+        "servicePrincipal": "Service Principal"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.AuthenticationType"
+    },
+    {
+      "name": "ServerName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ServerName",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated || AuthenticationType = servicePrincipal",
+      "helpMarkDown": "ms-resource:loc.input.help.ServerName"
+    },
+    {
+      "name": "DatabaseName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DatabaseName",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated || AuthenticationType = servicePrincipal",
+      "helpMarkDown": "ms-resource:loc.input.help.DatabaseName"
+    },
+    {
+      "name": "SqlUsername",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SqlUsername",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "AuthenticationType = server",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlUsername"
+    },
+    {
+      "name": "SqlPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SqlPassword",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "AuthenticationType = server",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"
+    },
+    {
+      "name": "aadSqlUsername",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.aadSqlUsername",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "AuthenticationType = aadAuthenticationPassword",
+      "helpMarkDown": "ms-resource:loc.input.help.aadSqlUsername"
+    },
+    {
+      "name": "aadSqlPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.aadSqlPassword",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "AuthenticationType = aadAuthenticationPassword",
+      "helpMarkDown": "ms-resource:loc.input.help.aadSqlPassword"
+    },
+    {
+      "name": "ConnectionString",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.ConnectionString",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "AuthenticationType = connectionString",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectionString"
+    },
+    {
+      "name": "TaskNameSelector",
+      "aliases": [
+        "deployType"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.TaskNameSelector",
+      "required": true,
+      "helpMarkDown": "",
+      "groupName": "taskDetails",
+      "defaultValue": "DacpacTask",
+      "options": {
+        "DacpacTask": "SQL DACPAC File",
+        "SqlTask": "SQL Script File",
+        "InlineSqlTask": "Inline SQL Script"
+      }
+    },
+    {
+      "name": "DeploymentAction",
+      "type": "picklist",
+      "label": "ms-resource:loc.input.label.DeploymentAction",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "Publish",
+      "options": {
+        "Publish": "Publish",
+        "Extract": "Extract",
+        "Export": "Export",
+        "Import": "Import",
+        "Script": "Script",
+        "DriftReport": "Drift Report",
+        "DeployReport": "Deploy Report"
+      },
+      "visibleRule": "TaskNameSelector = DacpacTask",
+      "helpMarkDown": "ms-resource:loc.input.help.DeploymentAction"
+    },
+    {
+      "name": "DacpacFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.DacpacFile",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.DacpacFile",
+      "visibleRule": "DeploymentAction = Publish || DeploymentAction = Script || DeploymentAction = DeployReport"
+    },
+    {
+      "name": "BacpacFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.BacpacFile",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.BacpacFile",
+      "visibleRule": "DeploymentAction = Import"
+    },
+    {
+      "name": "SqlFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SqlFile",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlFile",
+      "visibleRule": "TaskNameSelector = SqlTask"
+    },
+    {
+      "name": "SqlInline",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.SqlInline",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlInline",
+      "visibleRule": "TaskNameSelector = InlineSqlTask",
+      "properties": {
+        "resizable": "true",
+        "rows": "10"
+      }
+    },
+    {
+      "name": "PublishProfile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.PublishProfile",
+      "required": false,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.PublishProfile",
+      "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Script || DeploymentAction = DeployReport"
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdditionalArguments",
+      "required": false,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments",
+      "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Extract || DeploymentAction = Export || DeploymentAction = Import || DeploymentAction = Script || DeploymentAction = DeployReport || DeploymentAction = DriftReport"
+    },
+    {
+      "name": "SqlAdditionalArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SqlAdditionalArguments",
+      "required": false,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlAdditionalArguments",
+      "visibleRule": "TaskNameSelector = SqlTask"
+    },
+    {
+      "name": "InlineAdditionalArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.InlineAdditionalArguments",
+      "required": false,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.InlineAdditionalArguments",
+      "visibleRule": "TaskNameSelector = InlineSqlTask"
+    },
+    {
+      "name": "IpDetectionMethod",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.IpDetectionMethod",
+      "required": true,
+      "groupName": "firewall",
+      "defaultValue": "AutoDetect",
+      "options": {
+        "AutoDetect": "AutoDetect",
+        "IPAddressRange": "IPAddressRange"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.IpDetectionMethod"
+    },
+    {
+      "name": "StartIpAddress",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.StartIpAddress",
+      "required": true,
+      "groupName": "firewall",
+      "defaultValue": "",
+      "visibleRule": "IpDetectionMethod = IPAddressRange",
+      "helpMarkDown": "ms-resource:loc.input.help.StartIpAddress"
+    },
+    {
+      "name": "EndIpAddress",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.EndIpAddress",
+      "required": true,
+      "groupName": "firewall",
+      "defaultValue": "",
+      "visibleRule": "IpDetectionMethod = IPAddressRange",
+      "helpMarkDown": "ms-resource:loc.input.help.EndIpAddress"
+    },
+    {
+      "name": "DeleteFirewallRule",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.DeleteFirewallRule",
+      "required": false,
+      "groupName": "firewall",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.DeleteFirewallRule"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "SqlDeploymentOutputFile",
+      "description": "Generated output file path when deployment package action is either of Extract, Export, Script, Drift Report, Deploy Report."
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell3": {
+      "target": "DeploySqlAzure.ps1"
+    }
+  },
+  "messages": {
+    "SAD_InvalidServerAddress": "ms-resource:loc.messages.SAD_InvalidServerAddress",
+    "SAD_ServerNotFound": "ms-resource:loc.messages.SAD_ServerNotFound",
+    "SAD_InvalidIPv4Address": "ms-resource:loc.messages.SAD_InvalidIPv4Address",
+    "SAD_FoundMoreFiles": "ms-resource:loc.messages.SAD_FoundMoreFiles",
+    "SAD_NoFilesMatch": "ms-resource:loc.messages.SAD_NoFilesMatch",
+    "SAD_InvalidDacpacFile": "ms-resource:loc.messages.SAD_InvalidDacpacFile",
+    "SAD_InvalidAuthenticationInputs": "ms-resource:loc.messages.SAD_InvalidAuthenticationInputs",
+    "SAD_InvalidSqlFile": "ms-resource:loc.messages.SAD_InvalidSqlFile",
+    "SAD_NoPassword": "ms-resource:loc.messages.SAD_NoPassword",
+    "SAD_InvalidPublishProfile": "ms-resource:loc.messages.SAD_InvalidPublishProfile",
+    "SAD_InvalidServerNameFormat": "ms-resource:loc.messages.SAD_InvalidServerNameFormat",
+    "SAD_AzureSQLDacpacTaskFailed": "ms-resource:loc.messages.SAD_AzureSQLDacpacTaskFailed",
+    "SAD_TroubleshootingLink": "ms-resource:loc.messages.SAD_TroubleshootingLink",
+    "SAD_InvalidDeploymentAction": "ms-resource:loc.messages.SAD_InvalidDeploymentAction",
+    "SAD_InvalidDeploymentActionForSQLOperations": "ms-resource:loc.messages.SAD_InvalidDeploymentActionForSQLOperations",
+    "SAD_SetOutputVariable": "ms-resource:loc.messages.SAD_SetOutputVariable",
+    "SAD_TemporaryInlineSqlFile": "ms-resource:loc.messages.SAD_TemporaryInlineSqlFile",
+    "SAD_GeneratedFile": "ms-resource:loc.messages.SAD_GeneratedFile",
+    "SAD_InvalidPublishOption": "ms-resource:loc.messages.SAD_InvalidPublishOption",
+    "SAD_DacpacFilePath": "ms-resource:loc.messages.SAD_DacpacFilePath",
+    "SAD_BacpacFilePath": "ms-resource:loc.messages.SAD_BacpacFilePath",
+    "SAD_PublishProfilePath": "ms-resource:loc.messages.SAD_PublishProfilePath",
+    "SAD_DriftReportWarning": "ms-resource:loc.messages.SAD_DriftReportWarning",
+    "SAD_InvokeSQLCmdNotSupportingConnectionString": "ms-resource:loc.messages.SAD_InvokeSQLCmdNotSupportingConnectionString",
+    "SAD_NoServerSpecified": "ms-resource:loc.messages.SAD_NoServerSpecified"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.220.2",
+    "WorkloadIdentityFederation": "1.220.1"
+  }
+}

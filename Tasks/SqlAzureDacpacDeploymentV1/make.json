@@ -1,11 +1,19 @@
 {
     "common": [
         {
-            "module": "../Common/VstsAzureRestHelpers_",
+#if WORKLOADIDENTITYFEDERATION
+            "module": "../Common/VstsAzureHelpers_WIF",
+#else
+            "module": "../Common/VstsAzureHelpers_",
+#endif
             "type": "ps"
         },
         {
-            "module": "../Common/VstsAzureHelpers_",
+#if WORKLOADIDENTITYFEDERATION
+            "module": "../Common/VstsAzureRestHelpers_WIF",
+#else
+            "module": "../Common/VstsAzureRestHelpers_",
+#endif
             "type": "ps"
         },
         {

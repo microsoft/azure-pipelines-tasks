@@ -78,10 +78,6 @@ if ($validateScriptSignature) {
 $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
 $endpointObject = Get-VstsEndpoint -Name $serviceName -Require
 $endpoint = ConvertTo-Json $endpointObject
-#if WORKLOADIDENTITYFEDERATION
-$vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
-$vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
-#endif
 
 try 
 {
@@ -94,19 +90,13 @@ try
     }
 
     $CoreAzArgument = $null;
-#if WORKLOADIDENTITYFEDERATION
-    if ($targetAzurePs) {
-        $CoreAzArgument = "-endpoint '$endpoint' -targetAzurePs $targetAzurePs"
-    } else {
-        $CoreAzArgument = "-endpoint '$endpoint'"
-    }
-#else
+
     if ($targetAzurePs) {
         $CoreAzArgument = "-endpoint '$endpoint' -connectedServiceNameARM $serviceName -targetAzurePs $targetAzurePs -vstsAccessToken $vstsAccessToken"
     } else {
         $CoreAzArgument = "-endpoint '$endpoint' -connectedServiceNameARM $serviceName -vstsAccessToken $vstsAccessToken"
     }    
-#endif
+
     $contents += ". '$PSScriptRoot\CoreAz.ps1' $CoreAzArgument"
 
     if ($scriptType -eq "InlineScript") {
