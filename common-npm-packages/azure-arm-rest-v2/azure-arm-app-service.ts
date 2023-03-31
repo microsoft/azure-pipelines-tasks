@@ -14,7 +14,6 @@ import {
     ToError
 } from './AzureServiceClientBase';
 import constants = require('./constants');
-var parseString = require('xml2js').parseString;
 
 const CorrelationIdInResponse = "x-ms-correlation-request-id";
 

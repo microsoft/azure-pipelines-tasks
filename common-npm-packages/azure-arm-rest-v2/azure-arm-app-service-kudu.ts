@@ -23,7 +23,9 @@ export class KuduServiceManagementClient {
     public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions, contentType?: string): Promise<webClient.WebResponse> {
         request.headers = request.headers || {};
         request.headers["Authorization"] = "Basic " + this._accesssToken;
-        request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
+        if (!request.headers['Content-Type'] || !!contentType) {
+            request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
+        }
 
         if(!!this._cookie) {
             tl.debug(`setting affinity cookie ${JSON.stringify(this._cookie)}`);
