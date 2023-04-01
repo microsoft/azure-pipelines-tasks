@@ -171,7 +171,7 @@ export class StringWritable extends stream.Writable {
         this._parserCallback = parserCallback;
     }
 
-    _write(data: any, encoding: string, callback: Function): void {
+    _write(data: any, encoding: BufferEncoding, callback: Function): void {
         console.log(data.toString());
 
         if(!!this._parserCallback) {

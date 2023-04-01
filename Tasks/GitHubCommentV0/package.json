@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "main": "main.js",
   "dependencies": {
-    "@types/node": "^10.17.0",
     "@types/mocha": "^5.2.7",
+    "@types/node": "^16.11.39",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-task-lib": "3.0.6-preview.0",
-    "typed-rest-client": "1.5.0"
+    "azure-pipelines-task-lib": "^4.1.0",
+    "typed-rest-client": "^1.8.9"
   },
   "devDependencies": {
     "typescript": "4.0.2"

@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 219,
+    "Minor": 215,
     "Patch": 0
   },
   "demands": [],
@@ -344,6 +344,9 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {
+      "target": "src//kubernetes.js"
+    },
+    "Node16": {
       "target": "src//kubernetes.js"
     }
   },
