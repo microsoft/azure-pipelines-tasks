@@ -3,6 +3,7 @@ import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locati
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import * as tl from "azure-pipelines-task-lib";
 import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
+import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner";
 import * as universalDownload from "./universaldownload";
 import * as universalPublish from "./universalpublish";
 
@@ -42,14 +43,20 @@ async function main(): Promise<void> {
     } finally {
         _logUniversalStartupVariables(artifactToolPath);
     }
+
+    // Getting Artifact Tool Runner options
+    const execOptions = artifactToolRunner.getOptions();
+    execOptions.failOnStdErr = tl.getBoolInput("runnerFailOnStdErr") || false;
+    execOptions.ignoreReturnCode = tl.getBoolInput("runnerIgnoreReturnCode") || false;
+
     // Calling the command. download/publish
     const universalPackageCommand = tl.getInput("command", true);
     switch (universalPackageCommand) {
         case "download":
-            universalDownload.run(artifactToolPath);
+            universalDownload.run(artifactToolPath, execOptions);
             break;
         case "publish":
-            universalPublish.run(artifactToolPath);
+            universalPublish.run(artifactToolPath, execOptions);
             break;
         default:
             tl.setResult(tl.TaskResult.Failed, tl.loc("Error_CommandNotRecognized", universalPackageCommand));

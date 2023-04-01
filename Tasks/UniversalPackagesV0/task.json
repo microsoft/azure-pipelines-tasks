@@ -351,6 +351,22 @@
             }
         },
         {
+            "name": "runnerFailOnStdErr",
+            "groupName": "advanced",
+            "type": "boolean",
+            "label": "Runner - Fail on std err",
+            "defaultValue": false,
+            "helpMarkDown": "Whether to fail if output to stderr. Defaults to false."
+        },
+        {
+            "name": "runnerIgnoreReturnCode",
+            "groupName": "advanced",
+            "type": "boolean",
+            "label": "Runner - Ignore return code",
+            "defaultValue": false,
+            "helpMarkDown": "Defaults to failing on non zero. Ignore will not fail leaving it up to the caller."
+        },
+        {
             "name": "publishedPackageVar",
             "type": "string",
             "label": "Package Output Variable",

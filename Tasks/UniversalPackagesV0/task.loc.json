@@ -351,6 +351,22 @@
       }
     },
     {
+      "name": "runnerFailOnStdErr",
+      "groupName": "advanced",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runnerFailOnStdErr",
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runnerFailOnStdErr"
+    },
+    {
+      "name": "runnerIgnoreReturnCode",
+      "groupName": "advanced",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runnerIgnoreReturnCode",
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runnerIgnoreReturnCode"
+    },
+    {
       "name": "publishedPackageVar",
       "type": "string",
       "label": "ms-resource:loc.input.label.publishedPackageVar",

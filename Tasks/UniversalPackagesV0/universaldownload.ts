@@ -7,7 +7,11 @@ import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common/univ
 import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
 import * as auth from "azure-pipelines-tasks-packaging-common/universal/Authentication";
 
-export async function run(artifactToolPath: string): Promise<void> {
+export async function run(
+        artifactToolPath: string,
+        execOptions: IExecOptions
+    ): Promise<void> {
+    
     let buildIdentityDisplayName: string = null;
     let buildIdentityAccount: string = null;
     try {
@@ -36,8 +40,6 @@ export async function run(artifactToolPath: string): Promise<void> {
 
         let internalAuthInfo: auth.InternalAuthInfo;
 
-        let toolRunnerOptions = artifactToolRunner.getOptions();
-
         if (feedType === "internal") {
             // getting inputs
             serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
@@ -57,7 +59,7 @@ export async function run(artifactToolPath: string): Promise<void> {
 
             version = tl.getInput("versionListDownload");
 
-            toolRunnerOptions.env.UNIVERSAL_DOWNLOAD_PAT = internalAuthInfo.accessToken;
+            execOptions.env.UNIVERSAL_DOWNLOAD_PAT = internalAuthInfo.accessToken;
         }
         else {
             let externalAuthInfo = auth.GetExternalAuthInfo("externalEndpoint");
@@ -77,7 +79,7 @@ export async function run(artifactToolPath: string): Promise<void> {
 
             // Assuming only auth via PAT works for now
             const tokenAuth = externalAuthInfo as auth.TokenExternalAuthInfo;
-            toolRunnerOptions.env.UNIVERSAL_DOWNLOAD_PAT = tokenAuth.token;
+            execOptions.env.UNIVERSAL_DOWNLOAD_PAT = tokenAuth.token;
         }
 
         tl.debug(tl.loc("Info_UsingArtifactToolDownload"));
@@ -91,7 +93,7 @@ export async function run(artifactToolPath: string): Promise<void> {
             packageVersion: version,
         } as artifactToolRunner.IArtifactToolOptions;
 
-        downloadPackageUsingArtifactTool(downloadDir, downloadOptions, toolRunnerOptions);
+        downloadPackageUsingArtifactTool(downloadDir, downloadOptions, execOptions);
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesDownloadedSuccessfully"));
 

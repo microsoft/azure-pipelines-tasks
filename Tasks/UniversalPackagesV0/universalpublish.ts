@@ -12,7 +12,11 @@ import { logError } from 'azure-pipelines-tasks-packaging-common/util';
 const packageAlreadyExistsError = 17;
 const numRetries = 1;
 
-export async function run(artifactToolPath: string): Promise<void> {
+export async function run(
+        artifactToolPath: string,
+        execOptions: IExecOptions
+    ): Promise<void> {
+
     const buildIdentityDisplayName: string = null;
     const buildIdentityAccount: string = null;
     try {
@@ -46,8 +50,6 @@ export async function run(artifactToolPath: string): Promise<void> {
 
         let internalAuthInfo: auth.InternalAuthInfo;
 
-        const toolRunnerOptions = artifactToolRunner.getOptions();
-
         let sessionId: string;
 
         [serviceUri, packageName, feedId, projectId, accessToken] = authSetup(feedType);
@@ -55,7 +57,7 @@ export async function run(artifactToolPath: string): Promise<void> {
         if (feedType === "internal") {
             internalAuthInfo = new auth.InternalAuthInfo([], accessToken);
 
-            toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = internalAuthInfo.accessToken;
+            execOptions.env.UNIVERSAL_PUBLISH_PAT = internalAuthInfo.accessToken;
 
             let packagingLocation: string;
             try {
@@ -83,7 +85,7 @@ export async function run(artifactToolPath: string): Promise<void> {
                 return
             }
 
-            toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = accessToken;
+            execOptions.env.UNIVERSAL_PUBLISH_PAT = accessToken;
         }
 
         if (versionRadio === "custom") {
@@ -109,7 +111,7 @@ export async function run(artifactToolPath: string): Promise<void> {
             packageVersion: version,
         } as artifactToolRunner.IArtifactToolOptions;
 
-        execResult = publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
+        execResult = publishPackageUsingArtifactTool(publishDir, publishOptions, execOptions);
 
         var retries = 0;
         let newVersion: string;
@@ -119,7 +121,7 @@ export async function run(artifactToolPath: string): Promise<void> {
             [serviceUri, packageName, feedId, projectId, accessToken] = authSetup(feedType);
             if (feedType == "internal") {
                 internalAuthInfo = new auth.InternalAuthInfo([], accessToken);
-                toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = internalAuthInfo.accessToken;
+                execOptions.env.UNIVERSAL_PUBLISH_PAT = internalAuthInfo.accessToken;
             }
 
             else {
@@ -127,7 +129,7 @@ export async function run(artifactToolPath: string): Promise<void> {
                 if (!serviceUri) {
                     return
                 }
-                toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = accessToken;
+                execOptions.env.UNIVERSAL_PUBLISH_PAT = accessToken;
             }
 
             feedUri = await pkgLocationUtils.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
@@ -142,7 +144,7 @@ export async function run(artifactToolPath: string): Promise<void> {
                 packageVersion: newVersion,
             } as artifactToolRunner.IArtifactToolOptions;
             tl.debug(tl.loc("Info_PublishingRetry", publishOptions.packageName, version, newVersion));
-            execResult = publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
+            execResult = publishPackageUsingArtifactTool(publishDir, publishOptions, execOptions);
             version = newVersion;
             retries++;
         }
