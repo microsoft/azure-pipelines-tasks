@@ -16,11 +16,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 219,
+        "Minor": 215,
         "Patch": 0
     },
     "demands": [],
-    "minimumAgentVersion": "2.182.1",
+    "minimumAgentVersion": "2.144.0",
     "instanceNameFormat": "Publish code coverage from $(summaryFileLocation)",
     "inputs": [
         {
@@ -78,6 +78,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "publishcodecoverageresults.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "publishcodecoverageresults.js",
             "argumentFormat": ""
         }
