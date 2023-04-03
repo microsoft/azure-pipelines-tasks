@@ -28,9 +28,9 @@ namespace BuildConfigGen
 
             public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode16, bool isWif, string preprocessorVariableName, bool enableBuildConfigOverrides);
 
-            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode16: false, isWif: false, preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: true);
-            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode16: true, isWif: false, preprocessorVariableName: "NODE16", enableBuildConfigOverrides: false);
-            public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode16: false, isWif: true, preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true);
+            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode16: false, isWif: false, preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false);
+            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode16: true, isWif: false, preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true);
+            public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode16: true, isWif: true, preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true);
 
             public static ConfigRecord[] Configs = { Default, Node16, WorkloadIdentityFederation };
         }
@@ -140,13 +140,6 @@ namespace BuildConfigGen
                 if (!hasNodeHandler(taskHandlerContents))
                 {
                     Console.WriteLine($"Skipping {task} because task doesn't have node handler does not exist");
-                    return;
-                }
-
-                // If target task already has node16 handlers, skip it
-                if (taskHandlerContents["execution"]!["Node16"] != null)
-                {
-                    Console.WriteLine($"Skipping {task} because it already has a Node16 handler");
                     return;
                 }
             }
@@ -329,6 +322,8 @@ namespace BuildConfigGen
         {
             string outputTaskPath = Path.Combine(taskPath, fileName);
             JsonNode outputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputTaskPath))!;
+            outputTaskNode["version"]!["Major"] = configTaskVersionMapping[config].Major;
+            outputTaskNode["version"]!["Minor"] = configTaskVersionMapping[config].Minor;
             outputTaskNode["version"]!["Patch"] = configTaskVersionMapping[config].Patch;
             outputTaskNode.AsObject()?.Remove("_buildConfigMapping");
 
@@ -549,6 +544,8 @@ namespace BuildConfigGen
             string inputTaskPath = Path.Combine(taskTarget, fileName);
             JsonNode inputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(inputTaskPath))!;
 
+            inputTaskNode["version"]!["Major"] = configTaskVersion[Config.Default].Major;
+            inputTaskNode["version"]!["Minor"] = configTaskVersion[Config.Default].Minor;
             inputTaskNode["version"]!["Patch"] = configTaskVersion[Config.Default].Patch;
 
             ensureUpdateModeVerifier!.WriteAllText(inputTaskPath, inputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
@@ -653,7 +650,7 @@ namespace BuildConfigGen
 
             Console.Write($"Copy from={sourcePath} to={targetPath}...");
 
-            if (Helpers.FilesEqual(sourcePath, targetPath))
+            if (ensureUpdateModeVerifier!.FilesEqual(sourcePath, targetPath))
             {
                 Console.WriteLine("files same, skipping");
             }
