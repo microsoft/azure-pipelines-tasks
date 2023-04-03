@@ -81,6 +81,15 @@ if (argv.task) {
         .map(function (item) {
             return path.basename(item);
         });
+
+    // If base tasks was not found, try to find the task in the _generated tasks folder
+    if (taskList.length == 0) { 
+        taskList = matchFind(argv.task, genTaskPath, { noRecurse: true, matchBase: true })
+            .map(function (item) {
+                return path.basename(item);
+            });
+    }
+
     if (!taskList.length) {
         fail('Unable to find any tasks matching pattern ' + argv.task);
     }
@@ -883,7 +892,6 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
 
 CLI.gentask = function() {
     if (argv.rebuild) {
-        rm("-Rf", genTaskPath);
         rm("-Rf", path.join(baseConfigToolPath, "bin"));
     }
 
@@ -894,6 +902,12 @@ CLI.gentask = function() {
     if (argv.validate) {
         genTaskArg = "";
         tasksToGen = util.getTaskListForValidate(genTaskPath, taskList);
+    }
+
+    if (argv.config) {
+        genTaskArg += ` --configs ${argv.config} `;
+    } else {
+        genTaskArg += " --configs Node16 ";
     }
 
     if (tasksToGen.length == 0) {
