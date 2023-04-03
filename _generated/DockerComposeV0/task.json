@@ -338,10 +338,6 @@
     "Node10": {
       "target": "dockercompose.js",
       "argumentFormat": ""
-    },
-    "Node16": {
-      "target": "dockercompose.js",
-      "argumentFormat": ""
     }
   },
   "messages": {
