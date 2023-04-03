@@ -219,7 +219,7 @@ Below are a set of examples outlining how to use this task in different scenario
 ```yml
 steps:
 
-  - task: AzureContainerApps@0
+  - task: AzureContainerApps@1
     displayName: Build and deploy Container App
     inputs:
       connectedServiceNameARM: 'azure-subscription-service-connection'
@@ -237,7 +237,7 @@ the provided ACR instance.
 ```yml
 steps:
 
-  - task: AzureContainerApps@0
+  - task: AzureContainerApps@1
     displayName: Build and deploy Container App
     inputs:
       connectedServiceNameARM: 'azure-subscription-service-connection'
@@ -253,7 +253,7 @@ This will create a new Container App named `ado-task-app-<build-id>-<build-numbe
 ```yml
 steps:
 
-  - task: AzureContainerApps@0
+  - task: AzureContainerApps@1
     displayName: Build and deploy Container App
     inputs:
       yamlConfigPath: simple-image-container-app.yaml
@@ -289,7 +289,7 @@ resource ID of the **existing** Container App environment that the Container App
 ```yml
 steps:
 
-  - task: AzureContainerApps@0
+  - task: AzureContainerApps@1
     displayName: Build and deploy Container App
     inputs:
       connectedServiceNameARM: 'azure-subscription-service-connection'
@@ -309,7 +309,7 @@ to the ACR instance.
 ```yml
 steps:
 
-  - task: AzureContainerApps@0
+  - task: AzureContainerApps@1
     displayName: Build and deploy Container App
     inputs:
       connectedServiceNameARM: 'azure-subscription-service-connection'
@@ -326,7 +326,7 @@ This will create a new Container App named `my-test-container-app` in a new reso
 ```yml
 steps:
 
-  - task: AzureContainerApps@0
+  - task: AzureContainerApps@1
     displayName: Build and deploy Container App
     inputs:
       connectedServiceNameARM: 'azure-subscription-service-connection'
@@ -343,7 +343,7 @@ This will create a new Container App named `ado-task-app-<build-id>-<build-numbe
 ```yml
 steps:
 
-  - task: AzureContainerApps@0
+  - task: AzureContainerApps@1
     displayName: Build and deploy Container App
     inputs:
       connectedServiceNameARM: 'azure-subscription-service-connection'
@@ -361,7 +361,7 @@ This will create a new Container App named `my-test-container-app` in a resource
 ```yml
 steps:
 
-  - task: AzureContainerApps@0
+  - task: AzureContainerApps@1
     displayName: Build and deploy Container App
     inputs:
       connectedServiceNameARM: 'azure-subscription-service-connection'
@@ -378,7 +378,7 @@ This will create a new Container App named `ado-task-app-<build-id>-<build-numbe
 ```yml
 steps:
 
-  - task: AzureContainerApps@0
+  - task: AzureContainerApps@1
     displayName: Build and deploy Container App
     inputs:
       connectedServiceNameARM: 'azure-subscription-service-connection'
@@ -395,7 +395,7 @@ This will create a new Container App named `ado-task-app-<build-id>-<build-numbe
 ```yml
 steps:
 
-  - task: AzureContainerApps@0
+  - task: AzureContainerApps@1
     displayName: Build and deploy Container App
     inputs:
       connectedServiceNameARM: 'azure-subscription-service-connection'
@@ -417,7 +417,7 @@ inside of the task.
 ```yml
 steps:
 
-  - task: AzureContainerApps@0
+  - task: AzureContainerApps@1
     displayName: Build and deploy Container App
     inputs:
       connectedServiceNameARM: 'azure-subscription-service-connection'
