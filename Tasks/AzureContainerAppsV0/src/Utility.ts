@@ -25,7 +25,8 @@ export class Utility {
     public setAzureCliDynamicInstall() {
         this.throwIfError(
             tl.execSync('az', 'config set extension.use_dynamic_install=yes_without_prompt'),
-            'Unable to set the Azure CLI to dynamically install missing extensions');
+            tl.loc('AzureCliDynamicInstallFailed')
+            );
     }
 
     /**

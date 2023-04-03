@@ -1,4 +1,3 @@
-import * as ma from 'azure-pipelines-task-lib/mock-answer';
 import * as tmrm from 'azure-pipelines-task-lib/mock-run';
 import * as path from 'path';
 
@@ -7,7 +6,6 @@ const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set required arguments for the test
 tmr.setInput('cwd', '/fakecwd');
-tmr.setInput('imageToDeploy', 'imageToDeploy');
 tmr.setInput('disableTelemetry', 'true');
 
 const tl = require('azure-pipelines-task-lib/mock-task');
@@ -115,23 +113,6 @@ tmr.registerMock('./src/Utility', {
         };
     }
 });
-
-// Mock out command calls
-const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    'which': {
-        'bash': 'path/to/bash'
-    },
-    'checkPath': {
-        'path/to/bash': true,
-        '/fakecwd': true
-    },
-    'path/to/bash': {
-        '*': {
-            'code': 0
-        }
-    }
-};
-tmr.setAnswers(a);
 
 // Run the mocked task test
 tmr.run();
