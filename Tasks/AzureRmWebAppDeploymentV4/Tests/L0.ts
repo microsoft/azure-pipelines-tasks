@@ -198,8 +198,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdOutContained('Active DeploymentId :MOCK_DEPLOYMENT_ID'), 'Should have printed: Active DeploymentId :MOCK_DEPLOYMENT_ID.');
             assert(tr.stdOutContained('PreDeployment steps with virtual application should succeeded'), 'Should have printed: PreDeployment steps with slot enabled should succeeded');
 
-            tl.debug("STDERR: " + tr.stderr);
-            tl.debug("STDOUT: " + tr.stdout);
+            console.log("STDERR: " + tr.stderr);
+            console.log("STDOUT: " + tr.stdout);
 
             done();
         }
