@@ -13,10 +13,9 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 215,
-    "Patch": 0
+    "Minor": 219,
+    "Patch": 1
   },
-  "minimumAgentVersion": "2.144.0",
   "demands": [],
   "groups": [],
   "inputs": [
@@ -351,9 +350,6 @@
   ],
   "execution": {
     "Node10": {
-      "target": "src//run.js"
-    },
-    "Node16": {
       "target": "src//run.js"
     }
   },

@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 220,
-    "Patch": 0
+    "Minor": 208,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -297,9 +297,6 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {
-      "target": "./src//main.js"
-    },
-    "Node16": {
       "target": "./src//main.js"
     }
   },
