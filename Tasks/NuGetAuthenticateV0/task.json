@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 220,
-        "Patch": 0
+        "Patch": 4
     },
     "deprecated": true,
     "minimumAgentVersion": "2.120.0",
