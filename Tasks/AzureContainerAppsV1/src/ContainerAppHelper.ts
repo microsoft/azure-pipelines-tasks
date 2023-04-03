@@ -351,7 +351,7 @@ export class ContainerAppHelper {
         runtimeStack: string) {
             tl.debug(`Attempting to create a runnable application image using the Oryx++ Builder with image name "${imageToDeploy}"`);
             try {
-                let telemetryArg = `--env "CALLER_ID=azure-pipelines-v0"`;
+                let telemetryArg = `--env "CALLER_ID=azure-pipelines-v1"`;
                 if (this.disableTelemetry) {
                     telemetryArg = `--env "ORYX_DISABLE_TELEMETRY=true"`;
                 }

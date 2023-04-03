@@ -5,8 +5,8 @@
     "friendlyName": "Azure Container Apps Deploy",
     "description": "An Azure DevOps Task to build and deploy Azure Container Apps.",
     "author": "Microsoft Corporation",
-    "helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureContainerAppsV0/README.md)",
-    "releaseNotes": "Released new AzureContainerApps task for building and deploying Azure Container Apps.",
+    "helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureContainerAppsV1/README.md)",
+    "releaseNotes": "Released version 1.x.x of AzureContainerApps task for building and deploying Azure Container Apps.",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -17,7 +17,7 @@
         "DeploymentGroup"
     ],
     "version": {
-        "Major": 0,
+        "Major": 1,
         "Minor": 220,
         "Patch": 0
     },

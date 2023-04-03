@@ -7,7 +7,11 @@ const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set required arguments for the test
 tmr.setInput('cwd', '/fakecwd');
-tmr.setInput('imageToDeploy', 'imageToDeploy');
+tmr.setInput('connectedServiceNameARM', 'test-connectedServiceNameARM');
+tmr.setInput('acrName', 'sampletestacr');
+tmr.setInput('appSourcePath', '/samplepath');
+tmr.setInput('containerAppEnvironment', 'test-containerAppEnvironment');
+tmr.setInput('yamlConfigPath', '/samplepath/config.yaml');
 tmr.setInput('disableTelemetry', 'true');
 
 const tl = require('azure-pipelines-task-lib/mock-task');
@@ -115,6 +119,68 @@ tmr.registerMock('./src/Utility', {
         };
     }
 });
+
+/**
+ * -----------------------------------------
+ * Mock out the test-specific helper classes
+ * -----------------------------------------
+ */
+
+// Mock out function calls for the ContainerAppHelper class
+tmr.registerMock('./src/ContainerAppHelper', {
+    ContainerAppHelper: function() {
+        return {
+            getDefaultContainerAppLocation: function() {
+                console.log('[MOCK] getDefaultContainerAppLocation called');
+                return 'eastus2';
+            },
+            doesResourceGroupExist: function(resourceGroup: string) {
+                console.log('[MOCK] doesResourceGroupExist called');
+                return false;
+            },
+            createResourceGroup: function(name: string, location: string) {
+                console.log('[MOCK] createResourceGroup called');
+                return;
+            },
+            doesContainerAppExist: function(containerAppName: string, resourceGroup: string) {
+                console.log('[MOCK] doesContainerAppExist called');
+                return false;
+            },
+            doesContainerAppEnvironmentExist: function(containerAppEnvironment: string, resourceGroup: string) {
+                console.log('[MOCK] doesContainerAppEnvironmentExist called');
+                return true;
+            },
+            installPackCliAsync: async function() {
+                console.log('[MOCK] installPackCliAsync called');
+                return;
+            },
+            determineRuntimeStackAsync: async function(path: string) {
+                console.log('[MOCK] determineRuntimeStackAsync called');
+                return 'dotnetcore:7.0';
+            },
+            setDefaultBuilder: function() {
+                console.log('[MOCK] setDefaultBuilder called');
+                return;
+            },
+            createRunnableAppImage: function(imageToDeploy: string, appSourcePath: string, runtimeStack: string) {
+                console.log('[MOCK] createRunnableAppImage called');
+                return;
+            },
+            createContainerAppFromYaml: function(containerAppName: string, resourceGroup: string, yamlConfigPath: string) {
+                console.log('[MOCK] createContainerAppFromYaml called');
+                return;
+            },
+        };
+    }
+});
+
+// Mock fs
+const fs = require('fs');
+const fsClone = Object.assign({}, fs);
+fsClone.existsSync = function(filePath: any) {
+    return false;
+};
+tmr.registerMock('fs', fsClone);
 
 // Mock out command calls
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
