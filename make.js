@@ -904,8 +904,8 @@ CLI.gentask = function() {
         tasksToGen = util.getTaskListForValidate(genTaskPath, taskList);
     }
 
-    if (argv.config) {
-        genTaskArg += ` --configs ${argv.config} `;
+    if (argv.configs) {
+        genTaskArg += ` --configs ${argv.configs} `;
     } else {
         genTaskArg += " --configs Node16 ";
     }
