@@ -108,7 +108,9 @@ async function run() {
 
         // pathToPublish is a folder or a single file that may be added to a tar archive later
         const pathToPublish: string = tl.getPathInput('PathtoPublish', true, true);
-        const artifactName: string = tl.getInput('ArtifactName', true);
+        // replacing '+' symbol by its representation ' ' (space) - workaround for the DownloadBuildArtifactV0 task,
+        // where downloading of part of artifact is not possible if there is a plus symbol
+        const artifactName: string = (tl.getInput('ArtifactName', true)).replace(/\+/g, ' ');
 
         // pathToUpload is an actual folder or file that will get uploaded
         const pathToUpload: string = getPathToUploadAndCreateTarIfNeeded(pathToPublish, shouldStoreAsTar, artifactName);

@@ -240,7 +240,9 @@ async function main(): Promise<void> {
 
         // populate itempattern and artifacts based on downloadType
         if (downloadType === 'single') {
-            var artifactName = tl.getInput("artifactName", true);
+            // replacing '+' symbol by its representation ' ' (space) - workaround for the DownloadBuildArtifactV0 task, 
+            // where downloading of part of artifact is not possible if there is a plus symbol
+            var artifactName = (tl.getInput("artifactName", true)).replace(/\+/g, ' ');
             var artifact = await executeWithRetries("getArtifact", () => buildApi.getArtifact(projectId, buildId, artifactName), retryLimitRequest).catch((reason) => {
                 reject(reason);
                 return;
