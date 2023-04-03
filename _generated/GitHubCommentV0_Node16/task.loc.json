@@ -12,7 +12,7 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 198,
+    "Minor": 220,
     "Patch": 0
   },
   "demands": [],
@@ -80,7 +80,7 @@
   },
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "_buildConfigMapping": {
-    "Default": "0.198.1",
-    "Node16-219": "0.198.0"
+    "Default": "0.220.1",
+    "Node16-219": "0.220.0"
   }
 }
