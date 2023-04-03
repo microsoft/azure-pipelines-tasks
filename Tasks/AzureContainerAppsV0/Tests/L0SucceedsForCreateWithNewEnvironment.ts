@@ -7,7 +7,8 @@ const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set required arguments for the test
 tmr.setInput('cwd', '/fakecwd');
-tmr.setInput('imageToDeploy', 'imageToDeploy');
+tmr.setInput('connectedServiceNameARM', 'test-connectedServiceNameARM');
+tmr.setInput('imageToDeploy', 'previously-built-image');
 tmr.setInput('disableTelemetry', 'true');
 
 const tl = require('azure-pipelines-task-lib/mock-task');
@@ -115,6 +116,60 @@ tmr.registerMock('./src/Utility', {
         };
     }
 });
+
+/**
+ * -----------------------------------------
+ * Mock out the test-specific helper classes
+ * -----------------------------------------
+ */
+
+// Mock out function calls for the ContainerAppHelper class
+tmr.registerMock('./src/ContainerAppHelper', {
+    ContainerAppHelper: function() {
+        return {
+            getDefaultContainerAppLocation: function() {
+                console.log('[MOCK] getDefaultContainerAppLocation called');
+                return 'eastus2';
+            },
+            doesResourceGroupExist: function(resourceGroup: string) {
+                console.log('[MOCK] doesResourceGroupExist called');
+                return false;
+            },
+            createResourceGroup: function(name: string, location: string) {
+                console.log('[MOCK] createResourceGroup called');
+                return;
+            },
+            doesContainerAppExist: function(containerAppName: string, resourceGroup: string) {
+                console.log('[MOCK] doesContainerAppExist called');
+                return false;
+            },
+            getExistingContainerAppEnvironment: function(resourceGroup: string) {
+                console.log('[MOCK] getExistingContainerAppEnvironment called');
+                return null;
+            },
+            doesContainerAppEnvironmentExist: function(containerAppEnvironment: string, resourceGroup: string) {
+                console.log('[MOCK] doesContainerAppEnvironmentExist called');
+                return false;
+            },
+            createContainerAppEnvironment: function(containerAppEnvironment: string, resourceGroup: string, location: string) {
+                console.log('[MOCK] createContainerAppEnvironment called');
+                return;
+            },
+            createContainerApp: function(containerAppName: string, resourceGroup: string, containerAppEnvironment: string, imageToDeploy: string, optionalCmdArgs: string[]) {
+                console.log('[MOCK] createContainerApp called');
+                return;
+            },
+        };
+    }
+});
+
+// Mock fs
+const fs = require('fs');
+const fsClone = Object.assign({}, fs);
+fsClone.existsSync = function(filePath: any) {
+    return false;
+};
+tmr.registerMock('fs', fsClone);
 
 // Mock out command calls
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
