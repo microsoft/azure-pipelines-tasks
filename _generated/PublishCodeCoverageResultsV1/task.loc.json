@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 219,
+    "Minor": 220,
     "Patch": 1
   },
   "demands": [],
@@ -98,7 +98,7 @@
     "GeneratedHtmlReport": "ms-resource:loc.messages.GeneratedHtmlReport"
   },
   "_buildConfigMapping": {
-    "Default": "1.219.1",
-    "Node16-219": "1.219.0"
+    "Default": "1.220.1",
+    "Node16-219": "1.220.0"
   }
 }

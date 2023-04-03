@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 219,
+    "Minor": 220,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -390,7 +390,7 @@
     "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink"
   },
   "_buildConfigMapping": {
-    "Default": "0.219.1",
-    "Node16-219": "0.219.0"
+    "Default": "0.220.1",
+    "Node16-219": "0.220.0"
   }
 }
