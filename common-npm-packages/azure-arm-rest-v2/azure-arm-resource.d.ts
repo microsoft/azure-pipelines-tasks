@@ -12,6 +12,7 @@ export declare class Resources {
     private _client;
     constructor(endpoint: AzureEndpoint);
     getResources(resourceType: string, resourceName: string): Promise<any[]>;
+    getAppDetails(resourceName: string): Promise<any>;
 }
 export declare class ResourceGroup {
     private client;
