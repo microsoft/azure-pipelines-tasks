@@ -201,6 +201,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.WFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Additional arguments can't include separator characters '&' and ';'. Please verify input. To learn more about argument validation, please check https://aka.ms/azdo-task-argument-validation]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Les arguments supplémentaires ne peuvent pas inclure les caractères de séparation « & » et « ; ». Veuillez vérifier l’entrée. Pour en savoir plus sur la validation des arguments, consultez https://aka.ms/azdo-task-argument-validation]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.WFC_CopyStartedFor0" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Copy started for - {0}]]></Val>
