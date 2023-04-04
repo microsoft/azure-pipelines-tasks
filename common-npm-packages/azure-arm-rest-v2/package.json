@@ -1,6 +1,6 @@
 {
   "name": "azure-pipelines-tasks-azure-arm-rest-v2",
-  "version": "3.219.0",
+  "version": "3.220.2",
   "description": "Common Lib for Azure ARM REST apis",
   "repository": {
     "type": "git",
@@ -25,7 +25,8 @@
     "jsonwebtoken": "^8.5.1",
     "node-fetch": "^2.6.7",
     "q": "1.5.1",
-    "typed-rest-client": "1.8.4"
+    "typed-rest-client": "1.8.4",
+    "xml2js": "0.4.13"
   },
   "devDependencies": {
     "shelljs": "^0.8.5",

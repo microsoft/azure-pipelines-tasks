@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Richiama API REST",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=870236)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?linkid=870236)",
   "loc.description": "Richiama l'API REST come parte della pipeline.",
   "loc.instanceNameFormat": "Richiama API REST: $(method)",
   "loc.group.displayName.completionOptions": "Avanzate",

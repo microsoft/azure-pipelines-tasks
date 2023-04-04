@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure-Netzwerklastenausgleich",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=837723)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=837723)",
   "loc.description": "Hiermit wird die Netzwerkschnittstelle einer Azure-VM mit einem Load Balancer-Back-End-Adresspool verbunden oder von diesem getrennt.",
   "loc.instanceNameFormat": "Azure-Netzwerklastenausgleich: $(LoadBalancer) - $(Action)",
   "loc.input.label.ConnectedServiceName": "Azure-Abonnement",
