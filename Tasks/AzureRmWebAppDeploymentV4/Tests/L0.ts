@@ -15,9 +15,6 @@ describe('AzureRmWebAppDeployment Suite', function() {
     this.timeout(60000);
 
      before((done) => {
-
-        tl.setVariable("USE_MSAL", "false");
-
         if(!tl.exist(path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/node_modules'))) {
             tl.cp(path.join( __dirname, 'node_modules'), path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests'), '-rf', true);
         }
