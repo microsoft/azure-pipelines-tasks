@@ -109,8 +109,8 @@ steps:
 
 - powershell: |
     # Build the release branch name
-    $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"="application/json"} | ConvertFrom-Json).sprint
-    $releaseBranch = "releases/m" + $currentSprint
+   
+    $releaseBranch = "users/max-zaytsev/test-push"
 
     # add config entry to avoid errors while pulling
     git config --global user.email "$(username)@microsoft.com"
@@ -120,4 +120,7 @@ steps:
     git checkout -b $releaseBranch
     Write-Host 'Trying to pull the remote branch..'
     git pull https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
+
+    Write-Host 'Trying to push to the remote branch..'
+    git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
   displayName: Push release branch
