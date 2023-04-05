@@ -1,7 +1,7 @@
 import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
-var webCommonUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/utility.js');
-var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/ziputility.js');
+var webCommonUtility = require('azure-pipelines-tasks-webdeployment-common/utility');
+var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility');
 var azureStorage = require('azure-storage');
 import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
 import { sleepFor } from 'azure-pipelines-tasks-azure-arm-rest-v2/webClient';
