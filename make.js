@@ -52,9 +52,6 @@ var binPath = path.join(__dirname, 'node_modules', '.bin');
 var makeOptionsPath = path.join(__dirname, 'make-options.json');
 var gendocsPath = path.join(__dirname, '_gendocs');
 var packagePath = path.join(__dirname, '_package');
-var baseConfigToolPath = path.join(__dirname, 'BuildConfigGen');
-var genTaskPath = path.join(__dirname, '_generated');
-var genTaskCommonPath = path.join(__dirname, '_generated', 'Common');
 
 var CLI = {};
 
@@ -81,15 +78,6 @@ if (argv.task) {
         .map(function (item) {
             return path.basename(item);
         });
-
-    // If base tasks was not found, try to find the task in the _generated tasks folder
-    if (taskList.length == 0) { 
-        taskList = matchFind(argv.task, genTaskPath, { noRecurse: true, matchBase: true })
-            .map(function (item) {
-                return path.basename(item);
-            });
-    }
-
     if (!taskList.length) {
         fail('Unable to find any tasks matching pattern ' + argv.task);
     }
@@ -144,27 +132,6 @@ CLI.gendocs = function() {
     banner('Generating docs successful', true);
 }
 
-function getTaskList(taskList) {
-    let tasksToBuild = taskList;
-
-    if (!fs.existsSync(genTaskPath)) return tasksToBuild;
-
-    const generatedTaskFolders = fs.readdirSync(genTaskPath)
-        .filter((taskName) => {
-            return fs.statSync(path.join(genTaskPath, taskName)).isDirectory();
-        });
-
-    taskList.forEach((taskName) => {
-        generatedTaskFolders.forEach((generatedTaskName) => {
-            if (taskName !== generatedTaskName && generatedTaskName.startsWith(taskName)) {
-                tasksToBuild.push(generatedTaskName);
-            }
-        });
-    });
-
-    return tasksToBuild.sort();
-}
-
 //
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
@@ -180,22 +147,10 @@ CLI.build = function() {
     });
 
     const removeNodeModules = taskList.length > 1;
-    const allTasks = getTaskList(taskList);
 
-    allTasks.forEach(function(taskName) {
-        let isGeneratedTask = false;
+    taskList.forEach(function(taskName) {
         banner('Building: ' + taskName);
-
-        // If we have the task in generated folder, prefer to build from there and add all generated tasks which starts with task name
-        var taskPath = path.join(genTaskPath, taskName);
-        if (fs.existsSync(taskPath)) {
-            // Need to add all tasks which starts with task name
-            console.log('Found generated task: ' + taskName);
-            isGeneratedTask = true;
-        } else {
-            taskPath = path.join(tasksPath, taskName);
-        }
-        
+        var taskPath = path.join(tasksPath, taskName);
         ensureExists(taskPath);
 
         // load the task.json
@@ -244,11 +199,6 @@ CLI.build = function() {
 
                 if (!test('-d', modOutDir)) {
                     banner('Building module ' + modPath, true);
-
-                    // Ensure that Common folder exists for _generated tasks, otherwise copy it from Tasks folder
-                    if (!fs.existsSync(genTaskCommonPath) && isGeneratedTask) {
-                        cp('-Rf', path.resolve(tasksPath, "Common"), genTaskCommonPath);
-                    }
 
                     mkdir('-p', modOutDir);
 
@@ -364,11 +314,6 @@ CLI.build = function() {
         }
     });
 
-    // Remove Commons from _generated folder as it is not required
-    if (fs.existsSync(genTaskCommonPath)) {
-        rm('-Rf', genTaskCommonPath);
-    }
-
     banner('Build successful', true);
 }
 
@@ -430,17 +375,17 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
         });
     }
 
-    // Run tests for each task that exists
-    const allTasks = getTaskList(taskList);
+    if (argv.task) {
+        runTaskTests(argv.task);
+    } else {
+        // Run tests for each task that exists
+        taskList.forEach(function(taskName) {
+            var taskPath = path.join(buildTasksPath, taskName);
+            if (fs.existsSync(taskPath)) {
+                runTaskTests(taskName);
+            }
+        });
 
-    allTasks.forEach(function(taskName) {
-        var taskPath = path.join(buildTasksPath, taskName);
-        if (fs.existsSync(taskPath)) {
-            runTaskTests(taskName);
-        }
-    });
-
-    if (!argv.task) {
         banner('Running common library tests');
         var commonLibPattern = path.join(buildTasksPath, 'Common', '*', 'Tests', suiteType + '.js');
         var specs = [];
@@ -888,38 +833,6 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
     rm('-Rf', tempWorkspaceDirectory);
 
     console.log('\n# Completed creating sprintly zip.');
-}
-
-CLI.gentask = function() {
-    if (argv.rebuild) {
-        rm("-Rf", path.join(baseConfigToolPath, "bin"));
-    }
-
-    const programPath = util.getBuildConfigGenerator(baseConfigToolPath);
-    let tasksToGen = taskList;
-    let genTaskArg = "--write-updates";
-
-    if (argv.validate) {
-        genTaskArg = "";
-        tasksToGen = util.getTaskListForValidate(genTaskPath, taskList);
-    }
-
-    if (argv.configs) {
-        genTaskArg += ` --configs ${argv.configs} `;
-    } else {
-        genTaskArg += " --configs Node16 ";
-    }
-
-    if (tasksToGen.length == 0) {
-        fail("No tasks which satisfy the criteria for generation were found.");
-    }
-    
-    tasksToGen.forEach(function (taskName) {
-        const args = genTaskArg + ` --task ${taskName}`;
-
-        banner('Generating: ' + taskName);
-        run(`${programPath} ${args}` , true);
-    });
 }
 
 var command  = argv._[0];
