@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Командная строка",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=613735)",
   "loc.description": "Запуск скрипта командной строки с помощью Bash в Linux и macOS и cmd.exe в Windows",
   "loc.instanceNameFormat": "Скрипт командной строки",
   "loc.releaseNotes": "Создавайте скрипты для обеспечения согласованности задач. Добавлена поддержка нескольких строк.",

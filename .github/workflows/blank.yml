@@ -21,7 +21,7 @@ jobs:
         version: 10.x
 
     # Need to explicitly install @octokit/rest seperately or else it will mess with our typings.
-    - run: npm install && npm install @octokit/rest
+    - run: npm install && npm install @octokit/rest@18.12.x
 
     - name: File bugs
       run: node ci/file-bugs.js

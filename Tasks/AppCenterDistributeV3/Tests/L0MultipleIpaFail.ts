@@ -1,31 +1,27 @@
 
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
-import fs = require('fs');
-var Readable = require('stream').Readable
-
-var nock = require('nock');
 
 let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');
-tmr.setInput('app', '/test/path/to/*.ipa');
+tmr.setInput('app', './*.ipa');
 tmr.setInput('releaseNotesSelection', 'releaseNotesInput');
 tmr.setInput('releaseNotesInput', 'my release notes');
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "checkPath" : {
-        "/test/path/to/one.ipa": true,
-        "/test/path/to/two.ipa": true
+        "./test.ipa": true,
+        "./test2.ipa": true
     },
     "findMatch" : {
-        "/test/path/to/*.ipa": [
-            "/test/path/to/one.ipa",
-            "/test/path/to/two.ipa"
+        "./*.ipa": [
+            "./test.ipa",
+            "./test2.ipa"
         ]
     }
 };

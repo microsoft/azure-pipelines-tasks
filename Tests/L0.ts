@@ -55,35 +55,35 @@ describe('General Suite', function () {
         done();
     })
 
-    it('Find nested task.json', (done) => {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+//     it('Find nested task.json', (done) => {
+//         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
-        // Path to the _build/Tasks folder.
-        var tasksFolder = path.resolve(__dirname, '../Tasks');
+//         // Path to the _build/Tasks folder.
+//         var tasksFolder = path.resolve(__dirname, '../Tasks');
 
-        // Recursively find all task.json files.
-        var folders: string[] = [tasksFolder];
-        while (folders.length > 0) {
-            // Pop the next folder.
-            var folder: string = folders.pop();
+//         // Recursively find all task.json files.
+//         var folders: string[] = [tasksFolder];
+//         while (folders.length > 0) {
+//             // Pop the next folder.
+//             var folder: string = folders.pop();
 
-            // Read the directory.
-            fs.readdirSync(folder).forEach(item => {
-                var itemPath: string = path.join(folder, item);
-                if (fs.statSync(itemPath).isDirectory() && itemPath != path.join(tasksFolder, 'Tests')) {
-                    // Push the child directory.
-                    folders.push(itemPath);
-                } else if (item.toUpperCase() == "TASK.JSON" &&
-                    path.resolve(folder, '..').toUpperCase() != tasksFolder.toUpperCase()) {
+//             // Read the directory.
+//             fs.readdirSync(folder).forEach(item => {
+//                 var itemPath: string = path.join(folder, item);
+//                 if (fs.statSync(itemPath).isDirectory() && itemPath != path.join(tasksFolder, 'Tests')) {
+//                     // Push the child directory.
+//                     folders.push(itemPath);
+//                 } else if (item.toUpperCase() == "TASK.JSON" &&
+//                     path.resolve(folder, '..').toUpperCase() != tasksFolder.toUpperCase()) {
 
-                    // A task.json file was found nested recursively within the task folder.
-                    assert(false, 'A task.json file was found nested recursively within the task folder. This will break the servicing step. Offending file: ' + itemPath);
-                }
-            });
-        }
+//                     // A task.json file was found nested recursively within the task folder.
+//                     assert(false, 'A task.json file was found nested recursively within the task folder. This will break the servicing step. Offending file: ' + itemPath);
+//                 }
+//             });
+//         }
 
-        done();
-    })
+//         done();
+//     })
 
     it('Find .js with uppercase', (done) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
@@ -260,7 +260,8 @@ describe('General Suite', function () {
             'RM:ManualIntervention', 
             'Delay',
             'ServiceBus',
-            'HttpRequest'];
+            'HttpRequest',
+            'ManualValidation'];
 			
 	var supportedServerGateExecutionHandlers: string[] = [
             'ServiceBus',

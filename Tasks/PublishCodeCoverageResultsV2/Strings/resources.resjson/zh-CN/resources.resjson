@@ -6,7 +6,7 @@
   "loc.input.label.summaryFileLocation": "摘要文件的路径",
   "loc.input.help.summaryFileLocation": "摘要文件的路径，该文件包含代码覆盖率统计信息，如行、方法和类覆盖率。多个摘要文件将合并到一个报表中。支持多行的最小匹配模式。[详细信息](https://aka.ms/minimatchexamples)",
   "loc.input.label.pathToSources": "源文件的路径",
-  "loc.input.help.pathToSources": "当覆盖率 XML 报表不包含源文件的绝对路径时，需要源文件的路径。例如，JaCoCo 报表不使用绝对路径，当发布 Java 应用的 JaCoCo 覆盖率时，模式将与 `$(System.DefaultWorkingDirectory)/MyApp/src/main/java/` 类似。<br />如果在 docker 容器中运行测试，则也需要此输入。此输入应指向主机上源文件的绝对路径。例如 `$(System.DefaultWorkingDirectory)/MyApp/`",
+  "loc.input.help.pathToSources": "当覆盖率 XML 报表不包含源文件的绝对路径时，需要源文件的路径。例如，JaCoCo 报表不使用绝对路径，当发布 Java 应用的 JaCoCo 覆盖率时，模式将与 `$(System.DefaultWorkingDirectory)/MyApp/src/main/java/` 类似。<br />如果在 Docker 容器中运行测试，则也需要此输入。此输入应指向主机上源文件的绝对路径。例如 `$(System.DefaultWorkingDirectory)/MyApp/`",
   "loc.input.label.failIfCoverageEmpty": "如果缺少代码覆盖率结果则失败",
   "loc.input.help.failIfCoverageEmpty": "如果代码覆盖率未产生任何可发布的结果，任务将失败。",
   "loc.messages.FoundNMatchesForPattern": "找到 %s 个结果匹配模式: %s",

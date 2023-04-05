@@ -1,6 +1,6 @@
 import tl = require('azure-pipelines-task-lib');
 import { TaskParametersUtility, TaskParameters } from '../operations/TaskParameters';
-import { getMockEndpoint } from '../node_modules/azure-arm-rest-v2/Tests/mock_utils';
+import { getMockEndpoint } from '../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/mock_utils';
 
 getMockEndpoint();
 function ValidatePostDeploymentInput() {

@@ -4,11 +4,13 @@ import * as os from 'os';
 import * as path from 'path';
 
 describe('CopyFiles L0 Suite', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
     before(() => { });
 
     after(() => { });
 
-    it('copy files from srcdir to destdir', (done: MochaDone) => {
+    it('copy files from srcdir to destdir', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0copyAllFiles.js');
@@ -48,7 +50,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('copy files from srcdir to destdir with brackets in src path', (done: MochaDone) => {
+    it('copy files from srcdir to destdir with brackets in src path', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0copyAllFilesWithBracketsInSrcPath.js');
@@ -88,7 +90,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('copy files and subtract based on exclude pattern', (done: MochaDone) => {
+    it('copy files and subtract based on exclude pattern', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0copySubtractExclude.js');
@@ -119,7 +121,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('fails if Contents not set', (done: MochaDone) => {
+    it('fails if Contents not set', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0failsIfContentsNotSet.js');
@@ -127,11 +129,11 @@ describe('CopyFiles L0 Suite', function () {
         runner.run();
 
         assert(runner.failed, 'should have failed');
-        assert(runner.createdErrorIssue('Unhandled: Input required: Contents'), 'should have created error issue');
+        assert(runner.createdErrorIssue('Error: Input required: Contents'), 'should have created error issue');
         done();
     });
 
-    it('fails if SourceFolder not set', (done: MochaDone) => {
+    it('fails if SourceFolder not set', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0failsIfSourceFolderNotSet.js');
@@ -139,11 +141,11 @@ describe('CopyFiles L0 Suite', function () {
         runner.run();
 
         assert(runner.failed, 'should have failed');
-        assert(runner.createdErrorIssue('Unhandled: Input required: SourceFolder'), 'should have created error issue');
+        assert(runner.createdErrorIssue('Error: Input required: SourceFolder'), 'should have created error issue');
         done();
     });
 
-    it('fails if TargetFolder not set', (done: MochaDone) => {
+    it('fails if TargetFolder not set', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0failsIfTargetFolderNotSet.js');
@@ -151,11 +153,11 @@ describe('CopyFiles L0 Suite', function () {
         runner.run();
 
         assert(runner.failed, 'should have failed');
-        assert(runner.createdErrorIssue('Unhandled: Input required: TargetFolder'), 'should have created error issue');
+        assert(runner.createdErrorIssue('Error: Input required: TargetFolder'), 'should have created error issue');
         done();
     });
 
-    it('fails if SourceFolder not found', (done: MochaDone) => {
+    it('fails if SourceFolder not found', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0failsIfSourceFolderNotFound.js');
@@ -163,11 +165,11 @@ describe('CopyFiles L0 Suite', function () {
         runner.run();
 
         assert(runner.failed, 'should have failed');
-        assert(runner.createdErrorIssue(`Unhandled: Not found ${path.normalize('/srcDir')}`), 'should have created error issue');
+        assert(runner.createdErrorIssue(`Error: Not found ${path.normalize('/srcDir')}`), 'should have created error issue');
         done();
     });
 
-    it('fails if target file is a directory', (done: MochaDone) => {
+    it('fails if target file is a directory', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0failsIfTargetFileIsDir.js');
@@ -179,7 +181,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('skips if exists', (done: MochaDone) => {
+    it('skips if exists', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0skipsIfExists.js');
@@ -204,7 +206,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('overwrites if specified', (done: MochaDone) => {
+    it('overwrites if specified', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0overwritesIfSpecified.js');
@@ -229,7 +231,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('preserves timestamp if specified', (done: MochaDone) => {
+    it('preserves timestamp if specified', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0preservesTimestampIfSpecified.js');
@@ -257,7 +259,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('cleans if specified', (done: MochaDone) => {
+    it('cleans if specified', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0cleansIfSpecified.js');
@@ -288,7 +290,39 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('cleans if specified and target is file', (done: MochaDone) => {
+    it("skips cleaning when destination folder doesn't exist", (done: Mocha.Done) => {
+        this.timeout(1000);
+
+        let testPath = path.join(__dirname, 'L0cleansIfSpecifiedAndDestDoesntExist.js');
+        let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
+        runner.run();
+
+        // This will fail if stat is called with throwEnoent=true
+        assert(
+            runner.succeeded,
+            'should have succeeded');
+        assert(
+            !runner.stdOutContained(`rmRF ${path.normalize('/destDir/clean-subDir')}`),
+            'should have skipped cleaning non-existent directory');
+        assert(
+            !runner.stdOutContained(`rmRF ${path.normalize('/destDir/clean-file.txt')}`),
+            'should have skipped cleaning non-existent directory');
+        assert(
+            runner.stdOutContained(`creating path: ${path.normalize('/destDir')}`),
+            'should have mkdirP destDir');
+        assert(
+            runner.stdOutContained(`creating path: ${path.join('/destDir', 'someOtherDir')}`),
+            'should have mkdirP someOtherDir');
+        assert(
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file1.file')} to ${path.normalize('/destDir/someOtherDir/file1.file')}`),
+            'should have copied file1');
+        assert(
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
+            'should have copied file2');
+        done();
+    });
+
+    it('cleans if specified and target is file', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0cleansIfSpecifiedAndTargetIsFile.js');
@@ -316,7 +350,7 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
-    it('roots patterns', (done: MochaDone) => {
+    it('roots patterns', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let testPath = path.join(__dirname, 'L0rootsPatterns.js');
@@ -338,8 +372,37 @@ describe('CopyFiles L0 Suite', function () {
         done();
     });
 
+    it('ignores errors during target folder creation if ignoreMakeDirErrors is true', (done: Mocha.Done) => {
+        let testPath = path.join(__dirname, 'L0IgnoresMakeDirError.js');
+        let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
+        runner.run();
+
+        assert(
+            runner.succeeded,
+            'should have succeeded');
+        assert(
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file1.file')} to ${path.normalize('/destDir/someOtherDir/file1.file')}`),
+            'should have copied file1');
+
+        assert(
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
+            'should have copied file2');
+        done();
+    });
+
+    it('fails if there are errors during target folder creation if ignoreMakeDirErrors is false', (done: Mocha.Done) => {
+        let testPath = path.join(__dirname, 'L0FailsIfThereIsMkdirError.js');
+        let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
+        runner.run();
+
+        assert(
+            runner.failed,
+            'should have failed');
+        done();
+    });
+
     if (process.platform == 'win32') {
-        it('overwrites readonly', (done: MochaDone) => {
+        it('overwrites readonly', (done: Mocha.Done) => {
             this.timeout(1000);
 
             let testPath = path.join(__dirname, 'L0overwritesReadonly.js');

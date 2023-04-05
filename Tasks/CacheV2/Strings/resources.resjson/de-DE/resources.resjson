@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Cache",
+  "loc.helpMarkDown": "Verbessern Sie die Buildleistung, indem Sie Dateien wie beispielsweise Abhängigkeiten zwischen Pipelineausführungen zwischenspeichern.",
+  "loc.description": "Dateien zwischen Ausführungen zwischenspeichern",
+  "loc.instanceNameFormat": "Cache",
+  "loc.input.label.key": "Schlüssel",
+  "loc.input.help.key": "Schlüssel (eindeutiger Bezeichner) für den Cache. Es muss sich um eine Zeichenfolge handeln, die mithilfe von \"|\" segmentiert werden kann. Dateipfade können absolut oder relativ zu \"$(System.DefaultWorkingDirectory)\" angegeben werden.",
+  "loc.input.label.path": "Pfad",
+  "loc.input.help.path": "Der Pfad des Ordners, der zwischengespeichert werden soll. Es kann sich um einen vollqualifizierten oder um einen Pfad relativ zu \"$(System.DefaultWorkingDirectory)\" handeln. Platzhalter werden nicht unterstützt, [Variablen](https://go.microsoft.com/fwlink/?LinkID=550988) hingegen schon.",
+  "loc.input.label.cacheHitVar": "Cachetreffervariable",
+  "loc.input.help.cacheHitVar": "Die Variable ist auf TRUE festgelegt, wenn der Cache wiederhergestellt wird (bei einem Cachetreffer), andernfalls erfolgt eine Festlegung auf FALSE.",
+  "loc.input.label.restoreKeys": "Zusätzliche Präfixe für Wiederherstellungsschlüssel",
+  "loc.input.help.restoreKeys": "Zusätzliche Präfixe für Wiederherstellungsschlüssel, die verwendet werden, wenn der primäre Schlüssel fehlt. Dies kann eine durch Zeilenvorschubzeichen getrennte Liste mit Schlüsselpräfixen sein."
+}

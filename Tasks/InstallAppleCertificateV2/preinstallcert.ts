@@ -1,8 +1,10 @@
 import path = require('path');
-import sign = require('ios-signing-common/ios-signing-common');
-import secureFilesCommon = require('securefiles-common/securefiles-common');
+import sign = require('azure-pipelines-tasks-ios-signing-common/ios-signing-common');
+import secureFilesCommon = require('azure-pipelines-tasks-securefiles-common/securefiles-common');
 import * as tl from 'azure-pipelines-task-lib/task';
 import os = require('os');
+
+const retryCount = 8;
 
 async function run() {
     let secureFileId: string;
@@ -19,7 +21,7 @@ async function run() {
         // download decrypted contents
         secureFileId = tl.getInput('certSecureFile', true);
         
-        secureFileHelpers = new secureFilesCommon.SecureFileHelpers();
+        secureFileHelpers = new secureFilesCommon.SecureFileHelpers(retryCount);
         let certPath: string = await secureFileHelpers.downloadSecureFile(secureFileId);
 
         let certPwd: string = tl.getInput('certPwd');
@@ -73,7 +75,9 @@ async function run() {
         }
         tl.setTaskVariable('APPLE_CERTIFICATE_KEYCHAIN', keychainPath);
 
-        await sign.installCertInTemporaryKeychain(keychainPath, keychainPwd, certPath, certPwd, true);
+        const setUpPartitionIdACLForPrivateKey: boolean = tl.getBoolInput('setUpPartitionIdACLForPrivateKey', false);
+        const useKeychainIfExists: boolean = true;
+        await sign.installCertInTemporaryKeychain(keychainPath, keychainPwd, certPath, certPwd, useKeychainIfExists, setUpPartitionIdACLForPrivateKey);
 
         // set the keychain output variable.
         tl.setVariable('keychainPath', keychainPath);

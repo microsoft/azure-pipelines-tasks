@@ -11,7 +11,7 @@ describe('InstallAppleProvisioningProfile Suite', function () {
     after(() => {
     });
 
-    it('Defaults: install from SecureFile', (done: MochaDone) => {
+    it('Defaults: install from SecureFile', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0SecureFile.js');
@@ -27,7 +27,7 @@ describe('InstallAppleProvisioningProfile Suite', function () {
         done();
     });
 
-    it('Install from source repository', (done: MochaDone) => {
+    it('Install from source repository', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0SourceRepository.js');
@@ -43,7 +43,7 @@ describe('InstallAppleProvisioningProfile Suite', function () {
         done();
     });
 
-    it('Install from source repository fails if provisioning profile is not found', (done: MochaDone) => {
+    it('Install from source repository fails if provisioning profile is not found', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0SourceRepositoryProfileNotFound.js');
@@ -58,7 +58,7 @@ describe('InstallAppleProvisioningProfile Suite', function () {
         done();
     });
 
-    it('Install profile file with no file extension', (done: MochaDone) => {
+    it('Install profile file with no file extension', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0ProfileNoExtension.js');
@@ -76,7 +76,7 @@ describe('InstallAppleProvisioningProfile Suite', function () {
         done();
     });
 
-    it('Remove profile during post execution', (done: MochaDone) => {
+    it('Remove profile during post execution', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0RemoveProfile.js');
@@ -92,7 +92,7 @@ describe('InstallAppleProvisioningProfile Suite', function () {
         done();
     });
 
-    it('Fails on windows', (done: MochaDone) => {
+    it('Fails on windows', (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0FailOnWindows.js');
@@ -107,7 +107,7 @@ describe('InstallAppleProvisioningProfile Suite', function () {
         done();
     });
 
-    it('postexecution should not fail for errors', function (done: MochaDone) {
+    it('postexecution should not fail for errors', function (done: Mocha.Done) {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0ErrorsInPostExecutionJob.js');

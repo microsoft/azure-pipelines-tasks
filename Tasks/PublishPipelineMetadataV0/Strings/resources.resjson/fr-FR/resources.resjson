@@ -1,0 +1,5 @@
+{
+  "loc.friendlyName": "Publier des métadonnées de pipeline",
+  "loc.description": "Publier des métadonnées de pipeline sur le magasin de preuves",
+  "loc.instanceNameFormat": "Publication de métadonnées du pipeline $(System.DefinitionName) sur le magasin de preuves"
+}

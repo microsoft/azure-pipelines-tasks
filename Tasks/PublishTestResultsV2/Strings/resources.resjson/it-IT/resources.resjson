@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Pubblica risultati dei test",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.friendlyName": "Pubblica risultati del test",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "Pubblica i risultati dei test in Azure Pipelines",
-  "loc.instanceNameFormat": "Pubblica risultati dei test $(testResultsFiles)",
+  "loc.instanceNameFormat": "Pubblica risultati del test $(testResultsFiles)",
   "loc.releaseNotes": "<ul><li>Supporto per NUnit3</li><li>Supporto per criteri di file di corrispondenza minima</li></ul>",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.testRunner": "Formato dei risultati del test",

@@ -1,5 +1,5 @@
 import * as path from 'path';
-import * as secureFilesCommon from 'securefiles-common/securefiles-common';
+import * as secureFilesCommon from 'azure-pipelines-tasks-securefiles-common/securefiles-common';
 import * as tl from 'azure-pipelines-task-lib/task';
 
 async function run() {

@@ -1,7 +1,7 @@
 "use strict";
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as trm from 'azure-pipelines-task-lib/toolrunner';
-import * as nuGetGetter from 'packaging-common/nuget/NuGetToolGetter';
+import * as nuGetGetter from 'azure-pipelines-tasks-packaging-common/nuget/NuGetToolGetter';
 
  export class NuGetInstaller {
     public static async installNuGet(version: string) {
@@ -14,7 +14,7 @@ import * as nuGetGetter from 'packaging-common/nuget/NuGetToolGetter';
             }
         }
         catch (error) {
-            throw tl.loc("FailureWhileInstallingNuGetVersion", version, error.message);
+            console.warn(tl.loc("FailureWhileInstallingNuGetVersion", version, error.message));
         }
     }
 

@@ -1,6 +1,4 @@
-import fs = require('fs');
-import assert = require('assert');
-import path = require('path');
+import * as utilsTests from './L0UtilsTests';
 
 describe('CopyFilesOverSSHV0 Suite', function () {
     before(() => {
@@ -9,8 +7,5 @@ describe('CopyFilesOverSSHV0 Suite', function () {
     after(() => {
     });
 
-    it('Does a basic hello world test', function(done: MochaDone) {
-        // TODO - add real tests
-        done();
-    });
+    utilsTests.run();
 });

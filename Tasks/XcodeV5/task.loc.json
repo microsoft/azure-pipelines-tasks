@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 170,
-    "Patch": 2
+    "Minor": 220,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -95,6 +95,8 @@
         "9": "Xcode 9",
         "10": "Xcode 10",
         "11": "Xcode 11",
+        "12": "Xcode 12",
+        "13": "Xcode 13",
         "default": "Default",
         "specifyPath": "Specify path"
       }
@@ -286,7 +288,7 @@
       "name": "destinationSimulators",
       "label": "ms-resource:loc.input.label.destinationSimulators",
       "type": "string",
-      "defaultValue": "iPhone 7",
+      "defaultValue": "",
       "required": false,
       "groupName": "devices",
       "helpMarkDown": "ms-resource:loc.input.help.destinationSimulators",
@@ -332,6 +334,15 @@
       "groupName": "advanced"
     },
     {
+      "name": "xcprettyArgs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.xcprettyArgs",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcprettyArgs",
+      "groupName": "advanced",
+      "visibleRule": "useXcpretty == true"
+    },
+    {
       "name": "publishJUnitResults",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.publishJUnitResults",
@@ -339,16 +350,33 @@
       "defaultValue": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.publishJUnitResults"
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle",
+      "visibleRule": "publishJUnitResults == true"
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
+      "target": "xcode.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "xcode.js",
       "argumentFormat": ""
     }
   },
   "postjobexecution": {
-    "Node": {
+    "Node10": {
+      "target": "postxcode.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "postxcode.js",
       "argumentFormat": ""
     }
@@ -380,6 +408,7 @@
     "OutputDirectoryIgnored": "ms-resource:loc.messages.OutputDirectoryIgnored",
     "NoDestinationPlatformWarning": "ms-resource:loc.messages.NoDestinationPlatformWarning",
     "XcprettyNotInstalled": "ms-resource:loc.messages.XcprettyNotInstalled",
-    "XcodeRequiresMac": "ms-resource:loc.messages.XcodeRequiresMac"
+    "XcodeRequiresMac": "ms-resource:loc.messages.XcodeRequiresMac",
+    "UsingDefaultSimulator": "ms-resource:loc.messages.UsingDefaultSimulator"
   }
 }

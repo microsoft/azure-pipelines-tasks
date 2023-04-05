@@ -2,16 +2,20 @@ $rollForwardTable = @{
     "5.0.0" = "5.1.1";
 };
 
+function Get-SavedModuleContainerPath {
+    return $env:SystemDrive + "\Modules";
+}
+
 function Get-SavedModulePath {
     [CmdletBinding()]
     param([string] $azurePowerShellVersion,
           [switch] $Classic)
     
     if($Classic -eq $true) {
-        return $($env:SystemDrive + "\Modules\Azure_" + $azurePowerShellVersion)
+        return (Get-SavedModuleContainerPath) + "\Azure_" + $azurePowerShellVersion;
     }
     else {
-        return $($env:SystemDrive + "\Modules\AzureRm_" + $azurePowerShellVersion)
+        return (Get-SavedModuleContainerPath) + "\AzureRm_" + $azurePowerShellVersion;
     }
 }
 

@@ -30,9 +30,15 @@ export class TaskOptions {
 
     pollIntervalMillis: number;
 
+    //initialize retry count and timer
+    retryCount: number;
+    delayBetweenRetries: number;
+
     parameterizedJob: boolean;
     // jobParameters are only possible if parameterizedJob is enabled
     jobParameters: string[];
+
+    failOnUnstableResult: boolean;
 
     jobQueueUrl: string;
     teamJobQueueUrl: string;
@@ -69,9 +75,13 @@ export class TaskOptions {
 
         this.pollIntervalMillis = 5000; // five seconds is what the Jenkins Web UI uses
 
+        this.retryCount = parseInt(tl.getInput('retryCount', false));
+        this.delayBetweenRetries = parseInt(tl.getInput('delayBetweenRetries', false));
+
         this.parameterizedJob = tl.getBoolInput('parameterizedJob', true);
         // jobParameters are only possible if parameterizedJob is enabled
         this.jobParameters = this.parameterizedJob ? tl.getDelimitedInput('jobParameters', '\n', false) : [];
+        this.failOnUnstableResult = tl.getBoolInput('failOnUnstableResult', false);
 
         this.jobQueueUrl = util.addUrlSegment(this.serverEndpointUrl, util.convertJobName(this.jobName)) + ((this.parameterizedJob) ? '/buildWithParameters?delay=0sec' : '/build?delay=0sec');
         tl.debug('jobQueueUrl=' + this.jobQueueUrl);
@@ -116,9 +126,19 @@ async function doWork() {
         //store the job name in the output variable
         tl.setVariable('JENKINS_JOB_ID', rootJob.ExecutableNumber.toString());
     } catch (e) {
-        tl.debug(e.message);
-        process.stderr.write(e + os.EOL);
-        tl.setResult(tl.TaskResult.Failed, e.message);
+        let message: string;
+        if (e instanceof util.HttpError) {
+            message = e.message;
+            console.error(e.fullMessage);
+            console.error(e.body);
+        } else if (e instanceof Error) {
+            message = e.message;
+            console.error(e);
+        } else {
+            message = e;
+            console.error(e);
+        }
+        tl.setResult(tl.TaskResult.Failed, message);
     }
 }
 

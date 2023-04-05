@@ -3,9 +3,9 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as path from 'path';
 
 describe('PyPI Publisher', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 8000);
 
     it('Test to verify pip command arguements', function(done: MochaDone) {
-        this.timeout(3000);
         let tp = path.join(__dirname, 'L0PipCommands.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -19,7 +19,6 @@ describe('PyPI Publisher', function () {
     });
 
     it('Test for Python tool execution failure ', function(done: MochaDone) {
-        this.timeout(3000);
         let tp = path.join(__dirname, 'L0PythonExecFail.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 

@@ -12,7 +12,7 @@
   "loc.input.label.definition": "包",
   "loc.input.help.definition": "如果在列表中没有找到包，可以提供包 ID，可以使用[此处](https://go.microsoft.com/fwlink/?linkid=2086778)的说明找到包 ID。",
   "loc.input.label.version": "版本",
-  "loc.input.help.version": "包版本",
+  "loc.input.help.version": "包的版本。在运行时使用 `latest` 下载包的最新版本。",
   "loc.input.label.files": "文件",
   "loc.input.help.files": "使用[文件匹配模式](https://go.microsoft.com/fwlink/?linkid=2086953)指定要下载的文件。",
   "loc.input.label.extract": "提取包内容",
@@ -34,5 +34,6 @@
   "loc.messages.Info_ResolvedToolFromCache": "已从工具缓存 %s 中解析",
   "loc.messages.Info_DownloadingArtifactTool": "正在从 %s 下载项目工具",
   "loc.messages.Info_Downloading": "正在下载包: %s，版本: %s 使用源 ID: %s，项目: %s",
-  "loc.messages.Info_UsingArtifactToolDownload": "正在使用项目工具下载包"
+  "loc.messages.Info_UsingArtifactToolDownload": "正在使用项目工具下载包",
+  "loc.messages.Info_ResolvedLatestVersion": "已解析的最新包版本: %s"
 }

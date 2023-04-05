@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 172,
-    "Patch": 0
+    "Minor": 220,
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -47,7 +47,7 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "npmtask.js",
       "argumentFormat": ""
     }

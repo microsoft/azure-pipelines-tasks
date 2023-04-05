@@ -15,8 +15,9 @@
         $certificate.Import($pfxFilePath, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
     }
     else {
+        $pfxFilePassword = [System.String]::Empty
         $bytes = [System.Convert]::FromBase64String($Endpoint.Auth.Parameters.Certificate)
-        $certificate.Import($bytes)
+        $certificate.Import($bytes, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
     }
 
     $store = New-Object System.Security.Cryptography.X509Certificates.X509Store(
@@ -25,7 +26,7 @@
     $store.Open(([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite))
     $store.Add($certificate)
     $store.Close()
-
+    
     #store the thumbprint in a global variable which will be used to remove the certificate later on
     $script:Endpoint_Authentication_Certificate = $certificate.Thumbprint
     Write-Verbose "Added certificate to the certificate store."
@@ -115,7 +116,7 @@ function Get-MsiAccessToken {
             $webExceptionMessage = $_.Exception.Message
 			$response = $_.Exception.Response
 
-            if ($webExceptionStatus -eq [System.Net.WebExceptionStatus]::ProtocolError -and $response -ne $null) { 
+            if (($webExceptionStatus -eq [System.Net.WebExceptionStatus]::ProtocolError) -and ($response -ne $null)) { 
                 
 				$responseStatusCode = [int]$_.Exception.Response.StatusCode
                 $responseStream = $_.Exception.Response.GetResponseStream()
@@ -134,7 +135,7 @@ function Get-MsiAccessToken {
                     throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $responseStatusCode, $webExceptionMessage)
                 }
 
-                if ($retryableStatusCodes -contains $responseStatusCode -and $trialCount -lt $retryLimit) {
+                if (($retryableStatusCodes -contains $responseStatusCode) -and ($trialCount -lt $retryLimit)) {
                     Write-Verbose (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $responseStatusCode, $webExceptionMessage)
                     Start-Sleep -m $timeToWait    
                     $trialCount++
@@ -516,7 +517,8 @@ function Add-AzureStackAzureRmEnvironment {
 function Disconnect-AzureAndClearContext {
     [CmdletBinding()]
     param(
-        [string]$authScheme = 'ServicePrincipal'
+        [string]$authScheme = 'ServicePrincipal',
+        [string]$restrictContext = 'False'
     )
 
     try {
@@ -524,7 +526,7 @@ function Disconnect-AzureAndClearContext {
             Write-Verbose "Trying to disconnect from Azure and clear context at process scope"
 
             if (Get-Module Az.Accounts -ListAvailable) {
-                Disconnect-UsingAzModule
+                Disconnect-UsingAzModule -restrictContext $restrictContext
             }
             else {
                 Disconnect-UsingARMModule
@@ -539,19 +541,17 @@ function Disconnect-AzureAndClearContext {
 
 function Disconnect-UsingAzModule {
     [CmdletBinding()]
-    param()
+    param(
+        [string]$restrictContext = 'False'
+    )
 
-    if (Get-Command -Name "Disconnect-AzAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Disconnect-AzAccount -memberName Scope) {	
+    if ((Get-Command -Name "Disconnect-AzAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Disconnect-AzAccount -memberName Scope)) {	
+        if ($restrictContext -eq 'True') {
+            Write-Host "##[command]Disconnect-AzAccount -Scope CurrentUser -ErrorAction Stop"
+            $null = Disconnect-AzAccount -Scope CurrentUser -ErrorAction Stop
+        }
         Write-Host "##[command]Disconnect-AzAccount -Scope Process -ErrorAction Stop"	
         $null = Disconnect-AzAccount -Scope Process -ErrorAction Stop
-    }
-    elseif (Get-Command -Name "Remove-AzAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Remove-AzAccount -memberName Scope) {	
-        Write-Host "##[command]Remove-AzAccount -Scope Process -ErrorAction Stop"	
-        $null = Remove-AzAccount -Scope Process -ErrorAction Stop
-    }
-    elseif (Get-Command -Name "Logout-AzAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Logout-AzAccount -memberName Scope) {	
-        Write-Host "##[command]Logout-AzAccount -Scope Process -ErrorAction Stop"	
-        $null = Logout-AzAccount -Scope Process -ErrorAction Stop
     }
 
     if (Get-Command -Name "Clear-AzContext" -ErrorAction "SilentlyContinue") {
@@ -564,15 +564,15 @@ function Disconnect-UsingARMModule {
     [CmdletBinding()]
     param()
 
-    if (Get-Command -Name "Disconnect-AzureRmAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Disconnect-AzureRmAccount -memberName Scope) {	
+    if ((Get-Command -Name "Disconnect-AzureRmAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Disconnect-AzureRmAccount -memberName Scope)) {	
         Write-Host "##[command]Disconnect-AzureRmAccount -Scope Process -ErrorAction Stop"	
         $null = Disconnect-AzureRmAccount -Scope Process -ErrorAction Stop
     }
-    elseif (Get-Command -Name "Remove-AzureRmAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Remove-AzureRmAccount -memberName Scope) {	
+    elseif ((Get-Command -Name "Remove-AzureRmAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Remove-AzureRmAccount -memberName Scope)) {	
         Write-Host "##[command]Remove-AzureRmAccount -Scope Process -ErrorAction Stop"	
         $null = Remove-AzureRmAccount -Scope Process -ErrorAction Stop
     }
-    elseif (Get-Command -Name "Logout-AzureRmAccount" -ErrorAction "SilentlyContinue" -and CmdletHasMember -cmdlet Logout-AzureRmAccount -memberName Scope) {	
+    elseif ((Get-Command -Name "Logout-AzureRmAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Logout-AzureRmAccount -memberName Scope)) {	
         Write-Host "##[command]Logout-AzureRmAccount -Scope Process -ErrorAction Stop"	
         $null = Logout-AzureRmAccount -Scope Process -ErrorAction Stop
     }

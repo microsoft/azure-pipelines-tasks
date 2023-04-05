@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PyPI 發行者",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=875289)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?linkid=875289)",
   "loc.description": "使用 Twine 將 sdist 或 wheel 建立並上傳至相容於 PyPI 的索引",
   "loc.instanceNameFormat": "封裝並發佈至 PyPI",
   "loc.input.label.serviceEndpoint": "PyPI 服務連線",

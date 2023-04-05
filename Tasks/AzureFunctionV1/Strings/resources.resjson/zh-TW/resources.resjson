@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "叫用 Azure 函式",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870235)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?linkid=870235)",
   "loc.description": "叫用 Azure 函式",
   "loc.instanceNameFormat": "Azure 函式: $(function)",
   "loc.group.displayName.completionOptions": "進階",

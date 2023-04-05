@@ -43,8 +43,7 @@ class azureclitask {
 
       this.loginAzure();
 
-      tl.debug('OS release:' + os.release());
-
+      tl.debug('OS release:' + os.release());      
       let showIotExtensionCommand = ["extension", "show", "--name", "azure-iot"];
       let result = tl.execSync('az', showIotExtensionCommand, Constants.execSyncSilentOption);
       if (result.code !== 0) { // The extension is not installed
@@ -76,7 +75,8 @@ class azureclitask {
 
       let outputStream: EchoStream = new EchoStream();
       let execOptions: IExecOptions = {
-        errStream: outputStream as stream.Writable
+        errStream: outputStream as stream.Writable,
+        shell: true,
       } as IExecOptions;
 
       let result1 = tl.execSync('az', ["iot", "edge", "deployment", "delete", "--hub-name", iothub, "--deployment-id", configId], Constants.execSyncSilentOption);
@@ -111,6 +111,19 @@ class azureclitask {
   }
 
   static installAzureCliIotExtension(installCommand: string[]) {
+    let outputStream: EchoStream = new EchoStream();
+    let execOptions: IExecOptions = {
+      errStream: outputStream as stream.Writable
+    } as IExecOptions;
+    
+    // check azcli version
+    let checkAzureIoTVersionExtensionCommand = ["--version"]; 
+    let viewAzVersionResult = tl.execSync('az', checkAzureIoTVersionExtensionCommand, execOptions);
+    if(viewAzVersionResult.code !== 0)
+    {
+      throw new Error(`View Az Version Error: ${outputStream.content}`);
+    }
+
     let addResult = tl.execSync('az', installCommand, Constants.execSyncSilentOption);
     tl.debug(JSON.stringify(addResult));
     if (addResult.code !== 0) {

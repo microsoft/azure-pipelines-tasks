@@ -5,10 +5,12 @@ import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as os from "os";
 import * as yaml from 'js-yaml';
+import * as semver from 'semver';
 
 import helmcli from "./helmcli";
 
 const matchPatternForReleaseName = new RegExp(/NAME:(.+)/i);
+const namespace = tl.getInput('namespace', false);
 
 export function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
@@ -68,8 +70,10 @@ export function getManifestsFromRelease(helmCli: helmcli, releaseName: string): 
     helmCli.setCommand('get');
     helmCli.addArgument('manifest');
     helmCli.addArgument(releaseName);
+    if (namespace)
+        helmCli.addArgument('--namespace '.concat(namespace));
 
-    const execResult = helmCli.execHelmCommand();
+    const execResult = helmCli.execHelmCommand(true);
     yaml.safeLoadAll(execResult.stdout, (doc) => {
         manifests.push(doc);
     });
@@ -87,4 +91,16 @@ export function getHelmPathForACR() {
     const chartName = tl.getInput("chartNameForACR", true);
     const acr = tl.getInput("azureContainerRegistry");
     return acr + "/helm/" + chartName;
+}
+
+export function addVersion(helmCli: helmcli, version: string) {
+    if (semver.valid(version))
+        helmCli.addArgument("--version ".concat(version));
+    else
+        console.log("The given version is not valid. Running the helm install command with latest version");
+}
+
+export function replaceNewlinesWithCommas(overrideValues: string): string {
+    const keyValuePairs = overrideValues.split("\n").filter(pair => pair);
+    return keyValuePairs.join(",");
 }

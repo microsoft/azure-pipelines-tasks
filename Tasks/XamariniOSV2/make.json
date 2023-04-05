@@ -1,15 +1,8 @@
 {
-    "common": [
+	"rm": [
         {
-            "module": "../Common/MSBuildHelpers",
-            "type": "node",
-            "compile": true
-        }
-    ],
-    "rm": [
-         {
             "items": [
-                "node_modules/msbuildhelpers/node_modules/azure-pipelines-task-lib"
+                "node_modules/azure-pipelines-tasks-msbuildhelpers/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }

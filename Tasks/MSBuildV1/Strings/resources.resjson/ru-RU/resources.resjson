@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MSBuild",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "Сборка с помощью MSBuild",
   "loc.instanceNameFormat": "Сборка решения $(solution)",
   "loc.group.displayName.advanced": "Дополнительно",
@@ -22,7 +22,7 @@
   "loc.input.label.maximumCpuCount": "Параллельная сборка",
   "loc.input.help.maximumCpuCount": "Если целевая конфигурация MSBuild совместима с параллельной сборкой, при необходимости можно установить этот флажок для передачи параметра /m в MSBuild (только для Windows). Если целевая конфигурация несовместима с параллельной сборкой, выбор этого варианта может привести к возникновению ошибок \"Файл занят\" в сборке, а также к периодическим или противоречивым сбоям сборки.",
   "loc.input.label.restoreNugetPackages": "Восстановить пакеты NuGet",
-  "loc.input.help.restoreNugetPackages": "Этот параметр является нерекомендуемым. Чтобы восстановить пакеты NuGet, добавьте задачу [установщика средств NuGet](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) перед сборкой.",
+  "loc.input.help.restoreNugetPackages": "Этот параметр является нерекомендуемым. Чтобы восстановить пакеты NuGet, добавьте задачу [NuGet](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget) перед сборкой.",
   "loc.input.label.logProjectEvents": "Записать сведения о проекте",
   "loc.input.help.logProjectEvents": "Запись данных о хронологии для каждого проекта (необязательно, только для Windows).",
   "loc.input.label.createLogFile": "Создать файл журнала",

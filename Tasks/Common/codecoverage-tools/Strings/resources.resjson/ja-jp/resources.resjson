@@ -1,5 +1,0 @@
-{
-  "loc.messages.InvalidBuildFile": "無効またはサポートされていないビルド ファイル",
-  "loc.messages.FileNotFound": "ファイルまたはフォルダーが存在しません: %s",
-  "loc.messages.FailedToAppendCC": "コード カバレッジ データを追加できません: %s"
-}

@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 1,
-        "Patch": 13
+        "Minor": 221,
+        "Patch": 0
     },
     "releaseNotes": "What's new in Version 2.0: <br/>&nbsp;&nbsp;Proxy support is being added. <br/>&nbsp;&nbsp; Removed support of legacy DTL machines.",
     "minimumAgentVersion": "1.104.0",
@@ -39,7 +39,7 @@
             "type": "multiLine",
             "label": "Machines",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs. <br>Eg: dbserver.fabrikam.com,192.168.12.34 <br>Or provide output variable of other tasks. Eg: $(variableName)"
         },
         {
@@ -47,7 +47,7 @@
             "type": "string",
             "label": "Admin Login",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Administrator login for the target machines."
         },
         {
@@ -55,7 +55,7 @@
             "type": "string",
             "label": "Password",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Password for administrator login for the target machines. <br>It can accept a variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark the variable as 'secret' to secure it. "
         },
         {
@@ -107,6 +107,7 @@
         "WFC_CopyingRecurivelyFrom0to1MachineSucceed": "Copying recursively from {0} to {1} on machine {2} succeeded.",
         "WFC_SourcePathDoesNotExist": "Source path '{0}' does not exist.",
         "WFC_RemoteDestinationPathCannotContainEnvironmentVariables": "Remote destination path '{0}' cannot contain environment variables.",
+        "WFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "Additional arguments can't include separator characters '&', ';' and '|'. Please verify input. To learn more about argument validation, please check https://aka.ms/azdo-task-argument-validation",
         "WFC_CopyStartedFor0": "Copy started for - {0}",
         "WFC_NoMachineExistsUnderEnvironment": "No machine exists under environment: '{0}' for deployment",
         "WFC_NoMachineExistsUnderEnvironment0ForDeployment": "No machine exists under environment: '{0}' for deployment",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Развертывание Service Fabric Compose",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=847030)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=847030)",
   "loc.description": "Развертывание приложения Docker Compose в кластере Azure Service Fabric",
   "loc.instanceNameFormat": "Развертывание приложения Compose в Service Fabric",
   "loc.group.displayName.registry": "Параметры реестра",

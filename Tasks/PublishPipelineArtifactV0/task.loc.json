@@ -9,12 +9,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 140,
-    "Patch": 1
+    "Minor": 141,
+    "Patch": 0
   },
   "groups": [],
   "demands": [],
-  "minimumAgentVersion": "2.155.1",
+  "minimumAgentVersion": "2.199.0",
   "preview": false,
   "deprecated": true,
   "inputs": [
@@ -33,6 +33,14 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.targetPath"
+    },
+    {
+        "name": "properties",
+        "type": "string",
+        "label": "ms-resource:loc.input.label.customProperties",
+        "defaultValue": "",
+        "required": false,
+        "helpMarkDown": "ms-resource:loc.input.help.customProperties"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

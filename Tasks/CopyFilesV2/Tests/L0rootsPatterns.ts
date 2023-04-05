@@ -28,20 +28,36 @@ answers.find[path.normalize('/srcDir')] = [
     path.normalize('/srcDir/someOtherDir3'),
 ];
 runner.setAnswers(answers);
-runner.registerMockExport('stats', (itemPath: string) => {
-    console.log('##vso[task.debug]stats ' + itemPath);
-    switch (itemPath) {
-        case path.normalize('/srcDir/someOtherDir/file1.file'):
-        case path.normalize('/srcDir/someOtherDir/file2.file'):
-        case path.normalize('/srcDir/someOtherDir2/file2.file'):
-            return { isDirectory: () => false };
-        default:
-            throw { code: 'ENOENT' };
-    }
+
+const fsClone = Object.assign({}, fs);
+Object.assign(fsClone, {
+    existsSync(itemPath: string): boolean {
+        switch (itemPath) {
+            case path.normalize('/srcDir/someOtherDir/file1.file'):
+            case path.normalize('/srcDir/someOtherDir/file2.file'):
+            case path.normalize('/srcDir/someOtherDir2/file2.file'):
+                return true;
+            default:
+                return false;
+        }
+    },
+    statSync(itemPath: string): fs.Stats {
+        const itemStats: fs.Stats = new fs.Stats();
+        switch (itemPath) {
+            case path.normalize('/srcDir/someOtherDir/file1.file'):
+            case path.normalize('/srcDir/someOtherDir/file2.file'):
+            case path.normalize('/srcDir/someOtherDir2/file2.file'):
+                itemStats.isDirectory = () => false;
+                break;
+            default:
+                throw { code: 'ENOENT' };
+        }
+        return itemStats;
+    },
+    // as a precaution, disable fs.chmodSync. it should not be called during this scenario.
+    chmodSync(p: fs.PathLike, mode: fs.Mode): void {}
 });
 
-// as a precaution, disable fs.chmodSync. it should not be called during this scenario.
-fs.chmodSync = null;
-runner.registerMock('fs', fs);
+runner.registerMock('fs', fsClone);
 
 runner.run();

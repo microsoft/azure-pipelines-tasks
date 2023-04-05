@@ -54,7 +54,7 @@
             "cd /deployTemp",
             "ls",
             "chmod +x /deployTemp/{{user `package_name`}}/{{user `script_relative_path`}}",
-            ". /deployTemp/{{user `package_name`}}/{{user `script_relative_path`}} {{user `script_arguments`}}"
+            "/deployTemp/{{user `package_name`}}/{{user `script_relative_path`}} {{user `script_arguments`}}"
         ]
     },
     {

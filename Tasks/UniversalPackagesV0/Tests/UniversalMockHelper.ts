@@ -1,7 +1,7 @@
 import { TaskLibAnswers, TaskLibAnswerExecResult } from 'azure-pipelines-task-lib/mock-answer';
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import * as pkgMock from 'packaging-common/Tests/MockHelper';
-import * as artMock from 'packaging-common/Tests/ArtifactToolMockHelper';
+import * as pkgMock from 'azure-pipelines-tasks-packaging-common/Tests/MockHelper';
+import * as artMock from 'azure-pipelines-tasks-packaging-common/Tests/ArtifactToolMockHelper';
 
 export class UniversalMockHelper {
     private static ArtifactToolCmd: string = 'c:\\mock\\location\\ArtifactTool.exe';
@@ -21,7 +21,7 @@ export class UniversalMockHelper {
         this.tmr.setInput('verbosity', "verbose");
 
         process.env['AGENT_HOMEDIRECTORY'] = "c:\\agent\\home\\directory";
-        process.env['BUILD_SOURCESDIRECTORY'] = "c:\\agent\\home\\directory\\sources",
+        process.env['BUILD_SOURCESDIRECTORY'] = "c:\\agent\\home\\directory\\sources";
         process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";
         process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
         process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "c:\\agent\\home\\directory";
@@ -35,7 +35,7 @@ export class UniversalMockHelper {
         pkgMock.registerLocationHelpersMock(tmr);
     }
 
-    public mockUniversalCommand(command: string, feed:string, packageName: string, packageVersion: string, path: string, result: TaskLibAnswerExecResult, service?: string) {
+    public mockUniversalCommand(command: string, feed: string, packageName: string, packageVersion: string, path: string, result: TaskLibAnswerExecResult, service?: string) {
         if (!service) {
             service = "https://example.visualstudio.com/defaultcollection";
         }

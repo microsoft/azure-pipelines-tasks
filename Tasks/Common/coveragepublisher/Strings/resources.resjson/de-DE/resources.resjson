@@ -1,0 +1,6 @@
+{
+  "loc.messages.InstallDotNetCoreForPublishing": "Installieren Sie .NET Core, um diese Aufgabe auszuführen.",
+  "loc.messages.ErrorWhilePublishing": "Fehler bei Coverage-Veröffentlichung:",
+  "loc.messages.UpgradeAgentMessage": "Aktualisieren Sie Ihre Agentversion. Benötigt wird v2.115.0 oder höher. https://github.com/Microsoft/vsts-agent/releases",
+  "loc.messages.NoInputFiles": "Es wurden keine Eingabedateien angegeben."
+}

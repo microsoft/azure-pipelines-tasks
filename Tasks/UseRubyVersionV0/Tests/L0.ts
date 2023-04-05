@@ -4,7 +4,7 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('UseRubyVersion L0 Suite', function () {
 
-    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+    this.timeout(process.env.TASK_TEST_TIMEOUT || 20000);
     before(function () {
     });
 

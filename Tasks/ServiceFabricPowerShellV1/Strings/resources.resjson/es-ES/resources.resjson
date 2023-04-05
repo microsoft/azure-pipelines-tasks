@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Service Fabric PowerShell",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkID=841538)",
+  "loc.description": "Ejecuta un script de PowerShell en el contexto de una conexión de clúster de Azure Service Fabric.",
+  "loc.instanceNameFormat": "Script de Service Fabric PowerShell: $(ScriptType)",
+  "loc.input.label.serviceConnectionName": "Conexión de Servicio de clúster",
+  "loc.input.help.serviceConnectionName": "Clúster de Azure Service Fabric que tendrá una conexión de servicio establecida cuando se ejecute el script de PowerShell especificado.",
+  "loc.input.label.ScriptType": "Tipo de script",
+  "loc.input.help.ScriptType": "Tipo del script: ruta de acceso del archivo o script en línea",
+  "loc.input.label.ScriptPath": "Ruta de acceso del script",
+  "loc.input.help.ScriptPath": "Ruta de acceso del script. Debe ser una ruta de acceso completa o relativa al directorio de trabajo predeterminado.",
+  "loc.input.label.Inline": "Script alineado",
+  "loc.input.help.Inline": "Escriba el script que se va a ejecutar.",
+  "loc.input.label.ScriptArguments": "Argumentos de script",
+  "loc.input.help.ScriptArguments": "Parámetros adicionales que pasar a PowerShell. Pueden ser parámetros ordinales o con nombre.",
+  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "El certificado con la huella digital {0} no está presente en el almacén de certificados local, lo cual puede causar errores. Si se produce un error de versión o compilación, vuelva a intentarlo o asegúrese de que no haya varios agentes que ejecuten compilaciones o versiones que usan el mismo punto de conexión de servicio simultáneamente en la misma máquina.",
+  "loc.messages.InvalidScriptArguments0": "Argumentos de script '{0}' no válidos. No se permiten los saltos de línea.",
+  "loc.messages.InvalidScriptPath0": "Ruta del script '{0}' no válida. Los caracteres de ruta de acceso especificados no son válidos."
+}

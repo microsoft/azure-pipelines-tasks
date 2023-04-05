@@ -41,7 +41,7 @@
   "loc.input.label.releaseName": "Release Name",
   "loc.input.help.releaseName": "Release name. If unspecified, it will autogenerate one for you.",
   "loc.input.label.overrideValues": "Set Values",
-  "loc.input.help.overrideValues": "Set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2). The task will construct the helm command by using these set values. For example, helm install --set key1=val1 ./redis.",
+  "loc.input.help.overrideValues": "Set values on the command line (can specify multiple or separate values with commas or newlines: key1=val1,key2=val2 or <br>key1=val1<br>key2=val2<br>). The task will construct the helm command by using these set values. For example, helm install --set key1=val1 ./redis.",
   "loc.input.label.valueFile": "Value File",
   "loc.input.help.valueFile": "Specify values in a YAML file or a URL. For example, specifying myvalues.yaml will result in 'helm install --values=myvals.yaml'.",
   "loc.input.label.destination": "Destination",
@@ -78,6 +78,8 @@
   "loc.input.help.tillernamespace": "Specify K8 namespace of tiller.",
   "loc.input.label.failOnStderr": "Fail on Standard Error",
   "loc.input.help.failOnStderr": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely on the exit code to determine failure.",
+  "loc.input.label.publishPipelineMetadata": "Publish pipeline metadata",
+  "loc.input.help.publishPipelineMetadata": "If this is true, the task will collect and publish deployment metadata",
   "loc.input.label.chartNameForACR": "Chart Name For Azure Container Registry",
   "loc.input.help.chartNameForACR": "Chart name with which the chart will be stored in Azure Container Registry.",
   "loc.input.label.chartPathForACR": "Chart Path for Azure Container Registry",
@@ -101,5 +103,6 @@
   "loc.messages.FileNotFound": "File not found at %s",
   "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
   "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
-  "loc.messages.SaveSupportedInHelmsV3Only": "Save chart to Azure Container Registry is only supported in Helms V3."
+  "loc.messages.SaveSupportedInHelmsV3Only": "Save chart to Azure Container Registry is only supported in Helms V3.",
+  "loc.messages.OutputVariableDataSizeExceeded": "Output variable not set as Helm command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s"
 }

@@ -5,6 +5,12 @@ _temp/
 gulp-tsc-tmp-*
 .gulp-tsc-tmp-*
 
+common-npm-packages/**/*.js
+!common-npm-packages/**/make.js
+!common-npm-packages/**/publish.js
+!common-npm-packages/build-scripts/**.js
+common-npm-packages/**/*openssl.zip
+common-npm-packages/utility-common-v2/tools/*
 [Tt]asks/**/*.js
 [Tt]ests/**/*.js
 !**/mock_node_modules/**/*.js
@@ -210,3 +216,4 @@ _Pvt_Extensions/
 ModelManifest.xml
 /Package
 LoadTest.code-workspace
+.idea/

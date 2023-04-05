@@ -14,7 +14,7 @@ The tool installer approach also allows you to decouple from the agent update cy
 
 - Perfrom Multi-level lookup. This input is only applicable to Windows based agents. It configures the .Net Core's host process behviour for looking for a suitable shared framework on the machine. You can read more about it **[HERE](https://github.com/dotnet/core-setup/blob/master/Documentation/design-docs/multilevel-sharedfx-lookup.md)**
 
-- Installs NuGet version 4.4.1 and sets up proxy configuration if present in NuGet config.
+- Installs NuGet version 4.9.6 and sets up proxy configuration if present in NuGet config.
 
 ## Contact Information
 
@@ -36,6 +36,7 @@ Examples:
   - To install latest patch version of 2.1 sdk, use 2.1.x
   - To install latest minor version of 2. sdk, use 2.x<br/>For getting more details about exact version, refer [this link](https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json).
 
+* **Compatible Visual Studio Version**: Specify a compatible Visual Studio version. If a version is specified, then only those versions of .Net Core SDK/runtime will be considered for installation which are compatible with this Visual Studio version. Specify complete Visual Studio version containing major version, minor version and patch number. e.g. 16.6.4. Compatibility of Visual Studio is checked by looking at vs-version property specified in the release manifest from the releases.json files. The link to releases.json of that major.minor version can be found in [**releases-index file.**](https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json)
 
 * **Include Preview Versions**: Select if you want preview versions to be included while searching for latest versions, such as while searching 2.2.x. This setting is ignored if you specify an exact version, such as: 3.0.100-preview3-010431
 

@@ -1,15 +1,15 @@
 import { TaskParameters } from './taskparameters';
-import { KuduServiceUtility } from 'azurermdeploycommon/operations/KuduServiceUtility';
-import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
-import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
-import { Kudu } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service-kudu';
-import { AzureAppServiceUtility } from 'azurermdeploycommon/operations/AzureAppServiceUtility';
-import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
-import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/AzureResourceFilterUtility';
+import { KuduServiceUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/KuduServiceUtility';
+import { AzureAppService } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
+import { Kudu } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-app-service-kudu';
+import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureAppServiceUtility';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
+import { AzureResourceFilterUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureResourceFilterUtility';
 import tl = require('azure-pipelines-task-lib/task');
-import { addReleaseAnnotation } from 'azurermdeploycommon/operations/ReleaseAnnotationUtility';
-import { ContainerBasedDeploymentUtility } from 'azurermdeploycommon/operations/ContainerBasedDeploymentUtility';
-import * as ParameterParser from 'azurermdeploycommon/operations/ParameterParserUtility';
+import { addReleaseAnnotation } from 'azure-pipelines-tasks-azurermdeploycommon/operations/ReleaseAnnotationUtility';
+import { ContainerBasedDeploymentUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/ContainerBasedDeploymentUtility';
+import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon/operations/ParameterParserUtility';
 
 export class AzureRmWebAppDeploymentProvider{
     protected taskParams:TaskParameters;
@@ -36,14 +36,17 @@ export class AzureRmWebAppDeploymentProvider{
     public async DeployWebAppStep() {
         tl.debug("Performing container based deployment.");
 
-        let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
-        await containerDeploymentUtility.deployWebAppImage(this.taskParams);
-        
         if(this.taskParams.AppSettings) {
             var customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
             await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
         }
 
+        if(!this.taskParams["StartupCommand"]) {
+            this.taskParams["StartupCommand"] = null;
+        }
+
+        let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
+        await containerDeploymentUtility.deployWebAppImage(this.taskParams);
         await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
     }
 

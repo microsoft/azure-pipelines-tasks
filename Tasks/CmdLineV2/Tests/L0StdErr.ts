@@ -25,6 +25,14 @@ tlClone.assertAgent = function(variable: string) {
 tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 tmr.setInput('script2', `echo 'Hello world'\necho 'Goodbye world'`);
 
+function generateBigString(size: number) {
+    let result:string = '';
+    while (result.length < size) {
+        result += 'a';
+    }
+    return result;
+}
+
 // Mock task-lib
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'checkPath' : {
@@ -42,12 +50,12 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         'path/to/bash --noprofile --norc temp\\path\\fileName.sh': {
             "code": 0,
             "stdout": "",
-            "stderr": "myErrorTest"
+            "stderr": "myErrorTest" + generateBigString(1000)
         },
         'path/to/bash --noprofile --norc temp/path/fileName.sh': {
             "code": 0,
             "stdout": "",
-            "stderr": "myErrorTest"
+            "stderr": "myErrorTest" + generateBigString(1000)
         }
     }
 };
@@ -62,8 +70,8 @@ fsClone.writeFileSync = function(filePath, contents, options) {
 tmr.registerMock('fs', fsClone);
 
 // Mock uuidv4
-tmr.registerMock('uuid/v4', function () {
+tmr.registerMock('uuid', {v4: function () {
     return 'fileName';
-});
+}});
 
 tmr.run();

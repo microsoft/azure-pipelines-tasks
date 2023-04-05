@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import * as task from 'azure-pipelines-task-lib/task';
 
-import * as uuidV4 from 'uuid/v4';
+import { v4 as uuidV4 } from 'uuid';
 
 interface TaskParameters {
     scriptSource: string,

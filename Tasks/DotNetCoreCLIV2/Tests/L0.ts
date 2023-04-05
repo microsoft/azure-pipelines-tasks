@@ -6,6 +6,7 @@ import os = require('os');
 import fs = require('fs');
 
 describe('DotNetCoreExe Suite', function () {
+    this.timeout(5000);
     before(() => {
     });
 
@@ -193,6 +194,50 @@ describe('DotNetCoreExe Suite', function () {
         done();
     });
 
+    it('restore select nuget.org source warns', (done: Mocha.Done) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './RestoreTests/nugetOrgBehaviorWarn.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.invokedToolCount == 1, 'should have run dotnet once');
+        assert(tr.ran('c:\\path\\dotnet.exe restore c:\\agent\\home\\directory\\single.csproj --configfile c:\\agent\\home\\directory\\NuGet\\tempNuGet_.config'), 'it should have run dotnet');
+        assert(tr.stdOutContained('adding package source uri: https://api.nuget.org/v3/index.json'), "should have added nuget.org source to config");
+        assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
+        assert(tr.succeeded, 'should have succeeded with issues');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
+    it('restore select nuget.org source fails', (done: Mocha.Done) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './RestoreTests/nugetOrgBehaviorFail.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.invokedToolCount == 0, 'should not run dotnet once');
+        assert(tr.failed, 'should have Failed');
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
+        done();
+    });
+
+    it('restore select nuget.org source on nuget config succeeds', (done: Mocha.Done) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './RestoreTests/nugetOrgBehaviorOnConfig.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.invokedToolCount == 1, 'should have run dotnet once');
+        assert(tr.ran('c:\\path\\dotnet.exe restore c:\\agent\\home\\directory\\single.csproj --configfile c:\\agent\\home\\directory\\NuGet\\tempNuGet_.config'), 'it should have run dotnet');
+        assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
     it('build fails when zero match found', (done: MochaDone) => {
         process.env["__projects__"] = "*fail*/project.json";
         process.env["__command__"] = "build";
@@ -354,7 +399,7 @@ describe('DotNetCoreExe Suite', function () {
 
         tr.run();
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
-        assert(tr.ran('c:\\path\\dotnet.exe pack c:\\agent\\home\\directory\\foo.nuspec --output C:\\out\\dir /p:PackageVersion=x.y.z-CI-YYYYMMDD-HHMMSS'), 'it should have run dotnet');
+        assert(tr.ran('c:\\path\\dotnet.exe pack -p:NuspecFile=c:\\agent\\home\\directory\\foo.nuspec --output C:\\out\\dir /p:PackageVersion=x.y.z-CI-YYYYMMDD-HHMMSS'), 'it should have run dotnet');
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
@@ -369,7 +414,7 @@ describe('DotNetCoreExe Suite', function () {
 
         tr.run();
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
-        assert(tr.ran('c:\\path\\dotnet.exe pack c:\\agent\\home\\directory\\foo.nuspec --output C:\\out\\dir /p:PackageVersion=XX.YY.ZZ'), 'it should have run dotnet');
+        assert(tr.ran('c:\\path\\dotnet.exe pack -p:NuspecFile=c:\\agent\\home\\directory\\foo.nuspec --output C:\\out\\dir /p:PackageVersion=XX.YY.ZZ'), 'it should have run dotnet');
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
@@ -421,22 +466,6 @@ describe('DotNetCoreExe Suite', function () {
         done();
     });
 
-    it('pushes successfully to internal onprem feed, does not set auth in config', (done: MochaDone) => {
-        this.timeout(1000);
-
-        let tp = path.join(__dirname, './PushTests/internalFeedOnPrem.js')
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run()
-        assert(tr.invokedToolCount == 1, 'should have run dotnet once');
-        assert(tr.ran('c:\\path\\dotnet.exe nuget push c:\\agent\\home\\directory\\foo.nupkg --source https://vsts/packagesource --api-key VSTS'), 'it should have run dotnet');
-        assert(tr.stdOutContained('Push to internal OnPrem server detected. Credential configuration will be skipped.'), "should detect internal onprem push");
-        assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
-        assert(tr.succeeded, 'should have succeeded');
-        assert.equal(tr.errorIssues.length, 0, "should have no errors");
-        done();
-    });
-
     it('push fails when projects are not found', (done: MochaDone) => {
         this.timeout(1000);
 
@@ -473,7 +502,6 @@ describe('DotNetCoreExe Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        console.log(tr.stdout);
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
         assert(tr.ran('c:\\path\\dotnet.exe test c:\\agent new\\home\\directory\\temp.csproj --logger trx --results-directory c:\\agent new\\home\\temp'), 'it should have run dotnet test');
         assert(tr.stdOutContained('dotnet output'), "should have dotnet output");

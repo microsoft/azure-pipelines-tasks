@@ -1,6 +1,7 @@
 import os = require('os');
 import path = require('path');
 var process = require('process');
+import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
 
@@ -43,13 +44,75 @@ let pathToRobocopyPSString = (filePath: string) => {
     return `'${result}'`;
 }
 
+/**
+ * Creates plain (not compressed) tar archive from files located in `filesPath`.
+ * `filesPath` input may contain a file or a folder with files.
+ * Puts created tar file to temp directory ($(Agent.TempDirectory)/`artifactName`.tar).
+ * 
+ * @param filesPath path to a file or a directory of files to add to a tar archive
+ * @param artifactName the name of the artifact. This will be used to determine tar archive name
+ * @returns string
+ */
+function createTarArchive(filesPath: string, artifactName: string): string {
+    const tar: tr.ToolRunner = tl.tool(tl.which('tar', true));
+    const outputFilePath: string = path.join(tl.getVariable('Agent.TempDirectory'), `${artifactName}.tar`);
+
+    if (tl.stats(filesPath).isFile()) {
+        // If filesPath is a file, we only have to add a single file
+        tar.arg(['cf', outputFilePath, '--directory', path.dirname(filesPath), path.basename(filesPath)]);
+    } else {
+        // If filesPath is a directory, we have to add all files from that directory to the tar archive
+        tar.arg(['cf', outputFilePath, '--directory', filesPath, '.']);
+    }
+
+    const tarExecResult: tr.IExecSyncResult = tar.execSync();
+
+    if (tarExecResult.error || tarExecResult.code !== 0) {
+        throw new Error(`Couldn't add artifact files to a tar archive: ${tarExecResult.error}`);
+    }
+
+    return outputFilePath;
+}
+
+/**
+ * If the `StoreAsTar` input is set to false, return path to publish unaltered;
+ * otherwise add all files from this path to a tar archive and return path to that archive
+ *
+ * @param pathToPublish value of `PathtoPublish` input
+ * @param shouldStoreAsTar value of `PathtoPublish` input
+ * @param artifactName value of `ArtifactName` input
+ * @returns string
+ */
+function getPathToUploadAndCreateTarIfNeeded(
+    pathToPublish: string,
+    shouldStoreAsTar: boolean,
+    artifactName: string
+): string {
+    if (!shouldStoreAsTar) {
+        return pathToPublish;
+    }
+
+    return createTarArchive(pathToPublish, artifactName);
+}
+
 async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        // PathtoPublish is a folder that contains the files
-        let pathtoPublish: string = tl.getPathInput('PathtoPublish', true, true);
-        let artifactName: string = tl.getInput('ArtifactName', true);
+        const shouldStoreAsTar: boolean = tl.getBoolInput('StoreAsTar');
+        const isWindows = os.platform() === 'win32';
+        if (isWindows && shouldStoreAsTar) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc('TarExtractionNotSupportedInWindows'));
+            return;
+        }
+
+        // pathToPublish is a folder or a single file that may be added to a tar archive later
+        const pathToPublish: string = tl.getPathInput('PathtoPublish', true, true);
+        const artifactName: string = tl.getInput('ArtifactName', true);
+
+        // pathToUpload is an actual folder or file that will get uploaded
+        const pathToUpload: string = getPathToUploadAndCreateTarIfNeeded(pathToPublish, shouldStoreAsTar, artifactName);
+
         let artifactType: string = tl.getInput('ArtifactType', true);
 
 
@@ -71,8 +134,8 @@ async function run() {
             data["containerfolder"] = artifactName;
 
             // add localpath to ##vso command's properties for back compat of old Xplat agent
-            data["localpath"] = pathtoPublish;
-            tl.command("artifact.upload", data, pathtoPublish);
+            data["localpath"] = pathToUpload;
+            tl.command("artifact.upload", data, pathToUpload);
         }
         else if (artifactType === "filepath") {
             let targetPath: string = tl.getInput('TargetPath', true);
@@ -95,10 +158,10 @@ async function run() {
 
                 // copy the files
                 let script: string = path.join(__dirname, 'Invoke-Robocopy.ps1');
-                let command: string = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(pathtoPublish)} -Target ${pathToRobocopyPSString(artifactPath)} -ParallelCount ${parallelCount}`
-                if (tl.stats(pathtoPublish).isFile()) {
-                    let parentFolder = path.dirname(pathtoPublish);
-                    let file = path.basename(pathtoPublish);
+                let command: string = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(pathToUpload)} -Target ${pathToRobocopyPSString(artifactPath)} -ParallelCount ${parallelCount}`
+                if (tl.stats(pathToUpload).isFile()) {
+                    let parentFolder = path.dirname(pathToUpload);
+                    let file = path.basename(pathToUpload);
                     command = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(parentFolder)} -Target ${pathToRobocopyPSString(artifactPath)} -ParallelCount ${parallelCount} -File '${file}'`
                 }
 

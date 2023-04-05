@@ -1,20 +1,49 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as semver from 'semver';
 
-const findAndroidTool = (tool: string): string => {
+const findAndroidTool = (tool: string, version?: string): string => {
     const androidHome = tl.getVariable('ANDROID_HOME');
     if (!androidHome) {
         throw new Error(tl.loc('AndroidHomeNotSet'));
     }
 
-    // add * in search as on Windows the tool may end with ".exe" or ".bat"
-    const toolsList = tl.findMatch(tl.resolve(androidHome, 'build-tools'), tool + '*', null, { matchBase: true });
+    // add * in search as on Windows the tool may end with ".exe" or ".bat. Exclude .jar files from the list"
+    const toolsList = tl.findMatch(tl.resolve(androidHome, 'build-tools'), [`${tool}*`, "!*.jar"], null, { matchBase: true })
 
     if (!toolsList || toolsList.length === 0) {
         throw new Error(tl.loc('CouldNotFindToolInAndroidHome', tool, androidHome));
     }
 
-    return toolsList[0];
+    // use latest tool version, sort toolsList descending
+    if(!version || version === 'latest') {
+        tl.debug(tl.loc('GetLatestToolVersion', tool));
+        toolsList.sort((a: string, b: string) => {
+            const toolBaseDirA = path.basename(path.dirname(a));
+            const toolBaseDirB = path.basename(path.dirname(b));
+            // if parent folders are valid semantic versions, compare them, otherwise move to the end of the list
+            if(semver.valid(toolBaseDirA) && semver.valid(toolBaseDirB)) {
+                return semver.rcompare(toolBaseDirA, toolBaseDirB);
+            } else if(semver.valid(toolBaseDirA)) {
+                return -1;
+            } else {
+                return toolBaseDirA.localeCompare(toolBaseDirB);
+            }
+        });
+        return toolsList[0];
+    }
+    // try to find version specified
+    tl.debug(tl.loc('GetSpecifiedToolVersion', version, tool));
+    let versions: string[] = toolsList.map(item => path.basename(path.dirname(item)));
+    versions = versions.filter(item => !!semver.valid(item) && item.startsWith(version));
+    versions = versions.sort(semver.rcompare);
+    const matchingPath: string =  toolsList.find(item => item.includes(versions[0]));
+
+    if (!matchingPath) {
+        throw new Error(tl.loc('CouldNotFindVersionOfToolInAndroidHome', version, tool, androidHome));
+    }
+    
+    return matchingPath;
 };
 
 /*
@@ -29,7 +58,8 @@ const apksigning = (fn: string) => {
 
     // if the tool path is not set, let's find one (anyone) from the SDK folder
     if (!apksigner) {
-        apksigner = findAndroidTool('apksigner');
+        const apksignerVersion: string = tl.getInput('apksignerVersion', false);
+        apksigner = findAndroidTool('apksigner', apksignerVersion);
     }
 
     const apksignerRunner = tl.tool(apksigner);
@@ -80,7 +110,8 @@ const zipaligning = (fn: string) => {
 
     // if the tool path is not set, let's find one (anyone) from the SDK folder
     if (!zipaligner) {
-        zipaligner = findAndroidTool('zipalign');
+        const zipalignerVersion: string = tl.getInput('zipalignVersion', false);
+        zipaligner = findAndroidTool('zipalign', zipalignerVersion);
     }
 
     const zipalignRunner = tl.tool(zipaligner);

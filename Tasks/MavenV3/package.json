@@ -1,6 +1,6 @@
 {
   "name": "Agent.Tasks.Maven",
-  "version": "1.0.37",
+  "version": "2.208.0",
   "author": "Microsoft Corporation",
   "description": "Build with Apache Maven",
   "license": "MIT",
@@ -8,19 +8,26 @@
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
   },
   "dependencies": {
-    "@types/node": "^6.0.101",
-    "@types/q": "^1.0.7",
-    "azure-pipelines-task-lib": "^2.8.0",
+    "@types/jsdom": "^16.2.14",
+    "@types/node": "^16.11.39",
+    "@types/mocha": "^9.1.1",
+    "azure-pipelines-task-lib": "^4.0.0-preview",
+    "azure-pipelines-tool-lib": "^2.0.0-preview",
+    "azure-pipelines-tasks-codeanalysis-common": "2.0.3",
+    "azure-pipelines-tasks-codecoverage-tools": "2.201.0",
+    "azure-pipelines-tasks-java-common": "2.198.1",
+    "azure-pipelines-tasks-packaging-common": "3.201.0",
     "base-64": "^0.1.0",
-    "codeanalysis-common": "file:../../_build/Tasks/Common/codeanalysis-common-1.0.0.tgz",
-    "codecoverage-tools": "file:../../_build/Tasks/Common/codecoverage-tools-1.0.0.tgz",
     "fs-extra": "^0.30.0",
-    "java-common": "file:../../_build/Tasks/Common/java-common-1.0.0.tgz",
-    "packaging-common": "file:../../_build/Tasks/Common/packaging-common-1.0.1.tgz",
+    "jsdom": "^16.7.0",
     "request": "^2.74.0",
+    "shelljs": "^0.8.5",
     "strip-bom": "^3.0.0",
     "utf8": "^2.1.0",
     "uuid": "^3.0.1",
     "xml2js": "^0.4.16"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }

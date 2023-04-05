@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "安装 Apple 证书",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=862067)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkID=862067)",
   "loc.description": "将生成所需的 Apple 证书安装到 macOS 代理计算机上",
   "loc.instanceNameFormat": "安装 Apple 证书",
   "loc.releaseNotes": "修复程序 codesign 在自托管代理上挂起。密钥链密码现在需要使用 `Default Keychain` 或 `Custom Keychain`。Microsoft 托管生成应使用 `Temporary Keychain`。",
@@ -21,6 +21,8 @@
   "loc.input.help.deleteCustomKeychain": "生成或发布完成后选择从代理删除此自定义密钥链。",
   "loc.input.label.signingIdentity": "证书签名标识",
   "loc.input.help.signingIdentity": "签名证书中的使用者公用名。如果公用名为空，将尝试对其进行分析。",
+  "loc.input.label.setUpPartitionIdACLForPrivateKey": "为导入的私钥设置 partition_id ACL",
+  "loc.input.help.setUpPartitionIdACLForPrivateKey": "如果为 true - 为导入的私钥设置 partition_id ACL，因此 codesign 不会提示使用密钥进行签名。这对于临时密钥链来说不是必需的，至少在 MacOS High Sierra 上是这样。有关更多详细信息，请参阅 [link](http://www.openradar.me/28524119)。",
   "loc.messages.INVALID_P12": "无法找到证书 SHA1 哈希和公用名(CN)。请验证证书是否是有效的 P12。",
   "loc.messages.NoP12PwdWarning": "未提供任何 P12 密码。如果 P12 文件需要密码，最佳做法是以管道变量的形式提供，并通过启用锁定图标将其标记为机密。",
   "loc.messages.P12PrivateKeyNameNotFound": "无法标识私钥名称: %s",

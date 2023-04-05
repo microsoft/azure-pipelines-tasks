@@ -24,6 +24,14 @@ tlClone.assertAgent = function(variable: string) {
 };
 tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
+function generateBigString(size: number) {
+    let result:string = '';
+    while (result.length < size) {
+        result += 'a';
+    }
+    return result;
+}
+
 // Mock task-lib
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'checkPath' : {
@@ -38,14 +46,14 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         '2.115.0': true
     },
     'exec': {
-        'path/to/bash --noprofile --norc -c pwd': {
+        'path/to/bash -c pwd': {
             "code": 0,
             "stdout": "temp/path"
         },
         'path/to/bash temp/path/fileName.sh': {
             "code": 0,
             "stdout": "",
-            "stderr": "myErrorTest"
+            "stderr": "myErrorTest" + generateBigString(1000)
         }
     }
 };

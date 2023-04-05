@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Script de commandes par lot",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkID=613733).\n\nRemarque : Cette tâche n'est pas compatible avec les conteneurs Windows. Si vous devez exécuter un script de commandes par lot sur un conteneur Windows, utilisez la [tâche CmdLine](https://go.microsoft.com/fwlink/?LinkID=613735) à la place.",
+  "loc.description": "Exécuter une commande ou un script de commandes par lot Windows, et lui permettre éventuellement de changer l'environnement",
+  "loc.instanceNameFormat": "Exécuter le script $(filename)",
+  "loc.group.displayName.advanced": "Avancé",
+  "loc.input.label.filename": "Chemin",
+  "loc.input.help.filename": "Chemin d’accès du script de cmd ou de bat à exécuter. Doit être un chemin d’accès complet ou relatif à l’annuaire de travail par défaut (notez que l’annuaire de travail peut différer de « WorkingFolder » qui pourrait être spécifié pour cette tâche).",
+  "loc.input.label.arguments": "Arguments",
+  "loc.input.help.arguments": "Arguments passés au script cmd ou bat",
+  "loc.input.label.modifyEnvironment": "Modifier l'environnement",
+  "loc.input.help.modifyEnvironment": "Détermine si les modifications des variables d'environnement ont un impact sur les tâches suivantes.",
+  "loc.input.label.workingFolder": "Dossier de travail",
+  "loc.input.help.workingFolder": "Répertoire de travail actuel quand le script est exécuté. Il s'agit généralement du dossier dans lequel se trouve le script.",
+  "loc.input.label.failOnStandardError": "Échec sur une erreur standard",
+  "loc.input.help.failOnStandardError": "Si la valeur est true, cette tâche échoue si des erreurs sont écrites dans le flux de données StandardError."
+}

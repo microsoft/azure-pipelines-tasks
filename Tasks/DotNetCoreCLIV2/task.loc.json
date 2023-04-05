@@ -17,10 +17,10 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 171,
-    "Patch": 4
+    "Minor": 220,
+    "Patch": 0
   },
-  "minimumAgentVersion": "2.115.0",
+  "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -309,7 +309,10 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.feedPublish",
-      "visibleRule": "command = push && nuGetFeedType = internal"
+      "visibleRule": "command = push && nuGetFeedType = internal",
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "publishPackageMetadata",
@@ -498,20 +501,24 @@
     {
       "target": "feedRestore",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "feedPublish",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
+      "target": "dotnetcore.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "dotnetcore.js",
       "argumentFormat": ""
     }
@@ -568,7 +575,10 @@
     "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion",
-    "NetCore3Update": "ms-resource:loc.messages.NetCore3Update",
-    "DeprecatingDotnet2_2": "ms-resource:loc.messages.DeprecatingDotnet2_2"
+    "Net5Update": "ms-resource:loc.messages.Net5Update",
+    "Net5NugetVersionCompat": "ms-resource:loc.messages.Net5NugetVersionCompat",
+    "DeprecatedDotnet2_2_And_3_0": "ms-resource:loc.messages.DeprecatedDotnet2_2_And_3_0",
+    "Warning_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Warning_IncludeNuGetOrgEnabled",
+    "Error_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Error_IncludeNuGetOrgEnabled"
   }
 }

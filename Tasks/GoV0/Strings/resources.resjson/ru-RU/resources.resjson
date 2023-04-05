@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Go",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=867582)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?linkid=867582)",
   "loc.description": "Получите, создайте или протестируйте приложение Go либо выполните пользовательскую команду Go",
   "loc.instanceNameFormat": "go $(command)",
   "loc.group.displayName.advanced": "Дополнительно",

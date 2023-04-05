@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib');
+import tl = require('azure-pipelines-task-lib');
 
 export let TestEnvVars = {
     operatingSystem: "__operating_system__",

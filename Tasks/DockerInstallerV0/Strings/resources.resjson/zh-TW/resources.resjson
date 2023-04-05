@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Docker CLI 安裝程式",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "在代理程式機器上安裝 Docker CLI。",
   "loc.instanceNameFormat": "安裝 Docker $(dockerVersion)",
   "loc.input.label.dockerVersion": "Docker 版本",

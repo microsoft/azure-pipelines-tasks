@@ -9,13 +9,13 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 2,
-        "Patch": 3
+        "Minor": 199,
+        "Patch": 0
     },
     "groups": [],
     "demands": [],
     "preview": false,
-    "minimumAgentVersion": "2.159.2",
+    "minimumAgentVersion": "2.199.0",
     "inputs": [
         {
             "name": "path",
@@ -38,7 +38,7 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Name of the artifact to publish. If not set, defaults to a unique ID scoped to the job."
-        }, 
+        },
         {
             "name": "artifactType",
             "aliases": [
@@ -80,6 +80,14 @@
             "required": false,
             "helpMarkDown": "Enter the degree of parallelism, or number of threads used, to perform the copy. The value must be at least 1 and not greater than 128.",
             "visibleRule": "artifactType = filepath && parallel = true"
+        },
+        {
+            "name": "properties",
+            "type": "string",
+            "label": "Custom properties",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'"
         }
     ],
     "instanceNameFormat": "Publish Pipeline Artifact",

@@ -13,11 +13,11 @@ const isWindows = os.type().match(/^Win/);
 const dockerToolNameWithExtension = dockerToolName + getExecutableExtension();
 
 export async function downloadDocker(version: string, releaseType: string): Promise<string> {
-   
+
     //docker does not follow strict semversion and has leading zeros in versions <10
-    var cleanVersion = version.replace(/(0+)([1-9]+)/,"$2");
+    var cleanVersion = version.replace(/(0+)([1-9]+)/, "$2");
     var cachedToolpath = toolLib.findLocalTool(dockerToolName + "-" + releaseType, cleanVersion);
-   
+
     if (!cachedToolpath) {
         try {
             var dockerDownloadPath = await toolLib.downloadTool(getDockerDownloadURL(version, releaseType), dockerToolName + "-" + uuidV4() + getArchiveExtension());
@@ -26,8 +26,8 @@ export async function downloadDocker(version: string, releaseType: string): Prom
         }
 
         var unzipedDockerPath;
-        if(isWindows) {
-            unzipedDockerPath = await toolLib.extractZip(dockerDownloadPath);        
+        if (isWindows) {
+            unzipedDockerPath = await toolLib.extractZip(dockerDownloadPath);
         } else {
             //tgz is a tar file packaged using gzip utility
             unzipedDockerPath = await toolLib.extractTar(dockerDownloadPath);
@@ -35,7 +35,7 @@ export async function downloadDocker(version: string, releaseType: string): Prom
 
         //contents of the extracted archive are under "docker" directory. caching only "docker(.exe)" CLI
         unzipedDockerPath = path.join(unzipedDockerPath, "docker", dockerToolNameWithExtension);
-        cachedToolpath = await toolLib.cacheFile(unzipedDockerPath, dockerToolNameWithExtension, dockerToolName+ "-" + releaseType, cleanVersion);
+        cachedToolpath = await toolLib.cacheFile(unzipedDockerPath, dockerToolNameWithExtension, dockerToolName + "-" + releaseType, cleanVersion);
     }
 
     var Dockerpath = findDocker(cachedToolpath);
@@ -43,12 +43,12 @@ export async function downloadDocker(version: string, releaseType: string): Prom
         throw new Error(tl.loc("DockerNotFoundInFolder", cachedToolpath))
     }
 
-    fs.chmodSync(Dockerpath, "777");
+    fs.chmodSync(Dockerpath, "755");
     return Dockerpath;
 }
 
 function findDocker(rootFolder: string) {
-    var DockerPath = path.join(rootFolder,  dockerToolNameWithExtension);
+    var DockerPath = path.join(rootFolder, dockerToolNameWithExtension);
     var allPaths = tl.find(rootFolder);
     var matchingResultsFiles = tl.match(allPaths, DockerPath, rootFolder);
     return matchingResultsFiles[0];
@@ -61,8 +61,13 @@ function getDockerDownloadURL(version: string, releaseType: string): string {
     switch (os.type()) {
         case 'Linux':
             platform = "linux";
-            if (os.arch() === "arm64") {
-                architecture = "aarch64";
+            switch (os.arch()) {
+                case 'arm':
+                    architecture = "armhf";
+                    break;
+                case 'arm64':
+                    architecture = "aarch64";
+                    break;
             }
             break;
 
@@ -85,7 +90,7 @@ function getExecutableExtension(): string {
 }
 
 function getArchiveExtension(): string {
-    if(isWindows) {
+    if (isWindows) {
         return ".zip";
     }
     return ".tgz";

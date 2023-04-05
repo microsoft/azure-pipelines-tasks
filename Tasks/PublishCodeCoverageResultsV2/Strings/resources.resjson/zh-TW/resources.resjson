@@ -1,13 +1,13 @@
 {
   "loc.friendlyName": "發佈程式碼涵蓋範圍結果",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "Publish any of the code coverage results from a build",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.description": "從組建發行任何程式碼涵蓋範圍結果",
   "loc.instanceNameFormat": "發佈程式碼涵蓋範圍結果",
-  "loc.input.label.summaryFileLocation": "Path to summary files",
-  "loc.input.help.summaryFileLocation": "Paths to summary files containing code coverage statistics, such as line, method, and class coverage. Multiple summary files will be merged into a single report. Supports multiple lines of minimatch patterns. [More information](https://aka.ms/minimatchexamples)",
+  "loc.input.label.summaryFileLocation": "摘要檔案路徑",
+  "loc.input.help.summaryFileLocation": "包含程式碼涵蓋範圍統計資料的摘要檔路徑，例如行、方法和類別涵蓋範圍。多個摘要檔會合併成單一份報告。支援多行的 minimatch 模式。[詳細資訊](https://aka.ms/minimatchexamples)",
   "loc.input.label.pathToSources": "來源檔案的路徑",
   "loc.input.help.pathToSources": "當涵蓋範圍 XML 報告未包含來源檔案的絕對路徑時，來源檔案的路徑即為必要項。舉例來說，JaCoCo 並未使用絕對路徑，則在為 Java 應用程式發佈 JaCoCo 涵蓋範圍時，模式會相似於 `$(System.DefaultWorkingDirectory)/MyApp/src/main/java/`。<br />如果測試是在 Docker 容器中執行的，則此輸出亦為必要項。這個輸出應會在主機上指向來源檔案的絕對路徑。例如 `$(System.DefaultWorkingDirectory)/MyApp/`",
-  "loc.input.label.failIfCoverageEmpty": "Fail if code coverage results are missing",
+  "loc.input.label.failIfCoverageEmpty": "如果遺漏程式碼涵蓋範圍結果就會失敗",
   "loc.input.help.failIfCoverageEmpty": "若程式碼涵蓋範圍並未產生任何可發行結果，則工作會失敗。",
   "loc.messages.FoundNMatchesForPattern": "找到 %s 個結果符合格式: %s",
   "loc.messages.NoCodeCoverage": "找不到要發行的程式碼涵蓋範圍結果。"

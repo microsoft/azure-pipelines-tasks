@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Установщик Docker CLI",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "Установите Docker CLI на компьютере агента.",
   "loc.instanceNameFormat": "Установить Docker $(dockerVersion)",
   "loc.input.label.dockerVersion": "Версия Docker",

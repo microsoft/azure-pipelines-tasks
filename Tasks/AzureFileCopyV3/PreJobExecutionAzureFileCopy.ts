@@ -1,10 +1,10 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import fs = require('fs')
-import armStorage = require('azure-arm-rest-v2/azure-arm-storage');
-import msRestAzure = require('azure-arm-rest-v2/azure-arm-common');
-import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
-import { AzureEndpoint, StorageAccount } from 'azure-arm-rest-v2/azureModels';
+import armStorage = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-storage');
+import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common');
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
+import { AzureEndpoint, StorageAccount } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
 
 function isNonEmpty(str: string): boolean {
     return (!!str && !!str.trim());
@@ -27,7 +27,7 @@ async function run(): Promise<void> {
         const taskManifestPath = path.join(__dirname, "task.json");
         tl.debug("Setting resource path to " + taskManifestPath);
         tl.setResourcePath(taskManifestPath);
-        let connectionType = tl.getInput('ConnectedServiceNameSelector', true);
+        let connectionType = tl.getInput('ConnectedServiceNameSelector', false);
         if(connectionType === 'ConnectedServiceNameARM') {
             let connectedServiceName = tl.getInput('ConnectedServiceNameARM', true);
             let storageAccountName = tl.getInput('StorageAccountRM', true);

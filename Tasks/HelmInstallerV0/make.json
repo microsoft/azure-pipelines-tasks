@@ -1,14 +1,8 @@
 {
-    "common": [{
-        "module": "../Common/kubernetes-common",
-        "type": "node",
-        "dest" : "./",
-        "compile" : true
-    }],
     "rm": [
         {
             "items": [
-                "node_modules/kubernetes-common/node_modules/vsts-task-lib"
+                "node_modules/azure-pipelines-tasks-kubernetes-common/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }

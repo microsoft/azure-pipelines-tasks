@@ -1,0 +1,6 @@
+{
+  "loc.messages.InstallDotNetCoreForPublishing": "このタスクを実行するには、dotnet core をインストールしてください。",
+  "loc.messages.ErrorWhilePublishing": "カバレッジの発行中にエラーが発生しました",
+  "loc.messages.UpgradeAgentMessage": "エージェントのバージョンをアップグレードしてください。v2.115.0 以上が必要です。https://github.com/Microsoft/vsts-agent/releases",
+  "loc.messages.NoInputFiles": "入力ファイルが指定されていません。"
+}

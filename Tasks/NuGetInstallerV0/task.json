@@ -2,14 +2,14 @@
     "id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
     "name": "NuGetInstaller",
     "friendlyName": "NuGet Installer",
-    "description": "Installs or restores missing NuGet packages",
+    "description": "Installs or restores missing NuGet packages. Use NuGetAuthenticate@0 task for latest capabilities.",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget",
     "helpMarkDown": "[More Information](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 172,
+        "Minor": 215,
         "Patch": 0
     },
     "runsOn": [
@@ -111,7 +111,11 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
+            "target": "nugetinstaller.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "nugetinstaller.js",
             "argumentFormat": ""
         }

@@ -13,11 +13,12 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 171,
-        "Patch": 0
+        "Minor": 220,
+        "Patch": 1
     },
     "satisfies": [
-        "Java"
+        "Java",
+        "JDK"
     ],
     "demands": [],
     "groups": [
@@ -27,6 +28,7 @@
             "isExpanded": true
         }
     ],
+    "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Use Java $(versionSpec)",
     "inputs": [
         {
@@ -113,7 +115,7 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "jdkSourceOption != PreInstalled",
-            "helpMarkDown": "Destination directory into which JDK should be extracted."
+            "helpMarkDown": "On Linux and Windows, this is used as the destination directory for JDK installation. On macOS, this directory is used as a temporary folder for extracting of .dmg's since macOS doesn't support installing of JDK to specific directory."
         },
         {
             "name": "cleanDestinationDirectory",
@@ -123,6 +125,15 @@
             "defaultValue": "true",
             "visibleRule": "jdkSourceOption != PreInstalled",
             "helpMarkDown": "Select this option to clean the destination directory before JDK is extracted into it."
+        },
+        {
+            "name": "createExtractDirectory",
+            "type": "boolean",
+            "label": "Create directory for extracting",
+            "required": false,
+            "defaultValue": true,
+            "visibleRule": "jdkSourceOption != PreInstalled",
+            "helpMarkDown": "By default, task is creating a directory similar to this JAVA_HOME_8_X64_OpenJDK_zip for extracting JDK. This option allows to disable creation of this folder, in this case, JDK will be located in the root of jdkDestinationDirectory"
         }
     ],
     "dataSourceBindings": [
@@ -142,9 +153,24 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "javatoolinstaller.js",
             "argumentFormat": ""
+        },
+        "Node16": {
+            "target": "javatoolinstaller.js",
+            "argumentFormat": ""
+        }
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": [
+                "PATH",
+                "JAVA_HOME*"
+            ]
         }
     },
     "messages": {
@@ -177,6 +203,20 @@
         "CorrelationIdForARM": "Correlation ID from ARM api call response : %s",
         "JavaNotPreinstalled": "Java %s is not preinstalled on this agent",
         "UsePreinstalledJava": "Use preinstalled JDK from %s",
-        "WrongArchiveStructure": "JDK file is not valid. Verify if JDK file contains only one root folder with 'bin' inside."
+        "WrongArchiveStructure": "JDK file is not valid. Verify if JDK file contains only one root folder with 'bin' inside.",
+        "WrongArchiveFile": "Archive file is wrong. There is not any folder which contains JDK",
+        "ShareAccessError": "Network shared resource not available: (%s)",
+        "UnsupportedDMGStructure": "JDK file is not supported. Verify if JDK file contains exactly one folder inside.",
+        "NoPKGFile": "Could not find PKG file.",
+        "SeveralPKGFiles": "Found more than one PKG files.",
+        "InstallJDK": "Installing JDK.",
+        "AttachDiskImage": "Attaching a disk image.",
+        "DetachDiskImage": "Detaching a disk image.",
+        "PkgPathDoesNotExist": "Package path does not exist.",
+        "PreInstalledJavaUpgraded": "Preinstalled JDK updated.",
+        "JavaSuccessfullyInstalled": "Java has been successfully installed",
+        "ArchiveWasExtractedEarlier": "Archive with JDK was extracted earlier - skipping extracting",
+        "ExtractingArchiveToPath": "Extracting archive to: %s",
+        "ErrorCleaningFolder": "Folder cleaning error: %s"
     }
 }

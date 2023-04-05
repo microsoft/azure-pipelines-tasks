@@ -10,8 +10,7 @@ import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
 import * as restoreCommand from './restorecommand';
 import * as utility from './Common/utility';
-
-let MessagePrinted = false;
+import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 
 export class dotNetExe {
     private command: string;
@@ -34,7 +33,7 @@ export class dotNetExe {
     }
 
     public async execute() {
-        tl.setResourcePath(path.join(__dirname, "node_modules", "packaging-common", "module.json"));
+        tl.setResourcePath(path.join(__dirname, "node_modules", "azure-pipelines-tasks-packaging-common", "module.json"));
         tl.setResourcePath(path.join(__dirname, "task.json"));
 
         this.setConsoleCodePage();
@@ -54,6 +53,7 @@ export class dotNetExe {
                     await this.executeTestCommand();
                     break;
                 case "restore":
+                    this.logRestoreStartUpVariables();
                     await restoreCommand.run();
                     break;
                 case "pack":
@@ -67,9 +67,7 @@ export class dotNetExe {
             }
         }
         finally {
-            if (!MessagePrinted) {
-               console.log(tl.loc('NetCore3Update'));
-            }
+            console.log(tl.loc('Net5Update'));
         }
     }
 
@@ -88,7 +86,7 @@ export class dotNetExe {
     private async executeBasicCommand() {
         var dotnetPath = tl.which("dotnet", true);
 
-        tl.loc('DeprecatingDotnet2_2');
+        console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
 
         this.extractOutputArgument();
 
@@ -110,7 +108,7 @@ export class dotNetExe {
             } else {
                 dotnet.arg(projectFile);
             }
-            if(this.isBuildCommand()) {
+            if (this.isBuildCommand()) {
                 var loggerAssembly = path.join(__dirname, 'dotnet-build-helpers/Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll');
                 dotnet.arg(`-dl:CentralLogger,\"${loggerAssembly}\"*ForwardingLogger,\"${loggerAssembly}\"`);
             }
@@ -131,18 +129,16 @@ export class dotNetExe {
             }
         }
         if (failedProjects.length > 0) {
-            if (this.command === 'publish' && !MessagePrinted) {
-                tl.warning(tl.loc('NetCore3Update'));
-                MessagePrinted = true;
+            if (this.command === 'build' || this.command === 'publish' || this.command === 'run') {
+                tl.warning(tl.loc('Net5NugetVersionCompat'));
             }
-
             throw tl.loc("dotnetCommandFailed", failedProjects);
         }
     }
 
     private async executeTestCommand(): Promise<void> {
         const dotnetPath = tl.which('dotnet', true);
-        tl.loc('DeprecatingDotnet2_2');
+        console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
         const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
         var resultsDirectory = tl.getVariable('Agent.TempDirectory');
         if (enablePublishTestResults && enablePublishTestResults === true) {
@@ -185,6 +181,7 @@ export class dotNetExe {
             this.publishTestResults(resultsDirectory);
         }
         if (failedProjects.length > 0) {
+            tl.warning(tl.loc('Net5NugetVersionCompat'));
             throw tl.loc('dotnetCommandFailed', failedProjects);
         }
     }
@@ -203,7 +200,7 @@ export class dotNetExe {
         }
     }
 
-    private removeOldTestResultFiles(resultsDir:string): void {
+    private removeOldTestResultFiles(resultsDir: string): void {
         const matchingTestResultsFiles: string[] = tl.findMatch(resultsDir, '**/*.trx');
         if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
             tl.debug("No old result files found.");
@@ -438,7 +435,7 @@ export class dotNetExe {
 
             if (!resolvedProjectFiles.length) {
                 var projectFilesUsingWebSdk = projectFiles.filter(this.isWebSdkUsed);
-                if(!projectFilesUsingWebSdk.length) {
+                if (!projectFilesUsingWebSdk.length) {
                     tl.error(tl.loc("noWebProjectFound"));
                 }
                 return projectFilesUsingWebSdk;
@@ -455,17 +452,17 @@ export class dotNetExe {
             var fileBuffer: Buffer = fs.readFileSync(projectfile);
             var webConfigContent: string;
 
-            var fileEncodings = ['utf8', 'utf16le'];
+            var fileEncodings:Array<BufferEncoding> = ['utf8', 'utf16le'];
 
-            for(var i = 0; i < fileEncodings.length; i++) {
+            for (var i = 0; i < fileEncodings.length; i++) {
                 tl.debug("Trying to decode with " + fileEncodings[i]);
                 webConfigContent = fileBuffer.toString(fileEncodings[i]);
                 try {
                     var projectSdkUsed: string = ltx.parse(webConfigContent).getAttr("sdk") || ltx.parse(webConfigContent).getAttr("Sdk");
                     return projectSdkUsed && projectSdkUsed.toLowerCase() == "microsoft.net.sdk.web";
-                } catch (error) {}
+                } catch (error) { }
             }
-        } catch(error) {
+        } catch (error) {
             tl.warning(error);
         }
         return false;
@@ -485,6 +482,48 @@ export class dotNetExe {
 
     private static getModifiedOutputForProjectFile(outputBase: string, projectFile: string): string {
         return path.join(outputBase, path.basename(path.dirname(projectFile)));
+    }
+
+    private logRestoreStartUpVariables() {
+        try {
+            const nugetfeedtype = tl.getInput("nugetfeedtype");
+            let externalendpoint = null;
+            if (nugetfeedtype != null && nugetfeedtype === "external") {
+                const epId = tl.getInput("externalendpoint");
+                if (epId) {
+                    externalendpoint = {
+                        feedName: tl.getEndpointUrl(epId, false).replace(/\W/g, ""),
+                        feedUri: tl.getEndpointUrl(epId, false),
+                    };
+                }
+            }
+    
+            let externalendpoints = tl.getDelimitedInput("externalendpoints", ",");
+            if (externalendpoints) {
+                externalendpoints = externalendpoints.reduce((ary, id) => {
+                    const te = {
+                        feedName: tl.getEndpointUrl(id, false).replace(/\W/g, ""),
+                        feedUri: tl.getEndpointUrl(id, false),
+                    };
+                    ary.push(te);
+                    return ary;
+                }, []);
+            }
+            const nugetTelem = {
+                "command": tl.getInput("command"),
+                "System.TeamFoundationCollectionUri": tl.getVariable("System.TeamFoundationCollectionUri"),
+                "includenugetorg": tl.getInput("includenugetorg"),
+                "nocache": tl.getInput("nocache"),
+                "nugetconfigpath": tl.getInput("nugetconfigpath"),
+                "nugetfeedtype": nugetfeedtype,
+                "selectorconfig": tl.getInput("selectorconfig"),
+                "projects": tl.getInput("projects"),
+                "verbosityrestore": tl.getInput("verbosityrestore")
+            };
+            telemetry.emitTelemetry("Packaging", "DotNetCoreCLIRestore", nugetTelem);
+        } catch (err) {
+            tl.debug(`Unable to log NuGet task init telemetry. Err:( ${err} )`);
+        }
     }
 }
 

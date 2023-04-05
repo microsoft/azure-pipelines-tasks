@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 171,
+    "Minor": 211,
     "Patch": 0
   },
   "runsOn": [
@@ -21,8 +21,15 @@
     "DeploymentGroup"
   ],
   "demands": [],
-  "minimumAgentVersion": "2.117.0",
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "hostName",
@@ -58,24 +65,98 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.sshKeySecureFile"
+    },
+    {
+      "name": "addEntryToConfig",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addEntryToConfig",
+      "defaultValue": false,
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.addEntryToConfig"
+    },
+    {
+      "name": "configHostAlias",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configHostAlias",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "addEntryToConfig = true",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.configHostAlias"
+    },
+    {
+      "name": "configHostname",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configHostname",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "addEntryToConfig = true",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.configHostname"
+    },
+    {
+      "name": "configUser",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configUser",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "addEntryToConfig = true",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.configUser"
+    },
+    {
+      "name": "configPort",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configPort",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "addEntryToConfig = true",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.configPort"
     }
   ],
   "prejobexecution": {
-    "Node": {
+    "Node10": {
+      "target": "preinstallsshkey.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "preinstallsshkey.js",
       "argumentFormat": ""
     }
   },
   "postjobexecution": {
-    "Node": {
+    "Node10": {
       "target": "postinstallsshkey.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "postinstallsshkey.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "SSH_AGENT_PID",
+        "SSH_AUTH_SOCK",
+        "INSTALL_SSH_KEY_CONFIG_LOCATION",
+        "INSTALL_SSH_KEY_KNOWN_HOSTS_LOCATION"
+      ]
     }
   },
   "messages": {
     "SSHKeyAlreadyInstalled": "ms-resource:loc.messages.SSHKeyAlreadyInstalled",
     "SSHPublicKeyMalformed": "ms-resource:loc.messages.SSHPublicKeyMalformed",
     "SSHKeyInstallFailed": "ms-resource:loc.messages.SSHKeyInstallFailed",
-    "CannotResetKnownHosts": "ms-resource:loc.messages.CannotResetKnownHosts"
+    "CannotResetKnownHosts": "ms-resource:loc.messages.CannotResetKnownHosts",
+    "GeneratingPublicKey": "ms-resource:loc.messages.GeneratingPublicKey",
+    "CannotResetFile": "ms-resource:loc.messages.CannotResetFile",
+    "DeletePrivateKeyFile": "ms-resource:loc.messages.DeletePrivateKeyFile",
+    "InsertingIntoConfig": "ms-resource:loc.messages.InsertingIntoConfig"
   }
 }

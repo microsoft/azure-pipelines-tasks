@@ -1,9 +1,9 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { AzureResourceFilterUtility } from 'azurermdeploycommon/operations/AzureResourceFilterUtility';
-import { AzureEndpoint } from 'azurermdeploycommon/azure-arm-rest/azureModels';
-import { AzureRMEndpoint } from 'azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
-import { AzureAppService } from 'azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
-import { PackageUtility } from 'azurermdeploycommon/webdeployment-common/packageUtility';
+import { AzureResourceFilterUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureResourceFilterUtility';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
+import { AzureAppService } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
+import { PackageUtility } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
 import fs = require('fs');
 
 const osTypeMap = new Map([
@@ -47,7 +47,7 @@ export class TaskParametersUtility {
     }
 
     private static async getWebAppKind(taskParameters: TaskParameters): Promise<any> {
-        let resourceGroupName: string = taskParameters.ResourceGroupName;
+        let resourceGroupName: string = (taskParameters.DeployToSlotOrASEFlag) ? taskParameters.ResourceGroupName : "";
         let osType: string;
         if (!resourceGroupName) {
             var appDetails = await AzureResourceFilterUtility.getAppDetails(taskParameters.azureEndpoint, taskParameters.WebAppName);

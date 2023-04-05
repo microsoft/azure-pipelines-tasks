@@ -1,15 +1,15 @@
 {
   "loc.friendlyName": "Python pip 驗證",
-  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/pip-authenticate) or [see the pip documentation](https://pip.pypa.io/en/stable/reference/pip_install/)",
+  "loc.helpMarkDown": "[深入了解此工作](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/pip-authenticate)或[參閱 pip 文件](https://pip.pypa.io/en/stable/reference/pip_install/)",
   "loc.description": "用於安裝 Python 發行版本之 pip 用戶端的驗證工作",
-  "loc.instanceNameFormat": "Pip Authenticate",
+  "loc.instanceNameFormat": "Pip 驗證",
   "loc.group.displayName.feedAuthentication": "摘要與驗證",
   "loc.input.label.artifactFeeds": "我的摘要 (於下方選取)",
   "loc.input.help.artifactFeeds": "選取此組織內要驗證的摘要",
   "loc.input.label.pythonDownloadServiceConnections": "來自外部組織的摘要",
   "loc.input.help.pythonDownloadServiceConnections": "選取此組織外要驗證的端點。",
-  "loc.input.label.onlyAddExtraIndex": "Don't set primary index URL",
-  "loc.input.help.onlyAddExtraIndex": "If this is set to true, no feed will be set as the primary index URL. All of the configured feeds/endpoints will be set as extra index URLs. Defaults to false.",
+  "loc.input.label.onlyAddExtraIndex": "不要設定主要索引 URL",
+  "loc.input.help.onlyAddExtraIndex": "如果設為 true，則不會將任何摘要設為主要索引 URL。所有已設定的摘要/端點都會設為額外的索引 URL。預設為 false。",
   "loc.messages.Info_AddingInternalFeeds": "正在新增 %s 個內部摘要的驗證資訊。",
   "loc.messages.Info_AddingExternalFeeds": "正在新增 %s 外部端點的驗證資訊。",
   "loc.messages.Info_SuccessAddingAuth": "已成功為 %s 內部摘要和 %s 外部端點新增驗證。",
@@ -19,5 +19,5 @@
   "loc.messages.FailedToGetPackagingUri": "無法取得封裝 URI，將改用預設收集 URI。",
   "loc.messages.FailedToAddAuthentication": "無法新增驗證。",
   "loc.messages.Warn_TooManyFeedEntries": "太多要驗證的摘要項目。請減少工作中的存放庫數目。",
-  "loc.messages.Warning_SessionCreationFailed": "Could not create provenance session: %s"
+  "loc.messages.Warning_SessionCreationFailed": "無法建立來源工作階段: %s"
 }

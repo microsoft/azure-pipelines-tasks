@@ -6,6 +6,7 @@ param()
 Register-Mock Trace-VstsEnteringInvocation
 Register-Mock Trace-VstsLeavingInvocation
 Register-Mock Import-VstsLocStrings
+Register-Mock EmitTelemetry
 $variableSets = @(
     @{ Clean = $false ; MaximumCpuCount = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $false ; LogFileVerbosity = '' ; Debug = $false }
     @{ Clean = $false ; MaximumCpuCount = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $true ; LogFileVerbosity = '' ; Debug = $false }
@@ -44,7 +45,7 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Select-MSBuildPath { 'Some location' } -- -Method 'Some input method' -Location 'Some input location' -PreferredVersion 'Some input version' -Architecture 'Some input architecture'
     Register-Mock Invoke-BuildTools { 'Some build output line 1', 'Some build output line 2' }
 
-    $ExpectedCreateLogFile = if ($variableSet.Debug) { $true } else { $variableSet.CreateLogFile }
+    $ExpectedCreateLogFile = $variableSet.CreateLogFile
     $ExpectedLogFileVerbosity = if ($variableSet.Debug) { 'diagnostic' } else { $variableSet.LogFileVerbosity }
 
     # Act.

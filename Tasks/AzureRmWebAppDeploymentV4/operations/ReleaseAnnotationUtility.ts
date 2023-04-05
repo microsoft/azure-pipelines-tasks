@@ -1,7 +1,7 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { AzureAppService } from 'azure-arm-rest-v2/azure-arm-app-service';
-import { AzureApplicationInsights, ApplicationInsightsResources} from 'azure-arm-rest-v2/azure-arm-appinsights';
-import { AzureEndpoint } from 'azure-arm-rest-v2/azureModels';
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
+import { AzureApplicationInsights, ApplicationInsightsResources} from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-appinsights';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
 
 var uuidV4 = require("uuid/v4");
 
@@ -45,12 +45,21 @@ function getReleaseAnnotation(isDeploymentSuccess: boolean): {[key: string]: any
  
     let releaseAnnotationProperties = {
         "Label": isDeploymentSuccess ? "Success" : "Error", // Label decides the icon for release annotation
-        "Deployment Uri": getDeploymentUri()
+        "Deployment Uri": getDeploymentUri(),
+        "BuildNumber": getPipelineVariable("Build.BuildNumber"),
+        "BuildRepositoryName": getPipelineVariable("Build.Repository.Name"),
+        "BuildRepositoryProvider": getPipelineVariable("Build.Repository.Provider"),
+        "SourceBranch": getPipelineVariable("Build.SourceBranch"),
+        "ReleaseId": getPipelineVariable("Release.ReleaseId"),
+        "ReleaseDescription": getPipelineVariable("Release.ReleaseDescription"),
+        "ReleaseDefinitionName": getPipelineVariable("Release.DefinitionName"),
+        "ReleaseEnvironmentName": getPipelineVariable("Release.EnvironmentName"),
+        "ReleaseRequestedFor": getPipelineVariable("Release.RequestedForId") || getPipelineVariable("Release.RequestedFor")
     };
 
     let releaseAnnotation = {
         "AnnotationName": annotationName,
-        "Category": "Text",
+        "Category": "Deployment",
         "EventTime": new Date(),
         "Id": uuidV4(),
         "Properties": JSON.stringify(releaseAnnotationProperties)
@@ -75,4 +84,10 @@ function getDeploymentUri(): string {
     }
 
     return "";
+}
+
+function getPipelineVariable(variableName: string): string | undefined {
+    let variable = tl.getVariable(variableName);
+    //we dont want to set a variable to be empty string
+    return !!variable ? variable : undefined;
 }

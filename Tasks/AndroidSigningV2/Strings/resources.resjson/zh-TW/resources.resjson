@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Android 簽署",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613717)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?LinkID=613717)",
   "loc.description": "簽署並對齊 Android APK 檔案",
   "loc.instanceNameFormat": "簽署並對齊 APK 檔 $(files)",
   "loc.group.displayName.jarsignerOptions": "簽署選項",

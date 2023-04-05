@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure VM scale set deployment",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=852117)",
+  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-vmss-deployment)",
   "loc.description": "Deploy a virtual machine scale set image",
   "loc.instanceNameFormat": "Azure VMSS $(vmssName): $(action)",
   "loc.releaseNotes": "- Updates Azure Virtual Machine scale set with a custom machine image.",

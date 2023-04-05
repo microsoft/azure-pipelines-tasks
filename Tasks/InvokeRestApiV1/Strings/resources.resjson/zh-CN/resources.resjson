@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "调用 REST API",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=870236)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?linkid=870236)",
   "loc.description": "在管道中调用 REST API。",
   "loc.instanceNameFormat": "调用 REST API: $(method)",
   "loc.group.displayName.completionOptions": "高级",
@@ -12,7 +12,7 @@
   "loc.input.help.connectedServiceNameARM": "选择用于调用管理 API 的 Azure 资源管理器订阅。云的 \"ManagementPortalUrl\" 用作 baseURL",
   "loc.input.label.method": "方法",
   "loc.input.help.method": "选择应用于调用 API 的 HTTP 方法。",
-  "loc.input.label.headers": "标头",
+  "loc.input.label.headers": "标题",
   "loc.input.help.headers": "以 JSON 格式定义标头。标头应附带要发送的请求。",
   "loc.input.label.body": "正文",
   "loc.input.label.urlSuffix": "URL 后缀和参数",

@@ -78,6 +78,9 @@ describe('PublishSymbols Suite', function () {
         it('(Get-SourceProvider) warns for unsupported provider', (done) => {
             psr.run(path.join(__dirname, 'Get-SourceProvider.WarnsForUnsupportedProvider.ps1'), done);
         })
+        it('(Get-SymbolClientVersion) succeeds on retry', (done) => {
+            psr.run(path.join(__dirname, 'Get-SymbolClientVersion.SucceedsWithRetry.ps1'), done);
+        })
         it('(Get-ValidValue) returns within range', (done) => {
             psr.run(path.join(__dirname, 'Get-ValidValue.ReturnsWithinRange.ps1'), done);
         })

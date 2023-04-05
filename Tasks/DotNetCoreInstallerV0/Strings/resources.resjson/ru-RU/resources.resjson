@@ -1,12 +1,12 @@
 {
   "loc.friendlyName": "Установщик среды выполнения/пакета SDK для .NET",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=853651)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?linkid=853651)",
   "loc.description": "Получение определенной версии пакета SDK для .NET Core из Интернета или локального кэша и добавление ее в PATH",
   "loc.instanceNameFormat": "Использовать .NET Core $(packageType) $(version)",
   "loc.input.label.packageType": "Пакет для установки",
   "loc.input.help.packageType": "Выберите, следует ли устанавливать только среду выполнения или полный пакет SDK.",
   "loc.input.label.version": "Версия",
-  "loc.input.help.version": "Specify exact version of .NET Core SDK or runtime to install.<br/>Find the value of `version-sdk` for installing SDK, or `version-runtime` for installing Runtime from any releases [here](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json).\n **NOTE: the task will not work with new versions of .NET Core. Kindly upgrade to 2.\\* version of the task to download latest versions od .NET Core.**",
+  "loc.input.help.version": "Укажите точную версию пакета SDK для .NET Core или среды выполнения, которую нужно установить.<br/>Найдите значение version-sdk для установки пакета SDK или version-runtime для установки среды выполнения из любых выпусков [](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json).\n ** Примечание. Задача не будет работать с новыми версиями .NET Core. Обновите задачу до версии 2.\\*, чтобы скачать последние версии .NET Core. **",
   "loc.messages.ToolFailed": "Сбой установки инструмента: %s",
   "loc.messages.ImplicitVersionNotSupported": "Следует указать допустимую и явную версию: %s",
   "loc.messages.getMachinePlatformFailed": "Не удалось получить сведения о платформе компьютера. Ошибка: %s.",
@@ -24,10 +24,10 @@
   "loc.messages.ToolToInstall": "Инструмент для установки: .NET Core %s версии %s.",
   "loc.messages.PrimaryPlatform": "Обнаружена платформа (основная): %s",
   "loc.messages.LegacyPlatform": "Обнаружена платформа (прежней версии): %s",
-  "loc.messages.WarningVersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer the link for supported versions => https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json. Falling back to creating convention based URL.",
+  "loc.messages.WarningVersionNotFound": "Не удалось получить сведения о скачивании для версии %s. Проверьте, правильно ли указана версия. Список поддерживаемых версий можно найти по ссылке https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json. Будет создан URL-адрес на основе соглашений.",
   "loc.messages.CouldNotDownload": "Не удалось скачать пакет установки с этого URL-адреса: %s. Ошибка: %s",
   "loc.messages.FailedToDownloadPackage": "Не удалось скачать пакет для установки",
   "loc.messages.PrependGlobalToolPath": "Глобальный путь к средству создается и добавляется в начало PATH.",
   "loc.messages.VersionsFileMalformed": "Ссылки на скачивание для указанной версии неправильно сформированы в документе поддерживаемых версий => %s/",
-  "loc.messages.UpdateToNewerVersion": "Kindly upgrade to new major version of this task 'Use .NET Core (2.*)' for installing newer versions of .NET Core. '0.*' task version might not be able to download newer .NET core versions. To know more about 'Use Dot Net (2.*)', refer https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer?view=azure-devops."
+  "loc.messages.UpdateToNewerVersion": "Выполните обновление до нового основного номера версии этой задачи \"Использовать .NET Core (2.*)\" для установки более новых версий .NET Core. Версия задачи \"0.*\" может оказаться неспособна скачать более новые версии .NET Core. Дополнительные сведения о команде \"Использовать .NET (2.*)\" см. по адресу https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer?view=azure-devops."
 }

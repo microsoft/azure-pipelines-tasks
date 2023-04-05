@@ -34,6 +34,12 @@ export function registerLocationHelpersMock(tmr: tmrm.TaskMockRunner) {
             }
             return url + "/" + feedId;
         },
+        retryOnExceptionHelper: async function<T>(action: () => Promise<T>, maxTries: number, retryIntervalInMilliseconds: number) {
+            return await action();
+        },
+        retryOnNullOrExceptionHelper: async function<T>(action: () => Promise<T>, maxTries: number, retryIntervalInMilliseconds: number) {
+            return await action();
+        },
         ProtocolType: {NuGet: 1, Npm: 2, Maven: 3, PyPi: 4},
         RegistryType: {npm: 1, NuGetV2: 2, NuGetV3: 3, PyPiSimple: 4, PyPiUpload: 5}
     };

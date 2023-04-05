@@ -13,6 +13,7 @@ describe('Kubernetes Suite', function() {
     beforeEach(() => {
         process.env[shared.isKubectlPresentOnMachine] = "true";
         process.env[shared.endpointAuthorizationType] = "Kubeconfig";
+        process.env[shared.TestEnvVars.outputFormat] = 'json';
         delete process.env[shared.TestEnvVars.command];
         delete process.env[shared.TestEnvVars.containerType];
         delete process.env[shared.TestEnvVars.connectionType];
@@ -33,14 +34,13 @@ describe('Kubernetes Suite', function() {
         delete process.env[shared.TestEnvVars.useConfigMapFile];
         delete process.env[shared.TestEnvVars.configMapFile];
         delete process.env[shared.TestEnvVars.configMapArguments];
-        delete process.env[shared.TestEnvVars.outputFormat];
         delete process.env[shared.TestEnvVars.configuration];
         delete process.env["chmodShouldThrowError"];
     });
     after(function () {
     });
  
-    it('Run successfully when the connectionType is Kubernetes Service Connection', (done:MochaDone) => {
+    it('Run successfully when the connectionType is Kubernetes Service Connection', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -56,7 +56,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Run successfully when the authorization type of the endpoint is service account and connectionType is Kubernetes Service Connection', (done:MochaDone) => {
+    it('Run successfully when the authorization type of the endpoint is service account and connectionType is Kubernetes Service Connection', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -73,7 +73,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Run successfully when the user provides a specific location for kubectl', (done:MochaDone) => {
+    it('Run successfully when the user provides a specific location for kubectl', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -92,7 +92,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Run successfully when the user provides a specific location for kubectl even when chmod fails', (done:MochaDone) => {
+    it('Run successfully when the user provides a specific location for kubectl even when chmod fails', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -112,7 +112,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
  
-    it('Run successfully when the user provides the version for kubectl with checkLatest as false and version that dosent have a v prefix', (done:MochaDone) => {
+    it('Run successfully when the user provides the version for kubectl with checkLatest as false and version that dosent have a v prefix', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -132,7 +132,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Run successfully when the user provides the version for kubectl with checkLatest as true', (done:MochaDone) => {
+    it('Run successfully when the user provides the version for kubectl with checkLatest as true', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -154,7 +154,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Run successfully when the user provides the version 1.7 for kubectl with checkLatest as false', (done:MochaDone) => {
+    it('Run successfully when the user provides the version 1.7 for kubectl with checkLatest as false', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -175,7 +175,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Run fails when the user provides a wrong location for kubectl', (done:MochaDone) => {
+    it('Run fails when the user provides a wrong location for kubectl', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -193,7 +193,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Runs successfully for kubectl apply using configuration file', (done:MochaDone) => {
+    it('Runs successfully for kubectl apply using configuration file', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.apply;
@@ -210,7 +210,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Runs successfully for kubectl expose with configuration file and arguments', (done:MochaDone) => {
+    it('Runs successfully for kubectl expose with configuration file and arguments', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.expose;
@@ -228,7 +228,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Runs successfully for kubectl get', (done:MochaDone) => {
+    it('Runs successfully for kubectl get', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -243,7 +243,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Runs successfully for kubectl get in a particular namespace', (done:MochaDone) => {
+    it('Runs successfully for kubectl get in a particular namespace', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -259,7 +259,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Runs successfully for kubectl docker-registry secrets using Container Registry with forceUpdate', (done:MochaDone) => {
+    it('Runs successfully for kubectl docker-registry secrets using Container Registry with forceUpdate', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -278,7 +278,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Runs successfully for kubectl docker-registry secrets using Container Registry without forceUpdate', (done:MochaDone) => {
+    it('Runs successfully for kubectl docker-registry secrets using Container Registry without forceUpdate', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -298,7 +298,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Runs successfully for kubectl docker-registry secrets using AzureContainerRegistry Registry with forceUpdate', (done:MochaDone) => {
+    it('Runs successfully for kubectl docker-registry secrets using AzureContainerRegistry Registry with forceUpdate', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -317,7 +317,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-     it('Runs successfully for kubectl docker-registry secrets using AzureContainerRegistry without forceUpdate', (done:MochaDone) => {
+     it('Runs successfully for kubectl docker-registry secrets using AzureContainerRegistry without forceUpdate', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -337,7 +337,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Runs successfully for kubectl generic secrets with forceUpdate', (done:MochaDone) => {
+    it('Runs successfully for kubectl generic secrets with forceUpdate', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -357,7 +357,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Runs successfully for kubectl generic secrets without forceUpdate', (done:MochaDone) => {
+    it('Runs successfully for kubectl generic secrets without forceUpdate', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -378,7 +378,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
  
-    it('Runs successfully for kubectl create configMap from file with forceUpdate', (done:MochaDone) => {
+    it('Runs successfully for kubectl create configMap from file with forceUpdate', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -399,7 +399,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Runs successfully for kubectl create configMap from directory without forceUpdate', (done:MochaDone) => {
+    it('Runs successfully for kubectl create configMap from directory without forceUpdate', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -420,7 +420,7 @@ describe('Kubernetes Suite', function() {
         done();
     }); 
 
-    it('Runs successfully for kubectl create configMap using literal values with forceUpdate', (done:MochaDone) => {
+    it('Runs successfully for kubectl create configMap using literal values with forceUpdate', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -441,7 +441,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Runs successfully for kubectl kubectl create configMap using literal values without forceUpdate', (done:MochaDone) => {
+    it('Runs successfully for kubectl kubectl create configMap using literal values without forceUpdate', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -461,7 +461,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Runs successfully for kubectl get and print the output in a particular format', (done:MochaDone) => {
+    it('Runs successfully for kubectl get and print the output in a particular format', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -477,7 +477,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Runs successfully for kubectl create and dont print output', (done:MochaDone) => {
+    it('Runs successfully for kubectl create and dont print output', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.create;
@@ -488,12 +488,29 @@ describe('Kubernetes Suite', function() {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`Skipping -o in args as outputFormat is 'none' or empty.`) != -1, 'outputFormat skipped');
         assert(tr.stdout.indexOf(`[command]kubectl create secrets my-secret`) != -1, "kubectl create should run");
         console.log(tr.stderr);
         done();
     });
 
-    it('Runs successfully for kubectl get and print the output in custom format', (done:MochaDone) => {
+    it('Runs successfully for kubectl create and skip print for empty outputFormat', (done:Mocha.Done) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.create;
+        process.env[shared.TestEnvVars.arguments] = "secrets my-secret";
+        process.env[shared.TestEnvVars.outputFormat] = '';
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]kubectl create secrets my-secret`) != -1, "kubectl create should run");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Runs successfully for kubectl get and print the output in custom format', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -509,8 +526,7 @@ describe('Kubernetes Suite', function() {
         done();
     }); 
 
-
-    it('Runs successfully for checking whether secrets, configmaps and kubectl commands are run in a consecutive manner', (done:MochaDone) => {
+    it('Runs successfully for checking whether secrets, configmaps and kubectl commands are run in a consecutive manner', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -537,7 +553,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Runs fails if create config command fails even if create secret is successful', (done:MochaDone) => {
+    it('Runs fails if create config command fails even if create secret is successful', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -560,7 +576,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Runs successfully when forceUpdateConfigMap is false and configMap exists', (done:MochaDone) => {
+    it('Runs successfully when forceUpdateConfigMap is false and configMap exists', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -580,7 +596,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
  
-    it('Run successfully using the specified kubectl version when kubectl is present on machine and version is specified ', (done:MochaDone) => {
+    it('Run successfully using the specified kubectl version when kubectl is present on machine and version is specified ', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -596,7 +612,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Json and yaml output format should not added for commands that dont support it', (done:MochaDone) => {
+    it('Json and yaml output format should not added for commands that dont support it', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.logs;
@@ -611,7 +627,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Runs successfully when a configuration is provided inline', (done:MochaDone) => {
+    it('Runs successfully when a configuration is provided inline', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.apply;
@@ -628,7 +644,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
-    it('Run defaults to filepath when both configurations are provided through yaml', (done:MochaDone) => {
+    it('Run defaults to filepath when both configurations are provided through yaml', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.apply;

@@ -1,26 +1,28 @@
-"use strict";
+'use strict';
 
-var fs = require('fs');
-import * as path from "path";
-import * as tl from "azure-pipelines-task-lib/task";
-import * as os from "os";
+import fs = require('fs');
+import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
-import * as util from "util";
+import * as os from 'os';
+import * as path from 'path';
+import * as util from 'util';
 
 const opaToolName = 'opa';
 const opaLatestReleaseUrl = 'https://api.github.com/repos/open-policy-agent/opa/releases/latest';
 const stableOpaVersion = 'v0.13.5';
 
 export function getTempDirectory(): string {
-    return tl.getVariable('agent.tempDirectory') || os.tmpdir();
+    return taskLib.getVariable('agent.tempDirectory') || os.tmpdir();
 }
 
 export async function getOpaVersion(): Promise<string> {
-    let opaVersion = tl.getInput("opaVersion");
-    if(opaVersion && opaVersion != "latest") {
+    let opaVersion;
+    opaVersion = taskLib.getInput('opaVersion', false);
+    
+    if (opaVersion && opaVersion != 'latest') {
         return sanitizeVersionString(opaVersion.trim());
     }
-
+    
     return await getStableOpaVersion();
 }
 
@@ -51,9 +53,8 @@ export async function getStableOpaVersion(): Promise<string> {
         
         return response.tag_name;
     } catch (error) {
-        tl.warning(tl.loc('OpaLatestNotKnown', opaLatestReleaseUrl, error, stableOpaVersion));
+        taskLib.warning(taskLib.loc('OpaLatestNotKnown', opaLatestReleaseUrl, error, stableOpaVersion));
     }
-
     return stableOpaVersion;
 }
 
@@ -72,9 +73,8 @@ export async function downloadOpa(version: string): Promise<string> {
         try {
             opaDownloadPath = await toolLib.downloadTool(getOpaDownloadURL(version));
         } catch (exception) {
-            throw new Error(tl.loc('DownloadOpaFailedFromLocation', getOpaDownloadURL(version), exception));
+            throw new Error(taskLib.loc('DownloadOpaFailedFromLocation', getOpaDownloadURL(version), exception));
         }
-
         cachedToolpath = await toolLib.cacheFile(opaDownloadPath, opaToolName + getExecutableExtension(), opaToolName, version);
     }
 
@@ -82,7 +82,7 @@ export async function downloadOpa(version: string): Promise<string> {
 
     if (!cachedToolpath || !fs.existsSync(opaPath)) {
         const opaPathTmp = path.join(getTempDirectory(), opaToolName + getExecutableExtension());
-        tl.cp(opaDownloadPath, opaPathTmp, '-f');
+        taskLib.cp(opaDownloadPath, opaPathTmp, '-f');
         fs.chmodSync(opaPathTmp, '777');
         return opaPathTmp;
     }
@@ -92,11 +92,11 @@ export async function downloadOpa(version: string): Promise<string> {
 }
 
 // handle user input scenerios
-export function sanitizeVersionString(inputVersion: string) : string{
-    var version = toolLib.cleanVersion(inputVersion);
-    if(!version) {
-        throw new Error(tl.loc("NotAValidSemverVersion"));
+export function sanitizeVersionString(inputVersion: string) : string {
+    const version = toolLib.cleanVersion(inputVersion);
+    if (!version) {
+        throw new Error(taskLib.loc('NotAValidSemverVersion'));
     }
     
-    return "v"+version;
+    return 'v'+version;
 }

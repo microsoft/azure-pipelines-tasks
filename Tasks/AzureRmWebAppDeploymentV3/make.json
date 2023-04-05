@@ -1,24 +1,15 @@
 {
-    "common": [
-        {
-            "module": "../Common/azure-arm-rest",
-            "type": "node",
-            "dest": "./",
-            "compile" : true
-        },
-        {
-            "module": "../Common/webdeployment-common",
-            "type": "node",
-            "dest": "./",
-            "compile" : true
-        }
-    ],
     "externals": {
         "archivePackages": [
             {
                 "archiveName": "MSDeploy.zip",
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/MSDeploy.zip",
                 "dest": "./"
+            },
+            {
+                "archiveName": "MSDeploy.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/MSDeploy.zip",
+                "dest": "./webdeployment-common/"
             },
             {
                 "archiveName": "ctt.zip",
@@ -31,13 +22,37 @@
         {
             "source": "postDeploymentScript",
             "options": "-R"
+        },
+        {
+            "source": "webdeployment-common/Tests/L1JSONVarSub",
+            "dest": "webdeployment-common/Tests",
+            "options": "-R"
+        },
+        {
+            "source": "webdeployment-common/Tests/L1XdtTransform",
+            "dest": "webdeployment-common/Tests",
+            "options": "-R"
+        },
+        {
+            "source": "webdeployment-common/Tests/L1XmlVarSub",
+            "dest": "webdeployment-common/Tests",
+            "options": "-R"
+        },
+        {
+            "source": "webdeployment-common/WebConfigTemplates",
+            "dest": "webdeployment-common",
+            "options": "-R"
+        },
+        {
+            "source": "webdeployment-common/Strings",
+            "dest": "webdeployment-common",
+            "options": "-R"
         }
     ],
     "rm": [
         {
             "items": [
-                "node_modules/azure-arm-rest/node_modules/vsts-task-lib",
-                "node_modules/webdeployment-common/node_modules/vsts-task-lib"
+                "node_modules/azure-pipelines-tasks-azure-arm-rest-v2/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }

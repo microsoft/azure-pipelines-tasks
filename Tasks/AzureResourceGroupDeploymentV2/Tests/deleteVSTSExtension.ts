@@ -22,7 +22,7 @@ process.env["ENDPOINT_DATA_AzureRM_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = 
 
 
 tr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-task-lib/mock-toolrunner'));
-tr.registerMock('azure-arm-rest-v2/azure-arm-resource', require('./mock_node_modules/azure-arm-resource'));
-tr.registerMock('azure-arm-rest-v2/azure-arm-compute', require('./mock_node_modules/azure-arm-compute'));
-tr.registerMock('azure-arm-rest-v2/azure-arm-network', require('./mock_node_modules/azure-arm-network'));
+tr.registerMock('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource', require('./mock_node_modules/azure-arm-resource'));
+tr.registerMock('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-compute', require('./mock_node_modules/azure-arm-compute'));
+tr.registerMock('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-network', require('./mock_node_modules/azure-arm-network'));
 tr.run();

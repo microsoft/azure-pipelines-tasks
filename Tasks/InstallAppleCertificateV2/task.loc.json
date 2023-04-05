@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 170,
-    "Patch": 1
+    "Minor": 220,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "runsOn": [
@@ -31,7 +31,7 @@
       "isExpanded": true
     }
   ],
-  "minimumAgentVersion": "2.116.0",
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
@@ -106,6 +106,14 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.signingIdentity",
       "groupName": "advanced"
+    },
+    {
+      "name": "setUpPartitionIdACLForPrivateKey",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.setUpPartitionIdACLForPrivateKey",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.setUpPartitionIdACLForPrivateKey",
+      "groupName": "advanced"
     }
   ],
   "outputVariables": [
@@ -119,15 +127,37 @@
     }
   ],
   "prejobexecution": {
-    "Node": {
+    "Node10": {
+      "target": "preinstallcert.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "preinstallcert.js",
       "argumentFormat": ""
     }
   },
   "postjobexecution": {
-    "Node": {
+    "Node10": {
       "target": "postinstallcert.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "postinstallcert.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "signingIdentity",
+        "keychainPassword",
+        "keychainPath",
+        "APPLE_CERTIFICATE_SIGNING_IDENTITY",
+        "APPLE_CERTIFICATE_KEYCHAIN"
+      ]
     }
   },
   "messages": {

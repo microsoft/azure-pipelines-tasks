@@ -1,6 +1,6 @@
-import * as tl from 'vsts-task-lib/task';
-import * as toolLib from 'vsts-task-tool-lib/tool';
-import * as trm from 'vsts-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
+import * as trm from 'azure-pipelines-task-lib/toolrunner';
 import { DotNetCoreReleaseFetcher } from "./releasesfetcher";
 import * as utilities from "./utilities";
 
@@ -77,7 +77,7 @@ class DotnetCoreInstaller {
         }
         else {
             let scriptPath = path.join(utilities.getCurrentDir(), 'externals', 'get-os-distro.sh');
-            utilities.setFileAttribute(scriptPath, "777");
+            utilities.setFileAttribute(scriptPath, "755");
 
             scriptRunner = tl.tool(tl.which(scriptPath, true));
         }

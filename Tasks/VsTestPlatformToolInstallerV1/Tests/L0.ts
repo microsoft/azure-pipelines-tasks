@@ -59,13 +59,12 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         // Set the inputs
         process.env[constants.versionSelector] = 'latestPreRelease';
         process.env[constants.testPlatformVersion] = '';
-        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.expectedTestPlatformVersion] = '17.5.0-preview-20221003-04';
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
         process.env[testConstants.listPackagesReturnCode] = '0';
 
         // Start the run
         tr.run();
-
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, `Task should have succeeded`);
@@ -88,7 +87,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         // Set the inputs
         process.env[constants.versionSelector] = 'latestPreRelease';
         process.env[constants.testPlatformVersion] = '';
-        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.expectedTestPlatformVersion] = '17.5.0-preview-20221003-04';
         process.env[testConstants.listPackagesReturnCode] = '0';
         process.env[testConstants.downloadPackageReturnCode] = '0';
 
@@ -122,7 +121,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.expectedTestPlatformVersion] = 'x';
         process.env[testConstants.listPackagesReturnCode] = '1';
         process.env[testConstants.downloadPackageReturnCode] = '0';
-        process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\15.6.0`;
+        process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\17.5.0`;
 
         // Start the run
         tr.run();
@@ -178,10 +177,10 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         // Set the inputs
         process.env[constants.versionSelector] = 'latestPreRelease';
         process.env[constants.testPlatformVersion] = '';
-        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.expectedTestPlatformVersion] = '17.5.0-preview-20221003-04';
         process.env[testConstants.listPackagesReturnCode] = '0';
         process.env[testConstants.downloadPackageReturnCode] = '1';
-        process.env[testConstants.findLocalToolSecondCallReturnValue] = `VsTest\\15.6.0`;
+        process.env[testConstants.findLocalToolSecondCallReturnValue] = `VsTest\\17.5.0`;
 
         // Start the run
         tr.run();
@@ -210,7 +209,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         // Set the inputs
         process.env[constants.versionSelector] = 'latestPreRelease';
         process.env[constants.testPlatformVersion] = '';
-        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.expectedTestPlatformVersion] = '17.5.0-preview-20221003-04';
         process.env[testConstants.listPackagesReturnCode] = '0';
         process.env[testConstants.downloadPackageReturnCode] = '1';
 
@@ -243,13 +242,12 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         // Set the inputs
         process.env[constants.versionSelector] = 'latestStable';
         process.env[constants.testPlatformVersion] = '';
-        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0';
+        process.env[testConstants.expectedTestPlatformVersion] = '17.5.0';
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
         process.env[testConstants.listPackagesReturnCode] = '0';
 
         // Start the run
         tr.run();
-
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, `Task should have succeeded`);
@@ -274,7 +272,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.testPlatformVersion] = '';
         process.env[testConstants.expectedTestPlatformVersion] = 'x';
         process.env[testConstants.listPackagesReturnCode] = '0';
-        process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\15.6.0`;
+        process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\17.5.0`;
         process.env[testConstants.listPackagesOutput] = '';
 
         // Start the run
@@ -301,8 +299,8 @@ describe('VsTestPlatformToolInstaller Suite', function() {
 
         // Set the inputs
         process.env[constants.versionSelector] = 'specificVersion';
-        process.env[constants.testPlatformVersion] = '15.6.0-preview-20171108-02';
-        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[constants.testPlatformVersion] = '17.5.0-preview-20221003-04';
+        process.env[testConstants.expectedTestPlatformVersion] = '17.5.0-preview-20221003-04';
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
 
         // Start the run
@@ -327,8 +325,8 @@ describe('VsTestPlatformToolInstaller Suite', function() {
 
         // Set the inputs
         process.env[constants.versionSelector] = 'specificVersion';
-        process.env[constants.testPlatformVersion] = '15.6.0-preview-20171108-02';
-        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[constants.testPlatformVersion] = '17.5.0-preview-20221003-04';
+        process.env[testConstants.expectedTestPlatformVersion] = '17.5.0-preview-20221003-04';
         process.env[testConstants.downloadPackageReturnCode] = '0';
 
         // Start the run
@@ -361,7 +359,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.packageSource] = 'somecustomfeed';
         process.env[constants.versionSelector] = 'latestPreRelease';
         process.env[constants.testPlatformVersion] = '';
-        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.expectedTestPlatformVersion] = '17.5.0-preview-20221003-04';
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
         process.env[testConstants.listPackagesReturnCode] = '0';
 
@@ -396,7 +394,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.versionSelector] = 'latestPreRelease';
         process.env[testConstants.configFile] = `${process.env[constants.agentTempDirectory]}\\somefeedid.config`;
         process.env[constants.testPlatformVersion] = '';
-        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.expectedTestPlatformVersion] = '17.5.0-preview-20221003-04';
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
         process.env[testConstants.listPackagesReturnCode] = '0';
 
@@ -432,7 +430,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.versionSelector] = 'latestPreRelease';
         process.env[testConstants.configFile] = `${process.env[constants.agentTempDirectory]}\\somefeedid.config`;
         process.env[constants.testPlatformVersion] = '';
-        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.expectedTestPlatformVersion] = '17.5.0-preview-20221003-04';
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
         process.env[testConstants.listPackagesReturnCode] = '0';
 
@@ -469,7 +467,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.versionSelector] = 'latestPreRelease';
         process.env[testConstants.configFile] = `${process.env[constants.agentTempDirectory]}\\somefeedid.config`;
         process.env[constants.testPlatformVersion] = '';
-        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.expectedTestPlatformVersion] = '17.5.0-preview-20221003-04';
         process.env[testConstants.listPackagesReturnCode] = '0';
         process.env[testConstants.downloadPackageReturnCode] = '0';
 
@@ -570,7 +568,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         // Set the inputs
         process.env[constants.packageFeedSelector] = constants.netShare;
         process.env[testConstants.packageSource] = '\\somesharepath';
-        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.expectedTestPlatformVersion] = '17.5.0-preview-20221003-04';
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
         process.env[constants.netShare] = `\\\\somesharepath\\Microsoft.Testplatform.${process.env[testConstants.expectedTestPlatformVersion]}.nupkg`;
         process.env[testConstants.listPackagesReturnCode] = '0';
@@ -597,7 +595,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
 
         // Set the inputs
         process.env[constants.packageFeedSelector] = constants.netShare;
-        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.expectedTestPlatformVersion] = '17.5.0-preview-20221003-04';
         process.env[constants.netShare] = `\\\\somesharepath\\Microsoft.Testplatform.${process.env[testConstants.expectedTestPlatformVersion]}.nupkg`;
         process.env[testConstants.packageSource] = process.env[constants.netShare];
         process.env[testConstants.listPackagesReturnCode] = '0';
@@ -624,7 +622,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
 
         // Set the inputs
         process.env[constants.packageFeedSelector] = constants.netShare;
-        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.expectedTestPlatformVersion] = '17.5.0-preview-20221003-04';
         process.env[constants.netShare] = `\\\\somesharepath\\Microsoft.Testplatform.${process.env[testConstants.expectedTestPlatformVersion]}.nupkg`;
         process.env[testConstants.packageSource] = process.env[constants.netShare];
         process.env[testConstants.listPackagesReturnCode] = '0';
@@ -654,7 +652,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
 
         // Set the inputs
         process.env[constants.packageFeedSelector] = constants.netShare;
-        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.expectedTestPlatformVersion] = '17.5.0-preview-20221003-04';
         process.env[constants.netShare] = `\\\\somesharepath\\Microsoft.Testplatform.${process.env[testConstants.expectedTestPlatformVersion]}.nupkg`;
         process.env[testConstants.packageSource] = process.env[constants.netShare];
         process.env[testConstants.listPackagesReturnCode] = '0';
@@ -684,7 +682,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         // Set the inputs
         process.env[constants.packageFeedSelector] = constants.netShare;
         process.env[testConstants.packageSource] = '\\somesharepath';
-        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.expectedTestPlatformVersion] = '17.5.0-preview-20221003-04';
         process.env[constants.netShare] = `\\\\somesharepath\\Miiiicrosoft.Testplatform.${process.env[testConstants.expectedTestPlatformVersion]}.nupkg`;
         process.env[testConstants.listPackagesReturnCode] = '0';
 

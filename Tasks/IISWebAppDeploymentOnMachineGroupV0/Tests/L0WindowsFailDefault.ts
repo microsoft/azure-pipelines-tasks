@@ -46,8 +46,8 @@ let a: any = <any>{
 };
 
 import mockTask = require('azure-pipelines-task-lib/mock-task');
-var msDeployUtility = require('webdeployment-common-v2/msdeployutility.js');
-tr.registerMock('webdeployment-common-v2/ziputility.js', {
+var msDeployUtility = require('azure-pipelines-tasks-webdeployment-common/msdeployutility.js');
+tr.registerMock('azure-pipelines-tasks-webdeployment-common/ziputility.js', {
     getArchivedEntries: function(webDeployPkg) {
         return {
             "entries": [

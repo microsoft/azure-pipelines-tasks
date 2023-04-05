@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.iOS",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613729) or [see the Xamarin iOS documentation](https://docs.microsoft.com/xamarin/ios/)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?LinkID=613729). In alternativa [vedere la documentazione di Xamarin iOS](https://docs.microsoft.com/xamarin/ios/)",
   "loc.description": "Consente di compilare un'app iOS con Xamarin in macOS",
   "loc.instanceNameFormat": "Compila la soluzione Xamarin.iOS $(solution)",
   "loc.releaseNotes": "La configurazione della firma di iOS è stata rimossa dall'attività. Per configurare la firma, usare `File protetti` con le attività di supporto `Installa certificato Apple` e `Installa profilo di provisioning Apple`. Opzioni aggiornate per una maggiore compatibilità con `Visual Studio per Mac`.",

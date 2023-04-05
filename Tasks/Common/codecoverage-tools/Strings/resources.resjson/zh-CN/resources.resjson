@@ -1,5 +1,0 @@
-{
-  "loc.messages.InvalidBuildFile": "生成文件无效或不受支持",
-  "loc.messages.FileNotFound": "文件或文件夹不存在: %s",
-  "loc.messages.FailedToAppendCC": "无法追加代码覆盖率数据: %s"
-}

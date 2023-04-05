@@ -3,7 +3,7 @@
 import * as os from "os";
 import * as util from "util"
 import * as utils from "./utilities";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as definitions from "./definitions"
 
 export default class OutputVariablesParser implements definitions.IOutputParser {

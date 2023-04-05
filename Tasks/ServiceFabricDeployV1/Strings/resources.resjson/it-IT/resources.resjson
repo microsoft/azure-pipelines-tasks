@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Distribuzione applicazione Service Fabric",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=820528)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?LinkId=820528)",
   "loc.description": "Consente di distribuire un'applicazione Azure Service Fabric in un cluster",
   "loc.instanceNameFormat": "Distribuisci applicazione Service Fabric",
   "loc.group.displayName.advanced": "Impostazioni avanzate",
@@ -85,8 +85,8 @@
   "loc.messages.PublishProfileRequiredServerThumbprint": "È necessario definire un'identificazione personale del certificato del server nella connessione al servizio oppure specificare un profilo di pubblicazione nell'attività Azure Pipelines.",
   "loc.messages.PublishProfileRequiredAppParams": "È necessario specificare un file dei parametri dell'applicazione o un profilo di pubblicazione nell'attività Azure Pipelines.",
   "loc.messages.PublishProfileRequiredUpgrade": "È necessario sostituire le impostazioni di aggiornamento oppure specificare un profilo di pubblicazione nell'attività Azure Pipelines.",
-  "loc.messages.UnsupportedARMAuthScheme": "Unsupported authentication scheme '{0}' for ARM endpoint.",
-  "loc.messages.UnsupportedContainerRegistryAuthScheme": "Lo schema di autenticazione '{0}' per il Registro Azure Container non è supportato.",
+  "loc.messages.UnsupportedARMAuthScheme": "Lo schema di autenticazione '{0}' non è supportato per l'endpoint ARM.",
+  "loc.messages.UnsupportedContainerRegistryAuthScheme": "Lo schema di autenticazione '{0}' per il Registro contenitori di Azure non è supportato.",
   "loc.messages.SFSDK_InvalidSFPackage": "{0} non è un pacchetto dell'applicazione di Service Fabric valido.",
   "loc.messages.SFSDK_PackageValidationFailed": "La convalida non è riuscita per il pacchetto: {0}",
   "loc.messages.SFSDK_UnableToVerifyClusterConnection": "Non è possibile verificare la connessione al servizio per il cluster Service Fabric.",

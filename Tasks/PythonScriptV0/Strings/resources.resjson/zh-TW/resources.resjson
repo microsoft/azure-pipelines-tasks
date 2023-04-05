@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Python 指令碼",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=2006181) or [see the Python documentation](https://www.python.org/doc/)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?LinkID=2006181)或[參閱 Python 文件](https://www.python.org/doc/)",
   "loc.description": "執行 Python 檔案或內嵌指令碼",
   "loc.instanceNameFormat": "執行 Python 指令碼",
   "loc.group.displayName.advanced": "進階",

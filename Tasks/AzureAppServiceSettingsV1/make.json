@@ -1,14 +1,2 @@
 {
-    "common": [
-        {
-            "module": "../Common/AzureRmDeploy-common",
-            "type": "node",
-            "dest": "./",
-            "compile" : true
-        }
-    ],
-    "externals": {
-        "archivePackages": [
-        ]
-    }
 }

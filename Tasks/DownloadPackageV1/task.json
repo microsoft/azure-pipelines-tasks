@@ -9,7 +9,7 @@
     "author": "ms-vscs-rm",
     "version": {
         "Major": 1,
-        "Minor": 171,
+        "Minor": 220,
         "Patch": 0
     },
     "demands": [],
@@ -34,7 +34,8 @@
                 "npm": "Npm",
                 "nuget": "NuGet",
                 "pypi": "Python",
-                "upack": "Universal"
+                "upack": "Universal",
+                "cargo": "Cargo"
             }
         },
         {
@@ -78,7 +79,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Version of the package"
+            "helpMarkDown": "Version of the package. Use `latest` to download the latest version of the package at runtime."
         },
         {
             "name": "files",
@@ -119,9 +120,9 @@
         {
             "target": "feed",
             "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if projectId}}{{{projectId}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
         {
             "target": "view",
@@ -164,7 +165,7 @@
     ],
     "instanceNameFormat": "Download Package $(definition)",
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "main.js",
             "argumentFormat": ""
         }
@@ -185,6 +186,7 @@
         "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
         "Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
         "Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
-        "Info_UsingArtifactToolDownload": "Using artifact tool to download the package"
+        "Info_UsingArtifactToolDownload": "Using artifact tool to download the package",
+        "Info_ResolvedLatestVersion": "Resolved latest package version: %s"
     }
 }

@@ -1,8 +1,10 @@
 import * as  tl from 'azure-pipelines-task-lib/task';
-import msRestAzure = require('azure-arm-rest/azure-arm-common');
-import Model = require('azure-arm-rest/azureModels');
-import armStorage = require('azure-arm-rest/azure-arm-storage');
-import BlobService = require('azure-blobstorage-artifactProvider-v2/blobservice');
+import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common');
+import Model = require('azure-pipelines-tasks-azure-arm-rest-v2/azureModels');
+import armStorage = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-storage');
+import BlobService = require('azp-tasks-az-blobstorage-provider/blobservice');
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 
 export class AzureStorageArtifactDownloader {
   public connectedService: string;
@@ -32,9 +34,16 @@ export class AzureStorageArtifactDownloader {
     tl.debug("Getting storage account details for " + this.azureStorageAccountName);
 
     const subscriptionId: string = tl.getEndpointDataParameter(this.connectedService, "subscriptionId", false);
-    const credentials = this._getARMCredentials();
+    const credentials = await this._getARMCredentials();
     const storageArmClient = new armStorage.StorageManagementClient(credentials, subscriptionId);
-    const storageAccount: Model.StorageAccount = await this._getStorageAccount(storageArmClient);
+
+    const isUseOldStorageAccountQuery = process.env.AZP_TASK_FF_JAVATOOLINSTALLER_USE_OLD_SA_QUERY
+      ? !!process.env.AZP_TASK_FF_JAVATOOLINSTALLER_USE_OLD_SA_QUERY
+      : false;
+
+    const storageAccount = isUseOldStorageAccountQuery
+      ? await this._legacyGetStorageAccount(storageArmClient)
+      : await this._getStorageAccount(storageArmClient);
 
     const storageAccountResourceGroupName = armStorage.StorageAccounts.getResourceGroupNameFromUri(storageAccount.id);
 
@@ -48,7 +57,7 @@ export class AzureStorageArtifactDownloader {
     }
   }
 
-  private async _getStorageAccount(storageArmClient: armStorage.StorageManagementClient): Promise<Model.StorageAccount> {
+  private async _legacyGetStorageAccount(storageArmClient: armStorage.StorageManagementClient): Promise<Model.StorageAccount> {
     const storageAccounts = await storageArmClient.storageAccounts.listClassicAndRMAccounts(null);
     const index = storageAccounts.findIndex(account => account.name.toLowerCase() == this.azureStorageAccountName.toLowerCase());
     if (index < 0) {
@@ -58,17 +67,19 @@ export class AzureStorageArtifactDownloader {
     return storageAccounts[index];
   }
 
-  private _getARMCredentials(): msRestAzure.ApplicationTokenCredentials {
-    const servicePrincipalId: string = tl.getEndpointAuthorizationParameter(this.connectedService, "serviceprincipalid", false);
-    const servicePrincipalKey: string = tl.getEndpointAuthorizationParameter(this.connectedService, "serviceprincipalkey", false);
-    const tenantId: string = tl.getEndpointAuthorizationParameter(this.connectedService, "tenantid", false);
-    const armUrl: string = tl.getEndpointUrl(this.connectedService, true);
-    let envAuthorityUrl: string = tl.getEndpointDataParameter(this.connectedService, 'environmentAuthorityUrl', true);
-    envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
-    let activeDirectoryResourceId: string = tl.getEndpointDataParameter(this.connectedService, 'activeDirectoryServiceEndpointResourceId', false);
-    activeDirectoryResourceId = (activeDirectoryResourceId != null) ? activeDirectoryResourceId : armUrl;
-    const credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, armUrl, envAuthorityUrl, activeDirectoryResourceId, false);
-    return credentials;
+  private async _getStorageAccount(storageArmClient: armStorage.StorageManagementClient): Promise<Model.StorageAccount> {
+    const storageAccount = await storageArmClient.storageAccounts.getClassicOrArmAccountByName(this.azureStorageAccountName, null);
+
+    if (!storageAccount) {
+      throw new Error(tl.loc('StorageAccountDoesNotExist', this.azureStorageAccountName));
+    }
+
+    return storageAccount;
+  }
+
+  private async _getARMCredentials(): Promise<msRestAzure.ApplicationTokenCredentials> {
+    const endpoint: AzureEndpoint = await new AzureRMEndpoint(this.connectedService).getEndpoint();
+    return endpoint.applicationTokenCredentials;
   }
 }
 

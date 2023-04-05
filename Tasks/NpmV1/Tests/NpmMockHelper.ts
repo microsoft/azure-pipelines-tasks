@@ -4,7 +4,7 @@ import { TaskLibAnswers, TaskLibAnswerExecResult } from 'azure-pipelines-task-li
 import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 import * as mtr from 'azure-pipelines-task-lib/mock-toolrunner';
 
-import * as pkgMock from 'packaging-common/Tests/MockHelper';
+import * as pkgMock from 'azure-pipelines-tasks-packaging-common/Tests/MockHelper';
 
 export class NpmMockHelper extends TaskMockRunner {
     private static NpmCmdPath: string = 'c:\\mock\\location\\npm';

@@ -13,9 +13,10 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 170,
-    "Patch": 2
+    "Minor": 219,
+    "Patch": 1
   },
+  "minimumAgentVersion": "2.172.0",
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -44,7 +45,7 @@
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.repository",
       "defaultValue": "",
-      "visibleRule": "command != login && command != logout",
+      "visibleRule": "command != login && command != logout && command != start && command != stop",
       "groupName": "containerRepository",
       "properties": {
         "EditableOptions": "True"
@@ -61,7 +62,9 @@
         "build": "build",
         "push": "push",
         "login": "login",
-        "logout": "logout"
+        "logout": "logout",
+        "start": "start",
+        "stop": "stop"
       },
       "properties": {
         "EditableOptions": "True"
@@ -116,6 +119,22 @@
       "groupName": "commands",
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.addPipelineData"
+    },
+    {
+      "name": "addBaseImageData",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addBaseImageData",
+      "groupName": "commands",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.addBaseImageData"
+    },
+    {
+      "name": "container",
+      "type": "string",
+      "visibleRule": "command = start || command = stop",
+      "label": "ms-resource:loc.input.label.container",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.container"
     }
   ],
   "dataSourceBindings": [],
@@ -128,18 +147,23 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "showEnvironmentVariables": true,
   "execution": {
-    "Node": {
+    "Node10": {
+      "target": "docker.js"
+    },
+    "Node16": {
       "target": "docker.js"
     }
   },
   "messages": {
     "AddingNewAuthToExistingConfig": "ms-resource:loc.messages.AddingNewAuthToExistingConfig",
     "ConnectingToDockerHost": "ms-resource:loc.messages.ConnectingToDockerHost",
+    "CommandNotRecognized": "ms-resource:loc.messages.CommandNotRecognized",
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
     "CouldNotFindDockerConfig": "ms-resource:loc.messages.CouldNotFindDockerConfig",
+    "MSIFetchError": "ms-resource:loc.messages.MSIFetchError",
     "DockerHostVariableWarning": "ms-resource:loc.messages.DockerHostVariableWarning",
     "DeletingDockerConfigDirectory": "ms-resource:loc.messages.DeletingDockerConfigDirectory",
     "DeletingAuthDataFromDockerConfig": "ms-resource:loc.messages.DeletingAuthDataFromDockerConfig",

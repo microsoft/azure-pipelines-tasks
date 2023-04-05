@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "下載管線成品",
-  "loc.helpMarkDown": "Download a named artifact from a pipeline to a local path",
-  "loc.description": "Download a named artifact from a pipeline to a local path",
+  "loc.helpMarkDown": "從管線將具名成品下載至本機路徑",
+  "loc.description": "從管線將具名成品下載至本機路徑",
   "loc.instanceNameFormat": "下載管線成品",
   "loc.input.label.buildType": "下載產生自下列項目的成品",
   "loc.input.help.buildType": "下載目前組建所產生的成品，或從特定組建下載。",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Тест Visual Studio",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=624539)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkId=624539)",
   "loc.description": "Запуск тестов с помощью средства запуска тестов Visual Studio",
   "loc.instanceNameFormat": "Тестовые сборки $(testAssembly)",
   "loc.group.displayName.executionOptions": "Параметры выполнения",

@@ -1,5 +1,5 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
+import ma = require('azure-pipelines-task-lib/mock-answer');
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
 const DefaultWorkingDirectory: string = "C:\\a\\w\\";
@@ -23,6 +23,7 @@ if(!process.env["__no_output_vars__"] || process.env["__no_output_vars__"] !== "
 tr.setInput("additionalBuilderParameters", "{}");
 tr.setInput("skipTempFileCleanupDuringVMDeprovision", "true");
 
+process.env["ENDPOINT_URL_AzureRMSpn"] = "https://management.azure.com/";
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALKEY"] = "spKey";

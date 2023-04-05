@@ -117,7 +117,7 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
 mockery.registerMock('./versionfetcher', {
     DotNetCoreVersionFetcher: function () {
         return {
-            getVersionInfo: function (versionSpec: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
+            getVersionInfo: function (versionSpec: string, vsVersionSpec: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
                 if (process.env["__case__"] == "matchingversionnotfound") {
                     return new Promise<VersionInfo>((resolve, reject) => {
                         resolve(null);

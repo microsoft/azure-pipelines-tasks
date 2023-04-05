@@ -31,7 +31,7 @@ tlClone.assertAgent = function(variable: string) {
 tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
 //Create tool-lib mock
-tmr.registerMock('vsts-task-tool-lib/tool', {
+tmr.registerMock('azure-pipelines-tool-lib/tool', {
     isExplicitVersion: function(versionSpec) {
         return false;
     },
@@ -45,7 +45,7 @@ tmr.registerMock('vsts-task-tool-lib/tool', {
         let version: string;
         for (let i = versions.length - 1; i >= 0; i--) {
             let potential: string = versions[i];
-            let satisfied: boolean = potential === 'v0.12.18';
+            let satisfied: boolean = potential === '0.12.18';
             if (satisfied) {
                 version = potential;
                 break;

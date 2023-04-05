@@ -39,7 +39,7 @@ tr.setInput('versionOrLocation', process.env[shared.TestEnvVars.versionOrLocatio
 tr.setInput('versionSpec', process.env[shared.TestEnvVars.versionSpec] || "1.13.2");
 tr.setInput('checkLatest', process.env[shared.TestEnvVars.checkLatest] || "false");
 tr.setInput('specifyLocation', process.env[shared.TestEnvVars.specifyLocation] || "");
-tr.setInput('outputFormat', process.env[shared.TestEnvVars.outputFormat] || 'json');
+tr.setInput('outputFormat', process.env[shared.TestEnvVars.outputFormat]);
 tr.setInput('dockerRegistryEndpoint', 'dockerhubendpoint');
 tr.setInput('kubernetesServiceEndpoint', 'kubernetesEndpoint');
 tr.setInput('azureSubscriptionEndpoint', 'AzureRMSpn');

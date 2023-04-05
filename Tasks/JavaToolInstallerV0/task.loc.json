@@ -13,11 +13,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 171,
-    "Patch": 0
+    "Minor": 220,
+    "Patch": 1
   },
   "satisfies": [
-    "Java"
+    "Java",
+    "JDK"
   ],
   "demands": [],
   "groups": [
@@ -27,6 +28,7 @@
       "isExpanded": true
     }
   ],
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
@@ -123,6 +125,15 @@
       "defaultValue": "true",
       "visibleRule": "jdkSourceOption != PreInstalled",
       "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationDirectory"
+    },
+    {
+      "name": "createExtractDirectory",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.createExtractDirectory",
+      "required": false,
+      "defaultValue": true,
+      "visibleRule": "jdkSourceOption != PreInstalled",
+      "helpMarkDown": "ms-resource:loc.input.help.createExtractDirectory"
     }
   ],
   "dataSourceBindings": [
@@ -142,9 +153,24 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "javatoolinstaller.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "javatoolinstaller.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "PATH",
+        "JAVA_HOME*"
+      ]
     }
   },
   "messages": {
@@ -177,6 +203,20 @@
     "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM",
     "JavaNotPreinstalled": "ms-resource:loc.messages.JavaNotPreinstalled",
     "UsePreinstalledJava": "ms-resource:loc.messages.UsePreinstalledJava",
-    "WrongArchiveStructure": "ms-resource:loc.messages.WrongArchiveStructure"
+    "WrongArchiveStructure": "ms-resource:loc.messages.WrongArchiveStructure",
+    "WrongArchiveFile": "ms-resource:loc.messages.WrongArchiveFile",
+    "ShareAccessError": "ms-resource:loc.messages.ShareAccessError",
+    "UnsupportedDMGStructure": "ms-resource:loc.messages.UnsupportedDMGStructure",
+    "NoPKGFile": "ms-resource:loc.messages.NoPKGFile",
+    "SeveralPKGFiles": "ms-resource:loc.messages.SeveralPKGFiles",
+    "InstallJDK": "ms-resource:loc.messages.InstallJDK",
+    "AttachDiskImage": "ms-resource:loc.messages.AttachDiskImage",
+    "DetachDiskImage": "ms-resource:loc.messages.DetachDiskImage",
+    "PkgPathDoesNotExist": "ms-resource:loc.messages.PkgPathDoesNotExist",
+    "PreInstalledJavaUpgraded": "ms-resource:loc.messages.PreInstalledJavaUpgraded",
+    "JavaSuccessfullyInstalled": "ms-resource:loc.messages.JavaSuccessfullyInstalled",
+    "ArchiveWasExtractedEarlier": "ms-resource:loc.messages.ArchiveWasExtractedEarlier",
+    "ExtractingArchiveToPath": "ms-resource:loc.messages.ExtractingArchiveToPath",
+    "ErrorCleaningFolder": "ms-resource:loc.messages.ErrorCleaningFolder"
   }
 }

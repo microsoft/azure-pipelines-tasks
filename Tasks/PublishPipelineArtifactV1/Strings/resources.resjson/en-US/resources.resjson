@@ -9,6 +9,8 @@
   "loc.input.help.artifactName": "Name of the artifact to publish. If not set, defaults to a unique ID scoped to the job.",
   "loc.input.label.artifactType": "Artifact publish location",
   "loc.input.help.artifactType": "Choose whether to store the artifact in Azure Pipelines, or to copy it to a file share that must be accessible from the pipeline agent.",
+  "loc.input.label.customProperties": "Custom properties",
+  "loc.input.help.customProperties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'",
   "loc.input.label.fileSharePath": "File share path",
   "loc.input.help.fileSharePath": "The file share to which the artifact files will be copied. This can include variables. Example: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). Publishing artifacts from a Linux or macOS agent to a file share is not supported.",
   "loc.input.label.parallel": "Parallel copy",

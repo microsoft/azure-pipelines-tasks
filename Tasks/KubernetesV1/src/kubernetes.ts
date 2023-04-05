@@ -7,8 +7,8 @@ import * as kubectlConfigMap from "./kubernetesconfigmap";
 import * as kubectlSecret from "./kubernetessecret";
 import * as yaml from 'js-yaml';
 
-import { IsJsonString, getDeploymentMetadata, getManifestFileUrlsFromArgumentsInput, getPublishDeploymentRequestUrl, isDeploymentEntity } from 'kubernetes-common-v2/image-metadata-helper';
-import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
+import { IsJsonString, getDeploymentMetadata, getManifestFileUrlsFromArgumentsInput, getPublishDeploymentRequestUrl, isDeploymentEntity } from 'azure-pipelines-tasks-kubernetes-common/image-metadata-helper';
+import { WebRequest, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
 import { getCommandConfigurationFile, getNameSpace, isJsonOrYamlOutputFormatSupported } from "./kubernetescommand";
 
 import ClusterConnection from "./clusterconnection";
@@ -18,7 +18,7 @@ import trm = require('azure-pipelines-task-lib/toolrunner');
 
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
-tl.setResourcePath(path.join( __dirname, '../node_modules/azure-arm-rest-v2/module.json'));
+tl.setResourcePath(path.join( __dirname, '../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/module.json'));
 // Change to any specified working directory
 tl.cd(tl.getInput("cwd"));
 

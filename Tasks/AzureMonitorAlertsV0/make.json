@@ -1,10 +1,2 @@
 {
-    "common": [
-        {
-            "module": "../Common/azure-arm-rest-v2",
-            "type": "node",
-            "dest": "./",
-            "compile" : true
-        }
-    ]
 }

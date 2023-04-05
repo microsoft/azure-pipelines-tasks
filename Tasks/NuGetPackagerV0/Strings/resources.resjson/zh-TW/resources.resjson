@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet 封裝程式",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627416) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?LinkID=627416)或[參閱 NuGet 文件](https://docs.microsoft.com/nuget/)",
   "loc.description": "已淘汰: 請改用 “NuGet” 工作。該工作適用於新的工具安裝程式架構，使您不必等待工作更新就能輕鬆使用新版 NuGet，此外還為此組織/集合外的已驗證摘要提供了更好的支援，並預設使用 NuGet 4。",
   "loc.instanceNameFormat": "NuGet 封裝程式 $(solution)",
   "loc.group.displayName.versioning": "套件選項",

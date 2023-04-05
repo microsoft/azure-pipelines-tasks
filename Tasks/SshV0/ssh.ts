@@ -3,54 +3,52 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as fs from 'fs';
 import * as sshHelper from './ssh2helpers';
-import { RemoteCommandOptions } from './ssh2helpers'
+import { v4 as generateRandomUUID } from 'uuid';
+import { ConnectConfig } from 'ssh2';
+
+/**
+ * By default configuration, SSH runs on port 22.
+ * @constant {number}
+ * @default
+*/
+const DEFAULT_SSH_PORT: number = 22;
 
 async function run() {
     let sshClientConnection: any;
     let cleanUpScriptCmd: string;
-    const remoteCmdOptions: RemoteCommandOptions = new RemoteCommandOptions();
+    const remoteCmdOptions: sshHelper.RemoteCommandOptions = new sshHelper.RemoteCommandOptions();
 
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         //read SSH endpoint input
         const sshEndpoint = tl.getInput('sshEndpoint', true);
+        const tryKeyboard: boolean = tl.getBoolInput('interactiveKeyboardAuthentication', false);
         const username: string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'username', false);
         const password: string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'password', true); //passphrase is optional
         const privateKey: string = process.env['ENDPOINT_DATA_' + sshEndpoint + '_PRIVATEKEY']; //private key is optional, password can be used for connecting
         const hostname: string = tl.getEndpointDataParameter(sshEndpoint, 'host', false);
-        let port: string = tl.getEndpointDataParameter(sshEndpoint, 'port', true); //port is optional, will use 22 as default port if not specified
+        const port: number = getServerPort(sshEndpoint); //port is optional, will use 22 as default port if not specified
         const interactiveSession: boolean = tl.getBoolInput('interactiveSession', false);
-
-        if (!port || port === '') {
-            console.log(tl.loc('UseDefaultPort'));
-            port = '22';
-        }
-
         const readyTimeout = getReadyTimeoutVariable();
 
         //setup the SSH connection configuration based on endpoint details
-        let sshConfig;
-        if (privateKey && privateKey !== '') {
+        const sshConfig: ConnectConfig = {
+            host: hostname,
+            port: port,
+            username: username,
+            readyTimeout: readyTimeout,
+            tryKeyboard: tryKeyboard,
+        };
+
+        if (privateKey) {
             tl.debug('Using private key for ssh connection.');
-            sshConfig = {
-                host: hostname,
-                port: port,
-                username: username,
-                privateKey: privateKey,
-                passphrase: password,
-                readyTimeout: readyTimeout
-            }
+            sshConfig.privateKey = privateKey;
+            sshConfig.passphrase = password;
         } else {
             //use password
             tl.debug('Using username and password for ssh connection.');
-            sshConfig = {
-                host: hostname,
-                port: port,
-                username: username,
-                password: password,
-                readyTimeout: readyTimeout
-            }
+            sshConfig.password = password;
         }
 
         //read the run options
@@ -67,17 +65,17 @@ async function run() {
                 .filter(s => s.length > 0);
         } else if (runOptions === 'inline') {
             let inlineScript: string = tl.getInput('inline', true);
-            if (inlineScript && !inlineScript.startsWith('#!')) {
-                const bashHeader: string = '#!/bin/bash';
-                tl.debug('No script header detected.  Adding: ' + bashHeader);
-                inlineScript = bashHeader + os.EOL + inlineScript;
+            const interpreterCommand: string = tl.getInput('interpreterCommand');
+            if (inlineScript && !inlineScript.startsWith('#!') && interpreterCommand) {
+                tl.debug('No script header detected.  Adding: #!' + interpreterCommand);
+                inlineScript = `#!${interpreterCommand}${os.EOL}${inlineScript}`;
             }
-            const tempDir = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
-            scriptFile = path.join(tempDir, 'sshscript_' + new Date().getTime()); // default name
+            const tempDir: string = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
+            const scriptName: string = `sshscript_${generateRandomUUID()}`; // default name
+            scriptFile = path.join(tempDir, scriptName);
             try {
                 // Make sure the directory exists or else we will get ENOENT
-                if (!fs.existsSync(tempDir))
-                {
+                if (!fs.existsSync(tempDir)) {
                     tl.mkdirP(tempDir);
                 }
                 fs.writeFileSync(scriptFile, inlineScript);
@@ -88,7 +86,7 @@ async function run() {
             }
         } else {
             scriptFile = tl.getPathInput('scriptPath', true, true);
-            args = tl.getInput('args')
+            args = tl.getInput('args');
         }
 
         const failOnStdErr: boolean = tl.getBoolInput('failOnStdErr');
@@ -108,42 +106,49 @@ async function run() {
             if (runOptions === 'commands') {
                 //run commands specified by the user
                 for (const command of commands) {
-                    tl.debug('Running command ' + command + ' on remote machine.');
+                    tl.debug(`Running command ${command} on remote machine.`);
                     console.log(command);
                     const returnCode: string = await sshHelper.runCommandOnRemoteMachine(
-                        command, sshClientConnection, remoteCmdOptions);
-                    tl.debug('Command ' + command + ' completed with return code = ' + returnCode);
+                        command, sshClientConnection, remoteCmdOptions, password, interactiveSession);
+                    tl.debug(`Command ${command} completed with return code = ${returnCode}`);
                 }
-            } else { // both other runOptions: inline and script
-                //setup script path on remote machine relative to user's $HOME directory
-                const remoteScript = './' + path.basename(scriptFile);
-                let remoteScriptPath = '"' + remoteScript + '"';
-                const windowsEncodedRemoteScriptPath = remoteScriptPath;
-                const isWin = os.platform() === 'win32';
-                if (isWin) {
-                    remoteScriptPath = '"' + remoteScript + "._unix" + '"';
-                }
-                tl.debug('remoteScriptPath = ' + remoteScriptPath);
+            } else {
+                // both other runOptions: inline and script
+                // setup script path on remote machine relative to user's $HOME directory
+                let remoteScriptPath: string = `./${path.basename(scriptFile)}`;
+                const isWin: boolean = (os.platform() === 'win32');
+                tl.debug(`remoteScriptPath = ${remoteScriptPath}`);
 
-                //copy script file to remote machine
-                const scpConfig = sshConfig;
-                scpConfig.path = remoteScript;
+                //setup the scp configuration based on endpoint details
+                const scpConfig: sshHelper.ScpConfig = {
+                    host: hostname,
+                    port: port,
+                    username: username,
+                };
+
+                if (privateKey) {
+                    scpConfig.privateKey = privateKey;
+                    scpConfig.passphrase = password;
+                } else {
+                    scpConfig.password = password;
+                }
+
+                 //copy script file to remote machine
                 tl.debug('Copying script to remote machine.');
-                await sshHelper.copyScriptToRemoteMachine(scriptFile, scpConfig);
+                await sshHelper.copyScriptToRemoteMachine(scriptFile, remoteScriptPath, scpConfig);
 
                 //change the line encodings
+                let originalScriptPath: string = ''; 
                 if (isWin) {
                     tl.debug('Fixing the line endings in case the file was created in Windows');
-                    const removeLineEndingsCmd = 'tr -d \'\\015\' <' + windowsEncodedRemoteScriptPath + ' > ' + remoteScriptPath;
-                    console.log(removeLineEndingsCmd);
-                    await sshHelper.runCommandOnRemoteMachine(removeLineEndingsCmd, sshClientConnection, remoteCmdOptions);
+                    originalScriptPath = remoteScriptPath;
+                    remoteScriptPath = await sshHelper.clearFileFromWindowsCRLF(sshClientConnection, remoteCmdOptions, originalScriptPath);
                 }
 
                 //set execute permissions on the script
-                tl.debug('Setting execute permisison on script copied to remote machine');
-                console.log('chmod +x ' + remoteScriptPath);
-                await sshHelper.runCommandOnRemoteMachine(
-                    'chmod +x ' + remoteScriptPath, sshClientConnection, remoteCmdOptions);
+                tl.debug('Setting execute permission on script copied to remote machine');
+                console.log(`chmod +x ${remoteScriptPath}`);
+                await sshHelper.runCommandOnRemoteMachine(`chmod +x ${remoteScriptPath}`, sshClientConnection, remoteCmdOptions);
 
                 //run remote script file with args on the remote machine
                 let runScriptCmd = remoteScriptPath;
@@ -152,9 +157,9 @@ async function run() {
                 }
 
                 //setup command to clean up script file
-                cleanUpScriptCmd = 'rm -f ' + remoteScriptPath;
+                cleanUpScriptCmd = `rm -f ${remoteScriptPath}`;
                 if (isWin) {
-                    cleanUpScriptCmd = 'rm -f ' + remoteScriptPath + ' ' + windowsEncodedRemoteScriptPath;
+                    cleanUpScriptCmd = `rm -f ${remoteScriptPath} ${originalScriptPath}`;
                 }
 
                 console.log(runScriptCmd);
@@ -198,8 +203,28 @@ function tryDeleteFile(filePath: string): void {
 run();
 
 function getReadyTimeoutVariable(): number {
-    let readyTimeoutString: string = tl.getInput('readyTimeout', true);
+    const readyTimeoutString: string = tl.getInput('readyTimeout', true);
     const readyTimeout: number = parseInt(readyTimeoutString, 10);
 
     return readyTimeout;
-} 
+}
+
+/**
+ * Read port number from SSH endpoint input
+ * @param {string} sshEndpoint - name of the service endpoint
+ * @returns {number} Port number of remote ssh server.
+ *
+ * If port is not specified in the endpoint configuration, the default port value number will be returned.
+ */
+function getServerPort(sshEndpoint: string): number {
+    let port: number = DEFAULT_SSH_PORT;
+    const portString: string = tl.getEndpointDataParameter(sshEndpoint, 'port', true);
+
+    if (portString) {
+        port = parseInt(portString, 10);
+    } else {
+        console.log(tl.loc('UseDefaultPort'));
+    }
+
+    return port;
+}

@@ -9,13 +9,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 2,
-    "Patch": 3
+    "Minor": 199,
+    "Patch": 0
   },
   "groups": [],
   "demands": [],
   "preview": false,
-  "minimumAgentVersion": "2.159.2",
+  "minimumAgentVersion": "2.199.0",
   "inputs": [
     {
       "name": "path",
@@ -80,6 +80,14 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.parallelCount",
       "visibleRule": "artifactType = filepath && parallel = true"
+    },
+    {
+        "name": "properties",
+        "type": "string",
+        "label": "ms-resource:loc.input.label.customProperties",
+        "defaultValue": "",
+        "required": false,
+        "helpMarkDown": "ms-resource:loc.input.help.customProperties"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

@@ -8,7 +8,7 @@
   "loc.input.label.summaryFileLocation": "摘要文件",
   "loc.input.help.summaryFileLocation": "摘要文件的路径，该文件包含代码覆盖率统计信息，如行、方法和类覆盖率。其值可能包含 minimatch 模式。例如: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`",
   "loc.input.label.pathToSources": "源文件的路径",
-  "loc.input.help.pathToSources": "当覆盖率 XML 报表不包含源文件的绝对路径时，需要源文件的路径。例如，JaCoCo 报表不使用绝对路径，当发布 Java 应用的 JaCoCo 覆盖率时，模式将与 `$(System.DefaultWorkingDirectory)/MyApp/src/main/java/` 类似。<br />如果在 docker 容器中运行测试，则也需要此输入。此输入应指向主机上源文件的绝对路径。例如 `$(System.DefaultWorkingDirectory)/MyApp/`",
+  "loc.input.help.pathToSources": "当覆盖率 XML 报表不包含源文件的绝对路径时，需要源文件的路径。例如，JaCoCo 报表不使用绝对路径，当发布 Java 应用的 JaCoCo 覆盖率时，模式将与 `$(System.DefaultWorkingDirectory)/MyApp/src/main/java/` 类似。<br />如果在 Docker 容器中运行测试，则也需要此输入。此输入应指向主机上源文件的绝对路径。例如 `$(System.DefaultWorkingDirectory)/MyApp/`",
   "loc.input.label.reportDirectory": "报表目录",
   "loc.input.help.reportDirectory": "代码覆盖率 HTML 报表目录的路径。已发布报表目录，稍后可作为生成的项目查看。其值可能包含 minimatch 模式。例如: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`",
   "loc.input.label.additionalCodeCoverageFiles": "其他文件",

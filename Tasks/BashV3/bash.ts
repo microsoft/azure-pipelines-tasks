@@ -4,13 +4,8 @@ import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
 var uuidV4 = require('uuid/v4');
 
-const noProfile = tl.getBoolInput('noProfile');
-const noRc = tl.getBoolInput('noRc');
-
 async function translateDirectoryPath(bashPath: string, directoryPath: string): Promise<string> {
     let bashPwd = tl.tool(bashPath)
-        .arg('--noprofile')
-        .arg('--norc')
         .arg('-c')
         .arg('pwd');
 
@@ -34,6 +29,27 @@ async function translateDirectoryPath(bashPath: string, directoryPath: string): 
     return `${pwdOutput}`;
 }
 
+/**
+ * Set value for `BASH_ENV` environment variable
+ * 
+ * The pipeline task invokes bash as non-interactive shell. In this mode Bash looks only for `BASH_ENV` environment variable. 
+ * The value of `BASH_ENV` is expanded and used as the name of a startup file to read before executing the script.
+ * 
+ * If the environment variable `BASH_ENV` has already been defined, the function will override this variable only for the current task.
+ * 
+ * @param {string} valueToSet - Value that will be set to `BASH_ENV` environment variable
+ */
+function setBashEnvVariable(valueToSet: string): void {
+    const bashEnv: string = process.env["BASH_ENV"];
+
+    if (bashEnv) {
+        console.log(tl.loc('JS_BashEnvAlreadyDefined', bashEnv, valueToSet));
+    }
+
+    process.env["BASH_ENV"] = valueToSet;
+    tl.debug(`The BASH_ENV environment variable was set to ${valueToSet}`);
+}
+
 async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -46,6 +62,12 @@ async function run() {
         let input_script: string;
         let old_source_behavior: boolean;
         let input_targetType: string = tl.getInput('targetType') || '';
+        const input_bashEnvValue: string = tl.getInput('bashEnvValue') || '';
+
+        if (input_bashEnvValue) {
+            setBashEnvVariable(input_bashEnvValue);
+        }
+
         if (input_targetType.toUpperCase() == 'FILEPATH') {
             old_source_behavior = !!process.env['AZP_BASHV3_OLD_SOURCE_BEHAVIOR'];
             input_filePath = tl.getPathInput('filePath', /*required*/ true);
@@ -79,7 +101,7 @@ async function run() {
             if (old_source_behavior) {
                 contents = `. '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
             } else {
-                contents = `bash '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
+                contents = `exec bash '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
             }
             console.log(tl.loc('JS_FormattedCommand', contents));
         }
@@ -112,12 +134,6 @@ async function run() {
         // Create the tool runner.
         console.log('========================== Starting Command Output ===========================');
         let bash = tl.tool(bashPath);
-        if (noProfile) {
-            bash.arg('--noprofile');
-        }
-        if (noRc) {
-            bash.arg('--norc');
-        }
         bash.arg(filePath);
 
         let options = <tr.IExecOptions>{
@@ -128,23 +144,18 @@ async function run() {
             ignoreReturnCode: true
         };
 
+        process.on("SIGINT", () => {
+            tl.debug('Started cancellation of executing script');
+            bash.killChildProcess();
+        });
+
         // Listen for stderr.
         let stderrFailure = false;
         const aggregatedStderr: string[] = [];
         if (input_failOnStderr) {
             bash.on('stderr', (data: Buffer) => {
                 stderrFailure = true;
-                // Truncate to at most 10 error messages
-                if (aggregatedStderr.length < 10) {
-                    // Truncate to at most 1000 bytes
-                    if (data.length > 1000) {
-                        aggregatedStderr.push(`${data.toString('utf8', 0, 1000)}<truncated>`);
-                    } else {
-                        aggregatedStderr.push(data.toString('utf8'));
-                    }
-                } else if (aggregatedStderr.length === 10) {
-                    aggregatedStderr.push('Additional writes to stderr truncated');
-                }
+                aggregatedStderr.push(data.toString('utf8'));
             });
         }
 

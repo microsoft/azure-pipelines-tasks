@@ -31,5 +31,6 @@
   "loc.messages.CallbackCannotBeNull": "The callback cannot be null.",
   "loc.messages.UnableToCreateDatabaseException": "Unable to create database.",
   "loc.messages.WindowMysqlClientMissingError": "MySQL client is missing on the Windows agent machine. Please install it by running the MySQL client installer 'https://aka.ms/window-mysqlcli-installer' script file on the agent machine.",
-  "loc.messages.LinuxMysqlClientMissingError": "MySQL client is missing on the Linux agent machine. Please install it by running 'sudo apt-get install mysql-client'."
+  "loc.messages.LinuxMysqlClientMissingError": "MySQL client is missing on the Linux agent machine. Please install it by running 'sudo apt-get install mysql-client'.",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern"
 }

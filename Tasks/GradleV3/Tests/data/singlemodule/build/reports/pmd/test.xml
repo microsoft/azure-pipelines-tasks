@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd version="5.1.1" timestamp="2016-07-04T14:38:41.348">
+<file name="C:\Users\bgavril\source\repos\JavaGradle\src\test\java\com\mycompany\app\AppTest.java">
+<violation beginline="36" endline="38" begincolumn="13" endcolumn="9" rule="EmptyTryBlock" ruleset="Empty Code" package="com.mycompany.app" class="AppTest" method="testApp" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.1.1/rules/java/empty.html#EmptyTryBlock" priority="3">
+Avoid empty try blocks
+</violation>
+<violation beginline="39" endline="42" begincolumn="9" endcolumn="9" rule="EmptyCatchBlock" ruleset="Empty Code" package="com.mycompany.app" class="AppTest" method="testApp" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.1.1/rules/java/empty.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+</pmd>

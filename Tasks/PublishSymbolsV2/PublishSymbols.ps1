@@ -13,19 +13,21 @@ param()
 Trace-VstsEnteringInvocation $MyInvocation
 
 $ErrorActionPreference = "Stop"
+Import-Module $PSScriptRoot\ps_modules\PowershellHelpers\PowershellHelpers.psm1
 
 function Get-SymbolServiceUri ([string]$collectionUri)
 {
     $serviceDefinitionUri = "$collectionUri/_apis/servicedefinitions/locationservice2/951917ac-a960-4999-8464-e3f0aa25b381"
-    $result = Invoke-WebRequest $serviceDefinitionUri -UseBasicParsing
-
+    $action = { Invoke-WebRequest $serviceDefinitionUri -UseBasicParsing }
+    $result = Invoke-ActionWithRetries -Action $action -MaxTries 5
     if ($result.StatusCode -eq 200) {
         $locationUri = (ConvertFrom-Json $result.Content).locationMappings[0].location
         if (-not $locationUri) {
             throw "No location mappings found while querying $serviceDefinitionUri"
         }
         $locationServiceUri = "$locationUri/_apis/servicedefinitions/locationservice2/00000016-0000-8888-8000-000000000000"
-        $result = Invoke-WebRequest $locationServiceUri -UseBasicParsing
+        $action = { Invoke-WebRequest $locationServiceUri -UseBasicParsing }
+        $result = Invoke-ActionWithRetries -Action $action -MaxTries 5
         if ($result.StatusCode -ne 200) {
             throw "Failure while querying '$locationServiceUri', returned $($result.StatusCode)"
         }
@@ -97,7 +99,10 @@ try {
         [string]$SymbolsProduct = Get-VstsInput -Name 'SymbolsProduct' -Default (Get-VstsTaskVariable -Name 'Build.DefinitionName' -Require)
         [string]$SymbolsVersion = Get-VstsInput -Name 'SymbolsVersion' -Default (Get-VstsTaskVariable -Name 'Build.BuildNumber' -Require)
         [string]$SymbolsArtifactName = Get-VstsInput -Name 'SymbolsArtifactName'
+    } elseif ($symbolServerType -eq "TeamServices") {
+        [int]$SymbolExpirationInDays = Get-VstsInput -Name 'SymbolExpirationInDays' -AsInt -Default '36530'
     }
+
     [bool]$SkipIndexing = -not (Get-VstsInput -Name 'IndexSources' -AsBool)
     [bool]$CompressSymbols = (Get-VstsInput -Name 'CompressSymbols' -AsBool)
     [bool]$TreatNotIndexedAsWarning = Get-VstsInput -Name 'TreatNotIndexedAsWarning' -AsBool
@@ -159,9 +164,7 @@ try {
         } else {
             Write-Verbose "SymbolsPath was not set, publish symbols step was skipped."
         }
-    }
-    elseif ($symbolServerType -eq "TeamServices") {
-
+    } elseif ($symbolServerType -eq "TeamServices") {
         [string]$RequestName = (Get-VstsTaskVariable -Name 'System.TeamProject' -Require) + "/" + 
                                (Get-VstsTaskVariable -Name 'Build.DefinitionName' -Require)  + "/" + 
                                (Get-VstsTaskVariable -Name 'Build.BuildNumber' -Require)  + "/" + 
@@ -175,6 +178,7 @@ try {
         [string]$asAccountName = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.AccountName')
         [string]$PersonalAccessToken = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.PAT')
         [bool]$UseAad = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.UseAad' -AsBool)
+        [string]$IndexableFileFormats = (Get-VstsInput -Name 'IndexableFileFormats')
 
         if ( $asAccountName ) {
             if ( $PersonalAccessToken ) {
@@ -225,7 +229,15 @@ try {
         [string] $requestUrl = "#$SymbolServiceUri/_apis/Symbol/requests?requestName=$encodedRequestName"
         Write-VstsAssociateArtifact -Name "$RequestName" -Path $requestUrl -Type "SymbolRequest" -Properties @{}
 
-        & "$PSScriptRoot\Publish-Symbols.ps1" -SymbolServiceUri $SymbolServiceUri -RequestName $RequestName -SourcePath $SourcePath -SourcePathListFileName $tmpFileName -PersonalAccessToken $PersonalAccessToken -ExpirationInDays 36530 -DetailedLog $DetailedLog
+        & "$PSScriptRoot\Publish-Symbols.ps1" `
+            -SymbolServiceUri $SymbolServiceUri `
+            -RequestName $RequestName `
+            -SourcePath $SourcePath `
+            -SourcePathListFileName $tmpFileName `
+            -IndexableFileFormats `"$IndexableFileFormats`" `
+            -PersonalAccessToken $PersonalAccessToken `
+            -ExpirationInDays $SymbolExpirationInDays `
+            -DetailedLog $DetailedLog
 
         if (Test-Path -Path $tmpFileName) {
             del $tmpFileName

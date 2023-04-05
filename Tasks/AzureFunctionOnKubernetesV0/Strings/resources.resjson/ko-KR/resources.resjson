@@ -27,6 +27,8 @@
   "loc.messages.CouldNotDeterminePodStatus": "오류로 인해 Pod의 상태를 확인할 수 없음: %s",
   "loc.messages.CouldNotDetermineServiceStatus": "오류로 인해 서비스 %s 상태를 확인할 수 없음: %s",
   "loc.messages.FileContentSynced": "파일 콘텐츠를 디스크에 동기화했습니다. 콘텐츠는 %s입니다.",
+  "loc.messages.KubectlClientVersion": "Kubectl 클라이언트 버전",
+  "loc.messages.KubectlServerVersion": "Kubectl 서버 버전",
   "loc.messages.NoDataWrittenOnFile": "데이터를 %s 파일에 쓰지 않았습니다.",
   "loc.messages.ServiceExternalIP": "서비스 %s 외부 IP가 %s입니다.",
   "loc.messages.WritingDockerConfigToTempFile": "임시 파일에 Docker 구성을 쓰는 중입니다. 파일 경로: %s, Docker 구성: %s"

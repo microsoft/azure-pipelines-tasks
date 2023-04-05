@@ -51,10 +51,10 @@ process.env["MOCK_NORMALIZE_SLASHES"] = "true";
 tr.setAnswers(a);
 
 tr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-task-lib/mock-toolrunner'));
-tr.registerMock('azure-arm-rest-v2/webRequestUtility', require('./mock_node_modules/webRequestUtility'));
-tr.registerMock('azure-arm-rest-v2/azure-arm-network', require('./mock_node_modules/azure-arm-network'));
-tr.registerMock('azure-arm-rest-v2/azure-arm-resource', require('./mock_node_modules/azure-arm-resource'));
-tr.registerMock('azure-arm-rest-v2/azure-arm-compute', require('./mock_node_modules/azure-arm-compute'));
+tr.registerMock('azure-pipelines-tasks-azure-arm-rest-v2/webRequestUtility', require('./mock_node_modules/webRequestUtility'));
+tr.registerMock('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-network', require('./mock_node_modules/azure-arm-network'));
+tr.registerMock('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource', require('./mock_node_modules/azure-arm-resource'));
+tr.registerMock('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-compute', require('./mock_node_modules/azure-arm-compute'));
 
 
 tr.run();

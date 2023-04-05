@@ -1,11 +1,11 @@
 import tl = require("azure-pipelines-task-lib/task");
 
 import armDeployTaskParameters = require("../models/TaskParameters");
-import armResource = require("azure-arm-rest-v2/AzureServiceClientBase");
+import armResource = require("azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase");
 import utils = require("./Utils");
-import { sleepFor } from 'azure-arm-rest-v2/webClient';
+import { sleepFor } from 'azure-pipelines-tasks-azure-arm-rest-v2/webClient';
 import { DeploymentParameters } from "./DeploymentParameters";
-import azureGraph = require("azure-arm-rest-v2/azure-graph");
+import azureGraph = require("azure-pipelines-tasks-azure-arm-rest-v2/azure-graph");
 
 export class DeploymentScopeBase {
     protected deploymentParameters: DeploymentParameters;
@@ -21,13 +21,14 @@ export class DeploymentScopeBase {
 
     public async deploy(): Promise<void> {
         await this.createTemplateDeployment();
+        utils.deleteGeneratedFiles()
     }
 
     protected async createTemplateDeployment() {
         console.log(tl.loc("CreatingTemplateDeployment"));
         var params: DeploymentParameters;
         if (this.taskParameters.templateLocation === "Linked artifact") {
-            params = utils.getDeploymentDataForLinkedArtifact(this.taskParameters);
+            params = await utils.getDeploymentDataForLinkedArtifact(this.taskParameters);
         } else if (this.taskParameters.templateLocation === "URL of the file") {
             params = await utils.getDeploymentObjectForPublicURL(this.taskParameters);
         } else {
@@ -71,7 +72,21 @@ export class DeploymentScopeBase {
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
-                        tl.setVariable(this.taskParameters.deploymentOutputs, JSON.stringify(result["properties"]["outputs"]));
+                        const setVariablesInObject = (path: string, obj: any) => {
+                            for (var key of Object.keys(obj)) {
+                                if (obj[key] && typeof(obj[key]) === "object") {
+                                    setVariablesInObject(`${path}.${key}`, obj[key]);
+                                }
+                                else {
+                                    console.log(`##vso[task.setvariable variable=${path}.${key};]` + JSON.stringify(obj[key]));
+                                    console.log(tl.loc("AddedOutputVariable", `${path}.${key}`));
+                                }
+                            }
+                        }
+                        if (typeof(result["properties"]["outputs"]) === "object") {
+                            setVariablesInObject(this.taskParameters.deploymentOutputs, result["properties"]["outputs"]);
+                        }
+                        console.log(`##vso[task.setvariable variable=${this.taskParameters.deploymentOutputs};]` + JSON.stringify(result["properties"]["outputs"]));
                         console.log(tl.loc("AddedOutputVariable", this.taskParameters.deploymentOutputs));
                     }
 
@@ -104,7 +119,7 @@ export class DeploymentScopeBase {
             var servicePrincipalObject = await graphClient.servicePrincipals.GetServicePrincipal(null);
             return !!servicePrincipalObject ? servicePrincipalObject.appDisplayName : "";    
         } catch (error) {
-            tl.debug(tl.loc("ServicePrincipalFetchFailed", error));
+            tl.debug(tl.loc("ServicePrincipalFetchFailed", (error.message || error)));
             return "";
         }
     }

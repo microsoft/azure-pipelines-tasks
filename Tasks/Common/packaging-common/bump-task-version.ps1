@@ -10,6 +10,7 @@ Param(
 )
 
 # Bump patch version and adjust sprint
+# not including task that are deprecated such as NpmV0.
 "DotNetCoreCLIV2","DownloadPackageV0","DownloadPackageV1","MavenV2","MavenV3","NpmV1","NpmAuthenticateV0","NuGetV0","NuGetCommandV2","NuGetPublisherV0","NuGetToolInstallerV0","NuGetToolInstallerV1","PipAuthenticateV0","TwineAuthenticateV0","UniversalPackagesV0","UseNodeV1" | % {
     $taskLocation = Join-Path "$taskRoot/$_" "task.json"
     $taskContent = Get-Content $taskLocation 
@@ -37,6 +38,7 @@ Param(
 }
 
 # Just bump the patch version for these.
+# Because Azure Artifacts doesn't own these packages, so instead of adjusting the minor #, we bump the patch #.
 "UseDotNetV2","DownloadGitHubNugetPackageV1","DownloadGitHubNpmPackageV1" | % {
     $taskLocation = Join-Path "$taskRoot/$_" "task.json"
     $taskContent = Get-Content $taskLocation 

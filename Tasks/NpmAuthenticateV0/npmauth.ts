@@ -3,12 +3,12 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as URL from 'url';
 import * as fs from 'fs';
 import * as constants from './constants';
-import * as npmregistry from 'packaging-common/npm/npmregistry';
-import * as util from 'packaging-common/util';
-import * as npmutil from 'packaging-common/npm/npmutil';
+import * as npmregistry from 'azure-pipelines-tasks-packaging-common-v3/npm/npmregistry';
+import * as util from 'azure-pipelines-tasks-packaging-common-v3/util';
+import * as npmutil from 'azure-pipelines-tasks-packaging-common-v3/npm/npmutil';
 import * as os from 'os';
-import * as npmrcparser from 'packaging-common/npm/npmrcparser';
-import * as pkgLocationUtils from 'packaging-common/locationUtilities';
+import * as npmrcparser from 'azure-pipelines-tasks-packaging-common-v3/npm/npmrcparser';
+import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common-v3/locationUtilities';
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -26,13 +26,13 @@ async function main(): Promise<void> {
     }
 
     if (tl.getVariable("SAVE_NPMRC_PATH")) {
-         saveNpmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
+        saveNpmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
     }
     else {
         let tempPath = tl.getVariable('Agent.BuildDirectory') || tl.getVariable('Agent.TempDirectory');
         tempPath = path.join(tempPath, 'npmAuthenticate');
         tl.mkdirP(tempPath);
-        saveNpmrcPath = fs.mkdtempSync(tempPath + path.sep); 
+        saveNpmrcPath = fs.mkdtempSync(tempPath + path.sep);
         tl.setVariable("SAVE_NPMRC_PATH", saveNpmrcPath, false);
         tl.setVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY", tempPath, false);
     }
@@ -45,7 +45,7 @@ async function main(): Promise<void> {
 
     if (fs.existsSync(indexFile)) { //If the file exists, add to it.
         npmrcTable = JSON.parse(fs.readFileSync(indexFile, 'utf8'));
-        
+
     }
     else { //If the file doesn't exist, create it. 
         npmrcTable = new Object();
@@ -71,17 +71,14 @@ async function main(): Promise<void> {
     try {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
     } catch (error) {
-        tl.debug('Unable to get packaging URIs, using default collection URI');
+        tl.debug('Unable to get packaging URIs');
         util.logError(error);
-        const collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
-        packagingLocation = {
-            PackagingUris: [collectionUrl],
-            DefaultPackagingUri: collectionUrl
-        };
+        throw error;
     }
     let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
 
     let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
+    let addedRegistry = [];
     for (let RegistryURLString of npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true)) {
         let registryURL = URL.parse(RegistryURLString);
         let registry: npmregistry.NpmRegistry;
@@ -89,10 +86,11 @@ async function main(): Promise<void> {
             for (let serviceEndpoint of endpointRegistries) {
 
                 if (util.toNerfDart(serviceEndpoint.url) == util.toNerfDart(RegistryURLString)) {
-                    let serviceURL = URL.parse(serviceEndpoint.url);              
+                    let serviceURL = URL.parse(serviceEndpoint.url);
                     console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
                     registry = serviceEndpoint;
-                    npmrcFile = clearFileOfReferences(npmrc, npmrcFile, serviceURL);
+                    addedRegistry.push(serviceURL);
+                    npmrcFile = clearFileOfReferences(npmrc, npmrcFile, serviceURL, addedRegistry);
                     break;
                 }
             }
@@ -103,7 +101,8 @@ async function main(): Promise<void> {
                     let localURL = URL.parse(localRegistry.url);
                     console.log(tl.loc("AddingLocalCredentials"));
                     registry = localRegistry;
-                    npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL);
+                    addedRegistry.push(localURL);
+                    npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL, addedRegistry);
                     break;
                 }
             }
@@ -114,23 +113,28 @@ async function main(): Promise<void> {
             npmrcFile.push(os.EOL + registry.auth + os.EOL);
         }
         else {
-            console.log(tl.loc("IgnoringRegistry", registryURL.host ));
+            console.log(tl.loc("IgnoringRegistry", registryURL.host));
         }
     }
 }
 
 main().catch(error => {
-    if(tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY")) {
+    if (tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY")) {
         tl.rmRF(tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY"));
+        // Clear the variables after we rm-rf the main root directory
+        tl.setVariable("SAVE_NPMRC_PATH", "", false);
+        tl.setVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY", "", false);
     } 
     tl.setResult(tl.TaskResult.Failed, error);
 });
-function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url) {
+function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url, addedRegistry: URL.Url[]) {
     let redoneFile = file;
     let warned = false;
     for (let i = 0; i < redoneFile.length; i++) {
         if (file[i].indexOf(url.host) != -1 && file[i].indexOf(url.path) != -1 && file[i].indexOf('registry=') == -1) {
-            if (!warned) {
+            // Suppress the warning if it is the same registry from .npmrc
+            // E.g. registry={url} and @scope:registry={url} in .npmrc, the warning should not appear if both have the same url
+            if (!warned && !addedRegistry.includes(url)) {
                 tl.warning(tl.loc('CheckedInCredentialsOverriden', url.host));
             }
             warned = true;

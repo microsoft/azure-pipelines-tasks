@@ -23,6 +23,9 @@ Register-Mock Assert-VstsPath
 Register-Mock Invoke-VstsTool { }
 Register-Mock Write-VstsTaskError
 Register-Mock Write-VstsSetResult
+Register-Mock Expand-ModuleZip
+Register-Mock Invoke-RestMethod
+Register-Mock Save-Module
 
 # Act.
 $actual = & $PSScriptRoot\..\AzurePowerShell.ps1

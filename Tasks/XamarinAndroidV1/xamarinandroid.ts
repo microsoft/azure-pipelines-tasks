@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
-import * as javacommons from 'java-common/java-common';
+import * as javacommons from 'azure-pipelines-tasks-java-common/java-common';
 
 async function run() {
     try {

@@ -1,6 +1,6 @@
 import path = require('path');
 import * as tl from 'azure-pipelines-task-lib/task';
-import sign = require('ios-signing-common/ios-signing-common');
+import sign = require('azure-pipelines-tasks-ios-signing-common/ios-signing-common');
 import os = require('os');
 
 async function run() {
@@ -17,7 +17,7 @@ async function run() {
             let deleteCert: boolean = tl.getBoolInput('deleteCert');
             let hash: string = tl.getTaskVariable('APPLE_CERTIFICATE_SHA1HASH');
             if (deleteCert && hash) {
-                sign.deleteCert(keychainPath, hash);
+                await sign.deleteCert(keychainPath, hash);
             }
 
             let deleteKeychain: boolean = false;

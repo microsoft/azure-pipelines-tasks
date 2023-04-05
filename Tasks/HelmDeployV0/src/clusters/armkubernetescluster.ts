@@ -1,9 +1,9 @@
 "use strict";
 
 import tl = require('azure-pipelines-task-lib/task');
-import { AzureAksService } from 'azure-arm-rest-v2/azure-arm-aks-service';
-import { AzureRMEndpoint } from 'azure-arm-rest-v2/azure-arm-endpoint';
-import { AzureEndpoint, AKSCluster, AKSClusterAccessProfile} from 'azure-arm-rest-v2/azureModels';
+import { AzureAksService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-aks-service';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
+import { AzureEndpoint, AKSCluster, AKSClusterAccessProfile} from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
 
 // get kubeconfig file content
 async function getKubeConfigFromAKS(azureSubscriptionEndpoint: string, resourceGroup: string, clusterName: string, useClusterAdmin?: boolean) : Promise<string> {

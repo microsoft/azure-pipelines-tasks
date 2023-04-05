@@ -27,12 +27,13 @@ export function setEndpointData() {
 }
 
 export function setAgentsData() {
-    process.env['TASK_TEST_TRACE'] = 1;
+    process.env['TASK_TEST_TRACE'] = "1";
     process.env["AZURE_HTTP_USER_AGENT"] = "TFS_useragent";
     process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
     process.env["AGENT_NAME"] = "author";
     process.env["AGENT_TEMPDIRECTORY"] = process.cwd();
     process.env["BUILD_BUILDID"] = 'Build.BuildId';
+    process.env["USE_MSAL"] = "false";
 }
 
 export function mockTaskArgument():  ma.TaskLibAnswers{

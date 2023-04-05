@@ -25,19 +25,21 @@ export function run(connection: ClusterConnection, kubecommand: string, outputUp
 function getCommandOutputFormat(kubecommand: string): string[] {
     var args: string[] = [];
     var outputFormat = tl.getInput("outputFormat", false);
-    switch (outputFormat) {
-        case '':
-        case 'none':
-            tl.debug(`Skipping -o in args as outputFormat is 'none' or empty.`);
-            return args;
-        case 'json':
-        case 'yaml':
-            if (!isJsonOrYamlOutputFormatSupported(kubecommand)) {
+    if (outputFormat) {
+        switch (outputFormat) {
+            case '':
+            case 'none':
+                tl.debug(`Skipping -o in args as outputFormat is 'none' or empty.`);
                 return args;
-            }
-        default:
-            args[0] = "-o";
-            args[1] = outputFormat;
+            case 'json':
+            case 'yaml':
+                if (!isJsonOrYamlOutputFormatSupported(kubecommand)) {
+                    return args;
+                }
+            default:
+                args[0] = "-o";
+                args[1] = outputFormat;
+        }
     }
     return args;
 }

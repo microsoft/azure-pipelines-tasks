@@ -26,6 +26,8 @@
   "loc.input.help.CustomTargetAzurePs": "首选 Azure PowerShell 版本需为正确的语义版本，例如 1.2.3。不支持 2.\\*、2.3.\\* 等正则表达式。托管 VS2017 池当前支持 Azure 模块版本: 1.0.0、1.6.0、2.3.2、2.6.0、3.1.0",
   "loc.input.label.pwsh": "使用 PowerShell Core",
   "loc.input.help.pwsh": "如果为 true，则在 Windows 上，任务将使用来自 PATH 的 pwsh.exe，而不是 powershell.exe。",
+  "loc.input.label.validateScriptSignature": "验证脚本签名",
+  "loc.input.help.validateScriptSignature": "如果为 true，则任务将首先检查以确保指定的脚本已签名并且在执行前有效。",
   "loc.input.label.workingDirectory": "工作目录",
   "loc.input.help.workingDirectory": "在其中运行脚本的工作目录。",
   "loc.messages.GeneratingScript": "正在生成脚本。",
@@ -35,6 +37,6 @@
   "loc.messages.InvalidAzurePsVersion": "指定的 Azure PowerShell 版本“{0}”格式不正确。请检查格式。正确格式的示例为 1.0.1",
   "loc.messages.JS_ExitCode": "PowerShell 已退出，代码为“%s”。",
   "loc.messages.JS_Stderr": "PowerShell 向标准错误流写入一个或多个行。",
-  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+  "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。",
   "loc.messages.PS_ExitCode": "PowerShell 已退出，代码为“{0}”。"
 }

@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 164,
-        "Patch": 2
+        "Minor": 212,
+        "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for multiple lines.",
     "showEnvironmentVariables": true,
@@ -69,7 +69,11 @@
                 "windows"
             ]
         },
-        "Node": {
+        "Node10": {
+            "target": "cmdline.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "cmdline.js",
             "argumentFormat": ""
         }

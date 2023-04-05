@@ -3,6 +3,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from 'os';
 import * as path from 'path';
 import * as util from 'util';
+import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 
 let osPlat: string = os.platform();
 let osArch: string = os.arch();
@@ -11,6 +12,7 @@ async function run() {
     try {
         let version = tl.getInput('version', true).trim();
         await getGo(version);
+        telemetry.emitTelemetry('TaskHub', 'GoToolV0', { version });
     }
     catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);

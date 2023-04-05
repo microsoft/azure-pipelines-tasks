@@ -1,0 +1,22 @@
+{
+    "rm": [       
+        {
+            "items": [
+                "node_modules/azure-pipelines-tasks-artifacts-common/node_modules/azure-pipelines-task-lib"
+            ],
+            "options": "-Rf"
+        }
+    ],
+    "externals": {
+        "archivePackages": [
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/1.0.0/c.zip",
+                "dest": "./ArtifactsCredProvider/"
+            },
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/1.0.0/n6.zip",
+                "dest": "./ArtifactsCredProviderNet6/"
+            }
+        ]
+    }
+}

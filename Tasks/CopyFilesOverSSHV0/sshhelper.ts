@@ -1,7 +1,8 @@
 import Q = require('q');
 import tl = require('azure-pipelines-task-lib/task');
+const path = require('path');
 var Ssh2Client = require('ssh2').Client;
-var Scp2Client = require('scp2').Client;
+var SftpClient = require('ssh2-sftp-client');
 
 export class RemoteCommandOptions {
     public failOnStdErr : boolean;
@@ -39,18 +40,16 @@ export class SshHelper {
         await defer.promise;
     }
 
-    private async setupScpConnection() : Promise<void> {
+    private async setupSftpConnection() : Promise<void> {
         const defer = Q.defer<void>();
-        this.scpClient = new Scp2Client();
-        this.scpClient.defaults(this.sshConfig);
-        this.scpClient.sftp((err, sftp) => {
-            if(err) {
-                defer.reject(tl.loc('ConnectionFailed', err));
-            } else {
-                this.sftpClient = sftp;
-                defer.resolve();
-            }
-        })
+        try {
+            this.sftpClient = new SftpClient();
+            await this.sftpClient.connect(this.sshConfig);
+            defer.resolve();
+        } catch (err) {
+            this.sftpClient = null;
+            defer.reject(tl.loc('ConnectionFailed', err));
+        }
         await defer.promise;
     }
 
@@ -61,7 +60,7 @@ export class SshHelper {
         console.log(tl.loc('SettingUpSSHConnection', this.sshConfig.host));
         try {
             await this.setupSshClientConnection();
-            await this.setupScpConnection();
+            await this.setupSftpConnection();
         } catch(err) {
             throw new Error(tl.loc('ConnectionFailed', err));
         }
@@ -70,13 +69,13 @@ export class SshHelper {
     /**
      * Close any open client connections for SSH, SCP and SFTP
      */
-    closeConnection() {
+    async closeConnection() {
         try {
             if (this.sftpClient) {
                 this.sftpClient.on('error', (err) => {
                     tl.debug('sftpClient: Ignoring error diconnecting: ' + err);
                 }); // ignore logout errors; see: https://github.com/mscdex/node-imap/issues/695
-                this.sftpClient.close();
+                await this.sftpClient.end();
                 this.sftpClient = null;
             }
         } catch(err) {
@@ -93,18 +92,6 @@ export class SshHelper {
         } catch(err) {
             tl.debug('Failed to close SSH client: ' + err);
         }
-
-        try {
-            if (this.scpClient) {
-                this.scpClient.on('error', (err) => {
-                    tl.debug('scpClient: Ignoring error diconnecting: ' + err);
-                }); // ignore logout errors; see: https://github.com/mscdex/node-imap/issues/695
-                this.scpClient.close();
-                this.scpClient = null;
-            }
-        } catch(err) {
-            tl.debug('Failed to close SCP client: ' + err);
-        }
     }
 
     /**
@@ -113,19 +100,33 @@ export class SshHelper {
      * @param dest, folders will be created if they do not exist on remote server
      * @returns {Promise<string>}
      */
-    uploadFile(sourceFile: string, dest: string) : Q.Promise<string> {
+    async uploadFile(sourceFile: string, dest: string) : Promise<string> {
         tl.debug('Upload ' + sourceFile + ' to ' + dest + ' on remote machine.');
+
         var defer = Q.defer<string>();
-        if(!this.scpClient) {
+        if(!this.sftpClient) {
             defer.reject(tl.loc('ConnectionNotSetup'));
         }
-        this.scpClient.upload(sourceFile, dest, (err) => {
-            if(err) {
-                defer.reject(tl.loc('UploadFileFailed', sourceFile, dest, err));
-            } else {
-                defer.resolve(dest);
+
+        const remotePath = path.dirname(dest);
+        try {
+            if (!await this.sftpClient.exists(remotePath)) {
+                await this.sftpClient.mkdir(remotePath, true);
             }
-        })
+        } catch (error) {
+            defer.reject(tl.loc('TargetNotCreated', remotePath));
+        }
+
+        try {
+            if (this.sshConfig.useFastPut) {
+                await this.sftpClient.fastPut(sourceFile, dest);
+            } else {
+                await this.sftpClient.put(sourceFile, dest);
+            }
+            defer.resolve(dest);
+        } catch (err) {
+            defer.reject(tl.loc('UploadFileFailed', sourceFile, dest, err));
+        }
         return defer.promise;
     }
 
@@ -134,21 +135,22 @@ export class SshHelper {
      * @param path
      * @returns {Promise<boolean>}
      */
-    checkRemotePathExists(path: string) : Q.Promise<boolean> {
+    async checkRemotePathExists(path: string) : Promise<boolean> {
         var defer = Q.defer<boolean>();
 
+        tl.debug(tl.loc('CheckingPathExistance', path));
         if(!this.sftpClient) {
             defer.reject(tl.loc('ConnectionNotSetup'));
         }
-        this.sftpClient.stat(path, function(err, attr) {
-            if(err) {
-                //path does not exist
-                defer.resolve(false);
-            } else {
-                //path exists
-                defer.resolve(true);
-            }
-        })
+        if (await this.sftpClient.exists(path)) {
+            //path exists
+            tl.debug(tl.loc('PathExists', path));
+            defer.resolve(true);
+        } else {
+            //path does not exist
+            tl.debug(tl.loc('PathNotExists', path));
+            defer.resolve(false);
+        }
 
         return defer.promise;
     }

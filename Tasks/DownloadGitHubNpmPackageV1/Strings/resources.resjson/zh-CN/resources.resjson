@@ -37,5 +37,5 @@
   "loc.messages.OverridingProjectNpmrc": "正在重写项目 .npmrc: %s",
   "loc.messages.RestoringProjectNpmrc": "正在还原项目 .npmrc",
   "loc.messages.WorkingDirectoryNotDirectory": "请将工作目录更改为有效目录",
-  "loc.messages.NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region."
+  "loc.messages.NGCommon_AreaNotFoundInSps": "无法定位“%s”[%s] 区域。你所在的地区可能无法使用包含该区域的服务。"
 }

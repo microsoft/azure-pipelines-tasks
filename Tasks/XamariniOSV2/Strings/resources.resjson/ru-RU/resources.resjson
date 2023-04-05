@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.iOS",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613729) or [see the Xamarin iOS documentation](https://docs.microsoft.com/xamarin/ios/)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=613729) или [документацию по Xamarin iOS](https://docs.microsoft.com/xamarin/ios/)",
   "loc.description": "Создание приложения для iOS с помощью Xamarin в macOS",
   "loc.instanceNameFormat": "Сборка решения Xamarin.iOS $(solution)",
   "loc.releaseNotes": "Настройка подписи iOS была удалена из задачи. Чтобы настроить подпись, используйте задачу \"Защита файлов\" со вспомогательными задачами \"Установка сертификата Apple\" и \"Установка профиля подготовки Apple\". Параметры обновлены для более эффективной работы с Visual Studio для Mac.",

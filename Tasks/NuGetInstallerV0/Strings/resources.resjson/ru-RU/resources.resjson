@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Установщик NuGet",
-  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613747)",
-  "loc.description": "Установка или восстановление отсутствующих пакетов NuGet",
+  "loc.helpMarkDown": "[Дополнительные сведения](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget)",
+  "loc.description": "Устанавливает или восстанавливает отсутствующие пакеты NuGet. Используйте задачу NuGetAuthenticate@0 для получения последних возможностей.",
   "loc.instanceNameFormat": "NuGet $(restoreMode) $(solution)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.solution": "Путь к решению или файлу packages.config",

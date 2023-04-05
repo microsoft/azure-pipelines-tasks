@@ -10,6 +10,7 @@ $__vsts_input_errorActionPreference = Get-VstsInput -Name errorActionPreference
 $__vsts_input_failOnStandardError = Get-VstsInput -Name FailOnStandardError
 $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
+$validateScriptSignature = Get-VstsInput -Name validateScriptSignature -AsBool
 
 Write-Host "## Validating Inputs"
 # Validate the script path and args do not contains new-lines. Otherwise, it will
@@ -46,6 +47,30 @@ if ($targetAzurePs -eq $latestVersion) {
 }
 Write-Host "## Validating Inputs Complete" 
 
+if ($validateScriptSignature) {
+    try {
+        if ($scriptType -ne "InlineScript") {
+            Write-Host "## Validating Script Signature"
+
+            # Validate script is signed
+            $scriptSignature = Get-AuthenticodeSignature $scriptPath
+            if ($scriptSignature.Status -eq "NotSigned") {
+                throw "Object does not have a digital signature. Please ensure your script is signed and try again."
+            }
+            elseif ($scriptSignature.Status -ne "Valid") {
+                throw "Digital signature of the object did not verify. Please ensure your script is properly signed and try again."
+            }
+
+            Write-Host "## Validating Script Signature Complete" 
+        }
+    }
+    catch 
+    {
+        $errorMsg = $_.Exception.Message
+        throw "Unable to validate script signature: $errorMsg"
+    }
+}
+
 Write-Host "## Initializing Azure"
 . "$PSScriptRoot\Utility.ps1"
 $targetAzurePs = Get-RollForwardVersion -azurePowerShellVersion $targetAzurePs
@@ -76,6 +101,8 @@ catch
    Write-Verbose "Unable to get the authScheme $error" 
 }
 
+. $PSScriptRoot\TryMakingModuleAvailable.ps1 -targetVersion $targetAzurePs
+
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs -authScheme $authScheme
 
 # troubleshoot link
@@ -90,6 +117,8 @@ try {
 finally {
     if (!$success) {
         Write-VstsTaskError "Initialize Azure failed: For troubleshooting, refer: $troubleshoot"
+        Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+        Remove-EndpointSecrets
     }
 }
 
@@ -172,9 +201,8 @@ finally {
     if ($__vstsAzPSInlineScriptPath -and (Test-Path -LiteralPath $__vstsAzPSInlineScriptPath) ) {
         Remove-Item -LiteralPath $__vstsAzPSInlineScriptPath -ErrorAction 'SilentlyContinue'
     }
+    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+    Remove-EndpointSecrets
 }
 Write-Host "## Script Execution Complete"
-
-Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-Remove-EndpointSecrets
 Disconnect-AzureAndClearContext -authScheme $authScheme -ErrorAction SilentlyContinue

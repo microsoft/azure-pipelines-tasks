@@ -19,7 +19,7 @@ describe('DownloadSecureFile Suite', function () {
         tr.run();
 
         assert(tr.stderr.length === 0, 'should not have written to stderr');
-        assert(tr.stdOutContained('##vso[task.debug]Mock SecureFileHelpers retry count set to: 5'), 'task should have used default retry count of 5');
+        assert(tr.stdOutContained('##vso[task.debug]Mock SecureFileHelpers retry count set to: 8'), 'task should have used default retry count of 8');
         assert(tr.succeeded, 'task should have succeeded');
     });
 
@@ -36,7 +36,7 @@ describe('DownloadSecureFile Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Invalid retry count defaults to 5', function() {
+    it('Invalid retry count defaults to 8', function() {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp: string = path.join(__dirname, 'L0InvalidRetryCount.js');
@@ -45,11 +45,11 @@ describe('DownloadSecureFile Suite', function () {
         tr.run();
 
         assert(tr.stderr.length === 0, 'should not have written to stderr');
-        assert(tr.stdOutContained('##vso[task.debug]Mock SecureFileHelpers retry count set to: 5'), 'task should have used default retry count of 5');
+        assert(tr.stdOutContained('##vso[task.debug]Mock SecureFileHelpers retry count set to: 8'), 'task should have used default retry count of 8');
         assert(tr.succeeded, 'task should have succeeded');
     });
 
-    it('Negative retry count defaults to 5', function() {
+    it('Negative retry count defaults to 8', function() {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp: string = path.join(__dirname, 'L0NegativeRetryCount.js');
@@ -58,7 +58,7 @@ describe('DownloadSecureFile Suite', function () {
         tr.run();
 
         assert(tr.stderr.length === 0, 'should not have written to stderr');
-        assert(tr.stdOutContained('##vso[task.debug]Mock SecureFileHelpers retry count set to: 5'), 'task should have used default retry count of 5');
+        assert(tr.stdOutContained('##vso[task.debug]Mock SecureFileHelpers retry count set to: 8'), 'task should have used default retry count of 8');
         assert(tr.succeeded, 'task should have succeeded');
     });
 });

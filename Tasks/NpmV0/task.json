@@ -2,15 +2,15 @@
     "id": "FE47E961-9FA8-4106-8639-368C022D43AD",
     "name": "Npm",
     "friendlyName": "npm",
-    "description": "Run an npm command",
+    "description": "Run an npm command. Use NpmAuthenticate@0 task for latest capabilities.",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613746)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 172,
-        "Patch": 0
+        "Minor": 220,
+        "Patch": 3
     },
     "runsOn": [
         "Agent",
@@ -47,7 +47,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "npmtask.js",
             "argumentFormat": ""
         }

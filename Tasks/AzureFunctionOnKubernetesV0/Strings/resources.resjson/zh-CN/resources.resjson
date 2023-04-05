@@ -27,6 +27,8 @@
   "loc.messages.CouldNotDeterminePodStatus": "由于错误 %s，无法确定 Pod 的状态",
   "loc.messages.CouldNotDetermineServiceStatus": "由于错误 %s，无法确定服务 %s 状态",
   "loc.messages.FileContentSynced": "文件内容已同步到磁盘。内容为 %s。",
+  "loc.messages.KubectlClientVersion": "Kubectl 客户端版本",
+  "loc.messages.KubectlServerVersion": "Kubectl 服务器版本",
   "loc.messages.NoDataWrittenOnFile": "没有任何数据写入到文件 %s",
   "loc.messages.ServiceExternalIP": "服务 %s 外部 IP 为 %s",
   "loc.messages.WritingDockerConfigToTempFile": "正在将 Docker 配置写入临时文件。文件路径: %s，Docker 配置: %s"

@@ -9,14 +9,14 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 167,
-    "Patch": 2
+    "Minor": 218,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
     "DeploymentGroup"
   ],
-  "minimumAgentVersion": "2.120.0",
+  "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -71,13 +71,17 @@
     {
       "target": "artifactFeeds",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.name}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if projectName}}{{{projectName}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
+      "target": "pipauthenticatemain.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "pipauthenticatemain.js",
       "argumentFormat": ""
     }

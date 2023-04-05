@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Editore PyPI",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=875289)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?linkid=875289)",
   "loc.description": "Consente di creare e caricare un pacchetto sdist o wheel in un indice compatibile con PyPI usando Twine",
   "loc.instanceNameFormat": "Crea pacchetto e pubblica in PyPI",
   "loc.input.label.serviceEndpoint": "Connessione al servizio PyPI",

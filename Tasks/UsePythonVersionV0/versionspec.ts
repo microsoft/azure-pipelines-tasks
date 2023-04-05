@@ -1,3 +1,5 @@
+import * as semver from 'semver';
+
 /** Convert versions like `3.8-dev` to a version like `>= 3.8.0-a0`. */
 export function desugarDevVersion(versionSpec: string) {
     if (versionSpec.endsWith('-dev')) {
@@ -16,4 +18,17 @@ export function desugarDevVersion(versionSpec: string) {
 export function pythonVersionToSemantic(versionSpec: string) {
     const prereleaseVersion = /(\d+\.\d+\.\d+)((?:a|b|rc)\d*)/g;
     return versionSpec.replace(prereleaseVersion, '$1-$2');
+}
+
+/**
+ * Checks if at least the patch field is present in the version specification
+ * @param versionSpec version specification
+ */
+export function isExactVersion(versionSpec: string): boolean {
+    if (!versionSpec) {
+        return false;
+    }
+    const versionNumberParts = versionSpec.split('.');
+
+    return versionNumberParts.length >= 3;
 }

@@ -13,7 +13,7 @@
   "loc.input.label.configFile": "配置文件路径",
   "loc.input.help.configFile": "包含容器结构测试的配置文件路径。.yaml 或 .json 文件",
   "loc.input.label.testRunTitle": "测试运行标题",
-  "loc.input.help.testRunTitle": "Provide a name for the Test Run.",
+  "loc.input.help.testRunTitle": "提供测试运行的名称。",
   "loc.input.label.failTaskOnFailedTests": "如果存在测试故障，则任务会失败",
   "loc.input.help.failTaskOnFailedTests": "如果存在任何测试故障，任务将失败。中此选项，在检测到测试故障时使任务失败。",
   "loc.messages.NoMatchingFilesFound": "未找到任何与 \"%s\" 匹配的测试文件。",

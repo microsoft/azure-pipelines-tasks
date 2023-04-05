@@ -44,7 +44,7 @@ The Kubernetes task for Azure Pipelines or Team Foundation Server incorporates c
 36.	typed-rest-client  (https://github.com/Microsoft/typed-rest-client)
 37.	underscore (https://github.com/jashkenas/underscore)
 38.	vso-node-api (https://github.com/Microsoft/vsts-node-api)
-39.	VSTS-Task-Lib (https://github.com/Microsoft/vsts-task-lib)
+39.	Azure-Pipelines-Task-Lib (https://github.com/Microsoft/azure-pipelines-task-lib)
 40.	wrappy (https://github.com/npm/wrappy)
 
 
@@ -1069,7 +1069,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 =========================================
 END OF vso-node-api NOTICES, INFORMATION, AND LICENSE
 
-%% VSTS-Task-Lib NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+%% Azure-Pipelines-Task-Lib NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 The MIT License (MIT)
 
@@ -1094,7 +1094,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 =========================================
-END OF VSTS-Task-Lib NOTICES, INFORMATION, AND LICENSE
+END OF Azure-Pipelines-Task-Lib NOTICES, INFORMATION, AND LICENSE
 
 %% wrappy NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================

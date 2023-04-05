@@ -1,31 +1,26 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as Q from 'q';
 import * as utility from './Common/utility';
-import * as auth from 'packaging-common/nuget/Authentication';
-import { NuGetConfigHelper2 } from 'packaging-common/nuget/NuGetConfigHelper2';
-import * as ngRunner from 'packaging-common/nuget/NuGetToolRunner2';
+import * as auth from 'azure-pipelines-tasks-packaging-common/nuget/Authentication';
+import { NuGetConfigHelper2 } from 'azure-pipelines-tasks-packaging-common/nuget/NuGetConfigHelper2';
+import * as ngRunner from 'azure-pipelines-tasks-packaging-common/nuget/NuGetToolRunner2';
 import * as path from 'path';
 import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
-import * as nutil from 'packaging-common/nuget/Utility';
-import * as commandHelper from 'packaging-common/nuget/CommandHelper';
-import * as pkgLocationUtils from 'packaging-common/locationUtilities';
-import { getProjectAndFeedIdFromInputParam, logError } from 'packaging-common/util';
+import * as nutil from 'azure-pipelines-tasks-packaging-common/nuget/Utility';
+import * as commandHelper from 'azure-pipelines-tasks-packaging-common/nuget/CommandHelper';
+import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
+import { getProjectAndFeedIdFromInputParam, logError } from 'azure-pipelines-tasks-packaging-common/util';
 
 export async function run(): Promise<void> {
-    tl.loc('DeprecatingDotnet2_2');
+    console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
     } catch (error) {
-        tl.debug('Unable to get packaging URIs, using default collection URI');
+        tl.debug('Unable to get packaging URIs');
         logError(error);
-        const collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
-        packagingLocation = {
-            PackagingUris: [collectionUrl],
-            DefaultPackagingUri: collectionUrl
-        };
+        throw error;
     }
-
     const buildIdentityDisplayName: string = null;
     const buildIdentityAccount: string = null;
 
@@ -64,7 +59,6 @@ export async function run(): Promise<void> {
 
         const externalAuthArr: auth.ExternalAuthInfo[] = commandHelper.GetExternalAuthInfoArray('externalEndpoints');
         const authInfo = new auth.NuGetExtendedAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, /*useCredProvider*/ null, /*useCredConfig*/ true), externalAuthArr);
-
         // Setting up sources, either from provided config file or from feed selection
         tl.debug('Setting up sources');
         let nuGetConfigPath: string = undefined;
@@ -90,6 +84,8 @@ export async function run(): Promise<void> {
 
         let credCleanup = () => { return; };
 
+        let isNugetOrgBehaviorWarn = false;
+
         // Now that the NuGetConfigHelper was initialized with all the known information we can proceed
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === 'select') {
@@ -108,6 +104,17 @@ export async function run(): Promise<void> {
 
             const includeNuGetOrg = tl.getBoolInput('includeNuGetOrg', false);
             if (includeNuGetOrg) {
+                // If includeNuGetOrg is true, check the INCLUDE_NUGETORG_BEHAVIOR env variable to determine task result 
+                // this allows compliance checks to warn or break the task if consuming from nuget.org directly 
+                const nugetOrgBehavior = includeNuGetOrg ? tl.getVariable("INCLUDE_NUGETORG_BEHAVIOR") : undefined;
+                tl.debug(`NugetOrgBehavior: ${nugetOrgBehavior}`);
+
+                if(nugetOrgBehavior?.toLowerCase() == "fail"){
+                    throw new Error(tl.loc("Error_IncludeNuGetOrgEnabled"));
+                } else if (nugetOrgBehavior?.toLowerCase() == "warn"){
+                    isNugetOrgBehaviorWarn = true;
+                }
+
                 sources.push(auth.NuGetOrgV3PackageSource);
             }
 
@@ -138,12 +145,12 @@ export async function run(): Promise<void> {
             }
         } finally {
             credCleanup();
-
             nuGetConfigHelper.restoreBackupRootNuGetFiles();
         }
 
-        tl.setResult(tl.TaskResult.Succeeded, tl.loc('PackagesInstalledSuccessfully'));
-
+        isNugetOrgBehaviorWarn 
+        ? tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Warning_IncludeNuGetOrgEnabled"))
+        : tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesInstalledSuccessfully"));
     } catch (err) {
 
         tl.error(err);

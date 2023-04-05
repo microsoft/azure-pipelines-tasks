@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 167,
-    "Patch": 2
+    "Minor": 214,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -145,7 +145,11 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
+      "target": "xamarinios.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "xamarinios.js",
       "argumentFormat": ""
     }

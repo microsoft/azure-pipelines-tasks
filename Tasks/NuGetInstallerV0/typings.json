@@ -1,7 +1,0 @@
-{
-  "name": "nugetinstaller",
-  "dependencies": {},
-  "globalDependencies": {
-    "q": "registry:dt/q#0.0.0+20160613154756"
-  }
-}

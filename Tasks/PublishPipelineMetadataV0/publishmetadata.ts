@@ -1,5 +1,5 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { WebRequest, WebResponse, sendRequest } from 'utility-common-v2/restutilities';
+import { WebRequest, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
 
 interface RelatedUrl {
     "url": string;
@@ -65,7 +65,7 @@ function constructMetadataRequestBody(requestObject: any): AttestationRequestPay
             }
         }
         else {
-            tl.loc("Not pushing metadata as no resource Ids found");
+            tl.debug("Not pushing metadata as no resource Ids found");
             return;
         }
     }

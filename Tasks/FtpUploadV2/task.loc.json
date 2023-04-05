@@ -18,9 +18,10 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 157,
-    "Patch": 2
+    "Minor": 211,
+    "Patch": 0
   },
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -176,6 +177,18 @@
     "Node10": {
       "target": "ftpuploadtask.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "ftpuploadtask.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
     }
   },
   "messages": {
@@ -186,6 +199,7 @@
     "Disconnected": "ms-resource:loc.messages.Disconnected",
     "DisconnectHost": "ms-resource:loc.messages.DisconnectHost",
     "FTPConnected": "ms-resource:loc.messages.FTPConnected",
+    "InvalidFTPOptions": "ms-resource:loc.messages.InvalidFTPOptions",
     "FTPNoHostSpecified": "ms-resource:loc.messages.FTPNoHostSpecified",
     "FTPNoProtocolSpecified": "ms-resource:loc.messages.FTPNoProtocolSpecified",
     "NoFilesFound": "ms-resource:loc.messages.NoFilesFound",

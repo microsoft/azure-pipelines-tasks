@@ -40,6 +40,7 @@ export class PackageFile {
         const fileEnding = path.parse(this.initialLocation).ext;
         switch (fileEnding) {
             case ".zip":
+            case ".crate":
             case ".nupkg":
                 return this.unzip(this.initialLocation, this.finalLocation);
             case ".tgz":
@@ -72,7 +73,7 @@ export class PackageFile {
             });
 
             unzipper.extract({
-                path: unzipLocation
+                path: path.normalize(unzipLocation)
             });
         });
     }

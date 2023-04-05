@@ -4,7 +4,7 @@ import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 export class MocksRegistrator {
     public static register(taskRunner: TaskMockRunner) {
         let secureFileHelperMock = require('./secure-files-mock.js');
-        taskRunner.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
+        taskRunner.registerMock('azure-pipelines-tasks-securefiles-common/securefiles-common', secureFileHelperMock);
 
         class MockStats {
             mode = 600;

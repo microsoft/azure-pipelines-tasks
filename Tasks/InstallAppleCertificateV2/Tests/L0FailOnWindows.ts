@@ -14,8 +14,8 @@ tr.setInput('keychain', 'temp');
 process.env['AGENT_VERSION'] = '2.116.0';
 process.env['HOME'] = '/users/test';
 
-let secureFileHelperMock = require('securefiles-common/securefiles-common-mock');
-tr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
+let secureFileHelperMock = require('azure-pipelines-tasks-securefiles-common/securefiles-common-mock');
+tr.registerMock('azure-pipelines-tasks-securefiles-common/securefiles-common', secureFileHelperMock);
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{

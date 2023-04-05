@@ -1,13 +1,14 @@
 "use strict";
 
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import fs = require('fs');
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as utils from './utils';
 import * as os from "os";
 import * as util from "util";
 import * as semver from 'semver';
+import minimatch = require('minimatch');
 const uuidV4 = require('uuid/v4');
 const helmToolName = "helm";
 const helmAllReleasesUrl = "https://api.github.com/repos/helm/helm/releases";
@@ -40,14 +41,15 @@ export async function downloadHelm(version: string): Promise<string> {
         throw new Error(tl.loc("HelmNotFoundInFolder", cachedToolpath))
     }
 
-    fs.chmodSync(helmpath, "777");
+    // For owner needs to keep the executable permission
+    fs.chmodSync(helmpath, "744");
     return helmpath;
 }
 
 function findHelm(rootFolder: string) {
     var helmPath = path.join(rootFolder, "*", helmToolName + getExecutableExtention());
     var allPaths = tl.find(rootFolder);
-    var matchingResultsFiles = tl.match(allPaths, helmPath, rootFolder);
+    var matchingResultsFiles = minimatch.match(allPaths, helmPath, rootFolder);
     return matchingResultsFiles[0];
 }
 

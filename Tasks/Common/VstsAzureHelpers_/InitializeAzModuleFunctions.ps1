@@ -1,4 +1,4 @@
-﻿# Dot source Utility functions.
+# Dot source Utility functions.
 . $PSScriptRoot/Utility.ps1
 
 function Initialize-AzModule {
@@ -72,10 +72,10 @@ function Initialize-AzSubscription {
     Set-UserAgent
     
     # Clear context
-    Write-Host "##[command]Clear-AzContext -Scope Process"
-    $null = Clear-AzContext -Scope Process
     Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
     $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+    Write-Host "##[command]Clear-AzContext -Scope Process"
+    $null = Clear-AzContext -Scope Process
 
     $environmentName = "AzureCloud"
     if($Endpoint.Data.Environment) {
@@ -103,21 +103,27 @@ function Initialize-AzSubscription {
             if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
                 $servicePrincipalCertificate = Add-CertificateForAz -Endpoint $Endpoint
 
-                Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName @processScope"
-                $null = Connect-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId `
-                -CertificateThumbprint $servicePrincipalCertificate.Thumbprint `
-                -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId `
-                -Environment $environmentName @processScope -WarningAction SilentlyContinue
+                Retry-Command -Command 'Connect-AzAccount'-Verbose -Args `
+                @{
+                    Tenant=$Endpoint.Auth.Parameters.TenantId;
+                    CertificateThumbprint=$servicePrincipalCertificate.Thumbprint;
+                    ApplicationId=$Endpoint.Auth.Parameters.ServicePrincipalId;
+                    Environment=$environmentName;
+                    ServicePrincipal=$true;
+                }
             }
             else {
                 $psCredential = New-Object System.Management.Automation.PSCredential(
                     $Endpoint.Auth.Parameters.ServicePrincipalId,
                     (ConvertTo-SecureString $Endpoint.Auth.Parameters.ServicePrincipalKey -AsPlainText -Force))
 
-                Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName @processScope"
-                $null = Connect-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId `
-                -Credential $psCredential `
-                -Environment $environmentName @processScope -WarningAction SilentlyContinue
+                Retry-Command -Command 'Connect-AzAccount' -Verbose -Args `
+                @{
+                    Tenant=$Endpoint.Auth.Parameters.TenantId;
+                    Credential=$psCredential;
+                    Environment=$environmentName;
+                    ServicePrincipal=$true;
+                } 
             }
 
         } 
@@ -134,16 +140,15 @@ function Initialize-AzSubscription {
         }
 
     } elseif ($Endpoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
-        try {
-            Write-Host "##[command]Connect-AzAccount -Identity @processScope"
-            $null = Connect-AzAccount -Identity @processScope
-        } catch {
-            # Provide an additional, custom, credentials-related error message.
-            Write-VstsTaskError -Message $_.Exception.Message
-            throw (New-Object System.Exception((Get-VstsLocString -Key AZ_MsiFailure), $_.Exception))
+
+        Retry-Command -Command 'Connect-AzAccount' -Verbose -Args `
+        @{
+            Environment=$environmentName;
+            Identity=$true;
         }
-        
-        Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+        if($scopeLevel -ne "ManagementGroup") {
+            Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+        }     
     } else {
         throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
     } 
@@ -186,6 +191,39 @@ function Set-CurrentAzSubscription {
 
     $additional = @{ TenantId = $TenantId }
 
-    Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
-    $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
+    Retry-Command -Command 'Set-AzContext' -Verbose -Args `
+    @{
+        SubscriptionId=$SubscriptionId;
+    }
+}
+
+function Retry-Command {
+    param(
+        [Parameter(Mandatory=$true)][string]$command,
+        [Parameter(Mandatory=$true)][hashtable]$args,
+        [Parameter(Mandatory=$false)][int]$retries=5,
+        [Parameter(Mandatory=$false)][int]$secondsDelay=5
+    )
+    
+    $retryCount = 0
+    $completed = $false
+
+    while(-not $completed) {
+        try {
+            Write-Host "##[command]$command $args"
+            & $command @args
+            Write-Verbose("Command [{0}] succeeded." -f $command)
+            $completed = $true
+        } catch {
+            if ($retryCount -ge $retries) {
+                Write-Verbose("Command [{0}] failed the maximum number of {1} times." -f $command, $retryCount)
+                throw
+            } else {
+                $secondsDelay = [math]::Pow(2, $retryCount)
+                Write-Verbose("Command [{0}] failed. Retrying in {1} seconds." -f $command, $secondsDelay)
+                Start-Sleep $secondsDelay
+                $retryCount++
+            }
+        }
+    }
 }

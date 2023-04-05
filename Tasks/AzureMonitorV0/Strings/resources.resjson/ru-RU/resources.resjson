@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Запрос оповещений классического Azure Monitor",
-  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=870240)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?linkid=870240)",
   "loc.description": "Соблюдать настроенные правила классического Azure Monitor для активных оповещений",
   "loc.instanceNameFormat": "Запрос оповещений Azure Monitor",
   "loc.input.label.connectedServiceNameARM": "Подписка Azure",

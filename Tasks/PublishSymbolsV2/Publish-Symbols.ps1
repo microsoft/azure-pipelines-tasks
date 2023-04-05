@@ -38,6 +38,9 @@ param(
     [string] $SourcePathListFileName,
 
     [Parameter(Mandatory=$false)]
+    [string] $IndexableFileFormats,
+
+    [Parameter(Mandatory=$false)]
     [string] $ExpirationInDays,
 
     [Parameter(Mandatory=$false)]
@@ -49,55 +52,22 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-# -----------------------------------------------------------------------------
-# Methods
-# -----------------------------------------------------------------------------
-function Download-SymbolClient([string]$symbolServiceUri, [string]$directory)
-{
-    $clientFetchUrl = $symbolServiceUri + "/_apis/symbol/client/task"
-
-    "Downloading $clientFetchUrl to $directory" | Write-Verbose
-
-    $symbolAppZip = Join-Path $directory "symbol.app.buildtask.zip"
-    (New-Object System.Net.WebClient).DownloadFile($clientFetchUrl, $symbolAppZip)
-
-    "Download complete" | Write-Verbose
-
-    return $symbolAppZip
-}
-
-function Get-SymbolClientVersion([string]$symbolServiceUri)
-{
-    "Getting latest symbol.app.buildtask.zip package" | Write-Verbose
-
-    $versionUrl = $symbolServiceUri + "/_apis/symbol/client/"
-    try
-    {
-        $versionResponse = Invoke-WebRequest -Uri $versionUrl -Method Head -UseDefaultCredentials -UseBasicParsing
-    }
-    catch [System.Net.WebException] 
-    {
-        Write-Host "StatusCode '$($_.Exception.Response.StatusCode)' returned on account $symbolServiceUri"
-        
-        if ($_.Exception.Response.StatusCode -eq 404) {
-            throw "The Azure Artifacts Symbol Server feature is not enabled for this account. See https://go.microsoft.com/fwlink/?linkid=846265 for instructions on how to enable it.`n`n "
-        }
-        
-        throw  $_
-    }
-    $versionHeader = $versionResponse.Headers["symbol-client-version"]
-
-    "Most recent version is $versionHeader" | Write-Verbose
-
-    return $versionHeader
-}
+. $PSScriptRoot\SymbolClientFunctions.ps1
 
 function Publish-Symbols([string]$symbolServiceUri, [string]$requestName, [string]$sourcePath, [string]$expirationInDays, [string]$personalAccessToken)
 {
     "Using endpoint $symbolServiceUri to create request $requestName with content in $sourcePath" | Write-Verbose
 
-    # the latest symbol.app.buildtask.zip and use the assemblies in it.
-    $assemblyPath = Update-SymbolClient $SymbolServiceUri $env:Temp
+    $assemblyPath = $Env:VSTS_TASKVARIABLE_SYMBOLTOOL_FILE_PATH
+    if (![string]::IsNullOrEmpty($assemblyPath))
+    {
+        $assemblyPath = Split-Path -Path $assemblyPath -Parent
+    }
+    else
+    {
+        # the latest symbol.app.buildtask.zip and use the assemblies in it.
+        $assemblyPath = Update-SymbolClient $SymbolServiceUri $env:Temp
+    }
 
     # Publish the files
     try
@@ -110,7 +80,7 @@ function Publish-Symbols([string]$symbolServiceUri, [string]$requestName, [strin
         $args = "publish --service `"$symbolServiceUri`" --name `"$requestName`" --directory `"$sourcePath`"" 
 
         if ( $expirationInDays ) {
-             $args  += " --expirationInDays `"$expirationInDays`""
+            $args  += " --expirationInDays `"$expirationInDays`""
         }
 
         if ( $personalAccessToken ) {
@@ -122,6 +92,10 @@ function Publish-Symbols([string]$symbolServiceUri, [string]$requestName, [strin
 
         if ($SourcePathListFileName) {
             $args += " --fileListFileName `"$SourcePathListFileName`""
+        }
+
+        if ($IndexableFileFormats) {
+            $args += " --indexableFileFormats `"$IndexableFileFormats`""
         }
 
         Run-SymbolCommand $assemblyPath $args
@@ -139,73 +113,6 @@ function Publish-Symbols([string]$symbolServiceUri, [string]$requestName, [strin
     {
         $env:SYMBOL_PAT_AUTH_TOKEN = ''
     }
-}
-
-function Run-SymbolCommand([string]$assemblyPath, [string]$arguments)
-{
-    $exe = "$assemblyPath\symbol.exe"
-    $traceLevel = if ($DetailedLog) { "verbose" } else { "info" }
-    $arguments += " --tracelevel $traceLevel --globalretrycount 2"
-
-    Invoke-VstsTool -FileName $exe -Arguments $arguments | ForEach-Object { $_.Replace($arguments, $displayArgs) }
-
-    if ($LASTEXITCODE -ne 0) {
-        throw "$exe exited with exit code $LASTEXITCODE"
-    }
-}
-
-function Unzip-SymbolClient([string]$clientZip, [string]$destinationDirectory)
-{
-    "Unzipping $clientZip" | Write-Verbose
-
-    Add-Type -AssemblyName System.IO.Compression.FileSystem
-    [System.IO.Compression.ZipFile]::ExtractToDirectory($clientZip, $destinationDirectory)
-
-    "Unzipped" | Write-Verbose
-}
-
-function Update-SymbolClient([string]$symbolServiceUri, [string]$symbolClientLocation)
-{
-    "Checking for most recent symbol.app.buildtask.zip version" | Write-Verbose
-
-    # Check latest package version.
-    $availableVersion = Get-SymbolClientVersion $symbolServiceUri
-
-    $agent = Get-VstsTaskVariable -Name 'agent.version'
-    if (!$agent -or (([version]'2.115.0').CompareTo([version]$agent) -ge 1)) {
-        $symbolPathRoot = Join-Path $env:APPDATA "VSOSymbolClient"        
-    }
-    else {
-        $symbolPathRoot = Join-Path (Get-VstsTaskVariable -Name 'Agent.ToolsDirectory') "VSOSymbolClient"
-    }
-    $clientPath = Join-Path $symbolPathRoot $availableVersion
-    $completeMarkerFile = Join-Path $clientPath "symbol.app.buildtask.complete"
-    $symbolClientZip = Join-Path $clientPath "symbol.app.buildtask.zip"
-    $modulePath = Join-Path $clientPath "lib\net45"
-
-    if ( ! $(Test-Path $completeMarkerFile -PathType Leaf) ) {
-        "$completeMarkerFile not found" | Write-Host
-
-        if ( $(Test-Path $clientPath -PathType Container) ) {
-            "Cleaning $clientPath" | Write-Host
-            Remove-Item "$clientPath" -recurse | Write-Host
-        }
-
-        "Creating $clientPath" | Write-Host
-        New-Item -ItemType directory -Path $clientPath | Write-Host
-        $symbolClientZip = Download-SymbolClient $symbolServiceUri $clientPath
-
-        Unzip-SymbolClient $symbolClientZip $clientPath | Write-Host
-
-        [IO.File]::WriteAllBytes( $completeMarkerFile, @() )
-
-        "Update complete" | Write-Host
-    }
-    else {
-        "$completeMarkerFile exists" | Write-Host
-    }
-
-    return $modulePath
 }
 
 # Publish the symbols

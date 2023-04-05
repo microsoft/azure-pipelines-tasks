@@ -1,19 +1,34 @@
 import path = require('path');
-import tl = require('vsts-task-lib/task');
-import request = require('request');
-import Q = require('q');
+import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import os = require('os');
 
+import { HttpClient } from 'typed-rest-client/HttpClient';
+import { IHttpClientResponse } from "typed-rest-client/Interfaces";
+
 import { AzureBlobUploadHelper } from './azure-blob-upload-helper';
-import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 import utils = require('./utils');
 import { inspect } from 'util';
 
+import {
+    ACFusNodeUploader,
+    ACFile,
+    ACFusMessageLevel,
+    ACFusUploader,
+    ACFusUploadState,
+    IProgress,
+    LogProperties,
+    IUploadStats,
+    IInitializeSettings,
+} from "appcenter-file-upload-client-node";
+
+
 class UploadInfo {
-    upload_id: string;
-    upload_url: string;
+    id: string;
+    package_asset_id: string;
+    url_encoded_token: string;
+    upload_domain: string;
 }
 
 class SymbolsUploadInfo {
@@ -21,6 +36,8 @@ class SymbolsUploadInfo {
     upload_url: string;
     expiration_date: string;
 }
+
+let mcFusUploader: ACFusUploader = null;
 
 function getEndpointDetails(endpointInputFieldName) {
     var errorMessage = tl.loc("CannotDecodeEndpoint");
@@ -42,121 +59,197 @@ function getEndpointDetails(endpointInputFieldName) {
     };
 }
 
-function responseHandler(defer, err, res, body, handler: () => void) {
-    if (body) {
-        tl.debug(`---- ${JSON.stringify(body)}`);
+async function handleResponse(response: IHttpClientResponse): Promise<{ response: IHttpClientResponse, body?: any }> {
+    const { statusCode } = response.message;
+    tl.debug(`---- http call status code: ${statusCode}`);
+    const bodyStr: string = await response.readBody();
+    if (statusCode < 200 || statusCode >= 300) {
+        const statusCodeMsg = `http response code: ${statusCode}`;
+        const message = bodyStr ? `${bodyStr} ${os.EOL}${statusCodeMsg}` : statusCodeMsg;
+        tl.debug(`---- Failed with error: ${message}`);
+        throw new Error(message);
     }
+    tl.debug(`---- http call ${bodyStr}`);
+    let body = bodyStr;
+    if (bodyStr) {
+        tl.debug(`---- ${bodyStr}`);
+        try {
+            body = JSON.parse(bodyStr);
+        } catch (err) {
 
-    if (err) {
-        tl.debug(`---- Failed with error: ${err}`);
-        defer.reject(err);
-        return;
-    }
-
-    if (!res) {
-        defer.reject(tl.loc("NoResponseFromServer"));
-        return;
-    }
-
-    tl.debug(`---- http call status code: ${res.statusCode}`);
-    if (res.statusCode < 200 || res.statusCode >= 300) {
-        let message = JSON.stringify(body);
-        if (!message) {
-            message = `http response code: ${res.statusCode}`;
-        } else {
-            message = message.concat(os.EOL + `http response code: ${res.statusCode}`);
         }
-        defer.reject(message);
-        return;
     }
-
-    handler();
+    return Promise.resolve({ response, body });
 }
 
-function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string): Q.Promise<UploadInfo> {
-    tl.debug("-- Prepare for uploading release.");
-    let defer = Q.defer<UploadInfo>();
-    let beginUploadUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/release_uploads`;
-    tl.debug(`---- url: ${beginUploadUrl}`);
+function getClient(options) {
+    return new HttpClient('AppCenterDistribute', null, options);
+}
 
+async function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string): Promise<UploadInfo> {
+    tl.debug("-- Prepare for uploading release.");
+    let beginUploadUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/uploads/releases`;
+    tl.debug(`---- url: ${beginUploadUrl}`);
     let headers = {
         "Content-Type": "application/json",
         "X-API-Token": token,
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-    request.post({ url: beginUploadUrl, headers: headers }, (err, res, body) => {
-        responseHandler(defer, err, res, body, () => {
-            let response = JSON.parse(body);
-            let uploadInfo: UploadInfo = {
-                upload_id: response['upload_id'],
-                upload_url: response['upload_url']
+    const { body } = await getClient({headers}).post(beginUploadUrl, null).then(handleResponse);
+    if (!body.package_asset_id) {
+        throw new Error(`failed to create release upload. ${body.message}`);
+    }
+    return body;
+}
+
+/**
+ * Tries to get release by id until it exists.
+ * @param apiServer server url.
+ * @param apiVersion app center api version.
+ * @param appSlug name of the app (owner/app).
+ * @param uploadId predicted release id.
+ * @param token API token.
+ * @param userAgent header value for User-Agent.
+ * @returns {Promise<any>} - the promise is resolved once the release with the provided id exists.
+*/
+function loadReleaseIdUntilSuccess(apiServer: string, apiVersion: string, appSlug: string, uploadId: string, token: string, userAgent: string): Promise<string> {
+    return new Promise( (resolve, reject) => {
+        const timerId = setInterval(async () => {
+            let response;
+            try {
+                response = await getReleaseId(apiServer, apiVersion, appSlug, uploadId, token, userAgent);
+            } catch (error) {
+                clearInterval(timerId);
+                reject(new Error(`Loading release id failed with: ${error}`));
             }
-
-            defer.resolve(uploadInfo);
-        });
+            if (response && response.upload_status === "readyToBePublished" && response.release_distinct_id) {
+                const releaseId = response.release_distinct_id;
+                tl.debug(`---- Received release id is ${releaseId}`);
+                clearInterval(timerId);
+                resolve(releaseId);
+            } else if (!response || response.upload_status === "error") {
+                clearInterval(timerId);
+                reject(new Error(`Loading release id failed: ${response ? response.error_details : ''}`));
+            }
+        }, 2000);
     });
-
-    return defer.promise;
 }
 
-function uploadRelease(uploadUrl: string, file: string, userAgent: string): Q.Promise<void> {
+/**
+ * Uploads a the binary to App Center using appcenter-file-upload-client.
+ * @param releaseUploadParams release params from "beginReleaseUpload" call.
+ * @param file path to the file to be uploaded.
+ * @returns {Promise<any>} - the promise is resolved once the upload has been reported as completed.
+*/
+async function uploadRelease(releaseUploadParams: UploadInfo, file: string) {
+    const assetId = releaseUploadParams.package_asset_id;
+    const urlEncodedToken = releaseUploadParams.url_encoded_token;
+    const uploadDomain = releaseUploadParams.upload_domain;
     tl.debug("-- Uploading release...");
-    let defer = Q.defer<void>();
-    tl.debug(`---- url: ${uploadUrl}`);
-    let headers = {
-        "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
-    };
-    let req = request.post({ url: uploadUrl, headers: headers }, (err, res, body) => {
-        responseHandler(defer, err, res, body, () => {
-            tl.debug('-- File uploaded.');
-            defer.resolve();
-        });
+    return new Promise((resolve, reject) => {
+        const uploadSettings: IInitializeSettings = {
+            assetId: assetId,
+            urlEncodedToken: urlEncodedToken,
+            uploadDomain: uploadDomain,
+            tenant: "distribution",
+            onProgressChanged: (progress: IProgress) => {
+                tl.debug("---- onProgressChanged: " + progress.percentCompleted);
+            },
+            onMessage: (message: string, properties: LogProperties, level: ACFusMessageLevel) => {
+                tl.debug(`---- onMessage: ${message} \nMessage properties: ${JSON.stringify(properties)}`);
+                if (level === ACFusMessageLevel.Error) {
+                    mcFusUploader.cancel();
+                    reject(new Error(`Uploading file error: ${message}`));
+                }
+            },
+            onStateChanged: (status: ACFusUploadState): void => {
+                tl.debug(`---- onStateChanged: ${status.toString()}`);
+            },
+            onCompleted: (uploadStats: IUploadStats) => {
+                tl.debug("---- Upload completed, total time: " + uploadStats.totalTimeInSeconds);
+                resolve();
+            },
+        };
+        mcFusUploader = new ACFusNodeUploader(uploadSettings);
+        const appFile = new ACFile(file);
+        mcFusUploader.start(appFile);
     });
-
-    let form = req.form();
-    form.append('ipa', fs.createReadStream(file));
-
-    return defer.promise;
 }
 
-function commitRelease(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string): Q.Promise<string> {
-    tl.debug("-- Finishing uploading release...");
-    let defer = Q.defer<string>();
-    let commitReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/release_uploads/${upload_id}`;
-    tl.debug(`---- url: ${commitReleaseUrl}`);
+async function abortReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string) {
+    tl.debug("-- Aborting release...");
+    let patchReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/release_uploads/${upload_id}`;
+    tl.debug(`---- url: ${patchReleaseUrl}`);
     let headers = {
+        "X-API-Token": token,
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
+    };
+    try {
+        await getClient({ headers })
+            .patch(patchReleaseUrl, JSON.stringify({ "status": "aborted" }), headers)
+            .then(handleResponse);
+    } catch (err) {
+        return Promise.reject(`Failed to abort release upload: ${err}`);
+    }
+}
+
+/**
+ * Tries to get release by id.
+ * @param apiServer server url.
+ * @param apiVersion app center api version.
+ * @param appSlug name of the app (owner/app).
+ * @param releaseId predicted release id.
+ * @param token API token.
+ * @param userAgent header value for User-Agent.
+ * @returns {Promise<any>} - the promise is resolved if the release with the provided id already exists.
+*/
+async function getReleaseId(apiServer: string, apiVersion: string, appSlug: string, releaseId: string, token: string, userAgent: string): Promise<any> {
+    tl.debug("-- Getting release.");
+    let getReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/uploads/releases/${releaseId}`;
+    tl.debug(`---- url: ${getReleaseUrl}`);
+    const headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
         "internal-request-source": "VSTS"
     };
-
-    let commitBody = { "status": "committed" };
-
-    request.patch({ url: commitReleaseUrl, headers: headers, json: commitBody }, (err, res, body) => {
-        responseHandler(defer, err, res, body, () => {
-            if (body && body['release_url']) {
-                defer.resolve(body['release_url']);
-            } else {
-                defer.reject(tl.loc("FailedToUploadFile"));
-            }
-        });
-    })
-
-    return defer.promise;
+    const { body } = await getClient({ headers }).get(getReleaseUrl).then(handleResponse);
+    return body;
 }
 
-function publishRelease(apiServer: string, releaseUrl: string, isMandatory: boolean, releaseNotes: string, destinationId: string, token: string, userAgent: string) {
+async function patchRelease(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string) {
+    tl.debug("-- Finishing uploading release...");
+    let patchReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/uploads/releases/${upload_id}`;
+    tl.debug(`---- url: ${patchReleaseUrl}`);
+    const headers = {
+        "X-API-Token": token,
+        "User-Agent": userAgent,
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
+    };
+    const { body } = await getClient({ headers })
+        .patch(patchReleaseUrl, JSON.stringify({ "upload_status": "uploadFinished" }))
+        .then(handleResponse);
+    tl.debug(`---- patchRelease body : ${body}`);
+    const { upload_status, message } = body;
+    if (upload_status !== "uploadFinished") {
+        return Promise.reject(`Failed to patch release upload: ${message}`);
+    }
+    return Promise.resolve();
+}
+
+async function publishRelease(apiServer: string, apiVersion: string, appSlug: string, releaseId: string, isMandatory: boolean, releaseNotes: string, destinationId: string, token: string, userAgent: string) {
     tl.debug("-- Mark package available.");
-    let defer = Q.defer<void>();
-    let publishReleaseUrl: string = `${apiServer}/${releaseUrl}`;
+    let publishReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/releases/${releaseId}`;
     tl.debug(`---- url: ${publishReleaseUrl}`);
 
-    let headers = {
+    const headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
     };
 
     let publishBody = {
@@ -180,7 +273,7 @@ function publishRelease(apiServer: string, releaseUrl: string, isMandatory: bool
     // Updating the internal_request_source to distinguish the AppCenter triggered build and custom build
     if(!!commitMessage) {
         headers["internal-request-source"] = "VSTS-APPCENTER";
-    } 
+    }
 
     // Including these information for distribution notification to have additional context
     // Commit message is optional
@@ -198,13 +291,10 @@ function publishRelease(apiServer: string, releaseUrl: string, isMandatory: bool
         publishBody = Object.assign(publishBody, { build: build });
     }
 
-    request.patch({ url: publishReleaseUrl, headers: headers, json: publishBody }, (err, res, body) => {
-        responseHandler(defer, err, res, body, () => {
-            defer.resolve();
-        });
-    })
-
-    return defer.promise;
+    await getClient({ headers })
+        .patch(publishReleaseUrl, JSON.stringify(publishBody))
+        .then(handleResponse);
+    return Promise.resolve();
 }
 
 function getBranchName(ref: string): string {
@@ -219,63 +309,47 @@ function getBranchName(ref: string): string {
  * If the input is a single folder, zip it's content. The archive name is the folder's name
  * If the input is a set of folders or files, zip them so they appear on the root of the archive. The archive name is the parent folder's name.
  */
-function prepareSymbols(symbolsPaths: string[]): Q.Promise<string> {
-    tl.debug("-- Prepare symbols");
-    let defer = Q.defer<string>();
-
-    if (symbolsPaths.length === 1 && fs.statSync(symbolsPaths[0]).isFile()) {
-        tl.debug(`.. a single symbols file: ${symbolsPaths[0]}`)
-
-        // single file - Android source mapping txt file 
-        defer.resolve(symbolsPaths[0]);
-    } else if (symbolsPaths.length > 0) {
-        tl.debug(`.. archiving: ${symbolsPaths}`);
-
-        let symbolsRoot = utils.findCommonParent(symbolsPaths);
-        let zipPath = utils.getArchivePath(symbolsRoot);
-        let zipStream = utils.createZipStream(symbolsPaths, symbolsRoot);
-
-        utils.createZipFile(zipStream, zipPath).
-            then(() => {
-                tl.debug(`---- symbols arechive file: ${zipPath}`)
-                defer.resolve(zipPath);
+function prepareSymbols(symbolsPaths: string[]): Promise<string> {
+    return new Promise((resolve) => {
+        tl.debug("-- Prepare symbols");
+        if (symbolsPaths.length === 1 && fs.statSync(symbolsPaths[0]).isFile()) {
+            tl.debug(`.. a single symbols file: ${symbolsPaths[0]}`)
+            // single file - Android source mapping txt file
+            resolve(symbolsPaths[0]);
+        } else if (symbolsPaths.length > 0) {
+            tl.debug(`.. archiving: ${symbolsPaths}`);
+            let symbolsRoot = utils.findCommonParent(symbolsPaths);
+            let zipPath = utils.getArchivePath(symbolsRoot);
+            let zipStream = utils.createZipStream(symbolsPaths, symbolsRoot);
+            utils.createZipFile(zipStream, zipPath).then(() => {
+                tl.debug(`---- symbols archive file: ${zipPath}`)
+                resolve(zipPath);
             });
-    } else {
-        defer.resolve(null);
-    }
-
-
-    return defer.promise;
+        } else {
+            resolve(null);
+        }
+    });
 }
 
-function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: string, symbol_type: string, token: string, userAgent: string): Q.Promise<SymbolsUploadInfo> {
+async function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: string, symbol_type: string, token: string, userAgent: string): Promise<SymbolsUploadInfo> {
     tl.debug("-- Begin symbols upload")
-    let defer = Q.defer<SymbolsUploadInfo>();
-
     let beginSymbolUploadUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/symbol_uploads`;
     tl.debug(`---- url: ${beginSymbolUploadUrl}`);
-
-    let headers = {
+    const headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
     };
-
-    let symbolsUploadBody = { "symbol_type": symbol_type };
-
-    request.post({ url: beginSymbolUploadUrl, headers: headers, json: symbolsUploadBody }, (err, res, body) => {
-        responseHandler(defer, err, res, body, () => {
-            let symbolsUploadInfo: SymbolsUploadInfo = {
-                symbol_upload_id: body['symbol_upload_id'],
-                upload_url: body['upload_url'],
-                expiration_date: body['expiration_date']
-            }
-
-            defer.resolve(symbolsUploadInfo);
-        });
-    })
-
-    return defer.promise;
+    const { body } = await getClient({ headers })
+        .post(beginSymbolUploadUrl, JSON.stringify({ "symbol_type": symbol_type }))
+        .then(handleResponse);
+    const symbolsUploadInfo: SymbolsUploadInfo = {
+        symbol_upload_id: body.symbol_upload_id,
+        upload_url: body.upload_url,
+        expiration_date: body.expiration_date
+    }
+    return Promise.resolve(symbolsUploadInfo);
 }
 
 async function uploadSymbols(uploadUrl: string, file: string): Promise<void> {
@@ -294,26 +368,20 @@ async function uploadSymbols(uploadUrl: string, file: string): Promise<void> {
     tl.debug('-- Symbol uploaded.');
 }
 
-function commitSymbols(apiServer: string, apiVersion: string, appSlug: string, symbol_upload_id: string, token: string, userAgent: string): Q.Promise<void> {
+async function commitSymbols(apiServer: string, apiVersion: string, appSlug: string, symbol_upload_id: string, token: string, userAgent: string) {
     tl.debug("-- Finishing uploading symbols...");
-    let defer = Q.defer<void>();
     let commitSymbolsUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/symbol_uploads/${symbol_upload_id}`;
     tl.debug(`---- url: ${commitSymbolsUrl}`);
     let headers = {
         "X-API-Token": token,
         "User-Agent": userAgent,
-        "internal-request-source": "VSTS"
+        "internal-request-source": "VSTS",
+        "content-type": "application/json"
     };
-
-    let commitBody = { "status": "committed" };
-
-    request.patch({ url: commitSymbolsUrl, headers: headers, json: commitBody }, (err, res, body) => {
-        responseHandler(defer, err, res, body, () => {
-            defer.resolve();
-        });
-    })
-
-    return defer.promise;
+    await getClient({ headers })
+        .patch(commitSymbolsUrl, JSON.stringify({ "status": "committed" }))
+        .then(handleResponse);
+    return Promise.resolve();
 }
 
 function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnError: boolean, packParentFolder: boolean): string[] {
@@ -322,7 +390,7 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
     let symbolsPaths: string[] = [];
 
     if (symbolsType === "Apple") {
-        // User can specifay a symbols path pattern that selects 
+        // User can specifay a symbols path pattern that selects
         // multiple dSYM folder paths for Apple application.
         let dsymPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
 
@@ -339,7 +407,7 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
             })
         }
     } else if (symbolsType === "UWP") {
-        // User can specifay a symbols path pattern that selects 
+        // User can specifay a symbols path pattern that selects
         // multiple PDB paths for UWP application.
         let pdbPaths = utils.resolvePaths(pattern, continueOnError, packParentFolder);
 
@@ -356,7 +424,7 @@ function expandSymbolsPaths(symbolsType: string, pattern: string, continueOnErro
             })
         }
     } else {
-        // For all other application types user can specifay a symbols path pattern 
+        // For all other application types user can specifay a symbols path pattern
         // that selects only one file or one folder.
         let symbolsFile = utils.resolveSinglePath(pattern, continueOnError, packParentFolder);
 
@@ -455,23 +523,35 @@ async function run() {
         // Prepare symbols
         let symbolsFile = await prepareSymbols(symbolsPaths);
 
-        // Begin release upload
         let uploadInfo: UploadInfo = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent);
+        const uploadId = uploadInfo.id;
+        let releaseId: string;
+        try {
+            // Perform the upload
+            await uploadRelease(uploadInfo, app);
 
-        // Perform the upload
-        await uploadRelease(uploadInfo.upload_url, app, userAgent);
+            // Commit the upload
+            await patchRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
 
-        // Commit the upload
-        let packageUrl = await commitRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadInfo.upload_id, apiToken, userAgent);
+            // Get release Id
+            releaseId = await loadReleaseIdUntilSuccess(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
+        } catch (error) {
+            try {
+                return abortReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, uploadId, apiToken, userAgent);
+            } catch (abortError) {
+                tl.debug("Failed to abort release upload");
+            }
+            throw error;
+        }
 
         // Publish
-        await publishRelease(effectiveApiServer, packageUrl, isMandatory, releaseNotes, destinationId, apiToken, userAgent);
+        await publishRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, isMandatory, releaseNotes, destinationId, apiToken, userAgent);
 
         if (symbolsFile) {
             // Begin preparing upload symbols
             let symbolsUploadInfo = await beginSymbolUpload(effectiveApiServer, effectiveApiVersion, appSlug, symbolsType, apiToken, userAgent);
 
-            // upload symbols 
+            // upload symbols
             await uploadSymbols(symbolsUploadInfo.upload_url, symbolsFile);
 
             // Commit the symbols upload

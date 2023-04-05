@@ -8,11 +8,19 @@ import child = require('child_process');
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as trm from 'azure-pipelines-task-lib/toolrunner';
 
+import { SecureFileHelpers } from 'azure-pipelines-tasks-securefiles-common';
+import { ConfigFileEntry } from './config-entry';
+
 export const postKillAgentSetting: string = 'INSTALL_SSH_KEY_KILL_SSH_AGENT_PID';
 export const postDeleteKeySetting: string = 'INSTALL_SSH_KEY_DELETE_KEY';
 export const postKnownHostsContentsSetting: string = 'INSTALL_SSH_KEY_KNOWN_HOSTS_CONTENTS';
 export const postKnownHostsLocationSetting: string = 'INSTALL_SSH_KEY_KNOWN_HOSTS_LOCATION';
 export const postKnownHostsDeleteFileSetting: string = 'INSTALL_SSH_KEY_KNOWN_HOSTS_FILE_DELETE';
+export const postConfigContentsSetting: string = 'INSTALL_SSH_KEY_CONFIG_CONTENTS';
+export const postConfigLocationSetting: string = 'INSTALL_SSH_KEY_CONFIG_LOCATION';
+export const postConfigDeleteFileSetting: string = 'INSTALL_SSH_KEY_CONFIG_FILE_DELETE';
+
+export const preservedKeyFileIDVariableKey: string = 'INSTALL_SSH_KEY_PRESERVED_KEY_FILE_ID';
 
 export const sshAgentPidEnvVariableKey: string = 'SSH_AGENT_PID';
 export const sshAgentSockEnvVariableKey: string = 'SSH_AUTH_SOCK';
@@ -115,17 +123,27 @@ export class SshToolRunner {
         return executable;
     }
 
+    private getWindowsUsername(): string {
+        const username: string =  tl.execSync('whoami', []).stdout;
+        return username.trim();
+    }
+
     private restrictPermissionsToFile(fileLocation: string): void {
         if (this.isWindows()) {
-            const userName: string = os.userInfo().username;
+            const userName: string = this.getWindowsUsername();
             tl.execSync('icacls', [fileLocation, '/inheritance:r']);
             tl.execSync('icacls', [fileLocation, '/grant:r', `${userName}:(F)`]);
         }
         fs.chmodSync(fileLocation, '0600');
     }
 
-    private generatePublicKey(privateKeyLocation: string) {
-        let keygenResult: trm.IExecSyncResult =  tl.execSync('ssh-keygen', ['-y', '-f', privateKeyLocation]);
+    private generatePublicKey(privateKeyLocation: string, passphrase: string) {
+        tl.debug(tl.loc("GeneratingPublicKey"));
+        const options: trm.IExecOptions = <trm.IExecOptions> {
+            silent: true
+        }
+        let args: string[] = ['-y','-P', passphrase || '', '-f', privateKeyLocation]
+        let keygenResult: trm.IExecSyncResult =  tl.execSync('ssh-keygen', args, options);
         return keygenResult.stdout;
     }
 
@@ -164,8 +182,10 @@ export class SshToolRunner {
         this.restrictPermissionsToFile(privateKeyLocation);
 
         if (!publicKey || publicKey.length === 0) {
-            publicKey = this.generatePublicKey(privateKeyLocation);
+            publicKey = this.generatePublicKey(privateKeyLocation, passphrase);
         }
+        const publicKeyFile: string = `${privateKeyLocation}.pub`;
+        fs.writeFileSync(publicKeyFile, publicKey);
 
         let publicKeyComponents: string[] = publicKey.split(' ');
         if (publicKeyComponents.length <= 1) {
@@ -183,7 +203,7 @@ export class SshToolRunner {
         if (passphrase) {        
             installedSSH = await execSshAddPassphraseSync(this.getExecutable('ssh-add'), [privateKeyLocation], passphrase);
         } else {
-            results = tl.execSync(this.getExecutable('ssh-add'), privateKeyLocation);
+            results = tl.execSync(this.getExecutable('ssh-add'), [privateKeyLocation]);
             installedSSH = !results.error;
         }
         if (!installedSSH) {
@@ -208,35 +228,112 @@ export function setKnownHosts(knownHostsEntry: string) {
     let knownHostsFolder: string = path.join(os.homedir(), '.ssh');
     let knownHostsFile: string = path.join(knownHostsFolder, 'known_hosts');
     let knownHostsContent: string = '';
-    let knownHostsDeleteFileOnClose: string = 'true';
+    let knownHostsDeleteFileOnClose: boolean = true;
     if (!fs.existsSync(knownHostsFolder)) {
         fs.mkdirSync(knownHostsFolder);
     } else if (fs.existsSync(knownHostsFile)) {
         tl.debug('Read known_hosts');
-        knownHostsDeleteFileOnClose = '';
+        knownHostsDeleteFileOnClose = false;
         knownHostsContent = fs.readFileSync(knownHostsFile).toString();
     }
 
-    tl.setTaskVariable(postKnownHostsContentsSetting, knownHostsContent);
-    tl.setTaskVariable(postKnownHostsLocationSetting, knownHostsFile);
-    tl.setTaskVariable(postKnownHostsDeleteFileSetting, knownHostsDeleteFileOnClose);
-
     tl.debug('Inserting entry into known_hosts');
-    fs.writeFileSync(knownHostsFile, knownHostsEntry + os.EOL);
+    const taskAlreadyUsed: boolean = !!tl.getVariable(postKnownHostsLocationSetting);
+    if (taskAlreadyUsed) {
+        fs.appendFileSync(knownHostsFile, `${knownHostsEntry}${os.EOL}`);
+    } else {
+        fs.writeFileSync(knownHostsFile, `${knownHostsEntry}${os.EOL}`);
+    }
+
+    tl.setTaskVariable(postKnownHostsContentsSetting, knownHostsContent);
+    tl.setVariable(postKnownHostsLocationSetting, knownHostsFile);
+    tl.setTaskVariable(postKnownHostsDeleteFileSetting, knownHostsDeleteFileOnClose.toString());
 }
 
+/**
+ * Adds entry to SSH configuration file.
+ * @param {ConfigFileEntry} configEntry 
+ */
+export function addConfigEntry(configEntry: ConfigFileEntry): void {
+    const configFolder: string = path.join(os.homedir(), '.ssh');
+    const configFilePath: string = path.join(configFolder, 'config');
+    let configFileContent: string = '';
+    let deleteConfigFileOnClose: boolean = true;
+    if (!fs.existsSync(configFolder)) {
+        fs.mkdirSync(configFolder);
+    } else if (fs.existsSync(configFilePath)) {
+        tl.debug('Reading config file');
+        deleteConfigFileOnClose = false;
+        configFileContent = fs.readFileSync(configFilePath).toString();
+    }
+
+    const configEntryContent: string = configEntry.toString();
+    console.log(tl.loc("InsertingIntoConfig"));
+    console.log(configEntryContent);
+    const configAlreadyChanged: boolean = !!tl.getVariable(postConfigLocationSetting);
+    if (configAlreadyChanged) {
+        fs.appendFileSync(configFilePath, `${os.EOL}${configEntryContent}`);
+    } else {
+        fs.writeFileSync(configFilePath, configEntryContent);
+    }
+
+    tl.setTaskVariable(postConfigContentsSetting, configFileContent);
+    tl.setVariable(postConfigLocationSetting, configFilePath);
+    tl.setTaskVariable(postConfigDeleteFileSetting, deleteConfigFileOnClose.toString());
+}
+
+/**
+ * 
+ * @param {string} fileName File name
+ * @param {string} contents File contents which should be restored.
+ * @param {string} location Path to file being restored
+ * @param {boolean} deleteOnExit File should be deleted.
+ */
+function tryRestore(fileName: string, contents: string, location: string, deleteOnExit: boolean): void {
+    if (deleteOnExit && location) {
+        fs.unlinkSync(location);
+    } else if (contents && location) {
+        fs.writeFileSync(location, contents);
+    } else if (location || contents) {
+        tl.warning(tl.loc('CannotResetFile', fileName));
+        tl.debug('(location=' + location + ' content=' + contents + ')');
+    }
+}
+
+/**
+ * Restores known_hosts file to it's initial state.
+ */
 export function tryRestoreKnownHosts() {
-    let knownHostsContents: string = tl.getTaskVariable(postKnownHostsContentsSetting);
-    let knownHostsLocation: string = tl.getTaskVariable(postKnownHostsLocationSetting);
-    let knownHostsDeleteFileOnExit: string = tl.getTaskVariable(postKnownHostsDeleteFileSetting);
+    const knownHostsContents: string = tl.getTaskVariable(postKnownHostsContentsSetting);
+    const knownHostsLocation: string = tl.getVariable(postKnownHostsLocationSetting);
+    const knownHostsDeleteFileOnExit: boolean = tl.getTaskVariable(postKnownHostsDeleteFileSetting) === 'true';
     
     tl.debug('Restoring known_hosts');
-    if (knownHostsDeleteFileOnExit && knownHostsLocation) {
-        fs.unlinkSync(knownHostsLocation);
-    } else if (knownHostsContents && knownHostsLocation) {
-        fs.writeFileSync(knownHostsLocation, knownHostsContents);
-    } else if (knownHostsLocation || knownHostsContents) {
-        tl.warning(tl.loc('CannotResetKnownHosts'));
-        tl.debug('(location=' + knownHostsLocation + ' content=' + knownHostsContents + ')');
+    tryRestore('known_hosts', knownHostsContents, knownHostsLocation, knownHostsDeleteFileOnExit);
+}
+
+/**
+ * Restores SSH configuration file to it's initial state.
+ */
+export function tryRestoreConfig() {
+    const configContents: string = tl.getTaskVariable(postConfigContentsSetting);
+    const configLocation: string = tl.getVariable(postConfigLocationSetting);
+    const configDeleteFileOnExit: boolean = tl.getTaskVariable(postConfigDeleteFileSetting) === 'true';
+    
+    tl.debug('Restoring config');
+    tryRestore('config', configContents, configLocation, configDeleteFileOnExit);
+}
+
+/**
+ * Deletes private key file with ID specified.
+ * @param {string} privateKeyFileID 
+ */
+export function tryDeletePrivateKeyFile(privateKeyFileID: string) {
+    if (privateKeyFileID) {
+        tl.debug(tl.loc("DeletePrivateKeyFile"));
+        const secureFileHelpers: SecureFileHelpers = new SecureFileHelpers();
+        secureFileHelpers.deleteSecureFile(privateKeyFileID);
+    } else {
+        tl.debug('No private key file ID was specified.');
     }
 }

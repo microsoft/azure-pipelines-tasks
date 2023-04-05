@@ -1,6 +1,6 @@
 {
     "name": "nugetauthenticate",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "description": "NuGet Authenticate",
     "main": "main.js",
     "scripts": {
@@ -23,6 +23,11 @@
     },
     "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
     "dependencies": {
-        "artifacts-common": "file:../../_build/Tasks/Common/artifacts-common-0.1.0.tgz"
+        "azure-pipelines-tasks-artifacts-common": "2.202.0",
+        "azure-pipelines-task-lib": "^4.2.0",
+        "@types/node": "^16.11.39"
+    },
+    "devDependencies": {
+        "typescript": "4.0.2"
     }
 }

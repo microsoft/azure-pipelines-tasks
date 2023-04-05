@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Ant",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613718) or [see the Ant documentation](http://ant.apache.org/)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?LinkID=613718)或[參閱 Ant 文件](http://ant.apache.org/)",
   "loc.description": "使用 Apache Ant 建置",
   "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "JUnit 測試結果",
@@ -27,7 +27,7 @@
   "loc.input.label.srcDirectories": "原始程式檔目錄",
   "loc.input.help.srcDirectories": "以逗號分隔的清單，內含從 Ant 組建檔案到原始程式碼目錄的相對路徑。程式碼涵蓋範圍報表會加以使用，以強調顯示原始程式碼。例如: src/java,src/Test。",
   "loc.input.label.failIfCoverageEmpty": "遺漏程式碼涵蓋範圍結果時失敗",
-  "loc.input.help.failIfCoverageEmpty": "如果程式碼涵蓋範圍未產生任何可發佈的結果，則建置失敗。",
+  "loc.input.help.failIfCoverageEmpty": "如果程式碼涵蓋範圍未產生任何可發行的結果，則建置失敗。",
   "loc.input.label.antHomeUserInputPath": "設定 ANT_HOME 路徑",
   "loc.input.help.antHomeUserInputPath": "如有設定，將會以指定的路徑覆寫任何現有的 ANT_HOME 環境變數。",
   "loc.input.label.javaHomeSelection": "設定 JAVA_HOME 由",
@@ -42,6 +42,6 @@
   "loc.messages.UnsupportedJdkWarning": "JDK 9 與 JDK 10 已失去支援。請在您的專案和管線中切換至較新版本。正在嘗試以 JDK 11 進行建置...",
   "loc.messages.FailedToLocateSpecifiedJVM": "找不到指定的 JDK 版本。請確認指定的 JDK 版本已安裝在代理程式上，且環境變數 '%s' 存在並已設定為對應 JDK 的位置，或者使用 [Java 工具安裝程式](https://go.microsoft.com/fwlink/?linkid=875287) 工作安裝所需的 JDK。",
   "loc.messages.DiscontinueAntCodeCoverage": "我們即將中止對自動產生 Ant 專案程式碼涵蓋範圍報告的支援。如需更多詳細資料，請參閱 https://go.microsoft.com/fwlink/?linkid=875306。",
-  "loc.messages.NoCodeCoverage": "找不到要發佈的程式碼涵蓋範圍結果。",
-  "loc.messages.NoTestResults": "找不到任何符合 %s 的測試結果，因此跳過發佈 JUnit 測試結果。"
+  "loc.messages.NoCodeCoverage": "找不到要發行的程式碼涵蓋範圍結果。",
+  "loc.messages.NoTestResults": "找不到任何符合 %s 的測試結果，因此跳過發行 JUnit 測試結果。"
 }

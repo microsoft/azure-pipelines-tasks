@@ -10,7 +10,7 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput('versionSpec', '2.5');
 tr.setInput('addToPath', 'false');
 
-tr.registerMock('vsts-task-tool-lib/tool', {
+tr.registerMock('azure-pipelines-tool-lib/tool', {
     findLocalTool: () => path.join('/', 'Ruby', '2.5.4')
 });
 

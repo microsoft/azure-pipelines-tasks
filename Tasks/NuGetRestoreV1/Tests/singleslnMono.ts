@@ -48,7 +48,7 @@ process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.
 process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "~/myagent/_work/1/s";
 process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
 
-tmr.registerMock('packaging-common/nuget/Utility', {
+tmr.registerMock('azure-pipelines-tasks-packaging-common/nuget/Utility', {
     resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
         return ["~/myagent/_work/1/s/single.sln"];
     },

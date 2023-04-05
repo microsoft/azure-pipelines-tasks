@@ -1,10 +1,10 @@
 import * as util from 'util';
-import * as taskLib from 'vsts-task-lib/task';
+import * as taskLib from 'azure-pipelines-task-lib/task';
 
 import httpClient = require("typed-rest-client/HttpClient");
 import httpInterfaces = require("typed-rest-client/Interfaces");
 import { HttpClientResponse } from 'typed-rest-client/HttpClient';
-import * as trm from 'vsts-task-lib/toolrunner';
+import * as trm from 'azure-pipelines-task-lib/toolrunner';
 
 import * as os from 'os';
 import * as path from 'path';
@@ -100,7 +100,7 @@ export class DotNetCoreReleaseFetcher {
             legacyUrlSearchString = "dotnet-install: Legacy - ";
         } else {
             let escapedScript = path.join(utils.getCurrentDir(), 'externals', 'install-dotnet.sh').replace(/'/g, "''");
-            utils.setFileAttribute(escapedScript, "777");
+            utils.setFileAttribute(escapedScript, "755");
             scriptRunner = taskLib.tool(taskLib.which(escapedScript, true));
             scriptRunner.arg('--version');
             scriptRunner.arg(version);

@@ -132,9 +132,9 @@ export class Helper {
         }
     }
 
-    public static readFileContents(filePath: string, encoding: string): Q.Promise<string> {
+    public static readFileContents(filePath: string, encoding: BufferEncoding): Q.Promise<string> {
         const defer = Q.defer<string>();
-        fs.readFile(filePath, encoding, (err, data) => {
+        fs.readFile(filePath, encoding, (err, data: string) => {
             if (err) {
                 defer.reject(new Error('Could not read file (' + filePath + '): ' + err.message));
             } else {
@@ -143,8 +143,8 @@ export class Helper {
         });
         return defer.promise;
     }
-
-    public static readFileContentsSync(filePath: string, encoding: string): string {
+    
+    public static readFileContentsSync(filePath: string, encoding: BufferEncoding): string {
         return fs.readFileSync(filePath, encoding);
     }
 
@@ -169,6 +169,8 @@ export class Helper {
             case 12: return '2013';
             case 14: return '2015';
             case 15: return '2017';
+            case 16: return '2019';
+            case 17: return '2022';
             default: return 'selected';
         }
     }
@@ -273,7 +275,8 @@ export class Helper {
         }
         const keys = Object.keys(obj);
         for (var index in Object.keys(obj)) {
-            if (obj[keys[index]] && obj[keys[index]] != {}) {
+            // should call if object is not empty
+            if (obj[keys[index]] && Object.keys(obj[keys[index]]).length != 0) {
                 Helper.removeEmptyNodes(obj[keys[index]]);
             }
             if (obj[keys[index]] == undefined || obj[keys[index]] == null || (typeof obj[keys[index]] == "object" && Object.keys(obj[keys[index]]).length == 0)) {

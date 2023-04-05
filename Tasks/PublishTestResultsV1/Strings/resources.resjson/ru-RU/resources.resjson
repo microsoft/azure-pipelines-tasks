@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Публикация результатов теста",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "Опубликовать результаты тестов в Azure Pipelines",
   "loc.instanceNameFormat": "Опубликовать результаты тестов $(testResultsFiles)",
   "loc.group.displayName.advanced": "Дополнительно",

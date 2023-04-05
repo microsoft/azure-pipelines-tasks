@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Установить профиль подготовки Apple",
-  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?LinkID=862068)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=862068)",
   "loc.description": "Установить профиль подготовки Apple, необходимый для сборки, на компьютер агента macOS",
   "loc.instanceNameFormat": "Установка профиля подготовки Apple",
   "loc.input.label.provisioningProfileLocation": "Расположение профиля подготовки",
@@ -12,5 +12,6 @@
   "loc.input.label.removeProfile": "Удалить профиль после сборки",
   "loc.input.help.removeProfile": "Выберите, чтобы указать, что по завершении сборки или версии профиль подготовки следует удалить с агента.",
   "loc.messages.InputProvisioningProfileNotFound": "Устанавливаемый профиль подготовки не найден в %s. Укажите полный путь к профилю подготовки.",
-  "loc.messages.InstallRequiresMac": "Для установки профиля подготовки Apple требуется агент macOS. Установка в Linux или Windows не поддерживается Apple."
+  "loc.messages.InstallRequiresMac": "Для установки профиля подготовки Apple требуется агент macOS. Установка в Linux или Windows не поддерживается Apple.",
+  "loc.messages.InvalidMobileProvisionFileExtension": "Файл профиля подготовки должен иметь расширение \"MOBILEPROVISION\" или \"PROVISIONPROFILE\""
 }

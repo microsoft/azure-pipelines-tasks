@@ -3,11 +3,11 @@
 var https   = require('https');
 var fs      = require('fs');
 import * as path from "path";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "azure-pipelines-task-lib/task";
 import * as os from "os";
 import * as util from "util";
 
-import downloadutility = require("utility-common/downloadutility");
+import downloadutility = require("azure-pipelines-tasks-utility-common/downloadutility");
 
 export function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
@@ -82,7 +82,7 @@ export async function downloadKubectl(version: string, kubectlPath: string): Pro
     var kubectlPathTmp = kubectlPath+".tmp";
     return downloadutility.download(kubectlURL, kubectlPathTmp, false, true).then( (res) => {
             tl.cp(kubectlPathTmp, kubectlPath, "-f");
-            fs.chmodSync(kubectlPath, "777");
+            fs.chmodSync(kubectlPath, "755");
             assertFileExists(kubectlPath);
             return kubectlPath;
     },

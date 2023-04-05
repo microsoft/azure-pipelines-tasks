@@ -123,8 +123,9 @@ export class KuduServiceUtility {
     public async deployUsingRunFromZip(packagePath: string, customMessage?: any) : Promise<void> {
         try {
             console.log(tl.loc('PackageDeploymentInitiated'));
-
+            //zipdeploy async api ref: https://github.com/projectkudu/kudu/wiki/Deploying-from-a-zip-file-or-url#asynchronous-zip-deployment
             let queryParameters: Array<string> = [
+                'isAsync=true',
                 'deployer=' +   VSTS_DEPLOY
             ];
             var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;

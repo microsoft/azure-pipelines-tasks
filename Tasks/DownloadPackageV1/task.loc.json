@@ -9,7 +9,7 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 171,
+    "Minor": 220,
     "Patch": 0
   },
   "demands": [],
@@ -34,7 +34,8 @@
         "npm": "Npm",
         "nuget": "NuGet",
         "pypi": "Python",
-        "upack": "Universal"
+        "upack": "Universal",
+        "cargo": "Cargo"
       }
     },
     {
@@ -119,9 +120,9 @@
     {
       "target": "feed",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if projectId}}{{{projectId}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "view",
@@ -164,7 +165,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
       "target": "main.js",
       "argumentFormat": ""
     }
@@ -182,8 +183,10 @@
     "RedirectUrlError": "ms-resource:loc.messages.RedirectUrlError",
     "UnsupportedArchiveType": "ms-resource:loc.messages.UnsupportedArchiveType",
     "Error_UnexpectedErrorArtifactToolDownload": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactToolDownload",
+    "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
     "Info_DownloadingArtifactTool": "ms-resource:loc.messages.Info_DownloadingArtifactTool",
     "Info_Downloading": "ms-resource:loc.messages.Info_Downloading",
-    "Info_UsingArtifactToolDownload": "ms-resource:loc.messages.Info_UsingArtifactToolDownload"
+    "Info_UsingArtifactToolDownload": "ms-resource:loc.messages.Info_UsingArtifactToolDownload",
+    "Info_ResolvedLatestVersion": "ms-resource:loc.messages.Info_ResolvedLatestVersion"
   }
 }

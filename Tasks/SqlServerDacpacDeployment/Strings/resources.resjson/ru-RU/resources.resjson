@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "[Не рекомендуется] Развертывание базы данных SQL Server",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/sqlserverdacpackdeprecatedreadme)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://aka.ms/sqlserverdacpackdeprecatedreadme)",
   "loc.description": "Развертывание базы данных SQL Server с помощью DACPAC",
   "loc.instanceNameFormat": "[Не рекомендуется] Развертывание DACPAC-файла SQL: $(DacpacFile)",
   "loc.group.displayName.deployment": "Развертывание",
@@ -15,7 +15,7 @@
   "loc.input.label.Protocol": "Протокол",
   "loc.input.help.Protocol": "Выберите протокол, используемый в WinRM-подключениях к компьютерам. Значение по умолчанию — HTTPS.",
   "loc.input.label.TestCertificate": "Тестовый сертификат",
-  "loc.input.help.TestCertificate": "Выберите этот параметр, чтобы пропустить проверку достоверности сертификата компьютера доверенным центром сертификации. Параметр обязателен для протокола WinRM HTTPS.",
+  "loc.input.help.TestCertificate": "Выберите этот параметр, чтобы пропустить проверку подлинности сертификата компьютера доверенным центром сертификации. Параметр обязателен для протокола WinRM HTTPS.",
   "loc.input.label.DacpacFile": "DACPAC-файл",
   "loc.input.help.DacpacFile": "Расположение DACPAC-файла на целевых машинах или по UNC-пути, например \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. UNC-путь должен быть доступен для учетной записи администратора машины. Также можно использовать переменные среды, например $env:windir\\FabrikamFibre\\Web.",
   "loc.input.label.TargetMethod": "Указать SQL с помощью",

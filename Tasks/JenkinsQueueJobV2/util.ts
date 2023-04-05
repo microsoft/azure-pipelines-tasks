@@ -19,9 +19,7 @@ export function getFullErrorMessage(httpResponse, message: string): string {
 
 export function failReturnCode(httpResponse, message: string): void {
     const fullMessage = getFullErrorMessage(httpResponse, message);
-    tl.debug(message);
-    tl.error(fullMessage);
-    process.stderr.write(message + os.EOL);
+    console.error(fullMessage);
     tl.setResult(tl.TaskResult.Failed, message);
 }
 
@@ -40,8 +38,24 @@ export function fail(message: string): void {
 export class FailTaskError extends Error {
 }
 
+/**
+ * @class Represents error based on HttpResponse
+ * @extends {Error} Error class
+ */
+export class HttpError extends Error {
+    public body: string;
+    public fullMessage: string;
+
+    constructor(httpResponse: any, message: string) {
+        super();
+        this.fullMessage = getFullErrorMessage(httpResponse, message);
+        this.message = message;
+        this.body = httpResponse.body;
+    }
+}
+
 export function convertJobName(jobName: string): string {
-    return '/job/' + jobName.replace('/', '/job/');
+    return '/job/' + jobName.replace(/\//g, '/job/');
 }
 
 export function addUrlSegment(baseUrl: string, segment: string): string {
@@ -135,7 +149,7 @@ function createRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOp
                 defer.reject(error);
             }
         } else if (httpResponse.statusCode !== 200) {
-            defer.reject(getFullErrorMessage(httpResponse, 'Job progress tracking failed to read job queue'));
+            defer.reject(new HttpError(httpResponse, 'Job progress tracking failed to read job queue'));
         } else {
             const parsedBody: any = JSON.parse(body);
             tl.debug(`parsedBody for: ${queueUri} : ${JSON.stringify(parsedBody)}`);
@@ -256,14 +270,14 @@ function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
                         defer.reject(err);
                     }
                 } else if (httpResponse.statusCode !== 201) {
-                    defer.reject(getFullErrorMessage(httpResponse, 'Job creation failed.'));
+                    defer.reject(new HttpError(httpResponse, 'Job creation failed.'));
                 } else {
                     const queueUri: string = addUrlSegment(httpResponse.headers.location, 'api/json');
                     defer.resolve(queueUri);
                 }
             }).auth(taskOptions.username, taskOptions.password, true);
         } else if (httpResponse.statusCode !== 201) {
-            defer.reject(getFullErrorMessage(httpResponse, 'Job creation failed.'));
+            defer.reject(new HttpError(httpResponse, 'Job creation failed.'));
         } else {
             taskOptions.teamBuildPluginAvailable = true;
             const jsonBody: any = JSON.parse(body);
@@ -293,8 +307,7 @@ function getCrumb(taskOptions: TaskOptions): Q.Promise<string> {
             taskOptions.crumb = taskOptions.NO_CRUMB;
             defer.resolve(taskOptions.NO_CRUMB);
         } else if (httpResponse.statusCode !== 200) {
-            failReturnCode(httpResponse, 'crumb request failed.');
-            defer.reject(getFullErrorMessage(httpResponse, 'Crumb request failed.'));
+            defer.reject(new HttpError(httpResponse, 'Crumb request failed.'));
         } else {
             taskOptions.crumb = body;
             tl.debug('crumb: ' + taskOptions.crumb);

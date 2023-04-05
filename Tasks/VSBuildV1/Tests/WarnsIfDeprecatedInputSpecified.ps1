@@ -22,6 +22,7 @@ Register-Mock Select-MSBuildPath
 Register-Mock Format-MSBuildArguments
 Register-Mock Invoke-BuildTools { 'Some build output' }
 Register-Mock Write-Warning
+Register-Mock EmitTelemetry
 
 # Act.
 $output = & $PSScriptRoot\..\VSBuild.ps1

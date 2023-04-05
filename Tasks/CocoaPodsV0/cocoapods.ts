@@ -17,6 +17,15 @@ async function run() {
         tl.debug('Setting locale to UTF8 as required by CocoaPods');
         process.env['LC_ALL'] = 'en_US.UTF-8';
 
+        const proxyConfig: tl.ProxyConfiguration | null = tl.getHttpProxyConfiguration();
+        if (proxyConfig) {
+            
+            process.env['http_proxy'] = proxyConfig.proxyFormattedUrl;
+            process.env['https_proxy'] = proxyConfig.proxyFormattedUrl;
+            
+            tl.debug(tl.loc('ProxyConfig', proxyConfig.proxyUrl));
+        }
+    
         // Locate the CocoaPods 'pod' command
         var podPath: string = tl.which('pod');
         if (!podPath) {

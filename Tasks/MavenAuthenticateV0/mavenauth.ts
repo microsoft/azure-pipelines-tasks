@@ -2,10 +2,11 @@ import tl = require('azure-pipelines-task-lib/task');
 import util = require('./mavenutils');
 
 import * as path from 'path';
-import { emitTelemetry } from 'artifacts-common/telemetry';
+import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 
 const M2FolderName: string = ".m2";
 const SettingsXmlName: string = "settings.xml";
+const backupSettingsXmlName: string = "_settings.xml";
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -36,11 +37,16 @@ async function run(): Promise<void> {
         }
 
         let userSettingsXmlPath: string = path.join(userM2FolderPath, SettingsXmlName);
+        let backupSettingsXmlPath: string = path.join(userM2FolderPath, backupSettingsXmlName);
         let settingsJson: any;
+        
+        tl.setTaskVariable('userM2SettingsXmlPath', userSettingsXmlPath);
 
-        if(tl.exist(userSettingsXmlPath)) {
+        if (tl.exist(userSettingsXmlPath)) {
             tl.debug(tl.loc("Info_SettingsXmlRead", userSettingsXmlPath));
-            settingsJson = await util.readXmlFileAsJson(userSettingsXmlPath)
+            tl.cp(userSettingsXmlPath, backupSettingsXmlPath);
+            tl.setTaskVariable("backupUserM2SettingsFilePath", backupSettingsXmlPath);
+            settingsJson = await util.readXmlFileAsJson(userSettingsXmlPath);
         }
         else {
             tl.debug(tl.loc("Info_CreatingSettingsXml", userSettingsXmlPath));

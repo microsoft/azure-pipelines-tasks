@@ -79,7 +79,7 @@ function Get-ServerCertThumbprints {
         $ClusterConnectionParameters
     )
 
-    $serverCertThumbprints = null;
+    $serverCertThumbprints = $null;
 
     if ($ClusterConnectionParameters["ServerCommonName"])
     {

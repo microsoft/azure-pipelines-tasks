@@ -14,8 +14,12 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "@types/node": "^8.0.0",
-    "azure-pipelines-task-lib": "^2.8.0",
-    "basic-ftp": "^3.4.3"
+    "@types/node": "^16.11.39",
+    "@types/mocha": "^9.1.1",
+    "azure-pipelines-task-lib": "^4.0.0-preview",
+    "basic-ftp": "^4.6.6"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }

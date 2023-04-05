@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Скачать артефакт конвейера",
-  "loc.helpMarkDown": "Download a named artifact from a pipeline to a local path",
-  "loc.description": "Download a named artifact from a pipeline to a local path",
+  "loc.helpMarkDown": "Скачивание именованного артефакта из конвейера в локальную папку",
+  "loc.description": "Скачивание именованного артефакта из конвейера в локальную папку",
   "loc.instanceNameFormat": "Скачать артефакт конвейера",
   "loc.input.label.buildType": "Скачать артефакты, созданные",
   "loc.input.help.buildType": "Скачивание артефактов, созданных текущей сборкой или из определенной сборки.",

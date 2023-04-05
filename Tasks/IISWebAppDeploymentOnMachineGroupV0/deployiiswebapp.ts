@@ -2,16 +2,16 @@
 import path = require('path');
 import fs = require('fs');
 
-var msDeploy = require('webdeployment-common-v2/deployusingmsdeploy.js');
-var utility = require('webdeployment-common-v2/utility.js');
-var fileTransformationsUtility = require('webdeployment-common-v2/fileTransformationsUtility.js');
+var msDeploy = require('azure-pipelines-tasks-webdeployment-common/deployusingmsdeploy.js');
+var utility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
+var fileTransformationsUtility = require('azure-pipelines-tasks-webdeployment-common/fileTransformationsUtility.js');
 
 async function run()
 {
 	try
 	{
 		tl.setResourcePath(path.join( __dirname, 'task.json'));
-		tl.setResourcePath(path.join( __dirname, 'node_modules/webdeployment-common-v2/module.json'));
+		tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-webdeployment-common/module.json'));
 		var webSiteName: string = tl.getInput('WebSiteName', true);
 		var virtualApplication: string = tl.getInput('VirtualApplication', false);
 		var webDeployPkg: string = tl.getPathInput('Package', true);
@@ -42,6 +42,7 @@ async function run()
         if ( JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution ) {
 
             var folderPath = await utility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, webDeployPkg);
+			
 			var isMSBuildPackage = !isFolderBasedDeployment && await utility.isMSDeployPackage(webDeployPkg);
             fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath, isMSBuildPackage);
             var output = await utility.archiveFolderForDeployment(isFolderBasedDeployment, folderPath);

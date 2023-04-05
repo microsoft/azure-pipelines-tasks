@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet Restore",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613747) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "loc.helpMarkDown": "[深入了解此工作](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget)或[參閱 NuGet 文件](https://docs.microsoft.com/nuget/)",
   "loc.description": "還原 NuGet 套件以準備進行 Visual Studio 建置步驟。",
   "loc.instanceNameFormat": "NuGet 還原 $(solution)",
   "loc.group.displayName.advanced": "進階",
@@ -18,8 +18,8 @@
   "loc.input.help.noCache": "相當於 -NoCache NuGet.exe 命令列引數",
   "loc.input.label.packagesDirectory": "目的地路徑",
   "loc.input.help.packagesDirectory": "相當於 -PackagesDirectory NuGet.exe 命令列引數",
-  "loc.input.label.verbosity": "詳細程度",
-  "loc.input.help.verbosity": "NuGet 的詳細程度層級",
+  "loc.input.label.verbosity": "詳細資訊",
+  "loc.input.help.verbosity": "NuGet 的詳細資訊層級",
   "loc.messages.Warning_NoConfigForNoCredentialProvider": "若要連線到託管於此組建代理程式上 Azure Pipelines/TFS 專案集合中的 NuGet 摘要，請編輯您的組建定義以選擇較高版本的 NuGet，或指定含有所要使用套件來源的 NuGet.config 路徑。",
   "loc.messages.Warning_ConflictingNuGetPreference": "選取了 NuGet 3.3，但提供的是自訂 NuGet 路徑。慣用自訂路徑。若要解決此警告，請編輯您的組建工作，然後選取 [進階] 下 NuGet 版本的 [自訂]。",
   "loc.messages.PackagesInstalledSuccessfully": "已成功還原套件",
@@ -53,5 +53,7 @@
   "loc.messages.Error_NuGetToolInstallerFailer": "工具安裝失敗: %s",
   "loc.messages.Warning_SessionCreationFailed": "無法建立來源工作階段: %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "正在將 NuGet.exe 的版本更新為 %s (原始為 %s) 。當 NuGet 更新為新版本時，可能會發生行為變更或重大變更。如果這不是您想要的行為，請取消核取工作中的 [檢查最新版本] 選項。",
-  "loc.messages.UnsupportedProjectScopedFeeds": "這個版本的 \"NuGet Restore\" 工作不支援專案範圍摘要。請使用 \"NuGet\" 工作 2 版或更高版本。"
+  "loc.messages.UnsupportedProjectScopedFeeds": "這個版本的 \"NuGet Restore\" 工作不支援專案範圍摘要。請使用 \"NuGet\" 工作 2 版或更高版本。",
+  "loc.messages.Warning_IncludeNuGetOrgEnabled": "目前已為此工作啟用 IncludeNugetOrg。若要解决此警告，請編輯建置工作並將 'includeNuGetOrg' 設定為 'false' 或取消選取 'Use packages from NuGet.org'。",
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "無法還原封裝。編輯您的建置工作並將 'includeNuGetOrg' 設定為 'false' 或取消選取 'Use packages from NuGet.org'。"
 }

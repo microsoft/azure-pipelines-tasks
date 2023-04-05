@@ -1,8 +1,10 @@
 import * as ma from 'azure-pipelines-task-lib/mock-answer';
 import * as tmrm from 'azure-pipelines-task-lib/mock-run';
 import * as path from 'path';
+import * as semver from 'semver';
 
 import * as shared from './TestShared';
+import { formatDebugFlag } from './TestShared';
 
 const buildNumber = "123";
 const buildId = "1";
@@ -52,6 +54,7 @@ tr.setInput("force", process.env[shared.TestEnvVars.force] || "");
 tr.setInput("waitForExecution", process.env[shared.TestEnvVars.waitForExecution] || "");
 tr.setInput("arguments", process.env[shared.TestEnvVars.arguments] || "");
 tr.setInput("failOnStderr", process.env[shared.TestEnvVars.failOnStderr] || "true");
+tr.setInput("publishPipelineMetadata", process.env[shared.TestEnvVars.publishPipelineMetadata] || "true");
 tr.setInput("chartNameForACR", process.env[shared.TestEnvVars.chartNameForACR] || "");
 tr.setInput("chartPathForACR", process.env[shared.TestEnvVars.chartPathForACR] || "");
 
@@ -93,12 +96,12 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 
 if (process.env[shared.TestEnvVars.command] === shared.Commands.install) {
-    let helmInstallCommand = "helm install";
+    let helmInstallCommand = `helm install${formatDebugFlag()}`;
 
     if (process.env[shared.TestEnvVars.namespace])
         helmInstallCommand = helmInstallCommand.concat(` --namespace ${process.env[shared.TestEnvVars.namespace]}`);
 
-    if (process.env[shared.TestEnvVars.valueFile])
+    if (process.env[shared.TestEnvVars.valueFile]) 
         helmInstallCommand = helmInstallCommand.concat(` --values ${process.env[shared.TestEnvVars.valueFile]}`);
 
     if (process.env[shared.TestEnvVars.overrideValues])
@@ -127,6 +130,9 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.install) {
     else if (process.env[shared.TestEnvVars.chartPath])
         helmInstallCommand = helmInstallCommand.concat(` ${process.env[shared.TestEnvVars.chartPath]}`);
 
+    if (process.env[shared.TestEnvVars.version] && semver.valid(process.env[shared.TestEnvVars.version]))
+        helmInstallCommand = helmInstallCommand.concat(` --version ${process.env[shared.TestEnvVars.version]}`);
+
     a.exec[helmInstallCommand] = {
         "code": 0,
         "stdout": `NAME: ${shared.testReleaseName} \nLAST DEPLOYED: Mon Jun  8 10:30:31 2020 \nNAMESPACE: ${process.env[shared.TestEnvVars.namespace]} \nSTATUS: deployed \nREVISION: 1 \nNOTES: \n1. Get the application URL by running these commands: \n  export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=demo-chart,app.kubernetes.io/ \n  instance=mytestv2" -o jsonpath="{.items[0].metadata.name}") \n  echo "Visit http://127.0.0.1:8080 to use your application" \n  kubectl --namespace default port-forward $POD_NAME 8080:80`
@@ -134,7 +140,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.install) {
 }
 
 if (process.env[shared.TestEnvVars.command] === shared.Commands.upgrade) {
-    let helmUpgradeCommand = "helm upgrade";
+    let helmUpgradeCommand = `helm upgrade${formatDebugFlag()}`;
 
     if (process.env[shared.TestEnvVars.namespace])
         helmUpgradeCommand = helmUpgradeCommand.concat(` --namespace ${process.env[shared.TestEnvVars.namespace]}`);
@@ -151,7 +157,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.upgrade) {
     if (process.env[shared.TestEnvVars.force])
         helmUpgradeCommand = helmUpgradeCommand.concat(" --force");
 
-    if (process.env[shared.TestEnvVars.valueFile])
+    if (process.env[shared.TestEnvVars.valueFile]) 
         helmUpgradeCommand = helmUpgradeCommand.concat(` --values ${process.env[shared.TestEnvVars.valueFile]}`);
 
     if (process.env[shared.TestEnvVars.overrideValues])
@@ -173,6 +179,9 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.upgrade) {
     else if (process.env[shared.TestEnvVars.chartPath])
         helmUpgradeCommand = helmUpgradeCommand.concat(` ${process.env[shared.TestEnvVars.chartPath]}`);
 
+    if (process.env[shared.TestEnvVars.version] && semver.valid(process.env[shared.TestEnvVars.version]))
+        helmUpgradeCommand = helmUpgradeCommand.concat(` --version ${process.env[shared.TestEnvVars.version]}`);
+
     a.exec[helmUpgradeCommand] = {
         "code": 0,
         "stdout": `Release "${shared.testReleaseName}" has been upgraded. Happy Helming!\nNAME: ${shared.testReleaseName} \nLAST DEPLOYED: Mon Jun  8 10:30:31 2020 \nNAMESPACE: ${process.env[shared.TestEnvVars.namespace]} \nSTATUS: deployed \nREVISION: 1 \nNOTES: \n1. Get the application URL by running these commands: \n  export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=demo-chart,app.kubernetes.io/ \n  instance=mytestv2" -o jsonpath="{.items[0].metadata.name}") \n  echo "Visit http://127.0.0.1:8080 to use your application" \n  kubectl --namespace default port-forward $POD_NAME 8080:80`
@@ -180,7 +189,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.upgrade) {
 }
 
 if (process.env[shared.TestEnvVars.command] === shared.Commands.init) {
-    let helmInitCommand = "helm init";
+    let helmInitCommand = `helm init${formatDebugFlag()}`;
 
     if (process.env[shared.TestEnvVars.canaryimage])
         helmInitCommand = helmInitCommand.concat(" --canary-image");
@@ -207,28 +216,27 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.init) {
     }
 }
 
-if(process.env[shared.TestEnvVars.command] === shared.Commands.package) {
-    let helmPackageCommand = "helm package";
+if (process.env[shared.TestEnvVars.command] === shared.Commands.package) {
+    let helmPackageCommand = `helm package${formatDebugFlag()}`;
 
-    if(process.env[shared.TestEnvVars.updatedependency])
+    if (process.env[shared.TestEnvVars.updatedependency])
         helmPackageCommand = helmPackageCommand.concat(" --dependency-update");
 
-    if(process.env[shared.TestEnvVars.save])
-    {
-        if(process.env[shared.isHelmV3])
+    if (process.env[shared.TestEnvVars.save]) {
+        if (process.env[shared.isHelmV3])
             helmPackageCommand = helmPackageCommand.concat(" --save");
     }
 
-    if(process.env[shared.TestEnvVars.version])
+    if (process.env[shared.TestEnvVars.version])
         helmPackageCommand = helmPackageCommand.concat(` --version ${process.env[shared.TestEnvVars.version]}`);
 
-    if(process.env[shared.TestEnvVars.destination])
+    if (process.env[shared.TestEnvVars.destination])
         helmPackageCommand = helmPackageCommand.concat(` --destination ${process.env[shared.TestEnvVars.destination]}`);
 
-    if(process.env[shared.TestEnvVars.arguments])
+    if (process.env[shared.TestEnvVars.arguments])
         helmPackageCommand = helmPackageCommand.concat(` ${process.env[shared.TestEnvVars.arguments]}`);
 
-    if(process.env[shared.TestEnvVars.chartPath])
+    if (process.env[shared.TestEnvVars.chartPath])
         helmPackageCommand = helmPackageCommand.concat(` ${process.env[shared.TestEnvVars.chartPath]}`);
     a.exec[helmPackageCommand] = {
         "code": 0,
@@ -250,17 +258,34 @@ else {
     };
 }
 
-const helmGetManifestCommand = `helm get manifest ${shared.testReleaseName}`;
-a.exec[helmGetManifestCommand] = {
-    "code": 0,
-    "stdout": `---\n# Source: testChartName/templates/serviceaccount.yaml\n{apiVersion: v1, kind: ServiceAccount, metadata: {name: testReleaseName-testChartName, labels: {helm.sh/chart: testChartName-0.1.0, app.kubernetes.io/name: testChartName, app.kubernetes.io/instance: testReleaseName, app.kubernetes.io/version: 1.17.0, app.kubernetes.io/managed-by: Helm}}}\n---\n# Source: testChartName/templates/service.yaml\n{apiVersion: v1, kind: Service, metadata: {name: testReleaseName-testChartName, labels: {helm.sh/chart: testChartName-0.1.0, app.kubernetes.io/name: testChartName, app.kubernetes.io/instance: testReleaseName, app.kubernetes.io/version: 1.17.0, app.kubernetes.io/managed-by: Helm}}, spec: {type: ClusterIP, ports: [{port: 80, targetPort: http, protocol: TCP, name: http}], selector: {app.kubernetes.io/name: testChartName, app.kubernetes.io/instance: testReleaseName}}}\n---\n# Source: demo-chart/templates/deployment.yaml\n{apiVersion: apps/v1, kind: Deployment, metadata: {name: testReleaseName-testChartName, labels: {helm.sh/chart: testChartName-0.1.0, app.kubernetes.io/name: testChartName, app.kubernetes.io/instance: testReleaseName, app.kubernetes.io/version: 1.17.0, app.kubernetes.io/managed-by: Helm}}, spec: {replicas: 1, selector: {matchLabels: {app.kubernetes.io/name: testChartName, app.kubernetes.io/instance: testReleaseName}}, template: {metadata: {labels: {app.kubernetes.io/name: testChartName, app.kubernetes.io/instance: testReleaseName}}, spec: {serviceAccountName: testReleaseName-testChartName, securityContext: {}, containers: [{name: testChartName, securityContext: {}, image: "testImage:1.17.0", imagePullPolicy: Always, ports: [{name: http, containerPort: 80, protocol: TCP}], livenessProbe: {httpGet: {path: /, port: http}}, readinessProbe: {httpGet: {path: /, port: http}}, resources: {}}]}}}}\n`
+if (process.env[shared.TestEnvVars.namespace]) {
+    const helmGetManifestCommand = `helm get manifest ${shared.testReleaseName} --namespace ${process.env[shared.TestEnvVars.namespace]}`;
+    a.exec[helmGetManifestCommand] = {
+        "code": 0,
+        "stdout": `---\n# Source: testChartName/templates/serviceaccount.yaml\n{apiVersion: v1, kind: ServiceAccount, metadata: {name: testReleaseName-testChartName, labels: {helm.sh/chart: testChartName-0.1.0, app.kubernetes.io/name: testChartName, app.kubernetes.io/instance: testReleaseName, app.kubernetes.io/version: 1.17.0, app.kubernetes.io/managed-by: Helm}}}\n---\n# Source: testChartName/templates/service.yaml\n{apiVersion: v1, kind: Service, metadata: {name: testReleaseName-testChartName, labels: {helm.sh/chart: testChartName-0.1.0, app.kubernetes.io/name: testChartName, app.kubernetes.io/instance: testReleaseName, app.kubernetes.io/version: 1.17.0, app.kubernetes.io/managed-by: Helm}}, spec: {type: ClusterIP, ports: [{port: 80, targetPort: http, protocol: TCP, name: http}], selector: {app.kubernetes.io/name: testChartName, app.kubernetes.io/instance: testReleaseName}}}\n---\n# Source: demo-chart/templates/deployment.yaml\n{apiVersion: apps/v1, kind: Deployment, metadata: {name: testReleaseName-testChartName, labels: {helm.sh/chart: testChartName-0.1.0, app.kubernetes.io/name: testChartName, app.kubernetes.io/instance: testReleaseName, app.kubernetes.io/version: 1.17.0, app.kubernetes.io/managed-by: Helm}}, spec: {replicas: 1, selector: {matchLabels: {app.kubernetes.io/name: testChartName, app.kubernetes.io/instance: testReleaseName}}, template: {metadata: {labels: {app.kubernetes.io/name: testChartName, app.kubernetes.io/instance: testReleaseName}}, spec: {serviceAccountName: testReleaseName-testChartName, securityContext: {}, containers: [{name: testChartName, securityContext: {}, image: "testImage:1.17.0", imagePullPolicy: Always, ports: [{name: http, containerPort: 80, protocol: TCP}], livenessProbe: {httpGet: {path: /, port: http}}, readinessProbe: {httpGet: {path: /, port: http}}, resources: {}}]}}}}\n`
+    }
+
+    const kubectlGetPods = `kubectl get pods -o json --namespace ${process.env[shared.TestEnvVars.namespace]}`;
+    a.exec[kubectlGetPods] = {
+        "code": 0,
+        "stdout": `{"apiVersion":"v1","items":[{"apiVersion":"v1","kind":"Pod","metadata":{"creationTimestamp":"2020-06-10T18:20:57Z","generateName":"testReleaseName-testChartName-7966fd9bdb-","labels":{"app":"demo","pod-template-hash":"7966fd9bdb"},"name":"testReleaseName-testChartName-7966fd9bdb-wvz9w","namespace":"default","ownerReferences":[{"apiVersion":"apps/v1","blockOwnerDeletion":true,"controller":true,"kind":"ReplicaSet","name":"testReleaseName-testChartName-7966fd9bdb","uid":"ceb16411-6edc-4598-827e-027e8c68304e"}],"resourceVersion":"987","selfLink":"/api/v1/namespaces/default/pods/testReleaseName-testChartName-7966fd9bdb-wvz9w","uid":"ac838bab-a280-4189-b3e9-45bf9d8df920"},"spec":{"containers":[{"image":"nginx:latest","imagePullPolicy":"Always","name":"demo-cont","ports":[{"containerPort":80,"protocol":"TCP"}],"resources":{},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","volumeMounts":[{"mountPath":"/var/run/secrets/kubernetes.io/serviceaccount","name":"default-token-xp8jh","readOnly":true}]}],"dnsPolicy":"ClusterFirst","enableServiceLinks":true,"nodeName":"minikube","priority":0,"restartPolicy":"Always","schedulerName":"default-scheduler","securityContext":{},"serviceAccount":"default","serviceAccountName":"default","terminationGracePeriodSeconds":30,"tolerations":[{"effect":"NoExecute","key":"node.kubernetes.io/not-ready","operator":"Exists","tolerationSeconds":300},{"effect":"NoExecute","key":"node.kubernetes.io/unreachable","operator":"Exists","tolerationSeconds":300}],"volumes":[{"name":"default-token-xp8jh","secret":{"defaultMode":420,"secretName":"default-token-xp8jh"}}]},"status":{"conditions":[{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T18:20:57Z","status":"True","type":"Initialized"},{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T18:21:21Z","status":"True","type":"Ready"},{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T18:21:21Z","status":"True","type":"ContainersReady"},{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T18:20:57Z","status":"True","type":"PodScheduled"}],"containerStatuses":[{"containerID":"docker://9be62c1a895983aefde3b62c33f12a692ab3749fd841a1f9b7c813b4246d1ac7","image":"nginx:latest","imageID":"docker-pullable://nginx@sha256:21f32f6c08406306d822a0e6e8b7dc81f53f336570e852e25fbe1e3e3d0d0133","lastState":{},"name":"demo-cont","ready":true,"restartCount":0,"started":true,"state":{"running":{"startedAt":"2020-06-10T18:21:20Z"}}}],"hostIP":"192.168.105.196","phase":"Running","podIP":"172.17.0.6","podIPs":[{"ip":"172.17.0.6"}],"qosClass":"BestEffort","startTime":"2020-06-10T18:20:57Z"}}],"kind":"List","metadata":{"resourceVersion":"","selfLink":""}}\n`
+    }
+}
+else {
+    const helmGetManifestCommand = `helm get manifest ${shared.testReleaseName}`;
+    a.exec[helmGetManifestCommand] = {
+        "code": 0,
+        "stdout": `---\n# Source: testChartName/templates/serviceaccount.yaml\n{apiVersion: v1, kind: ServiceAccount, metadata: {name: testReleaseName-testChartName, labels: {helm.sh/chart: testChartName-0.1.0, app.kubernetes.io/name: testChartName, app.kubernetes.io/instance: testReleaseName, app.kubernetes.io/version: 1.17.0, app.kubernetes.io/managed-by: Helm}}}\n---\n# Source: testChartName/templates/service.yaml\n{apiVersion: v1, kind: Service, metadata: {name: testReleaseName-testChartName, labels: {helm.sh/chart: testChartName-0.1.0, app.kubernetes.io/name: testChartName, app.kubernetes.io/instance: testReleaseName, app.kubernetes.io/version: 1.17.0, app.kubernetes.io/managed-by: Helm}}, spec: {type: ClusterIP, ports: [{port: 80, targetPort: http, protocol: TCP, name: http}], selector: {app.kubernetes.io/name: testChartName, app.kubernetes.io/instance: testReleaseName}}}\n---\n# Source: demo-chart/templates/deployment.yaml\n{apiVersion: apps/v1, kind: Deployment, metadata: {name: testReleaseName-testChartName, labels: {helm.sh/chart: testChartName-0.1.0, app.kubernetes.io/name: testChartName, app.kubernetes.io/instance: testReleaseName, app.kubernetes.io/version: 1.17.0, app.kubernetes.io/managed-by: Helm}}, spec: {replicas: 1, selector: {matchLabels: {app.kubernetes.io/name: testChartName, app.kubernetes.io/instance: testReleaseName}}, template: {metadata: {labels: {app.kubernetes.io/name: testChartName, app.kubernetes.io/instance: testReleaseName}}, spec: {serviceAccountName: testReleaseName-testChartName, securityContext: {}, containers: [{name: testChartName, securityContext: {}, image: "testImage:1.17.0", imagePullPolicy: Always, ports: [{name: http, containerPort: 80, protocol: TCP}], livenessProbe: {httpGet: {path: /, port: http}}, readinessProbe: {httpGet: {path: /, port: http}}, resources: {}}]}}}}\n`
+    }
+    
+    const kubectlGetPods = "kubectl get pods -o json";
+    a.exec[kubectlGetPods] = {
+        "code": 0,
+        "stdout": `{"apiVersion":"v1","items":[{"apiVersion":"v1","kind":"Pod","metadata":{"creationTimestamp":"2020-06-10T18:20:57Z","generateName":"testReleaseName-testChartName-7966fd9bdb-","labels":{"app":"demo","pod-template-hash":"7966fd9bdb"},"name":"testReleaseName-testChartName-7966fd9bdb-wvz9w","namespace":"default","ownerReferences":[{"apiVersion":"apps/v1","blockOwnerDeletion":true,"controller":true,"kind":"ReplicaSet","name":"testReleaseName-testChartName-7966fd9bdb","uid":"ceb16411-6edc-4598-827e-027e8c68304e"}],"resourceVersion":"987","selfLink":"/api/v1/namespaces/default/pods/testReleaseName-testChartName-7966fd9bdb-wvz9w","uid":"ac838bab-a280-4189-b3e9-45bf9d8df920"},"spec":{"containers":[{"image":"nginx:latest","imagePullPolicy":"Always","name":"demo-cont","ports":[{"containerPort":80,"protocol":"TCP"}],"resources":{},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","volumeMounts":[{"mountPath":"/var/run/secrets/kubernetes.io/serviceaccount","name":"default-token-xp8jh","readOnly":true}]}],"dnsPolicy":"ClusterFirst","enableServiceLinks":true,"nodeName":"minikube","priority":0,"restartPolicy":"Always","schedulerName":"default-scheduler","securityContext":{},"serviceAccount":"default","serviceAccountName":"default","terminationGracePeriodSeconds":30,"tolerations":[{"effect":"NoExecute","key":"node.kubernetes.io/not-ready","operator":"Exists","tolerationSeconds":300},{"effect":"NoExecute","key":"node.kubernetes.io/unreachable","operator":"Exists","tolerationSeconds":300}],"volumes":[{"name":"default-token-xp8jh","secret":{"defaultMode":420,"secretName":"default-token-xp8jh"}}]},"status":{"conditions":[{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T18:20:57Z","status":"True","type":"Initialized"},{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T18:21:21Z","status":"True","type":"Ready"},{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T18:21:21Z","status":"True","type":"ContainersReady"},{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T18:20:57Z","status":"True","type":"PodScheduled"}],"containerStatuses":[{"containerID":"docker://9be62c1a895983aefde3b62c33f12a692ab3749fd841a1f9b7c813b4246d1ac7","image":"nginx:latest","imageID":"docker-pullable://nginx@sha256:21f32f6c08406306d822a0e6e8b7dc81f53f336570e852e25fbe1e3e3d0d0133","lastState":{},"name":"demo-cont","ready":true,"restartCount":0,"started":true,"state":{"running":{"startedAt":"2020-06-10T18:21:20Z"}}}],"hostIP":"192.168.105.196","phase":"Running","podIP":"172.17.0.6","podIPs":[{"ip":"172.17.0.6"}],"qosClass":"BestEffort","startTime":"2020-06-10T18:20:57Z"}}],"kind":"List","metadata":{"resourceVersion":"","selfLink":""}}\n`
+    }
 }
 
-const kubectlGetPods = "kubectl get pods -o json";
-a.exec[kubectlGetPods] = {
-    "code": 0,
-    "stdout": `{"apiVersion":"v1","items":[{"apiVersion":"v1","kind":"Pod","metadata":{"creationTimestamp":"2020-06-10T18:20:57Z","generateName":"testReleaseName-testChartName-7966fd9bdb-","labels":{"app":"demo","pod-template-hash":"7966fd9bdb"},"name":"testReleaseName-testChartName-7966fd9bdb-wvz9w","namespace":"default","ownerReferences":[{"apiVersion":"apps/v1","blockOwnerDeletion":true,"controller":true,"kind":"ReplicaSet","name":"testReleaseName-testChartName-7966fd9bdb","uid":"ceb16411-6edc-4598-827e-027e8c68304e"}],"resourceVersion":"987","selfLink":"/api/v1/namespaces/default/pods/testReleaseName-testChartName-7966fd9bdb-wvz9w","uid":"ac838bab-a280-4189-b3e9-45bf9d8df920"},"spec":{"containers":[{"image":"nginx:latest","imagePullPolicy":"Always","name":"demo-cont","ports":[{"containerPort":80,"protocol":"TCP"}],"resources":{},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","volumeMounts":[{"mountPath":"/var/run/secrets/kubernetes.io/serviceaccount","name":"default-token-xp8jh","readOnly":true}]}],"dnsPolicy":"ClusterFirst","enableServiceLinks":true,"nodeName":"minikube","priority":0,"restartPolicy":"Always","schedulerName":"default-scheduler","securityContext":{},"serviceAccount":"default","serviceAccountName":"default","terminationGracePeriodSeconds":30,"tolerations":[{"effect":"NoExecute","key":"node.kubernetes.io/not-ready","operator":"Exists","tolerationSeconds":300},{"effect":"NoExecute","key":"node.kubernetes.io/unreachable","operator":"Exists","tolerationSeconds":300}],"volumes":[{"name":"default-token-xp8jh","secret":{"defaultMode":420,"secretName":"default-token-xp8jh"}}]},"status":{"conditions":[{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T18:20:57Z","status":"True","type":"Initialized"},{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T18:21:21Z","status":"True","type":"Ready"},{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T18:21:21Z","status":"True","type":"ContainersReady"},{"lastProbeTime":null,"lastTransitionTime":"2020-06-10T18:20:57Z","status":"True","type":"PodScheduled"}],"containerStatuses":[{"containerID":"docker://9be62c1a895983aefde3b62c33f12a692ab3749fd841a1f9b7c813b4246d1ac7","image":"nginx:latest","imageID":"docker-pullable://nginx@sha256:21f32f6c08406306d822a0e6e8b7dc81f53f336570e852e25fbe1e3e3d0d0133","lastState":{},"name":"demo-cont","ready":true,"restartCount":0,"started":true,"state":{"running":{"startedAt":"2020-06-10T18:21:20Z"}}}],"hostIP":"192.168.105.196","phase":"Running","podIP":"172.17.0.6","podIPs":[{"ip":"172.17.0.6"}],"qosClass":"BestEffort","startTime":"2020-06-10T18:20:57Z"}}],"kind":"List","metadata":{"resourceVersion":"","selfLink":""}}\n`
-}
+
 
 const kubectlClusterInfo = "kubectl cluster-info";
 a.exec[kubectlClusterInfo] = {
@@ -268,25 +293,25 @@ a.exec[kubectlClusterInfo] = {
     "stdout": `Kubernetes master is running at https://shigupt-cluster-dns-7489360e.hcp.southindia.azmk8s.io:443 \nhealthmodel-replicaset-service is running at https://shigupt-cluster-dns-7489360e.hcp.southindia.azmk8s.io:443/api/v1/namespaces/kube-system/services/healthmodel-replicaset-service/proxy \nCoreDNS is running at https://shigupt-cluster-dns-7489360e.hcp.southindia.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy \nkubernetes-dashboard is running at https://shigupt-cluster-dns-7489360e.hcp.southindia.azmk8s.io:443/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy \nMetrics-server is running at https://shigupt-cluster-dns-7489360e.hcp.southindia.azmk8s.io:443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy\n\nTo further debug and diagnose cluster problems, use "kubectl cluster-info dump".\n`
 }
 
-const helmSaveCommand = `helm chart save ${process.env[shared.TestEnvVars.chartPathForACR]} ${process.env[shared.TestEnvVars.azureContainerRegistry]}/helm/${process.env[shared.TestEnvVars.chartNameForACR]}`;
+const helmSaveCommand = `helm chart${formatDebugFlag()} save ${process.env[shared.TestEnvVars.chartPathForACR]} ${process.env[shared.TestEnvVars.azureContainerRegistry]}/helm/${process.env[shared.TestEnvVars.chartNameForACR]}`;
 a.exec[helmSaveCommand] = {
     "code": 0,
     "stdout": `ref:    ${process.env[shared.TestEnvVars.azureContainerRegistry]}/helm/${process.env[shared.TestEnvVars.chartNameForACR]}:0.1.0 \n Successfully saved the helm chart to local registry cache.`
 }
 
-const helmRegistryLoginCommand = `helm registry login ${process.env[shared.TestEnvVars.azureContainerRegistry]} --username --password`;
+const helmRegistryLoginCommand = `helm registry${formatDebugFlag()} login ${process.env[shared.TestEnvVars.azureContainerRegistry]} --username --password`;
 a.exec[helmRegistryLoginCommand] = {
     "code": 0,
     "stdout": `Successfully logged in to  ${process.env[shared.TestEnvVars.azureContainerRegistry]}.`
 };
 
-const helmChartPushCommand = `helm chart push ${process.env[shared.TestEnvVars.azureContainerRegistry]}/helm/${process.env[shared.TestEnvVars.chartNameForACR]}:0.1.0`;
+const helmChartPushCommand = `helm chart${formatDebugFlag()} push ${process.env[shared.TestEnvVars.azureContainerRegistry]}/helm/${process.env[shared.TestEnvVars.chartNameForACR]}:0.1.0`;
 a.exec[helmChartPushCommand] = {
     "code": 0,
     "stdout": "Successfully pushed to the chart to container registry."
 }
 
-const helmChartRemoveCommand = `helm chart remove ${process.env[shared.TestEnvVars.azureContainerRegistry]}/helm/${process.env[shared.TestEnvVars.chartNameForACR]}:0.1.0`;
+const helmChartRemoveCommand = `helm chart${formatDebugFlag()} remove ${process.env[shared.TestEnvVars.azureContainerRegistry]}/helm/${process.env[shared.TestEnvVars.chartNameForACR]}:0.1.0`;
 a.exec[helmChartRemoveCommand] = {
     "code": 0,
     "stdout": "Successfully removed the chart from local cache."
@@ -301,6 +326,9 @@ import * as fs from 'fs';
 const fsClone = Object.assign({}, fs);
 fsClone.writeFileSync = function (path, data) {
     console.log(`wrote to ${path}`);
+};
+fsClone.chmodSync = function (path, mode) {
+    console.log(`changed mode of file at ${path} to ${mode}`);
 };
 tr.registerMock('fs', fsClone);
 
@@ -323,9 +351,9 @@ tr.registerMock('../src/utils', {
     getHelmPathForACR: util.getHelmPathForACR
 });
 
-import * as webUtil from 'utility-common-v2/restutilities';
+import * as webUtil from 'azure-pipelines-tasks-utility-common/restutilities';
 import { command } from 'azure-pipelines-task-lib';
-tr.registerMock('utility-common-v2/restutilities', {
+tr.registerMock('azure-pipelines-tasks-utility-common/restutilities', {
     WebRequest: webUtil.WebRequest,
     WebResponse: webUtil.WebResponse,
     sendRequest: async function (request: webUtil.WebRequest) {

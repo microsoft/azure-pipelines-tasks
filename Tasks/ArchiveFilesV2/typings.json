@@ -1,8 +1,0 @@
-{
-  "name": "ArchiveFiles",
-  "dependencies": {},
-  "globalDependencies": {
-    "node": "registry:dt/node#6.0.0+20160919063032",
-    "q": "registry:dt/q#0.0.0+20160613154756"
-  }
-}

@@ -1,6 +1,6 @@
 {
   "name": "vsts-tasks-azurewebappslotswap",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Azure Pipelines Azure WebApp Slot Swap",
   "main": "azurewebappslotswap.js",
   "scripts": {

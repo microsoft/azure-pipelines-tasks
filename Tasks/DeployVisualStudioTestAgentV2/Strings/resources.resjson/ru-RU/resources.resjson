@@ -16,7 +16,7 @@
   "loc.input.label.winRmProtocol": "Протокол",
   "loc.input.help.winRmProtocol": "Выберите протокол, используемый в подключении службы WinRM к компьютерам. Значение по умолчанию — HTTP.",
   "loc.input.label.testCertificate": "Тестовый сертификат",
-  "loc.input.help.testCertificate": "Выберите этот параметр, чтобы пропустить проверку достоверности сертификата компьютера доверенным центром сертификации. Параметр обязателен для протокола WinRM HTTPS.",
+  "loc.input.help.testCertificate": "Выберите этот параметр, чтобы пропустить проверку подлинности сертификата компьютера доверенным центром сертификации. Параметр обязателен для протокола WinRM HTTPS.",
   "loc.input.label.machineUserName": "Имя пользователя",
   "loc.input.help.machineUserName": "Имя пользователя, с которым должен выполняться агент тестирования.",
   "loc.input.label.machinePassword": "Пароль",
@@ -31,6 +31,6 @@
   "loc.input.help.agentLocation": "Дополнительно укажите локальный или сетевой путь к файлу vstf_testagent.exe. Если путь не указан, файл будет автоматически скачан из Центра загрузки. Установщик агента тестирования 2015 с обновлением 3: https://go.microsoft.com/fwlink/?LinkId=827840. Установщик агента тестирования 2017: https://aka.ms/vs/15/release/vs_TestAgent.exe. Дополнительные сведения об использовании автономных установщиков: https://aka.ms/testagentlocation.",
   "loc.input.label.updateTestAgent": "Обновить агент тестирования",
   "loc.input.help.updateTestAgent": "Если агент тестирования уже развернут на компьютере, этот параметр проверяет, доступно ли обновление для этой версии агента.",
-  "loc.messages.InvalidAccessToken": "Не удалось создать личный маркер доступа для пользователя. Обратитесь к администратору коллекции проектов.",
+  "loc.messages.InvalidAccessToken": "Не удалось создать личный маркер доступа для пользователя. Обратитесь к администратору коллекции проектов",
   "loc.messages.NotSupportedWithParallel": "Развертывание агента тестирования Visual Studio не поддерживается для типа параллельного выполнения MultiMachine/MultiConfiguration. Дополнительные сведения см. в следующей записи блога: https://blogs.msdn.microsoft.com/devops/2017/03/26/vstest-task-dons-a-new-avatar-testing-with-unified-agents-and-phases/"
 }

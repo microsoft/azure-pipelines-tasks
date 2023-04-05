@@ -1,15 +1,25 @@
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
+import * as semver from 'semver';
 
 import * as task from 'azure-pipelines-task-lib/task';
-import * as tool from 'vsts-task-tool-lib/tool';
+import * as tool from 'azure-pipelines-tool-lib/tool';
 
 export enum Platform {
     Windows,
     MacOS,
     Linux
 }
+
+/**
+ * Checks if the patch field is present in the version specification
+ * @param versionSpec version specification
+ */
+export function isExactVersion(versionSpec: string) {
+    const semanticVersion = semver.coerce(versionSpec);
+    return semanticVersion && semanticVersion.patch;
+} 
 
 export function getPlatform(): Platform {
     switch (process.platform) {
@@ -26,6 +36,9 @@ interface TaskParameters {
 }
 
 export async function useRubyVersion(parameters: TaskParameters, platform: Platform): Promise<void> {
+    if (isExactVersion(parameters.versionSpec)) {
+        task.warning(task.loc('ExactVersionNotRecommended'));
+    }
     const toolName: string = 'Ruby';
     const installDir: string | null = tool.findLocalTool(toolName, parameters.versionSpec);
     if (!installDir) {

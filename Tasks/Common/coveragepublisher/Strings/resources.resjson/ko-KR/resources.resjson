@@ -1,0 +1,6 @@
+{
+  "loc.messages.InstallDotNetCoreForPublishing": "이 작업을 실행하려면 dotnet core를 설치하세요.",
+  "loc.messages.ErrorWhilePublishing": "검사를 게시하는 동안 오류가 발생했습니다. ",
+  "loc.messages.UpgradeAgentMessage": "에이전트 버전을 업그레이드 하세요. v2.115.0 이상이 필요합니다. https://github.com/Microsoft/vsts-agent/releases",
+  "loc.messages.NoInputFiles": "입력 파일을 제공하지 않았습니다."
+}

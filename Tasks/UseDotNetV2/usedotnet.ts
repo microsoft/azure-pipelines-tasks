@@ -10,11 +10,19 @@ import { VersionInfo, VersionParts } from "./models"
 import { NuGetInstaller } from "./nugetinstaller";
 import { error } from 'util';
 
+
+function checkVersionForDeprecationAndNotify(versionSpec: string | null): void {
+    if (versionSpec != null && versionSpec.startsWith("2.1")) {
+        tl.warning(tl.loc('DepricatedVersionNetCore',versionSpec));
+    }
+}
+
 async function run() {
     let useGlobalJson: boolean = tl.getBoolInput('useGlobalJson');
     let packageType = (tl.getInput('packageType') || "sdk").toLowerCase();;
     let versionSpec = tl.getInput('version');
-    const nugetVersion = tl.getInput('nugetVersion') || '4.4.1';
+    let vsVersionSpec = tl.getInput('vsVersion');
+    const nugetVersion = tl.getInput('nugetVersion') || '4.9.6';
 
     let installationPath = tl.getInput('installationPath');
     if (!installationPath || installationPath.length == 0) {
@@ -26,16 +34,17 @@ async function run() {
     if (versionSpec || (useGlobalJson && packageType == "sdk")) {
         let includePreviewVersions: boolean = tl.getBoolInput('includePreviewVersions');
         let workingDirectory: string | null = tl.getPathInput("workingDirectory", false) || null;
-        await installDotNet(installationPath, packageType, versionSpec, useGlobalJson, workingDirectory, includePreviewVersions);
+        await installDotNet(installationPath, packageType, versionSpec, vsVersionSpec, useGlobalJson, workingDirectory, includePreviewVersions);
         tl.prependPath(installationPath);
         // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
         tl.setVariable('DOTNET_ROOT', installationPath);
         // By default disable Multi Level Lookup unless user wants it enabled.
         tl.setVariable("DOTNET_MULTILEVEL_LOOKUP", !performMultiLevelLookup ? "0" : "1");
     }
+
     // Add dot net tools path to "PATH" environment variables, so that tools can be used directly.
     addDotNetCoreToolPath();
-    // Install NuGet version specified by user or 4.4.1 in case none is specified
+    // Install NuGet version specified by user or 4.9.6 in case none is specified
     // Also sets up the proxy configuration settings.
     await NuGetInstaller.installNuGet(nugetVersion);
 }
@@ -53,6 +62,7 @@ async function installDotNet(
     installationPath: string,
     packageType: string,
     versionSpec: string | null,
+    vsVersionSpec: string | null,
     useGlobalJson: boolean,
     workingDirectory: string | null,
     includePreviewVersions: boolean) {
@@ -68,18 +78,22 @@ async function installDotNet(
             let url = versionFetcher.getDownloadUrl(version);
             if (!dotNetCoreInstaller.isVersionInstalled(version.getVersion())) {
                 await dotNetCoreInstaller.downloadAndInstall(version, url);
+            } else {
+                checkVersionForDeprecationAndNotify(versionSpec);
             }
         }
     } else if (versionSpec) {
         console.log(tl.loc("ToolToInstall", packageType, versionSpec));
         let versionSpecParts = new VersionParts(versionSpec);
-        let versionInfo: VersionInfo = await versionFetcher.getVersionInfo(versionSpecParts.versionSpec, packageType, includePreviewVersions);
+        let versionInfo: VersionInfo = await versionFetcher.getVersionInfo(versionSpecParts.versionSpec, vsVersionSpec, packageType, includePreviewVersions);
 
         if (!versionInfo) {
             throw tl.loc("MatchingVersionNotFound", versionSpecParts.versionSpec);
         }
         if (!dotNetCoreInstaller.isVersionInstalled(versionInfo.getVersion())) {
             await dotNetCoreInstaller.downloadAndInstall(versionInfo, versionFetcher.getDownloadUrl(versionInfo));
+        } else {
+            checkVersionForDeprecationAndNotify(versionSpec);
         }
     } else {
         throw new error("Hey developer you have called the method `installDotNet` without a `versionSpec` or without `useGlobalJson`. that is impossible.");
@@ -105,7 +119,7 @@ function addDotNetCoreToolPath() {
 }
 
 const taskManifestPath = path.join(__dirname, "task.json");
-const packagingCommonManifestPath = path.join(__dirname, "node_modules/packaging-common/module.json");
+const packagingCommonManifestPath = path.join(__dirname, "node_modules/azure-pipelines-tasks-packaging-common/module.json");
 tl.debug("Setting resource path to " + taskManifestPath);
 tl.setResourcePath(taskManifestPath);
 tl.setResourcePath(packagingCommonManifestPath);

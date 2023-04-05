@@ -4,8 +4,8 @@ import { ContainerWebAppDeploymentProvider } from '../deploymentProvider/Contain
 import { IWebAppDeploymentProvider } from '../deploymentProvider/IWebAppDeploymentProvider';
 import { TaskParametersUtility, TaskParameters, DeploymentType } from '../operations/TaskParameters';
 import { stringify } from 'querystring';
-import { PackageType } from 'webdeployment-common-v2/packageUtility';
-import { getMockEndpoint } from '../node_modules/azure-arm-rest-v2/Tests/mock_utils';
+import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
+import { getMockEndpoint } from '../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/mock_utils';
 import { mockAzureARMPreDeploymentSteps, mockContainerDeploySettings }  from "./mock_utils";
 
 getMockEndpoint();

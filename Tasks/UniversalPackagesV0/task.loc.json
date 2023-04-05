@@ -9,14 +9,14 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 171,
+    "Minor": 218,
     "Patch": 0
   },
   "runsOn": [
     "Agent",
     "DeploymentGroup"
   ],
-  "minimumAgentVersion": "2.115.0",
+  "minimumAgentVersion": "2.144.0",
   "groups": [
     {
       "name": "packageDownloadDetails",
@@ -364,9 +364,9 @@
     {
       "target": "feedListDownload",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if projectId}}{{{projectId}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "packageListDownload",
@@ -392,9 +392,9 @@
     {
       "target": "feedListPublish",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if projectId}}{{{projectId}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "packageListPublish",
@@ -408,7 +408,11 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
+      "target": "universalmain.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "universalmain.js",
       "argumentFormat": ""
     }
@@ -435,11 +439,15 @@
     "Info_DownloadingArtifactTool": "ms-resource:loc.messages.Info_DownloadingArtifactTool",
     "Info_Downloading": "ms-resource:loc.messages.Info_Downloading",
     "Info_Publishing": "ms-resource:loc.messages.Info_Publishing",
+    "Info_PublishingRetry": "ms-resource:loc.messages.Info_PublishingRetry",
     "Info_UsingArtifactToolPublish": "ms-resource:loc.messages.Info_UsingArtifactToolPublish",
     "Info_UsingArtifactToolDownload": "ms-resource:loc.messages.Info_UsingArtifactToolDownload",
     "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
     "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
     "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
+    "Info_ResolvePackageVersionRoute": "ms-resource:loc.messages.Info_ResolvePackageVersionRoute",
+    "Info_RetrievingArtifactToolUri": "ms-resource:loc.messages.Info_RetrievingArtifactToolUri",
+    "Info_ArtifactToolPath": "ms-resource:loc.messages.Info_ArtifactToolPath",
     "FailedToGetPackageMetadata": "ms-resource:loc.messages.FailedToGetPackageMetadata",
     "FailedToGetArtifactTool": "ms-resource:loc.messages.FailedToGetArtifactTool",
     "Error_UnexpectedErrorFailedToGetToolMetadata": "ms-resource:loc.messages.Error_UnexpectedErrorFailedToGetToolMetadata",

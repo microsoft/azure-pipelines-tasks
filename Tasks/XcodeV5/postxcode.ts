@@ -1,7 +1,7 @@
 import os = require('os');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
-import sign = require('ios-signing-common/ios-signing-common');
+import sign = require('azure-pipelines-tasks-ios-signing-common/ios-signing-common');
 import utils = require('./xcodeutils');
 
 async function run() {
@@ -44,12 +44,13 @@ async function run() {
                             matchingTestResultsFiles = [testResultsFiles];
                         }
 
-                        if (!matchingTestResultsFiles) {
+                        if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
                             tl.warning(tl.loc('NoTestResultsFound', testResultsFiles));
                         } else {
                             const TESTRUN_SYSTEM = "VSTS - xcode";
                             const tp = new tl.TestPublisher("JUnit");
-                            tp.publish(matchingTestResultsFiles, false, "", "", "", true, TESTRUN_SYSTEM);
+                            const testRunTitle: string = tl.getInput('testRunTitle');
+                            tp.publish(matchingTestResultsFiles, "false", "", "", testRunTitle, "true", TESTRUN_SYSTEM);
                         }
                     }
                 }

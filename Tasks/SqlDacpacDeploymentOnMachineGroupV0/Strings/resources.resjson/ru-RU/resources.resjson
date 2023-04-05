@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Развертывание базы данных SQL Server",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/sqldacpacmachinegroupreadme)",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://aka.ms/sqldacpacmachinegroupreadme)",
   "loc.description": "Развертывание базы данных SQL Server с помощью скриптов SQL или DACPAC",
   "loc.instanceNameFormat": "Развертывание с помощью: $(TaskType)",
   "loc.input.label.TaskType": "Развертывание SQL с помощью",
