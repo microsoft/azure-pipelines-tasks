@@ -92,9 +92,11 @@ function Validate-DestinationPath(
 
 function Validate-AdditionalArguments([string]$additionalArguments)
 {    
-    if($additionalArguments -match "[&;]")
+    if($additionalArguments -match "[&;|]")
     {
-        ThrowError -errorMessage (Get-LocalizedString -Key "Additional arguments can't include separator characters '&' and ';'. Please verify input. To learn more about argument validation, please check https://aka.ms/azdo-task-argument-validation")
+        $additionalArgumentsValidationErrorMessage = "Additional arguments can't include separator characters '&', ';' and '|'. Please verify input. To learn more about argument validation, please check https://aka.ms/azdo-task-argument-validation"
+
+        ThrowError -errorMessage (Get-LocalizedString -Key $additionalArgumentsValidationErrorMessage)
     }
 }
 
