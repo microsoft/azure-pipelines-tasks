@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Windows 머신 파일 복사",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "원격 Windows 머신에 파일을 복사합니다.",
   "loc.instanceNameFormat": "$(SourcePath)에서 파일 복사",
   "loc.releaseNotes": "버전 2.0의 새로운 기능: <br/>&nbsp;&nbsp;프록시 지원을 추가 중입니다. <br/>&nbsp;&nbsp; 레거시 DTL 컴퓨터 지원이 제거되었습니다.",

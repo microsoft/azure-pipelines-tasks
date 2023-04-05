@@ -125,22 +125,25 @@ export class StorageAccounts {
          return deferred.promise;
      }
 
-    public async getClassicOrArmAccountByName(accountName: string, options: any): Promise<Model.StorageAccount> {
-        const httpRequest = new webClient.WebRequest();
-        httpRequest.method = 'GET';
-        httpRequest.headers = this.client.setCustomHeaders(options);
-        // TODO: I think we should use newer api versions in the future?
-        httpRequest.uri = `https://management.azure.com/resources?api-version=2014-04-01-preview&%24filter=(subscriptionId%20eq%20'${this.client.subscriptionId}')%20and%20(resourceType%20eq%20'microsoft.storage%2Fstorageaccounts'%20or%20resourceType%20eq%20'microsoft.classicstorage%2Fstorageaccounts')%20and%20(name%20eq%20'${accountName}')`;
+    public async getClassicOrArmAccountByName(accountName: string, options: any): Promise<Model.StorageAccount | undefined> {
+        let storageAccounts = await this.getStorageAccountsByUri(
+            `https://management.azure.com/subscriptions/${this.client.subscriptionId}/providers/Microsoft.Storage/storageAccounts?api-version=2023-01-01`,
+            accountName,
+            options
+        );
 
-        const res = await this.client.beginRequest(httpRequest);
-
-        if (res.statusCode == 200 && res.body.value) {
-            const storageAccounts: Model.StorageAccount[] = res.body.value;
-
-            return storageAccounts[0];
-        } else {
-            throw azureServiceClientBase.ToError(res);
+        const armStorageAccount = storageAccounts[0];
+        if (armStorageAccount) {
+            return armStorageAccount;
         }
+
+        storageAccounts = await this.getStorageAccountsByUri(
+            `https://management.azure.com/subscriptions/${this.client.subscriptionId}/providers/Microsoft.ClassicStorage/storageAccounts?api-version=2016-11-01`,
+            accountName,
+            options
+        );
+
+        return storageAccounts[0];
     }
 
     public async listKeys(resourceGroupName: string, accountName: string, options, storageAccountType?: string): Promise<string[]> {
@@ -215,6 +218,47 @@ export class StorageAccounts {
             return resourceUri.substring(resourceUri.indexOf("resourcegroups/") + "resourcegroups/".length, resourceUri.indexOf("/providers"));
         }
         return "";
+    }
+
+    private async getStorageAccountsByUri(uri: string, filterName?: string, options?: any): Promise<Model.StorageAccount[]> {
+        const request = new webClient.WebRequest();
+        request.method = 'GET';
+        request.headers = this.client.setCustomHeaders(options);
+        request.uri = uri;
+
+        const storageAccounts: Model.StorageAccount[] = [];
+
+        const response = await this.client.beginRequest(request);
+        if (response.statusCode !== 200) {
+            throw azureServiceClientBase.ToError(response);
+        }
+
+        storageAccounts.push(...response.body.value);
+
+        if (filterName) {
+            const targetSA = storageAccounts.find(sa => sa.name === filterName);
+
+            if (targetSA) {
+                return [targetSA];
+            }
+        }
+
+        if (response.body.nextLink) {
+            const nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
+            if (nextResult.error) {
+                throw nextResult.error;
+            }
+
+            storageAccounts.push(...nextResult.result);
+        }
+
+        if (filterName) {
+            const targetSA = storageAccounts.find(sa => sa.name === filterName);
+
+            return targetSA ? [targetSA] : [];
+        }
+
+        return storageAccounts;
     }
 
     private static isNonEmptyInternal(str: string): boolean {
