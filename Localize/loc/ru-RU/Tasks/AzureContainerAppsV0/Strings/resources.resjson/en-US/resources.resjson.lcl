@@ -90,19 +90,25 @@
       </Item>
       <Item ItemId=";loc.input.help.containerAppEnvironment" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The name of the Azure Container App environment to use with the application. If not provided, an existing environment in the resource group of the Container App will be used, otherwise, an environment will be created in the format of <container-app-name>-env.]]></Val>
+          <Val><![CDATA[The name of the Azure Container App environment to use with the application. If not provided, an existing environment in the resource group of the Container App will be used, otherwise, an environment will be created in the form of `<container-app-name>-env`.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Имя среды приложения-контейнера Azure для использования с приложением. Если не указано, будет использоваться существующая среда в группе ресурсов приложения-контейнера, в противном случае будет создана среда в формате <container-app-name>-env.]]></Val>
+            <Val><![CDATA[Имя среды приложения-контейнера Azure для использования с приложением. Если не указано, будет использоваться существующая среда в группе ресурсов приложения-контейнера, в противном случае будет создана среда в форме "<container-app-name>-env".]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The name of the Azure Container App environment to use with the application. If not provided, an existing environment in the resource group of the Container App will be used, otherwise, an environment will be created in the format of <container-app-name>-env.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.containerAppName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The name of the Azure Container App that will be created or updated. If not provided, this value will be in the form of ado-task-app-<build-id>-<build-number>.]]></Val>
+          <Val><![CDATA[The name of the Azure Container App that will be created or updated. If not provided, this value will be in the form of `ado-task-app-<build-id>-<build-number>`.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Имя приложения-контейнера Azure, которое будет создано или обновлено. Если значение не указано, оно будет иметь формат ado-task-app-<build-id>-<build-number>.]]></Val>
+            <Val><![CDATA[Имя приложения-контейнера Azure, которое будет создано или обновлено. Если значение не указано, оно будет иметь форму "ado-task-app-<build-id>-<build-number>".]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The name of the Azure Container App that will be created or updated. If not provided, this value will be in the form of ado-task-app-<build-id>-<build-number>.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -144,10 +150,13 @@
       </Item>
       <Item ItemId=";loc.input.help.imageToBuild" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The custom name of the image that is to be built, pushed to ACR and deployed to the Container App by this task. Note: this image name should include the ACR server; e.g., <acr-name>.azurecr.io/<repo>:<tag>. If this argument is not provided, a default image name will be constructed in the form of <acr-name>.azurecr.io/ado-task/container-app:<build-id>.<build-number>.]]></Val>
+          <Val><![CDATA[The custom name of the image that is to be built, pushed to ACR and deployed to the Container App by this task. Note: this image name should include the ACR server; e.g., <acr-name>.azurecr.io/<repo>:<tag>. If this argument is not provided, a default image name will be constructed in the form of `<acr-name>.azurecr.io/ado-task/container-app:<build-id>.<build-number>`.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Настраиваемое имя образа, которое будет создано, отправлено в ACR и развернуто в контейнерном приложении этой задачей. Примечание. Это имя образа должно содержать сервер ACR; например, <acr-name>.azurecr.io/<repo>:<tag>. Если этот аргумент не указан, имя образа по умолчанию будет создано в форме <acr-name>.azurecr.io/ado-task/container-app:<build-id>.<build-number>.]]></Val>
+            <Val><![CDATA[Настраиваемое имя образа, которое будет создано, отправлено в ACR и развернуто в контейнерном приложении этой задачей. Примечание. Это имя образа должно содержать сервер ACR; например, <acr-name>.azurecr.io/<repo>:<tag>. Если этот аргумент не указан, имя образа по умолчанию будет создано в форме "<acr-name>.azurecr.io/ado-task/container-app:<build-id>.<build-number>".]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The custom name of the image that is to be built, pushed to ACR and deployed to the Container App by this task. Note: this image name should include the ACR server; e.g., <acr-name>.azurecr.io/<repo>:<tag>. If this argument is not provided, a default image name will be constructed in the form of <acr-name>.azurecr.io/ado-task/container-app:<build-id>.<build-number>.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -156,6 +165,15 @@
           <Val><![CDATA[The custom name of the image that has already been pushed to ACR and will be deployed to the Container App by this task. Note: the image name should include the ACR server; e.g., <acr-name>.azurecr.io/<repo>:<tag>. If this argument is not provided, the value provided (or determined) for the 'imageToBuild' argument will be used.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Пользовательское имя образа, который уже был отправлен в ACR и будет развернут в приложении-контейнере этой задачей. Примечание: имя образа должно включать в себя сервер ACR; например, <acr-name>.azurecr.io/<repo>:<tag>. Если этот аргумент не указан, будет использоваться значение, предоставленное (или определенное) для аргумента "imageToBuild".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.ingress" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Possible options: external, internal, disabled. If set to `external` (default value if not provided when creating a Container App), the Container App will be visible from the internet or a VNET, depending on the app environment endpoint configured. If set to `internal`, the Container App will be visible from within the app environment only. If set to `disabled`, ingress will be disabled for this Container App and will not have an HTTP or TCP endpoint.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Возможные параметры: внешний, внутренний, отключенный. Если задано значение "внешний" (значение по умолчанию, если не указано при создании приложения-контейнера), контейнерное приложение будет отображаться в Интернете или виртуальной сети в зависимости от настроенной конечной точки среды приложения. Если задано значение "внутренний", контейнерное приложение будет отображаться только из среды приложения. Если задано значение "отключенный", входящий трафик будет отключен для этого приложения-контейнера и не будет иметь конечной точки HTTP или TCP.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -171,27 +189,45 @@
       </Item>
       <Item ItemId=";loc.input.help.resourceGroup" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The resource group that the Azure Container App will be created in. If not provided, this value will be in the form of <container-app-name>-rg.]]></Val>
+          <Val><![CDATA[The existing resource group that the Azure Container App will be created in. If not provided, this value will be `<container-app-name>-rg` and its existence will first be checked before attempting to create it.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Группа ресурсов, в которой будет создано приложение-контейнер Azure. Если значение не указано, оно будет иметь формат <container-app-name>-rg.]]></Val>
+            <Val><![CDATA[Существующая группа ресурсов, в которую будет создано контейнерное приложение Azure. Если значение не указано, это значение будет "<container-app-name>-rg" и его существование будет сначала проверено перед попыткой его создания.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The resource group that the Azure Container App will be created in. If not provided, this value will be in the form of <container-app-name>-rg.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.runtimeStack" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The platform version stack that the application runs in when deployed to the Azure Container App. This should be provided in the form of <platform>:<version>. If not provided, this value is determined by Oryx based on the contents of the provided application. Please view the following document for more information on the supported runtime stacks for Oryx: https://github.com/microsoft/Oryx/blob/main/doc/supportedRuntimeVersions.md]]></Val>
+          <Val><![CDATA[The platform version stack that the application runs in when deployed to the Azure Container App. This should be provided in the form of `<platform>:<version>`. If not provided, this value is determined by Oryx based on the contents of the provided application. Please view the following document for more information on the supported runtime stacks for Oryx: https://github.com/microsoft/Oryx/blob/main/doc/supportedRuntimeVersions.md]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Стек версии платформы, в которой запускается приложение при развертывании в приложении-контейнере Azure. Значение должно быть указано в формате <платформа>:<версия>. Если значение не указано, оно определяется Oryx на основе содержимого предоставленного приложения. Дополнительные сведения о поддерживаемых стеках времени выполнения для Oryx см. в следующем документе: https://github.com/microsoft/Oryx/blob/main/doc/supportedRuntimeVersions.md]]></Val>
+            <Val><![CDATA[Стек версии платформы, в которой запускается приложение при развертывании в приложении-контейнере Azure. Значение должно быть указано в формате "<платформа>:<версия>". Если значение не указано, оно определяется Oryx на основе содержимого предоставленного приложения. Дополнительные сведения о поддерживаемых стеках времени выполнения для Oryx см. в следующем документе: https://github.com/microsoft/Oryx/blob/main/doc/supportedRuntimeVersions.md]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The platform version stack that the application runs in when deployed to the Azure Container App. This should be provided in the form of <platform>:<version>. If not provided, this value is determined by Oryx based on the contents of the provided application. Please view the following document for more information on the supported runtime stacks for Oryx: https://github.com/microsoft/Oryx/blob/main/doc/supportedRuntimeVersions.md]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.targetPort" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The designated port for the application to run on. If not provided, this value is 80 for Python applications, and 8080 for all other supposed platforms.]]></Val>
+          <Val><![CDATA[The designated port for the application to run on. If no value is provided and the builder is used to build the runnable application image, the target port will be set to 80 for Python applications and 8080 for all other platform applications. If no value is provided when creating a Container App, the target port will default to 80. Note: when using this task to update a Container App, the target port may be updated if not provided based on changes to the ingress property.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Назначенный порт для запуска приложения. Если это значение не указано, оно равно 80 для приложений Python и 8080 для всех остальных предполагаемых платформ.]]></Val>
+            <Val><![CDATA[Назначенный порт для запуска приложения. Если значение не указано и построитель используется для сборки запускаемого образа приложения, целевой порт будет установлен в значение 80 для приложений Python и 8080 для всех остальных приложений платформы. Если значение при создании приложения-контейнера не указано, целевой порт по умолчанию будет 80. Примечание. При использовании этой задачи для обновления приложения-контейнера целевой порт может быть обновлен, если он не указан на основе изменений в свойствах входящего трафика.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The designated port for the application to run on. If not provided, this value is 80 for Python applications, and 8080 for all other supposed platforms.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.yamlConfigPath" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Full path (on the executing Azure Pipelines agent) to the YAML file detailing the configuration of the Container App.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Полный путь (в исполняющемся агенте Azure Pipelines) к файлу YAML с подробным описанием конфигурации приложения-контейнера.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -313,6 +349,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.ingress" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Ingress setting]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Параметр входящего трафика]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.location" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Location of the Container App]]></Val>
@@ -345,6 +390,15 @@
           <Val><![CDATA[Application target port]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Целевой порт приложения]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.yamlConfigPath" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[YAML configuration file path]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Путь к файлу конфигурации YAML]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -394,12 +448,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.AzureCliDynamicInstallFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to set the Azure CLI to dynamically install missing extensions.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось задать Azure CLI для динамической установки отсутствующих расширений.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.BashCommandFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[`Unable to run provided bash command '%s'.]]></Val>
+          <Val><![CDATA[Unable to run provided bash command '%s'.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['Не удалось выполнить указанную команду bash "%s".]]></Val>
+            <Val><![CDATA[Не удалось выполнить указанную команду bash "%s".]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[`Unable to run provided bash command '%s'.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -417,6 +483,33 @@
           <Val><![CDATA[Using the provided containerAppEnvironment value provided '%s' when deploying the Container App.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Использование указанного значения containerAppEnvironment, предоставленного "%s" при развертывании приложения-контейнера.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.CreateContainerAppEnvironmentFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to create Container App Environment.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось создать среду приложения-контейнера]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.CreateContainerAppFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to create Azure Container App via 'az containerapp create' command.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось создать приложение-контейнер Azure с помощью команды "az containerapp create".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.CreateContainerAppFromYamlFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to create Azure Container App from YAML configuration file via 'az containerapp create' command.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось создать контейнерное приложение Azure из файла конфигурации YAML с помощью команды "az containerapp create".]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -457,11 +550,20 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.CreateOrUpdateContainerAppFailed" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.messages.CreateResourceGroupFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Unable to create or update Azure Container App via 'az container app' command.]]></Val>
+          <Val><![CDATA[Unable to create resource group '%s'.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Не удалось создать или обновить приложение-контейнер Azure с помощью команды "az container app".]]></Val>
+            <Val><![CDATA[Не удалось создать группу ресурсов "%s".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.DefaultContainerAppEnvironmentMessage" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No containerAppEnvironment argument was provided; setting the Container App to create/update to '%s'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не указан аргумент containerAppEnvironment; настройка приложения-контейнера для создания/обновления до "%s".]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -489,6 +591,15 @@
           <Val><![CDATA[No imageToDeploy argument was provided; setting the image to deploy to '%s'.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Аргумент ImageToDeploy не указан; настройка образа для развертывания "%s".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.DefaultIngressMessage" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No ingress argument was provided, setting the ingress value to '%s'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Аргумент входящего трафика не был предоставлен, установив значение входящего трафика равным "%s".]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -522,9 +633,39 @@
       </Item>
       <Item ItemId=";loc.messages.DetermineRuntimeStackFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[`Unable to determine runtime stack from application source '%s'.]]></Val>
+          <Val><![CDATA[Unable to determine runtime stack from application source '%s'.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Не удалось определить стек среды выполнения из источника приложения "%s".]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[`Unable to determine runtime stack from application source '%s'.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.DisableContainerAppIngressFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to disable ingress for the Container App.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось выключить входящий трафик для приложения-контейнера.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.DisabledIngressMessage" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Ingress will be disabled for the Container App.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Входящий трафик будет отключен для приложения-контейнера.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.EnableContainerAppIngressFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to enable ingress for the Container App.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось включить входящий трафик для приложения-контейнера.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -547,6 +688,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.ExistingContainerAppEnvironmentMessage" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Discovered existing Container App Environment, '%s', to use with the Container App.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Обнаружена существующая среда приложения-контейнера, "%s" для использования с приложением-контейнером.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.FoundAppSourceDockerfileMessage" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Found existing Dockerfile in provided application source at path '%s'; image will be built from this Dockerfile.]]></Val>
@@ -565,11 +715,11 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.MissingImageToDeployMessage" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.messages.MissingRequiredArgumentMessage" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The argument imageToDeploy must be provided if neither appSourcePath nor acrName are provided.]]></Val>
+          <Val><![CDATA[One of the following arguments must be provided: appSourcePath, imageToDeploy, yamlConfigPath]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Требуется указать аргумент imageToDeploy, если не указано ни appSourcePath, ни acrName.]]></Val>
+            <Val><![CDATA[Необходимо указать один из следующих аргументов: appSourcePath, imageToDeploy, yamlConfigPath]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -597,6 +747,33 @@
           <Val><![CDATA[Unable to set the Oryx++ Builder as the default builder.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Не удалось задать построитель Oryx++ в качестве построителя по умолчанию.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.UpdateContainerAppFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to update Azure Container App via 'az containerapp update' command.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось обновить приложение-контейнер Azure с помощью команды "az containerapp update".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.UpdateContainerAppFromYamlFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to update Azure Container App from YAML configuration file via 'az containerapp update' command.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось обновить контейнерное приложение Azure из файла конфигурации YAML с помощью команды "az containerapp update".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.UpdateContainerAppRegistryDetailsFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to update Azure Container App ACR details via 'az containerapp registry set' command.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось обновить сведения ACR для контейнерного приложения Azure с помощью команды "az containerapp registry set".]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
