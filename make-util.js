@@ -1327,7 +1327,16 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
 
             // Create the full task name so we don't need to rely on the folder name.
             var fullTaskName = `Mseng.MS.TF.DistributedTask.Tasks.${taskName}V${taskJsonContents.version.Major}`;
-
+            if (taskJsonContents.hasOwnProperty('_buildConfigMapping')) { 
+                for (let i in taskJsonContents._buildConfigMapping) {
+                    if (taskJsonContents._buildConfigMapping[i] === taskVersion && i.toLocaleLowerCase() !== 'default') {
+                        // take only first part of the name
+                        var postfix = i.split('-')[0];
+                        fullTaskName = fullTaskName + `-${postfix}`;
+                        break;
+                    }
+                }
+            }
             // Create xml entry for UnifiedDependencies
             unifiedDepsContent.push(`  <package id="${fullTaskName}" version="${taskVersion}" availableAtDeployTime="true" />`);
 
