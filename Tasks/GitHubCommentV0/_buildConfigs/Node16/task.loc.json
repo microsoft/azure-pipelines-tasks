@@ -67,7 +67,8 @@
       "target": "main.js"
     },
     "Node16": {
-      "target": "main.js"
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

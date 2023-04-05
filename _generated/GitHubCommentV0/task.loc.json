@@ -74,9 +74,9 @@
     "WriteSucceeded": "ms-resource:loc.messages.WriteSucceeded",
     "NoOp": "ms-resource:loc.messages.NoOp"
   },
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "_buildConfigMapping": {
     "Default": "0.220.1",
     "Node16-219": "0.220.0"
-  },
-  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+  }
 }
