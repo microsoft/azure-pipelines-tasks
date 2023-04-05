@@ -1,4 +1,20 @@
 {
+    "Node16": [
+        "AndroidSigningV2",
+        "AndroidSigningV3",
+        "DockerComposeV0",
+        "DownloadFileshareArtifactsV0",
+        "DownloadPackageV1",
+        "FuncToolsInstallerV0",
+        "GitHubCommentV0",
+        "KubernetesManifestV0",
+        "KubernetesV0",
+        "MysqlDeploymentOnMachineGroupV1",
+        "NuGetRestoreV1",
+        "PackerBuildV0",
+        "PackerBuildV1",
+        "PublishCodeCoverageResultsV1"
+    ],
     "tasks": [
         "AndroidSigningV2",
         "AndroidSigningV3",
@@ -50,7 +66,7 @@
         "BatchScriptV1",
         "CacheBetaV0",
         "CacheBetaV1",
-        "CacheV2", 
+        "CacheV2",
         "CargoAuthenticateV0",
         "ChefV1",
         "ChefKnifeV1",

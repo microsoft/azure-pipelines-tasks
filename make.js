@@ -165,6 +165,26 @@ function getTaskList(taskList) {
     return tasksToBuild.sort();
 }
 
+function validateGeneratedTasks(taskList) {
+    const excludedMakeOptionKeys = ["tasks", "taskResources"];
+
+    const makeOptions = fileToJson(makeOptionsPath);
+    const programPath = util.getBuildConfigGenerator(baseConfigToolPath);
+
+    for (const key in makeOptions) {
+        if (excludedMakeOptionKeys.indexOf(key) > -1) continue;
+
+        const tasksToValidate = makeOptions[key];
+        tasksToValidate.forEach((taskName) => {
+            if (taskList.indexOf(taskName) === -1) return;
+            const args = `--configs ${key} --task ${taskName}`;
+            banner('Validating: ' + taskName);
+            
+            run(`${programPath} ${args}` , true);
+        });
+    }
+}
+
 //
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
@@ -181,6 +201,9 @@ CLI.build = function() {
 
     const removeNodeModules = taskList.length > 1;
     const allTasks = getTaskList(taskList);
+
+    // Need to validate generated tasks first
+    validateGeneratedTasks(allTasks);
 
     allTasks.forEach(function(taskName) {
         let isGeneratedTask = false;
@@ -891,23 +914,26 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
 }
 
 CLI.gentask = function() {
-    if (argv.rebuild) {
-        rm("-Rf", path.join(baseConfigToolPath, "bin"));
-    }
-
     const programPath = util.getBuildConfigGenerator(baseConfigToolPath);
     let tasksToGen = taskList;
     let genTaskArg = "--write-updates";
+    const makeOptions = fileToJson(makeOptionsPath);
+    const configsString = argv.configs;
+    const configsArr = configsString.split("|")
+
+    if (argv.rebuild) {
+        rm("-Rf", path.join(baseConfigToolPath, "bin"));
+    }
 
     if (argv.validate) {
         genTaskArg = "";
         tasksToGen = util.getTaskListForValidate(genTaskPath, taskList);
     }
 
-    if (argv.configs) {
-        genTaskArg += ` --configs ${argv.configs} `;
+    if (configsString) {
+        genTaskArg += ` --configs ${configsString} `;
     } else {
-        genTaskArg += " --configs Node16 ";
+        throw Error ('--configs is required');
     }
 
     if (tasksToGen.length == 0) {
@@ -919,7 +945,18 @@ CLI.gentask = function() {
 
         banner('Generating: ' + taskName);
         run(`${programPath} ${args}` , true);
+
+        // insert to make-options.json
+        configsArr.forEach(function (config) {
+            if (!makeOptions[config]) {
+                makeOptions[config] = [];
+            } else if (makeOptions[config].indexOf(taskName) === -1) {
+                makeOptions[config].push(taskName);
+            }
+        });
     });
+
+    fs.writeFileSync(makeOptionsPath, JSON.stringify(makeOptions, null, 4));
 }
 
 var command  = argv._[0];
