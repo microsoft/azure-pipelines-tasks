@@ -414,7 +414,6 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
     console.log('> copying ps test lib resources');
     mkdir('-p', path.join(buildTestsPath, 'lib'));
     matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(testsPath, 'lib'), path.join(buildTestsPath, 'lib'));
-
     var suiteType = argv.suite || 'L0';
     function runTaskTests(taskName) {
         banner('Testing: ' + taskName);
@@ -914,16 +913,16 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
 }
 
 CLI.gentask = function() {
+    if (argv.rebuild) {
+        rm("-Rf", path.join(baseConfigToolPath, "bin"));
+    }
+
     const programPath = util.getBuildConfigGenerator(baseConfigToolPath);
     let tasksToGen = taskList;
     let genTaskArg = "--write-updates";
     const makeOptions = fileToJson(makeOptionsPath);
     const configsString = argv.configs;
     const configsArr = configsString.split("|")
-
-    if (argv.rebuild) {
-        rm("-Rf", path.join(baseConfigToolPath, "bin"));
-    }
 
     if (argv.validate) {
         genTaskArg = "";
