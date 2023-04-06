@@ -46,7 +46,7 @@ foreach ($variableSet in $variableSets) {
     Unregister-Mock Set-UserAgent
     Unregister-Mock Get-VstsFederatedToken
     Unregister-Mock Clear-AzContext
-    Register-Mock Connect-AzAccount { 'some output' }
+    Register-Mock Connect-AzAccount { '' }
     Register-Mock Set-CurrentAzSubscription
     Register-Mock Set-UserAgent
     Register-Mock Invoke-WebRequest { $response }

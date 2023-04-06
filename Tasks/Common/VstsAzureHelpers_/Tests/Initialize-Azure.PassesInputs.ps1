@@ -97,5 +97,5 @@ foreach ($variableSet in $variableSets) {
 
     # Assert.
     Assert-WasCalled Import-AzureModule -- -PreferredModule $variableSet.ExpectedPreferredModule -azurePsVersion "" -strict:$false
-    Assert-WasCalled Initialize-AzureSubscription-- -Endpoint $variableSet.Endpoint -StorageAccount $variableSet.StorageAccount
+    Assert-WasCalled Initialize-AzureSubscription -- -Endpoint $variableSet.Endpoint -StorageAccount $variableSet.StorageAccount
 }
