@@ -33,7 +33,7 @@ export function setAgentsData() {
     process.env["AGENT_NAME"] = "author";
     process.env["AGENT_TEMPDIRECTORY"] = process.cwd();
     process.env["BUILD_BUILDID"] = 'Build.BuildId';
-    process.env["SE_MSAL"] = 'false';
+    process.env["USE_MSAL"] = 'false';
 }
 
 export function mockTaskArgument():  ma.TaskLibAnswers{
