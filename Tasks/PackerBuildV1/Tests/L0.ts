@@ -135,13 +135,14 @@ describe('PackerBuild Suite V1', function() {
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
             runValidations(() => {
+                process.env["system.debug"] = "true";
                 assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
                 console.log("!!! TEST - start");
                 console.log(tr.stdout);
                 console.log("!!! TEST - end");
-                assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+                assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
             }, tr, done);
         });
 
@@ -153,7 +154,7 @@ describe('PackerBuild Suite V1', function() {
                 assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri]builtInWinManagedImageName") != -1, "image uri output variable not set");
+                assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]builtInWinManagedImageName") != -1, "image uri output variable not set");
             }, tr, done);
         });
 
@@ -166,7 +167,7 @@ describe('PackerBuild Suite V1', function() {
                 assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
             }, tr, done);
         });
 
@@ -179,7 +180,7 @@ describe('PackerBuild Suite V1', function() {
                 assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri]builtInWinManagedImageName") != -1, "image uri output variable not set");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]builtInWinManagedImageName") != -1, "image uri output variable not set");
             }, tr, done);
         });
 
@@ -191,7 +192,7 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
             done();
         });
 
@@ -367,7 +368,7 @@ describe('PackerBuild Suite V1', function() {
 
             assert(tr.failed, 'task should fail if output is not parsed properly');
             assert(tr.invokedToolCount == 4, 'all 4 commands should have been invoked. actual: ' + tr.invokedToolCount);
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri]") == -1, "should not try to set output variable");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]") == -1, "should not try to set output variable");
             assert(tr.stdout.indexOf("##vso[task.issue type=error;]loc_mock_ImageURIOutputVariableNotFound") != -1, "should show proper console message");
             done();
         });
@@ -384,7 +385,7 @@ describe('PackerBuild Suite V1', function() {
 
             assert(tr.succeeded, 'task should not fail if output is not parsed properly');
             assert(tr.invokedToolCount == 4, 'all 4 commands should have been invoked. actual: ' + tr.invokedToolCount);
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri]") == -1, "should not try to set output variable");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]") == -1, "should not try to set output variable");
             done();
         });
 
@@ -394,7 +395,7 @@ describe('PackerBuild Suite V1', function() {
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
 
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
             done();
         });
 
@@ -449,7 +450,7 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/1.2.4/packer_1.2.4_windows_amd64.zip to F:\\somedir\\tempdir\\100\\packer.zip") != -1, "should download to correct staging dir");
             assert(tr.stdout.indexOf("extracting from zip F:\\somedir\\tempdir\\100\\packer.zip to F:\\somedir\\tempdir\\100\\packer") != -1, "should extract from and to correct path");
             assert(tr.stdout.indexOf("Packer path to be used by task: F:\\somedir\\tempdir\\100\\packer\\packer.exe") != -1, "should show message that packer will be downloaded");
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
             done();
         });
 
@@ -471,7 +472,7 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/1.2.4/packer_1.2.4_windows_amd64.zip to F:\\somedir\\tempdir\\100\\packer.zip") != -1, "should download to correct staging dir");
             assert(tr.stdout.indexOf("extracting from zip F:\\somedir\\tempdir\\100\\packer.zip to F:\\somedir\\tempdir\\100\\packer") != -1, "should extract from and to correct path");
             assert(tr.stdout.indexOf("Packer path to be used by task: F:\\somedir\\tempdir\\100\\packer\\packer.exe") != -1, "should show message that packer will be downloaded");
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
             done();
         });
 
@@ -574,7 +575,7 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
             done();
         });
 
@@ -586,7 +587,7 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri]builtInWinManagedImageName") != -1, "image uri output variable not set");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]builtInWinManagedImageName") != -1, "image uri output variable not set");
             done();
         });
 
@@ -598,7 +599,7 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
             done();
         });
 
@@ -676,7 +677,7 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/1.2.4/packer_1.2.4_linux_amd64.zip to /tmp/tempdir/100/packer.zip") != -1, "should download to correct staging dir");
             assert(tr.stdout.indexOf("extracting from zip /tmp/tempdir/100/packer.zip to /tmp/tempdir/100/packer") != -1, "should extract from and to correct path");
             assert(tr.stdout.indexOf("Packer path to be used by task: /tmp/tempdir/100/packer/packer") != -1, "should show message that packer will be downloaded");
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
             done();
         });
 
@@ -698,7 +699,7 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/1.2.4/packer_1.2.4_linux_amd64.zip to /tmp/tempdir/100/packer.zip") != -1, "should download to correct staging dir");
             assert(tr.stdout.indexOf("extracting from zip /tmp/tempdir/100/packer.zip to /tmp/tempdir/100/packer") != -1, "should extract from and to correct path");
             assert(tr.stdout.indexOf("Packer path to be used by task: /tmp/tempdir/100/packer/packer") != -1, "should show message that packer will be downloaded");
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
             done();
         });
 
