@@ -13,10 +13,6 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
 
 [System.Net.WebRequest]::DefaultWebProxy = Get-VstsWebProxy
 
-if(-not (Get-Module -Name "Microsoft.PowerShell.Security"))
-{
-    Import-Module -Name Microsoft.PowerShell.Security
-}
 Import-Module $PSScriptRoot/../TlsHelper_
 Add-Tls12InSession
 
@@ -44,9 +40,6 @@ function Initialize-Azure {
 
         $endpoint = Get-VstsEndpoint -Name $serviceName -Require
         $storageAccount = Get-VstsInput -Name StorageAccount
-        $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
-        $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
-        $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
 
         # Determine which modules are preferred.
         $preferredModules = @( )
@@ -63,8 +56,7 @@ function Initialize-Azure {
         $currentWarningPreference = $WarningPreference
         $WarningPreference = "SilentlyContinue"
         Import-AzureModule -PreferredModule $preferredModules -azurePsVersion $azurePsVersion -strict:$strict
-        Initialize-AzureSubscription -Endpoint $endpoint -connectedServiceNameARM $serviceName `
-            -vstsAccessToken $encryptedToken -StorageAccount $storageAccount
+        Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $storageAccount
     } finally {
         if (![string]::IsNullOrEmpty($currentWarningPreference)) {
             $WarningPreference = $currentWarningPreference
