@@ -61,9 +61,9 @@
             "name": "RetryDuration",
             "type": "string",
             "label": "Retry duration",
-            "defaultValue": "00:00:30",
+            "defaultValue": "00:02:00",
             "required": false,
-            "helpMarkDown": "Defines period which task will wait until it retry to call Azure API in case that previous response code was \"Accepted\"​.",
+            "helpMarkDown": "Defines period which task will wait until it retry to call Azure API in case that previous response code was \"Accepted\"​. Minimal period is 2 minutes.",
             "groupName": "advancedOptions"
         }
     ],

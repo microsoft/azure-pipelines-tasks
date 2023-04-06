@@ -61,7 +61,7 @@
       "name": "RetryDuration",
       "type": "string",
       "label": "ms-resource:loc.input.label.RetryDuration",
-      "defaultValue": "00:00:30",
+      "defaultValue": "00:02:00",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.RetryDuration",
       "groupName": "advancedOptions"

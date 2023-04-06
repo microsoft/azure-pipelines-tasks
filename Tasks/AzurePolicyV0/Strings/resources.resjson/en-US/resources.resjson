@@ -11,5 +11,5 @@
   "loc.input.label.Resources": "Resource name",
   "loc.input.help.Resources": "Select name of Azure resources for which you want to check the policy compliance.",
   "loc.input.label.RetryDuration": "Retry duration",
-  "loc.input.help.RetryDuration": "Defines period which task will wait until it retry to call Azure API in case that previous response code was \"Accepted\"​."
+  "loc.input.help.RetryDuration": "Defines period which task will wait until it retry to call Azure API in case that previous response code was \"Accepted\"​. Minimal period is 2 minutes."
 }
