@@ -34,7 +34,7 @@
   "loc.input.help.uiTests": "UI 테스트를 실행하려면 에이전트가 대화형 모드로 실행되도록 설정되었는지 확인합니다. 빌드/릴리스를 큐에 추가하기 전에 대화형으로 실행되도록 에이전트를 설정해야 합니다. 이 확인란을 선택해도 에이전트가 자동으로 대화형 모드로 구성되지는 <b>않습니다</b>. 작업에서 이 옵션은 실패를 방지하기 위해 에이전트를 제대로 구성하라는 미리 알림 역할만 합니다. <br><br> VS 2015 및 2017 풀의 호스트된 Windows 에이전트를 사용하여 UI 테스트를 실행할 수는 없습니다.<br> [자세한 정보](https://aka.ms/uitestmoreinfo).",
   "loc.input.label.vstestLocationMethod": "다음을 사용하여 테스트 플랫폼 선택",
   "loc.input.label.vsTestVersion": "테스트 플랫폼 버전",
-  "loc.input.help.vsTestVersion": "사용할 Visual Studio 테스트 버전입니다. 최신 버전을 지정하면 설치된 버전에 따라 Visual Studio 2017 또는 Visual Studio 2015가 선택됩니다. Visual Studio 2013은 지원되지 않습니다. 에이전트에 Visual Studio를 요구하지 않고 테스트를 실행하려면 '도구 설치 관리자로 설치' 옵션을 사용합니다. nuget에서 테스트 플랫폼을 획득하려면 'Visual Studio 테스트 플랫폼 설치 관리자' 작업을 포함해야 합니다.",
+  "loc.input.help.vsTestVersion": "사용할 Visual Studio 테스트의 버전입니다. 최신 버전을 지정하면 설치된 버전에 따라 VS2022부터 시작하여 VS2019, VS2017, VS2015 순으로 최신 Visual Studio 버전을 선택합니다. Visual Studio 2013은 지원되지 않습니다. 에이전트에 Visual Studio 없이 테스트를 실행하려면 '도구 설치 프로그램으로 설치됨' 옵션을 사용합니다. NuGet에서 테스트 플랫폼을 가져오려면 'Visual Studio 테스트 플랫폼 설치 프로그램' 작업을 포함해야 합니다.",
   "loc.input.label.vstestLocation": "vstest.console.exe 경로",
   "loc.input.help.vstestLocation": "선택적으로 VSTest 경로를 제공합니다.",
   "loc.input.label.runSettingsFile": "설정 파일",

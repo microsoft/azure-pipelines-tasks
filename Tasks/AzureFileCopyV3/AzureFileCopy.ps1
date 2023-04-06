@@ -147,7 +147,7 @@ try {
         $logFilePath = Join-Path -Path $azCopyLocation -ChildPath $logFileName
 
         $additionalArgumentsForBlobCopy = "/XO /Y /SetContentType /Z:`"$azCopyLocation`" /V:`"$logFilePath`""
-
+        
         # Add more arguments if required
 
         # Premium storage accounts only support page blobs
@@ -164,8 +164,9 @@ try {
             $additionalArgumentsForBlobCopy += " /S"
         }
     }
-
+    
     Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArgumentsForBlobCopy
+    Validate-AdditionalArguments $additionalArguments
 
     # Uploading files to container
     Upload-FilesToAzureContainer -sourcePath $sourcePath `
