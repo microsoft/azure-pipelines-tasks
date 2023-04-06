@@ -131,11 +131,11 @@ describe('PackerBuild Suite V1', function() {
         });
 
         it('Creates output variables from packer log', (done:MochaDone) => {
+            process.env["system.debug"] = "true";
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
             runValidations(() => {
-                process.env["system.debug"] = "true";
                 assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
