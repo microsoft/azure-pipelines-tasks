@@ -140,7 +140,7 @@ describe('PackerBuild Suite V1', function() {
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
                 console.log("!!! TEST - start");
-                console.log("blabla = " + tr.stdout.substring(tr.stdout.indexOf("##vso[task.setvariable")) + " = blabla");
+                console.log("blabla=" + tr.stdout.substring(0, 1) + "=blabla=" + tr.stdout.substring(1));
                 console.log("!!! TEST - end");
                 assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
             }, tr, done);
