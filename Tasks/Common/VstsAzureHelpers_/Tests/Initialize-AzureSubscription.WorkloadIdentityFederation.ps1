@@ -40,21 +40,22 @@ $variableSets = @(
 )
 foreach ($variableSet in $variableSets) {
     Write-Verbose ('-' * 80)
-    Unregister-Mock Add-AzureRMAccount
-    Unregister-Mock Set-CurrentAzureRMSubscription
+    Unregister-Mock Connect-AzAccount
+    Unregister-Mock Set-CurrentAzSubscription
     Unregister-Mock Invoke-WebRequest
     Unregister-Mock Set-UserAgent
     Unregister-Mock Get-VstsFederatedToken
-    Register-Mock Add-AzureRMAccount { 'some output' }
-    Register-Mock Set-CurrentAzureRMSubscription
+    Unregister-Mock Clear-AzContext
+    Register-Mock Connect-AzAccount { 'some output' }
+    Register-Mock Set-CurrentAzSubscription
     Register-Mock Set-UserAgent
     Register-Mock Invoke-WebRequest { $response }
     Register-Mock Get-VstsFederatedToken { "some jwt token" }
+    Register-Mock Clear-AzContext
 
     # Act.
-    $result = & $module Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $variableSet.StorageAccount `
-        -connectedServiceNameARM 'Some connected service name' -vstsAccessToken $encryptedToken
+    $result = & $module Initialize-AzSubscription -Endpoint $endpoint -connectedServiceNameARM 'Some connected service name' -vstsAccessToken $encryptedToken
 
     Assert-AreEqual $null $result
-    Assert-WasCalled Set-CurrentAzureRMSubscription -- -SubscriptionId $endpoint.Data.SubscriptionId -TenantId $endpoint.Auth.Parameters.TenantId
+    Assert-WasCalled Set-CurrentAzSubscription -- -SubscriptionId $endpoint.Data.SubscriptionId -TenantId $endpoint.Auth.Parameters.TenantId
 }
