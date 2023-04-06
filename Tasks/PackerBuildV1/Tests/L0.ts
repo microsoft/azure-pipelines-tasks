@@ -131,7 +131,6 @@ describe('PackerBuild Suite V1', function() {
         });
 
         it('Creates output variables from packer log', (done:MochaDone) => {
-            process.env["system.debug"] = "true";
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
