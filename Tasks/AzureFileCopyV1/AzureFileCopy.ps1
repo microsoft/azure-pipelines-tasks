@@ -139,6 +139,7 @@ try {
     }
 
     Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArguments
+    Validate-AdditionalArguments $additionalArguments
 
     # Uploading files to container
     Upload-FilesToAzureContainer -sourcePath $sourcePath -storageAccountName $storageAccount -containerName $containerName -blobPrefix $blobPrefix -blobStorageEndpoint $blobStorageEndpoint -storageKey $storageKey `
