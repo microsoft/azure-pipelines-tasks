@@ -2,16 +2,13 @@ import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import tl = require('azure-pipelines-task-lib');
-var ltx = require('ltx');
-import fs = require('fs');
-
 var AppServiceTests = require("../node_modules/azure-pipelines-tasks-azurermdeploycommon/Tests/L0-azure-arm-app-service.js");
 var KuduServiceTests = require("../node_modules/azure-pipelines-tasks-azurermdeploycommon/Tests/L0-azure-arm-app-service-kudu-tests.js");
 var ApplicationInsightsTests = require("../node_modules/azure-pipelines-tasks-azurermdeploycommon/Tests/L0-azure-arm-appinsights-tests.js");
 var ResourcesTests = require("../node_modules/azure-pipelines-tasks-azurermdeploycommon/Tests/L0-azure-arm-resource-tests.js");
 
 describe('AzureFunctionOnContainerDeployment Suite', function() {
-    
+
     this.timeout(60000);
 
      before((done) => {
