@@ -138,6 +138,9 @@ describe('PackerBuild Suite V1', function() {
                 assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
+                console.log("!!! TEST - start");
+                console.log(tr.stdout);
+                console.log("!!! TEST - end");
                 assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
             }, tr, done);
         });
