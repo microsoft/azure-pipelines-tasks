@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "发布到 Azure 服务总线",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=870237)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?linkid=870237)",
   "loc.description": "使用服务连接向 Azure 服务总线发送消息(不需要代理)",
   "loc.instanceNameFormat": "发布到 Azure 服务总线",
   "loc.group.displayName.advancedProperties": "高级",
@@ -17,5 +17,7 @@
   "loc.input.label.signatureKey": "签名属性键",
   "loc.input.help.signatureKey": "希望签名在消息属性中所在的键。如果留空，则默认值为消息属性中的“签名”",
   "loc.input.label.waitForCompletion": "等待任务完成",
-  "loc.input.help.waitForCompletion": "如果为 true，此任务将等待 TaskCompleted 事件出现指定任务超时。"
+  "loc.input.help.waitForCompletion": "如果为 true，此任务将等待 TaskCompleted 事件出现指定任务超时。",
+  "loc.input.label.useDataContractSerializer": "使用 .NET 数据协定分隔符",
+  "loc.input.help.useDataContractSerializer": "有关更多详细信息，请转到任务文档"
 }
