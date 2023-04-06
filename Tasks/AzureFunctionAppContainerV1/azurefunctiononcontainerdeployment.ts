@@ -1,8 +1,8 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import * as Endpoint from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 import { TaskParameters, TaskParametersUtility } from './taskparameters';
 import { AzureFunctionOnContainerDeploymentProvider } from './azurefunctiononcontainerprovider';
+import * as Endpoint from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
 
 async function main() {
     let isDeploymentSuccess: boolean = true;
