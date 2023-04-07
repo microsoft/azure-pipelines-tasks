@@ -27,6 +27,8 @@ try{
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 
+    # Load all dependent files for execution
+    . $PSScriptRoot/Utility.ps1
     Update-PSModulePathForHostedAgent
 
     if (Get-Module Az.Accounts -ListAvailable) {
@@ -43,9 +45,6 @@ try{
             Initialize-AzureRMModule -Endpoint $endpoint
         }
     }
-
-    # Load all dependent files for execution
-    . $PSScriptRoot/Utility.ps1
 
     $storageAccountKeysMap = Parse-StorageKeys -StorageAccountKeys $DiagnosticStorageAccountKeys
 
