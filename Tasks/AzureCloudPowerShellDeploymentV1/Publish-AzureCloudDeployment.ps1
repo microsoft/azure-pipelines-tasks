@@ -26,13 +26,22 @@ try{
 
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    Initialize-Azure
 
-    # Initialize Azure RM connection if required
-    if ($EnableAdvancedStorageOptions)
-    {
+    Update-PSModulePathForHostedAgent
+
+    if (Get-Module Az.Accounts -ListAvailable) {
         $endpoint = Get-VstsEndpoint -Name $ARMConnectedServiceName -Require
-        Initialize-AzureRMModule -Endpoint $endpoint
+        $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+        $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
+        Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $ARMConnectedServiceName -vstsAccessToken $vstsAccessToken
+    }
+    else {
+        Initialize-Azure
+        # Initialize Azure RM connection if required
+        if ($EnableAdvancedStorageOptions) {
+            $endpoint = Get-VstsEndpoint -Name $ARMConnectedServiceName -Require
+            Initialize-AzureRMModule -Endpoint $endpoint
+        }
     }
 
     # Load all dependent files for execution
