@@ -922,12 +922,11 @@ CLI.gentask = function() {
     let genTaskArg = "--write-updates";
     const makeOptions = fileToJson(makeOptionsPath);
     const configsString = argv.configs;
-    const configsArr = configsString.split("|")
-
     if (!configsString) {
         throw Error ('--configs is required');
     }
 
+    const configsArr = configsString.split("|")
     if (argv.validate) {
         genTaskArg = "";
         tasksToGen = util.getTaskListForValidate(makeOptions, configsArr);
