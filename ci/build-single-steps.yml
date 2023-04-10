@@ -4,11 +4,20 @@ parameters:
 - name: push
   type: boolean
 
+resources:
+  repositories:
+  - repository: ConfigChange
+    type: git
+    name: AzureDevOps.ConfigChange
+
 steps:
 
 # Clean
 - checkout: self
   clean: true
+
+- checkout: ConfigChange
+  fetchDepth: 1
 
 # Start collect diagnostics
 - powershell: ./ci/start-collect-diagnostics.ps1
@@ -115,5 +124,5 @@ steps:
 
 # Stop collect diagnostics
 - powershell: ./ci/stop-collect-diagnostics.ps1
-  displayName: Stop collect diagnostics
+  displayName: Stop collect Push Nuget package
   condition: always()
