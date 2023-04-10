@@ -5,6 +5,8 @@
   "loc.instanceNameFormat": "Pipelineartefakt veröffentlichen",
   "loc.input.label.artifactName": "Der Name dieses Artefakts.",
   "loc.input.help.artifactName": "Der Name dieses Artefakts.",
+  "loc.input.label.customProperties": "Benutzerdefinierte Eigenschaften",
+  "loc.input.help.customProperties": "Geben Sie benutzerdefinierte Eigenschaften ein, die dem Artefakt zugeordnet werden sollen. Gültige JSON-Zeichenfolge mit allen Schlüsseln mit dem Präfix \"user-\" erwartet",
   "loc.input.label.targetPath": "Pfad für Veröffentlichung",
   "loc.input.help.targetPath": "Der Ordner- oder Dateipfad für die Veröffentlichung. Es kann sich um einen vollqualifizierten Pfad oder um einen Pfad relativ zum Stamm des Repositorys handeln. Platzhalter werden nicht unterstützt, [Variablen](https://go.microsoft.com/fwlink/?LinkID=550988) werden unterstützt."
 }
