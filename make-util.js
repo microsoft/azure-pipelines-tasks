@@ -1754,7 +1754,6 @@ var getTaskListForValidate = function (makeOptions, configsArr) {
 
     var tasksToValidate = {};
     for (const key in makeOptions) {
-        console.log(key)
         if (excludedMakeOptionKeys.indexOf(key) > -1) continue;
         if (configsArr.indexOf(key) === -1) continue;
 

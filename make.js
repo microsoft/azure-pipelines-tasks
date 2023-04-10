@@ -941,7 +941,7 @@ CLI.gentask = function() {
     tasksToGen.forEach(function (taskName) {
         const args = genTaskArg + ` --task ${taskName}`;
 
-        banner(validate ? 'Validating: ' : 'Generating: ' + taskName);
+        banner((validate ? 'Validating: ' : 'Generating: ') + taskName);
         run(`${programPath} ${args}` , true);
 
         // insert to make-options.json
