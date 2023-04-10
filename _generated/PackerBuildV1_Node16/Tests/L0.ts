@@ -364,7 +364,7 @@ describe('PackerBuild Suite V1', function() {
 
             assert(tr.failed, 'task should fail if output is not parsed properly');
             assert(tr.invokedToolCount == 4, 'all 4 commands should have been invoked. actual: ' + tr.invokedToolCount);
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]") == -1, "should not try to set output variable");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;isOutput=false;issecret=false;]") == -1, "should not try to set output variable");
             assert(tr.stdout.indexOf("##vso[task.issue type=error;]loc_mock_ImageURIOutputVariableNotFound") != -1, "should show proper console message");
             done();
         });
@@ -381,7 +381,7 @@ describe('PackerBuild Suite V1', function() {
 
             assert(tr.succeeded, 'task should not fail if output is not parsed properly');
             assert(tr.invokedToolCount == 4, 'all 4 commands should have been invoked. actual: ' + tr.invokedToolCount);
-            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]") == -1, "should not try to set output variable");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;isOutput=false;issecret=false;]") == -1, "should not try to set output variable");
             done();
         });
 
