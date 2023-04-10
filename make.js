@@ -922,9 +922,10 @@ CLI.gentask = function() {
     let genTaskArg = "--write-updates";
     const makeOptions = fileToJson(makeOptionsPath);
     const configsString = argv.configs;
+    const validate = argv.validate
     const configsArr = configsString.split("|")
 
-    if (argv.validate) {
+    if (validate) {
         genTaskArg = "";
         tasksToGen = util.getTaskListForValidate(genTaskPath, taskList);
     }
@@ -942,7 +943,7 @@ CLI.gentask = function() {
     tasksToGen.forEach(function (taskName) {
         const args = genTaskArg + ` --task ${taskName}`;
 
-        banner('Generating: ' + taskName);
+        banner(validate ? 'Validating: ' : 'Generating: ' + taskName);
         run(`${programPath} ${args}` , true);
 
         // insert to make-options.json
