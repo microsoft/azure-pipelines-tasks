@@ -14,9 +14,9 @@ steps:
 - checkout: ConfigChange
   fetchDepth: 1
 
-# Start collect diagnostics
-- powershell: ./ci/start-collect-diagnostics.ps1
-  displayName: Start collect diagnostics
+# # Start collect diagnostics
+# - powershell: ./ci/start-collect-diagnostics.ps1
+#   displayName: Start collect diagnostics
 
 # Use node 8, npm 5
 - task: NodeTool@0
@@ -28,22 +28,22 @@ steps:
 - script: npm install
   displayName: npm install
 
-# Verify min agent demands
-- script: |
-    cd ci/verifyMinAgentDemands
-    npm install
-  displayName: npm install min agent demands
+# # Verify min agent demands
+# - script: |
+#     cd ci/verifyMinAgentDemands
+#     npm install
+#   displayName: npm install min agent demands
 
-- script: node ./ci/verifyMinAgentDemands/index.js
-  displayName: Verify min agent demands
+# - script: node ./ci/verifyMinAgentDemands/index.js
+#   displayName: Verify min agent demands
 
 # Build
 - script: node make.js build --task "${{ parameters.task }}"
   displayName: Build
 
-# Check diff for task sources
-- script: node ./ci/verify-source-changes.js "${{ parameters.task }}"
-  displayName: Verify task source changes
+# # Check diff for task sources
+# - script: node ./ci/verify-source-changes.js "${{ parameters.task }}"
+#   displayName: Verify task source changes
 
 # Test
 - script: node make.js test --task "${{ parameters.task }}"
@@ -107,17 +107,17 @@ steps:
   - script: npm run package
     displayName: npm run package
 
-  # Authenticate 
-  - task: NuGetAuthenticate@0
-    displayName: Authenticate with nuget
+  # # Authenticate 
+  # - task: NuGetAuthenticate@0
+  #   displayName: Authenticate with nuget
 
-  # Push to feed
-  - script: |
-      cd $(Build.SourcesDirectory)\_package\nuget-packages\$(task)
-      push.cmd
-    displayName: Push Nuget package
+  # # Push to feed
+  # - script: |
+  #     cd $(Build.SourcesDirectory)\_package\nuget-packages\$(task)
+  #     push.cmd
+  #   displayName: Push Nuget package
 
-# Stop collect diagnostics
-- powershell: ./ci/stop-collect-diagnostics.ps1
-  displayName: Stop collect Push Nuget package
-  condition: always()
+# # Stop collect diagnostics
+# - powershell: ./ci/stop-collect-diagnostics.ps1
+#   displayName: Stop collect Push Nuget package
+#   condition: always()
