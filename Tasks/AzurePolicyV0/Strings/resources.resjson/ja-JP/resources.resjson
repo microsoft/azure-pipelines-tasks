@@ -3,10 +3,13 @@
   "loc.helpMarkDown": "",
   "loc.description": "Azure Policy のセキュリティとコンプライアンスの評価",
   "loc.instanceNameFormat": "ポリシー コンプライアンスの確認",
+  "loc.group.displayName.advancedOptions": "Advanced",
   "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
   "loc.input.help.ConnectedServiceName": "ポリシーを適用する Azure Resource Manager のサブスクリプションを選択します。",
   "loc.input.label.ResourceGroupName": "リソース グループ",
   "loc.input.help.ResourceGroupName": "リソース グループの名前を指定します。",
   "loc.input.label.Resources": "リソース名",
-  "loc.input.help.Resources": "ポリシー コンプライアンスを確認する Azure リソースの名前を選択します。"
+  "loc.input.help.Resources": "ポリシー コンプライアンスを確認する Azure リソースの名前を選択します。",
+  "loc.input.label.RetryDuration": "Retry duration",
+  "loc.input.help.RetryDuration": "Defines period which task will wait until it retry to call Azure API in case that previous response code was \"Accepted\"​. Minimal period is 2 minutes."
 }
