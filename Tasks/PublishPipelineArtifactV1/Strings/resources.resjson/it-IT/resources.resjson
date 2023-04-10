@@ -9,8 +9,6 @@
   "loc.input.help.artifactName": "Nome dell'artefatto da pubblicare. Se non è impostato, il valore predefinito è un ID univoco il cui ambito è il processo.",
   "loc.input.label.artifactType": "Percorso di pubblicazione degli artefatti",
   "loc.input.help.artifactType": "Consente di scegliere se archiviare l'artefatto in Azure Pipelines oppure copiarlo in una condivisione file accessibile dall'agente della pipeline.",
-  "loc.input.label.customProperties": "Proprietà personalizzate",
-  "loc.input.help.customProperties": "Immettere le proprietà personalizzate da associare all'artefatto. È prevista una stringa JSON valida con tutte le chiavi con prefisso 'user-'",
   "loc.input.label.fileSharePath": "Percorso della condivisione file",
   "loc.input.help.fileSharePath": "Condivisione file in cui verranno copiati i file di artefatto. Può includere variabili. Esempio: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). La pubblicazione di artefatti da un agente Linux o macOS in una condivisione file non è supportata.",
   "loc.input.label.parallel": "Copia parallela",
