@@ -104,46 +104,6 @@ if (argv.task) {
 // note, currently the ts runner igores this setting and will always run.
 process.env['TASK_TEST_RUNNER'] = argv.runner || '';
 
-CLI.clean = function() {
-    rm('-Rf', buildPath);
-    mkdir('-p', buildTasksPath);
-    rm('-Rf', testPath);
-};
-
-//
-// Generate documentation (currently only YAML snippets)
-// ex: node make.js gendocs
-// ex: node make.js gendocs --task ShellScript
-//
-CLI.gendocs = function() {
-    rm('-Rf', gendocsPath);
-    mkdir('-p', gendocsPath);
-    console.log();
-    console.log('> generating docs');
-
-    taskList.forEach(function(taskName) {
-        var taskPath = path.join(tasksPath, taskName);
-        ensureExists(taskPath);
-
-        // load the task.json
-        var taskJsonPath = path.join(taskPath, 'task.json');
-        if (test('-f', taskJsonPath)) {
-            var taskDef = fileToJson(taskJsonPath);
-            validateTask(taskDef);
-
-            // create YAML snippet Markdown
-            var yamlOutputFilename = taskName + '.md';
-            createYamlSnippetFile(taskDef, gendocsPath, yamlOutputFilename);
-
-            // create Markdown documentation file
-            var mdDocOutputFilename = taskName + '.md';
-            createMarkdownDocFile(taskDef, taskJsonPath, gendocsPath, mdDocOutputFilename);
-        }
-    });
-
-    banner('Generating docs successful', true);
-}
-
 function getTaskList(taskList) {
     let tasksToBuild = taskList;
 
@@ -183,6 +143,46 @@ function validateGeneratedTasks(taskList) {
             run(`${programPath} ${args}` , true);
         });
     }
+}
+
+CLI.clean = function() {
+    rm('-Rf', buildPath);
+    mkdir('-p', buildTasksPath);
+    rm('-Rf', testPath);
+};
+
+//
+// Generate documentation (currently only YAML snippets)
+// ex: node make.js gendocs
+// ex: node make.js gendocs --task ShellScript
+//
+CLI.gendocs = function() {
+    rm('-Rf', gendocsPath);
+    mkdir('-p', gendocsPath);
+    console.log();
+    console.log('> generating docs');
+
+    taskList.forEach(function(taskName) {
+        var taskPath = path.join(tasksPath, taskName);
+        ensureExists(taskPath);
+
+        // load the task.json
+        var taskJsonPath = path.join(taskPath, 'task.json');
+        if (test('-f', taskJsonPath)) {
+            var taskDef = fileToJson(taskJsonPath);
+            validateTask(taskDef);
+
+            // create YAML snippet Markdown
+            var yamlOutputFilename = taskName + '.md';
+            createYamlSnippetFile(taskDef, gendocsPath, yamlOutputFilename);
+
+            // create Markdown documentation file
+            var mdDocOutputFilename = taskName + '.md';
+            createMarkdownDocFile(taskDef, taskJsonPath, gendocsPath, mdDocOutputFilename);
+        }
+    });
+
+    banner('Generating docs successful', true);
 }
 
 //
@@ -924,16 +924,16 @@ CLI.gentask = function() {
     const configsString = argv.configs;
     const configsArr = configsString.split("|")
 
-    if (argv.validate) {
-        genTaskArg = "";
-        tasksToGen = util.getTaskListForValidate(genTaskPath, taskList);
-    }
-
-    if (configsString) {
-        genTaskArg += ` --configs "${configsString}" `;
-    } else {
+    if (!configsString) {
         throw Error ('--configs is required');
     }
+
+    if (argv.validate) {
+        genTaskArg = "";
+        tasksToGen = util.getTaskListForValidate(makeOptions, configsArr);
+    }
+    
+    genTaskArg += ` --configs "${configsString}" `;
 
     if (tasksToGen.length == 0) {
         fail("No tasks which satisfy the criteria for generation were found.");

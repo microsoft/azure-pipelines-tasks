@@ -1734,23 +1734,27 @@ exports.getBuildConfigGenerator = getBuildConfigGenerator;
 
 /**
  * Function to filter tasks for validation
- * @param {String} genPath Path to folder with generated tasks
- * @param {Array} taskList Array with tasks to validate
+ * @param {Object} makeOptions Object with all tasks
+ * @param {array} configsArr Array with configs to validate
  * @returns Array of tasks to validate
  */
-var getTaskListForValidate = function (genPath, taskList) {
-    if (!genPath) fail("genPath is not defined");
-    if (!taskList) fail("taskList is not defined");
+var getTaskListForValidate = function (makeOptions, configsArr) {
+    const excludedMakeOptionKeys = ["tasks", "taskResources"];
 
-    var tasksToValidate = [];
-    taskList.forEach(function (task) {
-        var taskPath = path.join(genPath, task);
-        if (fs.existsSync(taskPath)) {
-            tasksToValidate.push(task);
-        }
-    });
+    if (!makeOptions) fail("makeOptions is not defined");
 
-    return tasksToValidate;
+    var tasksToValidate = {};
+    for (const key in makeOptions) {
+        console.log(key)
+        if (excludedMakeOptionKeys.indexOf(key) > -1) continue;
+        if (configsArr.indexOf(key) === -1) continue;
+
+        makeOptions[key].forEach((taskName) => {
+            tasksToValidate[taskName] = true;
+        });
+    }
+
+    return Object.keys(tasksToValidate);
 };
 exports.getTaskListForValidate = getTaskListForValidate;
 
