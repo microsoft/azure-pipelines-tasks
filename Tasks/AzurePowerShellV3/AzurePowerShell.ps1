@@ -110,7 +110,7 @@ $troubleshoot = "https://aka.ms/azurepowershelltroubleshooting"
 try {
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    if (Get-Module Az.Accounts -ListAvailable) {
+    if (($authScheme -eq 'WorkloadIdentityFederation') -and (Get-Module Az.Accounts -ListAvailable)) {
         $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
         $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
         Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $serviceName -vstsAccessToken $vstsAccessToken
