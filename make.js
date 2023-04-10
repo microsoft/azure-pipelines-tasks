@@ -930,7 +930,7 @@ CLI.gentask = function() {
     }
 
     if (configsString) {
-        genTaskArg += ` --configs ${configsString} `;
+        genTaskArg += ` --configs "${configsString}" `;
     } else {
         throw Error ('--configs is required');
     }
@@ -949,7 +949,9 @@ CLI.gentask = function() {
         configsArr.forEach(function (config) {
             if (!makeOptions[config]) {
                 makeOptions[config] = [];
-            } else if (makeOptions[config].indexOf(taskName) === -1) {
+            }
+            
+            if (makeOptions[config].indexOf(taskName) === -1) {
                 makeOptions[config].push(taskName);
             }
         });

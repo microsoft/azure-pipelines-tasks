@@ -1725,7 +1725,7 @@ var getBuildConfigGenerator = function (baseConfigToolPath) {
 
     if (!fs.existsSync(programPath)) {
         console.log(`BuildConfigGen not found at ${programPath}. Starting build.`);
-        run(configToolBuildUtility);
+        run(configToolBuildUtility, true);
     }
 
     return programPath;
