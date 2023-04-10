@@ -12,6 +12,7 @@ resources:
 
   - repository: ConfigChange
     type: git
+    endpoint: AzureDevOps
     name: AzureDevOps/AzureDevOps.ConfigChange
 
 parameters:
