@@ -11,8 +11,8 @@ steps:
 - checkout: self
   clean: true
 
-- checkout: ConfigChange
-  fetchDepth: 1
+# - checkout: ConfigChange
+#   fetchDepth: 1
 
 # # Start collect diagnostics
 # - powershell: ./ci/start-collect-diagnostics.ps1
