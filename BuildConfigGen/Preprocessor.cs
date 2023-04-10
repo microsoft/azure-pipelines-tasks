@@ -74,6 +74,7 @@ namespace BuildConfigGen
 
                     command = startPreprocessMatch.Groups["command"].Value;
                     expression = startPreprocessMatch.Groups["expression"].Value;
+                    
                     currentExpression = expression;
 
                     if (expressions.Contains(expression))
@@ -104,68 +105,70 @@ namespace BuildConfigGen
                     currentExpression = null;
                 }
 
-                if (command is not null && command == ifCommand)
+                if (command is not null)
                 {
-                    if (inElseBlock)
+                    switch (command)
                     {
-                        validationErrors.Add($"Error {file}:{lineNumber}: nested #if block in #else block detected, not allowed");
+                        case ifCommand:
+                            if (inElseBlock)
+                            {
+                                validationErrors.Add($"Error {file}:{lineNumber}: nested #if block in #else block detected, not allowed");
+                            }
+
+                            if (inIfBlock)
+                            {
+                                validationErrors.Add($"Error {file}:{lineNumber}: nested #if block in #if or #ifelse block detected, not allowed");
+                            }
+
+                            inIfBlock = true;
+
+                            if (currentExpression == configName)
+                            {
+                                ifBlockMatched = true;
+                            }
+                            break;
+                        case elseIfCommand:
+                            if (!inIfBlock)
+                            {
+                                validationErrors.Add($"Error {file}:{lineNumber}: #elseif detected without matching #if block");
+                            }
+
+                            if (currentExpression == configName)
+                            {
+                                ifBlockMatched = true;
+                            }
+                            break;
+                        case elseCommand:
+                            if (!inIfBlock)
+                            {
+                                validationErrors.Add($"Error {file}:{lineNumber}: #else detected without matching #if or #ifelse block");
+                            }
+
+                            inIfBlock = false;
+                            inElseBlock = true;
+                            currentExpression = null;
+                            break;
+                        case endIfCommand:
+                            if (inIfBlock || inElseBlock)
+                            {
+                                // do nothing
+                            }
+                            else
+                            {
+                                validationErrors.Add($"Error {file}:{lineNumber}: #endif detected without matching #if, #ifelse, or #else block");
+                            }
+
+                            inIfBlock = false;
+                            currentExpression = null;
+                            ifBlockMatched = false;
+                            inElseBlock = false;
+                            expressions.Clear();
+                            break;
+                        default:
+                            validationErrors.Add($"Error {file}:{lineNumber}: unknown command {command}");
+                            currentExpression = null;
+                            break;
                     }
-
-                    if (inIfBlock)
-                    {
-                        validationErrors.Add($"Error {file}:{lineNumber}: nested #if block in #if or #ifelse block detected, not allowed");
-                    }
-
-                    inIfBlock = true;
-
-                    if (currentExpression == configName)
-                    {
-                        ifBlockMatched = true;
-                    }
-                }
-
-                if (command is not null && command == elseIfCommand)
-                {
-                    if (!inIfBlock)
-                    {
-                        validationErrors.Add($"Error {file}:{lineNumber}: #elseif detected without matching #if block");
-                    }
-
-                    if (currentExpression == configName)
-                    {
-                        ifBlockMatched = true;
-                    }
-                }
-
-                if (command is not null && command == elseCommand)
-                {
-                    if (!inIfBlock)
-                    {
-                        validationErrors.Add($"Error {file}:{lineNumber}: #else detected without matching #if or #ifelse block");
-                    }
-
-                    inIfBlock = false;
-                    inElseBlock = true;
-                    currentExpression = null;
-                }
-
-
-                if (command is not null && command == endIfCommand)
-                {
-                    if (inIfBlock || inElseBlock)
-                    {
-                        // do nothing
-                    }
-                    else
-                    {
-                        validationErrors.Add($"Error {file}:{lineNumber}: #endif detected without matching #if, #ifelse, or #else block");
-                    }
-
-                    inIfBlock = false;
-                    currentExpression = null;
-                    ifBlockMatched = false;
-                    inElseBlock = false;
-                    expressions.Clear();
                 }
 
                 // assert state
