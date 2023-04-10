@@ -4,11 +4,6 @@ parameters:
 - name: push
   type: boolean
 
-resources:
-  repositories:
-  - repository: ConfigChange
-    type: git
-    name: AzureDevOps/AzureDevOps.ConfigChange
 
 steps:
 
