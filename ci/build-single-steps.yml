@@ -8,7 +8,7 @@ resources:
   repositories:
   - repository: ConfigChange
     type: git
-    name: AzureDevOps.ConfigChange
+    name: AzureDevOps/AzureDevOps.ConfigChange
 
 steps:
 
