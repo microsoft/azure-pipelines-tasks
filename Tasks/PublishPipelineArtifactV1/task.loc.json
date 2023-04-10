@@ -84,10 +84,10 @@
     {
       "name": "properties",
       "type": "string",
-      "label": "ms-resource:loc.input.label.customProperties",
+      "label": "ms-resource:loc.input.label.properties",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.customProperties"
+      "helpMarkDown": "ms-resource:loc.input.help.properties"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
