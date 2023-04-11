@@ -93,5 +93,6 @@
   "loc.messages.InvalidBuildFile": "Ungültige oder nicht unterstützte Builddatei",
   "loc.messages.FileNotFound": "Datei oder Ordner nicht vorhanden: %s",
   "loc.messages.FailedToAppendCC": "Codedeckungsdaten können nicht angefügt werden: %s",
-  "loc.messages.NoTestResults": "Es wurden keine Testergebnisdateien gefunden, die mit %s übereinstimmen. Das Veröffentlichen von JUnit-Testergebnissen wird daher übersprungen."
+  "loc.messages.NoTestResults": "Es wurden keine Testergebnisdateien gefunden, die mit %s übereinstimmen. Das Veröffentlichen von JUnit-Testergebnissen wird daher übersprungen.",
+  "loc.messages.chmodGradlew": "Die Methode \"chmod\" wurde für die gradlew-Datei verwendet, um sie eine ausführbare Datei zu machen."
 }
