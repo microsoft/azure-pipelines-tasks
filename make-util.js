@@ -1742,28 +1742,80 @@ var getBuildConfigGenerator = function (baseConfigToolPath) {
 exports.getBuildConfigGenerator = getBuildConfigGenerator;
 
 /**
- * Function to filter tasks for validation
+ * Function to validate generated tasks
+ * @param {String} baseConfigToolPath Path to generating programm
+ * @param {Array} taskList  Array with allowed tasks
  * @param {Object} makeOptions Object with all tasks
- * @param {array} configsArr Array with configs to validate
- * @returns Array of tasks to validate
  */
-var getTaskListForValidate = function (makeOptions, configsArr) {
-    const excludedMakeOptionKeys = ["tasks", "taskResources"];
-
+var validateGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions) {
     if (!makeOptions) fail("makeOptions is not defined");
-
-    var tasksToValidate = {};
+    const excludedMakeOptionKeys = ["tasks", "taskResources"];
+    const validatingTasks = {};
+    
     for (const key in makeOptions) {
         if (excludedMakeOptionKeys.indexOf(key) > -1) continue;
-        if (configsArr.indexOf(key) === -1) continue;
 
         makeOptions[key].forEach((taskName) => {
-            tasksToValidate[taskName] = true;
+            if (taskList.indexOf(taskName) ===  -1) return;
+            if (validatingTasks[taskName]) {
+                validatingTasks[taskName].push(key);
+            } else {
+                validatingTasks[taskName] = [key];
+            }
         });
     }
 
-    return Object.keys(tasksToValidate);
-};
-exports.getTaskListForValidate = getTaskListForValidate;
+    for (const taskName in validatingTasks) {
+        const programPath = getBuildConfigGenerator(baseConfigToolPath);
+        const config = validatingTasks[taskName];
+        const configString = config.join("|");
+        const args = [
+            "--configs",
+            `"${configString}"`,
+            "--task",
+            taskName,
+        ];
+
+        banner('Validating: ' + taskName);
+        run(`${programPath} ${args.join(' ')}`, true);
+    }
+}
+exports.validateGeneratedTasks = validateGeneratedTasks;
+
+/**
+ * Function to generate new tasks
+ * @param {String} baseConfigToolPath Path to generating program
+ * @param {Array} taskList  Array with allowed tasks
+ * @param {String} configsString String with generation configs 
+ * @param {Object} makeOptions Object to put generated definitions
+ */
+
+var generateTasks = function(baseConfigToolPath, taskList, configsString, makeOptions) {
+    const args = `--write-updates --configs "${configsString}"`;
+    const configsArr = configsString.split("|")
+    let newMakeOptions = makeOptions;
+
+    taskList.forEach(function (taskName) {
+        const programPath = getBuildConfigGenerator(baseConfigToolPath);
+        const buildArgs = args + ` --task ${taskName}`;
+
+        banner('Generating: ' + taskName);
+        run(`${programPath} ${buildArgs}` , true);
+
+        // insert to make-options.json
+        configsArr.forEach(function (config) {
+            if (!newMakeOptions[config]) {
+                newMakeOptions[config] = [];
+            }
+            
+            if (newMakeOptions[config].indexOf(taskName) === -1) {
+                newMakeOptions[config].push(taskName);
+            }
+        });
+    });
+
+    return newMakeOptions;
+}
+exports.generateTasks = generateTasks;
 
 //------------------------------------------------------------------------------
