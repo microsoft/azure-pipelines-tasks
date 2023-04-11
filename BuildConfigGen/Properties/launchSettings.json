@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BuildConfigGen": {
+      "commandName": "Project",
+      "commandLineArgs": "--task AndroidSigningV2,AndroidSigningV3,DockerComposeV0,DownloadFileshareArtifactsV0,DownloadPackageV1,FuncToolsInstallerV0,GitHubCommentV0,KubernetesManifestV0,KubernetesV0,MysqlDeploymentOnMachineGroupV1,NuGetRestoreV1,PackerBuildV0,PackerBuildV1,PublishCodeCoverageResultsV1 --configs Node16 --write-updates"
+    }
+  }
+}

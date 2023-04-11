@@ -29,8 +29,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
         tl.setVariable(AzureDeployPackageArtifactAlias, packageArtifactAlias);
     }
 
-    // TODO: temporary fix for tests are failing with MSAL
-    public async PreDeploymentStep(useMSAL: boolean = false) {
+    public async PreDeploymentStep() {
 
         if (this.taskParams.WebAppKind.includes("functionAppContainer")){
             tl.warning(`Recommendation: Use Azure Functions for container Task to deploy Function app.`);
@@ -39,7 +38,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             tl.warning(`Recommendation: Use Azure Functions Task to deploy Function app.`);
         }
 
-        this.azureEndpoint = await new AzureRMEndpoint(this.taskParams.connectedServiceName).getEndpoint(false, useMSAL);
+        this.azureEndpoint = await new AzureRMEndpoint(this.taskParams.connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', this.taskParams.WebAppName));
         if(!this.taskParams.DeployToSlotOrASEFlag) {
             this.taskParams.ResourceGroupName = await AzureResourceFilterUtility.getResourceGroupName(this.azureEndpoint, this.taskParams.WebAppName);
