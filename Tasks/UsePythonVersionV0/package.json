@@ -27,7 +27,7 @@
     "@types/q": "^1.0.7",
     "@types/mocha": "^5.2.7",
     "azure-pipelines-task-lib": "^4.0.0-preview",
-    "azure-pipelines-tasks-utility-common": "^3.0.3",
+    "azure-pipelines-tasks-utility-common": "^3.219.1",
     "azure-pipelines-tool-lib": "^2.0.0-preview",
     "typed-rest-client": "^1.8.6",
     "semver": "^7.3.5"
