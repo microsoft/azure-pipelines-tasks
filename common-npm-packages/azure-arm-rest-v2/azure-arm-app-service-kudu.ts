@@ -1,7 +1,6 @@
 import msRestAzure = require('./azure-arm-common');
 import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
-import util = require('util');
 import webClient = require('./webClient');
 import Q = require('q');
 import { WebJob, SiteExtension } from './azureModels';
@@ -20,19 +19,19 @@ export class KuduServiceManagementClient {
         this._scmUri = scmUri;
     }
 
-    public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions): Promise<webClient.WebResponse> {
+    public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions, contentType?: string): Promise<webClient.WebResponse> {
         request.headers = request.headers || {};
         request.headers["Authorization"] = "Basic " + this._accesssToken;
-        if(!request.headers['Content-Type']) {
-            request.headers['Content-Type'] = 'application/json; charset=utf-8';
+        if (!request.headers['Content-Type'] || !!contentType) {
+            request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
         }
-        
+
         if(!!this._cookie) {
             tl.debug(`setting affinity cookie ${JSON.stringify(this._cookie)}`);
             request.headers['Cookie'] = this._cookie;
         }
 
-        let retryCount = reqOptions && util.isNumber(reqOptions.retryCount) ? reqOptions.retryCount : 5;
+        let retryCount = reqOptions && (typeof reqOptions.retryCount === 'number') ? reqOptions.retryCount : 5;
 
         while(retryCount >= 0) {
             try {
@@ -61,7 +60,6 @@ export class KuduServiceManagementClient {
                 throw new Error(exceptionString);
             }
         }
-
     }
 
     public getRequestUri(uriFormat: string, queryParameters?: Array<string>) {
@@ -83,7 +81,7 @@ export class Kudu {
     private _client: KuduServiceManagementClient;
 
     constructor(scmUri: string, username: string, password: string) {
-        var base64EncodedCredential = (new Buffer(username + ':' + password).toString('base64'));
+        var base64EncodedCredential = (Buffer.from(username + ':' + password).toString('base64'));
         this._client = new KuduServiceManagementClient(scmUri, base64EncodedCredential);
     }
 
@@ -109,6 +107,10 @@ export class Kudu {
         }
     }
 
+    public getKuduStackTraceUrl(): string {
+        let stackTraceUrl = this._client.getRequestUri(`/api/vfs/LogFiles/kudu/trace`);
+        return stackTraceUrl;
+    }
 
     public async getContinuousJobs(): Promise<Array<WebJob>> {
         var httpRequest = new webClient.WebRequest();
@@ -366,7 +368,7 @@ export class Kudu {
             if([200, 201, 204].indexOf(response.statusCode) != -1) {
                 return response.body;
             }
-            
+
             throw response;
         }
         catch(error) {
@@ -390,7 +392,7 @@ export class Kudu {
             if([200, 201, 204].indexOf(response.statusCode) != -1) {
                 return response.body;
             }
-            
+
             throw response;
         }
         catch(error) {
@@ -487,6 +489,50 @@ export class Kudu {
         }
         catch(error) {
             throw new Error(tl.loc('PackageDeploymentFailed', this._getFormattedError(error)));
+        }
+    }
+
+    public async validateZipDeploy(webPackage: string, queryParameters?: Array<string>): Promise<any> {
+        try {
+            var stats = fs.statSync(webPackage);
+            var fileSizeInBytes = stats.size;
+            let httpRequest: webClient.WebRequest = {
+                method: 'POST',
+                uri: this._client.getRequestUri(`/api/zipdeploy/validate`, queryParameters),
+                body: fs.createReadStream(webPackage),
+                headers: {
+                    'Content-Length': fileSizeInBytes
+                },
+            };
+            let requestOptions = new webClient.WebRequestOptions();
+            requestOptions.retriableStatusCodes = [500, 502, 503, 504];
+            requestOptions.retryIntervalInSeconds = 5;
+
+            let response = await this._client.beginRequest(httpRequest, requestOptions, 'application/octet-stream');
+            if(response.statusCode == 200) {
+                tl.debug(`Validation passed response: ${JSON.stringify(response)}`);
+                if (response.body && response.body.result){
+                    tl.warning(`${JSON.stringify(response.body.result)}`);
+                }
+                return null;
+            }
+            else if(response.statusCode == 400) {
+                tl.debug(`Validation failed response: ${JSON.stringify(response)}`);
+                throw response;
+            }
+            else {
+                tl.debug(`Skipping validation with status: ${response.statusCode}`);
+                return null;
+            }
+        }
+        catch(error) {
+            if (error && error.body && error.body.result && typeof error.body.result.valueOf() == 'string' && error.body.result.includes('ZipDeploy Validation ERROR')) {
+                throw Error(JSON.stringify(error.body.result));
+            }
+            else {
+                tl.debug(`Skipping validation with error: ${error}`);
+                return null;
+            }
         }
     }
 

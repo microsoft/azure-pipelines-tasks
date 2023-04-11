@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 220,
-    "Patch": 1
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -59,9 +59,5 @@
     "NpmConfigFailed": "ms-resource:loc.messages.NpmConfigFailed",
     "NpmAuthFailed": "ms-resource:loc.messages.NpmAuthFailed",
     "BuildCredentialsWarn": "ms-resource:loc.messages.BuildCredentialsWarn"
-  },
-  "_buildConfigMapping": {
-    "Default": "0.220.1",
-    "Node16-219": "0.220.0"
   }
 }
