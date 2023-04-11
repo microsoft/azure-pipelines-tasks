@@ -28,8 +28,25 @@ parameters:
   displayName: Push to Feed
   type: boolean
   default: false
+- name: create_hotfix_prs
+  displayName: Create hotfix prs
+  type: boolean
+  default: false
 
 jobs:
+
+- ${{ if and(parameters.build_single_task, parameters.create_hotfix_prs) }}:
+
+  # Build Hotfix Task
+  - job: build_hotfix_task
+    displayName: Build Hotfix Task
+    pool:
+      vmImage: windows-2022
+    steps:
+    - template: ci/build-hotfix-steps.yml
+      parameters:
+        task: ${{ parameters.task_name }}
+        push: ${{ parameters.push_to_feed }}
 
 - ${{ if parameters.build_single_task }}:
 
