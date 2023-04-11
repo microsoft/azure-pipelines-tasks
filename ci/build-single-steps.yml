@@ -115,5 +115,5 @@ steps:
 
 # Stop collect diagnostics
 - powershell: ./ci/stop-collect-diagnostics.ps1
-  displayName: Stop collect Push Nuget package
+  displayName: Stop collect diagnostics
   condition: always()
