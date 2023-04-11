@@ -37,6 +37,7 @@ steps:
     git config --global user.email "$(username)@microsoft.com"
     git config --global user.name "$(username)"
     git add .nuget\externals\UnifiedDependencies.xml
+    git add Tfs\Service\Deploy\components\*
     git commit -m "Courtesy bump of tasks"
     git push origin $releaseBranch --force
     Write-Host "Creating Pull Request"
