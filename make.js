@@ -125,26 +125,6 @@ function getTaskList(taskList) {
     return tasksToBuild.sort();
 }
 
-function validateGeneratedTasks(taskList) {
-    const excludedMakeOptionKeys = ["tasks", "taskResources"];
-
-    const makeOptions = fileToJson(makeOptionsPath);
-    const programPath = util.getBuildConfigGenerator(baseConfigToolPath);
-
-    for (const key in makeOptions) {
-        if (excludedMakeOptionKeys.indexOf(key) > -1) continue;
-
-        const tasksToValidate = makeOptions[key];
-        tasksToValidate.forEach((taskName) => {
-            if (taskList.indexOf(taskName) === -1) return;
-            const args = `--configs ${key} --task ${taskName}`;
-            banner('Validating: ' + taskName);
-            
-            run(`${programPath} ${args}` , true);
-        });
-    }
-}
-
 CLI.clean = function() {
     rm('-Rf', buildPath);
     mkdir('-p', buildTasksPath);
@@ -203,7 +183,8 @@ CLI.build = function() {
     const allTasks = getTaskList(taskList);
 
     // Need to validate generated tasks first
-    validateGeneratedTasks(allTasks);
+    const makeOptions = fileToJson(makeOptionsPath);
+    util.validateGeneratedTasks(baseConfigToolPath, taskList, makeOptions);
 
     allTasks.forEach(function(taskName) {
         let isGeneratedTask = false;
@@ -917,46 +898,21 @@ CLI.gentask = function() {
         rm("-Rf", path.join(baseConfigToolPath, "bin"));
     }
 
-    const programPath = util.getBuildConfigGenerator(baseConfigToolPath);
-    let tasksToGen = taskList;
-    let genTaskArg = "--write-updates";
     const makeOptions = fileToJson(makeOptionsPath);
+    const validate = argv.validate;
     const configsString = argv.configs;
+
+    if (validate) {
+        util.validateGeneratedTasks(baseConfigToolPath, taskList, makeOptions);
+        return;
+    }
+    
     if (!configsString) {
         throw Error ('--configs is required');
     }
 
-    const configsArr = configsString.split("|")
-    if (argv.validate) {
-        genTaskArg = "";
-        tasksToGen = util.getTaskListForValidate(makeOptions, configsArr);
-    }
-    
-    genTaskArg += ` --configs "${configsString}" `;
-
-    if (tasksToGen.length == 0) {
-        fail("No tasks which satisfy the criteria for generation were found.");
-    }
-    
-    tasksToGen.forEach(function (taskName) {
-        const args = genTaskArg + ` --task ${taskName}`;
-
-        banner('Generating: ' + taskName);
-        run(`${programPath} ${args}` , true);
-
-        // insert to make-options.json
-        configsArr.forEach(function (config) {
-            if (!makeOptions[config]) {
-                makeOptions[config] = [];
-            }
-            
-            if (makeOptions[config].indexOf(taskName) === -1) {
-                makeOptions[config].push(taskName);
-            }
-        });
-    });
-
-    fs.writeFileSync(makeOptionsPath, JSON.stringify(makeOptions, null, 4));
+    const newMakeOptions = util.generateTasks(baseConfigToolPath, taskList, configsString, makeOptions);
+    fs.writeFileSync(makeOptionsPath, JSON.stringify(newMakeOptions, null, 4));
 }
 
 var command  = argv._[0];
