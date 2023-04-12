@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Code Coverage-Ergebnisse veröffentlichen",
-  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.friendlyName": "Code Coverage-Ergebnisse v2 veröffentlichen",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2?view=azure-pipelines)",
   "loc.description": "Alle Code Coverage-Ergebnisse aus einem Build veröffentlichen",
   "loc.instanceNameFormat": "Code Coverage-Ergebnisse veröffentlichen",
   "loc.input.label.summaryFileLocation": "Pfad zu Zusammenfassungsdateien",
