@@ -32,6 +32,10 @@ function formatDeps(depArr) {
     return newDepsDict;
 }
 
+/* Function updating existing deps version and also add new deps with postfix 
+ * Example: Of we have dependency with name 
+ * Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2
+ * It will add Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2-Node16 */
 function updateUnifiedDeps(pathToUnifiedDeps, pathToNewUnifiedDeps, outputPath) {
     const currentDeps = fs.readFileSync(pathToUnifiedDeps, 'utf8');
     const newDeps = fs.readFileSync(pathToNewUnifiedDeps, 'utf8');
@@ -41,6 +45,8 @@ function updateUnifiedDeps(pathToUnifiedDeps, pathToNewUnifiedDeps, outputPath) 
     const newDepsDict = formatDeps(newDepsArr);
 
     const updatedDeps = [];
+    // Tasks that was updated and should be presented in TfsServer.Servicing.core.xml
+    const changedTasks = [];
 
     currentDepsArr.forEach(currentDep => {
         const depDetails = currentDep.split('"');
@@ -53,6 +59,8 @@ function updateUnifiedDeps(pathToUnifiedDeps, pathToNewUnifiedDeps, outputPath) 
                 // update the version
                 depDetails[3] = newDepsDict[newDepsKey];
                 updatedDeps.push(depDetails.join('"'));
+
+                changedTasks.push(newDepsKey);
                 delete newDepsDict[newDepsKey];
             } else {
                 updatedDeps.push(currentDep);
@@ -78,41 +86,41 @@ function updateUnifiedDeps(pathToUnifiedDeps, pathToNewUnifiedDeps, outputPath) 
 
                 const depDetails = basePackage.split('"');
                 const name = depDetails[1];
-                return packageName.includes(name)
+                return name && name.startsWith(msPrefix) && packageName.includes(name)
             });
 
             if (pushingIndex !== -1) {
                 // We need to insert new package after the old one
                 updatedDeps.splice(pushingIndex + 1, 0, depToBeInserted);
+                changedTasks.push(packageName);
             }
         }
     }
     // write it as a new file where currentDeps is
     fs.writeFileSync(outputPath, updatedDeps.join('\n'));
     console.log('Updating Unified Dependencies file done.');
+    return changedTasks;
 };
 
-// Working only for insert when deps not exists, because we are not updating this file
-function updateTfsServerDeps(pathToTfsCore, pathToDeps, outputPath) {
-    const depsToUpdate = fs.readFileSync(pathToDeps, 'utf8');
+/* Function to insert new tasks into TfsServer.Servicing.core.xml
+ * Only if the was modified/added into UnifiedDependencies.xml and not exists in the TfsServer.Servicing.core.xml file
+ */
+function updateTfsServerDeps(pathToTfsCore, depsToUpdateArr, outputPath) {
     const tfsCore = fs.readFileSync(pathToTfsCore, 'utf8');
-
-    const depsToUpdateArr = depsToUpdate.split('\n');
     const tfsToUpdate = tfsCore.split('\n');
-    const depsForCheck = formatDeps(depsToUpdateArr);
 
     const insertedIndex = tfsToUpdate.findIndex(tfsString => directoryTag.test(tfsString));
-    for (let i in depsForCheck) {
-        if (tfsCore.indexOf(i) === -1) {
-            const insertedString = formDirectoryString(i);
+    depsToUpdateArr.forEach(dependencyName => {
+        if (tfsCore.indexOf(dependencyName) === -1) {
+            const insertedString = formDirectoryString(dependencyName);
             tfsToUpdate.splice(insertedIndex, 0, insertedString);
             console.log(`${insertedString}`);
         } 
-    }
+    });
 
     fs.writeFileSync(outputPath, tfsToUpdate.join('\n'));
     console.log('Inserting into Tfs Servicing Core file done.');
 }
 
-updateUnifiedDeps(unifiedDepsPath, newDeps, unifiedDepsPath);
-updateTfsServerDeps(tfsServerPath, newDeps, tfsServerPath);
+const changedTasks = updateUnifiedDeps(unifiedDepsPath, newDeps, unifiedDepsPath);
+updateTfsServerDeps(tfsServerPath, changedTasks, tfsServerPath);
