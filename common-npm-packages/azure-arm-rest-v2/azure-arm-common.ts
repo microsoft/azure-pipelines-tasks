@@ -416,14 +416,17 @@ export class ApplicationTokenCredentials {
         if (!serviceConnectionId) {
             serviceConnectionId = tl.getInput("ConnectedServiceName", false);
             if (!serviceConnectionId) {
-                throw new Error(tl.loc("serviceConnectionIdCannotBeEmpty"));
+                serviceConnectionId = tl.getInput("azureSubscription", false);
+                if (!serviceConnectionId) {
+                    throw new Error(tl.loc("serviceConnectionIdCannotBeEmpty"));
+                }
             }
         }
         const projectId: string = tl.getVariable("System.TeamProjectId");
         const hub: string = tl.getVariable("System.HostType");
         const planId: string = tl.getVariable('System.PlanId');
         const jobId: string = tl.getVariable('System.JobId');
-        const uri = tl.getVariable("System.TeamFoundationCollectionUri");
+        const uri = tl.getVariable("System.CollectionUri");
 
         const token = ApplicationTokenCredentials.getSystemAccessToken();
         const authHandler = getHandlerFromToken(token);
