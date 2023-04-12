@@ -5,6 +5,7 @@ export var nock = require('nock');
 import { FirewallRule, FirewallAddressRange } from '../models/Firewall';
 
 export function getMockEndpoint() {
+    process.env["USE_MSAL"] = "false";
     process.env["AZURE_HTTP_USER_AGENT"] = "TEST_AGENT";
     var endpoint: AzureEndpoint = {
         activeDirectoryAuthority: "https://login.windows.net/",
