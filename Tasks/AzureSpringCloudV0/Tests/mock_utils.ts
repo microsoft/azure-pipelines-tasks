@@ -18,7 +18,6 @@ export function setEndpointData() {
     process.env["ENDPOINT_URL_AzureRM"] = "https://management.azure.com/";
     process.env["ENDPOINT_DATA_AzureRM_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
     process.env["ENDPOINT_DATA_AzureRM_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = "https://management.azure.com";
-    process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_USEMSAL"] = "false";
 }
 
 export function setAgentsData() {
@@ -28,6 +27,7 @@ export function setAgentsData() {
     process.env["AGENT_NAME"] = "author";
     process.env["AGENT_TEMPDIRECTORY"] = process.cwd();
     process.env["BUILD_BUILDID"] = 'Build.BuildId';
+    process.env["USE_MSAL"] = "false";
 }
 
 export function printTaskInputs() {
