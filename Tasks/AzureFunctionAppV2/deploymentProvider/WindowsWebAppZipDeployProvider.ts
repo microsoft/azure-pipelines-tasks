@@ -1,6 +1,6 @@
 import tl = require('azure-pipelines-task-lib/task');
-var deployUtility = require('v/utility.js');
-var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility.js');
+var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility');
+var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility');
 import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility'
 import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { DeploymentType } from '../taskparameters';
