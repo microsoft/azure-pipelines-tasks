@@ -30,7 +30,7 @@ jobs:
         ACTIONS_STEP_DEBUG: true
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        stale-issue-message: "In order to consolidate to fewer feedback channels, we've moved suggestions and issue reporting to [Developer Community](https://developercommunity.visualstudio.com/spaces/21/index.html)."
+        stale-issue-message: "In order to consolidate to fewer feedback channels, we've moved suggestions and issue reporting to [Developer Community](https://developercommunity.visualstudio.com/AzureDevOps/report/)."
         stale-issue-label: 'redirect-to-dev-community'
         days-before-stale: 1
         days-before-close: 1
