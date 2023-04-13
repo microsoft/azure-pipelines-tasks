@@ -31,15 +31,9 @@ jobs:
   # Build Single Task
   - job: build_single_task
     displayName: Build Single Task
-    pool:
-      vmImage: windows-2022
+    pool: Default
     steps:
-    - template: ci/build-single-steps.yml
-      parameters:
-        task: ${{ parameters.task_name }}
-        push: ${{ parameters.push_to_feed }}
-
-- ${{ if not(parameters.build_single_task) }}:
+    - task: 
 
   # All tasks on Windows
   - job: build_all_windows
