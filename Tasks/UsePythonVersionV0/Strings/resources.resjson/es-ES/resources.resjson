@@ -6,6 +6,12 @@
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.versionSpec": "Especificación de versión",
   "loc.input.help.versionSpec": "Intervalo de versiones o versión de Python específica que se va a usar, con la sintaxis de intervalo de versiones de semver. [Más información](https://go.microsoft.com/fwlink/?LinkID=2006180)",
+  "loc.input.label.disableDownloadFromRegistry": "Deshabilitar la descarga de versiones del registro de GitHub",
+  "loc.input.help.disableDownloadFromRegistry": "Indique si se va a deshabilitar la descarga de la versión de Python que falta del [Github Actions registry](https://github.com/actions/python-versions). Compruebe si solo quiere usar python preinstalado local.",
+  "loc.input.label.allowUnstable": "Permitir la descarga de versiones inestables",
+  "loc.input.help.allowUnstable": "Permitir la descarga de versiones inestables de Python desde [el registro de versiones de python de Acciones de GitHub](https://github.com/actions/python-versions).",
+  "loc.input.label.githubToken": "Token de GitHub para Acciones de GitHub registro de Python",
+  "loc.input.help.githubToken": "El token de GitHub es necesario para evitar que las solicitudes anónimas se limite al [registro de versiones de python de Acciones de GitHub](https://github.com/actions/python-versions). Si se deja vacío, es posible que se produzcan errores de descarga. No es necesario si solo usa Python instalado localmente.",
   "loc.input.label.addToPath": "Agregar a PATH",
   "loc.input.help.addToPath": "Indica si debe anteponerse la versión de Python recuperada a la variable de entorno PATH para que esté disponible en scripts o tareas posteriores sin usar la variable de salida.",
   "loc.input.label.architecture": "Arquitectura",
@@ -17,6 +23,11 @@
   "loc.messages.ToolNotFoundMicrosoftHosted": "Si es un agente hospedado por Microsoft, compruebe que la imagen admite versiones en paralelo de %s en %s.",
   "loc.messages.ToolNotFoundSelfHosted": "Si es un agente autohospedado, vea cómo configurar las versiones de %s en paralelo en %s.",
   "loc.messages.VersionNotFound": "La especificación de versión %s para la arquitectura %s no coincide con ninguna versión de Agent.ToolsDirectory.",
-  "loc.messages.ExactVersionNotRecommended": "No se recomienda especificar una versión exacta en los agentes hospedados por Microsoft. Las versiones de revisión de Python pueden reemplazarse por nuevas en los agentes hospedados sin previo aviso, lo que causará que las compilaciones dejen de funcionar inesperadamente. Se recomienda especificar solo la versión principal, o bien las versiones principal y secundaria (ejemplo: \"3\" o \"3.6\").",
-  "loc.messages.PythonVersionRetirement": "Python 3.5 ha llegado al final de su vida útil y se quitará de las imágenes hospedadas por ms el 24 de enero. Actualice la versión de Python si usa agentes hospedados por ms. Para obtener más información sobre esto: https://github.com/actions/virtual-environments"
+  "loc.messages.ExactVersionNotRecommended": "No se recomienda especificar una versión exacta en los agentes hospedados por Microsoft. Las versiones de revisión de Python pueden reemplazarse por nuevas en los agentes hospedados sin previo aviso, lo que causará que las compilaciones dejen de funcionar inesperadamente. Se recomienda especificar solo la versión principal, o bien las versiones principal y secundaria (ejemplo: \"3\" o \"3.9\").",
+  "loc.messages.ExactVersionPyPyNotRecommended": "No se recomienda especificar una versión exacta en los agentes hospedados por Microsoft. Las versiones de revisión de PyPy pueden reemplazarse por nuevas en los agentes hospedados sin previo aviso, lo que causará que las compilaciones dejen de funcionar inesperadamente. Se recomienda especificar solo la versión principal, o bien las versiones principal y secundaria (ejemplo: \"3\" o \"3.9\").",
+  "loc.messages.PythonVersionRetirement": "Python 3.5 ha llegado al final de su vida útil y se quitará de las imágenes hospedadas por ms el 24 de enero. Actualice la versión de Python si usa agentes hospedados por ms. Para obtener más información sobre esto: https://github.com/actions/virtual-environments",
+  "loc.messages.MissingGithubToken": "Debe proporcionar un token de GitHub si quiere descargar una versión de Python. De lo contrario, puede alcanzar el límite de descargas anónimas de GitHub.",
+  "loc.messages.DownloadNotFound": "No se encontró ninguna especificación coincidente de Python %s (%s) en el Registro de versiones de Python. Tenga en cuenta que solo los sistemas enumerados en el manifiesto de versiones de Python de Acciones de GitHub (https://github.com/actions/python-versions/blob/main/versions-manifest.json) son adecuados para descargar Python en el entorno piloto. Además, no se admite el proxy.",
+  "loc.messages.ManifestDownloadFailed": "No se pudo descargar el manifiesto de las versiones de Python desde el registro de Python de acciones de GitHub (https://github.com/actions/python-versions). Un token de GitHub no válido podría provocar esto.",
+  "loc.messages.DownloadFailed": "No se pudo descargar Python desde el registro de Python de acciones de GitHub (https://github.com/actions/python-versions). Error: %s"
 }

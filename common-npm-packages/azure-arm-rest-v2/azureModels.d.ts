@@ -137,6 +137,7 @@ export declare enum ComputeResourceType {
 export declare enum Scheme {
     ManagedServiceIdentity = 0,
     SPN = 1,
+    WorkloadIdentityFederation = 2,
 }
 export interface StorageAccountSku {
     name: string;
