@@ -16,6 +16,8 @@
   "loc.input.help.isWindowsOnTarget": "Machine cible exécutant Windows",
   "loc.input.label.cleanTargetFolder": "Effacer le dossier cible",
   "loc.input.help.cleanTargetFolder": "Supprimez tous les fichiers et sous-dossiers existants dans le dossier cible avant la copie.",
+  "loc.input.label.cleanHiddenFilesInTarget": "Supprimer les fichiers masqués dans le dossier cible",
+  "loc.input.help.cleanHiddenFilesInTarget": "Supprimez les fichiers masqués dans le dossier cible.",
   "loc.input.label.readyTimeout": "Délai d'expiration de l'établissement d'une liaison SSH",
   "loc.input.help.readyTimeout": "Durée (en millisecondes) d'attente de la fin de l'établissement d'une liaison SSH.",
   "loc.input.label.overwrite": "Remplacer",

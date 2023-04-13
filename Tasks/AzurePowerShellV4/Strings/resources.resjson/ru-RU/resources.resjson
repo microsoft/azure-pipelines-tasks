@@ -28,6 +28,8 @@
   "loc.input.help.CustomTargetAzurePs": "Предпочтительная версия Azure PowerShell должна быть надлежащей семантической версией, например 1.2.3. Регулярные выражения, например 2.\\*,2.3.\\*, не поддерживаются. Размещенный пул Visual Studio 2017 сейчас поддерживает следующие версии модуля Az: 1.0.0, 1.6.0, 2.3.2, 2.6.0, 3.1.0",
   "loc.input.label.pwsh": "Использовать PowerShell Core",
   "loc.input.help.pwsh": "Если задано значение True, в Windows задача будет использовать программу pwsh.exe, указанную в переменной PATH, вместо powershell.exe.",
+  "loc.input.label.validateScriptSignature": "Проверка подписи сценария",
+  "loc.input.help.validateScriptSignature": "Если задано значение true, задача сначала проверит, что указанный сценарий подписан и действителен, прежде чем выполнить его.",
   "loc.input.label.workingDirectory": "Рабочий каталог",
   "loc.input.help.workingDirectory": "Рабочий каталог, в котором выполняется скрипт.",
   "loc.messages.GeneratingScript": "Формируется скрипт.",

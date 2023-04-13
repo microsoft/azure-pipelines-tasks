@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Проверка подлинности Twine $(message)",
   "loc.group.displayName.feedAuthentication": "Веб-каналы и проверка подлинности",
   "loc.group.displayName.advanced": "Дополнительно",
-  "loc.input.label.artifactFeed": "Мой веб-канал (выберите ниже)",
+  "loc.input.label.artifactFeed": "Имя моего канала (выберите ниже)",
   "loc.input.help.artifactFeed": "Выберите веб-канал для проверки подлинности, присутствующий в этой организации.",
   "loc.input.label.pythonUploadServiceConnection": "Веб-канал из внешних организаций",
   "loc.input.help.pythonUploadServiceConnection": "Выберите конечную точку для проверки подлинности за пределами этой организации. Убедитесь, что конечная точка имеет разрешения на отправку пакетов.",
