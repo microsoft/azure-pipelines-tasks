@@ -223,8 +223,20 @@ namespace BuildConfigGen
             }
         }
 
+        internal bool FilesEqual(string sourcePath, string targetPath)
+        {
+            var resolvedTargetPath = ResolveFile(targetPath);
+
+            return Helpers.FilesEqual(sourcePath, resolvedTargetPath);
+        }
+
         private string ResolveFile(string filePath)
         {
+            if(!verifyOnly)
+            {
+                return filePath;
+            }
+
             filePath = NormalizeFile(filePath);
 
             string? sourceFile = null, tempFile = null;

@@ -16,6 +16,8 @@
   "loc.input.help.isWindowsOnTarget": "运行 Windows 的目标计算机",
   "loc.input.label.cleanTargetFolder": "清理目标文件夹",
   "loc.input.help.cleanTargetFolder": "删除目标文件夹中所有现有文件和子文件夹，然后再复制。",
+  "loc.input.label.cleanHiddenFilesInTarget": "移除目标文件夹中的隐藏文件",
+  "loc.input.help.cleanHiddenFilesInTarget": "移除目标文件夹中的隐藏文件。",
   "loc.input.label.readyTimeout": "SSH 握手超时",
   "loc.input.help.readyTimeout": "等待 SSH 握手完成的时间(毫秒)。",
   "loc.input.label.overwrite": "覆盖",
