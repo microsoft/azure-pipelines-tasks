@@ -240,9 +240,15 @@ async function main(): Promise<void> {
 
         // populate itempattern and artifacts based on downloadType
         if (downloadType === 'single') {
-            // replacing '+' symbol by its representation ' ' (space) - workaround for the DownloadBuildArtifactV0 task, 
+            // if FF EnableBuildArtifactsPlusSignWorkaround is enabled or AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND environment variable is set:
+            // replacing '+' symbol by its representation ' '(space) - workaround for the DownloadBuildArtifactV0 task,
             // where downloading of part of artifact is not possible if there is a plus symbol
-            var artifactName = (tl.getInput("artifactName", true)).replace(/\+/g, ' ');
+            const enableBuildArtifactsPlusSignWorkaround = process.env.AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND ? process.env.TASKS_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND === "true" : false;
+            
+            var artifactName = tl.getInput("artifactName", true);
+            if (enableBuildArtifactsPlusSignWorkaround)
+                artifactName = artifactName.replace(/\+/g, ' ');
+
             var artifact = await executeWithRetries("getArtifact", () => buildApi.getArtifact(projectId, buildId, artifactName), retryLimitRequest).catch((reason) => {
                 reject(reason);
                 return;

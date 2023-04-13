@@ -108,9 +108,15 @@ async function run() {
 
         // pathToPublish is a folder or a single file that may be added to a tar archive later
         const pathToPublish: string = tl.getPathInput('PathtoPublish', true, true);
-        // replacing '+' symbol by its representation ' ' (space) - workaround for the DownloadBuildArtifactV0 task,
+
+        // if FF EnableBuildArtifactsPlusSignWorkaround is enabled or AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND environment variable is set:
+        // replacing '+' symbol by its representation ' '(space) - workaround for the DownloadBuildArtifactV0 task,
         // where downloading of part of artifact is not possible if there is a plus symbol
-        const artifactName: string = (tl.getInput('ArtifactName', true)).replace(/\+/g, ' ');
+        const enableBuildArtifactsPlusSignWorkaround = process.env.AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND ? process.env.TASKS_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND === "true" : false;
+
+        var artifactName = tl.getInput('ArtifactName', true);
+        if (enableBuildArtifactsPlusSignWorkaround)
+            artifactName = artifactName.replace(/\+/g, ' ');
 
         // pathToUpload is an actual folder or file that will get uploaded
         const pathToUpload: string = getPathToUploadAndCreateTarIfNeeded(pathToPublish, shouldStoreAsTar, artifactName);
