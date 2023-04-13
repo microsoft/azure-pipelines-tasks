@@ -34,5 +34,6 @@
   "loc.messages.Info_ResolvedToolFromCache": "ツール キャッシュから解決: %s",
   "loc.messages.Info_DownloadingArtifactTool": "%s から成果物ツールをダウンロードしています ",
   "loc.messages.Info_Downloading": "パッケージ %s をダウンロードしています。バージョン: %s、使用しているフィード ID: %s、プロジェクト: %s",
-  "loc.messages.Info_UsingArtifactToolDownload": "成果物ツールを使用して、パッケージをダウンロードする"
+  "loc.messages.Info_UsingArtifactToolDownload": "成果物ツールを使用して、パッケージをダウンロードする",
+  "loc.messages.Info_ResolvedLatestVersion": "解決済みの最新のパッケージ バージョン: %s"
 }

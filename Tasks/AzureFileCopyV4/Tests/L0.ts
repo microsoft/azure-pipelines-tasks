@@ -102,5 +102,8 @@ describe('AzureFileCopy Suite', function () {
         it('Validate AzureFileCopy.Utility Check-ContainerNameAndArgs', (done) => {
             psr.run(path.join(__dirname, 'L0CheckContainerNameAndArgs.ps1'), done);
         });
+        it('Validate AzureFileCopy.Utility Validate-AdditionalArguments', (done) => {
+            psr.run(path.join(__dirname, 'L0ValidateAdditionalArguments.ps1'), done);
+        });
     }   
 });
