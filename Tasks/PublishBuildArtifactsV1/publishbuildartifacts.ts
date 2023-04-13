@@ -113,7 +113,7 @@ async function run() {
         // if FF EnableBuildArtifactsPlusSignWorkaround is enabled or AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND environment variable is set:
         // replacing '+' symbol by its representation ' '(space) - workaround for the DownloadBuildArtifactV0 task,
         // where downloading of part of artifact is not possible if there is a plus symbol
-        const enableBuildArtifactsPlusSignWorkaround = process.env.AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND ? process.env.TASKS_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND === "true" : false;
+        const enableBuildArtifactsPlusSignWorkaround = process.env.AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND ? process.env.AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND === "true" : false;
 
         if (enableBuildArtifactsPlusSignWorkaround)
             artifactName = artifactName.replace(/\+/g, ' ');
