@@ -108,7 +108,7 @@ async function run() {
 
         // pathToPublish is a folder or a single file that may be added to a tar archive later
         const pathToPublish: string = tl.getPathInput('PathtoPublish', true, true);
-        var artifactName = tl.getInput('ArtifactName', true);        
+        var artifactName: string = tl.getInput('ArtifactName', true);
         
         // if FF EnableBuildArtifactsPlusSignWorkaround is enabled or AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND environment variable is set:
         // replacing '+' symbol by its representation ' '(space) - workaround for the DownloadBuildArtifactV0 task,
