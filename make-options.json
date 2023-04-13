@@ -13,6 +13,7 @@
         "AzureCLIV1",
         "AzureCLIV2",
         "AzureCloudPowerShellDeploymentV1",
+        "AzureCloudPowerShellDeploymentV2",
         "AzureContainerAppsV0",
         "AzureContainerAppsV1",
         "AzureFileCopyV2",
