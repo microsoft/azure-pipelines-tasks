@@ -51,7 +51,7 @@ const ASYNC_OPERATION_HEADER = 'azure-asyncoperation';
 const API_VERSION = '2022-03-01-preview';
 const LOCATION_HEADER = 'location';
 
-export class AzureSpringCloud {
+export class AzureSpringApps {
     private _resourceId: string;
     private _client: ServiceClient;
 
@@ -246,6 +246,10 @@ export class AzureSpringCloud {
                     throw ToError(response);
                 }
                 provisioningState = response.body.properties.provisioningState;
+                if (provisioningState == "Failed"){
+                    tl.debug('KPack build failed');
+                    throw ToError(response);
+                }
             } catch (error) {
                 throw error;
             }
@@ -550,8 +554,6 @@ export class AzureSpringCloud {
      * @param operationStatusUrl The status URL of the Azure operation
      */
     async awaitOperationCompletion(operationStatusUrl: string) {
-
-
         tl.debug('Checking operation status at ' + operationStatusUrl);
         var statusCode = 202;
         var message = '';
