@@ -36,14 +36,11 @@
     "FailedToAddAuthentication": "Failed to add authentication.",
     "CondarcNotCondarc": "The file you selected to authenticate (%s) is not a valid .condarc file.",
     "ConfigCondarcDoesNotExist": "The .condarc file you selected at %s does not currently exist.",
-    "CondarcMissingChannels": "The .condarc file you selected must contain channels",
+    "CondarcMissingChannels": "The .condarc file you selected must contain channels to authenticate",
     "AuthenticatingThisConfigCondarc": "Adding authentication for channels listed in this .condarc file at %s",
-    "AddingAuthChannel": "Adding auth for channel: %s with token name: %s",
-    "InvalidCondarcFormat":  "Invalid format for %s property",
-    "EnvironmentVariableInUse":  "The environment variable for the alias %s is already in use and may be overwritten",
-    "DuplicateChannel": "The channel %s was listed multiple times",
-    "UseDefaultChannelsProperty": "Use the default_channels property to define custom default channels",
-    "DuplicateCustomName": "The custom channel or multichannel name %s was used multiple times",
-    "CircularMultichannel": "The custom multichannel %s has a circular reference"
+    "AddingAuthChannel": "Adding auth for the token %s in alias %s",
+    "AliasMissingInfo": "The alias should be in the format https://<username>:${ARTIFACTS_CONDA_TOKEN}@<url>",
+    "InvalidTokenFormat": "The token placeholder in the alias should have the format ${ARTIFACTS_CONDA_TOKEN} or $ARTIFACTS_CONDA_TOKEN",
+    "InvalidTokenName": "Please use the name ARTIFACTS_CONDA_TOKEN for the environment variable"
   }
 }
