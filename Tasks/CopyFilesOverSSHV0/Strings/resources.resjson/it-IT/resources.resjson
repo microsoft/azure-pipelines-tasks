@@ -16,6 +16,8 @@
   "loc.input.help.isWindowsOnTarget": "Computer di destinazione che esegue Windows",
   "loc.input.label.cleanTargetFolder": "Pulisci cartella di destinazione",
   "loc.input.help.cleanTargetFolder": "Elimina tutti i file e le sottocartelle esistenti nella cartella di destinazione prima della copia.",
+  "loc.input.label.cleanHiddenFilesInTarget": "Rimuovi i file nascosti nella cartella di destinazione",
+  "loc.input.help.cleanHiddenFilesInTarget": "Consente di rimuovere i file nascosti nella cartella di destinazione.",
   "loc.input.label.readyTimeout": "Timeout per handshake SSH",
   "loc.input.help.readyTimeout": "Indica per quanto tempo (in millisecondi) attendere il completamento dell'handshake SSH.",
   "loc.input.label.overwrite": "Sovrascrivi",
