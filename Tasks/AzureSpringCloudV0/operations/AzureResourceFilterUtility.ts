@@ -3,8 +3,8 @@ import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureMode
 import { Resources } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource';
 
 export class AzureResourceFilterUtility {
-    public static async getAzureSpringCloudResourceId(endpoint: AzureEndpoint, resourceName: string): Promise<string> {
-        tl.debug('Looking up Azure Spring Cloud Instance ' + resourceName);
+    public static async getAzureSpringAppsResourceId(endpoint: AzureEndpoint, resourceName: string): Promise<string> {
+        tl.debug('Looking up Azure Spring Apps Instance ' + resourceName);
         var azureResources: Resources = new Resources(endpoint);
         var filteredResources: Array<any> = await azureResources.getResources('Microsoft.AppPlatform/Spring', resourceName);
         let resourceId: string;
@@ -15,7 +15,7 @@ export class AzureResourceFilterUtility {
             resourceId = filteredResources[0].id;
         }
         else { //Should never ever ever happen
-            throw new Error(tl.loc('DuplicateAzureSpringCloudName'));
+            throw new Error(tl.loc('DuplicateAzureSpringAppsName'));
         }
         tl.debug('Azure Spring Cloud Lookup completed');
         return resourceId;
