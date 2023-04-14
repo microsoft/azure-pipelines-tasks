@@ -399,6 +399,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Additional arguments can't include separator characters '&', ';' and '|'. Please verify input. To learn more about argument validation, please check https://aka.ms/azdo-task-argument-validation]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Дополнительные аргументы не могут содержать разделители "&", ";" и "|". Проверьте входные данные. Дополнительные сведения о проверке аргументов см. по адресу https://aka.ms/azdo-task-argument-validation]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[AzCopy.exe exited with non-zero exit code while uploading files to blob storage.]]></Val>
