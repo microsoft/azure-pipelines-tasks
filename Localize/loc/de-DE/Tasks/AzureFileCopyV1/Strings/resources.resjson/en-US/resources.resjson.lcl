@@ -471,6 +471,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Additional arguments can't include separator characters '&', ';' and '|'. Please verify input. To learn more about argument validation, please check https://aka.ms/azdo-task-argument-validation]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Zusätzliche Argumente dürfen nicht die Trennzeichen „&“, „;“ und „|“ enthalten. Überprüfen Sie die Eingabe. Weitere Informationen zur Argumentüberprüfung finden Sie unter: https://aka.ms/azdo-task-argument-validation]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.AFC_AzureFileCopyMoreHelp" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[For more info please refer to {0}]]></Val>

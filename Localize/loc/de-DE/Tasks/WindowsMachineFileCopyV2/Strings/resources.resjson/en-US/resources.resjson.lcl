@@ -203,10 +203,13 @@
       </Item>
       <Item ItemId=";loc.messages.WFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Additional arguments can't include separator characters '&' and ';'. Please verify input. To learn more about argument validation, please check https://aka.ms/azdo-task-argument-validation]]></Val>
+          <Val><![CDATA[Additional arguments can't include separator characters '&', ';' and '|'. Please verify input. To learn more about argument validation, please check https://aka.ms/azdo-task-argument-validation]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[&Zusätzliche Argumente dürfen keine Trennzeichen „“ und „;“ enthalten. Überprüfen Sie die Eingabe. Weitere Informationen zur Argumentüberprüfung finden Sie in den https://aka.ms/azdo-task-argument-validation]]></Val>
+            <Val><![CDATA[Zusätzliche Argumente dürfen nicht die Trennzeichen „&“, „;“ und „|“ enthalten. Überprüfen Sie die Eingabe. Weitere Informationen zur Argumentüberprüfung finden Sie unter: https://aka.ms/azdo-task-argument-validation]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Additional arguments can't include separator characters '&' and ';'. Please verify input. To learn more about argument validation, please check https://aka.ms/azdo-task-argument-validation]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
