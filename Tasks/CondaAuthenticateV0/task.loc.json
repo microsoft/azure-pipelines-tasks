@@ -34,13 +34,6 @@
   },
   "messages": {
     "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
-    "CondarcNotCondarc": "ms-resource:loc.messages.CondarcNotCondarc",
-    "ConfigCondarcDoesNotExist": "ms-resource:loc.messages.ConfigCondarcDoesNotExist",
-    "CondarcMissingChannels": "ms-resource:loc.messages.CondarcMissingChannels",
-    "AuthenticatingThisConfigCondarc": "ms-resource:loc.messages.AuthenticatingThisConfigCondarc",
-    "AddingAuthChannel": "ms-resource:loc.messages.AddingAuthChannel",
-    "AliasMissingInfo": "ms-resource:loc.messages.AliasMissingInfo",
-    "InvalidTokenFormat": "ms-resource:loc.messages.InvalidTokenFormat",
-    "InvalidTokenName": "ms-resource:loc.messages.InvalidTokenName"
+    "AddingAuthChannel": "ms-resource:loc.messages.AddingAuthChannel"
   }
 }
