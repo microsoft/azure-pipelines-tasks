@@ -18,17 +18,11 @@
  ],
  "minimumAgentVersion": "2.144.0",
  "instanceNameFormat": "conda Authenticate $(configFile)",
- "inputs": [
-     {
-         "name": "configFile",
-         "type": "filePath",
-         "label": ".condarc file to authenticate",
-         "required": true,
-         "helpMarkDown": "Path to the .condarc file with the PAT for the channels you want to authenticate"
-     }
- ],
  "execution": {
     "Node10": {
+        "target": "condaauthenticatemain.js"
+    },
+    "Node16": {
         "target": "condaauthenticatemain.js"
     }
   },
