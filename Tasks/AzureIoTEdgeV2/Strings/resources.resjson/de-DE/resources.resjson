@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure IoT Edge",
-  "loc.helpMarkDown": "Besuchen Sie die [Dokumentation] (https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment), um Hilfe zu erhalten",
+  "loc.helpMarkDown": "Besuchen Sie die [Dokumentation](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-continuous-integration-continuous-deployment), um Hilfe zu erhalten.",
   "loc.description": "Azure IoT Edge-Image erstellen und bereitstellen",
   "loc.instanceNameFormat": "Azure IoT Edge – $(action)",
   "loc.group.displayName.advanced_push": "Erweitert",

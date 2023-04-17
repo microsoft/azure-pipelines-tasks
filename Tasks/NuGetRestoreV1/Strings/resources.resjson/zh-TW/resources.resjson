@@ -53,5 +53,7 @@
   "loc.messages.Error_NuGetToolInstallerFailer": "工具安裝失敗: %s",
   "loc.messages.Warning_SessionCreationFailed": "無法建立來源工作階段: %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "正在將 NuGet.exe 的版本更新為 %s (原始為 %s) 。當 NuGet 更新為新版本時，可能會發生行為變更或重大變更。如果這不是您想要的行為，請取消核取工作中的 [檢查最新版本] 選項。",
-  "loc.messages.UnsupportedProjectScopedFeeds": "這個版本的 \"NuGet Restore\" 工作不支援專案範圍摘要。請使用 \"NuGet\" 工作 2 版或更高版本。"
+  "loc.messages.UnsupportedProjectScopedFeeds": "這個版本的 \"NuGet Restore\" 工作不支援專案範圍摘要。請使用 \"NuGet\" 工作 2 版或更高版本。",
+  "loc.messages.Warning_IncludeNuGetOrgEnabled": "目前已為此工作啟用 IncludeNugetOrg。若要解决此警告，請編輯建置工作並將 'includeNuGetOrg' 設定為 'false' 或取消選取 'Use packages from NuGet.org'。",
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "無法還原封裝。編輯您的建置工作並將 'includeNuGetOrg' 設定為 'false' 或取消選取 'Use packages from NuGet.org'。"
 }

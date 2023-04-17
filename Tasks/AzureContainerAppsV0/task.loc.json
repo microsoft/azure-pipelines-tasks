@@ -18,7 +18,7 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 215,
+    "Minor": 220,
     "Patch": 0
   },
   "preview": true,
@@ -62,7 +62,7 @@
       "name": "acrName",
       "type": "string",
       "label": "ms-resource:loc.input.label.acrName",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.acrName"
     },
     {
@@ -134,6 +134,41 @@
       "label": "ms-resource:loc.input.label.targetPort",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.targetPort"
+    },
+    {
+      "name": "location",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.location",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.location"
+    },
+    {
+      "name": "environmentVariables",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.environmentVariables",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.environmentVariables"
+    },
+    {
+      "name": "ingress",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ingress",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ingress"
+    },
+    {
+      "name": "yamlConfigPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.yamlConfigPath",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.yamlConfigPath"
+    },
+    {
+      "name": "disableTelemetry",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.disableTelemetry",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.disableTelemetry"
     }
   ],
   "execution": {
@@ -149,27 +184,41 @@
     "AcrAccessTokenLoginMessage": "ms-resource:loc.messages.AcrAccessTokenLoginMessage",
     "AcrUsernamePasswordAuthFailed": "ms-resource:loc.messages.AcrUsernamePasswordAuthFailed",
     "AcrUsernamePasswordLoginMessage": "ms-resource:loc.messages.AcrUsernamePasswordLoginMessage",
+    "AzureCliDynamicInstallFailed": "ms-resource:loc.messages.AzureCliDynamicInstallFailed",
     "BashCommandFailed": "ms-resource:loc.messages.BashCommandFailed",
     "CheckForAppSourceDockerfileMessage": "ms-resource:loc.messages.CheckForAppSourceDockerfileMessage",
     "ContainerAppEnvironmentUsedMessage": "ms-resource:loc.messages.ContainerAppEnvironmentUsedMessage",
+    "CreateContainerAppEnvironmentFailed": "ms-resource:loc.messages.CreateContainerAppEnvironmentFailed",
+    "CreateContainerAppFailed": "ms-resource:loc.messages.CreateContainerAppFailed",
+    "CreateContainerAppFromYamlFailed": "ms-resource:loc.messages.CreateContainerAppFromYamlFailed",
     "CreateImageWithBuilderFailed": "ms-resource:loc.messages.CreateImageWithBuilderFailed",
     "CreateImageWithBuilderMessage": "ms-resource:loc.messages.CreateImageWithBuilderMessage",
     "CreateImageWithDockerfileFailed": "ms-resource:loc.messages.CreateImageWithDockerfileFailed",
     "CreateImageWithDockerfileMessage": "ms-resource:loc.messages.CreateImageWithDockerfileMessage",
-    "CreateOrUpdateContainerAppFailed": "ms-resource:loc.messages.CreateOrUpdateContainerAppFailed",
+    "CreateResourceGroupFailed": "ms-resource:loc.messages.CreateResourceGroupFailed",
     "DefaultContainerAppNameMessage": "ms-resource:loc.messages.DefaultContainerAppNameMessage",
+    "DefaultContainerAppEnvironmentMessage": "ms-resource:loc.messages.DefaultContainerAppEnvironmentMessage",
     "DefaultImageToBuildMessage": "ms-resource:loc.messages.DefaultImageToBuildMessage",
     "DefaultImageToDeployMessage": "ms-resource:loc.messages.DefaultImageToDeployMessage",
+    "DefaultIngressMessage": "ms-resource:loc.messages.DefaultIngressMessage",
     "DefaultResourceGroupMessage": "ms-resource:loc.messages.DefaultResourceGroupMessage",
     "DefaultRuntimeStackMessage": "ms-resource:loc.messages.DefaultRuntimeStackMessage",
     "DefaultTargetPortMessage": "ms-resource:loc.messages.DefaultTargetPortMessage",
     "DetermineRuntimeStackFailed": "ms-resource:loc.messages.DetermineRuntimeStackFailed",
+    "DisableContainerAppIngressFailed": "ms-resource:loc.messages.DisableContainerAppIngressFailed",
+    "DisabledIngressMessage": "ms-resource:loc.messages.DisabledIngressMessage",
+    "EnableContainerAppIngressFailed": "ms-resource:loc.messages.EnableContainerAppIngressFailed",
     "ErrorCodeFormat": "ms-resource:loc.messages.ErrorCodeFormat",
     "ErrorMessageFormat": "ms-resource:loc.messages.ErrorMessageFormat",
+    "ExistingContainerAppEnvironmentMessage": "ms-resource:loc.messages.ExistingContainerAppEnvironmentMessage",
     "FoundAppSourceDockerfileMessage": "ms-resource:loc.messages.FoundAppSourceDockerfileMessage",
-    "InvalidArgumentsMessage": "ms-resource:loc.messages.InvalidArgumentsMessage",
+    "MissingAcrNameMessage": "ms-resource:loc.messages.MissingAcrNameMessage",
+    "MissingRequiredArgumentMessage": "ms-resource:loc.messages.MissingRequiredArgumentMessage",
     "PackCliInstallFailed": "ms-resource:loc.messages.PackCliInstallFailed",
     "PushImageToAcrFailed": "ms-resource:loc.messages.PushImageToAcrFailed",
-    "SetDefaultBuilderFailed": "ms-resource:loc.messages.SetDefaultBuilderFailed"
+    "SetDefaultBuilderFailed": "ms-resource:loc.messages.SetDefaultBuilderFailed",
+    "UpdateContainerAppFailed": "ms-resource:loc.messages.UpdateContainerAppFailed",
+    "UpdateContainerAppFromYamlFailed": "ms-resource:loc.messages.UpdateContainerAppFromYamlFailed",
+    "UpdateContainerAppRegistryDetailsFailed": "ms-resource:loc.messages.UpdateContainerAppRegistryDetailsFailed"
   }
 }
