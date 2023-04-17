@@ -29,6 +29,8 @@ Tasks/AzureCloudPowerShellDeploymentV1/    @vsebesta   @rvairavelu   @pipeline-e
 
 Tasks/AzureContainerAppsV0/    @cormacpayne    @daniv-msft
 
+Tasks/AzureContainerAppsV1/    @cormacpayne    @daniv-msft
+
 Tasks/AzureFileCopyV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
 Tasks/AzureFileCopyV2/    @vsebesta   @rvairavelu   @pipeline-environment-team
@@ -85,7 +87,7 @@ Tasks/AzureRmWebAppDeploymentV4/   @vsebesta   @rvairavelu   @pipeline-environme
 
 Tasks/AzureSpringCloudV0    @yevster
 
-Tasks/AzureStaticWebAppV0/  @miwebst    @brhopcra
+Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @mkarmark @joslinmicrosoft
 
 Tasks/AzureWebAppV1/  @vsebesta @rvairavelu @pipeline-environment-team
 
@@ -285,6 +287,8 @@ Tasks/KubernetesV1/    @rvairavelu @manolerazvan
 
 Tasks/KubernetesManifestV0/    @rvairavelu @manolerazvan
 
+Tasks/KubernetesManifestV1/    @rvairavelu @manolerazvan
+
 Tasks/ManualInterventionV8/    @rvairavelu @manolerazvan
 
 Tasks/ManualValidationV0/    @rvairavelu @manolerazvan
@@ -300,6 +304,8 @@ Tasks/MavenV4/     @microsoft/akvelon-build-task-team
 Tasks/MSBuildV1/   @microsoft/akvelon-build-task-team
 
 Tasks/MysqlDeploymentOnMachineGroupV1/     @vsebesta   @rvairavelu   @pipeline-environment-team
+
+Tasks/NodeTaskRunnerInstallerV0/    @microsoft/akvelon-build-task-team
 
 Tasks/NodeToolV0/ @microsoft/akvelon-build-task-team
 

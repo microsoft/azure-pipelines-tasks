@@ -8,7 +8,7 @@
     "@types/uuid": "^8.3.0",
     "azure-devops-node-api": "11.2.0",
     "azure-pipelines-task-lib": "^4.0.1-preview",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.217.1",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.218.1",
     "moment": "^2.29.4"
   },
   "devDependencies": {

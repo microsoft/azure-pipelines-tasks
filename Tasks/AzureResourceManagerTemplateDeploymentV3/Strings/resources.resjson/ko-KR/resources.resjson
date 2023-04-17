@@ -25,13 +25,13 @@
   "loc.input.label.csmParametersFileLink": "템플릿 매개 변수 링크",
   "loc.input.help.csmParametersFileLink": "매개 변수 파일의 URL을 지정합니다. 예를 들면 [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.parameters.json)입니다. \n\n매개 변수 파일을 개인 저장소 계정으로 업로드하려면 템플릿의 URL에 SAS(공유 액세스 서명)를 검색하여 포함하세요. 예를 들면 `<blob_storage_url>/template.json?<SAStoken>`입니다. 매개 변수 파일을 저장소 계정으로 업로드하여 SAS 토큰을 생성하려면 [Azure 파일 복사](https://aka.ms/azurefilecopyreadme) 작업을 사용하거나 [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) 또는 [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911)를 사용하여 단계를 수행합니다.\n\n표에서 템플릿 매개 변수를 보려면 [템플릿 매개 변수 재정의] 텍스트 상자 옆에 있는 “…”을 클릭하세요. 이 기능을 사용하려면 소스에서 CORS 규칙이 사용하도록 설정되어 있어야 합니다. 템플릿이 Azure Storage Blob에 있는 경우에는 [여기](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests)를 참조하여 CORS를 사용하도록 설정하세요.",
   "loc.input.label.csmFile": "템플릿",
-  "loc.input.help.csmFile": "Azure Resource Manager 템플릿을 가리키는 경로 또는 패턴을 지정합니다. 템플릿에 대한 자세한 내용은 https://aka.ms/azuretemplates를 참조하세요. 바로 시작하려면 https://aka.ms/sampletemplate 템플릿을 사용하세요.",
+  "loc.input.help.csmFile": "Azure Resource Manager 템플릿을 가리키는 경로 또는 패턴을 지정합니다. 템플릿에 대한 자세한 내용은 https://aka.ms/azuretemplates를 참조하세요. 즉시 시작하려면 https://aka.ms/sampletemplate 템플릿을 사용하세요. '연결된 아티팩트'는 Azure CLI 버전 > 2.20.0인 경우 Bicep 파일도 지원합니다.",
   "loc.input.label.csmParametersFile": "템플릿 매개 변수",
-  "loc.input.help.csmParametersFile": "Azure Resource Manager 템플릿에 해당하는 매개 변수 파일을 가리키는 경로 또는 패턴을 지정합니다.",
+  "loc.input.help.csmParametersFile": "Azure Resource Manager 템플릿의 매개 변수 파일을 가리키는 경로 또는 패턴을 지정합니다. '연결된 아티팩트'는 Azure CLI 버전 > 2.20.0인 경우 Bicep 파일도 지원합니다.",
   "loc.input.label.overrideParameters": "템플릿 매개 변수 재정의",
   "loc.input.help.overrideParameters": "템플릿 매개 변수를 표 형태로 보려면 [매개 변수 재정의] 텍스트 상자 옆에 있는 \"...\"을 클릭합니다. 이 기능을 사용하려면 소스에서 CORS 규칙을 사용하도록 설정해야 합니다. 템플릿이 Azure Storage Blob에 있는 경우 [이 문서](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests)를 참조하여 CORS를 사용하도록 설정하세요. 또는 텍스트 상자에 재정의할 템플릿 매개 변수를 입력합니다. 예: <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).<br>사용 중인 매개 변수 값이 여러 단어로 이루어진 경우에는 변수를 사용해서 전달하더라도 따옴표로 묶으세요. 예: -name \"parameter value\" -name2 \"$(var)\"<br>개체 형식 매개 변수를 재정의하려면 묶은 JSON 개체를 사용합니다. 예: -options [\"option1\"] -map {\"key1\": \"value1\" }. ",
   "loc.input.label.deploymentMode": "배포 모드",
-  "loc.input.help.deploymentMode": "자세한 내용은 [관련 문서](https://docs.microsoft.com/en-us/azure/azure-resource-manager/deployment-modes)를 참조하세요. \n\n 증분 모드는 배포를 리소스 그룹에 대한 증분 업데이트로 처리합니다. 리소스 그룹에는 있지만 템플릿에 지정되지 않은 변경 안 된 리소스는 그대로 둡니다. \n\n 전체 모드는 템플릿에 없는 리소스를 삭제합니다. 증분 모드에 비해 전체 모드의 처리 시간이 상대적으로 더 오래 걸립니다. 작업 시간이 초과되는 경우 시간 제한을 늘리거나 모드를 '증분'으로 변경하는 것이 좋습니다. \n **[경고] 전체 모드는 템플릿에 지정되지 않은 리소스 그룹의 기존 리소스를 모두 삭제합니다. 템플릿에 지정되지 않은 필요한 리소스가 배포하는 리소스 그룹에 포함되지 않는지 검토하세요.** \n\n 유효성 검사 모드를 사용하면 실제 리소스를 만들기 전에 템플릿 문제를 찾을 수 있습니다. \n\n 기본적으로 증분 모드가 사용됩니다. \n\n '전체' 모드는 '리소스 그룹' 배포 범위에만 지원됩니다.",
+  "loc.input.help.deploymentMode": "자세한 내용은 [이 항목](https://docs.microsoft.com/en-us/azure/azure-resource-manager/deployment-modes)을 참조하세요. \n\n 증분 모드는 배포를 리소스 그룹에 대한 증분 업데이트로 처리합니다. 리소스 그룹에 존재하지만 템플릿에 지정되지 않은 변경되지 않은 리소스를 그대로 둡니다. \n\n 전체 모드는 템플릿에 없는 리소스를 삭제합니다. 완료 모드는 증분 모드보다 상대적으로 시간이 더 걸립니다. 작업 시간이 초과되면 시간 초과를 늘리거나 모드를 '증분'으로 변경하는 것이 좋습니다. \n **[경고] 전체 모드는 템플릿에 지정되지 않은 리소스 그룹의 기존 리소스를 모두 삭제합니다. 배포할 리소스 그룹에 템플릿에 지정되지 않은 필수 리소스가 없는지 검토하세요.** \n\n 유효성 검사 모드를 사용하면 실제 리소스를 생성하기 전에 템플릿의 문제를 찾을 수 있습니다. 유효성 검사 모드를 사용하면 실제 리소스를 생성하기 전에 템플릿의 문제를 찾을 수 있습니다. 이 모드는 리소스를 배포하지 않더라도 어쨌든 리소스 그룹을 생성합니다.\n\n 기본적으로 증분 모드가 사용됩니다.",
   "loc.input.label.deploymentName": "배포 이름",
   "loc.input.help.deploymentName": "만들 리소스 그룹 배포의 이름을 지정합니다.",
   "loc.input.label.deploymentOutputs": "배포 출력",
@@ -88,5 +88,10 @@
   "loc.messages.ManagedServiceIdentityDetails": "배포에 사용되는 관리 서비스 ID에 리소스 그룹 %s에 대한 올바른 역할이 할당되어 있는지 확인하세요. 자세한 내용은 https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal 링크를 참조하세요.",
   "loc.messages.CompleteDeploymentModeNotSupported": "배포 모드 '완료'는 '%s' 범위의 배포에 대해 지원되지 않습니다.",
   "loc.messages.TemplateValidationFailure": "Azure Resource Manager 템플릿에 유효성 검사 오류가 있습니다. 이로 인해 템플릿 배포가 실패할 수 있습니다. %s. https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-syntax를 따라 이동하세요.",
-  "loc.messages.TroubleshootingGuide": "문제가 해결되었는지 확인하려면 https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting에서 문제 해결 가이드를 확인하세요."
+  "loc.messages.TroubleshootingGuide": "문제가 해결되었는지 확인하려면 https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting에서 문제 해결 가이드를 확인하세요.",
+  "loc.messages.IncompatibleAzureCLIVersion": "Azure CLI 버전은 >= 2.20.0이어야 합니다.",
+  "loc.messages.AzureCLINotFound": "에이전트에서 Azure CLI를 찾을 수 없습니다.",
+  "loc.messages.FailedToFetchAzureCLIVersion": "에이전트에서 az cli 버전을 가져오지 못했습니다. 오류: %s",
+  "loc.messages.BicepBuildFailed": "\"az bicep 빌드\"가 실패했습니다. 오류: %s",
+  "loc.messages.BicepFileCleanupFailed": "Bicep 파일을 삭제하지 못했습니다. 오류: %s"
 }

@@ -96,7 +96,7 @@ export default class ClusterConnection {
         if( versionOrLocation === "location") {
             let pathToKubectl = tl.getPathInput("specifyLocation", true, true);
             try {
-                fs.chmodSync(pathToKubectl, "777");
+                fs.chmodSync(pathToKubectl, "755");
             } catch (ex) {
                 tl.debug(`Could not chmod ${pathToKubectl}, exception: ${JSON.stringify(ex)}`)
             }

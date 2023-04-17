@@ -5,8 +5,7 @@ $script:certificateAccessToken = $null
 
 $script:defaultEnvironmentMSALAuthUri = "https://login.microsoftonline.com/"
 
-# @DEPRACATED
-[Obsolete("Use 'script:defaultEnvironmentMSALAuthUri' instead. This property will be removed.")]
+# @DEPRACATED "Use 'script:defaultEnvironmentMSALAuthUri' instead. This property will be removed."
 $script:defaultEnvironmentADALAuthUri = "https://login.windows.net/"
 
 # MsalInstance
@@ -22,7 +21,6 @@ $MsiConnection = 'ManagedServiceIdentity'
     @DEPRECATED - DO NOT USE Well-Known ClientId
     This flow isn't recommended - https://learn.microsoft.com/en-us/azure/active-directory/develop/scenario-desktop-acquire-token-username-password?tabs=dotnet
 #>
-[Obsolete("This will be removed.")]
 $azurePsClientId = "1950a258-227b-4e31-a9cf-717495945fc2"
 
 # API-Version(s)
@@ -43,6 +41,15 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
 
 Import-Module $PSScriptRoot/../TlsHelper_
 Add-Tls12InSession
+
+function Print-MSALObsoleteMessage {
+    [CmdletBinding()]
+    param()
+    process {
+        $callerName = (Get-PSCallStack)[1].Command
+        Write-Host "INFO: The command '$callerName' is obsolete. We are updating the tasks to use 'Get-AccessTokenMSAL' instead. No action needed on end users."
+    }
+}
 
 function Get-AzureUri {
     param([object] [Parameter(Mandatory = $true)] $endpoint)
@@ -114,9 +121,10 @@ function Get-ConnectionType {
     This flow isn't recommended - https://learn.microsoft.com/en-us/azure/active-directory/develop/scenario-desktop-acquire-token-username-password?tabs=dotnet
 #>
 function Get-UsernamePasswordAccessToken {
-    [Obsolete("Use Get-AccessTokenMSAL instead. This will be removed.")]
     [CmdletBinding()]
     param([Parameter(Mandatory = $true)] $endpoint)
+
+    Print-MSALObsoleteMessage
 
     # Well known Client-Id
     $password = $endpoint.Auth.Parameters.Password
@@ -424,12 +432,13 @@ function Get-AccessTokenMSAL {
 
 # @DEPRECATED
 function Get-SpnAccessToken {
-    [Obsolete("Use Get-AccessTokenMSAL instead. This will be removed.")]
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)] $endpoint,
         [parameter(Mandatory = $false)] $overrideResourceType
     )
+
+    Print-MSALObsoleteMessage
 
     $principalId = $endpoint.Auth.Parameters.ServicePrincipalId
     $tenantId = $endpoint.Auth.Parameters.TenantId
@@ -539,11 +548,12 @@ function Get-MsiAccessToken {
 
 # @DEPRECATED
 function Get-SpnAccessTokenUsingCertificate {
-    [Obsolete("Use Get-AccessTokenMSAL instead. This will be removed.")]
     param(
         [Parameter(Mandatory = $true)] $endpoint,
         [Parameter(Mandatory = $false)] $overrideResourceType
     )
+
+    Print-MSALObsoleteMessage
 
     if ($script:certificateAccessToken -and $script:certificateAccessToken.expires_on) {
         # there exists a token cache
@@ -913,9 +923,8 @@ function Get-AzureSqlDatabaseServerResourceId {
     throw (Get-VstsLocString -Key AZ_NoValidResourceIdFound -ArgumentList $serverName, $serverType, $subscriptionId)
 }
 
-# @DEPRECATED - there is no usage
+# @DEPRECATED - there is no usage, this method might be removed.
 function Add-LegacyAzureSqlServerFirewall {
-    [Obsolete("This method will be removed.")]
     [CmdletBinding()]
     param([Object] [Parameter(Mandatory = $true)] $endpoint,
         [String] [Parameter(Mandatory = $true)] $startIPAddress,
@@ -976,9 +985,8 @@ function Add-AzureRmSqlServerFirewall {
     Invoke-RestMethod -Uri $uri -Method PUT -Headers $headers -Body $body -ContentType $script:jsonContentType
 }
 
-# @DEPRECATED - there is no usage
+# @DEPRECATED - there is no usage, this method might be removed.
 function Remove-LegacyAzureSqlServerFirewall {
-    [Obsolete("This method will be removed.")]
     [CmdletBinding()]
     param([Object] [Parameter(Mandatory = $true)] $endpoint,
         [String] [Parameter(Mandatory = $true)] $serverName,

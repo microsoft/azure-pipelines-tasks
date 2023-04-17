@@ -11,7 +11,7 @@ Another [migration progress](../../common-npm-packages/MIGRATION_OF_COMMON_PACKA
 1. [ ] AzureRmDeploy-common
 2. [ ] coveragepublisher
 3. [ ] packaging-common
-4. [ ] utility-common
+4. [X] utility-common
 5. [X] utility-common-v2
 6. [ ] webdeployment-common-v2
 
@@ -35,3 +35,4 @@ In addition to that, central repository usage will help us to maintain versionin
 | Package                 | Remove package folder                                               | Replace package in tasks                                            |
 | ----------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | utility-common-v2       | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17730) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/16997) |
+| utility-common          | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17737) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17729) |
