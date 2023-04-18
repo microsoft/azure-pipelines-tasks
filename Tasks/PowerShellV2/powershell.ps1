@@ -1,6 +1,15 @@
 [CmdletBinding()]
 param()
 
+Import-Module .\ArgsParser.psm1
+
+$argsFile = Join-Path $(Get-Location) "input.args"
+
+$featureFlags = @{
+    enableTelemetry  = [System.Convert]::ToBoolean($env:AZP_TASK_FF_POWERSHELLV2_ENABLE_INPUT_ARGS_TELEMETRY)
+    enableSecureArgs = [System.Convert]::ToBoolean($env:AZP_TASK_FF_POWERSHELLV2_ENABLE_SECURE_ARGS)
+}
+
 function Get-ActionPreference {
     param (
         [Parameter(Mandatory)]
@@ -58,8 +67,22 @@ try {
         }
 
         $input_arguments = Get-VstsInput -Name 'arguments'
+
+        if ($input_arguments) {
+            $argsArray, $telemetry = parsePowerShellArguments -InputArgs $input_arguments
+
+            if ($featureFlags.enableSecureArgs) {
+                $argsJson = $argsArray | ConvertTo-Json
+
+                $argsJson | Out-File "$argsFile"
+            }
+
+            if ($featureFlags.enableTelemetry) {
+                # publish($telemetry)
+            }
+        }
     }
-    elseif("$input_targetType".ToUpperInvariant() -eq "INLINE") {
+    elseif ("$input_targetType".ToUpperInvariant() -eq "INLINE") {
         $input_script = Get-VstsInput -Name 'script'
     }
     else {
@@ -88,11 +111,30 @@ try {
     if ($input_progressPreference -ne 'Default') {
         $contents += "`$ProgressPreference = '$input_progressPreference'"
     }
+    if ($input_arguments -and $featureFlags.enableSecureArgs) {
+        if ($input_pwsh) {
+            $contents += "`$scriptArgs = `$(Get-Content $argsFile) | ConvertFrom-Json  | ForEach-Object { `"`$_`" }"
+        }
+        else {
+            $contents += "`$scriptArgs = `$(Get-Content $argsFile) | ConvertFrom-Json"
+        }
+        $contents += "for (`$i = 0; `$i -lt `$scriptArgs.Count; `$i++) {"
+        $contents += "`$argVar = `$scriptArgs[`$i]"
+        $contents += "if (`$argVar.StartsWith('-')) {"
+        $contents += "`$modifiedParamName = `$argVar | Add-Member -NotePropertyName '<CommandParameterName>' -NotePropertyValue `$argVar -PassThru"
+        $contents += "`$scriptArgs[`$i] = `$modifiedParamName`t}`n}"
+    }
     # Change default error view to normal view. We need this for error handling since we pipe stdout and stderr to the same stream
     # and we rely on PowerShell piping back NormalView error records (required because PowerShell Core changed the default to ConciseView)
     $contents += "`$ErrorView = 'NormalView'"
     if ("$input_targetType".ToUpperInvariant() -eq 'FILEPATH') {
-        $contents += ". '$("$input_filePath".Replace("'", "''"))' $input_arguments".Trim()
+        if ($featureFlags.enableSecureArgs) {
+            $contents += ". '$("$input_filePath".Replace("'", "''"))' @scriptArgs".Trim()
+        }
+        else {
+            $contents += ". '$("$input_filePath".Replace("'", "''"))' $input_arguments".Trim()
+        }
+
         Write-Host (Get-VstsLocString -Key 'PS_FormattedCommand' -ArgumentList ($contents[-1]))
     }
     else {
@@ -146,8 +188,9 @@ try {
     }
     $executionOperator;
     if ($input_runScriptInSeparateScope) {
-        $executionOperator = '&'; 
-    } else {
+        $executionOperator = '&';
+    }
+    else {
         $executionOperator = '.';
     }
     Assert-VstsPath -LiteralPath $powershellPath -PathType 'Leaf'
