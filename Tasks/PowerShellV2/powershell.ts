@@ -3,9 +3,18 @@ import path = require('path');
 import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
+import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry'
+import { parsePowerShellArguments } from './ArgsParser';
 var uuidV4 = require('uuid/v4');
 
-function getActionPreference(vstsInputName: string, defaultAction: string = 'Default', validActions: string[] = [ 'Default', 'Stop', 'Continue', 'SilentlyContinue' ]) {
+const argsFile = path.join(__dirname, "input.args")
+
+const featureFlags = {
+    enableTelemetry: !!process.env['AZP_TASK_FF_POWERSHELLV2_ENABLE_INPUT_ARGS_TELEMETRY'],
+    enableSecureArgs: !!process.env['AZP_TASK_FF_POWERSHELLV2_ENABLE_SECURE_ARGS']
+}
+
+function getActionPreference(vstsInputName: string, defaultAction: string = 'Default', validActions: string[] = ['Default', 'Stop', 'Continue', 'SilentlyContinue']) {
     let result: string = tl.getInput(vstsInputName, false) || defaultAction;
 
     if (validActions.map(actionPreference => actionPreference.toUpperCase()).indexOf(result.toUpperCase()) < 0) {
@@ -42,6 +51,21 @@ async function run() {
             }
 
             input_arguments = tl.getInput('arguments') || '';
+
+            if (input_arguments) {
+                const [argsArray, telemetry] = parsePowerShellArguments(input_arguments)
+
+                if (featureFlags.enableSecureArgs) {
+
+                    const json = JSON.stringify(argsArray, null, 2)
+
+                    fs.writeFileSync(argsFile, json)
+                }
+
+                if (featureFlags.enableTelemetry) {
+                    emitTelemetry('TaskHub', 'PowerShell', telemetry)
+                }
+            }
         }
         else if (input_targetType.toUpperCase() == 'INLINE') {
             input_script = tl.getInput('script', false) || '';
@@ -72,10 +96,23 @@ async function run() {
         if (input_progressPreference.toUpperCase() != 'DEFAULT') {
             contents.push(`$ProgressPreference = '${input_progressPreference}'`);
         }
+        if (input_arguments && featureFlags.enableSecureArgs) {
+            contents.push(`$scriptArgs = Get-Content ${argsFile} | ConvertFrom-Json | ForEach-Object { "$_" }`)
+            contents.push("for ($i = 0; $i -lt $scriptArgs.Count; $i++) {")
+            contents.push("$argVar = $scriptArgs[$i]")
+            contents.push("if ($argVar.StartsWith('-')) {")
+            contents.push("$modifiedParamName = $argVar | Add-Member -NotePropertyName '<CommandParameterName>' -NotePropertyValue $argVar -PassThru")
+            contents.push("$scriptArgs[$i] = $modifiedParamName\n}\n}")
+        }
 
         let script = '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
-            script = `. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim();
+            if (featureFlags.enableSecureArgs) {
+                script = `. '${input_filePath.replace(/'/g, "''")}' @scriptArgs`.trim();
+            }
+            else {
+                script = `. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim();
+            }
         } else {
             script = `${input_script}`;
         }
@@ -123,7 +160,7 @@ async function run() {
         // Note, use "-Command" instead of "-File" to match the Windows implementation. Refer to
         // comment on Windows implementation for an explanation why "-Command" is preferred.
         console.log('========================== Starting Command Output ===========================');
-        
+
         const executionOperator = input_runScriptInSeparateScope ? '&' : '.';
         let powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
             .arg('-NoLogo')
