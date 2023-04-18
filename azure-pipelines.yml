@@ -9,5 +9,5 @@ steps:
     targetType: inline
     script: 'conda install afd -d'
   env:
-    CONDA_CHANNELS: https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/access/conda/pkgs/main
+    CONDA_CHANNELS: https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/access/conda/repo/pkgs/main
     ARTIFACTS_CONDA_TOKEN: $(System.AccessToken)
