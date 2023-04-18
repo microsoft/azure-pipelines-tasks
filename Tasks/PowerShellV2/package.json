@@ -7,6 +7,10 @@
     "type": "git",
     "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
   },
+  "scripts": {
+    "build": "node ../../make.js build --task PowerShellV2",
+    "test": "node ../../make.js test --task PowerShellV2"
+  },
   "author": "Microsoft Corporation",
   "license": "MIT",
   "dependencies": {
