@@ -3,8 +3,6 @@ trigger:
 - releases/*
 - node6hotfixes/*
 
-pool: Default
-
 steps:
 - task: PowerShell@2
   inputs:
