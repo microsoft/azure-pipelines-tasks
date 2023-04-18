@@ -9,5 +9,5 @@ steps:
     targetType: inline
     script: 'conda install fakePackage -d'
   env:
-    CONDA_CHANNELS: https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/main
+    CONDA_CHANNELS: https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/rep/pkgs/main
     ARTIFACTS_CONDA_TOKEN: $(System.AccessToken)
