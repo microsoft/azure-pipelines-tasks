@@ -12,19 +12,25 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Deploy applications to Azure Spring Cloud and manage deployments.]]></Val>
+          <Val><![CDATA[Deploy applications to Azure Spring Apps and manage deployments.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Déployez des applications pour Azure Spring Cloud et gérer les déploiements.]]></Val>
+            <Val><![CDATA[Déployez des applications sur Azure Spring Apps et gérez les déploiements.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Deploy applications to Azure Spring Cloud and manage deployments.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Azure Spring Cloud]]></Val>
+          <Val><![CDATA[Azure Spring Apps]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Azure Spring Cloud]]></Val>
+            <Val><![CDATA[Azure Spring Apps]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Azure Spring Cloud]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -39,46 +45,61 @@
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[[Learn more about this task]5D;(https://aka.ms/azurespringcloud)]]></Val>
+          <Val><![CDATA[[Learn more about this task]5D;(https://aka.ms/azurespringapps)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[Learn more about this task]5D;(https://aka.ms/azurespringcloud)]]></Val>
+            <Val><![CDATA[[En savoir plus sur cette tâche]5D;(https://aka.ms/azurespringapps)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[[Learn more about this task]5D;(https://aka.ms/azurespringcloud)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.Action" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Action to be performed on Azure Spring Cloud.]]></Val>
+          <Val><![CDATA[Action to be performed on Azure Spring Apps.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Action à effectuer sur Azure Spring Cloud.]]></Val>
+            <Val><![CDATA[Action à effectuer sur Azure Spring Apps.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Action to be performed on Azure Spring Cloud.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.AppName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Select the Azure Spring Cloud app to deploy.]]></Val>
+          <Val><![CDATA[Select the Azure Spring Apps app to deploy.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Sélectionnez l’application Azure Spring Cloud à déployer.]]></Val>
+            <Val><![CDATA[Sélectionnez l’application Azure Spring Apps à déployer.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Select the Azure Spring Cloud app to deploy.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.AzureSpringCloud" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Select the Azure Spring Cloud service to which to deploy.]]></Val>
+          <Val><![CDATA[Select the Azure Spring Apps service to which to deploy.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Sélectionnez le service Azure Spring Cloud sur lequel effectuer le déploiement.]]></Val>
+            <Val><![CDATA[Sélectionnez le service Azure Spring Apps sur lequel effectuer le déploiement.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Select the Azure Spring Cloud service to which to deploy.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.Builder" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Select a builder of VMware Tanzu® Build Service™, this can be used in enterprise tier. <br/> For detailed description, please check [Use Tanzu Build Service]5D;(https://docs.microsoft.com/en-us/azure/spring-cloud/how-to-enterprise-build-service?tabs=azure-portal).]]></Val>
+          <Val><![CDATA[Select a builder of VMware Tanzu® Build Service™, this can be used in enterprise tier. <br/> For detailed description, please check [Use Tanzu Build Service]5D;(https://docs.microsoft.com/en-us/azure/spring-apps/how-to-enterprise-build-service?tabs=azure-portal).]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Sélectionnez un générateur de VMware Tanzu® Build Service™, qui peut être utilisé dans le niveau Entreprise. <br/> Pour obtenir une description détaillée, consultez [Use Tanzu Build Service]5D;(https://docs.microsoft.com/en-us/azure/spring-cloud/how-to-enterprise-build-service?tabs=azure-portal).]]></Val>
+            <Val><![CDATA[Sélectionnez un générateur de VMware Tanzu® Build Service™, qui peut être utilisé dans le niveau Entreprise. <br/> Pour obtenir une description détaillée, consultez [Utiliser tanzu Build Service]5D;(https://docs.microsoft.com/en-us/azure/spring-apps/how-to-enterprise-build-service?tabs=azure-portal).]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Select a builder of VMware Tanzu® Build Service™, this can be used in enterprise tier. <br/> For detailed description, please check [Use Tanzu Build Service]5D;(https://docs.microsoft.com/en-us/azure/spring-cloud/how-to-enterprise-build-service?tabs=azure-portal).]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -174,10 +195,13 @@
       </Item>
       <Item ItemId=";loc.input.help.Package" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[File path to the package or a folder containing the Spring Cloud app contents.<br />Variables ( [Build]5D;(https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release]5D;(https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\*\*/\*.jar.]]></Val>
+          <Val><![CDATA[File path to the package or a folder containing the Spring Apps app contents.<br />Variables ( [Build]5D;(https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release]5D;(https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\*\*/\*.jar.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Chemin d’accès au package ou à un dossier contenant le contenu de l’application Spring Cloud.<br />Les variables ([Build]5D;(https://docs.microsoft.com/vsts/pipelines/build/variables) | [Mise en production]5D;(https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)) et les caractères génériques sont pris en charge. <br/> Exemple : $(System.DefaultWorkingDirectory)/\*\*/\*.jar.]]></Val>
+            <Val><![CDATA[Chemin d’accès au package ou à un dossier contenant le contenu de l’application Spring Apps.<br />Les variables ([Build]5D;(https://docs.microsoft.com/vsts/pipelines/build/variables) | [Mise en production]5D;(https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)) et les caractères génériques sont pris en charge. <br/> Exemple : $(System.DefaultWorkingDirectory)/\*\*/\*.jar.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[File path to the package or a folder containing the Spring Cloud app contents.<br />Variables ( [Build]5D;(https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release]5D;(https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\*\*/\*.jar.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -246,10 +270,13 @@
       </Item>
       <Item ItemId=";loc.input.label.AzureSpringCloud" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Azure Spring Cloud Name]]></Val>
+          <Val><![CDATA[Azure Spring Apps Name]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Nom d’Azure Spring Cloud]]></Val>
+            <Val><![CDATA[Nom d’Azure Spring Apps]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Azure Spring Cloud Name]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -426,10 +453,13 @@
       </Item>
       <Item ItemId=";loc.instanceNameFormat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Azure Spring Cloud $(Action): $(AppName)]]></Val>
+          <Val><![CDATA[Azure Spring Apps $(Action): $(AppName)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Azure Spring Cloud $(Action) : $(AppName)]]></Val>
+            <Val><![CDATA[Azure Spring Apps $(Action) : $(AppName)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Azure Spring Cloud $(Action): $(AppName)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -469,20 +499,20 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.DuplicateAzureSpringCloudName" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.messages.DuplicateAzureSpringAppsName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Illegal state: multiple Azure Spring Cloud instances with same name.]]></Val>
+          <Val><![CDATA[Illegal state: multiple Azure Spring Apps instances with same name.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[État non conforme : plusieurs instances Azure Spring Cloud portant le même nom.]]></Val>
+            <Val><![CDATA[État non conforme : plusieurs instances Azure Spring Apps portant le même nom.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.InvalidAzureSpringCloudResourceId" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.messages.InvalidAzureSpringAppsResourceId" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Invalid azure spring cloud resource identifier: %s]]></Val>
+          <Val><![CDATA[Invalid Azure Spring Apps resource identifier: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Identificateur de ressource Azure Spring Cloud non valide : %s]]></Val>
+            <Val><![CDATA[Identificateur de ressource Azure Spring Apps non valide : %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -615,10 +645,13 @@
       </Item>
       <Item ItemId=";loc.messages.UnableToGetDeploymentUrl" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Unable to get deployment URL for Azure Spring Cloud '%s', Error: '%s']]></Val>
+          <Val><![CDATA[Unable to get deployment URL for Azure Spring Apps '%s', Error: '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Impossible d’obtenir l’URL de déploiement pour Azure Spring Cloud « %s ». Erreur : « %s »]]></Val>
+            <Val><![CDATA[Impossible d’obtenir l’URL de déploiement pour Azure Spring Apps « %s ». Erreur : « %s »]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Unable to get deployment URL for Azure Spring Cloud '%s', Error: '%s']]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

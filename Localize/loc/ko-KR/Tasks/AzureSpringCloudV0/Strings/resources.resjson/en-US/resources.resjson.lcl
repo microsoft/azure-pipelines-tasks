@@ -12,19 +12,25 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Deploy applications to Azure Spring Cloud and manage deployments.]]></Val>
+          <Val><![CDATA[Deploy applications to Azure Spring Apps and manage deployments.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[애플리케이션을 Azure Spring Cloud 로 배포하여 배포를 관리합니다.]]></Val>
+            <Val><![CDATA[애플리케이션을 Azure Spring Apps로 배포하고 배포를 관리합니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Deploy applications to Azure Spring Cloud and manage deployments.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Azure Spring Cloud]]></Val>
+          <Val><![CDATA[Azure Spring Apps]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Azure Spring Cloud]]></Val>
+            <Val><![CDATA[Azure Spring Apps]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Azure Spring Cloud]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -39,46 +45,61 @@
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[[Learn more about this task]5D;(https://aka.ms/azurespringcloud)]]></Val>
+          <Val><![CDATA[[Learn more about this task]5D;(https://aka.ms/azurespringapps)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[이 작업에 관한 자세한 정보]5D;(https://aka.ms/azurespringcloud)]]></Val>
+            <Val><![CDATA[[이 작업에 관한 자세한 정보]5D;(https://aka.ms/azurespringapps)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[[Learn more about this task]5D;(https://aka.ms/azurespringcloud)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.Action" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Action to be performed on Azure Spring Cloud.]]></Val>
+          <Val><![CDATA[Action to be performed on Azure Spring Apps.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Azure Spring Cloud에서 수행할 작업입니다.]]></Val>
+            <Val><![CDATA[Azure Spring Apps에서 수행할 작업입니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Action to be performed on Azure Spring Cloud.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.AppName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Select the Azure Spring Cloud app to deploy.]]></Val>
+          <Val><![CDATA[Select the Azure Spring Apps app to deploy.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[배포할 Azure Spring Cloud 앱을 선택합니다.]]></Val>
+            <Val><![CDATA[배포할 Azure Spring Apps 앱을 선택합니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Select the Azure Spring Cloud app to deploy.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.AzureSpringCloud" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Select the Azure Spring Cloud service to which to deploy.]]></Val>
+          <Val><![CDATA[Select the Azure Spring Apps service to which to deploy.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[배포할 Azure Spring Cloud 서비스를 선택합니다.]]></Val>
+            <Val><![CDATA[배포할 Azure Spring Apps 서비스를 선택합니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Select the Azure Spring Cloud service to which to deploy.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.Builder" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Select a builder of VMware Tanzu® Build Service™, this can be used in enterprise tier. <br/> For detailed description, please check [Use Tanzu Build Service]5D;(https://docs.microsoft.com/en-us/azure/spring-cloud/how-to-enterprise-build-service?tabs=azure-portal).]]></Val>
+          <Val><![CDATA[Select a builder of VMware Tanzu® Build Service™, this can be used in enterprise tier. <br/> For detailed description, please check [Use Tanzu Build Service]5D;(https://docs.microsoft.com/en-us/azure/spring-apps/how-to-enterprise-build-service?tabs=azure-portal).]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[엔터프라이즈 계층에서 사용할 수 있는 VMware Tanzu® Build Service™의 작성기를 선택합니다. <br/> 자세한 내용은 [Tanzu Build Service 사용]5D;(https://docs.microsoft.com/en-us/azure/spring-cloud/how-to-enterprise-build-service?tabs=azure-portal)을 참조하세요.]]></Val>
+            <Val><![CDATA[엔터프라이즈 계층에서 사용할 수 있는 VMware Tanzu® Build Service™의 작성기를 선택합니다. <br/> 자세한 내용은 [Tanzu Build Service 사용]5D;(https://docs.microsoft.com/en-us/azure/spring-apps/how-to-enterprise-build-service?tabs=azure-portal)을 참조하세요.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Select a builder of VMware Tanzu® Build Service™, this can be used in enterprise tier. <br/> For detailed description, please check [Use Tanzu Build Service]5D;(https://docs.microsoft.com/en-us/azure/spring-cloud/how-to-enterprise-build-service?tabs=azure-portal).]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -174,10 +195,13 @@
       </Item>
       <Item ItemId=";loc.input.help.Package" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[File path to the package or a folder containing the Spring Cloud app contents.<br />Variables ( [Build]5D;(https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release]5D;(https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\*\*/\*.jar.]]></Val>
+          <Val><![CDATA[File path to the package or a folder containing the Spring Apps app contents.<br />Variables ( [Build]5D;(https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release]5D;(https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\*\*/\*.jar.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Spring Cloud 앱 콘텐츠를 포함한 패키지 또는 폴더의 파일 경로입니다.<br />변수([빌드]5D;(https://docs.microsoft.com/vsts/pipelines/build/variables) | [릴리스]5D;(https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), 와일드카드가 지원됩니다. <br/> 예: $(System.DefaultWorkingDirectory)/\*\*/\*.jar.]]></Val>
+            <Val><![CDATA[Spring Apps 앱 콘텐츠가 포함된 패키지 또는 폴더의 파일 경로입니다.<br />변수([빌드]5D;(https://docs.microsoft.com/vsts/pipelines/build/variables) | [릴리스]5D;(https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), 와일드카드가 지원됩니다. <br/> 예: $(System.DefaultWorkingDirectory)/\*\*/\*.jar.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[File path to the package or a folder containing the Spring Cloud app contents.<br />Variables ( [Build]5D;(https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release]5D;(https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\*\*/\*.jar.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -246,10 +270,13 @@
       </Item>
       <Item ItemId=";loc.input.label.AzureSpringCloud" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Azure Spring Cloud Name]]></Val>
+          <Val><![CDATA[Azure Spring Apps Name]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Azure Spring Cloud 이름]]></Val>
+            <Val><![CDATA[Azure Spring Apps 이름]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Azure Spring Cloud Name]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -426,10 +453,13 @@
       </Item>
       <Item ItemId=";loc.instanceNameFormat" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Azure Spring Cloud $(Action): $(AppName)]]></Val>
+          <Val><![CDATA[Azure Spring Apps $(Action): $(AppName)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Azure Spring Cloud $(Action): $(AppName)]]></Val>
+            <Val><![CDATA[Azure Spring Apps $(Action): $(AppName)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Azure Spring Cloud $(Action): $(AppName)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -469,20 +499,20 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.DuplicateAzureSpringCloudName" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.messages.DuplicateAzureSpringAppsName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Illegal state: multiple Azure Spring Cloud instances with same name.]]></Val>
+          <Val><![CDATA[Illegal state: multiple Azure Spring Apps instances with same name.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[잘못된 상태: 이름이 같은 Azure Spring Cloud 인스턴스가 여러 개입니다.]]></Val>
+            <Val><![CDATA[잘못된 상태: 이름이 같은 Azure Spring Apps 인스턴스가 여러 개입니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.InvalidAzureSpringCloudResourceId" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.messages.InvalidAzureSpringAppsResourceId" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Invalid azure spring cloud resource identifier: %s]]></Val>
+          <Val><![CDATA[Invalid Azure Spring Apps resource identifier: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[잘못된 Azure Spring Cloud 리소스 식별자: %s]]></Val>
+            <Val><![CDATA[잘못된 Azure Spring Apps 리소스 식별자: %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -615,10 +645,13 @@
       </Item>
       <Item ItemId=";loc.messages.UnableToGetDeploymentUrl" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Unable to get deployment URL for Azure Spring Cloud '%s', Error: '%s']]></Val>
+          <Val><![CDATA[Unable to get deployment URL for Azure Spring Apps '%s', Error: '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA['%s' Azure Spring Cloud에 대한 배포 URL을 가져올 수 없습니다. 오류: '%s']]></Val>
+            <Val><![CDATA[Azure Spring Apps '%s'에 대한 배포 URL을 가져올 수 없습니다. 오류: '%s']]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Unable to get deployment URL for Azure Spring Cloud '%s', Error: '%s']]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
