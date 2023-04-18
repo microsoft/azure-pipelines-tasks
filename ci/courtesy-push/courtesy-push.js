@@ -108,10 +108,12 @@ function updateUnifiedDeps(pathToUnifiedDeps, pathToNewUnifiedDeps, outputPath) 
 function updateTfsServerDeps(pathToTfsCore, depsToUpdateArr, outputPath) {
     const tfsCore = fs.readFileSync(pathToTfsCore, 'utf8');
     const tfsToUpdate = tfsCore.split('\n');
+    const tfsCoreLowerCase = tfsCore.toLowerCase();
 
     const insertedIndex = tfsToUpdate.findIndex(tfsString => directoryTag.test(tfsString));
     depsToUpdateArr.forEach(dependencyName => {
-        if (tfsCore.indexOf(dependencyName) === -1) {
+        const dependencyNameLower = dependencyName.toLowerCase();
+        if (tfsCoreLowerCase.indexOf(dependencyNameLower) === -1) {
             const insertedString = formDirectoryString(dependencyName);
             tfsToUpdate.splice(insertedIndex, 0, insertedString);
             console.log(`${insertedString}`);
