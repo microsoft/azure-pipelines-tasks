@@ -2,7 +2,14 @@ import fs = require('fs');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
+import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry'
+import { processBashEnvVariables } from './bashEnvProcessor';
 var uuidV4 = require('uuid/v4');
+
+const featureFlags = {
+    enableTelemetry: !!process.env['AZP_TASK_FF_BASHV3_ENABLE_INPUT_ARGS_TELEMETRY'],
+    enableSecureArgs: !!process.env['AZP_TASK_FF_BASHV3_ENABLE_SECURE_ARGS']
+}
 
 async function translateDirectoryPath(bashPath: string, directoryPath: string): Promise<string> {
     let bashPwd = tl.tool(bashPath)
@@ -94,14 +101,29 @@ async function run() {
             else {
                 targetFilePath = input_filePath;
             }
+
+            const [processedArgs, telemetry] = processBashEnvVariables(input_arguments)
+
+            const resultArgs = featureFlags.enableSecureArgs ? processedArgs : input_arguments
+
+            if (featureFlags.enableTelemetry) {
+                emitTelemetry('TaskHub', 'Bash', telemetry)
+            }
+
+            const argsEnvVar = {
+                envName: "INPUT_SCRIPT_ARGS",
+                value: resultArgs.trim()
+            };
+            process.env[argsEnvVar.envName] = argsEnvVar.value;
+
             // Choose behavior:
             // If they've set old_source_behavior, source the script. This is what we used to do and needs to hang around forever for back compat reasons
             // If they've not, execute the script with bash. This is our new desired behavior.
             // See https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/bashnote.md
             if (old_source_behavior) {
-                contents = `. '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
+                contents = `. '${targetFilePath.replace(/'/g, "'\\''")}' "\$${argsEnvVar.envName}"`.trim();
             } else {
-                contents = `exec bash '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
+                contents = `exec bash '${targetFilePath.replace(/'/g, "'\\''")}' "\$${argsEnvVar.envName}"`.trim();
             }
             console.log(tl.loc('JS_FormattedCommand', contents));
         }
@@ -121,7 +143,8 @@ async function run() {
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let fileName = uuidV4() + '.sh';
         let filePath = path.join(tempDirectory, fileName);
-        await fs.writeFileSync(
+
+        fs.writeFileSync(
             filePath,
             contents,
             { encoding: 'utf8' });
