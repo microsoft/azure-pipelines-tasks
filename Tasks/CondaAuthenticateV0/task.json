@@ -8,8 +8,8 @@
  "category": "Package",
  "author": "Microsoft Corporation",
  "version": {
-     "Major": 1,
-     "Minor": 0,
+     "Major": 0,
+     "Minor": 221,
      "Patch": 0
  },
  "runsOn": [
