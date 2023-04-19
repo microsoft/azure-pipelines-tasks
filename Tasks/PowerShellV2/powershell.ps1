@@ -74,10 +74,13 @@ try {
             if ($featureFlags.enableSecureArgs) {
                 $argsJson = $argsArray | ConvertTo-Json
 
+                Write-TaskDebug "Writing arguments to temp $argsFile file..."
+
                 $argsJson | Out-File "$argsFile"
             }
 
             if ($featureFlags.enableTelemetry) {
+                Write-TaskDebug "Publishing task telemetry..."
                 PublishTelemetry $telemetry
             }
         }
