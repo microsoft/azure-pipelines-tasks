@@ -56,14 +56,15 @@ async function run() {
                 const [argsArray, telemetry] = parsePowerShellArguments(input_arguments)
 
                 if (featureFlags.enableSecureArgs) {
-
                     const json = JSON.stringify(argsArray, null, 2)
 
+                    tl.debug("Writing arguments to temp $argsFile file...")
                     fs.writeFileSync(argsFile, json)
                 }
 
                 if (featureFlags.enableTelemetry) {
-                    emitTelemetry('TaskHub', 'PowerShell', telemetry)
+                    tl.debug("Publishing task telemetry...")
+                    emitTelemetry('TaskHub', 'PowerShellV2', telemetry)
                 }
             }
         }
