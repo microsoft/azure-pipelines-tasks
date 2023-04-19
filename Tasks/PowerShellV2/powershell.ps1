@@ -78,7 +78,7 @@ try {
             }
 
             if ($featureFlags.enableTelemetry) {
-                # publish($telemetry)
+                PublishTelemetry $telemetry
             }
         }
     }
@@ -270,4 +270,11 @@ try {
 }
 finally {
     Trace-VstsLeavingInvocation $MyInvocation
+}
+
+function PublishTelemetry($telemetry) {
+    $area = 'TaskHub'
+    $feature = 'PowerShellV2'
+    $telemetryJson = $telemetry | ConvertTo-Json
+    Write-Host "##vso[telemetry.publish area=$area;feature=$feature]$telemetryJson"
 }
