@@ -17,7 +17,7 @@
     "DeploymentGroup"
  ],
  "minimumAgentVersion": "2.144.0",
- "instanceNameFormat": "conda Authenticate $(configFile)",
+ "instanceNameFormat": "Conda Authenticate",
  "execution": {
     "Node10": {
         "target": "condaauthenticatemain.js"
