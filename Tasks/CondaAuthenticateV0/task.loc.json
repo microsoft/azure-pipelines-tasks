@@ -23,7 +23,7 @@
       "target": "condaauthenticatemain.js"
     },
     "Node16": {
-        "target": "condaauthenticatemain.js"
+      "target": "condaauthenticatemain.js"
     }
   },
   "messages": {
