@@ -4,21 +4,29 @@ import util = require('util');
 import webClient = require('azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/webClient');
 import { WebJob, SiteExtension } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
 import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/constants';
+import { ServiceClient } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/AzureServiceClient';
 
-export class KuduServiceManagementClient {
+
+export class KuduServiceManagementClient{
     private _scmUri;
-    private _accesssToken: string;
     private _cookie: string[];
+    private acceptLanguage: string;
+    private _accessToken;
+    
 
-    constructor(scmUri: string, accessToken: string) {
-        this._accesssToken = accessToken;
+    constructor(scmUri: string , accessToken: string) {
+        this._accessToken = accessToken;
         this._scmUri = scmUri;
     }
 
     public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions, contentType?: string): Promise<webClient.WebResponse> {
         request.headers = request.headers || {};
-        request.headers["Authorization"] = "Basic " + this._accesssToken;
-        request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
+        request.headers["Authorization"] = "Bearer " + this._accessToken;
+        this.acceptLanguage = 'en-US';
+        if (this.acceptLanguage) {
+            request.headers['accept-language'] = this.acceptLanguage;
+        }
+        request.headers['Content-Type'] = 'application/json; charset=utf-8';
         
         if(!!this._cookie) {
             tl.debug(`setting affinity cookie ${JSON.stringify(this._cookie)}`);
@@ -75,9 +83,9 @@ export class KuduServiceManagementClient {
 export class Kudu {
     private _client: KuduServiceManagementClient;
 
-    constructor(scmUri: string, username: string, password: string) {
-        var base64EncodedCredential = (new Buffer(username + ':' + password).toString('base64'));
-        this._client = new KuduServiceManagementClient(scmUri, base64EncodedCredential);
+    constructor(scmUri: string, accessToken: string) {
+        //var base64EncodedCredential = (new Buffer(username + ':' + password).toString('base64'));
+        this._client = new KuduServiceManagementClient(scmUri, accessToken);
     }
 
     public async updateDeployment(requestBody: any): Promise<string> {
