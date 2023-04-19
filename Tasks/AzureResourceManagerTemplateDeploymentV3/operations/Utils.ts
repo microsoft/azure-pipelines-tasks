@@ -430,7 +430,7 @@ class Utils {
             if(parseFloat(azcliversion)){
                 if(this.isBicepAvailable(azcliversion)){
                     await this.execBicepBuild(filePath)
-                    filePath = filePath.replace('.bicep', '.json')
+                    filePath.substring(0,filePath.lastIndexOf(".bicep"))+".json"
                     this.cleanupFileList.push(filePath)
                 }else{
                     throw new Error(tl.loc("IncompatibleAzureCLIVersion"));
