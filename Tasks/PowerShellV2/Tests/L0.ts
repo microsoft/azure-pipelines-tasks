@@ -3,6 +3,8 @@ import os = require('os');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
+import { ArgsParserTests, ArgsParserTelemetryTests } from './ArgsParser'
+
 describe('PowerShell Suite', function () {
     this.timeout(60000);
 
@@ -30,7 +32,7 @@ describe('PowerShell Suite', function () {
             assert(tr.succeeded, 'PowerShell should have succeeded.');
             assert(tr.stderr.length === 0, 'PowerShell should not have written to stderr');
             assert(tr.stdout.indexOf(`Writing \ufeff$ErrorActionPreference = 'Stop'${os.EOL}$ProgressPreference = 'SilentlyContinue'${os.EOL}Write-Host "my script output" to temp/path/fileName.ps1`) > 0, 'PowerShell should have written the script to a file');
-            assert(tr.stdout.indexOf('my script output') > 0,'PowerShell should have correctly run the script');
+            assert(tr.stdout.indexOf('my script output') > 0, 'PowerShell should have correctly run the script');
         }, tr, done);
     });
 
@@ -46,12 +48,12 @@ describe('PowerShell Suite', function () {
             assert(tr.succeeded, 'PowerShell should have succeeded.');
             assert(tr.stderr.length === 0, 'PowerShell should not have written to stderr');
             assert(tr.stdout.indexOf(`Writing \ufeff$ErrorActionPreference = 'Stop'${os.EOL}$ProgressPreference = 'SilentlyContinue'${os.EOL}. 'path/to/script.ps1' to temp/path/fileName.ps1`) > 0, 'PowerShell should have written the script to a file');
-            assert(tr.stdout.indexOf('my script output') > 0,'PowerShell should have correctly run the script');
+            assert(tr.stdout.indexOf('my script output') > 0, 'PowerShell should have correctly run the script');
         }, tr, done);
     });
 
     it('Adds arguments to the script', (done: Mocha.Done) => {
-        this.timeout(5000);        
+        this.timeout(5000);
 
         let tp: string = path.join(__dirname, 'L0Args.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -62,7 +64,7 @@ describe('PowerShell Suite', function () {
             assert(tr.succeeded, 'PowerShell should have succeeded.');
             assert(tr.stderr.length === 0, 'PowerShell should not have written to stderr');
             assert(tr.stdout.indexOf(`Writing \ufeff$ErrorActionPreference = 'Stop'${os.EOL}$ProgressPreference = 'SilentlyContinue'${os.EOL}. 'path/to/script.ps1' myCustomArg to temp/path/fileName.ps1`) > 0, 'PowerShell should have written the script to a file');
-            assert(tr.stdout.indexOf('my script output') > 0,'PowerShell should have correctly run the script');
+            assert(tr.stdout.indexOf('my script output') > 0, 'PowerShell should have correctly run the script');
         }, tr, done);
     });
 
@@ -93,7 +95,13 @@ describe('PowerShell Suite', function () {
             assert(tr.succeeded, 'PowerShell should have succeeded.');
             assert(tr.stderr.length === 0, 'PowerShell should not have written to stderr');
             assert(tr.stdout.indexOf(`Writing \ufeff$ErrorActionPreference = 'Stop'${os.EOL}$ProgressPreference = 'SilentlyContinue'${os.EOL}. 'path/to/script.ps1' to temp/path/fileName.ps1`) > 0, 'PowerShell should have written the script to a file');
-            assert(tr.stdout.indexOf('my script output') > 0,'PowerShell should have correctly run the script');
+            assert(tr.stdout.indexOf('my script output') > 0, 'PowerShell should have correctly run the script');
         }, tr, done);
     });
+
+    describe('Args parser tests', () => {
+        ArgsParserTests()
+
+        ArgsParserTelemetryTests()
+    })
 });
