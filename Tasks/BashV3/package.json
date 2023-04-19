@@ -4,7 +4,8 @@
   "description": "Azure Pipelines Bash Task",
   "main": "bash.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node ../../make.js build --task BashV3",
+    "test": "node ../../make.js test --task BashV3"
   },
   "repository": {
     "type": "git",
