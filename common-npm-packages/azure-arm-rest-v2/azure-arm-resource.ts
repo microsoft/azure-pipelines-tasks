@@ -66,6 +66,27 @@ export class Resources {
             throw Error(tl.loc('FailedToGetResourceID', resourceType, resourceName, this._client.getFormattedError(error)))
         }
     }
+
+    public async getAppDetails(resourceName: string): Promise<any> {
+        var filteredResources: Array<any> = await this.getResources('Microsoft.Web/Sites', resourceName);
+        let resourceGroupName: string;
+        let kind: string;
+        if(!filteredResources || filteredResources.length == 0) {
+            throw new Error(tl.loc('ResourceDoesntExist', resourceName));
+        }
+        else if(filteredResources.length == 1) {
+            resourceGroupName = filteredResources[0].id.split("/")[4];
+            kind = filteredResources[0].kind;
+        }
+        else {
+            throw new Error(tl.loc('MultipleResourceGroupFoundForAppService', resourceName));
+        }
+
+        return {
+            resourceGroupName: resourceGroupName,
+            kind: kind
+        };
+    }
 }
 
 export class ResourceGroup {
