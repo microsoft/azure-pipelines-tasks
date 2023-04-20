@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 220,
+    "Minor": 221,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -220,7 +220,7 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "3.220.1",
-    "Node16-219": "3.220.0"
+    "Default": "3.221.1",
+    "Node16-219": "3.221.0"
   }
 }

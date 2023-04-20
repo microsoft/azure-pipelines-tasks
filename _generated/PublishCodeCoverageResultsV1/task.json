@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 220,
+    "Minor": 221,
     "Patch": 1
   },
   "demands": [],
@@ -98,7 +98,7 @@
     "GeneratedHtmlReport": "Generated code coverage html report: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.220.1",
-    "Node16-219": "1.220.0"
+    "Default": "1.221.1",
+    "Node16-219": "1.221.0"
   }
 }
