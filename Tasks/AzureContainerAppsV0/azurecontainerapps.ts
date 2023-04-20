@@ -27,7 +27,7 @@ export class azurecontainerapps {
             this.validateSupportedScenarioArguments();
 
             // Set up the Azure CLI to be used for this task
-            this.setupAzureCli();
+            await this.setupAzureCli();
 
             // Set up the resources required to deploy a Container App
             this.setupResources();
@@ -63,11 +63,6 @@ export class azurecontainerapps {
         } finally {
             // Logout of Azure if logged in during this task session
             this.authHelper.logoutAzure();
-
-
-            // Log in to Azure with the service connection provided
-            const connectedService: string = tl.getInput('connectedServiceNameARM', true);
-            await this.authHelper.loginAzureRM(connectedService);
             
             // If telemetry is enabled, will log metadata for this task run
             this.telemetryHelper.sendLogs();
@@ -166,10 +161,10 @@ export class azurecontainerapps {
      * Sets up the Azure CLI to be used for this task by logging in to Azure with the provided service connection and
      * setting the Azure CLI to dynamically install missing extensions.
      */
-    private static setupAzureCli() {
+    private static async setupAzureCli() {
         // Log in to Azure with the service connection provided
         const connectedService: string = tl.getInput('connectedServiceNameARM', true);
-        this.authHelper.loginAzureRM(connectedService);
+        await this.authHelper.loginAzureRM(connectedService);
 
         // Set the Azure CLI to dynamically install missing extensions
         util.setAzureCliDynamicInstall();
