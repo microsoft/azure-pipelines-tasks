@@ -67,7 +67,7 @@ export class azurecontainerapps {
 
             // Log in to Azure with the service connection provided
             const connectedService: string = tl.getInput('connectedServiceNameARM', true);
-            await authHelper.loginAzureRM(connectedService);
+            await this.authHelper.loginAzureRM(connectedService);
             
             // If telemetry is enabled, will log metadata for this task run
             this.telemetryHelper.sendLogs();
