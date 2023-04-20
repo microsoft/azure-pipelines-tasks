@@ -102,28 +102,33 @@ async function run() {
                 targetFilePath = input_filePath;
             }
 
-            const [processedArgs, telemetry] = processBashEnvVariables(input_arguments)
+            let resultArgs = input_arguments
 
-            const resultArgs = featureFlags.enableSecureArgs ? processedArgs : input_arguments
+            if (featureFlags.enableSecureArgs || featureFlags.enableTelemetry) {
+                const [processedArgs, telemetry] = processBashEnvVariables(input_arguments)
 
-            if (featureFlags.enableTelemetry) {
-                emitTelemetry('TaskHub', 'Bash', telemetry)
+                if (featureFlags.enableSecureArgs) {
+                    const argsEnvVar = {
+                        envName: "BASHV3_INPUT_SCRIPT_ARGS",
+                        value: processedArgs.trim()
+                    };
+                    process.env[argsEnvVar.envName] = argsEnvVar.value;
+                    resultArgs = `"$${argsEnvVar.envName}"`
+                }
+
+                if (featureFlags.enableTelemetry) {
+                    emitTelemetry('TaskHub', 'Bash', telemetry)
+                }
             }
-
-            const argsEnvVar = {
-                envName: "INPUT_SCRIPT_ARGS",
-                value: resultArgs.trim()
-            };
-            process.env[argsEnvVar.envName] = argsEnvVar.value;
 
             // Choose behavior:
             // If they've set old_source_behavior, source the script. This is what we used to do and needs to hang around forever for back compat reasons
             // If they've not, execute the script with bash. This is our new desired behavior.
             // See https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/bashnote.md
             if (old_source_behavior) {
-                contents = `. '${targetFilePath.replace(/'/g, "'\\''")}' "\$${argsEnvVar.envName}"`.trim();
+                contents = `. '${targetFilePath.replace(/'/g, "'\\''")}' ${resultArgs}`.trim();
             } else {
-                contents = `exec bash '${targetFilePath.replace(/'/g, "'\\''")}' "\$${argsEnvVar.envName}"`.trim();
+                contents = `exec bash '${targetFilePath.replace(/'/g, "'\\''")}' ${resultArgs}`.trim();
             }
             console.log(tl.loc('JS_FormattedCommand', contents));
         }
