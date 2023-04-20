@@ -20,7 +20,6 @@ export class KuduServiceManagementClient{
     public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions, contentType?: string): Promise<webClient.WebResponse> {
         request.headers = request.headers || {};
         request.headers["Authorization"] = "Bearer " + this._accessToken;
-
         request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';      
         
         
@@ -80,7 +79,6 @@ export class Kudu {
     private _client: KuduServiceManagementClient;
 
     constructor(scmUri: string, accessToken: string) {
-        //var base64EncodedCredential = (new Buffer(username + ':' + password).toString('base64'));
         this._client = new KuduServiceManagementClient(scmUri, accessToken);
     }
 

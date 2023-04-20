@@ -124,8 +124,7 @@ export class AzureAppServiceUtility {
         var publishingCredentials = await this._appService.getPublishingCredentials();
         var accessToken = await this._appService._client.getCredentials().getToken();
         if(publishingCredentials.properties["scmUri"]) {
-            tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._appService.getSlot()}_PASSWORD`, publishingCredentials.properties["publishingPassword"], true);
-            return new Kudu(publishingCredentials.properties["scmUri"], accessToken);
+                     return new Kudu(publishingCredentials.properties["scmUri"], accessToken);
         }
 
         throw Error(tl.loc('KuduSCMDetailsAreEmpty'));
