@@ -4,13 +4,11 @@ import util = require('util');
 import webClient = require('azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/webClient');
 import { WebJob, SiteExtension } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
 import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/constants';
-import { ServiceClient } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/AzureServiceClient';
 
 
 export class KuduServiceManagementClient{
     private _scmUri;
     private _cookie: string[];
-    private acceptLanguage: string;
     private _accessToken;
     
 
@@ -22,11 +20,9 @@ export class KuduServiceManagementClient{
     public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions, contentType?: string): Promise<webClient.WebResponse> {
         request.headers = request.headers || {};
         request.headers["Authorization"] = "Bearer " + this._accessToken;
-        this.acceptLanguage = 'en-US';
-        if (this.acceptLanguage) {
-            request.headers['accept-language'] = this.acceptLanguage;
-        }
-        request.headers['Content-Type'] = 'application/json; charset=utf-8';
+
+        request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';      
+        
         
         if(!!this._cookie) {
             tl.debug(`setting affinity cookie ${JSON.stringify(this._cookie)}`);
