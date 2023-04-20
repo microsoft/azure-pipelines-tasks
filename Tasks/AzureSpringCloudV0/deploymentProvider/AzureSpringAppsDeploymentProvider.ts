@@ -2,7 +2,7 @@ import path = require('path');
 import { v4 as uuidv4 } from 'uuid';
 import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { Actions, DeploymentType, TaskParameters } from '../operations/taskparameters';
-import { SourceType, AzureSpringCloud } from './azure-arm-spring-cloud';
+import { SourceType, AzureSpringApps } from './azure-arm-spring-apps';
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 import tl = require('azure-pipelines-task-lib/task');
 import tar = require('tar');
@@ -10,41 +10,34 @@ import { AzureResourceFilterUtility } from '../operations/AzureResourceFilterUti
 
 const OUTPUT_VARIABLE_TEST_ENDPOINT = 'testEndpoint';
 
-export class AzureSpringCloudDeploymentProvider {
+export class AzureSpringAppsDeploymentProvider {
 
     defaultInactiveDeploymentName = 'staging';
 
     protected taskParameters: TaskParameters;
-    protected azureSpringCloud: AzureSpringCloud;
+    protected azureSpringApps: AzureSpringApps;
 
     constructor(taskParameters: TaskParameters) {
         this.taskParameters = taskParameters;
     }
 
     public async PreDeploymentStep() {
-        // TODO: temporary fix for tests are failing with MSAL
-        let useMSAL:boolean = false;
-        let useMSALEnv = tl.getEndpointAuthorizationParameter("AzureRM", "USEMSAL", true);
-        if(useMSALEnv !== undefined) {
-            useMSAL = JSON.parse(useMSALEnv);
-        }
+        const azureEndpoint = await new AzureRMEndpoint(this.taskParameters.ConnectedServiceName).getEndpoint();
 
-        const azureEndpoint = await new AzureRMEndpoint(this.taskParameters.ConnectedServiceName).getEndpoint(false, useMSAL);
-
-        //The Azure Spring Cloud parameter can be a resource ID (if selected from the picklist) or
+        //The Azure Spring Apps parameter can be a resource ID (if selected from the picklist) or
         //a name (if entered manually). This is to avoid requiring the user to enter an otherwise unnecessary user
         //user group name. If we have a name, we need to look up the resource ID.
-        var azureSpringCloudResourceId: string;
-        if (this.taskParameters.AzureSpringCloud.startsWith('/')) {
-            if (this.taskParameters.AzureSpringCloud.includes('..')){{
-                throw Error(tl.loc('InvalidAzureSpringCloudResourceId', 'this.taskParameters.AzureSpringCloud'));
+        var azureSpringAppsResourceId: string;
+        if (this.taskParameters.AzureSpringApps.startsWith('/')) {
+            if (this.taskParameters.AzureSpringApps.includes('..')){{
+                throw Error(tl.loc('InvalidAzureSpringAppsResourceId', 'this.taskParameters.AzureSpringApps'));
             }}
-            azureSpringCloudResourceId = this.taskParameters.AzureSpringCloud;
+            azureSpringAppsResourceId = this.taskParameters.AzureSpringApps;
         } else {
-            azureSpringCloudResourceId = await AzureResourceFilterUtility.getAzureSpringCloudResourceId(azureEndpoint, this.taskParameters.AzureSpringCloud);
+            azureSpringAppsResourceId = await AzureResourceFilterUtility.getAzureSpringAppsResourceId(azureEndpoint, this.taskParameters.AzureSpringApps);
         }
 
-        this.azureSpringCloud = new AzureSpringCloud(azureEndpoint, azureSpringCloudResourceId);
+        this.azureSpringApps = new AzureSpringApps(azureEndpoint, azureSpringAppsResourceId);
     }
 
     public async DeployAppStep() {
@@ -79,9 +72,9 @@ export class AzureSpringCloudDeploymentProvider {
 
     private async performDeleteStagingDeploymentAction() {
         tl.debug('Delete staging deployment action');
-        const deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
+        const deploymentName = await this.azureSpringApps.getInactiveDeploymentName(this.taskParameters.AppName);
         if (deploymentName) {
-            await this.azureSpringCloud.deleteDeployment(this.taskParameters.AppName, deploymentName);
+            await this.azureSpringApps.deleteDeployment(this.taskParameters.AppName, deploymentName);
         } else {
             throw Error(tl.loc('NoStagingDeploymentFound'));
         }
@@ -93,7 +86,7 @@ export class AzureSpringCloudDeploymentProvider {
         var deploymentName: string;
         if (this.taskParameters.UseStagingDeployment) {
             tl.debug('Targeting inactive deployment');
-            deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
+            deploymentName = await this.azureSpringApps.getInactiveDeploymentName(this.taskParameters.AppName);
             if (!deploymentName) { //If no inactive deployment exists, we cannot continue as instructed.
                 throw Error(tl.loc('NoStagingDeploymentFound'));
             }
@@ -101,13 +94,13 @@ export class AzureSpringCloudDeploymentProvider {
         else {
             //Verify that the named deployment actually exists.
             deploymentName = this.taskParameters.DeploymentName;
-            let existingStagingDeploymentName: string = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
+            let existingStagingDeploymentName: string = await this.azureSpringApps.getInactiveDeploymentName(this.taskParameters.AppName);
             if (deploymentName != existingStagingDeploymentName) {
                 throw Error(tl.loc('StagingDeploymentWithNameDoesntExist', deploymentName));
             }
         }
 
-        await this.azureSpringCloud.setActiveDeployment(this.taskParameters.AppName, deploymentName);
+        await this.azureSpringApps.setActiveDeployment(this.taskParameters.AppName, deploymentName);
     }
 
     private async performDeployAction() {
@@ -122,15 +115,15 @@ export class AzureSpringCloudDeploymentProvider {
 
         const {deploymentName, createDeployment} = await this.chooseDeployment();
         
-        // Determine the sku of the Azure Spring Cloud
-        const serviceSkuTier = await this.azureSpringCloud.getServiceSkuTier();
+        // Determine the sku of the Azure Spring Apps
+        const serviceSkuTier = await this.azureSpringApps.getServiceSkuTier();
         try {
             if (serviceSkuTier == "Standard" || serviceSkuTier == "Basic") {
-                await this.azureSpringCloud.deploy(fileToUpload, sourceType, this.taskParameters.AppName,
+                await this.azureSpringApps.deploy(fileToUpload, sourceType, this.taskParameters.AppName,
                     deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions, 
                     this.taskParameters.EnvironmentVariables, this.taskParameters.DotNetCoreMainEntryPath, this.taskParameters.Version);
             } else if (serviceSkuTier == "Enterprise") {
-                await this.azureSpringCloud.deployWithBuildService(fileToUpload, sourceType, this.taskParameters.AppName, 
+                await this.azureSpringApps.deployWithBuildService(fileToUpload, sourceType, this.taskParameters.AppName, 
                     deploymentName, createDeployment, this.taskParameters.RuntimeVersion, this.taskParameters.JvmOptions,
                     this.taskParameters.EnvironmentVariables, this.taskParameters.DotNetCoreMainEntryPath, this.taskParameters.Version, this.taskParameters.Builder);
             } else {
@@ -139,7 +132,7 @@ export class AzureSpringCloudDeploymentProvider {
         } catch (error) {
             throw error;
         }
-        var testEndpoint = await this.azureSpringCloud.getTestEndpoint(this.taskParameters.AppName, deploymentName);
+        var testEndpoint = await this.azureSpringApps.getTestEndpoint(this.taskParameters.AppName, deploymentName);
         tl.setVariable(OUTPUT_VARIABLE_TEST_ENDPOINT, testEndpoint);
         return deploymentName;
     }
@@ -150,14 +143,14 @@ export class AzureSpringCloudDeploymentProvider {
         const {deploymentName, createDeployment} = await this.chooseDeployment();
 
         try {
-            await this.azureSpringCloud.deployCustomContainer(this.taskParameters.AppName, deploymentName, createDeployment,
+            await this.azureSpringApps.deployCustomContainer(this.taskParameters.AppName, deploymentName, createDeployment,
                 this.taskParameters.RegistryServer, this.taskParameters.RegistryUsername, this.taskParameters.RegistryPassword,
                 this.taskParameters.ImageName, this.taskParameters.ImageCommand, this.taskParameters.ImageArgs, this.taskParameters.ImageLanguageFramework,
                 this.taskParameters.EnvironmentVariables, this.taskParameters.Version);
         } catch (error) {
             throw error;
         }
-        var testEndpoint = await this.azureSpringCloud.getTestEndpoint(this.taskParameters.AppName, deploymentName);
+        var testEndpoint = await this.azureSpringApps.getTestEndpoint(this.taskParameters.AppName, deploymentName);
         tl.setVariable(OUTPUT_VARIABLE_TEST_ENDPOINT, testEndpoint);
         return deploymentName;
     }
@@ -166,7 +159,7 @@ export class AzureSpringCloudDeploymentProvider {
         var deploymentName: string;
         var createDeployment = false;
         if (this.taskParameters.UseStagingDeployment) {
-            deploymentName = await this.azureSpringCloud.getInactiveDeploymentName(this.taskParameters.AppName);
+            deploymentName = await this.azureSpringApps.getInactiveDeploymentName(this.taskParameters.AppName);
             if (!deploymentName) { //If no inactive deployment exists
                 tl.debug('No inactive deployment exists');
                 if (this.taskParameters.CreateNewDeployment) {
@@ -179,7 +172,7 @@ export class AzureSpringCloudDeploymentProvider {
         } else { //Deploy to deployment with specified name
             tl.debug('Deploying with specified name.');
             deploymentName = this.taskParameters.DeploymentName;
-            var deploymentNames = await this.azureSpringCloud.getAllDeploymentNames(this.taskParameters.AppName);
+            var deploymentNames = await this.azureSpringApps.getAllDeploymentNames(this.taskParameters.AppName);
             if (!deploymentNames || !deploymentNames.includes(deploymentName)) {
                 tl.debug(`Deployment ${deploymentName} does not exist`);
                 if (this.taskParameters.CreateNewDeployment) {
