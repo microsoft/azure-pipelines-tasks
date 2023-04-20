@@ -1675,15 +1675,16 @@ var storeNonAggregatedZip = function (zipPath, release, commit) {
 exports.storeNonAggregatedZip = storeNonAggregatedZip;
 
 var getTaskNodeVersion = function(buildPath, taskName) {
+    const nodes = [];
     var taskJsonPath = path.join(buildPath, taskName, "task.json");
     if (!fs.existsSync(taskJsonPath)) {
         console.warn('Unable to find task.json, defaulting to use Node 14');
-        return 14;
+        nodes.push(14);
+        return nodes;
     }
     var taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
     var taskJson = JSON.parse(taskJsonContents);
     var execution = taskJson['execution'] || taskJson['prejobexecution'];
-    const nodes = [];
     for (var key of Object.keys(execution)) {
         const executor = key.toLocaleLowerCase();
         if (!executor.startsWith('node')) continue;
@@ -1697,8 +1698,26 @@ var getTaskNodeVersion = function(buildPath, taskName) {
     }
 
     console.warn('Unable to determine execution type from task.json, defaulting to use Node 10');
-    return [ 10 ];
+    nodes.push(10);
+    return nodes;
 }
 exports.getTaskNodeVersion = getTaskNodeVersion;
 
 //------------------------------------------------------------------------------
+
+function renameCodeCoverageOutput(coveragePath, taskName) {
+    if (!coveragePath) return;
+    try {
+        if (fs.existsSync(coveragePath)) {
+            if (fs.existsSync(path.join(coveragePath, "coverage-final.json"))) {
+                fs.renameSync(path.join(coveragePath, "coverage-final.json"), path.join(coveragePath, `${taskName}-coverage.json`));
+            }
+            if (fs.existsSync(path.join(coveragePath, "coverage-summary.json"))) {
+                fs.renameSync(path.join(coveragePath, "coverage-summary.json"), path.join(coveragePath, `${taskName}-coverage-summary.json`));
+            }
+        }
+    } catch (e) {
+        console.log(e)
+    }
+}
+exports.renameCodeCoverageOutput = renameCodeCoverageOutput;
