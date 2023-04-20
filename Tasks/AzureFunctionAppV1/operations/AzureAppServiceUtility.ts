@@ -122,9 +122,18 @@ export class AzureAppServiceUtility {
 
     public async getKuduService(): Promise<Kudu> {
         var publishingCredentials = await this._appService.getPublishingCredentials();
-        var accessToken = await this._appService._client.getCredentials().getToken();
+        var scmPolicyCheck = await this.isSitePublishingCredentialsEnabled();            
+        
+
         if(publishingCredentials.properties["scmUri"]) {
-                     return new Kudu(publishingCredentials.properties["scmUri"], accessToken);
+                    if(!scmPolicyCheck) {
+                        var accessToken = await this._appService._client.getCredentials().getToken();
+                    }
+                    else{
+                        tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._appService.getSlot()}_PASSWORD`, publishingCredentials.properties["publishingPassword"], true);
+                        var accessToken = (new Buffer(publishingCredentials.properties["publishingUserName"] + ':' + publishingCredentials.properties["publishingPassword"]).toString('base64'));
+                    }
+                 return new Kudu(publishingCredentials.properties["scmUri"], accessToken, scmPolicyCheck);
         }
 
         throw Error(tl.loc('KuduSCMDetailsAreEmpty'));
@@ -432,6 +441,25 @@ export class AzureAppServiceUtility {
         }        
     }
 
+    public async isSitePublishingCredentialsEnabled(): Promise<boolean>{
+        try{
+            let scmAuthPolicy: any = await this._appService.getSitePublishingCredentialPolicies();
+            tl.debug(`Site Publishing Policy check: ${JSON.stringify(scmAuthPolicy)}`);
+            if(scmAuthPolicy && scmAuthPolicy.properties.allow) {
+                tl.debug("Function App does allow SCM access");
+                return true;
+            }
+            else {
+                tl.debug("Function App does not allow SCM Access");
+                return false;
+            }
+        }
+        catch(error){
+            tl.debug(`Skipping SCM Policy check: ${error}`);
+            return null;
+        }
+    }
+    
     public async isMicrosoftHostedAgent(): Promise<string>{
         try{
             let agentos = os.type();

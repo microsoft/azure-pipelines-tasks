@@ -9,15 +9,24 @@ export class KuduServiceManagementClient {
     private _scmUri;
     private _accessToken: string;
     private _cookie: string[];
+    private _scmAccessCheck : boolean;
 
-    constructor(scmUri: string, accessToken: string) {
+    constructor(scmUri: string, accessToken: string, scmAccessCheck: boolean) {
         this._accessToken = accessToken;
         this._scmUri = scmUri;
+        this._scmAccessCheck = scmAccessCheck;
     }
 
     public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions, contentType?: string): Promise<webClient.WebResponse> {
         request.headers = request.headers || {};
-        request.headers["Authorization"] = "Bearer " + this._accessToken;
+        if(!this._scmAccessCheck) {
+            request.headers["Authorization"] = "Bearer " + this._accessToken;
+            tl.debug('Using Bearer Authentication');
+        }
+        else{
+            request.headers["Authorization"] = "Basic " + this._accessToken;
+            tl.debug('Using Basic Authentication');
+        }
         request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
         
         if(!!this._cookie) {
@@ -75,8 +84,8 @@ export class KuduServiceManagementClient {
 export class Kudu {
     private _client: KuduServiceManagementClient;
 
-    constructor(scmUri: string, accessToken: string) {
-         this._client = new KuduServiceManagementClient(scmUri, accessToken);
+    constructor(scmUri: string, accessToken: string, scmPolicyCheck: boolean) {
+         this._client = new KuduServiceManagementClient(scmUri, accessToken, scmPolicyCheck);
     }
 
     public async updateDeployment(requestBody: any): Promise<string> {
