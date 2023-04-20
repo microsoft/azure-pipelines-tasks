@@ -5,28 +5,41 @@ if (!token) {
     throw new Exception('No token provided');
 }
 
-const orgUrl = 'https://dev.azure.com/v-mazayt0';
+const hotfixFolder = process.argv[2];
+if (!hotfixFolder) {
+    throw new Exception('No hotfixFolder provided');
+}
+
+const taskName = process.argv[3];
+if (!taskName) {
+    throw new Exception('No description provided');
+}
+
+const scriptPath = `${hotfixFolder}/${taskName}.ps1`
+console.log(scriptPath);
+
+const description = `Hotfix for ${taskName} task`;
+
 const authHandler = azdev.getPersonalAccessTokenHandler(token);
+const orgUrl = 'https://dev.azure.com/v-mazayt0'; // TODO - update
+const definitionId = 3; // "TFS - Prod Config Change" release definition id
 
 const createRelease = async () => {
- console.log('Getting connection');
+  console.log('Getting connection');
+
   const connection = new azdev.WebApi(orgUrl, authHandler);
   console.log('Getting Git API');
   const releaseApi = await connection.getReleaseApi();
 
   console.log('Creating TFS - Prod Config Change release');
 
-  const definitionId = 120;
   const command = 'run';
-  const scriptPath = 'path';
-  const description = 'Task hotfix';
-  const projectName = 'AzureDevOps'
+  const projectName = 'TestProject'
 
   const releaseMetadata = {
     definitionId: definitionId,
     description: description,
     variables: {
-      Command: { value: command },
       ScriptPath: { value: scriptPath }
     }
   };
