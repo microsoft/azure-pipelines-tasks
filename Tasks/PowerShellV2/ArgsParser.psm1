@@ -92,8 +92,12 @@ function parsePowerShellArguments([string]$InputArgs) {
                 $escaped = $false
                 $telemetry.nestedQuotes++
 
-                $passiveQuote = $passiveQuote ? '' : $currentChar
-
+                if ($passiveQuote) {
+                    $passiveQuote = ''
+                }
+                else {
+                    $passiveQuote = $currentChar
+                }
 
                 continue
             }
