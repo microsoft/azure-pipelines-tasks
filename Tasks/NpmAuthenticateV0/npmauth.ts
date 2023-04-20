@@ -78,6 +78,7 @@ async function main(): Promise<void> {
     let LocalNpmRegistries = await npmutil.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
 
     let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
+    let addedRegistry = [];
     for (let RegistryURLString of npmrcparser.GetRegistries(npmrc, /* saveNormalizedRegistries */ true)) {
         let registryURL = URL.parse(RegistryURLString);
         let registry: npmregistry.NpmRegistry;
@@ -88,7 +89,8 @@ async function main(): Promise<void> {
                     let serviceURL = URL.parse(serviceEndpoint.url);
                     console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
                     registry = serviceEndpoint;
-                    npmrcFile = clearFileOfReferences(npmrc, npmrcFile, serviceURL);
+                    addedRegistry.push(serviceURL);
+                    npmrcFile = clearFileOfReferences(npmrc, npmrcFile, serviceURL, addedRegistry);
                     break;
                 }
             }
@@ -99,7 +101,8 @@ async function main(): Promise<void> {
                     let localURL = URL.parse(localRegistry.url);
                     console.log(tl.loc("AddingLocalCredentials"));
                     registry = localRegistry;
-                    npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL);
+                    addedRegistry.push(localURL);
+                    npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL, addedRegistry);
                     break;
                 }
             }
@@ -124,12 +127,14 @@ main().catch(error => {
     } 
     tl.setResult(tl.TaskResult.Failed, error);
 });
-function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url) {
+function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url, addedRegistry: URL.Url[]) {
     let redoneFile = file;
     let warned = false;
     for (let i = 0; i < redoneFile.length; i++) {
         if (file[i].indexOf(url.host) != -1 && file[i].indexOf(url.path) != -1 && file[i].indexOf('registry=') == -1) {
-            if (!warned) {
+            // Suppress the warning if it is the same registry from .npmrc
+            // E.g. registry={url} and @scope:registry={url} in .npmrc, the warning should not appear if both have the same url
+            if (!warned && !addedRegistry.includes(url)) {
                 tl.warning(tl.loc('CheckedInCredentialsOverriden', url.host));
             }
             warned = true;

@@ -12,5 +12,6 @@
   "loc.input.help.projectDirectory": "(省略可能) プロジェクト ディレクトリのルートへのパスを指定します。空のままにすると、Podfile で指定されたプロジェクトが使用されます。プロジェクトを指定しないと、Xcode プロジェクトが検索されます。複数の Xcode プロジェクトが見つかった場合は、エラーが発生します。",
   "loc.messages.PodReturnCode": "'pod' コマンドが次のリターン コードで終了しました: %d",
   "loc.messages.PodFailed": "'pod' コマンドが失敗し、次のエラーが発生しました: %s",
-  "loc.messages.CocoaPodsNotFound": "'pod' コマンドが見つかりません。CocoaPods をエージェント コンピューター上にインストールしてください (https://cocoapods.org)。"
+  "loc.messages.CocoaPodsNotFound": "'pod' コマンドが見つかりません。CocoaPods をエージェント コンピューター上にインストールしてください (https://cocoapods.org)。",
+  "loc.messages.ProxyConfig": "プロキシ構成が検出されました。プロキシ ホスト: %s を使用しています"
 }

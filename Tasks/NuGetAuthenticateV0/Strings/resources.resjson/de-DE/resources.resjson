@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "NuGet-Authentifizierung",
   "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://aka.ms/NuGetAuthenticateTask)",
-  "loc.description": "Konfigurieren Sie NuGet-Tools für die Authentifizierung bei Azure Artifacts und anderen NuGet-Repositorys. Erfordert NuGet >= 4.8.5385, .NET >= 2.1.400 oder MSBuild >= 15.8.166.59604",
+  "loc.description": "Diese Version der Aufgabe ist veraltet. Verwenden Sie stattdessen NuGetAuthenticateV1. Konfigurieren Sie NuGet-Tools für die Authentifizierung bei Azure Artifacts und anderen NuGet-Repositorys. Erfordert NuGet >= 4.8.5385, dotnet >= 2.1.400 oder MSBuild >= 15.8.166.59604.",
   "loc.instanceNameFormat": "NuGet-Authentifizierung",
   "loc.input.label.nuGetServiceConnections": "Anmeldeinformationen für Dienstverbindungen für Feeds außerhalb dieser Organisation",
   "loc.input.help.nuGetServiceConnections": "Durch Trennzeichen getrennte Liste mit NuGet-Dienstverbindungsnamen für Feeds außerhalb dieser Organisation/Sammlung. Lassen Sie dieses Feld für Feeds in dieser Organisation/Sammlung leer. Es werden automatisch die Anmeldeinformationen des Builds verwendet.",

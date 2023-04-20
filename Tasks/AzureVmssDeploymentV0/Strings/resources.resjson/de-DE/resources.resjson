@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure-VM-Skalierungsgruppenbereitstellung",
-  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=852117)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-vmss-deployment)",
   "loc.description": "Hiermit wird ein Image einer VM-Skalierungsgruppe bereitgestellt.",
   "loc.instanceNameFormat": "Azure-VMSS $(vmssName): $(action)",
   "loc.releaseNotes": "- Aktualisiert die Azure-VM-Skalierungsgruppe mit einem benutzerdefinierten Computerimage.",
