@@ -48,8 +48,8 @@
   "loc.input.help.mavenSetM2Home": "Задает переменную M2_HOME для настраиваемого пути установки Maven.",
   "loc.input.label.mavenOpts": "Задать MAVEN_OPTS равной",
   "loc.input.help.mavenOpts": "Задает переменную среды MAVEN_OPTS, которая используется для отправки аргументов командной строки, запускающих JVM. Флаг -Xmx указывает максимальный объем памяти, доступный JVM.",
-  "loc.input.label.mavenFeedAuthenticate": "Проверка подлинности встроенных веб-каналов Maven",
-  "loc.input.help.mavenFeedAuthenticate": "Автоматическая проверка подлинности веб-каналов Maven из Azure Artifacts. Если встроенные веб-каналы Maven не используются, отключите этот параметр, чтобы ускорить сборку.",
+  "loc.input.label.mavenFeedAuthenticate": "Authenticate with Artifacts feeds",
+  "loc.input.help.mavenFeedAuthenticate": "Automatically authenticates with Azure Artifacts feeds. If Artifacts feeds are not in use, deselect this option for faster builds.",
   "loc.input.label.sqAnalysisEnabled": "Выполнить анализ SonarQube или SonarCloud",
   "loc.input.help.sqAnalysisEnabled": "Этот параметр был изменен с версии 1 задачи **Maven** для использования расширений Marketplace [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) и [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud). Включите его, чтобы запустить [анализ SonarQube или SonarCloud](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) после выполнения целей в поле **Цели**. Первой должна быть запущена цель **install** или **package**. Также необходимо добавить задачу **Подготовить конфигурацию анализа** из одного из расширений в конвейер сборки перед этой задачей Maven.",
   "loc.input.label.isJacocoCoverageReportXML": "Использовать XML-отчеты Jacoco для анализа SonarQube",
@@ -96,6 +96,6 @@
   "loc.messages.NoCodeCoverage": "Результаты по объему протестированного кода для публикации не найдены.",
   "loc.messages.EntryAlreadyExists": "Параметры для веб-канала или репозитория уже имеются в XML-файле.",
   "loc.messages.EffectivePomInvalid": "Не удалось проанализировать действующий файл POM.",
-  "loc.messages.AuthenticationNotNecessary": "Встроенные веб-каналы Maven, требующие проверки подлинности, не найдены. Отключите параметр \"Проверка подлинности встроенных веб-каналов Maven\", чтобы ускорить сборку.",
-  "loc.messages.UsingAuthFeed": "Используется встроенный веб-канал: "
+  "loc.messages.AuthenticationNotNecessary": "No Artifacts feeds requiring authentication were found. Disable 'Authenticate with Artifacts feeds' for faster builds.",
+  "loc.messages.UsingAuthFeed": "Using Artifacts feed: "
 }

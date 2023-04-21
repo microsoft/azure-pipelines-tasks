@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Instalador del ejecutor de tareas de Node.js",
+  "loc.helpMarkDown": "TDB",
+  "loc.description": "Instalar una versión de Node.js específica para ejecutar tareas de nodo",
+  "loc.instanceNameFormat": "Instalar $(runnerVersion) del ejecutor de nodos",
+  "loc.input.label.runnerVersion": "Versión del ejecutor que se va a instalar",
+  "loc.input.help.runnerVersion": "Seleccione la versión del nodo que se va a instalar.",
+  "loc.messages.TryRosetta": "No se encuentra ningún node para la plataforma %s ni la arquitectura %s. Intentando instalar con Rosetta2",
+  "loc.messages.UnexpectedOS": "SO %s inesperado. Variantes admitidas: %s",
+  "loc.messages.RunnerAlreadyInUse": "El ejecutor de nodos especificado ver.%s ya está instalado y actualmente en uso. Omitiendo la instalación.",
+  "loc.messages.NotAllowedNodeVersion": "La versión del nodo de destino no coincide con las versiones permitidas. Posibles variantes: %s",
+  "loc.messages.AGENT_HOMEDIRECTORY_NotAvailable": "No se puede obtener la variable de entorno AGENT_HOMEDIRECTORY.",
+  "loc.messages.RunnerAlreadyInstalled": "%s versión del ejecutor de nodos ya instalada en el agente. Omitiendo la instalación."
+}

@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Programma di installazione dello strumento di esecuzione attività di Node.js",
+  "loc.helpMarkDown": "TDB",
+  "loc.description": "Installare una versione specifica di Node.js per eseguire le attività del nodo",
+  "loc.instanceNameFormat": "Installare lo strumento di esecuzione del nodo $(runnerVersion)",
+  "loc.input.label.runnerVersion": "Versione dello strumento di esecuzione da installare",
+  "loc.input.help.runnerVersion": "Selezionare la versione del nodo da installare.",
+  "loc.messages.TryRosetta": "Non è possibile trovare il nodo per la piattaforma %s e l'architettura %s. Tentativo di installazione con Rosetta2",
+  "loc.messages.UnexpectedOS": "Sistema operativo %s imprevisto. Varianti supportate: %s",
+  "loc.messages.RunnerAlreadyInUse": "Lo strumento di esecuzione del nodo specificato ver.%s è già installato e attualmente in uso. L'installazione verrà ignorata.",
+  "loc.messages.NotAllowedNodeVersion": "La versione del nodo di destinazione non corrisponde alle versioni consentite. Varianti possibili: %s",
+  "loc.messages.AGENT_HOMEDIRECTORY_NotAvailable": "Non è possibile ottenere la variabile di ambiente AGENT_HOMEDIRECTORY.",
+  "loc.messages.RunnerAlreadyInstalled": "Versione %s dello strumento di esecuzione del nodo già installata nell'agente. L'installazione verrà ignorata."
+}
