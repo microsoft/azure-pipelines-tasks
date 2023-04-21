@@ -3,10 +3,13 @@
   "loc.helpMarkDown": "",
   "loc.description": "Évaluation de sécurité et de conformité pour Azure Policy",
   "loc.instanceNameFormat": "Vérifier la conformité à la stratégie",
+  "loc.group.displayName.advancedOptions": "Avancé",
   "loc.input.label.ConnectedServiceName": "Abonnement Azure",
   "loc.input.help.ConnectedServiceName": "Sélectionnez l'abonnement Azure Resource Manager approprié pour appliquer les stratégies.",
   "loc.input.label.ResourceGroupName": "Groupe de ressources",
   "loc.input.help.ResourceGroupName": "Indiquez le nom d'un groupe de ressources.",
   "loc.input.label.Resources": "Nom de la ressource",
-  "loc.input.help.Resources": "Sélectionnez le nom des ressources Azure dont vous souhaitez vérifier la conformité à la stratégie."
+  "loc.input.help.Resources": "Sélectionnez le nom des ressources Azure dont vous souhaitez vérifier la conformité à la stratégie.",
+  "loc.input.label.RetryDuration": "Durée de nouvelle tentative",
+  "loc.input.help.RetryDuration": "Définit la période d’attente de la tâche jusqu’à ce qu’elle réessaye d’appeler l’API Azure au cas où le code de réponse précédent était « Accepté ». La période minimale est de 2 minutes."
 }

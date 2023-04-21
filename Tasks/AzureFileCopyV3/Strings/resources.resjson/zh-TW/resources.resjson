@@ -92,5 +92,6 @@
   "loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode": "將檔案上傳至 Blob 儲存體時 AzCopy.exe 已結束，結束代碼不為零。",
   "loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey": "無法擷取儲存體帳戶金鑰。錯誤: '{0}'",
   "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "請手動將 WinRM 自訂指令碼解除安裝，並重試部署。",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "其他引數不能包含分隔字元 '&'、';' 和 '|'。請驗證輸入。若要深入了解引數驗證，請檢查 https://aka.ms/azdo-task-argument-validation",
   "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。"
 }

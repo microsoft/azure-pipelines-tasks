@@ -97,5 +97,6 @@
   "loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode": "Blob Storage에 파일을 업로드하는 중 AzCopy.exe가 0이 아닌 종료 코드로 종료되었습니다.",
   "loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey": "스토리지 계정 키를 페치할 수 없습니다. 오류: '{0}'",
   "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "WinRM 사용자 지정 스크립트를 수동으로 제거하고 배포를 다시 시도하세요.",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "추가 인수에는 구분 문자 '&', ';', '|'을 포함할 수 없습니다. 입력 내용을 확인하세요. 인수 유효성 검사에 대한 자세한 내용은 https://aka.ms/azdo-task-argument-validation을 참조하세요.",
   "loc.messages.ExpiredServicePrincipal": "Azure의 액세스 토큰을 페치할 수 없습니다. 사용한 서비스 주체가 유효하고 만료되지 않았는지 확인하세요."
 }
