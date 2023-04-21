@@ -92,14 +92,36 @@ export class AzureAppServiceUtility {
         return physicalToVirtualPathMap.physicalPath;
     }
 
-    public async getKuduService(): Promise<Kudu> {
-        var publishingCredentials = await this._appService.getPublishingCredentials();
-        if (publishingCredentials.properties["scmUri"]) {
-            tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._appService.getSlot()}_PASSWORD`, publishingCredentials.properties["publishingPassword"], true);
-            return new Kudu(publishingCredentials.properties["scmUri"], publishingCredentials.properties["publishingUserName"], publishingCredentials.properties["publishingPassword"]);
+    public async getKuduService(): Promise<Kudu> {     
+
+        const publishingCredentials = await this._appService.getPublishingCredentials();
+        const scmUri = publishingCredentials.properties["scmUri"];
+
+        if (!scmUri) {
+            throw Error(tl.loc('KuduSCMDetailsAreEmpty'));
         }
 
-        throw Error(tl.loc('KuduSCMDetailsAreEmpty'));
+        const authHeader = await this.getKuduAuthHeader(publishingCredentials);
+        return new Kudu(publishingCredentials.properties["scmUri"], authHeader);        
+    }
+
+    private async getKuduAuthHeader(publishingCredentials: any): Promise<string> {
+        const scmPolicyCheck = await this.isSitePublishingCredentialsEnabled(); 
+
+        if (!scmPolicyCheck) {
+            const accessToken = await this._appService._client.getCredentials().getToken();
+            tl.debug("Kudu: using bearer token.");
+            return "Bearer " + accessToken;
+        }
+
+        const password = publishingCredentials.properties["publishingPassword"];
+        const userName = publishingCredentials.properties["publishingUserName"];
+
+        tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._appService.getSlot()}_PASSWORD`, password, true);
+        tl.debug("Kudu: using basic auth.");
+
+        const auth = (new Buffer(userName + ':' + password).toString('base64'));
+        return "Basic " + auth;
     }
 
     public async updateAndMonitorAppSettings(addProperties?: any, deleteProperties?: any, formatJSON?: boolean): Promise<boolean> {
@@ -188,6 +210,25 @@ export class AzureAppServiceUtility {
         }
         else {
             tl.debug(`Skipped updating the values. linuxFxVersion: ${linuxFxVersion} : appCommandLine: ${appCommandLine}`)
+        }
+    }
+
+    public async isSitePublishingCredentialsEnabled(): Promise<boolean>{
+        try{
+            let scmAuthPolicy: any = await this._appService.getSitePublishingCredentialPolicies();
+            tl.debug(`Site Publishing Policy check: ${JSON.stringify(scmAuthPolicy)}`);
+            if(scmAuthPolicy && scmAuthPolicy.properties.allow) {
+                tl.debug("Function App does allow SCM access");
+                return true;
+            }
+            else {
+                tl.debug("Function App does not allow SCM Access");
+                return false;
+            }
+        }
+        catch(error){
+            tl.debug(`Skipping SCM Policy check: ${error}`);
+            return null;
         }
     }
 }
