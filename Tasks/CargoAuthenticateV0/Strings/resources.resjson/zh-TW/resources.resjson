@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "貨物驗證 (適用於工作執行器)",
+  "loc.helpMarkDown": "",
+  "loc.description": "驗證工作，適用於裝運貨櫃配送的貨運客戶",
+  "loc.instanceNameFormat": "貨物驗證 $(configFile)",
+  "loc.input.label.configFile": "要驗證的 config.toml 檔案",
+  "loc.input.help.configFile": "config.toml 檔案的路徑，指定您要使用的登錄。請選取檔案而非資料夾，例如 \"/.cargo/config.toml\"。",
+  "loc.input.label.cargoServiceConnections": "此組織/集合外部登錄的認證",
+  "loc.input.help.cargoServiceConnections": "要用於專案 config.toml 中外部登錄的認證。針對此組織/集合中的登錄，請將此欄位保留空白，系統會自動使用組建的認證。",
+  "loc.messages.FailedToAddAuthentication": "無法新增驗證。",
+  "loc.messages.ConfigTomlNotToml": "您選取要驗證的檔案 (%s) 不是有效的 .toml 檔案。",
+  "loc.messages.ConfigTomlDoesNotExist": "您在 %s 選取的 config.toml 檔案目前不存在。",
+  "loc.messages.ConfigTomlMissingRegistry": "您選取的 config.toml 檔案必須包含登錄表格",
+  "loc.messages.AuthenticatingThisConfigToml": "為在 %s 的 config.toml 檔案中列出的登錄新增驗證",
+  "loc.messages.AddingAuthRegistry": "正在新增登錄的驗證: 具有權杖名稱的 %s: %s",
+  "loc.messages.AddingAuthExternalRegistry": "正在新增外部登錄的驗證: 具有權杖名稱的 %s: %s"
+}

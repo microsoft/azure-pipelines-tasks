@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Autenticazione del carico (per gli strumenti di esecuzione attività)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Attività di autenticazione per il client Cargo usato per l'installazione della distribuzione delle casse Cargo",
+  "loc.instanceNameFormat": "Autenticazione cargo $(configFile)",
+  "loc.input.label.configFile": "file config.toml da autenticare",
+  "loc.input.help.configFile": "Percorso del file config.toml che specifica i registri da usare. Selezionare il file, non la cartella, ad esempio \"/.cargo/config.toml\".",
+  "loc.input.label.cargoServiceConnections": "Credenziali per i registri esterni a questa organizzazione/raccolta",
+  "loc.input.help.cargoServiceConnections": "Credenziali da usare per i registri esterni situati nel file del progetto con estensione config.toml. Per i registri in questa organizzazione/raccolta lasciare vuoto il campo. Verranno usate automaticamente le credenziali della compilazione.",
+  "loc.messages.FailedToAddAuthentication": "Non è stato possibile aggiungere l'autenticazione.",
+  "loc.messages.ConfigTomlNotToml": "Il file selezionato per l'autenticazione (%s) non è un file con estensione .toml valido.",
+  "loc.messages.ConfigTomlDoesNotExist": "Il file config.toml selezionato in %s al momento non esiste.",
+  "loc.messages.ConfigTomlMissingRegistry": "Il file config.toml selezionato deve contenere la tabella dei registri",
+  "loc.messages.AuthenticatingThisConfigToml": "Aggiunta dell'autenticazione per il registro di sistema elencata in questo file config.toml in %s",
+  "loc.messages.AddingAuthRegistry": "Aggiunta dell'autenticazione per il registro di sistema: %s con nome token: %s",
+  "loc.messages.AddingAuthExternalRegistry": "Aggiunta dell'autenticazione per il registro di sistema esterno: %s con nome token: %s"
+}
