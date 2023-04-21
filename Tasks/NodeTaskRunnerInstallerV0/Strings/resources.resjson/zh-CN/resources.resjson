@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Node.js 任务运行程序安装程序",
+  "loc.helpMarkDown": "TDB",
+  "loc.description": "安装特定 Node.js 版本以运行节点任务",
+  "loc.instanceNameFormat": "安装节点运行程序 $(runnerVersion)",
+  "loc.input.label.runnerVersion": "要安装的运行程序版本",
+  "loc.input.help.runnerVersion": "选择要安装的节点版本。",
+  "loc.messages.TryRosetta": "找不到平台 %s 和体系结构 %s 的节点。尝试使用 Rosetta2 进行安装",
+  "loc.messages.UnexpectedOS": "意外的 OS %s。支持的变量: %s",
+  "loc.messages.RunnerAlreadyInUse": "指定的节点运行器 ver.%s 已安装并且当前正在使用中。正在跳过安装。",
+  "loc.messages.NotAllowedNodeVersion": "目标节点的版本与允许的版本不匹配。可能的变量: %s",
+  "loc.messages.AGENT_HOMEDIRECTORY_NotAvailable": "无法获取 AGENT_HOMEDIRECTORY 环境变量。",
+  "loc.messages.RunnerAlreadyInstalled": "代理上已安装 %s 版本的节点运行程序。正在跳过安装。"
+}

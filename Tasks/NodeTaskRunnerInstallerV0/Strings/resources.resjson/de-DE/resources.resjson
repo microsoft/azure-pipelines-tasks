@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Installationsprogramm für Node.js-Aufgabenausführung",
+  "loc.helpMarkDown": "Noch offen",
+  "loc.description": "Bestimmte Node.js-Version zum Ausführen von Knotenaufgaben installieren",
+  "loc.instanceNameFormat": "Knotenausführung $(runnerVersion) installieren",
+  "loc.input.label.runnerVersion": "Zu installierende Version der Ausführung",
+  "loc.input.help.runnerVersion": "Wählen Sie die zu installierende Knotenversion aus.",
+  "loc.messages.TryRosetta": "Der Knoten für die Plattform \"%s\" und die Architektur \"%s\" wurde nicht gefunden. Es wird versucht, mit Rosetta2 zu installieren.",
+  "loc.messages.UnexpectedOS": "Unerwartete %s des Betriebssystems. Unterstützte Varianten: %s",
+  "loc.messages.RunnerAlreadyInUse": "Die angegebene Knotenausführungsversion %s ist bereits installiert und wird zurzeit verwendet. Installation wird übersprungen.",
+  "loc.messages.NotAllowedNodeVersion": "Die Version des Zielknotens stimmt nicht mit den zulässigen Versionen überein. Mögliche Varianten: %s",
+  "loc.messages.AGENT_HOMEDIRECTORY_NotAvailable": "Die Variable AGENT_HOMEDIRECTORY-Umgebung kann nicht abgerufen werden.",
+  "loc.messages.RunnerAlreadyInstalled": "Version %s der Knotenausführung ist bereits auf dem Agent installiert. Installation wird übersprungen."
+}

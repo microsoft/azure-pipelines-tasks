@@ -18,6 +18,6 @@
   "loc.input.help.signatureKey": "메시지 속성에 시그니처를 포함하려는 키입니다. 비워둘 경우 메시지 속성의 기본값은 '시그니처'입니다.",
   "loc.input.label.waitForCompletion": "작업 완료 대기",
   "loc.input.help.waitForCompletion": "True인 경우 이 작업은 지정된 작업 시간 제한 동안 TaskCompleted 이벤트를 대기합니다.",
-  "loc.input.label.useDataContractSerializer": ".NET 데이터 계약 직렬 변환기 사용",
+  "loc.input.label.useDataContractSerializer": "Use .NET data contract serializer",
   "loc.input.help.useDataContractSerializer": "자세한 내용을 확인하려면 작업 설명서로 이동하세요."
 }

@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Programme d’installation de l’exécuteur de tâches Node.js",
+  "loc.helpMarkDown": "TDB",
+  "loc.description": "Installer une version Node.js spécifique pour exécuter des tâches de nœud",
+  "loc.instanceNameFormat": "Installer l’exécuteur de nœuds $(runnerVersion)",
+  "loc.input.label.runnerVersion": "Version de l’exécuteur à installer",
+  "loc.input.help.runnerVersion": "Sélectionnez la version de nœud à installer.",
+  "loc.messages.TryRosetta": "Nœud introuvable pour la %s de plateforme et l'%s d’architecture. Tentative d’installation avec Rosetta2",
+  "loc.messages.UnexpectedOS": "%s de système d’exploitation inattendue. Variantes prises en charge : %s",
+  "loc.messages.RunnerAlreadyInUse": "L’exécuteur node spécifié ver.%s est déjà installé et en cours d’utilisation. Installation ignorée.",
+  "loc.messages.NotAllowedNodeVersion": "La version du nœud cible ne correspond pas aux versions autorisées. Variantes possibles : %s",
+  "loc.messages.AGENT_HOMEDIRECTORY_NotAvailable": "Nous n’avons pas pu obtenir la variable d’environnement AGENT_HOMEDIRECTORY.",
+  "loc.messages.RunnerAlreadyInstalled": "%s version de Node Runner déjà installée sur l’agent. Installation ignorée."
+}

@@ -18,6 +18,6 @@
   "loc.input.help.signatureKey": "メッセージのプロパティの署名を配置するキー。空のままにする場合、既定はメッセージのプロパティの 'signature' です",
   "loc.input.label.waitForCompletion": "タスクの完了を待機する",
   "loc.input.help.waitForCompletion": "これが true の場合、このタスクは、タスクのタイムアウトに指定された期間 TaskCompleted イベントを待機します。",
-  "loc.input.label.useDataContractSerializer": ".NET データ コントラクト シリアライザーの使用",
+  "loc.input.label.useDataContractSerializer": "Use .NET data contract serializer",
   "loc.input.help.useDataContractSerializer": "詳細については、タスクのドキュメントを参照してください"
 }
