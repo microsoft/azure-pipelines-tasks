@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Node.js 工作執行器安裝程式",
+  "loc.helpMarkDown": "TDB",
+  "loc.description": "安裝特定 Node.js 版本以執行節點工作",
+  "loc.instanceNameFormat": "安裝節點執行器 $(runnerVersion)",
+  "loc.input.label.runnerVersion": "要安裝的執行器版本",
+  "loc.input.help.runnerVersion": "選取要安裝的節點版本。",
+  "loc.messages.TryRosetta": "找不到適用於平台 %s 與架構 %s 的 Node。正在嘗試使用 Rosetta2 安裝",
+  "loc.messages.UnexpectedOS": "未預期的 OS %s。支援的變體: %s",
+  "loc.messages.RunnerAlreadyInUse": "指定的節點執行器 ver.%s 已安裝且目前正在使用中。正在略過安裝。",
+  "loc.messages.NotAllowedNodeVersion": "目標節點的版本不符合允許的版本。可能的變體: %s",
+  "loc.messages.AGENT_HOMEDIRECTORY_NotAvailable": "無法取得 AGENT_HOMEDIRECTORY 環境變數。",
+  "loc.messages.RunnerAlreadyInstalled": "%s 版本的節點執行器已經安裝在代理程式上。正在略過安裝。"
+}
