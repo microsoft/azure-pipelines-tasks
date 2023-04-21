@@ -18,6 +18,6 @@
   "loc.input.help.signatureKey": "希望签名在消息属性中所在的键。如果留空，则默认值为消息属性中的“签名”",
   "loc.input.label.waitForCompletion": "等待任务完成",
   "loc.input.help.waitForCompletion": "如果为 true，此任务将等待 TaskCompleted 事件出现指定任务超时。",
-  "loc.input.label.useDataContractSerializer": "使用 .NET 数据协定分隔符",
+  "loc.input.label.useDataContractSerializer": "Use .NET data contract serializer",
   "loc.input.help.useDataContractSerializer": "有关更多详细信息，请转到任务文档"
 }

@@ -65,7 +65,7 @@
   "loc.input.label.ExcludeFilesFromAppDataFlag": "Dateien aus dem Ordner \"App_Data\" ausschließen",
   "loc.input.help.ExcludeFilesFromAppDataFlag": "Wählen Sie diese Option aus, um zu verhindern, dass Dateien im Ordner \"App_Data\" in Azure App Service bereitgestellt oder gelöscht werden.",
   "loc.input.label.AdditionalArguments": "Zusätzliche Argumente",
-  "loc.input.help.AdditionalArguments": "Weitere Web Deploy-Argumente mit der Syntax \"-key:value\".<br />Diese werden angewendet, wenn der Azure App Service bereitgestellt wird. Beispiel: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />Weitere Beispiele für Einstellungen für den Web Deploy-Vorgang finden Sie [hier] (https://go.microsoft.com/fwlink/?linkid=838471).",
+  "loc.input.help.AdditionalArguments": "Additional Web Deploy arguments following the syntax -key:value .<br />These will be applied when deploying the Azure App Service. Example: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />For more examples of Web Deploy operation settings, refer to  [this](https://go.microsoft.com/fwlink/?linkid=838471).",
   "loc.input.label.RenameFilesFlag": "Gesperrte Dateien umbenennen",
   "loc.input.help.RenameFilesFlag": "Wählen Sie die Option aus, um das msdeploy-Flag MSDEPLOY_RENAME_LOCKED_FILES=1 in den Azure App Service-Anwendungseinstellungen zu aktivieren. Wenn diese Option festgelegt ist, kann \"msdeploy\" gesperrte Dateien umbenennen, die während der App-Bereitstellung gesperrt sind.",
   "loc.input.label.XmlTransformation": "XML-Transformation",

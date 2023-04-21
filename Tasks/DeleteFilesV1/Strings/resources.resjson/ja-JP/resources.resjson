@@ -11,7 +11,7 @@
   "loc.input.label.RemoveSourceFolder": "SourceFolder の削除",
   "loc.input.help.RemoveSourceFolder": "ソース フォルダーの削除も試行します。",
   "loc.input.label.RemoveDotFiles": "ドットで始まるファイルを削除します",
-  "loc.input.help.RemoveDotFiles": "ドットで始まるファイル (.git、.dockerfile) を削除します。明示的に指定されていない場合は、これらのファイルを省略します (例: '/. * ')。詳細については、この [リンク] を参照してください (https://github.com/isaacs/minimatch#dot)",
+  "loc.input.help.RemoveDotFiles": "Delete files starting with a dot (.git, .dockerfile). Omits these files if it's not specified explicitly (for example, '/.*'). Please see this [link](https://github.com/isaacs/minimatch#dot) for more info",
   "loc.messages.CantDeleteFiles": "1 つ以上のファイルを削除できませんでした",
   "loc.messages.SkippingSymbolStore": "シンボル ストアのファイル共有の削除をスキップしています: %s",
   "loc.messages.NoFiles": "削除できるファイルはありません。"

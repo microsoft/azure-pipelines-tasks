@@ -16,7 +16,7 @@
   "loc.input.label.failOnStderr": "發生標準錯誤的失敗",
   "loc.input.help.failOnStderr": "若此為 true，則任何錯誤寫入 StandardError 資料流時，此工作便會失敗。",
   "loc.input.label.bashEnvValue": "設定 BASH_ENV 環境變數的值",
-  "loc.input.help.bashEnvValue": "若指定輸入，其值會展開，並作為執行指令碼前要執行之啟動檔案的路徑。如果已定義環境變數 'BASH_ENV'，則工作只會針對目前的工作覆寫此變數。您可以透過 [link] (https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html) 找到更多詳細資料。",
+  "loc.input.help.bashEnvValue": "If input is specified, it's value is expanded and used as the path of a startup file to execute before running the script. If the environment variable `BASH_ENV` has already been defined, the task will override this variable only for the current task. You can find more details by [link](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html).",
   "loc.messages.GeneratingScript": "正在產生指令碼。",
   "loc.messages.JS_ExitCode": "Bash 已結束，代碼為 '%s'。",
   "loc.messages.JS_FormattedCommand": "經過格式化的命令: %s",
