@@ -32,6 +32,14 @@ export class KuduServiceManagementClient {
             console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureFunctionAppDeployment]" + authMethodtelemetry);
         }
 
+
+        request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';              
+        
+        if(!!this._cookie) {
+            tl.debug(`setting affinity cookie ${JSON.stringify(this._cookie)}`);
+            request.headers['Cookie'] = this._cookie;
+        }
+
         let retryCount = reqOptions && util.isNumber(reqOptions.retryCount) ? reqOptions.retryCount : 5;
 
         while(retryCount >= 0) {
