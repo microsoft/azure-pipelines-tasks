@@ -92,22 +92,36 @@ export class AzureAppServiceUtility {
         return physicalToVirtualPathMap.physicalPath;
     }
 
-    public async getKuduService(): Promise<Kudu> {
+    public async getKuduService(): Promise<Kudu> {     
+
         const publishingCredentials = await this._appService.getPublishingCredentials();
-        if(publishingCredentials.properties["scmUri"]) {
-            const scmPolicyCheck = await this.isSitePublishingCredentialsEnabled(); 
-            let accessToken = null;
-            if(!scmPolicyCheck) {
-                accessToken = await this._appService._client.getCredentials().getToken();
-            }
-            else {
-                tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._appService.getSlot()}_PASSWORD`, publishingCredentials.properties["publishingPassword"], true);
-                accessToken = (new Buffer(publishingCredentials.properties["publishingUserName"] + ':' + publishingCredentials.properties["publishingPassword"]).toString('base64'));
-            }
-            return new Kudu(publishingCredentials.properties["scmUri"], accessToken, scmPolicyCheck);
+        const scmUri = publishingCredentials.properties["scmUri"];
+
+        if (!scmUri) {
+            throw Error(tl.loc('KuduSCMDetailsAreEmpty'));
         }
 
-        throw Error(tl.loc('KuduSCMDetailsAreEmpty'));
+        const authHeader = await this.getKuduAuthHeader(publishingCredentials);
+        return new Kudu(publishingCredentials.properties["scmUri"], authHeader);        
+    }
+
+    private async getKuduAuthHeader(publishingCredentials: any): Promise<string> {
+        const scmPolicyCheck = await this.isSitePublishingCredentialsEnabled(); 
+
+        if (!scmPolicyCheck) {
+            const accessToken = await this._appService._client.getCredentials().getToken();
+            tl.debug("Kudu: using bearer token.");
+            return "Bearer " + accessToken;
+        }
+
+        const password = publishingCredentials.properties["publishingPassword"];
+        const userName = publishingCredentials.properties["publishingUserName"];
+
+        tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._appService.getSlot()}_PASSWORD`, password, true);
+        tl.debug("Kudu: using basic auth.");
+
+        const auth = (new Buffer(userName + ':' + password).toString('base64'));
+        return "Basic " + auth;
     }
 
     public async updateAndMonitorAppSettings(addProperties?: any, deleteProperties?: any, formatJSON?: boolean): Promise<boolean> {
