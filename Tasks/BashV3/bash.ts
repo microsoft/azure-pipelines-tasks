@@ -113,7 +113,7 @@ async function run() {
                         value: processedArgs.trim()
                     };
                     process.env[argsEnvVar.envName] = argsEnvVar.value;
-                    resultArgs = `"$${argsEnvVar.envName}"`
+                    resultArgs = `$${argsEnvVar.envName}`
                 }
 
                 if (featureFlags.enableTelemetry) {
