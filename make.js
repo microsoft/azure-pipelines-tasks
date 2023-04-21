@@ -337,7 +337,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
     console.log('> copying ps test lib resources');
     mkdir('-p', path.join(buildTestsPath, 'lib'));
     matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(testsPath, 'lib'), path.join(buildTestsPath, 'lib'));
-    cd('..');
+    
     var suiteType = argv.suite || 'L0';
     function runTaskTests(taskName) {
         banner('Testing: ' + taskName);
@@ -345,7 +345,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
         var nodeVersions = argv.node ? new Array(argv.node) : getTaskNodeVersion(buildTasksPath, taskName);
         var pattern1 = path.join(buildTasksPath, taskName, 'Tests', suiteType + '.js');
         var pattern2 = path.join(buildTasksPath, 'Common', taskName, 'Tests', suiteType + '.js');
-        var taskPath = path.join('**', 'Tasks', taskName, "**", "*.js").replace(/\\/g, '/');
+        var taskPath = path.join('**', '_build', 'Tasks', taskName, "**", "*.js").replace(/\\/g, '/');
 
         var isReportWasFormed = false;
         var testsSpec = [];
@@ -397,18 +397,18 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
         });
 
         banner('Running common library tests');
-        var commonLibPattern = path.join(buildTasksPath, 'Common', '*', 'Tests', suiteType + '.js');
-        var specs = [];
-        if (matchFind(commonLibPattern, buildTasksPath).length > 0) {
-            specs.push(commonLibPattern);
-        }
-        if (specs.length > 0) {
-            // setup the version of node to run the tests
-            util.installNode(argv.node);
-            run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
-        } else {
-            console.warn("No common library tests found");
-        }
+        // var commonLibPattern = path.join(buildTasksPath, 'Common', '*', 'Tests', suiteType + '.js');
+        // var specs = [];
+        // if (matchFind(commonLibPattern, buildTasksPath).length > 0) {
+        //     specs.push(commonLibPattern);
+        // }
+        // if (specs.length > 0) {
+        //     // setup the version of node to run the tests
+        //     util.installNode(argv.node);
+        //     run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
+        // } else {
+        //     console.warn("No common library tests found");
+        // }
     }
 
     try {

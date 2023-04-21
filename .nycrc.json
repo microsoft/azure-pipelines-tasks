@@ -1,4 +1,7 @@
 {
+  "cache": false,
+  "produceSourceMap": false,
+  "sourceMap": false,
   "exclude": [
     "**/Tests/**",
     "**/*.d.ts",
