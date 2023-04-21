@@ -20,7 +20,7 @@ const webAppKindMap = new Map([
 ]);
 const defaultslotname:string = "production";
 
-async function advancedSlotSwap(updateDeploymentStatus: boolean, appServiceSourceSlot: AzureAppService, appServiceTargetSlot: AzureAppService, appServiceSourceSlotUtils: AzureAppServiceUtils, appServiceTargetSlotUtils: AzureAppServiceUtils) {
+async function advancedSlotSwap(updateDeploymentStatus: boolean, appServiceSourceSlot: AzureAppService, appServiceTargetSlot: AzureAppService, appServiceSourceSlotUtils: AzureAppServiceUtility, appServiceTargetSlotUtils: AzureAppServiceUtility) {
 
     if(appServiceSourceSlot.getSlot().toLowerCase() == appServiceTargetSlot.getSlot().toLowerCase()) {
         updateDeploymentStatus = false;
@@ -42,11 +42,11 @@ async function run() {
     let kuduService: Kudu;
     let kuduServiceUtils: KuduServiceUtils;
     let appService: AzureAppService;
-    let azureAppServiceUtils: AzureAppServiceUtils;
+    let azureAppServiceUtils: AzureAppServiceUtility;
     let appServiceSourceSlot: AzureAppService;
     let appServiceTargetSlot: AzureAppService;
-    let appServiceSourceSlotUtils: AzureAppServiceUtils;
-    let appServiceTargetSlotUtils: AzureAppServiceUtils;
+    let appServiceSourceSlotUtils: AzureAppServiceUtility;
+    let appServiceTargetSlotUtils: AzureAppServiceUtility;
     let taskResult = true;
     let errorMessage: string = "";
     let updateDeploymentStatus: boolean = true;
@@ -106,7 +106,7 @@ async function run() {
             tl.debug(`Resource Group: ${resourceGroupName}`);
 
             appService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
-            azureAppServiceUtils = new AzureAppServiceUtils(appService);
+            azureAppServiceUtils = new AzureAppServiceUtility(appService);
             let appServiceKuduService = await azureAppServiceUtils.getKuduService();
             kuduServiceUtils = new KuduServiceUtils(appServiceKuduService);
 
@@ -124,21 +124,21 @@ async function run() {
                 targetSlot = (swapWithProduction) ? "production" : targetSlot;
                 appServiceSourceSlot = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, sourceSlot);
                 appServiceTargetSlot = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, targetSlot);
-                appServiceSourceSlotUtils = new AzureAppServiceUtils(appServiceSourceSlot);
-                appServiceTargetSlotUtils = new AzureAppServiceUtils(appServiceTargetSlot);
+                appServiceSourceSlotUtils = new AzureAppServiceUtility(appServiceSourceSlot);
+                appServiceTargetSlotUtils = new AzureAppServiceUtility(appServiceTargetSlot);
             }
         }
 
         switch(action) {
             case "Start Azure App Service": {
                 await appService.start();
-                await azureAppServiceUtils.monitorApplicationState("running");
+                await AzureAppServiceUtils.monitorApplicationState(appService, "running");
                 await azureAppServiceUtils.pingApplication();
                 break;
             }
             case "Stop Azure App Service": {
                 await appService.stop();
-                await azureAppServiceUtils.monitorApplicationState("stopped");
+                await AzureAppServiceUtils.monitorApplicationState(appService, "stopped");
                 break;
             }
             case "Restart Azure App Service": {
