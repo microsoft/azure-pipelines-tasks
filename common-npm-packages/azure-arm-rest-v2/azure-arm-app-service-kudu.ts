@@ -11,17 +11,26 @@ tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 
 export class KuduServiceManagementClient {
     private _scmUri;
-    private _accesssToken: string;
+    private _accessToken: string;
     private _cookie: string[] = undefined;
+    private _scmAccessCheck : boolean;
 
-    constructor(scmUri: string, accessToken: string) {
-        this._accesssToken = accessToken;
+    constructor(scmUri: string, accessToken: string, scmAccessCheck: boolean) {
+        this._accessToken = accessToken;
         this._scmUri = scmUri;
+        this._scmAccessCheck = scmAccessCheck;
     }
 
     public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions, contentType?: string): Promise<webClient.WebResponse> {
         request.headers = request.headers || {};
-        request.headers["Authorization"] = "Basic " + this._accesssToken;
+        if(!this._scmAccessCheck) {
+            request.headers["Authorization"] = "Bearer " + this._accessToken;
+            tl.debug('Using Bearer Authentication');
+        }
+        else{
+            request.headers["Authorization"] = "Basic " + this._accessToken;
+            tl.debug('Using Basic Authentication');
+        }
         if (!request.headers['Content-Type'] || !!contentType) {
             request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
         }
@@ -80,9 +89,8 @@ export class KuduServiceManagementClient {
 export class Kudu {
     private _client: KuduServiceManagementClient;
 
-    constructor(scmUri: string, username: string, password: string) {
-        var base64EncodedCredential = (Buffer.from(username + ':' + password).toString('base64'));
-        this._client = new KuduServiceManagementClient(scmUri, base64EncodedCredential);
+    constructor(scmUri: string, accessToken: string, scmPolicyCheck: boolean) {
+        this._client = new KuduServiceManagementClient(scmUri, accessToken, scmPolicyCheck);
     }
 
     public async updateDeployment(requestBody: any): Promise<string> {
