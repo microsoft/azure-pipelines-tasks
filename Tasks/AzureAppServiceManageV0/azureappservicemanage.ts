@@ -3,7 +3,8 @@ import path = require('path');
 import { AzureRMEndpoint, dispose } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
 import { AzureRmEndpointAuthenticationScheme } from 'azure-pipelines-tasks-azure-arm-rest-v2/constants';
-import {AzureAppService  } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
+import { AzureAppService  } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
+import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureAppServiceUtility';
 import { AzureApplicationInsights } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-appinsights';
 import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
 import { AzureAppServiceUtils } from './operations/AzureAppServiceUtils';
@@ -72,13 +73,30 @@ async function run() {
 
         let endpointTelemetry = '{"endpointId":"' + connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureAppServiceManage]" + endpointTelemetry);
-        
+
         if (azureEndpoint.scheme && azureEndpoint.scheme.toLowerCase() === AzureRmEndpointAuthenticationScheme.PublishProfile) {
             if (action !== "Start all continuous webjobs" && action !== "Stop all continuous webjobs" && action !== "Install Extensions") {
                 throw Error(tl.loc('InvalidActionForPublishProfileEndpoint'));
             }
             let scmCreds: publishProfileUtility.ScmCredentials = await publishProfileUtility.getSCMCredentialsFromPublishProfile(azureEndpoint.PublishProfile);
-            kuduService = new Kudu(scmCreds.scmUri, scmCreds.username, scmCreds.password);
+
+            const appService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
+            const appServiceUtility = new AzureAppServiceUtility(appService);
+            let authHeader = "";
+
+            if (appServiceUtility.isSitePublishingCredentialsEnabled()) {
+                const buffer =  new Buffer(scmCreds.username + ':' + scmCreds.password);
+                const auth = buffer.toString("base64");
+                authHeader = "Basic " + auth;
+                tl.debug("Kudu: using basic authentication");
+            }
+            else {
+                const token = await azureEndpoint.applicationTokenCredentials.getToken();
+                authHeader = "Bearer " + token;
+                tl.debug("Kudu: using token authentication");
+            }
+
+            kuduService = new Kudu(scmCreds.scmUri, authHeader);
             kuduServiceUtils = new KuduServiceUtils(kuduService);
         } else {
             if(action != "Swap Slots" && !slotName) {
