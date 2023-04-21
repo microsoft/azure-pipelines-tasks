@@ -121,15 +121,16 @@ export class AzureAppServiceUtility {
     }
 
     public async getKuduService(): Promise<Kudu> {
+        
         var publishingCredentials = await this._appService.getPublishingCredentials();
         var scmPolicyCheck = await this.isSitePublishingCredentialsEnabled();            
         
-
         if(publishingCredentials.properties["scmUri"]) {
-                    if(!scmPolicyCheck) {
+                    if(scmPolicyCheck === false) {
+                        tl.debug('Gettting Bearer token');
                         var accessToken = await this._appService._client.getCredentials().getToken();
                     }
-                    else{
+                    else{                        
                         tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._appService.getSlot()}_PASSWORD`, publishingCredentials.properties["publishingPassword"], true);
                         var accessToken = (new Buffer(publishingCredentials.properties["publishingUserName"] + ':' + publishingCredentials.properties["publishingPassword"]).toString('base64'));
                     }
@@ -447,8 +448,8 @@ export class AzureAppServiceUtility {
             }
         }
         catch(error){
-            tl.debug(`Skipping SCM Policy check: ${error}`);
-            return null;
+            tl.debug(`Call to get SCM Policy check failed: ${error}`);
+            return false;
         }
     }
     

@@ -126,7 +126,8 @@ export class AzureAppServiceUtility {
         
 
         if(publishingCredentials.properties["scmUri"]) {
-                    if(!scmPolicyCheck) {
+                    if(scmPolicyCheck === false) {
+                        tl.debug('Gettting Bearer token');
                         var accessToken = await this._appService._client.getCredentials().getToken();
                     }
                     else{
@@ -455,8 +456,8 @@ export class AzureAppServiceUtility {
             }
         }
         catch(error){
-            tl.debug(`Skipping SCM Policy check: ${error}`);
-            return null;
+            tl.debug(`Call to get SCM Policy check failed: ${error}`);
+            return false;
         }
     }
     

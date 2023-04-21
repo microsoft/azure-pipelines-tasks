@@ -19,19 +19,17 @@ export class KuduServiceManagementClient {
 
     public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions, contentType?: string): Promise<webClient.WebResponse> {
         request.headers = request.headers || {};
-        if(!this._scmAccessCheck) {
+        if(this._scmAccessCheck === false || this._scmAccessCheck == null) {
             request.headers["Authorization"] = "Bearer " + this._accessToken;
             tl.debug('Using Bearer Authentication');
+            let authMethodtelemetry = '{"authMethod":"Bearer"}';
+            console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureFunctionAppDeployment]" + authMethodtelemetry);
         }
         else{
             request.headers["Authorization"] = "Basic " + this._accessToken;
             tl.debug('Using Basic Authentication');
-        }
-        request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
-        
-        if(!!this._cookie) {
-            tl.debug(`setting affinity cookie ${JSON.stringify(this._cookie)}`);
-            request.headers['Cookie'] = this._cookie;
+            let authMethodtelemetry = '{"authMethod":"Basic"}';
+            console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureFunctionAppDeployment]" + authMethodtelemetry);
         }
 
         let retryCount = reqOptions && util.isNumber(reqOptions.retryCount) ? reqOptions.retryCount : 5;
