@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Windows 计算机文件复制",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "将文件复制到远程 Windows 计算机",
   "loc.instanceNameFormat": "从 $(SourcePath)复制文件",
   "loc.releaseNotes": "版本 2.0 中的新增功能: <br/>&nbsp;&nbsp;将添加代理支持。<br/>&nbsp;&nbsp;已删除对旧 DTL 计算机的支持。",
@@ -27,6 +27,7 @@
   "loc.messages.WFC_CopyingRecurivelyFrom0to1MachineSucceed": "以递归方式成功从 {0} 复制到计算机 {2} 上的 {1}。",
   "loc.messages.WFC_SourcePathDoesNotExist": "源路径“{0}”不存在。",
   "loc.messages.WFC_RemoteDestinationPathCannotContainEnvironmentVariables": "远程目标路径“{0}”不能包含环境变量。",
+  "loc.messages.WFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "其他参数不能包含分隔符 '&', ';' 和 '|'.请验证输入。若要了解有关参数验证的详细信息，请检查 https://aka.ms/azdo-task-argument-validation",
   "loc.messages.WFC_CopyStartedFor0": "已启动复制 - {0}",
   "loc.messages.WFC_NoMachineExistsUnderEnvironment": "环境“{0}”中不存在用于部署的计算机",
   "loc.messages.WFC_NoMachineExistsUnderEnvironment0ForDeployment": "环境“{0}”中不存在用于部署的计算机",

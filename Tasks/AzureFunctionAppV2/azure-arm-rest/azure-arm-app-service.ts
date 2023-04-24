@@ -721,6 +721,31 @@ export class AzureAppService {
         return this._name;
     }
 
+    public async getSitePublishingCredentialPolicies(): Promise<any> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'GET';
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/basicPublishingCredentialsPolicies/scm`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2022-03-01');
+            let requestOptions = new webClient.WebRequestOptions();
+            requestOptions.retryCount = 1;
+            
+            var response = await this._client.beginRequest(httpRequest, requestOptions);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            return response.body;
+        }
+        catch(error) {
+            throw Error(`Failed to get SitePublishingCredentialPolicies. Error: ${this._client.getFormattedError(error)}`);
+        }
+    }
+
     public async getSiteVirtualNetworkConnections(): Promise<any> {
         try {
             var httpRequest = new webClient.WebRequest();

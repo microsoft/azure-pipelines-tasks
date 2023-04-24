@@ -28,6 +28,8 @@
   "loc.input.help.CustomTargetAzurePs": "慣用的 Azure PowerShell 版本必須是正確的語意版本，例如 1.2.3。不支援像 2.\\*,2.3.\\* 這樣的 Regex。裝載的 VS2017 集區目前支援 Az 模組版本: 1.0.0、1.6.0、2.3.2、2.6.0、3.1.0",
   "loc.input.label.pwsh": "使用 PowerShell Core",
   "loc.input.help.pwsh": "若此為 true，那麼在 Windows 上，工作就會使用 PATH 中的 pwsh.exe 而非 powershell.exe。",
+  "loc.input.label.validateScriptSignature": "驗證指令碼簽章",
+  "loc.input.help.validateScriptSignature": "如果此為 true，則工作會先進行檢查，確定指定的指令碼已簽署且有效，然後再執行。",
   "loc.input.label.workingDirectory": "工作目錄",
   "loc.input.help.workingDirectory": "指令碼執行所在的工作目錄。",
   "loc.messages.GeneratingScript": "正在產生指令碼。",
