@@ -87,6 +87,7 @@
   "loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode": "AzCopy.exe s'est arrêté avec un code de sortie différent de zéro durant le chargement des fichiers vers le Stockage Blob.",
   "loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey": "Impossible de récupérer (fetch) la clé du compte de stockage. Erreur : '{0}'",
   "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Désinstallez manuellement le script personnalisé WinRM, puis réessayez d'effectuer le déploiement.",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "Les arguments supplémentaires ne peuvent pas inclure les caractères de séparation '&', ';' and '|'. Veuillez vérifier l’entrée. Pour en savoir plus sur la validation des arguments, consultez https://aka.ms/azdo-task-argument-validation",
   "loc.messages.ExpiredServicePrincipal": "Impossible de récupérer (fetch) le jeton d'accès pour Azure. Vérifiez si le principal de service utilisé est valide et s'il n'a pas expiré.",
   "loc.messages.UnsupportedAuthScheme": "Schéma d'authentification '{0}' non pris en charge pour le point de terminaison.",
   "loc.messages.ServicePrincipalError": "Erreur liée au principal du service utilisé pour le déploiement.",

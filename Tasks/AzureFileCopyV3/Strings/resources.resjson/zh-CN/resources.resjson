@@ -92,5 +92,6 @@
   "loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode": "将文件上传到 blob 存储时，AzCopy.exe 以非零退出代码退出。",
   "loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey": "无法提取存储帐户密钥。错误: “{0}”",
   "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "请手动卸载 WinRM 自定义脚本，然后重试部署。",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "其他参数不能包含分隔符 '&', ';' 和 '|'.请验证输入。若要了解有关参数验证的详细信息，请检查 https://aka.ms/azdo-task-argument-validation",
   "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。"
 }

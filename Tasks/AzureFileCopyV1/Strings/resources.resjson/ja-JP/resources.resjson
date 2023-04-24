@@ -91,5 +91,6 @@
   "loc.messages.AFC_RootContainerAndDirectory": "$root コンテナーには、'/S' オプションは無効です。",
   "loc.messages.AFC_RedirectResponseInvalidStatusCode": "HTTP 応答コード: '{0}' は無効なリダイレクト状態コードです",
   "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "リダイレクト応答の場所ヘッダーが null です。",
-  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "WinRM カスタム スクリプトを手動でアンインストールしてから、配置を再試行してください。"
+  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "WinRM カスタム スクリプトを手動でアンインストールしてから、配置を再試行してください。",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "追加の引数に区切り文字 '&', ';', '|' を含めることはできません。入力を確認してください。引数の検証の詳細については、以下を確認してください: https://aka.ms/azdo-task-argument-validation"
 }
