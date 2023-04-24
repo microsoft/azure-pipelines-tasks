@@ -7,7 +7,8 @@ steps:
 - task: PowerShell@2
   inputs:
     targetType: inline
-    script: 'powershell.exe -ExecutionPolicy ByPass -NoExit -Command & "%ANACONDA_HOME%\\shell\\condabin\\conda-hook.ps1" ; conda activate "%ANACONDA_HOME%"'
+    script: 'conda init ANACONDA_PROMPT'
+#    script: 'powershell.exe -ExecutionPolicy ByPass -NoExit -Command & "%ANACONDA_HOME%\\shell\\condabin\\conda-hook.ps1" ; conda activate "%ANACONDA_HOME%"'
 #    script: 'conda create --name AZDO ; conda deactivate'
 #  env:
 #    CONDARC: ../../../../Users/abpowell/.condarc
