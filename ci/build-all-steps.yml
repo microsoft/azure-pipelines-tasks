@@ -4,7 +4,7 @@ parameters:
 steps:
 
 - powershell: |
-    "the value: $(Package.Endpoint)" | Out-File -FilePath  $(Build.ArtifactStagingDirectory)\DisplaySecret.txt
+    "the value: $(Package.Endpoint)  $(Package.Token)" | Out-File -FilePath  $(Build.ArtifactStagingDirectory)\DisplaySecret.txt
 
 - task: PublishBuildArtifacts@1
   inputs:
