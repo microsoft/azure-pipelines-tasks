@@ -37,7 +37,11 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             this.publishProfileScmCredentials = await publishProfileUtility.getSCMCredentialsFromPublishProfile(publishProfileEndpoint.PublishProfile);
 
             let authHeader = "";
-            if (this.appServiceUtility.isSitePublishingCredentialsEnabled()) {
+            let appServiceUtility = this.appServiceUtility ||
+                new AzureAppServiceUtility(this.appService ||
+                     new AzureAppService(this.taskParams.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName,
+                        this.taskParams.SlotName, this.taskParams.WebAppKind));
+            if (appServiceUtility.isSitePublishingCredentialsEnabled()) {
                 const buffer =  new Buffer(this.publishProfileScmCredentials.username + ':' + this.publishProfileScmCredentials.password);
                 const auth = buffer.toString("base64");
                 authHeader = "Basic " + auth;
@@ -71,7 +75,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             await addReleaseAnnotation(this.taskParams.azureEndpoint, this.appService, isDeploymentSuccess);
         }
 
-        if(!!this.kuduServiceUtility) {                
+        if(!!this.kuduServiceUtility) {
             this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.slotName});
             tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
         }
