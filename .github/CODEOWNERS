@@ -163,6 +163,8 @@ Tasks/Common/utility-common/       @nishubansal    @ds-ms
 
 Tasks/Common/webdeployment-common/   @vsebesta   @rvairavelu   @pipeline-environment-team
 
+Tasks/CondaAuthenticateV0/      @microsoft/azure-artifacts-packages
+
 Tasks/CondaEnvironmentV0/      @microsoft/akvelon-build-task-team
 
 Tasks/CondaEnvironmentV1/      @microsoft/akvelon-build-task-team

@@ -1,0 +1,33 @@
+{
+  "id": "543c39b2-11e9-4de8-8b9b-94eea1339891",
+  "name": "CondaAuthenticate",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 220,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "condaauthenticatemain.js"
+    },
+    "Node16": {
+      "target": "condaauthenticatemain.js"
+    }
+  },
+  "messages": {
+    "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
+    "AddingAuthChannel": "ms-resource:loc.messages.AddingAuthChannel"
+  }
+}

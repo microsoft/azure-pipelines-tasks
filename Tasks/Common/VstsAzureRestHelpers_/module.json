@@ -1,5 +1,6 @@
 {
     "messages": {
+        "AZ_CouldNotGenerateOidcToken": "Could not generate a client assertion for federated login.",
         "AZ_UnsupportedAuthScheme0": "Unsupported authentication scheme '{0}' for Azure endpoint.",
         "AZ_SpnAccessTokenFetchFailure": "Not able to fetch token for tenant Id {0}.",
         "AZ_UserAccessTokenFetchFailure": "Not able to fetch token for given User.",
