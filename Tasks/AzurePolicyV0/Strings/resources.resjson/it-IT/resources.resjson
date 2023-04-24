@@ -3,10 +3,13 @@
   "loc.helpMarkDown": "",
   "loc.description": "Valutazione di sicurezza e conformità per Criteri di Azure",
   "loc.instanceNameFormat": "Controlla conformità criteri",
+  "loc.group.displayName.advancedOptions": "Avanzate",
   "loc.input.label.ConnectedServiceName": "Sottoscrizione di Azure",
   "loc.input.help.ConnectedServiceName": "Consente di selezionare la sottoscrizione di Azure Resource Manager per l'applicazione dei criteri.",
   "loc.input.label.ResourceGroupName": "Gruppo di risorse",
   "loc.input.help.ResourceGroupName": "Specificare il nome di un gruppo di risorse.",
   "loc.input.label.Resources": "Nome della risorsa",
-  "loc.input.help.Resources": "Consente di selezionare il nome delle risorsa di Azure di cui verificare la conformità ai criteri."
+  "loc.input.help.Resources": "Consente di selezionare il nome delle risorsa di Azure di cui verificare la conformità ai criteri.",
+  "loc.input.label.RetryDuration": "Durata dei tentativi",
+  "loc.input.help.RetryDuration": "Definisce il periodo di attesa dell'attività fino al nuovo tentativo di chiamare l'API di Azure nel caso in cui il codice di risposta precedente fosse \"Accettato\". Il periodo minimo è di 2 minuti."
 }

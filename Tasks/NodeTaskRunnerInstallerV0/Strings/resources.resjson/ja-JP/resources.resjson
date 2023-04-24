@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Node.js タスク ランナー インストーラー",
+  "loc.helpMarkDown": "TDB",
+  "loc.description": "特定の Node.js バージョンをインストールしてノード タスクを実行する",
+  "loc.instanceNameFormat": "ノード ランナー $(runnerVersion)のインストール",
+  "loc.input.label.runnerVersion": "インストールするランナーのバージョン",
+  "loc.input.help.runnerVersion": "インストールするノードのバージョンを選択します。",
+  "loc.messages.TryRosetta": "プラットフォーム %s およびアーキテクチャ %s のノードが見つかりません。Rosetta2 でインストールしようとしています",
+  "loc.messages.UnexpectedOS": "予期しない OS %s。サポートされているバリアント: %s",
+  "loc.messages.RunnerAlreadyInUse": "指定された Node ランナー バージョン %s は既にインストールされており、現在使用中です。インストールをスキップしています。",
+  "loc.messages.NotAllowedNodeVersion": "ターゲット ノードのバージョンが、許可されているバージョンと一致しません。考えられるバリアント: %s",
+  "loc.messages.AGENT_HOMEDIRECTORY_NotAvailable": "AGENT_HOMEDIRECTORY 環境変数を取得できません。",
+  "loc.messages.RunnerAlreadyInstalled": "%s バージョンのノード ランナーが既にエージェントにインストールされています。インストールをスキップしています。"
+}
