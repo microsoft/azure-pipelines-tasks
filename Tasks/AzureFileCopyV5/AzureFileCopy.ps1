@@ -67,12 +67,15 @@ $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 . "$PSScriptRoot\Utility.ps1"
 CleanUp-PSModulePathForHostedAgent
 
-if (Get-Module Az.Accounts -ListAvailable){
-    Initialize-AzModule -Endpoint $endpoint
+$vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+$vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
+
+if (Get-Module Az.Accounts -ListAvailable) {
+    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $vstsAccessToken
 }
-else{    
+else {
     Write-Verbose "No module found with name: Az.Accounts"
-    throw ("Could not find the module Az.Accounts with given version. If the module was recently installed, retry after restarting the Azure Pipelines task agent.") 
+    throw ("Could not find the module Az.Accounts with given version. If the module was recently installed, retry after restarting the Azure Pipelines task agent.")
 }
 
 # Import the loc strings.
@@ -102,13 +105,13 @@ try {
         Write-Host "##vso[telemetry.publish area=TaskEndpointId;feature=AzureFileCopy]$telemetryJsonContent"
 
         # Getting storage key for the storage account
-        $storageKey = Get-StorageKey -storageAccountName $storageAccount -endpoint $endpoint
+        $storageKey = Get-StorageKey -storageAccountName $storageAccount -endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $vstsAccessToken
 
         # creating storage context to be used while creating container, sas token, deleting container
         $storageContext = Create-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
-        
+
         # Geting Azure Storage Account type
-        $storageAccountType = Get-StorageAccountType -storageAccountName $storageAccount -endpoint $endpoint
+        $storageAccountType = Get-StorageAccountType $storageAccount $endpoint $connectedServiceName $vstsAccessToken
         Write-Verbose "Obtained Storage Account type: $storageAccountType"
         if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.Contains('Premium'))
         {
@@ -128,14 +131,14 @@ try {
             $containerPresent = Get-AzureContainer -containerName $containerName -storageContext $storageContext
 
             #creating container if the containerName provided does not exist
-            if($containerPresent -eq $null)
+            if($null -eq $containerPresent)
             {
                 Write-Verbose "Creating container if the containerName provided does not exist"
                 Create-AzureContainer -containerName $containerName -storageContext $storageContext
             }
         }
 
-        
+
         # Getting Azure Blob Storage Endpoint
         $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -endpoint $endpoint
 
@@ -215,11 +218,12 @@ try {
         # Normalize admin username
         if($vmsAdminUserName -and (-not $vmsAdminUserName.StartsWith(".\")) -and ($vmsAdminUserName.IndexOf("\") -eq -1) -and ($vmsAdminUserName.IndexOf("@") -eq -1))
         {
-            $vmsAdminUserName = ".\" + $vmsAdminUserName 
+            $vmsAdminUserName = ".\" + $vmsAdminUserName
         }
         # getting azure vms properties(name, fqdn, winrmhttps port)
         $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName `
-        -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites -connectedServiceName $connectedServiceName
+            -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites `
+            -connectedServiceName $connectedServiceName -vstsAccessToken $vstsAccessToken
 
         $azureVMsCredentials = Get-AzureVMsCredentials -vmsAdminUserName $vmsAdminUserName -vmsAdminPassword $vmsAdminPassword
 

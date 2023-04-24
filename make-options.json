@@ -58,6 +58,7 @@
         "CMakeV1",
         "CmdLineV2",
         "CocoaPodsV0",
+        "CondaAuthenticateV0",
         "CondaEnvironmentV0",
         "CondaEnvironmentV1",
         "ContainerStructureTestV0",

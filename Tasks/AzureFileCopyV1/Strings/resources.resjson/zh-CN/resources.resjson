@@ -91,5 +91,6 @@
   "loc.messages.AFC_RootContainerAndDirectory": "\"/S\" 选项对 $root 容器无效。",
   "loc.messages.AFC_RedirectResponseInvalidStatusCode": "HTTP 响应代码:“{0}”不是有效的重定向状态代码",
   "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "重定向响应位置标头为 null。",
-  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "请手动卸载 WinRM 自定义脚本，然后重试部署。"
+  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "请手动卸载 WinRM 自定义脚本，然后重试部署。",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "其他参数不能包含分隔符 '&', ';' 和 '|'.请验证输入。若要了解有关参数验证的详细信息，请检查 https://aka.ms/azdo-task-argument-validation"
 }
