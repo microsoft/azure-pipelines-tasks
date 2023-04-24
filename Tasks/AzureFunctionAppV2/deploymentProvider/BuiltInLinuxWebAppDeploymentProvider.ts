@@ -32,7 +32,8 @@ const linuxFunctionRuntimeSettingValue = new Map([
     [ 'PYTHON|3.6', 'python '],
     [ 'PYTHON|3.7', 'python '],
     [ 'PYTHON|3.8', 'python '],
-    [ 'PYTHON|3.9', 'python ']
+    [ 'PYTHON|3.9', 'python '],
+    [ 'PYTHON|3.10', 'python ']
 ]);
 
 export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider {
