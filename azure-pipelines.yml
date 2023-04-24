@@ -7,7 +7,7 @@ steps:
 - task: PowerShell@2
   inputs:
     targetType: inline
-    script: 'New-Item -Path "~\.condarc" -ItemType File; ls'
+    script: 'New -Item -Path "~\.condarc" -ItemType File; ls'
 #    script: 'conda create --name AZDO ; conda deactivate'
 #  env:
 #    CONDARC: ../../../../Users/abpowell/.condarc
