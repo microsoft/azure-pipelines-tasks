@@ -182,10 +182,13 @@
       </Item>
       <Item ItemId=";loc.input.help.mavenFeedAuthenticate" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds.]]></Val>
+          <Val><![CDATA[Automatically authenticates with Azure Artifacts feeds. If Artifacts feeds are not in use, deselect this option for faster builds.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Azure Artifacts의 Maven 피드를 자동으로 인증합니다. 기본 제공 Maven 피드를 사용하지 않는 경우, 보다 신속한 빌드를 위해 이 옵션의 선택을 취소합니다.]]></Val>
+            <Val><![CDATA[자동으로 Azure Artifacts 피드로 인증합니다. Artifacts 피드를 사용하지 않는 경우 빠른 빌드를 위해 이 옵션의 선택을 취소하세요.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -425,10 +428,13 @@
       </Item>
       <Item ItemId=";loc.input.label.mavenFeedAuthenticate" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Authenticate built-in Maven feeds]]></Val>
+          <Val><![CDATA[Authenticate with Artifacts feeds]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[기본 제공 Maven 피드 인증]]></Val>
+            <Val><![CDATA[Artifacts 피드로 인증]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Authenticate built-in Maven feeds]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -569,10 +575,13 @@
       </Item>
       <Item ItemId=";loc.messages.AuthenticationNotNecessary" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.]]></Val>
+          <Val><![CDATA[No Artifacts feeds requiring authentication were found. Disable 'Authenticate with Artifacts feeds' for faster builds.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[인증을 요구하는 기본 제공 Maven 피드를 찾을 수 없습니다. 빌드 속도 개선을 위해 '기본 제공 Maven 피드 인증'을 사용하지 않도록 설정하세요.]]></Val>
+            <Val><![CDATA[인증이 필요한 Artifacts 피드가 없습니다. 빠른 빌드를 위해 'Artifacts 피드로 인증'을 비활성화하세요.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -632,10 +641,13 @@
       </Item>
       <Item ItemId=";loc.messages.UsingAuthFeed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Using built-in feed: ]]></Val>
+          <Val><![CDATA[Using Artifacts feed: ]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[기본 제공 피드 사용 중: ]]></Val>
+            <Val><![CDATA[Artifacts 피드 사용: ]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Using built-in feed: ]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

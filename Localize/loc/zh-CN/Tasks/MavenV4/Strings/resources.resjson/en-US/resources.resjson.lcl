@@ -183,10 +183,13 @@
       </Item>
       <Item ItemId=";loc.input.help.mavenFeedAuthenticate" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds.]]></Val>
+          <Val><![CDATA[Automatically authenticates with Azure Artifacts feeds. If Artifacts feeds are not in use, deselect this option for faster builds.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[自动对 Azure Artifacts 中的内置 Maven 源进行验证。如果未使用内置 Maven 源，请取消选择该选项，以便更快生成。]]></Val>
+            <Val><![CDATA[使用 Azure Artifacts 源自动进行身份验证。如果未使用 Artifacts 源，请取消选择此选项以加快生成速度。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -264,10 +267,13 @@
       </Item>
       <Item ItemId=";loc.input.help.skipEffectivePom" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Authenticate built-in Maven feeds using the POM only, allowing parent POMs in Azure Artifacts/Azure DevOps Server [Package Management]5D; feeds.]]></Val>
+          <Val><![CDATA[Authenticates with Artifacts feeds using the POM only.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[仅使用 POM 对内置 Maven 源进行身份验证，从而允许 Azure Artifacts/Azure DevOps Server [包管理]5D;源中的父 POM。]]></Val>
+            <Val><![CDATA[仅使用 POM 对 Artifacts 源进行身份验证。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Authenticate built-in Maven feeds using the POM only, allowing parent POMs in Azure Artifacts/Azure DevOps Server [Package Management]5D; feeds.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -471,10 +477,13 @@
       </Item>
       <Item ItemId=";loc.input.label.mavenFeedAuthenticate" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Authenticate built-in Maven feeds]]></Val>
+          <Val><![CDATA[Authenticate with Artifacts feeds]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[对内置 Maven 源进行身份验证]]></Val>
+            <Val><![CDATA[使用 Artifacts 源进行身份验证]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Authenticate built-in Maven feeds]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -561,10 +570,13 @@
       </Item>
       <Item ItemId=";loc.input.label.skipEffectivePom" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Skip generating effective POM while authenticating built-in feeds]]></Val>
+          <Val><![CDATA[Skip generating effective POM while authenticating with Artifacts feeds]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[对内置源进行身份验证时跳过生成有效 POM]]></Val>
+            <Val><![CDATA[在使用 Artifacts 源进行身份验证时跳过生成有效 POM]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Skip generating effective POM while authenticating built-in feeds]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -660,10 +672,13 @@
       </Item>
       <Item ItemId=";loc.messages.AuthenticationNotNecessary" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.]]></Val>
+          <Val><![CDATA[No Artifacts feeds requiring authentication were found. Disable 'Authenticate with Artifacts feeds' for faster builds.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[未找到需要进行身份验证的内置 Maven 源。禁用“对内置 Maven 源进行身份验证”以便更快生成。]]></Val>
+            <Val><![CDATA[找不到需要身份验证的项目源。禁用“使用项目源进行身份验证”以加快生成速度。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -732,10 +747,13 @@
       </Item>
       <Item ItemId=";loc.messages.UsingAuthFeed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Using built-in feed: ]]></Val>
+          <Val><![CDATA[Using Artifacts feed: ]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[使用内置源: ]]></Val>
+            <Val><![CDATA[使用项目源:]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Using built-in feed: ]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

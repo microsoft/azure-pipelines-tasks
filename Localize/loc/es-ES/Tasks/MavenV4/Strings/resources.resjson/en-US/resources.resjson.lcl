@@ -183,10 +183,13 @@
       </Item>
       <Item ItemId=";loc.input.help.mavenFeedAuthenticate" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds.]]></Val>
+          <Val><![CDATA[Automatically authenticates with Azure Artifacts feeds. If Artifacts feeds are not in use, deselect this option for faster builds.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Autentique automáticamente las fuentes de Maven de Azure Artifacts. Si no se usan las fuentes de Maven integradas, anule la selección de esta opción para que las compilaciones se ejecuten más rápido.]]></Val>
+            <Val><![CDATA[Se autentica automáticamente con fuentes de Azure Artifacts. Si las fuentes de artefactos no están en uso, anule la selección de esta opción para compilaciones más rápidas.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -264,10 +267,13 @@
       </Item>
       <Item ItemId=";loc.input.help.skipEffectivePom" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Authenticate built-in Maven feeds using the POM only, allowing parent POMs in Azure Artifacts/Azure DevOps Server [Package Management]5D; feeds.]]></Val>
+          <Val><![CDATA[Authenticates with Artifacts feeds using the POM only.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Autentique las fuentes de Maven integradas solo con el modelo de objetos de proyectos (POM), lo que permite el uso de POM primarios en las fuentes de Azure Artifacts/Azure DevOps Server [Administración de paquetes]5D;.]]></Val>
+            <Val><![CDATA[Se autentica con fuentes de artefactos solo mediante POM.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Authenticate built-in Maven feeds using the POM only, allowing parent POMs in Azure Artifacts/Azure DevOps Server [Package Management]5D; feeds.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -471,10 +477,13 @@
       </Item>
       <Item ItemId=";loc.input.label.mavenFeedAuthenticate" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Authenticate built-in Maven feeds]]></Val>
+          <Val><![CDATA[Authenticate with Artifacts feeds]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Autenticar fuentes de Maven integradas]]></Val>
+            <Val><![CDATA[Autenticación con fuentes de artefactos]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Authenticate built-in Maven feeds]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -561,10 +570,13 @@
       </Item>
       <Item ItemId=";loc.input.label.skipEffectivePom" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Skip generating effective POM while authenticating built-in feeds]]></Val>
+          <Val><![CDATA[Skip generating effective POM while authenticating with Artifacts feeds]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Omitir la generación de POM efectivos durante la autenticación de las fuentes integradas]]></Val>
+            <Val><![CDATA[Omitir la generación de POM efectivo durante la autenticación con fuentes de artefactos]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Skip generating effective POM while authenticating built-in feeds]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -660,10 +672,13 @@
       </Item>
       <Item ItemId=";loc.messages.AuthenticationNotNecessary" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.]]></Val>
+          <Val><![CDATA[No Artifacts feeds requiring authentication were found. Disable 'Authenticate with Artifacts feeds' for faster builds.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[No se han encontrado fuentes de Maven integradas que requieran autenticación. Deshabilite la opción "Autenticar fuentes de Maven integradas" para que las compilaciones se ejecuten más rápido.]]></Val>
+            <Val><![CDATA[No se encontraron fuentes de artefactos que requieran autenticación. Deshabilite "Autenticar con fuentes de artefactos" para compilaciones más rápidas.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -732,10 +747,13 @@
       </Item>
       <Item ItemId=";loc.messages.UsingAuthFeed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Using built-in feed: ]]></Val>
+          <Val><![CDATA[Using Artifacts feed: ]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Usando la fuente integrada: ]]></Val>
+            <Val><![CDATA[Uso de la fuente Artifacts:]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Using built-in feed: ]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

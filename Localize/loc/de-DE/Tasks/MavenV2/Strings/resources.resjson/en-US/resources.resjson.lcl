@@ -182,10 +182,13 @@
       </Item>
       <Item ItemId=";loc.input.help.mavenFeedAuthenticate" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds.]]></Val>
+          <Val><![CDATA[Automatically authenticates with Azure Artifacts feeds. If Artifacts feeds are not in use, deselect this option for faster builds.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Authentifizieren Sie Maven-Feeds automatisch über Azure Artifacts. Wenn keine integrierten Maven-Feeds verwendet werden, deaktivieren Sie diese Option, um die Builderstellung zu beschleunigen.]]></Val>
+            <Val><![CDATA[Authentifiziert sich automatisch mit Azure Artifacts Feeds. Wenn Artefaktfeeds nicht verwendet werden, deaktivieren Sie diese Option für schnellere Builds.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -425,10 +428,13 @@
       </Item>
       <Item ItemId=";loc.input.label.mavenFeedAuthenticate" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Authenticate built-in Maven feeds]]></Val>
+          <Val><![CDATA[Authenticate with Artifacts feeds]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Integrierte Maven-Feeds authentifizieren]]></Val>
+            <Val><![CDATA[Mit Artefaktfeeds authentifizieren]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Authenticate built-in Maven feeds]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -569,10 +575,13 @@
       </Item>
       <Item ItemId=";loc.messages.AuthenticationNotNecessary" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.]]></Val>
+          <Val><![CDATA[No Artifacts feeds requiring authentication were found. Disable 'Authenticate with Artifacts feeds' for faster builds.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Es wurden keine integrierten Maven-Feeds gefunden, für die eine Authentifizierung erforderlich ist. Deaktivieren Sie "Integrierte Maven-Feeds authentifizieren", um das Erstellen zu beschleunigen.]]></Val>
+            <Val><![CDATA[Es wurden keine Artefaktfeeds gefunden, die eine Authentifizierung erfordern. Deaktivieren Sie "Authentifizieren mit Artefaktfeeds", um Builds zu beschleunigen.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -632,10 +641,13 @@
       </Item>
       <Item ItemId=";loc.messages.UsingAuthFeed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Using built-in feed: ]]></Val>
+          <Val><![CDATA[Using Artifacts feed: ]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Integrierter Feed wird verwendet:]]></Val>
+            <Val><![CDATA[Artefaktfeed verwenden: ]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Using built-in feed: ]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

@@ -182,10 +182,13 @@
       </Item>
       <Item ItemId=";loc.input.help.mavenFeedAuthenticate" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds.]]></Val>
+          <Val><![CDATA[Automatically authenticates with Azure Artifacts feeds. If Artifacts feeds are not in use, deselect this option for faster builds.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Azure Artifacts からの Maven フィードを自動的に認証します。組み込みの Maven フィードを使用していない場合、このオプションを選択解除するとビルドを高速化できます。]]></Val>
+            <Val><![CDATA[Azure Artifacts フィードで自動的に認証します。成果物フィードが使用されていない場合は、ビルドを高速化するためにこのオプションの選択を解除します。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -425,10 +428,13 @@
       </Item>
       <Item ItemId=";loc.input.label.mavenFeedAuthenticate" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Authenticate built-in Maven feeds]]></Val>
+          <Val><![CDATA[Authenticate with Artifacts feeds]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[ビルトイン Maven フィードの認証]]></Val>
+            <Val><![CDATA[成果物フィードで認証する]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Authenticate built-in Maven feeds]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -569,10 +575,13 @@
       </Item>
       <Item ItemId=";loc.messages.AuthenticationNotNecessary" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.]]></Val>
+          <Val><![CDATA[No Artifacts feeds requiring authentication were found. Disable 'Authenticate with Artifacts feeds' for faster builds.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[認証が必要なビルトイン Maven フィードが見つかりませんでした。[ビルトイン Maven フィードの認証]5D; を無効にすれば、ビルドを高速化できます。]]></Val>
+            <Val><![CDATA[認証が必要なビルトイン 成果物フィードが見つかりませんでした。`ビルトイン成果物フィードの認証` を無効にすれば、ビルドを高速化できます。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -632,10 +641,13 @@
       </Item>
       <Item ItemId=";loc.messages.UsingAuthFeed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Using built-in feed: ]]></Val>
+          <Val><![CDATA[Using Artifacts feed: ]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[ビルトイン フィードを使用しています: ]]></Val>
+            <Val><![CDATA[成果物フィードの使用: ]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Using built-in feed: ]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
