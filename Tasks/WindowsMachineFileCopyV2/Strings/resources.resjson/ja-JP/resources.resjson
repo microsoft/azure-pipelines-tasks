@@ -27,6 +27,7 @@
   "loc.messages.WFC_CopyingRecurivelyFrom0to1MachineSucceed": "コンピューター {2} 上の {0} から {1} への再帰的なコピーは成功しました。",
   "loc.messages.WFC_SourcePathDoesNotExist": "ソース パス '{0}' は存在しません。",
   "loc.messages.WFC_RemoteDestinationPathCannotContainEnvironmentVariables": "リモート宛先パス '{0}' に環境変数を含めることはできません。",
+  "loc.messages.WFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "追加の引数に区切り文字 '&', ';', '|' を含めることはできません。入力を確認してください。引数の検証の詳細については、以下を確認してください: https://aka.ms/azdo-task-argument-validation",
   "loc.messages.WFC_CopyStartedFor0": "コピーが開始されました - {0}",
   "loc.messages.WFC_NoMachineExistsUnderEnvironment": "環境 '{0}' には配置用のコンピューターが存在しません。",
   "loc.messages.WFC_NoMachineExistsUnderEnvironment0ForDeployment": "環境 '{0}' には配置用のコンピューターが存在しません。",
