@@ -1,6 +1,9 @@
 parameters:
   os: ''
 
+variables:
+  currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
+
 steps:
 
 # Clean
@@ -110,7 +113,7 @@ steps:
   - powershell: |
       # Build the release branch name
       $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"="application/json"} | ConvertFrom-Json).sprint
-      $releaseBranch = "releases/m" + $currentSprint
+      $releaseBranch = "releases/m" + $currentSprint + "." + $(currentDate)
 
       # add config entry to avoid errors while pulling
       git config --global user.email "$(username)@microsoft.com"

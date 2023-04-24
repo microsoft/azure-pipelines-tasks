@@ -76,7 +76,7 @@ jobs:
     - publish
     condition: |
       and(succeeded(), eq(variables['COURTESY_PUSH'], 'true'), or(
-        and(eq(variables['build.reason'], 'Schedule'), eq(dependencies.publish.outputs['week.number'], '3')),
+        eq(variables['build.reason'], 'Schedule'),
         and(eq(variables['build.reason'], 'Manual'), eq(variables['FORCE_COURTESY_PUSH'], 'true'))
       ))
     pool:
