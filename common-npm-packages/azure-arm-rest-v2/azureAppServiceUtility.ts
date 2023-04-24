@@ -108,20 +108,17 @@ export class AzureAppServiceUtility {
     private async getKuduAuthHeader(publishingCredentials: any): Promise<string> {
         const scmPolicyCheck = await this.isSitePublishingCredentialsEnabled(); 
 
-        if (!scmPolicyCheck) {
+        if(scmPolicyCheck === false) {
+            tl.debug('Kudu: Getting Bearer token');
             const accessToken = await this._appService._client.getCredentials().getToken();
-            tl.debug("Kudu: using bearer token.");
             return "Bearer " + accessToken;
+        } else {
+            tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._appService.getSlot()}_PASSWORD`, publishingCredentials.properties["publishingPassword"], true);
+            var accessToken = (new Buffer(publishingCredentials.properties["publishingUserName"] + ':' + publishingCredentials.properties["publishingPassword"]).toString('base64'));
+            tl.debug("Kudu: using basic auth.");
+
+            return "Basic " + accessToken;
         }
-
-        const password = publishingCredentials.properties["publishingPassword"];
-        const userName = publishingCredentials.properties["publishingUserName"];
-
-        tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._appService.getSlot()}_PASSWORD`, password, true);
-        tl.debug("Kudu: using basic auth.");
-
-        const auth = (new Buffer(userName + ':' + password).toString('base64'));
-        return "Basic " + auth;
     }
 
     public async updateAndMonitorAppSettings(addProperties?: any, deleteProperties?: any, formatJSON?: boolean): Promise<boolean> {
@@ -227,8 +224,8 @@ export class AzureAppServiceUtility {
             }
         }
         catch(error){
-            tl.debug(`Skipping SCM Policy check: ${error}`);
-            return null;
+            tl.debug(`Call to get SCM Policy check failed: ${error}`);
+            return false;
         }
     }
 }
