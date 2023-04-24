@@ -416,7 +416,10 @@ export class ApplicationTokenCredentials {
         if (!serviceConnectionId) {
             serviceConnectionId = tl.getInput("ConnectedServiceName", false);
             if (!serviceConnectionId) {
-                throw new Error(tl.loc("serviceConnectionIdCannotBeEmpty"));
+                serviceConnectionId = tl.getInput("azureSubscription", false);
+                if (!serviceConnectionId) {
+                    throw new Error(tl.loc("serviceConnectionIdCannotBeEmpty"));
+                }
             }
         }
         const projectId: string = tl.getVariable("System.TeamProjectId");

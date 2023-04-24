@@ -37,7 +37,21 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
         if (this.taskParams.azureEndpoint.scheme && this.taskParams.azureEndpoint.scheme.toLowerCase() === AzureRmEndpointAuthenticationScheme.PublishProfile) {
             let publishProfileEndpoint: AzureEndpoint = this.taskParams.azureEndpoint;
             this.publishProfileScmCredentials = await publishProfileUtility.getSCMCredentialsFromPublishProfile(publishProfileEndpoint.PublishProfile);
-            this.kuduService = new Kudu(this.publishProfileScmCredentials.scmUri, this.publishProfileScmCredentials.username, this.publishProfileScmCredentials.password);
+
+            let authHeader = "";
+            if (this.appServiceUtility.isSitePublishingCredentialsEnabled()) {
+                const buffer =  new Buffer(this.publishProfileScmCredentials.username + ':' + this.publishProfileScmCredentials.password);
+                const auth = buffer.toString("base64");
+                authHeader = "Basic " + auth;
+                tl.debug("Kudu: using basic authentication");
+            }
+            else {
+                const token = await publishProfileEndpoint.applicationTokenCredentials.getToken();
+                authHeader = "Bearer " + token;
+                tl.debug("Kudu: using token authentication");
+            }
+
+            this.kuduService = new Kudu(this.publishProfileScmCredentials.scmUri, authHeader);
             let resourceId = publishProfileEndpoint.resourceId;
             let resourceIdSplit = resourceId.split("/");
             this.slotName = resourceIdSplit.length === 11 ? resourceIdSplit[10] : "production";

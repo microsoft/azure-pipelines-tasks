@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -7,13 +8,12 @@ namespace BuildConfigGen
 
     internal class Knob
     {
-        public static readonly Knob Default = new Knob { SourceDirectoriesMustContainPlaceHolders = false, EnableBuildConfigOverrides = false };
+        public static readonly Knob Default = new Knob { SourceDirectoriesMustContainPlaceHolders = false };
 
         // when true, Source Directories must contain _buildConfigs placeholders for each build config
         // _buildConfigs are written to each directory when --write-updates is specified
         // setting to false for now so we're not forced to check in a lot of placeholders to tasks that don't use them
         public bool SourceDirectoriesMustContainPlaceHolders { get; init; }
-        public bool EnableBuildConfigOverrides { get; init; }
     }
 
     internal class Program
@@ -24,41 +24,71 @@ namespace BuildConfigGen
 
         static class Config
         {
-            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode16, string preprocessorVariableName, string[] extensionsToPreprocess);
+            public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".json" };
 
-            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode16: false, preprocessorVariableName: "DEFAULT", extensionsToPreprocess: new[] { ".ts" });
-            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode16: true, preprocessorVariableName: "NODE16", extensionsToPreprocess: new[] { ".ts" });
+            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode16, bool isWif, string preprocessorVariableName, bool enableBuildConfigOverrides);
 
-            public static ConfigRecord[] Configs = { Default, Node16 };
+            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode16: false, isWif: false, preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false);
+            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode16: true, isWif: false, preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true);
+            public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode16: true, isWif: true, preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true);
+
+            public static ConfigRecord[] Configs = { Default, Node16, WorkloadIdentityFederation };
         }
 
         // ensureUpdateModeVerifier wraps all writes.  if writeUpdate=false, it tracks writes that would have occured
         static EnsureUpdateModeVerifier? ensureUpdateModeVerifier;
 
         /// <param name="task">The task to generate build configs for</param>
+        /// <param name="configs">List of configs to generate seperated by |</param>
         /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
-        static void Main(string task, bool writeUpdates = false)
+        static void Main(string task, string configs, bool writeUpdates = false)
         {
             // error handling strategy:
             // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
             // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
             // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
 
-            Main3(task, writeUpdates);
+            foreach (var t in task.Split(','))
+            {
+                Main3(t, configs, writeUpdates);
+            }
         }
 
-        private static void Main3(string task, bool writeUpdates)
+        private static void Main3(string task, string configsString, bool writeUpdates)
         {
             if (string.IsNullOrEmpty(task))
             {
                 throw new Exception("task expected!");
             }
 
+            if (string.IsNullOrEmpty(configsString))
+            {
+                throw new Exception("configs expected!");
+            }
+
+            string[] configs = configsString.Split("|");
+
+            Dictionary<string, Config.ConfigRecord> configdefs = new(Config.Configs.Where(x => !x.isDefault).Select(x => new KeyValuePair<string, Config.ConfigRecord>(x.name, x)));
+            HashSet<Config.ConfigRecord> targetConfigs = new HashSet<Config.ConfigRecord>();
+            targetConfigs.Add(Config.Default);
+            foreach (var config in configs)
+            {
+                if (configdefs.TryGetValue(config, out var matchedConfig))
+                {
+                    targetConfigs.Add(matchedConfig);
+                }
+                else
+                {
+                    string configsList = "Configs specified must be one of: " + string.Join(',', Config.Configs.Where(x=>!x.isDefault).Select(x => x.name));
+                    throw new Exception(configsList);
+                }
+            }
+
             try
             {
                 ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
 
-                Main2(task);
+                Main2(task, targetConfigs);
 
                 ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: false);
             }
@@ -89,7 +119,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void Main2(string task)
+        private static void Main2(string task, HashSet<Config.ConfigRecord> targetConfigs)
         {
             string currentDir = Environment.CurrentDirectory;
 
@@ -104,18 +134,14 @@ namespace BuildConfigGen
             string taskHandler = Path.Combine(taskTargetPath, "task.json");
             JsonNode taskHandlerContents = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(taskHandler))!;
 
-            // Task may not have nodejs or packages.json (example: AutomatedAnalysisV0) 
-            if (!hasNodeHandler(taskHandlerContents))
+            if (targetConfigs.Any(x => x.isNode16))
             {
-                Console.WriteLine($"Skipping {task} because task doesn't have node handler does not exist");
-                return;
-            }
-
-            // If target task already has node16 handlers, skip it
-            if (taskHandlerContents["execution"]!["Node16"] != null)
-            {
-                Console.WriteLine($"Skipping {task} because it already has a Node16 handler");
-                return;
+                // Task may not have nodejs or packages.json (example: AutomatedAnalysisV0) 
+                if (!hasNodeHandler(taskHandlerContents))
+                {
+                    Console.WriteLine($"Skipping {task} because task doesn't have node handler does not exist");
+                    return;
+                }
             }
 
             // Create _generated
@@ -125,9 +151,9 @@ namespace BuildConfigGen
                 ensureUpdateModeVerifier!.DirectoryCreateDirectory(generatedFolder, false);
             }
 
-            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping);
+            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping, targetConfigs: targetConfigs);
 
-            foreach (var config in Config.Configs)
+            foreach (var config in targetConfigs)
             {
                 string taskOutput;
                 if (config.isDefault)
@@ -139,7 +165,7 @@ namespace BuildConfigGen
                     taskOutput = Path.Combine(gitRootPath, "_generated", @$"{task}_{config.name}");
                 }
 
-                if (Knob.Default.EnableBuildConfigOverrides)
+                if (config.enableBuildConfigOverrides)
                 {
                     EnsureBuildConfigFileOverrides(config, taskTargetPath);
                 }
@@ -148,7 +174,7 @@ namespace BuildConfigGen
 
 
 
-                if (Knob.Default.EnableBuildConfigOverrides)
+                if (config.enableBuildConfigOverrides)
                 {
                     CopyConfigOverrides(taskTargetPath, taskOutput, config);
                 }
@@ -174,9 +200,9 @@ namespace BuildConfigGen
 
         private static void EnsureBuildConfigFileOverrides(Config.ConfigRecord config, string taskTargetPath)
         {
-            if(!Knob.Default.EnableBuildConfigOverrides)
+            if(!config.enableBuildConfigOverrides)
             {
-                throw new Exception("BUG: should not get here: !Knob.Default.EnableBuildConfigOverrides");
+                throw new Exception("BUG: should not get here: !config.enableBuildConfigOverrides");
             }
 
             string path, readmeFile;
@@ -192,9 +218,9 @@ namespace BuildConfigGen
 
         private static void GetBuildConfigFileOverridePaths(Config.ConfigRecord config, string taskTargetPath, out string path, out string readmeFile)
         {
-            if (!Knob.Default.EnableBuildConfigOverrides)
+            if (!config.enableBuildConfigOverrides)
             {
-                throw new Exception("BUG: should not get here: !Knob.Default.EnableBuildConfigOverrides");
+                throw new Exception("BUG: should not get here: !config.enableBuildConfigOverrides");
             }
 
             path = Path.Combine(taskTargetPath, buildConfigs, config.name);
@@ -203,9 +229,9 @@ namespace BuildConfigGen
 
         private static void CopyConfigOverrides(string taskTargetPath, string taskOutput, Config.ConfigRecord config)
         {
-            if (!Knob.Default.EnableBuildConfigOverrides)
+            if (!config.enableBuildConfigOverrides)
             {
-                throw new Exception("BUG: should not get here: !Knob.Default.EnableBuildConfigOverrides");
+                throw new Exception("BUG: should not get here: !config.enableBuildConfigOverrides");
             }
 
             string overridePathForBuildConfig;
@@ -241,7 +267,7 @@ namespace BuildConfigGen
 
         private static void PreprocessIfExtensionEnabledInConfig(string file, Config.ConfigRecord config, bool validateAndWriteChanges, out bool madeChanges)
         {
-            HashSet<string> extensions = new HashSet<string>(config.extensionsToPreprocess);
+            HashSet<string> extensions = new HashSet<string>(Config.ExtensionsToPreprocess);
             bool preprocessExtension = extensions.Contains(Path.GetExtension(file));
             if (preprocessExtension)
             {
@@ -251,9 +277,9 @@ namespace BuildConfigGen
                 }
                 else
                 {
-                    if (!Knob.Default.EnableBuildConfigOverrides)
+                    if (!config.enableBuildConfigOverrides)
                     {
-                        throw new Exception("BUG: should not get here: !Knob.Default.EnableBuildConfigOverrides");
+                        throw new Exception("BUG: should not get here: !config.enableBuildConfigOverrides");
                     }
 
                     Console.WriteLine($"Checking if {file} has preprocessor directives ...");
@@ -296,6 +322,8 @@ namespace BuildConfigGen
         {
             string outputTaskPath = Path.Combine(taskPath, fileName);
             JsonNode outputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputTaskPath))!;
+            outputTaskNode["version"]!["Major"] = configTaskVersionMapping[config].Major;
+            outputTaskNode["version"]!["Minor"] = configTaskVersionMapping[config].Minor;
             outputTaskNode["version"]!["Patch"] = configTaskVersionMapping[config].Patch;
             outputTaskNode.AsObject()?.Remove("_buildConfigMapping");
 
@@ -367,9 +395,9 @@ namespace BuildConfigGen
                 }
                 else
                 {
-                    if (!Knob.Default.EnableBuildConfigOverrides)
+                    if (!config.enableBuildConfigOverrides)
                     {
-                        throw new Exception("BUG: should not get here: !Knob.Default.EnableBuildConfigOverrides");
+                        throw new Exception("BUG: should not get here: !config.enableBuildConfigOverrides");
                     }
 
                     PreprocessIfExtensionEnabledInConfig(sourcePath, config, validateAndWriteChanges: false, out bool hasPreprocessorDirectives);
@@ -424,7 +452,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping)
+        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs)
         {
             Dictionary<string, TaskVersion> versionMap;
             TaskVersion? maxVersion;
@@ -444,7 +472,7 @@ namespace BuildConfigGen
 
             // copy the mappings.  As we go check if any configs not mapped. If so, invalidate.
             bool allConfigsMappedAndValid = true;
-            foreach (var config in Config.Configs)
+            foreach (var config in targetConfigs)
             {
                 if (versionMap.ContainsKey(config.constMappingKey))
                 {
@@ -474,7 +502,7 @@ namespace BuildConfigGen
             {
                 configTaskVersionMapping.Clear();
 
-                foreach (var config in Config.Configs)
+                foreach (var config in targetConfigs)
                 {
                     if (!config.isDefault)
                     {
@@ -487,7 +515,7 @@ namespace BuildConfigGen
                 configTaskVersionMapping.Add(Config.Default, inputVersion.CloneWithPatch(inputVersion.Patch + c));
             }
 
-            WriteVersionMapFile(versionMapFile, configTaskVersionMapping);
+            WriteVersionMapFile(versionMapFile, configTaskVersionMapping, targetConfigs: targetConfigs);
         }
 
         private static TaskVersion GetInputVersion(string taskTarget)
@@ -516,17 +544,19 @@ namespace BuildConfigGen
             string inputTaskPath = Path.Combine(taskTarget, fileName);
             JsonNode inputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(inputTaskPath))!;
 
+            inputTaskNode["version"]!["Major"] = configTaskVersion[Config.Default].Major;
+            inputTaskNode["version"]!["Minor"] = configTaskVersion[Config.Default].Minor;
             inputTaskNode["version"]!["Patch"] = configTaskVersion[Config.Default].Patch;
 
             ensureUpdateModeVerifier!.WriteAllText(inputTaskPath, inputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
-        private static void WriteVersionMapFile(string versionMapFile, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion)
+        private static void WriteVersionMapFile(string versionMapFile, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion, HashSet<Config.ConfigRecord> targetConfigs)
         {
             StringBuilder sb = new StringBuilder();
             using (var sw = new StringWriter(sb))
             {
-                foreach (var config in Config.Configs)
+                foreach (var config in targetConfigs)
                 {
                     sw.WriteLine(string.Concat(config.constMappingKey, "|", configTaskVersion[config]));
                 }
@@ -620,7 +650,7 @@ namespace BuildConfigGen
 
             Console.Write($"Copy from={sourcePath} to={targetPath}...");
 
-            if (Helpers.FilesEqual(sourcePath, targetPath))
+            if (ensureUpdateModeVerifier!.FilesEqual(sourcePath, targetPath))
             {
                 Console.WriteLine("files same, skipping");
             }
