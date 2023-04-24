@@ -18,7 +18,6 @@ export function setEndpointData() {
     process.env["ENDPOINT_URL_AzureRM"] = "https://management.azure.com/";
     process.env["ENDPOINT_DATA_AzureRM_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
     process.env["ENDPOINT_DATA_AzureRM_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = "https://management.azure.com";
-    process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_USEMSAL"] = "false";
 }
 
 export function setAgentsData() {
@@ -28,6 +27,7 @@ export function setAgentsData() {
     process.env["AGENT_NAME"] = "author";
     process.env["AGENT_TEMPDIRECTORY"] = process.cwd();
     process.env["BUILD_BUILDID"] = 'Build.BuildId';
+    process.env["USE_MSAL"] = "false";
 }
 
 export function printTaskInputs() {
@@ -76,7 +76,7 @@ export function mockCommonAzureAPIs() {
 }
 
 
-export function mockAzureSpringCloudExists(springCloudName: string) {
+export function mockAzureSpringAppsExists(springAppsName: string) {
 
     nock('https://management.azure.com', {
         reqheaders: {
@@ -84,11 +84,11 @@ export function mockAzureSpringCloudExists(springCloudName: string) {
             "content-type": "application/json; charset=utf-8",
             "user-agent": "TFS_useragent"
         }
-    }).get(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resources?$filter=resourceType%20EQ%20%27Microsoft.AppPlatform%2FSpring%27%20AND%20name%20EQ%20%27${springCloudName}%27&api-version=2016-07-01`)
+    }).get(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resources?$filter=resourceType%20EQ%20%27Microsoft.AppPlatform%2FSpring%27%20AND%20name%20EQ%20%27${springAppsName}%27&api-version=2016-07-01`)
         .reply(200, {
             value: [{
-                id: `/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/Microsoft.AppPlatform/Spring/${encodeURIComponent(springCloudName)}`,
-                name: springCloudName,
+                id: `/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/Microsoft.AppPlatform/Spring/${encodeURIComponent(springAppsName)}`,
+                name: springAppsName,
                 type: ASC_RESOURCE_TYPE,
                 tags: {},
                 properties: {}
