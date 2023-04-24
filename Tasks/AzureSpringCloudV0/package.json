@@ -26,7 +26,7 @@
     "@types/node": "^10.17.0",
     "@types/q": "1.0.7",
     "@xmldom/xmldom": "^0.8.7",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.217.1",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.221.1",
     "azure-pipelines-tasks-webdeployment-common": "4.208.0",
     "JSONPath": "^0.11.2",
     "moment": "^2.29.4",
