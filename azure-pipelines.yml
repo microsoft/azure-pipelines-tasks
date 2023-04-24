@@ -8,7 +8,7 @@ steps:
   inputs:
     targetType: inline
 #    script: 'conda init ANACONDA_PROMPT'
-    script: 'powershell.exe -ExecutionPolicy ByPass -NoExit -Command & "%ANACONDA_HOME%\\shell\\condabin\\conda-hook.ps1" ; conda init "powershell" ; ls ; start-process powershell {echo hello}' # ; ls ; conda activate "%ANACONDA_HOME%"'
+    script: 'powershell.exe -ExecutionPolicy ByPass -NoExit -Command & "%ANACONDA_HOME%\\shell\\condabin\\conda-hook.ps1" ; conda init "powershell" ; ls ; powershell.exe' # ; ls ; conda activate "%ANACONDA_HOME%"'
 #    script: 'conda create --name AZDO ; conda deactivate'
 #  env:
 #    CONDARC: ../../../../Users/abpowell/.condarc
