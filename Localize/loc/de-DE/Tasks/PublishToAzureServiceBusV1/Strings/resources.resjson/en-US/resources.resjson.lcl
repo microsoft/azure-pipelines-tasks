@@ -176,10 +176,13 @@
       </Item>
       <Item ItemId=";loc.input.label.useDataContractSerializer" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Use .NET data contract serailizer]]></Val>
+          <Val><![CDATA[Use .NET data contract serializer]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Serailizer für .NET-Datenverträge verwenden]]></Val>
+            <Val><![CDATA[.NET-Datenvertrags-Serialisierungsmodul verwenden]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Use .NET data contract serailizer]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

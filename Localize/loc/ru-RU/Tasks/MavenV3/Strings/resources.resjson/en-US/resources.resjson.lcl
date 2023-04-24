@@ -182,10 +182,13 @@
       </Item>
       <Item ItemId=";loc.input.help.mavenFeedAuthenticate" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds.]]></Val>
+          <Val><![CDATA[Automatically authenticates with Azure Artifacts feeds. If Artifacts feeds are not in use, deselect this option for faster builds.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Автоматическая проверка подлинности веб-каналов Maven из Azure Artifacts. Если встроенные веб-каналы Maven не используются, отключите этот параметр, чтобы ускорить сборку.]]></Val>
+            <Val><![CDATA[Автоматически проходит проверку подлинности с помощью веб-каналов Azure Artifacts. Если веб-каналы Artifacts не используются, снимите этот флажок для более быстрой сборки.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Automatically authenticate Maven feeds from Azure Artifacts. If built-in Maven feeds are not in use, deselect this option for faster builds.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -263,10 +266,13 @@
       </Item>
       <Item ItemId=";loc.input.help.skipEffectivePom" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Authenticate built-in Maven feeds using the POM only, allowing parent POMs in Azure Artifacts/Azure DevOps Server [Package Management]5D; feeds.]]></Val>
+          <Val><![CDATA[Authenticates with Artifacts feeds using the POM only.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Проверка подлинности встроенных веб-каналов Maven только с помощью POM, разрешающая родительские POM в веб-каналах [управления пакетами]5D; Azure Artifacts/Azure DevOps Server.]]></Val>
+            <Val><![CDATA[Проверка подлинности с помощью каналов Artifacts с использованием только POM.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Authenticate built-in Maven feeds using the POM only, allowing parent POMs in Azure Artifacts/Azure DevOps Server [Package Management]5D; feeds.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -470,10 +476,13 @@
       </Item>
       <Item ItemId=";loc.input.label.mavenFeedAuthenticate" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Authenticate built-in Maven feeds]]></Val>
+          <Val><![CDATA[Authenticate with Artifacts feeds]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Проверка подлинности встроенных веб-каналов Maven]]></Val>
+            <Val><![CDATA[Проверка подлинности с помощью веб-каналов Artifacts]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Authenticate built-in Maven feeds]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -560,10 +569,13 @@
       </Item>
       <Item ItemId=";loc.input.label.skipEffectivePom" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Skip generating effective POM while authenticating built-in feeds]]></Val>
+          <Val><![CDATA[Skip generating effective POM while authenticating with Artifacts feeds]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Пропуск создания эффективного POM при проверке подлинности встроенных веб-каналов]]></Val>
+            <Val><![CDATA[Пропустить создание эффективного POM при проверке подлинности с помощью веб-каналов Artifacts]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Skip generating effective POM while authenticating built-in feeds]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -659,10 +671,13 @@
       </Item>
       <Item ItemId=";loc.messages.AuthenticationNotNecessary" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.]]></Val>
+          <Val><![CDATA[No Artifacts feeds requiring authentication were found. Disable 'Authenticate with Artifacts feeds' for faster builds.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Встроенные веб-каналы Maven, требующие проверки подлинности, не найдены. Отключите параметр "Проверка подлинности встроенных веб-каналов Maven", чтобы ускорить сборку.]]></Val>
+            <Val><![CDATA[Не найдены веб-каналы Artifacts, требующие проверки подлинности. Отключите проверку подлинности с помощью каналов Artifacts для более быстрой сборки.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[No built-in Maven feeds requiring authentication were found. Disable 'Authenticate built-in Maven feeds' for faster builds.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -731,10 +746,13 @@
       </Item>
       <Item ItemId=";loc.messages.UsingAuthFeed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Using built-in feed: ]]></Val>
+          <Val><![CDATA[Using Artifacts feed: ]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Используется встроенный веб-канал: ]]></Val>
+            <Val><![CDATA[Использование веб-канала Artifacts: ]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Using built-in feed: ]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
