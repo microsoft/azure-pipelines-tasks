@@ -10,7 +10,10 @@ steps:
   displayName: Create Anaconda environment
 - bash: source activate AZDO
   displayName: Activating Conda environment
-- bash: conda config --show
+- bash: |
+    conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/main
+    conda config --remove channels defaults
+    conda config --show
   displayName: Setting up .condarc
 
 ##- script: |
