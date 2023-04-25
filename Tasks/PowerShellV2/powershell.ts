@@ -52,7 +52,9 @@ async function run() {
 
             input_arguments = tl.getInput('arguments') || '';
 
-            if (input_arguments) {
+            if (input_arguments &&
+                (featureFlags.enableSecureArgs || featureFlags.enableTelemetry)) {
+
                 const [argsArray, telemetry] = parsePowerShellArguments(input_arguments)
 
                 if (featureFlags.enableSecureArgs) {
@@ -108,7 +110,7 @@ async function run() {
 
         let script = '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
-            if (featureFlags.enableSecureArgs) {
+            if (input_arguments && featureFlags.enableSecureArgs) {
                 script = `. '${input_filePath.replace(/'/g, "''")}' @scriptArgs`.trim();
             }
             else {

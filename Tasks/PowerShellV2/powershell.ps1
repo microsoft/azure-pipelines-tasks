@@ -68,7 +68,7 @@ try {
 
         $input_arguments = Get-VstsInput -Name 'arguments'
 
-        if ($input_arguments) {
+        if ($input_arguments -and ($featureFlags.enableSecureArgs -or $featureFlags.enableTelemetry)) {
             $argsArray, $telemetry = parsePowerShellArguments -InputArgs $input_arguments
 
             if ($featureFlags.enableSecureArgs) {
@@ -131,7 +131,7 @@ try {
     # and we rely on PowerShell piping back NormalView error records (required because PowerShell Core changed the default to ConciseView)
     $contents += "`$ErrorView = 'NormalView'"
     if ("$input_targetType".ToUpperInvariant() -eq 'FILEPATH') {
-        if ($featureFlags.enableSecureArgs) {
+        if ($input_arguments -and $featureFlags.enableSecureArgs) {
             $contents += ". '$("$input_filePath".Replace("'", "''"))' @scriptArgs".Trim()
         }
         else {
