@@ -82,7 +82,10 @@ async function run() {
             const buffer =  new Buffer(scmCreds.username + ':' + scmCreds.password);
             const auth = buffer.toString("base64");
             var authHeader = "Basic " + auth;
+            
             tl.debug("Kudu: using basic authentication for publish profile");            
+            console.log('##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureAppServiceDeployment]{"authMethod":"Basic"}}');
+
             kuduService = new Kudu(scmCreds.scmUri, authHeader);
             kuduServiceUtils = new KuduServiceUtils(kuduService);
         } else {
