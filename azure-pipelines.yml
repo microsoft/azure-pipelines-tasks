@@ -6,7 +6,7 @@ trigger:
 steps:
 - script: |
     conda create --offline --name AZDO -y
-    call activate AZDO
+    conda activate AZDO
 
 
 ##- task: PowerShell@2
