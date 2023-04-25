@@ -1,16 +1,16 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import webClient = require('azure-pipelines-tasks-azure-arm-rest-v2/webClient');
 var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility');
 var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility');
-import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
 import { AzureDeployPackageArtifactAlias, KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azure-arm-rest-v2/constants';
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
+import webClient = require('azure-pipelines-tasks-azure-arm-rest-v2/webClient');
 
 const physicalRootPath: string = '/site/wwwroot';
 const deploymentFolder: string = 'site/deployments';
 const manifestFileName: string = 'manifest';
-const VSTS_ZIP_DEPLOY: string = 'VSTS_ZIP_DEPLOY_FUNCTIONS_V1';
-const VSTS_DEPLOY: string = 'VSTS_FUNCTIONS_V1';
+const VSTS_ZIP_DEPLOY: string = 'VSTS_ZIP_DEPLOY';
+const VSTS_DEPLOY: string = 'VSTS';
 
 export class KuduServiceUtility {
     private _appServiceKuduService: Kudu;
@@ -106,8 +106,7 @@ export class KuduServiceUtility {
             ];
             var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
-            let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
-            await this._processDeploymentResponse(deploymentDetails);
+            await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
             console.log(tl.loc('PackageDeploymentSuccess'));
             console.log("NOTE: Run From Package makes wwwroot read-only, so you will receive an error when writing files to this directory.");
         }
@@ -126,7 +125,7 @@ export class KuduServiceUtility {
             let queryParameters: Array<string> = [
                 'isAsync=true'
             ];
-            
+
             if(targetFolderName) {
                 queryParameters.push('name=' + encodeURIComponent(targetFolderName));
             }
@@ -283,9 +282,9 @@ export class KuduServiceUtility {
             repositoryUrl = tl.getVariable("build.repository.uri") || "";
             branch = tl.getVariable("build.sourcebranchname") || tl.getVariable("build.sourcebranch");
         }
-   
+
         deploymentID = !!deploymentID ? deploymentID : this.getDeploymentID();
-    
+
         var message = {
             type : "deployment",
             commitId : commitId,
@@ -308,7 +307,7 @@ export class KuduServiceUtility {
             for(var attribute in customMessage) {
                 message[attribute] = customMessage[attribute];
             }
-            
+
         }
         var deploymentLogType: string = message['type'];
         var active: boolean = false;
@@ -324,19 +323,5 @@ export class KuduServiceUtility {
             author : author,
             deployer : 'VSTS'
         };
-    }
-
-    public async getZipDeployValidation(packagePath: string, zipLanguage?: string, zipIs64Bit?: string): Promise<void> {
-        try {            
-            console.log("Validating deployment package for functions app before Zip Deploy");
-            let queryParameters: Array<string> = [
-                'zipLanguage=' + !!zipLanguage ? zipLanguage : '',
-                'zipIs64Bit=' + !!zipIs64Bit ? zipIs64Bit : ''
-            ];
-            await this._appServiceKuduService.validateZipDeploy(packagePath, queryParameters);
-        }
-        catch(error) {
-            tl.warning(`ERROR: ${error}`);
-        }
     }
 }

@@ -71,6 +71,7 @@
   "loc.messages.RequestedURLforkuduphysicalpath": "Kudu 實體路徑的要求 URL: %s",
   "loc.messages.Physicalpathalreadyexists": "實體路徑 '%s' 已存在",
   "loc.messages.KuduPhysicalpathCreatedSuccessfully": "已成功建立 Kudu 實體路徑: %s",
+  "loc.messages.KuduStackTraceURL": "若要進一步偵錯，請檢查 Kudu 堆疊追蹤 URL: %s",
   "loc.messages.FailedtocreateKuduPhysicalPath": "無法建立 Kudu 實體路徑。錯誤 : %s",
   "loc.messages.FailedtocheckphysicalPath": "無法檢查 Kudu 實體路徑。錯誤碼: %s",
   "loc.messages.VirtualApplicationDoesNotExist": "虛擬應用程式不存在: %s",
