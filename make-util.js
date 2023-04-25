@@ -1332,7 +1332,7 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
                     if (taskJsonContents._buildConfigMapping[i] === taskVersion && i.toLocaleLowerCase() !== 'default') {
                         // take only first part of the name
                         var postfix = i.split('-')[0];
-                        fullTaskName = fullTaskName + `-${postfix}`;
+                        fullTaskName = fullTaskName + `_${postfix}`;
                         break;
                     }
                 }

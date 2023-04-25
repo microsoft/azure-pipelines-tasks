@@ -33,9 +33,9 @@ function formatDeps(depArr) {
 }
 
 /* Function updating existing deps version and also add new deps with postfix 
- * Example: Of we have dependency with name 
+ * Example: If we have dependency with name 
  * Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2
- * It will add Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2-Node16 */
+ * It will add Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2_Node16 */
 function updateUnifiedDeps(pathToUnifiedDeps, pathToNewUnifiedDeps, outputPath) {
     const currentDeps = fs.readFileSync(pathToUnifiedDeps, 'utf8');
     const newDeps = fs.readFileSync(pathToNewUnifiedDeps, 'utf8');

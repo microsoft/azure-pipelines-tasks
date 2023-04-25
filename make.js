@@ -83,7 +83,7 @@ if (argv.task) {
         });
 
     // If base tasks was not found, try to find the task in the _generated tasks folder
-    if (taskList.length == 0) { 
+    if (taskList.length == 0 && fs.existsSync(genTaskPath)) { 
         taskList = matchFind(argv.task, genTaskPath, { noRecurse: true, matchBase: true })
             .map(function (item) {
                 return path.basename(item);

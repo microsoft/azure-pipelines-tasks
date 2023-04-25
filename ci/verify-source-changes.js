@@ -20,7 +20,7 @@ taskList.forEach(function(taskName) {
     console.log(`====================${taskName}====================`);
 
     var taskSourcePath = path.join(util.tasksSourcePath, taskName);
-    // If task source folder doesn't exist it's generated folded and we don't need to check it
+    // If the task source folder doesn't exist then it's generated task so we don't need to check it
     if (!fs.existsSync(taskSourcePath)) return
 
     var diffString = util.run(`git diff --name-only ${taskSourcePath}`);
