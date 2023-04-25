@@ -1,20 +1,22 @@
-import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
-import { TaskParameters } from '../taskparameters';
-import { KuduServiceUtility } from '../operations/KuduServiceUtility';
-import { AzureAppService } from '../azure-arm-rest/azure-arm-app-service';
-import { Kudu } from '../azure-arm-rest/azure-arm-app-service-kudu';
-import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 import tl = require('azure-pipelines-task-lib/task');
-import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon/operations/ParameterParserUtility'
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
+import { AzureDeployPackageArtifactAlias } from 'azure-pipelines-tasks-azure-arm-rest-v2/constants';
+import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureAppServiceUtility';
+import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
+import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility'
+import { TaskParameters } from '../taskparameters';
+import { AzureAppServiceUtilityExt } from '../operations/AzureAppServiceUtilityExt';
+import { KuduServiceUtility } from '../operations/KuduServiceUtility';
 import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
-import { PackageUtility } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
-import { AzureDeployPackageArtifactAlias } from 'azure-pipelines-tasks-azurermdeploycommon/Constants';
+import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 
 export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvider {
     protected taskParams:TaskParameters;
     protected appService: AzureAppService;
     protected kuduService: Kudu;
     protected appServiceUtility: AzureAppServiceUtility;
+    protected appServiceUtilityExt: AzureAppServiceUtilityExt;
     protected kuduServiceUtility: KuduServiceUtility;
     protected virtualApplicationPath: string = "";
     protected activeDeploymentID;
@@ -26,14 +28,15 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     }
 
     public async PreDeploymentStep() {
-        this.appService = new AzureAppService(this.taskParams.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, 
+        this.appService = new AzureAppService(this.taskParams.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName,
             this.taskParams.SlotName, this.taskParams.WebAppKind);
         this.appServiceUtility = new AzureAppServiceUtility(this.appService);
+        this.appServiceUtilityExt = new AzureAppServiceUtilityExt(this.appService);
 
         this.kuduService = await this.appServiceUtility.getKuduService();
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
 
-        await this.appServiceUtility.getFuntionAppNetworkingCheck(this.taskParams.isLinuxApp);
+        await this.appServiceUtilityExt.getFuntionAppNetworkingCheck(this.taskParams.isLinuxApp);
     }
 
     public async DeployWebAppStep() {}
@@ -58,9 +61,9 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
 
         if(this.taskParams.ConfigurationSettings) {
             var customApplicationSettings = ParameterParser.parse(this.taskParams.ConfigurationSettings);
-            await this.appServiceUtility.updateConfigurationSettings(customApplicationSettings);
+            await this.appService.updateConfigurationSettings(customApplicationSettings);
         }
 
-        await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
+        await this.appServiceUtilityExt.updateScmTypeAndConfigurationDetails();
     }
 }
