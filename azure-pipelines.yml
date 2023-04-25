@@ -23,32 +23,3 @@ steps:
   displayName: Activating and Using Conda environment
   env:
     ARTIFACTS_CONDA_TOKEN: $(System.AccessToken)
-
-##- script: |
-##    conda create --yes --quiet --name AZDO
-##    conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/main 
-##    conda config --remove channels defaults
-##    conda config show
-##    conda init powershell
-##    exit
-##    ls
-##    conda activate AZDO
-#; conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/r ; conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/main'
-
-
-##- task: PowerShell@2
-##  inputs:
-##    targetType: inline
-#    script: 'conda init ANACONDA_PROMPT'
-#    script: 'powershell.exe -ExecutionPolicy ByPass -NoExit -Command & "%ANACONDA_HOME%\\shell\\condabin\\conda-hook.ps1" ; conda init "powershell" ; ls ; powershell.exe' # ; ls ; conda activate "%ANACONDA_HOME%"'
-##    script: |
-##      'conda create --offline --name AZDO -y ; conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/msys2 ; conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/r ; conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/main ; conda config --remove channels defaults '
-##      call activate AZDO
-#; cd ../../../../../ ; ls ; Get-ChildItem miniconda -Exclude /boot -File -Recurse' 
-#  env:
-#    CONDARC: ../../../../Users/abpowell/.condarc
-#    CONDA_CHANNELS: https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/main
-#    ARTIFACTS_CONDA_TOKEN: $(System.AccessToken)
-#usr/share/miniconda/etc/profile.d ; .\conda.sh ; conda activate AZDO' #conda config --show ; conda activate AZDO'
-#New-Item -Path . -Name ".condarc" -ItemType "file" -Value "channels_alias:  https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs"; conda config --show'
-##    conda env create --quiet --file .condarc
