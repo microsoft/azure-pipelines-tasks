@@ -21,13 +21,22 @@ export class ContainerWebAppDeploymentProviderTests {
         setEndpointData();
         setAgentsData();
 
-        tr.registerMock('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu', {
-            Kudu: function(A, B, C) {
-                return {
-                    updateDeployment : function(D) {
-                        return "MOCK_DEPLOYMENT_ID";
-                    }
-                }
+        const kudu =  {
+            updateDeployment : function(_) {
+                return "MOCK_DEPLOYMENT_ID";
+            }
+        };
+
+        const utility = {
+            getKuduService: function()
+            {
+                return Promise.resolve(kudu);
+            }
+        };
+
+        tr.registerMock('azure-pipelines-tasks-azure-arm-rest-v2/azureAppServiceUtility', {
+            AzureAppServiceUtility: function(_) {
+                return utility;
             }
         });
 
