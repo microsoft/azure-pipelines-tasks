@@ -108,25 +108,26 @@ export class AzureAppServiceUtility {
     private async getKuduAuthHeader(publishingCredentials: any): Promise<string> {
         const scmPolicyCheck = await this.isSitePublishingCredentialsEnabled(); 
 
-        let method = "";
         let token = "";
+        let method = "";
 
         if(scmPolicyCheck === false) {
             token = await this._appService._client.getCredentials().getToken();
             method = "Bearer";
         } else {
             tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._appService.getSlot()}_PASSWORD`, publishingCredentials.properties["publishingPassword"], true);
-            token = (new Buffer(publishingCredentials.properties["publishingUserName"] + ':' + publishingCredentials.properties["publishingPassword"]).toString('base64'));
-
+            const buffer = new Buffer(publishingCredentials.properties["publishingUserName"] + ':' + publishingCredentials.properties["publishingPassword"]);
+            token = buffer.toString('base64');
             method = "Basic";
         }
 
         const authMethodtelemetry = {
             authMethod: method
         };
+        tl.debug(`Using ${method} authentication method for Kudu service.`);
         console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureAppServiceDeployment]" + JSON.stringify(authMethodtelemetry));
 
-        return `${method} ${token}`;
+        return method + " " + token;
     }
 
     public async updateAndMonitorAppSettings(addProperties?: any, deleteProperties?: any, formatJSON?: boolean): Promise<boolean> {
