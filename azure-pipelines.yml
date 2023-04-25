@@ -4,14 +4,20 @@ trigger:
 - node6hotfixes/*
 
 steps:
-- task: PowerShell@2
-  inputs:
-    targetType: inline
+- script: |
+    conda env create --quiet --file .condarc
+    ls
+    rm .condarc
+
+
+##- task: PowerShell@2
+##  inputs:
+##    targetType: inline
 #    script: 'conda init ANACONDA_PROMPT'
 #    script: 'powershell.exe -ExecutionPolicy ByPass -NoExit -Command & "%ANACONDA_HOME%\\shell\\condabin\\conda-hook.ps1" ; conda init "powershell" ; ls ; powershell.exe' # ; ls ; conda activate "%ANACONDA_HOME%"'
-    script: |
-      'conda create --offline --name AZDO -y ; conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/msys2 ; conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/r ; conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/main ; conda config --remove channels defaults '
-      call activate AZDO
+##    script: |
+##      'conda create --offline --name AZDO -y ; conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/msys2 ; conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/r ; conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/main ; conda config --remove channels defaults '
+##      call activate AZDO
 #; cd ../../../../../ ; ls ; Get-ChildItem miniconda -Exclude /boot -File -Recurse' 
 #  env:
 #    CONDARC: ../../../../Users/abpowell/.condarc
