@@ -37,20 +37,11 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
         if (this.taskParams.azureEndpoint.scheme && this.taskParams.azureEndpoint.scheme.toLowerCase() === AzureRmEndpointAuthenticationScheme.PublishProfile) {
             let publishProfileEndpoint: AzureEndpoint = this.taskParams.azureEndpoint;
             this.publishProfileScmCredentials = await publishProfileUtility.getSCMCredentialsFromPublishProfile(publishProfileEndpoint.PublishProfile);
-
-            let authHeader = "";
-            if (this.appServiceUtility.isSitePublishingCredentialsEnabled()) {
-                const buffer =  new Buffer(this.publishProfileScmCredentials.username + ':' + this.publishProfileScmCredentials.password);
-                const auth = buffer.toString("base64");
-                authHeader = "Basic " + auth;
-                tl.debug("Kudu: using basic authentication");
-            }
-            else {
-                const token = await publishProfileEndpoint.applicationTokenCredentials.getToken();
-                authHeader = "Bearer " + token;
-                tl.debug("Kudu: using token authentication");
-            }
-
+            
+            const buffer =  new Buffer(this.publishProfileScmCredentials.username + ':' + this.publishProfileScmCredentials.password);
+            const auth = buffer.toString("base64");
+            var authHeader = "Basic " + auth;
+            tl.debug("Kudu: using basic authentication for publish profile");            
             this.kuduService = new Kudu(this.publishProfileScmCredentials.scmUri, authHeader);
             let resourceId = publishProfileEndpoint.resourceId;
             let resourceIdSplit = resourceId.split("/");
@@ -65,6 +56,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
     }
 
+
     public async DeployWebAppStep() {}
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
@@ -72,7 +64,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             await addReleaseAnnotation(this.taskParams.azureEndpoint, this.appService, isDeploymentSuccess);
         }
 
-        if(!!this.kuduServiceUtility) {                
+        if(!!this.kuduServiceUtility) {
             this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.slotName});
             tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
         }
