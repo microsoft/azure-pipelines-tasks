@@ -4,13 +4,14 @@ trigger:
 - node6hotfixes/*
 
 steps:
-- powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
+- bash: echo "vso[task.prependpath]$CONDA/bin"
   displayName: Add conda to PATH
-- script: |
-    conda create --yes --quiet --name AZDO
-    conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/main
-    conda config --remove channels defaults
-    conda activate AZDO
+- bash: conda create --yes --quiet --name AZDO
+  displayName: Create Anaconda environment
+- script: conda env create --quiet --file environment.yml
+  displayName: Create Anaconda environment
+- bash: source activate AZDO
+  displayName: Activating Conda environment
 
 ##- script: |
 ##    conda create --yes --quiet --name AZDO
