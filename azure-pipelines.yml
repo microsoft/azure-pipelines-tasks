@@ -6,10 +6,13 @@ trigger:
 steps:
 - script: |
     conda create --yes --quiet --name AZDO
-    conda config --show
-#    'conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/msys2 ; conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/r ; conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/main'
+    conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/main 
+    conda config --remove channels defaults
+    conda config show
+    conda init powershell
+#; conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/r ; conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/main'
 - script: |
-    call activate AZDO
+    conda activate AZDO
 
 
 ##- task: PowerShell@2
