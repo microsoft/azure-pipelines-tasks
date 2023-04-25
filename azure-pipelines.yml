@@ -5,7 +5,7 @@ trigger:
 
 steps:
 - script: |
-    conda env create --quiet --file .condarc
+    conda create --offline --name AZDO
     ls
     rm .condarc
 
@@ -25,3 +25,4 @@ steps:
 #    ARTIFACTS_CONDA_TOKEN: $(System.AccessToken)
 #usr/share/miniconda/etc/profile.d ; .\conda.sh ; conda activate AZDO' #conda config --show ; conda activate AZDO'
 #New-Item -Path . -Name ".condarc" -ItemType "file" -Value "channels_alias:  https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs"; conda config --show'
+##    conda env create --quiet --file .condarc
