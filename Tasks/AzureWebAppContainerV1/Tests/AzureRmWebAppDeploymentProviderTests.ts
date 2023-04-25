@@ -11,9 +11,9 @@ export class AzureRmWebAppDeploymentProviderTests {
         setEndpointData();
         setAgentsData();
 
-        tr.registerMock('azure-pipelines-tasks-azurermdeploycommon/operations/KuduServiceUtility', {
+        tr.registerMock('./operations/KuduServiceUtility', {
             KuduServiceUtility: function(A) {
-                return {                    
+                return {
                     updateDeploymentStatus : function(B,C,D) {
                         return "MOCK_DEPLOYMENT_ID";
                     }

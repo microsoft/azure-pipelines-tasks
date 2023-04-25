@@ -78,8 +78,10 @@ if ($validateScriptSignature) {
 $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
 $endpointObject = Get-VstsEndpoint -Name $serviceName -Require
 $endpoint = ConvertTo-Json $endpointObject
+$vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+$vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
-try 
+try
 {
     # Generate the script contents.
     Write-Host (Get-VstsLocString -Key 'GeneratingScript')
@@ -91,9 +93,9 @@ try
 
     $CoreAzArgument = $null;
     if ($targetAzurePs) {
-        $CoreAzArgument = "-endpoint '$endpoint' -targetAzurePs $targetAzurePs"
+        $CoreAzArgument = "-endpoint '$endpoint' -connectedServiceNameARM $serviceName -targetAzurePs $targetAzurePs -vstsAccessToken $vstsAccessToken"
     } else {
-        $CoreAzArgument = "-endpoint '$endpoint'"
+        $CoreAzArgument = "-endpoint '$endpoint' -connectedServiceNameARM $serviceName -vstsAccessToken $vstsAccessToken"
     }
     $contents += ". '$PSScriptRoot\CoreAz.ps1' $CoreAzArgument"
 

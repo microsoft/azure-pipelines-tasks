@@ -1,10 +1,9 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { AzureResourceFilterUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureResourceFilterUtility';
-import { AzureEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
-import { AzureAppService } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
-import { PackageUtility } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
-import fs = require('fs');
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
+import { Resources } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
+import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 
 const osTypeMap = new Map([
     [ 'app,container,xenon', 'Windows' ],
@@ -50,10 +49,11 @@ export class TaskParametersUtility {
         let resourceGroupName: string = (taskParameters.DeployToSlotOrASEFlag) ? taskParameters.ResourceGroupName : "";
         let osType: string;
         if (!resourceGroupName) {
-            var appDetails = await AzureResourceFilterUtility.getAppDetails(taskParameters.azureEndpoint, taskParameters.WebAppName);
+            var resources = new Resources(taskParameters.azureEndpoint);
+            var appDetails = await resources.getAppDetails(taskParameters.WebAppName);
             resourceGroupName = appDetails["resourceGroupName"];
             osType = osTypeMap.get(appDetails["kind"]) ? osTypeMap.get(appDetails["kind"]) : appDetails["kind"];
-            
+
             tl.debug(`Resource Group: ${resourceGroupName}`);
         }
         else {

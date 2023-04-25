@@ -87,6 +87,7 @@
   "loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode": "AzCopy.exe が Blob Storage にファイルをアップロードしている間に、ゼロ以外の終了コードで終了しました。",
   "loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey": "ストレージ アカウント キーをフェッチできません。エラー: '{0}'",
   "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "WinRM カスタム スクリプトを手動でアンインストールしてから、配置を再試行してください。",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "追加の引数に区切り文字 '&', ';', '|' を含めることはできません。入力を確認してください。引数の検証の詳細については、以下を確認してください: https://aka.ms/azdo-task-argument-validation",
   "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことを確認してください。",
   "loc.messages.UnsupportedAuthScheme": "'{0}' はエンドポイントではサポートされていない認証スキームです。",
   "loc.messages.ServicePrincipalError": "配置に使用したサービス プリンシパルにエラーがありました。"
