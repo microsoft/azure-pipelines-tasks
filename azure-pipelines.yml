@@ -8,8 +8,6 @@ steps:
   displayName: Add conda to PATH
 - bash: conda create --yes --quiet --name AZDO
   displayName: Create Anaconda environment
-- script: conda env create --quiet --file environment.yml
-  displayName: Create Anaconda environment
 - bash: source activate AZDO
   displayName: Activating Conda environment
 
