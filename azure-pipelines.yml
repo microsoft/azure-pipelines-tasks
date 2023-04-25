@@ -10,6 +10,8 @@ steps:
   displayName: Create Anaconda environment
 - bash: source activate AZDO
   displayName: Activating Conda environment
+- bash: conda config --show
+  displayName: Setting up .condarc
 
 ##- script: |
 ##    conda create --yes --quiet --name AZDO
