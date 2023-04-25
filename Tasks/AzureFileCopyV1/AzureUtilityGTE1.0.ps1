@@ -100,7 +100,9 @@ function Get-AzureBlobStorageEndpointFromRDFE
 function Get-AzureBlobStorageEndpointFromARM
 {
     param([string]$storageAccountName,
-          [object]$endpoint)
+        [object]$endpoint,
+        [string]$connectedServiceNameARM,
+        [string]$vstsAccessToken)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -135,7 +137,9 @@ function Get-AzureStorageAccountTypeFromRDFE
 function Get-AzureStorageAccountTypeFromARM
 {
     param([string]$storageAccountName,
-          [object]$endpoint)
+        [object]$endpoint,
+        [string]$connectedServiceNameARM,
+        [string]$vstsAccessToken)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -288,26 +292,28 @@ function Get-AzureRMVMsInResourceGroup
 function Get-AzureRMResourceGroupResourcesDetailsForAzureStack
 {
     param([string]$resourceGroupName,
-          [object]$azureRMVMResources,
-          [object]$endpoint)
+        [object]$azureRMVMResources,
+        [object]$endpoint,
+        [string]$connectedServiceNameARM,
+        [string]$vstsAccessToken)
 
     [hashtable]$azureRGResourcesDetails = @{}
     [hashtable]$loadBalancerDetails = @{}
-    
+
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
     {
         Write-Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName"
-        $networkInterfaceResources = Get-AzureNetworkInterfaceDetails -ResourceGroupName $resourceGroupName -endpoint $endpoint
+        $networkInterfaceResources = Get-AzureNetworkInterfaceDetails $resourceGroupName $endpoint $connectedServiceNameARM $vstsAccessToken
         Write-Verbose "[Azure Call]Got network interfaces in resource group $resourceGroupName"
         $azureRGResourcesDetails.Add("networkInterfaceResources", $networkInterfaceResources)
 
         Write-Verbose "[Azure Call]Getting public IP Addresses in resource group $resourceGroupName"
-        $publicIPAddressResources = Get-AzurePublicIpAddressDetails -ResourceGroupName $resourceGroupName -endpoint $endpoint
+        $publicIPAddressResources = Get-AzurePublicIpAddressDetails $resourceGroupName $endpoint $connectedServiceNameARM $vstsAccessToken
         Write-Verbose "[Azure Call]Got public IP Addresses in resource group $resourceGroupName"
         $azureRGResourcesDetails.Add("publicIPAddressResources", $publicIPAddressResources)
 
         Write-Verbose "[Azure Call]Getting load balancers in resource group $resourceGroupName"
-        $lbGroup =  Get-AzureLoadBalancersDetails -ResourceGroupName $resourceGroupName -endpoint $endpoint
+        $lbGroup =  Get-AzureLoadBalancersDetails $resourceGroupName $endpoint $connectedServiceNameARM $vstsAccessToken
         Write-Verbose "[Azure Call]Got load balancers in resource group $resourceGroupName"
 
         if($lbGroup)
@@ -316,7 +322,7 @@ function Get-AzureRMResourceGroupResourcesDetailsForAzureStack
             {
                 $lbDetails = @{}
                 Write-Verbose "[Azure Call]Getting load balancer in resource group $resourceGroupName"
-                $loadBalancer = Get-AzureLoadBalancerDetails -Name $lb.Name -ResourceGroupName $resourceGroupName -endpoint $endpoint
+                $loadBalancer = Get-AzureLoadBalancerDetails $resourceGroupName $lb.Name $endpoint $connectedServiceNameARM $vstsAccessToken
                 Write-Verbose "[Azure Call]Got load balancer in resource group $resourceGroupName"
 
                 Write-Verbose "[Azure Call]Getting LoadBalancer Frontend Ip Config"
@@ -421,24 +427,26 @@ function Get-AzureMachineStatus
         $status = Get-AzureRmVM -ResourceGroupName $resourceGroupName -Name $name -Status -ErrorAction Stop -Verbose
         Write-Host (Get-VstsLocString -Key "AFC_GetVMStatusComplete" -ArgumentList $name)
     }
-	
+
     return $status
 }
 
 function Get-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
-          [string]$vmName,
-          [string]$name,
-          [object]$endpoint)
+        [string]$vmName,
+        [string]$name,
+        [object]$endpoint,
+        [string]$connectedServiceNameARM,
+        [string]$vstsAccessToken)
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName))
     {
         Write-Host (Get-VstsLocString -Key "AFC_GetCustomScriptExtension" -ArgumentList $name, $vmName)
-        $customScriptExtension = Get-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -ErrorAction Stop -Verbose     
+        $customScriptExtension = Get-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -ErrorAction Stop -Verbose
         Write-Host (Get-VstsLocString -Key "AFC_GetCustomScriptExtensionComplete" -ArgumentList $name, $vmName)
     }
-	
+
     return $customScriptExtension
 }
 
@@ -455,24 +463,26 @@ function Set-AzureMachineCustomScriptExtension
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))
     {
         Write-Host (Get-VstsLocString -Key "AFC_SetCustomScriptExtension" -ArgumentList $name, $vmName)
-        $result = Set-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -FileUri $fileUri  -Run $run -Argument $argument -Location $location -ErrorAction Stop -Verbose		
+        $result = Set-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -FileUri $fileUri  -Run $run -Argument $argument -Location $location -ErrorAction Stop -Verbose
         Write-Host (Get-VstsLocString -Key "AFC_SetCustomScriptExtensionComplete" -ArgumentList $name, $vmName)
     }
-	
+
     return $result
 }
 
 function Remove-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
-          [string]$vmName,
-          [string]$name,
-          [object]$endpoint)
+        [string]$vmName,
+        [string]$name,
+        [object]$endpoint,
+        [string]$connectedServiceNameARM,
+        [string]$vstsAccessToken)
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))
     {
         Write-Host (Get-VstsLocString -Key "AFC_RemoveCustomScriptExtension" -ArgumentList $name, $vmName)
-        $response = Remove-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -Force -ErrorAction SilentlyContinue -Verbose		
+        $response = Remove-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -Force -ErrorAction SilentlyContinue -Verbose
         Write-Host (Get-VstsLocString -Key "AFC_RemoveCustomScriptExtensionComplete" -ArgumentList $name, $vmName)
     }
 
