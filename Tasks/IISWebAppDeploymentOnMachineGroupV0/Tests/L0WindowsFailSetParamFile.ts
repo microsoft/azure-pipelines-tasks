@@ -25,11 +25,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     }
 };
 
-import mockTask = require('azure-pipelines-task-lib/mock-task');
-var msDeployUtility = require('azure-pipelines-tasks-webdeployment-common/msdeployutility.js');
-
 var fs = require('fs');
 tr.registerMock('fs', {
+    ...fs,
     createWriteStream: function (filePath, options) {
         return { "isWriteStreamObj": true };
     },

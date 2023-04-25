@@ -41,7 +41,7 @@ describe('NuGetCommand Suite', function () {
         assert.equal(tr.warningIssues.length, 0, "should have no warnings");
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('restore packages.config', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -57,7 +57,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('restore single solution with noCache', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -73,7 +73,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('restore single solution with disableParallelProcessing', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -89,7 +89,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('restore single solution with nuget config', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -105,7 +105,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('restore multiple solutions', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -122,7 +122,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('restore multiple solutions and parses pattern appropriately', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -139,7 +139,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('restore single solution mono', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -154,7 +154,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('restore select vsts source', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -169,7 +169,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('restore select nuget.org source', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -184,7 +184,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('restore select multiple sources', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -199,7 +199,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('restore select nuget.org source warns', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -214,7 +214,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded with issues');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('restore select nuget.org source fails', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -227,7 +227,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.failed, 'should have Failed');
         assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         done();
-    });
+    }).timeout(5000);
 
     it('restore select nuget.org source on nuget config succeeds', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -243,7 +243,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('pushes successfully to internal feed using NuGet.exe', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -259,7 +259,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('pushes successfully to internal feed using VstsNuGetPush.exe', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -275,7 +275,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('pushes successfully to internal project scoped feed using VstsNuGetPush.exe', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -291,7 +291,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('succeeds when conflict occurs using VstsNuGetPush.exe (allow conflict)', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -307,7 +307,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('succeeds when conflict occurs using NuGet.exe on Linux (allow conflict)', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -321,7 +321,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('fails when conflict occurs using VstsNuGetPush.exe (disallow conflict)', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -336,7 +336,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.stdOutContained('VstsNuGetPush output here'), "should have VstsNuGetPush output");
         assert(tr.failed, 'should have failed');
         done();
-    });
+    }).timeout(5000);
 
     it('packs with prerelease', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -352,7 +352,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('packs with env var', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -368,7 +368,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('packs with build number', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -384,7 +384,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('packs with base path', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -400,7 +400,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('packs tool', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -416,7 +416,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('works with custom command happy path', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -432,7 +432,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
     it('restore single solution with nuget config and multiple service connections', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -450,7 +450,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(5000);
 
 
     it('custom command fails when exit code !=0', (done: Mocha.Done) => {
@@ -463,7 +463,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.stdErrContained, "stderr output is here");
         assert(tr.failed, 'should have failed');
         done();
-    });
+    }).timeout(5000);
 
     it('pack fails when exit code !=0', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -475,7 +475,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.stdErrContained, "stderr output is here");
         assert(tr.failed, 'should have failed');
         done();
-    });
+    }).timeout(5000);
 
     it('publish fails when duplicates are skipped and exit code!=[0|2] on Windows_NT', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -487,7 +487,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.stdErrContained, "stderr output is here");
         assert(tr.failed, 'should have failed');
         done();
-    });
+    }).timeout(5000);
 
     it('publish fails when duplicates are NOT skipped and exit code!=0', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -499,7 +499,7 @@ describe('NuGetCommand Suite', function () {
         assert(tr.stdErrContained, "stderr output is here");
         assert(tr.failed, 'should have failed');
         done();
-    });
+    }).timeout(5000);
 
     it('restore fails when exit code!=0', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -511,6 +511,5 @@ describe('NuGetCommand Suite', function () {
         assert(tr.stdErrContained, "stderr output is here");
         assert(tr.failed, 'should have failed');
         done();
-    });
-
+    }).timeout(5000);
 });

@@ -10,6 +10,7 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 process.env['HOME'] = '/users/test'; //replace with mock of setVariable when task-lib has the support
 
 tr.registerMock('fs', {
+    ...fs,
     createReadStream: function (path) {
         if (path === '/user/build/fun.xcodeproj/project.pbxproj') {
             return undefined;

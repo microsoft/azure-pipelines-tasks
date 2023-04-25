@@ -4,6 +4,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import { Constants } from '../versionutilities';
 import { VersionInfo } from '../models';
 import { setFlagsFromString } from 'v8';
+import fs = require('fs');
 
 let mockery = require('mockery');
 let osType = "win";
@@ -16,6 +17,7 @@ mockery.enable({
 });
 
 mockery.registerMock('fs', {
+    ...fs,
     lstatSync: function (elementPath: string) {
         if (elementPath.indexOf(".") > -1 && !elementPath.endsWith("1.0.0") && !elementPath.endsWith("2.0.0") && !elementPath.endsWith("2.1.0")) {
             return {

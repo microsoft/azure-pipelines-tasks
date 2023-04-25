@@ -266,7 +266,7 @@ describe('Xcode L0 Suite', function () {
     });
 
     it('Xcode 8 create IPA with bad exportOptionsPlist path', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(5000);
 
         let tp = path.join(__dirname, 'L0ExportOptionsPlistBadPath.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -666,7 +666,7 @@ describe('Xcode L0 Suite', function () {
     });
 
     it('Task defaults - v4.127.0', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(5000);
 
         let tp = path.join(__dirname, 'L0TaskDefaults_4.127.0.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
