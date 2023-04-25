@@ -14,11 +14,15 @@ steps:
     conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/main
     conda config --remove channels defaults
     conda config --show
+  env:
+    ARTIFACTS_CONDA_TOKEN: $(System.AccessToken)
   displayName: Setting up .condarc
 - bash: |
     source activate AZDO
     conda install numpy
   displayName: Activating and Using Conda environment
+  env:
+    ARTIFACTS_CONDA_TOKEN: $(System.AccessToken)
 
 ##- script: |
 ##    conda create --yes --quiet --name AZDO
