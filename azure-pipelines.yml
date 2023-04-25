@@ -19,7 +19,7 @@ steps:
   displayName: Setting up .condarc
 - bash: |
     source activate AZDO
-    conda install numpy
+    conda install numpy -y
   displayName: Activating and Using Conda environment
   env:
     ARTIFACTS_CONDA_TOKEN: $(System.AccessToken)
