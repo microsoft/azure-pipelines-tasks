@@ -4,11 +4,11 @@ trigger:
 - node6hotfixes/*
 
 steps:
-- bash: echo "vso[task.prependpath]$CONDA/bin"
+- bash: echo "##vso[task.prependpath]$CONDA/bin"
   displayName: Add conda to PATH
-- bash: conda create --yes --quiet --name AZDO
+- bash: conda create --offline --name AZDO -y
   displayName: Create Anaconda environment
-- bash: source "$CONDA/etc/profile.d/activate" AZDO
+- bash: source activate AZDO
   displayName: Activating Conda environment
 
 ##- script: |
