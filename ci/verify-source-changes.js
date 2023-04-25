@@ -1,4 +1,5 @@
 var path = require('path');
+var fs = require('fs');
 var process = require("process");
 var util = require('./ci-util');
 
@@ -19,6 +20,8 @@ taskList.forEach(function(taskName) {
     console.log(`====================${taskName}====================`);
 
     var taskSourcePath = path.join(util.tasksSourcePath, taskName);
+    // If the task source folder doesn't exist then it's generated task so we don't need to check it
+    if (!fs.existsSync(taskSourcePath)) return
 
     var diffString = util.run(`git diff --name-only ${taskSourcePath}`);
     var diffList = diffString.split("\n").filter(Boolean);
