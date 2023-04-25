@@ -1,21 +1,20 @@
-import { TaskParameters } from './taskparameters';
-import { KuduServiceUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/KuduServiceUtility';
-import { AzureAppService } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
-import { Kudu } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-app-service-kudu';
-import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureAppServiceUtility';
-import { AzureEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
-import { AzureResourceFilterUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureResourceFilterUtility';
 import tl = require('azure-pipelines-task-lib/task');
-import { addReleaseAnnotation } from 'azure-pipelines-tasks-azurermdeploycommon/operations/ReleaseAnnotationUtility';
-import { ContainerBasedDeploymentUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/ContainerBasedDeploymentUtility';
-import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon/operations/ParameterParserUtility';
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
+import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureAppServiceUtility';
+import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
+import { AzureAppServiceUtilityExt } from './operations/AzureAppServiceUtilityExt';
+import { ContainerBasedDeploymentUtility } from './operations/ContainerBasedDeploymentUtility';
+import { KuduServiceUtility } from './operations/KuduServiceUtility';
+import { addReleaseAnnotation } from './operations/ReleaseAnnotationUtility';
+import { TaskParameters } from './taskparameters';
 
 export class AzureRmWebAppDeploymentProvider{
     protected taskParams:TaskParameters;
     protected appService: AzureAppService;
     protected kuduService: Kudu;
     protected appServiceUtility: AzureAppServiceUtility;
+    protected appServiceUtilityExt: AzureAppServiceUtilityExt;
     protected kuduServiceUtility: KuduServiceUtility;
     protected activeDeploymentID: string;
 
@@ -26,6 +25,7 @@ export class AzureRmWebAppDeploymentProvider{
     public async PreDeploymentStep() {
         this.appService = new AzureAppService(this.taskParams.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, this.taskParams.SlotName);
         this.appServiceUtility = new AzureAppServiceUtility(this.appService);
+        this.appServiceUtilityExt = new AzureAppServiceUtilityExt(this.appService);
 
         this.kuduService = await this.appServiceUtility.getKuduService();
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
@@ -47,7 +47,7 @@ export class AzureRmWebAppDeploymentProvider{
 
         let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
         await containerDeploymentUtility.deployWebAppImage(this.taskParams);
-        await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
+        await this.appServiceUtilityExt.updateScmTypeAndConfigurationDetails();
     }
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
