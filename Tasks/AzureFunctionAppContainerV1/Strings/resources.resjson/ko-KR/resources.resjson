@@ -71,6 +71,7 @@
   "loc.messages.RequestedURLforkuduphysicalpath": "Kudu 실제 경로의 요청된 URL: %s",
   "loc.messages.Physicalpathalreadyexists": "실제 경로 '%s'이(가) 이미 있습니다.",
   "loc.messages.KuduPhysicalpathCreatedSuccessfully": "Kudu 실제 경로를 만들었습니다. %s",
+  "loc.messages.KuduStackTraceURL": "추가로 디버깅하려면 Kudu 스택 추적 URL %s을(를) 확인하세요.",
   "loc.messages.FailedtocreateKuduPhysicalPath": "Kudu 실제 경로를 만들지 못했습니다. 오류: %s",
   "loc.messages.FailedtocheckphysicalPath": "Kudu 실제 경로를 확인하지 못했습니다. 오류 코드: %s",
   "loc.messages.VirtualApplicationDoesNotExist": "가상 응용 프로그램이 없습니다. %s",

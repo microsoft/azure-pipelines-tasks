@@ -3,10 +3,13 @@
   "loc.helpMarkDown": "",
   "loc.description": "Azure 原則的安全性與合規性評定",
   "loc.instanceNameFormat": "檢查原則合規性",
+  "loc.group.displayName.advancedOptions": "進階",
   "loc.input.label.ConnectedServiceName": "Azure 訂用帳戶",
   "loc.input.help.ConnectedServiceName": "請選取您要強制執行原則的 Azure Resource Manager 訂用帳戶。",
   "loc.input.label.ResourceGroupName": "資源群組",
   "loc.input.help.ResourceGroupName": "請提供資源群組的名稱。",
   "loc.input.label.Resources": "資源名稱",
-  "loc.input.help.Resources": "請選取您要檢查原則合規性的 Azure 資源。"
+  "loc.input.help.Resources": "請選取您要檢查原則合規性的 Azure 資源。",
+  "loc.input.label.RetryDuration": "重試持續時間",
+  "loc.input.help.RetryDuration": "定義當先前的回應碼為「已接受」時，工作將等候重試呼叫 Azure API 的期間。最小期間為 2 分鐘。"
 }
