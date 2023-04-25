@@ -14,12 +14,15 @@
         $OverwritePkgArtifact,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Specific", "LastSuccessful")]
+        [ValidateSet("Specific", "LastSuccessful", "LatestFromBranch")]
         [string]
         $CompareType,
 
         [string]
-        $BuildNumber
+        $BuildNumber,
+        
+        [string]
+        $BranchName
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -42,6 +45,17 @@
 
             # Query for a specific build number (regardless of build status or result)
             $url = "$($vstsEndpoint.url)$projectId/_apis/build/builds?$apiVersion&$definition&buildNumber=$escapedBuildNumber&`$top=1"
+        }
+        else if ($CompareType -eq "LatestFromBranch")
+        {
+            if ([string]::IsNullOrEmpty($BranchName))
+            {
+                throw (Get-VstsLocString -Key BranchName)
+            }
+
+            $escapedBranchName = [System.Uri]::EscapeDataString($BranchName)
+            # Query for the last successful, completed build for branch 
+            $url = "$($vstsEndpoint.url)$projectId/_apis/build/builds?$apiVersion&$definition&statusFilter=completed&resultFilter=succeeded&branchName=$escapedBranchName&`$top=1"
         }
         else
         {
