@@ -8,7 +8,7 @@ steps:
   displayName: Add conda to PATH
 - bash: conda create --yes --quiet --name AZDO
   displayName: Create Anaconda environment
-- bash: source activate AZDO
+- bash: source "$CONDA/etc/profile.d/activate" AZDO
   displayName: Activating Conda environment
 
 ##- script: |
