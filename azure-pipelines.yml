@@ -15,8 +15,10 @@ steps:
     conda config --remove channels defaults
     conda config --show
   displayName: Setting up .condarc
-- bash: source activate AZDO
-  displayName: Activating Conda environment
+- bash: |
+    source activate AZDO
+    conda install numpy
+  displayName: Activating and Using Conda environment
 
 ##- script: |
 ##    conda create --yes --quiet --name AZDO
