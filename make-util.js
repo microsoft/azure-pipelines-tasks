@@ -1703,6 +1703,33 @@ var getTaskNodeVersion = function(buildPath, taskName) {
 }
 exports.getTaskNodeVersion = getTaskNodeVersion;
 
+/**
+ * 
+ * @param {String} buildPath - Path to the build folder
+ * @param {String} taskName - Name of the task
+ * @returns { Boolean } true if the task is a node task
+ */
+var isNodeTask = function(buildPath, taskName) {
+    const taskJsonPath = path.join(buildPath, taskName, "task.json");
+    if (!fs.existsSync(taskJsonPath)) return false;
+    
+    const taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
+    const taskJson = JSON.parse(taskJsonContents);
+    const execution = ['execution', 'prejobexecution','postjobexecution']
+        .map(key => taskJson[key]);
+    
+    for (const executors of execution) {
+        if (!executors) continue;
+        for (const key of Object.keys(executors)) {
+            const executor = key.toLocaleLowerCase();
+            if (executor.startsWith('node')) return true;
+        }
+    }
+
+    return false;
+}
+exports.isNodeTask = isNodeTask;
+
 //------------------------------------------------------------------------------
 
 function renameCodeCoverageOutput(coveragePath, taskName) {
