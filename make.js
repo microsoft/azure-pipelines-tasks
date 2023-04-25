@@ -457,18 +457,18 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
 
     if (!argv.task) {
         banner('Running common library tests');
-        // var commonLibPattern = path.join(buildTasksPath, 'Common', '*', 'Tests', suiteType + '.js');
-        // var specs = [];
-        // if (matchFind(commonLibPattern, buildTasksPath).length > 0) {
-        //     specs.push(commonLibPattern);
-        // }
-        // if (specs.length > 0) {
-        //     // setup the version of node to run the tests
-        //     util.installNode(argv.node);
-        //     run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
-        // } else {
-        //     console.warn("No common library tests found");
-        // }
+        var commonLibPattern = path.join(buildTasksPath, 'Common', '*', 'Tests', suiteType + '.js');
+        var specs = [];
+        if (matchFind(commonLibPattern, buildTasksPath).length > 0) {
+            specs.push(commonLibPattern);
+        }
+        if (specs.length > 0) {
+            // setup the version of node to run the tests
+            util.installNode(argv.node);
+            run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
+        } else {
+            console.warn("No common library tests found");
+        }
     }
 
     try {
