@@ -37,24 +37,11 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
         if (this.taskParams.azureEndpoint.scheme && this.taskParams.azureEndpoint.scheme.toLowerCase() === AzureRmEndpointAuthenticationScheme.PublishProfile) {
             let publishProfileEndpoint: AzureEndpoint = this.taskParams.azureEndpoint;
             this.publishProfileScmCredentials = await publishProfileUtility.getSCMCredentialsFromPublishProfile(publishProfileEndpoint.PublishProfile);
-
-            let authHeader = "";
-            let appServiceUtility = this.appServiceUtility ||
-                new AzureAppServiceUtility(this.appService ||
-                     new AzureAppService(this.taskParams.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName,
-                        this.taskParams.SlotName, this.taskParams.WebAppKind));
-            if (appServiceUtility.isSitePublishingCredentialsEnabled()) {
-                const buffer =  new Buffer(this.publishProfileScmCredentials.username + ':' + this.publishProfileScmCredentials.password);
-                const auth = buffer.toString("base64");
-                authHeader = "Basic " + auth;
-                tl.debug("Kudu: using basic authentication");
-            }
-            else {
-                const token = await publishProfileEndpoint.applicationTokenCredentials.getToken();
-                authHeader = "Bearer " + token;
-                tl.debug("Kudu: using token authentication");
-            }
-
+            
+            const buffer =  new Buffer(this.publishProfileScmCredentials.username + ':' + this.publishProfileScmCredentials.password);
+            const auth = buffer.toString("base64");
+            var authHeader = "Basic " + auth;
+            tl.debug("Kudu: using basic authentication");            
             this.kuduService = new Kudu(this.publishProfileScmCredentials.scmUri, authHeader);
             let resourceId = publishProfileEndpoint.resourceId;
             let resourceIdSplit = resourceId.split("/");
@@ -68,6 +55,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
         }
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
     }
+
 
     public async DeployWebAppStep() {}
 
