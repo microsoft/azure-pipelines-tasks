@@ -91,5 +91,6 @@
   "loc.messages.AFC_RootContainerAndDirectory": "$root 컨테이너에 대해 '/S' 옵션이 잘못되었습니다.",
   "loc.messages.AFC_RedirectResponseInvalidStatusCode": "HTTP 응답 코드: '{0}'은(는) 유효한 리디렉션 상태 코드가 아닙니다.",
   "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "리디렉션 응답 위치 헤더가 null입니다.",
-  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "WinRM 사용자 지정 스크립트를 수동으로 제거하고 배포를 다시 시도하세요."
+  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "WinRM 사용자 지정 스크립트를 수동으로 제거하고 배포를 다시 시도하세요.",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "추가 인수에는 구분 문자 '&', ';', '|'을 포함할 수 없습니다. 입력 내용을 확인하세요. 인수 유효성 검사에 대한 자세한 내용은 https://aka.ms/azdo-task-argument-validation을 참조하세요."
 }

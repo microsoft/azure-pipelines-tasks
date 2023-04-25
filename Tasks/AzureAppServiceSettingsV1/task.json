@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 215,
-        "Patch": 0
+        "Minor": 221,
+        "Patch": 102
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -151,6 +151,7 @@
         }
     },
     "messages": {
+        "AppServiceConnectionStringsAlreadyPresent": "App Service Connection Strings are already present.",
         "GotconnectiondetailsforazureRMWebApp0": "Got service connection details for Azure App Service:'%s'",
         "ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
         "FailedToGetAppServiceDetails": "Failed to fetch App Service '%s' details. Error: %s",
