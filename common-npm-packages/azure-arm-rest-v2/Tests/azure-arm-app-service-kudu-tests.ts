@@ -11,7 +11,7 @@ export class KuduTests {
     public static async updateDeployment() {
 
         try {
-            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.updateDeployment({id: 'MOCK_DEPLOYMENT_ID', type: 'Deployment'});
         }
         catch(error) {
@@ -20,7 +20,7 @@ export class KuduTests {
         }
 
         try {
-            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.updateDeployment({id: 'MOCK_DEPLOYMENT_ID', type: 'Deployment'});
             tl.setResult(tl.TaskResult.Failed, 'KuduTests.updateDeployment() should have failed but passed');
         }
@@ -31,7 +31,7 @@ export class KuduTests {
 
     public static async getContinuousJobs() {
         try {
-            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             console.log(`MOCK KUDU CONTINUOUS JOBS COUNT: ${(await kudu.getContinuousJobs()).length}`);
         }
         catch(error) {
@@ -40,7 +40,7 @@ export class KuduTests {
         }
 
         try {
-            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.getContinuousJobs();
             tl.setResult(tl.TaskResult.Failed, 'KuduTests.getContinuousJobs() should have failed but passed');
         }
@@ -51,7 +51,7 @@ export class KuduTests {
 
     public static async startContinuousWebJob() {
         try {
-            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.startContinuousWebJob('MOCK_JOB_NAME');
         }
         catch(error) {
@@ -60,7 +60,7 @@ export class KuduTests {
         }
 
         try {
-            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.startContinuousWebJob('MOCK_JOB_NAME');
             tl.setResult(tl.TaskResult.Failed, 'KuduTests.startContinuousWebJob() should have failed but passed');
         }
@@ -71,7 +71,7 @@ export class KuduTests {
 
     public static async stopContinuousWebJob() {
         try {
-            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.stopContinuousWebJob('MOCK_JOB_NAME');
         }
         catch(error) {
@@ -80,7 +80,7 @@ export class KuduTests {
         }
 
         try {
-            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.stopContinuousWebJob('MOCK_JOB_NAME');
             tl.setResult(tl.TaskResult.Failed, 'KuduTests.stopContinuousWebJob() should have failed but passed');
         }
@@ -91,7 +91,7 @@ export class KuduTests {
 
     public static async installSiteExtension() {
         try {
-            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.installSiteExtension('MOCK_EXTENSION');
         }
         catch(error) {
@@ -100,7 +100,7 @@ export class KuduTests {
         }
 
         try {
-            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.installSiteExtension('MOCK_EXTENSION');
             tl.setResult(tl.TaskResult.Failed, 'KuduTests.installSiteExtension() should have failed but passed');
         }
@@ -111,7 +111,7 @@ export class KuduTests {
 
     public static async getSiteExtensions() {
         try {
-            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             console.log(`MOCK KUDU SITE EXTENSIONS COUNT: ${(await kudu.getSiteExtensions()).length}`);
         }
         catch(error) {
@@ -120,7 +120,7 @@ export class KuduTests {
         }
 
         try {
-            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.getSiteExtensions();
             tl.setResult(tl.TaskResult.Failed, 'KuduTests.getSiteExtensions() should have failed but passed');
         }
@@ -131,7 +131,7 @@ export class KuduTests {
 
     public static async getAllSiteExtensions() {
         try {
-            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             console.log(`MOCK KUDU SITE EXTENSIONS COUNT: ${(await kudu.getAllSiteExtensions()).length}`);
         }
         catch(error) {
@@ -140,7 +140,7 @@ export class KuduTests {
         }
 
         try {
-            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.getAllSiteExtensions();
             tl.setResult(tl.TaskResult.Failed, 'KuduTests.getAllSiteExtensions() should have failed but passed');
         }
@@ -151,7 +151,7 @@ export class KuduTests {
 
     public static async getProcess() {
         try {
-            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             console.log(`MOCK KUDU PROCESS ID: ${(await kudu.getProcess(0)).id}`);
         }
         catch(error) {
@@ -162,7 +162,7 @@ export class KuduTests {
 
     public static async killProcess() {
         try {
-            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.killProcess(0);
             console.log('KILLED PROCESS 0');
         }
@@ -174,7 +174,7 @@ export class KuduTests {
 
     public static async getAppSettings() {
         try {
-            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             var appSettings = await kudu.getAppSettings();
             console.log(`KUDU APP SETTINGS ${JSON.stringify(appSettings)}`);
         }
@@ -184,7 +184,7 @@ export class KuduTests {
         }
 
         try {
-            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.getAppSettings();
             tl.setResult(tl.TaskResult.Failed, 'KuduTests.getAppSettings() should have failed but passed');
         }
@@ -195,7 +195,7 @@ export class KuduTests {
 
     public static async listDir() {
         try {
-            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             var listDir = await kudu.listDir('/site/wwwroot');
             console.log(`KUDU LIST DIR ${JSON.stringify(listDir)}`);
         }
@@ -205,7 +205,7 @@ export class KuduTests {
         }
 
         try {
-            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.listDir('/site/wwwroot');
             tl.setResult(tl.TaskResult.Failed, 'KuduTests.listDir() should have failed but passed');
         }
@@ -216,7 +216,7 @@ export class KuduTests {
 
     public static async getFileContent() {
         try {
-            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             var fileContent: string = await kudu.getFileContent('/site/wwwroot', 'hello.txt');
             console.log(`KUDU FILE CONTENT ${fileContent}`);
         }
@@ -226,7 +226,7 @@ export class KuduTests {
         }
 
         try {
-            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             var fileContent: string = await kudu.getFileContent('/site/wwwroot', '404.txt');
             if(fileContent == null) {
                 console.log('KUDU FILE CONTENT 404 - PASSED');
@@ -241,7 +241,7 @@ export class KuduTests {
         }
 
         try {
-            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.getFileContent('/site/wwwroot', 'web.config');
             tl.setResult(tl.TaskResult.Failed, 'KuduTests.getFileContent() should have failed but passed');
         }
@@ -252,7 +252,7 @@ export class KuduTests {
 
     public static async uploadFile() {
         try {
-            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.uploadFile('/site/wwwroot', 'hello.txt', path.join(__dirname, 'package.json'));
             console.log('KUDU FILE UPLOAD HELLO.TXT PASSED');
         }
@@ -262,7 +262,7 @@ export class KuduTests {
         }
 
         try {
-            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.uploadFile('/site/wwwroot', 'web.config', path.join(__dirname, 'package.json'));
             tl.setResult(tl.TaskResult.Failed, 'KuduTests.uploadFile() should have failed but passed');
         }
@@ -273,7 +273,7 @@ export class KuduTests {
 
     public static async createPath() {
         try {
-            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.createPath('/site/wwwroot');
             console.log('KUDU CREATE PATH SITE/WWWROOT PASSED');
         }
@@ -283,7 +283,7 @@ export class KuduTests {
         }
 
         try {
-            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.createPath('/site/wwwroot');
             tl.setResult(tl.TaskResult.Failed, 'KuduTests.createPath() should have failed but passed');
         }
@@ -294,7 +294,7 @@ export class KuduTests {
 
     public static async runCommand() {
         try {
-            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.runCommand('site\\wwwroot', 'echo hello');
             console.log('KUDU RUN COMMAND PASSED');
         }
@@ -304,7 +304,7 @@ export class KuduTests {
         }
 
         try {
-            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.runCommand('site\\wwwroot', 'exit /b 1');
             tl.setResult(tl.TaskResult.Failed, 'KuduTests.runCommand() should have failed but passed');
         }
@@ -315,7 +315,7 @@ export class KuduTests {
 
     public static async extractZIP() {
         try {
-            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             var listDir = await kudu.extractZIP(path.join(__dirname, 'package.json'), '/site/wwwroot');
             console.log('KUDU ZIP API PASSED');
         }
@@ -325,7 +325,7 @@ export class KuduTests {
         }
 
         try {
-            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.extractZIP(path.join(__dirname, 'package.json'), '/site/wwwroot');
             tl.setResult(tl.TaskResult.Failed, 'KuduTests.extractZIP() should have failed but passed');
         }
@@ -336,7 +336,7 @@ export class KuduTests {
 
     public static async zipDeploy() {
         try {
-            let kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            let kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             let deploymentDetails = await kudu.zipDeploy(path.join(__dirname, 'package.json'), ['deployer=VSTS_ZIP_DEPLOY']);
             console.log(`KUDU ZIP DEPLOY PASSED. ID: ${deploymentDetails.id}. STATUS: ${deploymentDetails.status}.`);
         }
@@ -346,7 +346,7 @@ export class KuduTests {
         }
 
         try {
-            let kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            let kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             let deploymentDetails = await kudu.zipDeploy(path.join(__dirname, 'package.json'), ['deployer=VSTS_ZIP_DEPLOY']);
             console.log(`KUDU ZIP DEPLOY FAILED. ID: ${deploymentDetails.id}. STATUS: ${deploymentDetails.status}.`);
         }
@@ -357,7 +357,7 @@ export class KuduTests {
 
     public static async deleteFile() {
         try {
-            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.deleteFile('/site/wwwroot', 'hello.txt');
             console.log(`KUDU DELETE FILE PASSED`);
         }
@@ -367,7 +367,7 @@ export class KuduTests {
         }
 
         try {
-            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'Bearer MOCK_SCM_TOKEN');
             await kudu.deleteFile('/site/wwwroot', 'web.config');
             tl.setResult(tl.TaskResult.Failed, 'KuduTests.deleteFile() should have failed but passed');
         }
