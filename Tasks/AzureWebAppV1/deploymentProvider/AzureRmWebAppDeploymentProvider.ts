@@ -41,9 +41,9 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             const buffer =  new Buffer(this.publishProfileScmCredentials.username + ':' + this.publishProfileScmCredentials.password);
             const auth = buffer.toString("base64");
             var authHeader = "Basic " + auth;
-            
+
             tl.debug("Kudu: using basic authentication for publish profile");    
-            console.log('##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureAppServiceDeployment]{"authMethod":"Basic"}}');
+            console.log('##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureAppServiceDeployment]{"authMethod":"Basic"}');
             
             this.kuduService = new Kudu(this.publishProfileScmCredentials.scmUri, authHeader);
             let resourceId = publishProfileEndpoint.resourceId;
