@@ -4,15 +4,23 @@ trigger:
 - node6hotfixes/*
 
 steps:
+- powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
+  displayName: Add conda to PATH
 - script: |
     conda create --yes --quiet --name AZDO
-    conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/main 
+    conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/main
     conda config --remove channels defaults
-    conda config show
-    conda init powershell
-    exit
-    ls
     conda activate AZDO
+
+##- script: |
+##    conda create --yes --quiet --name AZDO
+##    conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/main 
+##    conda config --remove channels defaults
+##    conda config show
+##    conda init powershell
+##    exit
+##    ls
+##    conda activate AZDO
 #; conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/r ; conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/main'
 
 
