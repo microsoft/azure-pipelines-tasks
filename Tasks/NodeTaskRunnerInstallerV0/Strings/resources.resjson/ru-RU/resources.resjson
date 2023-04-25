@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Установщик запускателя задач Node.js",
+  "loc.helpMarkDown": "TDB",
+  "loc.description": "Установить определенную версию Node.js для запуска задач узла",
+  "loc.instanceNameFormat": "Установить запускатель узла $(runnerVersion)",
+  "loc.input.label.runnerVersion": "Версия запускателя для установки",
+  "loc.input.help.runnerVersion": "Выберите версию узла для установки.",
+  "loc.messages.TryRosetta": "Не удалось найти Node для платформы %s и архитектуры %s. Попытка установки с помощью Rosetta2",
+  "loc.messages.UnexpectedOS": "Неожиданная ОС %s. Поддерживаемые варианты: %s",
+  "loc.messages.RunnerAlreadyInUse": "Указанный запускатель узла версии %s уже установлен и сейчас используется. Пропуск установки.",
+  "loc.messages.NotAllowedNodeVersion": "Версия целевого узла не соответствует разрешенным версиям. Возможные варианты: %s",
+  "loc.messages.AGENT_HOMEDIRECTORY_NotAvailable": "Не удается получить переменную среды AGENT_HOMEDIRECTORY.",
+  "loc.messages.RunnerAlreadyInstalled": "Версия %s запускателя узла уже установлена в агенте. Пропуск установки."
+}

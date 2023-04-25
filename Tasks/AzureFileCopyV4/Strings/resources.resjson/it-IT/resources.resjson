@@ -87,6 +87,7 @@
   "loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode": "AzCopy.exe è stato terminato con il codice di uscita diverso da zero durante il caricamento dei file nell'archivio BLOB.",
   "loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey": "Non è possibile recuperare la chiave dell'account di archiviazione. Errore: '{0}'",
   "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Disinstallare manualmente lo script personalizzato di WinRM e ripetere la distribuzione.",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "Gli argomenti aggiuntivi non possono includere caratteri separatori '&', ';' e '|'. Verifica l'input. Per altre informazioni sulla convalida degli argomenti, controllare https://aka.ms/azdo-task-argument-validation",
   "loc.messages.ExpiredServicePrincipal": "Non è stato possibile recuperare il token di accesso per Azure. Verificare che l'entità servizio usata sia valida e non sia scaduta.",
   "loc.messages.UnsupportedAuthScheme": "Lo schema di autenticazione '{0}' non è supportato per l'endpoint.",
   "loc.messages.ServicePrincipalError": "Si è verificato un errore con l'entità servizio usata per la distribuzione."

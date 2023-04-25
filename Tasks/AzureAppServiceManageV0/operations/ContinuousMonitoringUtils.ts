@@ -4,7 +4,7 @@ import {AzureAppService  } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-a
 import { AzureApplicationInsights } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-appinsights';
 import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
 import { ApplicationInsightsWebTests } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-appinsights-webtests';
-import { AzureAppServiceUtils } from './AzureAppServiceUtils';
+import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureAppServiceUtility';
 import { AzureApplicationInsightsWebTestsUtils } from './AzureApplicationInsightsWebTestsUtils';
 
 const APPLICATION_INSIGHTS_EXTENSION_NAME: string = "Microsoft.ApplicationInsights.AzureWebSites";
@@ -13,7 +13,7 @@ export async function enableContinuousMonitoring(endpoint: AzureEndpoint, appSer
     try {
         console.log(tl.loc('EnablingContinousMonitoring', appService.getName()));
         var appDetails = await appService.get();
-        var appServiceUtils = new AzureAppServiceUtils(appService);
+        var appServiceUtils = new AzureAppServiceUtility(appService);
         var appInsightsResource = await appInsights.get();
         var appInsightsWebTests = new ApplicationInsightsWebTests(endpoint, appInsights.getResourceGroupName());
         var webDeployPublishingProfile = await appServiceUtils.getWebDeployPublishingProfile();
