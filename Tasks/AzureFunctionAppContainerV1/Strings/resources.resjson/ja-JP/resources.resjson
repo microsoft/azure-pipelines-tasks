@@ -71,6 +71,7 @@
   "loc.messages.RequestedURLforkuduphysicalpath": "Kudu 物理パスに関して URL が要求されました: %s",
   "loc.messages.Physicalpathalreadyexists": "物理パス '%s' は既に存在しています",
   "loc.messages.KuduPhysicalpathCreatedSuccessfully": "Kudu 物理パスが正常に作成されました: %s",
+  "loc.messages.KuduStackTraceURL": "さらにデバッグするには、Kudu スタック トレースの URL %s をご確認ください",
   "loc.messages.FailedtocreateKuduPhysicalPath": "Kudu 物理パスを作成することができませんでした。エラー: %s",
   "loc.messages.FailedtocheckphysicalPath": "Kudu 物理パスを確認できませんでした。エラー コード: %s",
   "loc.messages.VirtualApplicationDoesNotExist": "仮想アプリケーションがありません: %s",

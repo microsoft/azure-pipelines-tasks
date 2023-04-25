@@ -1,11 +1,11 @@
+import tl = require('azure-pipelines-task-lib/task');
+import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { TaskParameters, DeploymentType } from '../taskparameters';
 import { BuiltInLinuxWebAppDeploymentProvider } from './BuiltInLinuxWebAppDeploymentProvider';
 import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 import { WindowsWebAppZipDeployProvider } from './WindowsWebAppZipDeployProvider';
 import { WindowsWebAppRunFromZipProvider } from './WindowsWebAppRunFromZipProvider';
 import { ConsumptionWebAppDeploymentProvider } from './ConsumptionWebAppDeploymentProvider';
-import tl = require('azure-pipelines-task-lib/task');
-import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
 
 export class DeploymentFactory {
 

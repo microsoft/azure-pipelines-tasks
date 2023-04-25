@@ -58,7 +58,7 @@ try {
     # Telemetry for endpoint id
     $encodedServerName = GetSHA256String($serverName)
     $encodedDatabaseName = GetSHA256String($databaseName)
-    $telemetryJsonContent = -join ("{`"endpointId`":`"$connectedServiceName`",", 
+    $telemetryJsonContent = -join ("{`"endpointId`":`"$connectedServiceName`",",
         "`"subscriptionId`":`"$subscriptionId`",",
         "`"serverName`": `"$encodedServerName`",",
         "`"databaseName`": `"$encodedDatabaseName`"}")
@@ -101,7 +101,10 @@ try {
         $dbDns = $endpoint.Data.sqlDatabaseDnsSuffix
         $dbDns = $dbDns.Trim(".")
         $dbUrl = (New-Object -TypeName UriBuilder -ArgumentList @("https", $dbDns)).Uri
-        $accessToken = (Get-AzureRMAccessToken -endpoint $endpoint -overrideResourceType $dbUrl).access_token
+        $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+        $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
+        $token = Get-AzureRMAccessToken -endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $vstsAccessToken -overrideResourceType $dbUrl
+        $accessToken = $token.access_token
     }
 
     # Checks for the very basic consistency of the Server Name
@@ -112,7 +115,10 @@ try {
         throw (Get-VstsLocString -Key "SAD_InvalidDeploymentActionForSQLOperations" -ArgumentList $deploymentAction)
     }
 
-    $firewallRuleName, $isFirewallConfigured = Add-FirewallRule -endpoint $endpoint -authenticationType $authenticationType -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -ipDetectionMethod $ipDetectionMethod -startIPAddress $startIpAddress -endIPAddress $endIpAddress -token $accessToken
+    $firewallRuleName, $isFirewallConfigured = Add-FirewallRule -endpoint $endpoint -authenticationType $authenticationType -serverName $serverName `
+        -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString `
+        -ipDetectionMethod $ipDetectionMethod -startIPAddress $startIpAddress -endIPAddress $endIpAddress -token $accessToken `
+        -connectedServiceNameARM $connectedServiceName -vstsAccessToken $vstsAccessToken
 
     $firewallConfigWaitTime = $env:SqlFirewallConfigWaitTime
 
@@ -226,7 +232,8 @@ finally {
         Write-Verbose "Deleting $firewallRuleName"
         $serverFriendlyName = $serverName.split(".")[0]
         Delete-AzureSqlDatabaseServerFirewallRule -serverName $serverFriendlyName -firewallRuleName $firewallRuleName -endpoint $endpoint `
-            -isFirewallConfigured $isFirewallConfigured -deleteFireWallRule $deleteFirewallRule
+            -isFirewallConfigured $isFirewallConfigured -deleteFireWallRule $deleteFirewallRule -connectedServiceNameARM $connectedServiceName `
+            -vstsAccessToken $vstsAccessToken
     }
     else {
         Write-Verbose "No Firewall Rule was added"

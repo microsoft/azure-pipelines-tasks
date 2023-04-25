@@ -3,10 +3,13 @@
   "loc.helpMarkDown": "",
   "loc.description": "Azure Policy의 보안 및 규정 준수 평가입니다.",
   "loc.instanceNameFormat": "정책 준수 확인",
+  "loc.group.displayName.advancedOptions": "고급",
   "loc.input.label.ConnectedServiceName": "Azure 구독",
   "loc.input.help.ConnectedServiceName": "정책을 적용할 Azure Resource Manager 구독을 선택합니다.",
   "loc.input.label.ResourceGroupName": "리소스 그룹",
   "loc.input.help.ResourceGroupName": "리소스 그룹의 이름을 입력합니다.",
   "loc.input.label.Resources": "리소스 이름",
-  "loc.input.help.Resources": "정책 준수를 확인할 Azure 리소스의 이름을 선택합니다."
+  "loc.input.help.Resources": "정책 준수를 확인할 Azure 리소스의 이름을 선택합니다.",
+  "loc.input.label.RetryDuration": "재시도 기간",
+  "loc.input.help.RetryDuration": "이전 응답 코드가 \"수락됨\"인 경우 Azure API 호출을 다시 시도할 때까지 작업이 대기하는 기간을 정의합니다. 최소 기간은 2분입니다."
 }
