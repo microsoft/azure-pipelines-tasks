@@ -110,10 +110,17 @@ $troubleshoot = "https://aka.ms/azurepowershelltroubleshooting"
 try {
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    Initialize-Azure -azurePsVersion $targetAzurePs -strict
+    if (($authScheme -eq 'WorkloadIdentityFederation') -and (Get-Module Az.Accounts -ListAvailable)) {
+        $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+        $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
+        Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $serviceName -vstsAccessToken $vstsAccessToken
+    }
+    else {
+        Initialize-Azure -azurePsVersion $targetAzurePs -strict
+    }
     Write-Host "## Initializing Azure Complete"
     $success = $true
-} 
+}
 finally {
     if (!$success) {
         Write-VstsTaskError "Initialize Azure failed: For troubleshooting, refer: $troubleshoot"

@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 215,
-        "Patch": 0
+        "Minor": 221,
+        "Patch": 103
     },
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -211,6 +211,7 @@
         "RequestedURLforkuduphysicalpath": "Requested URL for kudu physical path : %s",
         "Physicalpathalreadyexists": "Physical path '%s' already exists",
         "KuduPhysicalpathCreatedSuccessfully": "Kudu physical path created successfully : %s",
+        "KuduStackTraceURL": "To debug further please check Kudu stack trace URL : %s",
         "FailedtocreateKuduPhysicalPath": "Failed to create kudu physical path. Error : %s",
         "FailedtocheckphysicalPath": "Failed to check kudu physical path. Error Code: %s",
         "VirtualApplicationDoesNotExist": "Virtual application doesn't exists : %s",

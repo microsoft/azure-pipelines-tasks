@@ -1,15 +1,12 @@
 import tl = require('azure-pipelines-task-lib/task');
-import Q = require('q');
 import path = require('path');
-
-import { AzureDeployPackageArtifactAlias } from 'azure-pipelines-tasks-azurermdeploycommon/Constants';
-import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/constants';
-import { Kudu } from '../azure-arm-rest/azure-arm-app-service-kudu';
-
 import webClient = require('azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/webClient');
-
 var deployUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/utility.js');
 var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/ziputility.js');
+import { Kudu } from '../azure-arm-rest/azure-arm-app-service-kudu';
+import { AzureDeployPackageArtifactAlias } from 'azure-pipelines-tasks-azurermdeploycommon/Constants';
+import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/constants';
+
 const physicalRootPath: string = '/site/wwwroot';
 const deploymentFolder: string = 'site/deployments';
 const manifestFileName: string = 'manifest';
@@ -18,7 +15,6 @@ const VSTS_DEPLOY: string = 'VSTS_FUNCTIONS_V1';
 
 export class KuduServiceUtility {
     private _appServiceKuduService: Kudu;
-    private _deploymentID: string;
 
     constructor(kuduService: Kudu) {
         this._appServiceKuduService = kuduService;
@@ -42,27 +38,8 @@ export class KuduServiceUtility {
     }
 
     public getDeploymentID(): string {
-        if(this._deploymentID) {
-            return this._deploymentID;
-        }
-
-        var buildUrl = tl.getVariable('build.buildUri');
-        var releaseUrl = tl.getVariable('release.releaseUri');
-    
         var buildId = tl.getVariable('build.buildId');
         var releaseId = tl.getVariable('release.releaseId');
-        
-        var buildNumber = tl.getVariable('build.buildNumber');
-        var releaseName = tl.getVariable('release.releaseName');
-    
-        var collectionUrl = tl.getVariable('system.TeamFoundationCollectionUri'); 
-        var teamProject = tl.getVariable('system.teamProjectId');
-    
-         var commitId = tl.getVariable('build.sourceVersion');
-         var repoName = tl.getVariable('build.repository.name');
-         var repoProvider = tl.getVariable('build.repository.provider');
-    
-        var buildOrReleaseUrl = "" ;
         var deploymentID: string = (releaseId ? releaseId : buildId) + Date.now().toString();
         return deploymentID;
     }
@@ -150,7 +127,7 @@ export class KuduServiceUtility {
             let queryParameters: Array<string> = [
                 'isAsync=true'
             ];
-            
+
             if(targetFolderName) {
                 queryParameters.push('name=' + encodeURIComponent(targetFolderName));
             }
@@ -232,81 +209,6 @@ export class KuduServiceUtility {
         }
     }
 
-    private async _printPostDeploymentLogs(physicalPath: string) : Promise<void> {
-        var stdoutLog = await this._appServiceKuduService.getFileContent(physicalPath, 'stdout.txt');
-        var stderrLog = await this._appServiceKuduService.getFileContent(physicalPath, 'stderr.txt');
-        var scriptReturnCode = await this._appServiceKuduService.getFileContent(physicalPath, 'script_result.txt');
-
-        if(scriptReturnCode == null) {
-            throw new Error('File not found in Kudu Service. ' + 'script_result.txt');
-        }
-
-        if(stdoutLog) {
-            console.log(tl.loc('stdoutFromScript'));
-            console.log(stdoutLog);
-        }
-        if(stderrLog) {
-            console.log(tl.loc('stderrFromScript'));
-            if(scriptReturnCode != '0') {
-                tl.error(stderrLog);
-                throw Error(tl.loc('ScriptExecutionOnKuduFailed', scriptReturnCode, stderrLog));
-            }
-            else {
-                console.log(stderrLog);
-            }
-        }
-    }
-
-    private async runCommand(physicalPath: string, command: string, timeOutInMinutes?: number, pollFolderPath?: string, pollFile?: string): Promise<void> {
-        try {
-            await this._appServiceKuduService.runCommand(physicalPath, command);
-        }
-        catch(error) {
-            if(!!pollFolderPath && !!pollFile && timeOutInMinutes > 0 && error.toString().indexOf('Request timeout: /api/command') != -1) {
-                tl.debug('Request timeout occurs. Trying to poll for file: ' + pollFile);
-                await this._pollForFile(pollFolderPath, pollFile, timeOutInMinutes);
-            }
-            else {
-                if(typeof error.valueOf() == 'string') {
-                    throw error;
-                }
-
-                throw `${error.statusCode} - ${error.statusMessage}`;
-            }
-        }
-    }
-
-    private _getPostDeploymentScript(scriptType, inlineScript, scriptPath, isLinux): any {
-        if(scriptType === 'Inline Script') {
-            tl.debug('creating kuduPostDeploymentScript_local file');
-            var scriptFilePath = path.join(tl.getVariable('AGENT.TEMPDIRECTORY'), isLinux ? 'kuduPostDeploymentScript_local.sh' : 'kuduPostDeploymentScript_local.cmd');
-            tl.writeFile(scriptFilePath, inlineScript);
-            tl.debug('Created temporary script file : ' + scriptFilePath);
-            return {
-                "filePath": scriptFilePath,
-                "isCreated": true
-            };
-        }
-        if(!tl.exist(scriptPath)) {
-            throw Error(tl.loc('ScriptFileNotFound', scriptPath));
-        }
-        var scriptExtension = path.extname(scriptPath);
-        if(isLinux){
-            if(scriptExtension != '.sh'){
-                throw Error(tl.loc('InvalidScriptFile', scriptPath));
-            }
-        } else {
-            if(scriptExtension != '.bat' && scriptExtension != '.cmd') {
-                throw Error(tl.loc('InvalidScriptFile', scriptPath));
-            }
-        }
-        tl.debug('postDeployment script path to execute : ' + scriptPath);
-        return {
-            filePath: scriptPath,
-            isCreated: false
-        }
-    }
-
     private async _warFileDeployment(packagePath: string, physicalPath: string, virtualPath?: string): Promise<string> {
         tl.debug('WAR: webAppPackage = ' + packagePath);
         let warFile = path.basename(packagePath.slice(0, packagePath.length - '.war'.length));
@@ -317,7 +219,6 @@ export class KuduServiceUtility {
         physicalPath = physicalPath + "/webapps/" + warFile;
         await this.createPathIfRequired(physicalPath);
         return physicalPath;
-
     }
 
     private async _appOfflineKuduService(physicalPath: string, enableFeature: boolean): Promise<void> {
@@ -335,44 +236,13 @@ export class KuduServiceUtility {
         }
     }
 
-    private async _pollForFile(physicalPath: string, fileName: string, timeOutInMinutes: number): Promise<void> {
-        var attempts: number = 0;
-        const retryInterval: number = 10;
-        if(tl.getVariable('appservicedeploy.retrytimeout')) {
-            timeOutInMinutes = Number(tl.getVariable('appservicedeploy.retrytimeout'));
-            tl.debug('Retry timeout in minutes provided by user: ' + timeOutInMinutes);
-        }
-
-        var timeOutInSeconds = timeOutInMinutes * 60;
-        var noOfRetry = timeOutInSeconds / retryInterval;
-
-        tl.debug(`Polling started for file:  ${fileName} with retry count: ${noOfRetry}`);
-
-        while (attempts < noOfRetry) {
-            attempts += 1;
-            var fileContent: string = await this._appServiceKuduService.getFileContent(physicalPath, fileName);
-            if(fileContent == null) {
-                tl.debug('File: ' + fileName + ' not found. retry after 5 seconds. Attempt: ' + attempts);
-                await webClient.sleepFor(5);
-            }
-            else {
-                tl.debug('Found file:  ' + fileName);
-                return ;
-            }
-        }
-
-        if(attempts == noOfRetry) {
-            throw new Error(tl.loc('PollingForFileTimeOut'));
-        }
-    }
-
     private _getUpdateHistoryRequest(isDeploymentSuccess: boolean, deploymentID?: string, customMessage?: any): any {
-        
+
         var artifactAlias = tl.getVariable(AzureDeployPackageArtifactAlias);
         var status = isDeploymentSuccess ? KUDU_DEPLOYMENT_CONSTANTS.SUCCESS : KUDU_DEPLOYMENT_CONSTANTS.FAILED;
         var releaseId = tl.getVariable('release.releaseId');
         var releaseName = tl.getVariable('release.releaseName');
-        var collectionUrl = tl.getVariable('system.TeamFoundationCollectionUri'); 
+        var collectionUrl = tl.getVariable('system.TeamFoundationCollectionUri');
         var teamProject = tl.getVariable('system.teamProjectId');
         let buildId = '', buildNumber = '', buildProject = '', commitId = '', repoProvider = '', repoName = '', branch = '', repositoryUrl = '', author = '';
 
@@ -414,9 +284,9 @@ export class KuduServiceUtility {
             repositoryUrl = tl.getVariable("build.repository.uri") || "";
             branch = tl.getVariable("build.sourcebranchname") || tl.getVariable("build.sourcebranch");
         }
-   
+
         deploymentID = !!deploymentID ? deploymentID : this.getDeploymentID();
-    
+
         var message = {
             type : "deployment",
             commitId : commitId,
@@ -439,7 +309,7 @@ export class KuduServiceUtility {
             for(var attribute in customMessage) {
                 message[attribute] = customMessage[attribute];
             }
-            
+
         }
         var deploymentLogType: string = message['type'];
         var active: boolean = false;
@@ -458,7 +328,7 @@ export class KuduServiceUtility {
     }
 
     public async getZipDeployValidation(packagePath: string, zipLanguage?: string, zipIs64Bit?: string): Promise<void> {
-        try {            
+        try {
             console.log("Validating deployment package for functions app before Zip Deploy");
             let queryParameters: Array<string> = [
                 'zipLanguage=' + !!zipLanguage ? zipLanguage : '',
