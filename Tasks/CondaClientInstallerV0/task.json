@@ -1,0 +1,109 @@
+{
+    "id": "d1d75615-084d-4b9b-91a5-068b5f8c95a9",
+    "name": "CondaClientInstaller",
+    "friendlyName": "Anaconda/Miniconda client installer",
+    "description": "Install task for the Anaconda or Miniconda client",
+    "helpUrl": "",
+    "helpMarkDown": "",
+    "category": "Package",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 218,
+        "Patch": 0
+    },
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "minimumAgentVersion": "2.144.0",
+    "instanceNameFormat": "conda install",
+    "inputs": [
+        {
+            "name": "distributionType",
+            "type": "pickList",
+            "label": "choose between Anaconda or Miniconda installation",
+            "defaultValue": "Miniconda",
+            "required": true,
+            "helpMarkDown": "Please select whether to install Anaconda or Miniconda",
+            "options": {
+                "Anaconda": "Install Anaconda",
+                "Miniconda": "Install Miniconda"
+            }
+        },
+        {
+            "name": "installLatest",
+            "type": "boolean",
+            "label": "Install the latest version of Conda for your environment",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "If installing the latest, pythonMinorVersion and condaVersion values are ignored."
+        },
+        {
+            "name": "pythonMajorVersion",
+            "type": "pickList",
+            "label": "choose the version of python bundled with Conda",
+            "defaultValue": "3",
+            "required": true,
+            "helpMarkDown": "A string representing the version of python to use in this format: \"Major.Minor\". If only a major is provided, the latest patch will be used.",
+            "options": {
+                "3": "Install for python 3",
+                "2": "Install for python 2"
+            }
+        },
+        {
+            "name": "pythonMinorVersion",
+            "type": "string",
+            "label": "choose the minor version of python required",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "A string representing the version of python to use in this format: Major.Minor . If only a major is provided, the latest patch will be used."
+        },
+        {
+            "name": "condaVersion",
+            "type": "string",
+            "label": "choose the version of conda to install",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "A string representing the version of python to use in this format: Major.Minor . If only a major is provided, the latest patch will be used."
+        },
+        {
+            "name": "processorArchitecture",
+            "type": "pickList",
+            "label": "choose between different CPU architectures",
+            "defaultValue": "x86_64",
+            "required": true,
+            "helpMarkDown": "Please select which architecture to use",
+            "options": {
+                "x86_64": "",
+                "x86": "",
+                "arm64": "",
+                "s390x": "",
+                "ppc64le": "",
+                "aarch64.sh": ""
+            }
+        },
+        {
+            "name": "installPath",
+            "type": "text",
+            "label": "Specify where conda will be installed",
+            "defaultValue": "$(Agent.ToolsDirectory)/conda",
+            "required": true,
+            "helpMarkDown": "Please select which architecture to use"
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "condaclientinstallermain.js"
+        }
+    },
+    "messages": {
+        "FailedToAddAuthentication": "Failed to add authentication.",
+        "ConfigTomlNotToml": "The file you selected to authenticate (%s) is not a valid .toml file.",
+        "ConfigTomlDoesNotExist": "The config.toml file you selected at %s does not currently exist.",
+        "ConfigTomlMissingRegistry": "The config.toml file you selected must contain registries table",
+        "AuthenticatingThisConfigToml": "Adding authentication for registry listed in this config.toml file at %s",
+        "AddingAuthRegistry": "Adding auth for registry: %s with token name: %s",
+        "AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s"
+    }
+}

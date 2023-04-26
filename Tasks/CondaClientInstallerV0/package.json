@@ -1,0 +1,45 @@
+{
+  "name": "condatoolinstaller",
+  "version": "1.0.0",
+  "description": "Install conda client.",
+  "main": "condatoolinstaller.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "keywords": [
+    "Azure",
+    "Pipelines",
+    "Tasks",
+    "Conda",
+    "Miniconda",
+    "Anaconda",
+    "Python"
+  ],
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/cheerio": "^0.22.31",
+    "@types/node": "^16.11.39",
+    "azure-pipelines-task-lib": "4.1.0",
+    "azure-pipelines-tasks-artifacts-common": "^2.212.0",
+    "azure-pipelines-tasks-packaging-common": "3.214.0",
+    "base-64": "^0.1.0",
+    "cheerio": "1.0.0-rc.08",
+    "request": "^2.88.2",
+    "request-async": "^0.1.0",
+    "request-promise": "^4.2.6",
+    "sync-request": "^6.1.0",
+    "utf8": "^2.1.0"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
+  }
+}
