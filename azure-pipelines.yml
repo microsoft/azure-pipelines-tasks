@@ -9,7 +9,8 @@ steps:
 - bash: conda create --offline --name AZDO -y
   displayName: Create Anaconda environment
 - bash: |
-    conda config --set channel_alias https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo
+    conda config --set channel_alias https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/
+    conda config --add custom_channels {main: https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/main}
     conda config --show
 #    conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/msys2
 #    conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/r
