@@ -79,22 +79,12 @@ async function run() {
                 throw Error(tl.loc('InvalidActionForPublishProfileEndpoint'));
             }
             let scmCreds: publishProfileUtility.ScmCredentials = await publishProfileUtility.getSCMCredentialsFromPublishProfile(azureEndpoint.PublishProfile);
-
-            const appService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
-            const appServiceUtility = new AzureAppServiceUtility(appService);
-            let authHeader = "";
-
-            if (appServiceUtility.isSitePublishingCredentialsEnabled()) {
-                const buffer =  new Buffer(scmCreds.username + ':' + scmCreds.password);
-                const auth = buffer.toString("base64");
-                authHeader = "Basic " + auth;
-                tl.debug("Kudu: using basic authentication");
-            }
-            else {
-                const token = await azureEndpoint.applicationTokenCredentials.getToken();
-                authHeader = "Bearer " + token;
-                tl.debug("Kudu: using token authentication");
-            }
+            const buffer =  new Buffer(scmCreds.username + ':' + scmCreds.password);
+            const auth = buffer.toString("base64");
+            var authHeader = "Basic " + auth;
+            
+            tl.debug("Kudu: using basic authentication for publish profile");            
+            console.log('##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureAppServiceDeployment]{"authMethod":"Basic"}');
 
             kuduService = new Kudu(scmCreds.scmUri, authHeader);
             kuduServiceUtils = new KuduServiceUtils(kuduService);
