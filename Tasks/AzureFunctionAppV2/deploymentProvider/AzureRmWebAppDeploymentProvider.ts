@@ -43,18 +43,20 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
         await addReleaseAnnotation(this.taskParams.azureEndpoint, this.appService, isDeploymentSuccess);
-        if(this.kuduServiceUtility) {
+        if (this.kuduServiceUtility) {
             this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
             tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
         }
-        
-        let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
-        console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
-        tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
+
+        if (this.appServiceUtility) {
+            let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
+            console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
+            tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
+        }
     }
 
     protected async PostDeploymentStep() {
-        if(this.taskParams.AppSettings) {
+        if (this.taskParams.AppSettings) {
             var customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
             await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
         }
