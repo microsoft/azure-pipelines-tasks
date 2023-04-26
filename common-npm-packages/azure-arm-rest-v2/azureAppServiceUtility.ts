@@ -114,6 +114,15 @@ export class AzureAppServiceUtility {
         if(scmPolicyCheck === false) {
             token = await this._appService._client.getCredentials().getToken();
             method = "Bearer";
+            // Though bearer AuthN is used, lets try to set publish profile password for mask hints to maintain compat with old behavior for MSDEPLOY. 
+            // This needs to be cleaned up once MSDEPLOY suppport is reomve. Safe handle the exception setting up mask hint as we dont want to fail here.
+            try {      
+                tl.setVariable(`AZURE_APP_MSDEPLOY_${this._appService.getSlot()}_PASSWORD`, publishingCredentials.properties["publishingPassword"], true);
+            }
+            catch (error){
+                // safe handle the exception setting up mask hint
+                tl.debug(`Setting mask hint for publish profile password failed with error: ${error}`);
+            }
         } else {
             tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._appService.getSlot()}_PASSWORD`, publishingCredentials.properties["publishingPassword"], true);
             const buffer = new Buffer(publishingCredentials.properties["publishingUserName"] + ':' + publishingCredentials.properties["publishingPassword"]);
