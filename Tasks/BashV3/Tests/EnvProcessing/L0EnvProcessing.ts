@@ -170,4 +170,15 @@ export const BashEnvProcessingTests = () => {
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
+    it('Skips variables with indirect expansion', () => {
+        const argsLine = `\${VAR1} \${!VAR2} \${VAR3}`;
+        const expectedArgs = `value1 \${!VAR2} value3`;
+        process.env['VAR1'] = 'value1'
+        process.env['VAR2'] = 'value2'
+        process.env['VAR2'] = 'value3'
+
+        const [actualArgs] = processBashEnvVariables(argsLine);
+
+        assert.deepStrictEqual(actualArgs, expectedArgs);
+    })
 }

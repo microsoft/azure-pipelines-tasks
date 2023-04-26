@@ -52,4 +52,20 @@ export const EnvProcessingTelemetryTests = () => {
 
         assert.deepStrictEqual(resultTelemetry.variablesStartsFromES, expectedTelemetry.variablesStartsFromES);
     })
+    it('Catches indirect expansion', () => {
+        const argsLine = "${!VAR1} ${!VAR2}";
+        const expectedTelemetry = { indirectExpansion: 2 };
+
+        const [_, resultTelemetry] = processBashEnvVariables(argsLine);
+
+        assert.deepStrictEqual(resultTelemetry.indirectExpansion, expectedTelemetry.indirectExpansion);
+    })
+    it('Skip indirect expansion inside quotes', () => {
+        const argsLine = "'${!VAR1}'";
+        const expectedTelemetry = { indirectExpansion: 0 };
+
+        const [_, resultTelemetry] = processBashEnvVariables(argsLine);
+
+        assert.deepStrictEqual(resultTelemetry.indirectExpansion, expectedTelemetry.indirectExpansion);
+    })
 }

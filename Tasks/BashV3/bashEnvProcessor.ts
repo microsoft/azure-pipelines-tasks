@@ -11,7 +11,8 @@ type BashTelemetry = {
     variablesWithESInside: number,
     // blockers
     unmatchedQuotes: number, // like "Hello, world!
-    notClosedBraceSyntaxPosition: number // 0 means no this issue
+    notClosedBraceSyntaxPosition: number, // 0 means no this issue,
+    indirectExpansion: number,
 }
 
 export function processBashEnvVariables(argsLine: string): [string, BashTelemetry] {
@@ -23,7 +24,7 @@ export function processBashEnvVariables(argsLine: string): [string, BashTelemetr
     let startIndex = 0
     // backslash - just backslash
     // ES (escaping symbol) - active backslash
-    const telemetry = {
+    const telemetry: BashTelemetry = {
         foundPrefixes: 0,
         quottedBlocks: 0,
         variablesExpanded: 0,
@@ -36,7 +37,8 @@ export function processBashEnvVariables(argsLine: string): [string, BashTelemetr
         variablesWithESInside: 0,
         // blockers
         unmatchedQuotes: 0, // like "Hello, world!
-        notClosedBraceSyntaxPosition: 0 // 0 means no this issue
+        notClosedBraceSyntaxPosition: 0,
+        indirectExpansion: 0 // 0 means no this issue,
     }
 
     while (true) {
@@ -98,6 +100,13 @@ export function processBashEnvVariables(argsLine: string): [string, BashTelemetr
                 // throw new Error(...)
                 break;
                 // continue
+            }
+
+            if (result[prefixIndex + envPrefix.length + 1] === '!') {
+                telemetry.indirectExpansion++
+                // We're just skipping indirect expansion
+                startIndex = envEndIndex
+                continue
             }
 
             envName = result.substring(envStartIndex, envEndIndex)
