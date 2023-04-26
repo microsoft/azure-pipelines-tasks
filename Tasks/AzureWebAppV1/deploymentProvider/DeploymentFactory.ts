@@ -1,12 +1,12 @@
+import tl = require('azure-pipelines-task-lib/task');
+import { AzureRmEndpointAuthenticationScheme } from 'azure-pipelines-tasks-azure-arm-rest-v2/constants';
+import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { TaskParameters, DeploymentType } from '../taskparameters';
 import { BuiltInLinuxWebAppDeploymentProvider } from './BuiltInLinuxWebAppDeploymentProvider';
 import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
-import { WindowsWebAppZipDeployProvider } from './WindowsWebAppZipDeployProvider';
 import { WindowsWebAppRunFromZipProvider } from './WindowsWebAppRunFromZipProvider';
-import tl = require('azure-pipelines-task-lib/task');
-import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
 import { WindowsWebAppWarDeployProvider } from './WindowsWebAppWarDeployProvider';
-import { AzureRmEndpointAuthenticationScheme } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/constants';
+import { WindowsWebAppZipDeployProvider } from './WindowsWebAppZipDeployProvider';
 
 export class DeploymentFactory {
 
