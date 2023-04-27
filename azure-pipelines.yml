@@ -6,8 +6,10 @@ trigger:
 steps:
 - bash: echo "##vso[task.prependpath]$CONDA/bin"
   displayName: Add conda to PATH
+
 - bash: conda create --offline --name AZDO -y
   displayName: Create Anaconda environment
+
 - bash: |
     conda config --set channel_alias "https://token:\${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo"
     conda config --set custom_channels.pkgs/pro null
@@ -17,11 +19,6 @@ steps:
     conda config --add default_channels pkgs/r
     conda config --add default_channels pkgs/main
     conda config --show
-#    conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/msys2
-#    conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/r
-#    conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/main
-#    conda config --remove channels defaults
-#    conda config --show
   displayName: Setting up .condarc
 
 - bash: echo "##vso[task.setvariable variable=ARTIFACTS_CONDA_TOKEN;]$(System.AccessToken)"
