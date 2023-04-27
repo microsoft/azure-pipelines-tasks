@@ -109,7 +109,7 @@ steps:
 
   # Push to feed
   - script: |
-      cd $(Build.SourcesDirectory)\_package\nuget-packages\$(task)
+      cd $(Build.SourcesDirectory)\_package\nuget-packages\${{ parameters.task }}
       push.cmd
     displayName: Push Nuget package
 

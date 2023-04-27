@@ -1,9 +1,9 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-var webCommonUtility = require('azure-pipelines-tasks-webdeployment-common/utility');
-var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility');
-import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
-import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility'
+var webCommonUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/utility.js');
+var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/ziputility.js');
+import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
+import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon/operations/ParameterParserUtility'
 import { TaskParameters, DeploymentType } from '../taskparameters';
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 
@@ -45,7 +45,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
 
         tl.debug('Performing Linux built-in package deployment');
         var isNewValueUpdated: boolean = false;
-        
+
         var linuxFunctionRuntimeSetting = "";
         if(this.taskParams.RuntimeStack && linuxFunctionRuntimeSettingValue.get(this.taskParams.RuntimeStack)) {
             linuxFunctionRuntimeSetting = linuxFunctionRuntimeSettingName + linuxFunctionRuntimeSettingValue.get(this.taskParams.RuntimeStack);
@@ -59,11 +59,11 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
         }
         var customApplicationSetting = ParameterParser.parse(linuxFunctionAppSetting);
         isNewValueUpdated = await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
-        
+
         if(!isNewValueUpdated) {
             await this.kuduServiceUtility.warmpUp();
         }
-        
+
         switch(packageType){
             case PackageType.folder:
                 let tempPackagePath = webCommonUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
