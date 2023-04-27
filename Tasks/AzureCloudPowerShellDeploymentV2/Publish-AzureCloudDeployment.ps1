@@ -18,7 +18,6 @@ try {
     $VerifyRoleInstanceStatus = Get-VstsInput -Name VerifyRoleInstanceStatus -AsBool
     $DiagnosticStorageAccountKeys = Get-VstsInput -Name DiagnosticStorageAccountKeys
     $ARMConnectedServiceName = Get-VstsInput -Name ARMConnectedServiceName -Require
-    $endpoint = Get-VstsEndpoint -Name $ARMConnectedServiceName -Require
 
     # Initialize helpers
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
@@ -29,6 +28,10 @@ try {
     $troubleshoot = "https://aka.ms/azurepowershelltroubleshooting"
     try {
         # Initialize Azure.
+
+        Write-Host "!!! TEST - name = $ARMConnectedServiceName"
+        $endpoint = Get-VstsEndpoint -Name $ARMConnectedServiceName -Require
+        Write-Host "!!! TEST - endpoint = $endpoint"
         Initialize-AzModule -Endpoint $endpoint
         Write-Host "## Az module initialization Complete"
         $success = $true
