@@ -30,10 +30,9 @@ try {
     try {
         # Initialize Azure.
         $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
-        Write-Host "!!! TEST - 1"
         $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
-        Write-Host "!!! TEST - 2"
-        Initialize-AzModule -Endpoint $endpoint --connectedServiceNameARM $ARMConnectedServiceName -vstsAccessToken $vstsAccessToken
+
+        Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $ARMConnectedServiceName -vstsAccessToken $vstsAccessToken
         Write-Host "## Az module initialization Complete"
         $success = $true
     }
