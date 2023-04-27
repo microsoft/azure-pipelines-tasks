@@ -28,6 +28,8 @@ var aggregatePackageName = 'Mseng.MS.TF.Build.Tasks';
 var aggregateNuspecPath = path.join(packagePath, 'Mseng.MS.TF.Build.Tasks.nuspec');
 var publishLayoutPath = path.join(packagePath, 'publish-layout');
 var publishPushCmdPath = path.join(packagePath, 'publish-layout', 'push.cmd');
+var genTaskPath = path.join(__dirname, '..', '_generated');
+
 exports.buildTasksPath = buildTasksPath;
 exports.packagePath = packagePath;
 exports.tasksLayoutPath = tasksLayoutPath;
@@ -47,6 +49,7 @@ exports.aggregatePackageName = aggregatePackageName;
 exports.aggregateNuspecPath = aggregateNuspecPath;
 exports.publishLayoutPath = publishLayoutPath;
 exports.publishPushCmdPath = publishPushCmdPath;
+exports.genTaskPath = genTaskPath;
 
 //------------------------------------------------------------------------------
 // generic functions
@@ -470,6 +473,14 @@ var resolveTaskList = function(taskPattern) {
             .map(function (item) {
                 return path.basename(item);
             });
+
+        // If base tasks was not found, try to find the task in the _generated tasks folder
+        if (taskList.length == 0) { 
+            taskList = matchFind(taskPattern, genTaskPath, { noRecurse: true, matchBase: true })
+                .map(function (item) {
+                    return path.basename(item);
+                });
+        }
         if (!taskList.length) {
             throw new Error(`Unable to find any tasks matching pattern ${taskPattern}`);
         }

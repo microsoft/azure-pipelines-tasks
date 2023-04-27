@@ -91,5 +91,6 @@
   "loc.messages.AFC_RootContainerAndDirectory": "Параметр \"/S\" является недопустимым для контейнеров $root.",
   "loc.messages.AFC_RedirectResponseInvalidStatusCode": "Код ответа HTTP \"{0}\" не является допустимым кодом состояния перенаправления.",
   "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "Заголовок расположения ответа перенаправления равен NULL.",
-  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Удалите пользовательский скрипт WinRM вручную и повторите попытку развертывания."
+  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Удалите пользовательский скрипт WinRM вручную и повторите попытку развертывания.",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "Дополнительные аргументы не могут содержать разделители \"&\", \";\" и \"|\". Проверьте входные данные. Дополнительные сведения о проверке аргументов см. по адресу https://aka.ms/azdo-task-argument-validation"
 }

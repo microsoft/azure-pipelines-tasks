@@ -91,5 +91,6 @@
   "loc.messages.AFC_RootContainerAndDirectory": "'/S' 選項對 $root 容器而言無效。",
   "loc.messages.AFC_RedirectResponseInvalidStatusCode": "HTTP 回應碼: '{0}' 不是有效的重新導向狀態碼",
   "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "重新導向回應位置標頭為 null。",
-  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "請手動將 WinRM 自訂指令碼解除安裝，並重試部署。"
+  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "請手動將 WinRM 自訂指令碼解除安裝，並重試部署。",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "其他引數不能包含分隔字元 '&'、';' 和 '|'。請驗證輸入。若要深入了解引數驗證，請檢查 https://aka.ms/azdo-task-argument-validation"
 }

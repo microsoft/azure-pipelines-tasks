@@ -1,10 +1,10 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import { AzureEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
-import { AzureRMEndpoint, dispose } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
-import { AzureAppService } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
-import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureAppServiceUtility';
-import { Resources } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-resource';
+import { AzureRMEndpoint, dispose } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
+import { Resources } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource';
+import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureAppServiceUtility';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
 
 export class AzureResourceFilterUtils {
     public static async getResourceGroupName(endpoint: AzureEndpoint, resourceType: string, resourceName: string): Promise<string> {
@@ -25,12 +25,11 @@ export class AzureResourceFilterUtils {
     }
 }
 
-
 async function main() {
 
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
-        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-azurermdeploycommon/module.json'));
+        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-azure-arm-rest-v2/module.json'));
         var connectedServiceName = tl.getInput('ConnectedServiceName', true);
         var webAppName: string = tl.getInput('appName', true);
         var resourceGroupName: string = tl.getInput('resourceGroupName', false);
@@ -72,7 +71,7 @@ async function main() {
             catch (error) {
                 throw new Error(tl.loc("ConfigSettingInvalidJSON"));
             }
-            await appServiceUtility.updateConfigurationSettings(customConfigurationSettings, true);
+            await appService.updateConfigurationSettings(customConfigurationSettings, true);
         }
         if(ConnectionStrings) {
             try {
@@ -81,17 +80,44 @@ async function main() {
             catch (error) {
                 throw new Error(tl.loc("ConnectionStringInvalidJSON"));
             }
-            await appServiceUtility.updateConnectionStrings(customConnectionStrings);
+            await updateConnectionStrings(appService, customConnectionStrings);
         }
-        
+
     }
     catch(error) {
-        
+
         tl.setResult(tl.TaskResult.Failed, error);
     }
     finally {
         dispose();
     }
+}
+
+async function updateConnectionStrings(appService: AzureAppService, addProperties: any): Promise<boolean>  {
+    var connectionStringProperties = {};
+    for(var property in addProperties) {
+        if (!addProperties[property].type) {
+            addProperties[property].type = "Custom";
+        }
+        if (!addProperties[property].slotSetting) {
+            addProperties[property].slotSetting = false;
+        }
+        connectionStringProperties[addProperties[property].name] = addProperties[property];
+        delete connectionStringProperties[addProperties[property].name].name;
+    }
+
+    console.log(tl.loc('UpdatingAppServiceConnectionStrings', JSON.stringify(connectionStringProperties)));
+    var isNewValueUpdated: boolean = await appService.patchConnectionString(connectionStringProperties);
+    await appService.patchConnectionStringSlot(connectionStringProperties);
+
+    if(!!isNewValueUpdated) {
+        console.log(tl.loc('UpdatedAppServiceConnectionStrings'));
+    }
+    else {
+        console.log(tl.loc('AppServiceConnectionStringsAlreadyPresent'));
+    }
+
+    return isNewValueUpdated;
 }
 
 main();

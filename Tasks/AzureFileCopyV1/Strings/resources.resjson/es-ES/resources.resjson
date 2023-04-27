@@ -91,5 +91,6 @@
   "loc.messages.AFC_RootContainerAndDirectory": "La opción \"/S\" no es válida para contenedores $root.",
   "loc.messages.AFC_RedirectResponseInvalidStatusCode": "El código de respuesta HTTP \"{0}\" no es un código de estado de redireccionamiento válido.",
   "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "El encabezado de ubicación de la respuesta de redireccionamiento es NULL.",
-  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Desinstale el script personalizado de WinRM de forma manual y reintente la implementación."
+  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Desinstale el script personalizado de WinRM de forma manual y reintente la implementación.",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "Los argumentos adicionales no pueden incluir los caracteres separadores \"&\", \";\" y \"|\". Verifica la entrada. Para obtener más información sobre la validación de argumentos, consulta https://aka.ms/azdo-task-argument-validation"
 }

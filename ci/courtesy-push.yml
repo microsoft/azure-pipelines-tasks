@@ -10,7 +10,7 @@ steps:
     downloadPath: IndividualNugetPackagesDownloaded
   displayName: Download Artifact
 
-- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps\.nuget\externals\UnifiedDependencies.xml IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
+- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: Update unified deps
 
 - task: NuGetAuthenticate@0
@@ -37,6 +37,7 @@ steps:
     git config --global user.email "$(username)@microsoft.com"
     git config --global user.name "$(username)"
     git add .nuget\externals\UnifiedDependencies.xml
+    git add Tfs\Service\Deploy\components\*
     git commit -m "Courtesy bump of tasks"
     git push origin $releaseBranch --force
     Write-Host "Creating Pull Request"

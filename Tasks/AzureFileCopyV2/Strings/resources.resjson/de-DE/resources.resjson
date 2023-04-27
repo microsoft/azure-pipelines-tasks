@@ -97,5 +97,6 @@
   "loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode": "\"AzCopy.exe\" wurde mit einem Exitcode ungleich null beendet, während Dateien in den Blobspeicher hochgeladen wurden.",
   "loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey": "Der Speicherkontoschlüssel konnte nicht abgerufen werden. Fehler: {0}",
   "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Deinstallieren Sie das benutzerdefinierte WinRM-Skript manuell, und wiederholen Sie die Bereitstellung.",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "Zusätzliche Argumente dürfen nicht die Trennzeichen „&“, „;“ und „|“ enthalten. Überprüfen Sie die Eingabe. Weitere Informationen zur Argumentüberprüfung finden Sie unter: https://aka.ms/azdo-task-argument-validation",
   "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist."
 }
