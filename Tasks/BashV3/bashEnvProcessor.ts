@@ -13,6 +13,7 @@ type BashTelemetry = {
     unmatchedQuotes: number, // like "Hello, world!
     notClosedBraceSyntaxPosition: number, // 0 means no this issue,
     indirectExpansion: number,
+    invalidEnvName: number,
 }
 
 export function processBashEnvVariables(argsLine: string): [string, BashTelemetry] {
@@ -38,7 +39,8 @@ export function processBashEnvVariables(argsLine: string): [string, BashTelemetr
         // blockers
         unmatchedQuotes: 0, // like "Hello, world!
         notClosedBraceSyntaxPosition: 0,
-        indirectExpansion: 0 // 0 means no this issue,
+        indirectExpansion: 0,
+        invalidEnvName: 0 // 0 means no this issue,
     }
 
     while (true) {
@@ -117,7 +119,7 @@ export function processBashEnvVariables(argsLine: string): [string, BashTelemetr
             envEndIndex = envStartIndex + envName.length
         }
 
-        if (envName.startsWith(escapingSymbol)) {
+        if (!isBraceSyntax && envName.startsWith(escapingSymbol)) {
             const sanitizedEnvName = '$' + (isBraceSyntax ? '{' : '') + envName.substring(1) + (isBraceSyntax ? '}' : '')
             result = result.substring(0, prefixIndex) + sanitizedEnvName + result.substring(envEndIndex + +isBraceSyntax)
             startIndex = prefixIndex + sanitizedEnvName.length
@@ -128,11 +130,17 @@ export function processBashEnvVariables(argsLine: string): [string, BashTelemetr
         }
 
         let head = result.substring(0, prefixIndex)
-        if (envName.includes(escapingSymbol)) {
+        if (!isBraceSyntax && envName.includes(escapingSymbol)) {
             head = head + envName.split(escapingSymbol)[1]
             envName = envName.split(escapingSymbol)[0]
 
             telemetry.variablesWithESInside++
+        }
+
+        if (!isValidEnvName(envName)) {
+            telemetry.invalidEnvName++
+            startIndex = envEndIndex
+            continue
         }
 
         const envValue = process.env[envName] ?? '';
@@ -156,4 +164,9 @@ function findEnclosingBraceIndex(input: string, targetIndex: number) {
         }
     }
     return 0
+}
+
+function isValidEnvName(envName) {
+    const regex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
+    return regex.test(envName);
 }

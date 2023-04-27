@@ -171,11 +171,24 @@ export const BashEnvProcessingTests = () => {
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
     it('Skips variables with indirect expansion', () => {
-        const argsLine = `\${VAR1} \${!VAR2} \${VAR3}`;
-        const expectedArgs = `value1 \${!VAR2} value3`;
+        const argsLine = `\${VAR1} \${!VAR2} "\${!VAR3}"`;
+        const expectedArgs = `value1 \${!VAR2} "\${!VAR3}"`;
         process.env['VAR1'] = 'value1'
         process.env['VAR2'] = 'value2'
         process.env['VAR2'] = 'value3'
+
+        const [actualArgs] = processBashEnvVariables(argsLine);
+
+        assert.deepStrictEqual(actualArgs, expectedArgs);
+    })
+    // All bash expansions we're treating as invalid names
+    it('Skips variables with invalid name', () => {
+        const argsLine = "\${1VAR} ${a:b} ${a:+b} ${a:?b} ${VAR1:0:2} ${VAR1\\val\\lav}";
+        const expectedArgs = argsLine;
+        process.env['1VAR'] = 'value1'
+        process.env['VAR1'] = 'value2'
+        process.env['a'] = 'value3'
+        process.env['a:b'] = 'value4'
 
         const [actualArgs] = processBashEnvVariables(argsLine);
 
