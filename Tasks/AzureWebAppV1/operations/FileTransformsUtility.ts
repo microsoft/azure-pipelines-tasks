@@ -1,10 +1,11 @@
 import tl = require('azure-pipelines-task-lib/task');
 var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility');
 var generateWebConfigUtil = require('azure-pipelines-tasks-webdeployment-common/webconfigutil');
-import { parse } from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
 import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
+import { parse } from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
 
 export class FileTransformsUtility {
+
     private static rootDirectoryPath: string = "D:\\home\\site\\wwwroot";
     public static async applyTransformations(webPackage: string, parameters: string, packageType: PackageType): Promise<string> {
         tl.debug("WebConfigParameters is "+ parameters);
@@ -21,7 +22,7 @@ export class FileTransformsUtility {
             webPackage = output.webDeployPkg;
         }
         else {
-            tl.debug('File Tranformation not enabled');
+            tl.debug('File Transformation not enabled');
         }
 
         return webPackage;
