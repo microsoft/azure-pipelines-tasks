@@ -27,8 +27,7 @@ steps:
   inputs:
     targetType: inline
     script: |
-      prefix = (Get-CondaEnvironment | Where-Object Name -eq '{ENV}').Path
-      Copy-Item -LiteralPath '{CONDARC}' -Destination (Join-Path $prefix '.condarc')
+      Copy-Item -LiteralPath '../../../Users/abpowell/.condarc' -Destination (Join-Path $prefix '.condarc')
       conda config --show
   displayName: Attaching .condarc to environment
 
