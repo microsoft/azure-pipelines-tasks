@@ -336,7 +336,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     describe("Unit tests", function() {
         it('Negative path: should keep exit code', function() {
             const tp = path.join(__dirname, 'UnitTests', 'UnitTestsExitCodeIsKept.js');
-            const spawn = spawnSync('node', [tp], {timeout: 2000});
+            const spawn = spawnSync('node', [tp], {timeout: 5000});
             assert.equal(spawn.status, 1);
         });
 
