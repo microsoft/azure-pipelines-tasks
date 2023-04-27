@@ -11,6 +11,8 @@ steps:
 - bash: |
     conda config --set channel_alias "https://token:\${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo"
     conda config --set custom_channels.pkgs/pro null
+    conda config --remove custom_channels.pkgs/main
+    conda config --remove custom_channels.pkgs/r
     conda config --show
 #    conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/msys2
 #    conda config --add channels https://token:${ARTIFACTS_CONDA_TOKEN}@pkgs.dev.azure.com/codesharing-SU0/abpowell/_packaging/abpowellTestFeed/conda/repo/pkgs/r
