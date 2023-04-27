@@ -1,6 +1,6 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import * as Endpoint from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
+import * as Endpoint from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
 import { TaskParameters, TaskParametersUtility } from './taskparameters';
 import { DeploymentFactory } from './deploymentProvider/DeploymentFactory';
 
@@ -9,7 +9,7 @@ async function main() {
 
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
-        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-azure-arm-rest-v2/module.json'));
+        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-azurermdeploycommon/module.json'));
         var taskParams: TaskParameters = await TaskParametersUtility.getParameters();
         var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParams);
         var deploymentProvider = await deploymentFactory.GetDeploymentProvider();
@@ -29,7 +29,7 @@ async function main() {
         if(deploymentProvider != null) {
             await deploymentProvider.UpdateDeploymentStatus(isDeploymentSuccess);
         }
-        
+
         Endpoint.dispose();
         tl.debug(isDeploymentSuccess ? "Deployment Succeded" : "Deployment failed");
 
