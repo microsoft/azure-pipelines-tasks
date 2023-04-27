@@ -20,6 +20,11 @@ steps:
   env:
     ARTIFACTS_CONDA_TOKEN: $(System.AccessToken)
   displayName: Setting up .condarc
+
+- bash: |
+    conda install --name AZDO --channel https://conda.anaconda.org/microsoft/ artifacts-credprovider-conda
+  displayName: Installing cred provider
+
 - bash: |
     source activate AZDO
     conda install numpy -y
