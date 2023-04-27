@@ -9,8 +9,8 @@ trigger:
 pool: Default
 
 steps:
-#- bash: echo "##vso[task.prependpath]$CONDA/bin"
-#  displayName: Add conda to PATH (CondaToolInstaller@0)
+- powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
+  displayName: Add Conda to PATH
 
 #- bash: echo "##vso[task.setvariable variable=CONDA_VERBOSITY;]2"
 #  displayName: Set conda verbosity
