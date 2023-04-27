@@ -88,23 +88,21 @@ export const ArgsParserTelemetryTests = () => {
 
     it('Should process if single quotes not closed, but with no env inside', () => {
         const argsLine = `'1`;
-        const expectedTelemetry = { unmatchedQuotes: 1, envUnmatchedQuotes: 0 };
+        const expectedTelemetry = { unmatchedQuotes: 1 };
 
         const [_, resultTelemetry] = parsePowerShellArguments(argsLine);
 
         assert.deepStrictEqual(resultTelemetry.unmatchedQuotes, expectedTelemetry.unmatchedQuotes, 'unmatchedQuotes should be 1');
-        assert.deepStrictEqual(resultTelemetry.envUnmatchedQuotes, expectedTelemetry.envUnmatchedQuotes, 'envUnmatchedQuotes should be 1');
     })
 
     it('Should process if single quotes not closed', () => {
         const argsLine = `'$env:VAR1`;
         process.env['VAR1'] = 'value1'
-        const expectedTelemetry = { unmatchedQuotes: 1, envUnmatchedQuotes: 1 };
+        const expectedTelemetry = { unmatchedQuotes: 1 };
 
         const [_, resultTelemetry] = parsePowerShellArguments(argsLine);
 
         assert.deepStrictEqual(resultTelemetry.unmatchedQuotes, expectedTelemetry.unmatchedQuotes, 'unmatchedQuotes should be 1');
-        assert.deepStrictEqual(resultTelemetry.envUnmatchedQuotes, expectedTelemetry.envUnmatchedQuotes, 'envUnmatchedQuotes should be 1');
     })
 
     it('Should determine unbalanced quotes', () => {
@@ -135,5 +133,23 @@ export const ArgsParserTelemetryTests = () => {
         const [_, resultTelemetry] = parsePowerShellArguments(argsLine);
 
         assert.deepStrictEqual(resultTelemetry.unbalancedQuotes, expectedTelemetry.unbalancedQuotes, 'unbalancedQuotes should be 2');
+    })
+    it('Should write telemetry about expansion syntax', () => {
+        const argsLine = `$(env:VAR1)`;
+
+        const expectedTelemetry = { expansionSyntax: 1 };
+
+        const [_, resultTelemetry] = parsePowerShellArguments(argsLine);
+
+        assert.deepStrictEqual(resultTelemetry.expansionSyntax, expectedTelemetry.expansionSyntax);
+    })
+    it('Should write telemetry about unmatched expansion', () => {
+        const argsLine = `$(env:VAR1 $env:VAR1`;
+
+        const expectedTelemetry = { unmatchedExpansionSyntax: 1 };
+
+        const [_, resultTelemetry] = parsePowerShellArguments(argsLine);
+
+        assert.deepStrictEqual(resultTelemetry.unmatchedExpansionSyntax, expectedTelemetry.unmatchedExpansionSyntax);
     })
 }

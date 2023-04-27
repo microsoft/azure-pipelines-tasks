@@ -222,4 +222,22 @@ export const ArgsParserTests = () => {
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
+    it('Should ignore variables inside expansion syntax', () => {
+        const argsLine = '$(env:VAR1)';
+        const expectedArgs = ['$(env:VAR1)'];
+        process.env['VAR1'] = 'value1'
+
+        const [actualArgs] = parsePowerShellArguments(argsLine);
+
+        assert.deepStrictEqual(actualArgs, expectedArgs);
+    })
+    it('Should break envs processing in case of unmatched expansion', () => {
+        const argsLine = '$(env:VAR1 $env:VAR1';
+        const expectedArgs = ['$(env:VAR1', '$env:VAR1'];
+        process.env['VAR1'] = 'value1'
+
+        const [actualArgs] = parsePowerShellArguments(argsLine);
+
+        assert.deepStrictEqual(actualArgs, expectedArgs);
+    })
 }

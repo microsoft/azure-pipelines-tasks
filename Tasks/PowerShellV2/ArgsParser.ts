@@ -138,15 +138,18 @@ type ProcessEnvPowerShellTelemetry = {
     variablesWithBacktickInside: number,
     envQuottedBlocks: number,
     // blockers
-    envUnmatchedQuotes: number
+    expansionSyntax: number,
+    unmatchedExpansionSyntax: number
 }
 
 function processPowerShellEnVariables(argsLine: string): [string, ProcessEnvPowerShellTelemetry] {
     const envPrefix = '$env:'
     const quote = '\''
     const escapingSymbol = '`'
+    const expansionPrefix = '$('
+    const expansionSuffix = ')'
 
-    const telemetry = {
+    const telemetry: ProcessEnvPowerShellTelemetry = {
         foundPrefixes: 0,
         someVariablesInsideQuotes: 0,
         variablesExpanded: 0,
@@ -156,12 +159,37 @@ function processPowerShellEnVariables(argsLine: string): [string, ProcessEnvPowe
         variablesWithBacktickInside: 0,
         envQuottedBlocks: 0,
         // blockers
-        envUnmatchedQuotes: 0
+        expansionSyntax: 0,
+        unmatchedExpansionSyntax: 0
     }
     let result = argsLine
     let startIndex = 0
 
     while (true) {
+        const quoteIndex = result.indexOf(quote, startIndex)
+        if (quoteIndex >= 0) {
+            const nextQuoteIndex = result.indexOf(quote, quoteIndex + 1)
+            if (nextQuoteIndex < 0) {
+                break
+            }
+
+            startIndex = nextQuoteIndex + quote.length
+            telemetry.envQuottedBlocks++
+            continue
+        }
+
+        const expansionPrefixIndex = result.indexOf(expansionPrefix, startIndex)
+        if (expansionPrefixIndex >= 0) {
+            const expansionSuffixIndex = result.indexOf(expansionSuffix, startIndex)
+            if (expansionSuffixIndex < 0) {
+                telemetry.unmatchedExpansionSyntax++;
+                break;
+            }
+
+            startIndex = expansionSuffixIndex + expansionSuffix.length
+            telemetry.expansionSyntax++
+            continue
+        }
         const prefixIndex = result.toLowerCase().indexOf(envPrefix, startIndex)
         if (prefixIndex < 0) {
             break;
@@ -180,23 +208,6 @@ function processPowerShellEnVariables(argsLine: string): [string, ProcessEnvPowe
             }
 
             telemetry.escapedEscapingSymbols++
-        }
-
-        const quoteIndex = result.indexOf(quote, startIndex)
-        if (quoteIndex >= 0 && prefixIndex > quoteIndex) {
-            const nextQuoteIndex = result.indexOf(quote, quoteIndex + 1)
-            if (nextQuoteIndex < 0) {
-                telemetry.envUnmatchedQuotes = 1
-                // we properly should throw error here
-                // throw new Error('Quotes not enclosed.')
-                break
-            }
-
-            startIndex = nextQuoteIndex + 1
-
-            telemetry.envQuottedBlocks++
-
-            continue
         }
 
         let envName = '';
