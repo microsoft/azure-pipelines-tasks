@@ -132,6 +132,8 @@ function Expand-EnvVariables([string]$ArgsLine) {
     $envPrefix = '$env:'
     $quote = "'"
     $escapingSymbol = '`'
+    $expansionPrefix = '$('
+    $expansionSuffix = ')'
 
     $telemetry = @{
         foundPrefixes               = 0
@@ -142,12 +144,38 @@ function Expand-EnvVariables([string]$ArgsLine) {
         variableStartsFromBacktick  = 0
         variablesWithBacktickInside = 0
         envQuottedBlocks            = 0
-        envUnmatchedQuotes          = 0
+        expansionSyntax             = 0
+        unmatchedExpansionSyntax    = 0
     }
     $result = $ArgsLine
     $startIndex = 0
 
     while ($true) {
+        $quoteIndex = $result.IndexOf($quote, $startIndex)
+        if ($quoteIndex -ge 0) {
+            $nextQuoteIndex = $result.IndexOf($quote, $quoteIndex + 1)
+            if ($nextQuoteIndex -lt 0) {
+                break
+            }
+
+            $startIndex = $nextQuoteIndex + $quote.Length
+            $telemetry.envQuottedBlocks++
+            continue
+        }
+
+        $expansionPrefixIndex = result.IndexOf($expansionPrefix, $startIndex)
+        if ($expansionPrefixIndex -ge 0) {
+            $expansionSuffixIndex = result.IndexOf($expansionSuffix, $startIndex)
+            if ($expansionSuffixIndex -lt 0) {
+                $telemetry.unmatchedExpansionSyntax++;
+                break;
+            }
+
+            $startIndex = $expansionSuffixIndex + $expansionSuffix.Length
+            $telemetry.expansionSyntax++
+            continue
+        }
+
         $prefixIndex = $result.ToLower().IndexOf($envPrefix, $startIndex)
         if ($prefixIndex -lt 0) {
             break;
@@ -166,23 +194,6 @@ function Expand-EnvVariables([string]$ArgsLine) {
             }
 
             $telemetry.escapedEscapingSymbols++
-        }
-
-        $quoteIndex = $result.IndexOf($quote, $startIndex)
-        if ($quoteIndex -ge 0 -and $prefixIndex -gt $quoteIndex) {
-            $nextQuoteIndex = $result.IndexOf($quote, $quoteIndex + 1)
-            if ($nextQuoteIndex -lt 0) {
-                $telemetry.envUnmatchedQuotes = 1
-                # we properly should throw error here
-                # throw new Error('Quotes not enclosed.')
-                break
-            }
-
-            $startIndex = $nextQuoteIndex + 1
-
-            $telemetry.envQuottedBlocks++
-
-            continue
         }
 
         $envName = ''
