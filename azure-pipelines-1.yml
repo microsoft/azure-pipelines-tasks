@@ -15,21 +15,35 @@ steps:
 #- bash: echo "##vso[task.setvariable variable=CONDA_VERBOSITY;]2"
 #  displayName: Set conda verbosity
 
-- bash: |
-    conda create --offline --name AZDO -y
-    conda config --show
+- task: PowerShell@2
+  inputs:
+    targetType: inline
+    script: |
+      conda create --offline --name AZDO -y
+      conda config --show
   displayName: Create conda environment
 
-- bash: |
-    prefix = (Get-CondaEnvironment | Where-Object Name -eq '{ENV}').Path
-    Copy-Item -LiteralPath '{CONDARC}' -Destination (Join-Path $prefix '.condarc')
-    conda config --show
+- task: PowerShell@2
+  inputs:
+    targetType: inline
+    script: |
+      prefix = (Get-CondaEnvironment | Where-Object Name -eq '{ENV}').Path
+      Copy-Item -LiteralPath '{CONDARC}' -Destination (Join-Path $prefix '.condarc')
+      conda config --show
   displayName: Attaching .condarc to environment
 
-- bash: echo "##vso[task.setvariable variable=ARTIFACTS_CONDA_TOKEN;]$(System.AccessToken)"
+- task: PowerShell@2
+  inputs:
+    targetType: inline
+    script: conda config --show
+  env: 
+    ARTIFACTS_CONDA_TOKEN: $(System.AccessToken)
   displayName: Set up auth token (CondaAuthenticate@0)
 
-- bash: |
-    source activate AZDO
-    conda install numpy -y
+- task: PowerShell@2
+  inputs:
+    targetType: inline
+    script: |
+      source activate AZDO
+      conda install numpy -y
   displayName: Activating and Using Conda environment
