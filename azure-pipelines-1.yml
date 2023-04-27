@@ -26,14 +26,6 @@ steps:
 - task: PowerShell@2
   inputs:
     targetType: inline
-    script: |
-      Copy-Item -LiteralPath '../../../Users/abpowell/.condarc' -Destination (Join-Path $prefix '.condarc')
-      conda config --show
-  displayName: Attaching .condarc to environment
-
-- task: PowerShell@2
-  inputs:
-    targetType: inline
     script: conda config --show
   env: 
     ARTIFACTS_CONDA_TOKEN: $(System.AccessToken)
