@@ -87,6 +87,7 @@
   "loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode": "AzCopy.exe terminó con el código de salida distinto de cero al cargar archivos en el almacenamiento de blobs.",
   "loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey": "No se puede recuperar la clave de la cuenta de almacenamiento. Error: \"{0}\"",
   "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Desinstale el script personalizado de WinRM de forma manual y reintente la implementación.",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "Los argumentos adicionales no pueden incluir los caracteres separadores \"&\", \";\" y \"|\". Verifica la entrada. Para obtener más información sobre la validación de argumentos, consulta https://aka.ms/azdo-task-argument-validation",
   "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado.",
   "loc.messages.UnsupportedAuthScheme": "Esquema de autenticación \"{0}\" no admitido para el punto de conexión.",
   "loc.messages.ServicePrincipalError": "Error con la entidad de servicio que se usó para la implementación."

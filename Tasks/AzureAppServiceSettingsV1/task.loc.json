@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 215,
-    "Patch": 0
+    "Minor": 221,
+    "Patch": 102
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -151,6 +151,7 @@
     }
   },
   "messages": {
+    "AppServiceConnectionStringsAlreadyPresent": "ms-resource:loc.messages.AppServiceConnectionStringsAlreadyPresent",
     "GotconnectiondetailsforazureRMWebApp0": "ms-resource:loc.messages.GotconnectiondetailsforazureRMWebApp0",
     "ResourceDoesntExist": "ms-resource:loc.messages.ResourceDoesntExist",
     "FailedToGetAppServiceDetails": "ms-resource:loc.messages.FailedToGetAppServiceDetails",

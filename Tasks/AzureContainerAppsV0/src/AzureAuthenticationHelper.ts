@@ -2,6 +2,8 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as fs from 'fs';
 import { Utility } from './Utility';
+import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
+import { ITaskApi } from "azure-devops-node-api/TaskApi";
 
 export class AzureAuthenticationHelper {
 
@@ -13,11 +15,22 @@ export class AzureAuthenticationHelper {
      * https://github.com/microsoft/azure-pipelines-tasks/blob/b82a8e69eb862d1a9d291af70da2e62ee69270df/Tasks/AzureCLIV2/azureclitask.ts#L106-L150
      * @param connectedService - an Azure DevOps Service Connection that can authorize the connection to Azure
      */
-     public loginAzureRM(connectedService: string): void {
+     public async loginAzureRM(connectedService: string): Promise<void> {
         const authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
         const subscriptionID: string = tl.getEndpointDataParameter(connectedService, 'SubscriptionID', true);
 
-        if (authScheme.toLowerCase() === 'serviceprincipal') {
+        if (authScheme.toLowerCase() == "workloadidentityfederation") {
+            var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+            var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+
+            const federatedToken = await AzureAuthenticationHelper.getIdToken(connectedService);
+            tl.setSecret(federatedToken);
+            const args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
+
+            //login using OpenID Connect federation
+            new Utility().throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
+        }
+        else if (authScheme.toLowerCase() === 'serviceprincipal') {
             const authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
             let cliPassword: string = null;
             const servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalid', false);
@@ -76,6 +89,37 @@ export class AzureAuthenticationHelper {
                 // task should not fail if logout doesn`t occur
                 tl.warning(`The following error occurred while logging out: ${err.message}`);
             }
+        }
+    }
+
+    private static async getIdToken(connectedService: string) : Promise<string> {
+        const jobId = tl.getVariable("System.JobId");
+        const planId = tl.getVariable("System.PlanId");
+        const projectId = tl.getVariable("System.TeamProjectId");
+        const hub = tl.getVariable("System.HostType");
+        const uri = tl.getVariable("System.CollectionUri");
+        const token = this.getSystemAccessToken();
+
+        const authHandler = getHandlerFromToken(token);
+        const connection = new WebApi(uri, authHandler);
+        const api: ITaskApi = await connection.getTaskApi();
+        const response = await api.createOidcToken({}, projectId, hub, planId, jobId, connectedService);
+        if (response == null) {
+            return null;
+        }
+
+        return response.oidcToken;
+    }
+
+    private static getSystemAccessToken() : string {
+        tl.debug('Getting credentials for local feeds');
+        const auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
+        if (auth.scheme === 'OAuth') {
+            tl.debug('Got auth token');
+            return auth.parameters['AccessToken'];
+        }
+        else {
+            tl.warning('Could not determine credentials to use');
         }
     }
 }

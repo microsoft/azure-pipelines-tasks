@@ -533,11 +533,26 @@ var copyGroup = function (group, sourceRoot, destRoot) {
 
     // multiply by culture name (recursive call to self)
     if (group.dest && group.dest.indexOf('<CULTURE_NAME>') >= 0) {
+        var missingCultures = [];
         cultureNames.forEach(function (cultureName) {
-            // culture names do not contain any JSON-special characters, so this is OK (albeit a hack)
-            var localizedGroupJson = JSON.stringify(group).replace(/<CULTURE_NAME>/g, cultureName);
-            copyGroup(JSON.parse(localizedGroupJson), sourceRoot, destRoot);
+            try {
+                // culture names do not contain any JSON-special characters, so this is OK (albeit a hack)
+                var localizedGroupJson = JSON.stringify(group).replace(/<CULTURE_NAME>/g, cultureName);
+                copyGroup(JSON.parse(localizedGroupJson), sourceRoot, destRoot);
+            }
+            catch (err) {
+                missingCultures.push(cultureName);
+            }
         });
+
+        // some cultures might not be present in certain dlls of TFS so just log and ignore
+        // fail in case none were present, as this indicates programmer error (or should not be copied at all)
+        if (missingCultures.length == cultureNames.length) {
+            throw new Error('Could not find a single culture even though make was instructed to copy them.');
+        }
+        if (missingCultures.length > 0) {
+            console.log('The following culture names could not be loaded as they do not exist: ' + missingCultures);
+        }
 
         return;
     }
@@ -1327,7 +1342,16 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
 
             // Create the full task name so we don't need to rely on the folder name.
             var fullTaskName = `Mseng.MS.TF.DistributedTask.Tasks.${taskName}V${taskJsonContents.version.Major}`;
-
+            if (taskJsonContents.hasOwnProperty('_buildConfigMapping')) { 
+                for (let i in taskJsonContents._buildConfigMapping) {
+                    if (taskJsonContents._buildConfigMapping[i] === taskVersion && i.toLocaleLowerCase() !== 'default') {
+                        // take only first part of the name
+                        var postfix = i.split('-')[0];
+                        fullTaskName = fullTaskName + `_${postfix}`;
+                        break;
+                    }
+                }
+            }
             // Create xml entry for UnifiedDependencies
             unifiedDepsContent.push(`  <package id="${fullTaskName}" version="${taskVersion}" availableAtDeployTime="true" />`);
 
@@ -1700,5 +1724,113 @@ var getTaskNodeVersion = function(buildPath, taskName) {
     return [ 10 ];
 }
 exports.getTaskNodeVersion = getTaskNodeVersion;
+
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// codegen functions
+//------------------------------------------------------------------------------
+
+/**
+ * Returns path to BuldConfigGenerator, if generator wasn't compile it will compile it
+ * @returns Path to the executed file
+ */
+var getBuildConfigGenerator = function (baseConfigToolPath) {
+    var programPath = "";
+    var configToolBuildUtility = "";
+
+    if (os.platform() === 'win32') {
+        programPath = path.join(baseConfigToolPath, 'bin', 'BuildConfigGen.exe');
+        configToolBuildUtility = path.join(baseConfigToolPath, "dev.cmd");
+    } else {
+        programPath = path.join(baseConfigToolPath, 'bin', 'BuildConfigGen');
+        configToolBuildUtility = path.join(baseConfigToolPath, "dev.sh");
+    }
+
+    if (!fs.existsSync(programPath)) {
+        console.log(`BuildConfigGen not found at ${programPath}. Starting build.`);
+        run(configToolBuildUtility, true);
+    }
+
+    return programPath;
+};
+exports.getBuildConfigGenerator = getBuildConfigGenerator;
+
+/**
+ * Function to validate generated tasks
+ * @param {String} baseConfigToolPath Path to generating programm
+ * @param {Array} taskList  Array with allowed tasks
+ * @param {Object} makeOptions Object with all tasks
+ */
+var validateGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions) {
+    if (!makeOptions) fail("makeOptions is not defined");
+    const excludedMakeOptionKeys = ["tasks", "taskResources"];
+    const validatingTasks = {};
+    
+    for (const key in makeOptions) {
+        if (excludedMakeOptionKeys.indexOf(key) > -1) continue;
+
+        makeOptions[key].forEach((taskName) => {
+            if (taskList.indexOf(taskName) ===  -1) return;
+            if (validatingTasks[taskName]) {
+                validatingTasks[taskName].push(key);
+            } else {
+                validatingTasks[taskName] = [key];
+            }
+        });
+    }
+
+    for (const taskName in validatingTasks) {
+        const programPath = getBuildConfigGenerator(baseConfigToolPath);
+        const config = validatingTasks[taskName];
+        const configString = config.join("|");
+        const args = [
+            "--configs",
+            `"${configString}"`,
+            "--task",
+            taskName,
+        ];
+
+        banner('Validating: ' + taskName);
+        run(`${programPath} ${args.join(' ')}`, true);
+    }
+}
+exports.validateGeneratedTasks = validateGeneratedTasks;
+
+/**
+ * Function to generate new tasks
+ * @param {String} baseConfigToolPath Path to generating program
+ * @param {Array} taskList  Array with allowed tasks
+ * @param {String} configsString String with generation configs 
+ * @param {Object} makeOptions Object to put generated definitions
+ */
+
+var generateTasks = function(baseConfigToolPath, taskList, configsString, makeOptions) {
+    const args = `--write-updates --configs "${configsString}"`;
+    const configsArr = configsString.split("|")
+    let newMakeOptions = makeOptions;
+
+    taskList.forEach(function (taskName) {
+        const programPath = getBuildConfigGenerator(baseConfigToolPath);
+        const buildArgs = args + ` --task ${taskName}`;
+
+        banner('Generating: ' + taskName);
+        run(`${programPath} ${buildArgs}` , true);
+
+        // insert to make-options.json
+        configsArr.forEach(function (config) {
+            if (!newMakeOptions[config]) {
+                newMakeOptions[config] = [];
+            }
+            
+            if (newMakeOptions[config].indexOf(taskName) === -1) {
+                newMakeOptions[config].push(taskName);
+            }
+        });
+    });
+
+    return newMakeOptions;
+}
+exports.generateTasks = generateTasks;
 
 //------------------------------------------------------------------------------

@@ -3,10 +3,13 @@
   "loc.helpMarkDown": "",
   "loc.description": "Evaluación de seguridad y cumplimiento para Azure Policy",
   "loc.instanceNameFormat": "Comprobar el cumplimiento de directivas",
+  "loc.group.displayName.advancedOptions": "Avanzado",
   "loc.input.label.ConnectedServiceName": "Suscripción a Azure",
   "loc.input.help.ConnectedServiceName": "Seleccione la suscripción de Azure Resource Manager para aplicar las directivas.",
   "loc.input.label.ResourceGroupName": "Grupo de recursos",
   "loc.input.help.ResourceGroupName": "Proporcione el nombre de un grupo de recursos.",
   "loc.input.label.Resources": "Nombre de recurso",
-  "loc.input.help.Resources": "Seleccione el nombre de los recursos de Azure para los que desea comprobar la compatibilidad de la directiva."
+  "loc.input.help.Resources": "Seleccione el nombre de los recursos de Azure para los que desea comprobar la compatibilidad de la directiva.",
+  "loc.input.label.RetryDuration": "Duración del reintento",
+  "loc.input.help.RetryDuration": "Define el período en el que la tarea esperará hasta que vuelva a intentar llamar a la API de Azure en caso de que el código de respuesta anterior haya sido \"Aceptado\". El período mínimo es de 2 minutos."
 }
