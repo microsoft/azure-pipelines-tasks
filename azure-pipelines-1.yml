@@ -35,6 +35,6 @@ steps:
   inputs:
     targetType: inline
     script: |
-      source activate AZDO
+      conda activate AZDO
       conda install numpy -y
   displayName: Activating and Using Conda environment
