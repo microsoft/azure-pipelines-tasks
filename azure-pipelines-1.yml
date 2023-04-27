@@ -15,26 +15,93 @@ steps:
 #- bash: echo "##vso[task.setvariable variable=CONDA_VERBOSITY;]2"
 #  displayName: Set conda verbosity
 
-- task: PowerShell@2
-  inputs:
-    targetType: inline
-    script: |
-      conda create --offline --name AZDO -y
-      conda config --show
-  displayName: Create conda environment
+- powershell: |
+    . $env:CONDA/shell/condabin/conda-hook.ps1
+    conda create --yes --quiet --offline --name AZDO
+    $prefix = (Get-CondaEnvironment | Where-Object Name -eq 'AZDO').Path
+    Copy-Item -LiteralPath '.condarc' -Destination (Join-Path $prefix '.condarc')
+  displayName: Create Conda environment
 
-- task: PowerShell@2
-  inputs:
-    targetType: inline
-    script: conda config --show
-  env: 
-    ARTIFACTS_CONDA_TOKEN: $(System.AccessToken)
+- powershell:  Write-Host "##vso[task.setvariable variable=ARTIFACTS_CONDA_TOKEN;]$(System.AccessToken)"
   displayName: Set up auth token (CondaAuthenticate@0)
 
-- task: PowerShell@2
-  inputs:
-    targetType: inline
-    script: |
-      conda activate AZDO
-      conda install numpy -y
-  displayName: Activating and Using Conda environment
+
+
+
+
+
+
+
+
+
+steps:
+    # On hosted agents, conda is left out of PATH by default.
+    # This may not be needed on self-hosted agents.
+    - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
+      displayName: Add Conda to PATH
+
+    - powershell: |
+        . $env:CONDA/shell/condabin/conda-hook.ps1
+        conda create --yes --quiet --offline --name my_environment
+        $prefix = (Get-CondaEnvironment | Where-Object Name -eq 'my_environment').Path
+        Copy-Item -LiteralPath '.condarc' -Destination (Join-Path $prefix '.condarc')
+      displayName: Create Conda environment
+
+    - powershell: Write-Host "##vso[task.setvariable variable=ARTIFACTS_CONDA_TOKEN;]$(System.AccessToken)"
+      displayName: Set up auth token (CondaAuthenticate@0)
+    
+    # - task: CondaAuthenticate@0
+    #   displayName: Authenticate Conda with Azure Artifacts
+
+    # Each script task that needs to use the Conda environment must activate it before running
+    # other commands
+    - powershell: |
+        . $env:CONDA/shell/condabin/conda-hook.ps1
+        conda activate my_environment
+        
+        # For example, install some packages:
+        conda install --yes --quiet numpy pandas
+      displayName: Install Conda packages   
+    
+    - powershell: |
+        . $env:CONDA/shell/condabin/conda-hook.ps1
+        conda activate my_environment
+        conda list --explicit
+      displayName: Demonstrate Azure Artifacts usage
+        
+
+- job: 
+  displayName: Bash (Linux)
+  pool:
+    vmImage: ubuntu-latest
+
+  steps:
+    # On hosted agents, conda is left out of PATH by default.
+    # This may not be needed on self-hosted agents.
+    - bash: echo "##vso[task.prependpath]$CONDA/bin"
+      displayName: Add Conda to PATH
+
+    - bash: |
+        conda create --yes --quiet --offline --name my_environment
+        cat .condarc | conda run --no-capture-output --name my_environment conda config --env --stdin
+      displayName: Create Conda environment
+
+    # - task: CondaAuthenticate@0
+    #   displayName: Authenticate Conda with Azure Artifacts
+
+    - bash: echo "##vso[task.setvariable variable=ARTIFACTS_CONDA_TOKEN;]$(System.AccessToken)"
+      displayName: Set up auth token (CondaAuthenticate@0)
+
+    # Each script task that needs to use the Conda environment must activate it before running
+    # other commands
+    - bash: |
+        source activate my_environment
+        
+        # For example, install some packages:
+        conda install --yes --quiet numpy pandas
+      displayName: Install Conda packages
+
+    - bash: |
+        source activate my_environment
+        conda list --explicit
+      displayName: Demonstrate Azure Artifacts usage
