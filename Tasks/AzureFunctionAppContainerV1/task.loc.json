@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 215,
-    "Patch": 0
+    "Minor": 221,
+    "Patch": 103
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -211,6 +211,7 @@
     "RequestedURLforkuduphysicalpath": "ms-resource:loc.messages.RequestedURLforkuduphysicalpath",
     "Physicalpathalreadyexists": "ms-resource:loc.messages.Physicalpathalreadyexists",
     "KuduPhysicalpathCreatedSuccessfully": "ms-resource:loc.messages.KuduPhysicalpathCreatedSuccessfully",
+    "KuduStackTraceURL": "ms-resource:loc.messages.KuduStackTraceURL",
     "FailedtocreateKuduPhysicalPath": "ms-resource:loc.messages.FailedtocreateKuduPhysicalPath",
     "FailedtocheckphysicalPath": "ms-resource:loc.messages.FailedtocheckphysicalPath",
     "VirtualApplicationDoesNotExist": "ms-resource:loc.messages.VirtualApplicationDoesNotExist",

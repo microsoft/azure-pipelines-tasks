@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 219,
-    "Patch": 0
+    "Minor": 221,
+    "Patch": 105
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -133,7 +133,8 @@
         "PYTHON|3.6": "PYTHON|3.6 (functionapp v2/v3)",
         "PYTHON|3.7": "PYTHON|3.7 (functionapp v2/v3/v4)",
         "PYTHON|3.8": "PYTHON|3.8 (functionapp v3/v4)",
-        "PYTHON|3.9": "PYTHON|3.9 (functionapp v3/v4)"
+        "PYTHON|3.9": "PYTHON|3.9 (functionapp v3/v4)",
+        "PYTHON|3.10": "PYTHON|3.10 (functionapp v3/v4)"
       },
       "visibleRule": "appType = functionAppLinux",
       "helpMarkDown": "ms-resource:loc.input.help.runtimeStack"

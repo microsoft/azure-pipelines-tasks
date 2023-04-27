@@ -1,10 +1,10 @@
-import { AzureEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
 import tl = require('azure-pipelines-task-lib/task');
-import { Package, PackageType } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
-var webCommonUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/utility.js');
+import { AzureEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
-import { AzureResourceFilterUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureResourceFilterUtility';
 import { AzureAppService } from './azure-arm-rest/azure-arm-app-service';
+import { AzureResourceFilterUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureResourceFilterUtility';
+import { Package } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
+
 const skuDynamicValue: string = 'dynamic';
 const skuElasticPremiumValue: string = 'elasticpremium';
 
@@ -24,7 +24,7 @@ export class TaskParametersUtility {
             AppSettings: tl.getInput('appSettings', false),
             ConfigurationSettings: tl.getInput('configurationStrings', false),
             WebAppName: tl.getInput('appName', true)
-        }  
+        }
 
         //Clear input if deploytoslot is disabled
         taskParameters.ResourceGroupName = (!!taskParameters.DeployToSlotOrASEFlag) ? tl.getInput('resourceGroupName', false) : null;
@@ -38,19 +38,19 @@ export class TaskParametersUtility {
         {
             taskParameters.AppSettings = taskParameters.AppSettings.replace('\n',' ');
         }
-        
+
         var appDetails = await this.getWebAppKind(taskParameters);
         taskParameters.ResourceGroupName = appDetails["resourceGroupName"];
         taskParameters.WebAppKind = appDetails["webAppKind"];
         taskParameters.isConsumption = appDetails["sku"].toLowerCase() == skuDynamicValue;
         taskParameters.isPremium = appDetails["sku"].toLowerCase() == skuElasticPremiumValue;
-        
+
         taskParameters.isLinuxApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("Linux") !=-1;
 
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureFunctionAppDeployment]" + endpointTelemetry);
-       
-        taskParameters.Package = new Package(tl.getPathInput('package', true));  
+
+        taskParameters.Package = new Package(tl.getPathInput('package', true));
 
         if(taskParameters.isLinuxApp) {
             taskParameters.RuntimeStack = tl.getInput('runtimeStack', false);
@@ -93,7 +93,7 @@ export class TaskParametersUtility {
 export enum DeploymentType {
     auto,
     zipDeploy,
-    runFromPackage    
+    runFromPackage
 }
 
 
