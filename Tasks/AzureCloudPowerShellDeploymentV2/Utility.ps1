@@ -230,7 +230,6 @@ function Create-AzureCloudService {
     $azureService = "New-AzCloudService -Name `"$serviceName`" -ResourceGroupName `"$resourceGroupName`" -Location `"$serviceLocation`" -ConfigurationFile `"$csCfg`""
     $azureService += " -DefinitionFile `"$csDef`" -PackageFile `"$csPkg`" -StorageAccount `"$storageAccount`" -Tag {$($tag.Keys.Count) tags} -UpgradeMode `"$upgradeMode`"";
     if ($KeyVault) {
-        Set-AzKeyVaultAccessPolicy -VaultName $keyVault -ResourceGroupName $resourceGroupName -EnabledForDeployment
         $azureService += " -KeyVaultName `"$KeyVault`""
         if ($diagnosticExtensions -and ($diagnosticExtensions.Length -gt 0)) {
             $azureService += " -ExtensionProfile @($(diagnosticExtensions.Length) extensions)"
