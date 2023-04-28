@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Twine 認証 $(message)",
   "loc.group.displayName.feedAuthentication": "フィードと認証",
   "loc.group.displayName.advanced": "詳細設定",
-  "loc.input.label.artifactFeed": "マイ フィード (以下を選択)",
+  "loc.input.label.artifactFeed": "自分のフィード名 (以下から選択)",
   "loc.input.help.artifactFeed": "この組織内に存在する、認証対象のフィードを選択します。",
   "loc.input.label.pythonUploadServiceConnection": "外部組織からのフィード",
   "loc.input.help.pythonUploadServiceConnection": "この組織の外部で認証するエンドポイントを選択します。パッケージをアップロードするアクセス許可がエンドポイントにあることを確認してください。",

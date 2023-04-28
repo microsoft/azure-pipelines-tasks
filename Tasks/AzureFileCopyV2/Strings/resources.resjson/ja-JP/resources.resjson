@@ -27,7 +27,7 @@
   "loc.input.label.EnvironmentNameRM": "リソース グループ",
   "loc.input.help.EnvironmentNameRM": "ファイルのコピー先のターゲット リソース グループの名前。",
   "loc.input.label.ResourceFilteringMethod": "以下の条件でコンピューターを選択",
-  "loc.input.help.ResourceFilteringMethod": "必要に応じて、VM ホスト名またはタグを指定してリソース グループ内での VM のサブセットを選びます。[タグ](https://azure.microsoft.com/ja-jp/documentation/articles/virtual-machines-tagging-arm/) は Azure Resource Manager を通して作成されたリソースでのみサポートされています。",
+  "loc.input.help.ResourceFilteringMethod": "必要に応じて、VM ホスト名またはタグを指定してリソース グループ内での VM のサブセットを選びます。[タグ](https://learn.microsoft.com/en-us/azure/virtual-machines/tag-template/) は、Azure Resource Manager を通して作成されたリソースでのみサポートされています。",
   "loc.input.label.MachineNames": "フィルター条件",
   "loc.input.help.MachineNames": "VM ホスト名 (ffweb, ffdb) またはタグ (Role:DB, Web; OS:Win8.1) のリストをご指定ください。タグに使用される区切り文字が &#44;(コンマ)、&#58;(コロン) および &#59;(セミコロン) であることにご注意ください。複数のタグが指定されている場合、指定されたタグを含むすべての VM でタスクが実行されます。既定値ではすべての VM でタスクが実行されます。",
   "loc.input.label.vmsAdminUserName": "管理者ログイン",
@@ -97,5 +97,6 @@
   "loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode": "AzCopy.exe が Blob Storage にファイルをアップロードしている間に、ゼロ以外の終了コードで終了しました。",
   "loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey": "ストレージ アカウント キーをフェッチできません。エラー: '{0}'",
   "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "WinRM カスタム スクリプトを手動でアンインストールしてから、配置を再試行してください。",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "追加の引数に区切り文字 '&', ';', '|' を含めることはできません。入力を確認してください。引数の検証の詳細については、以下を確認してください: https://aka.ms/azdo-task-argument-validation",
   "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことを確認してください。"
 }

@@ -9,7 +9,7 @@
     "author": "ms-vscs-rm",
     "version": {
         "Major": 1,
-        "Minor": 216,
+        "Minor": 221,
         "Patch": 0
     },
     "demands": [],
@@ -120,9 +120,9 @@
         {
             "target": "feed",
             "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
             "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{#if projectId}}{{{projectId}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         },
         {
             "target": "view",
@@ -190,6 +190,7 @@
         "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
         "Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
         "Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
-        "Info_UsingArtifactToolDownload": "Using artifact tool to download the package"
+        "Info_UsingArtifactToolDownload": "Using artifact tool to download the package",
+        "Info_ResolvedLatestVersion": "Resolved latest package version: %s"
     }
 }

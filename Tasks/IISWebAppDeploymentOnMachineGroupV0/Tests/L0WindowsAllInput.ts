@@ -74,6 +74,7 @@ tr.registerMock('./msdeployutility.js', {
 
 var fs = require('fs');
 tr.registerMock('fs', {
+    ...fs,
     createWriteStream: function (filePath, options) {
         return { 
             "isWriteStreamObj": true,

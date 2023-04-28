@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 202,
-    "Patch": 0
+    "Minor": 221,
+    "Patch": 102
   },
   "demands": [
     "azureps"
@@ -349,6 +349,7 @@
     "AFC_RootContainerAndDirectory": "ms-resource:loc.messages.AFC_RootContainerAndDirectory",
     "AFC_RedirectResponseInvalidStatusCode": "ms-resource:loc.messages.AFC_RedirectResponseInvalidStatusCode",
     "AFC_RedirectResponseLocationHeaderIsNull": "ms-resource:loc.messages.AFC_RedirectResponseLocationHeaderIsNull",
-    "AFC_UninstallWinRMCustomScriptExtension": "ms-resource:loc.messages.AFC_UninstallWinRMCustomScriptExtension"
+    "AFC_UninstallWinRMCustomScriptExtension": "ms-resource:loc.messages.AFC_UninstallWinRMCustomScriptExtension",
+    "AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "ms-resource:loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters"
   }
 }

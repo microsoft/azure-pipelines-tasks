@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 202,
-        "Patch": 0
+        "Minor": 221,
+        "Patch": 102
     },
     "demands": [
         "azureps"
@@ -349,6 +349,7 @@
         "AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers.",
         "AFC_RedirectResponseInvalidStatusCode": "The HTTP response code: '{0}' is not a valid redirect status code",
         "AFC_RedirectResponseLocationHeaderIsNull": "Redirect response location header is null.",
-        "AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment."
+        "AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment.",
+        "AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "Additional arguments can't include separator characters '&', ';' and '|'. Please verify input. To learn more about argument validation, please check https://aka.ms/azdo-task-argument-validation"
     }
 }

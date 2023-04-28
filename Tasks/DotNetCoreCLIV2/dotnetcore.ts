@@ -10,6 +10,7 @@ import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
 import * as restoreCommand from './restorecommand';
 import * as utility from './Common/utility';
+import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 
 export class dotNetExe {
     private command: string;
@@ -52,6 +53,7 @@ export class dotNetExe {
                     await this.executeTestCommand();
                     break;
                 case "restore":
+                    this.logRestoreStartUpVariables();
                     await restoreCommand.run();
                     break;
                 case "pack":
@@ -410,6 +412,48 @@ export class dotNetExe {
 
     private static getModifiedOutputForProjectFile(outputBase: string, projectFile: string): string {
         return path.join(outputBase, path.basename(path.dirname(projectFile)));
+    }
+
+    private logRestoreStartUpVariables() {
+        try {
+            const nugetfeedtype = tl.getInput("nugetfeedtype");
+            let externalendpoint = null;
+            if (nugetfeedtype != null && nugetfeedtype === "external") {
+                const epId = tl.getInput("externalendpoint");
+                if (epId) {
+                    externalendpoint = {
+                        feedName: tl.getEndpointUrl(epId, false).replace(/\W/g, ""),
+                        feedUri: tl.getEndpointUrl(epId, false),
+                    };
+                }
+            }
+    
+            let externalendpoints = tl.getDelimitedInput("externalendpoints", ",");
+            if (externalendpoints) {
+                externalendpoints = externalendpoints.reduce((ary, id) => {
+                    const te = {
+                        feedName: tl.getEndpointUrl(id, false).replace(/\W/g, ""),
+                        feedUri: tl.getEndpointUrl(id, false),
+                    };
+                    ary.push(te);
+                    return ary;
+                }, []);
+            }
+            const nugetTelem = {
+                "command": tl.getInput("command"),
+                "System.TeamFoundationCollectionUri": tl.getVariable("System.TeamFoundationCollectionUri"),
+                "includenugetorg": tl.getInput("includenugetorg"),
+                "nocache": tl.getInput("nocache"),
+                "nugetconfigpath": tl.getInput("nugetconfigpath"),
+                "nugetfeedtype": nugetfeedtype,
+                "selectorconfig": tl.getInput("selectorconfig"),
+                "projects": tl.getInput("projects"),
+                "verbosityrestore": tl.getInput("verbosityrestore")
+            };
+            telemetry.emitTelemetry("Packaging", "DotNetCoreCLIRestore", nugetTelem);
+        } catch (err) {
+            tl.debug(`Unable to log NuGet task init telemetry. Err:( ${err} )`);
+        }
     }
 }
 

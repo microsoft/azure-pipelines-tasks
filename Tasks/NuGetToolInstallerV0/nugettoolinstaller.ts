@@ -1,11 +1,11 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as semver from 'semver';
 import * as path from "path";
-import * as peParser from "packaging-common/pe-parser";
-import {VersionInfo} from "packaging-common/pe-parser/VersionResource";
-import * as telemetry from "utility-common/telemetry";
+import * as peParser from "azure-pipelines-tasks-packaging-common/pe-parser";
+import {VersionInfo} from "azure-pipelines-tasks-packaging-common/pe-parser/VersionResource";
+import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 
-import nuGetGetter = require("packaging-common/nuget/NuGetToolGetter");
+import nuGetGetter = require("azure-pipelines-tasks-packaging-common/nuget/NuGetToolGetter");
 
 async function run() {
     let nugetVersion: string;
@@ -17,16 +17,8 @@ async function run() {
 
         let versionSpec = taskLib.getInput('versionSpec', false);
         if (!versionSpec) {
+            versionSpec = await nuGetGetter.resolveNuGetVersion();
             msbuildSemVer = await nuGetGetter.getMSBuildVersion();
-            if (msbuildSemVer && semver.gte(msbuildSemVer, '16.8.0')) {
-                taskLib.debug('Defaulting to 5.8.0 for msbuild version: ' + msbuildSemVer);
-                versionSpec = '5.8.0';
-            } else if (msbuildSemVer && semver.gte(msbuildSemVer, '16.5.0')) {
-                taskLib.debug('Defaulting to 4.8.2 for msbuild version: ' + msbuildSemVer);
-                versionSpec = '4.8.2';
-            } else {
-                versionSpec = '4.3.0';
-            }
         }
         checkLatest = taskLib.getBoolInput('checkLatest', false);
         nuGetPath = await nuGetGetter.getNuGet(versionSpec, checkLatest, true);
