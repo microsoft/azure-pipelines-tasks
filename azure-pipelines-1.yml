@@ -18,8 +18,10 @@ steps:
 - powershell: |
     . $env:CONDA/shell/condabin/conda-hook.ps1
     conda create --yes --quiet --offline --name AZDO
-    $prefix = (Get-CondaEnvironment | Where-Object Name -eq 'AZDO').Path
-    Copy-Item -LiteralPath '../../../../../usr/share/.condarc' -Destination (Join-Path $prefix '.condarc')
+    cd ../../../../usr/share
+    ls
+#    $prefix = (Get-CondaEnvironment | Where-Object Name -eq 'AZDO').Path
+#    Copy-Item -LiteralPath '../../../../usr/share/.condarc' -Destination (Join-Path $prefix '.condarc')
   displayName: Create Conda environment
 
 - powershell:  Write-Host "##vso[task.setvariable variable=ARTIFACTS_CONDA_TOKEN;]$(System.AccessToken)"
