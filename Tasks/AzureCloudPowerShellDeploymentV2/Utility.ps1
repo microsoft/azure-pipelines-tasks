@@ -229,7 +229,7 @@ function Create-AzureCloudService {
     }
     $azureService = "New-AzCloudService -Name `"$serviceName`" -ResourceGroupName `"$resourceGroupName`" -Location `"$serviceLocation`" -ConfigurationFile `"$csCfg`""
     $azureService += " -DefinitionFile `"$csDef`" -PackageFile `"$csPkg`" -StorageAccount `"$storageAccount`" -Tag {$($tag.Keys.Count) tags} -UpgradeMode `"$upgradeMode`"";
-    $PSDefaultParameterValues = @{ '*:Force' = $true; }
+    Remove-AzStorageBlob -Container "cloudservicecontainer" -Blob ($ServiceName + ".cspkg")
     if ($KeyVault) {
         $azureService += " -KeyVaultName `"$KeyVault`""
         if ($diagnosticExtensions -and ($diagnosticExtensions.Length -gt 0)) {
@@ -259,7 +259,6 @@ function Create-AzureCloudService {
                 -DefinitionFile "$csDef" -PackageFile "$csPkg" -StorageAccount "$storageAccount" -Tag $tag -UpgradeMode "$upgradeMode"
         }
     }
-    $PSDefaultParameterValues = @{}
 }
 
 function Validate-AzureCloudServiceStatus {
