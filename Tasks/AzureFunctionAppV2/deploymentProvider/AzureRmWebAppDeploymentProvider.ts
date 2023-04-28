@@ -1,12 +1,11 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
-import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
-import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureAppServiceUtility';
-import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility'
-import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
-import { AzureDeployPackageArtifactAlias } from 'azure-pipelines-tasks-azure-arm-rest-v2/constants';
+import { AzureAppService } from '../azure-arm-rest/azure-arm-app-service';
+import { Kudu } from '../azure-arm-rest/azure-arm-app-service-kudu';
+import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon/operations/ParameterParserUtility'
+import { PackageUtility } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
+import { AzureDeployPackageArtifactAlias } from 'azure-pipelines-tasks-azurermdeploycommon/Constants';
 import { TaskParameters } from '../taskparameters';
-import { AzureAppServiceUtilityExt } from '../operations/AzureAppServiceUtilityExt';
+import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 import { KuduServiceUtility } from '../operations/KuduServiceUtility';
 import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
 import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
@@ -16,7 +15,6 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     protected appService: AzureAppService;
     protected kuduService: Kudu;
     protected appServiceUtility: AzureAppServiceUtility;
-    protected appServiceUtilityExt: AzureAppServiceUtilityExt;
     protected kuduServiceUtility: KuduServiceUtility;
     protected virtualApplicationPath: string = "";
     protected activeDeploymentID;
@@ -31,34 +29,35 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
         this.appService = new AzureAppService(this.taskParams.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName,
             this.taskParams.SlotName, this.taskParams.WebAppKind);
         this.appServiceUtility = new AzureAppServiceUtility(this.appService);
-        this.appServiceUtilityExt = new AzureAppServiceUtilityExt(this.appService);
 
         this.kuduService = await this.appServiceUtility.getKuduService();
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
 
-        await this.appServiceUtilityExt.getFuntionAppNetworkingCheck(this.taskParams.isLinuxApp);
+        await this.appServiceUtility.getFuntionAppNetworkingCheck(this.taskParams.isLinuxApp);
     }
 
     public async DeployWebAppStep() {}
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
         await addReleaseAnnotation(this.taskParams.azureEndpoint, this.appService, isDeploymentSuccess);
-        if(this.kuduServiceUtility) {
+        if (this.kuduServiceUtility) {
             this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
             tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
         }
-        
-        let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
-        console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
-        tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
+
+        if (this.appServiceUtility) {
+            let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
+            console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
+            tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
+        }
     }
 
     protected async PostDeploymentStep() {
-        if(this.taskParams.AppSettings) {
+        if (this.taskParams.AppSettings) {
             var customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
             await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
         }
 
-        await this.appServiceUtilityExt.updateScmTypeAndConfigurationDetails();
+        await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
     }
 }

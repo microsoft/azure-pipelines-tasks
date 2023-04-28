@@ -1,11 +1,11 @@
+import { AzureEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
 import tl = require('azure-pipelines-task-lib/task');
-var webCommonUtility = require('azure-pipelines-tasks-webdeployment-common/utility');
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
-import { Resources } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource';
-import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
-import { AzureRmEndpointAuthenticationScheme } from 'azure-pipelines-tasks-azure-arm-rest-v2/constants';
-import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
+import { Package, PackageType } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
+var webCommonUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/utility.js');
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
+import { AzureResourceFilterUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureResourceFilterUtility';
+import { AzureAppService } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-app-service';
+import { AzureRmEndpointAuthenticationScheme } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/constants';
 
 const webAppKindMap = new Map([
     [ 'app', 'webApp' ],
@@ -58,8 +58,7 @@ export class TaskParametersUtility {
         var kind = taskParameters.WebAppKind;
         if (taskParameters.azureEndpoint.scheme.toLowerCase() != AzureRmEndpointAuthenticationScheme.PublishProfile) {
             if (!resourceGroupName) {
-                var resources = new Resources(taskParameters.azureEndpoint);
-                var appDetails = await resources.getAppDetails(taskParameters.WebAppName);
+                var appDetails = await AzureResourceFilterUtility.getAppDetails(taskParameters.azureEndpoint, taskParameters.WebAppName);
                 resourceGroupName = appDetails["resourceGroupName"];
                 if(!kind) {
                     kind = webAppKindMap.get(appDetails["kind"]) ? webAppKindMap.get(appDetails["kind"]) : appDetails["kind"];

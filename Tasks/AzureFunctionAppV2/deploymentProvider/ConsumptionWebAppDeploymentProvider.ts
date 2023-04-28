@@ -1,13 +1,13 @@
 import tl = require('azure-pipelines-task-lib/task');
 import Q = require('q');
-var webCommonUtility = require('azure-pipelines-tasks-webdeployment-common/utility');
-var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility');
+var webCommonUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/utility.js');
+var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/ziputility.js');
 var azureStorage = require('azure-storage');
-import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
-import { sleepFor } from 'azure-pipelines-tasks-azure-arm-rest-v2/webClient';
-import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
-import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
-import { AzureAppServiceUtilityExt } from '../operations/AzureAppServiceUtilityExt';
+import { AzureAppService } from '../azure-arm-rest/azure-arm-app-service';
+import { sleepFor } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/webClient';
+import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
+import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon/operations/ParameterParserUtility';
+import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 
 export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider {
@@ -15,7 +15,7 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
     public async PreDeploymentStep() {
         this.appService = new AzureAppService(this.taskParams.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName,
             this.taskParams.SlotName, this.taskParams.WebAppKind, true);
-        this.appServiceUtilityExt = new AzureAppServiceUtilityExt(this.appService);
+        this.appServiceUtility = new AzureAppServiceUtility(this.appService);
     }
 
     public async DeployWebAppStep() {
@@ -95,7 +95,7 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
                 let expiryDate = new Date(startDate);
                 expiryDate.setFullYear(startDate.getUTCFullYear() + 1);
                 startDate.setMinutes(startDate.getMinutes()-5);
-            
+
                 let sharedAccessPolicy = {
                     AccessPolicy: {
                         Permissions: azureStorage.BlobUtilities.SharedAccessPermissions.READ,
@@ -103,7 +103,7 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
                         Expiry: expiryDate
                     }
                 };
-            
+
                 let token = blobService.generateSharedAccessSignature(containerName, blobName, sharedAccessPolicy);
                 let sasUrl = blobService.getUrl(containerName, blobName, token);
                 let index = sasUrl.indexOf("?");
@@ -134,10 +134,10 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
     protected async PostDeploymentStep() {
         if(this.taskParams.ConfigurationSettings) {
             var customApplicationSettings = ParameterParser.parse(this.taskParams.ConfigurationSettings);
-            await this.appService.updateConfigurationSettings(customApplicationSettings);
+            await this.appServiceUtility.updateConfigurationSettings(customApplicationSettings);
         }
 
-        await this.appServiceUtilityExt.updateScmTypeAndConfigurationDetails();
+        await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
     }
 
     private _getUserDefinedAppSettings() {
