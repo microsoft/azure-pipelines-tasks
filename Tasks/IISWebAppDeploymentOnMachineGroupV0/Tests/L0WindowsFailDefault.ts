@@ -70,6 +70,7 @@ tr.registerMock('./msdeployutility.js', {
 
 var fs = require('fs');
 tr.registerMock('fs', {
+    ...fs,
     createWriteStream: function (filePath, options) {
         var retryFunction;
         return { 
@@ -82,10 +83,6 @@ tr.registerMock('fs', {
                 return true; 
             }
         };
-    },
-    readFileSync: function (msDeployErrorFilePath) {
-        console.log("reading the error file");
-        return "ERROR DEPLOYING WEBSITE";
     },
     ReadStream: fs.ReadStream,
     WriteStream: fs.WriteStream,
