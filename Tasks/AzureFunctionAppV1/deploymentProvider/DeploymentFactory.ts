@@ -1,11 +1,11 @@
+import tl = require('azure-pipelines-task-lib/task');
+import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
 import { TaskParameters, DeploymentType } from '../taskparameters';
 import { BuiltInLinuxWebAppDeploymentProvider } from './BuiltInLinuxWebAppDeploymentProvider';
+import { ConsumptionWebAppDeploymentProvider } from './ConsumptionWebAppDeploymentProvider';
 import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 import { WindowsWebAppZipDeployProvider } from './WindowsWebAppZipDeployProvider';
 import { WindowsWebAppRunFromZipProvider } from './WindowsWebAppRunFromZipProvider';
-import { ConsumptionWebAppDeploymentProvider } from './ConsumptionWebAppDeploymentProvider';
-import tl = require('azure-pipelines-task-lib/task');
-import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
 import { WindowsWebAppWarDeployProvider } from './WindowsWebAppWarDeployProvider';
 
 export class DeploymentFactory {
@@ -23,7 +23,7 @@ export class DeploymentFactory {
                 return new ConsumptionWebAppDeploymentProvider(this._taskParams);
             } else {
                 return new BuiltInLinuxWebAppDeploymentProvider(this._taskParams);
-            }        
+            }
         } else {
             tl.debug("Deployment started for windows app service");
             return await this._getWindowsDeploymentProvider()
@@ -45,11 +45,11 @@ export class DeploymentFactory {
     private async _getWindowsDeploymentProviderForZipAndFolderPackageType(): Promise<IWebAppDeploymentProvider> {
         if(this._taskParams.DeploymentType != DeploymentType.auto) {
             return await this._getUserSelectedDeploymentProviderForWindow();
-        } else {  
-            var _isMSBuildPackage = await this._taskParams.Package.isMSBuildPackage();           
+        } else {
+            var _isMSBuildPackage = await this._taskParams.Package.isMSBuildPackage();
             if(_isMSBuildPackage) {
                 throw new Error(tl.loc('MsBuildPackageNotSupported', this._taskParams.Package.getPath()));
-            } else { 
+            } else {
                 return new WindowsWebAppRunFromZipProvider(this._taskParams);
             }
         }
