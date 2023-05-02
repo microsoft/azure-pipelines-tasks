@@ -103,6 +103,14 @@ steps:
   - script: npm run package
     displayName: npm run package
 
+  # Publish per task NuGet package artifact
+  - task: PublishBuildArtifacts@1
+    displayName: Publish per task NuGet package artifact
+    inputs:
+      pathToPublish: _package/nuget-packages
+      artifactName: IndividualNuGetPackages
+      publishLocation: container
+
   # Authenticate 
   - task: NuGetAuthenticate@0
     displayName: Authenticate with nuget

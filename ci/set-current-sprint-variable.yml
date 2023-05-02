@@ -1,0 +1,6 @@
+steps:
+- powershell: |
+    $currentSprint = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json)
+    Write-Host "##vso[task.setVariable variable=currentSprint]$($currentSprint.sprint)"
+    Write-Host "##vso[task.setVariable variable=currentSprintWeek]$($currentSprint.week)"
+  displayName: Set current sprint variable
