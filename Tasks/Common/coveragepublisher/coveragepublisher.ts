@@ -21,20 +21,14 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
 
     const osvar = process.platform;
     let dotnet: toolRunner.ToolRunner;
-
-    const dotnetPath = taskLib.which('dotnet', false);
-    if (!dotnetPath && osvar !== 'win32') {
-        taskLib.warning(taskLib.loc('InstallDotNetCoreForPublishing'));
-        return false;
+    const dotnetPath = taskLib.which('dotnet', true);
+   if (!dotnetPath && osvar !== 'win32') {
+     taskLib.warning(taskLib.loc('InstallDotNetCoreForPublishing'));
+       return false;
     }
-
-    if (!dotnetPath && osvar === 'win32') {
-        // use full .NET to execute
-        dotnet = taskLib.tool(path.join(__dirname, 'CoveragePublisher', 'CoveragePublisher.Console.exe'));
-    } else {
-        dotnet = taskLib.tool(dotnetPath);
-        dotnet.arg(path.join(__dirname, "CoveragePublisher", 'CoveragePublisher.Console.dll'));
-    }
+    
+    //Entire process will be handled by .exe file which is optimized. 
+    dotnet = taskLib.tool(path.join(__dirname, 'CoveragePublisher', 'CoveragePublisher.Console.exe'));
 
     dotnet.arg('"' + inputFiles.join('" "') + '"');
     dotnet.arg('--reportDirectory ' + reportDirectory);
