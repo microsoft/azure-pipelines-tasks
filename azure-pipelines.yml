@@ -24,6 +24,9 @@ parameters:
   type: boolean
   default: false
 
+variables:
+  currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
+  
 jobs:
 
 - ${{ if parameters.build_single_task }}:

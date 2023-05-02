@@ -1,6 +1,3 @@
-variables:
-  currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
-
 steps:
 - task: NuGetToolInstaller@0
   inputs:
