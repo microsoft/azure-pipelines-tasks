@@ -12,8 +12,6 @@ describe('InstallAppleCertificate Suite', function () {
     });
 
     it('Defaults: install cert in temporary keychain', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0InstallTempKeychain.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -30,8 +28,6 @@ describe('InstallAppleCertificate Suite', function () {
     });
 
     it('Defaults: install cert with empty password in temporary keychain', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0InstallCertWithEmptyPassword.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -48,8 +44,6 @@ describe('InstallAppleCertificate Suite', function () {
     });
 
     it('Defaults: delete temporary keychain after build', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0DeleteTempKeychain.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -64,8 +58,6 @@ describe('InstallAppleCertificate Suite', function () {
     });
 
     it('Defaults: install certificate in default keychain before build', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0InstallDefaultKeychain.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -81,8 +73,6 @@ describe('InstallAppleCertificate Suite', function () {
     });
 
     it('Defaults: delete certificate from default keychain after build', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0DeleteCertDefaultKeychain.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -101,8 +91,6 @@ describe('InstallAppleCertificate Suite', function () {
     it('Defaults: with user input CN do not parse for it', (done: Mocha.Done) => {
         // there is no way to verify the variable value as it is a 'side effect'
         // this test just verifies that with user set CN, the task still works
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0UserSupplyCN.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -117,8 +105,6 @@ describe('InstallAppleCertificate Suite', function () {
     });
 
     it('Installs certificate valid for a brief time', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0CertificateValidForABriefTime.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -131,8 +117,6 @@ describe('InstallAppleCertificate Suite', function () {
     });
 
     it('Fails on expired certificate', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0FailOnExpiredCertificate.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -146,8 +130,6 @@ describe('InstallAppleCertificate Suite', function () {
     });
 
     it('Fails on windows', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0FailOnWindows.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -161,8 +143,6 @@ describe('InstallAppleCertificate Suite', function () {
     });
 
     it('postexecution should not fail for errors', function (done: Mocha.Done) {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0ErrorsInPostExecutionJob.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -175,8 +155,6 @@ describe('InstallAppleCertificate Suite', function () {
     });
 
     it('Defaults: install cert in temporary keychain - skip partition_id ACL', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0InstallTempKeychainSkipPartitionIdACL.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
