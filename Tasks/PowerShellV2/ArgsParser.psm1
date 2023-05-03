@@ -163,9 +163,9 @@ function Expand-EnvVariables([string]$ArgsLine) {
             continue
         }
 
-        $expansionPrefixIndex = result.IndexOf($expansionPrefix, $startIndex)
+        $expansionPrefixIndex = $result.IndexOf($expansionPrefix, $startIndex)
         if ($expansionPrefixIndex -ge 0) {
-            $expansionSuffixIndex = result.IndexOf($expansionSuffix, $startIndex)
+            $expansionSuffixIndex = $result.IndexOf($expansionSuffix, $startIndex)
             if ($expansionSuffixIndex -lt 0) {
                 $telemetry.unmatchedExpansionSyntax++;
                 break;
