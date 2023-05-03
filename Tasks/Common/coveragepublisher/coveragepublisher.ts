@@ -26,7 +26,7 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
      taskLib.warning(taskLib.loc('InstallDotNetCoreForPublishing'));
        return false;
     }
-    
+    // This alone will handle entire process.
     dotnet = taskLib.tool(path.join(__dirname, 'CoveragePublisher', 'CoveragePublisher.Console.exe'));
 
     dotnet.arg('"' + inputFiles.join('" "') + '"');
