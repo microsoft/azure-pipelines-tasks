@@ -384,6 +384,7 @@ CLI.build = function() {
 // node make.js test --task ShellScript --suite L0
 //
 CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
+    var minIstanbulVersion = '10';
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('mocha', '--version', '6.2.3');
 
@@ -472,6 +473,9 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
     }
 
     try {
+        // Installing node version 10 to run code coverage report, since common library tests run under node 6,
+        // which is incompatible with nyc 
+        util.installNode(minIstanbulVersion);
         util.rm(path.join(coverageTasksPath, '*coverage-summary.json'));
         util.run(`nyc merge ${coverageTasksPath} ${path.join(coverageTasksPath, 'mergedcoverage.json')}`, true);
         util.rm(path.join(coverageTasksPath, '*-coverage.json'));
