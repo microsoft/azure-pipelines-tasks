@@ -18,6 +18,6 @@
   "loc.input.help.signatureKey": "Chiave in cui deve essere inserita la firma nelle proprietà del messaggio. Se viene lasciata vuota, il valore predefinito è 'signature' nelle proprietà del messaggio",
   "loc.input.label.waitForCompletion": "Attendi il completamento dell'attività",
   "loc.input.help.waitForCompletion": "Se è impostata su true, questa attività attenderà l'evento TaskCompleted per il timeout attività specificato.",
-  "loc.input.label.useDataContractSerializer": "Use .NET data contract serializer",
+  "loc.input.label.useDataContractSerializer": "Usare il serializzatore del contratto di dati .NET",
   "loc.input.help.useDataContractSerializer": "Per altri dettagli, vedere la documentazione dell'attività"
 }
