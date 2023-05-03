@@ -38,8 +38,11 @@
     "inputs": [
         {
             "name": "azureSubscription",
+            "aliases": [
+                "connectedServiceNameARM"
+            ],
             "type": "connectedService:AzureRM",
-            "label": "Azure subscription",
+            "label": "Azure Resource Manager connection",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
