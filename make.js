@@ -472,6 +472,18 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
         }
     }
 
+    // Run common tests
+    banner('Running common tests');
+    var commonPattern = path.join(buildTestsPath, suiteType + '.js');
+    var specs = matchFind(commonPattern, buildTestsPath, { noRecurse: true });
+    if (specs.length > 0) {
+        // setup the version of node to run the tests
+        util.installNode(argv.node);
+        run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
+    } else {
+        console.warn("No common tests found");
+    }
+
     try {
         // Installing node version 10 to run code coverage report, since common library tests run under node 6,
         // which is incompatible with nyc 
@@ -483,18 +495,6 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
         util.rm(path.join(coverageTasksPath, 'mergedcoverage.json'));
     } catch (e) {
         console.log('Error while generating coverage report')
-    }
-
-    // Run common tests
-    banner('Running common tests');
-    var commonPattern = path.join(buildTestsPath, suiteType + '.js');
-    var specs = matchFind(commonPattern, buildTestsPath, { noRecurse: true });
-    if (specs.length > 0) {
-        // setup the version of node to run the tests
-        util.installNode(argv.node);
-        run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
-    } else {
-        console.warn("No common tests found");
     }
 }
 
