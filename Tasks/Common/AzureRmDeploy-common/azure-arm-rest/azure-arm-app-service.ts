@@ -371,7 +371,7 @@ export class AzureAppService {
             }, null, '2018-02-01');
             
             var response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode != 200) {
+            if(response.statusCode != 200 && response.statusCode != 202) {
                 throw ToError(response);
             }
 

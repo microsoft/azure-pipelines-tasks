@@ -23,7 +23,7 @@ export class ContainerBasedDeploymentUtility {
         this._appServiceUtility = new AzureAppServiceUtility(appService);
     }
 
-    public async deployWebAppImage(properties: any): Promise<void> {
+    public async deployWebAppImage(properties: any, restart:boolean=true): Promise<void> {
         let imageName: string = properties["ImageName"];
         let multicontainerConfigFile: string = properties["MulticontainerConfigFile"];
         let isMultiContainer: boolean = properties["isMultiContainer"];
@@ -46,8 +46,10 @@ export class ContainerBasedDeploymentUtility {
         tl.debug("Updating the webapp configuration.");
         await this._updateConfigurationDetails(properties["ConfigurationSettings"], properties["StartupCommand"], isLinuxApp, imageName, isMultiContainer, updatedMulticontainerConfigFile);
 
-        tl.debug('making a restart request to app service');
-        await this._appService.restart();
+        if (restart){
+            tl.debug('making a restart request to app service');
+            await this._appService.restart();
+        }
     }
 
     private async _updateConfigurationDetails(configSettings: any, startupCommand: string, isLinuxApp: boolean, imageName?: string, isMultiContainer?: boolean, multicontainerConfigFile?: string): Promise<void> {
