@@ -3,7 +3,8 @@ import path = require('path');
 import { AzureRMEndpoint, dispose } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
 import { AzureRmEndpointAuthenticationScheme } from 'azure-pipelines-tasks-azure-arm-rest-v2/constants';
-import {AzureAppService  } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
+import { AzureAppService  } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
+import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureAppServiceUtility';
 import { AzureApplicationInsights } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-appinsights';
 import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
 import { AzureAppServiceUtils } from './operations/AzureAppServiceUtils';
@@ -19,7 +20,7 @@ const webAppKindMap = new Map([
 ]);
 const defaultslotname:string = "production";
 
-async function advancedSlotSwap(updateDeploymentStatus: boolean, appServiceSourceSlot: AzureAppService, appServiceTargetSlot: AzureAppService, appServiceSourceSlotUtils: AzureAppServiceUtils, appServiceTargetSlotUtils: AzureAppServiceUtils) {
+async function advancedSlotSwap(updateDeploymentStatus: boolean, appServiceSourceSlot: AzureAppService, appServiceTargetSlot: AzureAppService, appServiceSourceSlotUtils: AzureAppServiceUtility, appServiceTargetSlotUtils: AzureAppServiceUtility) {
 
     if(appServiceSourceSlot.getSlot().toLowerCase() == appServiceTargetSlot.getSlot().toLowerCase()) {
         updateDeploymentStatus = false;
@@ -41,11 +42,11 @@ async function run() {
     let kuduService: Kudu;
     let kuduServiceUtils: KuduServiceUtils;
     let appService: AzureAppService;
-    let azureAppServiceUtils: AzureAppServiceUtils;
+    let azureAppServiceUtils: AzureAppServiceUtility;
     let appServiceSourceSlot: AzureAppService;
     let appServiceTargetSlot: AzureAppService;
-    let appServiceSourceSlotUtils: AzureAppServiceUtils;
-    let appServiceTargetSlotUtils: AzureAppServiceUtils;
+    let appServiceSourceSlotUtils: AzureAppServiceUtility;
+    let appServiceTargetSlotUtils: AzureAppServiceUtility;
     let taskResult = true;
     let errorMessage: string = "";
     let updateDeploymentStatus: boolean = true;
@@ -72,13 +73,20 @@ async function run() {
 
         let endpointTelemetry = '{"endpointId":"' + connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureAppServiceManage]" + endpointTelemetry);
-        
+
         if (azureEndpoint.scheme && azureEndpoint.scheme.toLowerCase() === AzureRmEndpointAuthenticationScheme.PublishProfile) {
             if (action !== "Start all continuous webjobs" && action !== "Stop all continuous webjobs" && action !== "Install Extensions") {
                 throw Error(tl.loc('InvalidActionForPublishProfileEndpoint'));
             }
             let scmCreds: publishProfileUtility.ScmCredentials = await publishProfileUtility.getSCMCredentialsFromPublishProfile(azureEndpoint.PublishProfile);
-            kuduService = new Kudu(scmCreds.scmUri, scmCreds.username, scmCreds.password);
+            const buffer =  new Buffer(scmCreds.username + ':' + scmCreds.password);
+            const auth = buffer.toString("base64");
+            var authHeader = "Basic " + auth;
+            
+            tl.debug("Kudu: using basic authentication for publish profile");            
+            console.log('##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureAppServiceDeployment]{"authMethod":"Basic"}');
+
+            kuduService = new Kudu(scmCreds.scmUri, authHeader);
             kuduServiceUtils = new KuduServiceUtils(kuduService);
         } else {
             if(action != "Swap Slots" && !slotName) {
@@ -88,7 +96,7 @@ async function run() {
             tl.debug(`Resource Group: ${resourceGroupName}`);
 
             appService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
-            azureAppServiceUtils = new AzureAppServiceUtils(appService);
+            azureAppServiceUtils = new AzureAppServiceUtility(appService);
             let appServiceKuduService = await azureAppServiceUtils.getKuduService();
             kuduServiceUtils = new KuduServiceUtils(appServiceKuduService);
 
@@ -106,21 +114,21 @@ async function run() {
                 targetSlot = (swapWithProduction) ? "production" : targetSlot;
                 appServiceSourceSlot = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, sourceSlot);
                 appServiceTargetSlot = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, targetSlot);
-                appServiceSourceSlotUtils = new AzureAppServiceUtils(appServiceSourceSlot);
-                appServiceTargetSlotUtils = new AzureAppServiceUtils(appServiceTargetSlot);
+                appServiceSourceSlotUtils = new AzureAppServiceUtility(appServiceSourceSlot);
+                appServiceTargetSlotUtils = new AzureAppServiceUtility(appServiceTargetSlot);
             }
         }
 
         switch(action) {
             case "Start Azure App Service": {
                 await appService.start();
-                await azureAppServiceUtils.monitorApplicationState("running");
+                await AzureAppServiceUtils.monitorApplicationState(appService, "running");
                 await azureAppServiceUtils.pingApplication();
                 break;
             }
             case "Stop Azure App Service": {
                 await appService.stop();
-                await azureAppServiceUtils.monitorApplicationState("stopped");
+                await AzureAppServiceUtils.monitorApplicationState(appService, "stopped");
                 break;
             }
             case "Restart Azure App Service": {

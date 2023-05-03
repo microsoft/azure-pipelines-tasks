@@ -108,20 +108,35 @@ export class AzureAppServiceUtility {
     private async getKuduAuthHeader(publishingCredentials: any): Promise<string> {
         const scmPolicyCheck = await this.isSitePublishingCredentialsEnabled(); 
 
-        if (!scmPolicyCheck) {
-            const accessToken = await this._appService._client.getCredentials().getToken();
-            tl.debug("Kudu: using bearer token.");
-            return "Bearer " + accessToken;
+        let token = "";
+        let method = "";
+
+        if(scmPolicyCheck === false) {
+            token = await this._appService._client.getCredentials().getToken();
+            method = "Bearer";
+            // Though bearer AuthN is used, lets try to set publish profile password for mask hints to maintain compat with old behavior for MSDEPLOY. 
+            // This needs to be cleaned up once MSDEPLOY suppport is reomve. Safe handle the exception setting up mask hint as we dont want to fail here.
+            try {      
+                tl.setVariable(`AZURE_APP_MSDEPLOY_${this._appService.getSlot()}_PASSWORD`, publishingCredentials.properties["publishingPassword"], true);
+            }
+            catch (error){
+                // safe handle the exception setting up mask hint
+                tl.debug(`Setting mask hint for publish profile password failed with error: ${error}`);
+            }
+        } else {
+            tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._appService.getSlot()}_PASSWORD`, publishingCredentials.properties["publishingPassword"], true);
+            const buffer = new Buffer(publishingCredentials.properties["publishingUserName"] + ':' + publishingCredentials.properties["publishingPassword"]);
+            token = buffer.toString('base64');
+            method = "Basic";
         }
 
-        const password = publishingCredentials.properties["publishingPassword"];
-        const userName = publishingCredentials.properties["publishingUserName"];
+        const authMethodtelemetry = {
+            authMethod: method
+        };
+        tl.debug(`Using ${method} authentication method for Kudu service.`);
+        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureAppServiceDeployment]" + JSON.stringify(authMethodtelemetry));
 
-        tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._appService.getSlot()}_PASSWORD`, password, true);
-        tl.debug("Kudu: using basic auth.");
-
-        const auth = (new Buffer(userName + ':' + password).toString('base64'));
-        return "Basic " + auth;
+        return method + " " + token;
     }
 
     public async updateAndMonitorAppSettings(addProperties?: any, deleteProperties?: any, formatJSON?: boolean): Promise<boolean> {
@@ -227,8 +242,8 @@ export class AzureAppServiceUtility {
             }
         }
         catch(error){
-            tl.debug(`Skipping SCM Policy check: ${error}`);
-            return null;
+            tl.debug(`Call to get SCM Policy check failed: ${error}`);
+            return false;
         }
     }
 }

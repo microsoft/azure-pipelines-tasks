@@ -1,5 +1,93 @@
 {
     "externals": {
+        "nugetv2": [
+            {
+                "name": "Newtonsoft.Json",
+                "version": "12.0.3",
+                "repository": "https://www.nuget.org/api/v2/",
+                "cp": [
+                    {
+                        "source": "lib/net45/Newtonsoft.Json.dll"
+                    }
+                ]
+            },
+            {
+                "name": "Microsoft.AspNet.WebApi.Client",
+                "version": "5.2.7",
+                "repository": "https://www.nuget.org/api/v2/",
+                "cp": [
+                    {
+                        "source": "lib/net45/System.Net.Http.Formatting.dll"
+                    }
+                ]
+            },
+            {
+                "name": "Microsoft.TeamFoundationServer.Client",
+                "version": "16.170.0",
+                "repository": "https://www.nuget.org/api/v2/",
+                "cp": [
+                    {
+                        "source": "lib/net462/Microsoft.TeamFoundation.Core.WebApi.dll"
+                    },
+                    {
+                        "source": "lib/net462/<CULTURE_NAME>/Microsoft.TeamFoundation.Core.WebApi.resources.dll",
+                        "dest": "<CULTURE_NAME>/"
+                    }
+                ]
+            },
+            {
+                "name": "Microsoft.TeamFoundation.DistributedTask.Common.Contracts",
+                "version": "19.216.0-preview",
+                "repository": "https://www.nuget.org/api/v2/",
+                "cp": [
+                    {
+                        "source": [
+                            "lib/net472/Microsoft.TeamFoundation.DistributedTask.Common.Contracts.dll"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Microsoft.TeamFoundation.DistributedTask.WebApi",
+                "version": "19.216.0-preview",
+                "repository": "https://www.nuget.org/api/v2/",
+                "cp": [
+                    {
+                        "source": [
+                            "lib/net472/Microsoft.TeamFoundation.DistributedTask.WebApi.dll"
+                        ]
+                    },
+                    {
+                        "source": [
+                            "lib/net472/<CULTURE_NAME>/Microsoft.TeamFoundation.DistributedTask.WebApi.resources.dll"
+                        ],
+                        "dest": "<CULTURE_NAME>/"
+                    }
+                ]
+            },
+            {
+                "name": "Microsoft.VisualStudio.Services.Client",
+                "version": "19.216.0-preview",
+                "repository": "https://www.nuget.org/api/v2/",
+                "cp": [
+                    {
+                        "source": [
+                            "lib/net472/Microsoft.TeamFoundation.Common.dll",
+                            "lib/net472/Microsoft.VisualStudio.Services.Common.dll",
+                            "lib/net472/Microsoft.VisualStudio.Services.WebApi.dll"
+                        ]
+                    },
+                    {
+                        "source": [
+                            "lib/net472/<CULTURE_NAME>/Microsoft.TeamFoundation.Common.resources.dll",
+                            "lib/net472/<CULTURE_NAME>/Microsoft.VisualStudio.Services.Common.resources.dll",
+                            "lib/net472/<CULTURE_NAME>/Microsoft.VisualStudio.Services.WebApi.resources.dll"
+                        ],
+                        "dest": "<CULTURE_NAME>/"
+                    }
+                ]
+            }
+        ],
         "archivePackages": [
             {
                 "archiveName": "openssl.zip",
