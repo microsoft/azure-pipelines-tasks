@@ -384,6 +384,7 @@ CLI.build = function() {
 // node make.js test --task ShellScript --suite L0
 //
 CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
+    var minIstanbulVersion = '10';
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('mocha', '--version', '6.2.3');
 
@@ -471,16 +472,6 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
         }
     }
 
-    try {
-        util.rm(path.join(coverageTasksPath, '*coverage-summary.json'));
-        util.run(`nyc merge ${coverageTasksPath} ${path.join(coverageTasksPath, 'mergedcoverage.json')}`, true);
-        util.rm(path.join(coverageTasksPath, '*-coverage.json'));
-        util.run(`nyc report -t ${coverageTasksPath} --report-dir ${coverageTasksPath} --reporter=cobertura`, true);
-        util.rm(path.join(coverageTasksPath, 'mergedcoverage.json'));
-    } catch (e) {
-        console.log('Error while generating coverage report')
-    }
-
     // Run common tests
     banner('Running common tests');
     var commonPattern = path.join(buildTestsPath, suiteType + '.js');
@@ -491,6 +482,19 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
         run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
     } else {
         console.warn("No common tests found");
+    }
+
+    try {
+        // Installing node version 10 to run code coverage report, since common library tests run under node 6,
+        // which is incompatible with nyc 
+        util.installNode(minIstanbulVersion);
+        util.rm(path.join(coverageTasksPath, '*coverage-summary.json'));
+        util.run(`nyc merge ${coverageTasksPath} ${path.join(coverageTasksPath, 'mergedcoverage.json')}`, true);
+        util.rm(path.join(coverageTasksPath, '*-coverage.json'));
+        util.run(`nyc report -t ${coverageTasksPath} --report-dir ${coverageTasksPath} --reporter=cobertura`, true);
+        util.rm(path.join(coverageTasksPath, 'mergedcoverage.json'));
+    } catch (e) {
+        console.log('Error while generating coverage report')
     }
 }
 
