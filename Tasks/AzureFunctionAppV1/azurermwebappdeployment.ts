@@ -1,8 +1,8 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
+import * as Endpoint from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
 import { TaskParameters, TaskParametersUtility } from './taskparameters';
 import { DeploymentFactory } from './deploymentProvider/DeploymentFactory';
-import * as Endpoint from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
 
 async function main() {
     let isDeploymentSuccess: boolean = true;
@@ -29,7 +29,7 @@ async function main() {
         if(deploymentProvider != null) {
             await deploymentProvider.UpdateDeploymentStatus(isDeploymentSuccess);
         }
-        
+
         Endpoint.dispose();
         tl.debug(isDeploymentSuccess ? "Deployment Succeded" : "Deployment failed");
 
