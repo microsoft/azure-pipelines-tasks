@@ -370,7 +370,7 @@ function Build-MSALInstance {
         # load the MSAL library
         Add-Type -Path "$PSScriptRoot\msal\Microsoft.Identity.Client.dll"
 
-        $clientBuilder = [Microsoft.Identity.Client.ConfidentialClientApplicationBuilder]::Create($clientId)
+        $clientBuilder = [Microsoft.Identity.Client.ConfidentialClientApplicationBuilder]::Create($clientId).WithAuthority($envAuthUrl, $tenantId)
 
         if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
             Write-Verbose "MSAL - ServicePrincipal - certificate is used.";
@@ -378,20 +378,20 @@ function Build-MSALInstance {
             $pemFileContent = $endpoint.Auth.Parameters.ServicePrincipalCertificate
             $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
             $clientCertificate = Get-PfxCertificate -pfxFilePath $pfxFilePath -pfxFilePassword $pfxFilePassword
-            $msalClientInstance = $clientBuilder.WithTenantId($tenantId).WithCertificate($clientCertificate).Build()
+            $msalClientInstance = $clientBuilder.WithCertificate($clientCertificate).Build()
         }
         elseif ($endpoint.Auth.Scheme -eq $wifConnection) {
             Write-Verbose "MSAL - WorkloadIdentityFederation is used";
 
             $oidc_token = Get-VstsFederatedToken -serviceConnectionId $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
 
-            $msalClientInstance = $clientBuilder.WithTenantId($tenantId).WithClientAssertion($oidc_token).Build()
+            $msalClientInstance = $clientBuilder.WithClientAssertion($oidc_token).Build()
         }
         else {
             Write-Verbose "MSAL - ServicePrincipal - clientSecret is used.";
 
             $clientSecret = $endpoint.Auth.Parameters.ServicePrincipalKey
-            $msalClientInstance = $clientBuilder.WithTenantId($tenantId).WithClientSecret($clientSecret).Build()
+            $msalClientInstance = $clientBuilder.WithClientSecret($clientSecret).Build()
         }
 
         return $msalClientInstance
