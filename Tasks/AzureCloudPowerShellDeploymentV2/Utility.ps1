@@ -224,8 +224,10 @@ function Create-AzureCloudService {
         [Parameter(Mandatory = $false)][array] $diagnosticExtensions,
         [Parameter(Mandatory = $false)][string] $upgradeMode
     )
-    $storageContext = New-AzStorageContext -StorageAccountName $storageAccount -UseConnectedAccount
-    Remove-AzStorageBlob -Container "cloudservicecontainer" -Blob ($ServiceName + ".cspkg") -Context $storageContext -Force
+
+    # to compensation the issue with inability to pass -Force parameter to underlying comamnds in New-AzCloudService command
+    Cleanup-Resources-For-Recreation -serviceName $serviceName -resourceGroupName $resourceGroupName -storageAccount $storageAccount
+
     if (!$upgradeMode) {
         $upgradeMode = 'Auto'
     }
@@ -260,6 +262,18 @@ function Create-AzureCloudService {
                 -DefinitionFile "$csDef" -PackageFile "$csPkg" -StorageAccount "$storageAccount" -Tag $tag -UpgradeMode "$upgradeMode"
         }
     }
+}
+
+function Cleanup-Resources-For-Recreation {
+    Param (
+        [Parameter(Mandatory = $true)][string] $serviceName,
+        [Parameter(Mandatory = $true)][string] $resourceGroupName,
+        [Parameter(Mandatory = $true)][string] $storageAccount
+    )
+
+    $storageContext = New-AzStorageContext -StorageAccountName $storageAccount -UseConnectedAccount
+    Remove-AzStorageBlob -Container "cloudservicecontainer" -Blob ($ServiceName + ".cspkg") -Context $storageContext -Force
+    Remove-AzPublicIpAddress -Name ($serviceName + "Ip") -ResourceGroupName $resourceGroupName -Force
 }
 
 function Validate-AzureCloudServiceStatus {
