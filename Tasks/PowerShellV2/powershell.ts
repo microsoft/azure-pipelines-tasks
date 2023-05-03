@@ -7,7 +7,8 @@ import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry'
 import { parsePowerShellArguments } from './ArgsParser';
 var uuidV4 = require('uuid/v4');
 
-const argsFile = path.join(__dirname, "input.args")
+const secureArgsFile = path.join(process.env.AGENT_TEMPDIRECTORY, `powershellArgs_${uuidV4()}`)
+tl.debug(`Args file path = ${secureArgsFile}`)
 
 const featureFlags = {
     enableTelemetry: !!process.env['AZP_TASK_FF_POWERSHELLV2_ENABLE_INPUT_ARGS_TELEMETRY'],
@@ -60,8 +61,8 @@ async function run() {
                 if (featureFlags.enableSecureArgs) {
                     const json = JSON.stringify(argsArray, null, 2)
 
-                    tl.debug("Writing arguments to temp $argsFile file...")
-                    fs.writeFileSync(argsFile, json)
+                    tl.debug(`Writing arguments to temp ${secureArgsFile} file...`)
+                    fs.writeFileSync(secureArgsFile, json)
                 }
 
                 if (featureFlags.enableTelemetry) {
@@ -100,7 +101,7 @@ async function run() {
             contents.push(`$ProgressPreference = '${input_progressPreference}'`);
         }
         if (input_arguments && featureFlags.enableSecureArgs) {
-            contents.push(`$scriptArgs = Get-Content ${argsFile} | ConvertFrom-Json | ForEach-Object { "$_" }`)
+            contents.push(`$scriptArgs = Get-Content ${secureArgsFile} | ConvertFrom-Json | ForEach-Object { "$_" }`)
             contents.push("for ($i = 0; $i -lt $scriptArgs.Count; $i++) {")
             contents.push("$argVar = $scriptArgs[$i]")
             contents.push("if ($argVar.StartsWith('-')) {")

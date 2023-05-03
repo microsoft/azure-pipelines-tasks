@@ -3,7 +3,8 @@ param()
 
 Import-Module .\ArgsParser.psm1
 
-$argsFile = Join-Path $(Get-Location) "input.args"
+$secureArgsFile = Join-Path $env:AGENT_TEMPDIRECTORY "powershellArgs_$(New-Guid)"
+Write-Debug "Args file path = $secureArgsFile"
 
 $featureFlags = @{
     enableTelemetry  = [System.Convert]::ToBoolean($env:AZP_TASK_FF_POWERSHELLV2_ENABLE_INPUT_ARGS_TELEMETRY)
@@ -81,9 +82,9 @@ try {
             if ($featureFlags.enableSecureArgs) {
                 $argsJson = $argsArray | ConvertTo-Json
 
-                Write-Debug "Writing arguments to temp $argsFile file..."
+                Write-Debug "Writing arguments to temp $secureArgsFile file..."
 
-                $argsJson | Out-File "$argsFile"
+                $argsJson | Out-File "$secureArgsFile"
             }
 
             if ($featureFlags.enableTelemetry) {
@@ -123,10 +124,10 @@ try {
     }
     if ($input_arguments -and $featureFlags.enableSecureArgs) {
         if ($input_pwsh) {
-            $contents += "`$scriptArgs = `$(Get-Content $argsFile) | ConvertFrom-Json  | ForEach-Object { `"`$_`" }"
+            $contents += "`$scriptArgs = `$(Get-Content $secureArgsFile) | ConvertFrom-Json  | ForEach-Object { `"`$_`" }"
         }
         else {
-            $contents += "`$scriptArgs = `$(Get-Content $argsFile) | ConvertFrom-Json"
+            $contents += "`$scriptArgs = `$(Get-Content $secureArgsFile) | ConvertFrom-Json"
         }
         $contents += "for (`$i = 0; `$i -lt `$scriptArgs.Count; `$i++) {"
         $contents += "`$argVar = `$scriptArgs[`$i]"
