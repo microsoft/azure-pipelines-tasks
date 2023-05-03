@@ -217,3 +217,5 @@ ModelManifest.xml
 /Package
 LoadTest.code-workspace
 .idea/
+.nyc_output/
+_dotnetsdk/
