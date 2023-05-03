@@ -117,7 +117,7 @@ async function run() {
                 }
 
                 if (featureFlags.enableTelemetry) {
-                    emitTelemetry('TaskHub', 'Bash', telemetry)
+                    emitTelemetry('TaskHub', 'BashV3', telemetry)
                 }
             }
 
