@@ -27,7 +27,6 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
        return false;
     }
     
-    //Entire process will be handled by .exe file which is optimized. 
     dotnet = taskLib.tool(path.join(__dirname, 'CoveragePublisher', 'CoveragePublisher.Console.exe'));
 
     dotnet.arg('"' + inputFiles.join('" "') + '"');
