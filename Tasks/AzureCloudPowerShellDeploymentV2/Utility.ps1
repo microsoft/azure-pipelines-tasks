@@ -224,12 +224,13 @@ function Create-AzureCloudService {
         [Parameter(Mandatory = $false)][array] $diagnosticExtensions,
         [Parameter(Mandatory = $false)][string] $upgradeMode
     )
+    $storageContext = New-AzStorageContext -StorageAccountName $storageAccount -UseConnectedAccount
+    Remove-AzStorageBlob -Container "cloudservicecontainer" -Blob ($ServiceName + ".cspkg") -Context $storageContext -Force
     if (!$upgradeMode) {
         $upgradeMode = 'Auto'
     }
     $azureService = "New-AzCloudService -Name `"$serviceName`" -ResourceGroupName `"$resourceGroupName`" -Location `"$serviceLocation`" -ConfigurationFile `"$csCfg`""
     $azureService += " -DefinitionFile `"$csDef`" -PackageFile `"$csPkg`" -StorageAccount `"$storageAccount`" -Tag {$($tag.Keys.Count) tags} -UpgradeMode `"$upgradeMode`"";
-    Remove-AzStorageBlob -Container "cloudservicecontainer" -Blob ($ServiceName + ".cspkg")
     if ($KeyVault) {
         $azureService += " -KeyVaultName `"$KeyVault`""
         if ($diagnosticExtensions -and ($diagnosticExtensions.Length -gt 0)) {
