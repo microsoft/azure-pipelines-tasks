@@ -34,6 +34,13 @@ function Get-ActionPreference {
     return $result
 }
 
+function PublishTelemetry($telemetry) {
+    $area = 'TaskHub'
+    $feature = 'PowerShellV2'
+    $telemetryJson = $telemetry | ConvertTo-Json -Compress
+    Write-Host "##vso[telemetry.publish area=$area;feature=$feature]$telemetryJson"
+}
+
 Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
@@ -74,13 +81,13 @@ try {
             if ($featureFlags.enableSecureArgs) {
                 $argsJson = $argsArray | ConvertTo-Json
 
-                Write-TaskDebug "Writing arguments to temp $argsFile file..."
+                Write-Debug "Writing arguments to temp $argsFile file..."
 
                 $argsJson | Out-File "$argsFile"
             }
 
             if ($featureFlags.enableTelemetry) {
-                Write-TaskDebug "Publishing task telemetry..."
+                Write-Debug "Publishing task telemetry..."
                 PublishTelemetry $telemetry
             }
         }
@@ -273,11 +280,4 @@ try {
 }
 finally {
     Trace-VstsLeavingInvocation $MyInvocation
-}
-
-function PublishTelemetry($telemetry) {
-    $area = 'TaskHub'
-    $feature = 'PowerShellV2'
-    $telemetryJson = $telemetry | ConvertTo-Json
-    Write-Host "##vso[telemetry.publish area=$area;feature=$feature]$telemetryJson"
 }
