@@ -60,6 +60,7 @@
   "loc.messages.ErrorCodeFormat": "エラー コード: [%s]",
   "loc.messages.ErrorMessageFormat": "エラー: %s",
   "loc.messages.FoundAppSourceDockerfileMessage": "指定されたアプリケーション ソースのパス '%s' で既存の Dockerfile が見つかりました。イメージはこの Dockerfile からビルドされます。",
+  "loc.messages.LoginFailed": "Azure のログインに失敗しました",
   "loc.messages.MissingAcrNameMessage": "appSourcePath 引数が指定されている場合は、acrName 引数も指定する必要があります。",
   "loc.messages.MissingImageToDeployMessage": "appSourcePath も acrName も指定しない場合は、引数 imageToDeploy を指定する必要があります。",
   "loc.messages.PackCliInstallFailed": "パック CLI をインストールできません。",
