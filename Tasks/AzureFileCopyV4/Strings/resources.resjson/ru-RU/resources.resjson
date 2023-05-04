@@ -87,6 +87,7 @@
   "loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode": "Программа AzCopy.exe завершила работу с ненулевым кодом выхода при отправке файлов в хранилище BLOB-объектов.",
   "loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey": "Не удалось получить ключ учетной записи хранения. Ошибка: \"{0}\"",
   "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Удалите пользовательский скрипт WinRM вручную и повторите попытку развертывания.",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "Дополнительные аргументы не могут содержать разделители \"&\", \";\" и \"|\". Проверьте входные данные. Дополнительные сведения о проверке аргументов см. по адресу https://aka.ms/azdo-task-argument-validation",
   "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек.",
   "loc.messages.UnsupportedAuthScheme": "Схема проверки подлинности \"{0}\" не поддерживается для конечной точки.",
   "loc.messages.ServicePrincipalError": "Произошла ошибка с субъектом-службой, используемой для развертывания."

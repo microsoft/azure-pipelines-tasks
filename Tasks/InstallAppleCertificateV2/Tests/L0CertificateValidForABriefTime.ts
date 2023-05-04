@@ -15,6 +15,7 @@ let secureFileHelperMock = require('azure-pipelines-tasks-securefiles-common/sec
 tr.registerMock('azure-pipelines-tasks-securefiles-common/securefiles-common', secureFileHelperMock);
 
 tr.registerMock('fs', {
+    ...fs,
     writeFileSync: function (filePath, contents) {
     }
 });

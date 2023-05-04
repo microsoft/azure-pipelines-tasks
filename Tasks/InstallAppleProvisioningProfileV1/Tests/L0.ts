@@ -12,8 +12,6 @@ describe('InstallAppleProvisioningProfile Suite', function () {
     });
 
     it('Defaults: install from SecureFile', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0SecureFile.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -28,8 +26,6 @@ describe('InstallAppleProvisioningProfile Suite', function () {
     });
 
     it('Install from source repository', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0SourceRepository.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -44,8 +40,6 @@ describe('InstallAppleProvisioningProfile Suite', function () {
     });
 
     it('Install from source repository fails if provisioning profile is not found', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0SourceRepositoryProfileNotFound.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -59,8 +53,6 @@ describe('InstallAppleProvisioningProfile Suite', function () {
     });
 
     it('Install profile file with no file extension', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0ProfileNoExtension.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -77,8 +69,6 @@ describe('InstallAppleProvisioningProfile Suite', function () {
     });
 
     it('Remove profile during post execution', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0RemoveProfile.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -93,8 +83,6 @@ describe('InstallAppleProvisioningProfile Suite', function () {
     });
 
     it('Fails on windows', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0FailOnWindows.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -108,8 +96,6 @@ describe('InstallAppleProvisioningProfile Suite', function () {
     });
 
     it('postexecution should not fail for errors', function (done: Mocha.Done) {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0ErrorsInPostExecutionJob.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 

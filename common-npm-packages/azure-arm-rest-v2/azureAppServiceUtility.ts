@@ -92,14 +92,51 @@ export class AzureAppServiceUtility {
         return physicalToVirtualPathMap.physicalPath;
     }
 
-    public async getKuduService(): Promise<Kudu> {
-        var publishingCredentials = await this._appService.getPublishingCredentials();
-        if (publishingCredentials.properties["scmUri"]) {
-            tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._appService.getSlot()}_PASSWORD`, publishingCredentials.properties["publishingPassword"], true);
-            return new Kudu(publishingCredentials.properties["scmUri"], publishingCredentials.properties["publishingUserName"], publishingCredentials.properties["publishingPassword"]);
+    public async getKuduService(): Promise<Kudu> {     
+
+        const publishingCredentials = await this._appService.getPublishingCredentials();
+        const scmUri = publishingCredentials.properties["scmUri"];
+
+        if (!scmUri) {
+            throw Error(tl.loc('KuduSCMDetailsAreEmpty'));
         }
 
-        throw Error(tl.loc('KuduSCMDetailsAreEmpty'));
+        const authHeader = await this.getKuduAuthHeader(publishingCredentials);
+        return new Kudu(publishingCredentials.properties["scmUri"], authHeader);        
+    }
+
+    private async getKuduAuthHeader(publishingCredentials: any): Promise<string> {
+        const scmPolicyCheck = await this.isSitePublishingCredentialsEnabled(); 
+
+        let token = "";
+        let method = "";
+
+        if(scmPolicyCheck === false) {
+            token = await this._appService._client.getCredentials().getToken();
+            method = "Bearer";
+            // Though bearer AuthN is used, lets try to set publish profile password for mask hints to maintain compat with old behavior for MSDEPLOY. 
+            // This needs to be cleaned up once MSDEPLOY suppport is reomve. Safe handle the exception setting up mask hint as we dont want to fail here.
+            try {      
+                tl.setVariable(`AZURE_APP_MSDEPLOY_${this._appService.getSlot()}_PASSWORD`, publishingCredentials.properties["publishingPassword"], true);
+            }
+            catch (error){
+                // safe handle the exception setting up mask hint
+                tl.debug(`Setting mask hint for publish profile password failed with error: ${error}`);
+            }
+        } else {
+            tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._appService.getSlot()}_PASSWORD`, publishingCredentials.properties["publishingPassword"], true);
+            const buffer = new Buffer(publishingCredentials.properties["publishingUserName"] + ':' + publishingCredentials.properties["publishingPassword"]);
+            token = buffer.toString('base64');
+            method = "Basic";
+        }
+
+        const authMethodtelemetry = {
+            authMethod: method
+        };
+        tl.debug(`Using ${method} authentication method for Kudu service.`);
+        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureAppServiceDeployment]" + JSON.stringify(authMethodtelemetry));
+
+        return method + " " + token;
     }
 
     public async updateAndMonitorAppSettings(addProperties?: any, deleteProperties?: any, formatJSON?: boolean): Promise<boolean> {
@@ -188,6 +225,25 @@ export class AzureAppServiceUtility {
         }
         else {
             tl.debug(`Skipped updating the values. linuxFxVersion: ${linuxFxVersion} : appCommandLine: ${appCommandLine}`)
+        }
+    }
+
+    public async isSitePublishingCredentialsEnabled(): Promise<boolean>{
+        try{
+            let scmAuthPolicy: any = await this._appService.getSitePublishingCredentialPolicies();
+            tl.debug(`Site Publishing Policy check: ${JSON.stringify(scmAuthPolicy)}`);
+            if(scmAuthPolicy && scmAuthPolicy.properties.allow) {
+                tl.debug("Function App does allow SCM access");
+                return true;
+            }
+            else {
+                tl.debug("Function App does not allow SCM Access");
+                return false;
+            }
+        }
+        catch(error){
+            tl.debug(`Call to get SCM Policy check failed: ${error}`);
+            return false;
         }
     }
 }

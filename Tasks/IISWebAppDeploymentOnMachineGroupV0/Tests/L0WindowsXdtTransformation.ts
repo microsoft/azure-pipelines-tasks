@@ -136,6 +136,7 @@ tr.registerMock('azure-pipelines-tasks-webdeployment-common/utility.js', {
 
 var fs = require('fs');
 tr.registerMock('fs', {
+    ...fs,
     createWriteStream: function (filePath, options) {
         return { 
             "isWriteStreamObj": true,
