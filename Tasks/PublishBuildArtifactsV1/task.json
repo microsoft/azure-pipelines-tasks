@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 211,
+        "Minor": 222,
         "Patch": 0
     },
     "demands": [],
@@ -82,16 +82,6 @@
             "required": false,
             "helpMarkDown": "Enter the degree of parallelism, or number of threads used, to perform the copy. The value must be at least 1 and not greater than 128.",
             "visibleRule": "ArtifactType = FilePath && Parallel = true"
-        },
-        {
-            "name": "FileCopyOptions",
-            "type": "string",
-            "label": "File copy options",
-            "defaultValue": "",
-            "groupName": "advanced",
-            "required": false,
-            "helpMarkDown": "Pass additional options to the Robocopy command.",
-            "visibleRule": "ArtifactType = FilePath"
         },
         {
             "name": "StoreAsTar",
