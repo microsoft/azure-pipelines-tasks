@@ -18,6 +18,7 @@
   "loc.input.help.generalSettings": "使用 json 語法新增/更新 App Service 一般設定，如下所示:<br/> [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"alwaysOn\": true, <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"webSocketsEnabled\": false<br/> &nbsp;&nbsp; }<br/>]",
   "loc.input.label.connectionStrings": "連接字串",
   "loc.input.help.connectionStrings": "使用 json 語法新增/更新 App Service 連接字串，如下所示:<br/> [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key1\", <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueabcd\",<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"type\": \"MySql\", <br/> &nbsp;&nbsp;&nbsp;&nbsp;\"slotSetting\": false <br/> &nbsp;&nbsp; },<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key2\", <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueefgh\",<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"type\": \"Custom\", <br/> &nbsp;&nbsp;&nbsp;&nbsp;\"slotSetting\": true <br/> &nbsp;&nbsp; }<br/>]",
+  "loc.messages.AppServiceConnectionStringsAlreadyPresent": "App Service 連接字串已存在。",
   "loc.messages.GotconnectiondetailsforazureRMWebApp0": "取得 Azure App Service 的服務連線詳細資料: '%s'",
   "loc.messages.ResourceDoesntExist": "資源 '%s' 不存在。應具備資源才可部署。",
   "loc.messages.FailedToGetAppServiceDetails": "無法擷取 App Service '%s' 詳細資料。錯誤: %s",

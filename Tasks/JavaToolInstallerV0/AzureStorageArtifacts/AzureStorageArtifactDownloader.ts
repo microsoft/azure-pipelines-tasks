@@ -2,7 +2,7 @@ import * as  tl from 'azure-pipelines-task-lib/task';
 import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common');
 import Model = require('azure-pipelines-tasks-azure-arm-rest-v2/azureModels');
 import armStorage = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-storage');
-import BlobService = require('azp-tasks-az-blobstorage-provider-v2/blobservice');
+import BlobService = require('azp-tasks-az-blobstorage-provider/blobservice');
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 
@@ -36,7 +36,14 @@ export class AzureStorageArtifactDownloader {
     const subscriptionId: string = tl.getEndpointDataParameter(this.connectedService, "subscriptionId", false);
     const credentials = await this._getARMCredentials();
     const storageArmClient = new armStorage.StorageManagementClient(credentials, subscriptionId);
-    const storageAccount: Model.StorageAccount = await this._getStorageAccount(storageArmClient);
+
+    const isUseOldStorageAccountQuery = process.env.AZP_TASK_FF_JAVATOOLINSTALLER_USE_OLD_SA_QUERY
+      ? !!process.env.AZP_TASK_FF_JAVATOOLINSTALLER_USE_OLD_SA_QUERY
+      : false;
+
+    const storageAccount = isUseOldStorageAccountQuery
+      ? await this._legacyGetStorageAccount(storageArmClient)
+      : await this._getStorageAccount(storageArmClient);
 
     const storageAccountResourceGroupName = armStorage.StorageAccounts.getResourceGroupNameFromUri(storageAccount.id);
 
@@ -50,7 +57,7 @@ export class AzureStorageArtifactDownloader {
     }
   }
 
-  private async _getStorageAccount(storageArmClient: armStorage.StorageManagementClient): Promise<Model.StorageAccount> {
+  private async _legacyGetStorageAccount(storageArmClient: armStorage.StorageManagementClient): Promise<Model.StorageAccount> {
     const storageAccounts = await storageArmClient.storageAccounts.listClassicAndRMAccounts(null);
     const index = storageAccounts.findIndex(account => account.name.toLowerCase() == this.azureStorageAccountName.toLowerCase());
     if (index < 0) {
@@ -58,6 +65,16 @@ export class AzureStorageArtifactDownloader {
     }
 
     return storageAccounts[index];
+  }
+
+  private async _getStorageAccount(storageArmClient: armStorage.StorageManagementClient): Promise<Model.StorageAccount> {
+    const storageAccount = await storageArmClient.storageAccounts.getClassicOrArmAccountByName(this.azureStorageAccountName, null);
+
+    if (!storageAccount) {
+      throw new Error(tl.loc('StorageAccountDoesNotExist', this.azureStorageAccountName));
+    }
+
+    return storageAccount;
   }
 
   private async _getARMCredentials(): Promise<msRestAzure.ApplicationTokenCredentials> {

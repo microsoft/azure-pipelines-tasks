@@ -109,7 +109,7 @@ export class azureclitask {
         var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
 
-        if (authScheme.toLowerCase() == "oidcfederation") {
+        if (authScheme.toLowerCase() == "workloadidentityfederation") {
             var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
             var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
 
@@ -200,7 +200,7 @@ export class azureclitask {
         const planId = tl.getVariable("System.PlanId");
         const projectId = tl.getVariable("System.TeamProjectId");
         const hub = tl.getVariable("System.HostType");
-        const uri = tl.getVariable("System.TeamFoundationCollectionUri");
+        const uri = tl.getVariable("System.CollectionUri");
         const token = getSystemAccessToken();
 
         const authHandler = getHandlerFromToken(token);

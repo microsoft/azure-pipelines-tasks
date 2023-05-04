@@ -10,6 +10,7 @@ $__vsts_input_errorActionPreference = Get-VstsInput -Name errorActionPreference
 $__vsts_input_failOnStandardError = Get-VstsInput -Name FailOnStandardError
 $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
+$validateScriptSignature = Get-VstsInput -Name validateScriptSignature -AsBool
 
 Write-Host "## Validating Inputs"
 # Validate the script path and args do not contains new-lines. Otherwise, it will
@@ -45,6 +46,30 @@ if ($targetAzurePs -eq $latestVersion) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
 }
 Write-Host "## Validating Inputs Complete" 
+
+if ($validateScriptSignature) {
+    try {
+        if ($scriptType -ne "InlineScript") {
+            Write-Host "## Validating Script Signature"
+
+            # Validate script is signed
+            $scriptSignature = Get-AuthenticodeSignature $scriptPath
+            if ($scriptSignature.Status -eq "NotSigned") {
+                throw "Object does not have a digital signature. Please ensure your script is signed and try again."
+            }
+            elseif ($scriptSignature.Status -ne "Valid") {
+                throw "Digital signature of the object did not verify. Please ensure your script is properly signed and try again."
+            }
+
+            Write-Host "## Validating Script Signature Complete" 
+        }
+    }
+    catch 
+    {
+        $errorMsg = $_.Exception.Message
+        throw "Unable to validate script signature: $errorMsg"
+    }
+}
 
 Write-Host "## Initializing Azure"
 . "$PSScriptRoot\Utility.ps1"
@@ -85,10 +110,17 @@ $troubleshoot = "https://aka.ms/azurepowershelltroubleshooting"
 try {
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    Initialize-Azure -azurePsVersion $targetAzurePs -strict
+    if (($authScheme -eq 'WorkloadIdentityFederation') -and (Get-Module Az.Accounts -ListAvailable)) {
+        $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+        $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
+        Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $serviceName -vstsAccessToken $vstsAccessToken
+    }
+    else {
+        Initialize-Azure -azurePsVersion $targetAzurePs -strict
+    }
     Write-Host "## Initializing Azure Complete"
     $success = $true
-} 
+}
 finally {
     if (!$success) {
         Write-VstsTaskError "Initialize Azure failed: For troubleshooting, refer: $troubleshoot"
