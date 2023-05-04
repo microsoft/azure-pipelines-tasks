@@ -2,6 +2,14 @@ import assert = require('assert');
 import { processBashEnvVariables } from '../../bashEnvProcessor';
 
 export const BashEnvProcessingTests = () => {
+    it('Handles empty line', () => {
+        const argsLine = '';
+        const expectedArgs = '';
+
+        const [actualArgs] = processBashEnvVariables(argsLine);
+
+        assert.deepStrictEqual(actualArgs, expectedArgs);
+    })
     it('Expanding known env variables', () => {
         const argsLine = '$VAR1 2';
         const expectedArgs = 'value1 2';

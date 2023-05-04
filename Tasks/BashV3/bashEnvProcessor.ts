@@ -43,7 +43,7 @@ export function processBashEnvVariables(argsLine: string): [string, BashTelemetr
         invalidEnvName: 0 // 0 means no this issue,
     }
 
-    while (true) {
+    for (let i = 0; i < argsLine.length; i++) {
         const prefixIndex = result.indexOf(envPrefix, startIndex)
         if (prefixIndex < 0) {
             break;
