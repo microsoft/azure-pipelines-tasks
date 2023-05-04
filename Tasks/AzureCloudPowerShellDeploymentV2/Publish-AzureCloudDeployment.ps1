@@ -12,7 +12,7 @@ try {
     $StorageAccount = Get-VstsInput -Name ARMStorageAccount -Require
     $KeyVault = Get-VstsInput -Name KeyVault
     $DeploymentLabel = Get-VstsInput -Name DeploymentLabel
-    $AppendDateTimeToLabel = Get-VstsInput -Name AppendDateTimeToLabel -Require -AsBool
+    $AppendDateTimeToLabel = Get-VstsInput -Name AppendDateTimeToLabel -AsBool
     $UpgradeMode = Get-VstsInput -Name UpgradeMode
     $AllowUpgrade = Get-VstsInput -Name AllowUpgrade -Require -AsBool
     $VerifyRoleInstanceStatus = Get-VstsInput -Name VerifyRoleInstanceStatus -AsBool
@@ -82,13 +82,12 @@ try {
         Create-AzureCloudService $ServiceName $ResourceGroupName $ServiceLocation $CsCfg $CsDef $CsPkg $StorageAccount $KeyVault $tag $diagnosticExtensions $UpgradeMode
     }
     else {
-        $tagChanged = $azureService.Tag.Keys.Count -ne $tag.Keys.Count
-        if (!$tagChanged -and ($tag.Keys.Coun -gt 0)) {
-            foreach ($key in $tag.Keys) {
-                if ($tag[$key] -ne $azureService.Tag[$key]) {
-                    $tagChanged = $true
-                    break
-                }
+        $tagChanged = $false
+        foreach ($key in $tag.Keys) {
+            if (!$azureService.Tag.ContainsKey($key) -or ($tag[$key] -ne $azureService.Tag[$key])) {
+                $azureService.Tag[$key] = $tag[$key]
+                Write-Host "Updating a tag with [$key=$($tag[$key])]"
+                $tagChanged = $true
             }
         }
         if (!$UpgradeMode) {
@@ -96,12 +95,8 @@ try {
         }
         $upgradeModeChanged = $azureService.UpgradeMode -ne $UpgradeMode
         if ($tagChanged -or $upgradeModeChanged) {
-            if ($tagChanged) {
-                Write-Host "Updating a tag"
-                $azureService.Tag = $tag
-            }
             if ($upgradeModeChanged) {
-                Write-Host "Updating upgrade mode"
+                Write-Host "Updating upgrade mode to $UpgradeMode"
                 $azureService.UpgradeMode = $UpgradeMode
             }
             Write-Host "##[command]Update-AzCloudService"
