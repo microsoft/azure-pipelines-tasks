@@ -12,8 +12,6 @@ describe('AndroidSigning Suite', function () {
     });
 
     it('Do not sign or zipalign if nothing is selected', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0AndroidSkipSignAlign.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -27,8 +25,6 @@ describe('AndroidSigning Suite', function () {
     });
 
     it('Do not align or sign if input single file does not exist', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0AndroidSignAlignNoFileInput.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -42,8 +38,6 @@ describe('AndroidSigning Suite', function () {
     });
 
     it('Do not align or sign if input pattern does not match any files', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0AndroidSignAlignNoMatchingFileInput.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -57,8 +51,6 @@ describe('AndroidSigning Suite', function () {
     });
 
     it('Use jarsigner from PATH before searching in JAVA_HOME', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0AndroidSignAlignJarsignerFromPath.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -72,8 +64,6 @@ describe('AndroidSigning Suite', function () {
     });
 
     it('Fail if jarsigner is not on PATH and JAVA_HOME is not set', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0AndroidSignAlignFailJarsignerNotFound.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -87,8 +77,6 @@ describe('AndroidSigning Suite', function () {
     });
 
     it('Fail if ANDROID_HOME is not set', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0AndroidSignAlignAndroidHomeNotSet.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -102,8 +90,6 @@ describe('AndroidSigning Suite', function () {
     });
 
     it('Signing a single file', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0AndroidSignSingleFile.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -117,8 +103,6 @@ describe('AndroidSigning Suite', function () {
     });
 
     it('zipalign a single file', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0AndroidZipalignSingleFile.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -132,8 +116,6 @@ describe('AndroidSigning Suite', function () {
     });
 
     it('Signing and aligning multiple files', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0AndroidSignAlignMultipleFiles.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -147,8 +129,6 @@ describe('AndroidSigning Suite', function () {
     });
 
     it('Download keystore file from SecureFile', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp: string = path.join(__dirname, 'L0DownloadKeystoreFile.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 

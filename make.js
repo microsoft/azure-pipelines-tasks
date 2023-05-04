@@ -52,6 +52,7 @@ var binPath = path.join(__dirname, 'node_modules', '.bin');
 var makeOptionsPath = path.join(__dirname, 'make-options.json');
 var gendocsPath = path.join(__dirname, '_gendocs');
 var packagePath = path.join(__dirname, '_package');
+var coverageTasksPath = path.join(buildPath, 'coverage');
 var baseConfigToolPath = path.join(__dirname, 'BuildConfigGen');
 var genTaskPath = path.join(__dirname, '_generated');
 var genTaskCommonPath = path.join(__dirname, '_generated', 'Common');
@@ -383,6 +384,7 @@ CLI.build = function() {
 // node make.js test --task ShellScript --suite L0
 //
 CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
+    var minIstanbulVersion = '10';
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('mocha', '--version', '6.2.3');
 
@@ -395,14 +397,18 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
     console.log('> copying ps test lib resources');
     mkdir('-p', path.join(buildTestsPath, 'lib'));
     matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(testsPath, 'lib'), path.join(buildTestsPath, 'lib'));
+    
     var suiteType = argv.suite || 'L0';
     function runTaskTests(taskName) {
         banner('Testing: ' + taskName);
         // find the tests
-        var nodeVersions = argv.node ? [argv.node] : getTaskNodeVersion(buildTasksPath, taskName);
+        var nodeVersions = argv.node ? new Array(argv.node) : getTaskNodeVersion(buildTasksPath, taskName);
         var pattern1 = path.join(buildTasksPath, taskName, 'Tests', suiteType + '.js');
         var pattern2 = path.join(buildTasksPath, 'Common', taskName, 'Tests', suiteType + '.js');
-
+        var taskPath = path.join('**', '_build', 'Tasks', taskName, "**", "*.js").replace(/\\/g, '/');
+        var isNodeTask = util.isNodeTask(buildTasksPath, taskName);
+        
+        var isReportWasFormed = false;
         var testsSpec = [];
 
         if (fs.existsSync(pattern1)) {
@@ -419,13 +425,20 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
 
         nodeVersions.forEach(function (nodeVersion) {
             try {
-
                 nodeVersion = String(nodeVersion);
                 banner('Run Mocha Suits for node ' + nodeVersion);
                 // setup the version of node to run the tests
                 util.installNode(nodeVersion);
-        
-                run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+                
+
+                if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
+                    run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+                    util.renameCodeCoverageOutput(coverageTasksPath, taskName);
+                    isReportWasFormed = true;
+                }
+                else {
+                    run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+                }
             }  catch (e) {
                 console.error(e);
                 process.exit(1);
@@ -469,6 +482,19 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
         run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
     } else {
         console.warn("No common tests found");
+    }
+
+    try {
+        // Installing node version 10 to run code coverage report, since common library tests run under node 6,
+        // which is incompatible with nyc 
+        util.installNode(minIstanbulVersion);
+        util.rm(path.join(coverageTasksPath, '*coverage-summary.json'));
+        util.run(`nyc merge ${coverageTasksPath} ${path.join(coverageTasksPath, 'mergedcoverage.json')}`, true);
+        util.rm(path.join(coverageTasksPath, '*-coverage.json'));
+        util.run(`nyc report -t ${coverageTasksPath} --report-dir ${coverageTasksPath} --reporter=cobertura`, true);
+        util.rm(path.join(coverageTasksPath, 'mergedcoverage.json'));
+    } catch (e) {
+        console.log('Error while generating coverage report')
     }
 }
 

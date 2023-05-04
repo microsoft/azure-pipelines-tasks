@@ -33,6 +33,9 @@ parameters:
   type: boolean
   default: true
 
+variables:
+  currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
+  
 jobs:
 
 - ${{ if parameters.build_single_task }}:
@@ -67,11 +70,6 @@ jobs:
       vmImage: windows-2022
     steps:
     - template: ci/publish-steps.yml
-    - powershell: |
-        $number = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json).week
-        Write-Host "##vso[task.setvariable variable=number;isOutput=true]$number"
-      displayName: Week Number
-      name: week
 
   # Courtesy Push
   - job: courtesy_push
@@ -80,7 +78,7 @@ jobs:
     - publish
     condition: |
       and(succeeded(), eq(variables['COURTESY_PUSH'], 'true'), or(
-        and(eq(variables['build.reason'], 'Schedule'), eq(dependencies.publish.outputs['week.number'], '3')),
+        eq(variables['build.reason'], 'Schedule'),
         and(eq(variables['build.reason'], 'Manual'), eq(variables['FORCE_COURTESY_PUSH'], 'true'))
       ))
     pool:
