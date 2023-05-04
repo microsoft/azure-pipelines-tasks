@@ -56,7 +56,7 @@ export class AzureFunctionOnContainerDeploymentProvider{
         let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
         
         if (this.isCentauri){
-            await containerDeploymentUtility.deployWebAppImage(this.taskParams); //, false
+            await containerDeploymentUtility.deployWebAppImage(this.taskParams, false);
             let linuxFunctionStorageSetting: string = ''; 
             if (!this.taskParams.AppSettings || this.taskParams.AppSettings.indexOf(linuxFunctionStorageSettingName) < 0) { 
                 linuxFunctionStorageSetting = `${linuxFunctionStorageSettingName} ${linuxFunctionStorageSettingValue}`; 
