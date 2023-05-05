@@ -144,6 +144,8 @@ function Expand-EnvVariables([string]$ArgsLine) {
         variableStartsFromBacktick  = 0
         variablesWithBacktickInside = 0
         envQuottedBlocks            = 0
+        # blockers
+        bracedEnvSyntax             = 0
         expansionSyntax             = 0
         unmatchedExpansionSyntax    = 0
     }
@@ -178,6 +180,11 @@ function Expand-EnvVariables([string]$ArgsLine) {
 
         $prefixIndex = $result.ToLower().IndexOf($envPrefix, $startIndex)
         if ($prefixIndex -lt 0) {
+            $prefixIndex = $result.ToLower().IndexOf('${env:', $startIndex)
+            if ($prefixIndex -lt 0) {
+                break;
+            }
+            $telemetry.bracedEnvSyntax++
             break;
         }
 
