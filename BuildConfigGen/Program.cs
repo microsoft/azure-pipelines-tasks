@@ -47,7 +47,7 @@ namespace BuildConfigGen
             // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
             // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
             // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
-
+            // System.Diagnostics.Debugger.Launch();
             foreach (var t in task.Split(','))
             {
                 Main3(t, configs, writeUpdates);
@@ -349,7 +349,10 @@ namespace BuildConfigGen
             string outputNode16PackagePath = Path.Combine(taskOutputNode16, "package.json");
             JsonNode outputNod16PackagePath = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNode16PackagePath))!;
             outputNod16PackagePath["dependencies"]!["@types/node"] = "^16.11.39";
-            ensureUpdateModeVerifier!.WriteAllText(outputNode16PackagePath, outputNod16PackagePath.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
+            // We need to add newline since npm install command always add newline at the end of package.json
+            // https://github.com/npm/npm/issues/18545
+            string node16PackageContent = outputNod16PackagePath.ToJsonString(jso) + Environment.NewLine;
+            ensureUpdateModeVerifier!.WriteAllText(outputNode16PackagePath, node16PackageContent, suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
         private static bool hasNodeHandler(JsonNode taskHandlerContents)
