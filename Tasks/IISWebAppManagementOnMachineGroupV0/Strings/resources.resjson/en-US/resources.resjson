@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "IIS web app manage",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/iis-webapp-management-readme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/iis-webapp-management-readme)",
   "loc.description": "Create or update websites, web apps, virtual directories, or application pools",
   "loc.instanceNameFormat": "Manage $(IISDeploymentType)",
   "loc.group.displayName.Website": "IIS Website",
