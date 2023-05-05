@@ -232,7 +232,7 @@ function Create-AzureCloudService {
         $upgradeMode = 'Auto'
     }
     $azureService = "New-AzCloudService -Name `"$serviceName`" -ResourceGroupName `"$resourceGroupName`" -Location `"$serviceLocation`" -ConfigurationFile `"$csCfg`""
-    $azureService += " -DefinitionFile `"$csDef`" -PackageFile `"$csPkg`" -StorageAccount `"$storageAccount`" -Tag {$($tag.Keys.Count) tags} -UpgradeMode `"$upgradeMode`"";
+    $azureService += " -DefinitionFile `"$csDef`" -PackageFile `"$csPkg`" -StorageAccount `"$storageAccount`" -Tag `"$($tag | ConvertTo-Json -Compress)`" -UpgradeMode `"$upgradeMode`"";
     if ($KeyVault) {
         $azureService += " -KeyVaultName `"$KeyVault`""
         if ($diagnosticExtensions -and ($diagnosticExtensions.Length -gt 0)) {

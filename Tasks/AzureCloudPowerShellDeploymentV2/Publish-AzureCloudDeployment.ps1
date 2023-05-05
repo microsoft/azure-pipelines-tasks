@@ -105,7 +105,7 @@ try {
     }
 
     if ($VerifyRoleInstanceStatus -eq $true) {
-        Validate-AzureCloudServiceStatus -CloudServiceName $ServiceName
+        Validate-AzureCloudServiceStatus -cloudServiceName $ServiceName -resourceGroupName $ResourceGroupName
     }
 } finally {
 	Trace-VstsLeavingInvocation $MyInvocation
