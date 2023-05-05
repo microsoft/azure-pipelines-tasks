@@ -51,7 +51,7 @@
         "BatchScriptV1",
         "CacheBetaV0",
         "CacheBetaV1",
-        "CacheV2", 
+        "CacheV2",
         "CargoAuthenticateV0",
         "ChefV1",
         "ChefKnifeV1",
@@ -214,5 +214,9 @@
         "task.json",
         "task.loc.json",
         "Tests"
+    ],
+    "Node16": [
+        "CondaEnvironmentV0",
+        "CondaEnvironmentV1"
     ]
 }
