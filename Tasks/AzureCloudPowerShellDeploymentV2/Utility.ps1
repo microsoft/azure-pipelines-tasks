@@ -325,9 +325,9 @@ function Assert-RoleInstancesAreReady {
         }
         $staredInstancesCount = 0
         foreach ($roleInstance in $roleInstaces) {
-            $riv = Get-AzCloudServiceRoleInstanceView -CloudServiceName $cloudServiceName -ResourceGroupName $resourceGroupName -InstanceName $roleInstance.Name
+            $riv = Get-AzCloudServiceRoleInstanceView -CloudServiceName $cloudServiceName -ResourceGroupName $resourceGroupName -RoleInstanceName $roleInstance.Name
             if ($riv) {
-                if ($riv.Staruses[0].DisplayStatus -eq 'RoleStateStarted') {
+                if ($riv.Statuses[0].DisplayStatus -eq 'RoleStateStarted') {
                     ++$staredInstancesCount
                 }
                 Write-Verbose "InstanceName: $($roleInstance.Name), InstanceStatus: $($riv.Staruses[0].DisplayStatus)"
