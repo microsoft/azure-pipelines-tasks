@@ -328,15 +328,15 @@ function Assert-RoleInstancesAreReady {
             $riv = Get-AzCloudServiceRoleInstanceView -CloudServiceName $cloudServiceName -ResourceGroupName $resourceGroupName -RoleInstanceName $roleInstance.Name
             if ($riv) {
                 if ($riv.Statuses[0].DisplayStatus -eq 'RoleStateStarted') {
-                    ++$staredInstancesCount
+                    $staredInstancesCount += 1
                 }
                 Write-Verbose "InstanceName: $($roleInstance.Name), InstanceStatus: $($riv.Statuses[0].DisplayStatus)"
             } else {
                 Write-Warning "Couldn't get role instance view for role instance name: $($roleInstance.Name)"
             }
         }
-        if ($staredInstancesCount -ne $roleInstances.Length) {
-            Write-Verbose "One or more Role Instances are not in 'RoleStateStarted' state."
+        if ($staredInstancesCount -lt $roleInstances.Length) {
+            Write-Verbose "Only $staredInstancesCount role instances are started out of $($roleInstances.Length)."
             return $false
         } else {
             Write-Host (Get-VstsLocString -Key 'AllRoleInstancesAreReady' -ArgumentList $cloudServiceName, $staredInstancesCount)
