@@ -11,7 +11,7 @@
   "version": {
     "Major": 0,
     "Minor": 222,
-    "Patch": 1
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -41,6 +41,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "nuget.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "nuget.js",
       "argumentFormat": ""
     }
@@ -74,5 +78,9 @@
     "NGCommon_UnabletoDetectNuGetVersio": "Unknown NuGet version selected.",
     "NGCommon_UnableToFindTool": "Unable to find tool %s",
     "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
+  },
+  "_buildConfigMapping": {
+    "Default": "0.222.1",
+    "Node16-219": "0.222.0"
   }
 }
