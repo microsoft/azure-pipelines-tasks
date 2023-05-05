@@ -73,13 +73,13 @@ try {
     }
 
     if (!$azureService) {
-        Create-AzureCloudService $ServiceName $ResourceGroupName $ServiceLocation $CsCfg $CsDef $CsPkg $StorageAccount $KeyVault $tag $diagnosticExtensions $UpgradeMode
+        Create-AzureCloudService $ServiceName $ResourceGroupName $ServiceLocation $CsCfg $CsDef $CsPkg $StorageAccount $tag $KeyVault $diagnosticExtensions $UpgradeMode
     }
     elseif ($AllowUpgrade -eq $false) {
         #Remove and then Re-create
         Write-Host "##[command]Remove-AzCloudService -Name $ServiceName -ResourceGroupName $ResourceGroupName"
         Remove-AzCloudService -Name $ServiceName -ResourceGroupName $ResourceGroupName
-        Create-AzureCloudService $ServiceName $ResourceGroupName $ServiceLocation $CsCfg $CsDef $CsPkg $StorageAccount $KeyVault $tag $diagnosticExtensions $UpgradeMode
+        Create-AzureCloudService $ServiceName $ResourceGroupName $ServiceLocation $CsCfg $CsDef $CsPkg $StorageAccount $tag $KeyVault $diagnosticExtensions $UpgradeMode
     }
     else {
         $tagChanged = $false

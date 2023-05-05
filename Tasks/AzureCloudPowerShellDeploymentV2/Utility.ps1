@@ -219,8 +219,8 @@ function Create-AzureCloudService {
         [Parameter(Mandatory = $true)][string] $csDef,
         [Parameter(Mandatory = $true)][string] $csPkg,
         [Parameter(Mandatory = $true)][string] $storageAccount,
-        [Parameter(Mandatory = $true)][string] $keyVault,
         [Parameter(Mandatory = $true)][hashtable] $tag,
+        [Parameter(Mandatory = $false)][string] $keyVault,
         [Parameter(Mandatory = $false)][array] $diagnosticExtensions,
         [Parameter(Mandatory = $false)][string] $upgradeMode
     )
