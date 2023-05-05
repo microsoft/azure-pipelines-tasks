@@ -330,7 +330,9 @@ function Assert-RoleInstancesAreReady {
                 if ($riv.Statuses[0].DisplayStatus -eq 'RoleStateStarted') {
                     ++$staredInstancesCount
                 }
-                Write-Verbose "InstanceName: $($roleInstance.Name), InstanceStatus: $($riv.Staruses[0].DisplayStatus)"
+                Write-Verbose "InstanceName: $($roleInstance.Name), InstanceStatus: $($riv.Statuses[0].DisplayStatus)"
+            } else {
+                Write-Warning "Couldn't get role instance view for role instance name: $($roleInstance.Name)"
             }
         }
         if ($staredInstancesCount -ne $roleInstances.Length) {
