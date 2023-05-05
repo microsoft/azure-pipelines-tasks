@@ -296,7 +296,8 @@ function Validate-AzureCloudServiceStatus {
                     Write-Host (Get-VstsLocString -Key 'AzureCloudServiceIsReady' -ArgumentList $cloudServiceName)
                     return
                 }
-            } else {
+            }
+            else {
                 Write-Warning (Get-VstsLocString -Key 'AzureCloudServiceNotFound' -ArgumentList $cloudServiceName)
             }
 
@@ -304,9 +305,11 @@ function Validate-AzureCloudServiceStatus {
             Start-Sleep -Seconds $retryDelay
         }
         Write-Warning (Get-VstsLocString -Key 'AzureCloudServiceIsNotReady' -ArgumentList $cloudServiceName)
-    } catch {
+    }
+    catch {
         Write-Verbose "An error occurred while validating Azure Cloud Service: '$cloudServiceName' status. Error: $($_.Exception.ToString())"
-    } finally {
+    }
+    finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
@@ -331,21 +334,25 @@ function Assert-RoleInstancesAreReady {
                     $staredInstancesCount += 1
                 }
                 Write-Verbose "InstanceName: $($roleInstance.Name), InstanceStatus: $($riv.Statuses[0].DisplayStatus)"
-            } else {
+            }
+            else {
                 Write-Warning "Couldn't get role instance view for role instance name: $($roleInstance.Name)"
             }
         }
         if ($staredInstancesCount -lt $roleInstances.Length) {
             Write-Verbose "Only $staredInstancesCount role instances are started out of $($roleInstances.Length)."
             return $false
-        } else {
+        }
+        else {
             Write-Host (Get-VstsLocString -Key 'AllRoleInstancesAreReady' -ArgumentList $cloudServiceName, $staredInstancesCount)
             return $true
         }
-    } catch {
+    }
+    catch {
         Write-Verbose "An error occurred while trying to check all role instances are ready. Error: $($_.Exception.ToString())"
         return $false
-    } finally {
+    }
+    finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }

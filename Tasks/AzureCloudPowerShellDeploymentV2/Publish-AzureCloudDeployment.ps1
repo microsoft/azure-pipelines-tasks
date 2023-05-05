@@ -66,11 +66,24 @@ try {
 
     $diagnosticExtensions = Get-DiagnosticsExtensions $ServiceName $StorageAccount $serviceConfigFile $storageAccountKeysMap
 
-    Write-Host "##[command]Get-AzCloudService -Name $ServiceName -ResourceGroupName $ResourceGroupName -ErrorAction SilentlyContinue -ErrorVariable azureServiceError"
-    $azureService = Get-AzCloudService -Name $ServiceName -ResourceGroupName $ResourceGroupName -ErrorAction SilentlyContinue -ErrorVariable azureServiceError
-    if ($azureServiceError) {
-       $azureServiceError | ForEach-Object { Write-Verbose $_.Exception.ToString() }
+    $onAssemblyResolve = [System.ResolveEventHandler] {
+        param($sender, $e)
+
+        Write-Verbose "Unable to resolve assembly name '$($e.Name)'"
+        return $null
     }
+    [System.AppDomain]::CurrentDomain.add_AssemblyResolve($onAssemblyResolve)
+    try {
+        Write-Host "##[command]Get-AzCloudService -Name $ServiceName -ResourceGroupName $ResourceGroupName -ErrorAction SilentlyContinue -ErrorVariable azureServiceError"
+        $azureService = Get-AzCloudService -Name $ServiceName -ResourceGroupName $ResourceGroupName -ErrorAction SilentlyContinue -ErrorVariable azureServiceError
+        if ($azureServiceError) {
+        $azureServiceError | ForEach-Object { Write-Verbose $_.Exception.ToString() }
+        }
+    }
+    finally {
+        [System.AppDomain]::CurrentDomain.remove_AssemblyResolve($onAssemblyResolve)
+    }
+
 
     if (!$azureService) {
         Create-AzureCloudService $ServiceName $ResourceGroupName $ServiceLocation $CsCfg $CsDef $CsPkg $StorageAccount $tag $KeyVault $diagnosticExtensions $UpgradeMode
