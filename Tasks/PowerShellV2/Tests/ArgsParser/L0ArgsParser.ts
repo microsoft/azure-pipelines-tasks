@@ -240,4 +240,19 @@ export const ArgsParserTests = () => {
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
+
+    // We do not support braced env syntax since for now.
+    const bracedSyntaxInputs = [
+        ['${env:VAR1}', ['${env:VAR1}']],
+        ['${EnV:Var1}', ['${EnV:Var1}']]
+    ]
+    bracedSyntaxInputs.forEach(([inputArgs, expectedArgs], i) => {
+        it(`Should not handle env vars with braced syntax #${i + 1}`, () => {
+            process.env['VAR1'] = 'value1'
+
+            const [actualArgs] = parsePowerShellArguments(inputArgs as string);
+
+            assert.deepStrictEqual(actualArgs, expectedArgs);
+        })
+    })
 }

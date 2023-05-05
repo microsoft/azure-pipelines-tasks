@@ -152,4 +152,18 @@ export const ArgsParserTelemetryTests = () => {
 
         assert.deepStrictEqual(resultTelemetry.unmatchedExpansionSyntax, expectedTelemetry.unmatchedExpansionSyntax);
     })
+
+    const bracedSyntaxInputs = [
+        '${env:VAR1}',
+        '${EnV:Var1}'
+    ]
+    bracedSyntaxInputs.forEach((inputArgs, i) => {
+        it(`Should indicate about env vars with braced syntax #${i + 1}`, () => {
+            const expectedTelemetry = { bracedEnvSyntax: 1 };
+
+            const [_, resultTelemetry] = parsePowerShellArguments(inputArgs);
+
+            assert.deepStrictEqual(resultTelemetry.bracedEnvSyntax, expectedTelemetry.bracedEnvSyntax);
+        })
+    })
 }

@@ -138,6 +138,7 @@ type ProcessEnvPowerShellTelemetry = {
     variablesWithBacktickInside: number,
     envQuottedBlocks: number,
     // blockers
+    bracedEnvSyntax: number,
     expansionSyntax: number,
     unmatchedExpansionSyntax: number
 }
@@ -159,6 +160,7 @@ function processPowerShellEnVariables(argsLine: string): [string, ProcessEnvPowe
         variablesWithBacktickInside: 0,
         envQuottedBlocks: 0,
         // blockers
+        bracedEnvSyntax: 0,
         expansionSyntax: 0,
         unmatchedExpansionSyntax: 0
     }
@@ -190,8 +192,15 @@ function processPowerShellEnVariables(argsLine: string): [string, ProcessEnvPowe
             telemetry.expansionSyntax++
             continue
         }
-        const prefixIndex = result.toLowerCase().indexOf(envPrefix, startIndex)
+
+        let prefixIndex = result.toLowerCase().indexOf(envPrefix, startIndex)
+
         if (prefixIndex < 0) {
+            prefixIndex = result.toLowerCase().indexOf('${env:', startIndex)
+            if (prefixIndex < 0) {
+                break;
+            }
+            telemetry.bracedEnvSyntax++
             break;
         }
 
