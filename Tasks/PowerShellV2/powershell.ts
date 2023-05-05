@@ -7,7 +7,7 @@ import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry'
 import { parsePowerShellArguments } from './ArgsParser';
 var uuidV4 = require('uuid/v4');
 
-const secureArgsFile = path.join(process.env.AGENT_TEMPDIRECTORY, `powershellArgs_${uuidV4()}`)
+const secureArgsFile = path.join(tl.getVariable('agent.tempDirectory'), `powershellArgs_${uuidV4()}`)
 tl.debug(`Args file path = ${secureArgsFile}`)
 
 const featureFlags = {
