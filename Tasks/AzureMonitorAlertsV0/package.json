@@ -13,6 +13,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
+    "@types/mocha": "8.2.1",
     "@types/node": "^10.17.0",
     "azure-pipelines-tasks-azure-arm-rest-v2": "3.221.3",
     "moment": "^2.29.4",

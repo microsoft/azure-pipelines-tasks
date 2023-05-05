@@ -44,9 +44,9 @@
       }
     },
     "@types/mocha": {
-      "version": "5.2.7",
-      "resolved": "https://registry.npmjs.org/@types/mocha/-/mocha-5.2.7.tgz",
-      "integrity": "sha512-NYrtPht0wGzhwe9+/idPaBB+TqkY9AhTvOLMkThm0IoEfLaiVQZwBwyJ5puCkO3AUCWrmcoePjp2mbFocKy4SQ=="
+      "version": "8.2.1",
+      "resolved": "https://registry.npmjs.org/@types/mocha/-/mocha-8.2.1.tgz",
+      "integrity": "sha512-NysN+bNqj6E0Hv4CTGWSlPzMW6vTKjDpOteycDkV4IWBsO+PU48JonrPzV9ODjiI2XrjmA05KInLgF5ivZ/YGQ=="
     },
     "@types/node": {
       "version": "10.17.60",
@@ -142,6 +142,11 @@
         "xml2js": "0.4.13"
       },
       "dependencies": {
+        "@types/mocha": {
+          "version": "5.2.7",
+          "resolved": "https://registry.npmjs.org/@types/mocha/-/mocha-5.2.7.tgz",
+          "integrity": "sha512-NYrtPht0wGzhwe9+/idPaBB+TqkY9AhTvOLMkThm0IoEfLaiVQZwBwyJ5puCkO3AUCWrmcoePjp2mbFocKy4SQ=="
+        },
         "q": {
           "version": "1.5.1",
           "resolved": "https://registry.npmjs.org/q/-/q-1.5.1.tgz",
