@@ -12,29 +12,26 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
+    "Major": 0,
     "Minor": 222,
-    "Patch": 1
+    "Patch": 0
   },
-  "deprecated": true,
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "inputs": [
+  "groups": [
     {
-      "name": "createCustomEnvironment",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.createCustomEnvironment",
-      "required": false,
-      "defaultValue": false,
-      "helpMarkDown": "ms-resource:loc.input.help.createCustomEnvironment"
-    },
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
     {
       "name": "environmentName",
       "type": "string",
       "label": "ms-resource:loc.input.label.environmentName",
       "required": true,
       "defaultValue": "",
-      "visibleRule": "createCustomEnvironment == true",
       "helpMarkDown": "ms-resource:loc.input.help.environmentName"
     },
     {
@@ -54,22 +51,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.updateConda"
     },
     {
-      "name": "installOptions",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.installOptions",
-      "required": false,
-      "defaultValue": "",
-      "visibleRule": "createCustomEnvironment == false",
-      "helpMarkDown": "ms-resource:loc.input.help.installOptions"
-    },
-    {
       "name": "createOptions",
       "type": "string",
       "label": "ms-resource:loc.input.label.createOptions",
       "required": false,
       "defaultValue": "",
-      "visibleRule": "createCustomEnvironment == true",
-      "helpMarkDown": "ms-resource:loc.input.help.createOptions"
+      "helpMarkDown": "ms-resource:loc.input.help.createOptions",
+      "groupName": "advanced"
     },
     {
       "name": "cleanEnvironment",
@@ -77,12 +65,16 @@
       "label": "ms-resource:loc.input.label.cleanEnvironment",
       "required": false,
       "defaultValue": false,
-      "visibleRule": "createCustomEnvironment == true",
-      "helpMarkDown": "ms-resource:loc.input.help.cleanEnvironment"
+      "helpMarkDown": "ms-resource:loc.input.help.cleanEnvironment",
+      "groupName": "advanced"
     }
   ],
   "execution": {
     "Node10": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "main.js",
       "argumentFormat": ""
     }
@@ -91,10 +83,11 @@
     "CleanEnvironment": "ms-resource:loc.messages.CleanEnvironment",
     "CreateFailed": "ms-resource:loc.messages.CreateFailed",
     "CondaNotFound": "ms-resource:loc.messages.CondaNotFound",
-    "InstallFailed": "ms-resource:loc.messages.InstallFailed",
     "ReactivateExistingEnvironment": "ms-resource:loc.messages.ReactivateExistingEnvironment",
-    "ParameterRequired": "ms-resource:loc.messages.ParameterRequired",
-    "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized",
-    "PrependPath": "ms-resource:loc.messages.PrependPath"
+    "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.222.1",
+    "Node16-219": "0.222.0"
   }
 }

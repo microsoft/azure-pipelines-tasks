@@ -81,5 +81,9 @@
     "CondaNotFound": "The `conda` executable was not found on the system. Ask your administrator to install Miniconda or Anaconda. Then add the `conda` executable to `PATH` or set the `CONDA` environment variable to the root of the installation.",
     "ReactivateExistingEnvironment": "Found existing environment %s and the task's \"Clean environment\" parameter is not set. Reactivating ...",
     "PlatformNotRecognized": "Platform not recognized"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.222.1",
+    "Node16-219": "0.222.0"
   }
 }

@@ -96,5 +96,9 @@
     "ParameterRequired": "The `%s` parameter is required",
     "PlatformNotRecognized": "Platform not recognized",
     "PrependPath": "Prepending PATH environment variable with directory: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.222.1",
+    "Node16-219": "1.222.0"
   }
 }
