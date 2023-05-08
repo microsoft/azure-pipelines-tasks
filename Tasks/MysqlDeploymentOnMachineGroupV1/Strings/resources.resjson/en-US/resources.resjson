@@ -13,7 +13,7 @@
   "loc.input.help.ServerName": "Server name of 'Database for MySQL'.Example: localhost. When you connect using MySQL Workbench, this is the same value that is used for 'Hostname' in 'Parameters'",
   "loc.input.label.DatabaseName": "Database Name",
   "loc.input.help.DatabaseName": "The name of database, if you already have one, on which the below script is needed to be run, else the script itself can be used to create the database.",
-  "loc.input.label.SqlUsername": "Mysql User Name",
+  "loc.input.label.SqlUsername": "MySQL User Name",
   "loc.input.help.SqlUsername": "When you connect using MySQL Workbench, this is the same value that is used for 'Username' in 'Parameters'.",
   "loc.input.label.SqlPassword": "Password",
   "loc.input.help.SqlPassword": "Password for MySQL Database.<br>It can be variable defined in the pipeline. Example : $(password).<br>Also, you may mark the variable type as 'secret' to secure it.",

@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Installa Azure Functions Core Tools",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://aka.ms/func-tools-installer)",
+  "loc.description": "Installa Azure Functions Core Tools",
+  "loc.instanceNameFormat": "Installa Functions Core Tools - $(version)",
+  "loc.input.label.version": "Versione",
+  "loc.input.help.version": "Consente di specificare la versione di Azure Functions Core Tools da installare. Ad esempio: <br><br>2.7.1575<br>v2.7.1575<br>latest",
+  "loc.messages.ErrorFetchingLatestVersion": "Si è verificato un errore durante il recupero delle informazioni sulla versione più recente da %s. Errore: %s. Verrà scaricata la versione stabile predefinita: %s.",
+  "loc.messages.FindingLatestFuncToolsVersion": "Ricerca della versione più recente di Functions Core Tools...",
+  "loc.messages.FuncDownloadFailed": "Non è stato possibile scaricare Functions Core Tools dal percorso %s. Errore: %s.",
+  "loc.messages.LatestFuncToolsVersion": "La versione più recente è %s",
+  "loc.messages.NotAValidSemverVersion": "La versione non è stata specificata nel formato corretto. Esempio: 2.7.1575, v2.7.1575, latest",
+  "loc.messages.SuccessfullyDownloaded": "Functions Core Tools %s è stato scaricato. Percorso di download: %s.",
+  "loc.messages.VerifyingFuncToolsInstallation": "Verifica dell'installazione di Functions Core Tools...",
+  "loc.messages.VersionAlreadyInstalled": "La versione %s di Functions Core Tools è già installata. Percorso di installazione: %s."
+}
