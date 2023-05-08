@@ -272,8 +272,18 @@ function Cleanup-Resources-For-Recreation {
     )
 
     $storageContext = New-AzStorageContext -StorageAccountName $storageAccount -UseConnectedAccount
-    Remove-AzStorageBlob -Container "cloudservicecontainer" -Blob ($ServiceName + ".cspkg") -Context $storageContext -Force
-    Remove-AzPublicIpAddress -Name ($serviceName + "Ip") -ResourceGroupName $resourceGroupName -Force
+    try {
+        Remove-AzStorageBlob -Container "cloudservicecontainer" -Blob $($ServiceName + ".cspkg") -Context $storageContext -Force
+    }
+    catch {
+        # It doesn't exist, no need to clean up
+    }
+    try {
+        Remove-AzPublicIpAddress -Name ($serviceName + "Ip") -ResourceGroupName $resourceGroupName -Force
+    }
+    catch {
+        # It doesn't exist, no need to clean up
+    }
 }
 
 function Validate-AzureCloudServiceStatus {
