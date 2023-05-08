@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 220,
+    "Minor": 222,
     "Patch": 1
   },
   "deprecated": true,
@@ -98,7 +98,7 @@
     "PrependPath": "Prepending PATH environment variable with directory: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.220.1",
-    "Node16-219": "1.220.0"
+    "Default": "1.222.1",
+    "Node16-219": "1.222.0"
   }
 }
