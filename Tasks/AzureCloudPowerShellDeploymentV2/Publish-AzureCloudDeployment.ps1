@@ -1,6 +1,86 @@
 Trace-VstsEnteringInvocation $MyInvocation
 Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
+function Get-AssemblyReference {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$LiteralPath)
+
+    $ErrorActionPreference = 'Stop'
+    Write-Warning "Not supported for use during task execution. This function is only intended to help developers resolve the minimal set of DLLs that need to be bundled when consuming the VSTS REST SDK or TFS Extended Client SDK. The interface and output may change between patch releases of the VSTS Task SDK."
+    Write-Output ''
+    Write-Warning "Only a subset of the referenced assemblies may actually be required, depending on the functionality used by your task. It is best to bundle only the DLLs required for your scenario."
+    $directory = [System.IO.Path]::GetDirectoryName($LiteralPath)
+    $hashtable = @{ }
+    $queue = @( [System.Reflection.Assembly]::ReflectionOnlyLoadFrom($LiteralPath).GetName() )
+    while ($queue.Count) {
+        # Add a blank line between assemblies.
+        Write-Output ''
+
+        # Pop.
+        $assemblyName = $queue[0]
+        $queue = @( $queue | Select-Object -Skip 1 )
+
+        # Attempt to find the assembly in the same directory.
+        $assembly = $null
+        $path = "$directory\$($assemblyName.Name).dll"
+        if ((Test-Path -LiteralPath $path -PathType Leaf)) {
+            $assembly = [System.Reflection.Assembly]::ReflectionOnlyLoadFrom($path)
+        } else {
+            $path = "$directory\$($assemblyName.Name).exe"
+            if ((Test-Path -LiteralPath $path -PathType Leaf)) {
+                $assembly = [System.Reflection.Assembly]::ReflectionOnlyLoadFrom($path)
+            }
+        }
+
+        # Make sure the assembly full name matches, not just the file name.
+        if ($assembly -and $assembly.GetName().FullName -ne $assemblyName.FullName) {
+            $assembly = $null
+        }
+
+        # Print the assembly.
+        if ($assembly) {
+            Write-Output $assemblyName.FullName
+        } else {
+            if ($assemblyName.FullName -eq 'Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed') {
+                Write-Warning "*** NOT FOUND $($assemblyName.FullName) *** This is an expected condition when using the HTTP clients from the 15.x VSTS REST SDK. Use Get-VstsVssHttpClient to load the HTTP clients (which applies a binding redirect assembly resolver for Newtonsoft.Json). Otherwise you will need to manage the binding redirect yourself."
+            } else {
+                Write-Warning "*** NOT FOUND $($assemblyName.FullName) ***"
+            }
+
+            continue
+        }
+
+        # Walk the references.
+        $refAssemblyNames = @( $assembly.GetReferencedAssemblies() )
+        for ($i = 0 ; $i -lt $refAssemblyNames.Count ; $i++) {
+            $refAssemblyName = $refAssemblyNames[$i]
+
+            # Skip framework assemblies.
+            $fxPaths = @(
+                "$env:windir\Microsoft.Net\Framework64\v4.0.30319\$($refAssemblyName.Name).dll"
+                "$env:windir\Microsoft.Net\Framework64\v4.0.30319\WPF\$($refAssemblyName.Name).dll"
+            )
+            $fxPath = $fxPaths |
+                Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } |
+                Where-Object { [System.Reflection.Assembly]::ReflectionOnlyLoadFrom($_).GetName().FullName -eq $refAssemblyName.FullName }
+            if ($fxPath) {
+                continue
+            }
+
+            # Print the reference.
+            Write-Output "    $($refAssemblyName.FullName)"
+
+            # Add new references to the queue.
+            if (!$hashtable[$refAssemblyName.FullName]) {
+                $queue += $refAssemblyName
+                $hashtable[$refAssemblyName.FullName] = $true
+            }
+        }
+    }
+}
+
 try {
 
     $ServiceName = Get-VstsInput -Name ServiceName -Require
@@ -41,6 +121,9 @@ try {
             Write-VstsTaskError "Initializing Az module failed: For troubleshooting, refer: $troubleshoot"
         }
     }
+
+    $vsServicesDll = [System.IO.Path]::Combine($PSScriptRoot, "ps_modules\VstsAzureHelpers_\Microsoft.VisualStudio.Services.WebApi.dll")
+    Get-AssemblyReference $vsServicesDll
 
     $storageAccountKeysMap = Parse-StorageKeys -StorageAccountKeys $DiagnosticStorageAccountKeys
 
@@ -110,4 +193,3 @@ try {
 } finally {
 	Trace-VstsLeavingInvocation $MyInvocation
 }
-
