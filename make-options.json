@@ -216,6 +216,8 @@
         "Tests"
     ],
     "Node16": [
-        "NuGetV0"
+        "NuGetV0",
+        "PackerBuildV0",
+        "PackerBuildV1"
     ]
 }
