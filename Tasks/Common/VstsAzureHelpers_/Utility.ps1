@@ -167,7 +167,6 @@ function Get-VstsFederatedToken {
     )
 
     $OMDirectory = $PSScriptRoot
-    Write-Verbose "PS version $($PSVersionTable.PSVersion.Major)"
 
     $newtonsoftDll = [System.IO.Path]::Combine($OMDirectory, "Newtonsoft.Json.dll")
     if (!(Test-Path -LiteralPath $newtonsoftDll -PathType Leaf)) {
@@ -181,7 +180,6 @@ function Get-VstsFederatedToken {
         Write-Verbose "$vsServicesDll not found."
         throw
     }
-    Get-AssemblyReference $vsServicesDll
     try {
         Add-Type -LiteralPath $vsServicesDll
     } catch {
