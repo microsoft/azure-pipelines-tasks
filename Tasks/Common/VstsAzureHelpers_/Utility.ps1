@@ -11,7 +11,7 @@
     if ($ServicePrincipal) {
         $pemFileContent = $Endpoint.Auth.Parameters.ServicePrincipalCertificate
         $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
-        
+
         $certificate.Import($pfxFilePath, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
     }
     else {
@@ -167,6 +167,7 @@ function Get-VstsFederatedToken {
     )
 
     $OMDirectory = $PSScriptRoot
+    $psVersionLowerThan7 = $PSVersionTable.PSVersion.Major -lt 7
 
     $newtonsoftDll = [System.IO.Path]::Combine($OMDirectory, "Newtonsoft.Json.dll")
     if (!(Test-Path -LiteralPath $newtonsoftDll -PathType Leaf)) {
@@ -174,6 +175,15 @@ function Get-VstsFederatedToken {
         throw
     }
     $jsAssembly = [System.Reflection.Assembly]::LoadFrom($newtonsoftDll)
+
+    if ($psVersionLowerThan7) {
+        $automationDll = [System.IO.Path]::Combine($OMDirectory, "System.Management.Automation.dll")
+        if (!(Test-Path -LiteralPath $automationDll -PathType Leaf)) {
+            Write-Verbose "$automationDll not found."
+            throw
+        }
+        $automationAssembly = [System.Reflection.Assembly]::LoadFrom($automationDll)
+    }
 
     $vsServicesDll = [System.IO.Path]::Combine($OMDirectory, "Microsoft.VisualStudio.Services.WebApi.dll")
     if (!(Test-Path -LiteralPath $vsServicesDll -PathType Leaf)) {
@@ -193,6 +203,9 @@ function Get-VstsFederatedToken {
         if ($e.Name -like 'Newtonsoft.Json, *') {
             return $jsAssembly
         }
+        if ($psVersionLowerThan7 -and ($e.Name -like 'System.Management.Automation, *')) {
+            return $automationAssembly
+        }
 
         Write-Verbose "Unable to resolve assembly name '$($e.Name)'"
         return $null
@@ -203,7 +216,7 @@ function Get-VstsFederatedToken {
     try {
         Write-Verbose "Trying again to construct the HTTP client."
         $decriptedVstsToken = $null
-        if ($PSVersionTable.PSVersion.Major -lt 7) {
+        if ($psVersionLowerThan7) {
             $bstr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($vstsAccessToken)
             $decriptedVstsToken = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)
         }

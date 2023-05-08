@@ -12,6 +12,16 @@
                 ]
             },
             {
+                "name": "Microsoft.PowerShell.5.ReferenceAssemblies",
+                "version": "1.1.0",
+                "repository": "https://www.nuget.org/api/v2/",
+                "cp": [
+                    {
+                        "source": "lib/net4/System.Management.Automation.dll"
+                    }
+                ]
+            },
+            {
                 "name": "Microsoft.AspNet.WebApi.Client",
                 "version": "5.2.7",
                 "repository": "https://www.nuget.org/api/v2/",
