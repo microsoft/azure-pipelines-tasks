@@ -1,0 +1,15 @@
+{
+  "name": "vsts-tasks-packerbuild",
+  "main": "main.js",
+  "dependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10.17.0",
+    "@types/q": "^1.0.7",
+    "azure-pipelines-task-lib": "^3.4.0",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.220.2",
+    "decompress-zip": "^0.3.3"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
+  }
+}
