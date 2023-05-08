@@ -60,6 +60,7 @@
   "loc.messages.ErrorCodeFormat": "Код ошибки: [%s]",
   "loc.messages.ErrorMessageFormat": "Ошибка: %s",
   "loc.messages.FoundAppSourceDockerfileMessage": "Найден существующий файл Dockerfile в предоставленном источнике приложения по пути \"%s\"; образ будет создан из этого Dockerfile.",
+  "loc.messages.LoginFailed": "Не удалось войти в Azure",
   "loc.messages.MissingAcrNameMessage": "Аргумент acrName также должен быть указан, если указан аргумент appSourcePath.",
   "loc.messages.MissingImageToDeployMessage": "Требуется указать аргумент imageToDeploy, если не указано ни appSourcePath, ни acrName.",
   "loc.messages.PackCliInstallFailed": "Не удалось установить пакет CLI.",

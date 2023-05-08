@@ -60,6 +60,7 @@
   "loc.messages.ErrorCodeFormat": "错误代码: [%s]",
   "loc.messages.ErrorMessageFormat": "错误: %s",
   "loc.messages.FoundAppSourceDockerfileMessage": "在路径“%s”提供的应用程序源中找到现有的 Dockerfile; 映像将从此 Dockerfile 生成。",
+  "loc.messages.LoginFailed": "Azure 登录失败",
   "loc.messages.MissingAcrNameMessage": "如果提供了 appSourcePath 参数，则还必须提供 acrName 参数。",
   "loc.messages.MissingImageToDeployMessage": "如果未提供 appSourcePath 和 acrName，则必须提供参数 imageToDeploy。",
   "loc.messages.PackCliInstallFailed": "无法安装包 CLI。",
