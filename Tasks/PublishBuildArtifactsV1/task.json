@@ -84,16 +84,6 @@
             "visibleRule": "ArtifactType = FilePath && Parallel = true"
         },
         {
-            "name": "FileCopyOptions",
-            "type": "string",
-            "label": "File copy options",
-            "defaultValue": "",
-            "groupName": "advanced",
-            "required": false,
-            "helpMarkDown": "Pass additional options to the Robocopy command.",
-            "visibleRule": "ArtifactType = FilePath"
-        },
-        {
             "name": "StoreAsTar",
             "type": "boolean",
             "label": "Tar the artifact before uploading",

@@ -84,16 +84,6 @@
       "visibleRule": "ArtifactType = FilePath && Parallel = true"
     },
     {
-      "name": "FileCopyOptions",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.FileCopyOptions",
-      "defaultValue": "",
-      "groupName": "advanced",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.FileCopyOptions",
-      "visibleRule": "ArtifactType = FilePath"
-    },
-    {
       "name": "StoreAsTar",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.StoreAsTar",
