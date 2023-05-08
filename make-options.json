@@ -216,6 +216,10 @@
         "Tests"
     ],
     "Node16": [
+        "CondaEnvironmentV0",
+        "CondaEnvironmentV1",
+        "FuncToolsInstallerV0",
+        "NuGetV0",
         "PackerBuildV0",
         "PackerBuildV1"
     ]
