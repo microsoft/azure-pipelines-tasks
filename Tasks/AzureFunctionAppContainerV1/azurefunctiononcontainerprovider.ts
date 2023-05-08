@@ -5,7 +5,6 @@ import { AzureRMEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure
 import { Kudu } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-app-service-kudu';
 import { AzureEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
 import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureAppServiceUtility';
-import { AzureAppServiceUtilityExt } from './operations/AzureAppServiceUtilityExt';
 import { AzureResourceFilterUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureResourceFilterUtility';
 import tl = require('azure-pipelines-task-lib/task');
 import { addReleaseAnnotation } from 'azure-pipelines-tasks-azurermdeploycommon/operations/ReleaseAnnotationUtility';
@@ -19,7 +18,6 @@ export class AzureFunctionOnContainerDeploymentProvider{
     protected appService: AzureAppService;
     protected kuduService: Kudu;
     protected appServiceUtility: AzureAppServiceUtility;
-    protected appServiceUtilityExt: AzureAppServiceUtilityExt;
     protected kuduServiceUtility: KuduServiceUtility;
     protected azureEndpoint: AzureEndpoint;
     protected activeDeploymentID;
@@ -40,10 +38,9 @@ export class AzureFunctionOnContainerDeploymentProvider{
 
         this.appService = new AzureAppService(this.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, this.taskParams.SlotName);
         this.appServiceUtility = new AzureAppServiceUtility(this.appService);
-        this.appServiceUtilityExt = new AzureAppServiceUtilityExt(this.appService);
         this.taskParams.isLinuxContainerApp = true;
-        this.isCentauri = await this.appServiceUtilityExt.isFunctionAppOnCentauri();
-        if (!this.isCentauri){
+        this.isCentauri = await this.appServiceUtility.isFunctionAppOnCentauri();
+        if (!this.isCentauri) {
             this.kuduService = await this.appServiceUtility.getKuduService();
             this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
         }
@@ -53,39 +50,30 @@ export class AzureFunctionOnContainerDeploymentProvider{
 
     public async DeployWebAppStep() {
         tl.debug("Performing container based deployment.");
+
         let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
-        
-        if (this.isCentauri){
-            await containerDeploymentUtility.deployWebAppImage(this.taskParams, false);
-            let linuxFunctionStorageSetting: string = ''; 
-            if (!this.taskParams.AppSettings || this.taskParams.AppSettings.indexOf(linuxFunctionStorageSettingName) < 0) { 
-                linuxFunctionStorageSetting = `${linuxFunctionStorageSettingName} ${linuxFunctionStorageSettingValue}`; 
-            }
-            this.taskParams.AppSettings = this.taskParams.AppSettings ? this.taskParams.AppSettings.trim() + " " + linuxFunctionStorageSetting : linuxFunctionStorageSetting;
-            let customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
-            await this.appServiceUtilityExt.updateAndMonitorAppSettingsCentauri(customApplicationSettings, false);
-        } else {
-            await containerDeploymentUtility.deployWebAppImage(this.taskParams);
-            let linuxFunctionStorageSetting: string = ''; 
-            if (!this.taskParams.AppSettings || this.taskParams.AppSettings.indexOf(linuxFunctionStorageSettingName) < 0) { 
-                linuxFunctionStorageSetting = `${linuxFunctionStorageSettingName} ${linuxFunctionStorageSettingValue}`; 
-            }
-            this.taskParams.AppSettings = this.taskParams.AppSettings ? this.taskParams.AppSettings.trim() + " " + linuxFunctionStorageSetting : linuxFunctionStorageSetting;
-            let customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
-            await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
-            
-            await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
+        await containerDeploymentUtility.deployWebAppImage(this.taskParams, !this.isCentauri);
+        let linuxFunctionStorageSetting: string = ''; 
+        if (!this.taskParams.AppSettings || this.taskParams.AppSettings.indexOf(linuxFunctionStorageSettingName) < 0) { 
+            linuxFunctionStorageSetting = `${linuxFunctionStorageSettingName} ${linuxFunctionStorageSettingValue}`; 
+        }
+        this.taskParams.AppSettings = this.taskParams.AppSettings ? this.taskParams.AppSettings.trim() + " " + linuxFunctionStorageSetting : linuxFunctionStorageSetting;
+        let customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
+        await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings, undefined, undefined, !this.isCentauri);
+
+        if (!this.isCentauri) {
+            await this.appServiceUtility.updateScmTypeAndConfigurationDetails();            
         }
     }
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if (!this.isCentauri){
-            if(this.kuduServiceUtility) {
-                await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
-                this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
-                tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
-            }
-
+        if (!this.isCentauri && this.kuduServiceUtility) {
+            await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
+            this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
+            tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
+        }
+        
+        if (!this.isCentauri) {
             let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
             console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
             tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
