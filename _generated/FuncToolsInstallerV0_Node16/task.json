@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 222,
-    "Patch": 1
+    "Patch": 0
   },
   "preview": true,
   "demands": [],
@@ -35,6 +35,10 @@
   "execution": {
     "Node10": {
       "target": "src/functoolsinstaller.js"
+    },
+    "Node16": {
+      "target": "src/functoolsinstaller.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -46,5 +50,9 @@
     "SuccessfullyDownloaded": "Successfully downloaded func tools %s. Download path: %s.",
     "VerifyingFuncToolsInstallation": "Verifying func tools installation...",
     "VersionAlreadyInstalled": "Func tool version %s is already installed. Installation path: %s."
+  },
+  "_buildConfigMapping": {
+    "Default": "0.222.1",
+    "Node16-219": "0.222.0"
   }
 }

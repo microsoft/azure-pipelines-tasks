@@ -46,5 +46,9 @@
     "SuccessfullyDownloaded": "ms-resource:loc.messages.SuccessfullyDownloaded",
     "VerifyingFuncToolsInstallation": "ms-resource:loc.messages.VerifyingFuncToolsInstallation",
     "VersionAlreadyInstalled": "ms-resource:loc.messages.VersionAlreadyInstalled"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.222.1",
+    "Node16-219": "0.222.0"
   }
 }
