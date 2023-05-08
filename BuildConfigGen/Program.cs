@@ -47,7 +47,6 @@ namespace BuildConfigGen
             // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
             // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
             // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
-            // System.Diagnostics.Debugger.Launch();
             foreach (var t in task.Split(','))
             {
                 Main3(t, configs, writeUpdates);
