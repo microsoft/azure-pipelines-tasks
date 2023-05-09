@@ -160,6 +160,19 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Directory location of the Data API source files relative to working directory"
+    },
+    {
+      "name": "static_app_client_label",
+      "type": "string",
+      "label": "Label of Static App Client",
+      "defaultValue": "stable",
+      "required": false,
+      "options": {
+        "stable": "Stable",
+        "latest": "Latest",
+        "prev": "Previous"
+      },
+      "helpMarkDown": "Label of the Static App Client"
     }
   ],
   "execution": {

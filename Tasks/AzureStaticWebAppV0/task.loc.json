@@ -160,6 +160,19 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.data_api_location"
+    },
+    {
+      "name": "static_app_client_label",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.static_app_client_label",
+      "defaultValue": "stable",
+      "required": false,
+      "options": {
+        "stable": "Stable",
+        "latest": "Latest",
+        "prev": "Previous"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.static_app_client_label"
     }
   ],
   "execution": {

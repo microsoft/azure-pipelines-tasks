@@ -15,6 +15,7 @@ const apiTokenInputName = 'azure_static_web_apps_api_token';
 const deploymentEnvironmentInputName = 'deployment_environment';
 const productionBranchInputName = 'production_branch';
 const dataApiLocationInputName = 'data_api_location';
+const staticAppClientLabelInputName  = 'static_app_client_label';
 
 async function run() {
     const envVarFilePath: string = path.join(__dirname, 'env.list');
@@ -82,6 +83,7 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
     const deploymentEnvironment: string = tl.getInput(deploymentEnvironmentInputName, false) || "";
     const productionBranch: string = tl.getInput(productionBranchInputName, false) || "";
     const dataApiLocation: string = tl.getInput(dataApiLocationInputName, false) || "";
+    const staticAppClientLabel: string = tl.getInput(staticAppClientLabelInputName, false) || "stable";
 
     const skipAppBuild: boolean = tl.getBoolInput('skip_app_build', false);
     const skipApiBuild: boolean = tl.getBoolInput('skip_api_build', false);
@@ -93,7 +95,7 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
 
     const verbose = inputVerbose === true ? true : (inputVerbose === false ? false : systemVerbose === true);
 
-    const deploymentClient = "mcr.microsoft.com/appsvc/staticappsclient:stable";
+    const deploymentClient = "mcr.microsoft.com/appsvc/staticappsclient:";
     const containerWorkingDir = "/working_dir";
 
     addInputStringToString("APP_LOCATION", appLocation, appLocationInputName);
@@ -115,7 +117,7 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
 
     addInputStringToString("DEPLOYMENT_TOKEN", apiToken, apiTokenInputName);
 
-    process.env['SWA_DEPLOYMENT_CLIENT'] = deploymentClient;
+    process.env['SWA_DEPLOYMENT_CLIENT'] = deploymentClient + staticAppClientLabel;
     process.env['SWA_WORKING_DIR'] = workingDirectory;
     process.env['SWA_WORKSPACE_DIR'] = containerWorkingDir;
 

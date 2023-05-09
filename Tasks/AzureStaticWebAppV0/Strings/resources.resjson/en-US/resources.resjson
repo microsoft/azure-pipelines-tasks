@@ -36,5 +36,7 @@
   "loc.input.label.production_branch": "Production Branch",
   "loc.input.help.production_branch": "Production branch. When specified and Deployment Environment is empty, deployments from other branches will be preview environments",
   "loc.input.label.data_api_location": "Data api location",
-  "loc.input.help.data_api_location": "Directory location of the Data API source files relative to working directory"
+  "loc.input.help.data_api_location": "Directory location of the Data API source files relative to working directory",
+  "loc.input.label.static_app_client_label": "Label of Static App Client",
+  "loc.input.help.static_app_client_label": "Label of the Static App Client"
 }
