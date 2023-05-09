@@ -16,11 +16,10 @@ import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon/oper
 export class AzureFunctionOnContainerDeploymentProvider{
     protected taskParams:TaskParameters;
     protected appService: AzureAppService;
-    protected kuduService: Kudu;
     protected appServiceUtility: AzureAppServiceUtility;
     protected kuduServiceUtility: KuduServiceUtility;
     protected azureEndpoint: AzureEndpoint;
-    protected activeDeploymentID;
+    protected isCentauri : boolean;
 
     constructor(taskParams: TaskParameters) {
         this.taskParams = taskParams;
@@ -38,8 +37,11 @@ export class AzureFunctionOnContainerDeploymentProvider{
         this.appService = new AzureAppService(this.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, this.taskParams.SlotName);
         this.appServiceUtility = new AzureAppServiceUtility(this.appService);
         this.taskParams.isLinuxContainerApp = true;
-        this.kuduService = await this.appServiceUtility.getKuduService();
-        this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
+        this.isCentauri = await this.appServiceUtility.isFunctionAppOnCentauri();
+        if (!this.isCentauri) {
+            const kuduService = await this.appServiceUtility.getKuduService();
+            this.kuduServiceUtility = new KuduServiceUtility(kuduService);
+        }
         tl.debug(`Resource Group: ${this.taskParams.ResourceGroupName}`);
         tl.debug(`is Linux container web app: ${this.taskParams.isLinuxContainerApp}`);
     }
@@ -48,26 +50,32 @@ export class AzureFunctionOnContainerDeploymentProvider{
         tl.debug("Performing container based deployment.");
 
         let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
-        await containerDeploymentUtility.deployWebAppImage(this.taskParams);
+        await containerDeploymentUtility.deployWebAppImage(this.taskParams, !this.isCentauri);
         let linuxFunctionStorageSetting: string = ''; 
         if (!this.taskParams.AppSettings || this.taskParams.AppSettings.indexOf(linuxFunctionStorageSettingName) < 0) { 
             linuxFunctionStorageSetting = `${linuxFunctionStorageSettingName} ${linuxFunctionStorageSettingValue}`; 
         }
         this.taskParams.AppSettings = this.taskParams.AppSettings ? this.taskParams.AppSettings.trim() + " " + linuxFunctionStorageSetting : linuxFunctionStorageSetting;
         let customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
-        await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
-        
-        await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
+        await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings, undefined, undefined, !this.isCentauri);
+
+        if (!this.isCentauri) {
+            await this.appServiceUtility.updateScmTypeAndConfigurationDetails();            
+        }
     }
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if(this.kuduServiceUtility) {
-            await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
-            this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
-            tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
+        if (this.isCentauri) {
+            return;
         }
 
-        let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
+        if (this.kuduServiceUtility) {
+            await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
+            const activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
+            tl.debug('Active DeploymentId :'+ activeDeploymentID);
+        }
+        
+        const appServiceApplicationUrl = await this.appServiceUtility.getApplicationURL();
         console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
         tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
     }
