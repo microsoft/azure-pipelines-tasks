@@ -99,13 +99,6 @@ steps:
   displayName: Legacy tests with node 6
   condition: ne(variables['numTasks'], 0)
 
-# Publish code coverage result
-- task: PublishCodeCoverageResults@1
-  displayName: Publish Code Coverage Results
-  inputs:
-    codeCoverageTool: Cobertura
-    summaryFileLocation: $(System.DefaultWorkingDirectory)/_build/coverage/*coverage.xml
-
 # Only when building on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
 
@@ -117,7 +110,7 @@ steps:
   - powershell: |
       # Build the release branch name
       $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"="application/json"} | ConvertFrom-Json).sprint
-      $releaseBranch = "releases/m" + $currentSprint + "." + $(currentDate)
+      $releaseBranch = "releases/m" + $currentSprint
 
       # add config entry to avoid errors while pulling
       git config --global user.email "$(username)@microsoft.com"
