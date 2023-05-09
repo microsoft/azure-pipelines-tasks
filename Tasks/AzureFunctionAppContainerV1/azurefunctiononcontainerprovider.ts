@@ -16,11 +16,9 @@ import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon/oper
 export class AzureFunctionOnContainerDeploymentProvider{
     protected taskParams:TaskParameters;
     protected appService: AzureAppService;
-    protected kuduService: Kudu;
     protected appServiceUtility: AzureAppServiceUtility;
     protected kuduServiceUtility: KuduServiceUtility;
     protected azureEndpoint: AzureEndpoint;
-    protected activeDeploymentID;
     protected isCentauri : boolean;
 
     constructor(taskParams: TaskParameters) {
@@ -41,8 +39,8 @@ export class AzureFunctionOnContainerDeploymentProvider{
         this.taskParams.isLinuxContainerApp = true;
         this.isCentauri = await this.appServiceUtility.isFunctionAppOnCentauri();
         if (!this.isCentauri) {
-            this.kuduService = await this.appServiceUtility.getKuduService();
-            this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
+            const kuduService = await this.appServiceUtility.getKuduService();
+            this.kuduServiceUtility = new KuduServiceUtility(kuduService);
         }
         tl.debug(`Resource Group: ${this.taskParams.ResourceGroupName}`);
         tl.debug(`is Linux container web app: ${this.taskParams.isLinuxContainerApp}`);
@@ -67,16 +65,18 @@ export class AzureFunctionOnContainerDeploymentProvider{
     }
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if (!this.isCentauri && this.kuduServiceUtility) {
+        if (this.isCentauri) {
+            return;
+        }
+
+        if (this.kuduServiceUtility) {
             await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
-            this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
-            tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
+            const activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
+            tl.debug('Active DeploymentId :'+ activeDeploymentID);
         }
         
-        if (!this.isCentauri) {
-            let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
-            console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
-            tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
-        }
+        const appServiceApplicationUrl = await this.appServiceUtility.getApplicationURL();
+        console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
+        tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
     }
 }
