@@ -1,6 +1,7 @@
 pr:
   - master
-
+  - releases/*
+  
 jobs:
 - job: detect_changes
   displayName: Detect changes
