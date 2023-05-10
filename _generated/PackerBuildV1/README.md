@@ -1,0 +1,1 @@
+# Bake immutable machine image Task
