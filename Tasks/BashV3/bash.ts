@@ -7,8 +7,8 @@ import { processBashEnvVariables } from './bashEnvProcessor';
 var uuidV4 = require('uuid/v4');
 
 const featureFlags = {
-    enableTelemetry: !!process.env['AZP_TASK_FF_BASHV3_ENABLE_INPUT_ARGS_TELEMETRY'],
-    enableSecureArgs: !!process.env['AZP_TASK_FF_BASHV3_ENABLE_SECURE_ARGS']
+    enableTelemetry: getFeatureFlagValue('AZP_TASK_FF_BASHV3_ENABLE_INPUT_ARGS_TELEMETRY'),
+    enableSecureArgs: getFeatureFlagValue('AZP_TASK_FF_BASHV3_ENABLE_SECURE_ARGS')
 }
 
 async function translateDirectoryPath(bashPath: string, directoryPath: string): Promise<string> {
@@ -212,6 +212,10 @@ async function run() {
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed', true);
     }
+}
+
+function getFeatureFlagValue(featureFlagName: string): boolean {
+    return process.env[featureFlagName].toLowerCase() === "true"
 }
 
 run();
