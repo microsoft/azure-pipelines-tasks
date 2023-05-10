@@ -15,10 +15,10 @@ if (!taskName) {
   throw new Error('No description provided');
 }
 
-const scriptPath = `${hotfixFolder}/${taskName}.ps1`;
+const scriptPath = `${hotfixFolder}/hotfix.ps1`
 console.log(scriptPath);
 
-const description = `Hotfix for ${taskName} task`;
+const description = `Hotfix for ${taskName.split(',')} task`;
 
 const authHandler = azdev.getPersonalAccessTokenHandler(token);
 const orgUrl = 'https://dev.azure.com/mseng';

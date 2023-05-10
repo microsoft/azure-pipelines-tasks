@@ -10,9 +10,9 @@ steps:
 - checkout: self
   clean: true
 
-# Start collect diagnostics
-- powershell: ./ci/start-collect-diagnostics.ps1
-  displayName: Start collect diagnostics
+# # Start collect diagnostics
+# - powershell: ./ci/start-collect-diagnostics.ps1
+#   displayName: Start collect diagnostics
 
 # Use node 8, npm 5
 - task: NodeTool@0
@@ -33,18 +33,24 @@ steps:
 # - script: node ./ci/verifyMinAgentDemands/index.js
 #   displayName: Verify min agent demands
 
+- powershell: |
+    $tasks = "${{ parameters.task }}"
+    $taskPattern =  "@(" + ($tasks.split(',').trim() -join ('|')) + ")"
+    Write-Host "##vso[task.setVariable variable=task_pattern]$taskPattern"
+  displayName: Set task_pattern
+
 # Build
-- script: node make.js build --task "${{ parameters.task }}"
+- script: node make.js build --task "$(task_pattern)"
   displayName: Build
 
 # # Check diff for task sources
-# - script: node ./ci/verify-source-changes.js "${{ parameters.task }}"
+# - script: node ./ci/verify-source-changes.js "$(task_pattern)"
 #   displayName: Verify task source changes
 
 # # Test
-# - script: node make.js test --task "${{ parameters.task }}"
+# - script: node make.js test --task "$(task_pattern)"
 #   displayName: Run tests
-# - script: node make.js testLegacy --task "${{ parameters.task }}"
+# - script: node make.js testLegacy --task "$(task_pattern)"
 #   displayName: Legacy tests with node 6
 
 # # Publish test results
@@ -56,7 +62,7 @@ steps:
 #     searchFolder: $(System.DefaultWorkingDirectory)/testresults
 
 # Stage tasks individually into the package directory
-- script: node ./ci/stage-package.js ${{ not(parameters.push) }} individually
+- script: node ./ci/stage-package.js false individually
   displayName: Stage tasks individually into the package directory
 
 # # Sign task zip as nuget package
@@ -65,22 +71,29 @@ steps:
 #     layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
 # Stage all the tasks into a single zip for upload
-- script: node ./ci/stage-package.js ${{ not(parameters.push) }}
+- script: node ./ci/stage-package.js false
   displayName: Stage all the tasks into a single zip for upload
 
-- ${{ if not(parameters.push) }}:
+# - ${{ if not(parameters.push) }}:
 
-  # Stage hotfix
-  - script: node ./ci/stage-hotfix.js "${{ parameters.task }}"
-    displayName: Stage hotfix
+# Stage hotfix
+- script: node ./ci/stage-hotfix.js "${{ parameters.task }}"
+  displayName: Stage hotfix
 
-  # Publish hotfix artifact
-  - task: PublishBuildArtifacts@1
-    displayName: Publish hotfix artifact
-    inputs:
-      pathToPublish: _package/hotfix-layout
-      artifactName: hotfix
-      publishLocation: container
+- powershell: |
+    cd _package/hotfix-layout
+    2 > .\layout-version.txt
+    Compress-Archive -Path .\layout-version.txt -DestinationPath .\hotfix.zip -Update
+    Remove-Item -Path .\layout-version.txt
+  displayName: Add layout-version.txt to zip
+
+# Publish hotfix artifact
+- task: PublishBuildArtifacts@1
+  displayName: Publish hotfix artifact
+  inputs:
+    pathToPublish: _package/hotfix-layout
+    artifactName: hotfix
+    publishLocation: container
 
 - ${{ if parameters.push }}:
 
@@ -111,13 +124,13 @@ steps:
       artifactName: IndividualNuGetPackages
       publishLocation: container
 
-  # # Authenticate 
-  # - task: NuGetAuthenticate@0
-  #   displayName: Authenticate with nuget
+  # Authenticate 
+  - task: NuGetAuthenticate@0
+    displayName: Authenticate with nuget
 
   # # Push to feed
   # - script: |
-  #     cd $(Build.SourcesDirectory)\_package\nuget-packages\${{ parameters.task }}
+  #     cd $(Build.SourcesDirectory)\_package\nuget-packages
   #     push.cmd
   #   displayName: Push Nuget package
 
