@@ -11,8 +11,8 @@ const secureArgsFile = path.join(tl.getVariable('agent.tempDirectory'), `powersh
 tl.debug(`Args file path = ${secureArgsFile}`)
 
 const featureFlags = {
-    enableTelemetry: !!process.env['AZP_TASK_FF_POWERSHELLV2_ENABLE_INPUT_ARGS_TELEMETRY'],
-    enableSecureArgs: !!process.env['AZP_TASK_FF_POWERSHELLV2_ENABLE_SECURE_ARGS']
+    enableTelemetry: getFeatureFlagValue('AZP_TASK_FF_POWERSHELLV2_ENABLE_INPUT_ARGS_TELEMETRY'),
+    enableSecureArgs: getFeatureFlagValue('AZP_TASK_FF_POWERSHELLV2_ENABLE_SECURE_ARGS')
 }
 
 function getActionPreference(vstsInputName: string, defaultAction: string = 'Default', validActions: string[] = ['Default', 'Stop', 'Continue', 'SilentlyContinue']) {
@@ -211,3 +211,7 @@ async function run() {
 }
 
 run();
+
+function getFeatureFlagValue(featureFlagName: string): boolean {
+    return process.env[featureFlagName].toLowerCase() === "true"
+}
