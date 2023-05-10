@@ -15,7 +15,7 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 222,
     "Patch": 0
   },
@@ -32,44 +32,23 @@
   ],
   "inputs": [
     {
-      "name": "ConnectedServiceName",
-      "aliases": [
-        "azureClassicSubscription"
-      ],
-      "type": "connectedService:Azure:Certificate,UsernamePassword",
-      "label": "ms-resource:loc.input.label.ConnectedServiceName",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
-    },
-    {
-      "name": "EnableAdvancedStorageOptions",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.EnableAdvancedStorageOptions",
-      "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.EnableAdvancedStorageOptions",
-      "required": true
-    },
-    {
-      "name": "StorageAccount",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.StorageAccount",
-      "defaultValue": "",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.StorageAccount",
-      "visibleRule": "EnableAdvancedStorageOptions = false"
-    },
-    {
       "name": "ARMConnectedServiceName",
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ARMConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ARMConnectedServiceName",
-      "visibleRule": "EnableAdvancedStorageOptions = true"
+      "helpMarkDown": "ms-resource:loc.input.help.ARMConnectedServiceName"
+    },
+    {
+      "name": "ResourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ResourceGroupName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName"
     },
     {
       "name": "ARMStorageAccount",
@@ -80,8 +59,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.ARMStorageAccount",
       "properties": {
         "EditableOptions": "True"
-      },
-      "visibleRule": "EnableAdvancedStorageOptions = true"
+      }
     },
     {
       "name": "ServiceName",
@@ -106,14 +84,6 @@
       }
     },
     {
-      "name": "CsPkg",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.CsPkg",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.CsPkg"
-    },
-    {
       "name": "CsCfg",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.CsCfg",
@@ -122,15 +92,31 @@
       "helpMarkDown": "ms-resource:loc.input.help.CsCfg"
     },
     {
-      "name": "Slot",
-      "aliases": [
-        "slotName"
-      ],
-      "type": "string",
-      "label": "ms-resource:loc.input.label.Slot",
-      "defaultValue": "Production",
+      "name": "CsDef",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.CsDef",
+      "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.Slot"
+      "helpMarkDown": "ms-resource:loc.input.help.CsDef"
+    },
+    {
+      "name": "CsPkg",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.CsPkg",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.CsPkg"
+    },
+    {
+      "name": "KeyVault",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.KeyVault",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.KeyVault",
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "DeploymentLabel",
@@ -149,30 +135,20 @@
       "helpMarkDown": "ms-resource:loc.input.help.AppendDateTimeToLabel"
     },
     {
+      "name": "UpgradeMode",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.UpgradeMode",
+      "defaultValue": "Auto",
+      "helpMarkDown": "ms-resource:loc.input.help.UpgradeMode",
+      "required": false
+    },
+    {
       "name": "AllowUpgrade",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.AllowUpgrade",
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.AllowUpgrade",
       "required": true
-    },
-    {
-      "name": "SimultaneousUpgrade",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.SimultaneousUpgrade",
-      "defaultValue": "false",
-      "visibleRule": "AllowUpgrade == true",
-      "helpMarkDown": "ms-resource:loc.input.help.SimultaneousUpgrade",
-      "required": false
-    },
-    {
-      "name": "ForceUpgrade",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.ForceUpgrade",
-      "defaultValue": "false",
-      "visibleRule": "AllowUpgrade == true",
-      "helpMarkDown": "ms-resource:loc.input.help.ForceUpgrade",
-      "required": false
     },
     {
       "name": "VerifyRoleInstanceStatus",
@@ -195,68 +171,34 @@
         "rows": "6",
         "maxLength": "500"
       }
-    },
-    {
-      "name": "NewServiceCustomCertificates",
-      "type": "multiLine",
-      "label": "ms-resource:loc.input.label.NewServiceCustomCertificates",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.NewServiceCustomCertificates",
-      "groupName": "newServiceAdvancedOptions",
-      "properties": {
-        "resizable": "true",
-        "rows": "6",
-        "maxLength": "20000"
-      }
-    },
-    {
-      "name": "NewServiceAdditionalArguments",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.NewServiceAdditionalArguments",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.NewServiceAdditionalArguments",
-      "groupName": "newServiceAdvancedOptions"
-    },
-    {
-      "name": "NewServiceAffinityGroup",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.NewServiceAffinityGroup",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.NewServiceAffinityGroup",
-      "groupName": "newServiceAdvancedOptions",
-      "properties": {
-        "EditableOptions": "True"
-      }
     }
   ],
   "dataSourceBindings": [
     {
       "target": "ServiceName",
-      "endpointId": "$(ConnectedServiceName)",
+      "endpointId": "$(ARMConnectedServiceName)",
       "dataSourceName": "AzureHostedServiceNames"
     },
     {
+      "target": "ARMResourceGroupName",
+      "endpointId": "$(ARMConnectedServiceName)",
+      "dataSourceName": "AzureResourceGroups"
+    },
+    {
       "target": "ServiceLocation",
-      "endpointId": "$(ConnectedServiceName)",
+      "endpointId": "$(ARMConnectedServiceName)",
       "dataSourceName": "AzureLocations"
-    },
-    {
-      "target": "NewServiceAffinityGroup",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureAffinityGroups"
-    },
-    {
-      "target": "StorageAccount",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureStorageServiceNames"
     },
     {
       "target": "ARMStorageAccount",
       "endpointId": "$(ARMConnectedServiceName)",
       "dataSourceName": "AzureStorageAccountRM"
+    },
+    {
+      "target": "KeyVault",
+      "endpointId": "$(ARMConnectedServiceName)",
+      "dataSourceName": "AzureKeyVaultsListV2",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -266,8 +208,8 @@
     }
   },
   "messages": {
-    "Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "ms-resource:loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions",
-    "Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "ms-resource:loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions",
+    "Couldnotgettheprimarystoragekeyforstorageaccount": "ms-resource:loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount",
+    "Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount": "ms-resource:loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount",
     "Applyinganyconfigureddiagnosticsextensions": "ms-resource:loc.messages.Applyinganyconfigureddiagnosticsextensions",
     "_0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "ms-resource:loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions",
     "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
