@@ -215,7 +215,9 @@ async function run() {
 }
 
 function getFeatureFlagValue(featureFlagName: string): boolean {
-    return process.env[featureFlagName].toLowerCase() === "true"
+    const ffValue = process.env[featureFlagName]
+
+    return ffValue ? ffValue.toLowerCase() === "true" : false
 }
 
 run();
