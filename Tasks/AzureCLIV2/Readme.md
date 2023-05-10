@@ -44,7 +44,7 @@ The task is used to run Azure CLI commands on Cross platform agents running Wind
 
 * **Fail on standard error**: Select this check box if you want the build to fail if errors are written to the StandardError stream.
 
-* **Access service principal details in script**: Select this check box if you want to add service principal id , service principal key and tenantId of the Azure endpoint to the script's execution environment. You can use variables: `servicePrincipalId`, `servicePrincipalKey` and `tenantId` in your script. This is honored only when the Azure endpoint has Service Principal authentication scheme. \
+* **Access service principal details in script**: Select this check box if you want to add service principal id (AppId), service principal key and tenantId of the Azure endpoint to the script's execution environment. You can use variables: `servicePrincipalId`, `servicePrincipalKey` and `tenantId` in your script. This is honored only when the Azure endpoint has Service Principal authentication scheme. \
 \
 Syntax to access environment variables based on script type.\
 *Powershell script:* `$env:servicePrincipalId`\
