@@ -105,19 +105,31 @@ async function run() {
             let resultArgs = input_arguments
 
             if (featureFlags.enableSecureArgs || featureFlags.enableTelemetry) {
-                const [processedArgs, telemetry] = processBashEnvVariables(input_arguments)
+                try {
+                    const [processedArgs, telemetry] = processBashEnvVariables(input_arguments)
 
-                if (featureFlags.enableSecureArgs) {
-                    const argsEnvVar = {
-                        envName: "BASHV3_INPUT_SCRIPT_ARGS",
-                        value: processedArgs.trim()
-                    };
-                    process.env[argsEnvVar.envName] = argsEnvVar.value;
-                    resultArgs = `$${argsEnvVar.envName}`
+                    if (featureFlags.enableSecureArgs) {
+                        const argsEnvVar = {
+                            envName: "BASHV3_INPUT_SCRIPT_ARGS",
+                            value: processedArgs.trim()
+                        };
+                        process.env[argsEnvVar.envName] = argsEnvVar.value;
+                        resultArgs = `$${argsEnvVar.envName}`
+                    }
+
+                    if (featureFlags.enableTelemetry) {
+                        emitTelemetry('TaskHub', 'BashV3', telemetry)
+                    }
                 }
+                catch (err) {
+                    if (featureFlags.enableTelemetry) {
+                        tl.debug("Publishing error telemetry...");
+                        emitTelemetry('TaskHub', 'BashV3', { EnvProcessorError: err })
+                    }
 
-                if (featureFlags.enableTelemetry) {
-                    emitTelemetry('TaskHub', 'BashV3', telemetry)
+                    if (featureFlags.enableSecureArgs) {
+                        throw err
+                    }
                 }
             }
 
