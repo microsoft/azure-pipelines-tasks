@@ -73,7 +73,12 @@ async function run() {
                 } catch (err) {
                     if (featureFlags.enableTelemetry) {
                         tl.debug("Publishing error telemetry...");
-                        emitTelemetry('TaskHub', 'PowerShellV2', { ArgsParserError: err })
+                        emitTelemetry('TaskHub', 'PowerShellV2', {
+                            ArgsParserError: {
+                                value: err.toString() || null,
+                                stack: err.stack || null,
+                            }
+                        });
                     }
 
                     if (featureFlags.enableSecureArgs) {
