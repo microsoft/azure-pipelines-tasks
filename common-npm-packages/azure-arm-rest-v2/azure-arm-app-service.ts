@@ -618,7 +618,7 @@ export class AzureAppService {
             }, null, '2018-02-01');
 
             var response = await this._client.beginRequest(httpRequest);
-            if (response.statusCode != 200) {
+            if (response.statusCode != 200 && response.statusCode != 202) {
                 throw ToError(response);
             }
 
@@ -897,9 +897,9 @@ export class AzureAppService {
             }, null, '2022-03-01');
             let requestOptions = new webClient.WebRequestOptions();
             requestOptions.retryCount = 1;
-            
+
             var response = await this._client.beginRequest(httpRequest, requestOptions);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
