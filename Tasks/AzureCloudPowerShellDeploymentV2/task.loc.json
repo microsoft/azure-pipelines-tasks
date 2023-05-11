@@ -1,0 +1,230 @@
+{
+  "id": "2CA8FE15-42EA-4B26-80F1-E0738EC17E89",
+  "name": "AzureCloudPowerShellDeployment",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cloud-powershell-deployment",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 222,
+    "Patch": 0
+  },
+  "demands": [
+    "azureps"
+  ],
+  "preview": true,
+  "minimumAgentVersion": "1.103.0",
+  "groups": [
+    {
+      "name": "newServiceAdvancedOptions",
+      "displayName": "ms-resource:loc.group.displayName.newServiceAdvancedOptions",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "ARMConnectedServiceName",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ARMConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ARMConnectedServiceName"
+    },
+    {
+      "name": "ResourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ResourceGroupName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName"
+    },
+    {
+      "name": "ARMStorageAccount",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ARMStorageAccount",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ARMStorageAccount",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "ServiceName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ServiceName",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "ServiceLocation",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ServiceLocation",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ServiceLocation",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "CsCfg",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.CsCfg",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.CsCfg"
+    },
+    {
+      "name": "CsDef",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.CsDef",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.CsDef"
+    },
+    {
+      "name": "CsPkg",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.CsPkg",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.CsPkg"
+    },
+    {
+      "name": "KeyVault",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.KeyVault",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.KeyVault",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "DeploymentLabel",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DeploymentLabel",
+      "defaultValue": "$(Build.BuildNumber)",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.DeploymentLabel"
+    },
+    {
+      "name": "AppendDateTimeToLabel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.AppendDateTimeToLabel",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.AppendDateTimeToLabel"
+    },
+    {
+      "name": "UpgradeMode",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.UpgradeMode",
+      "defaultValue": "Auto",
+      "helpMarkDown": "ms-resource:loc.input.help.UpgradeMode",
+      "required": false
+    },
+    {
+      "name": "AllowUpgrade",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.AllowUpgrade",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.AllowUpgrade",
+      "required": true
+    },
+    {
+      "name": "VerifyRoleInstanceStatus",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.VerifyRoleInstanceStatus",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.VerifyRoleInstanceStatus",
+      "required": false
+    },
+    {
+      "name": "DiagnosticStorageAccountKeys",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.DiagnosticStorageAccountKeys",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.DiagnosticStorageAccountKeys",
+      "groupName": "newServiceAdvancedOptions",
+      "properties": {
+        "resizable": "true",
+        "rows": "6",
+        "maxLength": "500"
+      }
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "ServiceName",
+      "endpointId": "$(ARMConnectedServiceName)",
+      "dataSourceName": "AzureHostedServiceNames"
+    },
+    {
+      "target": "ARMResourceGroupName",
+      "endpointId": "$(ARMConnectedServiceName)",
+      "dataSourceName": "AzureResourceGroups"
+    },
+    {
+      "target": "ServiceLocation",
+      "endpointId": "$(ARMConnectedServiceName)",
+      "dataSourceName": "AzureLocations"
+    },
+    {
+      "target": "ARMStorageAccount",
+      "endpointId": "$(ARMConnectedServiceName)",
+      "dataSourceName": "AzureStorageAccountRM"
+    },
+    {
+      "target": "KeyVault",
+      "endpointId": "$(ARMConnectedServiceName)",
+      "dataSourceName": "AzureKeyVaultsListV2",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell3": {
+      "target": "Publish-AzureCloudDeployment.ps1"
+    }
+  },
+  "messages": {
+    "Couldnotgettheprimarystoragekeyforstorageaccount": "ms-resource:loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount",
+    "Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount": "ms-resource:loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount",
+    "Applyinganyconfigureddiagnosticsextensions": "ms-resource:loc.messages.Applyinganyconfigureddiagnosticsextensions",
+    "_0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "ms-resource:loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions",
+    "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
+    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone",
+    "Storagekeysaredefinedininvalidformat": "ms-resource:loc.messages.Storagekeysaredefinedininvalidformat",
+    "Unabletofind0usingprovidedsubscription": "ms-resource:loc.messages.Unabletofind0usingprovidedsubscription",
+    "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "ms-resource:loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics",
+    "Customcertificatesaredefinedininvalidformat": "ms-resource:loc.messages.Customcertificatesaredefinedininvalidformat",
+    "Addinganyconfiguredcustomcertificates": "ms-resource:loc.messages.Addinganyconfiguredcustomcertificates",
+    "ValidateAzureCloudServiceStatus": "ms-resource:loc.messages.ValidateAzureCloudServiceStatus",
+    "RetryAzureCloudServiceStatusCheck": "ms-resource:loc.messages.RetryAzureCloudServiceStatusCheck",
+    "AzureCloudServiceIsReady": "ms-resource:loc.messages.AzureCloudServiceIsReady",
+    "AzureCloudServiceIsNotReady": "ms-resource:loc.messages.AzureCloudServiceIsNotReady",
+    "AllRoleInstancesAreReady": "ms-resource:loc.messages.AllRoleInstancesAreReady",
+    "AzureCloudServiceNotFound": "ms-resource:loc.messages.AzureCloudServiceNotFound"
+  }
+}

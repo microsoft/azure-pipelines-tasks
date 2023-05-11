@@ -1,0 +1,230 @@
+{
+    "id": "2CA8FE15-42EA-4B26-80F1-E0738EC17E89",
+    "name": "AzureCloudPowerShellDeployment",
+    "friendlyName": "Azure Cloud Service deployment",
+    "description": "Deploy an Azure Cloud Service",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cloud-powershell-deployment",
+    "helpMarkDown": "[Learn more about this task](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureCloudPowerShellDeploymentV2)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Agent"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 2,
+        "Minor": 222,
+        "Patch": 0
+    },
+    "demands": [
+        "azureps"
+    ],
+    "preview": true,
+    "minimumAgentVersion": "1.103.0",
+    "groups": [
+        {
+            "name": "newServiceAdvancedOptions",
+            "displayName": "Advanced Options For Creating New Service",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "ARMConnectedServiceName",
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription (ARM)",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Azure Resource Manager subscription."
+        },
+        {
+            "name": "ResourceGroupName",
+            "type": "pickList",
+            "label": "Resource group",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above"
+        },
+        {
+            "name": "ARMStorageAccount",
+            "type": "pickList",
+            "label": "Storage account (ARM)",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Choose a pre-existing ARM storage account.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "ServiceName",
+            "type": "pickList",
+            "label": "Service name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select or enter an existing cloud service name.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "ServiceLocation",
+            "type": "pickList",
+            "label": "Service location",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select a region for new service deployment.Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "CsCfg",
+            "type": "filePath",
+            "label": "CsCfg",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path of CsCfg under the default artifact directory."
+        },
+        {
+            "name": "CsDef",
+            "type": "filePath",
+            "label": "CsDef",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path of CsDef under the default artifact directory."
+        },
+        {
+            "name": "CsPkg",
+            "type": "filePath",
+            "label": "CsPkg",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path of CsPkg under the default artifact directory."
+        },
+        {
+            "name": "KeyVault",
+            "type": "pickList",
+            "label": "Azure KeyVault",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Choose a pre-existing Azure KeyVault with certificates.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "DeploymentLabel",
+            "type": "string",
+            "label": "Deployment label",
+            "defaultValue": "$(Build.BuildNumber)",
+            "required": false,
+            "helpMarkDown": "Specifies the label name for the new deployment. If not specified, a Globally Unique Identifier (GUID) is used."
+        },
+        {
+            "name": "AppendDateTimeToLabel",
+            "type": "boolean",
+            "label": "Append current date and time",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Appends current date and time to deployment label"
+        },
+        {
+            "name": "UpgradeMode",
+            "type": "string",
+            "label": "Update mode for the cloud service",
+            "defaultValue": "Auto",
+            "helpMarkDown": "**Auto**, **Manual** or **Simultaneous**",
+            "required": false
+        },
+        {
+            "name": "AllowUpgrade",
+            "type": "boolean",
+            "label": "Allow upgrade",
+            "defaultValue": "true",
+            "helpMarkDown": "When selected allows an upgrade to the Microsoft Azure cloud service",
+            "required": true
+        },
+        {
+            "name": "VerifyRoleInstanceStatus",
+            "type": "boolean",
+            "label": "Verify role instance status",
+            "defaultValue": "false",
+            "helpMarkDown": "When selected then the task will wait until role instances are in ready state.",
+            "required": false
+        },
+        {
+            "name": "DiagnosticStorageAccountKeys",
+            "type": "multiLine",
+            "label": "Diagnostic storage account keys",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide storage keys for diagnostics storage account in Role:Storagekey format. The diagnostics storage account name for each role will be obtained from diagnostics config file (.wadcfgx). If the .wadcfgx file for a role is not found, diagnostics extensions won’t be set for the role. If the storage account name is missing in the .wadcfgx file, the default storage account will be used for storing diagnostics results and the storage key parameters from deployment task will be ignored. It’s recommended to save <storage_account_key> as a secret variable unless there is no sensitive information in the diagnostics result for your environment. <br/><br/>For example,<br/> WebRole: &lt;WebRole_storage_account_key&gt;<br/>WorkerRole: &lt;WorkerRole_stoarge_account_key&gt;",
+            "groupName": "newServiceAdvancedOptions",
+            "properties": {
+                "resizable": "true",
+                "rows": "6",
+                "maxLength": "500"
+            }
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "ServiceName",
+            "endpointId": "$(ARMConnectedServiceName)",
+            "dataSourceName": "AzureHostedServiceNames"
+        },
+        {
+            "target": "ARMResourceGroupName",
+            "endpointId": "$(ARMConnectedServiceName)",
+            "dataSourceName": "AzureResourceGroups"
+        },
+        {
+            "target": "ServiceLocation",
+            "endpointId": "$(ARMConnectedServiceName)",
+            "dataSourceName": "AzureLocations"
+        },
+        {
+            "target": "ARMStorageAccount",
+            "endpointId": "$(ARMConnectedServiceName)",
+            "dataSourceName": "AzureStorageAccountRM"
+        },
+        {
+            "target": "KeyVault",
+            "endpointId": "$(ARMConnectedServiceName)",
+            "dataSourceName": "AzureKeyVaultsListV2",
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        }
+    ],
+    "instanceNameFormat": "Azure Deployment: $(CsPkg)",
+    "execution": {
+        "PowerShell3": {
+            "target": "Publish-AzureCloudDeployment.ps1"
+        }
+    },
+    "messages": {
+        "Couldnotgettheprimarystoragekeyforstorageaccount": "Could not get the primary storage key for storage account '{0}'. Unable to apply any diagnostics extensions.",
+        "Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount": "Could not get the primary storage key for the public config storage account '{0}'. Unable to apply any diagnostics extensions.",
+        "Applyinganyconfigureddiagnosticsextensions": "Applying any configured diagnostics extensions.",
+        "_0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "'{0}' could not be parsed into parts for registering diagnostics extensions.",
+        "Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
+        "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one.",
+        "Storagekeysaredefinedininvalidformat": "Storage keys are defined in invalid format.",
+        "Unabletofind0usingprovidedsubscription": "Unable to find {0} using provided subscription",
+        "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "Current version of azure powershell does not support external storage account for configuring diagnostics.",
+        "Customcertificatesaredefinedininvalidformat": "Custom certificates are defined in invalid format.",
+        "Addinganyconfiguredcustomcertificates": "Adding any configured custom certificates.",
+        "ValidateAzureCloudServiceStatus": "Validating status of Azure Cloud Service: '{0}'",
+        "RetryAzureCloudServiceStatusCheck": "Azure Cloud Service: '{0}' validation failed. Retrying in '{1}' seconds.",
+        "AzureCloudServiceIsReady": "Azure Cloud Service: '{0}' is ready.",
+        "AzureCloudServiceIsNotReady": "Azure Cloud Service: '{0}' is not ready. This can be due to one or more RoleInstances not being in 'ReadyRole' state. Check logs for more details.",
+        "AllRoleInstancesAreReady": "All role instances (count: '{1}') for Azure Cloud Service: '{0}' are in 'ReadyRole' state.",
+        "AzureCloudServiceNotFound": "Azure Cloud Service: '{0}' not found."
+    }
+}

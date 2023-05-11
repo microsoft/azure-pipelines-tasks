@@ -74,6 +74,7 @@
   "loc.messages.ErrorMessageFormat": "エラー: %s",
   "loc.messages.ExistingContainerAppEnvironmentMessage": "Container App で使用する既存の Container App 環境 '%s' が検出されました。",
   "loc.messages.FoundAppSourceDockerfileMessage": "指定されたアプリケーション ソースのパス '%s' で既存の Dockerfile が見つかりました。イメージはこの Dockerfile からビルドされます。",
+  "loc.messages.LoginFailed": "Azure のログインに失敗しました",
   "loc.messages.MissingAcrNameMessage": "appSourcePath 引数が指定されている場合は、acrName 引数も指定する必要があります。",
   "loc.messages.MissingRequiredArgumentMessage": "次のいずれかの引数を指定する必要があります: appSourcePath、imageToDeploy、yamlConfigPath",
   "loc.messages.PackCliInstallFailed": "パック CLI をインストールできません。",
