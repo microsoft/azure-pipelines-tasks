@@ -56,18 +56,29 @@ async function run() {
             if (input_arguments &&
                 (featureFlags.enableSecureArgs || featureFlags.enableTelemetry)) {
 
-                const [argsArray, telemetry] = parsePowerShellArguments(input_arguments)
+                try {
+                    const [argsArray, telemetry] = parsePowerShellArguments(input_arguments)
 
-                if (featureFlags.enableSecureArgs) {
-                    const json = JSON.stringify(argsArray, null, 2)
+                    if (featureFlags.enableSecureArgs) {
+                        const json = JSON.stringify(argsArray, null, 2)
 
-                    tl.debug(`Writing arguments to temp ${secureArgsFile} file...`)
-                    fs.writeFileSync(secureArgsFile, json)
-                }
+                        tl.debug(`Writing arguments to temp ${secureArgsFile} file...`)
+                        fs.writeFileSync(secureArgsFile, json)
+                    }
 
-                if (featureFlags.enableTelemetry) {
-                    tl.debug("Publishing task telemetry...")
-                    emitTelemetry('TaskHub', 'PowerShellV2', telemetry)
+                    if (featureFlags.enableTelemetry) {
+                        tl.debug("Publishing task telemetry...")
+                        emitTelemetry('TaskHub', 'PowerShellV2', telemetry)
+                    }
+                } catch (err) {
+                    if (featureFlags.enableTelemetry) {
+                        tl.debug("Publishing error telemetry...");
+                        emitTelemetry('TaskHub', 'PowerShellV2', { ArgsParserError: err })
+                    }
+
+                    if (featureFlags.enableSecureArgs) {
+                        throw err
+                    }
                 }
             }
         }

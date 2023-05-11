@@ -77,19 +77,32 @@ try {
         $input_arguments = Get-VstsInput -Name 'arguments'
 
         if ($input_arguments -and ($featureFlags.enableSecureArgs -or $featureFlags.enableTelemetry)) {
-            $argsArray, $telemetry = parsePowerShellArguments -InputArgs $input_arguments
 
-            if ($featureFlags.enableSecureArgs) {
-                $argsJson = $argsArray | ConvertTo-Json
+            try {
+                $argsArray, $telemetry = parsePowerShellArguments -InputArgs $input_arguments
 
-                Write-Debug "Writing arguments to temp $secureArgsFile file..."
+                if ($featureFlags.enableSecureArgs) {
+                    $argsJson = $argsArray | ConvertTo-Json
 
-                $argsJson | Out-File "$secureArgsFile"
+                    Write-Debug "Writing arguments to temp $secureArgsFile file..."
+
+                    $argsJson | Out-File "$secureArgsFile"
+                }
+
+                if ($featureFlags.enableTelemetry) {
+                    Write-Debug "Publishing task telemetry..."
+                    PublishTelemetry $telemetry
+                }
             }
+            catch {
+                if ($featureFlags.enableTelemetry) {
+                    Write-Debug "Publishing error telemetry..."
+                    PublishTelemetry @{ 'ArgsParserError' = $_ }
+                }
 
-            if ($featureFlags.enableTelemetry) {
-                Write-Debug "Publishing task telemetry..."
-                PublishTelemetry $telemetry
+                if (featureFlags.enableSecureArgs) {
+                    throw $_
+                }
             }
         }
     }
