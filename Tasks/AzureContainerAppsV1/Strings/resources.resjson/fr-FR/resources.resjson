@@ -74,6 +74,7 @@
   "loc.messages.ErrorMessageFormat": "Erreur : %s",
   "loc.messages.ExistingContainerAppEnvironmentMessage": "Découverte d’un environnement d’application conteneur existant, « %s », à utiliser avec l’application conteneur.",
   "loc.messages.FoundAppSourceDockerfileMessage": "Dockerfile existant trouvé dans la source d’application fournie dans le chemin d’accès '%s'; l’image sera générée à partir de ce Dockerfile.",
+  "loc.messages.LoginFailed": "Échec de la connexion Azure",
   "loc.messages.MissingAcrNameMessage": "L’argument acrName doit également être fourni si l’argument appSourcePath est fourni.",
   "loc.messages.MissingRequiredArgumentMessage": "L’un des arguments suivants doit être fourni : appSourcePath, imageToDeploy, yamlConfigPath",
   "loc.messages.PackCliInstallFailed": "Impossible d’installer l’interface CLI du pack.",
