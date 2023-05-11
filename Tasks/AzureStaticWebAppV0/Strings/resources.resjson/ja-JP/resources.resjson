@@ -34,5 +34,7 @@
   "loc.input.label.deployment_environment": "デプロイ環境",
   "loc.input.help.deployment_environment": "デプロイ先の環境。運用環境では空白のままにします。運用ブランチよりも優先されます",
   "loc.input.label.production_branch": "運用ブランチ",
-  "loc.input.help.production_branch": "運用ブランチ。指定され、デプロイ環境が空の場合、他のブランチからのデプロイはプレビュー環境になります"
+  "loc.input.help.production_branch": "運用ブランチ。指定され、デプロイ環境が空の場合、他のブランチからのデプロイはプレビュー環境になります",
+  "loc.input.label.data_api_location": "データ API の場所",
+  "loc.input.help.data_api_location": "作業ディレクトリを基準とした Data API ソース ファイルのディレクトリの場所"
 }

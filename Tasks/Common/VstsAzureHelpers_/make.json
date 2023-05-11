@@ -3,7 +3,7 @@
         "nugetv2": [
             {
                 "name": "Newtonsoft.Json",
-                "version": "12.0.3",
+                "version": "10.0.3",
                 "repository": "https://www.nuget.org/api/v2/",
                 "cp": [
                     {
