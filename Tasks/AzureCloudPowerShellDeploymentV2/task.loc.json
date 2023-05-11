@@ -22,6 +22,7 @@
   "demands": [
     "azureps"
   ],
+  "preview": true,
   "minimumAgentVersion": "1.103.0",
   "groups": [
     {
