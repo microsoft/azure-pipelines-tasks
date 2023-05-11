@@ -1,11 +1,10 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-var deployUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/utility.js');
-var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/ziputility.js');
-import { Kudu } from '../azure-arm-rest/azure-arm-app-service-kudu';
-import { AzureDeployPackageArtifactAlias } from 'azure-pipelines-tasks-azurermdeploycommon/Constants';
-import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/constants';
-import webClient = require('azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/webClient');
+var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility');
+var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility');
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
+import { AzureDeployPackageArtifactAlias, KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azure-arm-rest-v2/constants';
+import webClient = require('azure-pipelines-tasks-azure-arm-rest-v2/webClient');
 
 const physicalRootPath: string = '/site/wwwroot';
 const deploymentFolder: string = 'site/deployments';
@@ -91,7 +90,7 @@ export class KuduServiceUtility {
             return deploymentDetails.id;
         }
         catch(error) {
-            let stackTraceUrl:string = this._appServiceKuduService.getKuduStackTrace();
+            let stackTraceUrl:string = this._appServiceKuduService.getKuduStackTraceUrl();
             tl.error(tl.loc('PackageDeploymentFailed'));
             tl.error(tl.loc('KuduStackTraceURL', stackTraceUrl));
             throw Error(error);
@@ -114,7 +113,7 @@ export class KuduServiceUtility {
             console.log("NOTE: Run From Package makes wwwroot read-only, so you will receive an error when writing files to this directory.");
         }
         catch(error) {
-            let stackTraceUrl:string = this._appServiceKuduService.getKuduStackTrace();
+            let stackTraceUrl:string = this._appServiceKuduService.getKuduStackTraceUrl();
             tl.error(tl.loc('PackageDeploymentFailed'));
             tl.error(tl.loc('KuduStackTraceURL', stackTraceUrl));
             throw Error(error);
@@ -128,7 +127,7 @@ export class KuduServiceUtility {
             let queryParameters: Array<string> = [
                 'isAsync=true'
             ];
-
+            
             if(targetFolderName) {
                 queryParameters.push('name=' + encodeURIComponent(targetFolderName));
             }
@@ -285,9 +284,9 @@ export class KuduServiceUtility {
             repositoryUrl = tl.getVariable("build.repository.uri") || "";
             branch = tl.getVariable("build.sourcebranchname") || tl.getVariable("build.sourcebranch");
         }
-
+   
         deploymentID = !!deploymentID ? deploymentID : this.getDeploymentID();
-
+    
         var message = {
             type : "deployment",
             commitId : commitId,
@@ -310,7 +309,7 @@ export class KuduServiceUtility {
             for(var attribute in customMessage) {
                 message[attribute] = customMessage[attribute];
             }
-
+            
         }
         var deploymentLogType: string = message['type'];
         var active: boolean = false;
@@ -329,7 +328,7 @@ export class KuduServiceUtility {
     }
 
     public async getZipDeployValidation(packagePath: string, zipLanguage?: string, zipIs64Bit?: string): Promise<void> {
-        try {
+        try {            
             console.log("Validating deployment package for functions app before Zip Deploy");
             let queryParameters: Array<string> = [
                 'zipLanguage=' + !!zipLanguage ? zipLanguage : '',
