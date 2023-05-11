@@ -40,7 +40,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
 
         tl.debug('Performing Linux built-in package deployment');
         var isNewValueUpdated: boolean = false;
-        
+
         var linuxFunctionRuntimeSetting = "";
         if(this.taskParams.RuntimeStack && linuxFunctionRuntimeSettingValue.get(this.taskParams.RuntimeStack)) {
             linuxFunctionRuntimeSetting = linuxFunctionRuntimeSettingName + linuxFunctionRuntimeSettingValue.get(this.taskParams.RuntimeStack);
@@ -52,11 +52,11 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
 
         var customApplicationSetting = ParameterParser.parse(linuxFunctionAppSetting);
         isNewValueUpdated = await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
-        
+
         if(!isNewValueUpdated) {
             await this.kuduServiceUtility.warmpUp();
         }
-        
+
         switch(packageType){
             case PackageType.folder:
                 let tempPackagePath = webCommonUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
@@ -94,7 +94,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
             case PackageType.war:
                 tl.debug("Initiated deployment via kudu service for webapp war package : "+ this.taskParams.Package.getPath());
                 var warName = webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".war");
-                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(), 
+                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(),
                 { slotName: this.appService.getSlot() }, warName);
             break;
 

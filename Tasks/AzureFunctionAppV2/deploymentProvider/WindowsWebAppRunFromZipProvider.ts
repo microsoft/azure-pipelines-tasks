@@ -36,7 +36,7 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
         }
 
         tl.debug("Initiated deployment via kudu service for webapp package : ");
-        
+
         var addCustomApplicationSetting = ParameterParser.parse(runFromZipAppSetting);
         var deleteCustomApplicationSetting = ParameterParser.parse(oldRunFromZipAppSetting);
         var isNewValueUpdated: boolean = await this.appServiceUtility.updateAndMonitorAppSettings(addCustomApplicationSetting, deleteCustomApplicationSetting);
@@ -45,16 +45,16 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
             await this.kuduServiceUtility.warmpUp();
         }
 
-        await this.kuduServiceUtility.getZipDeployValidation(webPackage); 
-        await this.kuduServiceUtility.deployUsingRunFromZip(webPackage, 
+        await this.kuduServiceUtility.getZipDeployValidation(webPackage);
+        await this.kuduServiceUtility.deployUsingRunFromZip(webPackage,
             { slotName: this.appService.getSlot() });
 
         await this.PostDeploymentStep();
     }
-    
+
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
         await addReleaseAnnotation(this.taskParams.azureEndpoint, this.appService, isDeploymentSuccess);
-        
+
         let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
         console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
         tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);

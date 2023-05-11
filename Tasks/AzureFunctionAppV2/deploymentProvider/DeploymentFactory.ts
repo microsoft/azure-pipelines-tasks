@@ -22,7 +22,7 @@ export class DeploymentFactory {
                 return new ConsumptionWebAppDeploymentProvider(this._taskParams);
             } else {
                 return new BuiltInLinuxWebAppDeploymentProvider(this._taskParams);
-            }        
+            }
         } else {
             tl.debug("Deployment started for windows app service");
             return await this._getWindowsDeploymentProvider()
@@ -42,11 +42,11 @@ export class DeploymentFactory {
     private async _getWindowsDeploymentProviderForZipAndFolderPackageType(): Promise<IWebAppDeploymentProvider> {
         if(this._taskParams.DeploymentType != DeploymentType.auto) {
             return await this._getUserSelectedDeploymentProviderForWindow();
-        } else {  
-            var _isMSBuildPackage = await this._taskParams.Package.isMSBuildPackage();           
+        } else {
+            var _isMSBuildPackage = await this._taskParams.Package.isMSBuildPackage();
             if(_isMSBuildPackage) {
                 throw new Error(tl.loc('MsBuildPackageNotSupported', this._taskParams.Package.getPath()));
-            } else { 
+            } else {
                 return new WindowsWebAppRunFromZipProvider(this._taskParams);
             }
         }

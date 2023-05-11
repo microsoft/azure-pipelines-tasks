@@ -127,7 +127,7 @@ export class KuduServiceUtility {
             let queryParameters: Array<string> = [
                 'isAsync=true'
             ];
-            
+
             if(targetFolderName) {
                 queryParameters.push('name=' + encodeURIComponent(targetFolderName));
             }
@@ -284,9 +284,9 @@ export class KuduServiceUtility {
             repositoryUrl = tl.getVariable("build.repository.uri") || "";
             branch = tl.getVariable("build.sourcebranchname") || tl.getVariable("build.sourcebranch");
         }
-   
+
         deploymentID = !!deploymentID ? deploymentID : this.getDeploymentID();
-    
+
         var message = {
             type : "deployment",
             commitId : commitId,
@@ -309,7 +309,7 @@ export class KuduServiceUtility {
             for(var attribute in customMessage) {
                 message[attribute] = customMessage[attribute];
             }
-            
+
         }
         var deploymentLogType: string = message['type'];
         var active: boolean = false;
@@ -328,7 +328,7 @@ export class KuduServiceUtility {
     }
 
     public async getZipDeployValidation(packagePath: string, zipLanguage?: string, zipIs64Bit?: string): Promise<void> {
-        try {            
+        try {
             console.log("Validating deployment package for functions app before Zip Deploy");
             let queryParameters: Array<string> = [
                 'zipLanguage=' + !!zipLanguage ? zipLanguage : '',

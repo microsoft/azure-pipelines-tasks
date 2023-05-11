@@ -36,7 +36,7 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
         }
 
         tl.debug("Initiated deployment via kudu service for webapp package : ");
-        
+
         var deleteApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting)
         var isNewValueUpdated: boolean = await this.appServiceUtility.updateAndMonitorAppSettings(null, deleteApplicationSetting);
 
@@ -44,12 +44,12 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
             await this.kuduServiceUtility.warmpUp();
         }
 
-        await this.kuduServiceUtility.getZipDeployValidation(webPackage); 
+        await this.kuduServiceUtility.getZipDeployValidation(webPackage);
         this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(webPackage);
 
         await this.PostDeploymentStep();
     }
-    
+
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
         if(this.kuduServiceUtility) {
             await super.UpdateDeploymentStatus(isDeploymentSuccess);

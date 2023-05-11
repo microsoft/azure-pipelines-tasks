@@ -27,7 +27,7 @@ export class TaskParametersUtility {
             StartupCommand: tl.getInput('startUpCommand', false),
             ConfigurationSettings: tl.getInput('configurationStrings', false),
             WebAppName: tl.getInput('appName', true)
-        }  
+        }
 
         //Clear input if deploytoslot is disabled
         taskParameters.ResourceGroupName = (!!taskParameters.DeployToSlotOrASEFlag) ? tl.getInput('resourceGroupName', false) : null;
@@ -41,18 +41,18 @@ export class TaskParametersUtility {
         {
             taskParameters.AppSettings = taskParameters.AppSettings.replace('\n',' ');
         }
-        
+
         var appDetails = await this.getWebAppKind(taskParameters);
         taskParameters.ResourceGroupName = appDetails["resourceGroupName"];
         taskParameters.WebAppKind = appDetails["webAppKind"];
         taskParameters.isConsumption = appDetails["sku"].toLowerCase() == skuDynamicValue;
         taskParameters.isPremium = appDetails["sku"].toLowerCase() == skuElasticPremiumValue;
-        
+
         taskParameters.isLinuxApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("Linux") !=-1;
 
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
-       
+
         taskParameters.Package = new Package(tl.getPathInput('package', true));
         taskParameters.WebConfigParameters = this.updateWebConfigParameters(taskParameters);
 
@@ -112,7 +112,7 @@ export class TaskParametersUtility {
                 webConfigParameters += " -JAR_PATH " + jarPath;
             }
             if(webConfigParameters.indexOf("-Dserver.port=%HTTP_PLATFORM_PORT%") > 0) {
-                webConfigParameters = webConfigParameters.replace("-Dserver.port=%HTTP_PLATFORM_PORT%", "");  
+                webConfigParameters = webConfigParameters.replace("-Dserver.port=%HTTP_PLATFORM_PORT%", "");
             }
             tl.debug("web config parameters :" + webConfigParameters);
         }
