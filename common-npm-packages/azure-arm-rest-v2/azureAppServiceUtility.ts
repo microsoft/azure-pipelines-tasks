@@ -6,9 +6,13 @@ import { Kudu } from './azure-arm-app-service-kudu';
 import webClient = require('./webClient');
 
 export class AzureAppServiceUtility {
-    private _appService: AzureAppService;
-    constructor(appService: AzureAppService) {
+
+    private readonly _appService: AzureAppService;
+    private readonly _telemetryFeature: string;
+
+    constructor(appService: AzureAppService, telemetryFeature?: string) {
         this._appService = appService;
+        this._telemetryFeature = telemetryFeature || "AzureAppServiceDeployment"; //TODO modify telemetry.publish command so that agent automatically pass task name and version to the server then remove this parameter
     }
 
     public async getWebDeployPublishingProfile(): Promise<any> {
@@ -137,7 +141,7 @@ export class AzureAppServiceUtility {
             authMethod: method
         };
         tl.debug(`Using ${method} authentication method for Kudu service.`);
-        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureAppServiceDeployment]" + JSON.stringify(authMethodtelemetry));
+        console.log(`##vso[telemetry.publish area=TaskDeploymentMethod;feature=${this._telemetryFeature}]${JSON.stringify(authMethodtelemetry)}`);
 
         return method + " " + token;
     }
