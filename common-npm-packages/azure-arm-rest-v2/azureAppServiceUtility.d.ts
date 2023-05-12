@@ -2,7 +2,7 @@ import { Kudu } from './azure-arm-app-service-kudu';
 import { AzureAppService } from './azure-arm-app-service';
 
 export declare class AzureAppServiceUtility {
-    constructor(appService: AzureAppService);
+    constructor(appService: AzureAppService, telemetryFeature?: string);
     getWebDeployPublishingProfile(): Promise<any>;
     getApplicationURL(virtualApplication?: string): Promise<string>;
     pingApplication(): Promise<void>;
