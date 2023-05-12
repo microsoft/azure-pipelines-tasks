@@ -158,17 +158,17 @@ export async function setNetworkInterface(SPN, endpointUrl: string, nic, resourc
 			deferred.reject(tl.loc("MaxRetriesExceededForSettingNetworkInterface", nic.name));
 			return;
 		}
-		
+
 		tl.debug(`Trial Count = ${retryCount}`);
 		httpObj.send("PUT", restUrl, JSON.stringify(nic, null, 2), requestHeader, (error, response, body) => {
 	        if(error) {
-	            deferred.reject(error); 
+	            deferred.reject(error);
 	        }
-	        else if(response.statusCode == 200) {	
+	        else if(response.statusCode == 200) {
 
 	        	// wait for the provisioning state to be succeeded
 	        	// check after every 20 seconds
-	        	var asyncUrl = response.headers["azure-asyncoperation"];
+	        	var asyncUrl = response.headers["azure-asyncoperation"].toString();
 	        	var checkStatusRetryCount = 0;
 	        	var checkStatusWaitTime = 20000;
 	        	setTimeout( async function checkSuccessStatus() {
