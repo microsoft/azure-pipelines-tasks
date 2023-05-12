@@ -34,5 +34,7 @@
   "loc.input.label.deployment_environment": "Entorno de implementación",
   "loc.input.help.deployment_environment": "Entorno en el que se va a implementar. Déjelo en blanco para el entorno de producción. Tiene prioridad sobre la rama de producción",
   "loc.input.label.production_branch": "Rama de producción",
-  "loc.input.help.production_branch": "Rama de producción. Cuando se especifica y el entorno de implementación está vacío, las implementaciones de otras ramas serán entornos de vista previa."
+  "loc.input.help.production_branch": "Rama de producción. Cuando se especifica y el entorno de implementación está vacío, las implementaciones de otras ramas serán entornos de vista previa.",
+  "loc.input.label.data_api_location": "Ubicación de la API de datos",
+  "loc.input.help.data_api_location": "Ubicación del directorio de los archivos de origen API de datos en relación con el directorio de trabajo"
 }

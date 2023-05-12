@@ -34,5 +34,7 @@
   "loc.input.label.deployment_environment": "Bereitstellungsumgebung",
   "loc.input.help.deployment_environment": "Umgebung, in der die Bereitstellung erfolgen soll. Lassen Sie das Feld für die Produktionsumgebung leer. Hat Vorrang vor Production Branch",
   "loc.input.label.production_branch": "Produktionsbranch",
-  "loc.input.help.production_branch": "Produktionsbranch. Wenn die angegebene Bereitstellungsumgebung leer ist, sind Bereitstellungen aus anderen Branches Vorschauumgebungen."
+  "loc.input.help.production_branch": "Produktionsbranch. Wenn die angegebene Bereitstellungsumgebung leer ist, sind Bereitstellungen aus anderen Branches Vorschauumgebungen.",
+  "loc.input.label.data_api_location": "Speicherort der Daten-API",
+  "loc.input.help.data_api_location": "Verzeichnisspeicherort der Daten-API-Quelldateien relativ zum Arbeitsverzeichnis"
 }

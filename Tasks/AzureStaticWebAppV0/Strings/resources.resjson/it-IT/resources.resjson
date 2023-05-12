@@ -34,5 +34,7 @@
   "loc.input.label.deployment_environment": "Ambiente di distribuzione",
   "loc.input.help.deployment_environment": "Ambiente in cui eseguire la distribuzione. Lasciare vuoto per l'ambiente di produzione. Ha la precedenza sul ramo di produzione",
   "loc.input.label.production_branch": "Ramo di produzione",
-  "loc.input.help.production_branch": "Ramo di produzione. Se viene specificato e l'ambiente di distribuzione è vuoto, le distribuzioni da altri rami saranno ambienti di anteprima"
+  "loc.input.help.production_branch": "Ramo di produzione. Se viene specificato e l'ambiente di distribuzione è vuoto, le distribuzioni da altri rami saranno ambienti di anteprima",
+  "loc.input.label.data_api_location": "Posizione dell'API dati",
+  "loc.input.help.data_api_location": "Percorso della directory dei file di origine API Dati in merito alla directory di lavoro"
 }
