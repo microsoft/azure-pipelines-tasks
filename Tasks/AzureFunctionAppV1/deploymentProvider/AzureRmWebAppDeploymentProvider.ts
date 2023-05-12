@@ -30,7 +30,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     public async PreDeploymentStep() {
         this.appService = new AzureAppService(this.taskParams.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName,
             this.taskParams.SlotName, this.taskParams.WebAppKind);
-        this.appServiceUtility = new AzureAppServiceUtility(this.appService);
+        this.appServiceUtility = new AzureAppServiceUtility(this.appService, "AzureFunctionAppDeployment");
         this.appServiceUtilityExt = new AzureAppServiceUtilityExt(this.appService);
 
         this.kuduService = await this.appServiceUtility.getKuduService();
