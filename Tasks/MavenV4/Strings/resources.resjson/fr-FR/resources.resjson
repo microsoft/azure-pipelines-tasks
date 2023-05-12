@@ -48,10 +48,10 @@
   "loc.input.help.mavenSetM2Home": "Affecte à la variable M2_HOME un chemin d’installation Maven personnalisé.",
   "loc.input.label.mavenOpts": "Affecter à MAVEN_OPTS",
   "loc.input.help.mavenOpts": "Définit la variable d’environnement MAVEN_OPTS, qui permet d’envoyer des arguments de ligne de commande pour démarrer JVM. L’indicateur -Xmx spécifie la mémoire maximale disponible pour JVM.",
-  "loc.input.label.mavenFeedAuthenticate": "Authentifier les flux Maven intégrés",
-  "loc.input.help.mavenFeedAuthenticate": "Authentifiez automatiquement les flux Maven à partir d’Azure Artifacts. Si les flux intégrés Maven ne sont pas utilisés, désélectionnez cette option pour obtenir des builds plus rapides.",
+  "loc.input.label.mavenFeedAuthenticate": "S’authentifier auprès des flux Artifacts",
+  "loc.input.help.mavenFeedAuthenticate": "S’authentifie automatiquement auprès des flux Azure Artifacts. Si les flux Artifacts ne sont pas utilisés, désélectionnez cette option pour des builds plus rapides.",
   "loc.input.label.skipEffectivePom": "Ignorer la génération d’un modèle POM effectif tout en authentifiant les flux intégrés",
-  "loc.input.help.skipEffectivePom": "Authentifiez les flux Maven intégrés à l’aide du modèle POM uniquement, en autorisant les modèles POM parents dans les flux Azure Artifacts/Azure DevOps Server [Package Management].",
+  "loc.input.help.skipEffectivePom": "S’authentifie avec les flux Artifacts à l’aide du POM uniquement.",
   "loc.input.label.sqAnalysisEnabled": "Exécuter l’analyse SonarQube ou SonarCloud",
   "loc.input.help.sqAnalysisEnabled": "Cette option a changé depuis la version 1 de la tâche **Maven**. Elle utilise les extensions du Marketplace [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) et [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud). Activez cette option pour exécuter l’[analyse SonarQube ou SonarCloud](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) après l’exécution des objectifs du champ **Goals**. L’objectif **installer** ou **package** doit s’exécuter en premier. Vous devez également ajouter une tâche **Préparer la configuration de l’analyse** à partir de l’une des extensions du pipeline de build avant cette tâche Maven.",
   "loc.input.label.isJacocoCoverageReportXML": "Utiliser les rapports XML Jacoco pour l'analyse SonarQube",
@@ -106,7 +106,7 @@
   "loc.messages.NoCodeCoverage": "Il n'existe aucun résultat de couverture du code à publier.",
   "loc.messages.EntryAlreadyExists": "Les paramètres du flux ou du référentiel existent déjà dans le fichier xml.",
   "loc.messages.EffectivePomInvalid": "Nous n’avons pas pu analyser le fichier POM effectif.",
-  "loc.messages.AuthenticationNotNecessary": "Aucun flux Maven intégré nécessitant une authentification n’a été trouvé. Désactivez ’Authentifier les flux Maven intégrés’ pour obtenir des builds plus rapides.",
-  "loc.messages.UsingAuthFeed": "Utilisation du flux intégré : ",
+  "loc.messages.AuthenticationNotNecessary": "Aucun flux Artifacts nécessitant une authentification n’a été trouvé. Désactiver ’Authenticate with Artifacts feeds’ pour des constructions plus rapides.",
+  "loc.messages.UsingAuthFeed": "Utilisation de l’alimentation en artefacts : ",
   "loc.messages.NoTestResults": "Les fichiers de résultats des tests correspondant à %s sont introuvables. La publication des résultats des tests JUnit est ignorée."
 }

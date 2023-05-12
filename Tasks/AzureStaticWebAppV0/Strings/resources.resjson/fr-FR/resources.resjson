@@ -34,5 +34,7 @@
   "loc.input.label.deployment_environment": "Environnement de déploiement",
   "loc.input.help.deployment_environment": "Environnement vers lequel effectuer le déploiement. Laissez vide pour l’environnement de production. Prévaut sur la branche de production",
   "loc.input.label.production_branch": "Branche de production",
-  "loc.input.help.production_branch": "Branche de production. Lorsqu'il est spécifié et que l'environnement de déploiement est vide, les déploiements des autres branches seront des environnements d'aperçu."
+  "loc.input.help.production_branch": "Branche de production. Lorsqu'il est spécifié et que l'environnement de déploiement est vide, les déploiements des autres branches seront des environnements d'aperçu.",
+  "loc.input.label.data_api_location": "Emplacement de l’API de données",
+  "loc.input.help.data_api_location": "Emplacement du répertoire des fichiers sources API Données par rapport au répertoire de travail"
 }
