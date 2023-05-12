@@ -1,7 +1,6 @@
 import tl = require('azure-pipelines-task-lib/task');
 import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
-import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
 import { Resources } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource';
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
 import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureAppServiceUtility';
@@ -65,7 +64,7 @@ export class AzureFunctionOnContainerDeploymentProvider{
         await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings, undefined, undefined, !this.isCentauri);
 
         if (!this.isCentauri) {
-            await this.appServiceUtility.updateScmTypeAndConfigurationDetails();            
+            await this.appServiceUtilityExt.updateScmTypeAndConfigurationDetails();            
         }
     }
 
