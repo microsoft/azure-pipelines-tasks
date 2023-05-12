@@ -5,20 +5,37 @@ import webClient = require('azure-pipelines-tasks-azurermdeploycommon/azure-arm-
 import { WebJob, SiteExtension } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
 import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/constants';
 
-export class KuduServiceManagementClient {
-    private _scmUri;
-    private _accesssToken: string;
-    private _cookie: string[];
 
-    constructor(scmUri: string, accessToken: string) {
-        this._accesssToken = accessToken;
+export class KuduServiceManagementClient{
+    private _scmUri;
+    private _cookie: string[];
+    private _accessToken;
+    private _scmAccessCheck : boolean;
+    
+
+    constructor(scmUri: string , accessToken: string , scmAccessCheck: boolean) {
+        this._accessToken = accessToken;
         this._scmUri = scmUri;
+        this._scmAccessCheck = scmAccessCheck;
     }
 
     public async beginRequest(request: webClient.WebRequest, reqOptions?: webClient.WebRequestOptions, contentType?: string): Promise<webClient.WebResponse> {
         request.headers = request.headers || {};
-        request.headers["Authorization"] = "Basic " + this._accesssToken;
-        request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
+        if(this._scmAccessCheck === false || this._scmAccessCheck == null) {
+            request.headers["Authorization"] = "Bearer " + this._accessToken;
+            tl.debug('Using Bearer Authentication');
+            let authMethodtelemetry = '{"authMethod":"Bearer"}';
+            console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureFunctionAppDeployment]" + authMethodtelemetry);
+        }
+        else{
+            request.headers["Authorization"] = "Basic " + this._accessToken;
+            tl.debug('Using Basic Authentication');
+            let authMethodtelemetry = '{"authMethod":"Basic"}';
+            console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureFunctionAppDeployment]" + authMethodtelemetry);
+        }
+        
+        request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';      
+        
         
         if(!!this._cookie) {
             tl.debug(`setting affinity cookie ${JSON.stringify(this._cookie)}`);
@@ -75,9 +92,8 @@ export class KuduServiceManagementClient {
 export class Kudu {
     private _client: KuduServiceManagementClient;
 
-    constructor(scmUri: string, username: string, password: string) {
-        var base64EncodedCredential = (new Buffer(username + ':' + password).toString('base64'));
-        this._client = new KuduServiceManagementClient(scmUri, base64EncodedCredential);
+    constructor(scmUri: string, accessToken: string, scmPolicyCheck: boolean) {
+        this._client = new KuduServiceManagementClient(scmUri, accessToken, scmPolicyCheck);
     }
 
     public async updateDeployment(requestBody: any): Promise<string> {

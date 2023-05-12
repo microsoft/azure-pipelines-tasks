@@ -60,6 +60,7 @@
   "loc.messages.ErrorCodeFormat": "Codice di errore: [%s]",
   "loc.messages.ErrorMessageFormat": "Errore: %s",
   "loc.messages.FoundAppSourceDockerfileMessage": "Trovato Dockerfile esistente nell'origine dell'applicazione specificata nel percorso '%s'; l'immagine verrà compilata da questo Dockerfile.",
+  "loc.messages.LoginFailed": "L'accesso ad Azure non è riuscito",
   "loc.messages.MissingAcrNameMessage": "Se si specifica l'argomento appSourcePath, è necessario specificare anche l'argomento acrName.",
   "loc.messages.MissingImageToDeployMessage": "È necessario specificare l'argomento imageToDeploy se non vengono specificati né appSourcePath né acrName.",
   "loc.messages.PackCliInstallFailed": "Non è possibile installare il pacchetto dell'interfaccia della riga di comando.",

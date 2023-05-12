@@ -60,6 +60,7 @@
   "loc.messages.ErrorCodeFormat": "Fehlercode: [%s]",
   "loc.messages.ErrorMessageFormat": "Fehler: %s",
   "loc.messages.FoundAppSourceDockerfileMessage": "Es wurde eine vorhandene Dockerfile-Datei in der angegebenen Anwendungsquelle im Pfad \"%s\" gefunden. Das Image wird aus dieser Dockerfile-Datei erstellt.",
+  "loc.messages.LoginFailed": "Fehler bei der Azure-Anmeldung.",
   "loc.messages.MissingAcrNameMessage": "Das acrName-Argument muss auch angegeben werden, wenn das appSourcePath-Argument angegeben wird.",
   "loc.messages.MissingImageToDeployMessage": "Das Argument imageToDeploy muss angegeben werden, wenn weder appSourcePath noch acrName angegeben werden.",
   "loc.messages.PackCliInstallFailed": "Die Paket-CLI kann nicht installiert werden.",

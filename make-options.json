@@ -13,6 +13,7 @@
         "AzureCLIV1",
         "AzureCLIV2",
         "AzureCloudPowerShellDeploymentV1",
+        "AzureCloudPowerShellDeploymentV2",
         "AzureContainerAppsV0",
         "AzureContainerAppsV1",
         "AzureFileCopyV2",
@@ -51,13 +52,14 @@
         "BatchScriptV1",
         "CacheBetaV0",
         "CacheBetaV1",
-        "CacheV2", 
+        "CacheV2",
         "CargoAuthenticateV0",
         "ChefV1",
         "ChefKnifeV1",
         "CMakeV1",
         "CmdLineV2",
         "CocoaPodsV0",
+        "CondaAuthenticateV0",
         "CondaEnvironmentV0",
         "CondaEnvironmentV1",
         "ContainerStructureTestV0",
@@ -213,5 +215,13 @@
         "task.json",
         "task.loc.json",
         "Tests"
+    ],
+    "Node16": [
+        "CondaEnvironmentV0",
+        "CondaEnvironmentV1",
+        "FuncToolsInstallerV0",
+        "NuGetV0",
+        "PackerBuildV0",
+        "PackerBuildV1"
     ]
 }

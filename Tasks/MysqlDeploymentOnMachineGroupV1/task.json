@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 215,
-        "Patch": 0
+        "Minor": 222,
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "1.100.0",
@@ -76,7 +76,7 @@
         {
             "name": "SqlUsername",
             "type": "string",
-            "label": "Mysql User Name",
+            "label": "MySQL User Name",
             "required": true,
             "defaultValue": "",
             "helpMarkDown": "When you connect using MySQL Workbench, this is the same value that is used for 'Username' in 'Parameters'."

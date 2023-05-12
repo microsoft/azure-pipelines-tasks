@@ -27,6 +27,7 @@
   "loc.messages.WFC_CopyingRecurivelyFrom0to1MachineSucceed": "La copia ricorsiva da {0} a {1} nel computer {2} è riuscita.",
   "loc.messages.WFC_SourcePathDoesNotExist": "Il percorso di origine '{0}' non esiste.",
   "loc.messages.WFC_RemoteDestinationPathCannotContainEnvironmentVariables": "Il percorso di destinazione remoto '{0}' non può contenere variabili di ambiente.",
+  "loc.messages.WFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "Gli argomenti aggiuntivi non possono includere caratteri separatori '&', ';' e '|'. Verifica l'input. Per altre informazioni sulla convalida degli argomenti, controllare https://aka.ms/azdo-task-argument-validation",
   "loc.messages.WFC_CopyStartedFor0": "Copia avviata per - {0}",
   "loc.messages.WFC_NoMachineExistsUnderEnvironment": "Nell'ambiente '{0}' non esiste alcun computer per la distribuzione",
   "loc.messages.WFC_NoMachineExistsUnderEnvironment0ForDeployment": "Nell'ambiente '{0}' non esiste alcun computer per la distribuzione",
