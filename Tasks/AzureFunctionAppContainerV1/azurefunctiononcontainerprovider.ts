@@ -38,7 +38,7 @@ export class AzureFunctionOnContainerDeploymentProvider{
         }
 
         this.appService = new AzureAppService(this.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName, this.taskParams.SlotName);
-        this.appServiceUtility = new AzureAppServiceUtility(this.appService);
+        this.appServiceUtility = new AzureAppServiceUtility(this.appService, "AzureFunctionOnContainerDeployment");
         this.appServiceUtilityExt = new AzureAppServiceUtilityExt(this.appService);
         this.taskParams.isLinuxContainerApp = true;
         this.isCentauri = await this.appServiceUtility.isFunctionAppOnCentauri();
