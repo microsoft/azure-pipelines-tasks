@@ -28,14 +28,9 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
         return false;
     }
 
-    if (!dotnetPath && osvar === 'win32') {
-        // use full .NET to execute
-        dotnet = taskLib.tool(path.join(__dirname, 'CoveragePublisher', 'CoveragePublisher.Console.exe'));
-    } else {
-        dotnet = taskLib.tool(dotnetPath);
-        dotnet.arg(path.join(__dirname, "CoveragePublisher", 'CoveragePublisher.Console.dll'));
-    }
-
+    // use full .NET to execute
+    dotnet = taskLib.tool(path.join(__dirname, 'CoveragePublisher', 'CoveragePublisher.Console.exe'));
+    
     dotnet.arg('"' + inputFiles.join('" "') + '"');
     dotnet.arg('--reportDirectory ' + reportDirectory);
 
