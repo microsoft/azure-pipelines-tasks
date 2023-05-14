@@ -1,171 +1,171 @@
 {
-  "id": "18aad896-e191-4720-88d6-8ced4806941a",
-  "name": "AzureStaticWebApp",
-  "friendlyName": "Deploy Azure Static Web App",
-  "description": "[PREVIEW] Build and deploy an Azure Static Web App",
-  "author": "Microsoft Corporation",
-  "helpUrl": "https://aka.ms/swadocs",
-  "helpMarkDown": "[Learn more about Azure Static Web Apps](https://aka.ms/swadocs)",
-  "category": "Utility",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "demands": [],
-  "version": {
-    "Major": 0,
-    "Minor": 220,
-    "Patch": 0
-  },
-  "preview": true,
-  "minimumAgentVersion": "1.95.0",
-  "instanceNameFormat": "Static Web App: $(message)",
-  "inputs": [
-    {
-      "name": "cwd",
-      "aliases": [
-        "workingDirectory",
-        "rootDirectory"
-      ],
-      "type": "filePath",
-      "label": "Working directory",
-      "defaultValue": "$(System.DefaultWorkingDirectory)",
-      "required": false,
-      "helpMarkDown": "Specify the absolute working directory in which to execute this task. If left empty, the default working directory will be used."
+    "id": "18aad896-e191-4720-88d6-8ced4806941a",
+    "name": "AzureStaticWebApp",
+    "friendlyName": "Deploy Azure Static Web App",
+    "description": "[PREVIEW] Build and deploy an Azure Static Web App",
+    "author": "Microsoft Corporation",
+    "helpUrl": "https://aka.ms/swadocs",
+    "helpMarkDown": "[Learn more about Azure Static Web Apps](https://aka.ms/swadocs)",
+    "category": "Utility",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "demands": [],
+    "version": {
+        "Major": 0,
+        "Minor": 222,
+        "Patch": 0
     },
-    {
-      "name": "app_location",
-      "type": "string",
-      "label": "App location",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Directory location of the application source code relative to working directory"
-    },
-    {
-      "name": "app_build_command",
-      "type": "string",
-      "label": "App build command",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Custom command for Oryx to run when building application source code"
-    },
-    {
-      "name": "output_location",
-      "type": "string",
-      "label": "Output location",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Directory location of the compiled application code after building"
-    },
-    {
-      "name": "api_location",
-      "type": "string",
-      "label": "Api location",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Directory location of the Azure Functions source code relative to working directory"
-    },
-    {
-      "name": "api_build_command",
-      "type": "string",
-      "label": "Api build command",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Custom command for Oryx to run when building Azure Functions source code"
-    },
-    {
-      "name": "routes_location",
-      "type": "string",
-      "label": "Routes location",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Directory location where the routes.json file can be found, relative to working directory. Note: routes.json is deprecated, use staticwebapp.config.json"
-    },
-    {
-      "name": "config_file_location",
-      "type": "string",
-      "label": "Config file location",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Directory location where the staticwebapp.config.json file can be found, relative to working directory"
-    },
-    {
-      "name": "skip_app_build",
-      "type": "boolean",
-      "label": "Skip app build",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Skips Oryx build for app folder"
-    },
-    {
-      "name": "skip_api_build",
-      "type": "boolean",
-      "label": "Skip api build",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Skips Oryx build for api folder"
-    },
-    {
-      "name": "is_static_export",
-      "type": "boolean",
-      "label": "Set static export",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Set this flag to true when your application is configured to export to static HTML, i.e. when if you're using `next export`."
-    },
-    {
-      "name": "verbose",
-      "type": "boolean",
-      "label": "Verbose",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Enables verbose logging"
-    },
-    {
-      "name": "build_timeout_in_minutes",
-      "type": "int",
-      "label": "Build timeout in minutes",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Time limit of Oryx app folder build in minutes"
-    },
-    {
-      "name": "azure_static_web_apps_api_token",
-      "type": "string",
-      "label": "Azure Static Web Apps api token",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Api token for deployment. Not required if passed as an environment variable"
-    },
-    {
-      "name": "deployment_environment",
-      "type": "string",
-      "label": "Deployment Environment",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Environment to deploy to. Leave blank for production environment. Takes precedence over Production Branch"
-    },
-    {
-      "name": "production_branch",
-      "type": "string",
-      "label": "Production Branch",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Production branch. When specified and Deployment Environment is empty, deployments from other branches will be preview environments"
-    },
-    {
-      "name": "data_api_location",
-      "type": "string",
-      "label": "Data api location",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Directory location of the Data API source files relative to working directory"
+    "preview": true,
+    "minimumAgentVersion": "1.95.0",
+    "instanceNameFormat": "Static Web App: $(message)",
+    "inputs": [
+        {
+            "name": "cwd",
+            "aliases": [
+                "workingDirectory",
+                "rootDirectory"
+            ],
+            "type": "filePath",
+            "label": "Working directory",
+            "defaultValue": "$(System.DefaultWorkingDirectory)",
+            "required": false,
+            "helpMarkDown": "Specify the absolute working directory in which to execute this task. If left empty, the default working directory will be used."
+        },
+        {
+            "name": "app_location",
+            "type": "string",
+            "label": "App location",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Directory location of the application source code relative to working directory"
+        },
+        {
+            "name": "app_build_command",
+            "type": "string",
+            "label": "App build command",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Custom command for Oryx to run when building application source code"
+        },
+        {
+            "name": "output_location",
+            "type": "string",
+            "label": "Output location",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Directory location of the compiled application code after building"
+        },
+        {
+            "name": "api_location",
+            "type": "string",
+            "label": "Api location",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Directory location of the Azure Functions source code relative to working directory"
+        },
+        {
+            "name": "api_build_command",
+            "type": "string",
+            "label": "Api build command",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Custom command for Oryx to run when building Azure Functions source code"
+        },
+        {
+            "name": "routes_location",
+            "type": "string",
+            "label": "Routes location",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Directory location where the routes.json file can be found, relative to working directory. Note: routes.json is deprecated, use staticwebapp.config.json"
+        },
+        {
+            "name": "config_file_location",
+            "type": "string",
+            "label": "Config file location",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Directory location where the staticwebapp.config.json file can be found, relative to working directory"
+        },
+        {
+            "name": "skip_app_build",
+            "type": "boolean",
+            "label": "Skip app build",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Skips Oryx build for app folder"
+        },
+        {
+            "name": "skip_api_build",
+            "type": "boolean",
+            "label": "Skip api build",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Skips Oryx build for api folder"
+        },
+        {
+            "name": "is_static_export",
+            "type": "boolean",
+            "label": "Set static export",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Set this flag to true when your application is configured to export to static HTML, i.e. when if you're using `next export`."
+        },
+        {
+            "name": "verbose",
+            "type": "boolean",
+            "label": "Verbose",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Enables verbose logging"
+        },
+        {
+            "name": "build_timeout_in_minutes",
+            "type": "int",
+            "label": "Build timeout in minutes",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Time limit of Oryx app folder build in minutes"
+        },
+        {
+            "name": "azure_static_web_apps_api_token",
+            "type": "string",
+            "label": "Azure Static Web Apps api token",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Api token for deployment. Not required if passed as an environment variable"
+        },
+        {
+            "name": "deployment_environment",
+            "type": "string",
+            "label": "Deployment Environment",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Environment to deploy to. Leave blank for production environment. Takes precedence over Production Branch"
+        },
+        {
+            "name": "production_branch",
+            "type": "string",
+            "label": "Production Branch",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Production branch. When specified and Deployment Environment is empty, deployments from other branches will be preview environments"
+        },
+        {
+            "name": "data_api_location",
+            "type": "string",
+            "label": "Data api location",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Directory location of the Data API source files relative to working directory"
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "index.js",
+            "argumentFormat": ""
+        }
     }
-  ],
-  "execution": {
-    "Node10": {
-      "target": "index.js",
-      "argumentFormat": ""
-    }
-  }
 }
