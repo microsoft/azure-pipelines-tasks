@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Среда Conda",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?linkid=873466)",
+  "loc.description": "Создание и активация среды Conda.",
+  "loc.instanceNameFormat": "Среда Conda $(environmentName)",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.environmentName": "Имя среды",
+  "loc.input.help.environmentName": "Имя среды Conda, которую необходимо создать и активировать.",
+  "loc.input.label.packageSpecs": "Спецификации пакета",
+  "loc.input.help.packageSpecs": "Разделенный пробелами список пакетов, которые следует установить при создании среды.",
+  "loc.input.label.updateConda": "Обновить до последней версии Conda",
+  "loc.input.help.updateConda": "Обновите Conda до последней версии. Это относится к установке Conda, указанной в переменной PATH или находящейся по пути в переменной среды CONDA.",
+  "loc.input.label.createOptions": "Параметры создания среды",
+  "loc.input.help.createOptions": "Разделенный пробелами список дополнительных аргументов для передачи в команду \"conda create\".",
+  "loc.input.label.cleanEnvironment": "Очистить среду",
+  "loc.input.help.cleanEnvironment": "Если среда уже существует, удалите ее и создайте заново. Если этот параметр не выбран, задача повторно активирует существующую среду.",
+  "loc.messages.CleanEnvironment": "Найдена существующая среда %s, и задан параметр \"Очистить среду\" задачи. Идет удаление...",
+  "loc.messages.CreateFailed": "Не удалось создать среду Conda %s: %s",
+  "loc.messages.CondaNotFound": "Исполняемый файл conda не найден в системе. Попросите администратора установить Miniconda или Anaconda. Затем добавьте исполняемый файл conda в переменную PATH или задайте в качестве значения переменной среды CONDA корневую папку установки.",
+  "loc.messages.ReactivateExistingEnvironment": "Найдена существующая среда %s, и не задан параметр \"Очистить среду\" задачи. Идет повторная активация...",
+  "loc.messages.PlatformNotRecognized": "Платформа не распознана"
+}

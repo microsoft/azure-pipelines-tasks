@@ -27,7 +27,11 @@ Tasks/AzureCLIV2/      @rvairavelu @manolerazvan
 
 Tasks/AzureCloudPowerShellDeploymentV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
+Tasks/AzureCloudPowerShellDeploymentV2/    @vsebesta   @rvairavelu   @pipeline-environment-team
+
 Tasks/AzureContainerAppsV0/    @cormacpayne    @daniv-msft
+
+Tasks/AzureContainerAppsV1/    @cormacpayne    @daniv-msft
 
 Tasks/AzureFileCopyV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
@@ -85,7 +89,7 @@ Tasks/AzureRmWebAppDeploymentV4/   @vsebesta   @rvairavelu   @pipeline-environme
 
 Tasks/AzureSpringCloudV0    @yevster
 
-Tasks/AzureStaticWebAppV0/  @miwebst    @brhopcra
+Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @mkarmark @joslinmicrosoft
 
 Tasks/AzureWebAppV1/  @vsebesta @rvairavelu @pipeline-environment-team
 
@@ -160,6 +164,8 @@ Tasks/Common/securefiles-common/   @microsoft/akvelon-build-task-team   @hashtag
 Tasks/Common/utility-common/       @nishubansal    @ds-ms
 
 Tasks/Common/webdeployment-common/   @vsebesta   @rvairavelu   @pipeline-environment-team
+
+Tasks/CondaAuthenticateV0/      @microsoft/azure-artifacts-packages
 
 Tasks/CondaEnvironmentV0/      @microsoft/akvelon-build-task-team
 

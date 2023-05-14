@@ -56,6 +56,7 @@
   "loc.messages.JavaNotPreinstalled": "Java %s non è preinstallato in questo agente",
   "loc.messages.UsePreinstalledJava": "Usa il JDK preinstallato da %s",
   "loc.messages.WrongArchiveStructure": "Il file JDK non è valido. Verificare se il file JDK contiene solo una cartella radice con 'bin'.",
+  "loc.messages.WrongArchiveFile": "Il file di archivio non è corretto. Non esiste alcuna cartella contenente JDK",
   "loc.messages.ShareAccessError": "Risorsa condivisa di rete non disponibile: (%s)",
   "loc.messages.UnsupportedDMGStructure": "Il file JDK non è supportato. Verificare se il file JDK contiene esattamente una cartella.",
   "loc.messages.NoPKGFile": "Non è stato possibile trovare il file PKG.",

@@ -1,7 +1,7 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { AzureAppService } from '../azure-arm-rest/azure-arm-app-service';
 import { AzureApplicationInsights, ApplicationInsightsResources} from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-appinsights';
 import { AzureEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
+import { AzureAppService } from '../azure-arm-rest/azure-arm-app-service';
 
 var uuidV4 = require("uuid/v4");
 
@@ -42,7 +42,7 @@ function getReleaseAnnotation(isDeploymentSuccess: boolean): {[key: string]: any
     else if (!!buildUri) {
         annotationName = `${tl.getVariable("Build.DefinitionName")} - ${tl.getVariable("Build.BuildNumber")}`;
     }
- 
+
     let releaseAnnotationProperties = {
         "Label": isDeploymentSuccess ? "Success" : "Error", // Label decides the icon for release annotation
         "Deployment Uri": getDeploymentUri(),

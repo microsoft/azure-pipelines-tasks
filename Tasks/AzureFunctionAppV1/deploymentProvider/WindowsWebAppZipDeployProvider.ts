@@ -1,21 +1,22 @@
-import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('azure-pipelines-task-lib/task');
-import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon/operations/ParameterParserUtility'
-import { DeploymentType } from '../taskparameters';
-import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
-import { FileTransformsUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/FileTransformsUtility.js';
-const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP -WEBSITE_RUN_FROM_PACKAGE';
 var deployUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/utility.js');
 var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/ziputility.js');
+import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
+import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon/operations/ParameterParserUtility'
+import { DeploymentType } from '../taskparameters';
+import { FileTransformsUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/FileTransformsUtility.js';
+import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
+
+const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP -WEBSITE_RUN_FROM_PACKAGE';
 
 export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvider {
-    
+
     private zipDeploymentID: string;
- 
+
     public async DeployWebAppStep() {
         let deploymentMethodtelemetry = '{"deploymentMethod":"Zip Deploy"}';
         console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureWebAppDeployment]" + deploymentMethodtelemetry);
-        
+
         var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams.WebConfigParameters, this.taskParams.Package.getPackageType());
 
         if(this.taskParams.DeploymentType === DeploymentType.zipDeploy) {
@@ -35,7 +36,7 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
         }
 
         tl.debug("Initiated deployment via kudu service for webapp package : ");
-        
+
         var deleteApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting)
         var isNewValueUpdated: boolean = await this.appServiceUtility.updateAndMonitorAppSettings(null, deleteApplicationSetting);
 
@@ -43,12 +44,12 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
             await this.kuduServiceUtility.warmpUp();
         }
 
-        await this.kuduServiceUtility.getZipDeployValidation(webPackage); 
+        await this.kuduServiceUtility.getZipDeployValidation(webPackage);
         this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(webPackage);
 
         await this.PostDeploymentStep();
     }
-    
+
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
         if(this.kuduServiceUtility) {
             await super.UpdateDeploymentStatus(isDeploymentSuccess);

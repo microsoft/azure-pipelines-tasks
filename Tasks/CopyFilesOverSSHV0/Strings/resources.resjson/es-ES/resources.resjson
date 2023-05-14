@@ -16,6 +16,8 @@
   "loc.input.help.isWindowsOnTarget": "Máquina de destino que ejecuta Windows",
   "loc.input.label.cleanTargetFolder": "Borrar carpeta de destino",
   "loc.input.help.cleanTargetFolder": "Elimina todos los archivos y subcarpetas que haya en la carpeta de destino antes de la copia.",
+  "loc.input.label.cleanHiddenFilesInTarget": "Quitar archivos ocultos en carpetas de destino",
+  "loc.input.help.cleanHiddenFilesInTarget": "Quitar archivos ocultos en la carpeta de destino",
   "loc.input.label.readyTimeout": "Tiempo de expiración del protocolo de enlace SSH",
   "loc.input.help.readyTimeout": "Tiempo (en milisegundos) que debe esperarse para que se complete el protocolo de enlace SSH.",
   "loc.input.label.overwrite": "Sobrescribir",

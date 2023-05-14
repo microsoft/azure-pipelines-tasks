@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Dateikopiervorgang auf Windows-Computer",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "Hiermit werden Dateien auf Windows-Remotecomputer kopiert.",
   "loc.instanceNameFormat": "Dateien kopieren aus $(SourcePath)",
   "loc.releaseNotes": "Neuigkeiten in Version 2.0: <br/>Proxys werden ab sofort unterstützt. <br/>Die Unterstützung von Legacy-DTL-Computern wurde eingestellt.",
@@ -27,6 +27,7 @@
   "loc.messages.WFC_CopyingRecurivelyFrom0to1MachineSucceed": "Das rekursive Kopieren aus ${0} in ${1} auf dem Computer \"{2}\" war erfolgreich.",
   "loc.messages.WFC_SourcePathDoesNotExist": "Der Quellpfad \"{0}\" ist nicht vorhanden.",
   "loc.messages.WFC_RemoteDestinationPathCannotContainEnvironmentVariables": "Der Remotezielpfad \"{0}\" darf keine Umgebungsvariablen enthalten.",
+  "loc.messages.WFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "Zusätzliche Argumente dürfen nicht die Trennzeichen „&“, „;“ und „|“ enthalten. Überprüfen Sie die Eingabe. Weitere Informationen zur Argumentüberprüfung finden Sie unter: https://aka.ms/azdo-task-argument-validation",
   "loc.messages.WFC_CopyStartedFor0": "Kopie für \"{0}\" gestartet",
   "loc.messages.WFC_NoMachineExistsUnderEnvironment": "In der Umgebung \"{0}\" ist kein Computer für die Bereitstellung vorhanden.",
   "loc.messages.WFC_NoMachineExistsUnderEnvironment0ForDeployment": "In der Umgebung \"{0}\" ist kein Computer für die Bereitstellung vorhanden.",
