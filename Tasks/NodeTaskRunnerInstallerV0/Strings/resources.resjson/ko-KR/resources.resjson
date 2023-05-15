@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Node.js 작업 실행기 설치 관리자",
-  "loc.helpMarkDown": "TDB",
+  "loc.helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/node-task-runner-installer-v0)",
   "loc.description": "특정 Node.js 버전을 설치하여 노드 작업 실행",
   "loc.instanceNameFormat": "노드 실행기 $(runnerVersion) 설치",
   "loc.input.label.runnerVersion": "설치할 실행기 버전",

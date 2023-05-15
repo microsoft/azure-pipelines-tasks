@@ -16,8 +16,6 @@
   "loc.input.help.Parallel": "Wählen Sie aus, ob Dateien mithilfe mehrerer Threads parallel kopiert werden sollen, um einen höheren Durchsatz zu erzielen. Wenn diese Einstellung nicht aktiviert ist, wird nur ein Thread verwendet.",
   "loc.input.label.ParallelCount": "Parallele Anzahl",
   "loc.input.help.ParallelCount": "Geben Sie den Parallelitätsgrad oder die Anzahl von Threads zum Durchführen des Kopiervorgangs ein. Der Wert muss mindestens 1 lauten und darf nicht größer sein als 128.",
-  "loc.input.label.FileCopyOptions": "Optionen für das Kopieren von Dateien",
-  "loc.input.help.FileCopyOptions": "Übergeben Sie zusätzliche Optionen an den Robocopy-Befehl.",
   "loc.input.label.StoreAsTar": "Artefakt vor dem Hochladen mit Tar packen",
   "loc.input.help.StoreAsTar": "Fügen Sie vor dem Hochladen alle Dateien aus dem Veröffentlichungspfad zu einem Tar-Archiv hinzu. Dadurch können Sie die Berechtigungen für die UNIX-Datei beibehalten. Verwenden Sie die Option \"extractTars\" der Aufgabe \"DownloadBuildArtifacts\", um die heruntergeladenen Elemente automatisch zu extrahieren.",
   "loc.messages.ErrorFileShareLinux": "Das Veröffentlichen von Artefakten von einem Linux- oder macOS-Agent in einer Dateifreigabe wird nicht unterstützt. Ändern Sie den Artefakttyp in \"Azure Pipelines\", oder verwenden Sie einen Windows-Agent.",
