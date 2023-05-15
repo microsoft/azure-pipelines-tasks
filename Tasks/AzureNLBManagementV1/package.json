@@ -9,12 +9,13 @@
   "author": "Microsoft Corporation",
   "license": "MIT",
   "dependencies": {
-    "q": "1.4.1",
-    "vso-node-api": "6.1.2-preview",
-    "azure-pipelines-task-lib": "3.0.6-preview.0",
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.17.0",
-    "@types/q": "1.0.7"
+    "@types/q": "1.0.7",
+    "azure-pipelines-task-lib": "3.4.0",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.222.2",
+    "q": "1.4.1",
+    "vso-node-api": "6.1.2-preview"
   },
   "devDependencies": {
     "typescript": "4.0.2"
