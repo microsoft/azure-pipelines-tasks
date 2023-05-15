@@ -4,8 +4,8 @@
     "name": "NodeTaskRunnerInstaller",
     "friendlyName": "Node.js tasks runner installer",
     "description": "Install specific Node.js version to run node tasks",
-    "helpUrl": "TDB",
-    "helpMarkDown": "TDB",
+    "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/node-task-runner-installer-v0",
+    "helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/node-task-runner-installer-v0)",
     "category": "Utility",
     "runsOn": [
         "Agent",
@@ -14,7 +14,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 221,
+        "Minor": 222,
         "Patch": 0
     },
     "preview": true,
