@@ -1,52 +1,17 @@
 import * as tl from 'azure-pipelines-task-lib/task';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
 import taskinternal = require('azure-pipelines-task-lib/internal');
 import * as Q from 'q';
-import * as querystring from "querystring";
 import * as httpClient from 'vso-node-api/HttpClient';
 
-
 var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-var defaultAuthUrl = 'https://login.windows.net/';
 var azureApiVersion = '2016-09-01';
-	
-function getAccessToken(SPN, endpointUrl: string): Q.Promise<string> {
 
-	var deferred = Q.defer<string>();
-	var envAuthUrl = (SPN.envAuthUrl) ? SPN.envAuthUrl : defaultAuthUrl;
-	var authorityUrl = envAuthUrl + SPN.tenantID + "/oauth2/token/";
-
-	var post_data = querystring.stringify({
-		resource: endpointUrl, 
-		client_id: SPN.servicePrincipalClientID,
-		grant_type: "client_credentials", 
-		client_secret: SPN.servicePrincipalKey
-	});
-
-	var requestHeader = {
-		"Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
-	};
-
-	tl.debug(`Requesting for bearer token ${authorityUrl}`);
-	httpObj.send("POST", authorityUrl, post_data, requestHeader, (error, response, body) => {
-		if(error) {
-			deferred.reject(error);
-		}
-		else if (response.statusCode == 200) {
-			deferred.resolve(JSON.parse(body).access_token);
-		}
-		else {
-			deferred.reject(tl.loc("CouldNotFetchAcessToken", response.statusCode, response.statusMessage, body));
-		};
-	}); 
-
-    return deferred.promise;
-}
-
-export async function getNetworkInterfacesInRG(SPN, endpointUrl: string, resourceGroupName: string) {
+export async function getNetworkInterfacesInRG(endpoint: AzureEndpoint, resourceGroupName: string) {
 
 	var deferred = Q.defer<any>();
-	var restUrl = SPN.url + "subscriptions/" + SPN.subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/networkInterfaces?api-version=" + azureApiVersion;
-	var accessToken = await getAccessToken(SPN, endpointUrl);
+	var restUrl = endpoint.url + "subscriptions/" + endpoint.subscriptionID + "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/networkInterfaces?api-version=" + azureApiVersion;
+	var accessToken = await endpoint.applicationTokenCredentials.getToken();
 
 	var requestHeader = {
 		Authorization: 'Bearer ' + accessToken
@@ -68,11 +33,11 @@ export async function getNetworkInterfacesInRG(SPN, endpointUrl: string, resourc
 	return deferred.promise;
 }
 
-export async function getLoadBalancer(SPN, endpointUrl: string, name: string, resourceGroupName: string) {
-	
-	var deferred = Q.defer<any>();    
-	var restUrl = SPN.url + "subscriptions/" + SPN.subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/loadBalancers/" + name + "?api-version=" + azureApiVersion;
-	var accessToken = await getAccessToken(SPN, endpointUrl);
+export async function getLoadBalancer(endpoint: AzureEndpoint, name: string, resourceGroupName: string) {
+
+	var deferred = Q.defer<any>();
+	var restUrl = endpoint.url + "subscriptions/" + endpoint.subscriptionID + "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/loadBalancers/" + name + "?api-version=" + azureApiVersion;
+	var accessToken = await endpoint.applicationTokenCredentials.getToken();
 
 	var requestHeader = {
 		authorization: 'Bearer ' + accessToken
@@ -90,14 +55,14 @@ export async function getLoadBalancer(SPN, endpointUrl: string, name: string, re
         	deferred.reject(tl.loc("CouldNotFetchLoadBalancer", name, response.statusCode, response.statusMessage, body));
         }
     });
-	
+
     return deferred.promise;
 }
 
-export async function getNetworkInterface(SPN, endpointUrl, name: string, resourceGroupName: string) {
-	var deferred = Q.defer<any>();   
-	var restUrl = SPN.url + "subscriptions/" + SPN.subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/networkInterfaces/" + name + "?api-version=" + azureApiVersion;
-	var accessToken = await getAccessToken(SPN, endpointUrl);
+export async function getNetworkInterface(endpoint: AzureEndpoint, name: string, resourceGroupName: string) {
+	var deferred = Q.defer<any>();
+	var restUrl = endpoint.url + "subscriptions/" + endpoint.subscriptionID + "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/networkInterfaces/" + name + "?api-version=" + azureApiVersion;
+	var accessToken = await endpoint.applicationTokenCredentials.getToken();
 
 	var requestHeader = {
 		authorization: 'Bearer ' + accessToken
@@ -115,7 +80,7 @@ export async function getNetworkInterface(SPN, endpointUrl, name: string, resour
         	deferred.reject(tl.loc("CouldNotFetchNetworkInterface", name, response.statusCode, response.statusMessage, body));
         }
     });
-	
+
     return deferred.promise;
 }
 
@@ -135,21 +100,21 @@ async function checkProvisioningState(url: string, accessToken: string) {
 			deferred.reject(body);
 		}
 	});
-	return deferred.promise;	
+	return deferred.promise;
 }
 
-export async function setNetworkInterface(SPN, endpointUrl: string, nic, resourceGroupName: string){
+export async function setNetworkInterface(endpoint: AzureEndpoint, nic, resourceGroupName: string){
 
-	var deferred = Q.defer();   
-	var restUrl = SPN.url + "subscriptions/" + SPN.subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/networkInterfaces/" + nic.name + "?api-version=" + azureApiVersion;
-	var accessToken = await getAccessToken(SPN, endpointUrl);
+	var deferred = Q.defer();
+	var restUrl = endpoint.url + "subscriptions/" + endpoint.subscriptionID + "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/networkInterfaces/" + nic.name + "?api-version=" + azureApiVersion;
+	var accessToken = await endpoint.applicationTokenCredentials.getToken();
 	var requestHeader = {
 		"Content-Type": "application/json; charset=utf-8",
 		"Authorization": 'Bearer ' + accessToken
 	};
 
 	taskinternal._writeLine(tl.loc("SettingTheNetworkInterface", nic.name));
-	var maxRetries = 10;	
+	var maxRetries = 10;
 	var sleepTime = (Math.floor(Math.random() * 6) + 5) * 1000;	// sleep time in ms
 	var retryCount = 1;
 
