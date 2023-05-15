@@ -24,6 +24,7 @@ of untested tasks to 0!
 | AzureCLIV1 | @bishal-pdmsft |  |
 | AzureCLIV2 | @bishal-pdmsft  |  |
 | AzureCloudPowerShellDeploymentV1 | @kmkumaran |  |
+| AzureCloudPowerShellDeploymentV2 | @kmkumaran |  |
 | AzureFileCopyV1 | @kmkumaran | :heavy_check_mark: |
 | AzureFileCopyV2 | @kmkumaran | :heavy_check_mark: |
 | AzureFileCopyV3 | @kmkumaran | :heavy_check_mark: |

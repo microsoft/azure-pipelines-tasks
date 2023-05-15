@@ -1,33 +1,33 @@
 {
- "id": "543c39b2-11e9-4de8-8b9b-94eea1339891",
- "name": "CondaAuthenticate",
- "friendlyName": "Conda authenticate (for task runners)",
- "description": "Authentication task for the conda client",
- "helpUrl": "",
- "helpMarkDown": "",
- "category": "Package",
- "author": "Microsoft Corporation",
- "version": {
-     "Major": 0,
-     "Minor": 221,
-     "Patch": 0
- },
- "runsOn": [
-    "Agent",
-    "DeploymentGroup"
- ],
- "minimumAgentVersion": "2.144.0",
- "instanceNameFormat": "Conda Authenticate",
- "execution": {
-    "Node10": {
-        "target": "condaauthenticatemain.js"
+    "id": "543c39b2-11e9-4de8-8b9b-94eea1339891",
+    "name": "CondaAuthenticate",
+    "friendlyName": "Conda authenticate (for task runners)",
+    "description": "Authentication task for the conda client",
+    "helpUrl": "",
+    "helpMarkDown": "",
+    "category": "Package",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 222,
+        "Patch": 0
     },
-    "Node16": {
-        "target": "condaauthenticatemain.js"
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "minimumAgentVersion": "2.144.0",
+    "instanceNameFormat": "Conda Authenticate",
+    "execution": {
+        "Node10": {
+            "target": "condaauthenticatemain.js"
+        },
+        "Node16": {
+            "target": "condaauthenticatemain.js"
+        }
+    },
+    "messages": {
+        "FailedToAddAuthentication": "Failed to add authentication.",
+        "AddingAuthChannel": "Adding auth for the token %s"
     }
-  },
-  "messages": {
-    "FailedToAddAuthentication": "Failed to add authentication.",
-    "AddingAuthChannel": "Adding auth for the token %s"
-  }
 }
