@@ -16,7 +16,7 @@ if (!taskName) {
 }
 
 const scriptPath = `${hotfixFolder}/hotfix.ps1`;
-const description = `Hotfixing tasks: ${taskName.split(',')}`;
+const description = `Hotfixing tasks ${taskName.split(',')}`;
 
 const authHandler = azdev.getPersonalAccessTokenHandler(token);
 const orgUrl = 'https://dev.azure.com/mseng';

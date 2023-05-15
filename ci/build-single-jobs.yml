@@ -28,7 +28,7 @@ jobs:
     steps: 
     - template: build-single-cc-pr-steps.yml
       parameters:
-        task_name: ${{ parameters.push_to_feed }}
+        task_name: ${{ parameters.task_name }}
 
   - ${{ if parameters.push_to_feed }}:
     # Create PR in AzureDevOps to update UnifiedDependencies.xml
