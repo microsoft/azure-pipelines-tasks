@@ -74,7 +74,7 @@
   "loc.messages.ErrorMessageFormat": "Errore: %s",
   "loc.messages.ExistingContainerAppEnvironmentMessage": "È stato individuato l'ambiente dell'app contenitore esistente, '%s', da usare con l'app contenitore.",
   "loc.messages.FoundAppSourceDockerfileMessage": "Trovato Dockerfile esistente nell'origine dell'applicazione specificata nel percorso '%s'; l'immagine verrà compilata da questo Dockerfile.",
-  "loc.messages.LoginFailed": "L'accesso ad Azure non è riuscito",
+  "loc.messages.LoginFailed": "Azure login failed",
   "loc.messages.MissingAcrNameMessage": "Se si specifica l'argomento appSourcePath, è necessario specificare anche l'argomento acrName.",
   "loc.messages.MissingRequiredArgumentMessage": "È necessario specificare uno degli argomenti seguenti: appSourcePath, imageToDeploy, yamlConfigPath",
   "loc.messages.PackCliInstallFailed": "Non è possibile installare il pacchetto dell'interfaccia della riga di comando.",
