@@ -31,7 +31,7 @@ parameters:
 - name: generate_prs
   displayName: Create hotfix PRs and Release
   type: boolean
-  default: true
+  default: false
 
 variables:
   currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]

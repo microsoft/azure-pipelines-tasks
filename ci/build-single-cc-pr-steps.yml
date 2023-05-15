@@ -6,9 +6,6 @@ steps:
 - checkout: self
   fetchDepth: 1
 
-- checkout: AzureDevOps
-  fetchDepth: 1
-
 - checkout: ConfigChange
   fetchDepth: 1
 
@@ -39,7 +36,8 @@ steps:
 
 - powershell: |
     $currentDate = Get-Date -Format "yyyyMMdd-HHmm"
-    $hotfixFolderPath = "tfs/m$(currentSprint)/tasksHotFix-${{ parameters.task_name }}-$currentDate"
+    $hotfixFolderPath = "tfs/m$(currentSprint)/tasksHotFix-$currentDate"
+    Write-Host $hotfixFolderPath
     Copy-Item -Path hotfixArtifact/hotfix -Destination AzureDevOps.ConfigChange/$hotfixFolderPath -Recurse
     Write-Host "##vso[task.setVariable variable=hotfixFolderPath]$hotfixFolderPath"
   displayName: Move HotFix files
@@ -51,15 +49,14 @@ steps:
     node open-hotfix-pr.js
   displayName: Open PR in ConfigChange
   env:
-    TOKEN: $(AzDoToken)
+    TOKEN: $(Package.Token)
     TASK_NAME: ${{ parameters.task_name }}
     REPOSITORY: AzureDevOps.ConfigChange
     BRANCH: '$(branchName)'
 
 - powershell: |
     cd azure-pipelines-tasks/ci/courtesy-push
-    node create-hotfix-release.js $(hotfixFolderPath) ${{ parameters.task_name }}
+    node create-hotfix-release.js $(hotfixFolderPath) "${{ parameters.task_name }}"
   displayName: Create Release in AzureDevOps.ConfigChange
   env:
-    TOKEN: $(AzDoToken)
-  condition: always()
+    TOKEN: $(Package.Token)
