@@ -32,13 +32,13 @@ function execInForeground(command, directory, dryrun = false) {
   }
 }
 
-async function commitAzureDevOpsChanges(pathToAdoRepo) {
+function commitAzureDevOpsChanges(pathToAdoRepo) {
   const unifiedDepsPath = path.join('.nuget', 'externals', 'UnifiedDependencies.xml');
   const commitMessage = `Update UnifiedDependencies.xml`;
   commitChanges(pathToAdoRepo, unifiedDepsPath, commitMessage);
 }
 
-async function commitConfigChangeChanges(pathToCCRepo) {
+function commitConfigChangeChanges(pathToCCRepo) {
   const hotfixFolder = process.argv[2];
   if (!hotfixFolder) {
     throw new Error('No hotfixFolder provided');
