@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Autenticación de Conda (para ejecutores de tareas)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Tarea de autenticación para el cliente de Conda",
+  "loc.instanceNameFormat": "Autenticación de Conda",
+  "loc.messages.FailedToAddAuthentication": "No se pudo agregar la autenticación",
+  "loc.messages.AddingAuthChannel": "Agregando autenticación para el token %s"
+}
