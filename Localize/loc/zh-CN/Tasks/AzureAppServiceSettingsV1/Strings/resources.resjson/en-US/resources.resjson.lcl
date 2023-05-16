@@ -180,6 +180,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.AppServiceConnectionStringsAlreadyPresent" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[App Service Connection Strings are already present.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[应用服务连接字符串已存在。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.AppServiceSettingsNotEnabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[App Service Settings is not enabled. Please provide one of the following : App Settings or General Settings or Connection Strings.]]></Val>
