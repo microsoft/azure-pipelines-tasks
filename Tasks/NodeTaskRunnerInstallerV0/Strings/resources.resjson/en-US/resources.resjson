@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Node.js tasks runner installer",
-  "loc.helpMarkDown": "TDB",
+  "loc.helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/node-task-runner-installer-v0)",
   "loc.description": "Install specific Node.js version to run node tasks",
   "loc.instanceNameFormat": "Install node runner $(runnerVersion)",
   "loc.input.label.runnerVersion": "Version of runner to install",
