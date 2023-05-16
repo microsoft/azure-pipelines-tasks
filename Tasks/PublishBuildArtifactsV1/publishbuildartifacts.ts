@@ -4,6 +4,7 @@ var process = require('process');
 import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
+import { error } from 'console';
 
 // used for escaping the path to the Invoke-Robocopy.ps1 script that is passed to the powershell command
 let pathToScriptPSString = (filePath: string) => {
@@ -129,6 +130,14 @@ async function run() {
             artifactname: artifactName
         };
 
+        let maxArtifactSize: number = getMaxArtifactSize();
+        if (maxArtifactSize != 0 ){
+            let artifactSize : number = getArtifactSize(pathToUpload)
+            if (artifactSize > maxArtifactSize){
+                tl.warning(tl.loc('ArtifactSizeExceeded', artifactSize, maxArtifactSize));
+            }
+        }
+
         // upload or copy
         if (artifactType === "container") {
             data["containerfolder"] = artifactName;
@@ -218,6 +227,32 @@ function getParallelCount(): number {
     }
 
     return result;
+}
+
+function getMaxArtifactSize(): number {
+    let result = 0;
+    let inputValue: string = tl.getInput('MaxArtifactSize', false);
+    if (!(Number.isNaN(Number(inputValue)))) {
+        result = parseInt(inputValue);
+    }
+    return result;
+}
+
+
+function getArtifactSize(
+    pathToUpload : string
+): number {
+    let totalSize = 0;
+    if(tl.stats(pathToUpload).isFile()) {
+        totalSize = tl.stats(pathToUpload).size;
+    }
+    else if(tl.stats(pathToUpload).isDirectory()) {
+        const files = fs.readdirSync(pathToUpload);
+        files.forEach (file => {
+            totalSize = totalSize + getArtifactSize(path.join(pathToUpload, file));
+        })
+    }
+    return totalSize;
 }
 
 run();

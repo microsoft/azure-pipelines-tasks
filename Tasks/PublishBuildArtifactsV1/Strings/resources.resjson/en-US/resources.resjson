@@ -10,6 +10,8 @@
   "loc.input.help.ArtifactName": "The name of the artifact to create in the publish location.",
   "loc.input.label.ArtifactType": "Artifact publish location",
   "loc.input.help.ArtifactType": "Choose whether to store the artifact in Azure Pipelines, or to copy it to a file share that must be accessible from the build agent.",
+  "loc.input.label.MaxArtifactSize": "Max Artifact Size",
+  "loc.input.help.MaxArtifactSize": "Maximum limit on the size of artifacts to be published in bytes. Put 0 if you don't want to set any limit.",
   "loc.input.label.TargetPath": "File share path",
   "loc.input.help.TargetPath": "The file share to which the artifact files will be copied. This can include variables. Example: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). Publishing artifacts from a Linux or macOS agent to a file share is not supported.",
   "loc.input.label.Parallel": "Parallel copy",
@@ -22,5 +24,6 @@
   "loc.messages.ErrorHostTypeNotSupported": "This task must run in a build to publish artifacts to Azure Pipelines.",
   "loc.messages.PublishBuildArtifactsFailed": "Publishing build artifacts failed with an error: %s",
   "loc.messages.UnexpectedParallelCount": "Unsupported parallel count '%s'. Enter a number between 1 and 128.",
-  "loc.messages.TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows"
+  "loc.messages.TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows",
+  "loc.messages.ArtifactSizeExceeded": "The size of artifacts being published is %s bytes which is larger than the maximum limit %s bytes set for the published size of artifacts."
 }
