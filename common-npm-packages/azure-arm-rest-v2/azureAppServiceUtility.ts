@@ -6,9 +6,13 @@ import { Kudu } from './azure-arm-app-service-kudu';
 import webClient = require('./webClient');
 
 export class AzureAppServiceUtility {
-    private _appService: AzureAppService;
-    constructor(appService: AzureAppService) {
+
+    private readonly _appService: AzureAppService;
+    private readonly _telemetryFeature: string;
+
+    constructor(appService: AzureAppService, telemetryFeature?: string) {
         this._appService = appService;
+        this._telemetryFeature = telemetryFeature || "AzureAppServiceDeployment"; //TODO modify telemetry.publish command so that agent automatically pass task name and version to the server then remove this parameter
     }
 
     public async getWebDeployPublishingProfile(): Promise<any> {
@@ -92,7 +96,7 @@ export class AzureAppServiceUtility {
         return physicalToVirtualPathMap.physicalPath;
     }
 
-    public async getKuduService(): Promise<Kudu> {     
+    public async getKuduService(): Promise<Kudu> {
 
         const publishingCredentials = await this._appService.getPublishingCredentials();
         const scmUri = publishingCredentials.properties["scmUri"];
@@ -102,30 +106,33 @@ export class AzureAppServiceUtility {
         }
 
         const authHeader = await this.getKuduAuthHeader(publishingCredentials);
-        return new Kudu(publishingCredentials.properties["scmUri"], authHeader);        
+        return new Kudu(publishingCredentials.properties["scmUri"], authHeader);
     }
 
     private async getKuduAuthHeader(publishingCredentials: any): Promise<string> {
-        const scmPolicyCheck = await this.isSitePublishingCredentialsEnabled(); 
+        const scmPolicyCheck = await this.isSitePublishingCredentialsEnabled();
 
         let token = "";
         let method = "";
 
-        if(scmPolicyCheck === false) {
+        const password = publishingCredentials.properties["publishingPassword"];
+
+        if (scmPolicyCheck === false) {
             token = await this._appService._client.getCredentials().getToken();
             method = "Bearer";
-            // Though bearer AuthN is used, lets try to set publish profile password for mask hints to maintain compat with old behavior for MSDEPLOY. 
-            // This needs to be cleaned up once MSDEPLOY suppport is reomve. Safe handle the exception setting up mask hint as we dont want to fail here.
-            try {      
-                tl.setVariable(`AZURE_APP_MSDEPLOY_${this._appService.getSlot()}_PASSWORD`, publishingCredentials.properties["publishingPassword"], true);
+            // Though bearer AuthN is used, lets try to set publish profile password for mask hints to maintain compat with old behavior for MSDEPLOY.
+            // This needs to be cleaned up once MSDEPLOY suppport is removed. Safe handle the exception setting up mask hint as we dont want to fail here.
+            try {
+                tl.setVariable(`AZURE_APP_MSDEPLOY_${this._appService.getSlot()}_PASSWORD`, password, true);
             }
-            catch (error){
+            catch (error) {
                 // safe handle the exception setting up mask hint
                 tl.debug(`Setting mask hint for publish profile password failed with error: ${error}`);
             }
         } else {
-            tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._appService.getSlot()}_PASSWORD`, publishingCredentials.properties["publishingPassword"], true);
-            const buffer = new Buffer(publishingCredentials.properties["publishingUserName"] + ':' + publishingCredentials.properties["publishingPassword"]);
+            tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._appService.getSlot()}_PASSWORD`, password, true);
+            const userName = publishingCredentials.properties["publishingUserName"];
+            const buffer = Buffer.from(userName + ':' + password);
             token = buffer.toString('base64');
             method = "Basic";
         }
@@ -134,12 +141,12 @@ export class AzureAppServiceUtility {
             authMethod: method
         };
         tl.debug(`Using ${method} authentication method for Kudu service.`);
-        console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureAppServiceDeployment]" + JSON.stringify(authMethodtelemetry));
+        console.log(`##vso[telemetry.publish area=TaskDeploymentMethod;feature=${this._telemetryFeature}]${JSON.stringify(authMethodtelemetry)}`);
 
         return method + " " + token;
     }
 
-    public async updateAndMonitorAppSettings(addProperties?: any, deleteProperties?: any, formatJSON?: boolean): Promise<boolean> {
+    public async updateAndMonitorAppSettings(addProperties?: any, deleteProperties?: any, formatJSON?: boolean, perSlot: boolean = true): Promise<boolean> {
         if (formatJSON) {
             var appSettingsProperties = {};
             for(var property in addProperties) {
@@ -181,7 +188,9 @@ export class AzureAppServiceUtility {
             console.log(tl.loc('AppServiceApplicationSettingsAlreadyPresent'));
         }
 
-        await this._appService.patchApplicationSettingsSlot(addProperties);
+        if (perSlot) {
+            await this._appService.patchApplicationSettingsSlot(addProperties);
+        }
         return isNewValueUpdated;
     }
 
@@ -228,11 +237,11 @@ export class AzureAppServiceUtility {
         }
     }
 
-    public async isSitePublishingCredentialsEnabled(): Promise<boolean>{
-        try{
+    public async isSitePublishingCredentialsEnabled(): Promise<boolean> {
+        try {
             let scmAuthPolicy: any = await this._appService.getSitePublishingCredentialPolicies();
             tl.debug(`Site Publishing Policy check: ${JSON.stringify(scmAuthPolicy)}`);
-            if(scmAuthPolicy && scmAuthPolicy.properties.allow) {
+            if (scmAuthPolicy && scmAuthPolicy.properties.allow) {
                 tl.debug("Function App does allow SCM access");
                 return true;
             }
@@ -241,8 +250,25 @@ export class AzureAppServiceUtility {
                 return false;
             }
         }
-        catch(error){
+        catch(error) {
             tl.debug(`Call to get SCM Policy check failed: ${error}`);
+            return false;
+        }
+    }
+
+    public async isFunctionAppOnCentauri(): Promise<boolean> {
+        try {
+            let details: any =  await this._appService.get();
+            if (details.properties["managedEnvironmentId"]) {
+                tl.debug("Function Container app is on Centauri.");
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        catch(error) {
+            tl.debug(`Skipping Centauri check: ${error}`);
             return false;
         }
     }

@@ -4,7 +4,7 @@
   "name": "NodeTaskRunnerInstaller",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "TDB",
+  "helpUrl": "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/node-task-runner-installer-v0",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "runsOn": [
@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 221,
+    "Minor": 222,
     "Patch": 0
   },
   "preview": true,
