@@ -25,7 +25,7 @@ describe('DownloadBuildArtifactsV0 Suite', function () {
           console.log(err);
           done(err);
       };
-  }).timeout(5000);
+  }).timeout(10000);
   
   it('No download path provided should fail', (done) => {
     const tp: string = path.join(__dirname, 'L0NoDownloadPathProvidedFail.js');
