@@ -21,7 +21,6 @@
         "Minor": 222,
         "Patch": 0
     },
-    "preview": true,
     "minimumAgentVersion": "2.144.0",
     "instanceNameFormat": "Azure Container Apps Deploy",
     "showEnvironmentVariables": false,
