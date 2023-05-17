@@ -13,7 +13,7 @@
   "loc.input.help.ServerName": "Nombre del servidor de \"Database for MySQL\". Ejemplo: localhost. Cuando se conecta mediante MySQL Workbench, este es el mismo valor que se usa para \"Nombre de host\" en \"Parámetros\".",
   "loc.input.label.DatabaseName": "Nombre de la base de datos",
   "loc.input.help.DatabaseName": "El nombre de la base de datos, si ya dispone de una, en la que es necesario ejecutar el script siguiente; de lo contrario, el propio script se puede usar para crear la base de datos.",
-  "loc.input.label.SqlUsername": "MySQL User Name",
+  "loc.input.label.SqlUsername": "Nombre de usuario de MySQL",
   "loc.input.help.SqlUsername": "Cuando se conecta mediante MySQL Workbench, este es el mismo valor que se usa para \"Nombre de usuario\" en \"Parámetros\".",
   "loc.input.label.SqlPassword": "Contraseña",
   "loc.input.help.SqlPassword": "Contraseña para MySQL Database.<br>Puede ser una variable declarada en la canalización. Ejemplo: $(password).<br>Además, para proteger la variable, puede marcar el tipo como \"secret\".",
