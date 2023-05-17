@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Programme d’installation de l’exécuteur de tâches Node.js",
-  "loc.helpMarkDown": "TDB",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/node-task-runner-installer-v0)",
   "loc.description": "Installer une version Node.js spécifique pour exécuter des tâches de nœud",
   "loc.instanceNameFormat": "Installer l’exécuteur de nœuds $(runnerVersion)",
   "loc.input.label.runnerVersion": "Version de l’exécuteur à installer",

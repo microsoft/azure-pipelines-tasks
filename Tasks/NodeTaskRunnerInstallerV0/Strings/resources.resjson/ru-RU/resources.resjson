@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Установщик запускателя задач Node.js",
-  "loc.helpMarkDown": "TDB",
+  "loc.helpMarkDown": "[Подробнее об этой задаче](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/node-task-runner-installer-v0)",
   "loc.description": "Установить определенную версию Node.js для запуска задач узла",
   "loc.instanceNameFormat": "Установить запускатель узла $(runnerVersion)",
   "loc.input.label.runnerVersion": "Версия запускателя для установки",

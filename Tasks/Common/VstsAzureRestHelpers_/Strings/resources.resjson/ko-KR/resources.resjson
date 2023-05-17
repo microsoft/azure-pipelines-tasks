@@ -1,4 +1,5 @@
 {
+  "loc.messages.AZ_CouldNotGenerateOidcToken": "페더레이션 로그인에 대한 클라이언트 어설션을 생성할 수 없습니다.",
   "loc.messages.AZ_UnsupportedAuthScheme0": "Azure 엔드포인트에 대해 인증 체계 '{0}'은(는) 지원되지 않습니다.",
   "loc.messages.AZ_SpnAccessTokenFetchFailure": "테넌트 ID {0}에 대한 토큰을 가져올 수 없습니다.",
   "loc.messages.AZ_UserAccessTokenFetchFailure": "지정된 사용자에 대한 토큰을 가져올 수 없습니다.",

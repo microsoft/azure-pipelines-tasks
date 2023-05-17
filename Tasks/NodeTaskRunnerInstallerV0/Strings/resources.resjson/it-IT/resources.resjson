@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Programma di installazione dello strumento di esecuzione attività di Node.js",
-  "loc.helpMarkDown": "TDB",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/node-task-runner-installer-v0)",
   "loc.description": "Installare una versione specifica di Node.js per eseguire le attività del nodo",
   "loc.instanceNameFormat": "Installare lo strumento di esecuzione del nodo $(runnerVersion)",
   "loc.input.label.runnerVersion": "Versione dello strumento di esecuzione da installare",
