@@ -1,0 +1,38 @@
+{
+    "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+    "id": "5eeaaa81-40b2-4918-8fc7-e2dfc2318902",
+    "name": "InstallKubelogin",
+    "friendlyName": "Install kubelogin",
+    "description": "Helps to install kubelogin",
+    "helpMarkDown": "",
+    "category": "Tool",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 15
+    },
+    "demands": [],
+    "satisfies": [
+        "Kubelogin"
+    ],
+    "instanceNameFormat": "Install Kubelogin $(kubeloginVersion)",
+    "inputs": [
+        {
+            "name": "kubeloginVersion",
+            "type": "string",
+            "label": "kubelogin version",
+            "defaultValue": "latest",
+            "helpMarkDown": "The version of kubelogin to use"
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "kubelogin.js"
+        }
+    }
+    }
