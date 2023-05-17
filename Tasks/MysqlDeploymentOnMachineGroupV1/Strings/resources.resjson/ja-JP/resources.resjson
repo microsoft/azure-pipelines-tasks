@@ -13,7 +13,7 @@
   "loc.input.help.ServerName": "'Database for MySQL' のサーバー名です。例: localhost。MySQL Workbench を使用して接続する場合、これは 'パラメーター' 内の 'ホスト名' に使用する値と同じです",
   "loc.input.label.DatabaseName": "データベース名　",
   "loc.input.help.DatabaseName": "以下のスクリプトを実行する必要のあるデータベースが既にある場合は、その名前。それ以外の場合は、スクリプト自体を使用してデータベースを作成できます。",
-  "loc.input.label.SqlUsername": "MySQL User Name",
+  "loc.input.label.SqlUsername": "MySQL のユーザー名",
   "loc.input.help.SqlUsername": "MySQL Workbench を使用して接続する場合、これは 'パラメーター' 内の 'ユーザー名' に使用する値と同じです",
   "loc.input.label.SqlPassword": "パスワード",
   "loc.input.help.SqlPassword": "MySQL データベースのパスワードです。<br>パイプラインで定義された変数を指定できます。例: $(password)。<br>また、セキュリティで保護するために変数の型を 'シークレット' とマークすることもできます。",

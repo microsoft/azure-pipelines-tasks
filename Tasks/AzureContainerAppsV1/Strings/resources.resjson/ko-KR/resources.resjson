@@ -74,7 +74,7 @@
   "loc.messages.ErrorMessageFormat": "오류: %s",
   "loc.messages.ExistingContainerAppEnvironmentMessage": "컨테이너 앱과 함께 사용할 기존 컨테이너 앱 환경 '%s'을(를) 발견했습니다.",
   "loc.messages.FoundAppSourceDockerfileMessage": "'%s' 경로에서 제공된 애플리케이션 원본에서 기존 Dockerfile을 찾았습니다. 이미지는 이 Dockerfile에서 빌드됩니다.",
-  "loc.messages.LoginFailed": "Azure login failed",
+  "loc.messages.LoginFailed": "Azure에 로그인하지 못했습니다.",
   "loc.messages.MissingAcrNameMessage": "appSourcePath 인수가 제공된 경우 acrName 인수도 제공해야 합니다.",
   "loc.messages.MissingRequiredArgumentMessage": "appSourcePath, imageToDeploy, yamlConfigPath 인수 중 하나를 제공해야 합니다.",
   "loc.messages.PackCliInstallFailed": "팩 CLI를 설치할 수 없습니다.",
