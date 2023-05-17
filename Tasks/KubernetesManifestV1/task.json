@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 221,
+        "Minor": 222,
         "Patch": 0
     },
     "demands": [],
@@ -96,6 +96,14 @@
             "properties": {
                 "EditableOptions": "True"
             }
+        },
+        {
+            "name": "useClusterAdmin",
+            "type": "boolean",
+            "label": "Use cluster admin credentials",
+            "defaultValue": "false",
+            "visibleRule": "connectionType = azureResourceManager",
+            "helpMarkDown": "Use cluster administrator credentials instead of default cluster user credentials."
         },
         {
             "name": "namespace",
