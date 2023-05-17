@@ -36,11 +36,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.AZ_CouldNotGenerateOidcToken" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not generate a client assertion for federated login.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無法產生用於同盟登入的用戶端判斷提示。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.AZ_CredentialsError" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[There was an error with the Azure credentials used for the deployment.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[部署用的 Azure 認證有錯誤。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.AZ_FederatedTokenFailure" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not fetch federated token for Workload Identity Federation. {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無法為工作負載識別身分同盟擷取同盟權杖。{0}]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

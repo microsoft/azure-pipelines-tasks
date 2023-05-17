@@ -164,10 +164,13 @@
       </Item>
       <Item ItemId=";loc.input.label.SqlUsername" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Mysql User Name]]></Val>
+          <Val><![CDATA[MySQL User Name]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Mysql 用户名]]></Val>
+            <Val><![CDATA[MySQL 用户名]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Mysql User Name]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
