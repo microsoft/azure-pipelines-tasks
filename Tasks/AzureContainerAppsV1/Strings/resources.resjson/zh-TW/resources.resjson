@@ -74,7 +74,7 @@
   "loc.messages.ErrorMessageFormat": "錯誤: %s",
   "loc.messages.ExistingContainerAppEnvironmentMessage": "已探索到要和容器應用程式搭配使用的現有容器應用程式環境 '%s'。",
   "loc.messages.FoundAppSourceDockerfileMessage": "在提供的應用程式來源中找到現有的 Dockerfile，位於路徑 '%s'; 將會從這個 Dockerfile 建立映像。",
-  "loc.messages.LoginFailed": "Azure login failed",
+  "loc.messages.LoginFailed": "Azure 登入失敗",
   "loc.messages.MissingAcrNameMessage": "如果提供 appSourcePath 引數，也必須提供 acrName 引數。",
   "loc.messages.MissingRequiredArgumentMessage": "必須提供下列其中一個引數: appSourcePath、imageToDeploy、yamlConfigPath",
   "loc.messages.PackCliInstallFailed": "無法安裝套件 CLI。",

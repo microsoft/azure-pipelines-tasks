@@ -13,7 +13,7 @@
   "loc.input.help.ServerName": "'Database for MySQL'의 서버 이름입니다. 예: localhost. MySQL Workbench를 사용하여 연결하는 경우 '매개 변수'의 'Hostname'에 사용되는 값과 같습니다.",
   "loc.input.label.DatabaseName": "데이터베이스 이름",
   "loc.input.help.DatabaseName": "아래 스크립트를 실행해야 하는 데이터베이스 이름입니다(이미 있는 경우). 데이터베이스가 없는 경우 스크립트 자체를 사용하여 데이터베이스를 만들 수 있습니다.",
-  "loc.input.label.SqlUsername": "MySQL User Name",
+  "loc.input.label.SqlUsername": "MySQL 사용자 이름",
   "loc.input.help.SqlUsername": "MySQL Workbench를 사용하여 연결하는 경우 '매개 변수'의 'Username'에 사용되는 값과 같습니다.",
   "loc.input.label.SqlPassword": "암호",
   "loc.input.help.SqlPassword": "MySQL 데이터베이스의 암호입니다.<br>파이프라인에서 정의된 변수일 수 있습니다. 예: $(password).<br>변수 형식을 '비밀'로 표시하여 보호할 수도 있습니다.",
