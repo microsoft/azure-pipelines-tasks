@@ -30,10 +30,13 @@
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[TDB]]></Val>
+          <Val><![CDATA[[Learn more about this task]5D;(https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/node-task-runner-installer-v0)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Noch offen]]></Val>
+            <Val><![CDATA[[Weitere Informationen zu dieser Aufgabe]5D;(https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/node-task-runner-installer-v0)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[TDB]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
