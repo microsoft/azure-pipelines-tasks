@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Node.js タスク ランナー インストーラー",
-  "loc.helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/node-task-runner-installer-v0)",
+  "loc.helpMarkDown": "[このタスクの詳細情報](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/node-task-runner-installer-v0)",
   "loc.description": "特定の Node.js バージョンをインストールしてノード タスクを実行する",
   "loc.instanceNameFormat": "ノード ランナー $(runnerVersion)のインストール",
   "loc.input.label.runnerVersion": "インストールするランナーのバージョン",

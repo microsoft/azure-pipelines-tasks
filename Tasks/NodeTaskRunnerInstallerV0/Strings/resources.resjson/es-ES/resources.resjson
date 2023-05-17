@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Instalador del ejecutor de tareas de Node.js",
-  "loc.helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/node-task-runner-installer-v0)",
+  "loc.helpMarkDown": "[Más información sobre esta tarea](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/node-task-runner-installer-v0)",
   "loc.description": "Instalar una versión de Node.js específica para ejecutar tareas de nodo",
   "loc.instanceNameFormat": "Instalar $(runnerVersion) del ejecutor de nodos",
   "loc.input.label.runnerVersion": "Versión del ejecutor que se va a instalar",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Node.js 工作執行器安裝程式",
-  "loc.helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/node-task-runner-installer-v0)",
+  "loc.helpMarkDown": "[深入了解此工作](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/node-task-runner-installer-v0)",
   "loc.description": "安裝特定 Node.js 版本以執行節點工作",
   "loc.instanceNameFormat": "安裝節點執行器 $(runnerVersion)",
   "loc.input.label.runnerVersion": "要安裝的執行器版本",

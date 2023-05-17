@@ -13,7 +13,7 @@
   "loc.input.help.ServerName": "Имя сервера \"База данных для MySQL\". Пример: localhost. При подключении с помощью MySQL Workbench это то же значение, которое используется как \"Имя узла\" в разделе \"Параметры\"",
   "loc.input.label.DatabaseName": "Имя базы данных",
   "loc.input.help.DatabaseName": "Имя базы данных (при наличии), в которой требуется выполнить указанный ниже скрипт. В противном случае сам скрипт можно использовать для создания базы данных.",
-  "loc.input.label.SqlUsername": "MySQL User Name",
+  "loc.input.label.SqlUsername": "Имя пользователя MySQL",
   "loc.input.help.SqlUsername": "При подключении с помощью MySQL Workbench это то же значение, которое используется как \"Имя пользователя\" в разделе \"Параметры\".",
   "loc.input.label.SqlPassword": "Пароль",
   "loc.input.help.SqlPassword": "Пароль для базы данных MySQL.<br>Может принимать переменную, заданную в конвейере. Пример: $(password).<br>Вы можете пометить тип переменной как secret, чтобы защитить ее.",
