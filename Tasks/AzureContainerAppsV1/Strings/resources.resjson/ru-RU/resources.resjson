@@ -74,7 +74,7 @@
   "loc.messages.ErrorMessageFormat": "Ошибка: %s",
   "loc.messages.ExistingContainerAppEnvironmentMessage": "Обнаружена существующая среда приложения-контейнера, \"%s\" для использования с приложением-контейнером.",
   "loc.messages.FoundAppSourceDockerfileMessage": "Найден существующий файл Dockerfile в предоставленном источнике приложения по пути \"%s\"; образ будет создан из этого Dockerfile.",
-  "loc.messages.LoginFailed": "Не удалось войти в Azure",
+  "loc.messages.LoginFailed": "Azure login failed",
   "loc.messages.MissingAcrNameMessage": "Аргумент acrName также должен быть указан, если указан аргумент appSourcePath.",
   "loc.messages.MissingRequiredArgumentMessage": "Необходимо указать один из следующих аргументов: appSourcePath, imageToDeploy, yamlConfigPath",
   "loc.messages.PackCliInstallFailed": "Не удалось установить пакет CLI.",
