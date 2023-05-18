@@ -43,7 +43,6 @@ steps:
   env:
     PACKAGE_ENDPOINT: $(Package.Endpoint)
     PACKAGE_TOKEN: $(Package.Token)
-    ENSURE_BUILD_ALL_TASKS: $(EnsureBuildAllTasks)
 
 # Build
 - script: node make.js build --task "$(task_pattern)"
