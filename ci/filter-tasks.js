@@ -12,7 +12,7 @@ var run = require('./ci-util').run;
 
 var makeOptionsPath = path.join(__dirname, '..', 'make-options.json');
 var makeOptions = JSON.parse(fs.readFileSync(makeOptionsPath).toString());
-makeOptions.tasks = makeOptions.tasks.slice(0, 10);
+makeOptions.tasks = makeOptions.tasks.slice(0, 3);
 
 var getTasksToBuildForCI = async function() {
     // Returns a list of tasks that have different version numbers than their current published version. 
@@ -61,11 +61,12 @@ var getTasksToBuildForCI = async function() {
 
     return makeOptions.tasks.filter(function (taskName) {
         if (process.env['ENSURE_BUILD_ALL_TASKS'] || process.env['BUILD_REASON'] === 'Schedule') {
-          console.log("process.env['ENSURE_BUILD_ALL_TASKS']", process.env['ENSURE_BUILD_ALL_TASKS']);
-          console.log('process.env', process.env);
           console.log('##vso[build.addbuildtag]AllPipelineTasksArchive');
           return true;
         }
+
+        console.log("process.env['ENSURE_BUILD_ALL_TASKS']", process.env['ENSURE_BUILD_ALL_TASKS']);
+        console.log('process.env', process.env);
 
         var taskJsonPath = path.join(__dirname, '..', 'Tasks' , taskName, 'task.json');
         if (fs.existsSync(taskJsonPath)){
