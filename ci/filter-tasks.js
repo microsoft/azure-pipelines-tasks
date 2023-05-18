@@ -59,6 +59,11 @@ var getTasksToBuildForCI = async function() {
     });
 
     return makeOptions.tasks.filter(function (taskName) {
+        if (process.env['ENSURE_BUILD_ALL_TASKS'] || process.env['BUILD_REASON'] === 'Schedule') {
+          console.log('##vso[build.addbuildtag]AllPipelineTasksArchive');
+          return true;
+        }
+
         var taskJsonPath = path.join(__dirname, '..', 'Tasks' , taskName, 'task.json');
         if (fs.existsSync(taskJsonPath)){
             var taskJson = JSON.parse(fs.readFileSync(taskJsonPath).toString());
