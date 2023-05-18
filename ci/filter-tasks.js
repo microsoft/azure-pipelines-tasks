@@ -61,6 +61,8 @@ var getTasksToBuildForCI = async function() {
 
     return makeOptions.tasks.filter(function (taskName) {
         if (process.env['ENSURE_BUILD_ALL_TASKS'] || process.env['BUILD_REASON'] === 'Schedule') {
+          console.log("process.env['ENSURE_BUILD_ALL_TASKS']", process.env['ENSURE_BUILD_ALL_TASKS']);
+          console.log('process.env', process.env);
           console.log('##vso[build.addbuildtag]AllPipelineTasksArchive');
           return true;
         }
