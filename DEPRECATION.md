@@ -11,4 +11,4 @@ In addition to that, as a part of consistency and security improvements, we've s
 | -------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | AzureMonitorAlertsV0           | [PR](https://github.com/microsoft/azure-pipelines-extensions/pull/1128) |     09-2019                                                                |
 
-[refer https://github.com/microsoft/azure-pipelines-extensions/blob/master/README.md]
+[refer https://github.com/microsoft/azure-pipelines-tasks/blob/master/README.md]
