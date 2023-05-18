@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "Kubelogin tool installer",
+  "loc.helpMarkDown": "[Learn more about Kubelogin](https://github.com/Azure/kubelogin)",
+  "loc.description": "Install Kubelogin on agent machine",
+  "loc.instanceNameFormat": "Install Kubelogin $(kubeloginVersion)",
+  "loc.input.label.kubeloginVersion": "Kubelogin Version Spec",
+  "loc.input.help.kubeloginVersion": "Specify the version of Kubelogin to install",
+  "loc.messages.NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
+  "loc.messages.VerifyKubectlInstallation": "Verifying kubelogin installation...",
+  "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+  "loc.messages.Info_UsingToolPath": "Using tool path: %s",
+  "loc.messages.Info_UsingVersion": "Using version: %s",
+  "loc.messages.Info_CachingTool": "Caching kubelog version: %s",
+  "loc.messages.Info_ToolDownloaded": "Release successfully downloaded to %s",
+  "loc.messages.Info_KubeloginRelease": "Kubelogin release:     %s",
+  "loc.messages.Info_KubeloginPlatform": "Kubelogin platform:    %s",
+  "loc.messages.Info_KubeloginVersion": "Kubelogin version:     %s",
+  "loc.messages.Info_KubeloginReleaseURL": "Kubelogin release URL: %s",
+
+  "loc.messages.Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
+  "loc.messages.Info_UsingArtifactToolDownload": "Using artifact tool to download the package",
+  "loc.messages.Info_ResolvedLatestVersion": "Resolved latest package version: %s",
+}

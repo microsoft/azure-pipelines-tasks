@@ -7,7 +7,7 @@ import path from 'path';
 
 import * as engine from 'artifact-engine/Engine';
 import * as providers from 'artifact-engine/Providers';
-import * as tl from 'azure-pipelines-task-lib/task';
+import * as taskLib from 'azure-pipelines-task-lib/task';
 
 import { Octokit } from '@octokit/rest'
 
@@ -109,7 +109,7 @@ function getKubeloginDownloadPath(): string {
 }
 
 function getTempDirectory(): string {
-  return tl.getVariable(agentTempDir) || os.tmpdir();
+  return taskLib.getVariable(agentTempDir) || os.tmpdir();
 }
 
 export async function downloadKubeloginRelease(release: KubeloginRelease) {
@@ -129,11 +129,11 @@ export async function downloadKubeloginRelease(release: KubeloginRelease) {
     var downloader = new engine.ArtifactEngine();
     var downloaderOptions = new engine.ArtifactEngineOptions();
 
-    var debugMode = tl.getVariable('System.Debug');
+    var debugMode = taskLib.getVariable('System.Debug');
     downloaderOptions.verbose = debugMode ? debugMode.toLowerCase() != 'false' : false;
 
     await downloader.processItems(webProvider, fileSystemProvider, downloaderOptions).then((result) => {
-        console.log('Release successfully downloaded to ', downloadPath);
+        console.log(taskLib.loc("Info_ToolDownloaded", downloadPath));
         resolve(downloadPath);
     }).catch((error) => {
         reject(error);
@@ -145,19 +145,19 @@ export async function unzipRelease(zipPath: string): Promise<string> {
   const tempDir = getTempDirectory();
   var unzipPath = path.join(tempDir, KUBELOGIN_REPO + Date.now());
 	await new Promise<void>(function (resolve, reject) {
-		if (tl.exist(unzipPath)) {
-			tl.rmRF(unzipPath);
+		if (taskLib.exist(unzipPath)) {
+			taskLib.rmRF(unzipPath);
 		}
 
-		tl.debug('Extracting ' + zipPath + ' to ' + unzipPath);
+		taskLib.debug('Extracting ' + zipPath + ' to ' + unzipPath);
 
 		var unzipper = new DecompressZip(zipPath);
 		unzipper.on('error', (err: any) => {
       console.log(err);
-			return reject(tl.loc("ExtractionFailed", err))
+			return reject(taskLib.loc("ExtractionFailed", err))
 		});
 		unzipper.on('extract', () => {
-			tl.debug('Extracted ' + zipPath + ' to ' + unzipPath + ' successfully');
+			taskLib.debug('Extracted ' + zipPath + ' to ' + unzipPath + ' successfully');
 			return resolve();
 		});
 
