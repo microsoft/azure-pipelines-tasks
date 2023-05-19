@@ -16,8 +16,6 @@
   "loc.input.help.Parallel": "スループット向上を期待して複数のスレッドを使って並列でファイルをコピーするかどうかを選択します。この設定が無効の場合は、1 つのスレッドが使用されます。",
   "loc.input.label.ParallelCount": "並列数",
   "loc.input.help.ParallelCount": "コピーを実行するための並列処理の程度、つまり使用するスレッド数を入力します。この値は 1 以上 128 以下でなければなりません。",
-  "loc.input.label.FileCopyOptions": "ファイル コピーのオプション",
-  "loc.input.help.FileCopyOptions": "追加オプションを Robocopy コマンドに渡します。",
   "loc.input.label.StoreAsTar": "アップロードする前に成果物を Tar してください",
   "loc.input.help.StoreAsTar": "アップロードする前に、発行パスのすべてのファイルを tar アーカイブに追加します。これにより、UNIX ファイルのアクセス許可を保持することができます。DownloadBuildArtifacts ティファクト タスクの ' extractTars ' オプションを使用して、ダウンロードされたアイテムを自動的に抽出します。",
   "loc.messages.ErrorFileShareLinux": "Linux または macOS エージェントからファイル共有への成果物の公開はサポートされていません。成果物の種類を `Azure Pipelines` に変更するか、Windows エージェントをご使用ください。",
