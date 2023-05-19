@@ -12,7 +12,7 @@ var run = require('./ci-util').run;
 
 var makeOptionsPath = path.join(__dirname, '..', 'make-options.json');
 var makeOptions = JSON.parse(fs.readFileSync(makeOptionsPath).toString());
-makeOptions.tasks = makeOptions.tasks.filter(taskName => taskName === 'ArchiveFilesV2');
+makeOptions.tasks = makeOptions.tasks.slice(0, 5);
 console.log('process.env');
 console.log(process.env);
 
@@ -60,6 +60,13 @@ var getTasksToBuildForCI = async function() {
             });
         }
     });
+
+
+    if (process.env['ENSUREBUILDALLTASKS'] === 'true') {
+      console.log('##vso[debug]Building all tasks...');
+      return makeOptions.tasks;
+    }
+
 
     return makeOptions.tasks.filter(function (taskName) {
         var taskJsonPath = path.join(__dirname, '..', 'Tasks' , taskName, 'task.json');

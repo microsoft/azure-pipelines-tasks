@@ -26,6 +26,10 @@ Write-Host "##vso[task.setVariable variable=milestone_version]$milestoneVersion"
 
 # Determine the aggregate version
 $now = [System.DateTime]::UtcNow
-$aggregateVersion = "1.$('{0:yyyyMMdd}' -f $now).$([System.Math]::Floor($now.timeofday.totalseconds))-$env:BUILD_SOURCEBRANCHNAME-$commit"
+if ($env:ENSUREBUILDALLTASKS -eq "true") {
+    $aggregateVersion = "BuildAllTasks_1.$('{0:yyyyMMdd}' -f $now).$([System.Math]::Floor($now.timeofday.totalseconds))"
+} else {
+    $aggregateVersion = "1.$('{0:yyyyMMdd}' -f $now).$([System.Math]::Floor($now.timeofday.totalseconds))-$env:BUILD_SOURCEBRANCHNAME-$commit"
+}
 Write-Host "Aggregate version: '$aggregateVersion'"
 Write-Host "##vso[task.setVariable variable=aggregate_version]$aggregateVersion"
