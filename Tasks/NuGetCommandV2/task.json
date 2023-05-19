@@ -522,6 +522,7 @@
         "Info_AvailableVersions": "The available versions are: %s",
         "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "You are using a query match on the version string. Behavior changes or breaking changes might occur as NuGet updates to a new version.",
         "Info_MatchingUrlWasFoundSettingAuth": "Using authentication information for the following URI: ",
+        "Info_NuGetSupportedAfter3_5": "NuGet 3.5 and above is supported.",
         "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
         "Info_SavingTempConfig": "Saving NuGet.config to a temporary config file.",
         "Info_UsingToolPath": "Using tool path: %s",
