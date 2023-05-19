@@ -63,7 +63,7 @@ var getTasksToBuildForCI = async function() {
 
 
     if (process.env['ENSUREBUILDALLTASKS'] === 'true') {
-      console.log('##vso[debug]Building all tasks...');
+      console.log('Building all tasks...');
       return makeOptions.tasks;
     }
 
