@@ -33,6 +33,30 @@ export const runPowershellSuite = () => {
             it('Should handle env variable content as single arg 2', (done) => {
                 psr.run(path.join(__dirname, 'ShouldHandleEnvVariableContentAsSingleArg2.ps1'), done);
             })
+
+            it('Should handle quoted arguments', (done) => {
+                psr.run(path.join(__dirname, 'ShouldHandleQuotedArguments.ps1'), done);
+            })
+
+            it('Should handle quoted arguments with 2 spaces inside', (done) => {
+                psr.run(path.join(__dirname, 'ShouldHandleQuotedArgumentsWith2SpacesInside.ps1'), done);
+            })
+
+            it('Should ignore spaces between non-quoted args', (done) => {
+                psr.run(path.join(__dirname, 'ShouldIgnoreSpacesBetweenNonQuotedArgs.ps1'), done);
+            })
+
+            it('Should ignore spaces between non-quoted args', (done) => {
+                psr.run(path.join(__dirname, 'ShouldHandleEscapedChars.ps1'), done);
+            })
+
+            it('Should handle string with single quotes', (done) => {
+                psr.run(path.join(__dirname, 'ShouldHandleStringWithSingleQuotes.ps1'), done);
+            });
+
+            it('Should handle argument in single quotes properly', (done) => {
+                psr.run(path.join(__dirname, 'ShouldHandleArgumentInSingleQuotesProperly.ps1'), done);
+            });
         }
     });
 }
