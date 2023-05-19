@@ -13,6 +13,8 @@ var run = require('./ci-util').run;
 var makeOptionsPath = path.join(__dirname, '..', 'make-options.json');
 var makeOptions = JSON.parse(fs.readFileSync(makeOptionsPath).toString());
 makeOptions.tasks = makeOptions.tasks.filter(taskName => taskName === 'ArchiveFilesV2');
+console.log('process.env');
+console.log(process.env);
 
 var getTasksToBuildForCI = async function() {
     // Returns a list of tasks that have different version numbers than their current published version. 
