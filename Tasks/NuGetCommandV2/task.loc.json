@@ -10,7 +10,7 @@
   "version": {
     "Major": 2,
     "Minor": 221,
-    "Patch": 1
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -522,6 +522,7 @@
     "Info_AvailableVersions": "ms-resource:loc.messages.Info_AvailableVersions",
     "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "ms-resource:loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery",
     "Info_MatchingUrlWasFoundSettingAuth": "ms-resource:loc.messages.Info_MatchingUrlWasFoundSettingAuth",
+    "Info_NuGetSupportedAfter3_5": "ms-resource:loc.messages.Info_NuGetSupportedAfter3_5",
     "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
     "Info_SavingTempConfig": "ms-resource:loc.messages.Info_SavingTempConfig",
     "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
