@@ -1,3 +1,33 @@
+import * as uuidV4 from 'uuid/v4';
+
+class EnvDelimitierHelper {
+    public readonly delimitier: string = `#AzpEnvDelim#${uuidV4()}&`
+
+    public isEnvDelimitierProcessing: boolean = false;
+    public isEnvVariableProcessing: boolean = false;
+    public delimAcc: string = ''
+
+    public get delimitierFirstLetter(): string {
+        return this.delimitier[0];
+    }
+
+    public get delimitierLastLetter(): string {
+        return this.delimitier[this.delimitier.length - 1];
+    }
+
+    public get isDelimiterFinished(): boolean {
+        return this.delimAcc === this.delimitier
+    }
+
+    public isNextLettersAreDelimitier(input: string): boolean {
+        const slice = input.slice(0, this.delimitier.length)
+
+        return slice === this.delimitier
+    }
+}
+
+const dHelper = new EnvDelimitierHelper();
+
 type PowerShellTelemetry = {
     nestedQuotes: number,
     closedQuotePairs: number,
@@ -42,7 +72,36 @@ export function parsePowerShellArguments(inputArgs: string): [string[], PowerShe
         lastCharMeaningfulBacktick: 0,
     }
 
-    for (const currentChar of processedArgs) {
+    for (let i = 0; i < processedArgs.length; i++) {
+        const currentChar = processedArgs[i]
+
+        if (dHelper.isEnvDelimitierProcessing) {
+            dHelper.delimAcc += currentChar;
+
+            if (dHelper.isDelimiterFinished) {
+                dHelper.isEnvDelimitierProcessing = false;
+                dHelper.isEnvVariableProcessing = !dHelper.isEnvVariableProcessing;
+                dHelper.delimAcc = ''
+            }
+
+            continue
+        }
+
+        if (currentChar === dHelper.delimitierFirstLetter) {
+            if (dHelper.isNextLettersAreDelimitier(processedArgs.slice(i))) {
+                dHelper.isEnvDelimitierProcessing = true;
+                dHelper.delimAcc += currentChar;
+
+                continue
+            }
+        }
+
+        if (dHelper.isEnvVariableProcessing) {
+            currentArg += currentChar
+
+            continue
+        }
+
         if (currentChar === ' ') {
             if (activeQuote) {
                 currentArg += currentChar
@@ -248,7 +307,7 @@ function processPowerShellEnVariables(argsLine: string): [string, ProcessEnvPowe
         const envValue = process.env[envName] ?? '';
         const tail = result.substring(envEndIndex)
 
-        result = head + envValue + tail
+        result = head + dHelper.delimitier + envValue + dHelper.delimitier + tail;
         startIndex = prefixIndex + envValue.length
 
         telemetry.variablesExpanded++

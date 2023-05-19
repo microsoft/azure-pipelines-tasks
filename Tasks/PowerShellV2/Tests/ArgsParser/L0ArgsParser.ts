@@ -245,14 +245,45 @@ export const ArgsParserTests = () => {
     const bracedSyntaxInputs = [
         ['${env:VAR1}', ['${env:VAR1}']],
         ['${EnV:Var1}', ['${EnV:Var1}']]
-    ]
+    ] as unknown as [string, string[]]
     bracedSyntaxInputs.forEach(([inputArgs, expectedArgs], i) => {
         it(`Should not handle env vars with braced syntax #${i + 1}`, () => {
             process.env['VAR1'] = 'value1'
 
-            const [actualArgs] = parsePowerShellArguments(inputArgs as string);
+            const [actualArgs] = parsePowerShellArguments(inputArgs);
 
             assert.deepStrictEqual(actualArgs, expectedArgs);
         })
+    })
+
+    it('Should handle env variable content as single arg', () => {
+        const argsLine = '$env:VAR1';
+        process.env['VAR1'] = '1 2'
+        const expectedArgs = ['1 2'];
+
+        const [actualArgs] = parsePowerShellArguments(argsLine);
+
+        assert.deepStrictEqual(actualArgs, expectedArgs);
+    })
+
+    it('Should handle env variable content as single arg 2', () => {
+        const argsLine = '$env:VAR1 $env:VAR2';
+        process.env['VAR1'] = '1 2'
+        process.env['VAR2'] = '3 4'
+        const expectedArgs = ['1 2', '3 4'];
+
+        const [actualArgs] = parsePowerShellArguments(argsLine);
+
+        assert.deepStrictEqual(actualArgs, expectedArgs);
+    })
+
+    it('Should handle env variable content as single arg 2', () => {
+        const argsLine = '1 $env:VAR1 "5 6"';
+        process.env['VAR1'] = '2 3 4'
+        const expectedArgs = ['1', '2 3 4', '5 6'];
+
+        const [actualArgs] = parsePowerShellArguments(argsLine);
+
+        assert.deepStrictEqual(actualArgs, expectedArgs);
     })
 }

@@ -1,3 +1,33 @@
+class EnvDelimitierHelper {
+    [string]$delimitier
+    [bool]$isEnvDelimitierProcessing = $false
+    [bool]$isEnvVariableProcessing = $false
+    [string]$delimAcc = ''
+
+    EnvDelimitierHelper() {
+        $this.delimitier = "#AzpEnvDelim#" + [System.Guid]::NewGuid().ToString() + "&"
+    }
+
+    [string]get_delimitierFirstLetter() {
+        return $this.delimitier[0]
+    }
+
+    [string]get_delimitierLastLetter() {
+        return $this.delimitier[$this.delimitier.Length - 1]
+    }
+
+    [bool]get_isDelimiterFinished() {
+        return $this.delimAcc -eq $this.delimitier
+    }
+
+    [bool]isNextLettersAreDelimitier([string]$candidate) {
+        $slice = $candidate.Substring(0, $this.delimitier.Length)
+        return $slice -eq $this.delimitier
+    }
+}
+
+$dHelper = New-Object -TypeName EnvDelimitierHelper
+
 function parsePowerShellArguments([string]$InputArgs) {
 
     $escapingSymbol = '`'
@@ -28,7 +58,36 @@ function parsePowerShellArguments([string]$InputArgs) {
 
     $chars = $processedArgs.ToCharArray()
 
-    foreach ($currentChar in $chars) {
+    for ($i = 0; $i -lt $chars.Length; $i++) {
+        $currentChar = $chars[$i]
+
+        if ($dHelper.isEnvDelimitierProcessing) {
+            $dHelper.delimAcc += $currentChar;
+
+            if ($dHelper.isDelimiterFinished) {
+                $dHelper.isEnvDelimitierProcessing = false;
+                $dHelper.isEnvVariableProcessing = !$dHelper.isEnvVariableProcessing;
+                $dHelper.delimAcc = ''
+            }
+
+            continue
+        }
+
+        if ($currentChar -eq $dHelper.delimitierFirstLetter) {
+            if ($dHelper.isNextLettersAreDelimitier($processedArgs.slice($i))) {
+                $dHelper.isEnvDelimitierProcessing = true;
+                $dHelper.delimAcc += $currentChar;
+
+                continue
+            }
+        }
+
+        if ($dHelper.isEnvVariableProcessing) {
+            $currentArg += $currentChar
+
+            continue
+        }
+
         if ($currentChar -eq ' ') {
             if ($activeQuote) {
                 $currentArg += $currentChar
@@ -235,7 +294,7 @@ function Expand-EnvVariables([string]$ArgsLine) {
         }
         $tail = $result.Substring($envEndIndex)
 
-        $result = $head + $envValue + $tail
+        $result = $head + $dHelper.delimitier + $envValue + $dHelper.delimitier + $tail
         $startIndex = $prefixIndex + $envValue.Length
 
         $telemetry.variablesExpanded++
