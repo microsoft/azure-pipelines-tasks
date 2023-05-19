@@ -2,6 +2,7 @@ import assert = require('assert');
 import os = require('os');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import { runPowershellSuite } from './powershellImpl/L0';
 
 import { ArgsParserTests, ArgsParserTelemetryTests } from './ArgsParser'
 
@@ -104,4 +105,6 @@ describe('PowerShell Suite', function () {
 
         ArgsParserTelemetryTests()
     })
+
+    runPowershellSuite();
 });

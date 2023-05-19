@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param()
 
-Import-Module .\ArgsParser.psm1
+Import-Module .\ArgsParser.ps1
 
 $secureArgsFile = Join-Path $env:AGENT_TEMPDIRECTORY "powershellArgs_$(New-Guid)"
 Write-Debug "Args file path = $secureArgsFile"
@@ -79,7 +79,7 @@ try {
         if ($input_arguments -and ($featureFlags.enableSecureArgs -or $featureFlags.enableTelemetry)) {
 
             try {
-                $argsArray, $telemetry = parsePowerShellArguments -InputArgs $input_arguments
+                $argsArray, $telemetry = Parse-FileArguments -InputArgs $input_arguments
 
                 if ($featureFlags.enableSecureArgs) {
                     $argsJson = $argsArray | ConvertTo-Json

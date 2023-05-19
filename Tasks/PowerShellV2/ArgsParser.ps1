@@ -1,19 +1,11 @@
 class EnvDelimitierHelper {
-    [string]$delimitier
+    [string] $delimitier = "#AzpEnvDelim#$([System.Guid]::NewGuid().ToString())&"
     [bool]$isEnvDelimitierProcessing = $false
     [bool]$isEnvVariableProcessing = $false
     [string]$delimAcc = ''
 
-    EnvDelimitierHelper() {
-        $this.delimitier = "#AzpEnvDelim#" + [System.Guid]::NewGuid().ToString() + "&"
-    }
-
     [string]get_delimitierFirstLetter() {
         return $this.delimitier[0]
-    }
-
-    [string]get_delimitierLastLetter() {
-        return $this.delimitier[$this.delimitier.Length - 1]
     }
 
     [bool]get_isDelimiterFinished() {
@@ -28,7 +20,7 @@ class EnvDelimitierHelper {
 
 $dHelper = New-Object -TypeName EnvDelimitierHelper
 
-function parsePowerShellArguments([string]$InputArgs) {
+function Parse-FileArguments([string]$InputArgs) {
 
     $escapingSymbol = '`'
     $quoteTypes = @("'", '"')
@@ -64,18 +56,18 @@ function parsePowerShellArguments([string]$InputArgs) {
         if ($dHelper.isEnvDelimitierProcessing) {
             $dHelper.delimAcc += $currentChar;
 
-            if ($dHelper.isDelimiterFinished) {
-                $dHelper.isEnvDelimitierProcessing = false;
-                $dHelper.isEnvVariableProcessing = !$dHelper.isEnvVariableProcessing;
+            if ($dHelper.get_isDelimiterFinished()) {
+                $dHelper.isEnvDelimitierProcessing = $false;
+                $dHelper.isEnvVariableProcessing = -not $dHelper.isEnvVariableProcessing;
                 $dHelper.delimAcc = ''
             }
 
-            continue
+            continue;
         }
 
-        if ($currentChar -eq $dHelper.delimitierFirstLetter) {
-            if ($dHelper.isNextLettersAreDelimitier($processedArgs.slice($i))) {
-                $dHelper.isEnvDelimitierProcessing = true;
+        if ($currentChar -eq $dHelper.get_delimitierFirstLetter()) {
+            if ($dHelper.isNextLettersAreDelimitier($processedArgs.Substring($i))) {
+                $dHelper.isEnvDelimitierProcessing = $true;
                 $dHelper.delimAcc += $currentChar;
 
                 continue

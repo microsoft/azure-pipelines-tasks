@@ -11,10 +11,6 @@ class EnvDelimitierHelper {
         return this.delimitier[0];
     }
 
-    public get delimitierLastLetter(): string {
-        return this.delimitier[this.delimitier.length - 1];
-    }
-
     public get isDelimiterFinished(): boolean {
         return this.delimAcc === this.delimitier
     }
