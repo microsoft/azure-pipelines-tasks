@@ -20,7 +20,7 @@ util.expandTasks(artifactZipPath, artifactPath);
 // link the artifact
 fs.readdirSync(artifactPath).forEach(function (itemName) {
     var itemSourcePath = path.join(artifactPath, itemName);
-    if (itemName !== 'layout-version.txt' && !fs.lstatSync(itemSourcePath).isDirectory()) {
+    if (!fs.lstatSync(itemSourcePath).isDirectory()) {
         throw new Error(`Expected item to be a directory: ${itemSourcePath}`);
     }
 
