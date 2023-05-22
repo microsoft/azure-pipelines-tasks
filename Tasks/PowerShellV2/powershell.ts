@@ -119,7 +119,7 @@ async function run() {
         if (input_arguments && featureFlags.enableSecureArgs) {
             contents.push(`$scriptArgs = Get-Content ${secureArgsFile} | ConvertFrom-Json | ForEach-Object { "$_" }`)
             contents.push("for ($i = 0; $i -lt $scriptArgs.Count; $i++) {")
-            contents.push("$argVar = $scriptArgs[$i]")
+            contents.push("[string]$argVar = $scriptArgs[$i]")
             contents.push("if ($argVar.StartsWith('-')) {")
             contents.push("$modifiedParamName = $argVar | Add-Member -NotePropertyName '<CommandParameterName>' -NotePropertyValue $argVar -PassThru")
             contents.push("$scriptArgs[$i] = $modifiedParamName\n}\n}")
