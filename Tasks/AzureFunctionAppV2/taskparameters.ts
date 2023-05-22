@@ -1,9 +1,9 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { AzureEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azureModels';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon/azure-arm-rest/azure-arm-endpoint';
-import { AzureAppService } from './azure-arm-rest/azure-arm-app-service';
-import { AzureResourceFilterUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/AzureResourceFilterUtility';
-import { Package } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
+import { Resources } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource';
+import { Package } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 
 const skuDynamicValue: string = 'dynamic';
 const skuElasticPremiumValue: string = 'elasticpremium';
@@ -66,7 +66,8 @@ export class TaskParametersUtility {
         var kind = taskParameters.WebAppKind;
         var sku;
         if (!resourceGroupName) {
-            var appDetails = await AzureResourceFilterUtility.getAppDetails(taskParameters.azureEndpoint, taskParameters.WebAppName);
+            var azureResources: Resources = new Resources(taskParameters.azureEndpoint);
+            var appDetails = await azureResources.getAppDetails(taskParameters.WebAppName);
             resourceGroupName = appDetails["resourceGroupName"];
             if(!kind) {
                 kind = webAppKindMap.get(appDetails["kind"]) ? webAppKindMap.get(appDetails["kind"]) : appDetails["kind"];
