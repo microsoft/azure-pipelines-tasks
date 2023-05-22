@@ -12,6 +12,7 @@ var run = require('./ci-util').run;
 
 var makeOptionsPath = path.join(__dirname, '..', 'make-options.json');
 var makeOptions = JSON.parse(fs.readFileSync(makeOptionsPath).toString());
+makeOptions.tasks = makeOptions.tasks.filter(taskName => taskName === 'ArchiveFilesV2');
 
 var getTasksToBuildForCI = async function() {
     // Returns a list of tasks that have different version numbers than their current published version. 
@@ -188,7 +189,7 @@ var buildReason = process.env['BUILD_REASON'].toLowerCase();
 var forceCourtesyPush = process.env['FORCE_COURTESY_PUSH'] && process.env['FORCE_COURTESY_PUSH'].toLowerCase() === 'true';
 
 var tasks;
-if (buildReason == 'individualci' || buildReason == 'batchedci' || forceCourtesyPush) {
+if (buildReason == 'individualci' || buildReason == 'batchedci' || buildReason == 'schedule' || forceCourtesyPush) {
     // If CI, we will compare any tasks that have updated versions.
     getTasksToBuildForCI().then(tasks => {
         setTaskVariables(tasks)
