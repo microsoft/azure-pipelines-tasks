@@ -57,6 +57,34 @@ export const runPowershellSuite = () => {
             it('Should handle argument in single quotes properly', (done) => {
                 psr.run(path.join(__dirname, 'ShouldHandleArgumentInSingleQuotesProperly.ps1'), done);
             });
+
+            it('Should handle escaped backslashes', (done) => {
+                psr.run(path.join(__dirname, 'ShouldHandleEscapedBackslashes.ps1'), done);
+            });
+
+            it('Should handle args with backslash', (done) => {
+                psr.run(path.join(__dirname, 'ShouldHandleArgsWithBackslash.ps1'), done);
+            });
+
+            it('Escaped escape character passed as a separate argument should present', (done) => {
+                psr.run(path.join(__dirname, 'EscapedEscapeCharacterPassedAsASeparateArgumentShouldPresent.ps1'), done);
+            });
+
+            it('Single escape character passed as a separate argument should be ignored', (done) => {
+                psr.run(path.join(__dirname, 'SingleEscapeCharacterPassedAsASeparateArgumentShouldBeIgnored.ps1'), done);
+            });
+
+            it('Escaped escape character should present in args when inside a double quotes', (done) => {
+                psr.run(path.join(__dirname, 'EscapedEscapeCharacterShouldPresentInArgsWhenInsideADoubleQuotes.ps1'), done);
+            });
+
+            it('Should handle multiple quote types properly', (done) => {
+                psr.run(path.join(__dirname, 'ShouldHandleMultipleQuoteTypesProperly.ps1'), done);
+            });
+
+            it('Should handle multiple quote types properly 2', (done) => {
+                psr.run(path.join(__dirname, 'ShouldHandleMultipleQuoteTypesProperly2.ps1'), done);
+            });
         }
     });
 }
