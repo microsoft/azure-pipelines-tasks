@@ -143,7 +143,7 @@ try {
             $contents += "`$scriptArgs = `$(Get-Content $secureArgsFile) | ConvertFrom-Json"
         }
         $contents += "for (`$i = 0; `$i -lt `$scriptArgs.Count; `$i++) {"
-        $contents += "[string]`$argVar = `$scriptArgs[`$i]"
+        $contents += "[string]`$argVar = ""`$scriptArgs[`$i]"""
         $contents += "if (`$argVar.StartsWith('-')) {"
         $contents += "`$modifiedParamName = `$argVar | Add-Member -NotePropertyName '<CommandParameterName>' -NotePropertyValue `$argVar -PassThru"
         $contents += "`$scriptArgs[`$i] = `$modifiedParamName`t}`n}"
