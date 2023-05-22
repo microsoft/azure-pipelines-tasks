@@ -34,6 +34,10 @@ export const runPowershellSuite = () => {
                 psr.run(path.join(__dirname, 'ShouldHandleEnvVariableContentAsSingleArg2.ps1'), done);
             })
 
+            it('Should handle env variable content as single arg 3', (done) => {
+                psr.run(path.join(__dirname, 'ShouldHandleEnvVariableContentAsSingleArg3.ps1'), done);
+            })
+
             it('Should handle quoted arguments', (done) => {
                 psr.run(path.join(__dirname, 'ShouldHandleQuotedArguments.ps1'), done);
             })
@@ -85,6 +89,60 @@ export const runPowershellSuite = () => {
             it('Should handle multiple quote types properly 2', (done) => {
                 psr.run(path.join(__dirname, 'ShouldHandleMultipleQuoteTypesProperly2.ps1'), done);
             });
+
+            it('Single escape inside quoted argument should make no sense', (done) => {
+                psr.run(path.join(__dirname, 'SingleEscapeInsideQuotedArgumentShouldMakeNoSense.ps1'), done);
+            });
+
+            it('Single escape character should present in args when inside a double quotes', (done) => {
+                psr.run(path.join(__dirname, 'SingleEscapeCharacterShouldPresentInArgsWhenInsideADoubleQuotes.ps1'), done);
+            });
+
+            it('Escape character should present in args when inside a single quotes', (done) => {
+                psr.run(path.join(__dirname, 'EscapeCharacterShouldPresentInArgsWhenInsideASingleQuotes.ps1'), done);
+            });
+
+            it('Separate quotes which are inside other should be present in result string', (done) => {
+                psr.run(path.join(__dirname, 'SeparateQuotesWhichAreInsideOtherShouldBePresentInResultString.ps1'), done);
+            });
+
+            it('Should get env variable from argument', (done) => {
+                psr.run(path.join(__dirname, 'ShouldGetEnvVariableFromArgument.ps1'), done);
+            });
+
+            it('Should get env variables from argument', (done) => {
+                psr.run(path.join(__dirname, 'ShouldGetEnvVariablesFromArgument.ps1'), done);
+            });
+
+            it('Should leave empty if no variable specified', (done) => {
+                psr.run(path.join(__dirname, 'ShouldLeaveEmptyIfNoVariableSpecified.ps1'), done);
+            });
+
+            it('Should leave var name if escaped', (done) => {
+                psr.run(path.join(__dirname, 'ShouldLeaveVarNameIfEscaped.ps1'), done);
+            });
+
+            it('Should process var name if escaped escape', (done) => {
+                psr.run(path.join(__dirname, 'ShouldProcessVarNameIfEscapedEscape.ps1'), done);
+            });
+
+            it('Should leave empty if escaped', (done) => {
+                psr.run(path.join(__dirname, 'ShouldLeaveEmptyIfEscaped.ps1'), done);
+            });
+
+            it('Should ignore variables inside expansion syntax', (done) => {
+                psr.run(path.join(__dirname, 'ShouldIgnoreVariablesInsideExpansionSyntax.ps1'), done);
+            });
+
+            it('Should break envs processing in case of unmatched expansion', (done) => {
+                psr.run(path.join(__dirname, 'ShouldBreakEnvsProcessingInCaseOfUnmatchedExpansion.ps1'), done);
+            });
+
+            for (let i = 1; i < 3; i++) {
+                it(`Should not handle env vars with braced syntax #${i}`, (done) => {
+                    psr.run(path.join(__dirname, `ShouldNotHandleEnvVarsWithBracedSyntax${i}.ps1`), done);
+                });
+            }
         }
     });
 }

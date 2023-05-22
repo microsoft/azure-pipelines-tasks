@@ -277,7 +277,7 @@ export const ArgsParserTests = () => {
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
 
-    it('Should handle env variable content as single arg 2', () => {
+    it('Should handle env variable content as single arg 3', () => {
         const argsLine = '1 $env:VAR1 "5 6"';
         process.env['VAR1'] = '2 3 4'
         const expectedArgs = ['1', '2 3 4', '5 6'];
