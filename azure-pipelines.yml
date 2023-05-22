@@ -10,6 +10,11 @@ resources:
     endpoint: AzureDevOps
     name: AzureDevOps/AzureDevOps
 
+  - repository: ConfigChange
+    type: git
+    endpoint: AzureDevOps
+    name: AzureDevOps/AzureDevOps.ConfigChange
+
 parameters:
 - name: build_single_task
   displayName: Build Single Task
@@ -23,6 +28,10 @@ parameters:
   displayName: Push to Feed
   type: boolean
   default: false
+- name: generate_prs
+  displayName: Create hotfix PRs and Release
+  type: boolean
+  default: false
 
 variables:
   currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
@@ -31,16 +40,11 @@ jobs:
 
 - ${{ if parameters.build_single_task }}:
 
-  # Build Single Task
-  - job: build_single_task
-    displayName: Build Single Task
-    pool:
-      vmImage: windows-2022
-    steps:
-    - template: ci/build-single-steps.yml
-      parameters:
-        task: ${{ parameters.task_name }}
-        push: ${{ parameters.push_to_feed }}
+  - template: ci/build-single-jobs.yml
+    parameters:
+      task_name: ${{ parameters.task_name }}
+      push_to_feed: ${{ parameters.push_to_feed }}
+      generate_prs: ${{ parameters.generate_prs }}
 
 - ${{ if not(parameters.build_single_task) }}:
 
