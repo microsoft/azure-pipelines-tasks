@@ -9,6 +9,9 @@ import { ArgsParserTests, ArgsParserTelemetryTests } from './ArgsParser'
 describe('PowerShell Suite', function () {
     this.timeout(60000);
 
+    process.env['AZP_TASK_FF_POWERSHELLV2_ENABLE_SECURE_ARGS'] = 'false';
+    process.env['AZP_TASK_FF_POWERSHELLV2_ENABLE_INPUT_ARGS_TELEMETRY'] = 'false';
+
     function runValidations(validator: () => void, tr, done: Mocha.Done) {
         try {
             validator();

@@ -10,9 +10,6 @@ tmr.setInput('filePath', 'path/to/script.ps1');
 tmr.setInput('workingDirectory', '/fakecwd');
 tmr.setInput('ignoreLASTEXITCODE', 'true');
 
-process.env['AZP_TASK_FF_POWERSHELLV2_ENABLE_SECURE_ARGS'] = 'false';
-process.env['AZP_TASK_FF_POWERSHELLV2_ENABLE_INPUT_ARGS_TELEMETRY'] = 'false';
-
 //Create assertAgent and getVariable mocks, support not added in this version of task-lib
 const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
