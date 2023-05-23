@@ -1,17 +1,16 @@
 import tl = require('azure-pipelines-task-lib/task');
-import fs = require('fs');
 import path = require('path');
 var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility');
 var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility');
-import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
 import { AzureDeployPackageArtifactAlias, KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azure-arm-rest-v2/constants';
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
 import webClient = require('azure-pipelines-tasks-azure-arm-rest-v2/webClient');
 
 const physicalRootPath: string = '/site/wwwroot';
 const deploymentFolder: string = 'site/deployments';
 const manifestFileName: string = 'manifest';
-const VSTS_ZIP_DEPLOY: string = 'VSTS_ZIP_DEPLOY_FUNCTIONS_V2';
-const VSTS_DEPLOY: string = 'VSTS_FUNCTIONS_V2';
+const VSTS_ZIP_DEPLOY: string = 'VSTS_ZIP_DEPLOY';
+const VSTS_DEPLOY: string = 'VSTS';
 
 export class KuduServiceUtility {
     private _appServiceKuduService: Kudu;
@@ -40,7 +39,6 @@ export class KuduServiceUtility {
     public getDeploymentID(): string {
         var buildId = tl.getVariable('build.buildId');
         var releaseId = tl.getVariable('release.releaseId');
-
         var deploymentID: string = (releaseId ? releaseId : buildId) + Date.now().toString();
         return deploymentID;
     }
@@ -108,8 +106,7 @@ export class KuduServiceUtility {
             ];
             var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
-            let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
-            await this._processDeploymentResponse(deploymentDetails);
+            await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
             console.log(tl.loc('PackageDeploymentSuccess'));
             console.log("NOTE: Run From Package makes wwwroot read-only, so you will receive an error when writing files to this directory.");
         }
@@ -326,63 +323,5 @@ export class KuduServiceUtility {
             author : author,
             deployer : 'VSTS'
         };
-    }
-
-    public async getZipDeployValidation(packagePath: string, zipLanguage?: string, zipIs64Bit?: string): Promise<void> {
-        try {
-            console.log("Validating deployment package for functions app before Zip Deploy");
-            let queryParameters: Array<string> = [
-                'zipLanguage=' + !!zipLanguage ? zipLanguage : '',
-                'zipIs64Bit=' + !!zipIs64Bit ? zipIs64Bit : ''
-            ];
-            await this.validateZipDeploy(packagePath, queryParameters);
-        }
-        catch(error) {
-            throw Error(error);
-        }
-    }
-
-    public async validateZipDeploy(webPackage: string, queryParameters?: Array<string>): Promise<any> {
-        try {
-            var stats = fs.statSync(webPackage);
-            var fileSizeInBytes = stats.size;
-            let httpRequest: webClient.WebRequest = {
-                method: 'POST',
-                uri: this._appServiceKuduService.client.getRequestUri(`/api/zipdeploy/validate`, queryParameters),
-                body: fs.createReadStream(webPackage),
-                headers: {
-                    'Content-Length': fileSizeInBytes
-                },
-            };
-            let requestOptions = new webClient.WebRequestOptions();
-            requestOptions.retriableStatusCodes = [500, 502, 503, 504];
-            requestOptions.retryIntervalInSeconds = 5;
-
-            let response = await this._appServiceKuduService.client.beginRequest(httpRequest, requestOptions, 'application/octet-stream');
-            if (response.statusCode == 200) {
-                tl.debug(`Validation passed response: ${JSON.stringify(response)}`);
-                if (response.body && response.body.result){
-                    tl.warning(`${JSON.stringify(response.body.result)}`);
-                }
-                return null;
-            }
-            else if (response.statusCode == 400) {
-                tl.debug(`Validation failed response: ${JSON.stringify(response)}`);
-                throw response;
-            }
-            else {
-                tl.debug(`Skipping validation with status: ${response.statusCode}`);
-                return null;
-            }
-        }
-        catch(error) {
-            if (error && error.body && error.body.result && typeof error.body.result.valueOf() == 'string' && error.body.result.includes('ZipDeploy Validation ERROR')) {
-                throw Error(JSON.stringify(error.body.result));
-            }
-            else {
-                tl.debug(`Skipping validation with error: ${error}`);
-                return null;
-            }
-        }
     }
 }
