@@ -295,17 +295,13 @@ export class ApplicationTokenCredentials {
 
         // proxy usage
         const agentProxyURL = tl.getVariable("agent.proxyurl") ? new URL(tl.getVariable("agent.proxyurl")) : null;
-        const agentProxyBypassHosts = tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null;
-        let shouldProxyBypass = false;
+        const agentProxyBypassHosts = tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : [];
 
         const authorityHost = new URL(authorityURL).host;
-        for(var i=0; agentProxyBypassHosts && i < agentProxyBypassHosts.length; i++) {
-            // same test logic with typed-rest-client
-            if(agentProxyBypassHosts[i] && new RegExp(agentProxyBypassHosts[i], 'i').test(authorityHost)) {
-                shouldProxyBypass = true;
-                break;
-            }
-        }
+
+        // same test logic is applied as typed-rest-client
+        const bypassChecker = (elem) => elem && new RegExp(elem, 'i').test(authorityHost);
+        const shouldProxyBypass = agentProxyBypassHosts.some(bypassChecker);
 
         if (agentProxyURL) {
             if (shouldProxyBypass) {
