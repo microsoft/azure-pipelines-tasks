@@ -1,0 +1,49 @@
+steps:
+
+# Clean
+- checkout: self
+  clean: true
+
+# Use node 8, npm 5
+- task: NodeTool@0
+  displayName: Use node 8
+  inputs:
+    versionSpec: 8.x
+
+- script: npm i -g npm@6.9.0 --force
+  displayName: Use npm version 6.9.0
+
+# npm install
+- script: npm install
+  displayName: npm install
+
+# Build
+- script: node make.js build --task ArchiveFilesV2
+  displayName: Build
+
+# Stage tasks individually into the package directory
+- script: node ./ci/stage-package.js true individually
+  displayName: Stage tasks individually into the package directory
+
+# Sign all task zips as nuget packages
+- template: sign-all-tasks.yml
+  parameters:
+    layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+
+# Stage all the tasks into a single zip for upload
+- script: node ./ci/stage-package.js true
+  displayName: Stage all the tasks into a single zip for upload
+
+# Publish artifact
+- task: PublishBuildArtifacts@1
+  displayName: Publish package artifact
+  inputs:
+    pathToPublish: _package/tasks.zip
+    artifactName: package
+    publishLocation: container
+
+# # Test
+# - script: node make.js test
+#   displayName: Run tests
+# - script: node make.js testLegacy
+#   displayName: Legacy tests with node 6
