@@ -18,17 +18,12 @@ steps:
   displayName: npm install
 
 # Build
-- script: node make.js build --task ArchiveFilesV2
-  displayName: Build
+- script: node make.js build --task "@(ArchiveFilesV2|CopyFilesV2)"
+  displayName: Build tasks
 
 # Stage tasks individually into the package directory
 - script: node ./ci/stage-package.js true individually
   displayName: Stage tasks individually into the package directory
-
-# Sign all task zips as nuget packages
-- template: sign-all-tasks.yml
-  parameters:
-    layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
 # Stage all the tasks into a single zip for upload
 - script: node ./ci/stage-package.js true
