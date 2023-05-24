@@ -18,7 +18,7 @@ steps:
   displayName: npm install
 
 # Build
-- script: node make.js build --task "@(ArchiveFilesV2|CopyFilesV2)"
+- script: node make.js build
   displayName: Build tasks
 
 # Stage tasks individually into the package directory
