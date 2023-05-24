@@ -15,7 +15,7 @@
   "loc.input.help.azureResourceGroup": "請選取 Azure 資源群組。",
   "loc.input.label.kubernetesCluster": "Kubernetes 叢集",
   "loc.input.help.kubernetesCluster": "選取 Azure 受控叢集。",
-  "loc.input.label.useClusterAdmin": "Use cluster admin credentials",
+  "loc.input.label.useClusterAdmin": "使用叢集系統管理員認證",
   "loc.input.help.useClusterAdmin": "Use cluster administrator credentials instead of default cluster user credentials.",
   "loc.input.label.namespace": "命名空間",
   "loc.input.help.namespace": "使用 –namespace 旗標為命令設定命名空間。若未提供命名空間，這些命令會在預設命名空間中執行。",
