@@ -1,5 +1,7 @@
-steps:
+# This YAML is intended for building ALL tasks and publish them as an artifact 
+# to be used later for Tasks Deployment train
 
+steps:
 # Clean
 - checkout: self
   clean: true
@@ -18,7 +20,7 @@ steps:
   displayName: npm install
 
 # Build
-- script: node make.js build --task "@(ArchiveFilesV2|CopyFilesV2)"
+- script: node make.js build
   displayName: Build tasks
 
 # Stage tasks individually into the package directory
@@ -33,12 +35,6 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: Publish package artifact
   inputs:
-    pathToPublish: _package/tasks.zip
+    pathToPublish: _package/AllTasks.zip
     artifactName: package
     publishLocation: container
-
-# # Test
-# - script: node make.js test
-#   displayName: Run tests
-# - script: node make.js testLegacy
-#   displayName: Legacy tests with node 6
