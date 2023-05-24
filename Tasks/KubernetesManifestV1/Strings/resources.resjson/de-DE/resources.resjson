@@ -15,6 +15,8 @@
   "loc.input.help.azureResourceGroup": "Wählen Sie eine Azure-Ressourcengruppe aus.",
   "loc.input.label.kubernetesCluster": "Kubernetes-Cluster",
   "loc.input.help.kubernetesCluster": "Wählen Sie einen verwalteten Azure-Cluster aus.",
+  "loc.input.label.useClusterAdmin": "Anmeldeinformationen für Clusteradministrator verwenden",
+  "loc.input.help.useClusterAdmin": "Verwenden Sie anstelle der standardmäßigen Anmeldeinformationen für Clusterbenutzer Anmeldeinformationen für Clusteradministratoren.",
   "loc.input.label.namespace": "Namespace",
   "loc.input.help.namespace": "Legen Sie den Namespace für die Befehle fest, indem Sie das Flag „–namespace“ verwenden. Wenn kein Namespace angegeben wird, werden die Befehle im Standardnamespace ausgeführt.",
   "loc.input.label.strategy": "Strategie",

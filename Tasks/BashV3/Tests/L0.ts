@@ -34,6 +34,7 @@ describe('Bash Suite', function () {
 
     it('Runs a checked in script correctly', (done: Mocha.Done) => {
         delete process.env['AZP_BASHV3_OLD_SOURCE_BEHAVIOR'];
+        process.env['AZP_TASK_FF_BASHV3_ENABLE_SECURE_ARGS'] = 'false'
         let tp: string = path.join(__dirname, 'L0External.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -55,6 +56,7 @@ describe('Bash Suite', function () {
 
     it('Runs a checked in script correctly when using the old behavior', (done: Mocha.Done) => {
         process.env['AZP_BASHV3_OLD_SOURCE_BEHAVIOR'] = "true";
+        process.env['AZP_TASK_FF_BASHV3_ENABLE_SECURE_ARGS'] = 'false'
         let tp: string = path.join(__dirname, 'L0External.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -76,6 +78,7 @@ describe('Bash Suite', function () {
 
     it('Adds arguments to the script', (done: Mocha.Done) => {
         delete process.env['AZP_BASHV3_OLD_SOURCE_BEHAVIOR'];
+        process.env['AZP_TASK_FF_BASHV3_ENABLE_SECURE_ARGS'] = 'false'
         let tp: string = path.join(__dirname, 'L0Args.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 

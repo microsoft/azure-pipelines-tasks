@@ -140,3 +140,24 @@ steps:
         eq(variables['Build.SourceBranch'], 'refs/heads/master')
       )
     displayName: Push release branch
+
+  - powershell: |
+      # Build the release branch name
+      $currentSprint = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json)
+      $releaseBranch = "releases/m" + $currentSprint.sprint + "." + $(currentDate)
+
+      if ($currentSprint.week -eq 3) {
+        cd $(System.DefaultWorkingDirectory)/ci/ci-release-notes
+        npm install
+        node release-notes.js --token $(GitHubPAT) --version $currentSprint.sprint --releaseBranch $releaseBranch
+      } else {
+        echo "Skipping since release notes generating on week 3"
+      }
+    condition: |
+      and(
+        succeeded(),
+        in(variables['build.reason'], 'Schedule', 'Manual'),
+        eq(variables['COURTESY_PUSH'], 'true'),
+        eq(variables['Build.SourceBranch'], 'refs/heads/master')
+      )
+    displayName: Create Release
