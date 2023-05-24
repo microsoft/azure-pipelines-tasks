@@ -15,7 +15,7 @@
   "loc.input.help.azureResourceGroup": "Azure 리소스 그룹을 선택합니다.",
   "loc.input.label.kubernetesCluster": "Kubernetes 클러스터",
   "loc.input.help.kubernetesCluster": "Azure 관리 클러스터를 선택합니다.",
-  "loc.input.label.useClusterAdmin": "Use cluster admin credentials",
+  "loc.input.label.useClusterAdmin": "클러스터 관리자 자격 증명 사용",
   "loc.input.help.useClusterAdmin": "Use cluster administrator credentials instead of default cluster user credentials.",
   "loc.input.label.namespace": "네임스페이스",
   "loc.input.help.namespace": "–namespace 플래그를 사용하여 명령의 네임스페이스를 설정합니다. 네임스페이스를 지정하지 않으면 기본 네임스페이스에서 명령이 실행됩니다.",
