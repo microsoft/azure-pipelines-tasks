@@ -46,6 +46,7 @@
         "Info_KubeloginRelease": "Kubelogin release:     %s",
         "Info_KubeloginPlatform": "Kubelogin platform:    %s",
         "Info_KubeloginVersion": "Kubelogin version:     %s",
-        "Info_KubeloginReleaseURL": "Kubelogin release URL: %s"
+        "Info_KubeloginReleaseURL": "Kubelogin release URL: %s",
+        "ExtractionFailed": "Failed to extract package with error %s"
     }
 }

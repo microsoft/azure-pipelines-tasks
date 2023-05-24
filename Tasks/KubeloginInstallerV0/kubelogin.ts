@@ -2,7 +2,7 @@
 
 import taskLib = require('azure-pipelines-task-lib/task');
 import toolLib = require('azure-pipelines-tool-lib/tool');
-import path from 'path';
+import path = require('path');
 import { isLatestVersion, getLatestVersionTag, getKubeloginRelease, downloadKubeloginRelease, unzipRelease, getKubeloginPath, KubeloginRelease, Platform } from './utils';
 
 const TOOL_NAME: string = "Kubelogin";

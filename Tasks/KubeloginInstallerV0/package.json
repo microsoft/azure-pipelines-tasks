@@ -1,26 +1,37 @@
 {
-  "name": "kubeloginTask",
+  "name": "kubelogin-installer",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "kubelogin.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node ../../make.js build --task KubeloginInstallerV0",
+    "test": "node ../../make.js test --task KubeloginInstallerV0"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "keywords": [
+    "Azure",
+    "Pipelines",
+    "Tasks"
+  ],
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@octokit/rest": "^16.43.2",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^16.11.59",
+    "@types/q": "^1.0.7",
     "artifact-engine": "^1.2.0",
     "azure-pipelines-task-lib": "^4.3.1",
+    "azure-pipelines-tasks-utility-common": "^3.219.1",
     "azure-pipelines-tool-lib": "^2.0.4",
     "decompress-zip": "^0.3.3",
     "octokit": "^2.0.14"
   },
   "devDependencies": {
-    "@types/mocha": "^10.0.1",
-    "@types/node": "^18.16.3",
-    "@types/q": "^1.5.5",
-    "sync-request": "^6.1.0"
+    "typescript": "4.0.2"
   }
 }

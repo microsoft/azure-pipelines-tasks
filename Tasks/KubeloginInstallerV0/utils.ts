@@ -3,7 +3,7 @@
 import * as fs from 'fs';
 import * as os from 'os';
 
-import path from 'path';
+import path = require('path');
 
 import * as engine from 'artifact-engine/Engine';
 import * as providers from 'artifact-engine/Providers';
@@ -18,7 +18,7 @@ const octokit = new Octokit();
 
 const KUBELOGIN_REPO_OWNER = 'Azure';
 const KUBELOGIN_REPO = 'kubelogin';
-const agentTempDir = 'agent.tempDirectory';
+const AGENT_TEMP_DIR = 'agent.tempDirectory';
 
 export type Platform =
   | 'darwin-amd64'
@@ -27,8 +27,15 @@ export type Platform =
   | 'linux-arm64'
   | 'win-amd64';
   
+export interface KubeloginRelease {
+  readonly version: string;
+  readonly platform: Platform;
+  readonly name: string;
+  readonly releaseUrl: string;
+  readonly checksumUrl: string;
+}
 
-function resolvePlatform(): Platform {
+export function resolvePlatform(): Platform {
   const platform = process.platform;
   const arch = process.arch;
   if (platform === 'darwin' && arch === 'x64') {
@@ -46,14 +53,6 @@ function resolvePlatform(): Platform {
   }
 }
 
-export interface KubeloginRelease {
-  readonly version: string;
-  readonly platform: Platform;
-  readonly name: string;
-  readonly releaseUrl: string;
-  readonly checksumUrl: string;
-}
-
 export function isLatestVersion(version: string): boolean {
     const v = version.toLowerCase();
     return v === 'latest' || v === '*' || v === '';
@@ -67,7 +66,7 @@ export async function getLatestVersionTag(): Promise<string> {
   return tag_name;
 }
 
-export async function getKubeloginRelease(version: string, platform?: Platform): Promise<KubeloginRelease> {
+export async function getKubeloginRelease(version: string = 'latest', platform?: Platform): Promise<KubeloginRelease> {
   if (isLatestVersion(version)) {
     version = await getLatestVersionTag();
   }
@@ -81,22 +80,26 @@ export async function getKubeloginRelease(version: string, platform?: Platform):
   const releaseName = `kubelogin-${platform}.zip`;
   const sha256 = `${releaseName}.sha256`;
   
-  const response = await octokit.repos.getReleaseByTag({
-    owner: KUBELOGIN_REPO_OWNER,
-    repo: KUBELOGIN_REPO,
-    tag: version
-  });
-
-  const releaseUrl: string = response.data.assets.find(asset => { return asset.name.includes(releaseName); })?.browser_download_url || '';
-  const sha256Url: string = response.data.assets.find(asset => { return asset.name.includes(sha256); })?.browser_download_url || '';
-  
-  return {
-    version,
-    platform,
-    name: releaseName,
-    releaseUrl: releaseUrl,
-    checksumUrl: sha256Url,
-  };
+  try {
+    const response = await octokit.repos.getReleaseByTag({
+      owner: KUBELOGIN_REPO_OWNER,
+      repo: KUBELOGIN_REPO,
+      tag: version
+    });
+    const releaseUrl: string = response.data.assets.find(asset => { return asset.name.includes(releaseName); })?.browser_download_url || '';
+    const sha256Url: string = response.data.assets.find(asset => { return asset.name.includes(sha256); })?.browser_download_url || '';
+    
+    return {
+      version,
+      platform,
+      name: releaseName,
+      releaseUrl: releaseUrl,
+      checksumUrl: sha256Url,
+    };
+  }
+  catch(err){
+    throw Error(taskLib.loc('Err_VersionNotFound', version));
+  }
 }
 
 function getKubeloginDownloadPath(): string {
@@ -109,7 +112,7 @@ function getKubeloginDownloadPath(): string {
 }
 
 function getTempDirectory(): string {
-  return taskLib.getVariable(agentTempDir) || os.tmpdir();
+  return taskLib.getVariable(AGENT_TEMP_DIR) || os.tmpdir();
 }
 
 export async function downloadKubeloginRelease(release: KubeloginRelease) {
@@ -142,8 +145,13 @@ export async function downloadKubeloginRelease(release: KubeloginRelease) {
 }
 
 export async function unzipRelease(zipPath: string): Promise<string> {
+  if(!taskLib.exist(zipPath)) {
+    throw new Error("Path doesn't exist");
+  }
+
   const tempDir = getTempDirectory();
   var unzipPath = path.join(tempDir, KUBELOGIN_REPO + Date.now());
+
 	await new Promise<void>(function (resolve, reject) {
 		if (taskLib.exist(unzipPath)) {
 			taskLib.rmRF(unzipPath);
