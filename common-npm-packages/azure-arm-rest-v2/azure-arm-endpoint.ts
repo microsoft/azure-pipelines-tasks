@@ -13,7 +13,6 @@ tl.setResourcePath(path.join(__dirname, 'module.json'), true);
 export class AzureRMEndpoint {
     public endpoint: AzureEndpoint;
     private _connectedServiceName: string;
-    private applicationTokenCredentials: ApplicationTokenCredentials;
 
     // Add an entry here and separate function for each new environment
     private _environments = {

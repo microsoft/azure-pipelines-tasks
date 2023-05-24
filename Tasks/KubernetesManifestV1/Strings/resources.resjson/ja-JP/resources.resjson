@@ -15,7 +15,7 @@
   "loc.input.help.azureResourceGroup": "Azure リソース グループを選択します。",
   "loc.input.label.kubernetesCluster": "Kubernetes クラスター",
   "loc.input.help.kubernetesCluster": "Azure 管理対象クラスターを選択します。",
-  "loc.input.label.useClusterAdmin": "Use cluster admin credentials",
+  "loc.input.label.useClusterAdmin": "クラスター管理者の資格情報を使用する",
   "loc.input.help.useClusterAdmin": "Use cluster administrator credentials instead of default cluster user credentials.",
   "loc.input.label.namespace": "名前空間",
   "loc.input.help.namespace": "コマンドの名前空間を設定するには、–namespace フラグを使用します。名前空間が指定されていない場合、コマンドは既定の名前空間で実行されます。",
