@@ -234,15 +234,17 @@ export class ApplicationTokenCredentials {
         const agentProxyUsername: string = tl.getVariable("agent.proxyusername");
         const agentProxyPassword: string = tl.getVariable("agent.proxypassword");
 
-        const encodedProxyUsername = encodeURIComponent(agentProxyUsername);;
-        const encodedProxyPassword = encodeURIComponent(agentProxyPassword);
+        const encodedProxyUsername: string = agentProxyUsername ? encodeURIComponent(agentProxyUsername) : '';
+        const encodedProxyPassword: string = agentProxyPassword ? encodeURIComponent(agentProxyPassword) : '';
 
-        // basic auth
         if (agentProxyUsername) {
+            // basic auth
             proxyURL = `${agentProxyURL.protocol}//${encodedProxyUsername}:${encodedProxyPassword}@${agentProxyURL.host}`;
+            tl.debug(`MSAL - Proxy setup with auth is: ${agentProxyURL.protocol}//${encodedProxyUsername}:***@${agentProxyURL.host}`);
+        } else {
+            // no auth
+            tl.debug(`MSAL - Proxy setup with no-auth is: ${proxyURL}`);
         }
-
-        tl.debug(`MSAL - Proxy setup is: ${agentProxyURL.protocol}//${encodedProxyUsername}:***@${agentProxyURL.host}`);
 
         // direct usage of msalConfig.system.proxyUrl is not available at the moment due to the fact that Object.fromEntries requires >=Node12
         const proxyAgent = new HttpsProxyAgent(proxyURL);
