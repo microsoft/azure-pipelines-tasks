@@ -296,7 +296,17 @@ export class ApplicationTokenCredentials {
         // proxy usage
         const agentProxyURL = tl.getVariable("agent.proxyurl") ? new URL(tl.getVariable("agent.proxyurl")) : null;
         const agentProxyBypassHosts = tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null;
-        const shouldProxyBypass = agentProxyBypassHosts?.includes(new URL(authorityURL).host);
+        let shouldProxyBypass = false;
+
+        const authorityHost = new URL(authorityURL).host;
+        for(var i=0; agentProxyBypassHosts && i < agentProxyBypassHosts.length; i++) {
+            // same test logic with typed-rest-client
+            if(agentProxyBypassHosts[i] && new RegExp(agentProxyBypassHosts[i], 'i').test(authorityHost)) {
+                shouldProxyBypass = true;
+                break;
+            }
+        }
+
         if (agentProxyURL) {
             if (shouldProxyBypass) {
                 tl.debug(`MSAL - Proxy is set but will be bypassed for ${authorityURL}`);
