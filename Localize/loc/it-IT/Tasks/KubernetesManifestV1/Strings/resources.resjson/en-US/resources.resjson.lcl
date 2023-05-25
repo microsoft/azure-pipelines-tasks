@@ -346,6 +346,9 @@
       <Item ItemId=";loc.input.help.useClusterAdmin" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Use cluster administrator credentials instead of default cluster user credentials.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Consente di usare le credenziali dell'amministratore del cluster invece delle credenziali utente del cluster predefinite.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
