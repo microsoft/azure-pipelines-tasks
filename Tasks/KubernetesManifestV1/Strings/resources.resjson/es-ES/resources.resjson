@@ -16,7 +16,7 @@
   "loc.input.label.kubernetesCluster": "Clúster de Kubernetes",
   "loc.input.help.kubernetesCluster": "Seleccione un clúster de Azure administrado.",
   "loc.input.label.useClusterAdmin": "Usar credenciales de administrador del clúster",
-  "loc.input.help.useClusterAdmin": "Use las credenciales de administrador del clúster en lugar de las credenciales predeterminadas de usuario de clúster.",
+  "loc.input.help.useClusterAdmin": "Use las credenciales de administrador del clúster en lugar de las credenciales predeterminadas de usuario de clúster.",  
   "loc.input.label.namespace": "Nombres",
   "loc.input.help.namespace": "Establece el espacio de nombres para los comandos con la marca –namespace. Si no se proporciona el espacio de nombres, los comandos se ejecutan en el predeterminado.",
   "loc.input.label.strategy": "Estrategia",

@@ -29,7 +29,6 @@ export declare class Kudu {
     runCommand(physicalPath: string, command: string): Promise<void>;
     extractZIP(webPackage: string, physicalPath: string): Promise<void>;
     zipDeploy(webPackage: string, queryParameters?: Array<string>): Promise<any>;
-    validateZipDeploy(webPackage: string, queryParameters?: Array<string>): Promise<any>;
     warDeploy(webPackage: string, queryParameters?: Array<string>): Promise<any>;
     getDeploymentDetails(deploymentID: string): Promise<any>;
     getDeploymentLogs(log_url: string): Promise<any>;
