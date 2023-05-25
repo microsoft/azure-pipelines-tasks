@@ -27,6 +27,8 @@ Tasks/AzureCLIV2/      @rvairavelu @manolerazvan
 
 Tasks/AzureCloudPowerShellDeploymentV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
+Tasks/AzureCloudPowerShellDeploymentV2/    @vsebesta   @rvairavelu   @pipeline-environment-team
+
 Tasks/AzureContainerAppsV0/    @cormacpayne    @daniv-msft
 
 Tasks/AzureContainerAppsV1/    @cormacpayne    @daniv-msft
@@ -56,8 +58,6 @@ Tasks/AzureIoTEdgeV2/     @marianan   @tameraw    @pprovost
 Tasks/AzureKeyVaultV1/     @rvairavelu @manolerazvan
 
 Tasks/AzureKeyVaultV2/     @rvairavelu @manolerazvan
-
-Tasks/AzureMonitorAlertsV0/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
 Tasks/AzureMonitorV0/      @rvairavelu @manolerazvan
 

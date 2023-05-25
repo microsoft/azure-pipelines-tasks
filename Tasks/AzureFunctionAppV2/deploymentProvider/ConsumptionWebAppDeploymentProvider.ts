@@ -95,7 +95,7 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
                 let expiryDate = new Date(startDate);
                 expiryDate.setFullYear(startDate.getUTCFullYear() + 1);
                 startDate.setMinutes(startDate.getMinutes()-5);
-            
+
                 let sharedAccessPolicy = {
                     AccessPolicy: {
                         Permissions: azureStorage.BlobUtilities.SharedAccessPermissions.READ,
@@ -103,7 +103,7 @@ export class ConsumptionWebAppDeploymentProvider extends AzureRmWebAppDeployment
                         Expiry: expiryDate
                     }
                 };
-            
+
                 let token = blobService.generateSharedAccessSignature(containerName, blobName, sharedAccessPolicy);
                 let sasUrl = blobService.getUrl(containerName, blobName, token);
                 let index = sasUrl.indexOf("?");

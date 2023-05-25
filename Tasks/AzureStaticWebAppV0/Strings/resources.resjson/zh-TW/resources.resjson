@@ -34,5 +34,7 @@
   "loc.input.label.deployment_environment": "部署環境",
   "loc.input.help.deployment_environment": "要部署的目的地環境。實際執行環境請保留空白。優先於 實際執行分支",
   "loc.input.label.production_branch": "實際執行分支",
-  "loc.input.help.production_branch": "實際執行分支。當指定與部署環境為空白時，來自其他分支的部署會是預覽環境"
+  "loc.input.help.production_branch": "實際執行分支。當指定與部署環境為空白時，來自其他分支的部署會是預覽環境",
+  "loc.input.label.data_api_location": "資料 API 位置",
+  "loc.input.help.data_api_location": "資料 API 原始檔相對於工作目錄的目錄位置"
 }

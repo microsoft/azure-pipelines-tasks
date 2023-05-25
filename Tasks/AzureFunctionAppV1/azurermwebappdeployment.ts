@@ -29,7 +29,7 @@ async function main() {
         if(deploymentProvider != null) {
             await deploymentProvider.UpdateDeploymentStatus(isDeploymentSuccess);
         }
-        
+
         Endpoint.dispose();
         tl.debug(isDeploymentSuccess ? "Deployment Succeded" : "Deployment failed");
 

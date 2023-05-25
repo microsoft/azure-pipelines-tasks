@@ -30,7 +30,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     public async PreDeploymentStep() {
         this.appService = new AzureAppService(this.taskParams.azureEndpoint, this.taskParams.ResourceGroupName, this.taskParams.WebAppName,
             this.taskParams.SlotName, this.taskParams.WebAppKind);
-        this.appServiceUtility = new AzureAppServiceUtility(this.appService);
+        this.appServiceUtility = new AzureAppServiceUtility(this.appService, "AzureFunctionAppDeployment");
         this.appServiceUtilityExt = new AzureAppServiceUtilityExt(this.appService);
 
         this.kuduService = await this.appServiceUtility.getKuduService();
@@ -43,23 +43,25 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
         await addReleaseAnnotation(this.taskParams.azureEndpoint, this.appService, isDeploymentSuccess);
-        if(this.kuduServiceUtility) {
+        if (this.kuduServiceUtility) {
             this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
             tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
         }
-        
-        let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
-        console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
-        tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
+
+        if (this.appServiceUtility) {
+            let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
+            console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
+            tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
+        }
     }
 
     protected async PostDeploymentStep() {
-        if(this.taskParams.AppSettings) {
+        if (this.taskParams.AppSettings) {
             var customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
             await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
         }
 
-        if(this.taskParams.ConfigurationSettings) {
+        if (this.taskParams.ConfigurationSettings) {
             var customApplicationSettings = ParameterParser.parse(this.taskParams.ConfigurationSettings);
             await this.appService.updateConfigurationSettings(customApplicationSettings);
         }

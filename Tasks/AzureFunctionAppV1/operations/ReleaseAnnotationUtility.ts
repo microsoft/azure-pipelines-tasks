@@ -42,7 +42,7 @@ function getReleaseAnnotation(isDeploymentSuccess: boolean): {[key: string]: any
     else if (!!buildUri) {
         annotationName = `${tl.getVariable("Build.DefinitionName")} - ${tl.getVariable("Build.BuildNumber")}`;
     }
- 
+
     let releaseAnnotationProperties = {
         "Label": isDeploymentSuccess ? "Success" : "Error", // Label decides the icon for release annotation
         "Deployment Uri": getDeploymentUri(),
