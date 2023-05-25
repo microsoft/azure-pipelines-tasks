@@ -35,6 +35,6 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: Publish package artifact
   inputs:
-    pathToPublish: _package/AllTasks.zip
+    pathToPublish: _package/tasks.zip
     artifactName: package
     publishLocation: container
