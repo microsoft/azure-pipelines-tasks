@@ -1,6 +1,13 @@
 # This YAML is intended for building ALL tasks and publish them as an artifact 
 # to be used later for Tasks Deployment train
 
+parameters:
+- name: folder
+  displayName: Fodler Name
+  type: string
+  default: package
+
+
 steps:
 # Clean
 - checkout: self
@@ -23,14 +30,6 @@ steps:
 - script: node make.js build --task ArchiveFilesV2
   displayName: Build tasks
 
-# Clear built package after previous build
-- bash: ls
-
-- bash: |
-    ls
-    cd _build
-    ls
-    
 # Stage tasks individually into the package directory
 - script: node ./ci/stage-package.js true individually
   displayName: Stage tasks individually into the package directory
@@ -44,5 +43,5 @@ steps:
   displayName: Publish package artifact
   inputs:
     pathToPublish: _package/tasks.zip
-    artifactName: allTasksPackage
+    artifactName: ${{ parameters.task_name }}
     publishLocation: container
