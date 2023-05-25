@@ -4,6 +4,11 @@ import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
 var uuidV4 = require('uuid/v4');
 
+const featureFlags = {
+    enableTelemetry: getFeatureFlagValue('AZP_TASK_FF_BASHV3_ENABLE_INPUT_ARGS_TELEMETRY', true),
+    enableSecureArgs: getFeatureFlagValue('AZP_TASK_FF_BASHV3_ENABLE_SECURE_ARGS', true)
+}
+
 async function runBashPwd(bashPath: string, directoryPath: string): Promise<string> {
     let pwdOutput = '';
     const bashPwd = tl.tool(bashPath).arg('-c').arg('pwd');
