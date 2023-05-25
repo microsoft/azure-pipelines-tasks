@@ -73,7 +73,7 @@ async function main(): Promise<void> {
         let nuGetPath = tl.getPathInput("nuGetPath", false, false);
         let nugetUxOption = tl.getInput("nuGetversion");
         let userNuGetProvided = false;
-        if (nuGetPath !== null && tl.filePathSupplied("nuGetPath")) {
+        if (nuGetPath !== undefined && tl.filePathSupplied("nuGetPath")) {
             nuGetPath = nutil.stripLeadingAndTrailingQuotes(nuGetPath);
             userNuGetProvided = true;
             if (nugetUxOption !== "custom")

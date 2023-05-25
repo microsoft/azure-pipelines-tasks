@@ -1,7 +1,7 @@
 "use strict";
 
 import Q = require('q');
-import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
+import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
 
 export function run(connection: ContainerConnection): any {
     var defer = Q.defer<any>();

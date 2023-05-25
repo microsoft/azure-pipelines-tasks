@@ -27,7 +27,7 @@
   "loc.input.label.EnvironmentNameRM": "Ressourcengruppe",
   "loc.input.help.EnvironmentNameRM": "Der Name der Zielressourcengruppe, in die Dateien kopiert werden sollen.",
   "loc.input.label.ResourceFilteringMethod": "Computer auswählen nach",
-  "loc.input.help.ResourceFilteringMethod": "Wählen Sie optional eine Teilmenge der virtuellen Maschinen in der Ressourcengruppe durch Angeben des Hostnamens oder der Tags der virtuellen Maschinen aus. [Tags](\"https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/\") werden nur für Ressourcen unterstützt, die über den Azure Resource Manager erstellt wurden.",
+  "loc.input.help.ResourceFilteringMethod": "Wählen Sie optional eine Teilmenge der virtuellen Maschinen in der Ressourcengruppe durch Angeben des Hostnamens oder der Tags der virtuellen Maschinen aus. [Tags](https://learn.microsoft.com/en-us/azure/virtual-machines/tag-template/) werden nur für Ressourcen unterstützt, die über den Azure Resource Manager erstellt werden.",
   "loc.input.label.MachineNames": "Filterkriterien",
   "loc.input.help.MachineNames": "Stellen Sie eine Liste der VM-Hostnamen (z. B. \"ffweb\", \"ffdb\") oder Tags (z. B. \"Role:DB\", \"Web; OS:Win8.1\" bereit. Beachten Sie, dass die für Tags verwendeten Trennzeichen \"&#44;\" (Komma), \"&#58;\" (Doppelpunkt) und \"&#59;\" (Semikolon) sind. Wenn mehrere Tags angegeben werden, wird der Task auf allen virtuellen Maschinen mit den angegebenen Tags ausgeführt. Standardmäßig wird der Task auf allen virtuellen Maschinen ausgeführt.",
   "loc.input.label.vmsAdminUserName": "Administratoranmeldung",
@@ -97,5 +97,6 @@
   "loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode": "\"AzCopy.exe\" wurde mit einem Exitcode ungleich null beendet, während Dateien in den Blobspeicher hochgeladen wurden.",
   "loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey": "Der Speicherkontoschlüssel konnte nicht abgerufen werden. Fehler: {0}",
   "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Deinstallieren Sie das benutzerdefinierte WinRM-Skript manuell, und wiederholen Sie die Bereitstellung.",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "Zusätzliche Argumente dürfen nicht die Trennzeichen „&“, „;“ und „|“ enthalten. Überprüfen Sie die Eingabe. Weitere Informationen zur Argumentüberprüfung finden Sie unter: https://aka.ms/azdo-task-argument-validation",
   "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist."
 }

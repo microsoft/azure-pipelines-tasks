@@ -3,10 +3,13 @@
   "loc.helpMarkDown": "",
   "loc.description": "Sicherheits- und Konformitätsbewertung für Azure Policy",
   "loc.instanceNameFormat": "Richtlinienkonformität überprüfen",
+  "loc.group.displayName.advancedOptions": "Erweitert",
   "loc.input.label.ConnectedServiceName": "Azure-Abonnement",
   "loc.input.help.ConnectedServiceName": "Wählen Sie das Azure Resource Manager-Abonnement zum Erzwingen der Richtlinien aus.",
   "loc.input.label.ResourceGroupName": "Ressourcengruppe",
   "loc.input.help.ResourceGroupName": "Geben Sie den Namen einer Ressourcengruppe an.",
   "loc.input.label.Resources": "Ressourcenname",
-  "loc.input.help.Resources": "Wählen Sie den Namen der Azure-Ressourcen aus, für die Sie die Richtlinienkonformität überprüfen möchten."
+  "loc.input.help.Resources": "Wählen Sie den Namen der Azure-Ressourcen aus, für die Sie die Richtlinienkonformität überprüfen möchten.",
+  "loc.input.label.RetryDuration": "Wiederholungsdauer",
+  "loc.input.help.RetryDuration": "Definiert den Zeitraum, für den der Task wartet, bis er erneut versucht, die Azure-API aufzurufen, falls der vorherige Antwortcode „Akzeptiert“ lautet. Der Mindestzeitraum beträgt 2 Minuten."
 }

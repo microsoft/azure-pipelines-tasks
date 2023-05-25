@@ -26,7 +26,7 @@
   "loc.input.label.EnvironmentNameRM": "Gruppo di risorse",
   "loc.input.help.EnvironmentNameRM": "Nome del gruppo di risorse di destinazione in cui copiare i file.",
   "loc.input.label.ResourceFilteringMethod": "Seleziona computer per",
-  "loc.input.help.ResourceFilteringMethod": "Facoltativamente, selezionare un sottoinsieme di macchine virtuali nel gruppo di risorse specificando il nome host o i tag delle macchine virtuali. I [tag](https://azure.microsoft.com/it-it/documentation/articles/virtual-machines-tagging-arm/) sono supportati solo per le risorse create tramite Azure Resource Manager.",
+  "loc.input.help.ResourceFilteringMethod": "Facoltativamente, selezionare un sottoinsieme di macchine virtuali nel gruppo di risorse specificando il nome host o i tag delle macchine virtuali. I [tag](https://learn.microsoft.com/it-it/azure/virtual-machines/tag-template/) sono supportati solo per le risorse create tramite Azure Resource Manager.",
   "loc.input.label.MachineNames": "Criteri di filtro",
   "loc.input.help.MachineNames": "Consente di specificare un elenco di nomi host di macchine virtuali, come ffweb, ffdb o tag come Role:DB, Web; OS:Win8.1. Nota: i delimitatori usati per i tag sono &#44;(virgola), &#58;(due punti) e &#59;(punto e virgola). Se si specificano più tag, l'attività verrà eseguita in tutte le macchine virtuali con i tag specificati. Per impostazione predefinita, l'attività viene eseguita in tutte le macchine virtuali.",
   "loc.input.label.vmsAdminUserName": "Account di accesso amministratore",
@@ -91,5 +91,6 @@
   "loc.messages.AFC_RootContainerAndDirectory": "L'opzione '/S' non è valida per i contenitori $root.",
   "loc.messages.AFC_RedirectResponseInvalidStatusCode": "Il codice di risposta HTTP '{0}' non è un codice di stato di reindirizzamento valido",
   "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "Intestazione del percorso della risposta di reindirizzamento è Null.",
-  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Disinstallare manualmente lo script personalizzato di WinRM e ripetere la distribuzione."
+  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Disinstallare manualmente lo script personalizzato di WinRM e ripetere la distribuzione.",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "Gli argomenti aggiuntivi non possono includere caratteri separatori '&', ';' e '|'. Verifica l'input. Per altre informazioni sulla convalida degli argomenti, controllare https://aka.ms/azdo-task-argument-validation"
 }

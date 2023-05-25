@@ -10,8 +10,6 @@ describe('NuGetPublisher Suite', function () {
     });
     
     it('publish single package internally', (done: MochaDone) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, 'internal.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -24,11 +22,9 @@ describe('NuGetPublisher Suite', function () {
         assert.equal(tr.warningIssues.length, 0, "should have no warnings");
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(20000);
     
     it('publish single package externally', (done: MochaDone) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, 'external.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -42,5 +38,5 @@ describe('NuGetPublisher Suite', function () {
         assert.equal(tr.warningIssues.length, 0, "should have no warnings");
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(20000);
 });

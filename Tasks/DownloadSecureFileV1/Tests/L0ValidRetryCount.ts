@@ -1,7 +1,6 @@
 import * as ma from 'azure-pipelines-task-lib/mock-answer';
 import * as tmrm from 'azure-pipelines-task-lib/mock-run';
 import path = require('path');
-import fs = require('fs');
 
 let taskPath = path.join(__dirname, '..', 'predownloadsecurefile.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -14,11 +13,6 @@ process.env['HOME'] = '/users/test';
 
 let secureFileHelperMock = require('azure-pipelines-tasks-securefiles-common/securefiles-common-mock');
 tr.registerMock('azure-pipelines-tasks-securefiles-common/securefiles-common', secureFileHelperMock);
-
-tr.registerMock('fs', {
-    writeFileSync: function (filePath, contents) {
-    }
-});
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{

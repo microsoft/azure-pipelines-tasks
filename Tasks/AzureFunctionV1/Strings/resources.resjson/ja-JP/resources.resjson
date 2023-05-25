@@ -17,7 +17,7 @@
   "loc.input.label.body": "本文",
   "loc.input.help.body": "要求の JSON 形式のメッセージ本文です。",
   "loc.input.label.waitForCompletion": "完了イベント",
-  "loc.input.help.waitForCompletion": "既定値は \"Callback\"。使用可能な値: \"ApiResponse\"、\"Callback\" 呼び出し (タイムライン レコードを更新するために Azure の関数をコールバックする場合)。",
+  "loc.input.help.waitForCompletion": "既定値は \"ApiResponse\"。使用可能な値: \"ApiResponse\"、\"Callback\" 呼び出し (タイムライン レコードを更新するために Azure の関数をコールバックする場合)。",
   "loc.input.label.successCriteria": "成功の条件",
   "loc.input.help.successCriteria": "タスクを渡す場合を定義する条件。条件を指定しない場合は、応答コンテンツは結果に影響しないことを意味します。例: 応答 {\"status\" : \"successful\"} に対して、式は eq(root['status'], 'successful') になります。[詳細情報](https://go.microsoft.com/fwlink/?linkid=842996)"
 }

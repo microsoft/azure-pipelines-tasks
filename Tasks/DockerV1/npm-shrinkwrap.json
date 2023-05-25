@@ -100,10 +100,10 @@
         }
       }
     },
-    "azure-pipelines-tasks-docker-common-v2": {
+    "azure-pipelines-tasks-docker-common": {
       "version": "2.198.1",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-docker-common-v2/-/azure-pipelines-tasks-docker-common-v2-2.198.1.tgz",
-      "integrity": "sha512-K7Ivf+5+qtsMNv/L+PPbSAEZKVhCb/8ffhKH0Oa5s5a0EI7oAwOjmuCKo6N/2N4pIOcQ/ilnqz0Ui+r39XEkQg==",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-docker-common/-/azure-pipelines-tasks-docker-common-2.198.1.tgz",
+      "integrity": "sha512-lgN/sNVhxVxnIM1HoUy8BO8A7idw1ypICBmdPOJUdw21Oy+7cplWfTnygFLPvGSFCN3VnSJFbzBe8LewcWplow==",
       "requires": {
         "@types/mocha": "^5.2.7",
         "@types/node": "^10.17.0",
@@ -125,12 +125,12 @@
           "integrity": "sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug=="
         },
         "azure-pipelines-task-lib": {
-          "version": "3.3.1",
-          "resolved": "https://registry.npmjs.org/azure-pipelines-task-lib/-/azure-pipelines-task-lib-3.3.1.tgz",
-          "integrity": "sha512-56ZAr4MHIoa24VNVuwPL4iUQ5MKaigPoYXkBG8E8fiVmh8yZdatUo25meNoQwg77vDY22F63Q44UzXoMWmy7ag==",
+          "version": "3.4.0",
+          "resolved": "https://registry.npmjs.org/azure-pipelines-task-lib/-/azure-pipelines-task-lib-3.4.0.tgz",
+          "integrity": "sha512-3eC4OTFw+7xD7A2aUhxR/j+jRlTI+vVfS0CGxt1pCLs4c/KmY0tQWgbqjD3157kmiucWxELBvgZHaD2gCBe9fg==",
           "requires": {
             "minimatch": "3.0.5",
-            "mockery": "^1.7.0",
+            "mockery": "^2.1.0",
             "q": "^1.5.1",
             "semver": "^5.1.0",
             "shelljs": "^0.8.5",
@@ -152,6 +152,11 @@
           "requires": {
             "brace-expansion": "^1.1.7"
           }
+        },
+        "mockery": {
+          "version": "2.1.0",
+          "resolved": "https://registry.npmjs.org/mockery/-/mockery-2.1.0.tgz",
+          "integrity": "sha512-9VkOmxKlWXoDO/h1jDZaS4lH33aWfRiJiNT/tKj+8OGzrcFDLo8d0syGdbsc3Bc4GvRXPb+NMMvojotmuGJTvA=="
         },
         "q": {
           "version": "1.4.1",

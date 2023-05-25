@@ -1,0 +1,18 @@
+{
+  "private": "true",
+  "main": "index.js",
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "scripts": {
+    "build": "node ../../make.js build --task NodeTaskRunnerInstallerV0",
+    "test": "node ../../make.js test --task NodeTaskRunnerInstallerV0"
+  },
+  "dependencies": {
+    "@types/node": "^16.18.11",
+    "azure-pipelines-task-lib": "^4.2.0",
+    "azure-pipelines-tool-lib": "^2.0.0-preview"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
+  }
+}
