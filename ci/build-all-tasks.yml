@@ -36,5 +36,5 @@ steps:
   displayName: Publish package artifact
   inputs:
     pathToPublish: _package/tasks.zip
-    artifactName: package
+    artifactName: allTasks
     publishLocation: container
