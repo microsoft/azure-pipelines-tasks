@@ -43,5 +43,5 @@ steps:
   displayName: Publish package artifact
   inputs:
     pathToPublish: _package/tasks.zip
-    artifactName: ${{ parameters.task_name }}
+    artifactName: ${{ parameters.folder }}
     publishLocation: container
