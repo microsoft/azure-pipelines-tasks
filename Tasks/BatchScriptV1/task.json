@@ -81,7 +81,8 @@
             "target": "$(filename)",
             "argumentFormat": "$(arguments)",
             "workingDirectory": "$(workingFolder)",
-            "modifyEnvironment": "$(modifyEnvironment)"
+            "modifyEnvironment": "$(modifyEnvironment)",
+            "availableInlineExecution": true
         }
     }
 }
