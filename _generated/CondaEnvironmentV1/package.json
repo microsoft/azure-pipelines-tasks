@@ -1,0 +1,29 @@
+{
+  "name": "conda-environment",
+  "version": "1.0.0",
+  "description": "Create and activate a Conda environment.",
+  "main": "conda.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/node": "^10.17.0",
+    "@types/mocha": "^5.2.7",
+    "@types/uuid": "^8.3.0",
+    "@types/q": "^1.5.0",
+    "azure-pipelines-task-lib": "^3.1.7"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
+  }
+}
