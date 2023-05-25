@@ -346,6 +346,9 @@
       <Item ItemId=";loc.input.help.useClusterAdmin" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Use cluster administrator credentials instead of default cluster user credentials.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[使用叢集系統管理員認證而非預設叢集使用者認證。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
