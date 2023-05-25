@@ -23,6 +23,14 @@ steps:
 - script: node make.js build --task ArchiveFilesV2
   displayName: Build tasks
 
+# Clear built package after previous build
+- bash: ls
+
+- bash: |
+    ls
+    cd _build
+    ls
+    
 # Stage tasks individually into the package directory
 - script: node ./ci/stage-package.js true individually
   displayName: Stage tasks individually into the package directory
@@ -36,5 +44,5 @@ steps:
   displayName: Publish package artifact
   inputs:
     pathToPublish: _package/tasks.zip
-    artifactName: allTasks
+    artifactName: allTasksPackage
     publishLocation: container
