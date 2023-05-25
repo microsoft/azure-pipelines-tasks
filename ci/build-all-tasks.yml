@@ -3,9 +3,13 @@
 
 parameters:
 - name: folder
-  displayName: Fodler Name
+  displayName: Folder Name
   type: string
   default: package
+- name: task
+  displayName: Task Name
+  type: string
+  default: ArchiveFilesV2
 
 
 steps:
@@ -27,7 +31,7 @@ steps:
   displayName: npm install
 
 # Build
-- script: node make.js build --task ArchiveFilesV2
+- script: node make.js build --task ${{ parameters.task }}
   displayName: Build tasks
 
 # Stage tasks individually into the package directory

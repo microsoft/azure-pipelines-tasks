@@ -18,14 +18,4 @@ jobs:
   - template: ci/build-all-tasks.yml
     parameters:
       folder: package2
-
-- job: build_all_windows3
-  dependsOn: build_all_windows2
-  displayName: Build all tasks (Windows)
-  timeoutInMinutes: 180
-  pool:
-    vmImage: windows-2022
-  steps:
-  - template: ci/build-all-tasks.yml
-    parameters:
-      folder: package3
+      task: CopyFilesV2
