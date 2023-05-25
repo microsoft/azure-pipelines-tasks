@@ -21,12 +21,12 @@
     "@types/node": "^10.17.0",
     "@types/q": "1.0.7",
     "azure-pipelines-task-lib": "^3.4.0",
-    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.223.3",
-    "azure-pipelines-tasks-webdeployment-common": "^4.222.0",
+    "azure-pipelines-tasks-azure-arm-rest-v2": "^3.221.3",
+    "azure-pipelines-tasks-webdeployment-common": "4.208.0",
     "moment": "^2.29.4",
     "q": "1.4.1",
     "uuid": "3.1.0",
-    "xml2js": "^0.5.0"
+    "xml2js": "0.4.13"
   },
   "devDependencies": {
     "typescript": "4.0.2"
