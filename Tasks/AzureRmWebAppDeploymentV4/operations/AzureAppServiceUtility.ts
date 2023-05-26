@@ -5,7 +5,9 @@ var parseString = require('xml2js').parseString;
 import Q = require('q');
 import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
 import { AzureDeployPackageArtifactAlias } from './Constants';
+import { AzureAppServiceUtility as AzureAppServiceUtilityCommon } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureAppServiceUtility';
 
+//todo replace this class with azure-arm-rest-v2/azureAppServiceUtility
 export class AzureAppServiceUtility {
     private _appService: AzureAppService;
     constructor(appService: AzureAppService) {
@@ -119,13 +121,10 @@ export class AzureAppServiceUtility {
     }
 
     public async getKuduService(): Promise<Kudu> {
-        var publishingCredentials = await this._appService.getPublishingCredentials();
-        if(publishingCredentials.properties["scmUri"]) {
-            tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._appService.getSlot()}_PASSWORD`, publishingCredentials.properties["publishingPassword"], true);
-            return new Kudu(publishingCredentials.properties["scmUri"], publishingCredentials.properties["publishingUserName"], publishingCredentials.properties["publishingPassword"]);
-        }
+        
+        const utility = new AzureAppServiceUtilityCommon(this._appService);
+        return await utility.getKuduService();
 
-        throw Error(tl.loc('KuduSCMDetailsAreEmpty'));
     }
 
     public async getPhysicalPath(virtualApplication: string): Promise<string> {

@@ -71,6 +71,7 @@
   "loc.messages.RequestedURLforkuduphysicalpath": "Angeforderte URL für physischen Kudu-Pfad: %s",
   "loc.messages.Physicalpathalreadyexists": "Der physische Pfad \"%s\" ist bereits vorhanden.",
   "loc.messages.KuduPhysicalpathCreatedSuccessfully": "Der physische Kudu-Pfad wurde erfolgreich erstellt: %s",
+  "loc.messages.KuduStackTraceURL": "Überprüfen Sie zum weiteren Debuggen die URL für die Kudu-Stapelüberwachung: %s",
   "loc.messages.FailedtocreateKuduPhysicalPath": "Fehler beim Erstellen des physischen Kudu-Pfads. Fehler: %s",
   "loc.messages.FailedtocheckphysicalPath": "Fehler beim Überprüfen des physischen Kudu-Pfads. Fehlercode: %s",
   "loc.messages.VirtualApplicationDoesNotExist": "Die virtuelle Anwendung ist nicht vorhanden: %s",

@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Azure Functions Core Tools のインストール",
+  "loc.helpMarkDown": "[このタスクの詳細を表示](https://aka.ms/func-tools-installer)",
+  "loc.description": "Azure Functions Core Tools をインストールします",
+  "loc.instanceNameFormat": "関数ツールのインストール - $(version)",
+  "loc.input.label.version": "バージョン",
+  "loc.input.help.version": "インストールする Azure Func Tools のバージョンを指定します。例: <br> <br>2.7.1575<br>v2.7.1575<br>latest",
+  "loc.messages.ErrorFetchingLatestVersion": "%s から最新バージョンの情報をフェッチする際にエラーが発生しました。エラー: %s。既定の安定バージョン (%s) をダウンロードしています。",
+  "loc.messages.FindingLatestFuncToolsVersion": "最新の関数ツール バージョンを検索しています...",
+  "loc.messages.FuncDownloadFailed": "場所 %s から関数ツールをダウンロードできませんでした。エラー %s。",
+  "loc.messages.LatestFuncToolsVersion": "最新バージョンは %s です",
+  "loc.messages.NotAValidSemverVersion": "指定されたバージョンの形式が正しくありません。例: 2.7.1575、v2.7.1575、latest",
+  "loc.messages.SuccessfullyDownloaded": "関数ツール %s が正常にダウンロードされました。ダウンロード パス: %s。",
+  "loc.messages.VerifyingFuncToolsInstallation": "関数ツールのインストールを確認しています...",
+  "loc.messages.VersionAlreadyInstalled": "関数ツール バージョン %s は既にインストールされています。インストール パス: %s。"
+}

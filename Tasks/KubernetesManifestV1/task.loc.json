@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 219,
-    "Patch": 0
+    "Minor": 223,
+    "Patch": 1
   },
   "demands": [],
   "groups": [],
@@ -96,6 +96,14 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "useClusterAdmin",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useClusterAdmin",
+      "defaultValue": "false",
+      "visibleRule": "connectionType = azureResourceManager",
+      "helpMarkDown": "ms-resource:loc.input.help.useClusterAdmin"
     },
     {
       "name": "namespace",

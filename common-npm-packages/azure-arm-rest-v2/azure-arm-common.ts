@@ -234,12 +234,17 @@ export class ApplicationTokenCredentials {
         const agentProxyUsername: string = tl.getVariable("agent.proxyusername");
         const agentProxyPassword: string = tl.getVariable("agent.proxypassword");
 
-        // basic auth
-        if (agentProxyUsername) {
-            proxyURL = `${agentProxyURL.protocol}//${agentProxyUsername}:${agentProxyPassword}@${agentProxyURL.host}`;
-        }
+        const encodedProxyUsername: string = agentProxyUsername ? encodeURIComponent(agentProxyUsername) : '';
+        const encodedProxyPassword: string = agentProxyPassword ? encodeURIComponent(agentProxyPassword) : '';
 
-        tl.debug(`MSAL - Proxy setup is: ${proxyURL}`);
+        if (agentProxyUsername) {
+            // basic auth
+            proxyURL = `${agentProxyURL.protocol}//${encodedProxyUsername}:${encodedProxyPassword}@${agentProxyURL.host}`;
+            tl.debug(`MSAL - Proxy setup with auth is: ${agentProxyURL.protocol}//${encodedProxyUsername}:***@${agentProxyURL.host}`);
+        } else {
+            // no auth
+            tl.debug(`MSAL - Proxy setup with no-auth is: ${proxyURL}`);
+        }
 
         // direct usage of msalConfig.system.proxyUrl is not available at the moment due to the fact that Object.fromEntries requires >=Node12
         const proxyAgent = new HttpsProxyAgent(proxyURL);
@@ -290,8 +295,14 @@ export class ApplicationTokenCredentials {
 
         // proxy usage
         const agentProxyURL = tl.getVariable("agent.proxyurl") ? new URL(tl.getVariable("agent.proxyurl")) : null;
-        const agentProxyBypassHosts = tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null;
-        const shouldProxyBypass = agentProxyBypassHosts?.includes(new URL(authorityURL).host);
+        const agentProxyBypassHosts = tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : [];
+
+        const authorityHost = new URL(authorityURL).host;
+
+        // same test logic is applied as typed-rest-client
+        const bypassChecker = (elem) => elem && new RegExp(elem, 'i').test(authorityHost);
+        const shouldProxyBypass = agentProxyBypassHosts.some(bypassChecker);
+
         if (agentProxyURL) {
             if (shouldProxyBypass) {
                 tl.debug(`MSAL - Proxy is set but will be bypassed for ${authorityURL}`);
@@ -416,14 +427,17 @@ export class ApplicationTokenCredentials {
         if (!serviceConnectionId) {
             serviceConnectionId = tl.getInput("ConnectedServiceName", false);
             if (!serviceConnectionId) {
-                throw new Error(tl.loc("serviceConnectionIdCannotBeEmpty"));
+                serviceConnectionId = tl.getInput("azureSubscription", false);
+                if (!serviceConnectionId) {
+                    throw new Error(tl.loc("serviceConnectionIdCannotBeEmpty"));
+                }
             }
         }
         const projectId: string = tl.getVariable("System.TeamProjectId");
         const hub: string = tl.getVariable("System.HostType");
         const planId: string = tl.getVariable('System.PlanId');
         const jobId: string = tl.getVariable('System.JobId');
-        const uri = tl.getVariable("System.TeamFoundationCollectionUri");
+        const uri = tl.getVariable("System.CollectionUri");
 
         const token = ApplicationTokenCredentials.getSystemAccessToken();
         const authHandler = getHandlerFromToken(token);
