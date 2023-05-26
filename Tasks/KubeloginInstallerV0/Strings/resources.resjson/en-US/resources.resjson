@@ -7,6 +7,7 @@
   "loc.input.help.kubeloginVersion": "The version of kubelogin to use",
   "loc.messages.NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
   "loc.messages.VerifyKubeloginInstallation": "Verifying kubelogin installation...",
+  "loc.messages.Err_VersionNotFound": "Kubelogin version %s was not found",
   "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
   "loc.messages.Info_UsingToolPath": "Using tool path: %s",
   "loc.messages.Info_UsingVersion": "Using version: %s",
@@ -16,8 +17,7 @@
   "loc.messages.Info_KubeloginPlatform": "Kubelogin platform:    %s",
   "loc.messages.Info_KubeloginVersion": "Kubelogin version:     %s",
   "loc.messages.Info_KubeloginReleaseURL": "Kubelogin release URL: %s",
-  "loc.messages.ExtractionFailed": "Failed to extract package with error %s",
-  "loc.messages.SucceedMsg": "successfully installed kubelogin version %s",
   "loc.messages.Info_DownloadingFailed": "Failed to download kubelogin to %s",
-  "loc.messages.NotAValidSemverVersion": "Kubelogin version %s was not found"
+  "loc.messages.ExtractionFailed": "Failed to extract package with error %s",
+  "loc.messages.SucceedMsg": "successfully installed kubelogin version %s"
 }

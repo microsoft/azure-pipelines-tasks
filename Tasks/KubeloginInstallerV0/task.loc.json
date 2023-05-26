@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 23
+    "Minor": 223,
+    "Patch": 0
   },
   "demands": [],
   "satisfies": [
@@ -38,6 +38,7 @@
   "messages": {
     "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
     "VerifyKubeloginInstallation": "ms-resource:loc.messages.VerifyKubeloginInstallation",
+    "Err_VersionNotFound": "ms-resource:loc.messages.Err_VersionNotFound",
     "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
     "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
     "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
@@ -47,8 +48,8 @@
     "Info_KubeloginPlatform": "ms-resource:loc.messages.Info_KubeloginPlatform",
     "Info_KubeloginVersion": "ms-resource:loc.messages.Info_KubeloginVersion",
     "Info_KubeloginReleaseURL": "ms-resource:loc.messages.Info_KubeloginReleaseURL",
+    "Info_DownloadingFailed": "ms-resource:loc.messages.Info_DownloadingFailed",
     "ExtractionFailed": "ms-resource:loc.messages.ExtractionFailed",
-    "SucceedMsg": "ms-resource:loc.messages.SucceedMsg",
-    "Info_DownloadingFailed": "loc.messages.Info_DownloadingFailed"
+    "SucceedMsg": "ms-resource:loc.messages.SucceedMsg"
   }
 }
