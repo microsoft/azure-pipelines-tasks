@@ -122,6 +122,7 @@
         "JenkinsDownloadArtifactsV1",
         "JenkinsQueueJobV2",
         "KubectlInstallerV0",
+        "KubeloginInstallerV0",
         "KubernetesV0",
         "KubernetesV1",
         "KubernetesManifestV0",
