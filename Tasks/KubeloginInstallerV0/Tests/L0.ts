@@ -2,10 +2,11 @@ import path = require('path');
 import * as assert from 'assert';
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import tmrm = require('azure-pipelines-task-lib/mock-run');
 import { TestString } from './TestStrings';
 
 describe('TestUtils', function () {
-  it('test unzip a release', (done: Mocha.Done) => {
+  it('should unzip a release', (done: Mocha.Done) => {
     const taskPath = path.join(__dirname, 'UnzipL0Tests.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
 
@@ -18,7 +19,31 @@ describe('TestUtils', function () {
     done();
   }).timeout(20000);
 
-  it('test resolve platform', (done: Mocha.Done) => {
+  
+  it('should get a release', (done: Mocha.Done) => {
+    const taskPath = path.join(__dirname, 'GetKubeloginReleaseL0Tests.js');
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
+
+    tr.run();
+
+    assert(tr.stdOutContained(TestString.Found0_0_29           ), 'should have printed: ' + TestString.Found0_0_29           );
+    assert(tr.stdOutContained(TestString.PlatformCorrect0_0_29 ), 'should have printed: ' + TestString.PlatformCorrect0_0_29 );
+    assert(tr.stdOutContained(TestString.ReleaseUrlValid0_0_29 ), 'should have printed: ' + TestString.ReleaseUrlValid0_0_29 );
+    assert(tr.stdOutContained(TestString.CheckSumValid0_0_29   ), 'should have printed: ' + TestString.CheckSumValid0_0_29   );
+    assert(tr.stdOutContained(TestString.Foundv0_0_29          ), 'should have printed: ' + TestString.Foundv0_0_29          );
+    assert(tr.stdOutContained(TestString.PlatformCorrectv0_0_29), 'should have printed: ' + TestString.PlatformCorrectv0_0_29);
+    assert(tr.stdOutContained(TestString.ReleaseUrlValidv0_0_29), 'should have printed: ' + TestString.ReleaseUrlValidv0_0_29);
+    assert(tr.stdOutContained(TestString.CheckSumValidv0_0_29  ), 'should have printed: ' + TestString.CheckSumValidv0_0_29  );
+    assert(tr.stdOutContained(TestString.Foundlatest           ), 'should have printed: ' + TestString.Foundlatest           );
+    assert(tr.stdOutContained(TestString.PlatformCorrectlatest ), 'should have printed: ' + TestString.PlatformCorrectlatest );
+    assert(tr.stdOutContained(TestString.ReleaseUrlValidlatest ), 'should have printed: ' + TestString.ReleaseUrlValidlatest );
+    assert(tr.stdOutContained(TestString.CheckSumValidlatest   ), 'should have printed: ' + TestString.CheckSumValidlatest   );
+    assert(tr.stdOutContained(TestString.NotFound123_1323      ), 'should have printed: ' + TestString.NotFound123_1323      );
+
+    done();
+  }).timeout(20000);
+
+  it('should resolve a platform', (done: Mocha.Done) => {
     const taskPath = path.join(__dirname, 'ResolvePlatformL0Tests.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
 
@@ -33,13 +58,34 @@ describe('TestUtils', function () {
 
     done();
   }).timeout(20000);
+  
+  
+  it('should download a release', (done: Mocha.Done) => {
+    const taskPath = path.join(__dirname, 'DownloadKubeloginReleaseL0Tests.js');
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
+    tr.run();
+    assert(tr.stdOutContained("kubelogin downloaded successfully"), 'should have printed: ' + "kubelogin downloaded successfully");
+    done();
+  }).timeout(20000);
 
-  // it('should handle invalid zip file paths gracefully', async () => {
-  //   const invalidZipPath = '/path/to/nonexistent.zip';
-  //   await expect(unzipRelease(invalidZipPath)).rejects.toThrow();
-  //   // Add additional assertions if needed
-  // });
+  it('should run successfully when installing Kublogin', function () {
 
-  // Add more test cases as needed to cover different scenarios
+    const testPath: string = path.join(__dirname, 'InstallKubeloginL0Tests.js');
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
 
+    tr.run();
+
+    assert(tr.succeeded, 'task should have succeeded.');
+  }).timeout(20000);
+
+  it('should fail when downloading kubelogin fails', function () {
+
+    const testPath: string = path.join(__dirname, 'InstallKubeloginL0TestsDownloadFails.js');
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
+
+    tr.run();
+
+    assert(tr.failed, 'task should have failed.');
+    assert(tr.stdOutContained(TestString.loc_mock_Info_DownloadingFailed), 'should have printed: ' + TestString.loc_mock_Info_DownloadingFailed);
+  }).timeout(20000);
 });

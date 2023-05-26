@@ -2,23 +2,24 @@
 
 import * as fs from 'fs';
 import * as os from 'os';
-
-import path = require('path');
+import * as path from 'path';
 
 import * as engine from 'artifact-engine/Engine';
 import * as providers from 'artifact-engine/Providers';
 import * as taskLib from 'azure-pipelines-task-lib/task';
+import * as toolLib from "azure-pipelines-tool-lib/tool";
 
-import { Octokit } from '@octokit/rest'
+import octo = require('@octokit/rest')
 
 var process = require('process');
 var DecompressZip = require('decompress-zip');
 
-const octokit = new Octokit();
+export const KUBELOGIN_REPO_OWNER = 'Azure';
+export const KUBELOGIN_REPO = 'kubelogin';
 
-const KUBELOGIN_REPO_OWNER = 'Azure';
-const KUBELOGIN_REPO = 'kubelogin';
 const AGENT_TEMP_DIR = 'agent.tempDirectory';
+
+const octokit = new octo.Octokit();
 
 export type Platform =
   | 'darwin-amd64'
@@ -67,8 +68,14 @@ export async function getLatestVersionTag(): Promise<string> {
 }
 
 export async function getKubeloginRelease(version: string = 'latest', platform?: Platform): Promise<KubeloginRelease> {
+  const origVersion = version;
   if (isLatestVersion(version)) {
     version = await getLatestVersionTag();
+  }
+
+  var version = toolLib.cleanVersion(version);
+  if(!version) {
+      throw new Error(taskLib.loc("NotAValidSemverVersion"));
   }
 
   if (version[0] != 'v') {
@@ -98,7 +105,8 @@ export async function getKubeloginRelease(version: string = 'latest', platform?:
     };
   }
   catch(err){
-    throw Error(taskLib.loc('Err_VersionNotFound', version));
+    taskLib.debug(err);
+    throw Error(taskLib.loc('Err_VersionNotFound', origVersion));
   }
 }
 
@@ -139,6 +147,7 @@ export async function downloadKubeloginRelease(release: KubeloginRelease) {
         console.log(taskLib.loc("Info_ToolDownloaded", downloadPath));
         resolve(downloadPath);
     }).catch((error) => {
+        console.log(taskLib.loc("Info_DownloadingFailed", downloadPath));
         reject(error);
     });
   });

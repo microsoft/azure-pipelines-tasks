@@ -6,4 +6,18 @@ export class TestString {
     public static readonly linuxarm64: string = 'linux-arm64';
     public static readonly winamd64:   string = 'win-amd64';
     public static readonly unsupported: string = `Unsupported platform: unsupported-unsupported`;
+    public static readonly Found0_0_29            : string = '0_0_29 was found'
+    public static readonly PlatformCorrect0_0_29  : string = '0_0_29 platform is correct'
+    public static readonly ReleaseUrlValid0_0_29  : string = '0_0_29 releaseUrl is valid'
+    public static readonly CheckSumValid0_0_29    : string = '0_0_29 checksumUrl is valid'
+    public static readonly Foundv0_0_29           : string = 'v0_0_29 was found'
+    public static readonly PlatformCorrectv0_0_29 : string = 'v0_0_29 platform is correct'
+    public static readonly ReleaseUrlValidv0_0_29 : string = 'v0_0_29 releaseUrl is valid'
+    public static readonly CheckSumValidv0_0_29   : string = 'v0_0_29 checksumUrl is valid'
+    public static readonly Foundlatest            : string = 'latest was found'
+    public static readonly PlatformCorrectlatest  : string = 'latest platform is correct'
+    public static readonly ReleaseUrlValidlatest  : string = 'latest releaseUrl is valid'
+    public static readonly CheckSumValidlatest    : string = 'latest checksumUrl is valid'
+    public static readonly NotFound123_1323       : string = '123.1323 version not found'
+    public static readonly loc_mock_Info_DownloadingFailed: string = 'loc_mock_Info_DownloadingFailed';
 }

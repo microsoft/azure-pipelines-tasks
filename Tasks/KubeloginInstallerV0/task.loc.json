@@ -47,6 +47,8 @@
     "Info_KubeloginPlatform": "ms-resource:loc.messages.Info_KubeloginPlatform",
     "Info_KubeloginVersion": "ms-resource:loc.messages.Info_KubeloginVersion",
     "Info_KubeloginReleaseURL": "ms-resource:loc.messages.Info_KubeloginReleaseURL",
-    "ExtractionFailed": "ms-resource:loc.messages.ExtractionFailed"
+    "ExtractionFailed": "ms-resource:loc.messages.ExtractionFailed",
+    "SucceedMsg": "ms-resource:loc.messages.SucceedMsg",
+    "Info_DownloadingFailed": "loc.messages.Info_DownloadingFailed"
   }
 }

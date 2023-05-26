@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 1,
-        "Patch": 23
+        "Minor": 2,
+        "Patch": 0
     },
     "demands": [],
     "satisfies": [
@@ -38,6 +38,7 @@
     "messages": {
         "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
         "VerifyKubeloginInstallation": "Verifying kubelogin installation...",
+        "Err_VersionNotFound": "Kubelogin version %s was not found",
         "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
         "Info_UsingToolPath": "Using tool path: %s",
         "Info_UsingVersion": "Using version: %s",
@@ -47,6 +48,8 @@
         "Info_KubeloginPlatform": "Kubelogin platform:    %s",
         "Info_KubeloginVersion": "Kubelogin version:     %s",
         "Info_KubeloginReleaseURL": "Kubelogin release URL: %s",
-        "ExtractionFailed": "Failed to extract package with error %s"
+        "Info_DownloadingFailed": "Failed to download kubelogin to %s",
+        "ExtractionFailed": "Failed to extract package with error %s",
+        "SucceedMsg": "successfully installed kubelogin version %s"
     }
 }

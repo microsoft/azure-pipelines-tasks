@@ -29,6 +29,7 @@
     "azure-pipelines-tasks-utility-common": "^3.219.1",
     "azure-pipelines-tool-lib": "^2.0.4",
     "decompress-zip": "^0.3.3",
+    "mockery": "^2.1.0",
     "octokit": "^2.0.14"
   },
   "devDependencies": {

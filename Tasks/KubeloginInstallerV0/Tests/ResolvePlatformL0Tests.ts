@@ -1,8 +1,4 @@
-import { unzipRelease, resolvePlatform} from "../utils";
-
-const fs = require('fs')
-import assert = require('assert');
-
+import { resolvePlatform} from "../utils";
 import { TestString } from "./TestStrings";
 
 export class ResolvePlatformL0Tests {
