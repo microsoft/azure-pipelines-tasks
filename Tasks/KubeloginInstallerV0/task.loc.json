@@ -36,9 +36,7 @@
     }
   },
   "messages": {
-    "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
-    "VerifyKubeloginInstallation": "ms-resource:loc.messages.VerifyKubeloginInstallation",
-    "Err_VersionNotFound": "ms-resource:loc.messages.Err_VersionNotFound",
+    "Info_VerifyKubeloginInstallation": "ms-resource:loc.messages.Info_VerifyKubeloginInstallation",
     "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
     "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
     "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
@@ -49,7 +47,9 @@
     "Info_KubeloginVersion": "ms-resource:loc.messages.Info_KubeloginVersion",
     "Info_KubeloginReleaseURL": "ms-resource:loc.messages.Info_KubeloginReleaseURL",
     "Info_DownloadingFailed": "ms-resource:loc.messages.Info_DownloadingFailed",
-    "ExtractionFailed": "ms-resource:loc.messages.ExtractionFailed",
+    "Err_ExtractionFailed": "ms-resource:loc.messages.Err_ExtractionFailed",
+    "Err_NotAValidSemverVersion": "ms-resource:loc.messages.Err_NotAValidSemverVersion",
+    "Err_VersionNotFound": "ms-resource:loc.messages.Err_VersionNotFound",
     "SucceedMsg": "ms-resource:loc.messages.SucceedMsg"
   }
 }

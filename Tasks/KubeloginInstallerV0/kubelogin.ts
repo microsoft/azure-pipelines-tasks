@@ -44,7 +44,7 @@ async function run() {
     const fileName = kubeloginRelease.platform == 'win-amd64' ? 'kubelogin.exe' : 'kubelogin';
     const filePath = getKubeloginPath(unzipPath, fileName);
     if(filePath == undefined) {
-        console.log(taskLib.loc("Info_CachingTool", kubeloginRelease.version));
+        console.log(taskLib.loc("Err_VersionNotFound", kubeloginRelease.version));
         taskLib.error('kubelogin was not found.')
         return;
     }
@@ -53,7 +53,7 @@ async function run() {
 }
 
 async function verifyKubelogin() {
-    console.log(taskLib.loc("VerifyKubeloginInstallation"));
+    console.log(taskLib.loc("Info_VerifyKubeloginInstallation"));
     var kubectlToolPath = taskLib.which("kubelogin", true);
     var kubectlTool = taskLib.tool(kubectlToolPath);
     kubectlTool.arg("--help");

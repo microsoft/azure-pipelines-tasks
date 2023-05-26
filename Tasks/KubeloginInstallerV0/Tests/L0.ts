@@ -14,7 +14,7 @@ describe('TestUtils', function () {
 
     assert(tr.stdOutContained('unzip path exist'), 'should have printed: unzip path exist');
     assert(tr.stdOutContained("Path doesn't exist"), "should have printed: Path doesn't exis");
-    assert(tr.stdOutContained("ExtractionFailed"), "should have printed: ExtractionFailed");
+    assert(tr.stdOutContained("Err_ExtractionFailed"), "should have printed: Err_ExtractionFailed");
 
     done();
   }).timeout(20000);

@@ -75,7 +75,7 @@ export async function getKubeloginRelease(version: string = 'latest', platform?:
 
   var version = toolLib.cleanVersion(version);
   if(!version) {
-      throw new Error(taskLib.loc("NotAValidSemverVersion"));
+      throw new Error(taskLib.loc("Err_NotAValidSemverVersion"));
   }
 
   if (version[0] != 'v') {
@@ -170,8 +170,7 @@ export async function unzipRelease(zipPath: string): Promise<string> {
 
 		var unzipper = new DecompressZip(zipPath);
 		unzipper.on('error', (err: any) => {
-      console.log(err);
-			return reject(taskLib.loc("ExtractionFailed", err))
+			return reject(taskLib.loc("Err_ExtractionFailed", err))
 		});
 		unzipper.on('extract', () => {
 			taskLib.debug('Extracted ' + zipPath + ' to ' + unzipPath + ' successfully');
