@@ -146,6 +146,8 @@ async function run() {
             tl.command("artifact.upload", data, pathToUpload);
         }
         else if (artifactType === "filepath") {
+            let fileCopyOptions: string = tl.getInput('FileCopyOptions', false);
+            
             let targetPath: string = tl.getInput('TargetPath', true);
             let artifactPath: string = path.join(targetPath, artifactName);
             data['artifactlocation'] = targetPath; // artifactlocation for back compat with old xplat agent
@@ -166,11 +168,11 @@ async function run() {
 
                 // copy the files
                 let script: string = path.join(__dirname, 'Invoke-Robocopy.ps1');
-                let command: string = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(pathToUpload)} -Target ${pathToRobocopyPSString(artifactPath)} -ParallelCount ${parallelCount}`
+                let command: string = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(pathToUpload)} -Target ${pathToRobocopyPSString(artifactPath)} -ParallelCount ${parallelCount} -FileCopyOptions ${fileCopyOptions}`
                 if (tl.stats(pathToUpload).isFile()) {
                     let parentFolder = path.dirname(pathToUpload);
                     let file = path.basename(pathToUpload);
-                    command = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(parentFolder)} -Target ${pathToRobocopyPSString(artifactPath)} -ParallelCount ${parallelCount} -File '${file}'`
+                    command = `& ${pathToScriptPSString(script)} -Source ${pathToRobocopyPSString(parentFolder)} -Target ${pathToRobocopyPSString(artifactPath)} -ParallelCount ${parallelCount} -FileCopyOptions ${fileCopyOptions} -File '${file}'`
                 }
 
                 let powershell = new tr.ToolRunner('powershell.exe');
