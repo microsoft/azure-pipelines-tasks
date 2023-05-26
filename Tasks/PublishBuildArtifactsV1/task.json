@@ -84,6 +84,15 @@
             "visibleRule": "ArtifactType = FilePath && Parallel = true"
         },
         {
+            "name": "FileCopyOptions",
+            "type": "string",
+            "label": "File copy options",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Passes additional options to the Robocopy command. For example, the recursive minimatch pattern **/*",
+            "visibleRule": "ArtifactType = FilePath"
+        },
+        {
             "name": "StoreAsTar",
             "type": "boolean",
             "label": "Tar the artifact before uploading",
