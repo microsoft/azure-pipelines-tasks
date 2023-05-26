@@ -10,6 +10,9 @@ param(
     [int]$ParallelCount,
 
     [Parameter(Mandatory = $false)]
+    [string]$FileCopyOptions),
+
+    [Parameter(Mandatory = $false)]
     [string]$File)
 
 # This script translates the output from robocopy into UTF8. Node has limited
@@ -45,10 +48,10 @@ if (!$File) {
 
 # Print the ##command. The /MT parameter is only supported on 2008 R2 and higher.
 if ($ParallelCount -gt 1) {
-    [System.Console]::WriteLine("##[command]robocopy.exe $CopySubFoldersOption /COPY:DA /NP /R:3 /MT:$ParallelCount `"$Source`" `"$Target`" `"$File`"")
+    [System.Console]::WriteLine("##[command]robocopy.exe $CopySubFoldersOption /COPY:DA /NP /R:3 /MT:$ParallelCount $FileCopyOptions `"$Source`" `"$Target`" `"$File`"")
 }
 else {
-    [System.Console]::WriteLine("##[command]robocopy.exe $CopySubFoldersOption /COPY:DA /NP /R:3 `"$Source`" `"$Target`" `"$File`"")
+    [System.Console]::WriteLine("##[command]robocopy.exe $CopySubFoldersOption /COPY:DA /NP /R:3 $FileCopyOptions `"$Source`" `"$Target`" `"$File`"")
 }
 
 # The $OutputEncoding variable instructs PowerShell how to interpret the output
@@ -75,7 +78,7 @@ $OutputEncoding = [System.Text.Encoding]::Default
 #
 # Note, the /MT parameter is only supported on 2008 R2 and higher.
 if ($ParallelCount -gt 1) {
-    & robocopy.exe $CopySubFoldersOption /COPY:DA /NP /R:3 /MT:$ParallelCount $Source $Target $File 2>&1 |
+    & robocopy.exe $CopySubFoldersOption /COPY:DA /NP /R:3 /MT:$ParallelCount $FileCopyOptions $Source $Target $File 2>&1 |
         ForEach-Object {
         if ($_ -is [System.Management.Automation.ErrorRecord]) {
             [System.Console]::WriteLine($_.Exception.Message)
@@ -86,7 +89,7 @@ if ($ParallelCount -gt 1) {
     }
 }
 else {
-    & robocopy.exe $CopySubFoldersOption /COPY:DA /NP /R:3 $Source $Target $File 2>&1 |
+    & robocopy.exe $CopySubFoldersOption /COPY:DA /NP /R:3 $Source $FileCopyOptions $Target $File 2>&1 |
         ForEach-Object {
         if ($_ -is [System.Management.Automation.ErrorRecord]) {
             [System.Console]::WriteLine($_.Exception.Message)
