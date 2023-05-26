@@ -53,7 +53,7 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
     let timeToWait: number = retryIntervalInSeconds;
     while (true) {
         try {
-            if (request.body && typeof(request.body) !== 'string') {
+            if (request.body && typeof(request.body) !== 'string' && !request.body["readable"]) {
                 request.body = fs.createReadStream(request.body["path"]);
             }
             
