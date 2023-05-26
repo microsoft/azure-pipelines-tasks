@@ -48,8 +48,8 @@
     "Info_KubeloginReleaseURL": "ms-resource:loc.messages.Info_KubeloginReleaseURL",
     "Info_DownloadingFailed": "ms-resource:loc.messages.Info_DownloadingFailed",
     "Err_ExtractionFailed": "ms-resource:loc.messages.Err_ExtractionFailed",
-    "Err_NotAValidSemverVersion": "ms-resource:loc.messages.Err_NotAValidSemverVersion",
     "Err_VersionNotFound": "ms-resource:loc.messages.Err_VersionNotFound",
+    "Err_NotAValidSemverVersion": "ms-resource:loc.messages.Err_NotAValidSemverVersion",
     "SucceedMsg": "ms-resource:loc.messages.SucceedMsg"
   }
 }

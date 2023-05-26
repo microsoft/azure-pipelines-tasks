@@ -14,31 +14,30 @@ describe('TestUtils', function () {
 
     assert(tr.stdOutContained('unzip path exist'), 'should have printed: unzip path exist');
     assert(tr.stdOutContained("Path doesn't exist"), "should have printed: Path doesn't exis");
-    assert(tr.stdOutContained("Err_ExtractionFailed"), "should have printed: Err_ExtractionFailed");
+    assert(tr.stdOutContained('Err_ExtractionFailed'), 'should have printed: Err_ExtractionFailed');
 
     done();
   }).timeout(20000);
 
-  
   it('should get a release', (done: Mocha.Done) => {
     const taskPath = path.join(__dirname, 'GetKubeloginReleaseL0Tests.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
 
     tr.run();
 
-    assert(tr.stdOutContained(TestString.Found0_0_29           ), 'should have printed: ' + TestString.Found0_0_29           );
-    assert(tr.stdOutContained(TestString.PlatformCorrect0_0_29 ), 'should have printed: ' + TestString.PlatformCorrect0_0_29 );
-    assert(tr.stdOutContained(TestString.ReleaseUrlValid0_0_29 ), 'should have printed: ' + TestString.ReleaseUrlValid0_0_29 );
-    assert(tr.stdOutContained(TestString.CheckSumValid0_0_29   ), 'should have printed: ' + TestString.CheckSumValid0_0_29   );
-    assert(tr.stdOutContained(TestString.Foundv0_0_29          ), 'should have printed: ' + TestString.Foundv0_0_29          );
+    assert(tr.stdOutContained(TestString.Found0_0_29), 'should have printed: ' + TestString.Found0_0_29);
+    assert(tr.stdOutContained(TestString.PlatformCorrect0_0_29), 'should have printed: ' + TestString.PlatformCorrect0_0_29);
+    assert(tr.stdOutContained(TestString.ReleaseUrlValid0_0_29), 'should have printed: ' + TestString.ReleaseUrlValid0_0_29);
+    assert(tr.stdOutContained(TestString.CheckSumValid0_0_29), 'should have printed: ' + TestString.CheckSumValid0_0_29);
+    assert(tr.stdOutContained(TestString.Foundv0_0_29), 'should have printed: ' + TestString.Foundv0_0_29);
     assert(tr.stdOutContained(TestString.PlatformCorrectv0_0_29), 'should have printed: ' + TestString.PlatformCorrectv0_0_29);
     assert(tr.stdOutContained(TestString.ReleaseUrlValidv0_0_29), 'should have printed: ' + TestString.ReleaseUrlValidv0_0_29);
-    assert(tr.stdOutContained(TestString.CheckSumValidv0_0_29  ), 'should have printed: ' + TestString.CheckSumValidv0_0_29  );
-    assert(tr.stdOutContained(TestString.Foundlatest           ), 'should have printed: ' + TestString.Foundlatest           );
-    assert(tr.stdOutContained(TestString.PlatformCorrectlatest ), 'should have printed: ' + TestString.PlatformCorrectlatest );
-    assert(tr.stdOutContained(TestString.ReleaseUrlValidlatest ), 'should have printed: ' + TestString.ReleaseUrlValidlatest );
-    assert(tr.stdOutContained(TestString.CheckSumValidlatest   ), 'should have printed: ' + TestString.CheckSumValidlatest   );
-    assert(tr.stdOutContained(TestString.NotFound123_1323      ), 'should have printed: ' + TestString.NotFound123_1323      );
+    assert(tr.stdOutContained(TestString.CheckSumValidv0_0_29), 'should have printed: ' + TestString.CheckSumValidv0_0_29);
+    assert(tr.stdOutContained(TestString.Foundlatest), 'should have printed: ' + TestString.Foundlatest);
+    assert(tr.stdOutContained(TestString.PlatformCorrectlatest), 'should have printed: ' + TestString.PlatformCorrectlatest);
+    assert(tr.stdOutContained(TestString.ReleaseUrlValidlatest), 'should have printed: ' + TestString.ReleaseUrlValidlatest);
+    assert(tr.stdOutContained(TestString.CheckSumValidlatest), 'should have printed: ' + TestString.CheckSumValidlatest);
+    assert(tr.stdOutContained(TestString.NotFound123_1323), 'should have printed: ' + TestString.NotFound123_1323);
 
     done();
   }).timeout(20000);
@@ -58,18 +57,16 @@ describe('TestUtils', function () {
 
     done();
   }).timeout(20000);
-  
-  
+
   it('should download a release', (done: Mocha.Done) => {
     const taskPath = path.join(__dirname, 'DownloadKubeloginReleaseL0Tests.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
     tr.run();
-    assert(tr.stdOutContained("kubelogin downloaded successfully"), 'should have printed: ' + "kubelogin downloaded successfully");
+    assert(tr.stdOutContained('kubelogin downloaded successfully'), 'should have printed: ' + 'kubelogin downloaded successfully');
     done();
   }).timeout(20000);
 
   it('should run successfully when installing Kublogin', function () {
-
     const testPath: string = path.join(__dirname, 'InstallKubeloginL0Tests.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
 
@@ -79,7 +76,6 @@ describe('TestUtils', function () {
   }).timeout(20000);
 
   it('should fail when downloading kubelogin fails', function () {
-
     const testPath: string = path.join(__dirname, 'InstallKubeloginL0TestsDownloadFails.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
 
