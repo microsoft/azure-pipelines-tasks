@@ -13,7 +13,7 @@
     "url": "git+https://github.com/microsoft/azure-pipelines-tasks-common.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "ISC",   
   "bugs": {
     "url": "https://github.com/microsoft/azure-pipelines-tasks-common/issues"
   },
