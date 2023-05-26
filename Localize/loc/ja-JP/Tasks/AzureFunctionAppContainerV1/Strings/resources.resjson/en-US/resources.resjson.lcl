@@ -900,6 +900,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.KuduStackTraceURL" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[To debug further please check Kudu stack trace URL : %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[さらにデバッグするには、Kudu スタック トレースの URL %s をご確認ください]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[MSDeploy generated packages are only supported for Windows platform.]]></Val>
