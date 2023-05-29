@@ -62,6 +62,10 @@ function runTestPipeline(pipeline) {
         BUILD_BRANCH: { 
           "isSercret": false,
           "value": BUILD_SOURCEVERSION,
+        },
+        REPOSTITORY_URL: {
+          "isSecret": false,
+          "value":"TEST_VALUE_ONE"
         }
       },
     }, { auth })
