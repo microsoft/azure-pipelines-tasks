@@ -44,7 +44,7 @@ async function translateDirectoryPath(bashPath: string, directoryPath: string): 
 
     const parentDirectoryPath = directoryPath.split('\\').slice(0, -1).join('\\');
 
-    if (parentDirectoryPath) {
+    if (parentDirectoryPath.split('\\').join('')) {
         const parentDirectoryPathTranslated = await runBashPwd(bashPath, parentDirectoryPath);
 
         if (directoryPathTranslated == parentDirectoryPathTranslated) {
