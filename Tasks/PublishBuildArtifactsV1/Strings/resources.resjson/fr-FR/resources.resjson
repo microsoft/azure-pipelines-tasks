@@ -10,6 +10,8 @@
   "loc.input.help.ArtifactName": "Nom de l'artefact à créer dans l'emplacement de publication.",
   "loc.input.label.ArtifactType": "Emplacement de publication des artefacts",
   "loc.input.help.ArtifactType": "Choisissez entre le stockage de l'artefact dans Azure Pipelines, ou sa copie sur un partage de fichiers qui doit être accessible à l'agent de build.",
+  "loc.input.label.MaxArtifactSize": "Max Artifact Size",
+  "loc.input.help.MaxArtifactSize": "Maximum limit on the size of artifacts to be published in bytes. Put 0 if you don't want to set any limit.",
   "loc.input.label.TargetPath": "Chemin du partage de fichiers",
   "loc.input.help.TargetPath": "Partage de fichiers où sont copiés les fichiers d'artefacts. Il peut inclure des variables. Exemple : \\\\\\\\mon\\\\partage\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). La publication d'artefacts d'un agent Linux ou macOS vers un partage de fichiers n'est pas prise en charge.",
   "loc.input.label.Parallel": "Copie parallèle",
@@ -22,5 +24,6 @@
   "loc.messages.ErrorHostTypeNotSupported": "Cette tâche doit s'exécuter dans une build pour permettre la publication d'artefacts sur Azure Pipelines.",
   "loc.messages.PublishBuildArtifactsFailed": "Échec de la publication des artefacts de build. Erreur : %s",
   "loc.messages.UnexpectedParallelCount": "Nombre parallèle '%s' non pris en charge. Entrez un nombre compris entre 1 et 128.",
-  "loc.messages.TarExtractionNotSupportedInWindows": "L’extraction par extraction d’extraction n’est pas prise en charge sur Windows"
+  "loc.messages.TarExtractionNotSupportedInWindows": "L’extraction par extraction d’extraction n’est pas prise en charge sur Windows",
+  "loc.messages.ArtifactSizeExceeded": "The size of artifacts being published is %s bytes which is larger than the maximum limit %s bytes set for the published size of artifacts."
 }

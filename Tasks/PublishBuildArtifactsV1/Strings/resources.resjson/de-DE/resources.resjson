@@ -10,6 +10,8 @@
   "loc.input.help.ArtifactName": "Der Name des Artefakts, das am Speicherort für die Veröffentlichung erstellt werden soll.",
   "loc.input.label.ArtifactType": "Veröffentlichungsort für Artefakte",
   "loc.input.help.ArtifactType": "Wählen Sie aus, ob Sie das Artefakt in Azure Pipelines speichern oder in eine Dateifreigabe kopieren möchten, die vom Build-Agent aus zugänglich sein muss.",
+  "loc.input.label.MaxArtifactSize": "Max Artifact Size",
+  "loc.input.help.MaxArtifactSize": "Maximum limit on the size of artifacts to be published in bytes. Put 0 if you don't want to set any limit.",
   "loc.input.label.TargetPath": "Dateifreigabepfad",
   "loc.input.help.TargetPath": "Die Dateifreigabe, in die die Artefaktdateien kopiert werden. Diese kann Variablen umfassen. Beispiel: \\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). Das Veröffentlichen von Artefakten über einen Linux- oder macOS-Agent in einer Dateifreigabe wird nicht unterstützt.",
   "loc.input.label.Parallel": "Paralleles Kopieren",
@@ -22,5 +24,6 @@
   "loc.messages.ErrorHostTypeNotSupported": "Diese Aufgabe muss in einem Build ausgeführt werden, um Artefakte in Azure Pipelines zu veröffentlichen.",
   "loc.messages.PublishBuildArtifactsFailed": "Fehler beim Veröffentlichen von Buildartefakten: %s",
   "loc.messages.UnexpectedParallelCount": "Nicht unterstützte parallele Anzahl \"%s\". Geben Sie eine Zahl zwischen 1 und 128 ein.",
-  "loc.messages.TarExtractionNotSupportedInWindows": "Die Tar-Extraktion wird unter Windows nicht unterstützt"
+  "loc.messages.TarExtractionNotSupportedInWindows": "Die Tar-Extraktion wird unter Windows nicht unterstützt",
+  "loc.messages.ArtifactSizeExceeded": "The size of artifacts being published is %s bytes which is larger than the maximum limit %s bytes set for the published size of artifacts."
 }

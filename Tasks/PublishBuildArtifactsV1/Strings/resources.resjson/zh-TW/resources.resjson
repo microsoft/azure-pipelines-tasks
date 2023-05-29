@@ -10,6 +10,8 @@
   "loc.input.help.ArtifactName": "要在發佈位置建立的成品名稱。",
   "loc.input.label.ArtifactType": "成品發佈位置",
   "loc.input.help.ArtifactType": "選擇要在 Azure Pipelines 中儲存成品，還是將成品複製到必須可透過組建代理程式存取的檔案共用。",
+  "loc.input.label.MaxArtifactSize": "Max Artifact Size",
+  "loc.input.help.MaxArtifactSize": "Maximum limit on the size of artifacts to be published in bytes. Put 0 if you don't want to set any limit.",
   "loc.input.label.TargetPath": "檔案共用路徑",
   "loc.input.help.TargetPath": "成品檔案所要複製到的檔案共用。此項目可包含變數。範例: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber)。不支援從 Linux 或 macOS 代理程式將成品發佈至檔案共用。",
   "loc.input.label.Parallel": "平行複製",
@@ -22,5 +24,6 @@
   "loc.messages.ErrorHostTypeNotSupported": "此工作必須在組建中執行才能將成品發佈至 Azure Pipelines。",
   "loc.messages.PublishBuildArtifactsFailed": "發行組建成品失敗，錯誤: %s",
   "loc.messages.UnexpectedParallelCount": "不支援的平行計數 '%s'。請輸入介於 1 到 128 之間的數字。",
-  "loc.messages.TarExtractionNotSupportedInWindows": "Windows 不支援 tar 解壓縮"
+  "loc.messages.TarExtractionNotSupportedInWindows": "Windows 不支援 tar 解壓縮",
+  "loc.messages.ArtifactSizeExceeded": "The size of artifacts being published is %s bytes which is larger than the maximum limit %s bytes set for the published size of artifacts."
 }
