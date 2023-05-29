@@ -60,7 +60,8 @@ function runTestPipeline(pipeline) {
     {
       variables: {
         TEST: BUILD_SOURCEVERSION,
-      }
+      },
+      templateParameters: { BuildSourceMessage: BUILD_SOURCEVERSION }
     }, { auth })
     .then(res => res.data)
     .catch(err => {
