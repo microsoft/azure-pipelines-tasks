@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 223,
-    "Patch": 1
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -84,6 +84,10 @@
     "Node10": {
       "target": "dotnetrestore.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "dotnetrestore.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -140,5 +144,9 @@
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion",
     "NetCore3Update": "ms-resource:loc.messages.NetCore3Update"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.223.1",
+    "Node16-219": "1.223.0"
   }
 }
