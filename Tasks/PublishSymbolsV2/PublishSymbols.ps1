@@ -165,13 +165,21 @@ try {
             Write-Verbose "SymbolsPath was not set, publish symbols step was skipped."
         }
     } elseif ($symbolServerType -eq "TeamServices") {
-        [string]$RequestName = (Get-VstsTaskVariable -Name 'System.TeamProject' -Require) + "/" + 
-                               (Get-VstsTaskVariable -Name 'Build.DefinitionName' -Require)  + "/" + 
-                               (Get-VstsTaskVariable -Name 'Build.BuildNumber' -Require)  + "/" + 
-                               (Get-VstsTaskVariable -Name 'Build.BuildId' -Require)  + "/" + 
-                               ([Guid]::NewGuid().ToString()) ;
-
-        $RequestName = $RequestName.ToLowerInvariant();
+        # If the SymbolsArtifactName is set to something other than the default, override the default request name
+        [string]$SymbolsArtifactName = Get-VstsInput -Name 'SymbolsArtifactName'
+        [string]$BuildConfiguration = Get-VstsTaskVariable -Name 'BuildConfiguration'
+        [string]$defaultArtifactName = if ($BuildConfiguration) { "Symbols_$BuildConfiguration" } else { "Symbols_`$(BuildConfiguration)" }
+        if ($SymbolsArtifactName -and $SymbolsArtifactName -ne $defaultArtifactName) {
+            [string]$RequestName = $SymbolsArtifactName
+        }
+        else {
+            [string]$RequestName = (Get-VstsTaskVariable -Name 'System.TeamProject' -Require) + "/" + 
+                                   (Get-VstsTaskVariable -Name 'Build.DefinitionName' -Require)  + "/" + 
+                                   (Get-VstsTaskVariable -Name 'Build.BuildNumber' -Require)  + "/" + 
+                                   (Get-VstsTaskVariable -Name 'Build.BuildId' -Require)  + "/" + 
+                                   ([Guid]::NewGuid().ToString());
+            $RequestName = $RequestName.ToLowerInvariant();
+        }
 
         Write-Host "Symbol Request Name = $RequestName"
 
