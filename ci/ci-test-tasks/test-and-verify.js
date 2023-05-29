@@ -56,7 +56,10 @@ function runTestPipeline(pipeline) {
   console.log(`Run ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`);
 
   return axios
-    .post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, {}, { auth })
+    .post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, 
+    {
+      templateParameters: { tasks, BuildSourceVersion: BUILD_SOURCEVERSION }
+    }, { auth })
     .then(res => res.data)
     .catch(err => {
       err.stack = `Error running ${pipeline.name} pipeline. ` + err.stack;
