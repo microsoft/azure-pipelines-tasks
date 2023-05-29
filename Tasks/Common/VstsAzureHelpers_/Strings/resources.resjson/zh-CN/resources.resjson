@@ -2,6 +2,8 @@
   "loc.messages.AZ_AzureRMProfileModuleNotFound": "找不到 \"AzureRM.Profile\" 模块。\"AzureRM\" 模块可能未完整安装。从提升的会话运行以下 PowerShell 命令可能解决该问题: Import-Module AzureRM；Install-AzureRM",
   "loc.messages.AZ_CertificateAuthNotSupported": "不支持基于证书的身份验证。找不到 Azure PowerShell 模块。",
   "loc.messages.AZ_CredentialsError": "用于部署的 Azure 凭据有错。",
+  "loc.messages.AZ_CouldNotGenerateOidcToken": "无法为联合登录生成客户端断言。",
+  "loc.messages.AZ_FederatedTokenFailure": "无法提取工作负载联合身份验证的联合令牌。{0}",
   "loc.messages.AZ_ModuleNotFound": "找不到版本为 {0} 的模块 {1}。如果最近安装了该模块，请在重启 Azure 管道任务代理后重试。",
   "loc.messages.AZ_RequiresMinVersion0": "未安装 Azure PowerShell 模块的最低必需版本({0})。",
   "loc.messages.AZ_ServicePrincipalError": "用于部署的服务主体有错。",
