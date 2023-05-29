@@ -58,7 +58,6 @@ function runTestPipeline(pipeline) {
   return axios
     .post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, 
     {
-      templateParameters: { BuildSourceVersion: BUILD_SOURCEVERSION },
       variables: { TEST_BRANCH: BUILD_SOURCEVERSION },
     }, { auth })
     .then(res => res.data)
