@@ -59,9 +59,8 @@ function runTestPipeline(pipeline) {
     .post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, 
     {
       variables: {
-        TEST: BUILD_SOURCEVERSION,
+        BUILD_BRANCH: BUILD_SOURCEVERSION,
       },
-      templateParameters: { BuildSourceMessage: BUILD_SOURCEVERSION }
     }, { auth })
     .then(res => res.data)
     .catch(err => {
