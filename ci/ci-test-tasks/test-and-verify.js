@@ -54,7 +54,7 @@ function fetchPipelines() {
 
 function runTestPipeline(pipeline) {
   console.log(`Run ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`);
-
+  const { BUILD_SOURCEVERSION } = process.env;
   return axios
     .post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, 
     {
