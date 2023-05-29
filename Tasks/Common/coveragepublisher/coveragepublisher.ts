@@ -36,11 +36,15 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
         dotnet.arg(path.join(__dirname, "CoveragePublisher", 'CoveragePublisher.Console.dll'));
     }
 
-    dotnet.arg('"' + inputFiles.join('" "') + '"');
-    dotnet.arg('--reportDirectory ' + reportDirectory);
+    for (const inputFile of inputFiles) {
+        dotnet.arg('"' + inputFile + '"');
+    }
+    dotnet.arg('--reportDirectory');
+    dotnet.arg(reportDirectory);
 
     if(!isNullOrWhitespace(pathToSources)) {
-        dotnet.arg('--sourceDirectory ' + pathToSources);
+        dotnet.arg('--sourceDirectory');
+        dotnet.arg(pathToSources);
     }
 
     try {
