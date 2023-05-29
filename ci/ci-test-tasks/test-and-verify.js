@@ -59,7 +59,8 @@ function runTestPipeline(pipeline) {
     .post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, 
     {
       variables: {
-        BUILD_BRANCH: BUILD_SOURCEVERSION,
+        BUILD_BRANCH: "TEST",
+        ANOTHER_VAR: "TEST2"
       },
     }, { auth })
     .then(res => res.data)
