@@ -423,15 +423,21 @@ export class ApplicationTokenCredentials {
     private async configureMSALWithOIDC(msalConfig: msal.Configuration): Promise<msal.ConfidentialClientApplication> {
         tl.debug("MSAL - FederatedAccess - OIDC is used.");
 
-        var serviceConnectionId: string = tl.getInput("connectedServiceNameARM", false);
-        if (!serviceConnectionId) {
-            serviceConnectionId = tl.getInput("ConnectedServiceName", false);
-            if (!serviceConnectionId) {
-                serviceConnectionId = tl.getInput("azureSubscription", false);
-                if (!serviceConnectionId) {
-                    throw new Error(tl.loc("serviceConnectionIdCannotBeEmpty"));
-                }
+        const serviceConnectionNames = [
+            "connectedServiceNameARM",
+            "ConnectedServiceName",
+            "azureSubscription",
+            "azureSubscriptionEndpoint"
+        ];
+        let serviceConnectionId: string = null;
+        for (let serviceConnectionName in serviceConnectionNames) {
+            serviceConnectionId = tl.getInput(serviceConnectionName, false);
+            if (serviceConnectionId) {
+                break;
             }
+        }
+        if (!serviceConnectionId) {
+            throw new Error(tl.loc("serviceConnectionIdCannotBeEmpty"));
         }
         const projectId: string = tl.getVariable("System.TeamProjectId");
         const hub: string = tl.getVariable("System.HostType");
