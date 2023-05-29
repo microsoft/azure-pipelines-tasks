@@ -198,7 +198,7 @@ export class ApplicationTokenCredentials {
                         }
                     },
                     (error) => {
-                        deferred.reject(error);
+                        deferred.reject(tl.loc('CouldNotFetchAccessTokenforAAD') + " " + error);
                     }
                 );
             }
@@ -437,7 +437,10 @@ export class ApplicationTokenCredentials {
         const hub: string = tl.getVariable("System.HostType");
         const planId: string = tl.getVariable('System.PlanId');
         const jobId: string = tl.getVariable('System.JobId');
-        const uri = tl.getVariable("System.CollectionUri");
+        let uri = tl.getVariable("System.CollectionUri");
+        if (!uri) {
+            uri = tl.getVariable("System.TeamFoundationServerUri");
+        }
 
         const token = ApplicationTokenCredentials.getSystemAccessToken();
         const authHandler = getHandlerFromToken(token);
