@@ -66,6 +66,12 @@ steps:
     testRunTitle: Node 6 Test Results
     searchFolder: $(System.DefaultWorkingDirectory)/testresults
 
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)\_package\tasks-layout\${{ parameters.task }}\task.zip'
+    ArtifactName: '${{ parameters.task }}'
+    publishLocation: 'Container'
+
 # Stop collect diagnostics
 - powershell: ./ci/stop-collect-diagnostics.ps1
   displayName: Stop collect diagnostics

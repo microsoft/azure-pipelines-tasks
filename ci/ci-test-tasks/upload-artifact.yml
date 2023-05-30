@@ -19,9 +19,3 @@ steps:
     pathToPublish: _package/hotfix-layout
     artifactName: hotfix
     publishLocation: container
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)\_package\tasks-layout\${{ parameters.task }}\task.zip'
-    ArtifactName: '${{ parameters.task }}'
-    publishLocation: 'Container'
