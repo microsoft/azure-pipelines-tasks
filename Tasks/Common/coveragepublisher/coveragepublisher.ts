@@ -5,6 +5,7 @@ import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as UUID from 'uuid/v4';
+import {execSync} from 'child_process';
 
 export async function PublishCodeCoverage(inputFiles: string[], sourceDirectory?: string) {
     var reportDirectory = path.join(getTempFolder(), UUID());
@@ -28,14 +29,38 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
         return false;
     }
 
-    // use full .NET to execute
-    dotnet = taskLib.tool(path.join(__dirname, 'CoveragePublisher', 'CoveragePublisher.Console.exe'));
-    
-    dotnet.arg('"' + inputFiles.join('" "') + '"');
-    dotnet.arg('--reportDirectory ' + reportDirectory);
+    if (osvar === 'win32') {
+        // use full .NET to execute
+        dotnet = taskLib.tool(path.join(__dirname, 'CoveragePublisher', 'CoveragePublisher.Console.exe'));
+    } 
+    else if(osvar==='linux')
+    {
+         // use full .NET to execute
+        var filepath=path.join(__dirname, 'CoveragePublisher','linux-x64', 'CoveragePublisher.Console');
+        execSync('chmod +x '+filepath);
+        dotnet=taskLib.tool(filepath);
+    }
+    else if(osvar==='darwin')
+    {
+         // use full .NET to execute
+        var filepath=path.join(__dirname, 'CoveragePublisher', 'osx-x64', 'CoveragePublisher.Console');
+        execSync('chmod +x '+filepath);
+        dotnet=taskLib.tool(filepath);
+    }
+    else{
+        dotnet = taskLib.tool(dotnetPath);
+        dotnet.arg(path.join(__dirname, "CoveragePublisher", 'CoveragePublisher.Console.dll'));
+    }
+
+    for (const inputFile of inputFiles) {
+        dotnet.arg(inputFile);
+    }
+    dotnet.arg('--reportDirectory');
+    dotnet.arg(reportDirectory);
 
     if(!isNullOrWhitespace(pathToSources)) {
-        dotnet.arg('--sourceDirectory ' + pathToSources);
+        dotnet.arg('--sourceDirectory');
+        dotnet.arg(pathToSources);
     }
 
     try {
