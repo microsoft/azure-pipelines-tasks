@@ -1,9 +1,5 @@
 steps:
 
-# Stage tasks individually into the package directory
-- script: node ./ci/stage-package.js false individually
-  displayName: Stage tasks individually into the package directory
-
 # Sign task zip as nuget package
 #- template: sign-all-tasks.yml
 #  parameters:

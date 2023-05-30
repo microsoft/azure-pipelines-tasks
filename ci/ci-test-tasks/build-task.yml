@@ -66,6 +66,10 @@ steps:
     testRunTitle: Node 6 Test Results
     searchFolder: $(System.DefaultWorkingDirectory)/testresults
 
+# Stage tasks individually into the package directory
+- script: node ./ci/stage-package.js false individually
+  displayName: Stage tasks individually into the package directory
+
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.SourcesDirectory)\_package\tasks-layout\${{ parameters.task }}\task.zip'
