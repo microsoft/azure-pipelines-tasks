@@ -16,7 +16,6 @@ const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 initTaskTests(taskLib);
 setAnswears(tr);
-registerMockedArtifactEngine(tr);
 registerMockedToolRunner(tr);
 registerMockedOctokitRest(tr);
 registerMockedToolLibTools(tr);

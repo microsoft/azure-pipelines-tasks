@@ -2,22 +2,22 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 
-import * as engine from 'artifact-engine/Engine';
-import * as providers from 'artifact-engine/Providers';
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
-import octo = require('@octokit/rest');
+import webClient = require('azure-pipelines-tasks-azure-arm-rest-v2/webClient');
 
 var process = require('process');
 var DecompressZip = require('decompress-zip');
+var packagejson = require('./package.json');
 
 export const KUBELOGIN_REPO_OWNER = 'Azure';
 export const KUBELOGIN_REPO = 'kubelogin';
 
+const userAgent: string = 'kubelogin-installer-task-' + packagejson.version;
+
 const AGENT_TEMP_DIR = 'agent.tempDirectory';
 
-const octokit = new octo.Octokit();
 
 export type Platform = 'darwin-amd64' | 'darwin-arm64' | 'linux-amd64' | 'linux-arm64' | 'win-amd64';
 
@@ -53,13 +53,14 @@ export function isLatestVersion(version: string): boolean {
 }
 
 export async function getLatestVersionTag(): Promise<string> {
-  const tag_name: string = await octokit.repos
-    .getLatestRelease({
-      owner: KUBELOGIN_REPO_OWNER,
-      repo: KUBELOGIN_REPO
-    })
-    .then(response => response.data.tag_name);
-  return tag_name;
+  var request = new webClient.WebRequest();
+  request.uri = 'https://api.github.com/repos/'+ KUBELOGIN_REPO_OWNER + '/' + KUBELOGIN_REPO + '/releases/latest';
+  request.method = "GET";  
+  request.headers = request.headers || {};
+  request.headers["User-Agent"] = userAgent;
+
+  var response = await webClient.sendRequest(request);
+  return response.body["tag_name"];
 }
 
 export async function getKubeloginRelease(version: string = 'latest', platform?: Platform): Promise<KubeloginRelease> {
@@ -83,17 +84,20 @@ export async function getKubeloginRelease(version: string = 'latest', platform?:
   const sha256: string = `${releaseName}.sha256`;
 
   try {
-    const response = await octokit.repos.getReleaseByTag({
-      owner: KUBELOGIN_REPO_OWNER,
-      repo: KUBELOGIN_REPO,
-      tag: version
-    });
+    var request = new webClient.WebRequest();
+    request.uri = 'https://api.github.com/repos/'+ KUBELOGIN_REPO_OWNER + '/' + KUBELOGIN_REPO + '/releases/tags/' + version;
+    request.method = "GET";  
+    request.headers = request.headers || {};
+    request.headers["User-Agent"] = userAgent;
+
+    var response = await webClient.sendRequest(request);
+
     const releaseUrl: string =
-      response.data.assets.find(asset => {
+      response.body["assets"].find(asset => {
         return asset.name.includes(releaseName);
       })?.browser_download_url || '';
     const sha256Url: string =
-      response.data.assets.find(asset => {
+      response.body["assets"].find(asset => {
         return asset.name.includes(sha256);
       })?.browser_download_url || '';
 
@@ -124,35 +128,9 @@ function getTempDirectory(): string {
 }
 
 export async function downloadKubeloginRelease(release: KubeloginRelease) {
-  return new Promise<string>(async (resolve, reject) => {
-    const downloadPath: string = path.join(getKubeloginDownloadPath(), release.name);
-
-    // We are using public Rest API to download release. Authentication is not need , but we have to create an empty handler
-    var customCredentialHandler = {
-      canHandleAuthentication: () => false,
-      handleAuthentication: () => {},
-      prepareRequest: (options: any) => {}
-    };
-    const webProvider = new providers.ZipProvider(release.releaseUrl, customCredentialHandler, { maxRedirects: 5 });
-    const fileSystemProvider = new providers.FilesystemProvider(downloadPath);
-
-    const downloader = new engine.ArtifactEngine();
-    const downloaderOptions = new engine.ArtifactEngineOptions();
-
-    let debugMode: string = taskLib.getVariable('System.Debug');
-    downloaderOptions.verbose = debugMode ? debugMode.toLowerCase() != 'false' : false;
-
-    await downloader
-      .processItems(webProvider, fileSystemProvider, downloaderOptions)
-      .then(result => {
-        console.log(taskLib.loc('Info_ToolDownloaded', downloadPath));
-        resolve(downloadPath);
-      })
-      .catch(error => {
-        console.log(taskLib.loc('Info_DownloadingFailed', downloadPath));
-        reject(error);
-      });
-  });
+  const downloadPath: string = path.join(getKubeloginDownloadPath(), release.name);
+  await toolLib.downloadTool(release.releaseUrl, downloadPath);
+  return downloadPath;
 }
 
 export async function unzipRelease(zipPath: string): Promise<string> {

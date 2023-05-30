@@ -92,7 +92,15 @@ export function registerMockedToolLibTools(tr: tmrm.TaskMockRunner): void {
     cleanVersion: function (A) {
       return A;
     },
-    prependPath: function (A) {}
+    prependPath: function (A) {},
+    downloadTool: function(A, B) {
+      return new Promise(async (resolve, reject) => {
+        fs.copyFile(path.join(__dirname, 'kubelogin-win-amd64.zip'), releasePath, err => {
+          if (err) reject(err);
+          resolve('ok');
+        });
+      });
+    }
   });
 }
 
