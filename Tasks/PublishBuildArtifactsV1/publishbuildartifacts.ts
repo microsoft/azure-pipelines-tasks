@@ -4,6 +4,7 @@ var process = require('process');
 import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
+import { error } from 'console';
 
 // used for escaping the path to the Invoke-Robocopy.ps1 script that is passed to the powershell command
 let pathToScriptPSString = (filePath: string) => {
@@ -108,7 +109,15 @@ async function run() {
 
         // pathToPublish is a folder or a single file that may be added to a tar archive later
         const pathToPublish: string = tl.getPathInput('PathtoPublish', true, true);
-        const artifactName: string = tl.getInput('ArtifactName', true);
+        var artifactName: string = tl.getInput('ArtifactName', true);
+        
+        // if FF EnableBuildArtifactsPlusSignWorkaround is enabled or AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND environment variable is set:
+        // replacing '+' symbol by its representation ' '(space) - workaround for the DownloadBuildArtifactV0 task,
+        // where downloading of part of artifact is not possible if there is a plus symbol
+        const enableBuildArtifactsPlusSignWorkaround = process.env.AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND ? process.env.AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND.toLowerCase() === "true" : false;
+
+        if (enableBuildArtifactsPlusSignWorkaround)
+            artifactName = artifactName.replace(/\+/g, ' ');
 
         // pathToUpload is an actual folder or file that will get uploaded
         const pathToUpload: string = getPathToUploadAndCreateTarIfNeeded(pathToPublish, shouldStoreAsTar, artifactName);
@@ -128,6 +137,14 @@ async function run() {
             artifacttype: artifactType,
             artifactname: artifactName
         };
+
+        let maxArtifactSize: number = getMaxArtifactSize();
+        if (maxArtifactSize != 0 ){
+            let artifactSize : number = getArtifactSize(pathToUpload)
+            if (artifactSize > maxArtifactSize){
+                tl.warning(tl.loc('ArtifactSizeExceeded', artifactSize, maxArtifactSize));
+            }
+        }
 
         // upload or copy
         if (artifactType === "container") {
@@ -218,6 +235,32 @@ function getParallelCount(): number {
     }
 
     return result;
+}
+
+function getMaxArtifactSize(): number {
+    let result = 0;
+    let inputValue: string = tl.getInput('MaxArtifactSize', false);
+    if (!(Number.isNaN(Number(inputValue)))) {
+        result = parseInt(inputValue);
+    }
+    return result;
+}
+
+
+function getArtifactSize(
+    pathToUpload : string
+): number {
+    let totalSize = 0;
+    if(tl.stats(pathToUpload).isFile()) {
+        totalSize = tl.stats(pathToUpload).size;
+    }
+    else if(tl.stats(pathToUpload).isDirectory()) {
+        const files = fs.readdirSync(pathToUpload);
+        files.forEach (file => {
+            totalSize = totalSize + getArtifactSize(path.join(pathToUpload, file));
+        })
+    }
+    return totalSize;
 }
 
 run();

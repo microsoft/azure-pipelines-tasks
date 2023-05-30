@@ -15,6 +15,8 @@
   "loc.input.help.azureResourceGroup": "Sélectionnez un groupe de ressources Azure.",
   "loc.input.label.kubernetesCluster": "Cluster Kubernetes",
   "loc.input.help.kubernetesCluster": "Sélectionnez un cluster managé Azure.",
+  "loc.input.label.useClusterAdmin": "Utiliser les informations d'identification de l'administrateur de cluster",
+  "loc.input.help.useClusterAdmin": "Utilisez les informations d’identification de l’administrateur de cluster à la place des informations d’identification de l’utilisateur de cluster par défaut.",
   "loc.input.label.namespace": "Espace de noms",
   "loc.input.help.namespace": "Définit l’espace de noms des commandes à l’aide de l’indicateur –namespace. Si vous n’indiquez pas l’espace de noms, les commandes sont exécutées dans l’espace de noms par défaut.",
   "loc.input.label.strategy": "Stratégie",
