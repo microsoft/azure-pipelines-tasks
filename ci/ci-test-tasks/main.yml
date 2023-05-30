@@ -10,15 +10,16 @@ parameters:
 trigger: none
 pr: none
 
+pool:
+  vmImage: windows-2022
+
 stages:
-- stage: Build
+- stage: BuildAndTest
   condition: eq(variables['build.reason'], 'Manual')
   jobs:
     - ${{ each task in split(parameters.tasks, ',') }}:
       - job: ${{ task }}_build_task
         displayName: Build Task (${{ task }})
-        pool:
-          vmImage: windows-2022
         steps:
         - template: ./build-task.yml
           parameters:
@@ -29,59 +30,38 @@ stages:
             version: '0.999.0'
             BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
-- stage: TfxInit
-  jobs:
     - job: tfx_init
       displayName: Tfx init
-      pool:
-        vmImage: windows-2022
       steps:
       - template: ./tfx-init.yml
 
-- stage: PreDelete
-  jobs:
     - ${{ each task in split(parameters.tasks, ',') }}:
       - job: ${{ task }}_pre_delete
         displayName: PreDelete (${{ task }})
-        pool:
-          vmImage: windows-2022
         steps:
         - template: ./delete-task.yml
           parameters:
             task: ${{ task }}
 
-- stage: Upload
-  jobs:
     - ${{ each task in split(parameters.tasks, ',') }}:
       - job: ${{ task }}_upload_task
         displayName: Upload (${{ task }})
-        pool:
-          vmImage: windows-2022
         steps:
         - template: ./upload-task.yml
           parameters:
             task: ${{ task }}
 
-- stage: Test
-  jobs:
     - ${{ each task in split(parameters.tasks, ',') }}:
       - job: ${{ task }}_test_task
         displayName: Test (${{ task }})
-        pool:
-          vmImage: windows-2022
         steps:
         - template: ./test-task.yml
           parameters:
             task: ${{ task }}
 
-- stage: PostDelete
-  condition: succeededOrFailed('Upload')
-  jobs:
     - ${{ each task in split(parameters.tasks, ',') }}:
       - job: ${{ task }}_post_delete
         displayName: PostDelete (${{ task }})
-        pool:
-          vmImage: windows-2022
         steps:
         - template: ./delete-task.yml
           parameters:
