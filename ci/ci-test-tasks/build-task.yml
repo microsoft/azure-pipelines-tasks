@@ -9,12 +9,44 @@ parameters:
   type: string
 - name: publishArtifact
   type: boolean
+- name: BuildSourceVersion
+  type: string
 
 steps:
 
+- bash: |
+    git init
+    git remote add origin https://github.com/microsoft/azure-pipelines-tasks
+    git fetch --force --tags --prune --prune-tags --progress --no-recurse-submodules origin --depth=1 +${{ parameters.BuildSourceVersion }}:refs/remotes/origin/${{ parameters.BuildSourceVersion }}
+    git checkout --progress --force refs/remotes/origin/${{ parameters.BuildSourceVersion }}
+  displayName: Checkout ${{ parameters.BuildSourceVersion }}
+
+# Start collect diagnostics
+- powershell: ./ci/start-collect-diagnostics.ps1
+  displayName: Start collect diagnostics
+
+# Use node 8, npm 5
+- task: NodeTool@0
+  displayName: Use node 8
+  inputs:
+    versionSpec: 8.x
+
+# npm install
+- script: npm install
+  displayName: Npm install
+
+# Verify min agent demands
+- script: |
+    cd ci/verifyMinAgentDemands
+    npm install
+  displayName: Npm install min agent demands
+
+- script: node ./ci/verifyMinAgentDemands/index.js
+  displayName: Verify min agent demands
+
 - ${{ if parameters.patchVersion }}:
   - script: node ci/patch-task-version.js --task=${{ parameters.task }} --version=${{ parameters.version }}
-    displayName: patchTaskVersion
+    displayName: Patch task version
 
 # Build
 - script: node make.js build --task "${{ parameters.task }}"

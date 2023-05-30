@@ -10,53 +10,53 @@ parameters:
 trigger: none
 pr: none
 
-pool:
-  vmImage: windows-2022
-
 stages:
 - stage: BuildAndTest
   condition: eq(variables['build.reason'], 'Manual')
   jobs:
-    - job: BuildAndTest
-      displayName: Build and test
-      steps:
-      - template: ./init.yml
-        parameters:
-          BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+    - ${{ each task in split(parameters.tasks, ',') }}:
+      - job:  ${{ task }}_build_and_test
+        displayName: Build and test task ${{ task }}
+        pool:
+          vmImage: windows-2022
+        steps:
+        - ${{ each task in split(parameters.tasks, ',') }}:
+          - template: ./build-task.yml
+            parameters:
+              task: ${{ task }}
+              push: false
+              publishArtifact: true
+              patchVersion: true
+              version: '0.999.0'
+              BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
-      - ${{ each task in split(parameters.tasks, ',') }}:
-        - template: ./build-task.yml
-          parameters:
-            task: ${{ task }}
-            push: false
-            publishArtifact: true
-            patchVersion: true
-            version: '0.999.0'
+        - script: |
+            npm install -g tfx-cli@0.14
+          displayName: 'Npm install -g tfx-cli'
 
-      - script: |
-          npm install -g tfx-cli@0.14
-        displayName: 'npm install -g tfx-cli'
+        - script: |
+            tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken)
+          displayName: 'Tfx login'
 
-      - script: |
-          tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken)
-        displayName: 'tfx login'
+        - ${{ each task in split(parameters.tasks, ',') }}:
+          - template: ./delete-task.yml
+            parameters:
+              task: ${{ task }}
 
-      - ${{ each task in split(parameters.tasks, ',') }}:
-        - template: ./delete-task.yml
-          parameters:
-            task: ${{ task }}
+        - ${{ each task in split(parameters.tasks, ',') }}:
+          - template: ./upload-task.yml
+            parameters:
+              task: ${{ task }}
 
-      - ${{ each task in split(parameters.tasks, ',') }}:
-        - template: ./upload-task.yml
-          parameters:
-            task: ${{ task }}
+        - script: npm install axios
+          displayName: 'npm install axios'
 
-      - ${{ each task in split(parameters.tasks, ',') }}:
-        - template: ./test-task.yml
-          parameters:
-            task: ${{ task }}
+        - ${{ each task in split(parameters.tasks, ',') }}:
+          - template: ./test-task.yml
+            parameters:
+              task: ${{ task }}
 
-      - ${{ each task in split(parameters.tasks, ',') }}:
-        - template: ./delete-task.yml
-          parameters:
-            task: ${{ task }}
+        - ${{ each task in split(parameters.tasks, ',') }}:
+          - template: ./delete-task.yml
+            parameters:
+              task: ${{ task }}
