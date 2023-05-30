@@ -181,7 +181,7 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
             let manifests = helmutil.getManifestsFromRelease(helmCli, releaseName);
             if (manifests && manifests.length > 0) {
                 const manifestUrls = getManifestFileUrlsFromHelmOutput(output);
-                const allPods = JSON.parse(kubectlCli.getAllPods().stdout);
+                const allPods = JSON.parse((kubectlCli.getAllPods()).stdout);
                 const clusterInfo = kubectlCli.getClusterInfo().stdout;
 
                 manifests.forEach(manifest => {
