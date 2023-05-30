@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Script por lotes",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkID=613733).\n\nTenga en cuenta que esta tarea no es compatible con los contenedores Windows. Si tiene que ejecutar un script por lotes en un contenedor Windows, use la [tarea CmdLine](https://go.microsoft.com/fwlink/?LinkID=613735) en su lugar.",
+  "loc.description": "Ejecute un script por lotes o un comando de Windows y, opcionalmente, permítale cambiar el entorno",
+  "loc.instanceNameFormat": "Run script $(filename)",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.filename": "Ruta de acceso",
+  "loc.input.help.filename": "Ruta del script cmd o bat a ejecutar. Debe ser una ruta de acceso absoluta o relativa al directorio de trabajo por defecto (tenga en cuenta que el directorio de trabajo podría diferir del 'workingFolder' que pudiera especificarse para esta tarea).",
+  "loc.input.label.arguments": "Argumentos",
+  "loc.input.help.arguments": "Argumentos pasados al script cmd o bat",
+  "loc.input.label.modifyEnvironment": "Modificar entorno",
+  "loc.input.help.modifyEnvironment": "Determina si las modificaciones de variable de entorno afectarán a tareas posteriores.",
+  "loc.input.label.workingFolder": "Carpeta de trabajo",
+  "loc.input.help.workingFolder": "Directorio de trabajo actual cuando el script se ejecuta. Se establece de forma predeterminada en la carpeta donde está el script.",
+  "loc.input.label.failOnStandardError": "Error si se produce un error estándar",
+  "loc.input.help.failOnStandardError": "Si es true, esta tarea no se realizará cuando se registre algún error en la secuencia StandardError."
+}

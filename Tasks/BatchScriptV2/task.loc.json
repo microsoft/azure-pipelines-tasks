@@ -1,0 +1,88 @@
+{
+  "id": "BFC8BF76-E7AC-4A8C-9A55-A944A9F632FD",
+  "name": "BatchScript",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/batch-script",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 223,
+    "Patch": 0
+  },
+  "demands": [
+    "Cmd"
+  ],
+  "minimumAgentVersion": "1.83.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "filename",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.filename",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.filename"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    },
+    {
+      "name": "modifyEnvironment",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.modifyEnvironment",
+      "defaultValue": "False",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.modifyEnvironment"
+    },
+    {
+      "name": "workingFolder",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingFolder",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.workingFolder",
+      "groupName": "advanced"
+    },
+    {
+      "name": "failOnStandardError",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStandardError",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStandardError",
+      "groupName": "advanced"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Process": {
+      "target": "$(filename)",
+      "argumentFormat": "$(arguments)",
+      "workingDirectory": "$(workingFolder)",
+      "modifyEnvironment": "$(modifyEnvironment)",
+      "disableInlineExecution": true
+    }
+  }
+}

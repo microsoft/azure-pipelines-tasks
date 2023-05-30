@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Batch script",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613733).\n\nPlease note: this task is not compatible with Windows containers. If you need to run a batch script on a Windows container, use the [CmdLine task](https://go.microsoft.com/fwlink/?LinkID=613735) instead.",
+  "loc.description": "Run a Windows command or batch script and optionally allow it to change the environment",
+  "loc.instanceNameFormat": "Run script $(filename)",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.filename": "Path",
+  "loc.input.help.filename": "Path of the cmd or bat script to execute. Should be fully qualified path or relative to the default working directory (please note that working directory could differ from 'workingFolder' which could be specified for this task).",
+  "loc.input.label.arguments": "Arguments",
+  "loc.input.help.arguments": "Arguments passed to the cmd or bat script",
+  "loc.input.label.modifyEnvironment": "Modify Environment",
+  "loc.input.help.modifyEnvironment": "Determines whether environment variable modifications will affect subsequent tasks.",
+  "loc.input.label.workingFolder": "Working folder",
+  "loc.input.help.workingFolder": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+  "loc.input.label.failOnStandardError": "Fail on Standard Error",
+  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the StandardError stream."
+}
