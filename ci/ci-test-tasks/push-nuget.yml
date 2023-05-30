@@ -1,0 +1,43 @@
+steps:
+
+# Stage tasks individually into the package directory
+- script: node ./ci/stage-package.js false individually
+  displayName: Stage tasks individually into the package directory
+
+# Sign task zip as nuget package
+#- template: sign-all-tasks.yml
+#  parameters:
+#    layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+
+# Stage all the tasks into a single zip for upload
+- script: node ./ci/stage-package.js false
+  displayName: Stage all the tasks into a single zip for upload
+
+# Set variables
+- powershell: .\ci\set-publish-variables.ps1
+  displayName: Set publish variables
+
+# Moving Package zip file to be consumed by Milestone staging task
+- powershell: |
+    mkdir $env:SYSTEM_ARTIFACTSDIRECTORY\package
+    Copy-Item $(Build.SourcesDirectory)\_package\tasks.zip -Destination $env:SYSTEM_ARTIFACTSDIRECTORY\package\tasks.zip
+    Write-Host "Copying from '$(Build.SourcesDirectory)\_package\tasks.zip' to '$env:SYSTEM_ARTIFACTSDIRECTORY\package\tasks.zip'"
+  displayName: Move package zip file
+
+# Stage Milestone task
+- script: node .\ci\stage-milestone.js
+  displayName: Stage milestone
+
+# Stage per task NuGet package
+- script: npm run package
+  displayName: npm run package
+
+# Authenticate
+- task: NuGetAuthenticate@0
+  displayName: Authenticate with nuget
+
+# Push to feed
+- script: |
+    cd $(Build.SourcesDirectory)\_package\nuget-packages\$(task)
+    push.cmd
+  displayName: Push Nuget package

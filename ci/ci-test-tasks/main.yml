@@ -35,6 +35,14 @@ stages:
             version: '0.999.0'
             BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
+        - ${{ if parameters.PushNugetPackage }}:
+          - template: ./push-nuget.yml
+
+        - ${{ if parameters.PushNugetPackage }}:
+          - template: ./upload-artifact.yml
+            parameters:
+              task: ${{ task }}
+
         - script: |
             npm install -g tfx-cli@0.14
           displayName: 'Npm install -g tfx-cli'

@@ -1,0 +1,27 @@
+parameters:
+- name: task
+  type: string
+
+steps:
+
+# Stage all the tasks into a single zip for upload
+- script: node ./ci/stage-package.js true
+  displayName: Stage all the tasks into a single zip for upload
+
+# Stage hotfix
+- script: node ./ci/stage-hotfix.js "${{ parameters.task }}"
+  displayName: Stage hotfix
+
+# Publish hotfix artifact
+- task: PublishBuildArtifacts@1
+  displayName: Publish hotfix artifact
+  inputs:
+    pathToPublish: _package/hotfix-layout
+    artifactName: hotfix
+    publishLocation: container
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)\_package\tasks-layout\${{ parameters.task }}\task.zip'
+    ArtifactName: '${{ parameters.task }}'
+    publishLocation: 'Container'
