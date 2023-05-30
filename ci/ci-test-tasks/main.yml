@@ -17,10 +17,23 @@ stages:
 - stage: BuildAndTest
   condition: eq(variables['build.reason'], 'Manual')
   jobs:
-    - ${{ each task in split(parameters.tasks, ',') }}:
-      - job: ${{ task }}_build_task
-        displayName: Build Task (${{ task }})
-        steps:
+    - job: BuildAndTest
+      displayName: Build and test
+      steps:
+      - bash: |
+          git init
+          git remote add origin https://github.com/microsoft/azure-pipelines-tasks
+          git fetch --force --tags --prune --prune-tags --progress --no-recurse-submodules origin --depth=1 +${{ parameters.BuildSourceVersion }}:refs/remotes/origin/${{ parameters.BuildSourceVersion }}
+          git checkout --progress --force refs/remotes/origin/${{ parameters.BuildSourceVersion }}
+        displayName: Checkout ${{ parameters.BuildSourceVersion }}
+
+      # Use node 8, npm 5
+      - task: NodeTool@0
+        displayName: Use node 8
+        inputs:
+          versionSpec: 8.x
+
+      - ${{ each task in split(parameters.tasks, ',') }}:
         - template: ./build-task.yml
           parameters:
             task: ${{ task }}
@@ -30,39 +43,30 @@ stages:
             version: '0.999.0'
             BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
-    - job: tfx_init
-      displayName: Tfx init
-      steps:
-      - template: ./tfx-init.yml
+      - script: |
+          npm install -g tfx-cli@0.14
+        displayName: 'npm install -g tfx-cli'
 
-    - ${{ each task in split(parameters.tasks, ',') }}:
-      - job: ${{ task }}_pre_delete
-        displayName: PreDelete (${{ task }})
-        steps:
+      - script: |
+          tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken)
+        displayName: 'tfx login'
+
+      - ${{ each task in split(parameters.tasks, ',') }}:
         - template: ./delete-task.yml
           parameters:
             task: ${{ task }}
 
-    - ${{ each task in split(parameters.tasks, ',') }}:
-      - job: ${{ task }}_upload_task
-        displayName: Upload (${{ task }})
-        steps:
+      - ${{ each task in split(parameters.tasks, ',') }}:
         - template: ./upload-task.yml
           parameters:
             task: ${{ task }}
 
-    - ${{ each task in split(parameters.tasks, ',') }}:
-      - job: ${{ task }}_test_task
-        displayName: Test (${{ task }})
-        steps:
+      - ${{ each task in split(parameters.tasks, ',') }}:
         - template: ./test-task.yml
           parameters:
             task: ${{ task }}
 
-    - ${{ each task in split(parameters.tasks, ',') }}:
-      - job: ${{ task }}_post_delete
-        displayName: PostDelete (${{ task }})
-        steps:
+      - ${{ each task in split(parameters.tasks, ',') }}:
         - template: ./delete-task.yml
           parameters:
             task: ${{ task }}
