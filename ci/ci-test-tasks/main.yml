@@ -29,9 +29,18 @@ stages:
             version: '0.999.0'
             BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
+- stage: TfxInit
+  jobs:
+    - job: tfx_init
+      displayName: Tfx init
+      pool:
+        vmImage: windows-2022
+      steps:
+      - template: ./tfx-init.yml
+
 - stage: PreDelete
   jobs:
-    - ${{ each task in split(parameters.tasks, ',') }}:    
+    - ${{ each task in split(parameters.tasks, ',') }}:
       - job: ${{ task }}_pre_delete
         displayName: PreDelete (${{ task }})
         pool:
@@ -40,7 +49,6 @@ stages:
         - template: ./delete-task.yml
           parameters:
             task: ${{ task }}
-            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
 - stage: Upload
   jobs:
@@ -53,7 +61,6 @@ stages:
         - template: ./upload-task.yml
           parameters:
             task: ${{ task }}
-            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
 - stage: Test
   jobs:
@@ -66,12 +73,11 @@ stages:
         - template: ./test-task.yml
           parameters:
             task: ${{ task }}
-            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
 - stage: PostDelete
   condition: succeededOrFailed('Upload')
   jobs:
-    - ${{ each task in split(parameters.tasks, ',') }}:    
+    - ${{ each task in split(parameters.tasks, ',') }}:
       - job: ${{ task }}_post_delete
         displayName: PostDelete (${{ task }})
         pool:
@@ -80,4 +86,3 @@ stages:
         - template: ./delete-task.yml
           parameters:
             task: ${{ task }}
-            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}

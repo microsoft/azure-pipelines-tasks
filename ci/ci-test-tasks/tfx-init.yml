@@ -1,0 +1,8 @@
+steps:
+- script: |
+    npm install -g tfx-cli@0.14
+  displayName: 'npm install -g tfx-cli'
+
+- script: |
+    tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken)
+  displayName: 'tfx login'
