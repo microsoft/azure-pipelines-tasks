@@ -4,7 +4,7 @@ parameters:
 
 steps:
 - script: npm install axios
-          displayName: 'npm install axios'
+  displayName: 'npm install axios'
 
 - script: |
     echo "Tasks: ${{ parameters.task }}"
