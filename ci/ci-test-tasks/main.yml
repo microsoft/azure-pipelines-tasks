@@ -22,7 +22,7 @@ stages:
       steps:
       - template: ./init.yml
         parameters:
-          BuildSourceVersion: parameters.BuildSourceVersion
+          BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
       - ${{ each task in split(parameters.tasks, ',') }}:
         - template: ./build-task.yml
