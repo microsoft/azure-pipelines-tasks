@@ -35,6 +35,10 @@ steps:
 - script: npm install
   displayName: Npm install
 
+- ${{ if parameters.patchVersion }}:
+  - script: node ci/patch-task-version.js --task=${{ parameters.task }} --version=${{ parameters.version }}
+    displayName: Patch task version
+
 # Verify min agent demands
 - script: |
     cd ci/verifyMinAgentDemands
@@ -43,10 +47,6 @@ steps:
 
 - script: node ./ci/verifyMinAgentDemands/index.js
   displayName: Verify min agent demands
-
-- ${{ if parameters.patchVersion }}:
-  - script: node ci/patch-task-version.js --task=${{ parameters.task }} --version=${{ parameters.version }}
-    displayName: Patch task version
 
 # Build
 - script: node make.js build --task "${{ parameters.task }}"

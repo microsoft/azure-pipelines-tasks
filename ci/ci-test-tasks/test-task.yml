@@ -3,6 +3,8 @@ parameters:
     type: string
 
 steps:
+- script: npm install axios
+          displayName: 'npm install axios'
 
 - script: |
     echo "Tasks: ${{ parameters.task }}"
