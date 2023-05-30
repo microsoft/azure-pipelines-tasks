@@ -41,7 +41,6 @@ stages:
             publishArtifact: true
             patchVersion: true
             version: '0.999.0'
-            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
       - script: |
           npm install -g tfx-cli@0.14
