@@ -44,8 +44,13 @@ function fetchPipelines() {
     .catch(err => {
       err.stack = 'Error fetching pipelines: ' + err.stack;
       console.error(err.stack);
-      if (err.response?.data) {
-        console.error(err.response.data);
+      if (err.response) {
+        if (err.response.data) {
+          console.error(err.response.data);
+        }
+        else {
+          console.error(err.response);
+        }
       }
 
       throw err;

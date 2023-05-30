@@ -9,58 +9,96 @@ parameters:
 - name: PushNugetPackage
   displayName: A flag for uploading nuget package
   type: boolean
-- name: PublishArtifact
-  displayName: A flag for publishing artifacts
+- name: PublishHotfixArtifact
+  displayName: A flag for publishing hotfix artifacts
   type: boolean
 
 trigger: none
 pr: none
 
 stages:
-- stage: BuildAndTestAllTasks
+- stage: ProcessAllTasks
   condition: eq(variables['build.reason'], 'Manual')
   jobs:
-    - ${{ each task in split(parameters.tasks, ',') }}:
-      - job:  ${{ task }}_build_and_test
-        displayName: Build and test task ${{ task }}
-        pool:
-          vmImage: windows-2022
-        steps:
-        - template: ./build-task.yml
-          parameters:
-            task: ${{ task }}
-            patchVersion: true
-            version: '0.999.0'
-            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+    - ${{ if not(parameters.PublishHotfixArtifact) }}:
+      - ${{ each task in split(parameters.tasks, ',') }}:
+        - job:  ${{ task }}_build_and_test
+          displayName: Process ${{ task }}
+          pool:
+            vmImage: windows-2022
+          steps:
+          - template: ./build-task.yml
+            parameters:
+              task: ${{ task }}
+              patchVersion: true
+              version: '0.999.0'
+              BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
-        - ${{ if parameters.PushNugetPackage }}:
-          - template: ./push-nuget.yml
+          - ${{ if parameters.PushNugetPackage }}:
+            - template: ./push-nuget.yml
 
-        - ${{ if parameters.PublishArtifact }}:
+          - script: |
+              npm install -g tfx-cli@0.14
+            displayName: 'Npm install -g tfx-cli'
+
+          - script: |
+              tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken)
+            displayName: 'Tfx login'
+
+          - template: ./delete-task.yml
+            parameters:
+              task: ${{ task }}
+
+          - template: ./upload-task.yml
+            parameters:
+              task: ${{ task }}
+
+          - template: ./test-task.yml
+            parameters:
+              task: ${{ task }}
+
+          - template: ./delete-task.yml
+            parameters:
+              task: ${{ task }}
+
+    - ${{ if parameters.PublishHotfixArtifact }}:
+      - ${{ each task in split(parameters.tasks, ',') }}:
+        - job:  ${{ task }}_build_and_test
+          displayName: Process ${{ task }}
+          pool:
+            vmImage: windows-2022
+          steps:
+          - template: ./build-task.yml
+            parameters:
+              task: ${{ task }}
+              patchVersion: true
+              version: '0.999.0'
+              BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+
           - template: ./upload-artifact.yml
             parameters:
               task: ${{ task }}
 
-        - script: |
-            npm install -g tfx-cli@0.14
-          displayName: 'Npm install -g tfx-cli'
+          - script: |
+              npm install -g tfx-cli@0.14
+            displayName: 'Npm install -g tfx-cli'
 
-        - script: |
-            tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken)
-          displayName: 'Tfx login'
+          - script: |
+              tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken)
+            displayName: 'Tfx login'
 
-        - template: ./delete-task.yml
-          parameters:
-            task: ${{ task }}
+          - template: ./delete-task.yml
+            parameters:
+              task: ${{ task }}
 
-        - template: ./upload-task.yml
-          parameters:
-            task: ${{ task }}
+          - template: ./upload-task.yml
+            parameters:
+              task: ${{ task }}
 
-        - template: ./test-task.yml
-          parameters:
-            task: ${{ task }}
+          - template: ./test-task.yml
+            parameters:
+              task: ${{ task }}
 
-        - template: ./delete-task.yml
-          parameters:
-            task: ${{ task }}
+          - template: ./delete-task.yml
+            parameters:
+              task: ${{ task }}
