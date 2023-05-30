@@ -8,7 +8,7 @@ var uuidV4 = require('uuid/v4');
 
 const featureFlags = {
     enableTelemetry: getFeatureFlagValue('AZP_TASK_FF_BASHV3_ENABLE_INPUT_ARGS_TELEMETRY', true),
-    enableSecureArgs: getFeatureFlagValue('AZP_TASK_FF_BASHV3_ENABLE_SECURE_ARGS', true)
+    enableSecureArgs: false
 }
 
 async function translateDirectoryPath(bashPath: string, directoryPath: string): Promise<string> {
