@@ -3,8 +3,8 @@
   "name": "Kubernetes",
   "friendlyName": "Kubectl",
   "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running kubectl commands",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/kubernetes",
-  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "helpUrl": "https://aka.ms/azpipes-kubectl-tsg",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -12,13 +12,19 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
+    "Major": 1,
     "Minor": 223,
     "Patch": 1
   },
   "demands": [],
-  "preview": "false",
+  "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
   "groups": [
+    {
+      "name": "kubernetesCluster",
+      "displayName": "Kubernetes Cluster",
+      "isExpanded": true,
+      "visibleRule": "command != logout"
+    },
     {
       "name": "commands",
       "displayName": "Commands",
@@ -27,12 +33,14 @@
     {
       "name": "secrets",
       "displayName": "Secrets",
-      "isExpanded": false
+      "isExpanded": false,
+      "visibleRule": "command != login && command != logout"
     },
     {
       "name": "configMaps",
       "displayName": "ConfigMaps",
-      "isExpanded": false
+      "isExpanded": false,
+      "visibleRule": "command != login && command != logout"
     },
     {
       "name": "advanced",
@@ -42,18 +50,78 @@
     {
       "name": "output",
       "displayName": "Output",
-      "isExpanded": false
+      "isExpanded": false,
+      "visibleRule": "command != login && command != logout"
     }
   ],
   "inputs": [
     {
+      "name": "connectionType",
+      "type": "pickList",
+      "label": "Service connection type",
+      "defaultValue": "Kubernetes Service Connection",
+      "required": true,
+      "options": {
+        "Azure Resource Manager": "Azure Resource Manager",
+        "Kubernetes Service Connection": "Kubernetes Service Connection",
+        "None": "None"
+      },
+      "groupName": "kubernetesCluster",
+      "helpMarkDown": "Select a service connection type."
+    },
+    {
       "name": "kubernetesServiceEndpoint",
-      "aliases": [
-        "kubernetesServiceConnection"
-      ],
       "type": "connectedService:kubernetes",
       "label": "Kubernetes service connection",
-      "helpMarkDown": "Select a Kubernetes service connection."
+      "visibleRule": "connectionType = Kubernetes Service Connection",
+      "helpMarkDown": "Select a Kubernetes service connection.",
+      "groupName": "kubernetesCluster",
+      "required": true
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "type": "connectedService:AzureRM",
+      "label": "Azure subscription",
+      "helpMarkDown": "Select the Azure Resource Manager subscription, which contains Azure Container Registry.Note: To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Add' or 'Manage' button.",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "groupName": "kubernetesCluster",
+      "required": true
+    },
+    {
+      "name": "azureResourceGroup",
+      "label": "Resource group",
+      "type": "pickList",
+      "helpMarkDown": "Select an Azure resource group.",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "kubernetesCluster",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "kubernetesCluster",
+      "label": "Kubernetes cluster",
+      "type": "pickList",
+      "helpMarkDown": "Select an Azure managed cluster.",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "kubernetesCluster",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "useClusterAdmin",
+      "type": "boolean",
+      "label": "Use cluster admin credentials",
+      "defaultValue": "false",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "groupName": "kubernetesCluster",
+      "helpMarkDown": "Use cluster administrator credentials instead of default cluster user credentials."
     },
     {
       "name": "namespace",
@@ -61,6 +129,7 @@
       "label": "Namespace",
       "required": false,
       "defaultValue": "",
+      "groupName": "kubernetesCluster",
       "helpMarkDown": "Set the namespace for the kubectl command by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace."
     },
     {
@@ -76,6 +145,8 @@
         "exec": "exec",
         "expose": "expose",
         "get": "get",
+        "login": "login",
+        "logout": "logout",
         "logs": "logs",
         "run": "run",
         "set": "set",
@@ -90,20 +161,49 @@
     {
       "name": "useConfigurationFile",
       "type": "boolean",
-      "label": "Use Configuration files",
+      "label": "Use configuration",
       "defaultValue": "false",
-      "helpMarkDown": "Use Kubernetes configuration file with the kubectl command. Filename, directory, or URL to Kubernetes configuration files can also be provided.",
-      "groupName": "commands"
+      "helpMarkDown": "Use Kubernetes configuration with the kubectl command. An inline script, filename, directory, or URL to Kubernetes configuration files can be provided.",
+      "groupName": "commands",
+      "visibleRule": "command != login && command != logout"
+    },
+    {
+      "name": "configurationType",
+      "type": "radio",
+      "label": "Configuration type",
+      "defaultValue": "configuration",
+      "groupName": "commands",
+      "helpMarkDown": "Type of Kubernetes configuration for kubectl command. It can be a file path or an inline script.",
+      "options": {
+        "configuration": "File path",
+        "inline": "Inline configuration"
+      },
+      "visibleRule": "useConfigurationFile = true"
     },
     {
       "name": "configuration",
       "type": "filePath",
-      "label": "Configuration file",
+      "label": "File path",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "Filename, directory, or URL to kubernetes configuration files that will be used with the commands.",
-      "visibleRule": "useConfigurationFile = true",
+      "visibleRule": "configurationType = configuration",
       "groupName": "commands"
+    },
+    {
+      "name": "inline",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000"
+      },
+      "required": true,
+      "defaultValue": "",
+      "label": "Inline configuration",
+      "helpMarkDown": "Inline deployment configuration for kubectl command",
+      "groupName": "commands",
+      "visibleRule": "configurationType = inline"
     },
     {
       "name": "arguments",
@@ -115,7 +215,8 @@
       },
       "label": "Arguments",
       "helpMarkDown": "Arguments to the specified kubectl command.",
-      "groupName": "commands"
+      "groupName": "commands",
+      "visibleRule": "command != login && command != logout"
     },
     {
       "name": "secretType",
@@ -147,7 +248,7 @@
     {
       "name": "containerRegistryType",
       "type": "pickList",
-      "label": "Container Registry type",
+      "label": "Container registry type",
       "defaultValue": "Azure Container Registry",
       "required": true,
       "options": {
@@ -160,20 +261,14 @@
     },
     {
       "name": "dockerRegistryEndpoint",
-      "aliases": [
-        "dockerRegistryConnection"
-      ],
       "type": "connectedService:dockerregistry",
-      "label": "Docker Registry service connection",
+      "label": "Docker registry service connection",
       "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
       "visibleRule": "secretType = dockerRegistry && containerRegistryType = Container Registry",
       "groupName": "secrets"
     },
     {
-      "name": "azureSubscriptionEndpoint",
-      "aliases": [
-        "azureSubscription"
-      ],
+      "name": "azureSubscriptionEndpointForSecrets",
       "type": "connectedService:AzureRM",
       "label": "Azure subscription",
       "helpMarkDown": "Select the Azure Resource Manager subscription, which contains Azure Container Registry. Note: To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Add' or 'Manage' button.",
@@ -183,7 +278,7 @@
     },
     {
       "name": "azureContainerRegistry",
-      "label": "Azure Container Registry",
+      "label": "Azure container registry",
       "type": "pickList",
       "helpMarkDown": "Select an Azure Container Registry which will be used for pulling container images and deploying applications to the Kubernetes cluster. Required for commands that need to authenticate with a registry.",
       "visibleRule": "secretType = dockerRegistry && containerRegistryType = Azure Container Registry",
@@ -271,7 +366,7 @@
       "name": "versionSpec",
       "type": "string",
       "label": "Version spec",
-      "defaultValue": "1.7.0",
+      "defaultValue": "1.13.2",
       "helpMarkDown": "Version Spec of version to get.  Examples: 1.7.0, 1.x.0, 4.x.0, 6.10.0",
       "groupName": "advanced",
       "visibleRule": "versionOrLocation = version"
@@ -289,7 +384,7 @@
     {
       "name": "specifyLocation",
       "type": "filePath",
-      "label": "Path to Kubectl",
+      "label": "Path to kubectl",
       "defaultValue": "",
       "helpMarkDown": "Full path to the kubectl.exe",
       "required": true,
@@ -315,42 +410,58 @@
       "required": false,
       "options": {
         "json": "json",
-        "yaml": "yaml"
+        "yaml": "yaml",
+        "none": "none"
       },
       "helpMarkDown": "Output format.",
-      "groupName": "output",
+      "groupName": "advanced",
       "properties": {
         "EditableOptions": "True"
       }
-    },
-    {
-      "name": "kubectlOutput",
-      "type": "string",
-      "label": "Output variable name",
-      "required": false,
-      "defaultValue": "",
-      "helpMarkDown": "Name of the variable in which output of the command should be saved.",
-      "groupName": "output"
     }
   ],
   "dataSourceBindings": [
     {
       "target": "azureContainerRegistry",
-      "endpointId": "$(azureSubscriptionEndpoint)",
+      "endpointId": "$(azureSubscriptionEndpointForSecrets)",
       "dataSourceName": "AzureRMContainerRegistries",
-      "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
+      "resultTemplate": "{\"Value\":\"{{{properties.loginServer}}}\",\"DisplayValue\":\"{{{name}}}\"}"
+    },
+    {
+      "target": "kubernetesCluster",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{{{name}}}"
+    },
+    {
+      "target": "azureResourceGroup",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
     }
   ],
   "instanceNameFormat": "kubectl $(command)",
+  "outputVariables": [
+    {
+      "name": "KubectlOutput",
+      "description": "Stores the output of the kubectl command"
+    }
+  ],
   "execution": {
     "Node10": {
+      "target": "src//kubernetes.js"
+    },
+    "Node16": {
       "target": "src//kubernetes.js"
     }
   },
   "messages": {
+    "CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s.",
     "DownloadingClient": "Downloading kubernetes client.",
+    "KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",
     "CreatingSecret": "Executing create %s secret.",
-    "CallToolRunnerExec": "Calling Toolrunner exec() method asynchronously to execute the kubectl command and store the returned promise object.",
     "DeleteSecret": "Executing delete %s secret",
     "CreatingConfigMap": "Executing create %s configmap.",
     "DeleteConfigMap": "Executing delete %s configmap",
@@ -362,12 +473,25 @@
     "DownloadPathForStableTxt": "Download path for stable.txt: %s",
     "DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
     "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
+    "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
+    "NotAValidVersion": "Not a valid version, the available versions are: %s",
+    "ConfigurationFileNotFound": "No configuration file matching %s was found.",
+    "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
+    "OutputVariableDataSizeExceeded": "Output variable not set as kubectl command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
+    "InvalidConfiguration": "No Kubernetes configuration found, supply either inline configuration or configuration file path",
+    "CallToolRunnerExec": "Calling Toolrunner exec() method asynchronously to execute the kubectl command and store the returned promise object.",
     "ReturningToolRunnerExecPromise": "Called Toolrunner exec() method asynchronously. Returning the promise.",
     "ToolRunnerExecCallFailed": "Toolrunner exec() method returned error for the kubectl command. Error: %s.",
     "ToolRunnerExecCallSucceeded": "Toolrunner exec() method returned successfully for the kubectl command.",
-    "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
-    "ConfigurationFileNotFound": "No configuration file matching %s was found.",
-    "OutputVariableDataSizeExceeded": "Output variable not set as kubectl command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
-    "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
+    "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s",
+    "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+    "UnableToFetchKubectlVersion": "Could not fetch Kubectl version. Please make sure that the Kubernetes server is up and running.",
+    "KubectlClientVersion": "Kubectl Client Version",
+    "KubectlServerVersion": "Kubectl Server Version",
+    "KubectlServerVerisonNotFound": "Could not find kubectl server version"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.223.1",
+    "Node16-219": "1.223.0"
   }
 }

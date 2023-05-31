@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 223,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
   "preview": "false",
@@ -345,6 +345,10 @@
   "execution": {
     "Node10": {
       "target": "src//kubernetes.js"
+    },
+    "Node16": {
+      "target": "src//kubernetes.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -369,5 +373,9 @@
     "ConfigurationFileNotFound": "ms-resource:loc.messages.ConfigurationFileNotFound",
     "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.223.1",
+    "Node16-219": "0.223.0"
   }
 }

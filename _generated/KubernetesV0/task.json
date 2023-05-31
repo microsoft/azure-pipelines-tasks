@@ -369,5 +369,9 @@
     "ConfigurationFileNotFound": "No configuration file matching %s was found.",
     "OutputVariableDataSizeExceeded": "Output variable not set as kubectl command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
     "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.223.1",
+    "Node16-219": "0.223.0"
   }
 }
