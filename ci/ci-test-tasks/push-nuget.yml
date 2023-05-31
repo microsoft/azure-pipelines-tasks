@@ -1,7 +1,7 @@
 steps:
 
 # Stage all the tasks into a single zip for upload
-- script: node ./ci/stage-package.js false
+- script: node ./ci/stage-package.js false individually
   displayName: Stage all the tasks into a single zip for upload
 
 # Set variables
