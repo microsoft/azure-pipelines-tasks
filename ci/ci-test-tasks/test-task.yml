@@ -3,11 +3,11 @@ parameters:
     type: string
 
 steps:
-- script: npm install axios
+- script: npm install axios@0.27.2
   displayName: 'Npm install axios'
 
 - script: |
     echo "Tasks: ${{ parameters.task }}"
-    node ./ci/ci-test-tasks/test-and-verify.js $(ADOToken) $(ADOUrl) $(System.TeamProject) ${{ parameters.task }} --input-type=module
+    node ./ci/ci-test-tasks/test-and-verify.js $(ADOToken) $(ADOUrl) $(System.TeamProject) ${{ parameters.task }}
   displayName: 'Run tests and verify results'
   failOnStderr: true
