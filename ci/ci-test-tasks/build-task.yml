@@ -5,8 +5,6 @@ parameters:
   type: boolean
 - name: version
   type: string
-- name: BuildSourceVersion
-  type: string
 
 steps:
 
@@ -14,18 +12,9 @@ steps:
   - script: node ci/patch-task-version.js --task=${{ parameters.task }} --version=${{ parameters.version }}
     displayName: Patch task version
 
-# Verify min agent demands
-- script: |
-    cd ci/verifyMinAgentDemands
-    npm install
-  displayName: Npm install min agent demands
-
-- script: node ./ci/verifyMinAgentDemands/index.js
-  displayName: Verify min agent demands
-
 # Build
 - script: node make.js build --task "${{ parameters.task }}"
-  displayName: Build
+  displayName: Build ${{ parameters.task }}
 
 # Check diff for task sources
 #- script: node ./ci/verify-source-changes.js "${{ parameters.task }}"
