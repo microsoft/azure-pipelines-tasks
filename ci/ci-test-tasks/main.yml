@@ -41,11 +41,6 @@ stages:
               version: '0.999.0'
               BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
-          - ${{ if parameters.PushNugetPackage }}:
-            - template: ./push-nuget.yml
-              parameters:
-                task: ${{ task }}
-
           - script: |
               npm install -g tfx-cli@0.14
             displayName: 'Npm install -g tfx-cli'
@@ -70,6 +65,11 @@ stages:
             parameters:
               task: ${{ task }}
 
+          - ${{ if parameters.PushNugetPackage }}:
+            - template: ./push-nuget.yml
+              parameters:
+                task: ${{ task }}
+
     - ${{ if parameters.PublishHotfixArtifact }}:
       - job:  process_all_tasks
         displayName: Process all tasks
@@ -90,6 +90,10 @@ stages:
               patchVersion: true
               version: '0.999.0'
               BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+
+        - template: ./upload-artifact.yml
+          parameters:
+            tasks: ${{ parameters.tasks }}
 
         - script: |
             npm install -g tfx-cli@0.14
@@ -123,7 +127,3 @@ stages:
           - template: ./push-nuget.yml
             parameters:
               task: ${{ task }}
-
-        - template: ./upload-artifact.yml
-          parameters:
-            tasks: ${{ parameters.tasks }}
