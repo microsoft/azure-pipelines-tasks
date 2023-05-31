@@ -221,6 +221,7 @@
         "FuncToolsInstallerV0",
         "PackerBuildV0",
         "PackerBuildV1",
-        "DownloadGitHubNugetPackageV1"
+        "DownloadGitHubNugetPackageV1",
+        "NuGetPublisherV0"
     ]
 }
