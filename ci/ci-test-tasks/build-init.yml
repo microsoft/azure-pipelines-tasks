@@ -1,0 +1,11 @@
+steps:
+
+# Use node 8, npm 5
+- task: NodeTool@0
+  displayName: Use node 8
+  inputs:
+    versionSpec: 8.x
+
+# npm install
+- script: npm install
+  displayName: Npm install

@@ -10,20 +10,6 @@ parameters:
 
 steps:
 
-# Start collect diagnostics
-- powershell: ./ci/start-collect-diagnostics.ps1
-  displayName: Start collect diagnostics
-
-# Use node 8, npm 5
-- task: NodeTool@0
-  displayName: Use node 8
-  inputs:
-    versionSpec: 8.x
-
-# npm install
-- script: npm install
-  displayName: Npm install
-
 - ${{ if parameters.patchVersion }}:
   - script: node ci/patch-task-version.js --task=${{ parameters.task }} --version=${{ parameters.version }}
     displayName: Patch task version
@@ -70,8 +56,3 @@ steps:
     PathtoPublish: '$(Build.SourcesDirectory)\_package\tasks-layout\${{ parameters.task }}\task.zip'
     ArtifactName: '${{ parameters.task }}'
     publishLocation: 'Container'
-
-# Stop collect diagnostics
-- powershell: ./ci/stop-collect-diagnostics.ps1
-  displayName: Stop collect diagnostics
-  condition: always()

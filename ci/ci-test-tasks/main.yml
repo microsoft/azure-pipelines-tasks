@@ -34,12 +34,23 @@ stages:
               git checkout --progress --force refs/remotes/origin/${{ parameters.BuildSourceVersion }}
             displayName: Checkout ${{ parameters.BuildSourceVersion }}
 
+          # Start collect diagnostics
+          - powershell: ./ci/start-collect-diagnostics.ps1
+            displayName: Start collect diagnostics
+
+          - template: ./build-init.yml
+
           - template: ./build-task.yml
             parameters:
               task: ${{ task }}
               patchVersion: true
               version: '0.999.0'
               BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+
+          # Stop collect diagnostics
+          - powershell: ./ci/stop-collect-diagnostics.ps1
+            displayName: Stop collect diagnostics
+            condition: always()
 
           - script: |
               npm install -g tfx-cli@0.14
@@ -83,6 +94,12 @@ stages:
             git checkout --progress --force refs/remotes/origin/${{ parameters.BuildSourceVersion }}
           displayName: Checkout ${{ parameters.BuildSourceVersion }}
 
+        # Start collect diagnostics
+        - powershell: ./ci/start-collect-diagnostics.ps1
+          displayName: Start collect diagnostics
+
+        - template: ./build-init.yml
+
         - ${{ each task in split(parameters.tasks, ',') }}:
           - template: ./build-task.yml
             parameters:
@@ -90,6 +107,11 @@ stages:
               patchVersion: true
               version: '0.999.0'
               BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+
+        # Stop collect diagnostics
+        - powershell: ./ci/stop-collect-diagnostics.ps1
+          displayName: Stop collect diagnostics
+          condition: always()
 
         - template: ./upload-artifact.yml
           parameters:
