@@ -4,6 +4,7 @@ parameters:
 
 steps:
 - task: DownloadBuildArtifacts@1
+  displayName: Download build artifact
   inputs:
     buildType: 'current'
     downloadType: 'single'
@@ -11,6 +12,7 @@ steps:
     downloadPath: '$(System.ArtifactsDirectory)'
 
 - task: ExtractFiles@1
+  displayName: Extract files
   inputs:
     archiveFilePatterns: '$(System.ArtifactsDirectory)/${{parameters.task}}/task.zip'
     destinationFolder: 'task-${{ parameters.task }}'

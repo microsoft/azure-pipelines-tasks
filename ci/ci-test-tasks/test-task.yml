@@ -8,6 +8,6 @@ steps:
 
 - script: |
     echo "Tasks: ${{ parameters.task }}"
-    node ./ci/ci-test-tasks/test-and-verify.js $(ADOToken) $(ADOUrl) $(System.TeamProject) ${{ parameters.task }}
+    node ./ci/ci-test-tasks/test-and-verify.js $(ADOToken) $(ADOUrl) $(System.TeamProject) ${{ parameters.task }} --input-type=module
   displayName: 'Run tests and verify results'
   failOnStderr: true

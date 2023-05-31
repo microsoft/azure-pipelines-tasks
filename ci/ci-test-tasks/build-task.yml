@@ -72,6 +72,7 @@ steps:
   displayName: Stage tasks individually into the package directory
 
 - task: PublishBuildArtifacts@1
+  displayName: Publish build artifacts
   inputs:
     PathtoPublish: '$(Build.SourcesDirectory)\_package\tasks-layout\${{ parameters.task }}\task.zip'
     ArtifactName: '${{ parameters.task }}'
