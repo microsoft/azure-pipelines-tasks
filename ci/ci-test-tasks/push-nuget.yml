@@ -34,5 +34,5 @@ steps:
 # Push to feed
 - script: |
     cd $(Build.SourcesDirectory)\_package\nuget-packages\$(task)
-    $(Build.SourcesDirectory)\_package\nuget-packages\push.cmd
+    push.cmd
   displayName: Push Nuget package
