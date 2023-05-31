@@ -63,11 +63,11 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.input.help.FileCopyOptions" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.input.help.MaxArtifactSize" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Pass additional options to the Robocopy command.]]></Val>
+          <Val><![CDATA[Maximum limit on the size of artifacts to be published in bytes. Put 0 if you don't want to set any limit.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[將其他選項傳遞給 Robocopy 命令。]]></Val>
+            <Val><![CDATA[成品的發佈大小上限，以位元組為單位。如果您不想設定任何限制，請放 0。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -135,11 +135,11 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.input.label.FileCopyOptions" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.input.label.MaxArtifactSize" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[File copy options]]></Val>
+          <Val><![CDATA[Max Artifact Size]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[檔案複製選項]]></Val>
+            <Val><![CDATA[成品大小上限]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -194,6 +194,15 @@
           <Val><![CDATA[Publish Artifact: $(ArtifactName)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[發行成品: $(ArtifactName)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ArtifactSizeExceeded" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The size of artifacts being published is %s bytes which is larger than the maximum limit %s bytes set for the published size of artifacts.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[要發佈的成品大小為 %s 位元組，這已超過成品發佈大小所設定的 %s 位元組上限。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

@@ -63,11 +63,11 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.input.help.FileCopyOptions" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.input.help.MaxArtifactSize" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Pass additional options to the Robocopy command.]]></Val>
+          <Val><![CDATA[Maximum limit on the size of artifacts to be published in bytes. Put 0 if you don't want to set any limit.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Robocopy 명령에 추가 옵션을 전달합니다.]]></Val>
+            <Val><![CDATA[게시할 아티팩트 크기에 대한 최대 제한(바이트)입니다. 제한을 설정하지 않으려면 0을 입력합니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -135,11 +135,11 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.input.label.FileCopyOptions" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.input.label.MaxArtifactSize" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[File copy options]]></Val>
+          <Val><![CDATA[Max Artifact Size]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[파일 복사 옵션]]></Val>
+            <Val><![CDATA[최대 아티팩트 크기]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -194,6 +194,15 @@
           <Val><![CDATA[Publish Artifact: $(ArtifactName)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[아티팩트 게시: $(ArtifactName)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ArtifactSizeExceeded" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The size of artifacts being published is %s bytes which is larger than the maximum limit %s bytes set for the published size of artifacts.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[게시 중인 아티팩트의 크기가 게시되는 아티팩트 크기에 대해 설정된 최대 제한 %s바이트보다 큰 %s바이트입니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

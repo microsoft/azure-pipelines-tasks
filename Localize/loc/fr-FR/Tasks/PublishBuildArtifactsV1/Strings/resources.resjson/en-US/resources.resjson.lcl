@@ -63,11 +63,11 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.input.help.FileCopyOptions" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.input.help.MaxArtifactSize" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Pass additional options to the Robocopy command.]]></Val>
+          <Val><![CDATA[Maximum limit on the size of artifacts to be published in bytes. Put 0 if you don't want to set any limit.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Passez des options supplémentaires à la commande Robocopy.]]></Val>
+            <Val><![CDATA[Limite maximale de la taille des artefacts à publier en octets. Mettez 0 si vous ne souhaitez pas définir de limite.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -135,11 +135,11 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.input.label.FileCopyOptions" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.input.label.MaxArtifactSize" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[File copy options]]></Val>
+          <Val><![CDATA[Max Artifact Size]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Options de copie de fichiers]]></Val>
+            <Val><![CDATA[Taille maximale de l’artefact]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -194,6 +194,15 @@
           <Val><![CDATA[Publish Artifact: $(ArtifactName)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Publier l'artefact : $(ArtifactName)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ArtifactSizeExceeded" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The size of artifacts being published is %s bytes which is larger than the maximum limit %s bytes set for the published size of artifacts.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La taille des artefacts en cours de publication est de %s octets, ce qui est supérieur à la limite maximale de %s octets définie pour la taille publiée des artefacts.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
