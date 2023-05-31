@@ -2,6 +2,7 @@ parameters:
 - name: task
   type: string
 
+# requires some rework - relies on batch processing and steps are not self-evindent
 steps:
 
 # Stage all the tasks into a single zip for upload

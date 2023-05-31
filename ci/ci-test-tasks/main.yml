@@ -27,6 +27,13 @@ stages:
           pool:
             vmImage: windows-2022
           steps:
+          - bash: |
+              git init
+              git remote add origin https://github.com/microsoft/azure-pipelines-tasks
+              git fetch --force --tags --prune --prune-tags --progress --no-recurse-submodules origin --depth=1 +${{ parameters.BuildSourceVersion }}:refs/remotes/origin/${{ parameters.BuildSourceVersion }}
+              git checkout --progress --force refs/remotes/origin/${{ parameters.BuildSourceVersion }}
+            displayName: Checkout ${{ parameters.BuildSourceVersion }}
+
           - template: ./build-task.yml
             parameters:
               task: ${{ task }}
@@ -69,6 +76,13 @@ stages:
         pool:
           vmImage: windows-2022
         steps:
+        - bash: |
+            git init
+            git remote add origin https://github.com/microsoft/azure-pipelines-tasks
+            git fetch --force --tags --prune --prune-tags --progress --no-recurse-submodules origin --depth=1 +${{ parameters.BuildSourceVersion }}:refs/remotes/origin/${{ parameters.BuildSourceVersion }}
+            git checkout --progress --force refs/remotes/origin/${{ parameters.BuildSourceVersion }}
+          displayName: Checkout ${{ parameters.BuildSourceVersion }}
+
         - ${{ each task in split(parameters.tasks, ',') }}:
           - template: ./build-task.yml
             parameters:
