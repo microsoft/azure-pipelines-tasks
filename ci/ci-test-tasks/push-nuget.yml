@@ -4,6 +4,10 @@ steps:
 - script: node ./ci/stage-package.js false individually
   displayName: Stage all the tasks into a single zip for upload
 
+# Stage Milestone task
+- script: node .\ci\stage-milestone.js
+  displayName: Stage milestone
+
 # Stage per task NuGet package
 - script: npm run package
   displayName: npm run package
