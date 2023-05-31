@@ -112,4 +112,4 @@ stages:
 
         - template: ./upload-artifact.yml
           parameters:
-            task: ${{ parameters.tasks }}
+            tasks: ${{ parameters.tasks }}
