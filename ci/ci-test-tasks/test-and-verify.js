@@ -44,13 +44,8 @@ function fetchPipelines() {
     .catch(err => {
       err.stack = 'Error fetching pipelines: ' + err.stack;
       console.error(err.stack);
-      if (err.response) {
-        if (err.response.data) {
-          console.error(err.response.data);
-        }
-        else {
-          console.error(err.response);
-        }
+      if (err.response && err.response.data) {
+        console.error(err.response.data);
       }
 
       throw err;
@@ -66,11 +61,8 @@ function runTestPipeline(pipeline) {
     .catch(err => {
       err.stack = `Error running ${pipeline.name} pipeline. ` + err.stack;
       console.error(err.stack);
-      if (err.response.data) {
+      if (err.response && err.response.data) {
         console.error(err.response.data);
-      }
-      else {
-        console.error(err.response);
       }
 
       throw err;
@@ -116,11 +108,8 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
         clearInterval(interval);
         err.stack = 'Error verifying build status: ' + err.stack;
         console.error(err.stack);
-        if (err.response.data) {
+        if (err.response && err.response.data) {
           console.error(err.response.data);
-        }
-        else {
-          console.error(err.response);
         }
 
         reject(err);
