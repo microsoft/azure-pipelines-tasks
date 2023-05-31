@@ -105,7 +105,6 @@ stages:
               task: ${{ task }}
               patchVersion: true
               version: '0.999.0'
-              BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
         # Stop collect diagnostics
         - powershell: ./ci/stop-collect-diagnostics.ps1
