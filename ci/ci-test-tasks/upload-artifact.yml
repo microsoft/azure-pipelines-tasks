@@ -4,9 +4,21 @@ parameters:
 
 steps:
 
+# Sign task zip as nuget package
+#- template: sign-all-tasks.yml
+#  parameters:
+#    layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+
 # Stage all the tasks into a single zip for upload
 - script: node ./ci/stage-package.js true
   displayName: Stage all the tasks into a single zip for upload
+
+# Moving Package zip file to be consumed by Milestone staging task
+- powershell: |
+    mkdir $env:SYSTEM_ARTIFACTSDIRECTORY\package
+    Copy-Item $(Build.SourcesDirectory)\_package\tasks.zip -Destination $env:SYSTEM_ARTIFACTSDIRECTORY\package\tasks.zip
+    Write-Host "Copying from '$(Build.SourcesDirectory)\_package\tasks.zip' to '$env:SYSTEM_ARTIFACTSDIRECTORY\package\tasks.zip'"
+  displayName: Move package zip file
 
 # Stage hotfix
 - script: node ./ci/stage-hotfix.js "${{ parameters.tasks }}"
