@@ -1,4 +1,15 @@
+parameters:
+- name: BuildSourceVersion
+  type: string
+
 steps:
+
+- bash: |
+    git init
+    git remote add origin https://github.com/microsoft/azure-pipelines-tasks
+    git fetch --force --tags --prune --prune-tags --progress --no-recurse-submodules origin --depth=1 +${{ parameters.BuildSourceVersion }}:refs/remotes/origin/${{ parameters.BuildSourceVersion }}
+    git checkout --progress --force refs/remotes/origin/${{ parameters.BuildSourceVersion }}
+  displayName: Checkout ${{ parameters.BuildSourceVersion }}
 
 # Use node 8, npm 5
 - task: NodeTool@0

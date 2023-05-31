@@ -27,18 +27,13 @@ stages:
           pool:
             vmImage: windows-2022
           steps:
-          - bash: |
-              git init
-              git remote add origin https://github.com/microsoft/azure-pipelines-tasks
-              git fetch --force --tags --prune --prune-tags --progress --no-recurse-submodules origin --depth=1 +${{ parameters.BuildSourceVersion }}:refs/remotes/origin/${{ parameters.BuildSourceVersion }}
-              git checkout --progress --force refs/remotes/origin/${{ parameters.BuildSourceVersion }}
-            displayName: Checkout ${{ parameters.BuildSourceVersion }}
-
           # Start collect diagnostics
           - powershell: ./ci/start-collect-diagnostics.ps1
             displayName: Start collect diagnostics
 
           - template: ./build-init.yml
+            parameters:
+              BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
           - template: ./build-task.yml
             parameters:
@@ -86,18 +81,13 @@ stages:
         pool:
           vmImage: windows-2022
         steps:
-        - bash: |
-            git init
-            git remote add origin https://github.com/microsoft/azure-pipelines-tasks
-            git fetch --force --tags --prune --prune-tags --progress --no-recurse-submodules origin --depth=1 +${{ parameters.BuildSourceVersion }}:refs/remotes/origin/${{ parameters.BuildSourceVersion }}
-            git checkout --progress --force refs/remotes/origin/${{ parameters.BuildSourceVersion }}
-          displayName: Checkout ${{ parameters.BuildSourceVersion }}
-
         # Start collect diagnostics
         - powershell: ./ci/start-collect-diagnostics.ps1
           displayName: Start collect diagnostics
 
         - template: ./build-init.yml
+          parameters:
+            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
         - ${{ each task in split(parameters.tasks, ',') }}:
           - template: ./build-task.yml
