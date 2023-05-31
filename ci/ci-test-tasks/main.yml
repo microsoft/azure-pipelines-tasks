@@ -62,6 +62,9 @@ stages:
             parameters:
               task: ${{ task }}
 
+          - script: npm install axios@0.27.2
+            displayName: 'Npm install axios'
+
           - template: ./test-task.yml
             parameters:
               task: ${{ task }}
@@ -122,6 +125,9 @@ stages:
           - template: ./upload-task.yml
             parameters:
               task: ${{ task }}
+
+        - script: npm install axios@0.27.2
+          displayName: 'Npm install axios'
 
         - ${{ each task in split(parameters.tasks, ',') }}:
           - template: ./test-task.yml
