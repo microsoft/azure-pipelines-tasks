@@ -83,6 +83,9 @@ describe('Kubernetes Suite', function() {
         process.env[shared.isKubectlPresentOnMachine] = "false";
         tr.run();
 
+        console.log("!!! TEST LOG - " + tr.stderr);
+        tl.debug("!!! TEST DEBUG - " + tr.stderr);
+
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
