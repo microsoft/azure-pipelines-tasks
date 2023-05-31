@@ -1,8 +1,16 @@
+parameters:
+- name: task
+  type: string
+
 steps:
 
 # Stage all the tasks into a single zip for upload
-- script: node ./ci/stage-package.js false individually
+- script: node ./ci/stage-package.js false
   displayName: Stage all the tasks into a single zip for upload
+
+# Set variables
+- powershell: .\ci\set-publish-variables.ps1
+  displayName: Set publish variables
 
 # Stage Milestone task
 - script: node .\ci\stage-milestone.js

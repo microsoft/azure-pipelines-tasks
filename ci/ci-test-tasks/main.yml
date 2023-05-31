@@ -36,6 +36,8 @@ stages:
 
           - ${{ if parameters.PushNugetPackage }}:
             - template: ./push-nuget.yml
+              parameters:
+                task: ${{ task }}
 
           - script: |
               npm install -g tfx-cli@0.14
