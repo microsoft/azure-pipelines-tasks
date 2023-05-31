@@ -140,5 +140,9 @@
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion",
     "NetCore3Update": "ms-resource:loc.messages.NetCore3Update"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.223.1",
+    "Node16-219": "1.223.0"
   }
 }
