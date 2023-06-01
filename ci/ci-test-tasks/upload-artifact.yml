@@ -9,10 +9,6 @@ steps:
 #  parameters:
 #    layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
-# Stage all the tasks into a single zip for upload
-- script: node ./ci/stage-package.js true
-  displayName: Stage all the tasks into a single zip for upload
-
 # Stage hotfix
 - script: node ./ci/stage-hotfix.js "${{ parameters.tasks }}"
   displayName: Stage hotfix

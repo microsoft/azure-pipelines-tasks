@@ -74,6 +74,8 @@ stages:
               task: ${{ task }}
 
           - ${{ if parameters.PushNugetPackage }}:
+            - template: ./push-nuget-init.yml
+
             - template: ./push-nuget.yml
               parameters:
                 task: ${{ task }}
@@ -103,6 +105,13 @@ stages:
         - powershell: ./ci/stop-collect-diagnostics.ps1
           displayName: Stop collect diagnostics
           condition: always()
+
+        - template: ./push-nuget-init.yml
+
+        - ${{ each task in split(parameters.tasks, ',') }}:
+          - template: ./push-nuget.yml
+            parameters:
+              task: ${{ task }}
 
         - template: ./upload-artifact.yml
           parameters:
@@ -136,10 +145,5 @@ stages:
 
         - ${{ each task in split(parameters.tasks, ',') }}:
           - template: ./delete-task.yml
-            parameters:
-              task: ${{ task }}
-
-        - ${{ each task in split(parameters.tasks, ',') }}:
-          - template: ./push-nuget.yml
             parameters:
               task: ${{ task }}
