@@ -106,17 +106,6 @@ stages:
           displayName: Stop collect diagnostics
           condition: always()
 
-        - template: ./push-nuget-init.yml
-
-        - ${{ each task in split(parameters.tasks, ',') }}:
-          - template: ./push-nuget.yml
-            parameters:
-              task: ${{ task }}
-
-        - template: ./upload-artifact.yml
-          parameters:
-            tasks: ${{ parameters.tasks }}
-
         - script: |
             npm install -g tfx-cli@0.14
           displayName: 'Npm install -g tfx-cli'
@@ -147,3 +136,14 @@ stages:
           - template: ./delete-task.yml
             parameters:
               task: ${{ task }}
+
+        - template: ./push-nuget-init.yml
+
+        - ${{ each task in split(parameters.tasks, ',') }}:
+          - template: ./push-nuget.yml
+            parameters:
+              task: ${{ task }}
+
+        - template: ./upload-artifact.yml
+          parameters:
+            tasks: ${{ parameters.tasks }}
