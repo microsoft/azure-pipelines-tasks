@@ -9,8 +9,6 @@ parameters:
   type: string
 
 steps:
-- checkout: none
-
 - bash: |
     git init
     git remote add origin https://github.com/microsoft/azure-pipelines-tasks
