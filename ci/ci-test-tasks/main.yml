@@ -6,12 +6,6 @@ parameters:
 - name: BuildSourceVersion
   displayName: The latest version control change of the triggering repo that is included in this build.
   type: string
-- name: PushNugetPackage
-  displayName: A flag for uploading nuget package
-  type: boolean
-- name: PublishHotfixArtifact
-  displayName: A flag for publishing hotfix artifacts
-  type: boolean
 
 trigger: none
 pr: none
@@ -20,136 +14,33 @@ stages:
 - stage: ProcessAllTasks
   condition: eq(variables['build.reason'], 'Manual')
   jobs:
-    - ${{ if not(parameters.PublishHotfixArtifact) }}:
-      - ${{ each task in split(parameters.tasks, ',') }}:
-        - job:  ${{ task }}_build_and_test
-          displayName: Process ${{ task }}
-          pool:
-            vmImage: windows-2022
-          steps:
-          # Start collect diagnostics
-          - powershell: ./ci/start-collect-diagnostics.ps1
-            displayName: Start collect diagnostics
-
-          - template: ./build-init.yml
-            parameters:
-              BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
-
-          - template: ./build-task.yml
-            parameters:
-              task: ${{ task }}
-              patchVersion: true
-              version: '0.999.0'
-
-          # Stop collect diagnostics
-          - powershell: ./ci/stop-collect-diagnostics.ps1
-            displayName: Stop collect diagnostics
-            condition: always()
-
-          - script: |
-              npm install -g tfx-cli@0.14
-            displayName: 'Npm install -g tfx-cli'
-
-          - script: |
-              tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken)
-            displayName: 'Tfx login'
-
-          - template: ./delete-task.yml
-            parameters:
-              task: ${{ task }}
-
-          - template: ./upload-task.yml
-            parameters:
-              task: ${{ task }}
-
-          - script: npm install axios@0.27.2
-            displayName: 'Npm install axios'
-
-          - script: |
-              echo "Task: ${{ task }}"
-              node ./ci/ci-test-tasks/test-and-verify.js $(ADOToken) $(ADOUrl) $(System.TeamProject) ${{ task }}
-            displayName: Run tests and verify results for ${{ task }}
-            failOnStderr: true
-
-          - template: ./delete-task.yml
-            parameters:
-              task: ${{ task }}
-
-          - ${{ if parameters.PushNugetPackage }}:
-            - template: ./push-nuget-init.yml
-
-            - script: |
-                cd $(Build.SourcesDirectory)\_package\nuget-packages\$(task)
-                push.cmd
-              displayName: Push Nuget package for $(task)
-
-    - ${{ if parameters.PublishHotfixArtifact }}:
-      - job:  process_all_tasks
-        displayName: Process all tasks
+    - ${{ each task in split(parameters.tasks, ',') }}:
+      - job:  ${{ task }}_build_and_test
+        displayName: Process ${{ task }}
         pool:
           vmImage: windows-2022
         steps:
-        # Start collect diagnostics
-        - powershell: ./ci/start-collect-diagnostics.ps1
-          displayName: Start collect diagnostics
-
-        - template: ./build-init.yml
+        - template: ./build-task.yml
           parameters:
+            task: ${{ task }}
+            patchVersion: true
+            version: '0.999.0'
             BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
-        - ${{ each task in split(parameters.tasks, ',') }}:
-          - template: ./build-task.yml
-            parameters:
-              task: ${{ task }}
-              patchVersion: true
-              version: '0.999.0'
+        - template: ./tfx-init.yml
 
-        # Stop collect diagnostics
-        - powershell: ./ci/stop-collect-diagnostics.ps1
-          displayName: Stop collect diagnostics
-          condition: always()
-
-        - script: |
-            npm install -g tfx-cli@0.14
-          displayName: 'Npm install -g tfx-cli'
-
-        - script: |
-            tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken)
-          displayName: 'Tfx login'
-
-        - ${{ each task in split(parameters.tasks, ',') }}:
-          - template: ./delete-task.yml
-            parameters:
-              task: ${{ task }}
-
-        - ${{ each task in split(parameters.tasks, ',') }}:
-          - template: ./upload-task.yml
-            parameters:
-              task: ${{ task }}
-
-        - script: npm install axios@0.27.2
-          displayName: 'Npm install axios'
-
-        - ${{ each task in split(parameters.tasks, ',') }}:
-          - script: |
-              echo "Task: ${{ task }}"
-              node ./ci/ci-test-tasks/test-and-verify.js $(ADOToken) $(ADOUrl) $(System.TeamProject) $(task)
-            displayName: Run tests and verify results for ${{ task }}
-            failOnStderr: true
-
-        - ${{ each task in split(parameters.tasks, ',') }}:
-          - template: ./delete-task.yml
-            parameters:
-              task: ${{ task }}
-
-        - template: ./push-nuget-init.yml
-
-        - ${{ each task in split(parameters.tasks, ',') }}:
-          - script: |
-              cd $(Build.SourcesDirectory)\_package\nuget-packages\$(task)
-              push.cmd
-            displayName: Push Nuget package for $(task)
-
-        - template: ./upload-hotfix.yml
+        - template: ./delete-task.yml
           parameters:
-            tasks: ${{ parameters.tasks }}
+            task: ${{ task }}
+
+        - template: ./upload-task.yml
+          parameters:
+            task: ${{ task }}
+
+        - template: ./test-task.yml
+          parameters:
+            task: ${{ task }}
+
+        - template: ./delete-task.yml
+          parameters:
+            task: ${{ task }}
