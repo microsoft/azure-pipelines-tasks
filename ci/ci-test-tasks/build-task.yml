@@ -24,7 +24,7 @@ steps:
   displayName: Run tests for ${{ parameters.task }}
 
 - script: node make.js testLegacy --task "${{ parameters.task }}"
-  displayName: Legacy tests with node 6
+  displayName: Legacy (node 6) tests for ${{ parameters.task }}
 
 # Publish test results
 - task: PublishTestResults@2
