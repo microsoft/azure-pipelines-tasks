@@ -90,6 +90,17 @@ jobs:
     - checkout: self
     - template: ci/courtesy-push.yml
 
+  - job: build_all_tasks_for_deployments
+    displayName: Build all tasks for deployments (Windows)
+    dependsOn:
+    - courtesy_push
+    condition: succeeded()
+    timeoutInMinutes: 180
+    pool:
+      vmImage: windows-2022
+    steps:
+    - template: ci/build-all-tasks.yml
+
   # All tasks on Linux
   - job: build_all_linux
     displayName: Build all tasks (Linux)

@@ -1,5 +1,5 @@
 import tl = require('azure-pipelines-task-lib/task');
-var webCommonUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/utility.js');
+var webCommonUtility = require('azure-pipelines-tasks-webdeployment-common/utility');
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 
 export class WindowsWebAppWarDeployProvider extends AzureRmWebAppDeploymentProvider {

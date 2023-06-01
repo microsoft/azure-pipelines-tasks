@@ -59,8 +59,6 @@ Tasks/AzureKeyVaultV1/     @rvairavelu @manolerazvan
 
 Tasks/AzureKeyVaultV2/     @rvairavelu @manolerazvan
 
-Tasks/AzureMonitorAlertsV0/    @vsebesta   @rvairavelu   @pipeline-environment-team
-
 Tasks/AzureMonitorV0/      @rvairavelu @manolerazvan
 
 Tasks/AzureMonitorV1/      @rvairavelu @manolerazvan

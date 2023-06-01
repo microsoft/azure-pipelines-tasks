@@ -18,10 +18,10 @@ export function getMockEndpoint(scheme?: string, msiClientId?: string) {
         url: "https://management.azure.com/",
         environmentAuthorityUrl: "https://login.windows.net/",
         activeDirectoryResourceID: "https://management.azure.com/",
-        applicationTokenCredentials: new ApplicationTokenCredentials("MOCK_SPN_ID", "MOCK_TENANT_ID", "MOCK_SPN_KEY", "https://management.azure.com/",
+        applicationTokenCredentials: new ApplicationTokenCredentials("MOCK_SERVICE_CONNECTION", "MOCK_SPN_ID", "MOCK_TENANT_ID", "MOCK_SPN_KEY", "https://management.azure.com/",
         "https://login.windows.net/", "https://management.azure.com/", false, scheme, msiClientId)
     }
-    
+
     nock("https://login.windows.net", {
         reqheaders: {
             "content-type": "application/x-www-form-urlencoded; charset=utf-8"
@@ -61,7 +61,7 @@ export function mockAzureARMAppInsightsWebTests() {
         name: 'MOCK_TEST_1',
         id: "hidden-link:/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.insights/components/MOCK_APP_INSIGHTS_1".toLowerCase()
     };
-    
+
     var MockWebTest2 = {
         type: '',
         location: '',
@@ -276,7 +276,7 @@ export function mockAzureAppServiceTests() {
             state: "Running"
         }
     }).persist();;
-    
+
     nock('https://management.azure.com', {
         reqheaders: {
             "authorization": "Bearer DUMMY_ACCESS_TOKEN",
@@ -302,7 +302,7 @@ export function mockAzureAppServiceTests() {
             state: "Stopped"
         }
     }).persist();;
-    
+
     nock('https://management.azure.com', {
         reqheaders: {
             "authorization": "Bearer DUMMY_ACCESS_TOKEN",
@@ -360,7 +360,7 @@ export function mockAzureAppServiceTests() {
             scmUri: "https://$v:MOCK_APP_SERVICE_MSDEPLOY_PASSWORD@MOCK_APP_SERVICE_NAME.scm.azurewebsites.net"
         }
     }).persist();;
-    
+
     nock('https://management.azure.com', {
         reqheaders: {
             "authorization": "Bearer DUMMY_ACCESS_TOKEN",
@@ -386,7 +386,7 @@ export function mockAzureAppServiceTests() {
             "MSDEPLOY_RENAME_LOCKED_FILES": "1"
         }
     }).persist();;
-    
+
     nock('https://management.azure.com', {
         reqheaders: {
             "authorization": "Bearer DUMMY_ACCESS_TOKEN",
@@ -424,7 +424,7 @@ export function mockAzureAppServiceTests() {
             "MSDEPLOY_RENAME_LOCKED_FILES": "0"
         }
     }).persist();;
-    
+
     nock('https://management.azure.com', {
         reqheaders: {
             "authorization": "Bearer DUMMY_ACCESS_TOKEN",
@@ -449,7 +449,7 @@ export function mockAzureAppServiceTests() {
             "alwaysOn": false
         }
     }).persist();;
-    
+
     nock('https://management.azure.com', {
         reqheaders: {
             "authorization": "Bearer DUMMY_ACCESS_TOKEN",
@@ -485,7 +485,7 @@ export function mockAzureAppServiceTests() {
             "alwaysOn": true
         }
     }).persist();;
-    
+
     nock('https://management.azure.com', {
         reqheaders: {
             "authorization": "Bearer DUMMY_ACCESS_TOKEN",
@@ -535,7 +535,7 @@ export function mockAzureAppServiceTests() {
             "VSTSRM_ReleaseDefinitionId": 1
         }
     }).persist();
-    
+
     nock('https://management.azure.com', {
         reqheaders: {
             "authorization": "Bearer DUMMY_ACCESS_TOKEN",
@@ -543,7 +543,7 @@ export function mockAzureAppServiceTests() {
         }
     }).post("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/slots/MOCK_SLOT_NAME/config/metadata/list?api-version=2016-08-01")
     .reply(501, 'internal error occurred').persist();
-    
+
     nock('https://management.azure.com', {
         reqheaders: {
             "authorization": "Bearer DUMMY_ACCESS_TOKEN",
@@ -560,7 +560,7 @@ export function mockAzureAppServiceTests() {
             "VSTSRM_ReleaseDefinitionId": 1
         }
     }).persist();
-    
+
     nock('https://management.azure.com', {
         reqheaders: {
             "authorization": "Bearer DUMMY_ACCESS_TOKEN",
@@ -592,16 +592,16 @@ export function mockKuduServiceTests() {
     nock('http://MOCK_SCM_WEBSITE').
     post('/api/continuouswebjobs/MOCK_JOB_NAME/start')
     .reply(200, {name: "CONT_2", status: "Running", runCommand: "hello.cmd", type: "continuous"});
-    
-    
+
+
     nock('http://FAIL_MOCK_SCM_WEBSITE').
     post('/api/continuouswebjobs/MOCK_JOB_NAME/start').reply(501, 'Internal error occured');
 
     nock('http://MOCK_SCM_WEBSITE').
     post('/api/continuouswebjobs/MOCK_JOB_NAME/stop')
     .reply(200, {name: "CONT_1", status: "Stopped", runCommand: "hello.cmd", type: "continuous"});
-    
-    
+
+
     nock('http://FAIL_MOCK_SCM_WEBSITE').
     post('/api/continuouswebjobs/MOCK_JOB_NAME/stop').reply(501, 'Internal error occured');
 

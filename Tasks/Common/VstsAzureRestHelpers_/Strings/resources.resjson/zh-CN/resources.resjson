@@ -1,4 +1,5 @@
 {
+  "loc.messages.AZ_CouldNotGenerateOidcToken": "无法为联合登录生成客户端断言。",
   "loc.messages.AZ_UnsupportedAuthScheme0": "Azure 终结点不支持授权方案“{0}”。",
   "loc.messages.AZ_SpnAccessTokenFetchFailure": "无法提取租户 ID {0} 的标记。",
   "loc.messages.AZ_UserAccessTokenFetchFailure": "无法提取给定用户的标记。",

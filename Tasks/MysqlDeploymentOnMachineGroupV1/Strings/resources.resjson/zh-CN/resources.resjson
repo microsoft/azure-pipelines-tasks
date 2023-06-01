@@ -13,7 +13,7 @@
   "loc.input.help.ServerName": "\"Database for MySQL\" 的服务器名称，例如 localhost。使用 MySQL 工作台进行连接时，该值与“参数”中的“主机名”所用的值相同",
   "loc.input.label.DatabaseName": "数据库名",
   "loc.input.help.DatabaseName": "数据库的名称。如果已有数据库，则需要在该数据库上运行以下脚本。否则，可使用脚本本身创建数据库。",
-  "loc.input.label.SqlUsername": "Mysql 用户名",
+  "loc.input.label.SqlUsername": "MySQL 用户名",
   "loc.input.help.SqlUsername": "使用 MySQL 工作台进行连接时，该值与“参数”中的“用户名”所用的值相同。",
   "loc.input.label.SqlPassword": "密码",
   "loc.input.help.SqlPassword": "MySQL 数据库的密码。<br>可以是在管道中定义的变量。例如: $(password)。<br>此外，可以将变量类型标记为“机密”来进行保护。",
