@@ -150,6 +150,6 @@ stages:
               push.cmd
             displayName: Push Nuget package for $(task)
 
-        - template: ./upload-artifact.yml
+        - template: ./upload-hotfix.yml
           parameters:
             tasks: ${{ parameters.tasks }}
