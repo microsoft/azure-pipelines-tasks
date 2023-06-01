@@ -20,20 +20,33 @@ stages:
         pool:
           vmImage: windows-2022
         steps:
+        # Start collect diagnostics
+        - powershell: ./ci/start-collect-diagnostics.ps1
+          displayName: Start collect diagnostics
+
+        - template: ./build-init.yml
+          parameters:
+              BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+s
         - ${{ each task in split(task_versions, ',') }}:
           - template: ./build-task.yml
             parameters:
               task: ${{ task }}
               patchVersion: true
               version: '0.999.0'
-              BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
-          - template: ./tfx-init.yml
+        # Stop collect diagnostics
+        - powershell: ./ci/stop-collect-diagnostics.ps1
+          displayName: Stop collect diagnostics
+          condition: always()
 
-          - template: ./delete-task.yml
-            parameters:
-              task: ${{ task }}
+        - template: ./tfx-init.yml
 
+        - template: ./delete-task.yml
+          parameters:
+            task: ${{ split(task_versions, ',')[0] }}
+
+        - ${{ each task in split(task_versions, ',') }}:
           - template: ./upload-task.yml
             parameters:
               task: ${{ task }}
