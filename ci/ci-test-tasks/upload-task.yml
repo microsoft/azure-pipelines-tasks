@@ -2,28 +2,11 @@ parameters:
   - name: task
     type: string
 
-steps:
-- task: DownloadBuildArtifacts@1
-  displayName: Download build artifact for ${{ parameters.task }}
-  inputs:
-    buildType: 'current'
-    downloadType: 'single'
-    artifactName: '${{ parameters.task }}'
-    downloadPath: '$(System.ArtifactsDirectory)'
-
-- task: ExtractFiles@1
-  displayName: Extract files for ${{ parameters.task }}
-  inputs:
-    archiveFilePatterns: '$(System.ArtifactsDirectory)/${{parameters.task}}/task.zip'
-    destinationFolder: 'task-${{ parameters.task }}'
-    cleanDestinationFolder: true
-    overwriteExistingFiles: true
-
 - bash: |
     echo "##vso[task.setvariable variable=TASKID]$(node ./ci/ci-test-tasks/get-task-guid.js ./Tasks/${{parameters.task}}/task.json)"
   displayName: Get task id for ${{ parameters.task }}
 
 - bash: |
     echo "Uploading task $(TASKID)"
-    tfx build tasks upload --task-path ./task-${{ parameters.task }} --no-prompt
+    tfx build tasks upload --task-path ./_build/Tasks/${{ parameters.task }} --no-prompt
   displayName: Upload ${{ parameters.task }} task
