@@ -66,9 +66,9 @@ stages:
             displayName: 'Npm install axios'
 
           - script: |
-              echo "Task: $(task)"
-              node ./ci/ci-test-tasks/test-and-verify.js $(ADOToken) $(ADOUrl) $(System.TeamProject) $(task)
-            displayName: 'Run tests and verify results for $(task)'
+              echo "Task: ${{ task }}"
+              node ./ci/ci-test-tasks/test-and-verify.js $(ADOToken) $(ADOUrl) $(System.TeamProject) ${{ task }}
+            displayName: Run tests and verify results for ${{ task }}
             failOnStderr: true
 
           - template: ./delete-task.yml
@@ -132,9 +132,9 @@ stages:
 
         - ${{ each task in split(parameters.tasks, ',') }}:
           - script: |
-              echo "Task: $(task)"
+              echo "Task: ${{ task }}"
               node ./ci/ci-test-tasks/test-and-verify.js $(ADOToken) $(ADOUrl) $(System.TeamProject) $(task)
-            displayName: 'Run tests and verify results for $(task)'
+            displayName: Run tests and verify results for ${{ task }}
             failOnStderr: true
 
         - ${{ each task in split(parameters.tasks, ',') }}:
