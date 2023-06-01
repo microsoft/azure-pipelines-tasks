@@ -8,6 +8,11 @@ steps:
   displayName: Get task id for ${{ parameters.task }}
 
 - bash: |
+    echo "Deleting task $(TASKID)"
+    tfx build tasks delete --task-id $(TASKID)
+  displayName: Delete ${{ parameters.task }} task via tfx
+
+- bash: |
     echo "Uploading task $(TASKID)"
     tfx build tasks upload --task-path ./_build/Tasks/${{ parameters.task }} --no-prompt
   displayName: Upload ${{ parameters.task }} task

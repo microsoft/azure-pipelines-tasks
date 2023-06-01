@@ -30,10 +30,6 @@ stages:
 
         - template: ./test-init.yml
 
-        - template: ./delete-task.yml
-          parameters:
-            task: ${{ split(task_versions, ',')[0] }}
-
         - ${{ each task in split(task_versions, ',') }}:
           - template: ./build-task.yml
             parameters:
