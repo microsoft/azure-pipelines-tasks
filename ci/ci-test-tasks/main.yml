@@ -15,7 +15,7 @@ stages:
   condition: eq(variables['build.reason'], 'Manual')
   jobs:
     - ${{ each task_versions in split(parameters.tasks, ';') }}:
-      - job:  Process_versions
+      - job:  Process_${{ task_versions }}
         displayName: Process ${{ task_versions }}
         pool:
           vmImage: windows-2022
