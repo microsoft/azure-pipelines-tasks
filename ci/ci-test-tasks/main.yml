@@ -76,9 +76,10 @@ stages:
           - ${{ if parameters.PushNugetPackage }}:
             - template: ./push-nuget-init.yml
 
-            - template: ./push-nuget.yml
-              parameters:
-                task: ${{ task }}
+            - script: |
+                cd $(Build.SourcesDirectory)\_package\nuget-packages\$(task)
+                push.cmd
+              displayName: Push Nuget package for ${{ parameters.task }}
 
     - ${{ if parameters.PublishHotfixArtifact }}:
       - job:  process_all_tasks
@@ -140,9 +141,10 @@ stages:
         - template: ./push-nuget-init.yml
 
         - ${{ each task in split(parameters.tasks, ',') }}:
-          - template: ./push-nuget.yml
-            parameters:
-              task: ${{ task }}
+          - script: |
+              cd $(Build.SourcesDirectory)\_package\nuget-packages\$(task)
+              push.cmd
+            displayName: Push Nuget package for ${{ parameters.task }}
 
         - template: ./upload-artifact.yml
           parameters:
