@@ -79,7 +79,7 @@ stages:
             - script: |
                 cd $(Build.SourcesDirectory)\_package\nuget-packages\$(task)
                 push.cmd
-              displayName: Push Nuget package for ${{ parameters.task }}
+              displayName: Push Nuget package for $(task)
 
     - ${{ if parameters.PublishHotfixArtifact }}:
       - job:  process_all_tasks
@@ -144,7 +144,7 @@ stages:
           - script: |
               cd $(Build.SourcesDirectory)\_package\nuget-packages\$(task)
               push.cmd
-            displayName: Push Nuget package for ${{ parameters.task }}
+            displayName: Push Nuget package for $(task)
 
         - template: ./upload-artifact.yml
           parameters:
