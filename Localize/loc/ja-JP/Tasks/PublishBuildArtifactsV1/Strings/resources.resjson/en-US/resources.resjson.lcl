@@ -63,11 +63,11 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.input.help.FileCopyOptions" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.input.help.MaxArtifactSize" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Pass additional options to the Robocopy command.]]></Val>
+          <Val><![CDATA[Maximum limit on the size of artifacts to be published in bytes. Put 0 if you don't want to set any limit.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[追加オプションを Robocopy コマンドに渡します。]]></Val>
+            <Val><![CDATA[公開する成果物のサイズの上限 (バイト単位)。制限を設定しない場合は 0 を指定します。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -135,11 +135,11 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.input.label.FileCopyOptions" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.input.label.MaxArtifactSize" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[File copy options]]></Val>
+          <Val><![CDATA[Max Artifact Size]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[ファイル コピーのオプション]]></Val>
+            <Val><![CDATA[成果物の最大サイズ]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -194,6 +194,15 @@
           <Val><![CDATA[Publish Artifact: $(ArtifactName)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[成果物の公開: $(ArtifactName)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ArtifactSizeExceeded" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The size of artifacts being published is %s bytes which is larger than the maximum limit %s bytes set for the published size of artifacts.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[公開中の成果物のサイズが %s バイトです。これは、成果物の公開サイズに設定されている上限 %s バイトを超えています。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
