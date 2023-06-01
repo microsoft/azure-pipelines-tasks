@@ -27,7 +27,7 @@ stages:
         - template: ./build-init.yml
           parameters:
               BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
-s
+
         - ${{ each task in split(task_versions, ',') }}:
           - template: ./build-task.yml
             parameters:
