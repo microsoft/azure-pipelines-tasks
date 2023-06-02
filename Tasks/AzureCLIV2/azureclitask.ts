@@ -43,9 +43,8 @@ export class azureclitask {
             });
 
             var addSpnToEnvironment: boolean = tl.getBoolInput('addSpnToEnvironment', false);
-            if (!!addSpnToEnvironment) {
-                var authorizationScheme = tl.getEndpointAuthorizationScheme(connectedService, true).toLowerCase();
-                if (authorizationScheme == 'serviceprincipal') {
+            var authorizationScheme = tl.getEndpointAuthorizationScheme(connectedService, true).toLowerCase();
+            if (!!addSpnToEnvironment && authorizationScheme == 'serviceprincipal') {
                 exitCode = await tool.exec({
                     failOnStdErr: false,
                     ignoreReturnCode: true,
@@ -54,7 +53,7 @@ export class azureclitask {
                     ...{ servicePrincipalId: this.servicePrincipalId, servicePrincipalKey: this.servicePrincipalKey, tenantId: this.tenantId }
                     }
                 });
-                } else if (authorizationScheme == 'workloadidentityfederation') {
+            } else if (!!addSpnToEnvironment && authorizationScheme == 'workloadidentityfederation') {
                 exitCode = await tool.exec({
                     failOnStdErr: false,
                     ignoreReturnCode: true,
@@ -63,14 +62,12 @@ export class azureclitask {
                     ...{ servicePrincipalId: this.servicePrincipalId, idToken: this.federatedToken, tenantId: this.tenantId }
                     }
                 });
-                }
             } else {
                 exitCode = await tool.exec({
                     failOnStdErr: false,
                     ignoreReturnCode: true
                  });
             }
-
 
             if (failOnStdErr && aggregatedErrorLines.length > 0) {
                 let error = FAIL_ON_STDERR;
