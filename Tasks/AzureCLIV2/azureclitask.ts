@@ -134,6 +134,10 @@ export class azureclitask {
 
             //login using OpenID Connect federation
             Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
+
+             this.servicePrincipalId = servicePrincipalId;
+             this.federatedToken = federatedToken;
+             this.tenantId = tenantId;
         }
         else if (authScheme.toLowerCase() == "serviceprincipal") {
             let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
