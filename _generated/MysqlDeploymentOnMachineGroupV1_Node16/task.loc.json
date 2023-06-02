@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 223,
-    "Patch": 2
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -102,6 +102,10 @@
   "execution": {
     "Node10": {
       "target": "mysqldeploy.js"
+    },
+    "Node16": {
+      "target": "mysqldeploy.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -119,5 +123,9 @@
     "WindowMysqlClientMissingError": "ms-resource:loc.messages.WindowMysqlClientMissingError",
     "LinuxMysqlClientMissingError": "ms-resource:loc.messages.LinuxMysqlClientMissingError",
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.223.2",
+    "Node16-219": "1.223.1"
   }
 }

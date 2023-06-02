@@ -119,5 +119,9 @@
     "WindowMysqlClientMissingError": "ms-resource:loc.messages.WindowMysqlClientMissingError",
     "LinuxMysqlClientMissingError": "ms-resource:loc.messages.LinuxMysqlClientMissingError",
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.223.2",
+    "Node16-219": "1.223.1"
   }
 }
