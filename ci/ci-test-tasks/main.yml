@@ -1,6 +1,6 @@
 parameters:
 - name: tasks
-  displayName: Tasks to process (separate by colons, no whitespaces)
+  displayName: Tasks to process, separated by semicolons (for different tasks) and commas (beween different versions of the same task), no whitespaces
   type: string
   default: DownloadPackageV1
 - name: BuildSourceVersion

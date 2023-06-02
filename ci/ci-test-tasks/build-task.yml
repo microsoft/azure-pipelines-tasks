@@ -9,11 +9,11 @@ parameters:
 steps:
 - ${{ if parameters.patchVersion }}:
   - script: node ci/patch-task-version.js --task=${{ parameters.task }} --version=${{ parameters.version }}
-    displayName: Patch ${{ parameters.task }} task version
+    displayName: ${{ parameters.task }} patch task version
 
 # Build
 - script: node make.js build --task "${{ parameters.task }}"
-  displayName: Build ${{ parameters.task }}
+  displayName: ${{ parameters.task }} build
 
 # Check diff for task sources
 #- script: node ./ci/verify-source-changes.js "${{ parameters.task }}"
@@ -21,10 +21,10 @@ steps:
 
 # Test
 - script: node make.js test --task "${{ parameters.task }}"
-  displayName: Run tests for ${{ parameters.task }}
+  displayName: ${{ parameters.task }} run tests
 
 - script: node make.js testLegacy --task "${{ parameters.task }}"
-  displayName: Legacy (node 6) tests for ${{ parameters.task }}
+  displayName: ${{ parameters.task }} legacy (node 6) tests
 
 # Publish test results
 - task: PublishTestResults@2
