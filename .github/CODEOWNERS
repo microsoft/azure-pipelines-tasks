@@ -99,6 +99,8 @@ Tasks/BashV3/  @microsoft/akvelon-build-task-team
 
 Tasks/BatchScriptV1/  @microsoft/akvelon-build-task-team
 
+Tasks/BatchScriptV2/  @microsoft/akvelon-build-task-team
+
 Tasks/CacheV2/       @johnterickson
 
 Tasks/CacheBetaV0/      @johnterickson

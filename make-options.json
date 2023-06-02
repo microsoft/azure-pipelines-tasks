@@ -49,6 +49,7 @@
         "AzureVmssDeploymentV0",
         "BashV3",
         "BatchScriptV1",
+        "BatchScriptV2",
         "CacheBetaV0",
         "CacheBetaV1",
         "CacheV2",
