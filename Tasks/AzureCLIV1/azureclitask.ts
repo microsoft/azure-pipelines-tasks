@@ -68,23 +68,20 @@ export class azureclitask {
             tool.line(args); // additional args should always call line. line() parses quoted arg strings
 
             var addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
-            if (!!addSpnToEnvironment) {
-                var authorizationScheme = tl.getEndpointAuthorizationScheme(connectedService, true).toLowerCase();
-
-                if (authorizationScheme == 'serviceprincipal') {
+            var authorizationScheme = tl.getEndpointAuthorizationScheme(connectedService, true).toLowerCase();
+            if (!!addSpnToEnvironment && authorizationScheme == 'serviceprincipal') {
                   await tool.exec({
                     failOnStdErr: failOnStdErr,
                     env: {
                       ...process.env,
                       ...{ servicePrincipalId: this.servicePrincipalId, servicePrincipalKey: this.servicePrincipalKey, tenantId: this.tenantId }
                     }
-                  });
-                } else if (authorizationScheme == 'workloadidentityfederation') {
+                  });                
+            } else if (!!addSpnToEnvironment && authorizationScheme == 'workloadidentityfederation') {
                   await tool.exec({
                     failOnStdErr: failOnStdErr,
                     env: { ...process.env, ...{ servicePrincipalId: this.servicePrincipalId, idToken: this.federatedToken, tenantId: this.tenantId } }
                   });
-                }
             }
             else {
                 await tool.exec({ failOnStdErr: failOnStdErr });
