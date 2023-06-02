@@ -10,26 +10,27 @@ import { ITaskApi } from "azure-devops-node-api/TaskApi";
 const FAIL_ON_STDERR: string = "FAIL_ON_STDERR";
 
 export class azureclitask {
+
   public static async runMain(): Promise<void> {
     var toolExecutionError = null;
     var exitCode: number = 0;
-    try {
+        try{
       var scriptType: ScriptType = ScriptTypeFactory.getSriptType();
       var tool: any = await scriptType.getTool();
-      var cwd: string = tl.getPathInput('cwd', true, false);
-      if (tl.getInput('scriptLocation', true).toLowerCase() === 'scriptPath' && !tl.filePathSupplied('cwd')) {
-        cwd = path.dirname(tl.getPathInput('scriptPath', true, true));
+            var cwd: string = tl.getPathInput("cwd", true, false);
+            if (tl.getInput("scriptLocation", true).toLowerCase() === "scriptPath" && !tl.filePathSupplied("cwd")) {
+                cwd = path.dirname(tl.getPathInput("scriptPath", true, true));
       }
       // determines whether output to stderr will fail a task.
       // some tools write progress and other warnings to stderr.  scripts can also redirect.
-      var failOnStdErr: boolean = tl.getBoolInput('failOnStandardError', false);
+            var failOnStdErr: boolean = tl.getBoolInput("failOnStandardError", false);
       tl.mkdirP(cwd);
       tl.cd(cwd);
-      Utility.throwIfError(tl.execSync('az', '--version'));
+            Utility.throwIfError(tl.execSync("az", "--version"));
       // set az cli config dir
       this.setConfigDirectory();
       this.setAzureCloudBasedOnServiceEndpoint();
-      var connectedService: string = tl.getInput('connectedServiceNameARM', true);
+            var connectedService: string = tl.getInput("connectedServiceNameARM", true);
       await this.loginAzureRM(connectedService);
 
       let errLinesCount: number = 0;
@@ -91,14 +92,15 @@ export class azureclitask {
       }
 
       //set the task result to either succeeded or failed based on error was thrown or not
-      if (toolExecutionError === FAIL_ON_STDERR) {
-        tl.setResult(tl.TaskResult.Failed, tl.loc('ScriptFailedStdErr'));
+            if(toolExecutionError === FAIL_ON_STDERR) {
+                tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedStdErr"));
       } else if (toolExecutionError) {
-        tl.setResult(tl.TaskResult.Failed, tl.loc('ScriptFailed', toolExecutionError));
-      } else if (exitCode != 0) {
-        tl.setResult(tl.TaskResult.Failed, tl.loc('ScriptFailedWithExitCode', exitCode));
-      } else {
-        tl.setResult(tl.TaskResult.Succeeded, tl.loc('ScriptReturnCode', 0));
+                tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailed", toolExecutionError));
+            } else if (exitCode != 0){
+                tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedWithExitCode", exitCode));
+            }
+            else {
+                tl.setResult(tl.TaskResult.Succeeded, tl.loc("ScriptReturnCode", 0));
       }
 
       //Logout of Azure if logged in
@@ -115,13 +117,13 @@ export class azureclitask {
   private static federatedToken: string = null;
   private static tenantId: string = null;
 
-  private static async loginAzureRM(connectedService: string): Promise<void> {
+    private static async loginAzureRM(connectedService: string):Promise<void> {
     var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
-    var subscriptionID: string = tl.getEndpointDataParameter(connectedService, 'SubscriptionID', true);
+        var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
 
-    if (authScheme.toLowerCase() == 'workloadidentityfederation') {
-      var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalid', false);
-      var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, 'tenantid', false);
+        if (authScheme.toLowerCase() == "workloadidentityfederation") {
+            var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+            var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
 
       const federatedToken = await this.getIdToken(connectedService);
       tl.setSecret(federatedToken);
@@ -131,59 +133,57 @@ export class azureclitask {
       this.federatedToken = federatedToken;
       this.tenantId = tenantId;
       //login using OpenID Connect federation
-      Utility.throwIfError(tl.execSync('az', args), tl.loc('LoginFailed'));
-    } else if (authScheme.toLowerCase() == 'serviceprincipal') {
+            Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
+        }
+        else if (authScheme.toLowerCase() == "serviceprincipal") {
       let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
       let cliPassword: string = null;
-      var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalid', false);
-      var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, 'tenantid', false);
+            var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+            var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
 
       this.servicePrincipalId = servicePrincipalId;
       this.tenantId = tenantId;
 
-      if (authType == 'spnCertificate') {
+            if (authType == "spnCertificate") {
         tl.debug('certificate based endpoint');
-        let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, 'servicePrincipalCertificate', false);
+                let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
         cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
         fs.writeFileSync(cliPassword, certificateContent);
         this.cliPasswordPath = cliPassword;
-      } else {
+            }
+            else {
         tl.debug('key based endpoint');
-        cliPassword = tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalkey', false);
+                cliPassword = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
         this.servicePrincipalKey = cliPassword;
       }
 
       let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
-      tl.setSecret(escapedCliPassword.replace(/\\/g, '"'));
+            tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
       //login using svn
-      Utility.throwIfError(
-        tl.execSync(
-          'az',
-          `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`
-        ),
-        tl.loc('LoginFailed')
-      );
-    } else if (authScheme.toLowerCase() == 'managedserviceidentity') {
+            Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
+        }
+        else if(authScheme.toLowerCase() == "managedserviceidentity") {
       //login using msi
-      Utility.throwIfError(tl.execSync('az', 'login --identity'), tl.loc('MSILoginFailed'));
-    } else {
+            Utility.throwIfError(tl.execSync("az", "login --identity"), tl.loc("MSILoginFailed"));
+        }
+        else {
       throw tl.loc('AuthSchemeNotSupported', authScheme);
     }
 
     this.isLoggedIn = true;
     if (!!subscriptionID) {
       //set the subscription imported to the current subscription
-      Utility.throwIfError(tl.execSync('az', 'account set --subscription "' + subscriptionID + '"'), tl.loc('ErrorInSettingUpSubscription'));
+            Utility.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
     }
   }
 
   private static setConfigDirectory(): void {
-    if (tl.getBoolInput('useGlobalConfig')) {
+        if (tl.getBoolInput("useGlobalConfig")) {
       return;
     }
 
     if (!!tl.getVariable('Agent.TempDirectory')) {
-      var azCliConfigPath = path.join(tl.getVariable('Agent.TempDirectory'), '.azclitask');
+            var azCliConfigPath = path.join(tl.getVariable('Agent.TempDirectory'), ".azclitask");
       console.log(tl.loc('SettingAzureConfigDir', azCliConfigPath));
       process.env['AZURE_CONFIG_DIR'] = azCliConfigPath;
     } else {
@@ -192,29 +192,30 @@ export class azureclitask {
   }
 
   private static setAzureCloudBasedOnServiceEndpoint(): void {
-    var connectedService: string = tl.getInput('connectedServiceNameARM', true);
+        var connectedService: string = tl.getInput("connectedServiceNameARM", true);
     var environment = tl.getEndpointDataParameter(connectedService, 'environment', true);
     if (!!environment) {
       console.log(tl.loc('SettingAzureCloud', environment));
-      Utility.throwIfError(tl.execSync('az', 'cloud set -n ' + environment));
+            Utility.throwIfError(tl.execSync("az", "cloud set -n " + environment));
     }
   }
 
   private static logoutAzure() {
     try {
-      tl.execSync('az', ' account clear');
-    } catch (err) {
+            tl.execSync("az", " account clear");
+        }
+        catch (err) {
       // task should not fail if logout doesn`t occur
-      tl.warning(tl.loc('FailedToLogout'));
+            tl.warning(tl.loc("FailedToLogout"));
     }
   }
 
-  private static async getIdToken(connectedService: string): Promise<string> {
-    const jobId = tl.getVariable('System.JobId');
-    const planId = tl.getVariable('System.PlanId');
-    const projectId = tl.getVariable('System.TeamProjectId');
-    const hub = tl.getVariable('System.HostType');
-    const uri = tl.getVariable('System.CollectionUri');
+    private static async getIdToken(connectedService: string) : Promise<string> {
+        const jobId = tl.getVariable("System.JobId");
+        const planId = tl.getVariable("System.PlanId");
+        const projectId = tl.getVariable("System.TeamProjectId");
+        const hub = tl.getVariable("System.HostType");
+        const uri = tl.getVariable("System.CollectionUri");
     const token = getSystemAccessToken();
 
     const authHandler = getHandlerFromToken(token);
