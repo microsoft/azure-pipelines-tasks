@@ -652,5 +652,6 @@ function replaceImageSourceToBase64(dir: string): void {
         tl.warning('Fail to replace images source to base64' + error)
     }
 }
+console.log(`maven4-original`);
 
 execBuildWithRestore();
