@@ -59,9 +59,9 @@ function runTestPipeline(pipeline) {
     .post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, 
     {
       variables: {
-        CANARY_TEST_TASKNAME: { 
+        CANARY_TEST_TASKNAMES: { 
           "isSercret": false,
-          "value": BUILD_SOURCEVERSION,
+          "value": pipeline.name,
         },
         CANARY_TEST_BRANCH: {
           "isSecret": false,
