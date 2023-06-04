@@ -48,7 +48,7 @@ function runMainPipeline(id, tasks) {
     .post(
       `${apiUrl}/${id}/runs?${apiVersion}`,
       {
-        templateParameters: { tasks, BuildSourceVersion: BUILD_SOURCEVERSION }
+        templateParameters: { tasks, BuildSourceVersion: BUILD_SOURCEVERSION },
       },
       { auth }
     )

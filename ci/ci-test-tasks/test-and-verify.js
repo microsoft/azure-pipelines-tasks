@@ -59,13 +59,13 @@ function runTestPipeline(pipeline) {
     .post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, 
     {
       variables: {
-        BUILD_BRANCH: { 
+        CANARY_TEST_TASKNAME: { 
           "isSercret": false,
           "value": BUILD_SOURCEVERSION,
         },
-        REPOSTITORY_URL: {
+        CANARY_TEST_BRANCH: {
           "isSecret": false,
-          "value":"TEST_VALUE_ONE"
+          "value": BUILD_SOURCEVERSION,
         }
       },
     }, { auth })
