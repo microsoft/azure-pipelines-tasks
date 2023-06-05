@@ -222,7 +222,6 @@
         "PackerBuildV0",
         "PackerBuildV1",
         "DownloadGitHubNugetPackageV1",
-        "KubernetesV0",
-        "KubernetesV1"
+        "KubernetesV0"
     ]
 }
