@@ -68,11 +68,20 @@ export class azureclitask {
             tool.line(args); // additional args should always call line. line() parses quoted arg strings
 
             var addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
-            if (!!addSpnToEnvironment && tl.getEndpointAuthorizationScheme(connectedService, true) == "ServicePrincipal") {
-                await tool.exec({
+            var authorizationScheme = tl.getEndpointAuthorizationScheme(connectedService, true).toLowerCase();
+            if (!!addSpnToEnvironment && authorizationScheme == 'serviceprincipal') {
+                  await tool.exec({
                     failOnStdErr: failOnStdErr,
-                    env: { ...process.env, ...{ servicePrincipalId: this.servicePrincipalId, servicePrincipalKey: this.servicePrincipalKey, tenantId: this.tenantId } }
-                });
+                    env: {
+                      ...process.env,
+                      ...{ servicePrincipalId: this.servicePrincipalId, servicePrincipalKey: this.servicePrincipalKey, tenantId: this.tenantId }
+                    }
+                  });                
+            } else if (!!addSpnToEnvironment && authorizationScheme == 'workloadidentityfederation') {
+                  await tool.exec({
+                    failOnStdErr: failOnStdErr,
+                    env: { ...process.env, ...{ servicePrincipalId: this.servicePrincipalId, idToken: this.federatedToken, tenantId: this.tenantId } }
+                  });
             }
             else {
                 await tool.exec({ failOnStdErr: failOnStdErr });
@@ -116,6 +125,7 @@ export class azureclitask {
     private static cliPasswordPath: string = null;
     private static servicePrincipalId: string = null;
     private static servicePrincipalKey: string = null;
+    private static federatedToken: string = null;
     private static tenantId: string = null;
 
     private static async loginAzureRM(connectedService: string):Promise<void> {
@@ -165,6 +175,7 @@ export class azureclitask {
             this.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
 
             this.servicePrincipalId = servicePrincipalId;
+            this.federatedToken = federatedToken;
             this.tenantId = tenantId;
         }
         else{

@@ -132,6 +132,7 @@ export class AzureRMEndpoint {
 
                 let access_token: string = tl.getEndpointAuthorizationParameter(this._connectedServiceName, "apitoken", true);
                 this.endpoint.applicationTokenCredentials = new ApplicationTokenCredentials(
+                    this._connectedServiceName,
                     this.endpoint.servicePrincipalClientID,
                     this.endpoint.tenantID,
                     this.endpoint.servicePrincipalKey,
