@@ -42,6 +42,7 @@ export class WebRequestOptions {
     public retryIntervalInSeconds: number;
     public retriableStatusCodes: number[];
     public retryRequestTimedout: boolean;
+    public shouldResetStreamOnReadableOrNot?: boolean;
 }
 
 export async function sendRequest(request: WebRequest, options?: WebRequestOptions): Promise<WebResponse> {
@@ -50,10 +51,11 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
     let retryIntervalInSeconds = options && options.retryIntervalInSeconds ? options.retryIntervalInSeconds : 2;
     let retriableErrorCodes = options && options.retriableErrorCodes ? options.retriableErrorCodes : ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN"];
     let retriableStatusCodes = options && options.retriableStatusCodes ? options.retriableStatusCodes : [408, 409, 500, 502, 503, 504];
+    let shouldResetStreamOnReadableOrNot = options && options.shouldResetStreamOnReadableOrNot ? options.shouldResetStreamOnReadableOrNot : false;
     let timeToWait: number = retryIntervalInSeconds;
     while (true) {
         try {
-            if (request.body && typeof(request.body) !== 'string' && !request.body["readable"]) {
+            if (request.body && typeof(request.body) !== 'string' && (shouldResetStreamOnReadableOrNot || !request.body["readable"])) {
                 request.body = fs.createReadStream(request.body["path"]);
             }
             

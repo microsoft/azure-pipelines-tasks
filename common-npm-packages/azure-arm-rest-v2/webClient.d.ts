@@ -17,6 +17,7 @@ export declare class WebRequestOptions {
     retryIntervalInSeconds: number;
     retriableStatusCodes: number[];
     retryRequestTimedout: boolean;
+    shouldResetStreamOnReadableOrNot?: boolean;
 }
 export declare function sendRequest(request: WebRequest, options?: WebRequestOptions): Promise<WebResponse>;
 export declare function sleepFor(sleepDurationInSeconds: any): Promise<any>;
