@@ -1,0 +1,23 @@
+{
+  "name": "downloadgithubnugetpackage-tests",
+  "version": "1.0.0",
+  "description": "Azure Pipelines Download GitHub Nuget Task Packages V1 Tests",
+  "main": "L0.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "devDependencies": {
+    "@types/mocha": "^5.2.7",
+    "nock": "^13.2.6"
+  }
+}
