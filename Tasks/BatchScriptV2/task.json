@@ -23,7 +23,7 @@
     "demands": [
         "Cmd"
     ],
-    "minimumAgentVersion": "3.223.0",
+    "minimumAgentVersion": "3.220.5",
     "groups": [
         {
             "name": "advanced",
