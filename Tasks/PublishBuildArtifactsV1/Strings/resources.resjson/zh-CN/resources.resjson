@@ -10,8 +10,8 @@
   "loc.input.help.ArtifactName": "要在发布位置中创建的项目的名称。",
   "loc.input.label.ArtifactType": "项目发布位置",
   "loc.input.help.ArtifactType": "选择是否在 Azure Pipelines 中存储项目，或者是否将其复制到必须可从生成代理访问的文件共享中。",
-  "loc.input.label.MaxArtifactSize": "Max Artifact Size",
-  "loc.input.help.MaxArtifactSize": "Maximum limit on the size of artifacts to be published in bytes. Put 0 if you don't want to set any limit.",
+  "loc.input.label.MaxArtifactSize": "最大项目大小",
+  "loc.input.help.MaxArtifactSize": "要发布的项目大小的最大限制(以字节为单位)。如果不想设置任何限制，请输入 0。",
   "loc.input.label.TargetPath": "文件共享路径",
   "loc.input.help.TargetPath": "项目文件将复制到的文件共享。这可包括变量。示例: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber)。不支持将项目从 Linux 或 macOS 代理发布到文件共享。",
   "loc.input.label.Parallel": "并行复制",
@@ -25,5 +25,5 @@
   "loc.messages.PublishBuildArtifactsFailed": "发布生成项目失败，出现错误: %s",
   "loc.messages.UnexpectedParallelCount": "并行计数“%s”不受支持。输入介于 1 到 128 之间的数字。",
   "loc.messages.TarExtractionNotSupportedInWindows": "Windows 不支持存档提取",
-  "loc.messages.ArtifactSizeExceeded": "The size of artifacts being published is %s bytes which is larger than the maximum limit %s bytes set for the published size of artifacts."
+  "loc.messages.ArtifactSizeExceeded": "正在发布的项目大小为 %s 字节，大于为项目发布的大小设置的最大限制 %s 字节。"
 }
