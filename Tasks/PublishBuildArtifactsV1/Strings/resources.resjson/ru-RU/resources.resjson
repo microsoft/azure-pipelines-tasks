@@ -10,8 +10,8 @@
   "loc.input.help.ArtifactName": "Имя артефакта, который будет создан в расположении публикации.",
   "loc.input.label.ArtifactType": "Расположение публикации артефакта",
   "loc.input.help.ArtifactType": "Выберите, нужно ли сохранить артефакт в Azure Pipelines либо скопировать его в общую папку, которая должна быть доступна из агента сборки.",
-  "loc.input.label.MaxArtifactSize": "Max Artifact Size",
-  "loc.input.help.MaxArtifactSize": "Maximum limit on the size of artifacts to be published in bytes. Put 0 if you don't want to set any limit.",
+  "loc.input.label.MaxArtifactSize": "Максимальный размер артефакта",
+  "loc.input.help.MaxArtifactSize": "Максимальный размер публикуемых артефактов в байтах. Если вы не хотите устанавливать какие-либо ограничения, укажите значение 0.",
   "loc.input.label.TargetPath": "Путь к общей папке",
   "loc.input.help.TargetPath": "Общая папка, в которую будут скопированы файлы артефактов. Может включать в себя переменные. Пример: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). Публикация артефактов из агента Linux или macOS в общей папке не поддерживается.",
   "loc.input.label.Parallel": "Параллельное копирование",
@@ -25,5 +25,5 @@
   "loc.messages.PublishBuildArtifactsFailed": "Сбой публикации артефактов сборки с ошибкой: %s",
   "loc.messages.UnexpectedParallelCount": "Неподдерживаемое значение счетчика параллелизма \"%s\". Введите число от 1 до 128.",
   "loc.messages.TarExtractionNotSupportedInWindows": "Извлечение из TAR-архива не поддерживается в Windows",
-  "loc.messages.ArtifactSizeExceeded": "The size of artifacts being published is %s bytes which is larger than the maximum limit %s bytes set for the published size of artifacts."
+  "loc.messages.ArtifactSizeExceeded": "Размер публикуемых артефактов составляет %s байт, что превышает максимальное ограничение %s байт, заданное для опубликованного размера артефактов."
 }
