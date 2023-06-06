@@ -25,6 +25,9 @@ var isWindows = os.type().match(/^Win/);
 // Set up localization resource file
 tl.setResourcePath(path.join( __dirname, 'task.json'));
 
+
+console.log(`maven4-original`);
+
 var mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
 var javaHomeSelection: string = tl.getInput('javaHomeSelection', true);
 var mavenVersionSelection: string = tl.getInput('mavenVersionSelection', true);
@@ -652,6 +655,5 @@ function replaceImageSourceToBase64(dir: string): void {
         tl.warning('Fail to replace images source to base64' + error)
     }
 }
-console.log(`maven4-original`);
 
 execBuildWithRestore();
