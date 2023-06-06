@@ -47,7 +47,7 @@ async function start(tasks) {
         tasksMap.get(taskName).push(taskFullName);
       });
     const tasksList = [];
-    for (const taskVersions in tasksMap.values()) {
+    for (const taskVersions of Array.from(tasksMap.values())) {
       tasksList.push(taskVersions.join(','));
     }
     const pipelineBuild = await runMainPipeline(mainPipelineId, tasksList.join(';'));
