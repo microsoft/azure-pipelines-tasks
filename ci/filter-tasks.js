@@ -13,6 +13,8 @@ var run = require('./ci-util').run;
 var makeOptionsPath = path.join(__dirname, '..', 'make-options.json');
 var makeOptions = JSON.parse(fs.readFileSync(makeOptionsPath).toString());
 
+var skipBumpingVersionsDueToChangesInCommon = process.env['SKIP_BUMPING_VERSIONS_DUE_TO_CHANGES_IN_COMMON'].toLowerCase() == 'true';
+
 var getTasksToBuildForCI = async function() {
     // Returns a list of tasks that have different version numbers than their current published version. 
     var packageInfo;
@@ -162,7 +164,8 @@ var getTasksToBuildForPR = function() {
             toBeBuilt.push(task);
         }
     });
-    if (shouldBeBumped.length > 0) {
+
+    if (shouldBeBumped.length > 0 && !skipBumpingVersionsDueToChangesInCommon) {
         throw new Error('The following tasks should have their versions bumped due to changes in common: ' + shouldBeBumped);
     }
     
@@ -194,8 +197,13 @@ if (buildReason == 'individualci' || buildReason == 'batchedci' || buildReason =
         setTaskVariables(tasks)
     });
 } else {
-    if (buildReason == 'pullrequest') {
+    if (
         // If PR, we will compare any tasks that could have been affected based on the diff.
+        buildReason == 'pullrequest' ||
+
+        // It should be manual rerun for PR
+        buildReason == 'manual' && skipBumpingVersionsDueToChangesInCommon
+        ) {
         tasks = getTasksToBuildForPR();
         setTaskVariables(tasks);
     } else {
