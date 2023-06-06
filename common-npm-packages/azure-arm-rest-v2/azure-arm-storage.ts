@@ -221,6 +221,8 @@ export class StorageAccounts {
             throw new Error(tl.loc("StorageAccountCannotBeNull"));
         }
 
+        // SubscribtionId will be placed automatically
+        // The endpoint for storage account
         let response = await this.sendRequest(
             "GET",
             "//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName}",
@@ -233,14 +235,15 @@ export class StorageAccounts {
         if (response.statusCode == 200) {
             return response.body;
         }
-
+        
+        // SubscribtionId will be placed automatically
+        // The endpoint for classic storage account
         response = await this.sendRequest(
             "GET",
             "//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.ClassicStorage/storageAccounts/{storageAccountName}",
             {
                 '{resourceGroupName}': resourceGroupName,
-                '{storageAccountName}': storageAccountName,
-                '{subscriptionId}': this.client.subscriptionId
+                '{storageAccountName}': storageAccountName
             }
         );
         
@@ -259,6 +262,11 @@ export class StorageAccounts {
         return "";
     }
 
+    /**
+     * The method is wrapping the request call for the azure storage service.
+     * SubscrubtionID is placed automatically in this.client.getRequestUri method based on this.client.subscriptionId
+     * The same with apiVersion
+     */
     private async sendRequest(method: string, uri: string, bindings?: {}, options?: any): Promise<webClient.WebResponse> {
         const request = new webClient.WebRequest();
         request.method = method;
