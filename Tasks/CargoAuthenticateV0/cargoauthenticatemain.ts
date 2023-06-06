@@ -75,7 +75,7 @@ async function main(): Promise<void> {
 
         for (let registry of Object.keys(result.registries)) {
             const registryUrl = url.parse(result.registries[registry].index);
-            let tokenName = `CARGO_REGISTRIES_${registry.toLocaleUpperCase().replace("-", "_")}_TOKEN`;
+            let tokenName = `CARGO_REGISTRIES_${registry.toLocaleUpperCase().replace(/-/g, "_")}_TOKEN`;
             if (registryUrl && registryUrl.host && collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0) {
                 let currentRegistry : string;
                 for (let serviceConnection of externalServiceConnections) {
