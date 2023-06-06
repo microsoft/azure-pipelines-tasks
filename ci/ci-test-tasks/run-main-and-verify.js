@@ -40,7 +40,7 @@ async function start(tasks) {
     const tasksMap = new Map();
     tasksToTest
       .forEach(taskFullName => {
-        const taskName = taskName.substring(0, taskName.lastIndexOf('V'));
+        const taskName = taskFullName.substring(0, taskFullName.lastIndexOf('V'));
         if (!tasksMap.has(taskName)) {
           tasksMap.set(taskName, []);
         }
