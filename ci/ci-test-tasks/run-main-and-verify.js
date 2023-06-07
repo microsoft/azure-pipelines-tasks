@@ -40,14 +40,14 @@ async function start(tasks) {
     const tasksMap = new Map();
     tasksToTest
       .forEach(taskFullName => {
-        const taskName = taskName.substring(0, taskName.lastIndexOf('V'));
+        const taskName = taskFullName.substring(0, taskFullName.lastIndexOf('V'));
         if (!tasksMap.has(taskName)) {
           tasksMap.set(taskName, []);
         }
         tasksMap.get(taskName).push(taskFullName);
       });
     const tasksList = [];
-    for (const taskVersions in tasksMap.values()) {
+    for (const taskVersions of Array.from(tasksMap.values())) {
       tasksList.push(taskVersions.join(','));
     }
     const pipelineBuild = await runMainPipeline(mainPipelineId, tasksList.join(';'));
