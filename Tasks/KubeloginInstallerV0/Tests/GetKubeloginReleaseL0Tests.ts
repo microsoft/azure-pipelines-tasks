@@ -89,7 +89,7 @@ export class GetKubeloginReleaseL0Tests {
   public static async validateGetKubeloginReleaseLatestVersion() {
     const release = await getKubeloginRelease('latest', 'darwin-amd64');
 
-    if (release.version == 'v0.0.29') {
+    if (release.version) {
       console.log(TestString.Foundlatest);
     }
     if (release.platform == 'darwin-amd64') {

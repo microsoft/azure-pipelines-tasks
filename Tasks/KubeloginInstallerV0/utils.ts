@@ -129,7 +129,13 @@ function getTempDirectory(): string {
 
 export async function downloadKubeloginRelease(release: KubeloginRelease) {
   const downloadPath: string = path.join(getKubeloginDownloadPath(), release.name);
-  await toolLib.downloadTool(release.releaseUrl, downloadPath);
+  try {
+    await toolLib.downloadTool(release.releaseUrl, downloadPath);
+  }
+  catch (exception) {
+    throw new Error(taskLib.loc('Info_DownloadingFailed', downloadPath, exception));
+  }
+  console.log(taskLib.loc('Info_DownloadingFailed', downloadPath));
   return downloadPath;
 }
 

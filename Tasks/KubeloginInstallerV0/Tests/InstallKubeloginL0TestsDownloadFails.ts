@@ -5,8 +5,6 @@ import * as taskLib from 'azure-pipelines-task-lib/task';
 import {
   initTaskTests,
   setAnswears,
-  registerMockedArtifactEngine,
-  registerMockedOctokitRest,
   registerMockedToolRunner,
   registerMockedToolLibTools
 } from './TestHelper';
@@ -16,10 +14,8 @@ const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 initTaskTests(taskLib);
 setAnswears(tr);
-registerMockedArtifactEngine(tr, true);
 registerMockedToolRunner(tr);
-registerMockedOctokitRest(tr);
-registerMockedToolLibTools(tr);
+registerMockedToolLibTools(tr, true);
 
 tr.setInput('kubeloginVersion', 'latest');
 

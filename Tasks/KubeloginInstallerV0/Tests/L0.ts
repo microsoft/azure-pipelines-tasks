@@ -61,8 +61,8 @@ describe('TestUtils', function () {
   it('should download a release', (done: Mocha.Done) => {
     const taskPath = path.join(__dirname, 'DownloadKubeloginReleaseL0Tests.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
+    
     tr.run();
-    console.log(tr.stdout);
 
     assert(tr.stdOutContained('kubelogin downloaded successfully'), 'should have printed: ' + 'kubelogin downloaded successfully');
     done();

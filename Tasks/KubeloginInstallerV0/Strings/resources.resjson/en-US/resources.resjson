@@ -15,7 +15,7 @@
   "loc.messages.Info_KubeloginPlatform": "Kubelogin platform:    %s",
   "loc.messages.Info_KubeloginVersion": "Kubelogin version:     %s",
   "loc.messages.Info_KubeloginReleaseURL": "Kubelogin release URL: %s",
-  "loc.messages.Info_DownloadingFailed": "Failed to download kubelogin to %s",
+  "loc.messages.Info_DownloadingFailed": "Failed to download kubelogin to %s, exception %s",
   "loc.messages.Err_ExtractionFailed": "Failed to extract package with error %s",
   "loc.messages.Err_VersionNotFound": "Kubelogin version %s was not found",
   "loc.messages.Err_NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",

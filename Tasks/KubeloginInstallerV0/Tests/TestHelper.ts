@@ -81,7 +81,7 @@ export function registerMockedToolRunner(tr: tmrm.TaskMockRunner): void {
   });
 }
 
-export function registerMockedToolLibTools(tr: tmrm.TaskMockRunner): void {
+export function registerMockedToolLibTools(tr: tmrm.TaskMockRunner, processItemsError: boolean = false): void {
   tr.registerMock('azure-pipelines-tool-lib/tool', {
     findLocalTool: function (A, B) {
       return undefined;
@@ -95,6 +95,9 @@ export function registerMockedToolLibTools(tr: tmrm.TaskMockRunner): void {
     prependPath: function (A) {},
     downloadTool: function(A, B) {
       return new Promise(async (resolve, reject) => {
+        if (processItemsError) {
+          reject('Failed to download a zip');
+        }
         fs.copyFile(path.join(__dirname, 'kubelogin-win-amd64.zip'), releasePath, err => {
           if (err) reject(err);
           resolve('ok');
