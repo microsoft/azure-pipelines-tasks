@@ -144,7 +144,7 @@ steps:
   - powershell: |
       # Build the release branch name
       $currentSprint = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json)
-      $releaseBranch = "releases/m" + $currentSprint.sprint + "." + $(currentDate)
+      $releaseBranch = "releases/m" + $currentSprint.sprint
 
       if ($currentSprint.week -eq 3) {
         cd $(System.DefaultWorkingDirectory)/ci/ci-release-notes
