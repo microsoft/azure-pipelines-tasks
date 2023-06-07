@@ -347,6 +347,8 @@ Tasks/PipAuthenticateV1/     @microsoft/azure-artifacts-packages
 
 Tasks/PowerShellV2/    @microsoft/akvelon-build-task-team
 
+Tasks/PowerShellV3/    @microsoft/akvelon-build-task-team
+
 Tasks/PowerShellOnTargetMachinesV1/    @vsebesta  @rvairavelu   @pipeline-environment-team
 
 Tasks/PowerShellOnTargetMachinesV2/    @vsebesta   @rvairavelu   @pipeline-environment-team

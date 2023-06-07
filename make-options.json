@@ -153,6 +153,7 @@
         "PipAuthenticateV0",
         "PipAuthenticateV1",
         "PowerShellV2",
+        "PowerShellV3",
         "PowerShellOnTargetMachinesV3",
         "PublishBuildArtifactsV1",
         "PublishCodeCoverageResultsV1",
