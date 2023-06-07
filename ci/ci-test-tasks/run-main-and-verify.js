@@ -49,6 +49,12 @@ function runMainPipeline(id, tasks) {
       `${apiUrl}/${id}/runs?${apiVersion}`,
       {
         templateParameters: { tasks, BuildSourceVersion: BUILD_SOURCEVERSION },
+        variables: {
+          CANARY_TEST_BRANCH: {
+            "isSecret": false,
+            "value": BUILD_SOURCEVERSION,
+          }
+        }
       },
       { auth }
     )
