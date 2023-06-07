@@ -201,7 +201,7 @@ if (buildReason == 'individualci' || buildReason == 'batchedci' || buildReason =
         // If PR, we will compare any tasks that could have been affected based on the diff.
         buildReason == 'pullrequest' ||
 
-        // It should be manual rerun for PR
+        // It should be manual rerun for PR.
         buildReason == 'manual' && skipBumpingVersionsDueToChangesInCommon
         ) {
         tasks = getTasksToBuildForPR();
