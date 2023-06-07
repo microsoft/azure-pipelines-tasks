@@ -117,7 +117,7 @@ steps:
   - powershell: |
       # Build the release branch name
       $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"="application/json"} | ConvertFrom-Json).sprint
-      $releaseBranch = "releases/m" + $currentSprint + "." + $(currentDate)
+      $releaseBranch = "releases/m" + $currentSprint
 
       # add config entry to avoid errors while pulling
       git config --global user.email "$(username)@microsoft.com"
