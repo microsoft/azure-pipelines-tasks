@@ -37,7 +37,20 @@ async function start(tasks) {
 
   const tasksToTest = tasks.filter(task => existingPipelineNames.has(task));
   if (tasksToTest.length) {
-    const pipelineBuild = await runMainPipeline(mainPipelineId, tasksToTest.join(','));
+    const tasksMap = new Map();
+    tasksToTest
+      .forEach(taskFullName => {
+        const taskName = taskFullName.substring(0, taskFullName.lastIndexOf('V'));
+        if (!tasksMap.has(taskName)) {
+          tasksMap.set(taskName, []);
+        }
+        tasksMap.get(taskName).push(taskFullName);
+      });
+    const tasksList = [];
+    for (const taskVersions of Array.from(tasksMap.values())) {
+      tasksList.push(taskVersions.join(','));
+    }
+    const pipelineBuild = await runMainPipeline(mainPipelineId, tasksList.join(';'));
 
     return new Promise((resolve, reject) => verifyBuildStatus(pipelineBuild, resolve, reject));
   }

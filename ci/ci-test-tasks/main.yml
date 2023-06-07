@@ -1,6 +1,6 @@
 parameters:
 - name: tasks
-  displayName: Tasks to process (separate by colons, no whitespaces)
+  displayName: Tasks to process, separated by semicolons (for different tasks) and commas (beween different versions of the same task), no whitespaces
   type: string
   default: DownloadPackageV1
 - name: BuildSourceVersion
@@ -11,73 +11,37 @@ trigger: none
 pr: none
 
 stages:
-- stage: Build
+- stage: ProcessAllTasks
   condition: eq(variables['build.reason'], 'Manual')
   jobs:
-    - ${{ each task in split(parameters.tasks, ',') }}:
-      - job: ${{ task }}_build_task
-        displayName: Build Task (${{ task }})
+    - ${{ each task_versions in split(parameters.tasks, ';') }}:
+      - job:  Process_${{ split(task_versions, ',')[0] }}
+        displayName: Process ${{ task_versions }}
         pool:
           vmImage: windows-2022
         steps:
-        - template: ./build-task.yml
+        # Start collect diagnostics
+        - powershell: ./ci/start-collect-diagnostics.ps1
+          displayName: Start collect diagnostics
+
+        - template: ./build-init.yml
           parameters:
-            task: ${{ task }}
-            push: false
-            publishArtifact: true
-            patchVersion: true
-            version: '0.999.0'
             BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
 
-- stage: PreDelete
-  jobs:
-    - ${{ each task in split(parameters.tasks, ',') }}:    
-      - job: ${{ task }}_pre_delete
-        displayName: PreDelete (${{ task }})
-        pool:
-          vmImage: windows-2022
-        steps:
-        - template: ./delete-task.yml
-          parameters:
-            task: ${{ task }}
-            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+        - template: ./test-init.yml
 
-- stage: Upload
-  jobs:
-    - ${{ each task in split(parameters.tasks, ',') }}:
-      - job: ${{ task }}_upload_task
-        displayName: Upload (${{ task }})
-        pool:
-          vmImage: windows-2022
-        steps:
-        - template: ./upload-task.yml
-          parameters:
-            task: ${{ task }}
-            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+        - ${{ each task in split(task_versions, ',') }}:
+          - template: ./build-task.yml
+            parameters:
+              task: ${{ task }}
+              patchVersion: true
+              version: '0.999.0'
 
-- stage: Test
-  jobs:
-    - ${{ each task in split(parameters.tasks, ',') }}:
-      - job: ${{ task }}_test_task
-        displayName: Test (${{ task }})
-        pool:
-          vmImage: windows-2022
-        steps:
-        - template: ./test-task.yml
-          parameters:
-            task: ${{ task }}
-            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+          - template: ./test-task.yml
+            parameters:
+              task: ${{ task }}
 
-- stage: PostDelete
-  condition: succeededOrFailed('Upload')
-  jobs:
-    - ${{ each task in split(parameters.tasks, ',') }}:    
-      - job: ${{ task }}_post_delete
-        displayName: PostDelete (${{ task }})
-        pool:
-          vmImage: windows-2022
-        steps:
-        - template: ./delete-task.yml
-          parameters:
-            task: ${{ task }}
-            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+        # Stop collect diagnostics
+        - powershell: ./ci/stop-collect-diagnostics.ps1
+          displayName: Stop collect diagnostics
+          condition: always()
