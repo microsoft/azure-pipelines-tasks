@@ -18,7 +18,7 @@ steps:
 
 - script: |
     echo "Tasks: ${{ parameters.task }}"
-    set
+    env
     node ./ci/ci-test-tasks/test-and-verify.js $(ADOToken) $(ADOUrl) $(System.TeamProject) ${{ parameters.task }}
   displayName: 'Run tests and verify results'
   failOnStderr: true
