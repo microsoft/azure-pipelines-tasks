@@ -30,7 +30,7 @@ if (tasks) {
 }
 async function detectBuildConfig(task) {
     console.log(`checking buildconfig for ${task}`);
-    if(fs.existSync(path.join(`_generated`,`${task}.versionmap.txt`)) {
+    if(fs.existSync(path.join(`_generated`,`${task}.versionmap.txt`))) {
         console.log(`buildconfig exits`);
     } else {
         console.log(`no buildconfig ${task}`);
