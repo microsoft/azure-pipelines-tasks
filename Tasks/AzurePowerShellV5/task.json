@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 5,
-        "Minor": 218,
-        "Patch": 0
+        "Minor": 223,
+        "Patch": 1
     },
     "releaseNotes": "Added support for Az Module and cross platform agents.",
     "groups": [
@@ -156,14 +156,14 @@
             "groupName": "advanced"
         },
         {
-            "name":  "validateScriptSignature",
-            "type":  "boolean",
-            "label":  "Validate script signature",
-            "required":  false,
-            "defaultValue":  "false",
-            "helpMarkDown":  "If this is true, then the task will first check to make sure specified script is signed and valid before executing it.",
-            "groupName":  "advanced",
-            "visibleRule":  "ScriptType = FilePath"
+            "name": "validateScriptSignature",
+            "type": "boolean",
+            "label": "Validate script signature",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "If this is true, then the task will first check to make sure specified script is signed and valid before executing it.",
+            "groupName": "advanced",
+            "visibleRule": "ScriptType = FilePath"
         },
         {
             "name": "workingDirectory",

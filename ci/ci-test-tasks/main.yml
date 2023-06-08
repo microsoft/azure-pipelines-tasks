@@ -1,54 +1,47 @@
 parameters:
 - name: tasks
-  displayName: Tasks to process (separate by colons, no whitespaces)
+  displayName: Tasks to process, separated by semicolons (for different tasks) and commas (beween different versions of the same task), no whitespaces
   type: string
-  default: ArchiveFilesV2
+  default: DownloadPackageV1
+- name: BuildSourceVersion
+  displayName: The latest version control change of the triggering repo that is included in this build.
+  type: string
 
 trigger: none
+pr: none
 
-jobs:
-  - ${{ each var in split(parameters.tasks, ',') }}:
-    - job: ${{ var }}_build_task
-      condition: eq(variables['build.reason'], 'Manual')
-      displayName: Build Task (${{ var }})
-      pool:
-        vmImage: windows-2022
-      steps:
-      - template: ./build-task.yml
-        parameters:
-          task: ${{ var }}
-          push: false
-          publishArtifact: true
-          patchVersion: true
-          version: '0.9999.9999'
+stages:
+- stage: ProcessAllTasks
+  condition: eq(variables['build.reason'], 'Manual')
+  jobs:
+    - ${{ each task_versions in split(parameters.tasks, ';') }}:
+      - job:  Process_${{ split(task_versions, ',')[0] }}
+        displayName: Process ${{ task_versions }}
+        pool:
+          vmImage: windows-2022
+        steps:
+        # Start collect diagnostics
+        - powershell: ./ci/start-collect-diagnostics.ps1
+          displayName: Start collect diagnostics
 
-    - job: ${{ var }}_upload_task
-      displayName: Upload (${{ var }})
-      dependsOn: ${{ var }}_build_task
-      pool:
-        vmImage: windows-2022
-      steps:
-      - template: ./upload-task.yml
-        parameters:
-          task: ${{ var }}
-   
-    - job: ${{ var }}_test_task
-      displayName: Test (${{ var }})
-      dependsOn: ${{ var }}_upload_task
-      pool:
-        vmImage: windows-2022
-      steps:
-      - template: ./test-task.yml
-        parameters:
-          task: ${{ var }}
-   
-    - job: ${{ var }}_clean_up
-      condition: always()
-      displayName: Clean up (${{ var }})
-      dependsOn: ${{ var }}_test_task
-      pool:
-        vmImage: windows-2022
-      steps:
-      - template: ./clean-up-task.yml
-        parameters:
-          task: ${{ var }}
+        - template: ./build-init.yml
+          parameters:
+            BuildSourceVersion: ${{ parameters.BuildSourceVersion }}
+
+        - template: ./test-init.yml
+
+        - ${{ each task in split(task_versions, ',') }}:
+          - template: ./build-task.yml
+            parameters:
+              task: ${{ task }}
+              patchVersion: true
+              version: '0.999.0'
+
+          - template: ./test-task.yml
+            parameters:
+              task: ${{ task }}
+
+        # Stop collect diagnostics
+        - powershell: ./ci/stop-collect-diagnostics.ps1
+          displayName: Stop collect diagnostics
+          condition: always()

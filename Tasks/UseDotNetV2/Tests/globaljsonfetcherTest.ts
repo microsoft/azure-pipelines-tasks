@@ -4,6 +4,7 @@ import { GlobalJson } from "../globaljsonfetcher";
 import { Buffer } from "buffer";
 import { VersionInfo } from '../models';
 import { Promise } from 'q';
+import fs = require('fs');
 var mockery = require('mockery');
 
 const workingDir: string = "work/";
@@ -44,6 +45,7 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
 });
 
 mockery.registerMock('fs', {
+    ...fs,
     readFileSync: function (path: string): Buffer {
         if (path == validRootGlobalJson) {
             var globalJson = new GlobalJson(rootVersionNumber);

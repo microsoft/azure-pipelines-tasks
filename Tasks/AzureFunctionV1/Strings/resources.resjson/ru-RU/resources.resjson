@@ -17,7 +17,7 @@
   "loc.input.label.body": "Текст",
   "loc.input.help.body": "Текст сообщения для запроса в формате JSON.",
   "loc.input.label.waitForCompletion": "Событие завершения",
-  "loc.input.help.waitForCompletion": "Значение по умолчанию — Callback. Доступные значения: ApiResponse, Callback; последнее — вызов, при котором функция Azure совершает обратный вызов, чтобы обновить запись временной шкалы.",
+  "loc.input.help.waitForCompletion": "Значение по умолчанию — ApiResponse. Доступные значения: ApiResponse, Callback; последнее — вызов, при котором функция Azure совершает обратный вызов, чтобы обновить запись временной шкалы.",
   "loc.input.label.successCriteria": "Критерии успеха",
   "loc.input.help.successCriteria": "Условие, которое определяет, когда должна передаваться задача. Отсутствие условия означает, что содержимое ответа не влияет на результат. Пример: для ответа {\"status\" : \"successful\"} выражением может быть eq(root['status'], 'successful'). [Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=842996)​"
 }

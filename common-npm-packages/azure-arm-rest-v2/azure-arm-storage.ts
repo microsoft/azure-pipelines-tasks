@@ -125,6 +125,27 @@ export class StorageAccounts {
          return deferred.promise;
      }
 
+    public async getClassicOrArmAccountByName(accountName: string, options: any): Promise<Model.StorageAccount | undefined> {
+        let storageAccounts = await this.getStorageAccountsByUri(
+            `https://management.azure.com/subscriptions/${this.client.subscriptionId}/providers/Microsoft.Storage/storageAccounts?api-version=2023-01-01`,
+            accountName,
+            options
+        );
+
+        const armStorageAccount = storageAccounts[0];
+        if (armStorageAccount) {
+            return armStorageAccount;
+        }
+
+        storageAccounts = await this.getStorageAccountsByUri(
+            `https://management.azure.com/subscriptions/${this.client.subscriptionId}/providers/Microsoft.ClassicStorage/storageAccounts?api-version=2016-11-01`,
+            accountName,
+            options
+        );
+
+        return storageAccounts[0];
+    }
+
     public async listKeys(resourceGroupName: string, accountName: string, options, storageAccountType?: string): Promise<string[]> {
         if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
             throw new Error(tl.loc("ResourceGroupCannotBeNull"));
@@ -191,12 +212,115 @@ export class StorageAccounts {
         return storageAccounts[index];
     }
 
+    public async getStorageAccountProperties(resourceGroupName: string, storageAccountName: string): Promise<Model.StorageAccount | undefined> {
+        if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+            throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+        }
+
+        if (storageAccountName === null || storageAccountName === undefined || typeof storageAccountName.valueOf() !== 'string') {
+            throw new Error(tl.loc("StorageAccountCannotBeNull"));
+        }
+
+        // SubscribtionId will be placed automatically
+        // The endpoint for storage account
+        let response = await this.sendRequest(
+            "GET",
+            "//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName}",
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{storageAccountName}': storageAccountName
+            }
+        );
+        
+        if (response.statusCode == 200) {
+            return response.body;
+        }
+        
+        // SubscribtionId will be placed automatically
+        // The endpoint for classic storage account
+        response = await this.sendRequest(
+            "GET",
+            "//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.ClassicStorage/storageAccounts/{storageAccountName}",
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{storageAccountName}': storageAccountName
+            }
+        );
+        
+        if (response.statusCode == 200) {
+            return response.body;
+        }
+
+        return undefined;
+    }
+
     public static getResourceGroupNameFromUri(resourceUri: string): string {
         if (this.isNonEmptyInternal(resourceUri)) {
             resourceUri = resourceUri.toLowerCase();
             return resourceUri.substring(resourceUri.indexOf("resourcegroups/") + "resourcegroups/".length, resourceUri.indexOf("/providers"));
         }
         return "";
+    }
+
+    /**
+     * The method is wrapping the request call for the azure storage service.
+     * SubscrubtionID is placed automatically in this.client.getRequestUri method based on this.client.subscriptionId
+     * The same with apiVersion
+     */
+    private async sendRequest(method: string, uri: string, bindings?: {}, options?: any): Promise<webClient.WebResponse> {
+        const request = new webClient.WebRequest();
+        request.method = method;
+        request.headers = this.client.setCustomHeaders(options);
+        request.uri = this.client.getRequestUri(
+            uri,
+            bindings,
+            []
+        );
+
+        const response =  await this.client.beginRequest(request);
+
+        return response;
+    }
+
+    private async getStorageAccountsByUri(uri: string, filterName?: string, options?: any): Promise<Model.StorageAccount[]> {
+        const request = new webClient.WebRequest();
+        request.method = 'GET';
+        request.headers = this.client.setCustomHeaders(options);
+        request.uri = uri;
+
+        const storageAccounts: Model.StorageAccount[] = [];
+
+        const response = await this.client.beginRequest(request);
+        if (response.statusCode !== 200) {
+            throw azureServiceClientBase.ToError(response);
+        }
+
+        storageAccounts.push(...response.body.value);
+
+        if (filterName) {
+            const targetSA = storageAccounts.find(sa => sa.name === filterName);
+
+            if (targetSA) {
+                return [targetSA];
+            }
+        }
+
+        if (response.body.nextLink) {
+            const nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
+            if (nextResult.error) {
+                throw nextResult.error;
+            }
+
+            storageAccounts.push(...nextResult.result);
+        }
+
+        if (filterName) {
+            const targetSA = storageAccounts.find(sa => sa.name === filterName);
+
+            return targetSA ? [targetSA] : [];
+        }
+
+        return storageAccounts;
     }
 
     private static isNonEmptyInternal(str: string): boolean {
