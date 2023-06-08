@@ -1,10 +1,10 @@
 import tl = require('azure-pipelines-task-lib/task');
-var deployUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/utility.js');
-var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/ziputility.js');
-import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon/operations/ParameterParserUtility'
-import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
+var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility');
+var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility');
+import { applyTransformations } from 'azure-pipelines-tasks-webdeployment-common/fileTransformationsUtility';
+import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility'
+import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { DeploymentType } from '../taskparameters';
-import { FileTransformsUtility } from 'azure-pipelines-tasks-azurermdeploycommon/operations/FileTransformsUtility.js';
 import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 
@@ -17,7 +17,7 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
         let deploymentMethodtelemetry = '{"deploymentMethod":"Run from Package for Windows"}';
         console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureFunctionAppDeployment]" + deploymentMethodtelemetry);
 
-        var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams.WebConfigParameters, this.taskParams.Package.getPackageType());
+        var webPackage = await applyTransformations(this.taskParams.Package.getPath(), this.taskParams.WebConfigParameters, this.taskParams.Package.getPackageType());
 
         if(this.taskParams.DeploymentType === DeploymentType.runFromPackage) {
             var _isMSBuildPackage = await this.taskParams.Package.isMSBuildPackage();
