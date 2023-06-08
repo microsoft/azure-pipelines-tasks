@@ -10,6 +10,8 @@
   "loc.input.help.ArtifactName": "Nome dell'artefatto da creare nel percorso di pubblicazione.",
   "loc.input.label.ArtifactType": "Percorso di pubblicazione degli artefatti",
   "loc.input.help.ArtifactType": "Consente di scegliere se archiviare l'artefatto in Azure Pipelines oppure copiarlo in una condivisione file accessibile dall'agente di compilazione.",
+  "loc.input.label.MaxArtifactSize": "Dimensioni massime artefatto",
+  "loc.input.help.MaxArtifactSize": "Limite massimo per le dimensioni degli artefatti da pubblicare in byte. Inserire 0 se non si vuole impostare alcun limite.",
   "loc.input.label.TargetPath": "Percorso condivisione file",
   "loc.input.help.TargetPath": "Condivisione file in cui verranno copiati i file di artefatto. Può includere variabili. Esempio: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). La pubblicazione di artefatti da un agente Linux o macOS in una condivisione file non è supportata.",
   "loc.input.label.Parallel": "Copia parallela",
@@ -22,5 +24,6 @@
   "loc.messages.ErrorHostTypeNotSupported": "Per pubblicare gli artefatti in Azure Pipelines, questa attività deve essere eseguita in una compilazione.",
   "loc.messages.PublishBuildArtifactsFailed": "La pubblicazione degli artefatti di compilazione non è riuscita. Errore: %s",
   "loc.messages.UnexpectedParallelCount": "Conteggio parallelo '%s' non supportato. Immettere un numero compreso tra 1 e 128.",
-  "loc.messages.TarExtractionNotSupportedInWindows": "L'estrazione di tar non è supportata in Windows"
+  "loc.messages.TarExtractionNotSupportedInWindows": "L'estrazione di tar non è supportata in Windows",
+  "loc.messages.ArtifactSizeExceeded": "Le dimensioni degli artefatti pubblicati sono %s byte, che superano il limite massimo di %s byte impostato per le dimensioni pubblicate degli artefatti."
 }
