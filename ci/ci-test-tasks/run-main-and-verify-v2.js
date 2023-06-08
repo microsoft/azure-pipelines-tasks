@@ -28,14 +28,31 @@ if (tasks) {
 } else {
     console.error('Task name was not provided');
 }
-async function detectBuildConfig(task) {
+
+
+function detectBuildConfig(task) {
     console.log(`checking buildconfig for ${task}`);
-    if(fs.existsSync(path.join(`_generated`,`${task}.versionmap.txt`))) {
-        console.log(`buildconfig exits`);
-    } else {
-        console.log(`no buildconfig ${task}`);
-    }
+    try {
+        const files = fs.readdirSync('_generated');
+        const tasksToTest = [];
+    
+        files.forEach((item) => {
+          const filePath = path.join('_generated', item);
+          const stats = fs.statSync(filePath);
+    
+          if (stats.isDirectory() && item.indexOf(task) !== -1) {
+            tasksToTest.push(item);
+            console.log(item);
+          }
+        });
+        return subdirectories;
+      } catch (error) {
+        console.error('Error reading subdirectories:', error);
+        return [task];
+      }
+
 }
+
 
 async function start(tasks) {
     const existingPipelines = await fetchPipelines();
@@ -48,14 +65,16 @@ async function start(tasks) {
 
     const tasksToTest = tasks.filter(task => existingPipelineNames.has(task));
     if (tasksToTest.length) {
-        detectBuildConfig(tasksToTest);
-        const pipelineBuild = await runMainPipeline(mainPipelineId, tasksToTest.join(','));
+        const configs = detectBuildConfig(tasksToTest);
+        configs.forEach(async configs => {
+            const pipelineBuild = await runMainPipeline(mainPipelineId, tasksToTest.join(','), task);
+        });
 
         return new Promise((resolve, reject) => verifyBuildStatus(pipelineBuild, resolve, reject));
     }
 }
 
-function runMainPipeline(id, tasks) {
+function runMainPipeline(id, tasks, config = '') {
     return axios
     .post(
         `${apiUrl}/${id}/runs?${apiVersion}`,
@@ -65,6 +84,10 @@ function runMainPipeline(id, tasks) {
                 CANARY_TEST_BRANCH: {
                     "isSecret": false,
                     "value": BUILD_SOURCEVERSION,
+                },
+                CANARY_BUILD_CONFIG_TO_TEST: {
+                    "isSecret": false,
+                    "value": config
                 }
             }
         },
