@@ -12,9 +12,9 @@ describe('TestUtils', function () {
 
     tr.run();
 
-    assert(tr.stdOutContained('unzip path exist'), 'should have printed: unzip path exist');
-    assert(tr.stdOutContained("Path doesn't exist"), "should have printed: Path doesn't exis");
-    assert(tr.stdOutContained('Err_ExtractionFailed'), 'should have printed: Err_ExtractionFailed');
+    assert(tr.stdOutContained(TestString.PathExists), "should have printed: " + TestString.PathExists);
+    assert(tr.stdOutContained(TestString.PathNotExists), "should have printed: " + TestString.PathNotExists);
+    assert(tr.stdOutContained(TestString.Err_ExtractionFailed), "should have printed: " + TestString.Err_ExtractionFailed);
 
     done();
   }).timeout(20000);
@@ -64,7 +64,7 @@ describe('TestUtils', function () {
     
     tr.run();
 
-    assert(tr.stdOutContained('kubelogin downloaded successfully'), 'should have printed: ' + 'kubelogin downloaded successfully');
+    assert(tr.stdOutContained(TestString.DownloadedSuccessfully), 'should have printed: ' + TestString.DownloadedSuccessfully);
     done();
   }).timeout(20000);
 
@@ -74,7 +74,7 @@ describe('TestUtils', function () {
 
     tr.run();
 
-    assert(tr.succeeded, 'task should have succeeded.');
+    assert(tr.succeeded, TestString.TaskSucceeded);
   }).timeout(20000);
 
   it('should fail when downloading kubelogin fails', function () {
@@ -83,7 +83,7 @@ describe('TestUtils', function () {
 
     tr.run();
 
-    assert(tr.failed, 'task should have failed.');
+    assert(tr.failed, TestString.TaskFailed);
     assert(tr.stdOutContained(TestString.loc_mock_Info_DownloadingFailed), 'should have printed: ' + TestString.loc_mock_Info_DownloadingFailed);
   }).timeout(20000);
 });

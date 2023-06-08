@@ -53,13 +53,13 @@ export function isLatestVersion(version: string): boolean {
 }
 
 export async function getLatestVersionTag(): Promise<string> {
-  var request = new webClient.WebRequest();
+  let request = new webClient.WebRequest();
   request.uri = 'https://api.github.com/repos/'+ KUBELOGIN_REPO_OWNER + '/' + KUBELOGIN_REPO + '/releases/latest';
   request.method = "GET";  
   request.headers = request.headers || {};
   request.headers["User-Agent"] = userAgent;
 
-  var response = await webClient.sendRequest(request);
+  const response = await webClient.sendRequest(request);
   return response.body["tag_name"];
 }
 
@@ -84,13 +84,13 @@ export async function getKubeloginRelease(version: string = 'latest', platform?:
   const sha256: string = `${releaseName}.sha256`;
 
   try {
-    var request = new webClient.WebRequest();
+    let request = new webClient.WebRequest();
     request.uri = 'https://api.github.com/repos/'+ KUBELOGIN_REPO_OWNER + '/' + KUBELOGIN_REPO + '/releases/tags/' + version;
     request.method = "GET";  
     request.headers = request.headers || {};
     request.headers["User-Agent"] = userAgent;
 
-    var response = await webClient.sendRequest(request);
+    const response = await webClient.sendRequest(request);
 
     const releaseUrl: string =
       response.body["assets"].find(asset => {
