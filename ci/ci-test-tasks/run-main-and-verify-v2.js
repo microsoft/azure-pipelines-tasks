@@ -48,7 +48,7 @@ async function start(tasks) {
 
     const tasksToTest = tasks.filter(task => existingPipelineNames.has(task));
     if (tasksToTest.length) {
-        detectBuildConfig(task);
+        detectBuildConfig(tasksToTest);
         const pipelineBuild = await runMainPipeline(mainPipelineId, tasksToTest.join(','));
 
         return new Promise((resolve, reject) => verifyBuildStatus(pipelineBuild, resolve, reject));
