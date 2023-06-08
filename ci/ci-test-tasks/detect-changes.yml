@@ -30,6 +30,6 @@ jobs:
     displayName: npm i axios
   - script: |
       echo $(tasks)
-      node ./ci/ci-test-tasks/run-main-and-verify-2.js $(ADOToken) $(ADOUrl) $(System.TeamProject) $(MainPipelineId) $(tasks)
+      node ./ci/ci-test-tasks/run-main-and-verify-v2.js $(ADOToken) $(ADOUrl) $(System.TeamProject) $(MainPipelineId) $(tasks)
     displayName: 'Run test pipelines and verify results'
     failOnStderr: true
