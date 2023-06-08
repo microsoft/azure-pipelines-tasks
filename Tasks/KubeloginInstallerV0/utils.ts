@@ -18,7 +18,6 @@ const userAgent: string = 'kubelogin-installer-task-' + packagejson.version;
 
 const AGENT_TEMP_DIR = 'agent.tempDirectory';
 
-
 export type Platform = 'darwin-amd64' | 'darwin-arm64' | 'linux-amd64' | 'linux-arm64' | 'win-amd64';
 
 export interface KubeloginRelease {
@@ -54,13 +53,13 @@ export function isLatestVersion(version: string): boolean {
 
 export async function getLatestVersionTag(): Promise<string> {
   let request = new webClient.WebRequest();
-  request.uri = 'https://api.github.com/repos/'+ KUBELOGIN_REPO_OWNER + '/' + KUBELOGIN_REPO + '/releases/latest';
-  request.method = "GET";  
+  request.uri = 'https://api.github.com/repos/' + KUBELOGIN_REPO_OWNER + '/' + KUBELOGIN_REPO + '/releases/latest';
+  request.method = 'GET';
   request.headers = request.headers || {};
-  request.headers["User-Agent"] = userAgent;
+  request.headers['User-Agent'] = userAgent;
 
   const response = await webClient.sendRequest(request);
-  return response.body["tag_name"];
+  return response.body['tag_name'];
 }
 
 export async function getKubeloginRelease(version: string = 'latest', platform?: Platform): Promise<KubeloginRelease> {
@@ -85,19 +84,19 @@ export async function getKubeloginRelease(version: string = 'latest', platform?:
 
   try {
     let request = new webClient.WebRequest();
-    request.uri = 'https://api.github.com/repos/'+ KUBELOGIN_REPO_OWNER + '/' + KUBELOGIN_REPO + '/releases/tags/' + version;
-    request.method = "GET";  
+    request.uri = 'https://api.github.com/repos/' + KUBELOGIN_REPO_OWNER + '/' + KUBELOGIN_REPO + '/releases/tags/' + version;
+    request.method = 'GET';
     request.headers = request.headers || {};
-    request.headers["User-Agent"] = userAgent;
+    request.headers['User-Agent'] = userAgent;
 
     const response = await webClient.sendRequest(request);
 
     const releaseUrl: string =
-      response.body["assets"].find(asset => {
+      response.body['assets'].find(asset => {
         return asset.name.includes(releaseName);
       })?.browser_download_url || '';
     const sha256Url: string =
-      response.body["assets"].find(asset => {
+      response.body['assets'].find(asset => {
         return asset.name.includes(sha256);
       })?.browser_download_url || '';
 
@@ -131,11 +130,10 @@ export async function downloadKubeloginRelease(release: KubeloginRelease) {
   const downloadPath: string = path.join(getKubeloginDownloadPath(), release.name);
   try {
     await toolLib.downloadTool(release.releaseUrl, downloadPath);
-  }
-  catch (exception) {
+  } catch (exception) {
     throw new Error(taskLib.loc('Info_DownloadingFailed', downloadPath, exception));
   }
-  console.log(taskLib.loc('Info_DownloadingFailed', downloadPath));
+  console.log(taskLib.loc('Info_ToolDownloaded', downloadPath));
   return downloadPath;
 }
 
