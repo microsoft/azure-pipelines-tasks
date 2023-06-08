@@ -27,3 +27,4 @@ steps:
     echo "Deleting task $(TASKID)"
     tfx build tasks delete --task-id $(TASKID)
   displayName: ${{ parameters.task }} delete task
+  condition: succeededOrFailed()
