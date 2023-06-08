@@ -14,6 +14,9 @@ function Initialize-AzModule {
         [string]$vstsAccessToken)
 
     Trace-VstsEnteringInvocation $MyInvocation
+
+    echo "This is just for testing purposes"
+
     try {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
 
