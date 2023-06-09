@@ -2,6 +2,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
 import * as utils from './utils/utilities';
+import * as Kubelogin from './utils/Kubelogin';
 
 import { deploy } from './actions/deploy';
 import { bake } from './actions/bake';
@@ -48,13 +49,18 @@ async function run(): Promise<void> {
             process.exit(1);
     }
 
-    let ignoreSSLErrors: boolean = false;
-    const kubernetesServiceConnection = tl.getInput('kubernetesServiceConnection', false);
-    if (kubernetesServiceConnection) {
-        ignoreSSLErrors = tl.getEndpointDataParameter(kubernetesServiceConnection, 'acceptUntrustedCerts', true) === 'true';
-    }
+     let ignoreSSLErrors: boolean = true;
+     const kubernetesServiceConnection = tl.getInput('azureSubscriptionEndpoint', false);
+     console.log("new version");
+    // if (kubernetesServiceConnection) {
+    //     ignoreSSLErrors = tl.getEndpointDataParameter(kubernetesServiceConnection, 'acceptUntrustedCerts', true) === 'true';
+    // }
 
-    await connection.open();
+    // await connection.open();
+
+    const kubelogin = new Kubelogin.Kubelogin(true);
+    await kubelogin.login(kubernetesServiceConnection);
+
     return action_func(ignoreSSLErrors)
         .then(() => connection.close())
         .catch((error) => {
