@@ -39,8 +39,8 @@ steps:
 
 - powershell: |
     $currentSprintData = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json)
-    $currentSprint = $currentSprintData.sprint
-    $currentSprintWeek = $currentSprintData.week
+    $currentSprint = [int]$currentSprintData.sprint
+    $currentSprintWeek = [int]$currentSprintData.week
     echo "##vso[task.setvariable variable=currentSprint;]$currentSprint"
     echo "##vso[task.setvariable variable=currentSprintWeek;]$currentSprintWeek"
   displayName: Fetch current sprint
