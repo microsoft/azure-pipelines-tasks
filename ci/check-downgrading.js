@@ -6,7 +6,7 @@ const {
 const { mkdir, rm } = require('shelljs');
 const { platform } = require('os');
 const { run, resolveTaskList } = require('./ci-util');
-const { eq, inc, parse, lt } = require('semver');
+const { eq, inc, parse, lte } = require('semver');
 
 const packageEndpoint = process.env['PACKAGE_VERSIONS_ENDPOINT'] || 'https://feeds.dev.azure.com/mseng/PipelineTools/_apis/packaging/Feeds/DistributedTasks/packages?api-version=7.0&includeAllVersions=true';
 const packageToken = process.env['PACKAGE_TOKEN'];
@@ -133,8 +133,8 @@ function compareLocalWithFeed(localTasks, feedTasks) {
         continue;
       }
 
-      if (lt(localTask.version, feedTaskVersion.version)) {
-        taskVersionsMismatch.push(` - [Feed] ${localTask.name} local version ${localTask.version.version} less than version in feed ${feedTaskVersion.version.version}`);
+      if (lte(localTask.version, feedTaskVersion.version)) {
+        taskVersionsMismatch.push(` - [Feed] ${localTask.name} local version ${localTask.version.version} less or equal than version in feed ${feedTaskVersion.version.version}`);
       }
     }
   }
