@@ -97,6 +97,8 @@ Tasks/AzureVmssDeploymentV0/       @bishal-pdmsft
 
 Tasks/BashV3/  @microsoft/akvelon-build-task-team
 
+Tasks/BashV4/  @microsoft/akvelon-build-task-team
+
 Tasks/BatchScriptV1/  @microsoft/akvelon-build-task-team
 
 Tasks/CacheV2/       @johnterickson
