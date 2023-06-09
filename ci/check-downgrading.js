@@ -8,7 +8,13 @@ const { platform } = require('os');
 const { run, resolveTaskList } = require('./ci-util');
 const { eq, inc, parse, lte } = require('semver');
 
-const packageEndpoint = process.env['PACKAGE_VERSIONS_ENDPOINT'] || 'https://feeds.dev.azure.com/mseng/PipelineTools/_apis/packaging/Feeds/DistributedTasks/packages?api-version=7.0&includeAllVersions=true';
+const packageEndpoint = process.env['PACKAGE_VERSIONS_ENDPOINT'];
+
+if (!packageEndpoint) {
+  console.log('##vso[task.logissue type=error]Failed to get info from package endpoint because no endpoint was specified. Try setting the PACKAGE_VERSIONS_ENDPOINT environment variable.');
+  process.exit(1);
+}
+
 const packageToken = process.env['PACKAGE_TOKEN'];
 const { RestClient } = require('typed-rest-client/RestClient');
 const { PersonalAccessTokenCredentialHandler } = require('typed-rest-client/Handlers');
