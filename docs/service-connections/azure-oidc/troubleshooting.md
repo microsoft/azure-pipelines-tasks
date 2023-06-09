@@ -73,7 +73,7 @@ The following messages indicate a task does not support Workload Identity federa
 -   Not all 'in-the-box' [tasks](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines") have rolled out yet (see overview).
 -   There is no method to 'grab' credentials similar to [`addSpnToEnvironment`](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines#inputs "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines#inputs") yet.
 -   Convert does not validate whether pipelines consuming the Service Connection use unsupported tasks, have jobs that are in flight, or have a secret that is consumed in the [AzureCLI](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines") task (`addSpnToEnvironment`). As a result, converted Service Connections may have to be reverted back if there is a dependency on `addSpnToEnvironment` or tasks/tools that do not support OIDC.
-https://build.microsoft.com/en-US/sessions/649603cd-c704-4222-bbcf-10c14b739bf9?source=/schedule
+
 ## Frequently Asked Questions
 
 -   Q: Can I still use Azure Service Connections with Service Principal secrets?  
