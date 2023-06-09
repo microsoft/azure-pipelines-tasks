@@ -83,11 +83,11 @@ The following messages indicate a task does not support Workload Identity federa
 -   Q: I can't enable features for my organization. How can I find out who can?  
     A: Features can be enabled by organization admins. You can find organization owners on the organization settings page (`https://dev.azure.com/<org>/_settings/organizationOverview`)
 -   Q: I don't have permissions to create a Service Principal in the Azure Active Directory tenant, what can I do?  
-    A: Please follow the [instructions for manual configuration](https://microsofteur.sharepoint.com/teams/azdo-rm/SitePages/Manual-Configuration.aspx "https://microsofteur.sharepoint.com/teams/azdo-rm/SitePages/Manual-Configuration.aspx").
+    A: Please follow the [instructions for manual configuration](manual-configuration.md).
 -   Q: I don't see 'Federated credentials' under Service Principal 'Certificates & secrets' the Azure Portal, what can I do?  
     A: Refresh the browser and disable any adBlocker browser extensions you may use.
 -   Q: I'm manually configuring a Service Connection but do not know what to provide for issuer URL, what should I enter?  
-    A: The issuer URL is [https://app.vstoken.visualstudio.com](https://app.vstoken.visualstudio.com/) (without trailing '/'). In an upcoming change this will be expanded to include an Azure DevOps specific identifier.
+    A: The issuer URL is `https://app.vstoken.visualstudio.com` (without trailing '/'). In an upcoming change this will be expanded to include an Azure DevOps specific identifier.
 -   Q: I'm using an Azure Active Directory credential to connect to Azure Container Registry with the docker Service Connection, AKS with the Kubernetes Service Connection or Azure Service Fabric with the Service Fabric Service Connection. Is this available?  
     A: We will support Azure tasks not using the Azure Service Connection later in the year.
 -   Q: I converted a Service Connection to use Workload Identity federation. However, now I have broken pipelines.  

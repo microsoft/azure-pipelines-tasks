@@ -4,7 +4,7 @@ In case a user does not have the permission to create Service Principals, or the
 
 ## Create Service Principal
 
--   Go to the [Azure Portal](https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps "https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps") or [Azure Active Directory Portal](https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps "https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps")
+-   Go to the [Azure Portal](https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps) or [Azure Active Directory Portal](https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps)
 -   Click on the 'New registration' link:
     </br><img src="new-app-reg.png" width="133"/>
 -   Give the new App Registration a name
@@ -15,7 +15,7 @@ In case a user does not have the permission to create Service Principals, or the
     </br><img src="federated-credentials.png" width="161"/></br>
     (Note: if you don't see 'Federated credentials', disable any adblocker browser extensions you may use and refresh your browser)
 -   Select 'Add Credentials' and then 'Other issuer'
--   For the issuer url specify [https://app.vstoken.visualstudio.com](https://app.vstoken.visualstudio.com/) (no trailing '/')
+-   For the issuer url specify `https://app.vstoken.visualstudio.com` (no trailing '/')
 -   For the subject identifier specify `sc://<Azure DevOps organization>/<Project name>/<Service Connection name>`
     (The Service Connection does not have to be created yet)
 
