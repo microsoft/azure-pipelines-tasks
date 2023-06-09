@@ -133,7 +133,7 @@ function compareLocalWithFeed(localTasks, feedTasks) {
         continue;
       }
 
-      if (lte(localTask.version, feedTaskVersion.version)) {
+      if (lte(localTask.version, feedTaskVersion.version) && feedTaskVersion.isLatest) {
         taskVersionsMismatch.push(` - [Feed] ${localTask.name} local version ${localTask.version.version} less or equal than version in feed ${feedTaskVersion.version.version}`);
       }
     }
