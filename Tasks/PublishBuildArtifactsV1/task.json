@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 223,
-        "Patch": 1
+        "Minor": 224,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "1.91.0",
@@ -118,6 +118,6 @@
         "PublishBuildArtifactsFailed": "Publishing build artifacts failed with an error: %s",
         "UnexpectedParallelCount": "Unsupported parallel count '%s'. Enter a number between 1 and 128.",
         "TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows",
-        "ArtifactSizeExceeded" : "The size of artifacts being published is %s bytes which is larger than the maximum limit %s bytes set for the published size of artifacts."
+        "ArtifactSizeExceeded": "The size of artifacts being published is %s bytes which is larger than the maximum limit %s bytes set for the published size of artifacts."
     }
 }
