@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 223,
-    "Patch": 2
+    "Minor": 224,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -121,7 +121,7 @@
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern"
   },
   "_buildConfigMapping": {
-    "Default": "1.223.2",
-    "Node16-219": "1.223.1"
+    "Default": "1.224.1",
+    "Node16-219": "1.224.0"
   }
 }
