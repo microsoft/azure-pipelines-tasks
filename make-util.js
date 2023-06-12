@@ -1383,7 +1383,7 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
         });
 
     console.log();
-    console.log('> Creating root push.cmd');
+    console.log('> Creating root push.cmd at ' + nugetPackagesPath);
     createRootPushCmd(nugetPackagesPath);
 
     // Write file that has XML for unified dependencies, makes it easier to setup that file.
