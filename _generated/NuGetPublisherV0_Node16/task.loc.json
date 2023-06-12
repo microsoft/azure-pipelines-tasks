@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 224,
-    "Patch": 1
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -128,6 +128,10 @@
     "Node10": {
       "target": "nugetpublisher.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "nugetpublisher.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -169,5 +173,9 @@
     "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion",
     "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.224.1",
+    "Node16-219": "0.224.0"
   }
 }
