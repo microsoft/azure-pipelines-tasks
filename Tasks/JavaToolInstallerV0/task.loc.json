@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 223,
+    "Minor": 224,
     "Patch": 0
   },
   "satisfies": [
@@ -116,6 +116,14 @@
       "required": true,
       "visibleRule": "jdkSourceOption != PreInstalled",
       "helpMarkDown": "ms-resource:loc.input.help.jdkDestinationDirectory"
+    },
+    {
+      "name": "azureResourceGroupName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.azureResourceGroupName",
+      "required": false,
+      "visibleRule": "jdkSourceOption == AzureStorage",
+      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroupName"
     },
     {
       "name": "cleanDestinationDirectory",

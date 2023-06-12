@@ -1,0 +1,352 @@
+{
+  "id": "7B5A6198-ADF8-4B16-9939-7ADDF85708B2",
+  "name": "GitHubRelease",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/AA5vv5o",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "preview": true,
+  "version": {
+    "Major": 0,
+    "Minor": 224,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.0.0",
+  "groups": [
+    {
+      "name": "changeLogConfiguration",
+      "displayName": "ms-resource:loc.group.displayName.changeLogConfiguration",
+      "isExpanded": true,
+      "visibleRule": "addChangeLog = true"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "gitHubConnection",
+      "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,Token",
+      "label": "ms-resource:loc.input.label.gitHubConnection",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.gitHubConnection"
+    },
+    {
+      "name": "repositoryName",
+      "type": "githubRepositoryPicker",
+      "label": "ms-resource:loc.input.label.repositoryName",
+      "defaultValue": "$(Build.Repository.Name)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.repositoryName",
+      "properties": {
+        "DisableManageLink": "True",
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.action",
+      "defaultValue": "create",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.action",
+      "options": {
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    {
+      "name": "target",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.target",
+      "defaultValue": "$(Build.SourceVersion)",
+      "required": true,
+      "visibleRule": "action = create || action = edit",
+      "helpMarkDown": "ms-resource:loc.input.help.target"
+    },
+    {
+      "name": "tagSource",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.tagSource",
+      "required": true,
+      "defaultValue": "auto",
+      "visibleRule": "action = create",
+      "helpMarkDown": "ms-resource:loc.input.help.tagSource",
+      "options": {
+        "auto": "Git tag",
+        "manual": "User specified tag"
+      }
+    },
+    {
+      "name": "tagPattern",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.tagPattern",
+      "required": false,
+      "visibleRule": "tagSource = auto",
+      "helpMarkDown": "ms-resource:loc.input.help.tagPattern"
+    },
+    {
+      "name": "tag",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.tag",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "action = edit || action = delete || tagSource = manual",
+      "helpMarkDown": "ms-resource:loc.input.help.tag"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.title",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "action = create || action = edit",
+      "helpMarkDown": "ms-resource:loc.input.help.title"
+    },
+    {
+      "name": "releaseNotesSource",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.releaseNotesSource",
+      "required": false,
+      "defaultValue": "file",
+      "visibleRule": "action = create || action = edit",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseNotesSource",
+      "options": {
+        "file": "Release notes file",
+        "input": "Inline release notes"
+      }
+    },
+    {
+      "name": "releaseNotesFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.releaseNotesFile",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.releaseNotesFile",
+      "visibleRule": "releaseNotesSource = file"
+    },
+    {
+      "name": "releaseNotes",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.releaseNotes",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.releaseNotes",
+      "visibleRule": "releaseNotesSource = input",
+      "properties": {
+        "resizable": "true",
+        "rows": "4",
+        "maxLength": "5000"
+      }
+    },
+    {
+      "name": "assets",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.assets",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)/*",
+      "required": false,
+      "visibleRule": "action = create || action = edit",
+      "helpMarkDown": "ms-resource:loc.input.help.assets",
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      }
+    },
+    {
+      "name": "assetUploadMode",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.assetUploadMode",
+      "required": false,
+      "defaultValue": "delete",
+      "visibleRule": "action = edit",
+      "helpMarkDown": "ms-resource:loc.input.help.assetUploadMode",
+      "options": {
+        "delete": "Delete exisiting assets",
+        "replace": "Replace existing assets"
+      }
+    },
+    {
+      "name": "isDraft",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isDraft",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.isDraft",
+      "visibleRule": "action = create || action = edit"
+    },
+    {
+      "name": "isPreRelease",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isPreRelease",
+      "defaultValue": "false",
+      "required": false,
+      "visibleRule": "action = create || action = edit",
+      "helpMarkDown": "ms-resource:loc.input.help.isPreRelease"
+    },
+    {
+      "name": "addChangeLog",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addChangeLog",
+      "defaultValue": "true",
+      "required": false,
+      "visibleRule": "action = create || action = edit",
+      "helpMarkDown": "ms-resource:loc.input.help.addChangeLog"
+    },
+    {
+      "name": "changeLogCompareToRelease",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.changeLogCompareToRelease",
+      "required": true,
+      "defaultValue": "lastFullRelease",
+      "groupName": "changeLogConfiguration",
+      "visibleRule": "addChangeLog = true",
+      "helpMarkDown": "ms-resource:loc.input.help.changeLogCompareToRelease",
+      "options": {
+        "lastFullRelease": "Last full release",
+        "lastNonDraftRelease": "Last non-draft release",
+        "lastNonDraftReleaseByTag": "Last non-draft release by tag"
+      }
+    },
+    {
+      "name": "changeLogCompareToReleaseTag",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.changeLogCompareToReleaseTag",
+      "required": true,
+      "groupName": "changeLogConfiguration",
+      "visibleRule": "changeLogCompareToRelease = lastNonDraftReleaseByTag",
+      "helpMarkDown": "ms-resource:loc.input.help.changeLogCompareToReleaseTag"
+    },
+    {
+      "name": "changeLogType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.changeLogType",
+      "required": true,
+      "defaultValue": "commitBased",
+      "groupName": "changeLogConfiguration",
+      "visibleRule": "addChangeLog = true",
+      "helpMarkDown": "ms-resource:loc.input.help.changeLogType",
+      "options": {
+        "commitBased": "Commit based",
+        "issueBased": "Issue based"
+      }
+    },
+    {
+      "name": "changeLogLabels",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.changeLogLabels",
+      "required": false,
+      "visibleRule": "changeLogType = issueBased",
+      "defaultValue": "[{ \"label\" : \"bug\", \"displayName\" : \"Bugs\", \"state\" : \"closed\" }]",
+      "groupName": "changeLogConfiguration",
+      "helpMarkDown": "ms-resource:loc.input.help.changeLogLabels"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "repositoryName",
+      "endpointId": "$(gitHubConnection)",
+      "dataSourceName": "UserRepositories",
+      "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "main.js"
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "GithubApiFailError": "ms-resource:loc.messages.GithubApiFailError",
+    "GetTagsError": "ms-resource:loc.messages.GetTagsError",
+    "GetReleasesError": "ms-resource:loc.messages.GetReleasesError",
+    "CreateReleaseError": "ms-resource:loc.messages.CreateReleaseError",
+    "EditReleaseError": "ms-resource:loc.messages.EditReleaseError",
+    "DeleteReleaseError": "ms-resource:loc.messages.DeleteReleaseError",
+    "CreatingRelease": "ms-resource:loc.messages.CreatingRelease",
+    "CreateReleaseSuccess": "ms-resource:loc.messages.CreateReleaseSuccess",
+    "ReleaseAlreadyExists": "ms-resource:loc.messages.ReleaseAlreadyExists",
+    "EditingRelease": "ms-resource:loc.messages.EditingRelease",
+    "EditReleaseSuccess": "ms-resource:loc.messages.EditReleaseSuccess",
+    "NoReleaseFoundToEditCreateRelease": "ms-resource:loc.messages.NoReleaseFoundToEditCreateRelease",
+    "DeletingRelease": "ms-resource:loc.messages.DeletingRelease",
+    "DeleteReleaseSuccess": "ms-resource:loc.messages.DeleteReleaseSuccess",
+    "NoReleaseFoundToDelete": "ms-resource:loc.messages.NoReleaseFoundToDelete",
+    "FetchReleaseForTag": "ms-resource:loc.messages.FetchReleaseForTag",
+    "FetchReleaseForTagSuccess": "ms-resource:loc.messages.FetchReleaseForTagSuccess",
+    "FetchTagForTarget": "ms-resource:loc.messages.FetchTagForTarget",
+    "FetchTagForTargetSuccess": "ms-resource:loc.messages.FetchTagForTargetSuccess",
+    "MissingAssetError": "ms-resource:loc.messages.MissingAssetError",
+    "MultipleReleasesFoundError": "ms-resource:loc.messages.MultipleReleasesFoundError",
+    "MultipleTagFound": "ms-resource:loc.messages.MultipleTagFound",
+    "NoTagFound": "ms-resource:loc.messages.NoTagFound",
+    "DeleteAllExistingAssets": "ms-resource:loc.messages.DeleteAllExistingAssets",
+    "DuplicateAssetFound": "ms-resource:loc.messages.DuplicateAssetFound",
+    "AssetsDeletedSuccessfully": "ms-resource:loc.messages.AssetsDeletedSuccessfully",
+    "DeletingDuplicateAsset": "ms-resource:loc.messages.DeletingDuplicateAsset",
+    "SkipDuplicateAssetFound": "ms-resource:loc.messages.SkipDuplicateAssetFound",
+    "AssetDeletedSuccessfully": "ms-resource:loc.messages.AssetDeletedSuccessfully",
+    "AllAssetsUploadedSuccessfully": "ms-resource:loc.messages.AllAssetsUploadedSuccessfully",
+    "ErrorDeletingDuplicateAsset": "ms-resource:loc.messages.ErrorDeletingDuplicateAsset",
+    "ErrorDeletingAsset": "ms-resource:loc.messages.ErrorDeletingAsset",
+    "DeletingAsset": "ms-resource:loc.messages.DeletingAsset",
+    "NoAssetFoundToDelete": "ms-resource:loc.messages.NoAssetFoundToDelete",
+    "UploadingAssets": "ms-resource:loc.messages.UploadingAssets",
+    "UploadingAsset": "ms-resource:loc.messages.UploadingAsset",
+    "UploadAssetError": "ms-resource:loc.messages.UploadAssetError",
+    "UploadAssetSuccess": "ms-resource:loc.messages.UploadAssetSuccess",
+    "NoAssetFoundToUpload": "ms-resource:loc.messages.NoAssetFoundToUpload",
+    "ReleaseNotesFileIsDirectoryError": "ms-resource:loc.messages.ReleaseNotesFileIsDirectoryError",
+    "AssetIsDirectoryError": "ms-resource:loc.messages.AssetIsDirectoryError",
+    "ComputingChangeLog": "ms-resource:loc.messages.ComputingChangeLog",
+    "ComputingChangeLogSuccess": "ms-resource:loc.messages.ComputingChangeLogSuccess",
+    "CommitDiffBehind": "ms-resource:loc.messages.CommitDiffBehind",
+    "CommitDiffEqual": "ms-resource:loc.messages.CommitDiffEqual",
+    "FetchLatestPublishRelease": "ms-resource:loc.messages.FetchLatestPublishRelease",
+    "FetchLatestNonDraftRelease": "ms-resource:loc.messages.FetchLatestNonDraftRelease",
+    "FetchLastReleaseByTag": "ms-resource:loc.messages.FetchLastReleaseByTag",
+    "FetchLatestPublishReleaseSuccess": "ms-resource:loc.messages.FetchLatestPublishReleaseSuccess",
+    "FetchMatchingReleaseSuccess": "ms-resource:loc.messages.FetchMatchingReleaseSuccess",
+    "FetchTagMatchingReleaseSuccess": "ms-resource:loc.messages.FetchTagMatchingReleaseSuccess",
+    "GetLatestReleaseError": "ms-resource:loc.messages.GetLatestReleaseError",
+    "NoLatestPublishRelease": "ms-resource:loc.messages.NoLatestPublishRelease",
+    "NoMatchingReleases": "ms-resource:loc.messages.NoMatchingReleases",
+    "NoTagMatchingReleases": "ms-resource:loc.messages.NoTagMatchingReleases",
+    "FetchCommitDiff": "ms-resource:loc.messages.FetchCommitDiff",
+    "FetchCommitDiffSuccess": "ms-resource:loc.messages.FetchCommitDiffSuccess",
+    "FetchCommitDiffError": "ms-resource:loc.messages.FetchCommitDiffError",
+    "FetchInitialCommit": "ms-resource:loc.messages.FetchInitialCommit",
+    "FetchInitialCommitSuccess": "ms-resource:loc.messages.FetchInitialCommitSuccess",
+    "InvalidGitHubEndpoint": "ms-resource:loc.messages.InvalidGitHubEndpoint",
+    "InvalidEndpointAuthScheme": "ms-resource:loc.messages.InvalidEndpointAuthScheme",
+    "FetchInitialCommitError": "ms-resource:loc.messages.FetchInitialCommitError",
+    "InvalidActionSet": "ms-resource:loc.messages.InvalidActionSet",
+    "InvalidTagSource": "ms-resource:loc.messages.InvalidTagSource",
+    "InvalidReleaseNotesSource": "ms-resource:loc.messages.InvalidReleaseNotesSource",
+    "InvalidCompareWithAttribute": "ms-resource:loc.messages.InvalidCompareWithAttribute",
+    "InvalidAssetUploadMode": "ms-resource:loc.messages.InvalidAssetUploadMode",
+    "TagRequiredEditDeleteAction": "ms-resource:loc.messages.TagRequiredEditDeleteAction",
+    "TagRequiredCreateAction": "ms-resource:loc.messages.TagRequiredCreateAction",
+    "NoFileFoundMatchingPattern": "ms-resource:loc.messages.NoFileFoundMatchingPattern",
+    "PatternIsADirectory": "ms-resource:loc.messages.PatternIsADirectory",
+    "SearchingFileMatchingPattern": "ms-resource:loc.messages.SearchingFileMatchingPattern",
+    "IssuesFetchError": "ms-resource:loc.messages.IssuesFetchError",
+    "NoIssuesLinkedError": "ms-resource:loc.messages.NoIssuesLinkedError",
+    "LabelsSyntaxError": "ms-resource:loc.messages.LabelsSyntaxError",
+    "InvalidChangeLogTypeAttribute": "ms-resource:loc.messages.InvalidChangeLogTypeAttribute",
+    "ChangeLogTitle": "ms-resource:loc.messages.ChangeLogTitle",
+    "DefaultCategory": "ms-resource:loc.messages.DefaultCategory",
+    "SeeMoreText": "ms-resource:loc.messages.SeeMoreText"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.224.1",
+    "Node16-219": "0.224.0"
+  }
+}
