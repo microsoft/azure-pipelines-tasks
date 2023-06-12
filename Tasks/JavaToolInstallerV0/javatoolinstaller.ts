@@ -58,8 +58,13 @@ async function getJava(versionSpec: string, jdkArchitectureOption: string): Prom
             // download from azure and save to temporary directory
             console.log(taskLib.loc('RetrievingJdkFromAzure'));
             const fileNameAndPath: string = taskLib.getInput('azureCommonVirtualFile', true);
-            const azureDownloader = new AzureStorageArtifactDownloader(taskLib.getInput('azureResourceManagerEndpoint', true),
-                taskLib.getInput('azureStorageAccountName', true), taskLib.getInput('azureContainerName', true), "");
+            const azureDownloader = new AzureStorageArtifactDownloader(
+                taskLib.getInput('azureResourceManagerEndpoint', true),
+                taskLib.getInput('azureStorageAccountName', true), 
+                taskLib.getInput('azureContainerName', true),
+                "",
+                taskLib.getInput('azureResourceGroupName', false),
+            );
             await azureDownloader.downloadArtifacts(extractLocation, '*' + fileNameAndPath);
             await taskutils.sleepFor(250); //Wait for the file to be released before extracting it.
             let jdkArchiveName = path.basename(fileNameAndPath);
