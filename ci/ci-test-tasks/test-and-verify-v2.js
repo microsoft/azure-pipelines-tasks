@@ -95,7 +95,7 @@ function fetchPipelines() {
 
 function runTestPipeline(pipeline, config = '') {
   console.log(`Run ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`);
-  const { CANARY_TEST_BRANCH } = process.env;
+  const {BUILD_SOURCEVERSION: CANARY_TEST_BRANCH } = process.env;
   return axios
     .post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, 
     {
