@@ -1,0 +1,352 @@
+{
+  "id": "7B5A6198-ADF8-4B16-9939-7ADDF85708B2",
+  "name": "GitHubRelease",
+  "friendlyName": "GitHub Release",
+  "description": "Create, edit, or delete a GitHub release",
+  "helpUrl": "https://aka.ms/AA5vv5o",
+  "helpMarkDown": "[Learn more about this task](https://aka.ms/AA3aeiw)",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "preview": false,
+  "version": {
+    "Major": 1,
+    "Minor": 224,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.0.0",
+  "groups": [
+    {
+      "name": "changeLogConfiguration",
+      "displayName": "Changelog configuration",
+      "isExpanded": true,
+      "visibleRule": "addChangeLog = true"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "gitHubConnection",
+      "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,Token",
+      "label": "GitHub connection (OAuth or PAT)",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Specify the name of the GitHub service connection to use to connect to the GitHub repository. The connection must be based on a GitHub user's OAuth or a GitHub personal access token. Learn more about service connections [here](https://aka.ms/AA3am5s)."
+    },
+    {
+      "name": "repositoryName",
+      "type": "githubRepositoryPicker",
+      "label": "Repository",
+      "defaultValue": "$(Build.Repository.Name)",
+      "required": true,
+      "helpMarkDown": "Specify the name of the GitHub repository in which the GitHub release will be created, edited, or deleted.",
+      "properties": {
+        "DisableManageLink": "True",
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "action",
+      "type": "pickList",
+      "label": "Action",
+      "defaultValue": "create",
+      "required": true,
+      "helpMarkDown": "Specify the type of release operation to perform. This task can create, edit, or delete a GitHub release.",
+      "options": {
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    {
+      "name": "target",
+      "type": "string",
+      "label": "Target",
+      "defaultValue": "$(Build.SourceVersion)",
+      "required": true,
+      "visibleRule": "action = create || action = edit",
+      "helpMarkDown": "Specify the commit SHA for which the GitHub release will be created. E.g. `48b11d8d6e92a22e3e9563a3f643699c16fd6e27`. You can also use a variable here. E.g. `$(myCommitSHA)`."
+    },
+    {
+      "name": "tagSource",
+      "type": "radio",
+      "label": "Tag source",
+      "required": true,
+      "defaultValue": "gitTag",
+      "visibleRule": "action = create",
+      "helpMarkDown": "Specify the tag to be used for release creation. The 'Git tag' option automatically takes the tag which is associated with the Git commit. Use the 'User specified tag' option to manually provide a tag.",
+      "options": {
+        "gitTag": "Git tag",
+        "userSpecifiedTag": "User specified tag"
+      }
+    },
+    {
+      "name": "tagPattern",
+      "type": "string",
+      "label": "Tag Pattern",
+      "required": false,
+      "visibleRule": "tagSource = gitTag",
+      "helpMarkDown": "Specify the git tag pattern using regex(Eg. `release-v1.*`). GitHub release will be created only for commits that have matching git tag. "
+    },
+    {
+      "name": "tag",
+      "type": "string",
+      "label": "Tag",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "action = edit || action = delete || tagSource = userSpecifiedTag",
+      "helpMarkDown": "Specify the tag for which to create, edit, or delete a release. You can also use a variable here. E.g. `$(myTagName)`."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "label": "Release title",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "action = create || action = edit",
+      "helpMarkDown": "Specify the title of the GitHub release. If left empty, the tag will be used as the release title."
+    },
+    {
+      "name": "releaseNotesSource",
+      "type": "radio",
+      "label": "Release notes source",
+      "required": false,
+      "defaultValue": "filePath",
+      "visibleRule": "action = create || action = edit",
+      "helpMarkDown": "Specify the description of the GitHub release. Use the 'Release notes file' option to use the contents of a file as release notes. Use the 'Inline release notes' option to manually enter release notes.",
+      "options": {
+        "filePath": "Release notes file",
+        "inline": "Inline release notes"
+      }
+    },
+    {
+      "name": "releaseNotesFilePath",
+      "type": "filePath",
+      "label": "Release notes file path",
+      "required": false,
+      "helpMarkDown": "Select the file which contains the release notes.",
+      "visibleRule": "releaseNotesSource = filePath"
+    },
+    {
+      "name": "releaseNotesInline",
+      "type": "multiLine",
+      "label": "Release notes",
+      "required": false,
+      "helpMarkDown": "Enter the release notes here. Markdown is supported.",
+      "visibleRule": "releaseNotesSource = inline",
+      "properties": {
+        "resizable": "true",
+        "rows": "4",
+        "maxLength": "5000"
+      }
+    },
+    {
+      "name": "assets",
+      "type": "multiLine",
+      "label": "Assets",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)/*",
+      "required": false,
+      "visibleRule": "action = create || action = edit",
+      "helpMarkDown": "Specify the files to be uploaded as assets of the release. You can use wildcard characters to specify multiple files. E.g. For build pipelines, `$(Build.ArtifactStagingDirectory)/*.zip` or in case of release pipelines `$(System.DefaultWorkingDirectory)/*.zip`. You can also specify multiple patterns - one per line. By default, all files in the $(Build.ArtifactStagingDirectory) directory will be uploaded. To know more about the list of pre-defined variables available, see [build variables](https://aka.ms/AA4449z) and [release variables](https://aka.ms/AA43wws).",
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      }
+    },
+    {
+      "name": "assetUploadMode",
+      "type": "radio",
+      "label": "Asset upload mode",
+      "required": false,
+      "defaultValue": "delete",
+      "visibleRule": "action = edit",
+      "helpMarkDown": "Use the 'Delete existing assets' option to first delete any existing assets in the release and then upload all assets. Use the 'Replace existing assets' option to replace any assets that have the same name.",
+      "options": {
+        "delete": "Delete exisiting assets",
+        "replace": "Replace existing assets"
+      }
+    },
+    {
+      "name": "isDraft",
+      "type": "boolean",
+      "label": "Draft release",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Indicate whether the release should be saved as a draft (unpublished). If `false`, the release will be published.",
+      "visibleRule": "action = create || action = edit"
+    },
+    {
+      "name": "isPreRelease",
+      "type": "boolean",
+      "label": "Pre-release",
+      "defaultValue": "false",
+      "required": false,
+      "visibleRule": "action = create || action = edit",
+      "helpMarkDown": "Indicate whether the release should be marked as a pre-release."
+    },
+    {
+      "name": "addChangeLog",
+      "type": "boolean",
+      "label": "Add changelog",
+      "defaultValue": "true",
+      "required": false,
+      "visibleRule": "action = create || action = edit",
+      "helpMarkDown": "If set to `true`, a list of changes (commits and issues) between this and the last published release will be generated and appended to the release notes."
+    },
+    {
+      "name": "changeLogCompareToRelease",
+      "type": "radio",
+      "label": "Compare to",
+      "required": true,
+      "defaultValue": "lastFullRelease",
+      "groupName": "changeLogConfiguration",
+      "visibleRule": "addChangeLog = true",
+      "helpMarkDown": "Indicate which release we should compare with to generate the changelog: \nLast full release: Compares the current release with  the most recent non-draft release which is not marked as pre-release.\nLast non-draft release: Compares the current release with the most recent non-draft release.\nLast non-draft release by tag: Compares the current release with the last non-draft release matching the specified tag. You can also specify a regex instead of an exact tag.",
+      "options": {
+        "lastFullRelease": "Last full release",
+        "lastNonDraftRelease": "Last non-draft release",
+        "lastNonDraftReleaseByTag": "Last non-draft release by tag"
+      }
+    },
+    {
+      "name": "changeLogCompareToReleaseTag",
+      "type": "string",
+      "label": "Release Tag",
+      "required": true,
+      "groupName": "changeLogConfiguration",
+      "visibleRule": "changeLogCompareToRelease = lastNonDraftReleaseByTag",
+      "helpMarkDown": "Specify the regex for release tag. Release matching this tag will be used as base for changelog computation."
+    },
+    {
+      "name": "changeLogType",
+      "type": "radio",
+      "label": "Changelog type",
+      "required": true,
+      "defaultValue": "commitBased",
+      "groupName": "changeLogConfiguration",
+      "visibleRule": "addChangeLog = true",
+      "helpMarkDown": "Changelog can be commit based or issue based . Commit based changelog lists all commits included in a release where as Issue based changelog lists all the issues/pr included in the release. ",
+      "options": {
+        "commitBased": "Commit based",
+        "issueBased": "Issue based"
+      }
+    },
+    {
+      "name": "changeLogLabels",
+      "type": "multiLine",
+      "label": "Categories",
+      "required": false,
+      "visibleRule": "changeLogType = issueBased",
+      "defaultValue": "[{ \"label\" : \"bug\", \"displayName\" : \"Bugs\", \"state\" : \"closed\" }]",
+      "groupName": "changeLogConfiguration",
+      "helpMarkDown": "Using this you can categorize changes based on the label associated with the issue/pr. For a label you can mention the display name for the category and the state of issue. E.g. `\"[{ \"label\" : \"bug\", \"displayName\" : \"Bugs\", \"state\" : \"closed\" }]\"` .In case a change has multiple labels on it, the first specified label takes priority. Leave this field empty, to see a flat list of issues/pr."
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "repositoryName",
+      "endpointId": "$(gitHubConnection)",
+      "dataSourceName": "UserRepositories",
+      "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }"
+    }
+  ],
+  "instanceNameFormat": "GitHub release ($(action))",
+  "execution": {
+    "Node10": {
+      "target": "main.js"
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "GithubApiFailError": "An unexpected error occurred.",
+    "GetTagsError": "An unexpected error occurred while fetching tags.",
+    "GetReleasesError": "An unexpected error occurred while fetching releases.",
+    "CreateReleaseError": "An unexpected error occurred while creating the release.",
+    "EditReleaseError": "An unexpected error occurred while editing the release.",
+    "DeleteReleaseError": "An unexpected error occurred while deleting the release.",
+    "CreatingRelease": "Creating a release for tag: %s",
+    "CreateReleaseSuccess": "Release created successfully at %s",
+    "ReleaseAlreadyExists": "Failed to create the release. A release already exists for tag: %s",
+    "EditingRelease": "Editing the release with tag: %s",
+    "EditReleaseSuccess": "Release edited successfully",
+    "NoReleaseFoundToEditCreateRelease": "No existing release was found to edit. Creating one with the tag: %s",
+    "DeletingRelease": "Deleting the release for tag: %s",
+    "DeleteReleaseSuccess": "Release deleted successfully.",
+    "NoReleaseFoundToDelete": "No release was found for tag: %s. Deleting the release failed.",
+    "FetchReleaseForTag": "Fetching the release for tag: %s",
+    "FetchReleaseForTagSuccess": "Found a release for tag: %s",
+    "FetchTagForTarget": "Searching for tags associated with target commit: %s",
+    "FetchTagForTargetSuccess": "Found a tag for target commit: %s",
+    "MissingAssetError": "File not found: %s",
+    "MultipleReleasesFoundError": "Only 1 release was expected but more than 1 release was found for tag: %s. Unable to perform the action.",
+    "MultipleTagFound": "Only 1 tag was expected but more than 1 tag was found for the given commit: %s. Unable to perform the action.",
+    "NoTagFound": "Release will not be created as the tags for the target commit do not match with the given tag pattern",
+    "DeleteAllExistingAssets": "Deleting all existing assets...",
+    "DuplicateAssetFound": "Duplicate asset found: %s",
+    "AssetsDeletedSuccessfully": "Assets deleted successfully.",
+    "DeletingDuplicateAsset": "Deleting duplicate asset: %s",
+    "SkipDuplicateAssetFound": "Duplicate asset found: %s. Skipping...",
+    "AssetDeletedSuccessfully": "Asset %s deleted successfully",
+    "AllAssetsUploadedSuccessfully": "All assets uploaded successfully.",
+    "ErrorDeletingDuplicateAsset": "An unexpected error occurred while deleting duplicate asset: %s",
+    "ErrorDeletingAsset": "An unexpected error occurred while deleting asset: %s",
+    "DeletingAsset": "Deleting asset: %s",
+    "NoAssetFoundToDelete": "No assets were found to delete.",
+    "UploadingAssets": "Uploading assets...",
+    "UploadingAsset": "Uploading file: '%s'.",
+    "UploadAssetError": "An unexpected error occurred while uploading the file: %s",
+    "UploadAssetSuccess": "Uploaded file successfully: '%s'",
+    "NoAssetFoundToUpload": "No assets were found to upload.",
+    "ReleaseNotesFileIsDirectoryError": "Release notes file: %s is a directory and not a file.",
+    "AssetIsDirectoryError": "The asset is a directory and not a file. Skipping uploading directory: %s",
+    "ComputingChangeLog": "Computing changes made in this release...",
+    "ComputingChangeLogSuccess": "Changes computed successfully.",
+    "CommitDiffBehind": "Cannot compute the changes as the provided target commit is older than the commit of the last published release.",
+    "CommitDiffEqual": "No changes were found. The provided target commit is the same as the commit of the last published release.",
+    "FetchLatestPublishRelease": "Fetching the latest published release...",
+    "FetchLatestNonDraftRelease": "Fetching the latest non-draft release...",
+    "FetchLastReleaseByTag": "Fetching the latest release matching the tag pattern: %s ",
+    "FetchLatestPublishReleaseSuccess": "Found the latest published release: %s",
+    "FetchMatchingReleaseSuccess": "Found the latest non-draft release",
+    "FetchTagMatchingReleaseSuccess": "Found the latest release matching the tag pattern: %s",
+    "GetLatestReleaseError": "An unexpected error occurred while fetching the latest published release.",
+    "NoLatestPublishRelease": "No releases are published yet in the repository.",
+    "NoMatchingReleases": "No non-draft releases found.",
+    "NoTagMatchingReleases": "No releases found matching the tag pattern: %s ",
+    "FetchCommitDiff": "Fetching the list of commits since the last published release...",
+    "FetchCommitDiffSuccess": "Found the list of changes.",
+    "FetchCommitDiffError": "An unexpected error occurred while fetching the list of changes.",
+    "FetchInitialCommit": "Fetching the initial commit...",
+    "FetchInitialCommitSuccess": "Found the initial commit: %s",
+    "InvalidGitHubEndpoint": "Invalid GitHub service endpoint: %s.",
+    "InvalidEndpointAuthScheme": "Invalid GitHub service connection scheme: %s. Only OAuth and GitHub personal access token connections are allowed.",
+    "FetchInitialCommitError": "An unexpected error occurred while fetching the initial commit.",
+    "InvalidActionSet": "Invalid action: %s. Only 'create', 'edit', or 'delete' actions are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
+    "InvalidTagSource": "Invalid tag source: %s. Only 'gitTag', or 'userSpecifiedTag' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
+    "InvalidReleaseNotesSource": "Invalid release notes source: %s. Only 'filePath', or 'inline' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
+    "InvalidCompareWithAttribute": "Invalid compareWith attribute: %s. Only 'lastFullRelease, 'lastNonDraftRelease', or 'lastNonDraftReleaseByTag' options are allowed. For yaml syntax see: https://aka.ms/AA3m1bq",
+    "InvalidAssetUploadMode": "Invalid asset upload mode: %s. Only 'delete', or 'replace' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
+    "TagRequiredEditDeleteAction": "For '%s' action, a tag is required. Please specify a tag in the step. For yaml syntax see: https://aka.ms/AA3m1bq",
+    "TagRequiredCreateAction": "Tag source is set to userSpecifiedTag- please specify a tag for create action. For yaml syntax see: https://aka.ms/AA3m1bq",
+    "NoFileFoundMatchingPattern": "No files found matching '%s'. Nothing to upload.",
+    "PatternIsADirectory": "'%s' cannot be uploaded as it is a directory. Please specify a file.",
+    "SearchingFileMatchingPattern": "Searching for file(s) matching '%s'.",
+    "IssuesFetchError": "Error fetching issues. Cannot generate change log.",
+    "NoIssuesLinkedError": "No issues are linked to commits in the specified commit Diff.",
+    "LabelsSyntaxError": "Error occured while parsing the labels. For yaml syntax see: https://aka.ms/AA3m1bq",
+    "InvalidChangeLogTypeAttribute": "Invalid ChangeLogType attribute: %s. Only 'commitBased' or 'issueBased' options are allowed. For yaml syntax see: https://aka.ms/AA3m1bq",
+    "ChangeLogTitle": "Changes",
+    "DefaultCategory": "Others",
+    "SeeMoreText": "See More"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.224.1",
+    "Node16-219": "1.224.0"
+  }
+}
