@@ -42,7 +42,6 @@ process.env["NuGet_ForceEnableCredentialConfig"] = "false";
 nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\packages.config"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
-nmh.RegisterLocationServiceMocks();
 nmh.registerNugetConfigMock();
 
 tmr.run();
