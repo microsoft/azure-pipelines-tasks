@@ -22,6 +22,8 @@
   "loc.input.help.azureCommonVirtualFile": "Azure ストレージ コンテナー内の JDK へのパス。",
   "loc.input.label.jdkDestinationDirectory": "宛先ディレクトリ",
   "loc.input.help.jdkDestinationDirectory": "Linux および Windows では、これは JDK のインストール先ディレクトリとして使用されます。macOSでは、JDK を特定のディレクトリにインストールすることはサポートされていないため、このディレクトリは .dmg を抽出する際の一時フォルダーとして使用されます。",
+  "loc.input.label.azureResourceGroupName": "Resource Group name",
+  "loc.input.help.azureResourceGroupName": "Resource Group name of the storage account.",
   "loc.input.label.cleanDestinationDirectory": "宛先ディレクトリの消去",
   "loc.input.help.cleanDestinationDirectory": "JDK を抽出する前に宛先ディレクトリを空にする場合、このオプションを選択します。",
   "loc.input.label.createExtractDirectory": "抽出するためのディレクトリを作成",
