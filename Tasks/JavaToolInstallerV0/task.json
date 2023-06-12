@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 223,
+        "Minor": 224,
         "Patch": 0
     },
     "satisfies": [
@@ -116,6 +116,14 @@
             "required": true,
             "visibleRule": "jdkSourceOption != PreInstalled",
             "helpMarkDown": "On Linux and Windows, this is used as the destination directory for JDK installation. On macOS, this directory is used as a temporary folder for extracting of .dmg's since macOS doesn't support installing of JDK to specific directory."
+        },
+        {
+            "name": "azureResourceGroupName",
+            "type": "string",
+            "label": "Resource Group name",
+            "required": false,
+            "visibleRule": "jdkSourceOption == AzureStorage",
+            "helpMarkDown": "Resource Group name of the storage account."
         },
         {
             "name": "cleanDestinationDirectory",
