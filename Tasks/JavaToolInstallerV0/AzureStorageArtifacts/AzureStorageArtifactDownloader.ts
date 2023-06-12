@@ -9,13 +9,15 @@ import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-a
 export class AzureStorageArtifactDownloader {
   public connectedService: string;
   public azureStorageAccountName: string;
+  public azureResourceGroupName?: string;
   public containerName: string;
   public commonVirtualPath: string;
 
 
-  constructor(connectedService: string, azureStorageAccountName: string, containerName: string, commonVirtualPath: string) {
+  constructor(connectedService: string, azureStorageAccountName: string, containerName: string, commonVirtualPath: string, azureResourceGroupName?: string) {
     this.connectedService = connectedService;
     this.azureStorageAccountName = azureStorageAccountName;
+    this.azureResourceGroupName = azureResourceGroupName;
     this.containerName = containerName;
     this.commonVirtualPath = commonVirtualPath;
   }
@@ -41,9 +43,19 @@ export class AzureStorageArtifactDownloader {
       ? !!process.env.AZP_TASK_FF_JAVATOOLINSTALLER_USE_OLD_SA_QUERY
       : false;
 
-    const storageAccount = isUseOldStorageAccountQuery
-      ? await this._legacyGetStorageAccount(storageArmClient)
-      : await this._getStorageAccount(storageArmClient);
+    let storageAccount = null;
+    if (this.azureResourceGroupName) {
+      tl.debug("Group name is provided. Using fast query to get storage account details.");
+      storageAccount = await this._getStorageAccountWithResourceGroup(storageArmClient, this.azureResourceGroupName, this.azureStorageAccountName);
+    } 
+
+    if (!storageAccount) {
+      tl.debug("Group name is not provided or fast query failed. Using legacy query to get storage account details.");
+      storageAccount = isUseOldStorageAccountQuery
+        ? await this._legacyGetStorageAccount(storageArmClient)
+        : await this._getStorageAccount(storageArmClient);
+    
+    }
 
     const storageAccountResourceGroupName = armStorage.StorageAccounts.getResourceGroupNameFromUri(storageAccount.id);
 
@@ -72,6 +84,22 @@ export class AzureStorageArtifactDownloader {
 
     if (!storageAccount) {
       throw new Error(tl.loc('StorageAccountDoesNotExist', this.azureStorageAccountName));
+    }
+
+    return storageAccount;
+  }
+
+  private async _getStorageAccountWithResourceGroup(storageArmClient: armStorage.StorageManagementClient, resourceGroupName: string, storageAccountName: string): Promise<Model.StorageAccount | undefined> {
+    let storageAccount = undefined;
+    
+    try {
+      storageAccount = await storageArmClient.storageAccounts.getStorageAccountProperties(resourceGroupName, storageAccountName);
+    } catch (e) {
+      tl.warning("Failed to get storage account details using fast query.");
+    }
+
+    if (storageAccount) {
+      tl.debug("Found storage account details using fast query.");
     }
 
     return storageAccount;
