@@ -212,7 +212,7 @@ async function main({ task, sprint, week }) {
   const messages = [
     ...checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyWeek),
     ...compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExist, isCourtesyWeek),
-    ...compareLocalWithFeed(localTasks, feedTasks)
+    ...compareLocalWithFeed(localTasks, feedTasks, sprint)
   ];
 
   if (messages.length > 0) {
