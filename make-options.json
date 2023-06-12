@@ -222,6 +222,7 @@
         "PackerBuildV0",
         "PackerBuildV1",
         "DownloadGitHubNugetPackageV1",
+        "MysqlDeploymentOnMachineGroupV1",
         "GitHubReleaseV0",
         "GitHubReleaseV1"
     ]
