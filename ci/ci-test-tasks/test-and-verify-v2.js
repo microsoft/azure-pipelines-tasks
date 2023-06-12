@@ -4,7 +4,7 @@ const path = require('path');
 const AUTH_TOKEN = process.argv[2];
 const ADOUrl = process.argv[3];
 const ProjectName = process.argv[4];
-const task = process.argv[5];
+const taskArg = process.argv[5];
 const apiVersion = 'api-version=7.0';
 const apiUrl = `${ADOUrl}/${ProjectName}/_apis/pipelines`;
 
@@ -15,16 +15,23 @@ const auth = {
 const intervalDelayMs = 15000;
 const maxRetries = 10;
 
-if (task) {
-  Promise.all(start(task)).then(values => {
-    console.log(values);
-  }).catch(err => {
-    console.error(err.message);
-    console.debug(err.stack);
-  });
-} else {
-  console.error('Task name was not provided');
+async function main() {
+  if(!taskArg) {
+    console.error(`Task list is not provided`);
+  }
+  const tasks = taskArg.split(',');
+  const runningTests = [];
+  for(const task of tasks) {
+    console.log(`starting tests for ${task}`);
+    runningTests.push(...await start(task));
+  }
+  Promise.all(runningTests).then(data => {
+    console.log(data);
+  }).catch(error => {
+    console.error(error);
+  })
 }
+
 
 async function start(taskName) {
   const pipelines = await fetchPipelines();
@@ -32,17 +39,18 @@ async function start(taskName) {
 
   if (pipeline) {
     const configs = getBuildConfigs(taskName);
-    console.log(`detected configs ${JOSN.stringify(configs)}`);
+    console.log(`Detected buildconfigs ${JSON.stringify(configs)}`);
     const promises = [];
-    configs.forEach(async config => {
+    for(const config of configs) {
       const pipelineBuild = await runTestPipeline(pipeline, config);
-      promises.push(new Promise((resolve, reject) => verifyBuildStatus(pipelineBuild, resolve, reject)));
-    });
+      const promise = new Promise((resolve, reject) => verifyBuildStatus(pipelineBuild, resolve, reject))
+      promises.push(promise);
+    }
+    return promises;
   } else {
     console.log(`Cannot build and run tests for task ${taskName} - corresponding test pipeline was not found`);
   }
-
-  return promises;
+  return [];
 }
 
 
@@ -60,6 +68,9 @@ function getBuildConfigs(task) {
           tasksToTest.push(item);
         }
       });
+      if(tasksToTest.length === 0) {
+        tasksToTest.push(task);
+      }
       return tasksToTest;
     } catch (error) {
       console.error('Error reading subdirectories:', error);
@@ -84,7 +95,6 @@ function fetchPipelines() {
 
 function runTestPipeline(pipeline, config = '') {
   console.log(`Run ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`);
-  console.log(JSON.stringify(process.env));
   const { CANARY_TEST_BRANCH } = process.env;
   return axios
     .post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, 
@@ -104,7 +114,7 @@ function runTestPipeline(pipeline, config = '') {
         }
       },
     }, { auth })
-    .then(res => res.data)
+    .then(res =>  res.data)
     .catch(err => {
       err.stack = `Error running ${pipeline.name} pipeline. ` + err.stack;
       console.error(err.stack);
@@ -116,7 +126,7 @@ function runTestPipeline(pipeline, config = '') {
     });
 }
 
-async function verifyBuildStatus(pipelineBuild, resolve, reject, config = '') {
+async function verifyBuildStatus(pipelineBuild, resolve, reject) {
   console.log(`Verify build ${pipelineBuild.name} status, url: ${pipelineBuild._links.web.href}`);
 
   let retryCount = 0;
@@ -125,7 +135,7 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject, config = '') {
     axios
       .get(pipelineBuild.url, { auth })
       .then(({ data }) => {
-        console.log(`Verify build status... ${data.state}`);
+        console.log(`Verify build status (${pipelineBuild.name})... ${data.state}`);
 
         if (data.state !== 'completed') {
           return;
@@ -169,3 +179,6 @@ process.on('uncaughtException', err => {
   console.error(err.message);
   console.debug(err.stack);
 });
+
+
+main();
