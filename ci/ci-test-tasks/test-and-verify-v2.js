@@ -18,6 +18,7 @@ const maxRetries = 10;
 async function main() {
   if(!taskArg) {
     console.error(`Task list is not provided`);
+    return;
   }
   const tasks = taskArg.split(',');
   const runningTests = [];
