@@ -88,7 +88,8 @@ function getTasksVersions(tasks, basepath) {
     const taskJSONPath = join(basepath, 'Tasks' , x, 'task.json');
 
     if (!existsSync(taskJSONPath)) {
-      throw new Error(`Task.json of ${x} does not exist by path ${taskJSONPath}`);
+      console.log(`##vso[task.logissue type=error]Task.json of ${x} does not exist by path ${taskJSONPath}`);
+      process.exit(1);
     }
 
     const taskJSONObject = JSON.parse(readFileSync(taskJSONPath, 'utf-8'));
@@ -105,8 +106,17 @@ function getTasksVersions(tasks, basepath) {
   });
 }
 
+async function clientWrapper(url) {
+  try {
+    return await client.get(url);
+  } catch (error) {
+    console.log(`##vso[task.logissue type=error]Cannot access to ${url} due to error ${error}`);
+    process.exit(1);
+  }
+}
+
 async function getFeedTasksVersions() {
-  const { result, statusCode } = await client.get(packageEndpoint);
+  const { result, statusCode } = clientWrapper(packageEndpoint);
 
   if (statusCode !== 200) {
     console.log('##vso[task.logissue type=error]Failed while fetching feed versions');
