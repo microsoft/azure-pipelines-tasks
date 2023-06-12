@@ -63,9 +63,7 @@ function compareLocalWithMaster(localTasks, masterTasks) {
     let destinationVersion = parse(localTask.version.version);
 
     if (localTask.version.minor < argv.sprint) {
-      while (destinationVersion.minor != argv.sprint) {
-        inc(destinationVersion, 'minor');
-      }
+      destinationVersion.minor = argv.sprint;
     } else if (localTask.version.minor === argv.sprint) {
       if (eq(localTask.version, masterTask.version)) {
         inc(destinationVersion, 'patch');
