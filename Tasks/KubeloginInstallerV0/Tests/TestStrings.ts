@@ -18,7 +18,7 @@ export class TestString {
   public static readonly ReleaseUrlValidlatest: string = 'latest releaseUrl is valid';
   public static readonly CheckSumValidlatest: string = 'latest checksumUrl is valid';
   public static readonly NotFound123_1323: string = '123.1323 version not found';
-  public static readonly loc_mock_Info_DownloadingFailed: string = 'loc_mock_Info_DownloadingFailed';
+  public static readonly loc_mock_Info_DownloadingFailed: string = 'Info_DownloadingFailed';
   public static readonly DownloadedSuccessfully = 'kubelogin downloaded successfully';
   public static readonly PathExists = 'unzip path exist';
   public static readonly PathNotExists = "Path doesn't exist";

@@ -1,41 +1,8 @@
-import { getKubeloginRelease, KUBELOGIN_REPO_OWNER, KUBELOGIN_REPO } from '../utils';
-import * as mockery from 'mockery';
-import path = require('path');
+import { getKubeloginRelease } from '../utils';
 import { TestString } from './TestStrings';
 
 export class GetKubeloginReleaseL0Tests {
   public static async startTests() {
-    mockery.registerMock('@octokit/rest', {
-      repos: {
-        getLatestRelease: async function () {
-          return new Promise(async (resolve, reject) => {
-            resolve({
-              data: {
-                tag_name: '0.0.29'
-              }
-            });
-          });
-        },
-        getReleaseByTag: async function () {
-          return new Promise(async (resolve, reject) => {
-            resolve({
-              data: {
-                assets: [
-                  {
-                    name: 'kubelogin-win-amd64.zip',
-                    browser_download_url: 'https://github.com/Azure/kubelogin/releases/download/v0.0.29/kubelogin-win-amd64.zip'
-                  },
-                  {
-                    name: 'kubelogin-win-amd64.zip.sha256',
-                    browser_download_url: 'https://github.com/Azure/kubelogin/releases/download/v0.0.29/kubelogin-win-amd64.zip.sha256'
-                  }
-                ]
-              }
-            });
-          });
-        }
-      }
-    });
     await this.validateGetKubeloginRelease0_0_29();
     await this.validateGetKubeloginReleasev0_0_29();
     await this.validateGetKubeloginReleaseLatestVersion();

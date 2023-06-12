@@ -9,9 +9,9 @@ Date.now = () => {
 };
 
 export const tempDir = path.join(__dirname, 'temp');
-export const releasePath = path.join(tempDir, 'kubelogin' + Date.now(), 'kubelogin-win-amd64.zip');
-export const unzipPath = path.join(tempDir, 'kubelogin' + Date.now(), 'bin', 'windows_amd64');
-export const toolPath = path.join(tempDir, 'kubelogin' + Date.now(), 'bin', 'windows_amd64', 'kubelogin.exe');
+export const releasePath = path.join(__dirname, 'kubelogin-win-amd64.zip');
+export const unzipPath = path.join(tempDir, 'kubelogin-win-amd64');
+export const toolPath = path.join(tempDir, 'kubelogin-win-amd64', 'bin', 'windows_amd64', 'kubelogin.exe');
 
 export function initTaskTests(taskLib): void {
   if (!fs.existsSync(tempDir)) {
@@ -22,19 +22,16 @@ export function initTaskTests(taskLib): void {
   taskLib.setVariable('Agent.ToolsDirectory', tempDir);
 }
 
-export function setAnswears(tr: tmrm.TaskMockRunner, toolPathVal: boolean = true, unzipPathVal: boolean = true): void {
+export function setAnswears(tr: tmrm.TaskMockRunner, toolPathVal: boolean = true): void {
   const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     stats: {
       [releasePath]: true,
-      [unzipPath]: unzipPathVal
     },
     exist: {
-      [releasePath]: true,
-      [unzipPath]: unzipPathVal
+      [releasePath]: true
     },
     checkPath: {
       [tempDir]: true,
-      [unzipPath]: unzipPathVal,
       [toolPath]: toolPathVal
     },
     'kubelogin --version': {
@@ -100,72 +97,9 @@ export function registerMockedToolLibTools(tr: tmrm.TaskMockRunner, processItems
         }
         fs.copyFile(path.join(__dirname, 'kubelogin-win-amd64.zip'), releasePath, err => {
           if (err) reject(err);
-          resolve('ok');
+          resolve(releasePath);
         });
       });
-    }
-  });
-}
-
-export function registerMockedArtifactEngine(tr: tmrm.TaskMockRunner, processItemsError: boolean = false): void {
-  tr.registerMock('artifact-engine/Engine', {
-    ArtifactEngine: function () {
-      return {
-        processItems: async function () {
-          return new Promise(async (resolve, reject) => {
-            if (processItemsError) {
-              reject('Failed to download a zip');
-            }
-            fs.copyFile(path.join(__dirname, 'kubelogin-win-amd64.zip'), releasePath, err => {
-              if (err) throw err;
-              resolve('ok');
-            });
-          });
-        }
-      };
-    },
-    ArtifactEngineOptions: function () {
-      return {
-        verbose: ''
-      };
-    }
-  });
-}
-
-export function registerMockedOctokitRest(tr: tmrm.TaskMockRunner): void {
-  tr.registerMock('@octokit/rest', {
-    Octokit: function () {
-      return {
-        repos: {
-          getLatestRelease: async function () {
-            return new Promise(async (resolve, reject) => {
-              resolve({
-                data: {
-                  tag_name: '0.0.28'
-                }
-              });
-            });
-          },
-          getReleaseByTag: async function () {
-            return new Promise(async (resolve, reject) => {
-              resolve({
-                data: {
-                  assets: [
-                    {
-                      name: 'kubelogin-win-amd64.zip',
-                      browser_download_url: path.join(__dirname, 'kubelogin-win-amd64.zip')
-                    },
-                    {
-                      name: 'kubelogin-win-amd64.zip.sha256',
-                      browser_download_url: path.join(__dirname, 'kubelogin-win-amd64.zip.sha256')
-                    }
-                  ]
-                }
-              });
-            });
-          }
-        }
-      };
     }
   });
 }

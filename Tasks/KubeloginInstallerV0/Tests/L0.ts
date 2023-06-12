@@ -58,16 +58,6 @@ describe('TestUtils', function () {
     done();
   }).timeout(20000);
 
-  it('should download a release', (done: Mocha.Done) => {
-    const taskPath = path.join(__dirname, 'DownloadKubeloginReleaseL0Tests.js');
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
-    
-    tr.run();
-
-    assert(tr.stdOutContained(TestString.DownloadedSuccessfully), 'should have printed: ' + TestString.DownloadedSuccessfully);
-    done();
-  }).timeout(20000);
-
   it('should run successfully when installing Kublogin', function () {
     const testPath: string = path.join(__dirname, 'InstallKubeloginL0Tests.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);

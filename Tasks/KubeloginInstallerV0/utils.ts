@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import * as os from 'os';
 import * as path from 'path';
 
 import * as taskLib from 'azure-pipelines-task-lib/task';
@@ -8,7 +7,6 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import webClient = require('azure-pipelines-tasks-azure-arm-rest-v2/webClient');
 
 var process = require('process');
-var DecompressZip = require('decompress-zip');
 var packagejson = require('./package.json');
 
 export const KUBELOGIN_REPO_OWNER = 'Azure';
@@ -113,28 +111,14 @@ export async function getKubeloginRelease(version: string = 'latest', platform?:
   }
 }
 
-function getKubeloginDownloadPath(): string {
-  const tempDir: string = getTempDirectory();
-  const downloadPath: string = path.join(tempDir, KUBELOGIN_REPO + Date.now());
-  if (!fs.existsSync(downloadPath)) {
-    fs.mkdirSync(downloadPath);
-  }
-  return downloadPath;
-}
-
-function getTempDirectory(): string {
-  return taskLib.getVariable(AGENT_TEMP_DIR) || os.tmpdir();
-}
-
-export async function downloadKubeloginRelease(release: KubeloginRelease) {
-  const downloadPath: string = path.join(getKubeloginDownloadPath(), release.name);
+export async function downloadKubeloginRelease(release: KubeloginRelease): Promise<string> {
   try {
-    await toolLib.downloadTool(release.releaseUrl, downloadPath);
+    const downloadPath = await toolLib.downloadTool(release.releaseUrl);
+    console.log(taskLib.loc('Info_ToolDownloaded', downloadPath));
+    return downloadPath;
   } catch (exception) {
-    throw new Error(taskLib.loc('Info_DownloadingFailed', downloadPath, exception));
+    throw new Error(taskLib.loc('Info_DownloadingFailed', exception));
   }
-  console.log(taskLib.loc('Info_ToolDownloaded', downloadPath));
-  return downloadPath;
 }
 
 export async function unzipRelease(zipPath: string): Promise<string> {
@@ -142,30 +126,14 @@ export async function unzipRelease(zipPath: string): Promise<string> {
     throw new Error("Path doesn't exist");
   }
 
-  const tempDir: string = getTempDirectory();
-  const unzipPath: string = path.join(tempDir, KUBELOGIN_REPO + Date.now());
-
-  await new Promise<void>(function (resolve, reject) {
-    if (taskLib.exist(unzipPath)) {
-      taskLib.rmRF(unzipPath);
-    }
-
-    taskLib.debug('Extracting ' + zipPath + ' to ' + unzipPath);
-
-    var unzipper = new DecompressZip(zipPath);
-    unzipper.on('error', (err: any) => {
-      return reject(taskLib.loc('Err_ExtractionFailed', err));
-    });
-    unzipper.on('extract', () => {
-      taskLib.debug('Extracted ' + zipPath + ' to ' + unzipPath + ' successfully');
-      return resolve();
-    });
-
-    unzipper.extract({
-      path: path.normalize(unzipPath)
-    });
-  });
-  return unzipPath;
+  try {
+    const unzipPath: string =  await toolLib.extractZip(zipPath);
+    taskLib.debug('Extracted ' + zipPath + ' to ' + unzipPath + ' successfully');
+    return unzipPath;
+  }
+  catch (err) {
+    throw new Error(taskLib.loc('Err_ExtractionFailed', err));
+  }
 }
 
 export function getKubeloginPath(inputPath: string, fileName: string): string | undefined {
