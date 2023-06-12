@@ -29,7 +29,7 @@
         "@types/q": "^1.0.7",
         "azp-tasks-az-blobstorage-provider": "^2.219.1",
         "azure-pipelines-task-lib": "^4.0.0-preview",
-        "azure-pipelines-tasks-azure-arm-rest-v2": "3.223.3",
+        "azure-pipelines-tasks-azure-arm-rest-v2": "^3.223.6",
         "azure-pipelines-tasks-utility-common": "^3.0.3",
         "azure-pipelines-tool-lib": "^2.0.0-preview"
     },
