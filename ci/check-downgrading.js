@@ -45,8 +45,29 @@ if (existsSync(join(tempMasterTasksPath, 'Tasks'))) {
   rm('-rf', join(tempMasterTasksPath, 'Tasks'));
 }
 
-function compareLocalWithMaster(localTasks, masterTasks) {
-  const taskVersionsMismatch = [];
+function checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyWeek) {
+  const messages = [];
+
+  for (const masterTask of masterTasks) {
+    if (masterTask.version.minor <= sprint) {
+      continue;
+    }
+
+    if (isReleaseTagExist || isCourtesyWeek) {
+      continue;
+    }
+
+    messages.push({
+      type: "warning",
+      payload: ` - [${targetBranch}] ${masterTask.name} has v${masterTask.version.version} it's higher than the current sprint ${allowedMinorVersion}`
+    });
+  }
+
+  return messages;
+}
+
+function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExist, isCourtesyWeek) {
+  const messages = [];
 
   for (const localTask of localTasks) {
     const masterTask = masterTasks.find(x => x.name.toLowerCase() === localTask.name.toLowerCase());
@@ -55,30 +76,40 @@ function compareLocalWithMaster(localTasks, masterTasks) {
       continue;
     }
 
-    if (masterTask.version.minor > argv.sprint) {
-      taskVersionsMismatch.push(` - [${targetBranch}] ${masterTask.name} has v${masterTask.version.version} it's higher than the current sprint ${argv.sprint}`);
+    if (localTask.version.minor < sprint) {
+      messages.push({
+        type: 'error',
+        payload: ` - ${localTask.name} have to be upgraded from v${localTask.version.version} to v${sprint} at least`
+      });
+      continue;
+    }
+    
+    if (localTask.version.minor === sprint && eq(localTask.version, masterTask.version)) {
+      messages.push({
+        type: 'error',
+        payload: ` - ${localTask.name} have to be upgraded from v${localTask.version.version} to v${inc(masterTask.version, 'patch')} at least`
+      });
       continue;
     }
 
-    let destinationVersion = parse(localTask.version.version);
-
-    if (localTask.version.minor < argv.sprint) {
-      destinationVersion.minor = argv.sprint;
-    } else if (localTask.version.minor === argv.sprint) {
-      if (eq(localTask.version, masterTask.version)) {
-        inc(destinationVersion, 'patch');
-      }
-    } else {
-      taskVersionsMismatch.push(` - [${sourceBranch}] ${localTask.name} has v${localTask.version.version} it's higher than the current sprint ${argv.sprint}`);
+    if (localTask.version.minor === sprint && isCourtesyWeek) {
+      messages.push({
+        type: 'warning',
+        payload: ` - Be careful with task ${localTask.name} version and check it attentively as the current week is courtesy push week`
+      });
       continue;
     }
 
-    if (localTask.version.version !== destinationVersion.version) {
-      taskVersionsMismatch.push(` - ${localTask.name} have to be upgraded from v${localTask.version.version} to v${destinationVersion}`);
+    if (localTask.version.minor > sprint && (!isReleaseTagExist && !isCourtesyWeek)) {
+      messages.push({
+        type: 'error',
+        payload: ` - [${sourceBranch}] ${localTask.name} has v${localTask.version.version} it's higher than the current sprint ${sprint}`
+      });
+      continue;
     }
   }
 
-  return taskVersionsMismatch;
+  return messages;
 }
 
 function getTasksVersions(tasks, basepath) {
@@ -114,10 +145,10 @@ async function clientWrapper(url) {
 }
 
 async function getFeedTasksVersions() {
-  const { result, statusCode } = clientWrapper(packageEndpoint);
+  const { result, statusCode } = await clientWrapper(packageEndpoint);
 
   if (statusCode !== 200) {
-    console.log('##vso[task.logissue type=error]Failed while fetching feed versions');
+    console.log(`##vso[task.logissue type=error]Failed while fetching feed versions.\nStatus code: ${statusCode}\nResult: ${result}`);
     process.exit(1);
   }
 
@@ -131,8 +162,8 @@ async function getFeedTasksVersions() {
     }));
 }
 
-function compareLocalWithFeed(localTasks, feedTasks) {
-  const taskVersionsMismatch = [];
+function compareLocalWithFeed(localTasks, feedTasks, sprint) {
+  const messages = [];
 
   for (const localTask of localTasks) {
     const feedTask = feedTasks.find(x => x.name.toLowerCase() === localTask.name.toLowerCase());
@@ -142,18 +173,24 @@ function compareLocalWithFeed(localTasks, feedTasks) {
     }
 
     for (const feedTaskVersion of feedTask.versions) {
-      if (feedTaskVersion.version.minor > argv.sprint) {
-        taskVersionsMismatch.push(` - [Feed] ${feedTask.name} has v${feedTaskVersion.version.version} it's higher than the current sprint ${argv.sprint}`);
+      if (feedTaskVersion.version.minor > sprint) {
+        messages.push({
+          type: 'waring',
+          payload: ` - [Feed] ${feedTask.name} has v${feedTaskVersion.version.version} it's higher than the current sprint ${sprint}`
+        });
         continue;
       }
 
       if (lte(localTask.version, feedTaskVersion.version) && feedTaskVersion.isLatest) {
-        taskVersionsMismatch.push(` - [Feed] ${localTask.name} local version ${localTask.version.version} less or equal than version in feed ${feedTaskVersion.version.version}`);
+        messages.push({
+          type: 'warning',
+          payload: ` - [Feed] ${localTask.name} local version ${localTask.version.version} less or equal than version in feed ${feedTaskVersion.version.version}`
+        });
       }
     }
   }
 
-  return taskVersionsMismatch;
+  return messages;
 }
 
 function getChangedTaskJsonFromMaster(names) {
@@ -163,29 +200,30 @@ function getChangedTaskJsonFromMaster(names) {
   });
 }
 
-async function main() {
-  const changedTasksNames = resolveTaskList(argv.task);
+async function main({ task, sprint, week }) {
+  const changedTasksNames = resolveTaskList(task);
   const localTasks = getTasksVersions(changedTasksNames, join(__dirname, '..'));
   getChangedTaskJsonFromMaster(changedTasksNames);
   const masterTasks = getTasksVersions(changedTasksNames, tempMasterTasksPath);
   const feedTasks = await getFeedTasksVersions();
+  const isReleaseTagExist = run(`git tag -l v${sprint}`).length !== 0;
+  const isCourtesyWeek = week === 3;
 
-  const versionErrors = [
-    ...compareLocalWithMaster(localTasks, masterTasks),
+  const messages = [
+    ...checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyWeek),
+    ...compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExist, isCourtesyWeek),
     ...compareLocalWithFeed(localTasks, feedTasks)
   ];
 
-  if (versionErrors.length > 0) {
-    console.log('##vso[task.logissue type=error]Failed while checking downgrading');
-    console.log(`\nProblems with ${versionErrors.length} task(s) should be resolved:\n`);
+  if (messages.length > 0) {
+    console.warn(`\nProblems with ${messages.length} task(s) should be resolved:\n`);
 
-    for (const versionError of versionErrors) {
-      console.log(versionError);
+    for (const message of messages) {
+      console.log(`##vso[task.logissue type=${message.type}]${message.payload}`);
     }
 
-    console.log('\nor you might have an outdated branch, try to merge/rebase your branch from master');
     process.exit(1);
   }
 }
 
-main();
+main(argv);

@@ -52,7 +52,7 @@ steps:
     PACKAGE_ENDPOINT: $(Package.Endpoint)
     PACKAGE_TOKEN: $(Package.Token)
 
-- script: node ./ci/check-downgrading.js --task "$(task_pattern)" --sprint $(currentSprint)
+- script: node ./ci/check-downgrading.js --task "$(task_pattern)" --sprint $(currentSprint) --week $(currentSprintWeek)
   displayName: Check for downgrading tasks
   condition: |
       and(
