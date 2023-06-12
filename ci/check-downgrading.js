@@ -118,7 +118,7 @@ async function getFeedTasksVersions() {
 
   if (statusCode !== 200) {
     console.log('##vso[task.logissue type=error]Failed while fetching feed versions');
-    return;
+    process.exit(1);
   }
 
   return result.value
