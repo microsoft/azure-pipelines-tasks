@@ -100,7 +100,7 @@ function runTestPipeline(pipeline, config = '') {
     .post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, 
     {
       variables: {
-        CANARY_TEST_TASKNAMES: { 
+        CANARY_TEST_TASKNAME: { 
           "isSercret": false,
           "value": pipeline.name,
         },
