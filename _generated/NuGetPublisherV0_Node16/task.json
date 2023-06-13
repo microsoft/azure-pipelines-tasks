@@ -1,0 +1,181 @@
+{
+  "id": "333b11bd-d341-40d9-afcf-b32d5ce6f25b",
+  "name": "NuGetPublisher",
+  "friendlyName": "NuGet publisher",
+  "description": "Deprecated: use the “NuGet” task instead. It works with the new Tool Installer framework so you can easily use new versions of NuGet without waiting for a task update, provides better support for authenticated feeds outside this organization/collection, and uses NuGet 4 by default.",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/prev-versions/nuget-publisher-0",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627417) or [see the NuGet documentation](https://docs.microsoft.com/nuget/)",
+  "category": "Package",
+  "author": "Lawrence Gripper",
+  "version": {
+    "Major": 0,
+    "Minor": 224,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [
+    "Cmd"
+  ],
+  "minimumAgentVersion": "2.144.0",
+  "deprecated": true,
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "instanceNameFormat": "NuGet Publisher $(solution)",
+  "inputs": [
+    {
+      "name": "searchPattern",
+      "type": "filePath",
+      "label": "Path/Pattern to nupkg",
+      "defaultValue": "**/*.nupkg;-:**/packages/**/*.nupkg;-:**/*.symbols.nupkg",
+      "helpMarkDown": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon.",
+      "required": true
+    },
+    {
+      "name": "nuGetFeedType",
+      "type": "radio",
+      "label": "Feed type",
+      "required": true,
+      "defaultValue": "external",
+      "options": {
+        "external": "External NuGet Feed",
+        "internal": "Internal NuGet Feed"
+      }
+    },
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "NuGet Service Connection",
+      "required": true,
+      "helpMarkDown": "The NuGet server generic service connection, set the key 'Password/Token Key' field to your NuGet API key.",
+      "visibleRule": "nuGetFeedType = external"
+    },
+    {
+      "name": "feedName",
+      "type": "string",
+      "label": "Internal Feed URL",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The URL of a NuGet feed hosted in this account.",
+      "visibleRule": "nuGetFeedType = internal"
+    },
+    {
+      "name": "nuGetAdditionalArgs",
+      "type": "string",
+      "label": "NuGet Arguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Additional arguments passed to NuGet.exe push. [More Information](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-push).",
+      "groupName": "advanced"
+    },
+    {
+      "name": "verbosity",
+      "type": "pickList",
+      "label": "Verbosity",
+      "defaultValue": "-",
+      "helpMarkDown": "NuGet's verbosity level",
+      "required": "false",
+      "groupName": "advanced",
+      "options": {
+        "-": "-",
+        "Quiet": "Quiet",
+        "Normal": "Normal",
+        "Detailed": "Detailed"
+      }
+    },
+    {
+      "name": "nuGetVersion",
+      "type": "radio",
+      "label": "NuGet Version",
+      "defaultValue": "3.3.0",
+      "helpMarkDown": "The version of NuGet to use, or custom version.",
+      "required": "true",
+      "groupName": "advanced",
+      "options": {
+        "3.3.0": "3.3.0",
+        "3.5.0.1829": "3.5.0",
+        "4.0.0.2283": "4.0.0",
+        "custom": "Custom"
+      }
+    },
+    {
+      "name": "nuGetPath",
+      "type": "string",
+      "label": "Path to NuGet.exe",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Optionally supply the path to NuGet.exe. Will override version selection.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "continueOnEmptyNupkgMatch",
+      "type": "boolean",
+      "label": "Continue if no packages match the \"Path/Pattern to nupkg\"",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "Continue instead of fail if no packages match the \"Path/Pattern to nupkg\".",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "nugetpublisher.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "nugetpublisher.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Warning_NoConfigForOldNuGet": "To connect to NuGet feeds hosted in your Azure DevOps organization with NuGet 3.1 or below, edit your build pipeline to specify a path to a NuGet.config containing the package sources you wish to use.",
+    "Warning_NoConfigForNoCredentialProvider": "To connect to NuGet feeds hosted in your Azure DevOps organization on this build agent, edit your build pipeline to specify a path to a NuGet.config containing the package sources you wish to use.",
+    "Warning_ConflictingNuGetPreference": "NuGet 3.3 was selected, but a custom NuGet path was provided. The custom path will be preferred. To resolve this warning, edit your build task and select 'custom' for NuGet version under Advanced.",
+    "PackagesPublishedSuccessfully": "Packages were published successfully",
+    "PackagesFailedToPublish": "Packages failed to publish",
+    "ConnectingAs": "Connecting to feeds in your Azure DevOps organization as '%s' [%s]",
+    "BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
+    "NoCredProviderOnAgent": "CredentialProvider.TeamBuild.exe not found on the agent. Falling back to config-based credential flow.",
+    "NotARegularFile": "%s is not a regular file. Check the 'Path/Pattern to nupkg' property of the NuGetPublisher task.",
+    "UnknownFeedType": "Unknown feed type '%s'",
+    "CouldNotFindNuGetService": "Could not find the NuGet service. This task will be unable to authenticate to feeds hosted in your Azure DevOps organization.",
+    "NoNuGetSpecified": "If 'custom' is selected, you must provide a path to NuGet.exe",
+    "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
+    "Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
+    "Error_NoMatchingFilesFoundForPattern": "No matching files were found with search pattern: %s",
+    "Error_NoUrlWasFoundWhichMatches": "No download URL was found for %s",
+    "Error_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
+    "Error_NuGetToolInstallerFailer": "Tool install failed: %s",
+    "Info_AvailableVersions": "The available versions are: %s",
+    "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "You are using a query match on the version string. Behavior changes or breaking changes might occur as NuGet updates to a new version.",
+    "Info_MatchingUrlWasFoundSettingAuth": "Using authentication information for the following URI: ",
+    "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+    "Info_SavingTempConfig": "Saving NuGet.config to a temporary config file.",
+    "Info_UsingToolPath": "Using tool path: %s",
+    "Info_UsingVersion": "Using version: %s",
+    "NGCommon_AddingSources": "Setting credentials in NuGet.config",
+    "NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region.",
+    "NGCommon_DetectedNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable): %s",
+    "NGCommon_DetectedNuGetVersion": "Detected NuGet version %s / %s",
+    "NGCommon_IgnoringNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable). Extensions are ignored when using the built-in NuGet client",
+    "NGCommon_NoSourcesFoundInConfig": "No package sources were found in the NuGet.config file at %s",
+    "NGCommon_NuGetConfigIsInvalid": "The NuGet.config at %s is invalid.",
+    "NGCommon_NuGetConfigIsPackagesConfig": "Expected a NuGet.config file at %s, but its contents appear to be a packages.config. Check the settings for the %s task and confirm you selected NuGet.config rather than packages.config.",
+    "NGCommon_RemovingSources": "Preparing to set credentials in NuGet.config",
+    "NGCommon_SpsNotFound": "Unable to find the '%s' [%s] area. There may be a problem with your Team Foundation Server installation.",
+    "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
+    "NGCommon_UnableToFindTool": "Unable to find tool %s",
+    "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
+  },
+  "_buildConfigMapping": {
+    "Default": "0.224.1",
+    "Node16-219": "0.224.0"
+  }
+}
