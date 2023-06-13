@@ -4,6 +4,9 @@ import taskLib = require("azure-pipelines-task-lib/task");
 import fs = require("fs");
 import path = require("path");
 
+import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
+import { ITaskApi } from "azure-devops-node-api/TaskApi";
+
 export class Kubelogin {
     private toolPath: string;
     constructor(required: boolean) {
@@ -46,16 +49,47 @@ export class Kubelogin {
             let escapedCliPassword = servicePrincipalKey.replace(/"/g, '\\"');
             taskLib.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
             //login using svn
-            const kubectlTool = taskLib.tool(this.toolPath);
-            kubectlTool.arg('convert-kubeconfig');
-            kubectlTool.arg(['-l', 'spn',  '--client-id', servicePrincipalId, '--client-secret', escapedCliPassword, '--tenant-id', tenantId, '--v', '20']);
-            await kubectlTool.exec();
+            const kubectaskLibTool = taskLib.tool(this.toolPath);
+            kubectaskLibTool.arg('convert-kubeconfig');
+            kubectaskLibTool.arg(['-l', 'spn',  '--client-id', servicePrincipalId, '--client-secret', escapedCliPassword, '--tenant-id', tenantId, '--v', '20']);
+            await kubectaskLibTool.exec();
         }
         else if (authScheme.toLowerCase() == "managedserviceidentity") {
-            const kubectlTool = taskLib.tool(this.toolPath);
-            kubectlTool.arg('convert-kubeconfig');
-            kubectlTool.arg(['-l', 'msi']);
-            await kubectlTool.exec();
+            const kubectaskLibTool = taskLib.tool(this.toolPath);
+            kubectaskLibTool.arg('convert-kubeconfig');
+            kubectaskLibTool.arg(['-l', 'msi']);
+            await kubectaskLibTool.exec();
+        }
+    }
+
+    private static async getIdToken(connectedService: string) : Promise<string> {
+        const jobId = taskLib.getVariable("System.JobId");
+        const planId = taskLib.getVariable("System.PlanId");
+        const projectId = taskLib.getVariable("System.TeamProjectId");
+        const hub = taskLib.getVariable("System.HostType");
+        const uri = taskLib.getVariable("System.CollectionUri");
+        const token = this.getSystemAccessToken();
+
+        const authHandler = getHandlerFromToken(token);
+        const connection = new WebApi(uri, authHandler);
+        const api: ITaskApi = await connection.getTaskApi();
+        const response = await api.createOidcToken({}, projectId, hub, planId, jobId, connectedService);
+        if (response == null) {
+            return null;
+        }
+
+        return response.oidcToken;
+    }
+
+    private static getSystemAccessToken() : string {
+        taskLib.debug('Getting credentials for local feeds');
+        const auth = taskLib.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
+        if (auth.scheme === 'OAuth') {
+            taskLib.debug('Got auth token');
+            return auth.parameters['AccessToken'];
+        }
+        else {
+            taskLib.warning('Could not determine credentials to use');
         }
     }
 }
