@@ -11,7 +11,7 @@ function Initialize-AzModule {
         [Parameter(Mandatory=$false)]
         [string] $azVersion,
         [Parameter(Mandatory=$false)]
-        [string]$vstsAccessToken)
+        [Security.SecureString]$encryptedToken)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -20,7 +20,6 @@ function Initialize-AzModule {
         Write-Verbose "Initializing Az Module."
         Import-AzModule -azVersion $azVersion
 
-        $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
         Initialize-AzSubscription -Endpoint $Endpoint -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $encryptedToken
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
