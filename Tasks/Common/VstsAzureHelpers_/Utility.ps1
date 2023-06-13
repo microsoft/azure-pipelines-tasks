@@ -11,7 +11,7 @@
     if ($ServicePrincipal) {
         $pemFileContent = $Endpoint.Auth.Parameters.ServicePrincipalCertificate
         $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
-        
+
         $certificate.Import($pfxFilePath, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
     }
     else {
@@ -168,7 +168,7 @@ function Get-VstsFederatedToken {
 
     $OMDirectory = $PSScriptRoot
 
-    $newtonsoftDll = [System.IO.Path]::Combine($OMDirectory, "Newtonsoft.Json.dll")
+    $newtonsoftDll = [System.IO.Path]::Combine($OMDirectory, "Newtonsoft.Json.10.dll")
     if (!(Test-Path -LiteralPath $newtonsoftDll -PathType Leaf)) {
         Write-Verbose "$newtonsoftDll not found."
         throw
