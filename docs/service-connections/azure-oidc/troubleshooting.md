@@ -93,7 +93,7 @@ The following messages indicate a task does not support Workload Identity federa
 -   Q: I converted a Service Connection to use Workload Identity federation. However, now I have broken pipelines.  
     A: You may be using tasks that do not yet support Workload identity federation. A Service Connection that has been converted to use Workload identity federation can be reverted back for 2 months. Converting the Service Connection back to use a secret should address any issues that were the result of the conversion to use Workload identity federation.
 -   Q: I'm using the [AzureCLI](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines) task with `addSpnToEnvironment: true` to get the Service Principal credentials and login with another tool.  
-    A: There is no longer a Service Principal secret. We will update the AzureCLI task to add the federated token as an environment variable. Tools that support Workload identity federation can consume this token.
+    A: There is no longer a Service Principal secret. We will update the AzureCLI task to add a `federatedToken` environment variable. Tools that support Workload identity federation can consume this token.
 -   Q: I'm not using Azure, but another service that supports Workload identity federation. When can I use that?
     A: Marketplace tasks that use Service Connections can be updated to use Workload Identity federation later in the year.
 -   Q: I'm using Service Connections to access Sovereign clouds (e.g. Azure China), can I use Workload Identity federation?  
