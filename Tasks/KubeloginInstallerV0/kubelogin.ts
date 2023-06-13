@@ -31,7 +31,7 @@ async function run() {
     toolPath = path.join(toolPath, kubeloginRelease.name);
     console.log(taskLib.loc('Info_ResolvedToolFromCache', kubeloginRelease.version));
   } else {
-    console.log('Download kubelogin');
+    console.log('Downloading kubelogin');
     toolPath = await downloadKubeloginRelease(kubeloginRelease);
     console.log(taskLib.loc('Info_CachingTool', kubeloginRelease.version));
     toolLib.cacheFile(toolPath, kubeloginRelease.name, TOOL_NAME, kubeloginRelease.version);
