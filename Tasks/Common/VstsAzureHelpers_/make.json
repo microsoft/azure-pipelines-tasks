@@ -8,7 +8,7 @@
                 "cp": [
                     {
                         "source": "lib/net45/Newtonsoft.Json.dll",
-                        "dest": "Newtonsoft.Json.10.dll"
+                        "dest": "Newtonsoft.Json.10/"
                     }
                 ]
             },
