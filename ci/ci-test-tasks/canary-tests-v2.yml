@@ -10,7 +10,7 @@ jobs:
   - script: |
       git fetch origin master
       git diff --name-only origin/master
-      echo "##vso[task.setvariable variable=TASKS;isoutput=true]$(node ./ci/ci-test-tasks/detect-changed-tasks.js $(git diff --name-only ms/master))"
+      echo "##vso[task.setvariable variable=TASKS;isoutput=true]$(node ./ci/ci-test-tasks/detect-changed-tasks.js $(git diff --name-only origin/master))"
     displayName: 'Detect changed tasks'
     name: detect
  
