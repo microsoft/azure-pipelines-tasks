@@ -49,18 +49,14 @@ async function run(): Promise<void> {
             process.exit(1);
     }
 
-     let ignoreSSLErrors: boolean = true;
-     const kubernetesServiceConnection = tl.getInput('azureSubscriptionEndpoint', false);
-     console.log("new version");
-    // if (kubernetesServiceConnection) {
-    //     ignoreSSLErrors = tl.getEndpointDataParameter(kubernetesServiceConnection, 'acceptUntrustedCerts', true) === 'true';
-    // }
+    let ignoreSSLErrors: boolean = false;
+    const kubernetesServiceConnection = tl.getInput('kubernetesServiceConnection', false);
+    
+    if (kubernetesServiceConnection) {
+        ignoreSSLErrors = tl.getEndpointDataParameter(kubernetesServiceConnection, 'acceptUntrustedCerts', true) === 'true';
+    }
 
-    // await connection.open();
-
-    const kubelogin = new Kubelogin.Kubelogin(true);
-    await kubelogin.login(kubernetesServiceConnection);
-
+    await connection.open();
     return action_func(ignoreSSLErrors)
         .then(() => connection.close())
         .catch((error) => {

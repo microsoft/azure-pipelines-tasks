@@ -6,6 +6,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as utils from "./utils/utilities";
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
+import { Kubelogin } from './utils/Kubelogin'
 
 export default class ClusterConnection {
     private kubectlPath: string;
@@ -68,6 +69,9 @@ export default class ClusterConnection {
             }
 
             process.env["KUBECONFIG"] = this.kubeconfigFile;
+
+            const kubelogin = new Kubelogin(true);
+            kubelogin.login(tl.getInput('azureSubscriptionEndpoint', false));
          });
     }
 

@@ -32,7 +32,6 @@ export class Kubelogin {
             var servicePrincipalId: string = taskLib.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
             var tenantId: string = taskLib.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
 
-
             if (authType == "spnCertificate") {
                 taskLib.debug('certificate based endpoint');
                 let certificateContent: string = taskLib.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
@@ -49,10 +48,14 @@ export class Kubelogin {
             //login using svn
             const kubectlTool = taskLib.tool(this.toolPath);
             kubectlTool.arg('convert-kubeconfig');
-            kubectlTool.arg(['-l', 'spn',  '--client-id', servicePrincipalId, ' --client-secret', escapedCliPassword, '--tenant-id', tenantId]);
-            const res = await kubectlTool.exec();
-            console.log(res);
-            //taskLib.execSync("az", `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), taskLib.loc("LoginFailed");
+            kubectlTool.arg(['-l', 'spn',  '--client-id', servicePrincipalId, '--client-secret', escapedCliPassword, '--tenant-id', tenantId, '--v', '20']);
+            await kubectlTool.exec();
+        }
+        else if (authScheme.toLowerCase() == "managedserviceidentity") {
+            const kubectlTool = taskLib.tool(this.toolPath);
+            kubectlTool.arg('convert-kubeconfig');
+            kubectlTool.arg(['-l', 'msi']);
+            await kubectlTool.exec();
         }
     }
 }
