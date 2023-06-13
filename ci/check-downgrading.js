@@ -248,6 +248,7 @@ async function main({ task, sprint, week }) {
       console.log(`##vso[task.logissue type=${message.type}]${message.payload}`);
     }
 
+    console.log('\nor you might have an outdated branch, try to merge/rebase your branch from master');
     process.exit(1);
   }
 }
