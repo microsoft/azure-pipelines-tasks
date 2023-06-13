@@ -59,7 +59,7 @@ function checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyW
 
     messages.push({
       type: "warning",
-      payload: `[${targetBranch}] ${masterTask.name} has v${masterTask.version.version} it's higher than the current sprint ${allowedMinorVersion}`
+      payload: `[${targetBranch}] ${masterTask.name} has v${masterTask.version.version} it's higher than the current sprint ${sprint}`
     });
   }
 
