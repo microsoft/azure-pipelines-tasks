@@ -23,6 +23,7 @@ jobs:
 - job: run_main_test_pipeline
   displayName: Run main test pipeline
   dependsOn: set_tasks
+  timeoutInMinutes: 360
   variables:
   - name: tasks
     value: $[dependencies.set_tasks.outputs['set.TASKS']]

@@ -1,6 +1,6 @@
 {
+    "ANT": [1],
     "AndroidSigning": [2, 3],
-    "Ant": [1],
     "ArchiveFiles": [2],
     "Bash": [3],
     "BatchScript": [1],
@@ -18,6 +18,7 @@
     "FtpUpload": [1, 2],
     "Gradle": [2],
     "Grunt": [0],
+    "Gulp": [0, 1],
     "InstallAppleCertificate": [2],
     "InstallAppleProvisioningProfile": [1],
     "InstallSSHKey": [0],
@@ -30,12 +31,11 @@
     "PublishBuildArtifacts": [1],
     "PublishPipelineArtifact": [1],
     "PythonScript": [0],
-    "SSH": [0],
+    "Ssh": [0],
     "UsePythonVersion": [0],
     "UseRubyVersion": [0],
     "VSBuild": [1],
     "XamarinAndroid": [1],
     "XamariniOS": [2],
-    "Xcode": [5],
-    "gulp": [0, 1]
+    "Xcode": [5]
 }
