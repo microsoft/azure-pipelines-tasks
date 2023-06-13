@@ -17,9 +17,10 @@ function Initialize-AzModule {
     try {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
 
-        Write-Verbose "Initializing Az Module."
+        Write-Verbose "Importing Az Module."
         Import-AzModule -azVersion $azVersion
 
+        Write-Verbose "Initializing Az Subscription."
         Initialize-AzSubscription -Endpoint $Endpoint -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $encryptedToken
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
