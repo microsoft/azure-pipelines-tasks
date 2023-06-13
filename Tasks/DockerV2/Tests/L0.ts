@@ -2,8 +2,8 @@ import * as path from "path";
 import * as assert from "assert";
 import * as ttm from "azure-pipelines-task-lib/mock-test";
 import * as tl from "azure-pipelines-task-lib/task";
-import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common-v2/dockercommandutils";
-import * as pipelineutils from "azure-pipelines-tasks-docker-common-v2/pipelineutils";
+import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common/dockercommandutils";
+import * as pipelineutils from "azure-pipelines-tasks-docker-common/pipelineutils";
 import * as shared from "./TestShared";
 
 describe("DockerV2 Suite", function () {
@@ -113,6 +113,20 @@ describe("DockerV2 Suite", function () {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} ${shared.DockerCommandArgs.BuildLabels} -t testacr2.azurecr.io/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
         console.log(tr.stderr);
+        done();
+    });
+
+    it('Log in with Managed Identity', function (done: Mocha.Done) {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        process.env[shared.TestEnvVars.containerRegistry] = "acrendpoint3";
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.login;
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert.equal(tr.succeeded, true, 'should have passed');
+        assert.equal(tr.warningIssues.length, 0, "should have no warnings");
+        assert.equal(tr.errorIssues.length, 0, "should have no error issue");
+        console.log();
         done();
     });
 

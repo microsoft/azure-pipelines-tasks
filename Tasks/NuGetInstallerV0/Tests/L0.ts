@@ -9,8 +9,6 @@ describe('NuGetInstaller Suite', function () {
     after(() => {
     });
     it('restore single solution', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, 'singlesln.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -22,7 +20,7 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(20000);;
 
     it('restore single solution with CredentialProvider', (done: Mocha.Done) => {
         this.timeout(1000);

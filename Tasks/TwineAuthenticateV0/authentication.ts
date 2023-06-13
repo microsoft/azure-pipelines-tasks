@@ -1,7 +1,7 @@
 import * as tl from "azure-pipelines-task-lib/task";
-import * as pkgLocationUtils from "packaging-common/locationUtilities";
-import { getProjectAndFeedIdFromInput } from 'packaging-common/util';
-import { logError } from 'packaging-common/util';
+import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
+import { getProjectAndFeedIdFromInput } from 'azure-pipelines-tasks-packaging-common/util';
+import { logError } from 'azure-pipelines-tasks-packaging-common/util';
 
 export interface IPackageSource {
     feedUri: string;

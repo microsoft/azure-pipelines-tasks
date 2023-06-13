@@ -6,8 +6,10 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'nodetool.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
+tmr.setInput('versionSource', 'spec');
 tmr.setInput('versionSpec', '0.12.18');
 tmr.setInput('checkLatest', 'false');
+tmr.setInput('nodejsMirror', 'https://nodejs.org/dist');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "assertAgent": {
@@ -45,7 +47,7 @@ tmr.registerMock('azure-pipelines-tool-lib/tool', {
         let version: string;
         for (let i = versions.length - 1; i >= 0; i--) {
             let potential: string = versions[i];
-            let satisfied: boolean = potential === 'v0.12.18';
+            let satisfied: boolean = potential === '0.12.18';
             if (satisfied) {
                 version = potential;
                 break;

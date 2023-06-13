@@ -6,9 +6,9 @@
     "@types/node": "^10.17.0",
     "@types/q": "^1.5.4",
     "applicationinsights": "^1.0.2",
-    "azure-pipelines-task-lib": "^3.1.7",
-    "minimatch": "^3.0.4",
-    "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz"
+    "azure-pipelines-task-lib": "^3.3.1",
+    "azure-pipelines-tasks-utility-common": "^3.210.0",
+    "minimatch": "^3.1.2"
   },
   "devDependencies": {
     "typescript": "4.0.2"

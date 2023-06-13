@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 209,
+    "Minor": 224,
     "Patch": 0
   },
   "demands": [
@@ -216,6 +216,7 @@
       "groupName": "executionOptions",
       "options": {
         "latest": "Latest",
+        "17.0": "Visual Studio 2022",
         "16.0": "Visual Studio 2019",
         "15.0": "Visual Studio 2017",
         "14.0": "Visual Studio 2015",
@@ -546,7 +547,10 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
+      "target": "runvstest.js"
+    },
+    "Node16": {
       "target": "runvstest.js"
     }
   },

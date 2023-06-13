@@ -13,9 +13,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 198,
+        "Minor": 215,
         "Patch": 0
     },
+    "minimumAgentVersion": "2.144.0",
     "demands": [],
     "groups": [],
     "inputs": [
@@ -29,9 +30,14 @@
     ],
     "instanceNameFormat": "Install opa $(opaVersion)",
     "execution": {
-        "Node": {
-            "target": "src//opatoolinstaller.js"
-        }
+        "Node10": {
+            "target": "src//opatoolinstaller.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
+            "target": "src//opatoolinstaller.js",
+            "argumentFormat": ""
+          }
     },
     "messages": {
         "DownloadOpaFailedFromLocation": "Failed to download opa from location %s. Error %s",

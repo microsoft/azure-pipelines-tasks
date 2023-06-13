@@ -3,7 +3,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import tr = require('azure-pipelines-task-lib/toolrunner');
 import { chmodSync, existsSync } from 'fs';
 import * as path from "path";
-import * as toolLib from 'vsts-task-tool-lib/tool';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
 export class TestRunner {
     constructor(testFilePath: string, imageName: string) {

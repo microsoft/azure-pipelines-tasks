@@ -1,6 +1,6 @@
 import * as path from 'path';
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import { setEndpointData, setAgentsData, mockTaskArgument, nock, MOCK_SUBSCRIPTION_ID, mockAzureSpringCloudExists, mockCommonAzureAPIs } from './mock_utils';
+import { setEndpointData, setAgentsData, mockTaskArgument, nock, MOCK_SUBSCRIPTION_ID, mockAzureSpringAppsExists, mockCommonAzureAPIs, API_VERSION } from './mock_utils';
 import { ASC_RESOURCE_TYPE, MOCK_RESOURCE_GROUP_NAME } from './mock_utils'
 import { Inputs } from '../operations/taskparameters';
 
@@ -12,12 +12,12 @@ export class DeploymentFailsWithInsufficientDeploymentL0 {
 
     public static startTest() {
         console.log(`running ${this.TEST_NAME}`);
-        let taskPath = path.join(__dirname, '..', 'azurespringclouddeployment.js');
+        let taskPath = path.join(__dirname, '..', 'azurespringappsdeployment.js');
         let taskMockRunner: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
         setEndpointData();
         setAgentsData();
         mockCommonAzureAPIs();
-        mockAzureSpringCloudExists(this.TEST_NAME);
+        mockAzureSpringAppsExists(this.TEST_NAME);
         this.mockDeploymentListApiWithSingleDeployment();
         taskMockRunner.setAnswers(mockTaskArgument());
         taskMockRunner.run();
@@ -29,14 +29,14 @@ export class DeploymentFailsWithInsufficientDeploymentL0 {
      */
     private static mockDeploymentListApiWithSingleDeployment() {
         console.log('mockDeploymentListApiWithSingleDeployment');
-        console.log('defining endpoint ' + `/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/deployments?api-version=2020-07-01`);
+        console.log('defining endpoint ' + `/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/deployments?api-version=${API_VERSION}`);
         nock('https://management.azure.com', {
             reqheaders: {
                 "authorization": "Bearer DUMMY_ACCESS_TOKEN",
                 "content-type": "application/json; charset=utf-8",
                 "user-agent": "TFS_useragent"
             }
-        }).get(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/deployments?api-version=2020-07-01`)
+        }).get(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/deployments?api-version=${API_VERSION}`)
             .reply(200, {
                 "value": [
                     {

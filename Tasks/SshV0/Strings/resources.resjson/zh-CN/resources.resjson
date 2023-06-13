@@ -24,6 +24,8 @@
   "loc.input.help.interactiveSession": "如果选择此选项，将启动交互式会话 - 如果有密码请求，则将根据用户的密码填充它。这对运行 \"sudo\" 之类的命令可能很有用",
   "loc.input.label.readyTimeout": "SSH 握手超时",
   "loc.input.help.readyTimeout": "等待 SSH 握手完成的时间(毫秒)。",
+  "loc.input.label.interactiveKeyboardAuthentication": "使用交互式键盘身份验证",
+  "loc.input.help.interactiveKeyboardAuthentication": "如果在目标计算机上禁用了 PasswordAuthentication，请使用此值",
   "loc.messages.ConnectionFailed": "无法连接到远程计算机。请验证 SSH 服务连接详细信息。错误: %s。",
   "loc.messages.FailedToWriteScript": "未能将脚本写入磁盘: %s",
   "loc.messages.RemoteCmdExecutionErr": "命令因远程计算机上的错误而失败。",

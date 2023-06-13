@@ -46,8 +46,8 @@ let a: any = <any>{
 };
 
 import mockTask = require('azure-pipelines-task-lib/mock-task');
-var msDeployUtility = require('azure-pipelines-tasks-webdeployment-common-v4/msdeployutility.js');
-tr.registerMock('azure-pipelines-tasks-webdeployment-common-v4/ziputility.js', {
+var msDeployUtility = require('azure-pipelines-tasks-webdeployment-common/msdeployutility.js');
+tr.registerMock('azure-pipelines-tasks-webdeployment-common/ziputility.js', {
     getArchivedEntries: function(webDeployPkg) {
         return {
             "entries": [
@@ -70,6 +70,7 @@ tr.registerMock('./msdeployutility.js', {
 
 var fs = require('fs');
 tr.registerMock('fs', {
+    ...fs,
     createWriteStream: function (filePath, options) {
         var retryFunction;
         return { 
@@ -82,10 +83,6 @@ tr.registerMock('fs', {
                 return true; 
             }
         };
-    },
-    readFileSync: function (msDeployErrorFilePath) {
-        console.log("reading the error file");
-        return "ERROR DEPLOYING WEBSITE";
     },
     ReadStream: fs.ReadStream,
     WriteStream: fs.WriteStream,

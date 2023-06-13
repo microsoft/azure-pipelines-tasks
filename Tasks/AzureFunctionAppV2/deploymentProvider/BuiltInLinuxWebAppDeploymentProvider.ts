@@ -1,15 +1,16 @@
-import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('azure-pipelines-task-lib/task');
-import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/packageUtility';
 import path = require('path');
-import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/ParameterParserUtility'
-
-var webCommonUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/utility.js');
-var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/ziputility.js');
+var webCommonUtility = require('azure-pipelines-tasks-webdeployment-common/utility');
+var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility');
+import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
+import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility'
+import { TaskParameters, DeploymentType } from '../taskparameters';
+import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 
 const linuxFunctionStorageSetting: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE true';
 const linuxFunctionRuntimeSettingName: string = '-FUNCTIONS_WORKER_RUNTIME ';
 const premiumPlanRunsFromPackage: string = ' -WEBSITE_RUN_FROM_PACKAGE 1';
+const removeRunFromZipAppSetting: string = ' -WEBSITE_RUN_FROM_PACKAGE 0';
 
 const linuxFunctionRuntimeSettingValue = new Map([
     [ 'DOCKER|microsoft/azure-functions-dotnet-core2.0:2.0', 'dotnet ' ],
@@ -18,6 +19,7 @@ const linuxFunctionRuntimeSettingValue = new Map([
     [ 'DOTNET|2.2', 'dotnet ' ],
     [ 'DOTNET|3.1', 'dotnet ' ],
     [ 'DOTNET|6.0', 'dotnet ' ],
+    [ 'DOTNET-ISOLATED|7.0', 'dotnet-isolated '],
     [ 'JAVA|8', 'java ' ],
     [ 'JAVA|11', 'java ' ],
     [ 'NODE|8', 'node ' ],
@@ -25,10 +27,12 @@ const linuxFunctionRuntimeSettingValue = new Map([
     [ 'NODE|12', 'node ' ],
     [ 'NODE|14', 'node ' ],
     [ 'NODE|16', 'node ' ],
+    [ 'NODE|18', 'node ' ],
     [ 'PYTHON|3.6', 'python '],
     [ 'PYTHON|3.7', 'python '],
     [ 'PYTHON|3.8', 'python '],
-    [ 'PYTHON|3.9', 'python ']
+    [ 'PYTHON|3.9', 'python '],
+    [ 'PYTHON|3.10', 'python ']
 ]);
 
 export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider {
@@ -41,23 +45,25 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
 
         tl.debug('Performing Linux built-in package deployment');
         var isNewValueUpdated: boolean = false;
-        
+
         var linuxFunctionRuntimeSetting = "";
         if(this.taskParams.RuntimeStack && linuxFunctionRuntimeSettingValue.get(this.taskParams.RuntimeStack)) {
             linuxFunctionRuntimeSetting = linuxFunctionRuntimeSettingName + linuxFunctionRuntimeSettingValue.get(this.taskParams.RuntimeStack);
         }
         var linuxFunctionAppSetting = linuxFunctionRuntimeSetting + linuxFunctionStorageSetting;
-        if(this.taskParams.isPremium) {
+        if(this.taskParams.DeploymentType != DeploymentType.zipDeploy) {
             linuxFunctionAppSetting = linuxFunctionAppSetting + premiumPlanRunsFromPackage;
         }
-
+        else if(this.taskParams.DeploymentType == DeploymentType.zipDeploy) {
+            linuxFunctionAppSetting = linuxFunctionAppSetting + removeRunFromZipAppSetting;
+        }
         var customApplicationSetting = ParameterParser.parse(linuxFunctionAppSetting);
         isNewValueUpdated = await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
-        
+
         if(!isNewValueUpdated) {
             await this.kuduServiceUtility.warmpUp();
         }
-        
+
         switch(packageType){
             case PackageType.folder:
                 let tempPackagePath = webCommonUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);

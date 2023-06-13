@@ -91,9 +91,9 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 tmr.setAnswers(a);
 
-mockFs();
+const mockedFs = {...fs, ...mockFs()};
 
-fs.readdirSync = (folder: string | Buffer): any[] => {
+mockedFs.readdirSync = (folder: string | Buffer): any[] => {
     let files: string[] = [];
 
     if (folder === '/test/path/to') {
@@ -113,17 +113,17 @@ fs.readdirSync = (folder: string | Buffer): any[] => {
     return files;
 };
 
-fs.statSync = (s: string) => {
+mockedFs.statSync = (s: string) => {
     const stat = new Stats;
     stat.isFile = () => s.endsWith('.txt');
     stat.isDirectory = () => !s.endsWith('.txt');
     stat.size = 100;
     return stat;
 }
-fs.lstatSync = fs.statSync;
+mockedFs.lstatSync = mockedFs.statSync;
 
 let fsos = fs.openSync;
-fs.openSync = (path: string, flags: string) => {
+mockedFs.openSync = (path: string, flags: string) => {
     if (path.includes("/test/path/to") || path.endsWith("libSasquatchBreakpad.so") || path.endsWith(".apk")){
         return 1234567.89;
     }
@@ -133,9 +133,9 @@ fs.openSync = (path: string, flags: string) => {
 mockAzure();
 
 tmr.registerMock('azure-blob-upload-helper', azureBlobUploadHelper);
-tmr.registerMock('fs', fs);
+tmr.registerMock('fs', mockedFs);
 
 tmr.run();
 
-mockery.deregisterMock('fs', fs);
-mockery.deregisterMock('azure-blob-upload-helper', azureBlobUploadHelper);
+mockery.deregisterMock('fs');
+mockery.deregisterMock('azure-blob-upload-helper');

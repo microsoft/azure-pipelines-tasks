@@ -2,8 +2,8 @@ import * as fs from "fs";
 import * as path from "path";
 import * as uuidV4 from 'uuid/v4';
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
-import * as clientToolUtils from "azure-pipelines-tasks-packaging-common-v3/universal/ClientToolUtilities";
-import * as clientToolRunner from "azure-pipelines-tasks-packaging-common-v3/universal/ClientToolRunner";
+import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
+import * as clientToolRunner from "azure-pipelines-tasks-packaging-common/universal/ClientToolRunner";
 import * as tl from "azure-pipelines-task-lib/task";
 import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
 
@@ -43,12 +43,23 @@ export async function run(clientToolFilePath: string): Promise<void> {
         let uniqueId: string = tl.getVariable("Build.UniqueId") ? tl.getVariable("Build.UniqueId") : uuidV4();
         let searchPatterns = tl.getDelimitedInput("SearchPattern", "\n", false) ? tl.getDelimitedInput("SearchPattern", "\n", false) : ["**\\bin\\**\\*.pdb"];
         let indexableFileFormats = tl.getInput("IndexableFileFormats", false);
-        let requestName = (tl.getVariable("System.TeamProject") + "/" +
-            tl.getVariable("Build.DefinitionName") + "/" +
-            tl.getVariable("Build.BuildNumber") + "/" +
-            tl.getVariable("Build.BuildId")  + "/" +  
-            uniqueId).toLowerCase();
 
+        // If SymbolsArtifactName input is not the default value, use that as the request name instead of the default
+        let symbolsArtifactName: string = tl.getInput("SymbolsArtifactName", false);
+        let requestName: string;
+        let defaultArtifactName: string = tl.getVariable("BuildConfiguration") ? "Symbols_" + tl.getVariable("BuildConfiguration") : "Symbols_$(BuildConfiguration)"
+        if (symbolsArtifactName && symbolsArtifactName !== defaultArtifactName) {
+            requestName = symbolsArtifactName;
+        }
+        else {
+            requestName = (tl.getVariable("System.TeamProject") + "/" +
+                tl.getVariable("Build.DefinitionName") + "/" +
+                tl.getVariable("Build.BuildNumber") + "/" +
+                tl.getVariable("Build.BuildId")  + "/" +  
+                uniqueId).toLowerCase();
+        }
+
+        let expirationInDays: string = tl.getInput("SymbolExpirationInDays", false) ? tl.getInput("SymbolExpirationInDays", false) : '36530';
         let detailedLog: boolean = tl.getBoolInput("DetailedLog");
 
         // Determine specific files to publish, if provided
@@ -62,7 +73,6 @@ export async function run(clientToolFilePath: string): Promise<void> {
             tl.setResult(tl.TaskResult.Succeeded, tl.loc("NoFilesForPublishing"));
         }
         else {
-            let expirationInDays: string = '36530';
             let execResult: IExecSyncResult;
             if (fs.existsSync(clientToolFilePath)) {
                 tl.debug("Publishing the symbols");

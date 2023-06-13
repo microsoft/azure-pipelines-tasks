@@ -26,7 +26,7 @@
   "loc.input.label.EnvironmentNameRM": "Groupe de ressources",
   "loc.input.help.EnvironmentNameRM": "Nom du groupe de ressources cible où copier les fichiers.",
   "loc.input.label.ResourceFilteringMethod": "Sélectionner les machines par",
-  "loc.input.help.ResourceFilteringMethod": "Vous pouvez également sélectionner un sous-ensemble de machines virtuelles dans le groupe de ressources, en indiquant les noms d'hôtes ou les balises des machines virtuelles. Les [balises](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) sont prises en charge pour les ressources créées via Azure Resource Manager uniquement.",
+  "loc.input.help.ResourceFilteringMethod": "Vous pouvez également sélectionner un sous-ensemble de machines virtuelles dans le groupe de ressources, en indiquant les noms d’hôtes ou les balises des machines virtuelles. Les [balises](https://learn.microsoft.com/en-us/azure/virtual-machines/tag-template/) sont prises en charge pour les ressources créées via Azure Resource Manager uniquement.",
   "loc.input.label.MachineNames": "Critères de filtre",
   "loc.input.help.MachineNames": "Indiquez une liste de noms d'hôtes de machines virtuelles, par exemple ffweb, ffdb, ou utilisez des balises telles que Role:DB, Web; OS:Win8.1. Notez que les délimiteurs employés pour les balises sont &#44;(virgule), &#58;(deux-points) et &#59;(point-virgule). Si plusieurs balises sont indiquées, la tâche s'exécute sur toutes les machines virtuelles correspondant aux balises spécifiées. Par défaut, la tâche s'exécute sur toutes les machines virtuelles.",
   "loc.input.label.vmsAdminUserName": "Informations de connexion d'administrateur",
@@ -91,5 +91,6 @@
   "loc.messages.AFC_RootContainerAndDirectory": "L'option '/S' est non valide pour les conteneurs $root.",
   "loc.messages.AFC_RedirectResponseInvalidStatusCode": "Le code de réponse HTTP '{0}' n'est pas un code d'état de redirection valide",
   "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "L'en-tête d'emplacement pour la réponse de redirection a une valeur null.",
-  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Désinstallez manuellement le script personnalisé WinRM, puis réessayez d'effectuer le déploiement."
+  "loc.messages.AFC_UninstallWinRMCustomScriptExtension": "Désinstallez manuellement le script personnalisé WinRM, puis réessayez d'effectuer le déploiement.",
+  "loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "Les arguments supplémentaires ne peuvent pas inclure les caractères de séparation '&', ';' and '|'. Veuillez vérifier l’entrée. Pour en savoir plus sur la validation des arguments, consultez https://aka.ms/azdo-task-argument-validation"
 }

@@ -1,10 +1,10 @@
 import * as path from "path";
 import * as tl from "azure-pipelines-task-lib";
-import * as pkgLocationUtils from "packaging-common/locationUtilities";
-import * as telemetry from "utility-common/telemetry";
+import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
+import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import * as auth from "./authentication";
 import * as utils from "./utilities";
-import { getProjectAndFeedIdFromInput, logError } from 'packaging-common/util';
+import { getProjectAndFeedIdFromInput, logError } from 'azure-pipelines-tasks-packaging-common/util';
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, "task.json"));

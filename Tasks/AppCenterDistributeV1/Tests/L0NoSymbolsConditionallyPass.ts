@@ -51,9 +51,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 tmr.setAnswers(a);
 
-mockFs();
+const mockedFs = {...fs, ...mockFs()};
 
-tmr.registerMock('fs', fs);
+tmr.registerMock('fs', mockedFs);
 
 tmr.run();
-mockery.deregisterMock('fs', fs);
+mockery.deregisterMock('fs');

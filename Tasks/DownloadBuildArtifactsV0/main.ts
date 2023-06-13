@@ -215,7 +215,7 @@ async function main(): Promise<void> {
             }
 
             if (!build) {
-                build = await executeWithRetries("getBuild", () => buildApi.getBuild(buildId, projectId), retryLimitRequest).catch((reason) => {
+                build = await executeWithRetries("getBuild", () => buildApi.getBuild(projectId, buildId), retryLimitRequest).catch((reason) => {
                     reject(reason);
                     return;
                 });
@@ -241,7 +241,16 @@ async function main(): Promise<void> {
         // populate itempattern and artifacts based on downloadType
         if (downloadType === 'single') {
             var artifactName = tl.getInput("artifactName", true);
-            var artifact = await executeWithRetries("getArtifact", () => buildApi.getArtifact(buildId, artifactName, projectId), retryLimitRequest).catch((reason) => {
+
+            // if FF EnableBuildArtifactsPlusSignWorkaround is enabled or AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND environment variable is set:
+            // replacing '+' symbol by its representation ' '(space) - workaround for the DownloadBuildArtifactV0 task,
+            // where downloading of part of artifact is not possible if there is a plus symbol
+            const enableBuildArtifactsPlusSignWorkaround = process.env.AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND ? process.env.AZP_TASK_FF_ENABLE_BUILDARTIFACTS_PLUS_SIGN_WORKAROUND.toLowerCase() === "true" : false;
+                        
+            if (enableBuildArtifactsPlusSignWorkaround)
+                artifactName = artifactName.replace(/\+/g, ' ');
+
+            var artifact = await executeWithRetries("getArtifact", () => buildApi.getArtifact(projectId, buildId, artifactName), retryLimitRequest).catch((reason) => {
                 reject(reason);
                 return;
             });
@@ -254,7 +263,7 @@ async function main(): Promise<void> {
             artifacts.push(artifact);
         }
         else {
-            var buildArtifacts = await executeWithRetries("getArtifacts", () => buildApi.getArtifacts(buildId, projectId), retryLimitRequest).catch((reason) => {
+            var buildArtifacts = await executeWithRetries("getArtifacts", () => buildApi.getArtifacts(projectId, buildId), retryLimitRequest).catch((reason) => {
                 reject(reason);
             });
 

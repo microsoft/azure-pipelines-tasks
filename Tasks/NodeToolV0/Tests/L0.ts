@@ -1,4 +1,5 @@
 import assert = require('assert');
+import os = require('os');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
@@ -40,8 +41,12 @@ describe('NodeTool Suite', function () {
         tr.run();
 
         runValidations(() => {
-            assert(tr.succeeded, 'NodeTool should have succeeded.');
-            assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+            if (os.platform() === 'win32') {
+                assert(tr.succeeded, 'NodeTool should have succeeded.');
+                assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+            } else {
+                assert(tr.failed, 'NodeTool should have failed after the first download failure for non-Windows platforms.');
+            }
         }, tr, done);
     });
 
@@ -54,8 +59,12 @@ describe('NodeTool Suite', function () {
         tr.run();
 
         runValidations(() => {
-            assert(tr.succeeded, 'NodeTool should have succeeded.');
-            assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+            if (os.platform() === 'win32') {
+                assert(tr.succeeded, 'NodeTool should have succeeded.');
+                assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+            } else {
+                assert(tr.failed, 'NodeTool should have failed after the first download failure for non-Windows platforms.');
+            }
         }, tr, done);
     });
 
@@ -72,5 +81,20 @@ describe('NodeTool Suite', function () {
             assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
         }, tr, done);
     });
+
+    it('Read node version from file', (done: Mocha.Done) => {
+        this.timeout(5000);
+
+        let tp: string = path.join(__dirname, 'L0ReadVersionFromFileSuccess.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        runValidations(() => {
+            assert(tr.succeeded, 'NodeTool should have succeeded.');
+            assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+        }, tr, done);
+    });
+
 
 });

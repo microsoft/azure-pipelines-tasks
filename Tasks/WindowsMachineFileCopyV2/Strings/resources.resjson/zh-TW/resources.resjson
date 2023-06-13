@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Windows 電腦檔案複製",
-  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "將檔案複製到遠端 Windows 機器",
   "loc.instanceNameFormat": "複製 $(SourcePath) 中的檔案",
   "loc.releaseNotes": "2.0 版的新功能: <br/>&nbsp;&nbsp;新增 Proxy 支援。<br/>&nbsp;&nbsp; 移除舊版 DTL 機器的支援。",
@@ -27,6 +27,7 @@
   "loc.messages.WFC_CopyingRecurivelyFrom0to1MachineSucceed": "成功從 {0} 遞迴複製到電腦 {2} 上的 {1}。",
   "loc.messages.WFC_SourcePathDoesNotExist": "來源路徑 '{0}' 不存在。",
   "loc.messages.WFC_RemoteDestinationPathCannotContainEnvironmentVariables": "遠端目的地路徑 '{0}' 不可包含環境變數。",
+  "loc.messages.WFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "其他引數不能包含分隔字元 '&'、';' 和 '|'。請驗證輸入。若要深入了解引數驗證，請檢查 https://aka.ms/azdo-task-argument-validation",
   "loc.messages.WFC_CopyStartedFor0": "{0} 的複製已啟動",
   "loc.messages.WFC_NoMachineExistsUnderEnvironment": "環境 '{0}' 沒有機器，無法部署",
   "loc.messages.WFC_NoMachineExistsUnderEnvironment0ForDeployment": "環境 '{0}' 沒有機器，無法部署",

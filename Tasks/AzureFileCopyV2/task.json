@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 208,
-        "Patch": 0
+        "Minor": 223,
+        "Patch": 1
     },
     "demands": [
         "azureps"
@@ -176,7 +176,7 @@
                 "machineNames": "Machine Names",
                 "tags": "Tags"
             },
-            "helpMarkDown": "Optionally, select a subset of VMs in resource group either by providing VMs host name or tags. [Tags](https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-tagging-arm/) are supported for resources created via the Azure Resource Manager only.",
+            "helpMarkDown": "Optionally, select a subset of VMs in resource group either by providing VMs host name or tags. [Tags](https://learn.microsoft.com/en-us/azure/virtual-machines/tag-template/) are supported for resources created via the Azure Resource Manager only.",
             "visibleRule": "Destination = AzureVMs"
         },
         {
@@ -367,6 +367,7 @@
         "AFC_AzCopyBlobUploadNonZeroExitCode": "AzCopy.exe exited with non-zero exit code while uploading files to blob storage.",
         "AFC_PreexecutionJob_UnableToGetStorageKey": "Unable to fetch storage account key. Error: '{0}'",
         "AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment.",
+        "AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "Additional arguments can't include separator characters '&', ';' and '|'. Please verify input. To learn more about argument validation, please check https://aka.ms/azdo-task-argument-validation",
         "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
 }

@@ -1,5 +1,5 @@
 import fs = require('fs');
-import { AzureSpringCloudUnitTests } from './AzureSpringCloudUnitTests';
+import { AzureSpringAppsUnitTests } from './AzureSpringAppsUnitTests';
 import { nock } from './mock_utils';
 import { CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist } from './CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist';
 import { CreateNamedDeploymentFailsWhenTwoDeploymentsExist } from './CreateNamedDeploymentFailsWhenTwoDeploymentsExist';
@@ -10,8 +10,11 @@ import { SetProductionUseStagingSucceeds } from './SetProductionUseStagingSuccee
 import { SetNamedDeploymentFailsWhenDeploymentDoesNotExist } from './SetNamedDeploymentFailsWhenDeploymentDoesNotExist';
 import { SetProductionNamedDeploymentSucceeds } from './SetProductionNamedDeploymentSucceeds';
 import { DeleteStagingDeploymentTest } from './DeleteStagingDeploymentTest';
+import { DeploymentToStagingSucceedsWithBuildService } from './DeploymentToStagingSucceedsWithBuildService';
+import { DeploymentFailsWhenBuilderNotExist } from './DeploymentFailsWhenBuilderNotExist';
+import { DeploymentCustomImageToStagingSucceeds } from './DeploymentCustomImageToStagingSucceeds'
 
-describe('Azure Spring Cloud deployment Suite', function () {
+describe('Azure Spring Apps deployment Suite', function () {
     afterEach(() => {
         nock.cleanAll();
     });
@@ -19,14 +22,21 @@ describe('Azure Spring Cloud deployment Suite', function () {
     this.timeout(900000);
 
     // /*************** Unit Tests ***************/
-    it('Azure Spring Cloud wrapper behaves according to expectations', AzureSpringCloudUnitTests.testDeploymentNameRetrieval);
-    it('Prevents a path traversal attack in the Azure Spring Cloud Resource ID', AzureSpringCloudUnitTests.testDeploymentNameRetrieval);
+    it('Azure Spring Apps wrapper behaves according to expectations', AzureSpringAppsUnitTests.testDeploymentNameRetrieval);
+    it('Prevents a path traversal attack in the Azure Spring Apps Resource ID', AzureSpringAppsUnitTests.testDeploymentNameRetrieval);
 
     /*************** Deployment tests ************/
     it('Correctly errors out when attempting to use staging deployment and no staging deployment exists', DeploymentFailsWithInsufficientDeployments.mochaTest);
     it('Correctly errors out when attempting to create a new deployment, and two deployments already exist.', CreateNamedDeploymentFailsWhenTwoDeploymentsExist.mochaTest);
     it('Correctly errors out deploying to a named deployment with "create new" disabled, and the named deployment does not exist', CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist.mochaTest);
     it('Correctly deploys to a current staging deployment', DeploymentToStagingSucceeds.mochaTest);
+
+    /*************** Deployment with build service tests ***************/
+    it('Correctly deploys to a current staging deployment with build service', DeploymentToStagingSucceedsWithBuildService.mochaTest);
+    it('Correctly errors out when the builder resource does not exist', DeploymentFailsWhenBuilderNotExist.mochaTest);
+
+    /*************** Deployment with Custom image ***************/
+    it('Correctly deploys custom image to a current staging deployment', DeploymentCustomImageToStagingSucceeds.mochaTest);
 
     /*************** Set Production Deployment tests ************/
     it('Correctly errors out when "Use Staging Deployment" is set but no such deployment exists', SetProductionUseStagingFailsWithNoStaging.mochaTest);

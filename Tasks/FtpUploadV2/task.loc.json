@@ -18,7 +18,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 206,
+    "Minor": 211,
     "Patch": 0
   },
   "minimumAgentVersion": "2.182.1",
@@ -175,6 +175,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "ftpuploadtask.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "ftpuploadtask.js",
       "argumentFormat": ""
     }

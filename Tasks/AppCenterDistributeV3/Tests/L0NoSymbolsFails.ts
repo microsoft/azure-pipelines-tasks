@@ -44,4 +44,4 @@ tmr.setAnswers(a);
 
 tmr.run();
 
-mockery.deregisterMock('azure-blob-upload-helper', azureBlobUploadHelper);
+mockery.deregisterMock('azure-blob-upload-helper');

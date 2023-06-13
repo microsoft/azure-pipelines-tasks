@@ -51,12 +51,31 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
     let retriableErrorCodes = options && options.retriableErrorCodes ? options.retriableErrorCodes : ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN"];
     let retriableStatusCodes = options && options.retriableStatusCodes ? options.retriableStatusCodes : [408, 409, 500, 502, 503, 504];
     let timeToWait: number = retryIntervalInSeconds;
+
+    // reset stream on retry even request's body is readable (possible fix for connection reset on large deployments)
+    const rawResetStreamOnRetry = tl.getVariable("CLIENT_RESETSTREAMONRETRY");
+    let resetStreamOnRetry: boolean = false;
+    if (rawResetStreamOnRetry) {
+        try {
+            tl.debug(`WEBCLIENT - CLIENT_RESETSTREAMONRETRY override is found: ${rawResetStreamOnRetry}`);
+            const parsedResetStreamOnRetry = JSON.parse(rawResetStreamOnRetry);
+            if (typeof parsedResetStreamOnRetry !== "boolean") {
+                throw new Error("Value is not a boolean");
+            }
+            resetStreamOnRetry = parsedResetStreamOnRetry;
+        } catch (error) {
+            // this is not a blocker error, so we're informing
+            tl.debug(`WEBCLIENT - CLIENT_RESETSTREAMONRETRY override is found couldn't be parsed due to error ${error}. resetStreamOnRetry=${resetStreamOnRetry} is used instead`);
+        }
+    }
+
     while (true) {
         try {
-            if (request.body && typeof(request.body) !== 'string' && !request.body["readable"]) {
+            if (request.body && typeof (request.body) !== 'string' && (resetStreamOnRetry || !request.body["readable"])) {
+                tl.debug(`WEBCLIENT - request body stream is reset due to the reason : ${resetStreamOnRetry ? 'resetStreamOnRetry is set.' : 'request body is not readable.'}`);
                 request.body = fs.createReadStream(request.body["path"]);
             }
-            
+
             let response: WebResponse = await sendRequestInternal(request);
             if (retriableStatusCodes.indexOf(response.statusCode) != -1 && ++i < retryCount) {
                 tl.debug(util.format("Encountered a retriable status code: %s. Message: '%s'.", response.statusCode, response.statusMessage));

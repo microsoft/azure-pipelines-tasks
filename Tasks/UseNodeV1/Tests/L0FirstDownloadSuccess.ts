@@ -90,7 +90,7 @@ tmr.registerMock('azure-pipelines-tool-lib/tool', {
         let version: string;
         for (let i = versions.length - 1; i >= 0; i--) {
             let potential: string = versions[i];
-            let satisfied: boolean = potential === 'v11.3.0';
+            let satisfied: boolean = potential === '11.3.0';
             if (satisfied) {
                 version = potential;
                 break;
@@ -127,7 +127,7 @@ tmr.registerMock('azure-pipelines-tool-lib/tool', {
 const fsClone = fs;
 fsClone.existsSync = function(pathToFile: string): boolean {
     if (pathToFile !== path.resolve(process.cwd(), '.npmrc')) {
-        throw 'Incorrect path ' + pathToFile
+        return fs.existsSync(pathToFile);
     }
     return false;
 };

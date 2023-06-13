@@ -1,13 +1,14 @@
-import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner";
-import * as nutil from "packaging-common/nuget/Utility";
-import * as tl from "azure-pipelines-task-lib/task";
 import * as path from "path";
-import * as auth from "packaging-common/nuget/Authentication";
+import * as tl from "azure-pipelines-task-lib/task";
+import * as ngToolRunner from "azure-pipelines-tasks-packaging-common-v3/nuget/NuGetToolRunner";
+import * as nutil from "azure-pipelines-tasks-packaging-common-v3/nuget/Utility";
+import * as auth from "azure-pipelines-tasks-packaging-common-v3/nuget/Authentication";
 
-import nuGetGetter = require("packaging-common/nuget/NuGetToolGetter");
-import peParser = require('packaging-common/pe-parser/index');
-import * as pkgLocationUtils from "packaging-common/locationUtilities";
-import { logError } from 'packaging-common/util';
+import nuGetGetter = require("azure-pipelines-tasks-packaging-common-v3/nuget/NuGetToolGetter");
+import peParser = require('azure-pipelines-tasks-packaging-common-v3/pe-parser/index');
+import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common-v3/locationUtilities";
+import { logError } from 'azure-pipelines-tasks-packaging-common-v3/util';
+import { getVersionFallback } from 'azure-pipelines-tasks-packaging-common/nuget/ProductVersionHelper';
 
 class NuGetExecutionOptions {
     constructor(
@@ -42,7 +43,7 @@ async function main(): Promise<void> {
     try {
         nuGetPath = process.env[nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR];
         if (!nuGetPath){
-            nuGetPath = await nuGetGetter.getNuGet("4.0.0");
+            nuGetPath = await nuGetGetter.getNuGet("4.9.6");
         }
     }
     catch (error) {
@@ -51,7 +52,8 @@ async function main(): Promise<void> {
     }
 
     const version = await peParser.getFileVersionInfoAsync(nuGetPath);
-    if(version.productVersion.a < 3 || (version.productVersion.a <= 3 && version.productVersion.b < 5))
+    const parsedVersion = getVersionFallback(version);
+    if(parsedVersion.a < 3 || (parsedVersion.a <= 3 && parsedVersion.b < 5))
     {
         tl.setResult(tl.TaskResult.Failed, tl.loc("Info_NuGetSupportedAfter3_5", version.strings.ProductVersion));
         return;

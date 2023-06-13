@@ -12,7 +12,10 @@ export class GraphManagementClient extends azureServiceClient.ServiceClient {
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, baseUri?: any, options?: any) {
         super(credentials, null);
 
-        this.apiVersion = '1.6';
+        const useMSAL = credentials.getUseMSAL();
+        tl.debug(`MSAL - Graph - GraphManagementClient - useMSAL = ${useMSAL}`);
+
+        this.apiVersion = useMSAL ? '' : '1.6';
         this.acceptLanguage = 'en-US';
         this.generateClientRequestId = true;
 
@@ -55,16 +58,23 @@ export class ServicePrincipals {
         httpRequest.method = 'GET';
         httpRequest.headers = this.client.setCustomHeaders(options);
 
-        var filterQuery = util.format("appId eq '%s'", this.client.getCredentials().getClientId());
-        httpRequest.uri = this.client.getRequestUri("{tenantId}/servicePrincipals",
+        const clientCredentials = this.client.getCredentials();
+        const useMSAL = clientCredentials.getUseMSAL();
+        tl.debug(`MSAL - Graph - GetServicePrincipal - useMSAL = ${useMSAL}`);
+        const requestUriFormat = (useMSAL ? "v1.0/" : "") + "{tenantId}/servicePrincipals";
+
+        var filterQuery = util.format("appId eq '%s'", clientCredentials.getClientId());
+        httpRequest.uri = this.client.getRequestUri(requestUriFormat,
             {
-                '{tenantId}': this.client.getCredentials().getDomain()
+                '{tenantId}': clientCredentials.getTenantId()
             },
             ['$filter=' + encodeURIComponent(filterQuery)]
         );
 
+        tl.debug(`MSAL - Graph - GetServicePrincipal - requestURL = ${httpRequest.uri}`);
+
         var deferred = Q.defer<any>();
-        this.client.beginRequest(httpRequest).then(async function(response) {
+        this.client.beginRequest(httpRequest).then(async function (response) {
             if (response.statusCode == 200) {
                 var result = null;
                 if (response.body.value) {
@@ -72,11 +82,10 @@ export class ServicePrincipals {
                 }
 
                 deferred.resolve(result);
-            }
-            else {
+            } else {
                 deferred.reject(azureServiceClientBase.ToError(response));
             }
-        }).catch(function(error) {
+        }).catch(function (error) {
             deferred.reject(error);
         });
 

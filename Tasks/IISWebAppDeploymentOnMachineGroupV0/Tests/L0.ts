@@ -4,22 +4,23 @@ import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 var ltx = require('ltx');
 import fs = require('fs');
+var fileEncoding = require("../node_modules/azure-pipelines-tasks-webdeployment-common/fileencoding.js");
 
 describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
      var taskSrcPath = path.join(__dirname, '..','deployiiswebapp.js');
      this.timeout(60000);
      before((done) => {
-        tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v4", "Tests", 'L1XmlVarSub', 'Web.config'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v4", "Tests", 'L1XmlVarSub', 'Web_test.config'), null, false);
-        tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v4", "Tests", 'L1XmlVarSub', 'Web.Debug.config'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v4", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config'), null, false);
-        tl.cp(path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common-v4","Tests", 'L1XdtTransform', 'Web.config'), path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common-v4","Tests", 'L1XdtTransform', 'Web_test.config'), null, false);
-        tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v4", "Tests", 'L1XmlVarSub', 'parameters.xml'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v4", "Tests", 'L1XmlVarSub', 'parameters_test.xml'), null, false);
+        tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.config'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), null, false);
+        tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.Debug.config'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config'), null, false);
+        tl.cp(path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XdtTransform', 'Web.config'), path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config'), null, false);
+        tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters.xml'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml'), null, false);
         done();
     });
     after(function() {
-        tl.rmRF(path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common-v4","Tests", 'L1XdtTransform', 'Web_test.config'));
-        tl.rmRF(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v4", "Tests", 'L1XmlVarSub', 'Web_test.config'));
-        tl.rmRF(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v4", "Tests", 'L1XmlVarSub', 'Web_Test.Debug.config'));
-        tl.rmRF(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v4", "Tests", 'L1XmlVarSub', 'parameters_test.xml'));
+        tl.rmRF(path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config'));
+        tl.rmRF(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'));
+        tl.rmRF(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Test.Debug.config'));
+        tl.rmRF(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml'));
     });
 
     if(!tl.osType().match(/^Win/)) {
@@ -148,13 +149,13 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
     it('Runs successfully with XDT Transformation (L1)', (done:MochaDone) => {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
-        let tp = path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common-v4","Tests","L1XdtTransform.js");
+        let tp = path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests","L1XdtTransform.js");
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
         if(tl.osType().match(/^Win/)) {
-            var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common-v4","Tests", 'L1XdtTransform', 'Web_test.config')));
-            var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common-v4","Tests", 'L1XdtTransform','Web_Expected.config')));
+            var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config')));
+            var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XdtTransform','Web_Expected.config')));
             assert(ltx.equal(resultFile, expectFile) , 'Should Transform attributes on Web.config');
         }
         else {
@@ -164,22 +165,40 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
     });
 
 
-    it('Runs successfully with XML variable substitution', (done:MochaDone) => {
-        let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v4", "Tests", 'L1XmlVarSub.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+    it('Runs successfully with XML variable substitution', (done) => {
+        let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub.js');
+        let tr = new ttm.MockTestRunner(tp);
         tr.run();
-		
-        var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname,  "..", "node_modules","azure-pipelines-tasks-webdeployment-common-v4","Tests", 'L1XmlVarSub', 'Web_test.config')));
-        var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common-v4","Tests", 'L1XmlVarSub', 'Web_Expected.config')));
-        assert(ltx.equal(resultFile, expectFile) , 'Should have substituted variables in Web.config file');
-        var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v4", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config')));
-        var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v4", "Tests", 'L1XmlVarSub', 'Web_Expected.Debug.config')));
-        assert(ltx.equal(resultFile, expectFile) , 'Should have substituted variables in Web.Debug.config file');
+		let transformedFilePath = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config');
+        let expectedFilePath = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Expected.config');
+        let transformedFileAsBuffer = fs.readFileSync(transformedFilePath);
+        let expectedFileAsBuffer = fs.readFileSync(expectedFilePath);
+        let transformedFileEncodeType = fileEncoding.detectFileEncoding(transformedFilePath, transformedFileAsBuffer)[0];
+        let transformedFileAsString = transformedFileAsBuffer.toString(transformedFileEncodeType);
+        transformedFileAsString = transformedFileAsString.replace( /[\n]+/gm, "\r\n" );
+        transformedFileAsBuffer = Buffer.from(transformedFileAsString, transformedFileEncodeType);
+        var resultFile = ltx.parse(transformedFileAsBuffer);
+        var expectFile = ltx.parse(expectedFileAsBuffer);
+        assert(ltx.equal(resultFile, expectFile), 'Should have substituted variables in Web.config file');
+        transformedFilePath = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config');
+        expectedFilePath = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Expected.Debug.config');
+        transformedFileAsBuffer = fs.readFileSync(transformedFilePath);
+        expectedFileAsBuffer = fs.readFileSync(expectedFilePath);
+        transformedFileEncodeType = fileEncoding.detectFileEncoding(transformedFilePath, transformedFileAsBuffer)[0];
+        transformedFileAsString = transformedFileAsBuffer.toString(transformedFileEncodeType);
+        transformedFileAsString = transformedFileAsString.replace( /[\n]+/gm, "\r\n" );
+        transformedFileAsBuffer = Buffer.from(transformedFileAsString, transformedFileEncodeType);
+        var resultFile = ltx.parse(transformedFileAsBuffer);
+        var expectFile = ltx.parse(expectedFileAsBuffer);
+        assert(ltx.equal(resultFile, expectFile), 'Should have substituted variables in Web.Debug.config file');
+        var resultParamFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml')));
+        var expectParamFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_Expected.xml')));
+        assert(ltx.equal(resultParamFile, expectParamFile), 'Should have substituted variables in parameters.xml file');
         done();
     });
 
     it('Runs successfully with JSON variable substitution', (done:MochaDone) => {
-        let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v4", "Tests", 'L1JsonVarSub.js');
+        let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1JsonVarSub.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -196,7 +215,7 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
     });
 
     it('Validate File Encoding', (done:MochaDone) => {
-        let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v4", "Tests", 'L1ValidateFileEncoding.js');
+        let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1ValidateFileEncoding.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -217,8 +236,8 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         done();
     });
 
-     it('Validate azure-pipelines-tasks-webdeployment-common-v4.utility.copyDirectory()', (done:MochaDone) => {
-        let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common-v4", "Tests", 'L0CopyDirectory.js');
+     it('Validate azure-pipelines-tasks-webdeployment-common.utility.copyDirectory()', (done:MochaDone) => {
+        let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L0CopyDirectory.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -228,7 +247,7 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
     });
 
     it('Validate MSDeploy parameters', (done:MochaDone) => {
-        let tp = path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common-v4","Tests","L0MSDeployUtility.js");
+        let tp = path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests","L0MSDeployUtility.js");
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 

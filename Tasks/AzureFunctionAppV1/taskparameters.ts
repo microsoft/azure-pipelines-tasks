@@ -1,10 +1,11 @@
-import { AzureEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/azureModels';
 import tl = require('azure-pipelines-task-lib/task');
-import { Package, PackageType } from 'azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/packageUtility';
-var webCommonUtility = require('azure-pipelines-tasks-azurermdeploycommon-v3/webdeployment-common/utility.js');
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/azure-arm-endpoint';
-import { AzureResourceFilterUtility } from 'azure-pipelines-tasks-azurermdeploycommon-v3/operations/AzureResourceFilterUtility';
-import { AzureAppService } from 'azure-pipelines-tasks-azurermdeploycommon-v3/azure-arm-rest/azure-arm-app-service';
+var webCommonUtility = require('azure-pipelines-tasks-webdeployment-common/utility');
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
+import { Resources } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
+import { Package, PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
+
 const skuDynamicValue: string = 'dynamic';
 const skuElasticPremiumValue: string = 'elasticpremium';
 
@@ -26,7 +27,7 @@ export class TaskParametersUtility {
             StartupCommand: tl.getInput('startUpCommand', false),
             ConfigurationSettings: tl.getInput('configurationStrings', false),
             WebAppName: tl.getInput('appName', true)
-        }  
+        }
 
         //Clear input if deploytoslot is disabled
         taskParameters.ResourceGroupName = (!!taskParameters.DeployToSlotOrASEFlag) ? tl.getInput('resourceGroupName', false) : null;
@@ -40,18 +41,18 @@ export class TaskParametersUtility {
         {
             taskParameters.AppSettings = taskParameters.AppSettings.replace('\n',' ');
         }
-        
+
         var appDetails = await this.getWebAppKind(taskParameters);
         taskParameters.ResourceGroupName = appDetails["resourceGroupName"];
         taskParameters.WebAppKind = appDetails["webAppKind"];
         taskParameters.isConsumption = appDetails["sku"].toLowerCase() == skuDynamicValue;
         taskParameters.isPremium = appDetails["sku"].toLowerCase() == skuElasticPremiumValue;
-        
+
         taskParameters.isLinuxApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("Linux") !=-1;
 
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
-       
+
         taskParameters.Package = new Package(tl.getPathInput('package', true));
         taskParameters.WebConfigParameters = this.updateWebConfigParameters(taskParameters);
 
@@ -69,7 +70,8 @@ export class TaskParametersUtility {
         var kind = taskParameters.WebAppKind;
         var sku;
         if (!resourceGroupName) {
-            var appDetails = await AzureResourceFilterUtility.getAppDetails(taskParameters.azureEndpoint, taskParameters.WebAppName);
+            var azureResources: Resources = new Resources(taskParameters.azureEndpoint);
+            var appDetails = await azureResources.getAppDetails(taskParameters.WebAppName);
             resourceGroupName = appDetails["resourceGroupName"];
             if(!kind) {
                 kind = webAppKindMap.get(appDetails["kind"]) ? webAppKindMap.get(appDetails["kind"]) : appDetails["kind"];
@@ -110,7 +112,7 @@ export class TaskParametersUtility {
                 webConfigParameters += " -JAR_PATH " + jarPath;
             }
             if(webConfigParameters.indexOf("-Dserver.port=%HTTP_PLATFORM_PORT%") > 0) {
-                webConfigParameters = webConfigParameters.replace("-Dserver.port=%HTTP_PLATFORM_PORT%", "");  
+                webConfigParameters = webConfigParameters.replace("-Dserver.port=%HTTP_PLATFORM_PORT%", "");
             }
             tl.debug("web config parameters :" + webConfigParameters);
         }

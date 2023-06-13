@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "REST-API aufrufen",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=870236)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=870236)",
   "loc.description": "Hiermit wird eine REST-API als Teil Ihrer Pipeline aufgerufen.",
   "loc.instanceNameFormat": "REST-API aufrufen: $(method)",
   "loc.group.displayName.completionOptions": "Erweitert",

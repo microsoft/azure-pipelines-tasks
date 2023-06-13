@@ -1,6 +1,6 @@
 ﻿import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
-import msbuildhelpers = require('azure-pipelines-tasks-msbuildhelpers-v3/msbuildhelpers');
+import msbuildhelpers = require('azure-pipelines-tasks-msbuildhelpers/msbuildhelpers');
 import os = require('os');
 
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';

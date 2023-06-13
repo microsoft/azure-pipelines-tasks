@@ -24,6 +24,6 @@
     },
     "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
     "devDependencies": {
-        "@types/mocha": "^5.2.0"
+        "@types/mocha": "^5.2.7"
     }
 }

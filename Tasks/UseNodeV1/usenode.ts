@@ -11,6 +11,7 @@ import * as taskLib from 'azure-pipelines-task-lib/task';
 //import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as installer from './installer';
 import * as proxyutil from './proxyutil';
+import * as path from 'path';
 
 async function run() {
     try {
@@ -18,6 +19,7 @@ async function run() {
         // Version is optional.  If supplied, install / use from the tool cache
         // If not supplied then task is still used to setup proxy, auth, etc...
         //
+        taskLib.setResourcePath(path.join(__dirname, 'task.json'));
         const version = taskLib.getInput('version', false);
         if (version) {
             const checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
