@@ -59,7 +59,7 @@ function checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyW
 
     messages.push({
       type: "warning",
-      payload: ` - [${targetBranch}] ${masterTask.name} has v${masterTask.version.version} it's higher than the current sprint ${allowedMinorVersion}`
+      payload: `[${targetBranch}] ${masterTask.name} has v${masterTask.version.version} it's higher than the current sprint ${allowedMinorVersion}`
     });
   }
 
@@ -79,7 +79,7 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
     if (localTask.version.minor < sprint) {
       messages.push({
         type: 'error',
-        payload: ` - ${localTask.name} have to be upgraded from v${localTask.version.version} to v${sprint} at least`
+        payload: `${localTask.name} have to be upgraded from v${localTask.version.version} to v${sprint} at least`
       });
       continue;
     }
@@ -87,7 +87,7 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
     if (localTask.version.minor === sprint && eq(localTask.version, masterTask.version)) {
       messages.push({
         type: 'error',
-        payload: ` - ${localTask.name} have to be upgraded from v${localTask.version.version} to v${inc(masterTask.version, 'patch')} at least`
+        payload: `${localTask.name} have to be upgraded from v${localTask.version.version} to v${inc(masterTask.version, 'patch')} at least`
       });
       continue;
     }
@@ -95,7 +95,7 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
     if (localTask.version.minor === sprint && isCourtesyWeek) {
       messages.push({
         type: 'warning',
-        payload: ` - Be careful with task ${localTask.name} version and check it attentively as the current week is courtesy push week`
+        payload: `Be careful with task ${localTask.name} version and check it attentively as the current week is courtesy push week`
       });
       continue;
     }
@@ -103,7 +103,7 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
     if (localTask.version.minor > sprint && (!isReleaseTagExist && !isCourtesyWeek)) {
       messages.push({
         type: 'error',
-        payload: ` - [${sourceBranch}] ${localTask.name} has v${localTask.version.version} it's higher than the current sprint ${sprint}`
+        payload: `[${sourceBranch}] ${localTask.name} has v${localTask.version.version} it's higher than the current sprint ${sprint}`
       });
       continue;
     }
@@ -176,7 +176,7 @@ function compareLocalWithFeed(localTasks, feedTasks, sprint) {
       if (feedTaskVersion.version.minor > sprint) {
         messages.push({
           type: 'warning',
-          payload: ` - [Feed] ${feedTask.name} has v${feedTaskVersion.version.version} it's higher than the current sprint ${sprint}`
+          payload: `[Feed] ${feedTask.name} has v${feedTaskVersion.version.version} it's higher than the current sprint ${sprint}`
         });
         continue;
       }
@@ -184,7 +184,7 @@ function compareLocalWithFeed(localTasks, feedTasks, sprint) {
       if (lte(localTask.version, feedTaskVersion.version) && feedTaskVersion.isLatest) {
         messages.push({
           type: 'warning',
-          payload: ` - [Feed] ${localTask.name} local version ${localTask.version.version} less or equal than version in feed ${feedTaskVersion.version.version}`
+          payload: `[Feed] ${localTask.name} local version ${localTask.version.version} less or equal than version in feed ${feedTaskVersion.version.version}`
         });
       }
     }
@@ -210,7 +210,7 @@ function compareLocalTaskLoc(localTasks) {
     if (neq(localTask.version, parse(taskLocJSONVersion))) {
       messages.push({
         type: 'ERROR',
-        payload: ` - [Loc] ${localTask.name} task.json version ${localTask.version.version} does not match with task.loc.json version ${taskLocJSONVersion}`
+        payload: `[Loc] ${localTask.name} task.json version ${localTask.version.version} does not match with task.loc.json version ${taskLocJSONVersion}`
       });
     }
   }
