@@ -69,7 +69,7 @@
       "name": "testAssemblyVer2",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.testAssemblyVer2",
-      "defaultValue": "**\\bin\\**\\test.dll\n**\\bin\\**\\tests.dll\n",
+      "defaultValue": "**\\bin\\**\\test.dll\n**\\bin\\**\\tests.dll",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.testAssemblyVer2",
       "groupName": "testSelection",
