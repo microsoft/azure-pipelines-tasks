@@ -14,8 +14,6 @@ export const KUBELOGIN_REPO = 'kubelogin';
 
 const userAgent: string = 'kubelogin-installer-task-' + packagejson.version;
 
-const AGENT_TEMP_DIR = 'agent.tempDirectory';
-
 export type Platform = 'darwin-amd64' | 'darwin-arm64' | 'linux-amd64' | 'linux-arm64' | 'win-amd64';
 
 export interface KubeloginRelease {

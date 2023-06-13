@@ -1,5 +1,4 @@
 import { resolvePlatform } from '../utils';
-import { TestString } from './TestStrings';
 
 export class ResolvePlatformL0Tests {
   public static async startTests() {

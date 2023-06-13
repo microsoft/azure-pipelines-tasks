@@ -2,7 +2,6 @@ import path = require('path');
 import * as assert from 'assert';
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import tmrm = require('azure-pipelines-task-lib/mock-run');
 import { TestString } from './TestStrings';
 
 describe('TestUtils', function () {
