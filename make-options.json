@@ -29,7 +29,6 @@
         "AzureIoTEdgeV2",
         "AzureKeyVaultV1",
         "AzureKeyVaultV2",
-        "AzureMonitorAlertsV0",
         "AzureMonitorV0",
         "AzureMonitorV1",
         "AzureMysqlDeploymentV1",
@@ -220,8 +219,12 @@
         "CondaEnvironmentV0",
         "CondaEnvironmentV1",
         "FuncToolsInstallerV0",
-        "NuGetV0",
         "PackerBuildV0",
-        "PackerBuildV1"
+        "PackerBuildV1",
+        "DownloadGitHubNugetPackageV1",
+        "NuGetPublisherV0",
+        "MysqlDeploymentOnMachineGroupV1",
+        "GitHubReleaseV0",
+        "GitHubReleaseV1"
     ]
 }

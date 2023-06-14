@@ -7,13 +7,13 @@ Tasks/AndroidSigningV3/    @microsoft/akvelon-build-task-team
 
 Tasks/ANTV1/   @microsoft/akvelon-build-task-team
 
-Tasks/AppCenterDistributeV1/   @thewulf7    @lucen-ms    @DergachevE    @vsebesta
+Tasks/AppCenterDistributeV1/   @imenkov    @lucen-ms    @DergachevE    @vsebesta
 
-Tasks/AppCenterDistributeV2/   @thewulf7    @lucen-ms    @DergachevE    @vsebesta
+Tasks/AppCenterDistributeV2/   @imenkov    @lucen-ms    @DergachevE    @vsebesta
 
-Tasks/AppCenterDistributeV3/   @thewulf7    @lucen-ms    @DergachevE    @vsebesta
+Tasks/AppCenterDistributeV3/   @imenkov    @lucen-ms    @DergachevE    @vsebesta
 
-Tasks/AppCenterTestV1/   @thewulf7    @lucen-ms    @DergachevE    @vsebesta
+Tasks/AppCenterTestV1/   @imenkov    @lucen-ms    @DergachevE    @vsebesta
 
 Tasks/ArchiveFilesV2/  @microsoft/akvelon-build-task-team
 
@@ -58,8 +58,6 @@ Tasks/AzureIoTEdgeV2/     @marianan   @tameraw    @pprovost
 Tasks/AzureKeyVaultV1/     @rvairavelu @manolerazvan
 
 Tasks/AzureKeyVaultV2/     @rvairavelu @manolerazvan
-
-Tasks/AzureMonitorAlertsV0/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
 Tasks/AzureMonitorV0/      @rvairavelu @manolerazvan
 

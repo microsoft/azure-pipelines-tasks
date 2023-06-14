@@ -148,31 +148,35 @@ async function acquireNode(version: string, installedArch: string): Promise<stri
     // Download - a tool installer intimately knows how to get the tool (and construct urls)
     //
     version = toolLib.cleanVersion(version);
-    const fileName: string = osPlat === 'win32' ? 'node-v' + version + '-win-' + installedArch :
-                                                  'node-v' + version + '-' + osPlat + '-' + installedArch;
-    const urlFileName: string = osPlat === 'win32' ? fileName + '.7z':
-                                                     fileName + '.tar.gz';
 
-    const downloadUrl = 'https://nodejs.org/dist/v' + version + '/' + urlFileName;
+    const isWin32: boolean = osPlat == 'win32';
+
+    const platform: string = isWin32 ? 'win' : osPlat;
+
+    const fileName: string = `node-v${version}-${platform}-${installedArch}`;
+
+    const fileExtension: string = isWin32 ? '.7z' : '.tar.gz';
+
+    const downloadUrl: string = `https://nodejs.org/dist/v${version}/${fileName}${fileExtension}`;
 
     let downloadPath: string;
+
     try {
         downloadPath = await toolLib.downloadTool(downloadUrl);
-    } 
-    catch (err) {
-        if (err['httpStatusCode'] && 
-            err['httpStatusCode'] === '404') {
+    } catch (err) {
+        if (isWin32 && err['httpStatusCode'] == 404) {
             return await acquireNodeFromFallbackLocation(version);
         }
 
         throw err;
     }
-    
+
     //
     // Extract
     //
     let extPath: string;
-    if (osPlat === 'win32') {
+
+    if (isWin32) {
         extPath = taskLib.getVariable('Agent.TempDirectory');
         if (!extPath) {
             throw new Error(taskLib.loc('AgentTempDirNotSet'));

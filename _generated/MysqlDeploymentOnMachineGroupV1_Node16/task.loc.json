@@ -1,0 +1,131 @@
+{
+  "id": "6FEC3938-DF52-4C01-9F5A-8ED5F66C377E",
+  "name": "MysqlDeploymentOnMachineGroup",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 224,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "1.100.0",
+  "groups": [],
+  "inputs": [
+    {
+      "name": "TaskNameSelector",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.TaskNameSelector",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.TaskNameSelector",
+      "defaultValue": "SqlTaskFile",
+      "options": {
+        "SqlTaskFile": "MySQL Script File",
+        "InlineSqlTask": "Inline MySQL Script"
+      }
+    },
+    {
+      "name": "SqlFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SqlFile",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlFile",
+      "visibleRule": "TaskNameSelector = SqlTaskFile"
+    },
+    {
+      "name": "SqlInline",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.SqlInline",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlInline",
+      "visibleRule": "TaskNameSelector = InlineSqlTask",
+      "properties": {
+        "resizable": "true",
+        "rows": "10"
+      }
+    },
+    {
+      "name": "ServerName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ServerName",
+      "required": true,
+      "defaultValue": "localhost",
+      "helpMarkDown": "ms-resource:loc.input.help.ServerName"
+    },
+    {
+      "name": "DatabaseName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DatabaseName",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.DatabaseName"
+    },
+    {
+      "name": "SqlUsername",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SqlUsername",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlUsername"
+    },
+    {
+      "name": "SqlPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SqlPassword",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"
+    },
+    {
+      "name": "SqlAdditionalArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SqlAdditionalArguments",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlAdditionalArguments"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "mysqldeploy.js"
+    },
+    "Node16": {
+      "target": "mysqldeploy.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ARGD_ConstructorFailed": "ms-resource:loc.messages.ARGD_ConstructorFailed",
+    "MysqlServerNameCannotBeEmpty": "ms-resource:loc.messages.MysqlServerNameCannotBeEmpty",
+    "NotAbleToGetInstalledLocationOfMysqlFromPath": "ms-resource:loc.messages.NotAbleToGetInstalledLocationOfMysqlFromPath",
+    "UnableToFindMysqlFromRegistryOnMachineError": "ms-resource:loc.messages.UnableToFindMysqlFromRegistryOnMachineError",
+    "UnableToFindMysqlFromRegistry": "ms-resource:loc.messages.UnableToFindMysqlFromRegistry",
+    "UnableToFindTheLocationOfMysqlFromRegistryOnMachineError": "ms-resource:loc.messages.UnableToFindTheLocationOfMysqlFromRegistryOnMachineError",
+    "MysqlTaskParameterCannotBeEmpty": "ms-resource:loc.messages.MysqlTaskParameterCannotBeEmpty",
+    "ToolPathCannotBeNull": "ms-resource:loc.messages.ToolPathCannotBeNull",
+    "SqlExecutionException": "ms-resource:loc.messages.SqlExecutionException",
+    "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
+    "UnableToCreateDatabaseException": "ms-resource:loc.messages.UnableToCreateDatabaseException",
+    "WindowMysqlClientMissingError": "ms-resource:loc.messages.WindowMysqlClientMissingError",
+    "LinuxMysqlClientMissingError": "ms-resource:loc.messages.LinuxMysqlClientMissingError",
+    "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.224.1",
+    "Node16-219": "1.224.0"
+  }
+}

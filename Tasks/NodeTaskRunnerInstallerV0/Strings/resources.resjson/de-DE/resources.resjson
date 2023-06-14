@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Installationsprogramm für Node.js-Aufgabenausführung",
-  "loc.helpMarkDown": "Noch offen",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/node-task-runner-installer-v0)",
   "loc.description": "Bestimmte Node.js-Version zum Ausführen von Knotenaufgaben installieren",
   "loc.instanceNameFormat": "Knotenausführung $(runnerVersion) installieren",
   "loc.input.label.runnerVersion": "Zu installierende Version der Ausführung",

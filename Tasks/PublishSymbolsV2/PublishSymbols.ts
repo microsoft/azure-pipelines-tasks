@@ -43,11 +43,21 @@ export async function run(clientToolFilePath: string): Promise<void> {
         let uniqueId: string = tl.getVariable("Build.UniqueId") ? tl.getVariable("Build.UniqueId") : uuidV4();
         let searchPatterns = tl.getDelimitedInput("SearchPattern", "\n", false) ? tl.getDelimitedInput("SearchPattern", "\n", false) : ["**\\bin\\**\\*.pdb"];
         let indexableFileFormats = tl.getInput("IndexableFileFormats", false);
-        let requestName = (tl.getVariable("System.TeamProject") + "/" +
-            tl.getVariable("Build.DefinitionName") + "/" +
-            tl.getVariable("Build.BuildNumber") + "/" +
-            tl.getVariable("Build.BuildId")  + "/" +  
-            uniqueId).toLowerCase();
+
+        // If SymbolsArtifactName input is not the default value, use that as the request name instead of the default
+        let symbolsArtifactName: string = tl.getInput("SymbolsArtifactName", false);
+        let requestName: string;
+        let defaultArtifactName: string = tl.getVariable("BuildConfiguration") ? "Symbols_" + tl.getVariable("BuildConfiguration") : "Symbols_$(BuildConfiguration)"
+        if (symbolsArtifactName && symbolsArtifactName !== defaultArtifactName) {
+            requestName = symbolsArtifactName;
+        }
+        else {
+            requestName = (tl.getVariable("System.TeamProject") + "/" +
+                tl.getVariable("Build.DefinitionName") + "/" +
+                tl.getVariable("Build.BuildNumber") + "/" +
+                tl.getVariable("Build.BuildId")  + "/" +  
+                uniqueId).toLowerCase();
+        }
 
         let expirationInDays: string = tl.getInput("SymbolExpirationInDays", false) ? tl.getInput("SymbolExpirationInDays", false) : '36530';
         let detailedLog: boolean = tl.getBoolInput("DetailedLog");
