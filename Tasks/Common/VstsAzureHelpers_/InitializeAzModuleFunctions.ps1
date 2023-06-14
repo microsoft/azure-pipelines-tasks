@@ -18,16 +18,17 @@ function Initialize-AzModule {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
 
         Write-Verbose "Importing Az Module."
-        Import-AzModule -azVersion $azVersion
+        $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
 
         Write-Verbose "Initializing Az Subscription."
-        Initialize-AzSubscription -Endpoint $Endpoint -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $encryptedToken
+        Initialize-AzSubscription -Endpoint $Endpoint -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $encryptedToken `
+            -azAccountsModuleVersion $azAccountsVersion
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
 
-function Import-AzModule {
+function Import-AzAccountsModule {
     [CmdletBinding()]
     param([string] $azVersion)
 
@@ -38,10 +39,10 @@ function Import-AzModule {
         # Attempt to resolve the module.
         Write-Verbose "Attempting to find the module '$moduleName' from the module path."
 
-        if($azVersion -eq ""){
+        if ($azVersion -eq "") {
             $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
         }
-        else{
+        else {
             $modules = Get-Module -Name $moduleName -ListAvailable
             foreach ($moduleVal in $modules) {
                 # $moduleVal.Path will have value like C:\Program Files\WindowsPowerShell\Modules\Az.Accounts\1.2.1\Az.Accounts.psd1
@@ -64,6 +65,7 @@ function Import-AzModule {
         Write-Host "##[command]Import-Module -Name $($module.Path) -Global"
         $module = Import-Module -Name $module.Path -Global -PassThru -Force
         Write-Verbose "Imported module version: $($module.Version)"
+        return $module.Version
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
@@ -77,7 +79,9 @@ function Initialize-AzSubscription {
         [Parameter(Mandatory=$false)]
         [string] $connectedServiceNameARM,
         [Parameter(Mandatory=$false)]
-        [Security.SecureString]$vstsAccessToken)
+        [Security.SecureString]$vstsAccessToken,
+        [Parameter(Mandatory=$false)]
+        [Version]$azAccountsModuleVersion)
 
     #Set UserAgent for Azure Calls
     Set-UserAgent
@@ -160,7 +164,8 @@ function Initialize-AzSubscription {
             Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
         }
     } elseif ($Endpoint.Auth.Scheme -eq 'WorkloadIdentityFederation') {
-        $clientAssertionJwt = Get-VstsFederatedToken -serviceConnectionId $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
+        $clientAssertionJwt = Get-VstsFederatedToken -serviceConnectionId $connectedServiceNameARM -vstsAccessToken $vstsAccessToken `
+            -azAccountsModuleVersion $azAccountsModuleVersion
 
         Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
         $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
