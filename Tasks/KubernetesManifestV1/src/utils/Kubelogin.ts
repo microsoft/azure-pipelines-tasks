@@ -9,8 +9,10 @@ import { ITaskApi } from "azure-devops-node-api/TaskApi";
 
 export class Kubelogin {
     private toolPath: string;
-    constructor(required: boolean) {
+    private userDir: string;
+    constructor(required: boolean, userDir: string) {
         this.toolPath = taskLib.which(this.getTool(), required);
+        this.userDir = userDir;
     }
 
     public getToolPath(): string {
@@ -28,6 +30,16 @@ export class Kubelogin {
         if (authScheme.toLowerCase() == "workloadidentityfederation") {
             var servicePrincipalId: string = taskLib.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
             var tenantId: string = taskLib.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+
+            const token: string = await Kubelogin.getIdToken(connectedService);
+            
+            const idTokenFile: string = path.join(this.userDir, "id_token");
+            fs.writeFileSync(idTokenFile, token);
+
+            process.env["AZURE_CLIENT_ID"] = servicePrincipalId;
+            process.env["AZURE_TENANT_ID"] = tenantId;
+            process.env["AZURE_FEDERATED_TOKEN_FILE"] = idTokenFile;
+            process.env["AZURE_AUTHORITY_HOST"] = "https://login.microsoftonline.com/";
         }
         else if (authScheme.toLowerCase() == "serviceprincipal") {
             let authType: string = taskLib.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);

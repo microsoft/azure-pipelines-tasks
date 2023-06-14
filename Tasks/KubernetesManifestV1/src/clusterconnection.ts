@@ -70,7 +70,7 @@ export default class ClusterConnection {
 
             process.env["KUBECONFIG"] = this.kubeconfigFile;
 
-            const kubelogin = new Kubelogin(true);
+            const kubelogin = new Kubelogin(true, this.userDir);
             kubelogin.login(tl.getInput('azureSubscriptionEndpoint', false));
          });
     }
