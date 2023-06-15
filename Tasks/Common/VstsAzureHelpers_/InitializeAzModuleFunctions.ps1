@@ -112,6 +112,8 @@ function Initialize-AzSubscription {
                     ApplicationId=$Endpoint.Auth.Parameters.ServicePrincipalId;
                     Environment=$environmentName;
                     ServicePrincipal=$true;
+                    Scope='Process';
+                    WarningAction='SilentlyContinue';
                 }
             }
             else {
@@ -125,6 +127,8 @@ function Initialize-AzSubscription {
                     Credential=$psCredential;
                     Environment=$environmentName;
                     ServicePrincipal=$true;
+                    Scope='Process';
+                    WarningAction='SilentlyContinue';
                 }
             }
 
@@ -149,6 +153,7 @@ function Initialize-AzSubscription {
         @{
             Environment=$environmentName;
             Identity=$true;
+            Scope='Process';
         }
 
         if ($scopeLevel -ne "ManagementGroup") {
@@ -169,6 +174,7 @@ function Initialize-AzSubscription {
             ApplicationId=$Endpoint.Auth.Parameters.ServicePrincipalId;
             FederatedToken=$clientAssertionJwt;
             Environment=$environmentName;
+            Scope='Process';
         }
 
         if ($scopeLevel -ne "ManagementGroup") {
