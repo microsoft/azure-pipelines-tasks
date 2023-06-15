@@ -7,7 +7,19 @@
                 "repository": "https://www.nuget.org/api/v2/",
                 "cp": [
                     {
-                        "source": "lib/net45/Newtonsoft.Json.dll"
+                        "source": "lib/net45/Newtonsoft.Json.dll",
+                        "dest": "Newtonsoft.Json.10/"
+                    }
+                ]
+            },
+            {
+                "name": "Newtonsoft.Json",
+                "version": "13.0.3",
+                "repository": "https://www.nuget.org/api/v2/",
+                "cp": [
+                    {
+                        "source": "lib/net45/Newtonsoft.Json.dll",
+                        "dest": "Newtonsoft.Json.13/"
                     }
                 ]
             },
@@ -23,14 +35,14 @@
             },
             {
                 "name": "Microsoft.TeamFoundationServer.Client",
-                "version": "16.170.0",
+                "version": "19.216.0-preview",
                 "repository": "https://www.nuget.org/api/v2/",
                 "cp": [
                     {
-                        "source": "lib/net462/Microsoft.TeamFoundation.Core.WebApi.dll"
+                        "source": "lib/net472/Microsoft.TeamFoundation.Core.WebApi.dll"
                     },
                     {
-                        "source": "lib/net462/<CULTURE_NAME>/Microsoft.TeamFoundation.Core.WebApi.resources.dll",
+                        "source": "lib/net472/<CULTURE_NAME>/Microsoft.TeamFoundation.Core.WebApi.resources.dll",
                         "dest": "<CULTURE_NAME>/"
                     }
                 ]
