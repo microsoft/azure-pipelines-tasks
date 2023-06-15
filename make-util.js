@@ -159,11 +159,11 @@ var buildNodeTask = function (taskPath, outDir) {
     var overrideTscPath;
     if (test('-f', packageJsonPath)) {
         // verify no dev dependencies
-        // we allow a TS dev-dependency to indicate a task should use a different TS version
+        // we allow only two dev dependencies: typescript and @tsconfig/node10
         var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
         var devDeps = packageJson.devDependencies ? Object.keys(packageJson.devDependencies).length : 0;
-        if (devDeps == 1 && packageJson.devDependencies["typescript"]) {
-            var version = packageJson.devDependencies["typescript"];
+        if (devDeps === 1 && packageJson.devDependencies['typescript'] || (devDeps === 2 && packageJson.devDependencies['typescript'] && packageJson.devDependencies['@tsconfig/node10'])) {
+            var version = packageJson.devDependencies['typescript'];
             if (!allowedTypescriptVersions.includes(version)) {
                 fail(`The package.json specifies a different TS version (${version}) that the allowed versions: ${allowedTypescriptVersions}. Offending package.json: ${packageJsonPath}`);
             }
