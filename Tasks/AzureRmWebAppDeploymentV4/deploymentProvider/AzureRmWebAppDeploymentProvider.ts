@@ -63,13 +63,12 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
         }
         
         if(this.appServiceUtility) {
-        let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
-            ? this.taskParams.VirtualApplication : null);
-        console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
-        tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
+            let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
+                ? this.taskParams.VirtualApplication : null);
+            console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
+            tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
         }
-    }
-    
+    }    
 
     protected async PostDeploymentStep() {
         if(this.taskParams.AppSettings) {
