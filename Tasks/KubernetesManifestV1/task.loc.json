@@ -13,9 +13,9 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 223,
-    "Patch": 3
-  },
+    "Minor": 224,
+    "Patch": 0
+  },  
   "demands": [],
   "groups": [],
   "inputs": [
@@ -459,6 +459,9 @@
     "InvalidTimeoutValue": "ms-resource:loc.messages.InvalidTimeoutValue",
     "RolloutStatusTimedout": "ms-resource:loc.messages.RolloutStatusTimedout",
     "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink",
-    "CantDownloadAccessProfile": "ms-resource:loc.messages.CantDownloadAccessProfile"
+    "CantDownloadAccessProfile": "ms-resource:loc.messages.CantDownloadAccessProfile",
+    "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
+    "KubeloginNotFound": "loc.messages.KubeloginNotFound",
+    "KubeloginFailed": "loc.messages.KubeloginFailed"
   }
 }

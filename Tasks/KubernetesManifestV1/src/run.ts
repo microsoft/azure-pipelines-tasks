@@ -2,7 +2,6 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
 import * as utils from './utils/utilities';
-import * as Kubelogin from './utils/Kubelogin';
 
 import { deploy } from './actions/deploy';
 import { bake } from './actions/bake';
