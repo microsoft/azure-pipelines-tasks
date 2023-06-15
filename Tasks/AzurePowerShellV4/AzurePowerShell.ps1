@@ -92,8 +92,9 @@ try
 {
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+    $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
     Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $serviceName `
-        -azVersion $targetAzurePs -vstsAccessToken $vstsAccessToken
+        -azVersion $targetAzurePs -encryptedToken $encryptedToken
     Write-Host "## Az module initialization Complete"
     $success = $true
 }
@@ -283,7 +284,7 @@ try {
                 }
             }
     }
- 
+
 }
 finally {
     if ($__vstsAzPSInlineScriptPath -and (Test-Path -LiteralPath $__vstsAzPSInlineScriptPath) ) {

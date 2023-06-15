@@ -24,5 +24,6 @@ Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
 
 $endpointObject =  ConvertFrom-Json  $endpoint
 Import-Module "$PSScriptRoot\ps_modules\VstsAzureHelpers_"
+$encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
 Initialize-AzModule -Endpoint $endpointObject -connectedServiceNameARM $connectedServiceNameARM `
-    -azVersion $targetAzurePs -vstsAccessToken $vstsAccessToken
+    -azVersion $targetAzurePs -encryptedToken $encryptedToken
