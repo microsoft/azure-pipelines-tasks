@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 223,
-    "Patch": 1
+    "Minor": 224,
+    "Patch": 0
   },
   "demands": [],
   "groups": [
@@ -188,6 +188,9 @@
     "KubernetesClusterResourceGroup": "ms-resource:loc.messages.KubernetesClusterResourceGroup",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
     "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP",
-    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile",
+    "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
+    "KubeloginNotFound": "loc.messages.KubeloginNotFound",
+    "KubeloginFailed": "loc.messages.KubeloginFailed"
   }
 }

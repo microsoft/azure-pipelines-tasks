@@ -14,6 +14,7 @@ import { AzureAksService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-a
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
 import helmcli from "./helmcli";
 import kubernetescli from "./kubernetescli"
+import * as kl from './kubelogin'
 
 import fs = require('fs');
 import { fail } from 'assert';
@@ -84,6 +85,18 @@ async function run() {
         var kubeconfigfilePath = command === "logout" ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
         kubectlCli = new kubernetescli(kubeconfigfilePath);
         kubectlCli.login();
+
+        try {
+            const kubelogin = new kl.Kubelogin(this.userDir);
+            if (kubelogin.isAvailable) {
+              tl.debug('Kubelogin is installed. Converting kubeconfig.');
+              await kubelogin.login(tl.getInput('azureSubscriptionEndpoint', false));
+            } else {
+              console.log(tl.loc('KubeloginNotFound'));
+            }
+          } catch (err) {
+            console.log(tl.loc('KubeloginFailed', err));
+          }
     }
 
     var helmCli: helmcli = new helmcli();

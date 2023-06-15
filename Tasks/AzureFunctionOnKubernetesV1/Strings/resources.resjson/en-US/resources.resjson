@@ -40,5 +40,8 @@
   "loc.messages.KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",
   "loc.messages.NoDataWrittenOnFile": "No data was written into the file %s",
   "loc.messages.ServiceExternalIP": "service %s external IP is %s",
-  "loc.messages.WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s",
+  "loc.messages.AuthSchemeNotSupported": "Auth Scheme %s is not supported",
+  "loc.messages.KubeloginNotFound": "Kubelogin not found",
+  "loc.messages.KubeloginFailed": "Kubelogin authentication filed, exception %s"
 }

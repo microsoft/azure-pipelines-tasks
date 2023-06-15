@@ -545,6 +545,9 @@
         "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
         "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
         "SaveSupportedInHelmsV3Only": "Save chart to Azure Container Registry is only supported in Helms V3.",
-        "OutputVariableDataSizeExceeded": "Output variable not set as Helm command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s"
+        "OutputVariableDataSizeExceeded": "Output variable not set as Helm command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
+        "AuthSchemeNotSupported": "Auth Scheme %s is not supported",
+        "KubeloginNotFound": "Kubelogin not found",
+        "KubeloginFailed": "Kubelogin authentication filed, exception %s"
     }
 }

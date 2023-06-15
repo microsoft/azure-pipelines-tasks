@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 223,
-        "Patch": 1
+        "Minor": 224,
+        "Patch": 0
     },
     "demands": [],
     "groups": [
@@ -188,6 +188,9 @@
         "KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",
         "NoDataWrittenOnFile": "No data was written into the file %s",
         "ServiceExternalIP": "service %s external IP is %s",
-        "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
+        "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s",
+        "AuthSchemeNotSupported": "Auth Scheme %s is not supported",
+        "KubeloginNotFound": "Kubelogin not found",
+        "KubeloginFailed": "Kubelogin authentication filed, exception %s"
     }
 }
