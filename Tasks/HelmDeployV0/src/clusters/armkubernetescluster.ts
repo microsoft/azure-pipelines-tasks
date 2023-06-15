@@ -13,7 +13,8 @@ async function getKubeConfigFromAKS(azureSubscriptionEndpoint: string, resourceG
     tl.debug(tl.loc("KubernetesClusterResourceGroup", clusterName, resourceGroup));
 
     var clusterInfo : AKSClusterAccessProfile = await aks.getAccessProfile(resourceGroup, clusterName, useClusterAdmin);
-    var base64Kubeconfig = Buffer.from(clusterInfo.properties.kubeConfig, 'base64');
+    var accessProfileName: string = !!useClusterAdmin ? 'clusterAdmin' : 'clusterUser';
+    var base64Kubeconfig = Buffer.from(clusterInfo.kubeconfigs.find(kubeconfig => kubeconfig.name == accessProfileName).value, 'base64');
     return base64Kubeconfig.toString();
 }
 

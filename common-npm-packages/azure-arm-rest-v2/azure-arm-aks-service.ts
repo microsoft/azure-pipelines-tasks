@@ -30,8 +30,8 @@ export class AzureAksService {
 
     public beginRequest(uri: string,  parameters: {}) : Promise<webClient.WebResponse> {
          var webRequest = new webClient.WebRequest();
-         webRequest.method = 'GET';
-         webRequest.uri = this._client.getRequestUri(uri, parameters, null,'2017-08-31');
+         webRequest.method = 'POST';
+         webRequest.uri = this._client.getRequestUri(uri, parameters, null,'2023-04-01');
         return this._client.beginRequestExpBackoff(webRequest, 3).then((response)=>{
             if(response.statusCode >= 200 && response.statusCode < 300) {
                 return response;
@@ -42,8 +42,8 @@ export class AzureAksService {
     } 
 
     public getAccessProfile(resourceGroup : string , clusterName : string, useClusterAdmin?: boolean): Promise<Model.AKSClusterAccessProfile> {
-        var accessProfileName = !!useClusterAdmin ? 'clusterAdmin' : 'clusterUser';
-        return this.beginRequest(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.ContainerService/managedClusters/{ClusterName}/accessProfiles/{AccessProfileName}`,
+        var accessProfileName = !!useClusterAdmin ? 'listClusterAdminCredential' : 'listClusterUserCredential';
+        return this.beginRequest(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.ContainerService/managedClusters/{ClusterName}/{AccessProfileName}`,
         {
             '{ResourceGroupName}': resourceGroup,
             '{ClusterName}': clusterName,

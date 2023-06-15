@@ -298,11 +298,12 @@ export interface AKSCluster extends AzureBaseObject {
 }
 
 export interface AKSClusterAccessProfileProperties {
-    kubeConfig: string;
+    name: string;
+    value: string;
 }
 
 export interface AKSClusterAccessProfile extends AzureBaseObject {
-    properties: AKSClusterAccessProfileProperties
+    kubeconfigs: AKSClusterAccessProfileProperties[];
 }
 
 export interface IThresholdRuleConditionDataSource {
