@@ -20,11 +20,11 @@ if ($scriptType -eq "FilePath") {
         throw (Get-VstsLocString -Key InvalidScriptPath0 -ArgumentList $scriptPath)
     }
 }
-    
+
 if ($scriptArguments -match '[\r\n]') {
     throw (Get-VstsLocString -Key InvalidScriptArguments0 -ArgumentList $scriptArguments)
 }
-    
+
 # string constants
 $otherVersion = "OtherVersion"
 $latestVersion = "LatestVersion"
@@ -113,7 +113,8 @@ try {
     if (($authScheme -eq 'WorkloadIdentityFederation') -and (Get-Module Az.Accounts -ListAvailable)) {
         $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
         $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
-        Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $serviceName -vstsAccessToken $vstsAccessToken
+        $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
+        Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $serviceName -encryptedToken $encryptedToken
     }
     else {
         Initialize-Azure -azurePsVersion $targetAzurePs -strict
