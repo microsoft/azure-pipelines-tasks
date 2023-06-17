@@ -57,10 +57,13 @@
       </Item>
       <Item ItemId=";loc.input.help.BlobPrefix" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Useful for filtering files, for example, append build number to all the blobs to download files from that build only. Example: If you specify blob prefix as <i>myvd1</i>, a virtual directory with this name will be created inside the container. The source files will be copied to <i>https://myaccount.blob.core.windows.net/mycontainer/myvd1/</i>.]]></Val>
+          <Val><![CDATA[Useful for filtering files, for example, append build number to all the blobs to download files from that build only. Example: If you specify blob prefix as <i>myvd1/</i>, a virtual directory with this name will be created inside the container. Blob prefix with a trailing '/' will be considered a virtual directory. Otherwise, it will be treated as a file, unless the item being copied is itself a folder. The source files will be copied to <i>https://myaccount.blob.core.windows.net/mycontainer/myvd1/</i>.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Utile pour filtrer des fichiers, par exemple, ajouter un numéro de build à tous les objets blob pour télécharger uniquement les fichiers de cette build. Exemple : si vous spécifiez le préfixe d'objet blob <i>myvd1</i>, un répertoire virtuel portant ce nom est créé dans le conteneur. Les fichiers sources sont copiés dans <i>https://myaccount.blob.core.windows.net/mycontainer/myvd1/</i>.]]></Val>
+            <Val><![CDATA[Utile pour filtrer les fichiers, par exemple, ajouter le numéro de build à tous les objets blob pour télécharger les fichiers à partir de cette build uniquement. Exemple : si vous spécifiez le préfixe d’objet blob <i>myvd1/</i>, un répertoire virtuel portant ce nom est créé dans le conteneur. Le préfixe d’objet blob avec un '/' de fin sera considéré comme un répertoire virtuel. Sinon, il sera traité comme un fichier, sauf si l’élément en cours de copie est lui-même un dossier. Les fichiers sources seront copiés dans <i>https://myaccount.blob.core.windows.net/mycontainer/myvd1/</i>.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Useful for filtering files, for example, append build number to all the blobs to download files from that build only. Example: If you specify blob prefix as <i>myvd1</i>, a virtual directory with this name will be created inside the container. The source files will be copied to <i>https://myaccount.blob.core.windows.net/mycontainer/myvd1/</i>.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -84,10 +87,13 @@
       </Item>
       <Item ItemId=";loc.input.help.ContainerName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Name of the Container for uploading the files. If a container with the given name does not exist in the specified storage account, it will automatically be created. <br> If you need to create a virtual directory inside the container, use the blob prefix input below. <br> Example: If your target location is <i>https://myaccount.blob.core.windows.net/mycontainer/vd1/vd2/</i>, then specify <i>mycontainer</i> as container name and <i>vd1/vd2</i> as blob prefix.]]></Val>
+          <Val><![CDATA[Name of the Container for uploading the files. If a container with the given name does not exist in the specified storage account, it will automatically be created. <br> If you need to create a virtual directory inside the container, use the blob prefix input below. <br> Example: If your target location is <i>https://myaccount.blob.core.windows.net/mycontainer/vd1/vd2/</i>, then specify <i>mycontainer</i> as container name and <i>vd1/vd2/</i> as blob prefix.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Nom du conteneur pour le chargement des fichiers. Si un conteneur portant le nom indiqué n'existe pas dans le compte de stockage spécifié, il est automatiquement créé. <br> Si vous devez créer un répertoire virtuel dans le conteneur, utilisez l'entrée de préfixe d'objet blob ci-dessous. <br> Exemple : Si votre emplacement cible est <i>https://myaccount.blob.core.windows.net/mycontainer/vd1/vd2/</i>, spécifiez <i>mycontainer</i> comme nom de conteneur et <i>vd1/vd2</i> comme préfixe d’objet blob.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Name of the Container for uploading the files. If a container with the given name does not exist in the specified storage account, it will automatically be created. <br> If you need to create a virtual directory inside the container, use the blob prefix input below. <br> Example: If your target location is <i>https://myaccount.blob.core.windows.net/mycontainer/vd1/vd2/</i>, then specify <i>mycontainer</i> as container name and <i>vd1/vd2</i> as blob prefix.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
