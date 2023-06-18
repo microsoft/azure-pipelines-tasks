@@ -57,10 +57,13 @@
       </Item>
       <Item ItemId=";loc.input.help.BlobPrefix" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Useful for filtering files, for example, append build number to all the blobs to download files from that build only. Example: If you specify blob prefix as <i>myvd1</i>, a virtual directory with this name will be created inside the container. The source files will be copied to <i>https://myaccount.blob.core.windows.net/mycontainer/myvd1/</i>.]]></Val>
+          <Val><![CDATA[Useful for filtering files, for example, append build number to all the blobs to download files from that build only. Example: If you specify blob prefix as <i>myvd1/</i>, a virtual directory with this name will be created inside the container. Blob prefix with a trailing '/' will be considered a virtual directory. Otherwise, it will be treated as a file, unless the item being copied is itself a folder. The source files will be copied to <i>https://myaccount.blob.core.windows.net/mycontainer/myvd1/</i>.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[用于筛选文件，例如，将生成号追加到所有 blob 以便仅从该生成下载文件。示例: 如果将 blob 前缀指定为 <i>myvd1</i>，则将在容器内创建具有此名称的虚拟目录。源文件将被复制到 <i>https://myaccount.blob.core.windows.net/mycontainer/myvd1/</i>。]]></Val>
+            <Val><![CDATA[用于筛选文件，例如，将生成号追加到所有 blob 以仅从该生成下载文件。示例: 如果将 blob 前缀指定为 <i>myvd1/</i>，则将在容器内创建具有此名称的虚拟目录。带有尾随“/”的 Blob 前缀将被视为虚拟目录。否则，除非要复制的项本身是文件夹，否则它将被视为文件。源文件将被复制到 <i>https://myaccount.blob.core.windows.net/mycontainer/myvd1/</i>。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Useful for filtering files, for example, append build number to all the blobs to download files from that build only. Example: If you specify blob prefix as <i>myvd1</i>, a virtual directory with this name will be created inside the container. The source files will be copied to <i>https://myaccount.blob.core.windows.net/mycontainer/myvd1/</i>.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -84,10 +87,13 @@
       </Item>
       <Item ItemId=";loc.input.help.ContainerName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Name of the Container for uploading the files. If a container with the given name does not exist in the specified storage account, it will automatically be created. <br> If you need to create a virtual directory inside the container, use the blob prefix input below. <br> Example: If your target location is <i>https://myaccount.blob.core.windows.net/mycontainer/vd1/vd2/</i>, then specify <i>mycontainer</i> as container name and <i>vd1/vd2</i> as blob prefix.]]></Val>
+          <Val><![CDATA[Name of the Container for uploading the files. If a container with the given name does not exist in the specified storage account, it will automatically be created. <br> If you need to create a virtual directory inside the container, use the blob prefix input below. <br> Example: If your target location is <i>https://myaccount.blob.core.windows.net/mycontainer/vd1/vd2/</i>, then specify <i>mycontainer</i> as container name and <i>vd1/vd2/</i> as blob prefix.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[用于上载文件的容器的名称。如果指定存储帐户中不存在具有给定名称的容器，将自动创建该容器。<br>如果需要在容器中创建虚拟目录，请使用下面的 blob 前缀输入。<br>示例: 如果目标位置是 <i>https://myaccount.blob.core.windows.net/mycontainer/vd1/vd2/</i>，则指定 <i>mycontainer</i> 作为容器名称，<i>vd1/vd2</i> 作为 blob 前缀。]]></Val>
+            <Val><![CDATA[用于上载文件的容器的名称。如果指定存储帐户中不存在具有给定名称的容器，将自动创建该容器。<br>如果需要在容器中创建虚拟目录，请使用下面的 blob 前缀输入。<br>示例: 如果目标位置是 <i>https://myaccount.blob.core.windows.net/mycontainer/vd1/vd2/</i>，则指定 <i>mycontainer</i> 作为容器名称，<i>vd1/vd2/</i> 作为 blob 前缀。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Name of the Container for uploading the files. If a container with the given name does not exist in the specified storage account, it will automatically be created. <br> If you need to create a virtual directory inside the container, use the blob prefix input below. <br> Example: If your target location is <i>https://myaccount.blob.core.windows.net/mycontainer/vd1/vd2/</i>, then specify <i>mycontainer</i> as container name and <i>vd1/vd2</i> as blob prefix.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
