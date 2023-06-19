@@ -30,6 +30,12 @@ The Service Principal created needs to be given access to the target Azure scope
 Populate Service Principal & subscription details as per below screenshot:
 <img src="multi-window-annotated.png" width="1620"/>
 
+## Federated Managed Identity
+
+Instead of a Service Principal, you can also configure a Managed Identity:
+
+<img src="multi-window-msi-annotated.png" width="2124"/>
+
 ## More information
 
 Other pages with information on Workload Identity federation:
