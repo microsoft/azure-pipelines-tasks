@@ -15,7 +15,7 @@
     "Major": 1,
     "Minor": 224,
     "Patch": 0
-  },  
+  },
   "demands": [],
   "groups": [],
   "inputs": [
@@ -461,7 +461,7 @@
     "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink",
     "CantDownloadAccessProfile": "ms-resource:loc.messages.CantDownloadAccessProfile",
     "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
-    "KubeloginNotFound": "loc.messages.KubeloginNotFound",
-    "KubeloginFailed": "loc.messages.KubeloginFailed"
+    "KubeloginNotFound": "ms-resource:loc.messages.KubeloginNotFound",
+    "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   }
 }

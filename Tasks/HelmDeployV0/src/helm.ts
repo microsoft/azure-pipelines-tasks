@@ -87,7 +87,7 @@ async function run() {
         kubectlCli.login();
 
         try {
-            const kubelogin = new kl.Kubelogin(this.userDir);
+            const kubelogin = new kl.Kubelogin(helmutil.getTaskTempDir());
             if (kubelogin.isAvailable) {
               tl.debug('Kubelogin is installed. Converting kubeconfig.');
               await kubelogin.login(tl.getInput('azureSubscriptionEndpoint', false));
