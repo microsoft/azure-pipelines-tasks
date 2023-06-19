@@ -35,4 +35,4 @@ Populate Service Principal & subscription details as per below screenshot:
 Other pages with information on Workload Identity federation:
 
 - [Getting Started](README.md)
-- [Troubleshooting](troubleshooting.md)
+- [Troubleshooting & Frequently Asked Questions](troubleshooting.md)

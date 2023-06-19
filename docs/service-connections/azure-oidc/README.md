@@ -46,4 +46,4 @@ Workload identity federation can be configured in 2 ways:
 Other pages with information on Workload Identity federation:
 
 - [Manual Configuration](manual-configuration.md)
-- [Troubleshooting](troubleshooting.md)
+- [Troubleshooting & Frequently Asked Questions](troubleshooting.md)

@@ -1,4 +1,4 @@
-# Workload Identity federation - Troubleshooting
+# Workload Identity federation - Troubleshooting & Frequently Asked Questions
 
 ## Task coverage
 
@@ -108,6 +108,8 @@ The following messages indicate a task does not support Workload Identity federa
     A: Access requests can be submitted here: <https://aka.ms/azdo-rm-workload-identity-preview>.
 -   Q: Can I create a Service Connection that uses Workload Identity federation through a REST API?  
     A: Yes, you can use the [REST API](https://learn.microsoft.com/rest/api/azure/devops/serviceendpoint/endpoints/create?view=azure-devops-rest-7.1&tabs=HTTP "https://learn.microsoft.com/rest/api/azure/devops/serviceendpoint/endpoints/create?view=azure-devops-rest-7.1&tabs=HTTP"). Simply remove the *serviceprincipalkey* attribute. Before making the request, you first need to create a Service Principal with the right federated credential. This can be done with the [Azure CLI](https://learn.microsoft.com/cli/azure/ad/app/federated-credential?view=azure-cli-latest#az-ad-app-federated-credential-create "https://learn.microsoft.com/cli/azure/ad/app/federated-credential?view=azure-cli-latest#az-ad-app-federated-credential-create") or [Microsoft Graph API](https://learn.microsoft.com/graph/api/application-post-federatedidentitycredentials?view=graph-rest-1.0&tabs=http "https://learn.microsoft.com/graph/api/application-post-federatedidentitycredentials?view=graph-rest-1.0&tabs=http"). The federated subject needs to match the Service Connection name: `sc://<org name>/<project name>/<service connection name>`.
+-   Q: Can I use a Managed Identity instead of a Service Principal to set up Workload Identity federation?  
+    A: Yes, it is possible to use [Managed Identity for Workload Identity federation](https://learn.microsoft.com/en-us/azure/active-directory/workload-identities/workload-identity-federation-create-trust-user-assigned-managed-identity?pivots=identity-wif-mi-methods-azp). To set this up, use the [manual] configuration and populate `clientId`, `tenantId` from the Managed Identity's properties. [Here is a sample script](https://github.com/geekzter/azure-pipeline-scripts/blob/main/scripts/create_azurerm_msi_oidc_service_connection.ps1) to configure a Service Connection with a Federated Managed Identity.
 
 ## More information
 
