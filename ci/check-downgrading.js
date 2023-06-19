@@ -15,10 +15,8 @@ if (!packageEndpoint) {
   process.exit(1);
 }
 
-const packageToken = process.env['PACKAGE_TOKEN'];
 const { RestClient } = require('typed-rest-client/RestClient');
-const { PersonalAccessTokenCredentialHandler } = require('typed-rest-client/Handlers');
-const client = new RestClient('azure-pipelines-tasks-ci', '', [new PersonalAccessTokenCredentialHandler(packageToken)]);
+const client = new RestClient('azure-pipelines-tasks-ci', '');
 
 const argv = require('minimist')(process.argv.slice(2));
 
