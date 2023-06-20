@@ -42,7 +42,13 @@ export async function download(url: string, downloadPath: string): Promise<void>
         req.end();
     });
 
+#if NODE16
+    if (!file.writableEnded) {
+        file.end(null, null, file.close);
+    }
+#else
     file.end(null, null, file.close);
+#endif
 }
 
 export async function unzip(zipLocation, unzipLocation): Promise<string> {
