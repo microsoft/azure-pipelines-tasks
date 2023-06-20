@@ -114,8 +114,8 @@ function runTestPipeline(pipeline, config = '') {
         },
         CANARY_TEST_NODE_VERSION: {
           "isSecret": false,
-          "value:" 
-        }
+          "value": CANARY_TEST_NODE_VERSION
+        },
       },
     }, { auth })
     .then(res =>  res.data)
