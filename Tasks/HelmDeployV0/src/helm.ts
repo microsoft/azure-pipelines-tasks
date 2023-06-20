@@ -39,13 +39,11 @@ function getClusterType(): any {
 }
 
 function isKubConfigSetupRequired(command: string): boolean {
-    var connectionType = tl.getInput("connectionType", true);
-    return command !== "package" && command !== "save" && connectionType !== "None";
+    return command !== "package" && command !== "save";
 }
 
 function isKubConfigLogoutRequired(command: string): boolean {
-    var connectionType = tl.getInput("connectionType", true);
-    return command !== "package" && command !== "save" && command !== "login" && connectionType !== "None";
+    return command !== "package" && command !== "save" && command !== "login";
 }
 
 // get kubeconfig file path
@@ -78,10 +76,11 @@ function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnS
 
 async function run() {
     var command = tl.getInput("command", true).toLowerCase();
+    var connectionType = tl.getInput("connectionType", true);
     var isKubConfigRequired = isKubConfigSetupRequired(command);
     var kubectlCli: kubernetescli;
     if (isKubConfigRequired) {
-        var kubeconfigfilePath = command === "logout" ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
+        var kubeconfigfilePath = (command === "logout" || connectionType === "None") ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
         kubectlCli = new kubernetescli(kubeconfigfilePath);
         kubectlCli.login();
     }
@@ -202,7 +201,7 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
             }
         }
         catch (e) {
-            tl.warning("Capturing deployment metadata failed with error: " + e);
+            tl.error("Capturing deployment metadata failed with error: " + e);
         }
     }
 }
