@@ -247,7 +247,11 @@ async function main({ task, sprint, week }) {
     }
 
     console.log('\nor you might have an outdated branch, try to merge/rebase your branch from master');
-    process.exit(1);
+
+    // If only we have errors, we should fail the build
+    if (messages.some(x => x.type === 'error')) {
+      process.exit(1);
+    }
   }
 }
 
