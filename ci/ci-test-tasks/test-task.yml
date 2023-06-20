@@ -11,7 +11,7 @@ steps:
     echo "Deleting task $(TASKID)"
     taskCount=`tfx build tasks list | grep -w -c  $(TASKID)`
     echo "Task count with specified id = $taskCount"
-    if [ taskCount -gt 0 ]
+    if [ $taskCount -gt 0 ]
     then
         tfx build tasks delete --task-id $(TASKID)
     else
