@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Install kubelogin",
+  "loc.friendlyName": "Kubelogin tool installer",
   "loc.helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/kubelogin-installer-v0) or [see the Kubelogin documentation](https://azure.github.io/kubelogin/index.html)",
   "loc.description": "Helps to install kubelogin",
   "loc.instanceNameFormat": "Install Kubelogin $(kubeloginVersion)",

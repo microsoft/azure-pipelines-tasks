@@ -62,6 +62,7 @@ describe('TestUtils', function () {
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
 
     tr.run();
+    console.log(tr.stdout);
 
     assert(tr.succeeded, TestString.TaskSucceeded);
   }).timeout(20000);
