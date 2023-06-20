@@ -8,8 +8,10 @@ steps:
   displayName: ${{ parameters.task }} get task id
 
 - bash: |
+    echo "Deleting task $(TASKID)"
     taskCount=`tfx build tasks list | grep -w -c  $(TASKID)`
-    if [ taskCount -gt 0 ]
+    echo "Task count with specified id = $taskCount"
+    if [ $taskCount -gt 0 ]
     then
         tfx build tasks delete --task-id $(TASKID)
     else
