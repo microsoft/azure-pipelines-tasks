@@ -106,6 +106,5 @@
   "loc.messages.KubectlServerVersion": "Kubectl Server Version",
   "loc.messages.KubectlServerVerisonNotFound": "Could not find kubectl server version",
   "loc.messages.AuthSchemeNotSupported": "Auth Scheme %s is not supported",
-  "loc.messages.KubeloginNotFound": "Kubelogin not found",
-  "loc.messages.KubeloginFailed": "Kubelogin authentication filed, exception %s"
+  "loc.messages.KubeloginFailed": "Kubelogin authentication failed, exception %s"
 }
