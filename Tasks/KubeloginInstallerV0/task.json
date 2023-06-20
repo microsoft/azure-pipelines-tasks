@@ -1,7 +1,7 @@
 {
     "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
     "id": "5eeaaa81-40b2-4918-8fc7-e2dfc2318902",
-    "name": "InstallKubelogin",
+    "name": "KubeloginInstaller",
     "friendlyName": "Install kubelogin",
     "description": "Helps to install kubelogin",
     "helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/kubelogin-installer-v0) or [see the Kubelogin documentation](https://azure.github.io/kubelogin/index.html)",
