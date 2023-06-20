@@ -1,4 +1,5 @@
 import assert = require('assert');
+import os = require('os');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
@@ -40,8 +41,12 @@ describe('NodeTool Suite', function () {
         tr.run();
 
         runValidations(() => {
-            assert(tr.succeeded, 'NodeTool should have succeeded.');
-            assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+            if (os.platform() === 'win32') {
+                assert(tr.succeeded, 'NodeTool should have succeeded.');
+                assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+            } else {
+                assert(tr.failed, 'NodeTool should have failed after the first download failure for non-Windows platforms.');
+            }
         }, tr, done);
     });
 
@@ -54,8 +59,12 @@ describe('NodeTool Suite', function () {
         tr.run();
 
         runValidations(() => {
-            assert(tr.succeeded, 'NodeTool should have succeeded.');
-            assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+            if (os.platform() === 'win32') {
+                assert(tr.succeeded, 'NodeTool should have succeeded.');
+                assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+            } else {
+                assert(tr.failed, 'NodeTool should have failed after the first download failure for non-Windows platforms.');
+            }
         }, tr, done);
     });
 
