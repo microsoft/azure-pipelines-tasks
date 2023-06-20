@@ -39,11 +39,13 @@ function getClusterType(): any {
 }
 
 function isKubConfigSetupRequired(command: string): boolean {
-    return command !== "package" && command !== "save";
+    var connectionType = tl.getInput("connectionType", true);
+    return command !== "package" && command !== "save" && connectionType !== "None";
 }
 
 function isKubConfigLogoutRequired(command: string): boolean {
-    return command !== "package" && command !== "save" && command !== "login";
+    var connectionType = tl.getInput("connectionType", true);
+    return command !== "package" && command !== "save" && command !== "login" && connectionType !== "None";
 }
 
 // get kubeconfig file path
@@ -79,7 +81,8 @@ async function run() {
     var connectionType = tl.getInput("connectionType", true);
     var isKubConfigRequired = isKubConfigSetupRequired(command);
     var kubectlCli: kubernetescli;
-    if (isKubConfigRequired) {
+    var externalAuth = connectionType === "None" && tl.getVariable("KUBECONFIG");
+    if (isKubConfigRequired || externalAuth) {
         var kubeconfigfilePath = (command === "logout" || connectionType === "None") ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
         kubectlCli = new kubernetescli(kubeconfigfilePath);
         kubectlCli.login();
@@ -87,7 +90,6 @@ async function run() {
 
     var helmCli: helmcli = new helmcli();
     helmCli.login();
-    var connectionType = tl.getInput("connectionType", true);
     var telemetry = {
         connectionType: connectionType,
         command: command,
@@ -119,7 +121,7 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, err.message);
     }
     finally {
-        if (isKubConfigLogoutRequired(command)) {
+        if (isKubConfigLogoutRequired(command) || externalAuth) {
             kubectlCli.logout();
         }
 
