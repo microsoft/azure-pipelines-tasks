@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 223,
+    "Minor": 224,
     "Patch": 0
   },
   "demands": [],
@@ -55,6 +55,14 @@
         "Container": "Azure Pipelines",
         "FilePath": "A file share"
       }
+    },
+    {
+      "name": "MaxArtifactSize",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.MaxArtifactSize",
+      "defaultValue": 0,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.MaxArtifactSize"
     },
     {
       "name": "TargetPath",
@@ -109,6 +117,7 @@
     "ErrorHostTypeNotSupported": "ms-resource:loc.messages.ErrorHostTypeNotSupported",
     "PublishBuildArtifactsFailed": "ms-resource:loc.messages.PublishBuildArtifactsFailed",
     "UnexpectedParallelCount": "ms-resource:loc.messages.UnexpectedParallelCount",
-    "TarExtractionNotSupportedInWindows": "ms-resource:loc.messages.TarExtractionNotSupportedInWindows"
+    "TarExtractionNotSupportedInWindows": "ms-resource:loc.messages.TarExtractionNotSupportedInWindows",
+    "ArtifactSizeExceeded": "ms-resource:loc.messages.ArtifactSizeExceeded"
   }
 }

@@ -1,0 +1,181 @@
+{
+  "id": "333b11bd-d341-40d9-afcf-b32d5ce6f25b",
+  "name": "NuGetPublisher",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/prev-versions/nuget-publisher-0",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "author": "Lawrence Gripper",
+  "version": {
+    "Major": 0,
+    "Minor": 224,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [
+    "Cmd"
+  ],
+  "minimumAgentVersion": "2.144.0",
+  "deprecated": true,
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "searchPattern",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.searchPattern",
+      "defaultValue": "**/*.nupkg;-:**/packages/**/*.nupkg;-:**/*.symbols.nupkg",
+      "helpMarkDown": "ms-resource:loc.input.help.searchPattern",
+      "required": true
+    },
+    {
+      "name": "nuGetFeedType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.nuGetFeedType",
+      "required": true,
+      "defaultValue": "external",
+      "options": {
+        "external": "External NuGet Feed",
+        "internal": "Internal NuGet Feed"
+      }
+    },
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "ms-resource:loc.input.label.connectedServiceName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName",
+      "visibleRule": "nuGetFeedType = external"
+    },
+    {
+      "name": "feedName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.feedName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.feedName",
+      "visibleRule": "nuGetFeedType = internal"
+    },
+    {
+      "name": "nuGetAdditionalArgs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.nuGetAdditionalArgs",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.nuGetAdditionalArgs",
+      "groupName": "advanced"
+    },
+    {
+      "name": "verbosity",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.verbosity",
+      "defaultValue": "-",
+      "helpMarkDown": "ms-resource:loc.input.help.verbosity",
+      "required": "false",
+      "groupName": "advanced",
+      "options": {
+        "-": "-",
+        "Quiet": "Quiet",
+        "Normal": "Normal",
+        "Detailed": "Detailed"
+      }
+    },
+    {
+      "name": "nuGetVersion",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.nuGetVersion",
+      "defaultValue": "3.3.0",
+      "helpMarkDown": "ms-resource:loc.input.help.nuGetVersion",
+      "required": "true",
+      "groupName": "advanced",
+      "options": {
+        "3.3.0": "3.3.0",
+        "3.5.0.1829": "3.5.0",
+        "4.0.0.2283": "4.0.0",
+        "custom": "Custom"
+      }
+    },
+    {
+      "name": "nuGetPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.nuGetPath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.nuGetPath",
+      "groupName": "advanced"
+    },
+    {
+      "name": "continueOnEmptyNupkgMatch",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.continueOnEmptyNupkgMatch",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.continueOnEmptyNupkgMatch",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "nugetpublisher.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "nugetpublisher.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Warning_NoConfigForOldNuGet": "ms-resource:loc.messages.Warning_NoConfigForOldNuGet",
+    "Warning_NoConfigForNoCredentialProvider": "ms-resource:loc.messages.Warning_NoConfigForNoCredentialProvider",
+    "Warning_ConflictingNuGetPreference": "ms-resource:loc.messages.Warning_ConflictingNuGetPreference",
+    "PackagesPublishedSuccessfully": "ms-resource:loc.messages.PackagesPublishedSuccessfully",
+    "PackagesFailedToPublish": "ms-resource:loc.messages.PackagesFailedToPublish",
+    "ConnectingAs": "ms-resource:loc.messages.ConnectingAs",
+    "BuildIdentityPermissionsHint": "ms-resource:loc.messages.BuildIdentityPermissionsHint",
+    "NoCredProviderOnAgent": "ms-resource:loc.messages.NoCredProviderOnAgent",
+    "NotARegularFile": "ms-resource:loc.messages.NotARegularFile",
+    "UnknownFeedType": "ms-resource:loc.messages.UnknownFeedType",
+    "CouldNotFindNuGetService": "ms-resource:loc.messages.CouldNotFindNuGetService",
+    "NoNuGetSpecified": "ms-resource:loc.messages.NoNuGetSpecified",
+    "Error_ApiKeyNotSupported": "ms-resource:loc.messages.Error_ApiKeyNotSupported",
+    "Error_ExpectedConfigurationElement": "ms-resource:loc.messages.Error_ExpectedConfigurationElement",
+    "Error_NoMatchingFilesFoundForPattern": "ms-resource:loc.messages.Error_NoMatchingFilesFoundForPattern",
+    "Error_NoUrlWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoUrlWasFoundWhichMatches",
+    "Error_NoVersionWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoVersionWasFoundWhichMatches",
+    "Error_NuGetToolInstallerFailer": "ms-resource:loc.messages.Error_NuGetToolInstallerFailer",
+    "Info_AvailableVersions": "ms-resource:loc.messages.Info_AvailableVersions",
+    "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "ms-resource:loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery",
+    "Info_MatchingUrlWasFoundSettingAuth": "ms-resource:loc.messages.Info_MatchingUrlWasFoundSettingAuth",
+    "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
+    "Info_SavingTempConfig": "ms-resource:loc.messages.Info_SavingTempConfig",
+    "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
+    "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
+    "NGCommon_AddingSources": "ms-resource:loc.messages.NGCommon_AddingSources",
+    "NGCommon_AreaNotFoundInSps": "ms-resource:loc.messages.NGCommon_AreaNotFoundInSps",
+    "NGCommon_DetectedNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_DetectedNuGetExtensionsPath",
+    "NGCommon_DetectedNuGetVersion": "ms-resource:loc.messages.NGCommon_DetectedNuGetVersion",
+    "NGCommon_IgnoringNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_IgnoringNuGetExtensionsPath",
+    "NGCommon_NoSourcesFoundInConfig": "ms-resource:loc.messages.NGCommon_NoSourcesFoundInConfig",
+    "NGCommon_NuGetConfigIsInvalid": "ms-resource:loc.messages.NGCommon_NuGetConfigIsInvalid",
+    "NGCommon_NuGetConfigIsPackagesConfig": "ms-resource:loc.messages.NGCommon_NuGetConfigIsPackagesConfig",
+    "NGCommon_RemovingSources": "ms-resource:loc.messages.NGCommon_RemovingSources",
+    "NGCommon_SpsNotFound": "ms-resource:loc.messages.NGCommon_SpsNotFound",
+    "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion",
+    "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
+    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.224.1",
+    "Node16-219": "0.224.0"
+  }
+}

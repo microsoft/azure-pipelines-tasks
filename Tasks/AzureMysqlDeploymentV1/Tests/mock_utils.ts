@@ -17,10 +17,10 @@ export function getMockEndpoint() {
         url: "https://management.azure.com/",
         environmentAuthorityUrl: "https://login.windows.net/",
         activeDirectoryResourceID: "https://management.azure.com/",
-        applicationTokenCredentials: new ApplicationTokenCredentials("MOCK_SPN_ID", "MOCK_TENANT_ID", "MOCK_SPN_KEY", "https://management.azure.com/",
+        applicationTokenCredentials: new ApplicationTokenCredentials("MOCK_SERVICE_CONNECTION", "MOCK_SPN_ID", "MOCK_TENANT_ID", "MOCK_SPN_KEY", "https://management.azure.com/",
         "https://login.windows.net/", "https://management.azure.com/", false)
     }
-    
+
     nock("https://login.windows.net", {
         reqheaders: {
             "content-type": "application/x-www-form-urlencoded; charset=utf-8"
@@ -32,9 +32,9 @@ export function getMockEndpoint() {
         grant_type: "client_credentials",
         client_secret: "MOCK_SPN_KEY"
     }))
-    .reply(200, { 
+    .reply(200, {
         access_token: "DUMMY_ACCESS_TOKEN"
-    }).persist(); 
+    }).persist();
 
     return endpoint;
 }

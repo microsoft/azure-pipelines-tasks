@@ -26,6 +26,7 @@ export class ApplicationTokenCredentials {
     public scheme: number;
     public msiClientId: string;
 
+    private connectedServiceName: string;
     private clientId: string;
     private tenantId: string;
     private authType: string;
@@ -39,7 +40,26 @@ export class ApplicationTokenCredentials {
 
     private readonly tokenMutex: Mutex;
 
-    constructor(clientId: string, tenantId: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string, isADFSEnabled?: boolean, access_token?: string, useMSAL?: boolean) {
+    constructor(
+        connectedServiceName: string,
+        clientId: string,
+        tenantId: string,
+        secret: string,
+        baseUrl: string,
+        authorityUrl: string,
+        activeDirectoryResourceId: string,
+        isAzureStackEnvironment: boolean,
+        scheme?: string,
+        msiClientId?: string,
+        authType?: string,
+        certFilePath?: string,
+        isADFSEnabled?: boolean,
+        access_token?: string,
+        useMSAL?: boolean) {
+
+        if (!Boolean(connectedServiceName) || typeof tenantId.valueOf() !== 'string') {
+            throw new Error(tl.loc("serviceConnectionIdCannotBeEmpty"));
+        }
 
         if (!Boolean(tenantId) || typeof tenantId.valueOf() !== 'string') {
             throw new Error(tl.loc("DomainCannotBeEmpty"));
@@ -78,6 +98,7 @@ export class ApplicationTokenCredentials {
             isAzureStackEnvironment = false;
         }
 
+        this.connectedServiceName = connectedServiceName;
         this.clientId = clientId;
         this.tenantId = tenantId;
         this.baseUrl = baseUrl;
@@ -198,7 +219,7 @@ export class ApplicationTokenCredentials {
                         }
                     },
                     (error) => {
-                        deferred.reject(error);
+                        deferred.reject(tl.loc('CouldNotFetchAccessTokenforAAD') + " " + error);
                     }
                 );
             }
@@ -423,21 +444,14 @@ export class ApplicationTokenCredentials {
     private async configureMSALWithOIDC(msalConfig: msal.Configuration): Promise<msal.ConfidentialClientApplication> {
         tl.debug("MSAL - FederatedAccess - OIDC is used.");
 
-        var serviceConnectionId: string = tl.getInput("connectedServiceNameARM", false);
-        if (!serviceConnectionId) {
-            serviceConnectionId = tl.getInput("ConnectedServiceName", false);
-            if (!serviceConnectionId) {
-                serviceConnectionId = tl.getInput("azureSubscription", false);
-                if (!serviceConnectionId) {
-                    throw new Error(tl.loc("serviceConnectionIdCannotBeEmpty"));
-                }
-            }
-        }
         const projectId: string = tl.getVariable("System.TeamProjectId");
         const hub: string = tl.getVariable("System.HostType");
         const planId: string = tl.getVariable('System.PlanId');
         const jobId: string = tl.getVariable('System.JobId');
-        const uri = tl.getVariable("System.CollectionUri");
+        let uri = tl.getVariable("System.CollectionUri");
+        if (!uri) {
+            uri = tl.getVariable("System.TeamFoundationServerUri");
+        }
 
         const token = ApplicationTokenCredentials.getSystemAccessToken();
         const authHandler = getHandlerFromToken(token);
@@ -448,7 +462,7 @@ export class ApplicationTokenCredentials {
             hub,
             planId,
             jobId,
-            serviceConnectionId,
+            this.connectedServiceName,
             0,
             2000);
 

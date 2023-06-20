@@ -1,0 +1,127 @@
+{
+  "id": "6FEC3938-DF52-4C01-9F5A-8ED5F66C377E",
+  "name": "MysqlDeploymentOnMachineGroup",
+  "friendlyName": "MySQL database deploy",
+  "description": "Run scripts and make changes to a MySQL Database",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+  "helpMarkDown": "[Learn more about this task](https://aka.ms/mysql-deployment-on-machine-group)",
+  "category": "Deploy",
+  "visibility": [
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 224,
+    "Patch": 1
+  },
+  "demands": [],
+  "minimumAgentVersion": "1.100.0",
+  "groups": [],
+  "inputs": [
+    {
+      "name": "TaskNameSelector",
+      "type": "pickList",
+      "label": "Deploy MySql Using",
+      "required": false,
+      "helpMarkDown": "Select one of the options between Script File & Inline Script.",
+      "defaultValue": "SqlTaskFile",
+      "options": {
+        "SqlTaskFile": "MySQL Script File",
+        "InlineSqlTask": "Inline MySQL Script"
+      }
+    },
+    {
+      "name": "SqlFile",
+      "type": "filePath",
+      "label": "MySQL Script",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "Full path of the script file on the automation agent or on a UNC path accessible to the automation agent like,  \\\\\\\\BudgetIT\\DeployBuilds\\script.sql. Also, predefined system variables like, $(agent.releaseDirectory) can also be used here. A file containing SQL statements can be used here.​",
+      "visibleRule": "TaskNameSelector = SqlTaskFile"
+    },
+    {
+      "name": "SqlInline",
+      "type": "multiLine",
+      "label": "Inline MySQL Script",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "Enter the MySQL script to execute on the Database selected above.",
+      "visibleRule": "TaskNameSelector = InlineSqlTask",
+      "properties": {
+        "resizable": "true",
+        "rows": "10"
+      }
+    },
+    {
+      "name": "ServerName",
+      "type": "string",
+      "label": "Host Name",
+      "required": true,
+      "defaultValue": "localhost",
+      "helpMarkDown": "Server name of 'Database for MySQL'.Example: localhost. When you connect using MySQL Workbench, this is the same value that is used for 'Hostname' in 'Parameters'"
+    },
+    {
+      "name": "DatabaseName",
+      "type": "string",
+      "label": "Database Name",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "The name of database, if you already have one, on which the below script is needed to be run, else the script itself can be used to create the database."
+    },
+    {
+      "name": "SqlUsername",
+      "type": "string",
+      "label": "MySQL User Name",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "When you connect using MySQL Workbench, this is the same value that is used for 'Username' in 'Parameters'."
+    },
+    {
+      "name": "SqlPassword",
+      "type": "string",
+      "label": "Password",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "Password for MySQL Database.<br>It can be variable defined in the pipeline. Example : $(password).<br>Also, you may mark the variable type as 'secret' to secure it."
+    },
+    {
+      "name": "SqlAdditionalArguments",
+      "type": "string",
+      "label": "Additional Arguments",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "Additional options supported by MySQL simple SQL shell.  These options will be applied when executing the given file on the Database for MySQL.​<br>Example: You can change to default tab separated output format to HTML or even XML format. Or if you have problems due to insufficient memory for large result sets, use the --quick option.​"
+    }
+  ],
+  "instanceNameFormat": "Deploy Using : $(TaskNameSelector)",
+  "execution": {
+    "Node10": {
+      "target": "mysqldeploy.js"
+    }
+  },
+  "messages": {
+    "ARGD_ConstructorFailed": "The task failed while initializing. Error: %s .",
+    "MysqlServerNameCannotBeEmpty": "The MySQL server name cannot be null.",
+    "NotAbleToGetInstalledLocationOfMysqlFromPath": "The MySQL client is missing on the agent machine.",
+    "UnableToFindMysqlFromRegistryOnMachineError": "Unable to find MySQL using the registry on the machine.",
+    "UnableToFindMysqlFromRegistry": "Unable to find MySQL using the registry. Error: %s .",
+    "UnableToFindTheLocationOfMysqlFromRegistryOnMachineError": "Unable to find the location of MySQL using the registry on the machine. Error: %s .",
+    "MysqlTaskParameterCannotBeEmpty": "The MySQL task parameter cannot be null.",
+    "ToolPathCannotBeNull": "Tool path cannot be null.",
+    "SqlExecutionException": "A SQL execution exception occurred. Please check the SQL script. Error: %s .",
+    "CallbackCannotBeNull": "The callback cannot be null.",
+    "UnableToCreateDatabaseException": "Unable to create database.",
+    "WindowMysqlClientMissingError": "MySQL client is missing on the Windows agent machine. Please install it by running the MySQL client installer 'https://aka.ms/window-mysqlcli-installer' script file on the agent machine.",
+    "LinuxMysqlClientMissingError": "MySQL client is missing on the Linux agent machine. Please install it by running 'sudo apt-get install mysql-client'.",
+    "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.224.1",
+    "Node16-219": "1.224.0"
+  }
+}
