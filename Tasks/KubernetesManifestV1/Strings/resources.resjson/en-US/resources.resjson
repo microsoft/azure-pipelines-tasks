@@ -105,6 +105,5 @@
   "loc.messages.EnvironmentLink": "For more information, go to %s",
   "loc.messages.CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s.",
   "loc.messages.AuthSchemeNotSupported": "Auth Scheme %s is not supported",
-  "loc.messages.KubeloginNotFound": "Kubelogin not found",
-  "loc.messages.KubeloginFailed": "Kubelogin authentication filed, exception %s"
+  "loc.messages.KubeloginFailed": "Kubelogin authentication failed, exception %s"
 }

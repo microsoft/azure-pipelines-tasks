@@ -190,7 +190,6 @@
     "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP",
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile",
     "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
-    "KubeloginNotFound": "ms-resource:loc.messages.KubeloginNotFound",
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   }
 }

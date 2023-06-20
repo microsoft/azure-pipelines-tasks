@@ -547,7 +547,6 @@
         "SaveSupportedInHelmsV3Only": "Save chart to Azure Container Registry is only supported in Helms V3.",
         "OutputVariableDataSizeExceeded": "Output variable not set as Helm command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
         "AuthSchemeNotSupported": "Auth Scheme %s is not supported",
-        "KubeloginNotFound": "Kubelogin not found",
-        "KubeloginFailed": "Kubelogin authentication filed, exception %s"
+        "KubeloginFailed": "Kubelogin authentication failed, exception %s"
     }
 }

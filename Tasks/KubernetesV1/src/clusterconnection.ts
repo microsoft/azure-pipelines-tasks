@@ -76,11 +76,9 @@ export default class ClusterConnection {
 
             try {
               const kubelogin = new kl.Kubelogin(this.userDir);
-              if (kubelogin.isAvailable) {
+              if (kubelogin.isAvailable()) {
                 tl.debug('Kubelogin is installed. Converting kubeconfig.');
                 await kubelogin.login(tl.getInput('azureSubscriptionEndpoint', false));
-              } else {
-                console.log(tl.loc('KubeloginNotFound'));
               }
             } catch (err) {
               console.log(tl.loc('KubeloginFailed', err));

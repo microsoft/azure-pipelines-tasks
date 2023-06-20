@@ -490,7 +490,6 @@
         "KubectlServerVersion": "Kubectl Server Version",
         "KubectlServerVerisonNotFound": "Could not find kubectl server version",
         "AuthSchemeNotSupported": "Auth Scheme %s is not supported",
-        "KubeloginNotFound": "Kubelogin not found",
-        "KubeloginFailed": "Kubelogin authentication filed, exception %s"
+        "KubeloginFailed": "Kubelogin authentication failed, exception %s"
     }
 }

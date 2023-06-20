@@ -461,7 +461,6 @@
         "EnvironmentLink": "For more information, go to %s",
         "CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s.",
         "AuthSchemeNotSupported": "Auth Scheme %s is not supported",
-        "KubeloginNotFound": "Kubelogin not found",
-        "KubeloginFailed": "Kubelogin authentication filed, exception %s"
+        "KubeloginFailed": "Kubelogin authentication failed, exception %s"
     }
 }
