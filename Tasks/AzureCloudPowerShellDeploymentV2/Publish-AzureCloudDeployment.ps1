@@ -31,8 +31,8 @@ try {
         # Initialize Azure.
         $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
         $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
-
-        Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $ARMConnectedServiceName -vstsAccessToken $vstsAccessToken
+        $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
+        Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $ARMConnectedServiceName -encryptedToken $encryptedToken
         Write-Host "## Az module initialization Complete"
         $success = $true
     }
