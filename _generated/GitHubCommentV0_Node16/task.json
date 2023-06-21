@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 224,
-    "Patch": 2
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -65,6 +65,10 @@
   "execution": {
     "Node10": {
       "target": "main.js"
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -73,5 +77,9 @@
     "WriteFailed": "Writing comment failed",
     "WriteSucceeded": "Writing commment succeeded",
     "NoOp": "Contents of the Comment field are empty or the PR/Issue ID is not provided"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.224.2",
+    "Node16-219": "0.224.1"
   }
 }
