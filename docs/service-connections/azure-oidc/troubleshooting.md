@@ -4,55 +4,56 @@
 
 The following table lists [tasks](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines") using the [Azure Service Connection](https://learn.microsoft.com/azure/devops/pipelines/library/connect-to-azure?view=azure-devops "https://learn.microsoft.com/azure/devops/pipelines/library/connect-to-azure?view=azure-devops"), and which ring they're on. Marketplace tasks do not support Workload identity federation during preview.
 
-| Task | Status |
+| TaskFullName | Status |
 | --- |  --- |
-| AzureAppServiceManageV0 | Ring 5 |
-| AzureAppServiceSettingsV1 | Ring 5 |
-| AzureCLIV1 with addSpnToEnvironment | Not deployed yet |
-| AzureCLIV2 with addSpnToEnvironment | Not deployed yet |
-| AzureCLIV1 | Ring 5 |
-| AzureCLIV2 | Ring 5 |
-| AzureCloudPowerShellDeploymentV1 | Not deployed yet |
-| AzureCloudPowerShellDeploymentV2 | Not deployed yet |
-| AzureContainerAppsV0 | Ring 5 |
-| AzureContainerAppsV1 | Not deployed yet |
-| AzureFileCopyV1 | AzCopy v7 does not support OIDC |
+| AzureAppServiceManageV0 | Available |
+| AzureAppServiceSettingsV1 | Available |
+| AzureCLIV1 | addSpnToEnvironment update not available yet |
+| AzureCLIV1 | Available |
+| AzureCLIV2 | addSpnToEnvironment update not available yet |
+| AzureCLIV2 | Available |
+| AzureCloudPowerShellDeploymentV1 | Use AzureCloudPowerShellDeploymentV2 for OIDC |
+| AzureCloudPowerShellDeploymentV2 | Available |
+| AzureContainerAppsV0 | Available |
+| AzureContainerAppsV1 | Available |
+| AzureFileCopyV1 | AzCopy v7 does not support OIDC |
 | AzureFileCopyV2 | AzCopy v7 does not support OIDC |
 | AzureFileCopyV3 | AzCopy v7 does not support OIDC |
 | AzureFileCopyV4 | AzCopy v10 does not support OIDC yet |
 | AzureFileCopyV5 | AzCopy v10 does not support OIDC yet |
-| AzureFunctionAppContainerV1 | Not deployed yet |
-| AzureFunctionAppV1 | Not deployed yet |
-| AzureFunctionAppV2 | Not deployed yet |
-| AzureFunctionOnKubernetesV1 | Not deployed yet |
-| AzureIoTEdgeV2 | Not deployed yet |
-| AzureKeyVaultV1 | Ring 5 |
-| AzureKeyVaultV2 | Ring 5 |
+| AzureFunctionAppContainerV1 | Not available yet |
+| AzureFunctionAppV1 | Not available yet |
+| AzureFunctionAppV2 | Not available yet |
+| AzureFunctionOnKubernetesV1 | Not available yet |
+| AzureIoTEdgeV2 | Not available yet |
+| AzureKeyVaultV1 | Available |
+| AzureKeyVaultV2 | Available |
 | AzureMonitorAlertsV0 | Task is deprecated |
-| AzureMonitorV0 | Ring 5 |
-| AzureMonitorV1 | Ring 5 |
-| AzureMysqlDeploymentV1 | Ring 5 |
+| AzureMonitorV0 | Available |
+| AzureMonitorV1 | Available |
+| AzureMysqlDeploymentV1 | Available |
 | AzureNLBManagementV1 | Task is deprecated |
-| AzurePolicyV0 | Ring 5 |
-| AzurePowerShellV2 | Ring 5 |
-| AzurePowerShellV3 | Ring 5 |
-| AzurePowerShellV4 | Ring 5 |
-| AzurePowerShellV5 | Ring 5 |
-| AzureResourceGroupDeploymentV2 | Ring 5 |
-| AzureResourceManagerTemplateDeploymentV3 | Ring 5 |
-| AzureRmWebAppDeploymentV3 | Ring 5 |
-| AzureRmWebAppDeploymentV4 | Ring 5 |
-| AzureSpringCloudV0 | Ring 5 |
-| AzureVmssDeploymentV0 | Ring 5 |
-| AzureWebAppContainerV1 | Not deployed yet |
-| AzureWebAppV1 | Not deployed yet |
-| HelmDeployV0 | Not deployed yet |
-| InvokeRestApiV1 | Ring 5 |
-| KubernetesManifestV1 | Not deployed yet |
-| KubernetesV1 | Not deployed yet |
+| AzurePolicyV0 | Available |
+| AzurePowerShellV2 | Available |
+| AzurePowerShellV3 | Available |
+| AzurePowerShellV4 | Available |
+| AzurePowerShellV5 | Linux version not available yet |
+| AzurePowerShellV5 | Available |
+| AzureResourceGroupDeploymentV2 | Available |
+| AzureResourceManagerTemplateDeploymentV3 | Available |
+| AzureRmWebAppDeploymentV3 | Available |
+| AzureRmWebAppDeploymentV4 | Available |
+| AzureSpringCloudV0 | Available |
+| AzureVmssDeploymentV0 | Available |
+| AzureWebAppContainerV1 | Not available yet |
+| AzureWebAppV1 | Not available yet |
+| HelmDeployV0 | Not available yet |
+| InvokeRestApiV1 | Available |
+| KubernetesManifestV1 | Not available yet |
+| KubernetesV1 | Not available yet |
 | PackerBuildV0 | Packer does not support OIDC yet |
 | PackerBuildV1 | Packer does not support OIDC yet |
-| SqlAzureDacpacDeploymentV1 | Ring 5 |
+| SqlAzureDacpacDeploymentV1 | Available |
 
 ## Error messages
 
@@ -110,6 +111,8 @@ The following messages indicate a task does not support Workload Identity federa
     A: Yes, you can use the [REST API](https://learn.microsoft.com/rest/api/azure/devops/serviceendpoint/endpoints/create?view=azure-devops-rest-7.1&tabs=HTTP "https://learn.microsoft.com/rest/api/azure/devops/serviceendpoint/endpoints/create?view=azure-devops-rest-7.1&tabs=HTTP"). Simply remove the *serviceprincipalkey* attribute. Before making the request, you first need to create a Service Principal with the right federated credential. This can be done with the [Azure CLI](https://learn.microsoft.com/cli/azure/ad/app/federated-credential?view=azure-cli-latest#az-ad-app-federated-credential-create "https://learn.microsoft.com/cli/azure/ad/app/federated-credential?view=azure-cli-latest#az-ad-app-federated-credential-create") or [Microsoft Graph API](https://learn.microsoft.com/graph/api/application-post-federatedidentitycredentials?view=graph-rest-1.0&tabs=http "https://learn.microsoft.com/graph/api/application-post-federatedidentitycredentials?view=graph-rest-1.0&tabs=http"). The federated subject needs to match the Service Connection name: `sc://<org name>/<project name>/<service connection name>`.
 -   Q: Can I use a Managed Identity instead of a Service Principal to set up Workload Identity federation?  
     A: Yes, it is possible to use [Managed Identity for Workload Identity federation](https://learn.microsoft.com/en-us/azure/active-directory/workload-identities/workload-identity-federation-create-trust-user-assigned-managed-identity?pivots=identity-wif-mi-methods-azp). To set this up, use the [manual configuration](https://github.com/microsoft/azure-pipelines-tasks/blob/users/geekzter/oidc-preview-docs/docs/service-connections/azure-oidc/manual-configuration.md#federated-managed-identity) and populate `clientId`, `tenantId` from the Managed Identity's properties. [Here is a sample script](https://github.com/geekzter/azure-pipeline-scripts/blob/main/scripts/create_azurerm_msi_oidc_service_connection.ps1) to configure a Service Connection with a Federated Managed Identity.
+-   Q: The AzurePowerShell task does not work on Linux, what can we do?  
+    A: This task will be released later, see status overview at the top of this page.
 
 ## More information
 
