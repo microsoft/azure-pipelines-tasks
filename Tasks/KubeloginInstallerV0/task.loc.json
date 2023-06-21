@@ -55,6 +55,7 @@
     "Err_ExtractionFailed": "ms-resource:loc.messages.Err_ExtractionFailed",
     "Err_VersionNotFound": "ms-resource:loc.messages.Err_VersionNotFound",
     "Err_NotAValidSemverVersion": "ms-resource:loc.messages.Err_NotAValidSemverVersion",
-    "SucceedMsg": "ms-resource:loc.messages.SucceedMsg"
+    "SucceedMsg": "ms-resource:loc.messages.SucceedMsg",
+    "Info_KubeloginDownloading": "ms-resource:loc.messages.Info_KubeloginDownloading"
   }
 }
