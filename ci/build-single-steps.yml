@@ -14,11 +14,11 @@ steps:
 - powershell: ./ci/start-collect-diagnostics.ps1
   displayName: Start collect diagnostics
 
-# Use node 8, npm 5
+# Use node 10, npm 6
 - task: NodeTool@0
-  displayName: Use node 8
+  displayName: Use node 10
   inputs:
-    versionSpec: 8.x
+    versionSpec: 10.x
 
 # npm install
 - script: npm install
