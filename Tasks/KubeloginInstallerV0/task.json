@@ -7,6 +7,7 @@
     "helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/kubelogin-installer-v0) or [see the Kubelogin documentation](https://azure.github.io/kubelogin/index.html)",
     "helpUrl": "https://azure.github.io/kubelogin/index.html",
     "category": "Tool",
+    "minimumAgentVersion": "2.144.0",
     "visibility": [
         "Build",
         "Release"
@@ -34,6 +35,9 @@
     "execution": {
         "Node10": {
             "target": "kubelogin.js"
+        },
+        "Node16": {
+          "target": "kubelogin.js"
         }
     },
     "messages": {

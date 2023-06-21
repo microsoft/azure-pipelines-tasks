@@ -4,14 +4,24 @@ import path = require('path');
 import fs = require('fs');
 import Q = require('q');
 
+import * as utils from '../utils'
+
+var process = require('process');
+
 Date.now = () => {
   return 123456;
 };
 
+const kubelogin = `kubelogin-${utils.resolvePlatform()}`
+const kubelogin_zip = `${kubelogin}.zip`
+
 export const tempDir = path.join(__dirname, 'temp');
-export const releasePath = path.join(__dirname, 'kubelogin-win-amd64.zip');
-export const unzipPath = path.join(tempDir, 'kubelogin-win-amd64');
-export const toolPath = path.join(tempDir, 'kubelogin-win-amd64', 'bin', 'windows_amd64', 'kubelogin.exe');
+export const releasePath = path.join(__dirname, kubelogin_zip);
+export const unzipPath = path.join(tempDir, kubelogin);
+
+export const toolPathWin = path.join(tempDir, kubelogin, 'bin', 'windows_amd64', 'kubelogin.exe');
+export const toolPathLinux = path.join(tempDir, kubelogin, 'bin', 'linux_amd64', 'kubelogin');
+export const toolPathDarwin = path.join(tempDir, kubelogin, 'bin', 'darwin_amd64', 'kubelogin');
 
 export function initTaskTests(taskLib): void {
   if (!fs.existsSync(tempDir)) {
@@ -23,6 +33,13 @@ export function initTaskTests(taskLib): void {
 }
 
 export function setAnswears(tr: tmrm.TaskMockRunner, toolPathVal: boolean = true): void {
+  let toolPath = toolPathWin;
+  if (process.platform == 'linux') {
+    toolPath = toolPathLinux;
+  }
+  else if (process.platform == 'darwin') {
+    toolPath = toolPathDarwin;
+  }
   const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     stats: {
       [releasePath]: true,
@@ -32,7 +49,9 @@ export function setAnswears(tr: tmrm.TaskMockRunner, toolPathVal: boolean = true
     },
     checkPath: {
       [tempDir]: true,
-      [toolPath]: toolPathVal
+      [toolPathWin]: toolPathVal,
+      [toolPathLinux]: toolPathVal,
+      [toolPathDarwin]: toolPathVal
     },
     'kubelogin --version': {
       code: 0
@@ -95,7 +114,7 @@ export function registerMockedToolLibTools(tr: tmrm.TaskMockRunner, processItems
         if (processItemsError) {
           reject('Failed to download a zip');
         }
-        fs.copyFile(path.join(__dirname, 'kubelogin-win-amd64.zip'), releasePath, err => {
+        fs.copyFile(path.join(__dirname, kubelogin_zip), releasePath, err => {
           if (err) reject(err);
           resolve(releasePath);
         });

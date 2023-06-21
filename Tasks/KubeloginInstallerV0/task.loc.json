@@ -7,6 +7,7 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "helpUrl": "https://azure.github.io/kubelogin/index.html",
   "category": "Tool",
+  "minimumAgentVersion": "2.144.0",
   "visibility": [
     "Build",
     "Release"
@@ -33,6 +34,9 @@
   ],
   "execution": {
     "Node10": {
+      "target": "kubelogin.js"
+    },
+    "Node16": {
       "target": "kubelogin.js"
     }
   },

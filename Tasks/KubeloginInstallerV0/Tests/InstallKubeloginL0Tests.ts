@@ -24,16 +24,13 @@ tr.registerMock('./utils', {
   getKubeloginRelease: function() {
     return {
       version: 'v0.0.28',
-      platform: 'win-amd64',
+      platform: utils.resolvePlatform(),
       name: 'releaseName',
       releaseUrl: 'releaseUrl',
       checksumUrl: 'sha256Url'
     };
   },
   downloadKubeloginRelease: function() {
-      fs.copyFile(path.join(__dirname, 'kubelogin-win-amd64.zip'), releasePath, err => {
-        console.log(err);
-      });
       return releasePath;
   },
   getKubeloginPath: utils.getKubeloginPath,
