@@ -1,5 +1,6 @@
 {
   "loc.friendlyName": "GitHub Comment",
+  "loc.helpMarkDown": "",
   "loc.description": "Write a comment to your Github entity i.e. issue or a Pull Request (PR)",
   "loc.instanceNameFormat": "Writing GitHub comment",
   "loc.input.label.gitHubConnection": "GitHub connection (OAuth or PAT)",

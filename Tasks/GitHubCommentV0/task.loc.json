@@ -3,6 +3,7 @@
   "name": "GitHubComment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
     "Build",
@@ -13,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 224,
-    "Patch": 2
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -73,6 +74,5 @@
     "WriteFailed": "ms-resource:loc.messages.WriteFailed",
     "WriteSucceeded": "ms-resource:loc.messages.WriteSucceeded",
     "NoOp": "ms-resource:loc.messages.NoOp"
-  },
-  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+  }
 }
