@@ -68,7 +68,7 @@ steps:
 # Build
 - script: node make.js build --task "$(task_pattern)"
   displayName: Build
-  condition: ne(variables['numTasks'], 0)
+  condition: and(succeeded(), ne(variables['numTasks'], 0))
 
 - script: node ./ci/check-tasks.js
   displayName: Check that tasks has no duplicated libs
@@ -115,10 +115,10 @@ steps:
 # Test
 - script: node make.js test
   displayName: Run tests
-  condition: ne(variables['numTasks'], 0)
+  condition: and(succeeded(), ne(variables['numTasks'], 0))
 - script: node make.js testLegacy --task "$(task_pattern)"
   displayName: Legacy tests with node 6
-  condition: ne(variables['numTasks'], 0)
+  condition: and(succeeded(), ne(variables['numTasks'], 0))
 
 # Publish code coverage result
 - task: PublishCodeCoverageResults@1
