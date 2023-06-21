@@ -3,6 +3,7 @@
 // If its a PR build, all tasks that have been changed will be built.
 // Any other type of build will build all tasks.
 var fs = require('fs');
+var fetch = require('node-fetch');
 var os = require('os');
 var path = require('path');
 var semver = require('semver');
@@ -14,7 +15,7 @@ var makeOptionsPath = path.join(__dirname, '..', 'make-options.json');
 var makeOptions = JSON.parse(fs.readFileSync(makeOptionsPath).toString());
 
 var getTasksToBuildForCI = async function() {
-    // Returns a list of tasks that have different version numbers than their current published version. 
+    // Returns a list of tasks that have different version numbers than their current published version.
     var packageInfo;
     try {
         var packageToken = process.env['PACKAGE_TOKEN'];
@@ -68,11 +69,11 @@ var getTasksToBuildForCI = async function() {
             }
             if (lowerCaseName in packageMap || taskName.toLowerCase() in packageMap) {
                 if (taskName.toLowerCase() in packageMap) {
-                    lowerCaseName = taskName.toLowerCase();   
+                    lowerCaseName = taskName.toLowerCase();
                 }
                 var packageVersion = packageMap[lowerCaseName];
                 var localVersion = `${taskJson.version.Major}.${taskJson.version.Minor}.${taskJson.version.Patch}`;
-                
+
                 // Build if local version and package version are different.
                 return semver.neq(localVersion, packageVersion);
             } else {
@@ -108,11 +109,26 @@ var getTasksDependentOnChangedCommonFiles = function(commonFilePaths) {
     return changedTasks;
 }
 
-var getTasksToBuildForPR = function() {
+async function getPullRequestBranches (pullRequestId) {
+    const response = await fetch(`https://api.github.com/repos/microsoft/azure-pipelines-tasks/pulls/${pullRequestId}`);
+    const data = await response.json();
+    return { source: data.head.ref, target: data.base.ref };
+}
+
+async function getTasksToBuildForPR (prId) {
     // Takes in a git source branch, diffs it with master, and returns a list of tasks that could have been affected by the changes.
-    var sourceBranch = process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH'];
-    var prId = process.env['SYSTEM_PULLREQUEST_PULLREQUESTNUMBER'];
-    var targetBranch = process.env['SYSTEM_PULLREQUEST_TARGETBRANCH'];
+    let sourceBranch, targetBranch;
+
+    if (prId) {
+        const branches = await getPullRequestBranches(prId);
+        sourceBranch = branches.source;
+        targetBranch = branches.target;
+    } else {
+        prId = process.env['SYSTEM_PULLREQUEST_PULLREQUESTNUMBER'];
+        sourceBranch = process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH'];
+        targetBranch = process.env['SYSTEM_PULLREQUEST_TARGETBRANCH'];
+    }
+
     var commonChanges = [];
     var commonTestChanges = [];
     var toBeBuilt = [];
@@ -162,10 +178,13 @@ var getTasksToBuildForPR = function() {
             toBeBuilt.push(task);
         }
     });
-    if (shouldBeBumped.length > 0) {
-        throw new Error('The following tasks should have their versions bumped due to changes in common: ' + shouldBeBumped);
+
+    var skipBumpingVersionsDueToChangesInCommon = process.env['SKIPBUMPINGVERSIONSDUETOCHANGESINCOMMON'].toLowerCase() == 'true';
+
+    if (shouldBeBumped.length > 0 && !skipBumpingVersionsDueToChangesInCommon) {
+        throw new Error(`The following tasks should have their versions bumped due to changes in common: ${shouldBeBumped}`);
     }
-    
+
     changedTests.forEach(task => {
         if (!toBeBuilt.includes(task)) {
             toBeBuilt.push(task);
@@ -187,19 +206,36 @@ var setTaskVariables = function(tasks) {
 var buildReason = process.env['BUILD_REASON'].toLowerCase();
 var forceCourtesyPush = process.env['FORCE_COURTESY_PUSH'] && process.env['FORCE_COURTESY_PUSH'].toLowerCase() === 'true';
 
-var tasks;
-if (buildReason == 'individualci' || buildReason == 'batchedci' || buildReason == 'schedule' || forceCourtesyPush) {
-    // If CI, we will compare any tasks that have updated versions.
-    getTasksToBuildForCI().then(tasks => {
-        setTaskVariables(tasks)
-    });
-} else {
-    if (buildReason == 'pullrequest') {
-        // If PR, we will compare any tasks that could have been affected based on the diff.
-        tasks = getTasksToBuildForPR();
-        setTaskVariables(tasks);
-    } else {
-        // If manual or other, build everything.
-        setTaskVariables(makeOptions.tasks);
+async function filterTasks () {
+    try {
+        if (buildReason == 'individualci' || buildReason == 'batchedci' || buildReason == 'schedule' || forceCourtesyPush) {
+            // If CI, we will compare any tasks that have updated versions.
+            const tasks = await getTasksToBuildForCI();
+            setTaskVariables(tasks);
+        } else {
+            const buildSourceBranch = process.env['BUILD_SOURCEBRANCH'];
+            // If CI for PR, the `Build.SourceBranch` pipeline variable == `refs/pull/${prId}/merge`
+            const regex = /^refs\/pull\/(\d+)\/merge$/;
+            const prIdMatch = buildSourceBranch.match(regex);
+
+            if (buildReason == 'pullrequest') {
+                // If PR, we will compare any tasks that could have been affected based on the diff.
+                const tasks = await getTasksToBuildForPR();
+                setTaskVariables(tasks);
+            } else if (buildReason == 'manual' && prIdMatch) {
+                // Manual rerun for PR.
+                const prId = prIdMatch[1];
+                const tasks = await getTasksToBuildForPR(prId);
+                setTaskVariables(tasks);
+            } else {
+                // If other, build everything.
+                setTaskVariables(makeOptions.tasks);
+            }
+        }
+    } catch (error) {
+        console.log(`##vso[task.logissue type=error]${error}`);
+        console.log('##vso[task.complete result=Failed;]');
     }
 }
+
+filterTasks();
