@@ -103,6 +103,33 @@ The parameters of the task are described in details, including examples, to show
   echo $sa_name
   ```
 
+  In case, you're accessing individual output values directly, values are being set after being converted via JSON.Stringify. To change this behavior, `Use individual output values as it is without JSON.Stringify` checkbox can be used:
+
+  Example:
+  Let's assume, we've `outputvalue` as output of the deployment.
+
+  `Use individual output values as it is without JSON.Stringify` set to `false (default)`
+  ```
+  outputvalue => JSON.stringify(outputvalue) => "outputvalue":
+
+  // setting variable as JSON.stringify's result
+  ##vso[task.setvariable variable=taskdeploymentoutputname.outputkey]"outputvalue"
+
+  // variable will be read as JSON.stringify's result
+  $(outputvalue) => "outputvalue"
+  ```
+
+  `Use individual output values as it is without JSON.Stringify` set to `true`
+  ```
+  outputvalue => no operation:
+
+  // setting variable as it is
+  ##vso[task.setvariable variable=taskdeploymentoutputname.outputkey]outputvalue
+
+  // variable will be read as it is
+  $(outputvalue) => outputvalue
+  ```
+  
 ### Supported Azure and AzureRM module versions:
 |  Azure Pipelines/TFS Release  |  Recommended Azure Version  |  Other Supported Versions |
 |:------------------:|:---------------------------:|:-------------------------:|

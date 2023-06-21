@@ -73,6 +73,7 @@ export class AzureRGTaskParameters {
     public agentServiceUserCredentials: AgentServiceUserCredentials;
     public runAgentServiceAsUser: boolean;
     public addSpnToEnvironment: boolean;
+    public useWithoutJSON: boolean;
     public connectedService: string;
     public authScheme: string;
     
@@ -152,6 +153,8 @@ export class AzureRGTaskParameters {
             this.deploymentGroupProjectName = tl.getInput("project");
             this.deploymentOutputs = tl.getInput("deploymentOutputs");
             this.addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
+            this.useWithoutJSON = tl.getBoolInput("useWithoutJSON", false);
+            
             return this;
         } catch (error) {
             throw new Error(tl.loc("ARGD_ConstructorFailed", error.message));
