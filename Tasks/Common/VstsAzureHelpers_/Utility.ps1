@@ -163,12 +163,19 @@ function Get-VstsFederatedToken {
         [Parameter(Mandatory=$true)]
         [string]$serviceConnectionId,
         [Parameter(Mandatory=$true)]
-        [Security.SecureString]$vstsAccessToken
+        [Security.SecureString]$vstsAccessToken,
+        [Parameter(Mandatory=$true)]
+        [Version]$azAccountsModuleVersion
     )
 
     $OMDirectory = $PSScriptRoot
 
-    $newtonsoftDll = [System.IO.Path]::Combine($OMDirectory, "Newtonsoft.Json.dll")
+    if ($azAccountsModuleVersion.Major -le 2 -and $azAccountsModuleVersion.Minor -le 12 -and $azAccountsModuleVersion.Build -lt 3) {
+        $newtonsoftDll = [System.IO.Path]::Combine($OMDirectory, "Newtonsoft.Json.10", "Newtonsoft.Json.dll")
+    }
+    else {
+        $newtonsoftDll = [System.IO.Path]::Combine($OMDirectory, "Newtonsoft.Json.13", "Newtonsoft.Json.dll")
+    }
     if (!(Test-Path -LiteralPath $newtonsoftDll -PathType Leaf)) {
         Write-Verbose "$newtonsoftDll not found."
         throw
@@ -184,7 +191,7 @@ function Get-VstsFederatedToken {
         Add-Type -LiteralPath $vsServicesDll
     } catch {
         # The requested type may successfully load now even though the assembly itself is not fully loaded.
-        Write-Verbose "$($_.Exception.GetType().FullName): $($_.Exception.Message)"
+        Write-Verbose "Services.WebApi load errors: $($_.Exception.GetType().FullName): $($_.Exception.Message)"
     }
 
     $onAssemblyResolve = [System.ResolveEventHandler] {
@@ -201,7 +208,7 @@ function Get-VstsFederatedToken {
 
     $taskHttpClient = $null;
     try {
-        Write-Verbose "Trying again to construct the HTTP client."
+        Write-Verbose "Trying to construct the HTTP client."
         $decriptedVstsToken = $null
         if ($PSVersionTable.PSVersion.Major -lt 7) {
             $bstr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($vstsAccessToken)
