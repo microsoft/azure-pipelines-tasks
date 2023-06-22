@@ -310,7 +310,7 @@
         {
             "name": "useWithoutJSON",
             "type": "boolean",
-            "label": "Use individual output values as it is without JSON.Stringify",
+            "label": "Use individual output values without JSON.Stringify applied",
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Individual output values are being converted via JSON.Stringify by default. If you want to use the output values as it is without converting them via JSON.Stringify, enable this option. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)",

@@ -106,12 +106,12 @@ The following parameters are shown when the selected action is to create or upda
   echo $sa_name
 
   ```
-  In case, you're accessing individual output values directly, values are being set after being converted via JSON.Stringify. To change this behavior, `Use individual output values as it is without JSON.Stringify` checkbox can be used:
+  In case, you're accessing individual output values directly, values are being set after being converted via JSON.Stringify. To change this behavior, `Use individual output values without JSON.Stringify applied` checkbox can be used:
 
   Example:
   Let's assume, we've `outputvalue` as output of the deployment.
 
-  `Use individual output values as it is without JSON.Stringify` set to `false (default)`
+  `Use individual output values without JSON.Stringify applied` set to `false (default)`
   ```
   outputvalue => JSON.stringify(outputvalue) => "outputvalue":
 
@@ -122,7 +122,7 @@ The following parameters are shown when the selected action is to create or upda
   $(outputvalue) => "outputvalue"
   ```
 
-  `Use individual output values as it is without JSON.Stringify` set to `true`
+  `Use individual output values without JSON.Stringify applied` set to `true`
   ```
   outputvalue => no operation:
 
