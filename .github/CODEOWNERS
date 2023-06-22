@@ -283,6 +283,8 @@ Tasks/JenkinsQueueJobV2/   @microsoft/akvelon-build-task-team
 
 Tasks/KubectlInstallerV0/  @rvairavelu @manolerazvan
 
+Tasks/KubeloginInstallerV0/  @YevheniiKholodkov @manolerazvan
+
 Tasks/KubernetesV0/    @rvairavelu @manolerazvan
 
 Tasks/KubernetesV1/    @rvairavelu @manolerazvan
