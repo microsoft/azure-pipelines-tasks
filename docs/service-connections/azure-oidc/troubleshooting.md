@@ -112,7 +112,7 @@ The following messages indicate a task does not support Workload Identity federa
 -   Q: Can I use a Managed Identity instead of a Service Principal to set up Workload Identity federation?  
     A: Yes, it is possible to use [Managed Identity for Workload Identity federation](https://learn.microsoft.com/en-us/azure/active-directory/workload-identities/workload-identity-federation-create-trust-user-assigned-managed-identity?pivots=identity-wif-mi-methods-azp). To set this up, use the [manual configuration](https://github.com/microsoft/azure-pipelines-tasks/blob/users/geekzter/oidc-preview-docs/docs/service-connections/azure-oidc/manual-configuration.md#federated-managed-identity) and populate `clientId`, `tenantId` from the Managed Identity's properties. [Here is a sample script](https://github.com/geekzter/azure-pipeline-scripts/blob/main/scripts/create_azurerm_msi_oidc_service_connection.ps1) to configure a Service Connection with a Federated Managed Identity.
 -   Q: The AzurePowerShell task does not work on Linux, what can we do?  
-    A: This task will be released later, see status overview at the top of this page.
+    A: AzurePowerShellV5 with Workload identity federation support task will be released later, see status overview at the top of this page. Note that earlier versions of the task will not be updated for Linux.
 
 ## More information
 
