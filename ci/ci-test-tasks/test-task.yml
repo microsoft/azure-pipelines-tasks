@@ -9,7 +9,14 @@ steps:
 
 - bash: |
     echo "Deleting task $(TASKID)"
-    tfx build tasks delete --task-id $(TASKID)
+    taskCount=`tfx build tasks list | grep -w -c  $(TASKID)`
+    echo "Task count with specified id = $taskCount"
+    if [ $taskCount -gt 0 ]
+    then
+        tfx build tasks delete --task-id $(TASKID)
+    else
+        echo "Task $(TASKID) is not found, skipping pre-delete."
+    fi
   displayName: ${{ parameters.task }} delete task
 
 - bash: |

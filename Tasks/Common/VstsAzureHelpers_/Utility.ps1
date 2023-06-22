@@ -11,7 +11,7 @@
     if ($ServicePrincipal) {
         $pemFileContent = $Endpoint.Auth.Parameters.ServicePrincipalCertificate
         $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
-        
+
         $certificate.Import($pfxFilePath, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
     }
     else {
@@ -26,7 +26,7 @@
     $store.Open(([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite))
     $store.Add($certificate)
     $store.Close()
-    
+
     #store the thumbprint in a global variable which will be used to remove the certificate later on
     $script:Endpoint_Authentication_Certificate = $certificate.Thumbprint
     Write-Verbose "Added certificate to the certificate store."
@@ -41,7 +41,7 @@ function Add-CertificateForAz {
 
     $pemFileContent = $Endpoint.Auth.Parameters.ServicePrincipalCertificate
     $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
-   
+
     # Add the certificate to the cert store.
     $certificate = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2($pfxFilePath, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
 
@@ -98,10 +98,10 @@ function Get-MsiAccessToken {
     $retryableStatusCodes = @(409, 429, 500, 502, 503, 504)
 
     do {
-        try {        
+        try {
             Write-Verbose "Trial count: $trialCount"
             $response = Invoke-WebRequest -Uri $requestUri -Method "GET" -Headers $requestHeaders -UseBasicParsing
-            
+
             if ($response.StatusCode -eq 200) {
                 $responseJson = $response.Content | ConvertFrom-Json
                 return $responseJson.access_token
@@ -111,13 +111,13 @@ function Get-MsiAccessToken {
             }
         }
         catch [System.Net.WebException] {
-            
+
             $webExceptionStatus = $_.Exception.Status
             $webExceptionMessage = $_.Exception.Message
 			$response = $_.Exception.Response
 
-            if (($webExceptionStatus -eq [System.Net.WebExceptionStatus]::ProtocolError) -and ($response -ne $null)) { 
-                
+            if (($webExceptionStatus -eq [System.Net.WebExceptionStatus]::ProtocolError) -and ($response -ne $null)) {
+
 				$responseStatusCode = [int]$_.Exception.Response.StatusCode
                 $responseStream = $_.Exception.Response.GetResponseStream()
 
@@ -127,7 +127,7 @@ function Get-MsiAccessToken {
                         $responseStream.Position = 0
                         $reader.DiscardBufferedData()
                     }
-           
+
                     $webExceptionMessage += "`n$($reader.ReadToEnd())"
                 }
 
@@ -137,7 +137,7 @@ function Get-MsiAccessToken {
 
                 if (($retryableStatusCodes -contains $responseStatusCode) -and ($trialCount -lt $retryLimit)) {
                     Write-Verbose (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $responseStatusCode, $webExceptionMessage)
-                    Start-Sleep -m $timeToWait    
+                    Start-Sleep -m $timeToWait
                     $trialCount++
                 }
                 else {
@@ -163,12 +163,20 @@ function Get-VstsFederatedToken {
         [Parameter(Mandatory=$true)]
         [string]$serviceConnectionId,
         [Parameter(Mandatory=$true)]
-        [Security.SecureString]$vstsAccessToken
+        [Security.SecureString]$vstsAccessToken,
+        [Parameter(Mandatory=$true)]
+        [Version]$azAccountsModuleVersion
     )
 
     $OMDirectory = $PSScriptRoot
 
-    $newtonsoftDll = [System.IO.Path]::Combine($OMDirectory, "Newtonsoft.Json.dll")
+    if ($azAccountsModuleVersion.Major -le 2 -and $azAccountsModuleVersion.Minor -le 12 -and $azAccountsModuleVersion.Build -lt 3) {
+        $newtonsoftDll = [System.IO.Path]::Combine($OMDirectory, "Newtonsoft.Json.10", "Newtonsoft.Json.dll")
+    }
+    else {
+        $newtonsoftDll = [System.IO.Path]::Combine($OMDirectory, "Newtonsoft.Json.13", "Newtonsoft.Json.dll")
+    }
+
     if (!(Test-Path -LiteralPath $newtonsoftDll -PathType Leaf)) {
         Write-Verbose "$newtonsoftDll not found."
         throw
@@ -184,7 +192,7 @@ function Get-VstsFederatedToken {
         Add-Type -LiteralPath $vsServicesDll
     } catch {
         # The requested type may successfully load now even though the assembly itself is not fully loaded.
-        Write-Verbose "$($_.Exception.GetType().FullName): $($_.Exception.Message)"
+        Write-Verbose "Services.WebApi load errors: $($_.Exception.GetType().FullName): $($_.Exception.Message)"
     }
 
     $onAssemblyResolve = [System.ResolveEventHandler] {
@@ -201,7 +209,7 @@ function Get-VstsFederatedToken {
 
     $taskHttpClient = $null;
     try {
-        Write-Verbose "Trying again to construct the HTTP client."
+        Write-Verbose "Trying to construct the HTTP client."
         $decriptedVstsToken = $null
         if ($PSVersionTable.PSVersion.Major -lt 7) {
             $bstr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($vstsAccessToken)
@@ -291,7 +299,7 @@ function CmdletHasMember {
 
 function Get-ProxyUri {
     param([String] [Parameter(Mandatory=$true)] $serverUrl)
-    
+
     $proxyUri = [System.Uri]($env:AGENT_PROXYURL)
     Write-Verbose -Verbose ("Reading proxy from the AGENT_PROXYURL environment variable. Proxy url specified={0}" -f $proxyUri.OriginalString)
 
@@ -323,7 +331,7 @@ function ConvertTo-Pfx {
     else {
         $pemFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pem"
         $pfxFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"
-        $pfxPasswordFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificatepassword.txt"    
+        $pfxPasswordFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificatepassword.txt"
     }
 
     # save the PEM certificate to a PEM file
@@ -342,9 +350,9 @@ function ConvertTo-Pfx {
     $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
     $env:OPENSSL_CONF = "$PSScriptRoot\openssl\openssl.cnf"
     $env:RANDFILE=".rnd"
-    
+
     $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password file:`"$pfxPasswordFilePath`""
-     
+
     Invoke-VstsTool -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
 
     return $pfxFilePath, $pfxFilePassword
@@ -379,7 +387,7 @@ function Get-AzureStackEnvironment {
 
     # Check if endpoint data contains required data.
     if($Endpoint.data.GraphUrl -eq $null)
-    { 
+    {
         $azureStackEndpointUri = $EndpointURI.ToString() + "/metadata/endpoints?api-version=2015-01-01"
         $proxyUri = Get-ProxyUri $azureStackEndpointUri
 
@@ -392,7 +400,7 @@ function Get-AzureStackEnvironment {
         else
         {
             Write-Verbose "Using Proxy settings"
-            $endpointData = Invoke-RestMethod -Uri $azureStackEndpointUri -Method Get -Proxy $proxyUri -ErrorAction Stop 
+            $endpointData = Invoke-RestMethod -Uri $azureStackEndpointUri -Method Get -Proxy $proxyUri -ErrorAction Stop
         }
 
         if ($endpointData)
@@ -515,7 +523,7 @@ function Add-AzureStackAzureRmEnvironment {
 
     # Check if endpoint data contains required data.
     if($Endpoint.data.GraphUrl -eq $null)
-    { 
+    {
         $azureStackEndpointUri = $EndpointURI.ToString() + "/metadata/endpoints?api-version=2015-01-01"
         $proxyUri = Get-ProxyUri $azureStackEndpointUri
 
@@ -528,7 +536,7 @@ function Add-AzureStackAzureRmEnvironment {
         else
         {
             Write-Verbose "Using Proxy settings"
-            $endpointData = Invoke-RestMethod -Uri $azureStackEndpointUri -Method Get -Proxy $proxyUri -ErrorAction Stop 
+            $endpointData = Invoke-RestMethod -Uri $azureStackEndpointUri -Method Get -Proxy $proxyUri -ErrorAction Stop
         }
 
         if ($endpointData)
@@ -582,13 +590,13 @@ function Add-AzureStackAzureRmEnvironment {
     $armEnv = Get-AzureRmEnvironment -Name $name
     if($armEnv -ne $null) {
         Write-Verbose "Updating AzureRm environment $name" -Verbose
-        
+
         if (CmdletHasMember -cmdlet Remove-AzureRmEnvironment -memberName Force) {
             Remove-AzureRmEnvironment -Name $name -Force | Out-Null
         }
         else {
             Remove-AzureRmEnvironment -Name $name | Out-Null
-        }        
+        }
     }
     else {
         Write-Verbose "Adding AzureRm environment $name" -Verbose
@@ -634,12 +642,12 @@ function Disconnect-UsingAzModule {
         [string]$restrictContext = 'False'
     )
 
-    if ((Get-Command -Name "Disconnect-AzAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Disconnect-AzAccount -memberName Scope)) {	
+    if ((Get-Command -Name "Disconnect-AzAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Disconnect-AzAccount -memberName Scope)) {
         if ($restrictContext -eq 'True') {
             Write-Host "##[command]Disconnect-AzAccount -Scope CurrentUser -ErrorAction Stop"
             $null = Disconnect-AzAccount -Scope CurrentUser -ErrorAction Stop
         }
-        Write-Host "##[command]Disconnect-AzAccount -Scope Process -ErrorAction Stop"	
+        Write-Host "##[command]Disconnect-AzAccount -Scope Process -ErrorAction Stop"
         $null = Disconnect-AzAccount -Scope Process -ErrorAction Stop
     }
 
@@ -653,16 +661,16 @@ function Disconnect-UsingARMModule {
     [CmdletBinding()]
     param()
 
-    if ((Get-Command -Name "Disconnect-AzureRmAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Disconnect-AzureRmAccount -memberName Scope)) {	
-        Write-Host "##[command]Disconnect-AzureRmAccount -Scope Process -ErrorAction Stop"	
+    if ((Get-Command -Name "Disconnect-AzureRmAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Disconnect-AzureRmAccount -memberName Scope)) {
+        Write-Host "##[command]Disconnect-AzureRmAccount -Scope Process -ErrorAction Stop"
         $null = Disconnect-AzureRmAccount -Scope Process -ErrorAction Stop
     }
-    elseif ((Get-Command -Name "Remove-AzureRmAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Remove-AzureRmAccount -memberName Scope)) {	
-        Write-Host "##[command]Remove-AzureRmAccount -Scope Process -ErrorAction Stop"	
+    elseif ((Get-Command -Name "Remove-AzureRmAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Remove-AzureRmAccount -memberName Scope)) {
+        Write-Host "##[command]Remove-AzureRmAccount -Scope Process -ErrorAction Stop"
         $null = Remove-AzureRmAccount -Scope Process -ErrorAction Stop
     }
-    elseif ((Get-Command -Name "Logout-AzureRmAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Logout-AzureRmAccount -memberName Scope)) {	
-        Write-Host "##[command]Logout-AzureRmAccount -Scope Process -ErrorAction Stop"	
+    elseif ((Get-Command -Name "Logout-AzureRmAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Logout-AzureRmAccount -memberName Scope)) {
+        Write-Host "##[command]Logout-AzureRmAccount -Scope Process -ErrorAction Stop"
         $null = Logout-AzureRmAccount -Scope Process -ErrorAction Stop
     }
 

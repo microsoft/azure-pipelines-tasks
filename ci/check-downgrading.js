@@ -15,10 +15,8 @@ if (!packageEndpoint) {
   process.exit(1);
 }
 
-const packageToken = process.env['PACKAGE_TOKEN'];
 const { RestClient } = require('typed-rest-client/RestClient');
-const { PersonalAccessTokenCredentialHandler } = require('typed-rest-client/Handlers');
-const client = new RestClient('azure-pipelines-tasks-ci', '', [new PersonalAccessTokenCredentialHandler(packageToken)]);
+const client = new RestClient('azure-pipelines-tasks-ci', '');
 
 const argv = require('minimist')(process.argv.slice(2));
 
@@ -249,7 +247,11 @@ async function main({ task, sprint, week }) {
     }
 
     console.log('\nor you might have an outdated branch, try to merge/rebase your branch from master');
-    process.exit(1);
+
+    // If only we have errors, we should fail the build
+    if (messages.some(x => x.type === 'error')) {
+      process.exit(1);
+    }
   }
 }
 
