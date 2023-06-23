@@ -81,9 +81,12 @@ async function run() {
     var connectionType = tl.getInput("connectionType", true);
     var isKubConfigRequired = isKubConfigSetupRequired(command);
     var kubectlCli: kubernetescli;
-    var externalAuth = connectionType === "None" && tl.getVariable("KUBECONFIG");
+    var externalAuth = connectionType === "None" && (command === "install" || command === "upgrade");
+    if (externalAuth && !tl.getVariable("KUBECONFIG")) {
+        tl.error("KUBECONFIG kube configuration file path must be set when command is install or upgrade.");
+    }
     if (isKubConfigRequired || externalAuth) {
-        var kubeconfigfilePath = (command === "logout" || connectionType === "None") ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
+        var kubeconfigfilePath = (command === "logout" || externalAuth) ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
         kubectlCli = new kubernetescli(kubeconfigfilePath);
         kubectlCli.login();
     }
@@ -182,7 +185,7 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
             let manifests = helmutil.getManifestsFromRelease(helmCli, releaseName);
             if (manifests && manifests.length > 0) {
                 const manifestUrls = getManifestFileUrlsFromHelmOutput(output);
-                const allPods = JSON.parse((kubectlCli.getAllPods()).stdout);
+                const allPods = JSON.parse(kubectlCli.getAllPods().stdout);
                 const clusterInfo = kubectlCli.getClusterInfo().stdout;
 
                 manifests.forEach(manifest => {
