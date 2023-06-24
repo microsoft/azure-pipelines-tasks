@@ -329,13 +329,14 @@
       }
     },
     "azure-pipelines-tasks-kubernetes-common": {
-      "version": "2.212.0",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-kubernetes-common/-/azure-pipelines-tasks-kubernetes-common-2.212.0.tgz",
-      "integrity": "sha512-tUvpcX/EXMBpIzpsKpgcYPil4uWs1FvdRxR1edy3fey/t7p7yZszuGtVETygWURfvDiOwKDpAJL8olaPf+derA==",
+      "version": "2.224.0",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-kubernetes-common/-/azure-pipelines-tasks-kubernetes-common-2.224.0.tgz",
+      "integrity": "sha512-9LZ2+6XkfQ+k7JvIlh7s3V8r3pue7+rPO+5cJOaMLigNsRZD0+CVc62i5r2Nx+lu60DsUH3vSNBsOsY/yWDmfQ==",
       "requires": {
         "@types/mocha": "5.2.7",
         "@types/node": "10.17.0",
         "@types/uuid": "8.3.0",
+        "azure-devops-node-api": "^12.0.0",
         "azure-pipelines-task-lib": "^3.1.0",
         "azure-pipelines-tool-lib": "^1.0.2",
         "js-yaml": "3.13.1"
