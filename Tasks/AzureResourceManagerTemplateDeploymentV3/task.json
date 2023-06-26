@@ -15,7 +15,7 @@
     "version": {
         "Major": 3,
         "Minor": 224,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -225,15 +225,6 @@
             "required": false,
             "helpMarkDown": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId` and `$servicePrincipalKey` in your override parameters like `-key $servicePrincipalKey`",
             "groupName": "Advanced"
-        },
-        {
-            "name": "useWithoutJSON",
-            "type": "boolean",
-            "label": "Use individual output values without JSON.Stringify applied",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Individual output values are being converted via JSON.Stringify by default. If you want to use the output values as it is without converting them via JSON.Stringify, enable this option. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceManagerTemplateDeploymentV3#deployment-outputs)",
-            "groupName": "Advanced"
         }
     ],
     "dataSourceBindings": [
@@ -323,6 +314,10 @@
         "AzureCLINotFound": "Azure CLI not found on the agent.",
         "FailedToFetchAzureCLIVersion": "Failed to fetch az cli version from agent. Error: %s",
         "BicepBuildFailed": "\"az bicep build\" failed. Error: %s",
-        "BicepFileCleanupFailed": "Failed to delete Bicep file. Error: %s"
+        "BicepFileCleanupFailed": "Failed to delete Bicep file. Error: %s",
+        "LoginFailed": "Azure login failed: %s",
+        "MSILoginFailed": "Azure login failed using Managed Service Identity: %s",
+        "AuthSchemeNotSupported": "Auth Scheme %s is not supported",
+        "ErrorInSettingUpSubscription": "Error in setting up subscription: %s"
     }
 }
