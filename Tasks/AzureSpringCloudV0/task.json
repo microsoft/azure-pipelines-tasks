@@ -227,7 +227,7 @@
             "groupName": "ApplicationAndConfigurationSettings",
             "defaultValue": "Java_11",
             "required": false,
-            "helpMarkDown": "The runtime on which the app will run.",
+            "helpMarkDown": "The runtime on which the app will run, use this for basic or standard tier.",
             "options": {
                 "Java_8": "Java 8",
                 "Java_11": "Java 11",
