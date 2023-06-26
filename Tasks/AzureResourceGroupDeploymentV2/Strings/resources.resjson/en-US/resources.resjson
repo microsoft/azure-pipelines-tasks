@@ -53,6 +53,8 @@
   "loc.input.help.deploymentOutputs": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)",
   "loc.input.label.addSpnToEnvironment": "Access service principal details in override parameters",
   "loc.input.help.addSpnToEnvironment": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId` and `$servicePrincipalKey` in your override parameters like `-key $servicePrincipalKey`",
+  "loc.input.label.useWithoutJSON": "Use individual output values without JSON.Stringify applied",
+  "loc.input.help.useWithoutJSON": "Individual output values are being converted via JSON.Stringify by default. If you want to use the output values as it is without converting them via JSON.Stringify, enable this option. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)",
   "loc.messages.CheckResourceGroupExistence": "Checking if the following resource group exists: %s.",
   "loc.messages.ResourceGroupStatusFetchFailed": "Failed to check the resource group status. Error: %s.",
   "loc.messages.ResourceGroupStatus": "Resource group exists: %s.",

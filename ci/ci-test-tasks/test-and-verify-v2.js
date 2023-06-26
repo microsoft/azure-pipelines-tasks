@@ -96,7 +96,7 @@ function fetchPipelines() {
 
 function runTestPipeline(pipeline, config = '') {
   console.log(`Run ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`);
-  const {BUILD_SOURCEVERSION: CANARY_TEST_BRANCH } = process.env;
+  const {BUILD_SOURCEVERSION: CANARY_TEST_BRANCH, CANARY_TEST_NODE_VERSION } = process.env;
   return axios
     .post(`${apiUrl}/${pipeline.id}/runs?${apiVersion}`, 
     {
@@ -112,7 +112,11 @@ function runTestPipeline(pipeline, config = '') {
         CANARY_TEST_CONFIG: {
           "isSecret": false,
           "value": config 
-        }
+        },
+        CANARY_TEST_NODE_VERSION: {
+          "isSecret": false,
+          "value": CANARY_TEST_NODE_VERSION
+        },
       },
     }, { auth })
     .then(res =>  res.data)
