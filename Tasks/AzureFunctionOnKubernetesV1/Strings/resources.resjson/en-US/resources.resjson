@@ -42,5 +42,5 @@
   "loc.messages.ServiceExternalIP": "service %s external IP is %s",
   "loc.messages.WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s",
   "loc.messages.AuthSchemeNotSupported": "Auth Scheme %s is not supported",
-  "loc.messages.KubeloginFailed": "Kubelogin authentication failed, exception %s"
+  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
 }

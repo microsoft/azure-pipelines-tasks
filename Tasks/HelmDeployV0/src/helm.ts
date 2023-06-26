@@ -82,19 +82,19 @@ async function run() {
     var isKubConfigRequired = isKubConfigSetupRequired(command);
     var kubectlCli: kubernetescli;
     if (isKubConfigRequired) {
-        var kubeconfigfilePath = command === "logout" ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
-        kubectlCli = new kubernetescli(kubeconfigfilePath);
-        kubectlCli.login();
+      var kubeconfigfilePath = command === 'logout' ? tl.getVariable('KUBECONFIG') : await getKubeConfigFile();
+      kubectlCli = new kubernetescli(kubeconfigfilePath);
+      kubectlCli.login();
 
-        try {
-            const kubelogin = new Kubelogin(helmutil.getTaskTempDir());
-            if (kubelogin.isAvailable()) {
-              tl.debug('Kubelogin is installed. Converting kubeconfig.');
-              await kubelogin.login(tl.getInput('azureSubscriptionEndpoint', false));
-            }
-          } catch (err) {
-            console.log(tl.loc('KubeloginFailed', err));
-          }
+      try {
+        const kubelogin = new Kubelogin(helmutil.getTaskTempDir());
+        if (kubelogin.isAvailable()) {
+          tl.debug('Kubelogin is installed. Converting kubeconfig.');
+          await kubelogin.login(tl.getInput('azureSubscriptionEndpoint', false));
+        }
+      } catch (err) {
+        tl.warning(tl.loc('KubeloginFailed', err));
+      }
     }
 
     var helmCli: helmcli = new helmcli();

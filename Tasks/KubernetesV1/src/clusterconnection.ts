@@ -82,7 +82,7 @@ export default class ClusterConnection {
                 await kubelogin.login(tl.getInput('azureSubscriptionEndpoint', false));
               }
             } catch (err) {
-              console.log(tl.loc('KubeloginFailed', err));
+              tl.warning(tl.loc('KubeloginFailed', err));
             }
          });
     }

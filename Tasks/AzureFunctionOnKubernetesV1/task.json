@@ -190,6 +190,6 @@
         "ServiceExternalIP": "service %s external IP is %s",
         "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s",
         "AuthSchemeNotSupported": "Auth Scheme %s is not supported",
-        "KubeloginFailed": "Kubelogin authentication failed, exception %s"
+        "KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
     }
 }
