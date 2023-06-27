@@ -11,7 +11,7 @@
   "version": {
     "Major": 1,
     "Minor": 224,
-    "Patch": 1
+    "Patch": 0
   },
   "groups": [
     {
@@ -72,11 +72,19 @@
     "Node10": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
     "DownloadArtifacts": "Downloading artifact %s from: %s",
     "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
     "ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.224.1",
+    "Node16-219": "1.224.0"
   }
 }

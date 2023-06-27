@@ -78,5 +78,9 @@
     "DownloadArtifacts": "ms-resource:loc.messages.DownloadArtifacts",
     "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded",
     "ArtifactNameDirectoryNotFound": "ms-resource:loc.messages.ArtifactNameDirectoryNotFound"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.224.1",
+    "Node16-219": "1.224.0"
   }
 }
