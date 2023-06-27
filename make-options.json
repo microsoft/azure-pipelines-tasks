@@ -217,7 +217,6 @@
         "Tests"
     ],
     "Node16": [
-        "FuncToolsInstallerV0",
         "PackerBuildV0",
         "PackerBuildV1",
         "DownloadGitHubNugetPackageV1",
