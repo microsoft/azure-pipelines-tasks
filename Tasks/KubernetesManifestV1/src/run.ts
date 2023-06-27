@@ -50,7 +50,6 @@ async function run(): Promise<void> {
 
     let ignoreSSLErrors: boolean = false;
     const kubernetesServiceConnection = tl.getInput('kubernetesServiceConnection', false);
-    
     if (kubernetesServiceConnection) {
         ignoreSSLErrors = tl.getEndpointDataParameter(kubernetesServiceConnection, 'acceptUntrustedCerts', true) === 'true';
     }
