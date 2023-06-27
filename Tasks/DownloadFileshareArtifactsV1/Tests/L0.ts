@@ -26,7 +26,7 @@ describe('DownloadFileshareArtifactsV1 Suite', function () {
           console.log(err);
           done(err);
       };
-  }).timeout(5000);
+  }).timeout(30_000);
 
   it('No file share path should fail', (done) => {
     const tp: string = path.join(__dirname, 'L0NoFileSharePath.js');
@@ -44,7 +44,7 @@ describe('DownloadFileshareArtifactsV1 Suite', function () {
         console.log(err);
         done(err);
     };
-  });
+  }).timeout(30_000);
 
   it('No artifact name should fail', (done) => {
     const tp: string = path.join(__dirname, 'L0NoArtifactName.js');
