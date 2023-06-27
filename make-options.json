@@ -217,8 +217,6 @@
         "Tests"
     ],
     "Node16": [
-        "CondaEnvironmentV0",
-        "CondaEnvironmentV1",
         "PackerBuildV0",
         "PackerBuildV1",
         "DownloadGitHubNugetPackageV1",
