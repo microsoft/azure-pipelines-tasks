@@ -26,13 +26,13 @@ namespace BuildConfigGen
         {
             public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".json" };
 
-            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode16, bool isWif, string preprocessorVariableName, bool enableBuildConfigOverrides);
+            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode16, bool isWif, string preprocessorVariableName, bool enableBuildConfigOverrides, string? overriddenDirectoryName = null);
 
             public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode16: false, isWif: false, preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false);
-            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode16: true, isWif: false, preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true);
+            public static readonly ConfigRecord Node16_225 = new ConfigRecord(name: nameof(Node16_225), constMappingKey: "Node16-225", isDefault: false, isNode16: true, isWif: false, preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, overriddenDirectoryName: "Node16");
             public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode16: true, isWif: true, preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true);
 
-            public static ConfigRecord[] Configs = { Default, Node16, WorkloadIdentityFederation };
+            public static ConfigRecord[] Configs = { Default, Node16_225, WorkloadIdentityFederation };
         }
 
         // ensureUpdateModeVerifier wraps all writes.  if writeUpdate=false, it tracks writes that would have occured
@@ -161,7 +161,13 @@ namespace BuildConfigGen
                 }
                 else
                 {
-                    taskOutput = Path.Combine(gitRootPath, "_generated", @$"{task}_{config.name}");
+                    string directoryName = config.name;
+                    if (config.overriddenDirectoryName != null)
+                    {
+                        directoryName = config.overriddenDirectoryName;
+                    }
+
+                    taskOutput = Path.Combine(gitRootPath, "_generated", @$"{task}_{directoryName}");
                 }
 
                 if (config.enableBuildConfigOverrides)
@@ -217,13 +223,20 @@ namespace BuildConfigGen
 
         private static void GetBuildConfigFileOverridePaths(Config.ConfigRecord config, string taskTargetPath, out string path, out string readmeFile)
         {
+            string directoryName = config.name;
+
             if (!config.enableBuildConfigOverrides)
             {
                 throw new Exception("BUG: should not get here: !config.enableBuildConfigOverrides");
             }
+    
+            if (config.overriddenDirectoryName != null)
+            {
+                directoryName = config.overriddenDirectoryName;
+            }
 
-            path = Path.Combine(taskTargetPath, buildConfigs, config.name);
-            readmeFile = Path.Combine(taskTargetPath, buildConfigs, config.name, filesOverriddenForConfigGoHereReadmeTxt);
+            path = Path.Combine(taskTargetPath, buildConfigs, directoryName);
+            readmeFile = Path.Combine(taskTargetPath, buildConfigs, directoryName, filesOverriddenForConfigGoHereReadmeTxt);
         }
 
         private static void CopyConfigOverrides(string taskTargetPath, string taskOutput, Config.ConfigRecord config)
