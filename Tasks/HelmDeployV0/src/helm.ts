@@ -82,7 +82,6 @@ async function run() {
     var connectionType = tl.getInput("connectionType", true);
     var isKubConfigRequired = isKubConfigSetupRequired(command);
     var kubectlCli: kubernetescli;
-
     var externalAuth = connectionType === "None" && (command === "install" || command === "upgrade");
     if (externalAuth && !tl.getVariable("KUBECONFIG")) {
         tl.error("KUBECONFIG kube configuration file path must be set when connectionType is none and command is install or upgrade.");
