@@ -460,7 +460,6 @@
     "RolloutStatusTimedout": "ms-resource:loc.messages.RolloutStatusTimedout",
     "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink",
     "CantDownloadAccessProfile": "ms-resource:loc.messages.CantDownloadAccessProfile",
-    "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   }
 }

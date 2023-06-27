@@ -189,7 +189,6 @@
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
     "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP",
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile",
-    "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   }
 }

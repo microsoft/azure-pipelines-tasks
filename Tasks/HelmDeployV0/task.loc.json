@@ -546,7 +546,6 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "SaveSupportedInHelmsV3Only": "ms-resource:loc.messages.SaveSupportedInHelmsV3Only",
     "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
-    "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   }
 }

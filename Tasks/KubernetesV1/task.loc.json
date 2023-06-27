@@ -489,7 +489,6 @@
     "KubectlClientVersion": "ms-resource:loc.messages.KubectlClientVersion",
     "KubectlServerVersion": "ms-resource:loc.messages.KubectlServerVersion",
     "KubectlServerVerisonNotFound": "ms-resource:loc.messages.KubectlServerVerisonNotFound",
-    "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   }
 }
