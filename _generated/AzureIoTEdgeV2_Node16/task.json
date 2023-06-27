@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 224,
-    "Patch": 1
+    "Patch": 0
   },
   "preview": false,
   "showEnvironmentVariables": true,
@@ -250,6 +250,10 @@
   "execution": {
     "Node10": {
       "target": "index.js"
+    },
+    "Node16": {
+      "target": "index.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -290,5 +294,9 @@
       "description": "This is the path of generated deployment file.",
       "visibleRule": "action = Build module images"
     }
-  ]
+  ],
+  "_buildConfigMapping": {
+    "Default": "2.224.1",
+    "Node16-219": "2.224.0"
+  }
 }

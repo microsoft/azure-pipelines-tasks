@@ -290,5 +290,9 @@
       "description": "This is the path of generated deployment file.",
       "visibleRule": "action = Build module images"
     }
-  ]
+  ],
+  "_buildConfigMapping": {
+    "Default": "2.224.1",
+    "Node16-219": "2.224.0"
+  }
 }
