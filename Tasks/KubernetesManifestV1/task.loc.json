@@ -459,7 +459,6 @@
     "InvalidTimeoutValue": "ms-resource:loc.messages.InvalidTimeoutValue",
     "RolloutStatusTimedout": "ms-resource:loc.messages.RolloutStatusTimedout",
     "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink",
-    "CantDownloadAccessProfile": "ms-resource:loc.messages.CantDownloadAccessProfile",
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   }
 }
