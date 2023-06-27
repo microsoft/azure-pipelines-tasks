@@ -3,7 +3,7 @@ import assert = require('assert');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
-describe('DownloadFileshareArtifactsV0 Suite', function () {
+describe('DownloadFileshareArtifactsV1 Suite', function () {
     before(() => {
     });
 
