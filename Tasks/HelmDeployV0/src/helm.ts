@@ -92,14 +92,15 @@ async function run() {
         kubectlCli.login();
     }
   
-    try {
-        const kubelogin = new Kubelogin(helmutil.getTaskTempDir());
-        if (kubelogin.isAvailable()) {
-          tl.debug('Kubelogin is installed. Converting kubeconfig.');
-          await kubelogin.login(tl.getInput('azureSubscriptionEndpoint', false));
+    const kubelogin = new Kubelogin(helmutil.getTaskTempDir());
+    if (kubelogin.isAvailable()) {
+        tl.debug('Kubelogin is installed. Converting kubeconfig.');
+        const serviceConnection: string = tl.getInput('azureSubscriptionEndpoint', false);
+        try {
+            await kubelogin.login(serviceConnection);
+        } catch (err) {
+            tl.debug(tl.loc('KubeloginFailed', err));
         }
-    } catch (err) {
-        tl.warning(tl.loc('KubeloginFailed', err));
     }
 
     var helmCli: helmcli = new helmcli();

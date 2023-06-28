@@ -70,14 +70,15 @@ export default class ClusterConnection {
 
             process.env["KUBECONFIG"] = this.kubeconfigFile;
 
-            try {
-              const kubelogin = new Kubelogin(this.userDir);
-              if (kubelogin.isAvailable()) {
+            const kubelogin = new Kubelogin(this.userDir);
+            if (kubelogin.isAvailable()) {
                 tl.debug('Kubelogin is installed. Converting kubeconfig.');
-                await kubelogin.login(tl.getInput('azureSubscriptionEndpoint', false));
-              }
-            } catch (err) {
-              tl.warning(tl.loc('KubeloginFailed', err));
+                const serviceConnection: string = tl.getInput('azureSubscriptionEndpoint', false);
+                try {
+                    await kubelogin.login(serviceConnection);
+                } catch (err) {
+                    tl.debug(tl.loc('KubeloginFailed', err));
+                }
             }
          });
     }
