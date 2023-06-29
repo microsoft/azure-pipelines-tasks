@@ -91,12 +91,12 @@ function Get-RoleName($extPath) {
     return $roleName
 }
 
-function Get-AzureStoragePrimaryKey($storageAccount) {
-    $storageAccountResource = Get-AzStorageAccount -Name $storageAccount
+function Get-AzureStoragePrimaryKey($storageAccount, $resourceGroupName) {
+    $storageAccountResource = Get-AzStorageAccount -Name $storageAccount -ResourceGroupName $resourceGroupName
     if (!$storageAccountResource) {
         Write-Error -Message "Could not find storage account $storageAccount"
     }
-    $storageAccountKeys = Get-AzStorageAccountKey -Name $storageAccount
+    $storageAccountKeys = Get-AzStorageAccountKey -Name $storageAccount -ResourceGroupName $resourceGroupName
     if (!$storageAccountKeys) {
         Write-Error -Message "Could not retrieve storage account keys from storage account resource $Storage"
     }
@@ -104,7 +104,7 @@ function Get-AzureStoragePrimaryKey($storageAccount) {
     return $primaryStorageKey
 }
 
-function Get-DiagnosticsExtensions($cloudServiceName, $storageAccount, $extensionsPath, $storageAccountKeysMap) {
+function Get-DiagnosticsExtensions($cloudServiceName, $resourceGroupName, $storageAccount, $extensionsPath, $storageAccountKeysMap) {
     $diagnosticsConfigurations = @()
 
     $extensionsSearchPath = Split-Path -Parent $extensionsPath
@@ -120,7 +120,7 @@ function Get-DiagnosticsExtensions($cloudServiceName, $storageAccount, $extensio
     Write-Host (Get-VstsLocString -Key "Applyinganyconfigureddiagnosticsextensions")
 
     Write-Verbose "Getting the primary AzureStorageKey..."
-    $primaryStorageKey = Get-AzureStoragePrimaryKey $StorageAccount
+    $primaryStorageKey = Get-AzureStoragePrimaryKey $StorageAccount $resourceGroupName
     if (!$primaryStorageKey) {
         Write-Warning (Get-VstsLocString -Key "Couldnotgettheprimarystoragekeyforstorageaccount" -ArgumentList "$storageAccount")
         return $diagnosticsConfigurations
@@ -182,8 +182,8 @@ function Get-DiagnosticsExtensions($cloudServiceName, $storageAccount, $extensio
             $storageAccountKey = $primaryStorageKey
         }
 
-        Write-Host "New-AzCloudServiceDiagnosticsExtension -Name $role -CloudServiceName $cloudServiceName -DiagnosticsConfigurationPath $fullExtPath -StorageAccountName $storageAccountName -StorageAccountKey <storageKey> -RolesAppliedTo [$role]"
-        $wadconfig = New-AzCloudServiceDiagnosticsExtension -Name $role -CloudServiceName $cloudServiceName -DiagnosticsConfigurationPath $fullExtPath `
+        Write-Host "New-AzCloudServiceDiagnosticsExtension -Name $role -ResourceGroupName $resourceGroupName -CloudServiceName $cloudServiceName -DiagnosticsConfigurationPath $fullExtPath -StorageAccountName $storageAccountName -StorageAccountKey <storageKey> -RolesAppliedTo [$role]"
+        $wadconfig = New-AzCloudServiceDiagnosticsExtension -Name $role -ResourceGroupName $resourceGroupName -CloudServiceName $cloudServiceName -DiagnosticsConfigurationPath $fullExtPath `
             -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey -RolesAppliedTo @($role)
 
         #Add each extension configuration to the array for use by caller

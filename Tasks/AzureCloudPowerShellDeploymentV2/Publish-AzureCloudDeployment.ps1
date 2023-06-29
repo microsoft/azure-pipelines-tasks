@@ -64,7 +64,7 @@ try {
         $tag["Label"] = $label
     }
 
-    $diagnosticExtensions = Get-DiagnosticsExtensions $ServiceName $StorageAccount $serviceConfigFile $storageAccountKeysMap
+    $diagnosticExtensions = Get-DiagnosticsExtensions $ServiceName $ResourceGroupName $StorageAccount $serviceConfigFile $storageAccountKeysMap
 
     Write-Host "##[command]Get-AzCloudService -Name $ServiceName -ResourceGroupName $ResourceGroupName -ErrorAction SilentlyContinue -ErrorVariable azureServiceError"
     $azureService = Get-AzCloudService -Name $ServiceName -ResourceGroupName $ResourceGroupName -ErrorAction SilentlyContinue -ErrorVariable azureServiceError
