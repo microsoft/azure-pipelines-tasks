@@ -10,6 +10,8 @@ function Initialize-AzModule {
         [string] $connectedServiceNameARM,
         [Parameter(Mandatory=$false)]
         [string] $azVersion,
+        [Parameter(Mandatory = $false)]
+        [bool] $isPSCore,
         [Parameter(Mandatory=$false)]
         [Security.SecureString]$encryptedToken)
 
@@ -22,7 +24,7 @@ function Initialize-AzModule {
 
         Write-Verbose "Initializing Az Subscription."
         Initialize-AzSubscription -Endpoint $Endpoint -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $encryptedToken `
-            -azAccountsModuleVersion $azAccountsVersion
+            -azAccountsModuleVersion $azAccountsVersion -isPSCore $isPSCore
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
@@ -79,9 +81,11 @@ function Initialize-AzSubscription {
         [Parameter(Mandatory=$false)]
         [string] $connectedServiceNameARM,
         [Parameter(Mandatory=$false)]
-        [Security.SecureString]$vstsAccessToken,
+        [Security.SecureString] $vstsAccessToken,
         [Parameter(Mandatory=$false)]
-        [Version]$azAccountsModuleVersion)
+        [Version] $azAccountsModuleVersion,
+        [Parameter(Mandatory=$false)]
+        [bool] $isPSCore)
 
     #Set UserAgent for Azure Calls
     Set-UserAgent
@@ -168,7 +172,7 @@ function Initialize-AzSubscription {
         }
     } elseif ($Endpoint.Auth.Scheme -eq 'WorkloadIdentityFederation') {
         $clientAssertionJwt = Get-VstsFederatedToken -serviceConnectionId $connectedServiceNameARM -vstsAccessToken $vstsAccessToken `
-            -azAccountsModuleVersion $azAccountsModuleVersion
+            -azAccountsModuleVersion $azAccountsModuleVersion -isPSCore $isPSCore
 
         Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
         $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
