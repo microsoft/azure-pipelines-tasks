@@ -222,6 +222,7 @@
         "NuGetPublisherV0",
         "MysqlDeploymentOnMachineGroupV1",
         "GitHubReleaseV0",
-        "GitHubReleaseV1"
+        "GitHubReleaseV1",
+        "AzureVmssDeploymentV0"
     ]
 }
