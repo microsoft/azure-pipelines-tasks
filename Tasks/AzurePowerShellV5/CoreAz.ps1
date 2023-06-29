@@ -10,6 +10,9 @@ param
     [String] [Parameter(Mandatory = $false)]
     $targetAzurePs,
 
+    [bool] [Parameter(Mandatory = $false)]
+    $isPSCore,
+
     [String] [Parameter(Mandatory = $false)]
     $vstsAccessToken
 )
@@ -26,4 +29,4 @@ $endpointObject =  ConvertFrom-Json  $endpoint
 Import-Module "$PSScriptRoot\ps_modules\VstsAzureHelpers_"
 $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
 Initialize-AzModule -Endpoint $endpointObject -connectedServiceNameARM $connectedServiceNameARM `
-    -azVersion $targetAzurePs -encryptedToken $encryptedToken
+    -azVersion $targetAzurePs -isPSCore $isPSCore -encryptedToken $encryptedToken
