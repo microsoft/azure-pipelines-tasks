@@ -48,7 +48,7 @@ if ($targetAzurePs -eq $latestVersion) {
 } elseif (-not($regex.IsMatch($targetAzurePs))) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
 }
-Write-Host "## Validating Inputs Complete" 
+Write-Host "## Validating Inputs Complete"
 
 . $PSScriptRoot\TryMakingModuleAvailable.ps1 -targetVersion "$targetAzurePs" -platform Windows
 
@@ -94,7 +94,7 @@ try
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
     Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $serviceName `
-        -azVersion $targetAzurePs -encryptedToken $encryptedToken
+        -azVersion $targetAzurePs -encryptedToken $encryptedToken -isPSCore $input_pwsh
     Write-Host "## Az module initialization Complete"
     $success = $true
 }
