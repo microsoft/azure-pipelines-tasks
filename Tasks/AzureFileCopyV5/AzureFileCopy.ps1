@@ -65,6 +65,8 @@ $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 
 # Update PSModulePath for hosted agent
 . "$PSScriptRoot\Utility.ps1"
+. "$PSScriptRoot\ArgumentParser.ps1"
+
 CleanUp-PSModulePathForHostedAgent
 
 $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require

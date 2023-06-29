@@ -96,11 +96,12 @@ $AzureFileCopyRemoteJob = {
             Write-DetailLogs "Using default AzCopy arguments for dowloading to VM"
             $additionalArguments = "--recursive --log-level=INFO"
         }
-
-        Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $additionalArguments"
-
-        $azCopyCommand = "& azcopy copy `"$containerURL/*$containerSasToken`" `"$targetPath`" $additionalArguments"
-        Invoke-Expression $azCopyCommand
+        
+        $arguments = Parse-FileArguments -InputArgs $additionalArguments
+    
+        Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $arguments"
+                
+        & azcopy copy $targetPath $containerURL/*$containerSasToken @($arguments[0])
     }
     catch
     {
