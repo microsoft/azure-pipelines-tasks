@@ -236,7 +236,7 @@ function Create-AzureCloudService {
     if ($KeyVault) {
         $azureService += " -KeyVaultName `"$KeyVault`""
         if ($diagnosticExtensions -and ($diagnosticExtensions.Length -gt 0)) {
-            $azureService += " -ExtensionProfile @($(diagnosticExtensions.Length) extensions)"
+            $azureService += " -ExtensionProfile @($($diagnosticExtensions.Length) extensions)"
             Write-Host "$azureService"
             $extensionProfile = @{extension = @($diagnosticExtensions)}
             New-AzCloudService -Name "$ServiceName" -ResourceGroupName "$resourceGroupName" -Location "$serviceLocation" -ConfigurationFile "$csCfg" `
@@ -250,7 +250,7 @@ function Create-AzureCloudService {
     }
     else {
         if ($diagnosticExtensions -and ($diagnosticExtensions.Length -gt 0)) {
-            $azureService += " -ExtensionProfile @($(diagnosticExtensions.Length) extensions)"
+            $azureService += " -ExtensionProfile @($($diagnosticExtensions.Length) extensions)"
             Write-Host "$azureService"
             $extensionProfile = @{extension = @($diagnosticExtensions)}
             New-AzCloudService -Name "$serviceName" -ResourceGroupName "$resourceGroupName" -Location "$serviceLocation" -ConfigurationFile "$csCfg" `
