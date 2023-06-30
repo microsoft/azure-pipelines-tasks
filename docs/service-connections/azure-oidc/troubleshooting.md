@@ -8,10 +8,10 @@ The following table lists [tasks](https://learn.microsoft.com/azure/devops/pipe
 | --- |  --- |
 | AzureAppServiceManageV0 | Available |
 | AzureAppServiceSettingsV1 | Available |
-| AzureCLIV1 | addSpnToEnvironment update not available yet |
 | AzureCLIV1 | Available |
-| AzureCLIV2 | addSpnToEnvironment update not available yet |
+| AzureCLIV1 | addSpnToEnvironment update not available yet |
 | AzureCLIV2 | Available |
+| AzureCLIV2 | addSpnToEnvironment update not available yet |
 | AzureCloudPowerShellDeploymentV1 | Use AzureCloudPowerShellDeploymentV2 for OIDC |
 | AzureCloudPowerShellDeploymentV2 | Available |
 | AzureContainerAppsV0 | Available |
@@ -37,8 +37,8 @@ The following table lists [tasks](https://learn.microsoft.com/azure/devops/pipe
 | AzurePowerShellV2 | Available |
 | AzurePowerShellV3 | Available |
 | AzurePowerShellV4 | Available |
-| AzurePowerShellV5 | Linux version not available yet |
 | AzurePowerShellV5 | Available |
+| AzurePowerShellV5 | Linux version not available yet |
 | AzureResourceGroupDeploymentV2 | Available |
 | AzureResourceManagerTemplateDeploymentV3 | Available |
 | AzureRmWebAppDeploymentV3 | Available |
@@ -47,13 +47,18 @@ The following table lists [tasks](https://learn.microsoft.com/azure/devops/pipe
 | AzureVmssDeploymentV0 | Available |
 | AzureWebAppContainerV1 | Not available yet |
 | AzureWebAppV1 | Not available yet |
+| DockerComposeV0 | Not available yet |
+| DockerV0 | Not available yet |
+| DockerV1 | Not available yet |
 | HelmDeployV0 | Not available yet |
 | InvokeRestApiV1 | Available |
-| KubernetesManifestV1 | Not available yet |
+| JavaToolInstallerV0 | Not available yet |
+| JenkinsDownloadArtifactsV1 | Not available yet |
 | KubernetesV1 | Not available yet |
 | PackerBuildV0 | Packer does not support OIDC yet |
 | PackerBuildV1 | Packer does not support OIDC yet |
-| SqlAzureDacpacDeploymentV1 | Available |
+| ServiceFabricComposeDeployV0 | Service Fabric does not support OIDC |
+| ServiceFabricDeployV1 | Service Fabric does not support OIDC |
 
 ## Error messages
 
@@ -64,7 +69,9 @@ The following messages indicate a task does not support Workload Identity federa
 -   *Could not fetch access token for Azure*
 -   \<Task\> *only support(s) service principal authorization*
 
-## Limitations
+- The `AzurePowerShellV5` task does not yet support
+
+## Limitations & Known Issues
 
 -   During private preview, breaking changes may be introduced.
 -   Support for Azure Service Connections only.
@@ -74,6 +81,7 @@ The following messages indicate a task does not support Workload Identity federa
 -   Not all 'in-the-box' [tasks](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines") have rolled out yet (see overview).
 -   There is no method to 'grab' credentials similar to [`addSpnToEnvironment`](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines#inputs "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines#inputs") yet.
 -   Convert does not validate whether pipelines consuming the Service Connection use unsupported tasks, have jobs that are in flight, or have a secret that is consumed in the [AzureCLI](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines") task (`addSpnToEnvironment`). As a result, converted Service Connections may have to be reverted back if there is a dependency on `addSpnToEnvironment` or tasks/tools that do not support OIDC.
+-   `AzurePowerShellV5` supports OIDC on Windows only, with `pwsh: false`
 
 ## Frequently Asked Questions
 
@@ -108,7 +116,7 @@ The following messages indicate a task does not support Workload Identity federa
 -   Q: I have a(nother) organization who I would like to join the preview, how can they get access?  
     A: Access requests can be submitted here: <https://aka.ms/azdo-rm-workload-identity-preview>.
 -   Q: Can I create a Service Connection that uses Workload Identity federation through a REST API?  
-    A: Yes, you can use the [REST API](https://learn.microsoft.com/rest/api/azure/devops/serviceendpoint/endpoints/create?view=azure-devops-rest-7.1&tabs=HTTP "https://learn.microsoft.com/rest/api/azure/devops/serviceendpoint/endpoints/create?view=azure-devops-rest-7.1&tabs=HTTP"). Simply remove the *serviceprincipalkey* attribute. Before making the request, you first need to create a Service Principal with the right federated credential. This can be done with the [Azure CLI](https://learn.microsoft.com/cli/azure/ad/app/federated-credential?view=azure-cli-latest#az-ad-app-federated-credential-create "https://learn.microsoft.com/cli/azure/ad/app/federated-credential?view=azure-cli-latest#az-ad-app-federated-credential-create") or [Microsoft Graph API](https://learn.microsoft.com/graph/api/application-post-federatedidentitycredentials?view=graph-rest-1.0&tabs=http "https://learn.microsoft.com/graph/api/application-post-federatedidentitycredentials?view=graph-rest-1.0&tabs=http"). The federated subject needs to match the Service Connection name: `sc://<org name>/<project name>/<service connection name>`.
+    A: Yes, you can use the [REST API](https://learn.microsoft.com/rest/api/azure/devops/serviceendpoint/endpoints/create?view=azure-devops-rest-7.1&tabs=HTTP "https://learn.microsoft.com/rest/api/azure/devops/serviceendpoint/endpoints/create?view=azure-devops-rest-7.1&tabs=HTTP"). Here is a sample [script](https://github.com/geekzter/azure-pipeline-scripts/blob/586e6dd5bd84c9f7985ecc1501d76f2b6f87022b/scripts/create_azurerm_msi_oidc_service_connection.ps1#L277) and [request](https://github.com/geekzter/azure-pipeline-scripts/blob/main/scripts/serviceEndpointRequest.json).
 -   Q: Can I use a Managed Identity instead of a Service Principal to set up Workload Identity federation?  
     A: Yes, it is possible to use [Managed Identity for Workload Identity federation](https://learn.microsoft.com/en-us/azure/active-directory/workload-identities/workload-identity-federation-create-trust-user-assigned-managed-identity?pivots=identity-wif-mi-methods-azp). To set this up, use the [manual configuration](https://github.com/microsoft/azure-pipelines-tasks/blob/users/geekzter/oidc-preview-docs/docs/service-connections/azure-oidc/manual-configuration.md#federated-managed-identity) and populate `clientId`, `tenantId` from the Managed Identity's properties. [Here is a sample script](https://github.com/geekzter/azure-pipeline-scripts/blob/main/scripts/create_azurerm_msi_oidc_service_connection.ps1) to configure a Service Connection with a Federated Managed Identity.
 -   Q: The AzurePowerShell task does not work on Linux, what can we do?  
