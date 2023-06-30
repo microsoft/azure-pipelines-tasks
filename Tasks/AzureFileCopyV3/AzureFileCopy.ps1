@@ -82,6 +82,7 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 # Load all dependent files for execution
 . "$PSScriptRoot\AzureFileCopyRemoteJob.ps1"
 . "$PSScriptRoot\Utility.ps1"
+. "$PSScriptRoot\ArgumentParser.ps1"
 
 # Enabling detailed logging only when system.debug is true
 $enableDetailedLogging = ($env:system_debug -eq "true")
@@ -170,7 +171,6 @@ try {
     }
     
     Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArgumentsForBlobCopy
-    Validate-AdditionalArguments $additionalArguments
 
     # Uploading files to container
     Upload-FilesToAzureContainer -sourcePath $sourcePath `

@@ -24,6 +24,7 @@ Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy"
 
 . $PSScriptRoot/RoboCopyJob.ps1
 . $PSScriptRoot/Utility.ps1
+. $PSScriptRoot/ArgumentParser.ps1
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -42,7 +43,6 @@ $envOperationStatus = 'Passed'
 
 Validate-SourcePath $sourcePath
 Validate-DestinationPath $targetPath $environmentName
-Validate-AdditionalArguments $additionalArguments
 
 if([string]::IsNullOrWhiteSpace($environmentName))
 {
