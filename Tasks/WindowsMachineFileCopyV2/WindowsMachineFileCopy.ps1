@@ -18,6 +18,7 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 
 . $PSScriptRoot/RoboCopyJob.ps1
 . $PSScriptRoot/Utility.ps1
+. $PSScriptRoot/ArgumentParser.ps1
 
 try 
 {

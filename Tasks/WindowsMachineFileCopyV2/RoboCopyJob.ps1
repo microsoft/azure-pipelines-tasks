@@ -234,11 +234,12 @@ param (
     }
 
     try
-    {
+    {       
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
+        $arguments = Parse-FileArguments -InputArgs $robocopyParameters
+                
+        & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy @($arguments[0])
 
-        $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
-        Invoke-Expression $command
         if ($LASTEXITCODE -ge 8)
         {
             $errorMessage = Get-VstsLocString -Key "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails"
