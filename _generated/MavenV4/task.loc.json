@@ -515,5 +515,9 @@
     "AuthenticationNotNecessary": "ms-resource:loc.messages.AuthenticationNotNecessary",
     "UsingAuthFeed": "ms-resource:loc.messages.UsingAuthFeed",
     "NoTestResults": "ms-resource:loc.messages.NoTestResults"
+  },
+  "_buildConfigMapping": {
+    "Default": "4.223.1",
+    "Node20-219": "4.223.0"
   }
 }

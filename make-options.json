@@ -223,5 +223,8 @@
         "MysqlDeploymentOnMachineGroupV1",
         "GitHubReleaseV0",
         "GitHubReleaseV1"
+    ],
+    "Node20": [
+        "MavenV4"
     ]
 }
