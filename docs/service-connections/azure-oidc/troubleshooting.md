@@ -9,9 +9,7 @@ The following table lists [tasks](https://learn.microsoft.com/azure/devops/pipe
 | AzureAppServiceManageV0 | Available |
 | AzureAppServiceSettingsV1 | Available |
 | AzureCLIV1 | Available |
-| AzureCLIV1 | addSpnToEnvironment update not available yet |
 | AzureCLIV2 | Available |
-| AzureCLIV2 | addSpnToEnvironment update not available yet |
 | AzureCloudPowerShellDeploymentV1 | Use AzureCloudPowerShellDeploymentV2 for OIDC |
 | AzureCloudPowerShellDeploymentV2 | Available |
 | AzureContainerAppsV0 | Available |
@@ -122,7 +120,9 @@ The following messages indicate a task does not support Workload Identity federa
 -   Q: I'm using Terraform, how can I use Workload Identity federation?  
     A: There are 3 methods to use Terraform with OIDC:
        - Using one of the Terraform tasks from the Marketplace. We are making changes to task developers can obtain the token. Once that has completed the [DevLabs Terraform](https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks) and other extensions will be updated.
-       - We will be adding the `federatedToken` environment variable with the AzureCLI@2 task and `addSpnToEnvironment: true`. This will enable you to assign the [`ARM_OIDC_TOKEN`](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc#configuring-the-service-principal-in-terraform) environment variable consumed by the [azuread](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs#argument-reference) & [azurerm](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc#configuring-the-service-principal-in-terraform) providers.
+       - We have added the `idToken` environment variable with the AzureCLI@2 task and `addSpnToEnvironment: true`. This will enable you to assign the [`ARM_OIDC_TOKEN`](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc#configuring-the-service-principal-in-terraform) environment variable consumed by the [azuread](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs#argument-reference) & [azurerm](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc#configuring-the-service-principal-in-terraform) providers.  
+         `ARM_OIDC_TOKEN = idToken`  
+         `ARM_USE_OUDC = 'true'`
        - You can use OIDC today with the help of [a script](https://github.com/geekzter/azure-pipeline-examples/blob/main/deployment/terraform-service-connection/set_terraform_azurerm_vars.ps1) to set [`ARM_OIDC_TOKEN`](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc#configuring-the-service-principal-in-terraform). See end-to-end sample at [Azure-Samples/azure-devops-terraform-oidc-ci-cd](https://github.com/Azure-Samples/azure-devops-terraform-oidc-ci-cd/tree/main).
 
 ## More information
