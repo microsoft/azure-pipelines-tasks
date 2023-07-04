@@ -441,9 +441,7 @@ export class ApplicationTokenCredentials {
         return msalInstance;
     }
 
-    private async configureMSALWithOIDC(msalConfig: msal.Configuration): Promise<msal.ConfidentialClientApplication> {
-        tl.debug("MSAL - FederatedAccess - OIDC is used.");
-
+    public async getFederatedToken(): Promise<string> {
         const projectId: string = tl.getVariable("System.TeamProjectId");
         const hub: string = tl.getVariable("System.HostType");
         const planId: string = tl.getVariable('System.PlanId');
@@ -466,7 +464,13 @@ export class ApplicationTokenCredentials {
             0,
             2000);
 
-        msalConfig.auth.clientAssertion = oidc_token;
+        return oidc_token;
+    }
+
+    private async configureMSALWithOIDC(msalConfig: msal.Configuration): Promise<msal.ConfidentialClientApplication> {
+        tl.debug("MSAL - FederatedAccess - OIDC is used.");
+
+        msalConfig.auth.clientAssertion = await this.getFederatedToken();
 
         let msalInstance = new msal.ConfidentialClientApplication(msalConfig);
         return msalInstance;
