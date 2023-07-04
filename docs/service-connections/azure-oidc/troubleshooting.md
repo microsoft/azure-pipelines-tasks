@@ -9,9 +9,11 @@ The following table lists [tasks](https://learn.microsoft.com/azure/devops/pipe
 | AzureAppServiceManageV0 | Available |
 | AzureAppServiceSettingsV1 | Available |
 | AzureCLIV1 | Available |
+| AzureCLIV1 | Available |
+| AzureCLIV2 | Available |
 | AzureCLIV2 | Available |
 | AzureCloudPowerShellDeploymentV1 | Use AzureCloudPowerShellDeploymentV2 for OIDC |
-| AzureCloudPowerShellDeploymentV2 | Available |
+| AzureCloudPowerShellDeploymentV2 | Not available yet |
 | AzureContainerAppsV0 | Available |
 | AzureContainerAppsV1 | Available |
 | AzureFileCopyV1 | AzCopy v7 does not support OIDC |
@@ -19,9 +21,9 @@ The following table lists [tasks](https://learn.microsoft.com/azure/devops/pipe
 | AzureFileCopyV3 | AzCopy v7 does not support OIDC |
 | AzureFileCopyV4 | AzCopy v10 does not support OIDC yet |
 | AzureFileCopyV5 | AzCopy v10 does not support OIDC yet |
-| AzureFunctionAppContainerV1 | Not available yet |
-| AzureFunctionAppV1 | Not available yet |
-| AzureFunctionAppV2 | Not available yet |
+| AzureFunctionAppContainerV1 | Available |
+| AzureFunctionAppV1 | Available |
+| AzureFunctionAppV2 | Available |
 | AzureFunctionOnKubernetesV1 | Not available yet |
 | AzureIoTEdgeV2 | Not available yet |
 | AzureKeyVaultV1 | Available |
@@ -36,23 +38,23 @@ The following table lists [tasks](https://learn.microsoft.com/azure/devops/pipe
 | AzurePowerShellV3 | Available |
 | AzurePowerShellV4 | Available |
 | AzurePowerShellV5 | Available |
-| AzurePowerShellV5 | Linux version not available yet |
+| AzurePowerShellV5 | Available |
 | AzureResourceGroupDeploymentV2 | Available |
 | AzureResourceManagerTemplateDeploymentV3 | Available |
 | AzureRmWebAppDeploymentV3 | Available |
 | AzureRmWebAppDeploymentV4 | Available |
 | AzureSpringCloudV0 | Available |
 | AzureVmssDeploymentV0 | Available |
-| AzureWebAppContainerV1 | Not available yet |
-| AzureWebAppV1 | Not available yet |
+| AzureWebAppContainerV1 | Available |
+| AzureWebAppV1 | Available |
 | DockerComposeV0 | Not available yet |
 | DockerV0 | Not available yet |
 | DockerV1 | Not available yet |
-| HelmDeployV0 | Not available yet |
+| HelmDeployV0 | Available |
 | InvokeRestApiV1 | Available |
 | JavaToolInstallerV0 | Not available yet |
 | JenkinsDownloadArtifactsV1 | Not available yet |
-| KubernetesV1 | Not available yet |
+| KubernetesV1 | Available |
 | PackerBuildV0 | Packer does not support OIDC yet |
 | PackerBuildV1 | Packer does not support OIDC yet |
 | ServiceFabricComposeDeployV0 | Service Fabric does not support OIDC |
@@ -73,13 +75,11 @@ The following messages indicate a task does not support Workload Identity federa
 
 -   During private preview, breaking changes may be introduced.
 -   Support for Azure Service Connections only.
--   We plan to implement a breaking change around Mid-June, which will require Workload Identity Service Connections to be updated or recreated.
+-   We plan to implement a breaking change around early July, which will require Workload Identity Service Connections to be updated or recreated.
 -   Azure Tasks included with [Azure DevOps Azure Tasks](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines") only, no support for Marketplace extension Tasks yet.
 -   AzCopy & Packer do not support Workload identity federation. The [AzureFileCopy](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-file-copy-v5?view=azure-pipelines "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-file-copy-v5?view=azure-pipelines") and [PackerBuild](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/packer-build-v1?view=azure-pipelines "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/packer-build-v1?view=azure-pipelines") tasks will be updated once the underlying tools receive support.
--   Not all 'in-the-box' [tasks](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines") have rolled out yet (see overview).
--   There is no method to 'grab' credentials similar to [`addSpnToEnvironment`](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines#inputs "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines#inputs") yet.
+-   Not all 'in-the-box' [tasks](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines") have rolled out yet (see above).
 -   Convert does not validate whether pipelines consuming the Service Connection use unsupported tasks, have jobs that are in flight, or have a secret that is consumed in the [AzureCLI](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines") task (`addSpnToEnvironment`). As a result, converted Service Connections may have to be reverted back if there is a dependency on `addSpnToEnvironment` or tasks/tools that do not support OIDC.
--   `AzurePowerShellV5` supports OIDC on Windows only, with `pwsh: false`
 
 ## Frequently Asked Questions
 
@@ -100,7 +100,7 @@ The following messages indicate a task does not support Workload Identity federa
 -   Q: I converted a Service Connection to use Workload Identity federation. However, now I have broken pipelines.  
     A: You may be using tasks that do not yet support Workload identity federation. A Service Connection that has been converted to use Workload identity federation can be reverted back for 2 months. Converting the Service Connection back to use a secret should address any issues that were the result of the conversion to use Workload identity federation.
 -   Q: I'm using the [AzureCLI](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines) task with `addSpnToEnvironment: true` to get the Service Principal credentials and login with another tool.  
-    A: There is no longer a Service Principal secret. We will update the AzureCLI task to add a `federatedToken` environment variable. Tools that support Workload identity federation can consume this token.
+    A: There is no Service Principal secret. You can set `addSpnToEnvironment: true` on the AzureCLI task to have the `idToken` environment variable populated. Tools that support Workload identity federation can consume this token.
 -   Q: I'm not using Azure, but another service that supports Workload identity federation. When can I use that?
     A: Marketplace tasks that use Service Connections can be updated to use Workload Identity federation later in the year.
 -   Q: I'm using Service Connections to access Sovereign clouds (e.g. Azure China), can I use Workload Identity federation?  
@@ -120,10 +120,10 @@ The following messages indicate a task does not support Workload Identity federa
 -   Q: I'm using Terraform, how can I use Workload Identity federation?  
     A: There are 3 methods to use Terraform with OIDC:
        - Using one of the Terraform tasks from the Marketplace. We are making changes to task developers can obtain the token. Once that has completed the [DevLabs Terraform](https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks) and other extensions will be updated.
-       - We have added the `idToken` environment variable with the AzureCLI@2 task and `addSpnToEnvironment: true`. This will enable you to assign the [`ARM_OIDC_TOKEN`](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc#configuring-the-service-principal-in-terraform) environment variable consumed by the [azuread](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs#argument-reference) & [azurerm](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc#configuring-the-service-principal-in-terraform) providers.  
+       - We have added the `idToken` environment variable with the AzureCLI@2 task and `addSpnToEnvironment: true`. This will enable you to assign the [`ARM_OIDC_TOKEN`](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc#configuring-the-service-principal-in-terraform) environment variable consumed by the [azuread](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs#argument-reference) & [azurerm](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc#configuring-the-service-principal-in-terraform) providers:  
          `ARM_OIDC_TOKEN = idToken`  
          `ARM_USE_OUDC = 'true'`
-       - You can use OIDC today with the help of [a script](https://github.com/geekzter/azure-pipeline-examples/blob/main/deployment/terraform-service-connection/set_terraform_azurerm_vars.ps1) to set [`ARM_OIDC_TOKEN`](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc#configuring-the-service-principal-in-terraform). See end-to-end sample at [Azure-Samples/azure-devops-terraform-oidc-ci-cd](https://github.com/Azure-Samples/azure-devops-terraform-oidc-ci-cd/tree/main).
+       - Use this the end-to-end sample at [Azure-Samples/azure-devops-terraform-oidc-ci-cd](https://github.com/Azure-Samples/azure-devops-terraform-oidc-ci-cd/tree/main).
 
 ## More information
 
