@@ -165,10 +165,14 @@ function Get-VstsFederatedToken {
         [Parameter(Mandatory=$true)]
         [Security.SecureString]$vstsAccessToken,
         [Parameter(Mandatory=$true)]
-        [Version]$azAccountsModuleVersion
+        [Version]$azAccountsModuleVersion,
+        [bool]$isPSCore
     )
 
     $OMDirectory = $PSScriptRoot
+    if ($isPSCore) {
+        $OMDirectory = [System.IO.Path]::Combine($OMDirectory, 'netstandard')
+    }
 
     if ($azAccountsModuleVersion.Major -le 2 -and $azAccountsModuleVersion.Minor -le 12 -and $azAccountsModuleVersion.Build -lt 3) {
         $newtonsoftDll = [System.IO.Path]::Combine($OMDirectory, "Newtonsoft.Json.10", "Newtonsoft.Json.dll")
