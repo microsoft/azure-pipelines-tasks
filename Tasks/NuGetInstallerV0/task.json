@@ -17,6 +17,7 @@
         "DeploymentGroup"
     ],
     "minimumAgentVersion": "2.115.0",
+    "deprecated": true,
     "groups": [
         {
             "name": "advanced",
