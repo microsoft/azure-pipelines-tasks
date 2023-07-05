@@ -44,7 +44,7 @@ async function start(taskName) {
     const promises = [];
     for(const config of configs) {
       const pipelineBuild = await runTestPipeline(pipeline, config);
-      const promise = new Promise((resolve, reject) => verifyBuildStatus(pipelineBuild, resolve, reject))
+      const promise = new Promise((resolve, reject) => verifyBuildStatus(taskName, pipelineBuild, resolve, reject))
       promises.push(promise);
     }
     return promises;
@@ -131,8 +131,11 @@ function runTestPipeline(pipeline, config = '') {
     });
 }
 
-async function verifyBuildStatus(pipelineBuild, resolve, reject) {
-  console.log(`Verify build ${pipelineBuild.name} status, url: ${pipelineBuild._links.web.href}`);
+async function verifyBuildStatus(pipelineName, pipelineBuild, resolve, reject) {
+  const webUrl = pipelineBuild._links.web.href;
+  const buildInfo = `(id: "${pipelineBuild.id}", url: ${webUrl})`;
+  const verify = `Verifying the "${pipelineName}" pipeline build status ${buildInfo}`;
+  console.log(verify);
 
   let retryCount = 0;
 
@@ -140,7 +143,7 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
     axios
       .get(pipelineBuild.url, { auth })
       .then(({ data }) => {
-        console.log(`Verify build status (${pipelineBuild.name})... ${data.state}`);
+        console.log(`${verify}... ${data.state}`);
 
         if (data.state !== 'completed') {
           return;
@@ -148,7 +151,7 @@ async function verifyBuildStatus(pipelineBuild, resolve, reject) {
 
         clearInterval(interval);
 
-        const result = `Build ${pipelineBuild.name} id:${pipelineBuild.id} finished with status "${data.state}" and result "${data.result}", url: ${pipelineBuild._links.web.href}`;
+        const result = `The "${pipelineName}" pipeline build ${buildInfo} completed with result "${data.result}"`;
 
         if (data.result === 'succeeded') {
           resolve(result);
