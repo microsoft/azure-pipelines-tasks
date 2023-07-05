@@ -14,6 +14,7 @@
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
+  "deprecated": true,
   "inputs": [
     {
       "name": "feed",
