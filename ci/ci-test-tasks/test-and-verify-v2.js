@@ -133,10 +133,8 @@ function runTestPipeline(pipeline, config = '') {
 }
 
 async function verifyBuildStatus(pipelineName, pipelineBuild, resolve, reject) {
-  const webUrl = pipelineBuild._links.web.href;
-  const buildInfo = `(id: "${pipelineBuild.id}", url: ${webUrl})`;
-  const verify = `Verifying the "${pipelineName}" pipeline build status ${buildInfo}`;
-  console.log(verify);
+  const stringifiedBuild = `build (id: "${pipelineBuild.id}", url: "${pipelineBuild._links.web.href}") of the pipeline "${pipelineName}"`;
+  console.log(`Verifying state of the ${stringifiedBuild}`);
 
   let retryCount = 0;
 
@@ -145,13 +143,13 @@ async function verifyBuildStatus(pipelineName, pipelineBuild, resolve, reject) {
     axios
       .get(pipelineBuild.url, { auth })
       .then(({ data }) => {
-        console.log(`${verify}... ${data.state}`);
+        console.log(`State of the ${stringifiedBuild}: "${data.state}"`);
 
         if (data.state !== 'completed') {
           if (++intervalAmount * intervalInSeconds >= buildTimeoutInMinutes * 60) {
             clearInterval(interval);
 
-            reject(new Error(`Timeout to complete the "${pipelineName}" pipeline build ${buildInfo} exceeded`));
+            reject(new Error(`Timeout to complete the ${stringifiedBuild} exceeded`));
           }
 
           return;
@@ -159,7 +157,7 @@ async function verifyBuildStatus(pipelineName, pipelineBuild, resolve, reject) {
 
         clearInterval(interval);
 
-        const result = `The "${pipelineName}" pipeline build ${buildInfo} completed with result "${data.result}"`;
+        const result = `The ${stringifiedBuild} completed with result "${data.result}"`;
 
         if (data.result === 'succeeded') {
           resolve(result);
