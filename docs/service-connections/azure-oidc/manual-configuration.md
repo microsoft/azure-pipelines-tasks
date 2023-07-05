@@ -1,3 +1,8 @@
+## Pages
+
+#### [Getting Started](README.md)
+#### [Troubleshooting & Frequently Asked Questions](troubleshooting.md)
+
 # Workload Identity federation - Manual Configuration
 
 In case a user does not have the permission to create Service Principals, or the Azure Active Directory tenant of the Service Connection is different from the user's tenant, you need create the Service Principal used by the Service Connection manually. Below are the steps needed to set that up.
@@ -36,9 +41,3 @@ Instead of a Service Principal, you can also configure a Managed Identity:
 
 <img src="multi-window-msi-annotated.png" width="2124"/>
 
-## More information
-
-Other pages with information on Workload Identity federation:
-
-- [Getting Started](README.md)
-- [Troubleshooting & Frequently Asked Questions](troubleshooting.md)

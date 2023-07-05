@@ -1,3 +1,8 @@
+## Pages
+
+#### [Getting Started](README.md)
+#### [Manual Configuration](manual-configuration.md)
+
 # Workload Identity federation - Troubleshooting & Frequently Asked Questions
 
 ## Task coverage
@@ -122,10 +127,3 @@ The following messages indicate a task does not support Workload Identity federa
          `ARM_USE_OUDC = 'true'`
        - Use the end-to-end sample at [Azure-Samples/azure-devops-terraform-oidc-ci-cd](https://github.com/Azure-Samples/azure-devops-terraform-oidc-ci-cd/tree/main).
        - Using one of the Terraform tasks from the Marketplace. We are making changes to task developers can obtain the token. Once that has completed the [DevLabs Terraform](https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks) and other extensions will be updated.
-
-## More information
-
-Other pages with information on Workload Identity federation:
-
-- [Getting Started](README.md)
-- [Manual Configuration](manual-configuration.md)

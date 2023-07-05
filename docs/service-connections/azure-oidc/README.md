@@ -1,3 +1,8 @@
+## Pages
+
+#### [Manual Configuration](manual-configuration.md)
+#### [Troubleshooting & Frequently Asked Questions](troubleshooting.md)
+
 # Workload Identity federation - Getting Started
 
 ## What is Workload identity federation?
@@ -41,9 +46,3 @@ Workload identity federation can be configured in 2 ways:
 
 <img src="convert-service-connection.png" width="870">
 
-## More information
-
-Other pages with information on Workload Identity federation:
-
-- [Manual Configuration](manual-configuration.md)
-- [Troubleshooting & Frequently Asked Questions](troubleshooting.md)
