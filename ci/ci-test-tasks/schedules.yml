@@ -13,10 +13,14 @@ jobs:
 - job: set_tasks
   displayName: Set tasks to test
   pool:
-    vmImage: ubuntu-20.04
+    vmImage: ubuntu-latest
   steps:
-  - script: |
-      echo "##vso[task.setvariable variable=TASKS;isoutput=true]$(node ./ci/ci-test-tasks/get-tasks.js)"
+  - bash: |
+      npm i minimist
+    displayName: npm i minimist
+  - bash: |
+      tasks=$(node ./ci/ci-test-tasks/get-tasks.js --exclude "$(TASKS_TO_EXCLUDE)")
+      echo "##vso[task.setvariable variable=tasks;isoutput=true]${tasks}"
     displayName: Set tasks to test
     name: set
 
@@ -26,14 +30,14 @@ jobs:
   timeoutInMinutes: 360
   variables:
   - name: tasks
-    value: $[dependencies.set_tasks.outputs['set.TASKS']]
+    value: $[dependencies.set_tasks.outputs['set.tasks']]
   pool:
-    vmImage: ubuntu-20.04
+    vmImage: ubuntu-latest
   steps:
-  - script: |
+  - bash: |
       npm i axios
     displayName: npm i axios
-  - script: |
+  - bash: |
       echo $(tasks)
       node ./ci/ci-test-tasks/test-and-verify-v2.js $(ADOToken) $(ADOUrl) $(System.TeamProject) $(tasks)
     displayName: Run test pipelines and verify results

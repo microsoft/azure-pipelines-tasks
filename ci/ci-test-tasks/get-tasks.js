@@ -1,15 +1,21 @@
 const fs = require('fs');
 const path = require('path');
+const minimist = require('minimist');
 
-const result = [];
-const tasks = JSON.parse(fs.readFileSync(path.join(__dirname, 'tasks.json')));
+const args = minimist(process.argv.slice(2));
 
-for (const task in tasks) {
-    const versions = tasks[task];
+const exclude = args.exclude?.split(',').map(task => task.trim()) || [];
 
-    for (const version of versions) {
-        result.push(`${task}V${version}`);
+const tasksPath = path.join(__dirname, '..', '..', 'Tasks');
+
+const items = fs.readdirSync(tasksPath);
+
+const tasks = [];
+
+for (const item of items) {
+    if (fs.existsSync(path.join(tasksPath, item, 'task.json'))) {
+        tasks.push(item);
     }
 }
 
-console.log(result.join(','));
+console.log(tasks.filter(task => !exclude.includes(task)).join(','));
