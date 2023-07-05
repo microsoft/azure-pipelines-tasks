@@ -2,6 +2,8 @@
   "loc.messages.AZ_AzureRMProfileModuleNotFound": "No se encuentra el módulo 'AzureRM.Profile'. Puede que el módulo 'AzureRM' no esté instalado completamente. Puede resolver el problema ejecutando los siguientes comandos de PowerShell en una sesión con permisos elevados: Import-Module AzureRM ; Install-AzureRM",
   "loc.messages.AZ_CertificateAuthNotSupported": "No se admite la autenticación basada en certificados. No se encuentra el módulo Azure PowerShell.",
   "loc.messages.AZ_CredentialsError": "Hubo un error con las credenciales de Azure usadas para la implementación.",
+  "loc.messages.AZ_CouldNotGenerateOidcToken": "No se pudo generar una aserción de cliente para el inicio de sesión federado.",
+  "loc.messages.AZ_FederatedTokenFailure": "No se pudo capturar el token federado para la federación de identidades de carga de trabajo. {0}",
   "loc.messages.AZ_ModuleNotFound": "No se encontraron los módulos \"{1}\" con la versión \"{0}\". Si el módulo se instaló recientemente, reinténtelo después de reiniciar al agente de tareas de Azure Pipelines.",
   "loc.messages.AZ_RequiresMinVersion0": "No está instalada la versión mínima necesaria ({0}) del módulo Azure PowerShell.",
   "loc.messages.AZ_ServicePrincipalError": "Error con la entidad de servicio que se usó para la implementación.",

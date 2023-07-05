@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 221,
+        "Minor": 225,
         "Patch": 0
     },
     "demands": [],
@@ -96,6 +96,14 @@
             "properties": {
                 "EditableOptions": "True"
             }
+        },
+        {
+            "name": "useClusterAdmin",
+            "type": "boolean",
+            "label": "Use cluster admin credentials",
+            "defaultValue": "false",
+            "visibleRule": "connectionType = azureResourceManager",
+            "helpMarkDown": "Use cluster administrator credentials instead of default cluster user credentials."
         },
         {
             "name": "namespace",
@@ -450,6 +458,7 @@
         "InvalidBaselineAndCanaryReplicas": "Invalid value for replica count.",
         "InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number.",
         "RolloutStatusTimedout": "Rollout status check failed.",
-        "EnvironmentLink": "For more information, go to %s"
+        "EnvironmentLink": "For more information, go to %s",
+        "KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
     }
 }

@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 222,
-        "Patch": 1
+        "Minor": 225,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "1.91.0",
@@ -55,6 +55,14 @@
                 "Container": "Azure Pipelines",
                 "FilePath": "A file share"
             }
+        },
+        {
+            "name": "MaxArtifactSize",
+            "type": "int",
+            "label": "Max Artifact Size",
+            "defaultValue": 0,
+            "required": false,
+            "helpMarkDown": "Maximum limit on the size of artifacts to be published in bytes. Put 0 if you don't want to set any limit."
         },
         {
             "name": "TargetPath",
@@ -109,6 +117,7 @@
         "ErrorHostTypeNotSupported": "This task must run in a build to publish artifacts to Azure Pipelines.",
         "PublishBuildArtifactsFailed": "Publishing build artifacts failed with an error: %s",
         "UnexpectedParallelCount": "Unsupported parallel count '%s'. Enter a number between 1 and 128.",
-        "TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows"
+        "TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows",
+        "ArtifactSizeExceeded": "The size of artifacts being published is %s bytes which is larger than the maximum limit %s bytes set for the published size of artifacts."
     }
 }
