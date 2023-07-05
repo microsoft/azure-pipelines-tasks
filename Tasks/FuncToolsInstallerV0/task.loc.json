@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 222,
-    "Patch": 1
+    "Minor": 224,
+    "Patch": 0
   },
   "preview": true,
   "demands": [],
@@ -35,6 +35,10 @@
   "execution": {
     "Node10": {
       "target": "src/functoolsinstaller.js"
+    },
+    "Node16": {
+      "target": "src/functoolsinstaller.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
