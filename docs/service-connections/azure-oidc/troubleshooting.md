@@ -124,6 +124,6 @@ The following messages indicate a task does not support Workload Identity federa
     A: There are 3 methods to use Terraform with OIDC:
        - We have added the `idToken` environment variable with the AzureCLI@2 task and `addSpnToEnvironment: true`. This will enable you to assign the [`ARM_OIDC_TOKEN`](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc#configuring-the-service-principal-in-terraform) environment variable consumed by the [azuread](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs#argument-reference) & [azurerm](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc#configuring-the-service-principal-in-terraform) providers:  
          `ARM_OIDC_TOKEN = idToken`  
-         `ARM_USE_OUDC = 'true'`
+         `ARM_USE_OIDC = 'true'`
        - Use the end-to-end sample at [Azure-Samples/azure-devops-terraform-oidc-ci-cd](https://github.com/Azure-Samples/azure-devops-terraform-oidc-ci-cd/tree/main).
        - Using one of the Terraform tasks from the Marketplace. We are making changes to task developers can obtain the token. Once that has completed the [DevLabs Terraform](https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks) and other extensions will be updated.
