@@ -12,7 +12,8 @@ const auth = {
   username: 'Basic',
   password: AUTH_TOKEN
 };
-const intervalDelayMs = 15000;
+const intervalInSeconds = 15;
+const buildTimeoutInMinutes = 300;
 const maxRetries = 10;
 
 async function main() {
@@ -139,6 +140,7 @@ async function verifyBuildStatus(pipelineName, pipelineBuild, resolve, reject) {
 
   let retryCount = 0;
 
+  let intervalAmount = 0;
   const interval = setInterval(() => {
     axios
       .get(pipelineBuild.url, { auth })
@@ -146,6 +148,12 @@ async function verifyBuildStatus(pipelineName, pipelineBuild, resolve, reject) {
         console.log(`${verify}... ${data.state}`);
 
         if (data.state !== 'completed') {
+          if (++intervalAmount * intervalInSeconds >= buildTimeoutInMinutes * 60) {
+            clearInterval(interval);
+
+            reject(new Error(`Timeout to complete the "${pipelineName}" pipeline build ${buildInfo} exceeded`));
+          }
+
           return;
         }
 
@@ -179,7 +187,7 @@ async function verifyBuildStatus(pipelineName, pipelineBuild, resolve, reject) {
 
         reject(err);
       });
-  }, intervalDelayMs);
+  }, intervalInSeconds * 1000);
 }
 
 process.on('uncaughtException', err => {
