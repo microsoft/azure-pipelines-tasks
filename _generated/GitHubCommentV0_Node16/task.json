@@ -13,7 +13,7 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 224,
+    "Minor": 225,
     "Patch": 0
   },
   "demands": [],
@@ -80,7 +80,7 @@
     "NoOp": "Contents of the Comment field are empty or the PR/Issue ID is not provided"
   },
   "_buildConfigMapping": {
-    "Default": "0.224.1",
-    "Node16-219": "0.224.0"
+    "Default": "0.225.1",
+    "Node16-219": "0.225.0"
   }
 }
