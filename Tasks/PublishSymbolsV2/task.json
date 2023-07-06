@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 225,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "2.144.0",
     "groups": [
@@ -173,7 +173,7 @@
             "label": "Artifact name",
             "defaultValue": "Symbols_$(BuildConfiguration)",
             "required": false,
-            "helpMarkDown": "Specify the artifact name to use for the Symbols artifact.  The default is Symbols_$(BuildConfiguration)",
+            "helpMarkDown": "Specify the artifact name to use for the Symbols artifact. This should only be used with the FileShare symbol server type.  The default is Symbols_$(BuildConfiguration)",
             "groupName": "advanced"
         }
     ],
