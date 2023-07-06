@@ -75,7 +75,7 @@ The following table contains a list of known error messages and:
 | *Identity not found* | Task does not support Workload Identity federation |
 | *Could not fetch access token for Azure* | Task does not support Workload Identity federation |
 | \<Task\> *only support(s) service principal authorization* | Task does not support Workload Identity federation |
-| *AADSTS70021: No matching federated identity record found for presented assertion. Assertion Issuer: 'https://app.vstoken.visualstudio.com'. Assertion Subject: 'sc://\<org\>/\<project\>/\<service-connection\>'.* | Either the issuer url or federation subject does not match |
+| *AADSTS70021: No matching federated identity record found for presented assertion. Assertion Issuer: 'https://app.vstoken.visualstudio.com'. Assertion Subject: 'sc://\<org\>/\<project\>/\<service-connection\>'.* | Either the issuer url or federation subject does not match. This can happen when the Azure DevOps organization or project have been renamed, or a manually created service connection was renamed without updating the federation subject on the identity. |
 | *AADSTS700223* | Workload Identity federation has been disabled on the AAD tenant |
 | *AADSTS700024: Client assertion is not within its valid time range* | You're using the AzureCLI task with `addSpnToEnvironment: true` to consume the `idToken` environment variable. The `idToken` has expired after 10 minutes. |
 
