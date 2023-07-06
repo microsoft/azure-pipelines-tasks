@@ -8,6 +8,8 @@ const { platform } = require('os');
 const { run, resolveTaskList } = require('./ci-util');
 const { eq, inc, parse, lte, neq } = require('semver');
 
+const taskVersionBumpingDocUrl = "https://aka.ms/azp-tasks-version-bumping";
+
 const packageEndpoint = process.env['PACKAGE_VERSIONS_ENDPOINT'];
 
 if (!packageEndpoint) {
@@ -80,7 +82,7 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
 
       messages.push({
         type: 'error',
-        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${destinationVersion.format()} at least (https://aka.ms/azp-tasks-version-bumping)`
+        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${destinationVersion.format()} at least (${taskVersionBumpingDocUrl})`
       });
       continue;
     }
@@ -88,7 +90,7 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
     if (localTask.version.minor === sprint && eq(localTask.version, masterTask.version)) {
       messages.push({
         type: 'error',
-        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${inc(masterTask.version, 'patch')} at least (https://aka.ms/azp-tasks-version-bumping)`
+        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${inc(masterTask.version, 'patch')} at least (${taskVersionBumpingDocUrl})`
       });
       continue;
     }
@@ -104,7 +106,7 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
     if (localTask.version.minor > sprint && (!isReleaseTagExist && !isCourtesyWeek)) {
       messages.push({
         type: 'error',
-        payload: `[${sourceBranch}] ${localTask.name} has v${localTask.version.version} it's higher than the current sprint ${sprint} (https://aka.ms/azp-tasks-version-bumping)`
+        payload: `[${sourceBranch}] ${localTask.name} has v${localTask.version.version} it's higher than the current sprint ${sprint} (${taskVersionBumpingDocUrl})`
       });
       continue;
     }
@@ -211,7 +213,7 @@ function compareLocalTaskLoc(localTasks) {
     if (neq(localTask.version, parse(taskLocJSONVersion))) {
       messages.push({
         type: 'error',
-        payload: `[Loc] ${localTask.name} task.json v${localTask.version.version} does not match with task.loc.json v${taskLocJSONVersion} (https://aka.ms/azp-tasks-version-bumping)`
+        payload: `[Loc] ${localTask.name} task.json v${localTask.version.version} does not match with task.loc.json v${taskLocJSONVersion} (${taskVersionBumpingDocUrl})`
       });
     }
   }
