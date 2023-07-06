@@ -56,7 +56,7 @@ steps:
         ne(variables['numTasks'], 0),
         ne(variables['COURTESY_PUSH'], 'true'),
         eq(variables['build.reason'], 'PullRequest'),
-        eq(variables['Build.TargetBranch'], 'refs/heads/master')
+        eq(variables['System.PullRequest.TargetBranch'], 'master')
       )
   env:
     PACKAGE_TOKEN: $(Package.Token)
