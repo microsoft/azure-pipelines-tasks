@@ -53,6 +53,7 @@ steps:
   displayName: Check for downgrading tasks
   condition: |
       and(
+        succeeded(),
         ne(variables['numTasks'], 0),
         ne(variables['COURTESY_PUSH'], 'true'),
         eq(variables['build.reason'], 'PullRequest'),
