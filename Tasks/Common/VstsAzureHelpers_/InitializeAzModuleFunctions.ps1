@@ -110,8 +110,10 @@ function Initialize-AzSubscription {
             $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
             Write-Host "##[command]Clear-AzContext -Scope Process"
             $null = Clear-AzContext -Scope Process
-            Write-Host "##[command]Clear-AzConfig -DefaultSubscriptionForLogin"
-            $null = Clear-AzConfig -DefaultSubscriptionForLogin
+            if (Get-Command 'Clear-AzConfig' -errorAction SilentlyContinue) {
+                Write-Host "##[command]Clear-AzConfig -DefaultSubscriptionForLogin"
+                $null = Clear-AzConfig -DefaultSubscriptionForLogin
+            }
 
             if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
                 $servicePrincipalCertificate = Add-CertificateForAz -Endpoint $Endpoint
