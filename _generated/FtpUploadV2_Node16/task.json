@@ -19,7 +19,7 @@
   "version": {
     "Major": 2,
     "Minor": 211,
-    "Patch": 1
+    "Patch": 0
   },
   "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "FTP Upload: $(rootFolder)",
@@ -207,5 +207,9 @@
     "UploadSucceedMsg": "FTP upload successful %s",
     "UploadSucceedRes": "FTP upload successful",
     "UploadFailed": "Ftp Upload failed"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.211.1",
+    "Node16-225": "2.211.0"
   }
 }

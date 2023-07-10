@@ -225,5 +225,8 @@
         "MysqlDeploymentOnMachineGroupV1",
         "GitHubReleaseV0",
         "GitHubReleaseV1"
+    ],
+    "Node16_225": [
+        "FtpUploadV2"
     ]
 }

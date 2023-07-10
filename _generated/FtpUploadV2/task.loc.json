@@ -207,5 +207,9 @@
     "UploadSucceedMsg": "ms-resource:loc.messages.UploadSucceedMsg",
     "UploadSucceedRes": "ms-resource:loc.messages.UploadSucceedRes",
     "UploadFailed": "ms-resource:loc.messages.UploadFailed"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.211.1",
+    "Node16-225": "2.211.0"
   }
 }
