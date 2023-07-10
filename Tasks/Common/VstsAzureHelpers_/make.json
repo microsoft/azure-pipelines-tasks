@@ -9,6 +9,10 @@
                     {
                         "source": "lib/net45/Newtonsoft.Json.dll",
                         "dest": "Newtonsoft.Json.10/"
+                    },
+                    {
+                        "source": "lib/netstandard1.3/Newtonsoft.Json.dll",
+                        "dest": "netstandard/Newtonsoft.Json.10/"
                     }
                 ]
             },
@@ -20,6 +24,10 @@
                     {
                         "source": "lib/net45/Newtonsoft.Json.dll",
                         "dest": "Newtonsoft.Json.13/"
+                    },
+                    {
+                        "source": "lib/netstandard2.0/Newtonsoft.Json.dll",
+                        "dest": "netstandard/Newtonsoft.Json.13/"
                     }
                 ]
             },
@@ -30,6 +38,10 @@
                 "cp": [
                     {
                         "source": "lib/net45/System.Net.Http.Formatting.dll"
+                    },
+                    {
+                        "source": "lib/netstandard2.0/System.Net.Http.Formatting.dll",
+                        "dest": "netstandard/"
                     }
                 ]
             },
@@ -44,6 +56,10 @@
                     {
                         "source": "lib/net472/<CULTURE_NAME>/Microsoft.TeamFoundation.Core.WebApi.resources.dll",
                         "dest": "<CULTURE_NAME>/"
+                    },
+                    {
+                        "source": "lib/netstandard2.0/Microsoft.TeamFoundation.Core.WebApi.dll",
+                        "dest": "netstandard/"
                     }
                 ]
             },
@@ -56,6 +72,10 @@
                         "source": [
                             "lib/net472/Microsoft.TeamFoundation.DistributedTask.Common.Contracts.dll"
                         ]
+                    },
+                    {
+                        "source": "lib/netstandard2.0/Microsoft.TeamFoundation.DistributedTask.Common.Contracts.dll",
+                        "dest": "netstandard/"
                     }
                 ]
             },
@@ -74,6 +94,10 @@
                             "lib/net472/<CULTURE_NAME>/Microsoft.TeamFoundation.DistributedTask.WebApi.resources.dll"
                         ],
                         "dest": "<CULTURE_NAME>/"
+                    },
+                    {
+                        "source": "lib/netstandard2.0/Microsoft.TeamFoundation.DistributedTask.WebApi.dll",
+                        "dest": "netstandard/"
                     }
                 ]
             },
@@ -96,6 +120,14 @@
                             "lib/net472/<CULTURE_NAME>/Microsoft.VisualStudio.Services.WebApi.resources.dll"
                         ],
                         "dest": "<CULTURE_NAME>/"
+                    },
+                    {
+                        "source": [
+                            "lib/netstandard2.0/Microsoft.TeamFoundation.Common.dll",
+                            "lib/netstandard2.0/Microsoft.VisualStudio.Services.Common.dll",
+                            "lib/netstandard2.0/Microsoft.VisualStudio.Services.WebApi.dll"
+                        ],
+                        "dest": "netstandard/"
                     }
                 ]
             }

@@ -217,8 +217,6 @@
         "Tests"
     ],
     "Node16": [
-        "PackerBuildV0",
-        "PackerBuildV1",
         "DownloadGitHubNugetPackageV1",
         "KubernetesV0",
         "NuGetPublisherV0",
