@@ -132,3 +132,5 @@ The following table contains a list of known error messages and:
          `ARM_USE_OIDC = 'true'`
        - Use the end-to-end sample at [Azure-Samples/azure-devops-terraform-oidc-ci-cd](https://github.com/Azure-Samples/azure-devops-terraform-oidc-ci-cd/tree/main).
        - Using one of the Terraform tasks from the Marketplace. We are making changes to task developers can obtain the token. Once that has completed the [DevLabs Terraform](https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks) and other extensions will be updated.
+1.  Q: I'm using AWS, how can I use Workload Identity federation?  
+    A: During the preview, we only support Azure Service Connections. Marketplace tasks that come with their own Service Connection will be supported at a later point in time.
