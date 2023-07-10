@@ -17,12 +17,13 @@ var cwd = tl.getInput("cwd");
 // Change to any specified working directory
 tl.cd(cwd);
 
-// get the registry server authentication provider 
+// get the registry server authentication provider
 var registryType = tl.getInput("containerregistrytype", true);
 var registryAuthenticationToken;
 
 if (registryType == "Azure Container Registry") {
-    registryAuthenticationToken = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint"), tl.getInput("azureContainerRegistry")).getAuthenticationToken();
+    const tokenProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint"), tl.getInput("azureContainerRegistry"));
+    registryAuthenticationToken = tokenProvider.getToken();
 }
 else {
     registryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(tl.getInput("dockerRegistryEndpoint"))
@@ -34,12 +35,14 @@ var dockerFile = DockerComposeUtils.findDockerFile(dockerComposeFile, cwd);
 if (nopIfNoDockerComposeFile && !tl.exist(dockerFile)) {
     console.log("No Docker Compose file matching " + dockerComposeFile + " was found.");
     tl.setResult(tl.TaskResult.Succeeded, "");
-} else {    
-    let resultPaths = "";
+} else {
+    registryAuthenticationToken
+    .then(function success(authToken) {
+        let resultPaths = "";
 
-    // Connect to any specified Docker host and/or registry 
-    var connection = new DockerComposeConnection();
-    connection.open(tl.getInput("dockerHostEndpoint"), registryAuthenticationToken)
+        // Connect to any specified Docker host and/or registry
+        var connection = new DockerComposeConnection();
+        connection.open(tl.getInput("dockerHostEndpoint"), authToken)
         .then(function runAction() {
             // Run the specified action
             var action = tl.getInput("action", true).toLowerCase();
@@ -59,7 +62,7 @@ if (nopIfNoDockerComposeFile && !tl.exist(dockerFile)) {
                 "combine configuration": "./dockercomposeconfig",
                 "run a docker compose command": "./dockercomposecommand"
             }[action]).run(connection, (pathToResult) => {
-                resultPaths += `${pathToResult}\n`;    
+                resultPaths += `${pathToResult}\n`;
             });
             /* tslint:enable:no-var-requires */
         })
@@ -73,4 +76,5 @@ if (nopIfNoDockerComposeFile && !tl.exist(dockerFile)) {
             tl.setResult(tl.TaskResult.Failed, err.message);
         })
         .done();
+    });
 }
