@@ -14,7 +14,7 @@
   "preview": false,
   "version": {
     "Major": 1,
-    "Minor": 224,
+    "Minor": 225,
     "Patch": 0
   },
   "demands": [],
@@ -346,7 +346,7 @@
     "SeeMoreText": "See More"
   },
   "_buildConfigMapping": {
-    "Default": "1.224.1",
-    "Node16-219": "1.224.0"
+    "Default": "1.225.1",
+    "Node16-219": "1.225.0"
   }
 }
