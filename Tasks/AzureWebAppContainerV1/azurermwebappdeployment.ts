@@ -9,7 +9,6 @@ async function main() {
 
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
-        tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-azure-arm-rest-v2/module.json'));
         var taskParams: TaskParameters = await TaskParametersUtility.getParameters();
         var deploymentProvider = new AzureRmWebAppDeploymentProvider(taskParams);
 
