@@ -95,5 +95,9 @@
   "loc.messages.AzureCLINotFound": "Azure CLI not found on the agent.",
   "loc.messages.FailedToFetchAzureCLIVersion": "Failed to fetch az cli version from agent. Error: %s",
   "loc.messages.BicepBuildFailed": "\"az bicep build\" failed. Error: %s",
-  "loc.messages.BicepFileCleanupFailed": "Failed to delete Bicep file. Error: %s"
+  "loc.messages.BicepFileCleanupFailed": "Failed to delete Bicep file. Error: %s",
+  "loc.messages.LoginFailed": "Azure login failed: %s",
+  "loc.messages.MSILoginFailed": "Azure login failed using Managed Service Identity: %s",
+  "loc.messages.AuthSchemeNotSupported": "Auth Scheme %s is not supported",
+  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription: %s"
 }

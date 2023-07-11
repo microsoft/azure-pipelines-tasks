@@ -12,22 +12,19 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
 // Change to any specified working directory
 tl.cd(tl.getInput("cwd"));
 
-// get the registry server authentication provider 
+// get the registry server authentication provider
 var containerRegistryType = tl.getInput("containerregistrytype", true);
 const environmentVariableMaximumSize = 32766;
 
 var registryAuthenticationToken;
 if (containerRegistryType == "Azure Container Registry") {
-    registryAuthenticationToken = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint"), tl.getInput("azureContainerRegistry")).getAuthenticationToken();
+    const tokenProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint"), tl.getInput("azureContainerRegistry"));
+    registryAuthenticationToken = tokenProvider.getToken();
 }
 else {
     let endpointId = tl.getInput("dockerRegistryEndpoint");
     registryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(endpointId);
 }
-
-// Connect to any specified container host and/or registry 
-var connection = new ContainerConnection();
-connection.open(tl.getInput("dockerHostEndpoint"), registryAuthenticationToken);
 
 // Run the specified action
 var action = tl.getInput("action", true).toLowerCase();
@@ -70,29 +67,35 @@ console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
     "DockerV0",
     JSON.stringify(telemetry));
 
-/* tslint:disable:no-var-requires */
-require({
-    "build an image": "./containerbuild",
-    "tag images": "./containertag",
-    "push an image": "./containerpush",
-    "push images": "./containerpush",
-    "run an image": "./containerrun",
-    "run a docker command": "./containercommand"
-}[action]).run(connection, (data) => result += data)
-/* tslint:enable:no-var-requires */
-.fin(function cleanup() {
-    connection.close();
-})
-.then(function success() {
-    var commandOutputLength = result.length;
-    if (commandOutputLength > environmentVariableMaximumSize) {
-        tl.warning(tl.loc('OutputVariableDataSizeExceeded', commandOutputLength, environmentVariableMaximumSize));
-    } else {
-        tl.setVariable("DockerOutput", result);
-    }
+registryAuthenticationToken
+.then(function success(authToken) {
+    // Connect to any specified container host and/or registry
+    var connection = new ContainerConnection();
+    connection.open(tl.getInput("dockerHostEndpoint"), authToken);
+    /* tslint:disable:no-var-requires */
+    require({
+        "build an image": "./containerbuild",
+        "tag images": "./containertag",
+        "push an image": "./containerpush",
+        "push images": "./containerpush",
+        "run an image": "./containerrun",
+        "run a docker command": "./containercommand"
+    }[action]).run(connection, (data) => result += data)
+    /* tslint:enable:no-var-requires */
+    .fin(function cleanup() {
+        connection.close();
+    })
+    .then(function success() {
+        var commandOutputLength = result.length;
+        if (commandOutputLength > environmentVariableMaximumSize) {
+            tl.warning(tl.loc('OutputVariableDataSizeExceeded', commandOutputLength, environmentVariableMaximumSize));
+        } else {
+            tl.setVariable("DockerOutput", result);
+        }
 
-    tl.setResult(tl.TaskResult.Succeeded, "");
-}, function failure(err) {
-    tl.setResult(tl.TaskResult.Failed, err.message);
-})
-.done();
+        tl.setResult(tl.TaskResult.Succeeded, "");
+    }, function failure(err) {
+        tl.setResult(tl.TaskResult.Failed, err.message);
+    })
+    .done();
+});
