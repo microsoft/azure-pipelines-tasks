@@ -74,5 +74,9 @@
     "WriteFailed": "Writing comment failed",
     "WriteSucceeded": "Writing commment succeeded",
     "NoOp": "Contents of the Comment field are empty or the PR/Issue ID is not provided"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.225.1",
+    "Node16-219": "0.225.0"
   }
 }

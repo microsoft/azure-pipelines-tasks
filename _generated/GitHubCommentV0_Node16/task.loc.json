@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 225,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -66,6 +66,10 @@
   "execution": {
     "Node10": {
       "target": "main.js"
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -74,5 +78,9 @@
     "WriteFailed": "ms-resource:loc.messages.WriteFailed",
     "WriteSucceeded": "ms-resource:loc.messages.WriteSucceeded",
     "NoOp": "ms-resource:loc.messages.NoOp"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.225.1",
+    "Node16-219": "0.225.0"
   }
 }
