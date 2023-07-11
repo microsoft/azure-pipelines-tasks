@@ -17,6 +17,7 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
         process.env['ENDPOINT_AUTH_PARAMETER_ID1_USERNAME'] = 'uname';
         process.env['ENDPOINT_AUTH_PARAMETER_ID1_PASSWORD'] = 'pword';
         process.env['ENDPOINT_URL_ID1'] = 'bogusURL';
+        process.env['AGENT_TEMPDIRECTORY'] = '.';
 
         done();
     });
@@ -102,7 +103,7 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             done(err);
         }
     });
-    
+
     it('Should download commits from single build', (done) => {
 
         const tp: string = path.join(__dirname, 'L0DownloadCommitsFromSingleBuild.js');
@@ -160,7 +161,7 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             done(err);
         }
     });
-    
+
     it('Validate bitbucket commit url', (done) => {
 
         const tp: string = path.join(__dirname, 'L0ValidateBitBucketCommitUrl.js');
