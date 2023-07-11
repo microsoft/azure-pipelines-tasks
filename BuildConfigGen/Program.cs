@@ -26,12 +26,12 @@ namespace BuildConfigGen
         {
             public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".json" };
 
-            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode16, bool isNode20, bool isWif, string preprocessorVariableName, bool enableBuildConfigOverrides);
+            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides);
 
-            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode16: false, isNode20: false, isWif: false, preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false);
-            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode16: true, isNode20: false, isWif: false, preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true);
-            public static readonly ConfigRecord Node20 = new ConfigRecord(name: nameof(Node20), constMappingKey: "Node20-225", isDefault: false, isNode16: false, isNode20: true, isWif: false, preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true);
-            public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode16: true, isNode20: false, isWif: true, preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true);
+            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false);
+            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: false, nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true);
+            public static readonly ConfigRecord Node20 = new ConfigRecord(name: nameof(Node20), constMappingKey: "Node20-225", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true);
+            public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true);
 
             public static ConfigRecord[] Configs = { Default, Node16, Node20, WorkloadIdentityFederation };
         }
@@ -190,13 +190,9 @@ namespace BuildConfigGen
                 WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.json");
                 WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.loc.json");
 
-                if (config.isNode16)
+                if (config.isNode)
                 {
-                    WriteNodePackageJson(taskOutput, "^16.11.39");
-                }
-                if (config.isNode20)
-                {
-                    WriteNodePackageJson(taskOutput, "^20.3.1");
+                    WriteNodePackageJson(taskOutput, config.nodePackageVersion);
                 }
             }
         }
@@ -340,13 +336,9 @@ namespace BuildConfigGen
 
             outputTaskNode.AsObject().Add("_buildConfigMapping", configMapping);
 
-            if (config.isNode16)
+            if (config.isNode)
             {
-                AddNodehandler(outputTaskNode, "Node16");
-            }
-            if (config.isNode20)
-            {
-                AddNodehandler(outputTaskNode, "Node20");
+                AddNodehandler(outputTaskNode, config.nodeHandler);
             }
 
             ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
