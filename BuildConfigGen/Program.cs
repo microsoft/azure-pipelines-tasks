@@ -134,7 +134,7 @@ namespace BuildConfigGen
             string taskHandler = Path.Combine(taskTargetPath, "task.json");
             JsonNode taskHandlerContents = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(taskHandler))!;
 
-            if (targetConfigs.Any(x => x.isNode16) || targetConfigs.Any(x => x.isNode20))
+            if (targetConfigs.Any(x => x.isNode))
             {
                 // Task may not have nodejs or packages.json (example: AutomatedAnalysisV0) 
                 if (!hasNodeHandler(taskHandlerContents))
