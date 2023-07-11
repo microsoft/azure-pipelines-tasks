@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 224,
-    "Patch": 0
+    "Minor": 225,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -323,6 +323,10 @@
     "AzureCLINotFound": "ms-resource:loc.messages.AzureCLINotFound",
     "FailedToFetchAzureCLIVersion": "ms-resource:loc.messages.FailedToFetchAzureCLIVersion",
     "BicepBuildFailed": "ms-resource:loc.messages.BicepBuildFailed",
-    "BicepFileCleanupFailed": "ms-resource:loc.messages.BicepFileCleanupFailed"
+    "BicepFileCleanupFailed": "ms-resource:loc.messages.BicepFileCleanupFailed",
+    "LoginFailed": "ms-resource:loc.messages.LoginFailed",
+    "MSILoginFailed": "ms-resource:loc.messages.MSILoginFailed",
+    "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
+    "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription"
   }
 }

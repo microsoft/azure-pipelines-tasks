@@ -8,6 +8,8 @@ const { platform } = require('os');
 const { run, resolveTaskList } = require('./ci-util');
 const { eq, inc, parse, lte, neq } = require('semver');
 
+const taskVersionBumpingDocUrl = "https://aka.ms/azp-tasks-version-bumping";
+
 const packageEndpoint = process.env['PACKAGE_VERSIONS_ENDPOINT'];
 
 if (!packageEndpoint) {
@@ -56,7 +58,7 @@ function checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyW
     }
 
     messages.push({
-      type: "warning",
+      type: 'warning',
       payload: `[${targetBranch}] ${masterTask.name} has v${masterTask.version.version} it's higher than the current sprint ${sprint}`
     });
   }
@@ -75,17 +77,20 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
     }
 
     if (localTask.version.minor < sprint) {
+      const destinationVersion = parse(masterTask.version.version);
+      destinationVersion.minor = sprint;
+
       messages.push({
         type: 'error',
-        payload: `${localTask.name} have to be upgraded from v${localTask.version.version} to v${sprint} at least`
+        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${destinationVersion.format()} at least (${taskVersionBumpingDocUrl})`
       });
       continue;
     }
-    
+
     if (localTask.version.minor === sprint && eq(localTask.version, masterTask.version)) {
       messages.push({
         type: 'error',
-        payload: `${localTask.name} have to be upgraded from v${localTask.version.version} to v${inc(masterTask.version, 'patch')} at least`
+        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${inc(masterTask.version, 'patch')} at least (${taskVersionBumpingDocUrl})`
       });
       continue;
     }
@@ -101,7 +106,7 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
     if (localTask.version.minor > sprint && (!isReleaseTagExist && !isCourtesyWeek)) {
       messages.push({
         type: 'error',
-        payload: `[${sourceBranch}] ${localTask.name} has v${localTask.version.version} it's higher than the current sprint ${sprint}`
+        payload: `[${sourceBranch}] ${localTask.name} has v${localTask.version.version} it's higher than the current sprint ${sprint} (${taskVersionBumpingDocUrl})`
       });
       continue;
     }
@@ -203,12 +208,12 @@ function compareLocalTaskLoc(localTasks) {
     }
 
     const taskLocJSONObject = JSON.parse(readFileSync(taskLocJSONPath, 'utf-8'));
-    const taskLocJSONVersion = [taskLocJSONObject.version.Major, taskLocJSONObject.version.Minor, taskLocJSONObject.version.Patch].join(".");
+    const taskLocJSONVersion = [taskLocJSONObject.version.Major, taskLocJSONObject.version.Minor, taskLocJSONObject.version.Patch].join('.');
     
     if (neq(localTask.version, parse(taskLocJSONVersion))) {
       messages.push({
-        type: 'ERROR',
-        payload: `[Loc] ${localTask.name} task.json version ${localTask.version.version} does not match with task.loc.json version ${taskLocJSONVersion}`
+        type: 'error',
+        payload: `[Loc] ${localTask.name} task.json v${localTask.version.version} does not match with task.loc.json v${taskLocJSONVersion} (${taskVersionBumpingDocUrl})`
       });
     }
   }

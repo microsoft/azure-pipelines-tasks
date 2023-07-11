@@ -9,7 +9,7 @@
   "author": "Lawrence Gripper",
   "version": {
     "Major": 0,
-    "Minor": 224,
+    "Minor": 225,
     "Patch": 0
   },
   "runsOn": [
@@ -175,7 +175,7 @@
     "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
   },
   "_buildConfigMapping": {
-    "Default": "0.224.1",
-    "Node16-219": "0.224.0"
+    "Default": "0.225.1",
+    "Node16-219": "0.225.0"
   }
 }
