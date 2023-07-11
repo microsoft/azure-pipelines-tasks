@@ -223,7 +223,7 @@
         "MysqlDeploymentOnMachineGroupV1",
         "GitHubReleaseV0",
         "GitHubReleaseV1",
+        "GitHubCommentV0",
         "AndroidSigningV2"
-        "GitHubCommentV0"
     ]
 }
