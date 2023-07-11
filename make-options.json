@@ -224,6 +224,7 @@
         "GitHubReleaseV0",
         "GitHubReleaseV1",
         "GitHubCommentV0",
-        "AndroidSigningV2"
+        "AndroidSigningV2",
+        "AndroidSigningV3"
     ]
 }
