@@ -134,3 +134,7 @@ The following table contains a list of known error messages and:
        - Using one of the Terraform tasks from the Marketplace. We are making changes to task developers can obtain the token. Once that has completed the [DevLabs Terraform](https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks) and other extensions will be updated.
 1.  Q: I'm using AWS, how can I use Workload Identity federation?  
     A: During the preview, we only support Azure Service Connections. We will add support for Marketplace extensions that come with their own Service Connection at a later point in time. Those extensions will then have to be updated by the publisher to take advantage of the capability.
+1.  Q: What are the pre-requisites to create an Azure Service Connection automatically?  
+    A: The user creating the Service Connection needs permissions both in Azure as well as in Azure Active Directory:
+       - In Azure Active Directory, either app registration creation should not [be disabled](https://learn.microsoft.com/azure/active-directory/roles/delegate-app-roles#restrict-who-can-create-applications) or the user should be in a privileged role e.g. [Application Developer](https://learn.microsoft.com/azure/active-directory/roles/permissions-reference#application-developer).
+       - In Azure, the [Owner](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#owner) role on the scope of the Service Connection (in order to perform role assignment of Service Principal created for the Service Connection).  
