@@ -135,10 +135,6 @@ class azureclitask {
 
   static async loginAzure(): Promise<void> {
     var connectedService = tl.getInput("connectedServiceNameARM", true);
-    await this.loginAzureRM(connectedService);
-  }
-
-  static async loginAzureRM(connectedService): Promise<void> {
     // Work around for build agent az command will exit with non-zero code since configuration files are missing.
     tl.debug(tl.execSync("az", "--version", Constants.execSyncSilentOption).stdout);
 
