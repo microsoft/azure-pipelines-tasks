@@ -2,6 +2,8 @@ import * as fs from "fs";
 import * as path from "path";
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from "os";
+import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
+import { ITaskApi } from "azure-devops-node-api/TaskApi";
 import util from "./util";
 import Constants from "./constant";
 import { TelemetryEvent } from './telemetry';
@@ -41,9 +43,9 @@ class azureclitask {
       configId = util.normalizeDeploymentId(configId);
       console.log(tl.loc('NomralizedDeployementId', configId));
 
-      this.loginAzure();
+      await this.loginAzure();
 
-      tl.debug('OS release:' + os.release());      
+      tl.debug('OS release:' + os.release());
       let showIotExtensionCommand = ["extension", "show", "--name", "azure-iot"];
       let result = tl.execSync('az', showIotExtensionCommand, Constants.execSyncSilentOption);
       if (result.code !== 0) { // The extension is not installed
@@ -115,9 +117,9 @@ class azureclitask {
     let execOptions: IExecOptions = {
       errStream: outputStream as stream.Writable
     } as IExecOptions;
-    
+
     // check azcli version
-    let checkAzureIoTVersionExtensionCommand = ["--version"]; 
+    let checkAzureIoTVersionExtensionCommand = ["--version"];
     let viewAzVersionResult = tl.execSync('az', checkAzureIoTVersionExtensionCommand, execOptions);
     if(viewAzVersionResult.code !== 0)
     {
@@ -136,30 +138,66 @@ class azureclitask {
     this.loginAzureRM(connectedService);
   }
 
-  static loginAzureRM(connectedService) {
-    var servicePrincipalId = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-    var servicePrincipalKey = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
-    var tenantId = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
-    var subscriptionName = tl.getEndpointDataParameter(connectedService, "SubscriptionName", true);
-    var environment = tl.getEndpointDataParameter(connectedService, "environment", true);
+  static async loginAzureRM(connectedService):Promise<void> {
     // Work around for build agent az command will exit with non-zero code since configuration files are missing.
     tl.debug(tl.execSync("az", "--version", Constants.execSyncSilentOption).stdout);
 
+    var environment = tl.getEndpointDataParameter(connectedService, "environment", true);
     // Set environment if it is not AzureCloud (global Azure)
     if (environment && environment !== 'AzureCloud') {
       let result = tl.execSync("az", ["cloud", "set", "--name", environment], Constants.execSyncSilentOption);
       tl.debug(JSON.stringify(result));
     }
 
-    //login using svn
-    let result = tl.execSync("az", ["login", "--service-principal", "-u", servicePrincipalId, "-p", servicePrincipalKey, "--tenant", tenantId], Constants.execSyncSilentOption);
-    tl.debug(JSON.stringify(result));
-    this.throwIfError(result);
+    var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
+    if (authScheme.toLowerCase() == "workloadidentityfederation") {
+      var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+      var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+
+      const federatedToken = await this.getIdToken(connectedService);
+      tl.setSecret(federatedToken);
+      const args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
+
+      //login using OpenID Connect federation
+      this.throwIfError(tl.execSync("az", args));
+    }
+    else if (authScheme.toLowerCase() == "serviceprincipal") {
+      let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
+      let cliPassword: string = null;
+      var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
+      var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
+
+      if (authType == "spnCertificate") {
+        tl.debug('certificate based endpoint');
+        let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
+        cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
+        fs.writeFileSync(cliPassword, certificateContent);
+      }
+      else {
+        tl.debug('key based endpoint');
+        cliPassword = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
+      }
+
+      let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
+      tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
+      //login using svn
+      this.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`, Constants.execSyncSilentOption));
+    }
+    else if(authScheme.toLowerCase() == "managedserviceidentity") {
+      //login using msi
+      this.throwIfError(tl.execSync("az", "login --identity"));
+    }
+    else {
+      throw tl.loc('AuthSchemeNotSupported', authScheme);
+    }
+
     this.isLoggedIn = true;
-    //set the subscription imported to the current subscription
-    result = tl.execSync("az", ["account", "set", "--subscription", subscriptionName], Constants.execSyncSilentOption);
-    tl.debug(JSON.stringify(result));
-    this.throwIfError(result);
+
+    var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
+    if (!!subscriptionID) {
+      //set the subscription imported to the current subscription
+      this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\"", Constants.execSyncSilentOption));
+    }
   }
 
   static logoutAzure() {
@@ -175,6 +213,37 @@ class azureclitask {
   static throwIfError(resultOfToolExecution) {
     if (resultOfToolExecution.stderr) {
       throw resultOfToolExecution;
+    }
+  }
+
+  private static async getIdToken(connectedService: string) : Promise<string> {
+    const jobId = tl.getVariable("System.JobId");
+    const planId = tl.getVariable("System.PlanId");
+    const projectId = tl.getVariable("System.TeamProjectId");
+    const hub = tl.getVariable("System.HostType");
+    const uri = tl.getVariable("System.CollectionUri");
+    const token = this.getSystemAccessToken();
+
+    const authHandler = getHandlerFromToken(token);
+    const connection = new WebApi(uri, authHandler);
+    const api: ITaskApi = await connection.getTaskApi();
+    const response = await api.createOidcToken({}, projectId, hub, planId, jobId, connectedService);
+    if (response == null) {
+        return null;
+    }
+
+    return response.oidcToken;
+  }
+
+  private static getSystemAccessToken() : string {
+    tl.debug('Getting credentials for local feeds');
+    const auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
+    if (auth.scheme === 'OAuth') {
+      tl.debug('Got auth token');
+      return auth.parameters['AccessToken'];
+    }
+    else {
+      tl.warning('Could not determine credentials to use');
     }
   }
 }

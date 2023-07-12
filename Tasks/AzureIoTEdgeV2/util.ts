@@ -81,7 +81,7 @@ export default class Util {
 
     let cmds: Cmd[] = [];
     let edgeDevVersion = Constants.iotedgedevDefaultVersion;
-    let lockSimVersion = tl.getVariable(Constants.iotedgehubdevLockVersionKey); 
+    let lockSimVersion = tl.getVariable(Constants.iotedgehubdevLockVersionKey);
     // if no version is specified, iotedgedev installs default simulator version
 
     let lockVersion = tl.getVariable(Constants.iotedgedevLockVersionKey);
@@ -134,6 +134,16 @@ export default class Util {
     if (result.code === 0) {
       console.log(tl.loc('DependencyInstallSuccess', Constants.iotedgedev, result.stdout.substring(result.stdout.indexOf("version"))));
     } else {
+      tl.debug("Trying to fix env variables.");
+      let result2 = tl.execSync(`${Constants.iotedgedev}`, `new`, Constants.execSyncSilentOption);
+      if (result2.code === 0) {
+        result = tl.execSync(`${Constants.iotedgedev}`, `--version`, Constants.execSyncSilentOption);
+        tl.debug(result.stdout);
+        if (result.code === 0) {
+          return;
+        }
+      }
+
       tl.error(result.stderr);
       throw Error(tl.loc('DependencyInstallFail', Constants.iotedgedev));
     }
