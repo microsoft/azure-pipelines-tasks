@@ -18,7 +18,7 @@ class azureclitask {
     return !!tl.which("az", false);
   }
 
-  static async runMain(deploymentJson, telemetryEvent: TelemetryEvent) {
+  static async runMain(deploymentJson, telemetryEvent: TelemetryEvent): Promise<void> {
     var toolExecutionError = null;
     try {
       let iothub: string = tl.getInput("iothubname", true);
@@ -133,12 +133,12 @@ class azureclitask {
     }
   }
 
-  static loginAzure() {
+  static async loginAzure(): Promise<void> {
     var connectedService = tl.getInput("connectedServiceNameARM", true);
-    this.loginAzureRM(connectedService);
+    await this.loginAzureRM(connectedService);
   }
 
-  static async loginAzureRM(connectedService):Promise<void> {
+  static async loginAzureRM(connectedService): Promise<void> {
     // Work around for build agent az command will exit with non-zero code since configuration files are missing.
     tl.debug(tl.execSync("az", "--version", Constants.execSyncSilentOption).stdout);
 
@@ -322,7 +322,7 @@ class imagevalidationtask {
   }
 }
 
-export async function run(telemetryEvent: TelemetryEvent) {
+export async function run(telemetryEvent: TelemetryEvent): Promise<void> {
   let inBuildPipeline: boolean = util.checkSelfInBuildPipeline();
   console.log(tl.loc('DeployTaskRunningInBuild', inBuildPipeline));
   let deploymentFilePath: string = tl.getPathInput('deploymentFilePath', true);
