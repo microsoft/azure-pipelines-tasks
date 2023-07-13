@@ -35,7 +35,7 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.stdout.indexOf('credProviderPath = ') >= 0, "should have found credential provider path");
         assert(tr.succeeded, 'should have succeeded');
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
-        assert.equal(tr.warningIssues.length, 0, "should have no warnings");
+        assert.equal(tr.warningIssues[0], 'This task will be deprecated soon', "should have deprecation warning");
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
