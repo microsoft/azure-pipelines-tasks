@@ -73,6 +73,14 @@ export function basicSetup() {
     .reply(200, {
         upload_status: "uploadFinished"
     });
+    nock('https://example.test')
+      .get('/v0.1/apps/testuser/testapp/releases/1')
+      .query(true)
+      .reply(200, {
+          download_url:'https://',
+          version: '1',
+          short_version: '1.0',
+      });
 
     nock('https://example.test')
         .put('/v0.1/apps/testuser/testapp/releases/1', JSON.stringify({
