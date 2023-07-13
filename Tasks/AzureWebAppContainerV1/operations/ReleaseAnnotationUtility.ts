@@ -1,8 +1,8 @@
 import tl = require('azure-pipelines-task-lib/task');
 var uuidV4 = require("uuid/v4");
-import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
-import { AzureApplicationInsights, ApplicationInsightsResources} from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-appinsights';
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
+import { AzureApplicationInsights, ApplicationInsightsResources} from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-appinsights';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
 
 export async function addReleaseAnnotation(endpoint: AzureEndpoint, azureAppService: AzureAppService, isDeploymentSuccess: boolean): Promise<void> {
     try {
