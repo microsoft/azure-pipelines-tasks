@@ -86,6 +86,14 @@
       "resolved": "https://registry.npmjs.org/@types/node/-/node-16.18.3.tgz",
       "integrity": "sha512-jh6m0QUhIRcZpNv7Z/rpN+ZWXOicUUQbSoWks7Htkbb9IjFQj4kzcX/xFCkjstCj5flMsN8FiSvt+q+Tcs4Llg=="
     },
+    "@types/node-forge": {
+      "version": "1.3.2",
+      "resolved": "https://registry.npmjs.org/@types/node-forge/-/node-forge-1.3.2.tgz",
+      "integrity": "sha512-TzX3ahoi9xbmaoT58smrBu7oa6dQXb/+PTNCslZyD/55tlJ/osofIMClzZsoo6buDFrg7e4DvVGkZqVgv6OLxw==",
+      "requires": {
+        "@types/node": "*"
+      }
+    },
     "@types/q": {
       "version": "1.5.2",
       "resolved": "https://registry.npmjs.org/@types/q/-/q-1.5.2.tgz",
@@ -107,9 +115,12 @@
       "integrity": "sha512-eQ9qFW/fhfGJF8WKHGEHZEyVWfZxrT+6CLIJGBcZPfxUh/+BnEj+UCGYMlr9qZuX/2AltsvwrGqp0LhEW8D0zQ=="
     },
     "agent-base": {
-      "version": "5.1.1",
-      "resolved": "https://registry.npmjs.org/agent-base/-/agent-base-5.1.1.tgz",
-      "integrity": "sha512-TMeqbNl2fMW0nMjTEPOwe3J/PRFP4vqeoNuQMG0HlMrtm5QxKqdvAkZ1pRBQ/ulIyDD5Yq0nJ7YbdD8ey0TO3g=="
+      "version": "6.0.2",
+      "resolved": "https://registry.npmjs.org/agent-base/-/agent-base-6.0.2.tgz",
+      "integrity": "sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==",
+      "requires": {
+        "debug": "4"
+      }
     },
     "argparse": {
       "version": "1.0.10",
@@ -329,16 +340,19 @@
       }
     },
     "azure-pipelines-tasks-kubernetes-common": {
-      "version": "2.212.0",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-kubernetes-common/-/azure-pipelines-tasks-kubernetes-common-2.212.0.tgz",
-      "integrity": "sha512-tUvpcX/EXMBpIzpsKpgcYPil4uWs1FvdRxR1edy3fey/t7p7yZszuGtVETygWURfvDiOwKDpAJL8olaPf+derA==",
+      "version": "2.224.1",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-kubernetes-common/-/azure-pipelines-tasks-kubernetes-common-2.224.1.tgz",
+      "integrity": "sha512-UwVeSD1hZcPW9Z4CwAuNp6wmczdBCoWOa0saVv0DNejGVbOi0Nu7xBl+J3/N8xhcLnkD5G00LDY29G69yZFXUA==",
       "requires": {
         "@types/mocha": "5.2.7",
         "@types/node": "10.17.0",
+        "@types/node-forge": "^1.3.2",
         "@types/uuid": "8.3.0",
+        "azure-devops-node-api": "^12.0.0",
         "azure-pipelines-task-lib": "^3.1.0",
         "azure-pipelines-tool-lib": "^1.0.2",
-        "js-yaml": "3.13.1"
+        "js-yaml": "3.13.1",
+        "node-forge": "^1.3.1"
       },
       "dependencies": {
         "@types/node": {
@@ -822,6 +836,13 @@
       "requires": {
         "agent-base": "5",
         "debug": "4"
+      },
+      "dependencies": {
+        "agent-base": {
+          "version": "5.1.1",
+          "resolved": "https://registry.npmjs.org/agent-base/-/agent-base-5.1.1.tgz",
+          "integrity": "sha512-TMeqbNl2fMW0nMjTEPOwe3J/PRFP4vqeoNuQMG0HlMrtm5QxKqdvAkZ1pRBQ/ulIyDD5Yq0nJ7YbdD8ey0TO3g=="
+        }
       }
     },
     "inflight": {
@@ -1000,6 +1021,11 @@
       "requires": {
         "whatwg-url": "^5.0.0"
       }
+    },
+    "node-forge": {
+      "version": "1.3.1",
+      "resolved": "https://registry.npmjs.org/node-forge/-/node-forge-1.3.1.tgz",
+      "integrity": "sha512-dPEtOeMvF9VMcYV/1Wb8CPoVAXtp6MKMlcbAt4ddqmGqUJ6fQZFXkNZNkNlfevtNkGtaSoXf/vNNNSvgrdXwtA=="
     },
     "object-assign": {
       "version": "4.1.1",

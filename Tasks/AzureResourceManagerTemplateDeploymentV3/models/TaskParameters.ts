@@ -1,7 +1,7 @@
 import tl = require("azure-pipelines-task-lib/task");
-import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common');
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
-import { GraphManagementClient } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-graph';
+import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest/azure-arm-common');
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
+import { GraphManagementClient } from 'azure-pipelines-tasks-azure-arm-rest/azure-graph';
 
 export class TaskParameters {
 
@@ -23,6 +23,7 @@ export class TaskParameters {
     public graphCredentials: msRestAzure.ApplicationTokenCredentials;
     public deploymentOutputs: string;
     public addSpnToEnvironment: boolean;
+    public useWithoutJSON: boolean;
     public connectedService: string;
     public deploymentScope: string;
     public managementGroupId: string;
@@ -118,6 +119,7 @@ export class TaskParameters {
             this.graphCredentials = await this.getGraphCredentials(this.connectedService);
             this.deploymentOutputs = tl.getInput("deploymentOutputs");
             this.addSpnToEnvironment = tl.getBoolInput("addSpnToEnvironment", false);
+            this.useWithoutJSON = tl.getBoolInput("useWithoutJSON", false);
 
             return this;
         } catch (error) {

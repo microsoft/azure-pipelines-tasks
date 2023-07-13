@@ -15,10 +15,11 @@ export declare class ApplicationTokenCredentials {
     scheme: number;
     msiClientId: string;
     private token_deferred;
-    constructor(clientId: string, domain: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string, isADFSEnabled?: boolean, access_token?: string);
+    constructor(connectedServiceName: string, clientId: string, domain: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string, isADFSEnabled?: boolean, access_token?: string);
     getToken(force?: boolean): Q.Promise<string>;
     getDomain(): string;
     getClientId(): string;
+    getFederatedToken(): Promise<string>;
     public static getMSIAuthorizationToken(retyCount, timeToWait, baseUrl, msiClientId?);
     private _getSPNAuthorizationToken();
     private _getSPNAuthorizationTokenFromCertificate();
