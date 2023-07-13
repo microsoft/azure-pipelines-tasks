@@ -1,5 +1,5 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { AzureRmEndpointAuthenticationScheme } from 'azure-pipelines-tasks-azure-arm-rest-v2/constants';
+import { AzureRmEndpointAuthenticationScheme } from 'azure-pipelines-tasks-azure-arm-rest/constants';
 import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { TaskParameters, DeploymentType } from '../taskparameters';
 import { BuiltInLinuxWebAppDeploymentProvider } from './BuiltInLinuxWebAppDeploymentProvider';

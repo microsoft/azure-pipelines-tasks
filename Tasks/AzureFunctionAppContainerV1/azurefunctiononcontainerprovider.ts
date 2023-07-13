@@ -1,9 +1,9 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
-import { Resources } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource';
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
-import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureAppServiceUtility';
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
+import { Resources } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-resource';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
+import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azure-arm-rest/azureAppServiceUtility';
 import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
 import { AzureAppServiceUtilityExt } from './operations/AzureAppServiceUtilityExt';
 import { ContainerBasedDeploymentUtility } from './operations/ContainerBasedDeploymentUtility';
