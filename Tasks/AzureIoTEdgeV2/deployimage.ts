@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from "os";
+import { getSystemAccessToken } from 'azure-pipelines-tasks-utility-common/accesstoken';
 import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
 import util from "./util";
@@ -218,7 +219,7 @@ class azureclitask {
     const projectId = tl.getVariable("System.TeamProjectId");
     const hub = tl.getVariable("System.HostType");
     const uri = tl.getVariable("System.CollectionUri");
-    const token = this.getSystemAccessToken();
+    const token = getSystemAccessToken();
 
     const authHandler = getHandlerFromToken(token);
     const connection = new WebApi(uri, authHandler);
@@ -229,18 +230,6 @@ class azureclitask {
     }
 
     return response.oidcToken;
-  }
-
-  private static getSystemAccessToken() : string {
-    tl.debug('Getting credentials for local feeds');
-    const auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
-    if (auth.scheme === 'OAuth') {
-      tl.debug('Got auth token');
-      return auth.parameters['AccessToken'];
-    }
-    else {
-      tl.warning('Could not determine credentials to use');
-    }
   }
 }
 
