@@ -51,7 +51,7 @@ async function main(): Promise<void> {
                 installerOptions = `-p ${installPath}`;
                 break;
             default:
-                throw new Error(tl.loc('Error_UnsupportedOSPlatform', osTypeEnum));
+                throw new Error(tl.loc('UnsupportedOSPlatform', osTypeEnum, "Linux, Windows, MacOSX"));
         }
 
         let condaRepo = await condaRepoPromise;
@@ -81,15 +81,14 @@ async function main(): Promise<void> {
         if (exitCode === 0) {
             console.log("Conda install artifact ran successfully.")
         } else {
-            throw new Error(`Conda install exited with error code: ${exitCode}`);
+            throw new Error(tl.loc("FailedToRunCondaInstaller", exitCode));
         }
     }
 
     catch(error) {
         tl.error(error);
         tl.error(error.stack);
-        tl.setResult(tl.TaskResult.Failed, "FailedToInstallConda");
-        // tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToInstallConda"));
+        tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToInstallConda"));
         return;
     }
 }
