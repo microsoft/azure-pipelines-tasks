@@ -226,5 +226,9 @@
     "NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure mysql server. Error: %s",
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
     "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.225.1",
+    "Node16-225": "1.225.0"
   }
 }

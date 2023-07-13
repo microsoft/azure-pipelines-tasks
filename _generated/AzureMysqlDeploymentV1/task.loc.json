@@ -226,5 +226,9 @@
     "NotAbleToCreateFirewallRule": "ms-resource:loc.messages.NotAbleToCreateFirewallRule",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.225.1",
+    "Node16-225": "1.225.0"
   }
 }
