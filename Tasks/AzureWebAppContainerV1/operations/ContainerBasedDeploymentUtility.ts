@@ -5,7 +5,7 @@ import url = require('url');
 import util = require('util');
 var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility');
 import { parse }  from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
-import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
 
 enum registryTypes {
     "AzureContainerRegistry",
