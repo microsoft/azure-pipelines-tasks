@@ -47,6 +47,7 @@ const DestinationTypeParameter = {
 let mcFusUploader: ACFusUploader = null;
 
 interface Release {
+    download_url: string;
     version: string;
     short_version: string;
 }
@@ -604,6 +605,11 @@ async function run() {
         await Promise.all(destinationIds.map(destinationId => {
             return publishRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, destinationType, isMandatory, isSilent, destinationId, apiToken, userAgent);
         }));
+        // Obtain release information
+        const release = await getRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, apiToken, userAgent);
+
+        tl.setVariable("AppCenterDownloadUrl", release.download_url);
+
 
         for (const { fieldName, symbolType, forceArchive } of symbolsLookup) {
             const symbolsPathPattern: string = tl.getInput(fieldName, false);
@@ -619,7 +625,6 @@ async function run() {
                 let version: string;
                 let build: string;
                 if (symbolType === "AndroidProguard") {
-                    const release = await getRelease(effectiveApiServer, effectiveApiVersion, appSlug, releaseId, apiToken, userAgent);
                     version = release.short_version;
                     build = release.version;
                 }
@@ -632,6 +637,7 @@ async function run() {
                 await commitSymbols(effectiveApiServer, effectiveApiVersion, appSlug, symbolsUploadInfo.symbol_upload_id, apiToken, userAgent);
             }
         }
+        tl.getIn
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("Succeeded"));
     } catch (err) {

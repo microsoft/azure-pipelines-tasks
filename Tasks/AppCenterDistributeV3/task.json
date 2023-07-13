@@ -225,6 +225,12 @@
             "visibleRule": "destinationType = groups"
         }
     ],
+    "outputs":[{
+        "name": "downloadUrl",
+        "type": "string",
+        "label": "Download url generated.",
+        "helpMarkDown": "Testers will not receive an email for new releases."        
+    }],
     "instanceNameFormat": "Deploy $(app) to Visual Studio App Center",
     "execution": {
         "Node10": {
