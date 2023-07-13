@@ -18,6 +18,7 @@
     "decompress-zip": "0.3.3",
     "fs-extra": "5.0.0",
     "handlebars": "^4.7.7",
+    "agent-base": "^6.0.2",
     "moment": "^2.29.4"
   },
   "devDependencies": {
