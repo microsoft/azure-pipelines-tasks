@@ -81,7 +81,7 @@ process.env["MOCK_NORMALIZE_SLASHES"] = "true";
 tr.setAnswers(a);
 
 tr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-task-lib/mock-toolrunner'));
-tr.registerMock('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource', require('./mock_node_modules/azure-arm-resource'));
+tr.registerMock('azure-pipelines-tasks-azure-arm-rest/azure-arm-resource', require('./mock_node_modules/azure-arm-resource'));
 
 const fsClone = Object.assign({}, fs);
 fsClone.readFileSync = function(fileName: string): Buffer {
