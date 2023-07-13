@@ -28,7 +28,6 @@ process.env['BUILD_SOURCEVERSION'] = 'commitsha';
 
 basicSetup();
 
-
 nock('https://example.test')
     .put('/v0.1/apps/testuser/testapp/releases/1')
     .query(true)

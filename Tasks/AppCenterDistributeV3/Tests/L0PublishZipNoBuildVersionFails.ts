@@ -52,7 +52,6 @@ nock(uploadDomain)
 
     });
 
-
 nock('https://example.test')
     .patch(`/v0.1/apps/testuser/testapp/uploads/releases/${uploadId}`)
     .reply(200, {
