@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 224,
-        "Patch": 1
+        "Minor": 225,
+        "Patch": 2
     },
     "satisfies": [
         "Java",
@@ -185,6 +185,7 @@
         "DownloadFromAzureBlobStorage": "Downloading artifacts from Azure blob storage, Container Name: %s",
         "SuccessFullyFetchedItemList": "Successfully fetched list of items",
         "StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
+        "RequestedUrlTooLong": "Requested URL is too long, this usually happen when you have a lot of Resource Groups in the subscription, try to set azureResourceGroupName input.",
         "UnzipExtractFile": "Extracting file: %s",
         "SevenZipExtractFile": "Extracting file: %s",
         "TarExtractFile": "Extracting file: %s",

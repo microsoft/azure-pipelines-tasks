@@ -1,5 +1,5 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
 
 export const AzureDeployPackageArtifactAlias = "Azure_App_Service_Deploy_PackageArtifactAlias";
 
