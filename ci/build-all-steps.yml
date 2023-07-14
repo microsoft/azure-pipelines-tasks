@@ -62,9 +62,17 @@ steps:
   env:
     PACKAGE_TOKEN: $(Package.Token)
 
-# Build
+# Build BuildConfigGen
+- task: DotNetCoreCLI@2
+  displayName: Build BuildConfigGen
+  inputs:
+    command: build
+    projects: './BuildConfigGen/BuildConfigGen.csproj'
+
+# Build Tasks
 - script: node make.js build --task "$(task_pattern)"
-  displayName: Build
+  displayName: Build Tasks
+  condition: and(succeeded(), ne(variables['numTasks'], 0))
 
 - script: node ./ci/check-tasks.js
   displayName: Check that tasks has no duplicated libs
