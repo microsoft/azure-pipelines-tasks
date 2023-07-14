@@ -347,11 +347,11 @@ namespace BuildConfigGen
         private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion)
         {
             string outputNodePackagePath = Path.Combine(taskOutputNode, "package.json");
-            JsonNode outputNodePackagePath = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNodePackagePath))!;
-            outputNodePackagePath["dependencies"]!["@types/node"] = nodeVersion;
+            JsonNode outputNodePackagePathJsonNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNodePackagePath))!;
+            outputNodePackagePathJsonNode["dependencies"]!["@types/node"] = nodeVersion;
             // We need to add newline since npm install command always add newline at the end of package.json
             // https://github.com/npm/npm/issues/18545
-            string nodePackageContent = outputNodePackagePath.ToJsonString(jso) + Environment.NewLine;
+            string nodePackageContent = outputNodePackagePathJsonNode.ToJsonString(jso) + Environment.NewLine;
             ensureUpdateModeVerifier!.WriteAllText(outputNodePackagePath, nodePackageContent, suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
