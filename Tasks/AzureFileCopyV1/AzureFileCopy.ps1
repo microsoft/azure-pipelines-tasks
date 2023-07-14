@@ -75,8 +75,6 @@ if ($enableDetailedLoggingString -ne "true")
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
-Import-Module $PSScriptRoot\ps_modules\Security
-
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
 try {
     try

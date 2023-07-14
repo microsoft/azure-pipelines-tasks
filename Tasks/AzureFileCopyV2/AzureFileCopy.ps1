@@ -65,7 +65,6 @@ Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-Import-Module $PSScriptRoot\ps_modules\Security
 
 . "$PSScriptRoot\Utility.ps1"
 $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
