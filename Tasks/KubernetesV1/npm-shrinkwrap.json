@@ -115,9 +115,12 @@
       "integrity": "sha512-eQ9qFW/fhfGJF8WKHGEHZEyVWfZxrT+6CLIJGBcZPfxUh/+BnEj+UCGYMlr9qZuX/2AltsvwrGqp0LhEW8D0zQ=="
     },
     "agent-base": {
-      "version": "5.1.1",
-      "resolved": "https://registry.npmjs.org/agent-base/-/agent-base-5.1.1.tgz",
-      "integrity": "sha512-TMeqbNl2fMW0nMjTEPOwe3J/PRFP4vqeoNuQMG0HlMrtm5QxKqdvAkZ1pRBQ/ulIyDD5Yq0nJ7YbdD8ey0TO3g=="
+      "version": "6.0.2",
+      "resolved": "https://registry.npmjs.org/agent-base/-/agent-base-6.0.2.tgz",
+      "integrity": "sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==",
+      "requires": {
+        "debug": "4"
+      }
     },
     "argparse": {
       "version": "1.0.10",
@@ -206,10 +209,10 @@
         }
       }
     },
-    "azure-pipelines-tasks-azure-arm-rest-v2": {
+    "azure-pipelines-tasks-azure-arm-rest": {
       "version": "3.223.4",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-azure-arm-rest-v2/-/azure-pipelines-tasks-azure-arm-rest-v2-3.223.4.tgz",
-      "integrity": "sha512-t7sfkbwSvL6oWTFxCWeC6OBY29tv+eJrT060I1+O4Xpwm0T5sTTAihMjZAi2AdB0ygFfXuOMYZEAornIqWBDKA==",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-azure-arm-rest/-/azure-pipelines-tasks-azure-arm-rest-3.223.4.tgz",
+      "integrity": "sha512-3RPwQfTk38HYGOCTmG2+UVM2JClaUV76YVqYrR/AhShMMFkg1wQIbpQZ7PLUh0YPbyWqFhmdaZla0JTRL9MWkg==",
       "requires": {
         "@azure/msal-node": "1.14.5",
         "@types/jsonwebtoken": "^8.5.8",
@@ -833,6 +836,13 @@
       "requires": {
         "agent-base": "5",
         "debug": "4"
+      },
+      "dependencies": {
+        "agent-base": {
+          "version": "5.1.1",
+          "resolved": "https://registry.npmjs.org/agent-base/-/agent-base-5.1.1.tgz",
+          "integrity": "sha512-TMeqbNl2fMW0nMjTEPOwe3J/PRFP4vqeoNuQMG0HlMrtm5QxKqdvAkZ1pRBQ/ulIyDD5Yq0nJ7YbdD8ey0TO3g=="
+        }
       }
     },
     "inflight": {
