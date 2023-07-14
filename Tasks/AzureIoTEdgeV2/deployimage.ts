@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from "os";
+import { loginAzureRM } from 'azure-pipelines-tasks-artifacts-common/azCliUtils';
 import { getSystemAccessToken } from 'azure-pipelines-tasks-utility-common/accesstoken';
 import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
@@ -146,55 +147,9 @@ class azureclitask {
       tl.debug(JSON.stringify(result));
     }
 
-    var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
-    if (authScheme.toLowerCase() == "workloadidentityfederation") {
-      var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-      var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
-
-      const federatedToken = await this.getIdToken(connectedService);
-      tl.setSecret(federatedToken);
-      const args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
-
-      //login using OpenID Connect federation
-      this.throwIfError(tl.execSync("az", args));
-    }
-    else if (authScheme.toLowerCase() == "serviceprincipal") {
-      let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
-      let cliPassword: string = null;
-      var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-      var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
-
-      if (authType == "spnCertificate") {
-        tl.debug('certificate based endpoint');
-        let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
-        cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
-        fs.writeFileSync(cliPassword, certificateContent);
-      }
-      else {
-        tl.debug('key based endpoint');
-        cliPassword = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
-      }
-
-      let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
-      tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
-      //login using svn
-      this.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`, Constants.execSyncSilentOption));
-    }
-    else if(authScheme.toLowerCase() == "managedserviceidentity") {
-      //login using msi
-      this.throwIfError(tl.execSync("az", "login --identity"));
-    }
-    else {
-      throw tl.loc('AuthSchemeNotSupported', authScheme);
-    }
+    await loginAzureRM(connectedService);
 
     this.isLoggedIn = true;
-
-    var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
-    if (!!subscriptionID) {
-      //set the subscription imported to the current subscription
-      this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\"", Constants.execSyncSilentOption));
-    }
   }
 
   static logoutAzure() {
