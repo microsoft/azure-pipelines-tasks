@@ -26,14 +26,13 @@ namespace BuildConfigGen
         {
             public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".json" };
 
-            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides);
+            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode16, bool isWif, string preprocessorVariableName, bool enableBuildConfigOverrides);
 
-            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false);
-            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: false, nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true);
-            public static readonly ConfigRecord Node20 = new ConfigRecord(name: nameof(Node20), constMappingKey: "Node20-225", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true);
-            public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true);
+            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode16: false, isWif: false, preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false);
+            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode16: true, isWif: false, preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true);
+            public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode16: true, isWif: true, preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true);
 
-            public static ConfigRecord[] Configs = { Default, Node16, Node20, WorkloadIdentityFederation };
+            public static ConfigRecord[] Configs = { Default, Node16, WorkloadIdentityFederation };
         }
 
         // ensureUpdateModeVerifier wraps all writes.  if writeUpdate=false, it tracks writes that would have occured
@@ -134,7 +133,7 @@ namespace BuildConfigGen
             string taskHandler = Path.Combine(taskTargetPath, "task.json");
             JsonNode taskHandlerContents = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(taskHandler))!;
 
-            if (targetConfigs.Any(x => x.isNode))
+            if (targetConfigs.Any(x => x.isNode16))
             {
                 // Task may not have nodejs or packages.json (example: AutomatedAnalysisV0) 
                 if (!hasNodeHandler(taskHandlerContents))
@@ -190,9 +189,9 @@ namespace BuildConfigGen
                 WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.json");
                 WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.loc.json");
 
-                if (config.isNode)
+                if (config.isNode16)
                 {
-                    WriteNodePackageJson(taskOutput, config.nodePackageVersion);
+                    WriteNode16PackageJson(taskOutput);
                 }
             }
         }
@@ -336,23 +335,23 @@ namespace BuildConfigGen
 
             outputTaskNode.AsObject().Add("_buildConfigMapping", configMapping);
 
-            if (config.isNode)
+            if (config.isNode16)
             {
-                AddNodehandler(outputTaskNode, config.nodeHandler);
+                AddNode16handler(outputTaskNode);
             }
 
             ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
-        private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion)
+        private static void WriteNode16PackageJson(string taskOutputNode16)
         {
-            string outputNodePackagePath = Path.Combine(taskOutputNode, "package.json");
-            JsonNode outputNodePackagePath = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNodePackagePath))!;
-            outputNodePackagePath["dependencies"]!["@types/node"] = nodeVersion;
+            string outputNode16PackagePath = Path.Combine(taskOutputNode16, "package.json");
+            JsonNode outputNod16PackagePath = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNode16PackagePath))!;
+            outputNod16PackagePath["dependencies"]!["@types/node"] = "^16.11.39";
             // We need to add newline since npm install command always add newline at the end of package.json
             // https://github.com/npm/npm/issues/18545
-            string nodePackageContent = outputNodePackagePath.ToJsonString(jso) + Environment.NewLine;
-            ensureUpdateModeVerifier!.WriteAllText(outputNodePackagePath, nodePackageContent, suppressValidationErrorIfTargetPathDoesntExist: false);
+            string node16PackageContent = outputNod16PackagePath.ToJsonString(jso) + Environment.NewLine;
+            ensureUpdateModeVerifier!.WriteAllText(outputNode16PackagePath, node16PackageContent, suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
         private static bool hasNodeHandler(JsonNode taskHandlerContents)
@@ -587,25 +586,25 @@ namespace BuildConfigGen
             throw new Exception("Execution block with Node not found.");
         }
 
-        private static void AddNodehandler(JsonNode taskNode, string nodeVersion)
+        private static void AddNode16handler(JsonNode taskNode)
         {
-            AddHandler(taskNode, "prejobexecution", nodeVersion);
-            AddHandler(taskNode, "execution", nodeVersion);
-            AddHandler(taskNode, "postjobexecution", nodeVersion);
+            AddHandler(taskNode, "prejobexecution");
+            AddHandler(taskNode, "execution");
+            AddHandler(taskNode, "postjobexecution");
         }
 
-        private static void AddHandler(JsonNode taskNode, string target, string nodeVersion)
+        private static void AddHandler(JsonNode taskNode, string target)
         {
             var targetNode = taskNode[target]?.AsObject();
 
             if (targetNode != null)
             {
-                if (targetNode!.ContainsKey(nodeVersion))
+                if (targetNode!.ContainsKey("Node16"))
                 {
-                    targetNode!.Remove(nodeVersion);
+                    targetNode!.Remove("Node16");
                 }
 
-                targetNode!.Add(nodeVersion, new JsonObject
+                targetNode!.Add("Node16", new JsonObject
                 {
                     ["target"] = GetExecutionPath(taskNode, target),
                     ["argumentFormat"] = ""
