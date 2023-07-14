@@ -1,159 +1,159 @@
 {
-    "id": "E28912F1-0114-4464-802A-A3A35437FD16",
-    "name": "Docker",
-    "friendlyName": "Docker",
-    "description": "Build or push Docker images, login or logout, start or stop containers, or run a Docker command",
-    "helpUrl": "https://aka.ms/azpipes-docker-tsg",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006) or [see the Docker documentation](https://docs.docker.com/)",
-    "category": "Build",
-    "visibility": [
-        "Build",
-        "Release"
-    ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 2,
-        "Minor": 221,
-        "Patch": 0
+  "id": "E28912F1-0114-4464-802A-A3A35437FD16",
+  "name": "Docker",
+  "friendlyName": "Docker",
+  "description": "Build or push Docker images, login or logout, start or stop containers, or run a Docker command",
+  "helpUrl": "https://aka.ms/azpipes-docker-tsg",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=848006) or [see the Docker documentation](https://docs.docker.com/)",
+  "category": "Build",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 225,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "2.172.0",
+  "demands": [],
+  "releaseNotes": "Simplified the task YAML by:<br/>&nbsp;- Removing the Container registry type input<br/>&nbsp;- Removing complex inputs as they can be passed as arguments to the command.",
+  "groups": [
+    {
+      "name": "containerRepository",
+      "displayName": "Container Repository",
+      "isExpanded": true
     },
-    "minimumAgentVersion": "2.172.0",
-    "demands": [],
-    "releaseNotes": "Simplified the task YAML by:<br/>&nbsp;- Removing the Container registry type input<br/>&nbsp;- Removing complex inputs as they can be passed as arguments to the command.",
-    "groups": [
-        {
-            "name": "containerRepository",
-            "displayName": "Container Repository",
-            "isExpanded": true
-        },
-        {
-            "name": "commands",
-            "displayName": "Commands",
-            "isExpanded": true
-        }
-    ],
-    "inputs": [
-        {
-            "name": "containerRegistry",
-            "type": "connectedService:dockerregistry",
-            "label": "Container registry",
-            "groupName": "containerRepository",
-            "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry."
-        },
-        {
-            "name": "repository",
-            "label": "Container repository",
-            "type": "string",
-            "helpMarkDown": "Name of the repository.",
-            "defaultValue": "",
-            "visibleRule": "command != login && command != logout && command != start && command != stop",
-            "groupName": "containerRepository",
-            "properties": {
-                "EditableOptions": "True"
-            }
-        },
-        {
-            "name": "command",
-            "type": "pickList",
-            "label": "Command",
-            "defaultValue": "buildAndPush",
-            "required": true,
-            "options": {
-                "buildAndPush": "buildAndPush",
-                "build": "build",
-                "push": "push",
-                "login": "login",
-                "logout": "logout",
-                "start": "start",
-                "stop": "stop"
-            },
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "groupName": "commands",
-            "helpMarkDown": "Select a Docker command."
-        },
-        {
-            "name": "Dockerfile",
-            "type": "filePath",
-            "label": "Dockerfile",
-            "defaultValue": "**/Dockerfile",
-            "required": true,
-            "visibleRule": "command = build || command = buildAndPush",
-            "groupName": "commands",
-            "helpMarkDown": "Path to the Dockerfile."
-        },
-        {
-            "name": "buildContext",
-            "type": "filePath",
-            "label": "Build context",
-            "defaultValue": "**",
-            "visibleRule": "command = build || command = buildAndPush",
-            "groupName": "commands",
-            "helpMarkDown": "Path to the build context. Pass ** to specify the directory that contains the Dockerfile."
-        },
-        {
-            "name": "tags",
-            "type": "multiLine",
-            "defaultValue": "$(Build.BuildId)",
-            "properties": {
-                "resizable": "true",
-                "rows": "2"
-            },
-            "visibleRule": "command = build || command = push || command = buildAndPush",
-            "label": "Tags",
-            "groupName": "commands",
-            "helpMarkDown": "A list of tags in separate lines. These tags are used in build, push and buildAndPush commands. Ex:<br><br>beta1.1<br>latest"
-        },
-        {
-            "name": "arguments",
-            "type": "string",
-            "visibleRule": "command != login && command != logout && command != buildAndPush",
-            "label": "Arguments",
-            "groupName": "commands",
-            "helpMarkDown": "Docker command options. Ex:<br> For build command,<br>--build-arg HTTP_PROXY=http://10.20.30.2:1234 --quiet"
-        },
-        {
-            "name": "addPipelineData",
-            "type": "boolean",
-            "label": "Add Pipeline metadata to image(s)",
-            "groupName": "commands",
-            "defaultValue": "true",
-            "helpMarkDown": "By default pipeline data like source branch name, build id are added which helps with traceability. For example you can inspect an image to find out which pipeline built the image. You can opt out of this default behavior by using this input."
-        },
-        {
-            "name": "addBaseImageData",
-            "type": "boolean",
-            "label": "Add base image metadata to image(s)",
-            "groupName": "commands",
-            "defaultValue": "true",
-            "helpMarkDown": "By default base image data like base image name and digest are added which helps with traceability. You can opt out of this default behavior by using this input."
-        },
-        {
-            "name": "container",
-            "type": "string",
-            "visibleRule": "command = start || command = stop",
-            "label": "Container",
-            "groupName": "commands",
-            "helpMarkDown": "Name of the container. For use with start and stop commands."
-        }
-    ],
-    "dataSourceBindings": [],
-    "outputVariables": [
-        {
-            "name": "DockerOutput",
-            "description": "The path of the file(s) which contains the output of the command. This contains two file paths (separated by newline characters) in case of buildAndPush command, and one file path for any other command."
-        }
-    ],
-    "instanceNameFormat": "$(command)",
-    "showEnvironmentVariables": true,
-    "execution": {
-        "Node10": {
-            "target": "docker.js"
-        },
-        "Node16": {
-            "target": "docker.js"
-        }
+    {
+      "name": "commands",
+      "displayName": "Commands",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "containerRegistry",
+      "type": "connectedService:dockerregistry",
+      "label": "Container registry",
+      "groupName": "containerRepository",
+      "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry."
     },
+    {
+      "name": "repository",
+      "label": "Container repository",
+      "type": "string",
+      "helpMarkDown": "Name of the repository.",
+      "defaultValue": "",
+      "visibleRule": "command != login && command != logout && command != start && command != stop",
+      "groupName": "containerRepository",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "command",
+      "type": "pickList",
+      "label": "Command",
+      "defaultValue": "buildAndPush",
+      "required": true,
+      "options": {
+        "buildAndPush": "buildAndPush",
+        "build": "build",
+        "push": "push",
+        "login": "login",
+        "logout": "logout",
+        "start": "start",
+        "stop": "stop"
+      },
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "groupName": "commands",
+      "helpMarkDown": "Select a Docker command."
+    },
+    {
+      "name": "Dockerfile",
+      "type": "filePath",
+      "label": "Dockerfile",
+      "defaultValue": "**/Dockerfile",
+      "required": true,
+      "visibleRule": "command = build || command = buildAndPush",
+      "groupName": "commands",
+      "helpMarkDown": "Path to the Dockerfile."
+    },
+    {
+      "name": "buildContext",
+      "type": "filePath",
+      "label": "Build context",
+      "defaultValue": "**",
+      "visibleRule": "command = build || command = buildAndPush",
+      "groupName": "commands",
+      "helpMarkDown": "Path to the build context. Pass ** to specify the directory that contains the Dockerfile."
+    },
+    {
+      "name": "tags",
+      "type": "multiLine",
+      "defaultValue": "$(Build.BuildId)",
+      "properties": {
+        "resizable": "true",
+        "rows": "2"
+      },
+      "visibleRule": "command = build || command = push || command = buildAndPush",
+      "label": "Tags",
+      "groupName": "commands",
+      "helpMarkDown": "A list of tags in separate lines. These tags are used in build, push and buildAndPush commands. Ex:<br><br>beta1.1<br>latest"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "visibleRule": "command != login && command != logout && command != buildAndPush",
+      "label": "Arguments",
+      "groupName": "commands",
+      "helpMarkDown": "Docker command options. Ex:<br> For build command,<br>--build-arg HTTP_PROXY=http://10.20.30.2:1234 --quiet"
+    },
+    {
+      "name": "addPipelineData",
+      "type": "boolean",
+      "label": "Add Pipeline metadata to image(s)",
+      "groupName": "commands",
+      "defaultValue": "true",
+      "helpMarkDown": "By default pipeline data like source branch name, build id are added which helps with traceability. For example you can inspect an image to find out which pipeline built the image. You can opt out of this default behavior by using this input."
+    },
+    {
+      "name": "addBaseImageData",
+      "type": "boolean",
+      "label": "Add base image metadata to image(s)",
+      "groupName": "commands",
+      "defaultValue": "true",
+      "helpMarkDown": "By default base image data like base image name and digest are added which helps with traceability. You can opt out of this default behavior by using this input."
+    },
+    {
+      "name": "container",
+      "type": "string",
+      "visibleRule": "command = start || command = stop",
+      "label": "Container",
+      "groupName": "commands",
+      "helpMarkDown": "Name of the container. For use with start and stop commands."
+    }
+  ],
+  "dataSourceBindings": [],
+  "outputVariables": [
+    {
+      "name": "DockerOutput",
+      "description": "The path of the file(s) which contains the output of the command. This contains two file paths (separated by newline characters) in case of buildAndPush command, and one file path for any other command."
+    }
+  ],
+  "instanceNameFormat": "$(command)",
+  "showEnvironmentVariables": true,
+  "execution": {
+    "Node10": {
+      "target": "docker.js"
+    },
+    "Node16": {
+      "target": "docker.js"
+    }
+  },
   "messages": {
     "AddingNewAuthToExistingConfig": "Adding auth data for registry to Docker config file. Registry: %s.",
     "ConnectingToDockerHost": "DOCKER_HOST variable is set. Docker will try to connect to the Docker host: %s",
