@@ -3,9 +3,6 @@ import * as path from "path";
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from "os";
 import { loginAzureRM } from 'azure-pipelines-tasks-artifacts-common/azCliUtils';
-import { getSystemAccessToken } from 'azure-pipelines-tasks-utility-common/accesstoken';
-import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
-import { ITaskApi } from "azure-devops-node-api/TaskApi";
 import util from "./util";
 import Constants from "./constant";
 import { TelemetryEvent } from './telemetry';
@@ -160,31 +157,6 @@ class azureclitask {
       // task should not fail if logout doesn`t occur
       tl.warning(tl.loc("FailedToLogout"));
     }
-  }
-
-  static throwIfError(resultOfToolExecution) {
-    if (resultOfToolExecution.stderr) {
-      throw resultOfToolExecution;
-    }
-  }
-
-  private static async getIdToken(connectedService: string) : Promise<string> {
-    const jobId = tl.getVariable("System.JobId");
-    const planId = tl.getVariable("System.PlanId");
-    const projectId = tl.getVariable("System.TeamProjectId");
-    const hub = tl.getVariable("System.HostType");
-    const uri = tl.getVariable("System.CollectionUri");
-    const token = getSystemAccessToken();
-
-    const authHandler = getHandlerFromToken(token);
-    const connection = new WebApi(uri, authHandler);
-    const api: ITaskApi = await connection.getTaskApi();
-    const response = await api.createOidcToken({}, projectId, hub, planId, jobId, connectedService);
-    if (response == null) {
-        return null;
-    }
-
-    return response.oidcToken;
   }
 }
 
