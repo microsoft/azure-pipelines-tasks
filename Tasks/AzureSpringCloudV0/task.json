@@ -15,7 +15,7 @@
         "DeploymentGroup"
     ],
     "author": "Microsoft Corporation",
-    "preview": true,
+    "preview": false,
     "version": {
         "Major": 0,
         "Minor": 225,
