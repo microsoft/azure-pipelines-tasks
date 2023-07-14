@@ -29,6 +29,6 @@
         "azure-pipelines-task-lib": "4.1.0"
     },
     "devDependencies": {
-        "typescript": "4.0.2"
+        "typescript": "4.0.8"
     }
 }
