@@ -22,6 +22,6 @@
     "minimatch": "^3.0.4"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "4.0.8"
   }
 }
