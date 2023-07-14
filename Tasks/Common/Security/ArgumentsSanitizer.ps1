@@ -5,8 +5,8 @@ $featureFlags = @{
 }
 
 Write-Debug "Feature flag AZP_MSRC75787_ENABLE_NEW_LOGIC_AUDIT state: $($featureFlags.audit)"
-Write-Debug "Feature flag AZP_MSRC75787_ENABLE_NEW_LOGIC state: $($featureFlags.audit)"
-Write-Debug "Feature flag AZP_MSRC75787_ENABLE_TELEMETRY state: $($featureFlags.audit)"
+Write-Debug "Feature flag AZP_MSRC75787_ENABLE_NEW_LOGIC state: $($featureFlags.activate)"
+Write-Debug "Feature flag AZP_MSRC75787_ENABLE_TELEMETRY state: $($featureFlags.telemetry)"
 
 # The only public function, which should be called from the task
 # This is a wrapper for Get-SanitizedArgumentsArray to handle feature flags in one place
