@@ -316,5 +316,9 @@
     "RestartedAppServiceSlot": "ms-resource:loc.messages.RestartedAppServiceSlot",
     "FailedToRestartAppService": "ms-resource:loc.messages.FailedToRestartAppService",
     "FailedToRestartAppServiceSlot": "ms-resource:loc.messages.FailedToRestartAppServiceSlot"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.225.2",
+    "Node16-225": "1.225.1"
   }
 }

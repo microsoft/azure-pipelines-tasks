@@ -316,5 +316,9 @@
     "RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
     "FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
     "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.225.2",
+    "Node16-225": "1.225.1"
   }
 }

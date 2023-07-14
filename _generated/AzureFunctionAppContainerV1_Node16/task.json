@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 225,
-    "Patch": 2
+    "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -159,6 +159,10 @@
   "execution": {
     "Node10": {
       "target": "azurefunctiononcontainerdeployment.js"
+    },
+    "Node16": {
+      "target": "azurefunctiononcontainerdeployment.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -316,5 +320,9 @@
     "RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
     "FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
     "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.225.2",
+    "Node16-225": "1.225.1"
   }
 }
