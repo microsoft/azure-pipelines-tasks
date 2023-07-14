@@ -9,6 +9,6 @@
     "azure-pipelines-tool-lib": "^1.3.2"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "4.0.8"
   }
 }
