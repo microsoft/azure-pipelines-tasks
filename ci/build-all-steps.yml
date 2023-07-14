@@ -65,7 +65,6 @@ steps:
 # Build
 - script: node make.js build --task "$(task_pattern)"
   displayName: Build
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
 
 - script: node ./ci/check-tasks.js
   displayName: Check that tasks has no duplicated libs
