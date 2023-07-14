@@ -214,10 +214,10 @@ param (
         }
 
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp
+        $arguments = Sanitize-ScriptArguments -InputArgs $robocopyParameters
+                
+        & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy @($arguments)
 
-        $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"                
-        Invoke-Expression $command        
-        
         if ($LASTEXITCODE -ge 8)
         {
             $errorMessage = Get-LocalizedString -Key "Copying failed. Consult the robocopy logs for more details."            

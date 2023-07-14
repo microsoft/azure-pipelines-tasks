@@ -97,10 +97,11 @@ $AzureFileCopyRemoteJob = {
             $additionalArguments = "--recursive --log-level=INFO"
         }
 
-        Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $additionalArguments"
-
-        $azCopyCommand = "& azcopy copy `"$containerURL/*$containerSasToken`" `"$targetPath`" $additionalArguments"
-        Invoke-Expression $azCopyCommand
+        $arguments = Sanitize-ScriptArguments -InputArgs $additionalArguments
+    
+        Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $arguments"
+                
+        & azcopy copy $targetPath $containerURL/*$containerSasToken @($arguments)
     }
     catch
     {
