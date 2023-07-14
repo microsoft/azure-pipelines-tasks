@@ -1,7 +1,7 @@
 import tl = require('azure-pipelines-task-lib/task');
 import url = require('url');
 import util = require('util');
-import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
 import { TaskParameters } from './TaskParameters';
 import { parse }  from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
 import { AzureAppServiceUtility } from './AzureAppServiceUtility';
