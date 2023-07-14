@@ -6,6 +6,6 @@
     "azure-pipelines-tasks-codecoverage-tools": "3.214.0"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "4.0.8"
   }
 }
