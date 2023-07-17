@@ -1,8 +1,8 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
-import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
-import { Resources } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
+import { Resources } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-resource';
 import { Package } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 
 const skuDynamicValue: string = 'dynamic';

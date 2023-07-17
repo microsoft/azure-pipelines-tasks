@@ -15,7 +15,7 @@
   "version": {
     "Major": 3,
     "Minor": 225,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -224,6 +224,15 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.addSpnToEnvironment",
+      "groupName": "Advanced"
+    },
+    {
+      "name": "useWithoutJSON",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useWithoutJSON",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.useWithoutJSON",
       "groupName": "Advanced"
     }
   ],
