@@ -13,7 +13,7 @@ Write-Debug "Feature flag AZP_MSRC75787_ENABLE_TELEMETRY state: $($featureFlags.
 # It will return sanitized arguments if feature flags are enabled
 function Sanitize-ScriptArguments([string]$InputArgs) {
 
-    if ($featureFlags.audit || $featureFlags.activate) {
+    if ($featureFlags.audit -or $featureFlags.activate) {
 
         $sanitizedArguments = Get-SanitizedArgumentsArray -InputArgs $InputArgs
         return $sanitizedArguments
