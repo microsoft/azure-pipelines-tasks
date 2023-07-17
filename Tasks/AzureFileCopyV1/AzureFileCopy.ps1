@@ -51,7 +51,7 @@ $azCopyExeLocation = 'AzCopy\AzCopy.exe'
 $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
 
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-Import-Module $PSScriptRoot\ps_modules\Security
+Import-Module $PSScriptRoot\ps_modules\Sanitization
 Initialize-Azure
 
 # Import the loc strings.

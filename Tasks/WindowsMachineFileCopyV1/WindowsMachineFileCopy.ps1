@@ -25,7 +25,7 @@ Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy"
 . $PSScriptRoot/RoboCopyJob.ps1
 . $PSScriptRoot/Utility.ps1
 
-Import-Module $PSScriptRoot\ps_modules\Security
+Import-Module $PSScriptRoot\ps_modules\Sanitization
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
