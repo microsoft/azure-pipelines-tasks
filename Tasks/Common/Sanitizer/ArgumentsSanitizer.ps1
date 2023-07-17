@@ -39,7 +39,7 @@ function Get-SanitizedArgumentsArray([string]$InputArgs) {
 
     if ( $resultArgs -like "*$removedSymbolSign*") {
 
-        Write-Warning (Get-VstsLocString -Key 'PS_FileArgsSanitized' -ArgumentList $resultArgs);
+        Write-Warning (Get-VstsLocString -Key 'PS_ScriptArgsSanitized' -ArgumentList $resultArgs);
 
         if ($featureFlags.telemetry) {
             $removedSymbolsCount = [regex]::matches($resultArgs, $removedSymbolSign).count

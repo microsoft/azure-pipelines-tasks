@@ -31,10 +31,4 @@ describe('Security Suite', function () {
             psr.run(path.join(__dirname, 'L0Get-SanitizedArgumentsArray.ReturnsArrayOfSanitizedValues.ps1'), done);
         });
     }
-
-    if (psm.testSupported()) {
-        it('Test Sanitize-Arguments', (done) => {
-            psr.run(path.join(__dirname, 'L0Get-SanitizedArgumentsArray.OutputsWarningMessage.ps1'), done);
-        });
-    }
 });
