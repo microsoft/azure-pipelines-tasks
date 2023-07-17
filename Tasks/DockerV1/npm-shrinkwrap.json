@@ -155,10 +155,10 @@
         }
       }
     },
-    "azure-pipelines-tasks-azure-arm-rest-v2": {
+    "azure-pipelines-tasks-azure-arm-rest": {
       "version": "3.224.0",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-azure-arm-rest-v2/-/azure-pipelines-tasks-azure-arm-rest-v2-3.224.0.tgz",
-      "integrity": "sha512-G76zBn1hthbrAdB6AnQbbe9Yh6zLZzv5NBNaBVqMqkb8VvaciqKCLEYAIc2FAdhqy/w7lwqWEPr82dJX59J7aQ==",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-azure-arm-rest/-/azure-pipelines-tasks-azure-arm-rest-3.224.0.tgz",
+      "integrity": "sha512-1S77+wBJIBA97ioWpMlVf/9WHCMcTN7zNzI70LM2Gub24c/CNi6C+9wXTHPMCrt8o2IlylBI/UeVB+oWG8U/hQ==",
       "requires": {
         "@azure/msal-node": "1.14.5",
         "@types/jsonwebtoken": "^8.5.8",
@@ -216,16 +216,16 @@
       }
     },
     "azure-pipelines-tasks-docker-common": {
-      "version": "2.225.0",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-docker-common/-/azure-pipelines-tasks-docker-common-2.225.0.tgz",
-      "integrity": "sha512-bv2WI4guDb8BlCQKOAH2HGf8uTmrnTMHEn4FdRVzyYqR3jLOm0XfjrseFzOgzS2pxMhIJNPE4UOE2YeaBsnw/Q==",
+      "version": "2.225.1",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-docker-common/-/azure-pipelines-tasks-docker-common-2.225.1.tgz",
+      "integrity": "sha512-omrNMVfmMiFAbEbMsxT4rZFMiY01ZLwXkr8QIEljAWtDcBpW31xyav92Pm9i0qnhrZ41T7GGmVsziydYpBuAEw==",
       "requires": {
         "@types/mocha": "^5.2.7",
         "@types/node": "^10.17.0",
         "@types/q": "1.5.4",
         "@types/uuid": "^8.3.0",
         "azure-pipelines-task-lib": "^3.1.0",
-        "azure-pipelines-tasks-azure-arm-rest-v2": "^3.224.0",
+        "azure-pipelines-tasks-azure-arm-rest": "3.224.0",
         "del": "2.2.0",
         "q": "1.4.1"
       },
