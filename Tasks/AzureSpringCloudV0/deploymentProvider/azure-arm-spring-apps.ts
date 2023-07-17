@@ -1,9 +1,9 @@
 import tl = require('azure-pipelines-task-lib/task');
 import jsonPath = require('JSONPath');
-import webClient = require('azure-pipelines-tasks-azure-arm-rest-v2/webClient');
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
-import { ServiceClient } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClient';
-import { ToError } from 'azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase';
+import webClient = require('azure-pipelines-tasks-azure-arm-rest/webClient');
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
+import { ServiceClient } from 'azure-pipelines-tasks-azure-arm-rest/AzureServiceClient';
+import { ToError } from 'azure-pipelines-tasks-azure-arm-rest/AzureServiceClientBase';
 import { uploadFileToSasUrl } from './azure-storage';
 import https = require('https');
 import { parse } from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';

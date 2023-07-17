@@ -1283,11 +1283,3 @@ function Get-InvokeRemoteScriptParameters
         sessionOption = $sessionOption
     }
 }
-
-function Validate-AdditionalArguments([string]$additionalArguments)
-{
-    if($additionalArguments -match "[&;|]")
-    {
-        ThrowError -errorMessage (Get-VstsLocString -Key "AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters")
-    }
-}

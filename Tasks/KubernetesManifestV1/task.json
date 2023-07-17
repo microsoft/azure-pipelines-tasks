@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 223,
-        "Patch": 3
+        "Minor": 225,
+        "Patch": 1
     },
     "demands": [],
     "groups": [],
@@ -458,6 +458,7 @@
         "InvalidBaselineAndCanaryReplicas": "Invalid value for replica count.",
         "InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number.",
         "RolloutStatusTimedout": "Rollout status check failed.",
-        "EnvironmentLink": "For more information, go to %s"
+        "EnvironmentLink": "For more information, go to %s",
+        "KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
     }
 }

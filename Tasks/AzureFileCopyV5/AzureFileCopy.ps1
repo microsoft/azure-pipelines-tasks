@@ -65,13 +65,15 @@ $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 
 # Update PSModulePath for hosted agent
 . "$PSScriptRoot\Utility.ps1"
+
 CleanUp-PSModulePathForHostedAgent
 
 $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
 $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
 if (Get-Module Az.Accounts -ListAvailable) {
-    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $vstsAccessToken
+    $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
+    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
 }
 else {
     Write-Verbose "No module found with name: Az.Accounts"
@@ -180,7 +182,6 @@ try {
     }
 
     Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArgumentsForBlobCopy
-    Validate-AdditionalArguments $additionalArguments
 
     # Uploading files to container
     Upload-FilesToAzureContainer -sourcePath $sourcePath `

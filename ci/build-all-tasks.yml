@@ -6,14 +6,11 @@ steps:
 - checkout: self
   clean: true
 
-# Use node 8, npm 5
+# Use node 10, npm 6
 - task: NodeTool@0
-  displayName: Use node 8
+  displayName: Use node 10
   inputs:
-    versionSpec: 8.x
-
-- script: npm i -g npm@6.9.0 --force
-  displayName: Use npm version 6.9.0
+    versionSpec: 10.x
 
 # npm install
 - script: npm install
@@ -26,6 +23,11 @@ steps:
 # Stage tasks individually into the package directory
 - script: node ./ci/stage-package.js true individually
   displayName: Stage tasks individually into the package directory
+
+# Sign all task zips as nuget packages
+- template: sign-all-tasks.yml
+  parameters:
+    layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
 # Stage all the tasks into a single zip for upload
 - script: node ./ci/stage-package.js true
