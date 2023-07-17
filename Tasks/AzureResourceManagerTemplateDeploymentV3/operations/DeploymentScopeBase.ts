@@ -1,11 +1,11 @@
 import tl = require("azure-pipelines-task-lib/task");
 
 import armDeployTaskParameters = require("../models/TaskParameters");
-import armResource = require("azure-pipelines-tasks-azure-arm-rest-v2/AzureServiceClientBase");
+import armResource = require("azure-pipelines-tasks-azure-arm-rest/AzureServiceClientBase");
 import utils = require("./Utils");
-import { sleepFor } from 'azure-pipelines-tasks-azure-arm-rest-v2/webClient';
+import { sleepFor } from 'azure-pipelines-tasks-azure-arm-rest/webClient';
 import { DeploymentParameters } from "./DeploymentParameters";
-import azureGraph = require("azure-pipelines-tasks-azure-arm-rest-v2/azure-graph");
+import azureGraph = require("azure-pipelines-tasks-azure-arm-rest/azure-graph");
 
 export class DeploymentScopeBase {
     protected deploymentParameters: DeploymentParameters;
@@ -78,7 +78,7 @@ export class DeploymentScopeBase {
                                     setVariablesInObject(`${path}.${key}`, obj[key]);
                                 }
                                 else {
-                                    console.log(`##vso[task.setvariable variable=${path}.${key};]` + JSON.stringify(obj[key]));
+                                    console.log(`##vso[task.setvariable variable=${path}.${key};]` + (this.taskParameters.useWithoutJSON ? obj[key] : JSON.stringify(obj[key])));
                                     console.log(tl.loc("AddedOutputVariable", `${path}.${key}`));
                                 }
                             }

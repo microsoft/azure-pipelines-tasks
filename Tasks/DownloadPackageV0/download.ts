@@ -100,10 +100,13 @@ export async function downloadPackage(feedConnection: WebApi, pkgsConnection: We
 				});
 				await unzipPromise;
 				
-				if (tl.exist(zipLocation)) {
-					tl.rmRF(zipLocation);
+				if (tl.exist(zipLocation)) {                        
+					try {
+						tl.rmRF(zipLocation);
+					} catch (error) {
+						tl.warning(tl.loc("OperationFailed", "rmRF", error));
+					}
 				}
-
 				return resolve();
 			}
 			else {

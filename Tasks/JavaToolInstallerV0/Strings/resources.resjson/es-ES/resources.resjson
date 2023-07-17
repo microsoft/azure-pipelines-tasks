@@ -22,6 +22,8 @@
   "loc.input.help.azureCommonVirtualFile": "Ruta de acceso al JDK dentro del contenedor de almacenamiento de Azure.",
   "loc.input.label.jdkDestinationDirectory": "Directorio de destino",
   "loc.input.help.jdkDestinationDirectory": "En Linux y Windows, se usa como directorio de destino para la instalación de JDK. En macOS, este directorio se usa como carpeta temporal para la extracción de archivos .dmg, ya que macOS no admite la instalación de JDK en el directorio específico.",
+  "loc.input.label.azureResourceGroupName": "Nombre del grupo de recursos",
+  "loc.input.help.azureResourceGroupName": "Nombre del grupo de recursos de la cuenta de almacenamiento.",
   "loc.input.label.cleanDestinationDirectory": "Limpiar directorio de destino",
   "loc.input.help.cleanDestinationDirectory": "Seleccione esta opción para limpiar el directorio de destino antes de extraer JDK en este.",
   "loc.input.label.createExtractDirectory": "Crear directorio para la extracción",

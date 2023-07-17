@@ -5,18 +5,19 @@ import tl = require('azure-pipelines-task-lib');
 var ltx = require('ltx');
 import fs = require('fs');
 
-var AppServiceTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/L0-azure-arm-app-service.js");
-var KuduServiceTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/L0-azure-arm-app-service-kudu-tests.js");
-var ApplicationInsightsTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/L0-azure-arm-appinsights-tests.js");
-var ResourcesTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/L0-azure-arm-resource-tests.js");
+var AppServiceTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-app-service.js");
+var KuduServiceTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-app-service-kudu-tests.js");
+var ApplicationInsightsTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-appinsights-tests.js");
+var ResourcesTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-resource-tests.js");
+var fileEncoding = require("../node_modules/azure-pipelines-tasks-webdeployment-common/fileencoding.js");
 
 describe('AzureRmWebAppDeployment Suite', function() {
     
     this.timeout(60000);
 
      before((done) => {
-        if(!tl.exist(path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/node_modules'))) {
-            tl.cp(path.join( __dirname, 'node_modules'), path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests'), '-rf', true);
+        if(!tl.exist(path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/node_modules'))) {
+            tl.cp(path.join( __dirname, 'node_modules'), path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest/Tests'), '-rf', true);
         }
 
         tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.config'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), '-f', false);
@@ -80,21 +81,35 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
 
-    it('Runs successfully with XML variable substitution', (done:MochaDone) => {
+    it('Runs successfully with XML variable substitution', (done) => {
         let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        let tr = new ttm.MockTestRunner(tp);
         tr.run();
-
-        var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname,  "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XmlVarSub', 'Web_test.config')));
-        var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XmlVarSub', 'Web_Expected.config')));
-        assert(ltx.equal(resultFile, expectFile) , 'Should have substituted variables in Web.config file');
-        var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config')));
-        var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Expected.Debug.config')));
-        assert(ltx.equal(resultFile, expectFile) , 'Should have substituted variables in Web.Debug.config file');   
-        var resultParamFile = ltx.parse(fs.readFileSync(path.join(__dirname,  "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XmlVarSub', 'parameters_test.xml')));
-        var expectParamFile = ltx.parse(fs.readFileSync(path.join(__dirname,  "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XmlVarSub', 'parameters_Expected.xml')));
-        assert(ltx.equal(resultParamFile, expectParamFile) , 'Should have substituted variables in parameters.xml file');
-
+        let transformedFilePath = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config');
+        let expectedFilePath = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Expected.config');
+        let transformedFileAsBuffer = fs.readFileSync(transformedFilePath);
+        let expectedFileAsBuffer = fs.readFileSync(expectedFilePath);
+        let transformedFileEncodeType = fileEncoding.detectFileEncoding(transformedFilePath, transformedFileAsBuffer)[0];
+        let transformedFileAsString = transformedFileAsBuffer.toString(transformedFileEncodeType);
+        transformedFileAsString = transformedFileAsString.replace( /[\n]+/gm, "\r\n" );
+        transformedFileAsBuffer = Buffer.from(transformedFileAsString, transformedFileEncodeType);
+        var resultFile = ltx.parse(transformedFileAsBuffer);
+        var expectFile = ltx.parse(expectedFileAsBuffer);
+        assert(ltx.equal(resultFile, expectFile), 'Should have substituted variables in Web.config file');
+        transformedFilePath = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config');
+        expectedFilePath = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Expected.Debug.config');
+        transformedFileAsBuffer = fs.readFileSync(transformedFilePath);
+        expectedFileAsBuffer = fs.readFileSync(expectedFilePath);
+        transformedFileEncodeType = fileEncoding.detectFileEncoding(transformedFilePath, transformedFileAsBuffer)[0];
+        transformedFileAsString = transformedFileAsBuffer.toString(transformedFileEncodeType);
+        transformedFileAsString = transformedFileAsString.replace( /[\n]+/gm, "\r\n" );
+        transformedFileAsBuffer = Buffer.from(transformedFileAsString, transformedFileEncodeType);
+        var resultFile = ltx.parse(transformedFileAsBuffer);
+        var expectFile = ltx.parse(expectedFileAsBuffer);
+        assert(ltx.equal(resultFile, expectFile), 'Should have substituted variables in Web.Debug.config file');
+        var resultParamFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml')));
+        var expectParamFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_Expected.xml')));
+        assert(ltx.equal(resultParamFile, expectParamFile), 'Should have substituted variables in parameters.xml file');
         done();
     });
 

@@ -3,9 +3,8 @@ import path = require('path');
 import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
-import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
 var uuidV4 = require('uuid/v4');
 
 function convertToNullIfUndefined<T>(arg: T): T|null {
@@ -73,17 +72,20 @@ async function run() {
         const makeModuleAvailableScriptPath = path.join(path.resolve(__dirname), 'TryMakingModuleAvailable.ps1');
         contents.push(`${makeModuleAvailableScriptPath} -targetVersion '${targetAzurePs}' -platform Linux`);
 
-        let azFilePath = path.join(path.resolve(__dirname), 'InitializeAz.ps1');
-        contents.push(`$ErrorActionPreference = '${_vsts_input_errorActionPreference}'`); 
-        if(targetAzurePs == "") {
-            contents.push(`${azFilePath} -endpoint '${endpoint}'`);
-        }
-        else {
-            contents.push(`${azFilePath} -endpoint '${endpoint}' -targetAzurePs  ${targetAzurePs}`);
-        }
+        contents.push(`$ErrorActionPreference = '${_vsts_input_errorActionPreference}'`);
 
-        if(scriptArguments == null)
-        {
+        let azFilePath = path.join(path.resolve(__dirname), 'InitializeAz.ps1');
+        let initAzCommand = `${azFilePath} -endpoint '${endpoint}'`
+        if (targetAzurePs != "") {
+            initAzCommand += ` -targetAzurePs  ${targetAzurePs}`;
+        }
+        if (endpointObject.scheme === 'WorkloadIdentityFederation') {
+            const oidc_token = await endpointObject.applicationTokenCredentials.getFederatedToken();
+            initAzCommand += ` -clientAssertionJwt  ${oidc_token}`;
+        }
+        contents.push(initAzCommand);
+
+        if (scriptArguments == null) {
             scriptArguments = "";
         }
 
@@ -108,7 +110,7 @@ async function run() {
                                           // encode the BOM into its UTF8 binary sequence.
             function (err) {
                 if (err) throw err;
-                console.log('Saved!');
+                console.log('File saved!');
             });
 
         // Run the script.
