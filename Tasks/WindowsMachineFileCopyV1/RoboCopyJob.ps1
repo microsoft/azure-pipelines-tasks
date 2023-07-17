@@ -8,6 +8,9 @@ param (
     [string]$additionalArguments
     )    
 
+    # Import Vsts SDK.
+    Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk
+    
     $sourcePath = $sourcePath.Trim().TrimEnd('\', '/')
     $targetPath = $targetPath.Trim().TrimEnd('\', '/')    
 
