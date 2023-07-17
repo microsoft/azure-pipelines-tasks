@@ -22,10 +22,12 @@ Write-Verbose "additionalArguments = $additionalArguments"
 Write-Verbose "copyFilesInParallel = $copyFilesInParallel"
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy"
 
+Import-Module $PSScriptRoot/ps_modules/VstsTaskSdk
+Import-Module $PSScriptRoot/ps_modules/Sanitizer
+
 . $PSScriptRoot/RoboCopyJob.ps1
 . $PSScriptRoot/Utility.ps1
 
-Import-Module $PSScriptRoot\ps_modules\Sanitizer
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"

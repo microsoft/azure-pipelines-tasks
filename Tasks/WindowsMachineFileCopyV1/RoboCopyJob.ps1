@@ -7,8 +7,6 @@ param (
     [string]$cleanTargetBeforeCopy,
     [string]$additionalArguments
     )    
-
-    Import-Module "$scriptRoot\ps_modules\VstsTaskSdk"
     
     $sourcePath = $sourcePath.Trim().TrimEnd('\', '/')
     $targetPath = $targetPath.Trim().TrimEnd('\', '/')    
