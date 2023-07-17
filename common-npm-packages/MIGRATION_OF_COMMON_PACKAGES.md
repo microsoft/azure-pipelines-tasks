@@ -21,11 +21,7 @@ List of already migrated packages:
 13. [x] az-blobstorage-provider-v2
 14. [x] azure-arm-rest
 15. [x] docker-common-v2
-
-
-TODO:
-
-1.  [ ] azure-arm-rest-v2
+16. [x] azure-arm-rest-v2
 
 # Getting rid of -v2, -v3 folders
 
@@ -43,20 +39,21 @@ Missed versions were re-published to the original packages.
 
 # Related PRs
 
-| Package                    | Remove package folder                                               | Replace package in tasks                                            |
-| -------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| artifacts-common           | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17273) |                                                                     |
-| codeanalysis-common        | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17268) |                                                                     |
-| ios-signing-common         | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17272) |                                                                     |
-| java-common                | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17269) |                                                                     |
-| MSBuildHelpers-v3          | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17274) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17250) |
-| packaging-common-v3        | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17271) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17266) |
-| securefiles-common         | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17270) |                                                                     |
-| AzureRmDeploy-common-v3    | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17444) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17435) |
-| webdeployment-common-v4    | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17430) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17379) |
-| utility-common-v2          | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17445) |                                                                     |
-| kubernetes-common-v2       | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17559) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17557) |
-| docker-common              | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17597) |                                                                     |
-| azure-arm-rest             | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17562) |                                                                     |
-| az-blobstorage-provider-v2 | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17447) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17540) |
-| docker-common-v2           | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17748) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17746) |
+| Package                    | Remove package folder                                               | Replace package in tasks                                                   |
+| -------------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| artifacts-common           | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17273) |                                                                            |
+| codeanalysis-common        | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17268) |                                                                            |
+| ios-signing-common         | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17272) |                                                                            |
+| java-common                | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17269) |                                                                            |
+| MSBuildHelpers-v3          | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17274) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17250)        |
+| packaging-common-v3        | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17271) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17266)        |
+| securefiles-common         | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17270) |                                                                            |
+| AzureRmDeploy-common-v3    | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17444) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17435)        |
+| webdeployment-common-v4    | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17430) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17379)        |
+| utility-common-v2          | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17445) |                                                                            |
+| kubernetes-common-v2       | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17559) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17557)        |
+| docker-common              | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17597) |                                                                            |
+| azure-arm-rest             | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17562) |                                                                            |
+| az-blobstorage-provider-v2 | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17447) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17540)        |
+| docker-common-v2           | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17748) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17746)        |
+| azure-arm-rest-v2          | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/18656) | [PR1](https://github.com/microsoft/azure-pipelines-tasks/pull/18629), [PR2](https://github.com/microsoft/azure-pipelines-tasks/pull/18630), [PR3](https://github.com/microsoft/azure-pipelines-tasks/pull/18632), [PR4](https://github.com/microsoft/azure-pipelines-tasks/pull/18636), [PR5](https://github.com/microsoft/azure-pipelines-tasks/pull/18637), [PR6](https://github.com/microsoft/azure-pipelines-tasks/pull/18639) |
