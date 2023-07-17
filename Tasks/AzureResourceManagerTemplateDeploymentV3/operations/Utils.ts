@@ -10,8 +10,7 @@ import { TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
 import { DeploymentParameters } from "./DeploymentParameters";
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
-import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
-import { ITaskApi } from "azure-devops-node-api/TaskApi";
+import { loginAzureRM } from 'azure-pipelines-tasks-artifacts-common/azCliUtils';
 
 var cpExec = util.promisify(require('child_process').exec);
 var hm = require("typed-rest-client/HttpClient");
@@ -432,7 +431,7 @@ class Utils {
             let azcliversion = await this.getAzureCliVersion()
             if(parseFloat(azcliversion)){
                 if(this.isBicepAvailable(azcliversion)){
-                    await this.loginAzureRM(taskParameters.connectedService);
+                    await loginAzureRM(taskParameters.connectedService);
                     await this.execBicepBuild(filePath)
                     filePath = filePath.replace('.bicep', '.json')
                     this.cleanupFileList.push(filePath)
@@ -469,56 +468,6 @@ class Utils {
         }
     }
 
-    private static async loginAzureRM(connectedService): Promise<void> {
-        const authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
-        const subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
-        const servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-        const tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
-        let args: string = "";
-        let errorMsg: string = "LoginFailed";
-
-        if (authScheme.toLowerCase() == "serviceprincipal") {
-            let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
-            let cliPassword: string = null;
-            if (authType == "spnCertificate") {
-                tl.debug('certificate based endpoint');
-                let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
-                cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
-                fs.writeFileSync(cliPassword, certificateContent);
-            }
-            else {
-                tl.debug('key based endpoint');
-                cliPassword = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
-            }
-
-            let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
-            tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
-            // login using svn
-            args = `--service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}"`;
-        } else if (authScheme.toLowerCase() == "managedserviceidentity") {
-            // login using msi
-            args = `--identity`;
-            errorMsg = "MSILoginFailed";
-        }
-        else if (authScheme.toLowerCase() == "workloadidentityfederation") {
-            const federatedToken = await this.getIdToken(connectedService);
-            tl.setSecret(federatedToken);
-            //login using OpenID Connect federation
-            args = `--service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
-        }
-        else{
-            throw tl.loc('AuthSchemeNotSupported', authScheme);
-        }
-        let result: IExecSyncResult = tl.execSync("az", `login ${args}`);
-        if (result.stderr) {
-            throw new Error(tl.loc(errorMsg, result.stderr));
-        }
-        result = tl.execSync("az", "account set --subscription \"" + subscriptionID + "\"");
-        if (result.stderr) {
-            throw new Error(tl.loc("ErrorInSettingUpSubscription", result.stderr));
-        }
-    }
-
     private static async logoutAzure() {
         const result: IExecSyncResult = tl.execSync("az", "account clear");
         if(result && result.code !== 0){
@@ -534,37 +483,6 @@ class Utils {
             return true
         }
         return false
-    }
-
-    private static async getIdToken(connectedService: string) : Promise<string> {
-        const jobId = tl.getVariable("System.JobId");
-        const planId = tl.getVariable("System.PlanId");
-        const projectId = tl.getVariable("System.TeamProjectId");
-        const hub = tl.getVariable("System.HostType");
-        const uri = tl.getVariable("System.CollectionUri");
-        const token = this.getSystemAccessToken();
-
-        const authHandler = getHandlerFromToken(token);
-        const connection = new WebApi(uri, authHandler);
-        const api: ITaskApi = await connection.getTaskApi();
-        const response = await api.createOidcToken({}, projectId, hub, planId, jobId, connectedService);
-        if (response == null) {
-            return null;
-        }
-
-        return response.oidcToken;
-    }
-
-    private static getSystemAccessToken() : string {
-        tl.debug('Getting credentials for local feeds');
-        const auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
-        if (auth.scheme === 'OAuth') {
-            tl.debug('Got auth token');
-            return auth.parameters['AccessToken'];
-        }
-        else {
-            tl.warning('Could not determine credentials to use');
-        }
     }
 }
 

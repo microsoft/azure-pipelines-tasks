@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
-import webClient = require('azure-pipelines-tasks-azure-arm-rest-v2/webClient');
+import webClient = require('azure-pipelines-tasks-azure-arm-rest/webClient');
 
 var process = require('process');
 var packagejson = require('./package.json');
