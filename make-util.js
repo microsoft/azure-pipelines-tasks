@@ -1777,7 +1777,7 @@ exports.renameCodeCoverageOutput = renameCodeCoverageOutput;
 //------------------------------------------------------------------------------
 
 /**
- * Returns path to BuldConfigGenerator, if generator wasn't compile it will compile it
+ * Returns path to BuldConfigGenerator
  * @returns Path to the executed file
  */
 var getBuildConfigGenerator = function (baseConfigToolPath) {
@@ -1792,10 +1792,8 @@ var getBuildConfigGenerator = function (baseConfigToolPath) {
         configToolBuildUtility = path.join(baseConfigToolPath, "dev.sh");
     }
 
-    if (!fs.existsSync(programPath)) {
-        console.log(`BuildConfigGen not found at ${programPath}. Starting build.`);
-        run(configToolBuildUtility, true);
-    }
+    // build configToolBuildUtility if needed.  (up-to-date check will skip build if not needed)
+    run(configToolBuildUtility, true);
 
     return programPath;
 };
