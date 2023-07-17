@@ -26,15 +26,13 @@ namespace BuildConfigGen
         {
             public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".json" };
 
-            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides);
+            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, string? overriddenDirectoryName = null);
 
-            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false);
-            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: false, nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true);
-            
-            public static readonly ConfigRecord Node16_225 = new ConfigRecord(name: nameof(Node16_225), constMappingKey: "Node16-225", isDefault: false, isNode: true, isWif: false, preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: false, overriddenDirectoryName: "Node16");
-            
-            public static readonly ConfigRecord Node20 = new ConfigRecord(name: nameof(Node20), constMappingKey: "Node20-225", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true);
-            public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true);
+            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false, deprecated: false);
+            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: false, nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: true);
+            public static readonly ConfigRecord Node16_225 = new ConfigRecord(name: nameof(Node16_225), constMappingKey: "Node16-225", isDefault: false, isNode: true, isWif: false, nodePackageVersion: "^16.11.39", nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: false, overriddenDirectoryName: "Node16");
+            public static readonly ConfigRecord Node20 = new ConfigRecord(name: nameof(Node20), constMappingKey: "Node20-225", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false);
+            public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true, deprecated: false);
 
             public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, WorkloadIdentityFederation };
         }
@@ -369,11 +367,11 @@ namespace BuildConfigGen
         private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion)
         {
             string outputNodePackagePath = Path.Combine(taskOutputNode, "package.json");
-            JsonNode outputNodePackagePath = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNodePackagePath))!;
-            outputNodePackagePath["dependencies"]!["@types/node"] = nodeVersion;
+            JsonNode outputNodePackagePathJsonNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNodePackagePath))!;
+            outputNodePackagePathJsonNode["dependencies"]!["@types/node"] = nodeVersion;
             // We need to add newline since npm install command always add newline at the end of package.json
             // https://github.com/npm/npm/issues/18545
-            string nodePackageContent = outputNodePackagePath.ToJsonString(jso) + Environment.NewLine;
+            string nodePackageContent = outputNodePackagePathJsonNode.ToJsonString(jso) + Environment.NewLine;
             ensureUpdateModeVerifier!.WriteAllText(outputNodePackagePath, nodePackageContent, suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
