@@ -8,8 +8,8 @@
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 218,
+    "Major": 1,
+    "Minor": 0,
     "Patch": 0
   },
   "runsOn": [
@@ -19,18 +19,6 @@
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
-    {
-      "name": "distributionType",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.distributionType",
-      "defaultValue": "Miniconda",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.distributionType",
-      "options": {
-        "Anaconda": "Install Anaconda",
-        "Miniconda": "Install Miniconda"
-      }
-    },
     {
       "name": "installLatest",
       "type": "boolean",
@@ -98,12 +86,9 @@
     }
   },
   "messages": {
-    "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
-    "ConfigTomlNotToml": "ms-resource:loc.messages.ConfigTomlNotToml",
-    "ConfigTomlDoesNotExist": "ms-resource:loc.messages.ConfigTomlDoesNotExist",
-    "ConfigTomlMissingRegistry": "ms-resource:loc.messages.ConfigTomlMissingRegistry",
-    "AuthenticatingThisConfigToml": "ms-resource:loc.messages.AuthenticatingThisConfigToml",
-    "AddingAuthRegistry": "ms-resource:loc.messages.AddingAuthRegistry",
-    "AddingAuthExternalRegistry": "ms-resource:loc.messages.AddingAuthExternalRegistry"
+    "UnsupportedOSPlatform": "ms-resource:loc.messages.UnsupportedOSPlatform",
+    "FailedToRunTask": "ms-resource:loc.messages.FailedToRunTask",
+    "FailedToRunCondaInstaller": "ms-resource:loc.messages.FailedToRunCondaInstaller",
+    "FailedToInstallConda": "ms-resource:loc.messages.FailedToInstallConda"
   }
 }

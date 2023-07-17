@@ -1,26 +1,14 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as rp from 'request-promise';
-import * as fs from 'fs'
-import * as util from 'azure-pipelines-tasks-packaging-common/util';
-import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
-import * as url from 'url';
 import * as constants from './constants';
-import { MinicondaRepo, AnacondaRepo, CondaEntry } from './condarepo';
-
-import { Platform, exec } from 'azure-pipelines-task-lib/task';
-// import { request } from 'http';
+import { loadMinicondaRepo, MinicondaEntry } from './condarepo';
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
 
     try {
         let minicondaReleasesIndexUrl = "https://repo.anaconda.com/miniconda/";
-        let anacondaReleasesIndexUrl = "https://repo.anaconda.com/archive/";
-        
-        let distributionType = tl.getInput(constants.CondaInstallTaskInput.DistributionType);
-
-        const condaRepoPromise = distributionType === "Anaconda" ? AnacondaRepo.loadVersionsFromRepo(anacondaReleasesIndexUrl) : MinicondaRepo.loadVersionsFromRepo(minicondaReleasesIndexUrl);
+        const condaRepoPromise = loadMinicondaRepo(minicondaReleasesIndexUrl);
 
         let installLatest = tl.getBoolInput(constants.CondaInstallTaskInput.InstallLatest);
         let pythonMajorVersion = tl.getInput(constants.CondaInstallTaskInput.PythonMajorVersion);
@@ -35,59 +23,57 @@ async function main(): Promise<void> {
         let installerOptions = "";
         switch(osTypeEnum)
         {
-            case Platform.Linux:
+            case tl.Platform.Linux:
                 osTypeString = "Linux";
                 fileExtension = "sh"
-                installerOptions = `-p ${installPath}`;
+                installerOptions = `-b -f -p ${installPath}`;
                 break;
-            case Platform.Windows:
-                osTypeString = "Windows";
-                fileExtension = "exe"
-                installerOptions = `/D=${installPath}`;
-                break;
-            case Platform.MacOS:
+            case tl.Platform.MacOS:
                 osTypeString = "MacOSX";
                 fileExtension = "sh"
-                installerOptions = `-p ${installPath}`;
+                installerOptions = `-b -f -p ${installPath}`;
+                break;
+            case tl.Platform.Windows:
+                osTypeString = "Windows";
+                fileExtension = "exe"
+                installerOptions = `/S /f /D=${installPath}`;
                 break;
             default:
                 throw new Error(tl.loc('UnsupportedOSPlatform', osTypeEnum, "Linux, Windows, MacOSX"));
         }
 
+        // resolve which Miniconda version to download/install
         let condaRepo = await condaRepoPromise;
 
-        let condaEntryToInstall: CondaEntry;
+        let condaEntryToInstall: MinicondaEntry;
         if (installLatest) {
             condaEntryToInstall = condaRepo.getLatestEntry(pythonMajorVersion, osTypeString, processorArchitecture, fileExtension);
-        } else if (distributionType === "Anaconda") {
-            condaRepo = <AnacondaRepo> condaRepo;
-            condaEntryToInstall = condaRepo.getEntry(pythonMajorVersion, condaVersion, osTypeString, processorArchitecture, fileExtension);
         } else {
-            condaRepo = <MinicondaRepo> condaRepo;
             condaEntryToInstall = condaRepo.getEntry(pythonMajorVersion, pythonMinorVersion, condaVersion, osTypeString, processorArchitecture, fileExtension);
         }
 
         if (!condaEntryToInstall)
             throw new Error("Couldn't find conda entry that matches the given parameters.");
 
-        //actually download/install it
+        // actually download/install Miniconda
         console.log("Downloading Conda from this URL: " + condaEntryToInstall.downloadUrl);
         const downloadPath = await condaEntryToInstall.download();
 
         console.log("file downloaded to: " + downloadPath);
+        console.log("Installing conda at: " + installPath);
         console.log("Executing install artifact.");
-        const exitCode = await exec(downloadPath, installerOptions);
+        const exitCode = await tl.exec(downloadPath, installerOptions);
 
         if (exitCode === 0) {
-            console.log("Conda install artifact ran successfully.")
+            console.log("Conda install artifact ran successfully.");
         } else {
             throw new Error(tl.loc("FailedToRunCondaInstaller", exitCode));
         }
+
     }
 
     catch(error) {
         tl.error(error);
-        tl.error(error.stack);
         tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToInstallConda"));
         return;
     }

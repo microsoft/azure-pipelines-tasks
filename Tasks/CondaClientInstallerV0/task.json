@@ -1,8 +1,8 @@
 {
     "id": "d1d75615-084d-4b9b-91a5-068b5f8c95a9",
     "name": "CondaClientInstaller",
-    "friendlyName": "Anaconda/Miniconda client installer",
-    "description": "Install task for the Anaconda or Miniconda client",
+    "friendlyName": "Miniconda client installer",
+    "description": "Install task for the Miniconda client",
     "helpUrl": "",
     "helpMarkDown": "",
     "category": "Package",
@@ -20,18 +20,6 @@
     "instanceNameFormat": "conda install",
     "inputs": [
         {
-            "name": "distributionType",
-            "type": "pickList",
-            "label": "choose between Anaconda or Miniconda installation",
-            "defaultValue": "Miniconda",
-            "required": true,
-            "helpMarkDown": "Please select whether to install Anaconda or Miniconda",
-            "options": {
-                "Anaconda": "Install Anaconda",
-                "Miniconda": "Install Miniconda"
-            }
-        },
-        {
             "name": "installLatest",
             "type": "boolean",
             "label": "Install the latest version of Conda for your environment",
@@ -45,7 +33,7 @@
             "label": "choose the version of python bundled with Conda",
             "defaultValue": "3",
             "required": true,
-            "helpMarkDown": "A string representing the version of python to use in this format: \"Major.Minor\". If only a major is provided, the latest patch will be used.",
+            "helpMarkDown": "Choose between version 3 and 2 of Python.",
             "options": {
                 "3": "Install for python 3",
                 "2": "Install for python 2"
@@ -57,7 +45,7 @@
             "label": "choose the minor version of python required",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "A string representing the version of python to use in this format: Major.Minor . If only a major is provided, the latest patch will be used."
+            "helpMarkDown": "A string representing the minor version of python to use. Latest used if blank."
         },
         {
             "name": "condaVersion",
@@ -65,7 +53,7 @@
             "label": "choose the version of conda to install",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "A string representing the version of python to use in this format: Major.Minor . If only a major is provided, the latest patch will be used."
+            "helpMarkDown": "A string representing the version of Miniconda to use. Latest used if blank. Versions can be browsed at: https://repo.anaconda.com/miniconda/"
         },
         {
             "name": "processorArchitecture",
@@ -86,10 +74,10 @@
         {
             "name": "installPath",
             "type": "text",
-            "label": "Specify where conda will be installed",
+            "label": "Specify where conda will be installed on the agent.",
             "defaultValue": "$(Agent.ToolsDirectory)/conda",
             "required": true,
-            "helpMarkDown": "Please select which architecture to use"
+            "helpMarkDown": "Installation path"
         }
     ],
     "execution": {
@@ -98,12 +86,9 @@
         }
     },
     "messages": {
-        "FailedToAddAuthentication": "Failed to add authentication.",
-        "ConfigTomlNotToml": "The file you selected to authenticate (%s) is not a valid .toml file.",
-        "ConfigTomlDoesNotExist": "The config.toml file you selected at %s does not currently exist.",
-        "ConfigTomlMissingRegistry": "The config.toml file you selected must contain registries table",
-        "AuthenticatingThisConfigToml": "Adding authentication for registry listed in this config.toml file at %s",
-        "AddingAuthRegistry": "Adding auth for registry: %s with token name: %s",
-        "AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s"
+        "UnsupportedOSPlatform": "The agent's OS: %s is not supported. Supported OS types are: %s",
+        "FailedToRunTask": "There was an unexpected error while running the Task.",
+        "FailedToRunCondaInstaller": "Conda installer exited with a non-zero return code. Code: %s",
+        "FailedToInstallConda": "Couldn't install Conda."
     }
 }
