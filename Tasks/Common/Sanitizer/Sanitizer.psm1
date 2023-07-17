@@ -4,6 +4,9 @@ if ($global:DebugPreference -eq 'Continue') {
     $global:DebugPreference = 'SilentlyContinue'
 }
 
+# Import Vsts SDK.
+Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk
+
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
 
