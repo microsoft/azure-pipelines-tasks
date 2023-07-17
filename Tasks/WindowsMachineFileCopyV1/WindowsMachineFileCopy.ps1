@@ -45,7 +45,6 @@ $envOperationStatus = 'Passed'
 
 Validate-SourcePath $sourcePath
 Validate-DestinationPath $targetPath $environmentName
-Validate-AdditionalArguments $additionalArguments
 
 if([string]::IsNullOrWhiteSpace($environmentName))
 {
