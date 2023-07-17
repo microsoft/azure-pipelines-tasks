@@ -3,6 +3,7 @@
 const assert = require('assert');
 const ttm = require('azure-pipelines-task-lib/mock-test');
 const path = require('path');
+import fs = require("fs");
 
 function setResponseFile(name) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -17,9 +18,21 @@ describe('Azure Resource Manager Template Deployment', function () {
     });
 
     process.env['AGENT_HOMEDIRECTORY'] = process.env['AGENT_HOMEDIRECTORY'] || "C:\\temp\\agent\\home";
-	process.env['BUILD_SOURCESDIRECTORY'] = process.env['BUILD_SOURCESDIRECTORY'] || "C:\\temp\\agent\\home\\sources",
+    if (!fs.existsSync(process.env['AGENT_HOMEDIRECTORY'])){
+        fs.mkdirSync(process.env['AGENT_HOMEDIRECTORY']);
+    }
+	process.env['BUILD_SOURCESDIRECTORY'] = process.env['BUILD_SOURCESDIRECTORY'] || "C:\\temp\\agent\\home\\sources";
+    if (!fs.existsSync(process.env['BUILD_SOURCESDIRECTORY'])){
+        fs.mkdirSync(process.env['BUILD_SOURCESDIRECTORY']);
+    }
 	process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] || "C:\\temp\\agent\\home";
+    if (!fs.existsSync(process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'])){
+        fs.mkdirSync(process.env['SYSTEM_DEFAULTWORKINGDIRECTORY']);
+    }
 	process.env["AGENT_TEMPDIRECTORY"] = process.env["AGENT_TEMPDIRECTORY"] || "C:\\temp\\agent\\home\\temp";
+    if (!fs.existsSync(process.env['AGENT_TEMPDIRECTORY'])){
+        fs.mkdirSync(process.env['AGENT_TEMPDIRECTORY']);
+    }
 
 //  uncomment to get test traces
 //	process.env['TASK_TEST_TRACE'] = "1";
