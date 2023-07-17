@@ -65,6 +65,7 @@ Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+
 . "$PSScriptRoot\Utility.ps1"
 $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
 Update-PSModulePathForHostedAgentWithLatestModule -Endpoint $endpoint
@@ -169,7 +170,6 @@ try {
     }
 
     Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArgumentsForBlobCopy
-    Validate-AdditionalArguments $additionalArguments
 
     # Uploading files to container
     Upload-FilesToAzureContainer -sourcePath $sourcePath `

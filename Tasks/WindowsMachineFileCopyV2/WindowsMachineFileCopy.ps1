@@ -34,7 +34,6 @@ try
 
     Validate-SourcePath $sourcePath
     Validate-DestinationPath $targetPath $machineNames
-    Validate-AdditionalArguments $additionalArguments
 
     $machines = $machineNames.split(',') | ForEach-Object { if ($_ -and $_.trim()) { $_.trim() } }
 
