@@ -31,6 +31,7 @@
   "loc.messages.DownloadFromAzureBlobStorage": "Downloading artifacts from Azure blob storage, Container Name: %s",
   "loc.messages.SuccessFullyFetchedItemList": "Successfully fetched list of items",
   "loc.messages.StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
+  "loc.messages.RequestedUrlTooLong": "Requested URL is too long, this usually happen when you have a lot of Resource Groups in the subscription, try to set azureResourceGroupName input.",
   "loc.messages.UnzipExtractFile": "Extracting file: %s",
   "loc.messages.SevenZipExtractFile": "Extracting file: %s",
   "loc.messages.TarExtractFile": "Extracting file: %s",

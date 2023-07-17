@@ -217,13 +217,14 @@
         "Tests"
     ],
     "Node16": [
-        "PackerBuildV0",
-        "PackerBuildV1",
         "DownloadGitHubNugetPackageV1",
         "KubernetesV0",
         "NuGetPublisherV0",
         "MysqlDeploymentOnMachineGroupV1",
         "GitHubReleaseV0",
-        "GitHubReleaseV1"
+        "GitHubReleaseV1",
+        "GitHubCommentV0",
+        "AndroidSigningV2",
+        "AndroidSigningV3"
     ]
 }
