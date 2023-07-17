@@ -1,4 +1,10 @@
 {
+    "common": [
+        {
+            "module": "../Common/Sanitizer",
+            "type": "ps"
+        }
+    ],
     "externals": {
         "nugetv2": [
             {

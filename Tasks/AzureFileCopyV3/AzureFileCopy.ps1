@@ -61,7 +61,7 @@ $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
 Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-Import-Module $PSScriptRoot\ps_modules\Sanitization
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
 
 $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require

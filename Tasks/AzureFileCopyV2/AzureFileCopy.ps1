@@ -64,7 +64,7 @@ $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
 Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-Import-Module $PSScriptRoot\ps_modules\Sanitization
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
 
 . "$PSScriptRoot\Utility.ps1"
 $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName

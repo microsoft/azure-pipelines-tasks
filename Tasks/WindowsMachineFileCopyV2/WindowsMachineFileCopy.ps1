@@ -15,7 +15,7 @@ $copyFilesInParallel = Get-VstsInput -Name CopyFilesInParallel
 
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
-Import-Module $PSScriptRoot\ps_modules\Sanitization
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
 
 . $PSScriptRoot/RoboCopyJob.ps1
 . $PSScriptRoot/Utility.ps1
