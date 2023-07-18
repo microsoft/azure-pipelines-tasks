@@ -88,6 +88,12 @@
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\AzureCloudPowerShellDeploymentV2\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\AzureCloudPowerShellDeploymentV2\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "Tasks\\AzureContainerAppsV0\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\AzureContainerAppsV0\\Strings\\resources.resjson"
@@ -811,6 +817,12 @@
             "SourceFile": "Tasks\\KubectlInstallerV0\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\KubectlInstallerV0\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\KubeloginInstallerV0\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\KubeloginInstallerV0\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
