@@ -2,14 +2,8 @@ import fs = require('fs');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
-import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry'
-import { processBashEnvVariables } from './bashEnvProcessor';
+import { sanitizeScriptArgs } from './helpers';
 var uuidV4 = require('uuid/v4');
-
-const featureFlags = {
-    enableTelemetry: getFeatureFlagValue('AZP_TASK_FF_BASHV3_ENABLE_INPUT_ARGS_TELEMETRY', true),
-    enableSecureArgs: getFeatureFlagValue('AZP_TASK_FF_BASHV3_ENABLE_SECURE_ARGS', true)
-}
 
 async function runBashPwd(bashPath: string, directoryPath: string): Promise<string> {
     let pwdOutput = '';
@@ -121,41 +115,11 @@ async function run() {
                 targetFilePath = input_filePath;
             }
 
-            let resultArgs = input_arguments
+            let resultArgs = input_arguments;
 
-            if (featureFlags.enableSecureArgs || featureFlags.enableTelemetry) {
-                try {
-                    const [processedArgs, telemetry] = processBashEnvVariables(input_arguments)
-
-                    if (featureFlags.enableSecureArgs) {
-                        const argsEnvVar = {
-                            envName: "BASHV3_INPUT_SCRIPT_ARGS",
-                            value: processedArgs.trim()
-                        };
-                        process.env[argsEnvVar.envName] = argsEnvVar.value;
-                        resultArgs = `$${argsEnvVar.envName}`
-                    }
-
-                    if (featureFlags.enableTelemetry) {
-                        emitTelemetry('TaskHub', 'BashV3', telemetry)
-                    }
-                }
-                catch (err) {
-                    if (featureFlags.enableTelemetry) {
-                        tl.debug("Publishing error telemetry...");
-                        emitTelemetry('TaskHub', 'BashV3', {
-                            EnvProcessorError:
-                            {
-                                value: err.toString() || null,
-                                stack: err.stack || null,
-                            }
-                        });
-                    }
-
-                    if (featureFlags.enableSecureArgs) {
-                        throw err
-                    }
-                }
+            const sanitizedArgs = sanitizeScriptArgs(input_arguments);
+            if (tl.getBoolFeatureFlag('AZP_MSRC75787_ENABLE_NEW_LOGIC')) {
+                resultArgs = sanitizedArgs;
             }
 
             // Choose behavior:

@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 225,
-    "Patch": 0
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.115.0",
@@ -121,6 +121,7 @@
     "JS_ScriptContents": "ms-resource:loc.messages.JS_ScriptContents",
     "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
     "JS_TranslatePathFailed": "ms-resource:loc.messages.JS_TranslatePathFailed",
-    "JS_BashEnvAlreadyDefined": "ms-resource:loc.messages.JS_BashEnvAlreadyDefined"
+    "JS_BashEnvAlreadyDefined": "ms-resource:loc.messages.JS_BashEnvAlreadyDefined",
+    "FileArgsSanitized": "ms-resource:loc.messages.FileArgsSanitized"
   }
 }
