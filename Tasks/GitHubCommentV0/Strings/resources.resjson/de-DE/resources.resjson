@@ -1,5 +1,6 @@
 {
   "loc.friendlyName": "GitHub-Kommentar",
+  "loc.helpMarkDown": "",
   "loc.description": "Hiermit erstellen Sie einen Kommentar zu Ihrer GitHub-Entität, z. B. für ein Issue oder einen Pull Request (PR)",
   "loc.instanceNameFormat": "GitHub-Kommentar wird geschrieben",
   "loc.input.label.gitHubConnection": "GitHub-Verbindung (OAuth oder PAT)",

@@ -6,7 +6,7 @@
   "loc.releaseNotes": "Новые возможности в версии 2.* <br /> Удалена поддержка развертывания из WAR, настройка параметров Web.Config и параметр для команды Startup для приложений-функций Linux Azure.",
   "loc.group.displayName.AdditionalDeploymentOptions": "Дополнительные параметры развертывания",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Параметры приложения и конфигурации",
-  "loc.input.label.azureSubscription": "Подписка Azure",
+  "loc.input.label.azureSubscription": "Azure Resource Manager connection",
   "loc.input.help.azureSubscription": "Выберите подписку Azure Resource Manager для развертывания.",
   "loc.input.label.appType": "Тип приложения",
   "loc.input.help.appType": "Выберите тип приложения-функции Azure для развертывания.",
