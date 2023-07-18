@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 224,
-    "Patch": 0
+    "Minor": 225,
+    "Patch": 2
   },
   "satisfies": [
     "Java",
@@ -185,6 +185,7 @@
     "DownloadFromAzureBlobStorage": "ms-resource:loc.messages.DownloadFromAzureBlobStorage",
     "SuccessFullyFetchedItemList": "ms-resource:loc.messages.SuccessFullyFetchedItemList",
     "StorageAccountDoesNotExist": "ms-resource:loc.messages.StorageAccountDoesNotExist",
+    "RequestedUrlTooLong": "ms-resource:loc.messages.RequestedUrlTooLong",
     "UnzipExtractFile": "ms-resource:loc.messages.UnzipExtractFile",
     "SevenZipExtractFile": "ms-resource:loc.messages.SevenZipExtractFile",
     "TarExtractFile": "ms-resource:loc.messages.TarExtractFile",

@@ -1,10 +1,10 @@
 import tl = require('azure-pipelines-task-lib/task');
 import publishProfileUtility = require("azure-pipelines-tasks-utility-common/publishProfileUtility");
-import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
-import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
-import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureAppServiceUtility';
-import { AzureRmEndpointAuthenticationScheme, AzureDeployPackageArtifactAlias } from 'azure-pipelines-tasks-azure-arm-rest-v2/constants';
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
+import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azure-arm-rest/azureAppServiceUtility';
+import { AzureRmEndpointAuthenticationScheme, AzureDeployPackageArtifactAlias } from 'azure-pipelines-tasks-azure-arm-rest/constants';
 import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility'
 import { TaskParameters } from '../taskparameters';

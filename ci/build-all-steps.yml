@@ -15,14 +15,11 @@ steps:
     displayName: Start collect diagnostics
     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
 
-# Use node 8, npm 5
+# Use node 10, npm 6
 - task: NodeTool@0
-  displayName: Use node 8
+  displayName: Use node 10
   inputs:
-    versionSpec: 8.x
-
-- script: npm i -g npm@6.9.0 --force
-  displayName: Use npm version 6.9.0
+    versionSpec: 10.x
 
 # npm install
 - script: npm install
@@ -56,19 +53,26 @@ steps:
   displayName: Check for downgrading tasks
   condition: |
       and(
+        succeeded(),
         ne(variables['numTasks'], 0),
         ne(variables['COURTESY_PUSH'], 'true'),
         eq(variables['build.reason'], 'PullRequest'),
-        ne(variables['Build.SourceBranch'], 'refs/heads/master'),
-        not(startsWith(variables['Build.SourceBranch'], 'releases/'))
+        eq(variables['System.PullRequest.TargetBranch'], 'master')
       )
   env:
     PACKAGE_TOKEN: $(Package.Token)
 
-# Build
+# Build BuildConfigGen
+- task: DotNetCoreCLI@2
+  displayName: Build BuildConfigGen
+  inputs:
+    command: build
+    projects: './BuildConfigGen/BuildConfigGen.csproj'
+
+# Build Tasks
 - script: node make.js build --task "$(task_pattern)"
-  displayName: Build
-  condition: ne(variables['numTasks'], 0)
+  displayName: Build Tasks
+  condition: and(succeeded(), ne(variables['numTasks'], 0))
 
 - script: node ./ci/check-tasks.js
   displayName: Check that tasks has no duplicated libs
@@ -115,10 +119,10 @@ steps:
 # Test
 - script: node make.js test
   displayName: Run tests
-  condition: ne(variables['numTasks'], 0)
+  condition: and(succeeded(), ne(variables['numTasks'], 0))
 - script: node make.js testLegacy --task "$(task_pattern)"
   displayName: Legacy tests with node 6
-  condition: ne(variables['numTasks'], 0)
+  condition: and(succeeded(), ne(variables['numTasks'], 0))
 
 # Publish code coverage result
 - task: PublishCodeCoverageResults@1
