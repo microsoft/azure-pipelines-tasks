@@ -36,6 +36,7 @@ var fileToJson = util.fileToJson;
 var createYamlSnippetFile = util.createYamlSnippetFile;
 var createMarkdownDocFile = util.createMarkdownDocFile;
 var getTaskNodeVersion = util.getTaskNodeVersion;
+var callGenTaskDuringBuild = false;
 
 // global paths
 var buildPath = path.join(__dirname, '_build');
@@ -170,7 +171,17 @@ CLI.gendocs = function() {
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
 //
-CLI.build = function() {
+CLI.build = function() 
+{
+    if (process.env.TF_BUILD) {
+        fail('Please use serverBuild for CI builds for proper validation');
+    }
+
+    callGenTaskDuringBuild = true;
+    CLI.serverBuild();
+}
+
+CLI.serverBuild = function() {
     CLI.clean();
 
     ensureTool('tsc', '--version', 'Version 4.0.2');
@@ -185,7 +196,8 @@ CLI.build = function() {
 
     // Need to validate generated tasks first
     const makeOptions = fileToJson(makeOptionsPath);
-    util.validateGeneratedTasks(baseConfigToolPath, taskList, makeOptions);
+
+    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, callGenTaskDuringBuild);
 
     allTasks.forEach(function(taskName) {
         let isGeneratedTask = false;
@@ -929,7 +941,7 @@ CLI.gentask = function() {
     const configsString = argv.configs;
 
     if (validate) {
-        util.validateGeneratedTasks(baseConfigToolPath, taskList, makeOptions);
+        util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, false);
         return;
     }
 
