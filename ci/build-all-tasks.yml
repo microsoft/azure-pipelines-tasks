@@ -17,7 +17,7 @@ steps:
   displayName: npm install
 
 # Build
-- script: node make.js build
+- script: node make.js serverBuild
   displayName: Build tasks
 
 # Stage tasks individually into the package directory

@@ -12,7 +12,7 @@ steps:
     displayName: ${{ parameters.task }} patch task version
 
 # Build
-- script: node make.js build --task "${{ parameters.task }}"
+- script: node make.js serverBuild --task "${{ parameters.task }}"
   displayName: ${{ parameters.task }} build
 
 # Check diff for task sources

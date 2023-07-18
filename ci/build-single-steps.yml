@@ -40,7 +40,7 @@ steps:
   displayName: Set task_pattern
 
 # Build
-- script: node make.js build --task "$(task_pattern)"
+- script: node make.js serverBuild --task "$(task_pattern)"
   displayName: Build
 
 # Check diff for task sources
