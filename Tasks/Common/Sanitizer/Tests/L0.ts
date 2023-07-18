@@ -27,14 +27,32 @@ describe('Security Suite', function () {
     });
 
     if (psm.testSupported()) {
-        it('Test: Sanitize-Arguments should return array of sanitized values', (done) => {
+        it('Sanitize-Arguments should return array of sanitized values', (done) => {
             psr.run(path.join(__dirname, 'L0Get-SanitizedArgumentsArray.ReturnsArrayOfSanitizedValues.ps1'), done);
         });
     }
 
     if (psm.testSupported()) {
-        it('Test: Sanitize-Arguments should replace forbidden charachters', (done) => {
+        it('Sanitize-Arguments should replace forbidden charachters', (done) => {
             psr.run(path.join(__dirname, 'L0Get-SanitizedArgumentsArray.ReplacesForbiddenCharachters.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Sanitize-Arguments should not break existing Cmd argument formats', (done) => {
+            psr.run(path.join(__dirname, 'L0Get-SanitizedArgumentsArray.DoesNotBreakExistingCmdFormats.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Sanitize-Arguments should not break existing PowerShell argument formats', (done) => {
+            psr.run(path.join(__dirname, 'L0Get-SanitizedArgumentsArray.DoesNotBreakExistingPowerShellFormats.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Sanitize-Arguments should not break existing Bash argument formats', (done) => {
+            psr.run(path.join(__dirname, 'L0Get-SanitizedArgumentsArray.DoesNotBreakExistingBashFormats.ps1'), done);
         });
     }
 });
