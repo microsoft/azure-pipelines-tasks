@@ -16,6 +16,10 @@ steps:
 - script: npm install
   displayName: npm install
 
+  # Clean
+- script: node make.js clean
+  displayName: Clean tasks
+
 # Build
 - script: node make.js build
   displayName: Build tasks
