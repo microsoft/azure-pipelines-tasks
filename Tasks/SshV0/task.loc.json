@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 220,
+    "Minor": 225,
     "Patch": 0
   },
   "demands": [],
@@ -165,6 +165,7 @@
     "RemoteScriptFileCleanUpFailed": "ms-resource:loc.messages.RemoteScriptFileCleanUpFailed",
     "SettingUpSshConnection": "ms-resource:loc.messages.SettingUpSshConnection",
     "SshConnectionSuccessful": "ms-resource:loc.messages.SshConnectionSuccessful",
-    "UseDefaultPort": "ms-resource:loc.messages.UseDefaultPort"
+    "UseDefaultPort": "ms-resource:loc.messages.UseDefaultPort",
+    "FileArgsSanitized": "ms-resource:loc.messages.FileArgsSanitized"
   }
 }

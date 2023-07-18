@@ -34,5 +34,6 @@
   "loc.messages.RemoteScriptFileCleanUpFailed": "Failed to delete the script file copied to the remote machine. Error = %s.",
   "loc.messages.SettingUpSshConnection": "Trying to establish an SSH connection to %s@%s:%s",
   "loc.messages.SshConnectionSuccessful": "Successfully connected.",
-  "loc.messages.UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified."
+  "loc.messages.UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
+  "loc.messages.FileArgsSanitized": "Arguments were sanitized to prevent command injection. Please check your input arguments: '%s'"
 }
