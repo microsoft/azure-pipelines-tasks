@@ -51,7 +51,7 @@ param (
         $blobStorageURI = $blobStorageEndpoint+$containerName+"/"+$blobPrefix
     }
 	
-    $arguments = Sanitize-ScriptArguments -InputArgs $additionalArguments
+    $arguments = Protect-ScriptArguments -InputArgs $additionalArguments
 
     Copy-ToAzureMachines -MachineDnsName $fqdn -StorageAccountName $storageAccount -ContainerName $containerName -SasToken $sasToken -DestinationPath $targetPath -Credential $credential -AzCopyLocation $azCopyLocation -AdditionalArguments  @($arguments) -BlobStorageURI $blobStorageURI -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption
 }

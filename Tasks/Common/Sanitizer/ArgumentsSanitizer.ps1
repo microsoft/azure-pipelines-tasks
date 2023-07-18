@@ -11,7 +11,7 @@ Write-Debug "Feature flag AZP_MSRC75787_ENABLE_TELEMETRY state: $($featureFlags.
 # The only public function, which should be called from the task
 # This is a wrapper for Get-SanitizedArgumentsArray to handle feature flags in one place
 # It will return sanitized arguments if feature flags are enabled
-function Sanitize-ScriptArguments([string]$InputArgs) {
+function Protect-ScriptArguments([string]$InputArgs) {
 
     if ($featureFlags.audit -or $featureFlags.activate) {
 
@@ -32,7 +32,7 @@ function Get-SanitizedArgumentsArray([string]$InputArgs) {
 
     for ($i = 0; $i -lt $argsArr.Length; $i++ ) {
         ## '?<!`' - checking if before character no backtick. '^a-zA-Z0-9` _'"-' - checking if character is allowed. Insead replacing to #removed#
-        $argsArr[$i] = $argsArr[$i] -replace '(?<!\\)([^a-zA-Z0-9\\ _''"\-=])', $removedSymbolSign;
+        $argsArr[$i] = $argsArr[$i] -replace '(?<!\\)([^a-zA-Z0-9\\ _''"\-=/:])', $removedSymbolSign;
     }
 
     $resultArgs = $argsArr -join $argsSplitSymbols;

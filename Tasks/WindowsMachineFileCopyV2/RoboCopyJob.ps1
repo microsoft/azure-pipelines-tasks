@@ -236,7 +236,7 @@ param (
     try
     {       
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
-        $arguments = Sanitize-ScriptArguments -InputArgs $robocopyParameters
+        $arguments = Protect-ScriptArguments -InputArgs $robocopyParameters
                 
         & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy @($arguments)
 

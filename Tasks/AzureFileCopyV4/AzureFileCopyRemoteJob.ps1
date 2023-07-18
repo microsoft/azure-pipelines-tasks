@@ -97,7 +97,7 @@ $AzureFileCopyRemoteJob = {
             $additionalArguments = "--recursive --log-level=INFO"
         }
 
-        $arguments = Sanitize-ScriptArguments -InputArgs $additionalArguments
+        $arguments = Protect-ScriptArguments -InputArgs $additionalArguments
     
         Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $arguments"
                 
