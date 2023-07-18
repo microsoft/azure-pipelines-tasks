@@ -102,5 +102,6 @@
   "loc.messages.InvalidBaselineAndCanaryReplicas": "Недопустимое значение для количества реплик.",
   "loc.messages.InvalidTimeoutValue": "Недопустимое значение времени ожидания. Введите допустимое число.",
   "loc.messages.RolloutStatusTimedout": "Сбой проверки состояния выпуска.",
-  "loc.messages.EnvironmentLink": "Дополнительные сведения: %s"
+  "loc.messages.EnvironmentLink": "Дополнительные сведения: %s",
+  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
 }

@@ -102,5 +102,6 @@
   "loc.messages.InvalidBaselineAndCanaryReplicas": "Ungültiger Wert für Replikatanzahl.",
   "loc.messages.InvalidTimeoutValue": "Ungültiger Wert für Timeout. Geben Sie eine gültige Zahl ein.",
   "loc.messages.RolloutStatusTimedout": "Fehler beim Überprüfen des Rolloutstatus.",
-  "loc.messages.EnvironmentLink": "Weitere Informationen finden Sie hier: %s"
+  "loc.messages.EnvironmentLink": "Weitere Informationen finden Sie hier: %s",
+  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
 }
