@@ -23,6 +23,8 @@
   "loc.input.help.signingIdentity": "Nom commun du sujet dans le certificat de signature. Le nom commun fait l'objet d'une tentative d'analyse, si cette valeur reste vide.",
   "loc.input.label.setUpPartitionIdACLForPrivateKey": "Configurer partition_id liste de contrôle d’accès pour la clé privée importée",
   "loc.input.help.setUpPartitionIdACLForPrivateKey": "Si la valeur est true, définit la liste de contrôle d’accès partition_id pour la clé privée importée. Codesign n’invite donc pas à utiliser la clé pour la signature. Ceci n’est pas nécessaire pour les trousseaux temporaires, au moins sur MacOS High Sierra. Pour plus d’informations, consultez le [link](http://www.openradar.me/28524119).",
+  "loc.input.label.opensslPkcsArgs": "OpenSSL arguments for PKCS12",
+  "loc.input.help.opensslPkcsArgs": "Arguments for extraction certificate information using openssl.",
   "loc.messages.INVALID_P12": "Le hachage du certificat SHA1 et le nom commun (CN) sont introuvables. Vérifiez qu'il s'agit d'un certificat P12 valide.",
   "loc.messages.NoP12PwdWarning": "Aucun mot de passe P12 n'a été fourni. Si le fichier P12 nécessite un mot de passe, il est recommandé de le fournir sous forme de variable de pipeline et de le marquer comme étant secret en activant l'icône de verrouillage.",
   "loc.messages.P12PrivateKeyNameNotFound": "Échec de l'identification du nom de la clé privée : %s",

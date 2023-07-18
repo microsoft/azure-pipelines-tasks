@@ -102,5 +102,6 @@
   "loc.messages.InvalidBaselineAndCanaryReplicas": "副本计数值无效。",
   "loc.messages.InvalidTimeoutValue": "超时值无效。请输入有效数字。",
   "loc.messages.RolloutStatusTimedout": "推出状态检查失败。",
-  "loc.messages.EnvironmentLink": "有关详细信息，请转到 %s"
+  "loc.messages.EnvironmentLink": "有关详细信息，请转到 %s",
+  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
 }

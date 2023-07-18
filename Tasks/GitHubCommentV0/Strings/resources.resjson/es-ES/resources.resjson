@@ -1,5 +1,6 @@
 {
   "loc.friendlyName": "Comentario de GitHub",
+  "loc.helpMarkDown": "",
   "loc.description": "Escriba un comentario en la entidad de GitHub, es decir, una incidencia o una solicitud de incorporación de cambios.",
   "loc.instanceNameFormat": "Escribiendo comentario de GitHub",
   "loc.input.label.gitHubConnection": "Conexión de GitHub (OAuth o PAT)",

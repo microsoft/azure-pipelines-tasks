@@ -6,7 +6,7 @@
   "loc.releaseNotes": "版本 2 的新增功能。* <br />已移除 WAR 部署支援、設定 Web.Config 選項，以及 Linux Azure Function 應用程式的啟動命令選項。",
   "loc.group.displayName.AdditionalDeploymentOptions": "其他部署選項",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "應用程式和組態設定",
-  "loc.input.label.azureSubscription": "Azure 訂閱",
+  "loc.input.label.azureSubscription": "Azure Resource Manager connection",
   "loc.input.help.azureSubscription": "選取部署的 Azure Resource Manager 訂用帳戶。",
   "loc.input.label.appType": "應用程式類型",
   "loc.input.help.appType": "選取部署的 Azure Function 應用程式類型。",

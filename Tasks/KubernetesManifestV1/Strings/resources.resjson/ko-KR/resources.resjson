@@ -102,5 +102,6 @@
   "loc.messages.InvalidBaselineAndCanaryReplicas": "복제본 개수 값이 잘못되었습니다.",
   "loc.messages.InvalidTimeoutValue": "시간 제한 값이 잘못되었습니다. 유효한 수를 입력하세요.",
   "loc.messages.RolloutStatusTimedout": "롤아웃 상태를 확인하지 못했습니다.",
-  "loc.messages.EnvironmentLink": "자세한 내용을 보려면 %s(으)로 이동하세요."
+  "loc.messages.EnvironmentLink": "자세한 내용을 보려면 %s(으)로 이동하세요.",
+  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
 }

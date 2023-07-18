@@ -102,5 +102,6 @@
   "loc.messages.InvalidBaselineAndCanaryReplicas": "Valor de número de réplicas no válido.",
   "loc.messages.InvalidTimeoutValue": "Valor de tiempo de expiración no válido. Escriba un número válido.",
   "loc.messages.RolloutStatusTimedout": "Error al comprobar el estado de lanzamiento.",
-  "loc.messages.EnvironmentLink": "Para más información, vaya a %s"
+  "loc.messages.EnvironmentLink": "Para más información, vaya a %s",
+  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
 }

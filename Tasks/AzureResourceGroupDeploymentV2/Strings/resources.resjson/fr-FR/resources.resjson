@@ -53,6 +53,8 @@
   "loc.input.help.deploymentOutputs": "Donnez un nom à la variable de sortie qui contient la section outputs de l'objet de déploiement actuel au format chaîne. Vous pouvez utiliser l'applet de commande PowerShell \"ConvertFrom-Json\" pour analyser l'objet JSON et accéder aux valeurs de sortie individuelles. Pour plus d'informations, consultez [ceci](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)",
   "loc.input.label.addSpnToEnvironment": "Accéder aux détails du principal de service dans les paramètres de substitution",
   "loc.input.help.addSpnToEnvironment": "Ajoute l'ID et la clé de principal de service du point de terminaison Azure choisi à l'environnement d'exécution du script. Vous pouvez utiliser les variables '$servicePrincipalId' et '$servicePrincipalKey' dans vos paramètres de substitution, par exemple '-key $servicePrincipalKey'",
+  "loc.input.label.useWithoutJSON": "Use individual output values without JSON.Stringify applied",
+  "loc.input.help.useWithoutJSON": "Individual output values are being converted via JSON.Stringify by default. If you want to use the output values as it is without converting them via JSON.Stringify, enable this option. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)",
   "loc.messages.CheckResourceGroupExistence": "Vérification de l'existence du groupe de ressources suivant : %s.",
   "loc.messages.ResourceGroupStatusFetchFailed": "Échec de la vérification de l'état du groupe de ressources. Erreur : %s.",
   "loc.messages.ResourceGroupStatus": "Le groupe de ressources existe : %s.",
