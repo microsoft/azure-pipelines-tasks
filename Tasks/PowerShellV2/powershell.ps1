@@ -1,6 +1,8 @@
 [CmdletBinding()]
 param()
 
+. $PSScriptRoot\helpers.ps1
+
 function Get-ActionPreference {
     param (
         [Parameter(Mandatory)]
@@ -92,7 +94,14 @@ try {
     # and we rely on PowerShell piping back NormalView error records (required because PowerShell Core changed the default to ConciseView)
     $contents += "`$ErrorView = 'NormalView'"
     if ("$input_targetType".ToUpperInvariant() -eq 'FILEPATH') {
-        $contents += ". '$("$input_filePath".Replace("'", "''"))' $input_arguments".Trim()
+        $resultArgs = $input_arguments;
+        $sanitizedArgs = Sanitize-FileArguments -InputArgs $input_arguments;
+
+        if (([System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_NEW_LOGIC))) {
+            $resultArgs = $sanitizedArgs;
+        }
+
+        $contents += ". '$("$input_filePath".Replace("'", "''"))' $resultArgs".Trim()
         Write-Host (Get-VstsLocString -Key 'PS_FormattedCommand' -ArgumentList ($contents[-1]))
     }
     else {

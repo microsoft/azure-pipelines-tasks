@@ -44,10 +44,12 @@
   "loc.messages.JS_InvalidFilePath": "Invalid file path '%s'. A path to a .ps1 file is required.",
   "loc.messages.JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
   "loc.messages.JS_InvalidTargetType": "Invalid target type '%s'. The value must be one of: 'filepath' or 'inline'",
+  "loc.messages.JS_FileArgsSanitized": "Arguments were sanitized to prevent command injection. Please check your input arguments: '%s'",
   "loc.messages.PS_ExitCode": "PowerShell exited with code '{0}'.",
   "loc.messages.PS_FormattedCommand": "Formatted command: {0}",
   "loc.messages.PS_InvalidActionPreference": "Invalid action preference for {0}: '{1}'. The value must be one of: {2}",
   "loc.messages.PS_InvalidFilePath": "Invalid file path '{0}'. A path to a .ps1 file is required.",
   "loc.messages.PS_UnableToDetermineExitCode": "Unexpected exception. Unable to determine the exit code from powershell.",
-  "loc.messages.PS_InvalidTargetType": "Invalid target type '{0}'. The value must be one of: 'filepath' or 'inline'"
+  "loc.messages.PS_InvalidTargetType": "Invalid target type '{0}'. The value must be one of: 'filepath' or 'inline'",
+  "loc.messages.PS_FileArgsSanitized": "Arguments were sanitized to prevent command injection. Please check your input arguments: '{0}'"
 }

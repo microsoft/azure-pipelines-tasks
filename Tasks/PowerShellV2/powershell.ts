@@ -3,6 +3,7 @@ import path = require('path');
 import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
+import { sanitizeScriptArgs } from './helpers';
 var uuidV4 = require('uuid/v4');
 
 function getActionPreference(vstsInputName: string, defaultAction: string = 'Default', validActions: string[] = [ 'Default', 'Stop', 'Continue', 'SilentlyContinue' ]) {
@@ -75,7 +76,14 @@ async function run() {
 
         let script = '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
-            script = `. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim();
+            let resultArgs = input_arguments;
+
+            const sanitizedArgs = sanitizeScriptArgs(input_arguments);
+            if (tl.getBoolFeatureFlag('AZP_MSRC75787_ENABLE_NEW_LOGIC')) {
+                resultArgs = sanitizedArgs;
+            }
+
+            script = `. '${input_filePath.replace(/'/g, "''")}' ${resultArgs}`.trim();
         } else {
             script = `${input_script}`;
         }
