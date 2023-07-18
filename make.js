@@ -920,10 +920,6 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
 }
 
 CLI.gentask = function() {
-    if (argv.rebuild) {
-        rm("-Rf", path.join(baseConfigToolPath, "bin"));
-    }
-
     const makeOptions = fileToJson(makeOptionsPath);
     const validate = argv.validate;
     const configsString = argv.configs;
