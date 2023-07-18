@@ -101,7 +101,7 @@ $AzureFileCopyRemoteJob = {
     
         Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $arguments"
 
-        & azcopy copy $targetPath $containerURL/*$containerSasToken @($arguments)
+        & azcopy copy $targetPath $containerURL/*$containerSasToken $arguments
     }
     catch
     {

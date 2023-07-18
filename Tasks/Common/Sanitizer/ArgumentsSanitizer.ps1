@@ -14,10 +14,10 @@ function Protect-ScriptArguments([string]$InputArgs) {
     if ($featureFlags.activate) {
 
         $sanitizedArguments = Get-SanitizedArguments -InputArgs $InputArgs
-        return $sanitizedArguments
+        return $sanitizedArguments -split ' '
     }
     
-    return $InputArgs
+    return $InputArgs -split ' '
 }
 
 function Get-SanitizedArguments([string]$InputArgs) {

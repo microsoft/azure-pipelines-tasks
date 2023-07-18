@@ -216,7 +216,7 @@ param (
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp
         $arguments = Protect-ScriptArguments -InputArgs $robocopyParameters
                 
-        & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy @($arguments)
+        & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy $arguments
 
         if ($LASTEXITCODE -ge 8)
         {
