@@ -16,7 +16,7 @@ $cmdArgumentsFormats = @(
 foreach ($argument in $cmdArgumentsFormats) {
 
     # Act
-    $sanitizedArguments = Get-SanitizedArgumentsArray -InputArgs $argument
+    $sanitizedArguments = Get-SanitizedArguments -InputArgs $argument
 
     # Assert
     Assert-AreEqual $sanitizedArguments $argument

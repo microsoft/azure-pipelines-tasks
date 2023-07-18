@@ -1,28 +1,26 @@
 $featureFlags = @{
-    audit     = [System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_NEW_LOGIC_AUDIT)
     activate  = [System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_NEW_LOGIC)
     telemetry = [System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_TELEMETRY)
 }
 
-Write-Debug "Feature flag AZP_MSRC75787_ENABLE_NEW_LOGIC_AUDIT state: $($featureFlags.audit)"
 Write-Debug "Feature flag AZP_MSRC75787_ENABLE_NEW_LOGIC state: $($featureFlags.activate)"
 Write-Debug "Feature flag AZP_MSRC75787_ENABLE_TELEMETRY state: $($featureFlags.telemetry)"
 
 # The only public function, which should be called from the task
-# This is a wrapper for Get-SanitizedArgumentsArray to handle feature flags in one place
-# It will return sanitized arguments if feature flags are enabled
+# This is a wrapper for Get-SanitizedArguments to handle feature flags in one place
+# It will return sanitized arguments string if feature flag is enabled
 function Protect-ScriptArguments([string]$InputArgs) {
 
-    if ($featureFlags.audit -or $featureFlags.activate) {
+    if ($featureFlags.activate) {
 
-        $sanitizedArguments = Get-SanitizedArgumentsArray -InputArgs $InputArgs
+        $sanitizedArguments = Get-SanitizedArguments -InputArgs $InputArgs
         return $sanitizedArguments
     }
     
     return $InputArgs
 }
 
-function Get-SanitizedArgumentsArray([string]$InputArgs) {
+function Get-SanitizedArguments([string]$InputArgs) {
 
     $removedSymbolSign = '_#removed#_';
     $argsSplitSymbols = '``';
@@ -47,7 +45,7 @@ function Get-SanitizedArgumentsArray([string]$InputArgs) {
         }
     }
 
-    return $resultArgs -split ' ';
+    return $resultArgs;
 }
 
 function Publish-Telemetry($Telemetry) {

@@ -17,8 +17,7 @@ $bashArgumentsFormats = @(
 foreach ($argument in $bashArgumentsFormats) {
 
     # Act
-    $sanitizedArguments = Get-SanitizedArgumentsArray -InputArgs $argument
-    $sanitizedArguments = $sanitizedArguments -join ' '
+    $sanitizedArguments = Get-SanitizedArguments -InputArgs $argument
 
     # Assert
     Assert-AreEqual $sanitizedArguments $argument
