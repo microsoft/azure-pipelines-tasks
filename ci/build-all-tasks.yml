@@ -16,7 +16,7 @@ steps:
 - script: npm install
   displayName: npm install
 
-  # Clean
+# Clean
 - script: node make.js clean
   displayName: Clean tasks
 
