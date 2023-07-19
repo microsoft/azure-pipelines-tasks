@@ -14,4 +14,5 @@ $sanitizedArguments = Get-SanitizedArguments -InputArgs $arguments
 
 # Assert
 
-Assert-AreEqual $sanitizedArguments "start notepad_#removed#_exe _#removed#_ echo 'hello' _#removed#_ calc_#removed#_exe"
+# We need to use $sanitizedArguments[1] because $sanitizedArguments contains buffer with Write-Output message from the function execution. 
+Assert-AreEqual $sanitizedArguments[1] "start notepad.exe _#removed#_ echo 'hello' _#removed#_ calc.exe"
