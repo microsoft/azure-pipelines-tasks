@@ -9,6 +9,7 @@
 
 The following table lists [tasks](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines") using the [Azure Service Connection](https://learn.microsoft.com/azure/devops/pipelines/library/connect-to-azure?view=azure-devops "https://learn.microsoft.com/azure/devops/pipelines/library/connect-to-azure?view=azure-devops"), and which ring they're on. Marketplace tasks do not support Workload identity federation during preview.
 
+
 | TaskFullName | Status |
 | --- |  --- |
 | AzureAppServiceManageV0 | Available |
@@ -18,7 +19,7 @@ The following table lists [tasks](https://learn.microsoft.com/azure/devops/pipe
 | AzureCLIV2 | Available |
 | AzureCLIV2 | Available |
 | AzureCloudPowerShellDeploymentV1 | Use AzureCloudPowerShellDeploymentV2 for OIDC |
-| AzureCloudPowerShellDeploymentV2 | Not available yet |
+| AzureCloudPowerShellDeploymentV2 | Available |
 | AzureContainerAppsV0 | Available |
 | AzureContainerAppsV1 | Available |
 | AzureFileCopyV1 | AzCopy v7 does not support OIDC |
@@ -29,7 +30,7 @@ The following table lists [tasks](https://learn.microsoft.com/azure/devops/pipe
 | AzureFunctionAppContainerV1 | Available |
 | AzureFunctionAppV1 | Available |
 | AzureFunctionAppV2 | Available |
-| AzureFunctionOnKubernetesV1 | Not available yet |
+| AzureFunctionOnKubernetesV1 | Available |
 | AzureIoTEdgeV2 | Not available yet |
 | AzureKeyVaultV1 | Available |
 | AzureKeyVaultV2 | Available |
@@ -52,12 +53,13 @@ The following table lists [tasks](https://learn.microsoft.com/azure/devops/pipe
 | AzureVmssDeploymentV0 | Available |
 | AzureWebAppContainerV1 | Available |
 | AzureWebAppV1 | Available |
+| DockerComposeV0 | Available |
 | DockerComposeV0 | Not available yet |
 | DockerV0 | Not available yet |
 | DockerV1 | Not available yet |
 | HelmDeployV0 | Available |
 | InvokeRestApiV1 | Available |
-| JavaToolInstallerV0 | Not available yet |
+| JavaToolInstallerV0 | Available |
 | JenkinsDownloadArtifactsV1 | Not available yet |
 | KubernetesV1 | Available |
 | PackerBuildV0 | Packer does not support OIDC yet |
