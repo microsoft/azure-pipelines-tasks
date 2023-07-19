@@ -74,7 +74,7 @@ steps:
   displayName: Clean tasks
 
 # Build Tasks
-- script: node make.js build --task "$(task_pattern)"
+- script: node make.js serverBuild --task "$(task_pattern)"
   displayName: Build Tasks
   condition: and(succeeded(), ne(variables['numTasks'], 0))
 

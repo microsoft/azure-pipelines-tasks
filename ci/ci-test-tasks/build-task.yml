@@ -16,7 +16,7 @@ steps:
   displayName: Clean tasks
 
 # Build
-- script: node make.js build --task "${{ parameters.task }}"
+- script: node make.js serverBuild --task "${{ parameters.task }}"
   displayName: ${{ parameters.task }} build
 
 # Check diff for task sources
