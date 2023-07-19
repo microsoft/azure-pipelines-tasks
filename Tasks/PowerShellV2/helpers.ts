@@ -10,9 +10,9 @@ export function sanitizeScriptArgs(args: string): string {
     const argsSplitSymbols = '``';
 
     const featureFlags = {
-        audit: tl.getBoolFeatureFlag('AZP_MSRC75787_ENABLE_NEW_LOGIC_AUDIT'),
-        activate: tl.getBoolFeatureFlag('AZP_MSRC75787_ENABLE_NEW_LOGIC'),
-        telemetry: tl.getBoolFeatureFlag('AZP_MSRC75787_ENABLE_TELEMETRY')
+        audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
+        activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
+        telemetry: tl.getBoolFeatureFlag('AZP_75787_ENABLE_COLLECT')
     };
 
     // We're splitting by esc. symbol pairs, removing all suspicious characters and then join back

@@ -79,7 +79,7 @@ async function run() {
             let resultArgs = input_arguments;
 
             const sanitizedArgs = sanitizeScriptArgs(input_arguments);
-            if (tl.getBoolFeatureFlag('AZP_MSRC75787_ENABLE_NEW_LOGIC')) {
+            if (tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC')) {
                 resultArgs = sanitizedArgs;
             }
 

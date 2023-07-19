@@ -157,7 +157,7 @@ async function run() {
                     let resultArgs = args;
 
                     const sanitizedArgs = sanitizeScriptArgs(args);
-                    if (tl.getBoolFeatureFlag('AZP_MSRC75787_ENABLE_NEW_LOGIC')) {
+                    if (tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC')) {
                         resultArgs = sanitizedArgs;
                     }
 

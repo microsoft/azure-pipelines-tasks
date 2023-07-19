@@ -97,7 +97,7 @@ try {
         $resultArgs = $input_arguments;
         $sanitizedArgs = Sanitize-FileArguments -InputArgs $input_arguments;
 
-        if (([System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_NEW_LOGIC))) {
+        if (([System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC))) {
             $resultArgs = $sanitizedArgs;
         }
 

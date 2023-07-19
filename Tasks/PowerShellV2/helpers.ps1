@@ -8,9 +8,9 @@ function Publish-Telemetry($Telemetry) {
 function Sanitize-FileArguments([string]$InputArgs) {
 
     $featureFlags = @{
-        audit     = [System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_NEW_LOGIC_AUDIT)
-        activate  = [System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_NEW_LOGIC)
-        telemetry = [System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_TELEMETRY)
+        audit     = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC_LOG)
+        activate  = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
+        telemetry = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_COLLECT)
     }
 
     $removedSymbolSign = '_#removed#_';
