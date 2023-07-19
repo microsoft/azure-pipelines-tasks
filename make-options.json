@@ -224,5 +224,9 @@
         "GitHubCommentV0",
         "AndroidSigningV2",
         "AndroidSigningV3"
+    ],
+    "Node16_225": [
+        "AzureFunctionOnKubernetesV0",
+        "AzureFunctionOnKubernetesV1"
     ]
 }
