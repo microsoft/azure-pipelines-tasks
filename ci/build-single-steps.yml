@@ -39,8 +39,12 @@ steps:
     Write-Host "##vso[task.setVariable variable=task_pattern]$taskPattern"
   displayName: Set task_pattern
 
+# Clean
+- script: node make.js clean
+  displayName: Clean tasks
+
 # Build
-- script: node make.js build --task "$(task_pattern)"
+- script: node make.js serverBuild --task "$(task_pattern)"
   displayName: Build
 
 # Check diff for task sources
