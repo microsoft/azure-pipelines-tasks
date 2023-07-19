@@ -72,6 +72,22 @@ describe('InstallAppleCertificate Suite', function () {
         done();
     });
 
+    it('Defaults: install certificate in default keychain before build with openssl args', (done: Mocha.Done) => {
+        let tp: string = path.join(__dirname, 'L0InstallDefaultKeychainWithArgs.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/usr/bin/security import /build/temp/mySecureFileId.filename -P mycertPwd -A -t cert -f pkcs12 -k /usr/lib/login.keychain'),
+            'certificate should have been installed in the default keychain');
+        assert(!tr.ran('/usr/bin/security create-keychain -p mykeychainPwd /usr/lib/login.keychain'), 'login keychain should not be created')
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
+
     it('Defaults: delete certificate from default keychain after build', (done: Mocha.Done) => {
         let tp: string = path.join(__dirname, 'L0DeleteCertDefaultKeychain.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);

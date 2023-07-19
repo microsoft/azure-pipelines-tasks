@@ -63,7 +63,7 @@ export class azurecontainerapps {
         } finally {
             // Logout of Azure if logged in during this task session
             this.authHelper.logoutAzure();
-            
+
             // If telemetry is enabled, will log metadata for this task run
             this.telemetryHelper.sendLogs();
         }
@@ -164,7 +164,7 @@ export class azurecontainerapps {
     private static async setupAzureCli() {
         // Log in to Azure with the service connection provided
         const connectedService: string = tl.getInput('connectedServiceNameARM', true);
-        await this.authHelper.loginAzureRM(connectedService);
+        await this.authHelper.loginAzure(connectedService);
 
         // Set the Azure CLI to dynamically install missing extensions
         util.setAzureCliDynamicInstall();

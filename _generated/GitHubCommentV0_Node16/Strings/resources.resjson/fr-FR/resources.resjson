@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Commentaire GitHub",
+  "loc.description": "Écrivez un commentaire pour votre entité GitHub, par exemple \"Problème\" ou \"Demande de tirage (pull request) (PR)\"",
+  "loc.instanceNameFormat": "Écriture du commentaire GitHub",
+  "loc.input.label.gitHubConnection": "Connexion GitHub (OAuth ou PAT)",
+  "loc.input.help.gitHubConnection": "Spécifiez le nom de la connexion de service GitHub à utiliser pour la connexion au dépôt GitHub. La connexion doit être basée sur le jeton OAuth d'un utilisateur GitHub ou un jeton d'accès personnel GitHub. En savoir plus sur les connexions de service [ici](https://aka.ms/AA3am5s).",
+  "loc.input.label.repositoryName": "Dépôt",
+  "loc.input.help.repositoryName": "Spécifiez le nom du dépôt GitHub dans lequel le commentaire GitHub doit être créé",
+  "loc.input.label.id": "ID du problème/de la demande de tirage (pull request) GitHub",
+  "loc.input.help.id": "Spécifiez le numéro de problème ou de demande de tirage (pull request). S'il est utilisé dans un pipeline de demandes de tirage, n'indiquez rien pour permettre une recherche dynamique de l'ID",
+  "loc.input.label.comment": "Commentaire",
+  "loc.input.help.comment": "Contenu du commentaire à écrire",
+  "loc.messages.InvalidEndpointAuthScheme": "Schéma de connexion de service GitHub non valide : %s. Seules les connexions par jeton d'accès personnel Token, OAuth et GitHub sont autorisées.",
+  "loc.messages.InvalidGithubEndpoint": "Point de terminaison de service GitHub non valide : %s.",
+  "loc.messages.WriteFailed": "Échec de l'écriture du commentaire",
+  "loc.messages.WriteSucceeded": "Écriture réussie du commentaire",
+  "loc.messages.NoOp": "Le contenu du champ Commentaire est vide, ou l'ID de problème/demande de tirage (pull request) n'est pas fourni"
+}

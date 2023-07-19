@@ -1,10 +1,10 @@
 import * as  tl from 'azure-pipelines-task-lib/task';
-import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common');
-import Model = require('azure-pipelines-tasks-azure-arm-rest-v2/azureModels');
-import armStorage = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-storage');
+import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest/azure-arm-common');
+import Model = require('azure-pipelines-tasks-azure-arm-rest/azureModels');
+import armStorage = require('azure-pipelines-tasks-azure-arm-rest/azure-arm-storage');
 import BlobService = require('azp-tasks-az-blobstorage-provider/blobservice');
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
 
 export class AzureStorageArtifactDownloader {
   public connectedService: string;
@@ -23,13 +23,19 @@ export class AzureStorageArtifactDownloader {
   }
 
   public async downloadArtifacts(downloadToPath: string, fileType: string): Promise<void> {
-    console.log(tl.loc('DownloadFromAzureBlobStorage', this.containerName));
+    try {
+      console.log(tl.loc('DownloadFromAzureBlobStorage', this.containerName));
 
-    const storageAccount: StorageAccountInfo = await this._getStorageAccountDetails();
+      const storageAccount: StorageAccountInfo = await this._getStorageAccountDetails();
 
-    const blobService = new BlobService.BlobService(storageAccount.name, storageAccount.primaryAccessKey);
+      const blobService = new BlobService.BlobService(storageAccount.name, storageAccount.primaryAccessKey);
 
-    await blobService.downloadBlobs(downloadToPath, this.containerName, this.commonVirtualPath, fileType || "**");
+      await blobService.downloadBlobs(downloadToPath, this.containerName, this.commonVirtualPath, fileType || "**");
+
+    } catch (e) {
+      if (e.statusCode === 414) throw new Error(tl.loc('RequestedUrlTooLong'));
+      throw e;
+    }
   }
 
   private async _getStorageAccountDetails(): Promise<StorageAccountInfo> {
@@ -70,23 +76,23 @@ export class AzureStorageArtifactDownloader {
   }
 
   private async _legacyGetStorageAccount(storageArmClient: armStorage.StorageManagementClient): Promise<Model.StorageAccount> {
-    const storageAccounts = await storageArmClient.storageAccounts.listClassicAndRMAccounts(null);
-    const index = storageAccounts.findIndex(account => account.name.toLowerCase() == this.azureStorageAccountName.toLowerCase());
-    if (index < 0) {
-      throw new Error(tl.loc("StorageAccountDoesNotExist", this.azureStorageAccountName));
-    }
+      const storageAccounts = await storageArmClient.storageAccounts.listClassicAndRMAccounts(null);
+      const index = storageAccounts.findIndex(account => account.name.toLowerCase() == this.azureStorageAccountName.toLowerCase());
+      if (index < 0) {
+        throw new Error(tl.loc("StorageAccountDoesNotExist", this.azureStorageAccountName));
+      }
 
-    return storageAccounts[index];
+      return storageAccounts[index];
   }
 
   private async _getStorageAccount(storageArmClient: armStorage.StorageManagementClient): Promise<Model.StorageAccount> {
-    const storageAccount = await storageArmClient.storageAccounts.getClassicOrArmAccountByName(this.azureStorageAccountName, null);
+      const storageAccount = await storageArmClient.storageAccounts.getClassicOrArmAccountByName(this.azureStorageAccountName, null);
 
-    if (!storageAccount) {
-      throw new Error(tl.loc('StorageAccountDoesNotExist', this.azureStorageAccountName));
-    }
+      if (!storageAccount) {
+        throw new Error(tl.loc('StorageAccountDoesNotExist', this.azureStorageAccountName));
+      }
 
-    return storageAccount;
+      return storageAccount;
   }
 
   private async _getStorageAccountWithResourceGroup(storageArmClient: armStorage.StorageManagementClient, resourceGroupName: string, storageAccountName: string): Promise<Model.StorageAccount | undefined> {
