@@ -3,28 +3,25 @@
 import path = require('path');
 import * as tl from "azure-pipelines-task-lib/task";
 import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
-import ACRAuthenticationTokenProvider from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/acrauthenticationtokenprovider"
+import ACRAuthenticationTokenProvider from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/acrauthenticationtokenprovider";
 import { getDockerRegistryEndpointAuthenticationToken } from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/registryauthenticationtoken";
 import Q = require('q');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-// get the registry server authentication provider 
+// get the registry server authentication provider
 var containerRegistryType = tl.getInput("containerregistrytype", true);
 const environmentVariableMaximumSize = 32766;
 
 var registryAuthenticationToken;
 if (containerRegistryType == "Azure Container Registry") {
-    registryAuthenticationToken = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint"), tl.getInput("azureContainerRegistry")).getAuthenticationToken();
+    const tokenProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint"), tl.getInput("azureContainerRegistry"));
+    registryAuthenticationToken = tokenProvider.getToken();
 }
 else {
     let endpointId = tl.getInput("dockerRegistryEndpoint");
     registryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(endpointId);
 }
-
-// Connect to any specified container host and/or registry 
-var connection = new ContainerConnection();
-connection.open(tl.getInput("dockerHostEndpoint"), registryAuthenticationToken);
 
 // Run the specified command
 var command = tl.getInput("command", true).toLowerCase();
@@ -59,24 +56,34 @@ if (command in dockerCommandMap) {
     commandImplementation = require(dockerCommandMap[command]);
 }
 
-var result = "";
-commandImplementation.run(connection, (data) => result += data)
-/* tslint:enable:no-var-requires */
-.fin(function cleanup() {
-    if (command !== "login") {
-        connection.close();
-    }
-})
-.then(function success() {
-    var commandOutputLength = result.length;
-    if (commandOutputLength > environmentVariableMaximumSize) {
-        tl.warning(tl.loc('OutputVariableDataSizeExceeded', commandOutputLength, environmentVariableMaximumSize));
-    } else {
-        tl.setVariable("DockerOutput", result);
-    }
-
-    tl.setResult(tl.TaskResult.Succeeded, "");
-}, function failure(err) {
-    tl.setResult(tl.TaskResult.Failed, err.message);
-})
-.done();
+registryAuthenticationToken
+.then(function success(authToken) {
+    // Connect to any specified container host and/or registry
+    var connection = new ContainerConnection();
+    connection.open(tl.getInput("dockerHostEndpoint"), authToken);
+    var result = "";
+    commandImplementation
+    .run(connection, (data) => result += data)
+        /* tslint:enable:no-var-requires */
+    .fin(function cleanup() {
+        if (command !== "login") {
+            connection.close();
+        }
+    })
+    .then(
+        function success() {
+            var commandOutputLength = result.length;
+            if (commandOutputLength > environmentVariableMaximumSize) {
+                tl.warning(tl.loc('OutputVariableDataSizeExceeded', commandOutputLength, environmentVariableMaximumSize));
+            }
+            else {
+                tl.setVariable("DockerOutput", result);
+            }
+            tl.setResult(tl.TaskResult.Succeeded, "");
+        },
+        function failure(err) {
+            tl.setResult(tl.TaskResult.Failed, err.message);
+        }
+    )
+    .done();
+});

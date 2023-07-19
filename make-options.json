@@ -165,7 +165,6 @@
         "PublishTestResultsV1",
         "PublishTestResultsV2",
         "PublishToAzureServiceBusV1",
-        "PyPIPublisherV0",
         "PythonScriptV0",
         "QueryWorkItemsV0",
         "QuickPerfTestV1",
@@ -197,7 +196,6 @@
         "WindowsMachineFileCopyV2",
         "XamarinAndroidV1",
         "XamariniOSV2",
-        "XamarinTestCloudV1",
         "XcodeV5"
     ],
     "taskResources": [
@@ -223,6 +221,8 @@
         "MysqlDeploymentOnMachineGroupV1",
         "GitHubReleaseV0",
         "GitHubReleaseV1",
-        "AzureVmssDeploymentV0"
+        "GitHubCommentV0",
+        "AndroidSigningV2",
+        "AndroidSigningV3"
     ]
 }

@@ -25,7 +25,7 @@ $AzureFileCopyRemoteJob = {
     {
         $useDefaultArguments = ($additionalArguments -eq "")
 
-        #argument to check whether azcopy.exe needs to be downloaded on VM or it is already present on VM
+        # Argument to check whether azcopy.exe needs to be downloaded on VM or it is already present on VM
         $shouldDownload = $false
 
         if($CleanTargetBeforeCopy)

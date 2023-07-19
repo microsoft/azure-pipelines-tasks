@@ -84,7 +84,7 @@ if (argv.task) {
         });
 
     // If base tasks was not found, try to find the task in the _generated tasks folder
-    if (taskList.length == 0 && fs.existsSync(genTaskPath)) { 
+    if (taskList.length == 0 && fs.existsSync(genTaskPath)) {
         taskList = matchFind(argv.task, genTaskPath, { noRecurse: true, matchBase: true })
             .map(function (item) {
                 return path.basename(item);
@@ -173,7 +173,7 @@ CLI.gendocs = function() {
 CLI.build = function() {
     CLI.clean();
 
-    ensureTool('tsc', '--version', 'Version 2.3.4');
+    ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('npm', '--version', function (output) {
         if (semver.lt(output, '5.6.0')) {
             fail('Expected 5.6.0 or higher. To fix, run: npm install -g npm');
@@ -200,7 +200,7 @@ CLI.build = function() {
         } else {
             taskPath = path.join(tasksPath, taskName);
         }
-        
+
         ensureExists(taskPath);
 
         // load the task.json
@@ -385,7 +385,7 @@ CLI.build = function() {
 //
 CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
     var minIstanbulVersion = '10';
-    ensureTool('tsc', '--version', 'Version 2.3.4');
+    ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('mocha', '--version', '6.2.3');
 
     // build the general tests and ps test infra
@@ -397,7 +397,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
     console.log('> copying ps test lib resources');
     mkdir('-p', path.join(buildTestsPath, 'lib'));
     matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(testsPath, 'lib'), path.join(buildTestsPath, 'lib'));
-    
+
     var suiteType = argv.suite || 'L0';
     function runTaskTests(taskName) {
         banner('Testing: ' + taskName);
@@ -407,7 +407,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
         var pattern2 = path.join(buildTasksPath, 'Common', taskName, 'Tests', suiteType + '.js');
         var taskPath = path.join('**', '_build', 'Tasks', taskName, "**", "*.js").replace(/\\/g, '/');
         var isNodeTask = util.isNodeTask(buildTasksPath, taskName);
-        
+
         var isReportWasFormed = false;
         var testsSpec = [];
 
@@ -429,7 +429,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
                 banner('Run Mocha Suits for node ' + nodeVersion);
                 // setup the version of node to run the tests
                 util.installNode(nodeVersion);
-                
+
 
                 if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
                     run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
@@ -486,7 +486,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
 
     try {
         // Installing node version 10 to run code coverage report, since common library tests run under node 6,
-        // which is incompatible with nyc 
+        // which is incompatible with nyc
         util.installNode(minIstanbulVersion);
         util.rm(path.join(coverageTasksPath, '*coverage-summary.json'));
         util.run(`nyc merge ${coverageTasksPath} ${path.join(coverageTasksPath, 'mergedcoverage.json')}`, true);
@@ -504,7 +504,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
 //
 
 CLI.testLegacy = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
-    ensureTool('tsc', '--version', 'Version 2.3.4');
+    ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('mocha', '--version', '6.2.3');
 
     if (argv.suite) {
@@ -932,7 +932,7 @@ CLI.gentask = function() {
         util.validateGeneratedTasks(baseConfigToolPath, taskList, makeOptions);
         return;
     }
-    
+
     if (!configsString) {
         throw Error ('--configs is required');
     }
