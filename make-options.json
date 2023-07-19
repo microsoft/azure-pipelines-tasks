@@ -80,7 +80,7 @@
         "DotNetCoreInstallerV1",
         "DownloadBuildArtifactsV0",
         "DownloadBuildArtifactsV1",
-        "DownloadFileshareArtifactsV0",
+        "DownloadFileshareArtifactsV1",
         "DownloadGitHubNugetPackageV1",
         "DownloadGitHubNpmPackageV1",
         "DownloadGitHubReleaseV0",
