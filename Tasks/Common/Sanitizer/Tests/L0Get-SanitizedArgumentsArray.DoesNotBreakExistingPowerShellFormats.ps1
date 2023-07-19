@@ -11,7 +11,8 @@ $powershellArgumentsFormats = @(
     "-Parameter:Value",               # Colon connects the parameter and its value
     "/p:Parameter=Value",             # Specific syntax for tools like MSBuild or NuGet
     "--Parameter Value",              # Used by cmdlets or scripts for cross-platform compatibility
-    "--Parameter=Value"               # Used by cross-platform tools
+    "--Parameter=Value",              # Used by cross-platform tools
+    "parameter value.txt"             # Argument with dot in the middle
 )
 
 foreach ($argument in $powershellArgumentsFormats) {

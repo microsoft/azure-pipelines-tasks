@@ -30,7 +30,7 @@ function Get-SanitizedArguments([string]$InputArgs) {
 
     for ($i = 0; $i -lt $argsArr.Length; $i++ ) {
         ## '?<!`' - checking if before character no backtick. '^a-zA-Z0-9` _'"-' - checking if character is allowed. Insead replacing to #removed#
-        $argsArr[$i] = $argsArr[$i] -replace '(?<!\\)([^a-zA-Z0-9\\ _''"\-=/:])', $removedSymbolSign;
+        $argsArr[$i] = $argsArr[$i] -replace '(?<!\\)([^a-zA-Z0-9\\ _''"\-=/:.])', $removedSymbolSign;
     }
 
     $resultArgs = $argsArr -join $argsSplitSymbols;
