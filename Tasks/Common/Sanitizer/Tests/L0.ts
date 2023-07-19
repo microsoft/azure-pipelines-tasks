@@ -27,8 +27,8 @@ describe('Security Suite', function () {
     });
 
     if (psm.testSupported()) {
-        it('Sanitize-Arguments should replace forbidden charachters', (done) => {
-            psr.run(path.join(__dirname, 'L0Get-SanitizedArgumentsArray.ReplacesForbiddenCharachters.ps1'), done);
+        it('Sanitize-Arguments should replace forbidden characters', (done) => {
+            psr.run(path.join(__dirname, 'L0Get-SanitizedArgumentsArray.ReplacesForbiddenCharacters.ps1'), done);
         });
     }
 
