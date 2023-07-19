@@ -3,6 +3,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from 'os';
 import { toolrunner } from './mocks/mockedModels'
 import { Constants } from "../versionutilities";
+import fs = require('fs');
 var mockery = require('mockery');
 var osType = "win";
 
@@ -137,6 +138,7 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
 });
 
 mockery.registerMock('fs', {
+    ...fs,
     lstatSync: function (path: string) {
         if (path.indexOf(".") > -1 && !path.endsWith("1.0.0") && !path.endsWith("2.0.0") && !path.endsWith("2.1.0")) {
             return {

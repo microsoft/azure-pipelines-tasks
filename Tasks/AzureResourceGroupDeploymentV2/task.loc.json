@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 217,
+    "Minor": 225,
     "Patch": 0
   },
   "demands": [],
@@ -305,6 +305,15 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.addSpnToEnvironment",
+      "groupName": "Advanced"
+    },
+    {
+      "name": "useWithoutJSON",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useWithoutJSON",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.useWithoutJSON",
       "groupName": "Advanced"
     }
   ],

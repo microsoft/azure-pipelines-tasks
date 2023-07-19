@@ -125,5 +125,5 @@ tr.registerMock('../utilities', utMock);
 
 tr.setAnswers(a);
 
-tr.registerMock('azure-pipelines-tasks-azure-arm-rest-v2/azure-graph', require('./mock_node_modules/azure-graph'));
+tr.registerMock('azure-pipelines-tasks-azure-arm-rest/azure-graph', require('./mock_node_modules/azure-graph'));
 tr.run();

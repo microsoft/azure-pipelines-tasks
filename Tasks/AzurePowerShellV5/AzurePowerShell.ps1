@@ -10,8 +10,9 @@ $__vsts_input_errorActionPreference = Get-VstsInput -Name errorActionPreference
 $__vsts_input_failOnStandardError = Get-VstsInput -Name FailOnStandardError -AsBool
 $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
-$input_pwsh = Get-VstsInput -Name pwsh -AsBool
+$input_pwsh = Get-VstsInput -Name pwsh -AsBool -Default $false
 $input_workingDirectory = Get-VstsInput -Name workingDirectory -Require
+$validateScriptSignature = Get-VstsInput -Name validateScriptSignature -AsBool
 
 # Validate the script path and args do not contains new-lines. Otherwise, it will
 # break invoking the script via Invoke-Expression.
@@ -30,7 +31,7 @@ $otherVersion = "OtherVersion"
 $latestVersion = "LatestVersion"
 
 if ($targetAzurePs -eq $otherVersion) {
-    if ($customTargetAzurePs -eq $null) {
+    if ($null -eq $customTargetAzurePs) {
         throw (Get-VstsLocString -Key InvalidAzurePsVersion $customTargetAzurePs)
     } else {
         $targetAzurePs = $customTargetAzurePs.Trim()
@@ -48,13 +49,39 @@ if ($targetAzurePs -eq $latestVersion) {
 
 . $PSScriptRoot\TryMakingModuleAvailable.ps1 -targetVersion "$targetAzurePs" -platform Windows
 
+if ($validateScriptSignature) {
+    try {
+        if ($scriptType -ne "InlineScript") {
+            Write-Host "## Validating Script Signature"
+
+            # Validate script is signed
+            $scriptSignature = Get-AuthenticodeSignature $scriptPath
+            if ($scriptSignature.Status -eq "NotSigned") {
+                throw "Object does not have a digital signature. Please ensure your script is signed and try again."
+            }
+            elseif ($scriptSignature.Status -ne "Valid") {
+                throw "Digital signature of the object did not verify. Please ensure your script is properly signed and try again."
+            }
+
+            Write-Host "## Validating Script Signature Complete"
+        }
+    }
+    catch
+    {
+        $errorMsg = $_.Exception.Message
+        throw "Unable to validate script signature: $errorMsg"
+    }
+}
+
 . "$PSScriptRoot\Utility.ps1"
 
 $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
 $endpointObject = Get-VstsEndpoint -Name $serviceName -Require
 $endpoint = ConvertTo-Json $endpointObject
+$vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+$vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
-try 
+try
 {
     # Generate the script contents.
     Write-Host (Get-VstsLocString -Key 'GeneratingScript')
@@ -64,11 +91,9 @@ try
         $contents += "`$VerbosePreference = 'continue'"
     }
 
-    $CoreAzArgument = $null;
+    $CoreAzArgument = "-endpoint '$endpoint' -connectedServiceNameARM $serviceName -vstsAccessToken $vstsAccessToken -isPSCore $" + "$input_pwsh"
     if ($targetAzurePs) {
-        $CoreAzArgument = "-endpoint '$endpoint' -targetAzurePs $targetAzurePs"
-    } else {
-        $CoreAzArgument = "-endpoint '$endpoint'"
+        $CoreAzArgument += " -targetAzurePs $targetAzurePs"
     }
     $contents += ". '$PSScriptRoot\CoreAz.ps1' $CoreAzArgument"
 

@@ -6,6 +6,12 @@
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.versionSpec": "Спецификатор версии",
   "loc.input.help.versionSpec": "Диапазон версий или точная версия Python, которую необходимо использовать, заданная с помощью синтаксиса диапазона версий SemVer. [Дополнительные сведения](https://go.microsoft.com/fwlink/?LinkID=2006180)",
+  "loc.input.label.disableDownloadFromRegistry": "Отключить скачивание выпусков из реестра GitHub",
+  "loc.input.help.disableDownloadFromRegistry": "Следует ли отключить скачивание отсутствующей версии Python из [реестра Github Actions](https://github.com/actions/python-versions). Установите этот флажок, если вы хотите использовать только локальную предварительно установленную версию Python.",
+  "loc.input.label.allowUnstable": "Разрешить скачивание нестабильных выпусков",
+  "loc.input.help.allowUnstable": "Разрешить скачивание нестабильных версий Python из [реестра версий Python в Github Actions](https://github.com/actions/python-versions).",
+  "loc.input.label.githubToken": "Токен GitHub для реестра Python в GitHub Actions",
+  "loc.input.help.githubToken": "Токен GitHub необходим для предотвращения ограничения числа анонимных запросов к [реестру версий Python в Github Actions](https://github.com/actions/python-versions). Если оставить это поле пустым, это может привести к сбоям скачивания. Не требуется, если используется только локально установленная версия Python.",
   "loc.input.label.addToPath": "Добавить в PATH",
   "loc.input.help.addToPath": "Следует ли добавлять извлеченную версию Python в начало переменной среды PATH, чтобы она была доступна в последующих задачах или скриптах без использования выходной переменной.",
   "loc.input.label.architecture": "Архитектура",
@@ -17,6 +23,11 @@
   "loc.messages.ToolNotFoundMicrosoftHosted": "Если это агент, размещенный на сервере Майкрософт, убедитесь, что этот образ поддерживает параллельные версии %s в %s.",
   "loc.messages.ToolNotFoundSelfHosted": "Если это локальный агент, ознакомьтесь со сведениями о настройке параллельных версий %s в %s.",
   "loc.messages.VersionNotFound": "Спецификация версии %s для архитектуры %s не соответствует ни одной версии в Agent.ToolsDirectory.",
-  "loc.messages.ExactVersionNotRecommended": "Не рекомендуется указывать точную версию для агентов, размещенных в корпорации Майкрософт. Версии исправлений Python могут быть заменены новой версией на размещенных агентах без уведомления, что может привести к неожиданным ошибкам сборок. Рекомендуется указывать только основную версию или основную и дополнительную версии (например, \"3\" или \"3.6\").",
-  "loc.messages.PythonVersionRetirement": "Срок использования Python 3.5 истек, и 24 января он будет удален с образов, размещенных на серверах Майкрософт. Если вы используете агенты, размещенные на серверах Майкрософт, обновите версию Python. Подробнее см. на https://github.com/actions/virtual-environments"
+  "loc.messages.ExactVersionNotRecommended": "Не рекомендуется указывать точную версию для агентов, размещенных в корпорации Майкрософт. Версии исправлений Python могут быть заменены новой версией на размещенных агентах без уведомления, что может привести к неожиданным ошибкам сборок. Рекомендуется указывать только основную версию или основную и дополнительную версии (например, \"3\" или \"3.9\").",
+  "loc.messages.ExactVersionPyPyNotRecommended": "Не рекомендуется указывать точную версию для агентов, размещенных в корпорации Майкрософт. Версии исправлений PyPy могут быть заменены новой версией на размещенных агентах без уведомления, что может привести к неожиданным ошибкам сборок. Рекомендуется указывать только основную версию или основную и дополнительную версии (например, \"3\" или \"3.9\").",
+  "loc.messages.PythonVersionRetirement": "Срок использования Python 3.5 истек, и 24 января он будет удален с образов, размещенных на серверах Майкрософт. Если вы используете агенты, размещенные на серверах Майкрософт, обновите версию Python. Подробнее см. на https://github.com/actions/virtual-environments",
+  "loc.messages.MissingGithubToken": "Если вы хотите скачать выпуск Python, укажите токен GitHub. В противном случае вы можете столкнуться с ограничением на количество анонимных скачиваний в GitHub.",
+  "loc.messages.DownloadNotFound": "Не удалось найти соответствующую спецификацию Python %s (%s) в реестре python-versions. Обратите внимание, что только системы, перечисленные в манифесте версий Python для GitHub Actions (https://github.com/actions/python-versions/blob/main/versions-manifest.json) могут загружать Python во время работы. Прокси-серверы не поддерживаются.",
+  "loc.messages.ManifestDownloadFailed": "Не удалось скачать манифест версий Python из реестра Python в Github Actions (https://github.com/actions/python-versions). Это может быть вызвано недопустимым токеном GitHub.",
+  "loc.messages.DownloadFailed": "Не удалось скачать Python из реестра Python в GitHub Actions(https://github.com/actions/python-versions). Ошибка: %s"
 }

@@ -5,18 +5,19 @@ import tl = require('azure-pipelines-task-lib');
 var ltx = require('ltx');
 import fs = require('fs');
 
-var AppServiceTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/L0-azure-arm-app-service.js");
-var KuduServiceTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/L0-azure-arm-app-service-kudu-tests.js");
-var ApplicationInsightsTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/L0-azure-arm-appinsights-tests.js");
-var ResourcesTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/L0-azure-arm-resource-tests.js");
+var AppServiceTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-app-service.js");
+var KuduServiceTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-app-service-kudu-tests.js");
+var ApplicationInsightsTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-appinsights-tests.js");
+var ResourcesTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-resource-tests.js");
+var fileEncoding = require("../node_modules/azure-pipelines-tasks-webdeployment-common/fileencoding.js");
 
 describe('AzureRmWebAppDeployment Suite', function() {
     
     this.timeout(60000);
 
      before((done) => {
-        if(!tl.exist(path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests/node_modules'))) {
-            tl.cp(path.join( __dirname, 'node_modules'), path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest-v2/Tests'), '-rf', true);
+        if(!tl.exist(path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/node_modules'))) {
+            tl.cp(path.join( __dirname, 'node_modules'), path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest/Tests'), '-rf', true);
         }
 
         tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.config'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), '-f', false);
@@ -40,7 +41,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     ResourcesTests.ResourcesTests(); 
     
     if (tl.osType().match(/^Win/)) {
-        it('Runs successfully with XML Transformation (L1)', (done:Mocha.Done) => {
+        it('Runs successfully with XML Transformation (L1)', (done:MochaDone) => {
             this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
             let tp = path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests","L1XdtTransform.js");
@@ -53,7 +54,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             done();
         });
 
-        it('Validate MSDeploy parameters', (done:Mocha.Done) => {
+        it('Validate MSDeploy parameters', (done:MochaDone) => {
             let tp = path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests","L0MSDeployUtility.js");
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
@@ -69,7 +70,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         });
     }
 
-    it('Validate operations.ParameterParserUtility.parse()', (done:Mocha.Done) => {
+    it('Validate operations.ParameterParserUtility.parse()', (done:MochaDone) => {
         let tp = path.join(__dirname, 'L0ParameterParserUtility.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -80,25 +81,39 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
 
-    it('Runs successfully with XML variable substitution', (done:Mocha.Done) => {
+    it('Runs successfully with XML variable substitution', (done) => {
         let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        let tr = new ttm.MockTestRunner(tp);
         tr.run();
-
-        var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname,  "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XmlVarSub', 'Web_test.config')));
-        var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XmlVarSub', 'Web_Expected.config')));
-        assert(ltx.equal(resultFile, expectFile) , 'Should have substituted variables in Web.config file');
-        var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config')));
-        var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Expected.Debug.config')));
-        assert(ltx.equal(resultFile, expectFile) , 'Should have substituted variables in Web.Debug.config file');   
-        var resultParamFile = ltx.parse(fs.readFileSync(path.join(__dirname,  "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XmlVarSub', 'parameters_test.xml')));
-        var expectParamFile = ltx.parse(fs.readFileSync(path.join(__dirname,  "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XmlVarSub', 'parameters_Expected.xml')));
-        assert(ltx.equal(resultParamFile, expectParamFile) , 'Should have substituted variables in parameters.xml file');
-
+        let transformedFilePath = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config');
+        let expectedFilePath = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Expected.config');
+        let transformedFileAsBuffer = fs.readFileSync(transformedFilePath);
+        let expectedFileAsBuffer = fs.readFileSync(expectedFilePath);
+        let transformedFileEncodeType = fileEncoding.detectFileEncoding(transformedFilePath, transformedFileAsBuffer)[0];
+        let transformedFileAsString = transformedFileAsBuffer.toString(transformedFileEncodeType);
+        transformedFileAsString = transformedFileAsString.replace( /[\n]+/gm, "\r\n" );
+        transformedFileAsBuffer = Buffer.from(transformedFileAsString, transformedFileEncodeType);
+        var resultFile = ltx.parse(transformedFileAsBuffer);
+        var expectFile = ltx.parse(expectedFileAsBuffer);
+        assert(ltx.equal(resultFile, expectFile), 'Should have substituted variables in Web.config file');
+        transformedFilePath = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config');
+        expectedFilePath = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Expected.Debug.config');
+        transformedFileAsBuffer = fs.readFileSync(transformedFilePath);
+        expectedFileAsBuffer = fs.readFileSync(expectedFilePath);
+        transformedFileEncodeType = fileEncoding.detectFileEncoding(transformedFilePath, transformedFileAsBuffer)[0];
+        transformedFileAsString = transformedFileAsBuffer.toString(transformedFileEncodeType);
+        transformedFileAsString = transformedFileAsString.replace( /[\n]+/gm, "\r\n" );
+        transformedFileAsBuffer = Buffer.from(transformedFileAsString, transformedFileEncodeType);
+        var resultFile = ltx.parse(transformedFileAsBuffer);
+        var expectFile = ltx.parse(expectedFileAsBuffer);
+        assert(ltx.equal(resultFile, expectFile), 'Should have substituted variables in Web.Debug.config file');
+        var resultParamFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml')));
+        var expectParamFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_Expected.xml')));
+        assert(ltx.equal(resultParamFile, expectParamFile), 'Should have substituted variables in parameters.xml file');
         done();
     });
 
-    it('Runs successfully with JSON variable substitution', (done:Mocha.Done) => {
+    it('Runs successfully with JSON variable substitution', (done:MochaDone) => {
         let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1JsonVarSub.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -115,7 +130,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
 
-    it('Runs successfully with JSON variable substitution V2', (done:Mocha.Done) => {
+    it('Runs successfully with JSON variable substitution V2', (done:MochaDone) => {
         let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1JsonVarSubV2.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -135,7 +150,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
 
-    it('Validate File Encoding', (done:Mocha.Done) => {
+    it('Validate File Encoding', (done:MochaDone) => {
         let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1ValidateFileEncoding.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -157,7 +172,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
 
-    it('Validate azure-pipelines-tasks-webdeployment-common.utility.copyDirectory()', (done:Mocha.Done) => {
+    it('Validate azure-pipelines-tasks-webdeployment-common.utility.copyDirectory()', (done:MochaDone) => {
         let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L0CopyDirectory.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -167,7 +182,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
 
-    it('AzureRmWebAppDeploymentV4 DeploymentFactoryTests', (done: Mocha.Done) => {
+    it('AzureRmWebAppDeploymentV4 DeploymentFactoryTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'DeploymentFactoryTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -188,7 +203,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 AzureRmWebAppDeploymentProviderTests', (done: Mocha.Done) => {
+    it('AzureRmWebAppDeploymentV4 AzureRmWebAppDeploymentProviderTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'AzureRmWebAppDeploymentProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -204,7 +219,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 BuiltInLinuxWebAppDeploymentProviderTests', (done: Mocha.Done) => {
+    it('AzureRmWebAppDeploymentV4 BuiltInLinuxWebAppDeploymentProviderTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'BuiltInLinuxWebAppDeploymentProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -226,7 +241,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 ContainerWebAppDeploymentProviderTests', (done: Mocha.Done) => {
+    it('AzureRmWebAppDeploymentV4 ContainerWebAppDeploymentProviderTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'ContainerWebAppDeploymentProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -246,7 +261,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 WindowsWebAppRunFromZipProviderTests', (done: Mocha.Done) => {
+    it('AzureRmWebAppDeploymentV4 WindowsWebAppRunFromZipProviderTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'WindowsWebAppRunFromZipProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -269,7 +284,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 WindowsWebAppWarDeployProviderTests', (done: Mocha.Done) => {
+    it('AzureRmWebAppDeploymentV4 WindowsWebAppWarDeployProviderTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'WindowsWebAppWarDeployProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -289,7 +304,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 WindowsWebAppZipDeployProviderTests', (done: Mocha.Done) => {
+    it('AzureRmWebAppDeploymentV4 WindowsWebAppZipDeployProviderTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'WindowsWebAppZipDeployProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -311,7 +326,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     });
 
     
-    it('AzureRmWebAppDeploymentV4 WindowsWebAppWebDeployProviderTests', (done: Mocha.Done) => {
+    it('AzureRmWebAppDeploymentV4 WindowsWebAppWebDeployProviderTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'WindowsWebAppWebDeployProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -334,7 +349,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 PublishProfileWebAppDeploymentProviderTests', (done: Mocha.Done) => {
+    it('AzureRmWebAppDeploymentV4 PublishProfileWebAppDeploymentProviderTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'PublishProfileWebAppDeploymentProviderTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -350,7 +365,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('AzureRmWebAppDeploymentV4 Validate TaskParameters', (done: Mocha.Done) => {
+    it('AzureRmWebAppDeploymentV4 Validate TaskParameters', (done: MochaDone) => {
         let tp = path.join(__dirname,'TaskParametersTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {

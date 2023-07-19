@@ -1,10 +1,10 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
-import {AzureAppService  } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
-import { AzureApplicationInsights } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-appinsights';
-import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
-import { ApplicationInsightsWebTests } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-appinsights-webtests';
-import { AzureAppServiceUtils } from './AzureAppServiceUtils';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
+import {AzureAppService  } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
+import { AzureApplicationInsights } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-appinsights';
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
+import { ApplicationInsightsWebTests } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-appinsights-webtests';
+import { AzureAppServiceUtility } from 'azure-pipelines-tasks-azure-arm-rest/azureAppServiceUtility';
 import { AzureApplicationInsightsWebTestsUtils } from './AzureApplicationInsightsWebTestsUtils';
 
 const APPLICATION_INSIGHTS_EXTENSION_NAME: string = "Microsoft.ApplicationInsights.AzureWebSites";
@@ -13,7 +13,7 @@ export async function enableContinuousMonitoring(endpoint: AzureEndpoint, appSer
     try {
         console.log(tl.loc('EnablingContinousMonitoring', appService.getName()));
         var appDetails = await appService.get();
-        var appServiceUtils = new AzureAppServiceUtils(appService);
+        var appServiceUtils = new AzureAppServiceUtility(appService);
         var appInsightsResource = await appInsights.get();
         var appInsightsWebTests = new ApplicationInsightsWebTests(endpoint, appInsights.getResourceGroupName());
         var webDeployPublishingProfile = await appServiceUtils.getWebDeployPublishingProfile();

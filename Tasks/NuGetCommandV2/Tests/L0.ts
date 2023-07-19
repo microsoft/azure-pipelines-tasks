@@ -3,6 +3,8 @@ import * as ttm from "azure-pipelines-task-lib/mock-test";
 import * as path from "path";
 
 describe('NuGetCommand Suite', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 10000);
+
     before(() => {
     });
 
@@ -10,8 +12,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('restore single solution', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './RestoreTests/singlesln.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -26,8 +26,6 @@ describe('NuGetCommand Suite', function () {
     }).timeout(20000);
 
     it('restore single solution with CredentialProvider', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './RestoreTests/singleslnCredentialProvider.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -44,8 +42,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('restore packages.config', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './RestoreTests/pkgconfig.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -60,8 +56,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('restore single solution with noCache', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './RestoreTests/singleslnNoCache.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -76,8 +70,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('restore single solution with disableParallelProcessing', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './RestoreTests/singleslnDisableParallelProcessing.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -92,8 +84,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('restore single solution with nuget config', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './RestoreTests/singleslnConfigFile.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -108,8 +98,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('restore multiple solutions', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './RestoreTests/multiplesln.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -125,8 +113,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('restore multiple solutions and parses pattern appropriately', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './RestoreTests/multipleslnmultiplepattern.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -142,8 +128,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('restore single solution mono', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './RestoreTests/singleslnMono.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -157,8 +141,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('restore select vsts source', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './RestoreTests/selectSourceVsts.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -172,8 +154,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('restore select nuget.org source', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './RestoreTests/selectSourceNuGetOrg.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -187,8 +167,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('restore select multiple sources', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './RestoreTests/selectSourceMultiple.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -202,8 +180,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('restore select nuget.org source warns', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './RestoreTests/nugetOrgBehaviorWarn.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -217,8 +193,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('restore select nuget.org source fails', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './RestoreTests/nugetOrgBehaviorFail.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -230,8 +204,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('restore select nuget.org source on nuget config succeeds', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './RestoreTests/nugetOrgBehaviorOnConfig.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -246,8 +218,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('pushes successfully to internal feed using NuGet.exe', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './PublishTests/internalFeedNuGet.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -262,8 +232,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('pushes successfully to internal feed using VstsNuGetPush.exe', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './PublishTests/internalFeedVstsNuGetPush.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -278,8 +246,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('pushes successfully to internal project scoped feed using VstsNuGetPush.exe', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './PublishTests/internalFeedVstsNuGetPushProjectScoped.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -294,8 +260,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('succeeds when conflict occurs using VstsNuGetPush.exe (allow conflict)', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './PublishTests/internalFeedVstsNuGetPushAllowConflict.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -310,8 +274,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('succeeds when conflict occurs using NuGet.exe on Linux (allow conflict)', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './PublishTests/failWithContinueOnConflictOnLinux.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -324,8 +286,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('fails when conflict occurs using VstsNuGetPush.exe (disallow conflict)', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './PublishTests/internalFeedVstsNuGetPushDisallowConflict.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -339,8 +299,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('packs with prerelease', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './PackTests/packPrerelease.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -355,8 +313,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('packs with env var', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './PackTests/packEnvVar.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -371,8 +327,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('packs with build number', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './PackTests/packBuildNumber.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -387,8 +341,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('packs with base path', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './PackTests/packBasePath.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -403,8 +355,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('packs tool', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './PackTests/packTool.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -419,8 +369,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('works with custom command happy path', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './CustomCommandTests/customHappyPath.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -435,8 +383,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('restore single solution with nuget config and multiple service connections', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './RestoreTests/multipleServiceConnections.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -454,8 +400,6 @@ describe('NuGetCommand Suite', function () {
 
 
     it('custom command fails when exit code !=0', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './CustomCommandTests/customFailPath.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -466,8 +410,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('pack fails when exit code !=0', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './PackTests/packFails.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -478,8 +420,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('publish fails when duplicates are skipped and exit code!=[0|2] on Windows_NT', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './PublishTests/failWithContinueOnConflict.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -490,8 +430,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('publish fails when duplicates are NOT skipped and exit code!=0', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './PublishTests/failWithoutContinueOnConflict.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -502,8 +440,6 @@ describe('NuGetCommand Suite', function () {
     });
 
     it('restore fails when exit code!=0', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, './RestoreTests/failRestore.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -512,5 +448,4 @@ describe('NuGetCommand Suite', function () {
         assert(tr.failed, 'should have failed');
         done();
     });
-
 });

@@ -89,6 +89,7 @@ function Validate-DestinationPath(
         ThrowError -errorMessage (Get-LocalizedString -Key "Remote destination path '{0}' cannot contain environment variables." -ArgumentList $value)
     }
 }
+
 # $sourcePath, $targetPath, $credential, $cleanTargetBeforeCopy, $additionalArguments
 # $adminUserName, $adminPassword
 function Copy-OnLocalMachine(

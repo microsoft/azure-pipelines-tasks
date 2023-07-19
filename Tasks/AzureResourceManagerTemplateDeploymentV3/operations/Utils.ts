@@ -9,6 +9,8 @@ import fileEncoding = require('./FileEncoding');
 import { TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
 import { DeploymentParameters } from "./DeploymentParameters";
+import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
+import { loginAzureRM } from 'azure-pipelines-tasks-artifacts-common/azCliUtils';
 
 var cpExec = util.promisify(require('child_process').exec);
 var hm = require("typed-rest-client/HttpClient");
@@ -237,7 +239,7 @@ class Utils {
         var csmFilePath = fileMatches[0];
         if (!fs.lstatSync(csmFilePath).isDirectory()) {
             tl.debug("Loading CSM Template File.. " + csmFilePath);
-            csmFilePath = await this.getFilePathForLinkedArtifact(csmFilePath)
+            csmFilePath = await this.getFilePathForLinkedArtifact(csmFilePath, taskParameters)
             try {
                 template = JSON.parse(this.stripJsonComments(fileEncoding.readFileContentsAsText(csmFilePath)));
             }
@@ -261,7 +263,7 @@ class Utils {
             var csmParametersFilePath = fileMatches[0];
             if (!fs.lstatSync(csmParametersFilePath).isDirectory()) {
                 tl.debug("Loading Parameters File.. " + csmParametersFilePath);
-                csmParametersFilePath = await this.getFilePathForLinkedArtifact(csmParametersFilePath)
+                csmParametersFilePath = await this.getFilePathForLinkedArtifact(csmParametersFilePath, taskParameters)
                 try {
                     var parameterFile = JSON.parse(this.stripJsonComments(fileEncoding.readFileContentsAsText(csmParametersFilePath)));
                     tl.debug("Loaded Parameters File");
@@ -423,15 +425,17 @@ class Utils {
         return str.replace(/[\[]/g, '$&[]');
     }
 
-    private static async getFilePathForLinkedArtifact(filePath: string): Promise<string> {
+    private static async getFilePathForLinkedArtifact(filePath: string, taskParameters: armDeployTaskParameters.TaskParameters): Promise<string> {
         var filePathExtension: string = filePath.split('.').pop();
         if(filePathExtension === 'bicep'){
             let azcliversion = await this.getAzureCliVersion()
             if(parseFloat(azcliversion)){
                 if(this.isBicepAvailable(azcliversion)){
+                    await loginAzureRM(taskParameters.connectedService);
                     await this.execBicepBuild(filePath)
                     filePath = filePath.replace('.bicep', '.json')
                     this.cleanupFileList.push(filePath)
+                    await this.logoutAzure();
                 }else{
                     throw new Error(tl.loc("IncompatibleAzureCLIVersion"));
                 }
@@ -458,9 +462,16 @@ class Utils {
     }
 
     private static async execBicepBuild(filePath): Promise<void> {
-        const {error, stdout, stderr} = await cpExec(`az bicep build --file ${filePath}`);
-        if(error && error.code !== 0){
-            throw new Error(tl.loc("BicepBuildFailed", stderr));
+        const result: IExecSyncResult = tl.execSync("az", `bicep build --file ${filePath}`);
+        if(result && result.code !== 0){
+            throw new Error(tl.loc("BicepBuildFailed", result.stderr));
+        }
+    }
+
+    private static async logoutAzure() {
+        const result: IExecSyncResult = tl.execSync("az", "account clear");
+        if(result && result.code !== 0){
+            throw new Error(tl.loc("BicepBuildFailed", result.stderr));
         }
     }
 

@@ -43,8 +43,8 @@ export class NugetMockHelper {
             FORCE_NUGET_4_0_0: 'FORCE_NUGET_4_0_0',
             NUGET_VERSION_4_0_0: '4.0.0',
             NUGET_VERSION_4_0_0_PATH_SUFFIX: 'NuGet/4.0.0/',
-            DEFAULT_NUGET_VERSION: '4.1.0',
-            DEFAULT_NUGET_PATH_SUFFIX: 'NuGet/4.1.0/',
+            DEFAULT_NUGET_VERSION: '4.9.6',
+            DEFAULT_NUGET_PATH_SUFFIX: 'NuGet/4.9.6/',
             NUGET_EXE_TOOL_PATH_ENV_VAR: "NuGetExeToolPath"
         } )
     }
@@ -112,27 +112,6 @@ export class NugetMockHelper {
     public registerToolRunnerMock() {
         var mtt = require('azure-pipelines-task-lib/mock-toolrunner');
         this.tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtt);
-    }
-
-    public RegisterLocationServiceMocks() {
-        this.tmr.registerMock('vso-node-api/WebApi', {
-            getBearerHandler: function(token){
-                return {};
-            }, 
-            WebApi: function(url, handler){
-                return {
-                    getCoreApi: function() {
-                        return { 
-                            vsoClient: {
-                                getVersioningData: function (ApiVersion, PackagingAreaName, PackageAreaId, Obj) { 
-                                    return { requestUrl:"foobar" }
-                                }
-                            }
-                        };
-                    }
-                };
-            }
-        })
     }
     
     public setAnswers(a) {

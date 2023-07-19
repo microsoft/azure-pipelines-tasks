@@ -2,8 +2,8 @@
 
 import path = require('path');
 import * as tl from "azure-pipelines-task-lib/task";
-import ContainerConnection from "azure-pipelines-tasks-docker-common-v2/containerconnection";
-import RegistryAuthenticationToken, { getDockerRegistryEndpointAuthenticationToken } from "azure-pipelines-tasks-docker-common-v2/registryauthenticationprovider/registryauthenticationtoken";
+import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
+import RegistryAuthenticationToken, { getDockerRegistryEndpointAuthenticationToken } from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/registryauthenticationtoken";
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 let registryAuthenticationToken: RegistryAuthenticationToken;

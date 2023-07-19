@@ -1,6 +1,16 @@
 {
+  "cache": false,
+  "produceSourceMap": false,
+  "sourceMap": false,
   "exclude": [
-    "**/Tests/*.*"
+    "**/Tests/**",
+    "**/*.d.ts",
+    "**/*.spec.*",
+    "**/*.test.*",
+    "**/*.mock.*",
+    "**/test/**",
+    "**/tests/**",
+    "**/node_modules/**"
   ],
   "watermarks": {
     "lines": [60, 80],
@@ -9,8 +19,8 @@
     "statements": [60, 80]
   },
   "reporter": [
-	"text",
-	"json",
-	"json-summary"
+    "text",
+    "json",
+    "json-summary"
   ]
 }

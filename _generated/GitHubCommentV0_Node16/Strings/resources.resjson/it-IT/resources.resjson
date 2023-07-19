@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Commento GitHub",
+  "loc.description": "Consente di scrivere un commento relativo all'entità GitHub, ad esempio per un commento o una richiesta pull",
+  "loc.instanceNameFormat": "Scrittura del commento GitHub",
+  "loc.input.label.gitHubConnection": "Connessione a GitHub (OAuth o token di accesso personale)",
+  "loc.input.help.gitHubConnection": "Specificare il nome della connessione al servizio GitHub da usare per la connessione al repository GitHub. La connessione deve essere basata su un OAuth dell'utente di GitHub o su un token di accesso personale GitHub. Per altre informazioni sulle connessioni al servizio, vedere [qui](https://aka.ms/AA3am5s).",
+  "loc.input.label.repositoryName": "Repository",
+  "loc.input.help.repositoryName": "Consente di specificare il nome del repository GitHub in cui verrà creato il commento GitHub",
+  "loc.input.label.id": "ID del problema o della richiesta pull",
+  "loc.input.help.id": "Consente di specificare il problema o il numero della richiesta pull. Se viene usato in una pipeline per richieste pull, lasciare vuoto in modo che l'ID venga determinato dinamicamente",
+  "loc.input.label.comment": "Commento",
+  "loc.input.help.comment": "Contenuto del commento da scrivere",
+  "loc.messages.InvalidEndpointAuthScheme": "Schema di connessione al servizio GitHub non valido: %s. Sono consentite solo le connessioni con token di accesso personale GitHub, Token e OAuth.",
+  "loc.messages.InvalidGithubEndpoint": "Endpoint servizio GitHub non valido: %s.",
+  "loc.messages.WriteFailed": "Il commento non è stato scritto",
+  "loc.messages.WriteSucceeded": "Il commento è stato scritto",
+  "loc.messages.NoOp": "Il contenuto del campo Commento è vuoto o l'ID del problema p della richiesta pull non è stato specificato"
+}

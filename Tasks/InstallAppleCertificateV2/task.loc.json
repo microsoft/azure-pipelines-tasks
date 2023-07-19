@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 214,
+    "Minor": 225,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -113,6 +113,15 @@
       "label": "ms-resource:loc.input.label.setUpPartitionIdACLForPrivateKey",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.setUpPartitionIdACLForPrivateKey",
+      "groupName": "advanced"
+    },
+    {
+      "name": "opensslPkcsArgs",
+      "type": "string",
+      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.opensslPkcsArgs",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.opensslPkcsArgs",
       "groupName": "advanced"
     }
   ],

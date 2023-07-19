@@ -2,6 +2,7 @@ import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import os = require('os');
 import path = require('path');
+import fs = require('fs');
 
 let taskPath = path.join(__dirname, '..', 'nodetool.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -9,6 +10,7 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tmr.setInput('versionSource', 'fromFile');
 tmr.setInput('versionFilePath', 'src/.nvmrc');
 tmr.setInput('checkLatest', 'false');
+tmr.setInput('nodejsMirror', 'https://nodejs.org/dist');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "assertAgent": {
@@ -33,9 +35,10 @@ tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
 //create fs mock
 tmr.registerMock('fs', {
+    ...fs,
     readFileSync: function (path, options) {
         if (path != 'src/.nvmrc') {
-            throw new Error(`reading wrong .nvmrc: '${[path]}'`);
+            return fs.readFileSync(path, options);
         }
 
         return '11.3.0';

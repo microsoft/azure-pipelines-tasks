@@ -42,21 +42,32 @@ export class azureclitask {
                 errLinesCount++;
             });
 
-            var addSpnToEnvironment: boolean = tl.getBoolInput("addSpnToEnvironment", false);
-            if (!!addSpnToEnvironment && tl.getEndpointAuthorizationScheme(connectedService, true).toLowerCase() == "serviceprincipal") {
+            var addSpnToEnvironment: boolean = tl.getBoolInput('addSpnToEnvironment', false);
+            var authorizationScheme = tl.getEndpointAuthorizationScheme(connectedService, true).toLowerCase();
+            if (!!addSpnToEnvironment && authorizationScheme == 'serviceprincipal') {
                 exitCode = await tool.exec({
                     failOnStdErr: false,
                     ignoreReturnCode: true,
-                    env: { ...process.env, ...{ servicePrincipalId: this.servicePrincipalId, servicePrincipalKey: this.servicePrincipalKey, tenantId: this.tenantId } }
+                    env: {
+                    ...process.env,
+                    ...{ servicePrincipalId: this.servicePrincipalId, servicePrincipalKey: this.servicePrincipalKey, tenantId: this.tenantId }
+                    }
                 });
-            }
-            else {
+            } else if (!!addSpnToEnvironment && authorizationScheme == 'workloadidentityfederation') {
+                exitCode = await tool.exec({
+                    failOnStdErr: false,
+                    ignoreReturnCode: true,
+                    env: {
+                    ...process.env,
+                    ...{ servicePrincipalId: this.servicePrincipalId, idToken: this.federatedToken, tenantId: this.tenantId }
+                    }
+                });
+            } else {
                 exitCode = await tool.exec({
                     failOnStdErr: false,
                     ignoreReturnCode: true
                  });
             }
-
 
             if (failOnStdErr && aggregatedErrorLines.length > 0) {
                 let error = FAIL_ON_STDERR;
@@ -103,13 +114,14 @@ export class azureclitask {
     private static cliPasswordPath: string = null;
     private static servicePrincipalId: string = null;
     private static servicePrincipalKey: string = null;
+    private static federatedToken: string = null;
     private static tenantId: string = null;
 
     private static async loginAzureRM(connectedService: string):Promise<void> {
         var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
 
-        if (authScheme.toLowerCase() == "oidcfederation") {
+        if (authScheme.toLowerCase() == "workloadidentityfederation") {
             var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
             var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
 
@@ -119,6 +131,10 @@ export class azureclitask {
 
             //login using OpenID Connect federation
             Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
+
+             this.servicePrincipalId = servicePrincipalId;
+             this.federatedToken = federatedToken;
+             this.tenantId = tenantId;
         }
         else if (authScheme.toLowerCase() == "serviceprincipal") {
             let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
@@ -200,7 +216,7 @@ export class azureclitask {
         const planId = tl.getVariable("System.PlanId");
         const projectId = tl.getVariable("System.TeamProjectId");
         const hub = tl.getVariable("System.HostType");
-        const uri = tl.getVariable("System.TeamFoundationCollectionUri");
+        const uri = tl.getVariable("System.CollectionUri");
         const token = getSystemAccessToken();
 
         const authHandler = getHandlerFromToken(token);

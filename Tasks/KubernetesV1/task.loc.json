@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 216,
-    "Patch": 0
+    "Minor": 225,
+    "Patch": 2
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -488,6 +488,7 @@
     "UnableToFetchKubectlVersion": "ms-resource:loc.messages.UnableToFetchKubectlVersion",
     "KubectlClientVersion": "ms-resource:loc.messages.KubectlClientVersion",
     "KubectlServerVersion": "ms-resource:loc.messages.KubectlServerVersion",
-    "KubectlServerVerisonNotFound": "ms-resource:loc.messages.KubectlServerVerisonNotFound"
+    "KubectlServerVerisonNotFound": "ms-resource:loc.messages.KubectlServerVerisonNotFound",
+    "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   }
 }
