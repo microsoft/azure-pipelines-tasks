@@ -127,11 +127,18 @@ function getTaskList(taskList) {
     return tasksToBuild.sort();
 }
 
-CLI.clean = function() {
-    rm('-Rf', buildPath);
-    mkdir('-p', buildTasksPath);
+function ensureBuildTasksAndRemoveTestPath() {
+    if (!fs.existsSync(buildTasksPath)) {
+        mkdir('-p', buildTasksPath);
+    }
     rm('-Rf', testPath);
 };
+
+CLI.clean = function() {
+    rm('-Rf', buildPath);
+    ensureBuildTasksAndRemoveTestPath();
+};
+
 
 //
 // Generate documentation (currently only YAML snippets)
@@ -182,7 +189,7 @@ CLI.build = function()
 }
 
 CLI.serverBuild = function() {
-    CLI.clean();
+    ensureBuildTasksAndRemoveTestPath();
 
     ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('npm', '--version', function (output) {
@@ -225,6 +232,12 @@ CLI.serverBuild = function() {
 
             // fixup the outDir (required for relative pathing in legacy L0 tests)
             outDir = path.join(buildTasksPath, taskName);
+
+            if(fs.existsSync(outDir))
+            {
+                console.log('Remove existing outDir: ' + outDir);
+                rm('-rf', outDir);
+            }
 
             // create loc files
             createTaskLocJson(taskPath);
