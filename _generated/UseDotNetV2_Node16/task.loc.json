@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 226,
-    "Patch": 1
+    "Patch": 0
   },
   "satisfies": [
     "DotNetCore"
@@ -110,6 +110,10 @@
   "execution": {
     "Node10": {
       "target": "usedotnet.js"
+    },
+    "Node16": {
+      "target": "usedotnet.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -189,5 +193,9 @@
     "OnlyExplicitVersionAllowed": "ms-resource:loc.messages.OnlyExplicitVersionAllowed",
     "SupportPhaseNotPresentInChannel": "ms-resource:loc.messages.SupportPhaseNotPresentInChannel",
     "DepricatedVersionNetCore": "ms-resource:loc.messages.DepricatedVersionNetCore"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.226.1",
+    "Node16-225": "2.226.0"
   }
 }

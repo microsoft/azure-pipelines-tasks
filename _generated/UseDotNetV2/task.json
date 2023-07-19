@@ -189,5 +189,9 @@
     "OnlyExplicitVersionAllowed": "Only explicit versions and accepted, such as: 2.2.301. Version: %s is not valid.",
     "SupportPhaseNotPresentInChannel": "support-phase is not present in the channel with channel-version %s.",
     "DepricatedVersionNetCore": "NET Core version you specfied %s is out of support and will be removed from hosted agents soon. Please refer to https://aka.ms/dotnet-core-support for more information about the .NET support policy."
+  },
+  "_buildConfigMapping": {
+    "Default": "2.226.1",
+    "Node16-225": "2.226.0"
   }
 }
