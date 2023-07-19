@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 225,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -232,7 +232,7 @@
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern"
   },
   "_buildConfigMapping": {
-    "Default": "1.225.1",
-    "Node16-225": "1.225.0"
+    "Default": "1.225.2",
+    "Node16-225": "1.225.1"
   }
 }
