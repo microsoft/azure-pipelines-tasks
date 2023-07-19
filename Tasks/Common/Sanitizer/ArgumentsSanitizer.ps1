@@ -3,8 +3,8 @@ $featureFlags = @{
     telemetry = [System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_TELEMETRY)
 }
 
-Write-Debug "Feature flag AZP_MSRC75787_ENABLE_NEW_LOGIC state: $($featureFlags.activate)"
-Write-Debug "Feature flag AZP_MSRC75787_ENABLE_TELEMETRY state: $($featureFlags.telemetry)"
+Write-Verbose "Feature flag AZP_MSRC75787_ENABLE_NEW_LOGIC state: $($featureFlags.activate)"
+Write-Verbose "Feature flag AZP_MSRC75787_ENABLE_TELEMETRY state: $($featureFlags.telemetry)"
 
 # The only public function, which should be called from the task
 # This is a wrapper for Get-SanitizedArguments to handle feature flags in one place
@@ -37,7 +37,7 @@ function Get-SanitizedArguments([string]$InputArgs) {
 
     if ( $resultArgs -like "*$removedSymbolSign*") {
 
-        Write-Warning (Get-VstsLocString -Key 'PS_ScriptArgsSanitized' -ArgumentList $resultArgs);
+        Write-Output (Get-VstsLocString -Key 'PS_ScriptArgsSanitized' -ArgumentList $resultArgs);
 
         if ($featureFlags.telemetry) {
             $removedSymbolsCount = [regex]::matches($resultArgs, $removedSymbolSign).count
