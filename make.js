@@ -178,7 +178,7 @@ CLI.gendocs = function() {
 // ex: node make.js build --task ShellScript
 //
 CLI.build = function() {
-    CLI.ensureBuildTasksAndRemoveTestPath();
+    ensureBuildTasksAndRemoveTestPath();
 
     ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('npm', '--version', function (output) {
