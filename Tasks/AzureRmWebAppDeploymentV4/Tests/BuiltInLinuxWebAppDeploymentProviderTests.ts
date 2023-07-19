@@ -4,9 +4,9 @@ import ma = require('azure-pipelines-task-lib/mock-answer');
 import * as path from 'path';
 import { AzureResourceFilterUtility } from '../operations/AzureResourceFilterUtility';
 import { KuduServiceUtility } from '../operations/KuduServiceUtility';
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
-import { ApplicationTokenCredentials } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint'; 
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
+import { ApplicationTokenCredentials } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-common';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint'; 
 import { setEndpointData, setAgentsData, mockTaskArgument, mockTaskInputParameters } from './utils';
 
 export class BuiltInLinuxWebAppDeploymentProviderTests {
@@ -47,7 +47,7 @@ export class BuiltInLinuxWebAppDeploymentProviderTests {
             }
         };
 
-        tr.registerMock('azure-pipelines-tasks-azure-arm-rest-v2/azureAppServiceUtility', {
+        tr.registerMock('azure-pipelines-tasks-azure-arm-rest/azureAppServiceUtility', {
             AzureAppServiceUtility: function(_) {
                 return utility;
             }
