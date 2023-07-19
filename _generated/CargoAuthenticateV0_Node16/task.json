@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 225,
-    "Patch": 1
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -39,6 +39,10 @@
   "execution": {
     "Node10": {
       "target": "cargoauthenticatemain.js"
+    },
+    "Node16": {
+      "target": "cargoauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -49,5 +53,9 @@
     "AuthenticatingThisConfigToml": "Adding authentication for registry listed in this config.toml file at %s",
     "AddingAuthRegistry": "Adding auth for registry: %s with token name: %s",
     "AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.225.1",
+    "Node16-225": "0.225.0"
   }
 }
