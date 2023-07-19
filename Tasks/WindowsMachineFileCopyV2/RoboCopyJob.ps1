@@ -234,7 +234,7 @@ param (
     }
 
     try
-    {       
+    {
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
         $arguments = Protect-ScriptArguments -InputArgs $robocopyParameters
                 
