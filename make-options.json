@@ -165,7 +165,6 @@
         "PublishTestResultsV1",
         "PublishTestResultsV2",
         "PublishToAzureServiceBusV1",
-        "PyPIPublisherV0",
         "PythonScriptV0",
         "QueryWorkItemsV0",
         "QuickPerfTestV1",
@@ -197,7 +196,6 @@
         "WindowsMachineFileCopyV2",
         "XamarinAndroidV1",
         "XamariniOSV2",
-        "XamarinTestCloudV1",
         "XcodeV5"
     ],
     "taskResources": [
@@ -217,15 +215,20 @@
         "Tests"
     ],
     "Node16": [
-        "FuncToolsInstallerV0",
-        "PackerBuildV0",
-        "PackerBuildV1",
         "DownloadGitHubNugetPackageV1",
         "KubernetesV0",
         "NuGetPublisherV0",
         "MysqlDeploymentOnMachineGroupV1",
         "GitHubReleaseV0",
         "GitHubReleaseV1",
-        "DownloadFileshareArtifactsV1"
+        "GitHubCommentV0",
+        "AndroidSigningV2",
+        "AndroidSigningV3"
+    ],
+    "Node16_225": [
+        "AzureIoTEdgeV2",
+        "DownloadFileshareArtifactsV1",
+        "AzureVmssDeploymentV0",
+        "CargoAuthenticateV0" 
     ]
 }

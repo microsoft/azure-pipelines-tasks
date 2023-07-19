@@ -1,7 +1,7 @@
 import tl = require("azure-pipelines-task-lib/task");
-import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common');
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
-import { GraphManagementClient } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-graph';
+import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest/azure-arm-common');
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
+import { GraphManagementClient } from 'azure-pipelines-tasks-azure-arm-rest/azure-graph';
 
 export class TaskParameters {
 
