@@ -7,7 +7,7 @@ param (
     [string]$cleanTargetBeforeCopy,
     [string]$additionalArguments
     )
-    
+
     $sourcePath = $sourcePath.Trim().TrimEnd('\', '/')
     $targetPath = $targetPath.Trim().TrimEnd('\', '/')    
 
