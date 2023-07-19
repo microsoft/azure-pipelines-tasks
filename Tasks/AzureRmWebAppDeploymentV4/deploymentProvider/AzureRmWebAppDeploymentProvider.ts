@@ -1,11 +1,11 @@
 import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 import { TaskParameters } from '../operations/TaskParameters';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
 import { AzureResourceFilterUtility } from '../operations/AzureResourceFilterUtility';
 import { KuduServiceUtility } from '../operations/KuduServiceUtility';
-import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
-import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
 import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 import tl = require('azure-pipelines-task-lib/task');
 import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';

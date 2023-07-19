@@ -1,8 +1,8 @@
 import tl = require('azure-pipelines-task-lib/task');
-import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
-import { Resources } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource';
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
+import { Resources } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-resource';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
 import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 
 const osTypeMap = new Map([

@@ -16,7 +16,7 @@ var downloadPath = path.join(__dirname, '_download');
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['2.3.4', '4.0.2'];
+var allowedTypescriptVersions = ['4.0.2'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -159,11 +159,11 @@ var buildNodeTask = function (taskPath, outDir) {
     var overrideTscPath;
     if (test('-f', packageJsonPath)) {
         // verify no dev dependencies
-        // we allow a TS dev-dependency to indicate a task should use a different TS version
+        // we allow only two dev dependencies: typescript and @tsconfig/node10
         var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
         var devDeps = packageJson.devDependencies ? Object.keys(packageJson.devDependencies).length : 0;
-        if (devDeps == 1 && packageJson.devDependencies["typescript"]) {
-            var version = packageJson.devDependencies["typescript"];
+        if (devDeps === 1 && packageJson.devDependencies['typescript'] || (devDeps === 2 && packageJson.devDependencies['typescript'] && packageJson.devDependencies['@tsconfig/node10'])) {
+            var version = packageJson.devDependencies['typescript'];
             if (!allowedTypescriptVersions.includes(version)) {
                 fail(`The package.json specifies a different TS version (${version}) that the allowed versions: ${allowedTypescriptVersions}. Offending package.json: ${packageJsonPath}`);
             }
@@ -1777,7 +1777,7 @@ exports.renameCodeCoverageOutput = renameCodeCoverageOutput;
 //------------------------------------------------------------------------------
 
 /**
- * Returns path to BuldConfigGenerator, if generator wasn't compile it will compile it
+ * Returns path to BuldConfigGenerator, build it if needed.  Fail on compilation failure
  * @returns Path to the executed file
  */
 var getBuildConfigGenerator = function (baseConfigToolPath) {
@@ -1792,22 +1792,21 @@ var getBuildConfigGenerator = function (baseConfigToolPath) {
         configToolBuildUtility = path.join(baseConfigToolPath, "dev.sh");
     }
 
-    if (!fs.existsSync(programPath)) {
-        console.log(`BuildConfigGen not found at ${programPath}. Starting build.`);
-        run(configToolBuildUtility, true);
-    }
+    // build configToolBuildUtility if needed.  (up-to-date check will skip build if not needed)
+    run(configToolBuildUtility, true);
 
     return programPath;
 };
 exports.getBuildConfigGenerator = getBuildConfigGenerator;
 
 /**
- * Function to validate generated tasks
+ * Function to validate or write generated tasks
  * @param {String} baseConfigToolPath Path to generating programm
  * @param {Array} taskList  Array with allowed tasks
  * @param {Object} makeOptions Object with all tasks
+ * @param {Boolean} writeUpdates Write Updates (false to validateOnly)
  */
-var validateGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions) {
+var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates) {
     if (!makeOptions) fail("makeOptions is not defined");
     const excludedMakeOptionKeys = ["tasks", "taskResources"];
     const validatingTasks = {};
@@ -1836,11 +1835,17 @@ var validateGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions)
             taskName,
         ];
 
+        var writeUpdateArg = "";
+        if(writeUpdates)
+        {
+            writeUpdateArg += " --write-updates";
+        }
+
         banner('Validating: ' + taskName);
-        run(`${programPath} ${args.join(' ')}`, true);
+        run(`${programPath} ${args.join(' ')} ${writeUpdateArg}`, true);
     }
 }
-exports.validateGeneratedTasks = validateGeneratedTasks;
+exports.processGeneratedTasks = processGeneratedTasks;
 
 /**
  * Function to generate new tasks

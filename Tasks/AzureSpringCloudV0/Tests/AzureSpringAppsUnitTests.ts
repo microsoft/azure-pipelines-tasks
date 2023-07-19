@@ -1,6 +1,6 @@
 
-import { AzureEndpoint } from "azure-pipelines-tasks-azure-arm-rest-v2/azureModels";
-import { getMockEndpoint, nock } from 'azure-pipelines-tasks-azure-arm-rest-v2/Tests/mock_utils';
+import { AzureEndpoint } from "azure-pipelines-tasks-azure-arm-rest/azureModels";
+import { getMockEndpoint, nock } from 'azure-pipelines-tasks-azure-arm-rest/Tests/mock_utils';
 import { MOCK_RESOURCE_GROUP_NAME, API_VERSION } from "./mock_utils";
 import assert = require('assert');
 
