@@ -11,6 +11,10 @@ steps:
   - script: node ci/patch-task-version.js --task=${{ parameters.task }} --version=${{ parameters.version }}
     displayName: ${{ parameters.task }} patch task version
 
+# Clean
+- script: node make.js clean
+  displayName: Clean tasks
+
 # Build
 - script: node make.js build --task "${{ parameters.task }}"
   displayName: ${{ parameters.task }} build

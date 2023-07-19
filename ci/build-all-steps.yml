@@ -69,6 +69,10 @@ steps:
     command: build
     projects: './BuildConfigGen/BuildConfigGen.csproj'
 
+# Clean
+- script: node make.js clean
+  displayName: Clean tasks
+
 # Build Tasks
 - script: node make.js build --task "$(task_pattern)"
   displayName: Build Tasks
