@@ -219,12 +219,11 @@ param (
         if ($useSanitizer) {
             $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp
             $arguments = Protect-ScriptArguments -InputArgs $robocopyParameters -TaskName "WindowsMachineFileCopyV1"
+            & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy $arguments
         } else {
             $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
             Invoke-Expression $command
         }
-                
-        & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy $arguments
 
         if ($LASTEXITCODE -ge 8)
         {
