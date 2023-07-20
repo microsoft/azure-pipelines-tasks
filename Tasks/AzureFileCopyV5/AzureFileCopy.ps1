@@ -183,12 +183,14 @@ try {
     }
 
     Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArgumentsForBlobCopy
-
+    $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInMinutes $sasTokenTimeOutInMinutes
+    
     # Uploading files to container
     Upload-FilesToAzureContainer -sourcePath $sourcePath `
                                 -endPoint $endpoint `
                                 -storageAccountName $storageAccount `
                                 -containerName $containerName `
+                                -containerSasToken $containerSasToken `
                                 -blobPrefix $blobPrefix `
                                 -blobStorageEndpoint $blobStorageEndpoint `
                                 -azCopyLocation $azCopyLocation `

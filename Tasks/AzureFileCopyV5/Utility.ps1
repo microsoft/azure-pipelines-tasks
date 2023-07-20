@@ -161,6 +161,7 @@ function Upload-FilesToAzureContainer
           [object][Parameter(Mandatory=$true)]$endPoint,
           [string][Parameter(Mandatory=$true)]$storageAccountName,
           [string][Parameter(Mandatory=$true)]$containerName,
+          [string][Parameter(Mandatory=$true)]$containerSasToken,
           [string]$blobPrefix,
 		  [string]$blobStorageEndpoint,
           [string][Parameter(Mandatory=$true)]$azCopyLocation,
@@ -245,7 +246,7 @@ function Upload-FilesToAzureContainer
         if ($useSanitizer) {
             $arguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV5"
             Write-Output "##[command] azcopy copy `"$sourcePath`" `"$containerURL`"  $arguments"
-            & azcopy copy $sourcePath $containerURL $arguments
+            & azcopy copy $sourcePath $containerURL/*$containerSasToken $arguments
         } else {
             Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
             $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"
