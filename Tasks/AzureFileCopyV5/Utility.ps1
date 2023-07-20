@@ -239,11 +239,18 @@ function Upload-FilesToAzureContainer
 
         }
 
-        $arguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV5"
+        $useSanitizer = [System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_NEW_LOGIC)
+        Write-Verbose "Feature flag AZP_MSRC75787_ENABLE_NEW_LOGIC state: $useSanitizer"
 
-        Write-Output "##[command] azcopy copy `"$sourcePath`" `"$containerURL`"  $arguments"       
-
-        & azcopy copy $sourcePath $containerURL $arguments    
+        if ($useSanitizer) {
+            $arguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV5"
+            Write-Output "##[command] azcopy copy `"$sourcePath`" `"$containerURL`"  $arguments"
+            & azcopy copy $sourcePath $containerURL $arguments
+        } else {
+            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
+            $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"
+            Invoke-Expression $uploadToBlobCommand
+        }
 
         if($LASTEXITCODE -eq 0)
         {

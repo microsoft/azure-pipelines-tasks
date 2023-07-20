@@ -213,8 +213,16 @@ param (
             }
         }
 
-        $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp
-        $arguments = Protect-ScriptArguments -InputArgs $robocopyParameters -TaskName "WindowsMachineFileCopyV1"
+        $useSanitizer = [System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_NEW_LOGIC)
+        Write-Verbose "Feature flag AZP_MSRC75787_ENABLE_NEW_LOGIC state: $useSanitizer"
+
+        if ($useSanitizer) {
+            $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp
+            $arguments = Protect-ScriptArguments -InputArgs $robocopyParameters -TaskName "WindowsMachineFileCopyV1"
+        } else {
+            $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
+            Invoke-Expression $command
+        }
                 
         & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy $arguments
 

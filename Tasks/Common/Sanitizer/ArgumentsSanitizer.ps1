@@ -1,9 +1,7 @@
 $featureFlags = @{
-    activate  = [System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_NEW_LOGIC)
     telemetry = [System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_TELEMETRY)
 }
 
-Write-Verbose "Feature flag AZP_MSRC75787_ENABLE_NEW_LOGIC state: $($featureFlags.activate)"
 Write-Verbose "Feature flag AZP_MSRC75787_ENABLE_TELEMETRY state: $($featureFlags.telemetry)"
 
 $taskName = ""
@@ -14,19 +12,15 @@ $taskName = ""
 function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
     $script:taskName = $taskName
 
-    if ($featureFlags.activate) {
-        $sanitizedArguments = Get-SanitizedArguments -InputArgs $inputArgs
+    $sanitizedArguments = Get-SanitizedArguments -InputArgs $inputArgs
 
-        if ($sanitizedArguments -eq $inputArgs) {
-            Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsNotSanitized');
-        } else {
-            Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsSanitized' -ArgumentList $sanitizedArguments);
-        }
-
-        return $sanitizedArguments -split ' '
+    if ($sanitizedArguments -eq $inputArgs) {
+        Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsNotSanitized');
+    } else {
+        Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsSanitized' -ArgumentList $sanitizedArguments);
     }
-    
-    return $inputArgs -split ' '
+
+    return $sanitizedArguments -split ' '
 }
 
 function Get-SanitizedArguments([string]$inputArgs) {

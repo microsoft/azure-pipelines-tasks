@@ -96,12 +96,19 @@ $AzureFileCopyRemoteJob = {
             Write-DetailLogs "Using default AzCopy arguments for dowloading to VM"
             $additionalArguments = "--recursive --log-level=INFO"
         }
-        
-        $arguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV5"
-    
-        Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $arguments"
 
-        & azcopy copy $targetPath $containerURL/*$containerSasToken $arguments
+        $useSanitizer = [System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_NEW_LOGIC)
+        Write-Verbose "Feature flag AZP_MSRC75787_ENABLE_NEW_LOGIC state: $useSanitizer"
+
+        if ($useSanitizer) {
+            $arguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV5"
+            Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $arguments"
+            & azcopy copy $targetPath $containerURL/*$containerSasToken $arguments
+        } else {
+            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
+            $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"
+            Invoke-Expression $uploadToBlobCommand
+        }
     }
     catch
     {
