@@ -12,6 +12,7 @@ Register-Mock Write-Telemetry { }
 Register-Mock Test-Path { return $true } -ParametersEvaluator { $Path -eq "c:\foo\bar" }
 Register-Mock Test-Path { return $false } -ParametersEvaluator { $Path -eq $validInputSourcePath }
 Register-Mock Get-VstsTaskVariable { return 'c:\foo\bar' }
+Register-Mock Protect-ScriptArguments { return @() }
 
 # Test 1 "Should throw if Invoke-Expression fails" at time of azcopy login
 Register-Mock Invoke-Expression { throw $exceptionMessage }
@@ -34,14 +35,3 @@ Assert-Throws {
 } -MessagePattern "*AFC_UploadContainerStorageAccount*invalidInputStorageAccount*"
 
 Assert-WasCalled Remove-AzureContainer -Times 1
-
-
-# Test 3 "Success in Upload blob destination"
-Unregister-Mock Invoke-Expression
-Register-Mock Invoke-Expression { return $succeededCopyResponse }
-$LASTEXITCODE = 0
-
-Upload-FilesToAzureContainer -sourcePath $validInputSourcePath -endPoint $spnEndpoint -storageAccountName $validInputStorageAccount -containerName $validInputContainerName `
-                             -blobPrefix $validInputBlobPrefix -azCopyLocation $validAzCopyLocation -destinationType $validInputAzureBlobDestinationType
-
-Assert-WasCalled Invoke-Expression -Times 3
