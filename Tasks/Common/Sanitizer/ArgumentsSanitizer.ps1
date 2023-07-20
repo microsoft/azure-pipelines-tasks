@@ -1,6 +1,6 @@
 $featureFlags = @{
-    activate  = [System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_NEW_LOGIC ?? $false)
-    telemetry = [System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_TELEMETRY ?? $false)
+    activate  = [System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_NEW_LOGIC)
+    telemetry = [System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_TELEMETRY)
 }
 
 Write-Verbose "Feature flag AZP_MSRC75787_ENABLE_NEW_LOGIC state: $($featureFlags.activate)"
@@ -16,6 +16,13 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
 
     if ($featureFlags.activate) {
         $sanitizedArguments = Get-SanitizedArguments -InputArgs $inputArgs
+
+        if ($sanitizedArguments -eq $inputArgs) {
+            Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsNotSanitized');
+        } else {
+            Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsSanitized' -ArgumentList $sanitizedArguments);
+        }
+
         return $sanitizedArguments -split ' '
     }
     
@@ -37,16 +44,9 @@ function Get-SanitizedArguments([string]$inputArgs) {
 
     $resultArgs = $argsArr -join $argsSplitSymbols;
 
-    if ( $resultArgs -like "*$removedSymbolSign*") {
-        Write-Output (Get-VstsLocString -Key 'PS_ScriptArgsSanitized' -ArgumentList $resultArgs);
-
-        if ($featureFlags.telemetry) {
-            $removedSymbolsCount = [regex]::matches($resultArgs, $removedSymbolSign).count
-            Publish-Telemetry @{ 'removedSymbolsCount' = $removedSymbolsCount }
-        }
-    }
-    else {
-        Write-Output (Get-VstsLocString -Key 'PS_ScriptArgsNotSanitized');
+    if ( $resultArgs -like "*$removedSymbolSign*" -and $featureFlags.telemetry) {
+        $removedSymbolsCount = [regex]::matches($resultArgs, $removedSymbolSign).count
+        Publish-Telemetry @{ 'removedSymbolsCount' = $removedSymbolsCount }
     }
 
     return $resultArgs;
