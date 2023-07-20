@@ -174,10 +174,13 @@
       </Item>
       <Item ItemId=";loc.input.label.azureSubscription" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Azure subscription]]></Val>
+          <Val><![CDATA[Azure Resource Manager connection]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Abonnement Azure]]></Val>
+            <Val><![CDATA[Connexion Azure Resource Manager]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Azure subscription]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
