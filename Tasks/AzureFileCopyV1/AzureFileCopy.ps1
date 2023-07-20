@@ -50,6 +50,7 @@ $containerName = $containerName.Trim().ToLower()
 $azCopyExeLocation = 'AzCopy\AzCopy.exe'
 $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
 
+# Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
 Initialize-Azure
