@@ -239,7 +239,7 @@ function Upload-FilesToAzureContainer
 
         }
 
-        $arguments = Protect-ScriptArguments -InputArgs $additionalArguments
+        $arguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV5"
 
         Write-Output "##[command] azcopy copy `"$sourcePath`" `"$containerURL`"  $arguments"       
 
