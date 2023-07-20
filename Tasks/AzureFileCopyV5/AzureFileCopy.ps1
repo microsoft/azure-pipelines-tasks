@@ -197,7 +197,7 @@ try {
                                 -destinationType $destination `
                                 -useDefaultArguments $useDefaultArgumentsForBlobCopy `
                                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy `
-                                -containerSasToken $containerSasToken `
+                                -containerSasToken $containerSasToken
     
     # Complete the task if destination is azure blob
     if ($destination -eq "AzureBlob")

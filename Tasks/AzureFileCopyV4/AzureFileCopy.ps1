@@ -193,8 +193,8 @@ try {
                                 -azCopyLocation $azCopyLocation `
                                 -additionalArguments $additionalArgumentsForBlobCopy `
                                 -destinationType $destination `
-                                -useDefaultArguments $useDefaultArgumentsForBlobCopy
-                                -containerSasToken $containerSasToken `
+                                -useDefaultArguments $useDefaultArgumentsForBlobCopy `
+                                -containerSasToken $containerSasToken
     
     # Complete the task if destination is azure blob
     if ($destination -eq "AzureBlob")

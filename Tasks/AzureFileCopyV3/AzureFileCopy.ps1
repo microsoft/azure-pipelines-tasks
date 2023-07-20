@@ -184,8 +184,8 @@ try {
                                 -additionalArguments $additionalArgumentsForBlobCopy `
                                 -destinationType $destination `
                                 -useDefaultArguments $useDefaultArgumentsForBlobCopy `
-                                -azCopyLogFilePath $logFilePath
-                                -containerSasToken $containerSasToken `
+                                -azCopyLogFilePath $logFilePath `
+                                -containerSasToken $containerSasToken
     
     # Complete the task if destination is azure blob
     if ($destination -eq "AzureBlob")
