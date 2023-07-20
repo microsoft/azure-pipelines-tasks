@@ -507,6 +507,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.RequestedUrlTooLong" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Requested URL is too long, this usually happen when you have a lot of Resource Groups in the subscription, try to set azureResourceGroupName input.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[L’URL demandée est trop longue. Cela se produit généralement lorsque vous avez beaucoup de groupes de ressources dans l’abonnement. Essayez de définir l’entrée azureResourceGroupName.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.RetrievingJdkFromAzure" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Retrieving the JDK from Azure blob storage.]]></Val>
