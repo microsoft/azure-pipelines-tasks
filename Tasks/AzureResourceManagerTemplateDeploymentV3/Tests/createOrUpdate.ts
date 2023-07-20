@@ -40,7 +40,7 @@ var defaults = path.join(__dirname, "defaults.json");
 var faultyCSM = path.join(__dirname, "faultyCSM.json");
 var bicepbuildCmd = `az bicep build --file ${path.join(__dirname, "CSMwithBicep.bicep")}`;
 var bicepbuildwithWarning = `az bicep build --file ${path.join(__dirname, "CSMwithBicepWithWarning.bicep")}`;
-var azloginCommand = `az login --service-principal -u "id" --password="key" --tenant "tenant"`;
+var azloginCommand = `az login --service-principal -u "id" --password="key" --tenant "tenant" --allow-no-subscriptions`;
 var azaccountSet = `az account set --subscription "sId"`;
 var azlogoutCommand = `az account clear`
 
