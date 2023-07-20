@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 214,
+    "Minor": 215,
     "Patch": 0
   },
   "satisfies": [
@@ -33,7 +33,7 @@
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
-      "defaultValue": "1.10",
+      "defaultValue": "1.19",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.version"
     },
@@ -50,6 +50,14 @@
       "label": "ms-resource:loc.input.label.goBin",
       "helpMarkDown": "ms-resource:loc.input.help.goBin",
       "groupName": "advanced"
+    },
+    {
+      "name": "goSource",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.goSource",
+      "required": false,
+      "defaultValue": "https://storage.googleapis.com/golang/",
+      "helpMarkDown": "ms-resource:loc.input.help.goSource"
     }
   ],
   "execution": {

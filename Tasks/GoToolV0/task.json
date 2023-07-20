@@ -6,6 +6,7 @@
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/go-tool",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=867581) or [see the Go documentation](https://golang.org/doc/)",
     "category": "Tool",
+    "preview": true,
     "runsOn": [
         "Agent",
         "DeploymentGroup"
@@ -13,7 +14,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 214,
+        "Minor": 226,
         "Patch": 0
     },
     "satisfies": [
@@ -33,7 +34,7 @@
             "name": "version",
             "type": "string",
             "label": "Version",
-            "defaultValue": "1.10",
+            "defaultValue": "1.19",
             "required": true,
             "helpMarkDown": "The Go version to download (if necessary) and use. Example: 1.9.3"
         },
@@ -50,6 +51,14 @@
             "label": "GOBIN",
             "helpMarkDown": "A custom value for the GOBIN environment variable.",
             "groupName": "advanced"
+        },
+        {
+            "name": "goSource",
+            "type": "string",
+            "label": "Go URL",
+            "required": false,
+            "defaultValue": "https://storage.googleapis.com/golang/",
+            "helpMarkDown": "The base URL of the Go distribution to install. Example: https://aka.ms/golang/release/latest/"
         }
     ],
     "execution": {
