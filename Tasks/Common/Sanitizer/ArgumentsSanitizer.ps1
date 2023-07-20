@@ -36,13 +36,15 @@ function Get-SanitizedArguments([string]$InputArgs) {
     $resultArgs = $argsArr -join $argsSplitSymbols;
 
     if ( $resultArgs -like "*$removedSymbolSign*") {
-
         Write-Output (Get-VstsLocString -Key 'PS_ScriptArgsSanitized' -ArgumentList $resultArgs);
 
         if ($featureFlags.telemetry) {
             $removedSymbolsCount = [regex]::matches($resultArgs, $removedSymbolSign).count
             Publish-Telemetry @{ 'removedSymbolsCount' = $removedSymbolsCount }
         }
+    }
+    else {
+        Write-Output (Get-VstsLocString -Key 'PS_ScriptArgsNotSanitized');
     }
 
     return $resultArgs;
