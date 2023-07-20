@@ -190,7 +190,6 @@ try {
                                 -endPoint $endpoint `
                                 -storageAccountName $storageAccount `
                                 -containerName $containerName `
-                                -containerSasToken $containerSasToken `
                                 -blobPrefix $blobPrefix `
                                 -blobStorageEndpoint $blobStorageEndpoint `
                                 -azCopyLocation $azCopyLocation `
@@ -198,6 +197,7 @@ try {
                                 -destinationType $destination `
                                 -useDefaultArguments $useDefaultArgumentsForBlobCopy `
                                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy `
+                                -containerSasToken $containerSasToken `
     
     # Complete the task if destination is azure blob
     if ($destination -eq "AzureBlob")

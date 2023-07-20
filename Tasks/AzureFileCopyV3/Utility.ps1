@@ -127,7 +127,8 @@ function Upload-FilesToAzureContainer
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$destinationType,
           [bool]$useDefaultArguments,
-          [string]$azCopyLogFilePath
+          [string]$azCopyLogFilePath,
+          [string][Parameter(Mandatory=$true)]$containerSasToken = ""
     )
 
     try
@@ -160,11 +161,18 @@ function Upload-FilesToAzureContainer
             )
         }
 
-        Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"
+        $useSanitizer = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
+        Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $useSanitizer"
 
-        $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"
-
-        Invoke-Expression $uploadToBlobCommand
+        if ($useSanitizer) {
+            $arguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV3"
+            Write-Output "##[command] & azcopy /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $arguments"   
+            & azcopy /Source:$resolvedSourcePath /Dest:$containerURL$containerSasToken /@:$responseFile $arguments
+        } else {
+            Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"   
+            $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"
+            Invoke-Expression $uploadToBlobCommand
+        }
 
         if($LASTEXITCODE -eq 0)
         {

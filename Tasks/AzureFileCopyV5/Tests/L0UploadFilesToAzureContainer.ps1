@@ -19,7 +19,8 @@ Register-Mock Invoke-Expression { throw $exceptionMessage }
 
 Assert-Throws {
     Upload-FilesToAzureContainer -sourcePath $validInputSourcePath -endPoint $spnEndpoint -storageAccountName $invalidInputStorageAccount -containerName $validInputContainerName `
-                                -containerSasToken $validSasToken -blobPrefix $validInputBlobPrefix -blobStorageEndpoint $validBlobStorageEndpoint -azCopyLocation $validAzCopyLocation -destinationType $validInputAzureBlobDestinationType
+                                -blobPrefix $validInputBlobPrefix -blobStorageEndpoint $validBlobStorageEndpoint -azCopyLocation $validAzCopyLocation -destinationType $validInputAzureBlobDestinationType `
+                                -containerSasToken $validSasToken
 } -MessagePattern "*ServicePrincipalError*"
 
 Unregister-Mock Invoke-Expression
@@ -31,7 +32,7 @@ Register-Mock Invoke-Expression { throw $exceptionMessage } -ParametersEvaluator
 
 Assert-Throws {
     Upload-FilesToAzureContainer -sourcePath $validInputSourcePath -endPoint $spnEndpoint -storageAccountName $invalidInputStorageAccount -containerName $validInputContainerName `
-                                -containerSasToken $validSasToken -blobPrefix $validInputBlobPrefix -azCopyLocation $validAzCopyLocation -destinationType $validInputAzureVmsDestinationType
+                                -blobPrefix $validInputBlobPrefix -azCopyLocation $validAzCopyLocation -destinationType $validInputAzureVmsDestinationType -containerSasToken $validSasToken
 } -MessagePattern "*AFC_UploadContainerStorageAccount*invalidInputStorageAccount*"
 
 Assert-WasCalled Remove-AzureContainer -Times 1

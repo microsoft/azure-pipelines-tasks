@@ -166,7 +166,8 @@ function Upload-FilesToAzureContainer
           [string][Parameter(Mandatory=$true)]$azCopyLocation,
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$destinationType,
-          [bool]$useDefaultArguments
+          [bool]$useDefaultArguments,
+          [string][Parameter(Mandatory=$true)]$containerSasToken = ""
     )
 
     try
@@ -226,11 +227,18 @@ function Upload-FilesToAzureContainer
         $containerURL = $containerURL.Replace('$','`$')
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
 
-        Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
+        $useSanitizer = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
+        Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $useSanitizer"
 
-        $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"
-
-        Invoke-Expression $uploadToBlobCommand
+        if ($useSanitizer) {
+            $arguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV4"
+            Write-Output "##[command] & azcopy copy `"$sourcePath`" `"$containerURL`"  $arguments"
+            & azcopy copy $sourcePath $containerURL$containerSasToken $arguments
+        } else {
+            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
+            $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"    
+            Invoke-Expression $uploadToBlobCommand
+        }
 
         if($LASTEXITCODE -eq 0)
         {
