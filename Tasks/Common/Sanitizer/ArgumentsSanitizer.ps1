@@ -1,8 +1,8 @@
 $featureFlags = @{
-    telemetry = [System.Convert]::ToBoolean($env:AZP_MSRC75787_ENABLE_TELEMETRY)
+    telemetry = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_COLLECT)
 }
 
-Write-Verbose "Feature flag AZP_MSRC75787_ENABLE_TELEMETRY state: $($featureFlags.telemetry)"
+Write-Verbose "Feature flag AZP_75787_ENABLE_COLLECT state: $($featureFlags.telemetry)"
 
 $taskName = ""
 
