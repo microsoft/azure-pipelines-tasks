@@ -4,6 +4,7 @@ param()
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\MockVariable.ps1
 . $PSScriptRoot\..\Utility.ps1
+Import-Module $PSScriptRoot\..\..\Common\Sanitizer
 
 $invalidInputStorageAccount = "invalidInputStorageAccount"
 $exceptionMessage = "Exception thrown"

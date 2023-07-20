@@ -239,11 +239,11 @@ function Upload-FilesToAzureContainer
 
         }
 
-        Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"       
+        $arguments = Protect-ScriptArguments -InputArgs $additionalArguments
 
-        $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"       
+        Write-Output "##[command] azcopy copy `"$sourcePath`" `"$containerURL`"  $arguments"       
 
-        Invoke-Expression $uploadToBlobCommand
+        & azcopy copy $sourcePath $containerURL $arguments    
 
         if($LASTEXITCODE -eq 0)
         {
