@@ -6,27 +6,29 @@ $featureFlags = @{
 Write-Verbose "Feature flag AZP_MSRC75787_ENABLE_NEW_LOGIC state: $($featureFlags.activate)"
 Write-Verbose "Feature flag AZP_MSRC75787_ENABLE_TELEMETRY state: $($featureFlags.telemetry)"
 
+$taskName = ""
+
 # The only public function, which should be called from the task
 # This is a wrapper for Get-SanitizedArguments to handle feature flags in one place
 # It will return sanitized arguments string if feature flag is enabled
-function Protect-ScriptArguments([string]$InputArgs) {
+function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
+    $script:taskName = $taskName
 
     if ($featureFlags.activate) {
-
-        $sanitizedArguments = Get-SanitizedArguments -InputArgs $InputArgs
+        $sanitizedArguments = Get-SanitizedArguments -InputArgs $inputArgs
         return $sanitizedArguments -split ' '
     }
     
-    return $InputArgs -split ' '
+    return $inputArgs -split ' '
 }
 
-function Get-SanitizedArguments([string]$InputArgs) {
+function Get-SanitizedArguments([string]$inputArgs) {
 
     $removedSymbolSign = '_#removed#_';
     $argsSplitSymbols = '``';
 
     # We're splitting by ``, removing all suspicious characters and then join
-    $argsArr = $InputArgs -split $argsSplitSymbols;
+    $argsArr = $inputArgs -split $argsSplitSymbols;
 
     for ($i = 0; $i -lt $argsArr.Length; $i++ ) {
         ## '?<!`' - checking if before character no backtick. '([allowedchars])' - checking if character is allowed. Otherwise, replace to $removedSymbolSign
@@ -50,9 +52,9 @@ function Get-SanitizedArguments([string]$InputArgs) {
     return $resultArgs;
 }
 
-function Publish-Telemetry($Telemetry) {
+function Publish-Telemetry($telemetry) {
     $area = 'TaskHub'
-    $feature = 'PowerShellV2' # TODO: Clarify the feature name
-    $telemetryJson = $Telemetry | ConvertTo-Json -Compress
+    $feature = $script:taskName
+    $telemetryJson = $telemetry | ConvertTo-Json -Compress
     Write-Host "##vso[telemetry.publish area=$area;feature=$feature]$telemetryJson"
 }

@@ -118,7 +118,7 @@ $AzureFileCopyRemoteJob = {
             $additionalArguments = "/Z:`"$azCopyDestinationPath`" /V:`"$logFilePath`" /S /Y"
         }
 
-        $arguments = Protect-ScriptArguments -InputArgs $additionalArguments
+        $arguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV2"
         
         Write-DetailLogs "##[command] & `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"*****`" $arguments"
 

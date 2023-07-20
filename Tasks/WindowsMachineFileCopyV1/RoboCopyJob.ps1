@@ -214,7 +214,7 @@ param (
         }
 
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp
-        $arguments = Protect-ScriptArguments -InputArgs $robocopyParameters
+        $arguments = Protect-ScriptArguments -InputArgs $robocopyParameters -TaskName "WindowsMachineFileCopyV1"
                 
         & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy $arguments
 
