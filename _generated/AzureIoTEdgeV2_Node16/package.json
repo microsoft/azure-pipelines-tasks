@@ -1,0 +1,17 @@
+{
+  "name": "azure-iot-edge-vsts-extension-task",
+  "version": "1.1.2",
+  "dependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^16.11.39",
+    "@types/q": "^1.5.4",
+    "applicationinsights": "^1.0.2",
+    "azure-pipelines-task-lib": "^4.4.0",
+    "azure-pipelines-tasks-artifacts-common": "^2.225.0",
+    "azure-pipelines-tasks-utility-common": "^3.210.0",
+    "minimatch": "^3.1.2"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
+  }
+}
