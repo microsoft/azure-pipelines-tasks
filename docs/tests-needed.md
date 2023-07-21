@@ -71,7 +71,7 @@ of untested tasks to 0!
 | DotNetCoreInstallerV0 | @bishal-pdmsft | :heavy_check_mark: |
 | DotNetCoreInstallerV1 | @bishal-pdmsft | :heavy_check_mark: |
 | DownloadBuildArtifactsV0 | @Lovakumar      @omeshp |  |
-| DownloadFileshareArtifactsV0 | @Lovakumar      @omeshp |  |
+| DownloadFileshareArtifactsV1 | @Lovakumar      @omeshp |  |
 | DownloadGitHubReleaseV0 |  |  |
 | DownloadPackageV0 | @zjrunner |  |
 | DownloadPackageV1 |  | :heavy_check_mark: |
