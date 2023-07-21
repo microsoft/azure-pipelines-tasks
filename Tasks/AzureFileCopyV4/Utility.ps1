@@ -167,7 +167,7 @@ function Upload-FilesToAzureContainer
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$destinationType,
           [bool]$useDefaultArguments,
-          [string][Parameter(Mandatory=$true)]$containerSasToken = ""
+          [string][Parameter(Mandatory=$false)]$containerSasToken = ""
     )
 
     try

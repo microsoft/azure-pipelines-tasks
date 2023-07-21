@@ -181,7 +181,14 @@ try {
     }
 
     Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArgumentsForBlobCopy
-    $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInMinutes $sasTokenTimeOutInMinutes
+
+
+    $useSanitizer = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
+    Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state (for sas token): $useSanitizer"
+    $containerSasToken = ""
+    if ($useSanitizer) {
+        $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInMinutes $sasTokenTimeOutInMinutes
+    }
     
     # Uploading files to container
     Upload-FilesToAzureContainer -sourcePath $sourcePath `
