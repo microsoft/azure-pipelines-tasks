@@ -166,7 +166,7 @@ function Upload-FilesToAzureContainer
 
         if ($useSanitizer) {
             $arguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV3"
-            Write-Output "##[command] & azcopy /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $arguments"
+            # Write-Output "##[command] & azcopy /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $arguments"
             & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$containerURL /DestSAS:$containerSasToken /@:$responseFile $arguments
         } else {
             Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"   
