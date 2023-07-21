@@ -124,7 +124,7 @@ $AzureFileCopyRemoteJob = {
         if ($useSanitizer) {
             $arguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV2"
             Write-DetailLogs "##[command] & `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"*****`" $arguments"
-            & azcopy copy /Source:$containerURL /Dest:$targetPath /SourceSAS:$containerSasToken $arguments
+            & $azCopyExeLocation /Source:$containerURL /Dest:$targetPath /SourceSAS:$containerSasToken $arguments
         } else {
             Write-DetailLogs "##[command] & `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"*****`" $additionalArguments"
             $azCopyCommand = "& `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"$containerSasToken`" $additionalArguments"
