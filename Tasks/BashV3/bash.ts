@@ -2,7 +2,7 @@ import fs = require('fs');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
-import { sanitizeScriptArgs } from './helpers';
+import { sanitizeScriptArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
 var uuidV4 = require('uuid/v4');
 
 async function runBashPwd(bashPath: string, directoryPath: string): Promise<string> {
@@ -117,7 +117,14 @@ async function run() {
 
             let resultArgs = input_arguments;
 
-            const sanitizedArgs = sanitizeScriptArgs(input_arguments);
+            const sanitizedArgs = sanitizeScriptArgs(
+                input_arguments,
+                {
+                    argsSplitSymbols: '\\\\',
+                    warningLocSymbol: 'FileArgsSanitized',
+                    telemetryFeature: 'BashV3'
+                }
+            );
             if (tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC')) {
                 resultArgs = sanitizedArgs;
             }

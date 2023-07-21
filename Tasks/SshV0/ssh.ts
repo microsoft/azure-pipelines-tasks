@@ -5,7 +5,7 @@ import * as fs from 'fs';
 import * as sshHelper from './ssh2helpers';
 import { v4 as generateRandomUUID } from 'uuid';
 import { ConnectConfig } from 'ssh2';
-import { sanitizeScriptArgs } from './helpers';
+import { sanitizeScriptArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
 
 /**
  * By default configuration, SSH runs on port 22.
@@ -156,7 +156,14 @@ async function run() {
                 if (args) {
                     let resultArgs = args;
 
-                    const sanitizedArgs = sanitizeScriptArgs(args);
+                    const sanitizedArgs = sanitizeScriptArgs(
+                        args,
+                        {
+                            argsSplitSymbols: '\\\\',
+                            warningLocSymbol: 'FileArgsSanitized',
+                            telemetryFeature: 'SshV0'
+                        }
+                    );
                     if (tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC')) {
                         resultArgs = sanitizedArgs;
                     }
