@@ -52,6 +52,7 @@ $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
 
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
 Initialize-Azure
 
 # Import the loc strings.
