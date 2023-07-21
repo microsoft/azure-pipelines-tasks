@@ -161,7 +161,8 @@ async function run() {
                         {
                             argsSplitSymbols: '\\\\',
                             warningLocSymbol: 'FileArgsSanitized',
-                            telemetryFeature: 'SshV0'
+                            telemetryFeature: 'SshV0',
+                            saniziteRegExp: /(?<!\\)([^a-zA-Z0-9\\` _'"\-=\/:\.])/g
                         }
                     );
                     if (tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC')) {
