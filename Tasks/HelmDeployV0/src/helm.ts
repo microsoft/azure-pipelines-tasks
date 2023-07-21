@@ -79,14 +79,20 @@ function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnS
 
 async function run() {
     var command = tl.getInput("command", true).toLowerCase();
+    var connectionType = tl.getInput("connectionType", true);
     var isKubConfigRequired = isKubConfigSetupRequired(command);
     var kubectlCli: kubernetescli;
-    if (isKubConfigRequired) {
-        var kubeconfigfilePath = command === "logout" ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
+    var externalAuth = connectionType === "None" && (command === "install" || command === "upgrade");
+    if (externalAuth && !tl.getVariable("KUBECONFIG")) {
+        tl.error("KUBECONFIG kube configuration file path must be set when connectionType is none and command is install or upgrade.");
+    }
+    if (isKubConfigRequired || externalAuth) {
+        var kubeconfigfilePath = (command === "logout" || externalAuth) ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
         kubectlCli = new kubernetescli(kubeconfigfilePath);
         kubectlCli.login();
+        tl.debug("kubectlCli login");
     }
-    
+
     const kubelogin = new Kubelogin(helmutil.getTaskTempDir());
     if (kubelogin.isAvailable()) {
         tl.debug('Kubelogin is installed. Converting kubeconfig.');
@@ -100,7 +106,6 @@ async function run() {
 
     var helmCli: helmcli = new helmcli();
     helmCli.login();
-    var connectionType = tl.getInput("connectionType", true);
     var telemetry = {
         connectionType: connectionType,
         command: command,
