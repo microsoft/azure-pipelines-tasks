@@ -41,3 +41,5 @@ Instead of a Service Principal, you can also configure a Managed Identity:
 
 <img src="multi-window-msi-annotated.png" width="2124"/>
 
+You can use Terraform to create a Service Connection with a Managed Identity. See [azuredevops_serviceendpoint_azurerm documentation](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/serviceendpoint_azurerm#workload-identity-federation-manual-azurerm-service-endpoint-subscription-scoped) and end-to-end sample at [Azure-Samples/azure-devops-terraform-oidc-ci-cd](https://github.com/Azure-Samples/azure-devops-terraform-oidc-ci-cd/tree/main).
+
