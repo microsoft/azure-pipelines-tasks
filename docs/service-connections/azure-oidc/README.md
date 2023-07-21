@@ -3,7 +3,7 @@
 #### [Manual Configuration](manual-configuration.md)
 #### [Troubleshooting & Frequently Asked Questions](troubleshooting.md)
 
-# Workload Identity federation - Getting Started
+# Workload Identity federation (preview) - Getting Started
 
 ## What is Workload identity federation?
 

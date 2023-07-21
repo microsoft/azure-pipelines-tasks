@@ -3,7 +3,7 @@
 #### [Getting Started](README.md)
 #### [Manual Configuration](manual-configuration.md)
 
-# Workload Identity federation - Troubleshooting & Frequently Asked Questions
+# Workload Identity federation (preview) - Troubleshooting & Frequently Asked Questions
 
 ## Task coverage
 
