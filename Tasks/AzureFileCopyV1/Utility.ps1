@@ -279,14 +279,14 @@ function Upload-FilesToAzureContainer
             $blobStorageURI = $blobStorageEndpoint+$containerName+"/"+$blobPrefix
         }
 
-        if([string]::IsNullOrWhiteSpace($additionalArguments))
-        {
-            $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey  $storageKey -AzCopyLocation $azCopyLocation -BlobStorageURI $blobStorageURI
+        $useSanitizer = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
+        Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $useSanitizer"
+
+        if ($useSanitizer) {
+            $additionalArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV1"
         }
-        else
-        {
-            $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments -BlobStorageURI $blobStorageURI
-        }
+        
+        Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments -BlobStorageURI $blobStorageURI
     }
     catch
     {

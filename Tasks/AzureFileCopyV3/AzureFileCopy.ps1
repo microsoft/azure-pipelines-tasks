@@ -62,6 +62,7 @@ Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
 
 $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
@@ -170,7 +171,7 @@ try {
     }
     
     Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArgumentsForBlobCopy
-
+    
     # Uploading files to container
     Upload-FilesToAzureContainer -sourcePath $sourcePath `
                                 -storageAccountName $storageAccount `
