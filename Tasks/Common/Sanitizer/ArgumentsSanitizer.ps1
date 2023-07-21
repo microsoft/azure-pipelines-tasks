@@ -20,7 +20,8 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
         Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsSanitized' -ArgumentList $sanitizedArguments);
     }
 
-    return $sanitizedArguments -split ' '
+    $arrayOfArguments = Split-Arguments -Arguments $sanitizedArguments
+    return $arrayOfArguments
 }
 
 function Get-SanitizedArguments([string]$inputArgs) {
@@ -51,4 +52,25 @@ function Publish-Telemetry($telemetry) {
     $feature = $script:taskName
     $telemetryJson = $telemetry | ConvertTo-Json -Compress
     Write-Host "##vso[telemetry.publish area=$area;feature=$feature]$telemetryJson"
+}
+
+# Splits a string into array of arguments, considering quotes.
+function Split-Arguments ([Parameter(Mandatory=$true)] [string] $arguments)
+{
+    $matchesList = [System.Text.RegularExpressions.Regex]::Matches($arguments, "`"([^`"]*)`"|'([^']*)'|[^ ]+")
+
+    $result = @()
+
+    foreach ($match in $matchesList) {
+        $arg = $match.Groups[1].Value
+        if ([string]::IsNullOrEmpty($arg)) {
+            $arg = $match.Groups[2].Value
+        }
+        if ([string]::IsNullOrEmpty($arg)) {
+            $arg = $match.Groups[0].Value
+        }
+        $result += $arg
+    }
+
+    return $result
 }
