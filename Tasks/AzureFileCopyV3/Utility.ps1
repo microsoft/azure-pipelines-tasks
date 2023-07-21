@@ -127,8 +127,7 @@ function Upload-FilesToAzureContainer
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$destinationType,
           [bool]$useDefaultArguments,
-          [string]$azCopyLogFilePath,
-          [string][Parameter(Mandatory=$true)]$containerSasToken
+          [string]$azCopyLogFilePath
     )
 
     try

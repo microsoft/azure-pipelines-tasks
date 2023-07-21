@@ -17,8 +17,7 @@ Register-Mock Get-VstsTaskVariable { return 'c:\foo\bar' }
 Register-Mock Invoke-Expression { throw $exceptionMessage }
 Assert-Throws {
     Upload-FilesToAzureContainer -sourcePath $validInputSourcePath -storageAccountName $invalidInputStorageAccount -containerName $validInputContainerName `
-                                 -blobPrefix $validInputBlobPrefix -blobStorageEndpoint $validBlobStorageEndpoint -storageKey $validStorageKey -azCopyLocation $validAzCopyLocation -destinationType $validInputAzureBlobDestinationType `
-                                 -containerSasToken $validSasToken
+                                 -blobPrefix $validInputBlobPrefix -blobStorageEndpoint $validBlobStorageEndpoint -storageKey $validStorageKey -azCopyLocation $validAzCopyLocation -destinationType $validInputAzureBlobDestinationType
 } -MessagePattern "*AFC_UploadContainerStorageAccount*invalidInputStorageAccount*"
 
 # Test 2 "Should throw and delete container if destination azureVM"
@@ -26,7 +25,7 @@ Register-Mock Remove-AzureContainer { }
 
 Assert-Throws {
     Upload-FilesToAzureContainer -sourcePath $validInputSourcePath -storageAccountName $invalidInputStorageAccount -containerName $validInputContainerName `
-                                 -blobPrefix $validInputBlobPrefix -storageKey $validStorageKey -azCopyLocation $validAzCopyLocation -destinationType $validInputAzureVmsDestinationType -containerSasToken $validSasToken
+                                 -blobPrefix $validInputBlobPrefix -storageKey $validStorageKey -azCopyLocation $validAzCopyLocation -destinationType $validInputAzureVmsDestinationType
 } -MessagePattern "*AFC_UploadContainerStorageAccount*invalidInputStorageAccount*"
 
 Assert-WasCalled Remove-AzureContainer -Times 1
