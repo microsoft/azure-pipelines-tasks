@@ -203,7 +203,7 @@ Tasks/DotNetCoreInstallerV1/   @rvairavelu @manolerazvan
 
 Tasks/DownloadBuildArtifactsV0/   @manolerazvan @rvairavelu
 
-Tasks/DownloadFileshareArtifactsV0/   @manolerazvan @rvairavelu
+Tasks/DownloadFileshareArtifactsV1/   @manolerazvan @rvairavelu
 
 Tasks/DownloadGitHubNpmPackageV1/    @manolerazvan @rvairavelu
 
