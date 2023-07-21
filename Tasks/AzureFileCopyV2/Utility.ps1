@@ -283,8 +283,8 @@ function Upload-FilesToAzureContainer
 
         if ($useSanitizer) {
             $arguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV2"
-            Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /DestSAS:*** $arguments"
-            & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$containerURL /DestSAS:$containerSasToken $arguments
+            Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $arguments"
+            & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$containerURL /@:$responseFile $arguments
         } else {
             Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"   
             $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"
