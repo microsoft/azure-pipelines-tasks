@@ -36,6 +36,7 @@ var fileToJson = util.fileToJson;
 var createYamlSnippetFile = util.createYamlSnippetFile;
 var createMarkdownDocFile = util.createMarkdownDocFile;
 var getTaskNodeVersion = util.getTaskNodeVersion;
+var callGenTaskDuringBuild = false;
 
 // global paths
 var buildPath = path.join(__dirname, '_build');
@@ -126,11 +127,18 @@ function getTaskList(taskList) {
     return tasksToBuild.sort();
 }
 
-CLI.clean = function() {
-    rm('-Rf', buildPath);
-    mkdir('-p', buildTasksPath);
+function ensureBuildTasksAndRemoveTestPath() {
+    if (!fs.existsSync(buildTasksPath)) {
+        mkdir('-p', buildTasksPath);
+    }
     rm('-Rf', testPath);
 };
+
+CLI.clean = function() {
+    rm('-Rf', buildPath);
+    ensureBuildTasksAndRemoveTestPath();
+};
+
 
 //
 // Generate documentation (currently only YAML snippets)
@@ -170,8 +178,18 @@ CLI.gendocs = function() {
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
 //
-CLI.build = function() {
-    CLI.clean();
+CLI.build = function() 
+{
+    if (process.env.TF_BUILD) {
+        fail('Please use serverBuild for CI builds for proper validation');
+    }
+
+    callGenTaskDuringBuild = true;
+    CLI.serverBuild();
+}
+
+CLI.serverBuild = function() {
+    ensureBuildTasksAndRemoveTestPath();
 
     ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('npm', '--version', function (output) {
@@ -185,7 +203,8 @@ CLI.build = function() {
 
     // Need to validate generated tasks first
     const makeOptions = fileToJson(makeOptionsPath);
-    util.validateGeneratedTasks(baseConfigToolPath, taskList, makeOptions);
+
+    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, callGenTaskDuringBuild);
 
     allTasks.forEach(function(taskName) {
         let isGeneratedTask = false;
@@ -213,6 +232,12 @@ CLI.build = function() {
 
             // fixup the outDir (required for relative pathing in legacy L0 tests)
             outDir = path.join(buildTasksPath, taskName);
+
+            if(fs.existsSync(outDir))
+            {
+                console.log('Remove existing outDir: ' + outDir);
+                rm('-rf', outDir);
+            }
 
             // create loc files
             createTaskLocJson(taskPath);
@@ -920,16 +945,12 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
 }
 
 CLI.gentask = function() {
-    if (argv.rebuild) {
-        rm("-Rf", path.join(baseConfigToolPath, "bin"));
-    }
-
     const makeOptions = fileToJson(makeOptionsPath);
     const validate = argv.validate;
     const configsString = argv.configs;
 
     if (validate) {
-        util.validateGeneratedTasks(baseConfigToolPath, taskList, makeOptions);
+        util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, false);
         return;
     }
 
