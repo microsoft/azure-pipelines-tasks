@@ -6,7 +6,7 @@
   "loc.releaseNotes": "Neuerungen in Version 2.* <br /> Entfernte WAR Deploy-Unterstützung, Festlegen von Web.Config-Optionen und die Option für den Startbefehl für Linux Azure Functions-Apps.",
   "loc.group.displayName.AdditionalDeploymentOptions": "Zusätzliche Bereitstellungsoptionen",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Anwendungs- und Konfigurationseinstellungen",
-  "loc.input.label.azureSubscription": "Azure Resource Manager connection",
+  "loc.input.label.azureSubscription": "Azure Resource Manager-Verbindung",
   "loc.input.help.azureSubscription": "Wählen Sie das Azure Resource Manager-Abonnement für die Bereitstellung aus.",
   "loc.input.label.appType": "App-Typ",
   "loc.input.help.appType": "Wählen Sie den Azure Functions-App-Typ für die Bereitstellung aus.",

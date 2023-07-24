@@ -6,7 +6,7 @@
   "loc.releaseNotes": "Novedades de la versión 2.* <br /> Se quitó la compatibilidad con la implementación de WAR, estableciendo opciones de Web.Config y la opción para el comando de inicio para Aplicaciones de funciones de Azure para Linux.",
   "loc.group.displayName.AdditionalDeploymentOptions": "Opciones adicionales de implementación",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Aplicación y ajustes de configuración",
-  "loc.input.label.azureSubscription": "Azure Resource Manager connection",
+  "loc.input.label.azureSubscription": "Conexión de Azure Resource Manager",
   "loc.input.help.azureSubscription": "Seleccione la suscripción de Azure Resource Manager para la implementación.",
   "loc.input.label.appType": "Tipo de aplicación",
   "loc.input.help.appType": "Seleccione el tipo de aplicación de funciones de Azure para la implementación.",

@@ -24,5 +24,6 @@
   "loc.messages.JS_ScriptContents": "Contenuto dello script:",
   "loc.messages.JS_Stderr": "Bash ha scritto una o più righe nel flusso di errore standard.",
   "loc.messages.JS_TranslatePathFailed": "Non è possibile convertire il percorso '%s' per il file system Linux.",
-  "loc.messages.JS_BashEnvAlreadyDefined": "La variabile di ambiente BASH_ENV è già stata impostata su '%s'. L'attività la sostituirà con '%s'"
+  "loc.messages.JS_BashEnvAlreadyDefined": "La variabile di ambiente BASH_ENV è già stata impostata su '%s'. L'attività la sostituirà con '%s'",
+  "loc.messages.SanitizerOutput": "Sanitizer changed input arguments. Output from sanitizer: '%s'"
 }
