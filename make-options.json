@@ -80,7 +80,7 @@
         "DotNetCoreInstallerV1",
         "DownloadBuildArtifactsV0",
         "DownloadBuildArtifactsV1",
-        "DownloadFileshareArtifactsV0",
+        "DownloadFileshareArtifactsV1",
         "DownloadGitHubNugetPackageV1",
         "DownloadGitHubNpmPackageV1",
         "DownloadGitHubReleaseV0",
@@ -224,5 +224,11 @@
         "GitHubCommentV0",
         "AndroidSigningV2",
         "AndroidSigningV3"
+    ],
+    "Node16_225": [
+        "AzureIoTEdgeV2",
+        "DownloadFileshareArtifactsV1",
+        "AzureVmssDeploymentV0",
+        "CargoAuthenticateV0"
     ]
 }

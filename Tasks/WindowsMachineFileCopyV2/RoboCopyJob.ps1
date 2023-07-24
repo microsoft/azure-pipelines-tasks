@@ -236,9 +236,18 @@ param (
     try
     {
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
+        
+        $useSanitizer = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
+        Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $useSanitizer"
 
-        $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
-        Invoke-Expression $command
+        if ($useSanitizer) {
+            $arguments = Protect-ScriptArguments -InputArgs $robocopyParameters -TaskName "WindowsMachineFileCopyV2"
+            & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy $arguments
+        } else {
+            $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
+            Invoke-Expression $command
+        }
+
         if ($LASTEXITCODE -ge 8)
         {
             $errorMessage = Get-VstsLocString -Key "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails"
