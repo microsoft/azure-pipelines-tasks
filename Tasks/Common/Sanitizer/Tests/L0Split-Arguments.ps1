@@ -6,13 +6,16 @@ param()
 
 # Arrange
 
+$someString = "some string"
+
 $argumentsFormats = @(
     "",                                      # Empty string
     " ",                                     # Single space
     "/parameter",                            # Single word
     "/parameter1 /parameter2",               # Multiple words separated by space
     "/parameter1 '/path/my file.txt'",       # Argument with spaces in quotes
-    "/parameter1 '/path/my file.txt' /parameter2 'value with spaces'" # Complex example
+    "/parameter1 '/path/my file.txt' /parameter2 'value with spaces'", # Complex example
+    "/parameter1 `"$someString`""            # Argument with variable in quotes
 )
 
 $expectedOutputs = @(
@@ -21,7 +24,8 @@ $expectedOutputs = @(
     @("/parameter"),
     @("/parameter1", "/parameter2"),
     @("/parameter1", "/path/my file.txt"),
-    @("/parameter1", "/path/my file.txt", "/parameter2", "value with spaces")
+    @("/parameter1", "/path/my file.txt", "/parameter2", "value with spaces"),
+    @("/parameter1", "some string")
 )
 
 for ($i = 0; $i -lt $argumentsFormats.Length; $i++) {
