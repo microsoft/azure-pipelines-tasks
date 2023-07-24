@@ -55,8 +55,18 @@ function Publish-Telemetry($telemetry) {
 }
 
 # Splits a string into array of arguments, considering quotes.
-function Split-Arguments ([Parameter(Mandatory=$true)] [string] $arguments)
+function Split-Arguments
 {
+    [OutputType([String[]])]
+    param(
+        [string]$arguments
+    )
+
+    # If the incoming arguments string is null or empty or space, return an empty array
+    if ([string]::IsNullOrWhiteSpace($arguments)) {
+        return New-Object string[] 0
+    }
+
     $matchesList = [System.Text.RegularExpressions.Regex]::Matches($arguments, "`"([^`"]*)`"|'([^']*)'|[^ ]+")
 
     $result = @()
