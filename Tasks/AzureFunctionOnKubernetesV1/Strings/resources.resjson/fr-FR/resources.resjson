@@ -40,6 +40,5 @@
   "loc.messages.KubernetesClusterResourceGroup": "Cluster Kubernetes : %s, groupe de ressources : %s.",
   "loc.messages.NoDataWrittenOnFile": "Aucune donnée n’a été écrite dans le fichier %s",
   "loc.messages.ServiceExternalIP": "l'adresse IP externe du service %s est %s",
-  "loc.messages.WritingDockerConfigToTempFile": "Écriture de la configuration Docker dans le fichier temporaire. Chemin de fichier : %s. Configuration Docker : %s",
-  "loc.messages.KubeloginFailed": "Échec de l’authentification Kubelogin. Exception : %s"
+  "loc.messages.WritingDockerConfigToTempFile": "Écriture de la configuration Docker dans le fichier temporaire. Chemin de fichier : %s. Configuration Docker : %s"
 }

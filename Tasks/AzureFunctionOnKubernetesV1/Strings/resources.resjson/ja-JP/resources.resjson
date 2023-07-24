@@ -40,6 +40,5 @@
   "loc.messages.KubernetesClusterResourceGroup": "Kubernetes クラスター %s、リソース グループ %s。",
   "loc.messages.NoDataWrittenOnFile": "ファイル %s にデータが書き込まれませんでした",
   "loc.messages.ServiceExternalIP": "サービス %s の外部 IP は %s です",
-  "loc.messages.WritingDockerConfigToTempFile": "Docker 構成を一時ファイルに書き込んでいます。ファイル パス: %s、Docker 構成: %s",
-  "loc.messages.KubeloginFailed": "Kubelogin 認証に失敗しました。例外: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "Docker 構成を一時ファイルに書き込んでいます。ファイル パス: %s、Docker 構成: %s"
 }

@@ -40,6 +40,5 @@
   "loc.messages.KubernetesClusterResourceGroup": "Kubernetes 클러스터 %s, 리소스 그룹 %s.",
   "loc.messages.NoDataWrittenOnFile": "%s 파일에 데이터가 기록되지 않았습니다.",
   "loc.messages.ServiceExternalIP": "서비스 %s 외부 IP가 %s입니다.",
-  "loc.messages.WritingDockerConfigToTempFile": "임시 파일에 Docker 구성을 쓰는 중입니다. 파일 경로: %s, Docker 구성: %s",
-  "loc.messages.KubeloginFailed": "Kubelogin 인증에 실패했습니다. 예외: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "임시 파일에 Docker 구성을 쓰는 중입니다. 파일 경로: %s, Docker 구성: %s"
 }

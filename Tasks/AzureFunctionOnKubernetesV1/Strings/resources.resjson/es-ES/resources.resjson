@@ -40,6 +40,5 @@
   "loc.messages.KubernetesClusterResourceGroup": "Clúster de Kubernetes %s, grupo de recursos %s.",
   "loc.messages.NoDataWrittenOnFile": "No se escribieron datos en el archivo %s",
   "loc.messages.ServiceExternalIP": "La dirección IP externa del servicio %s es %s",
-  "loc.messages.WritingDockerConfigToTempFile": "Escribiendo la configuración de Docker en el archivo temporal. Ruta de acceso del archivo: %s. Configuración de Docker: %s",
-  "loc.messages.KubeloginFailed": "Error de autenticación de Kubelogin. Excepción: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "Escribiendo la configuración de Docker en el archivo temporal. Ruta de acceso del archivo: %s. Configuración de Docker: %s"
 }
