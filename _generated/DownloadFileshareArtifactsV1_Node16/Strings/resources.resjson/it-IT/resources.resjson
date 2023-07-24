@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Scarica artefatti dalla condivisione file",
+  "loc.helpMarkDown": "",
+  "loc.description": "Consente di scaricare gli artefatti da una condivisione file, ad esempio \\\\condivisione\\drop",
+  "loc.instanceNameFormat": "Scarica gli artefatti da una condivisione file",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.filesharePath": "Percorso della condivisione file",
+  "loc.input.help.filesharePath": "Percorso della condivisione file, ad esempio \\\\server\\cartella",
+  "loc.input.label.artifactName": "Nome dell'artefatto",
+  "loc.input.help.artifactName": "Nome dell'artefatto da scaricare, ad esempio drop",
+  "loc.input.label.itemPattern": "Criterio di corrispondenza",
+  "loc.input.help.itemPattern": "Consente di specificare i file da scaricare come criterio di corrispondenza minima a più righe. [Altre informazioni](https://aka.ms/minimatchexamples) <p>Con il criterio predefinito (\\*\\*) verranno scaricati tutti i file presenti nell'artefatto.</p>",
+  "loc.input.label.downloadPath": "Percorso di download",
+  "loc.input.help.downloadPath": "Percorso nel computer agente in cui verranno scaricati gli artefatti",
+  "loc.input.label.parallelizationLimit": "Limite di parallelizzazione",
+  "loc.input.help.parallelizationLimit": "Numero di file da scaricare contemporaneamente",
+  "loc.messages.DownloadArtifacts": "Download dell'artefatto %s da %s",
+  "loc.messages.ArtifactsSuccessfullyDownloaded": "Gli artefatti sono stati scaricati in %s",
+  "loc.messages.ArtifactNameDirectoryNotFound": "La directory '%s' non esiste. Verrà eseguito il fallback alla directory padre: '%s'"
+}
