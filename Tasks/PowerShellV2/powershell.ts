@@ -78,17 +78,25 @@ async function run() {
         if (input_targetType.toUpperCase() == 'FILEPATH') {
             let resultArgs = input_arguments;
 
-            const sanitizedArgs = sanitizeScriptArgs(
-                input_arguments,
-                {
-                    argsSplitSymbols: '``',
-                    warningLocSymbol: 'JS_SanitizerOutput',
-                    telemetryFeature: 'PowerShellV2',
-                    saniziteRegExp: /(?<!`)([^a-zA-Z0-9\\` _'"\-=\/:\.])/g
+            const featureFlags = {
+                audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
+                activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
+                telemetry: tl.getBoolFeatureFlag('AZP_75787_ENABLE_COLLECT')
+            };
+
+            if (featureFlags.activate || featureFlags.activate || featureFlags.telemetry) {
+                const sanitizedArgs = sanitizeScriptArgs(
+                    input_arguments,
+                    {
+                        argsSplitSymbols: '``',
+                        warningLocSymbol: 'JS_SanitizerOutput',
+                        telemetryFeature: 'PowerShellV2',
+                        saniziteRegExp: /(?<!`)([^a-zA-Z0-9\\` _'"\-=\/:\.])/g
+                    }
+                );
+                if (featureFlags.activate) {
+                    resultArgs = sanitizedArgs;
                 }
-            );
-            if (tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC')) {
-                resultArgs = sanitizedArgs;
             }
 
             script = `. '${input_filePath.replace(/'/g, "''")}' ${resultArgs}`.trim();

@@ -61,7 +61,7 @@ try {
 
         $input_arguments = Get-VstsInput -Name 'arguments'
     }
-    elseif("$input_targetType".ToUpperInvariant() -eq "INLINE") {
+    elseif ("$input_targetType".ToUpperInvariant() -eq "INLINE") {
         $input_script = Get-VstsInput -Name 'script'
     }
     else {
@@ -95,10 +95,17 @@ try {
     $contents += "`$ErrorView = 'NormalView'"
     if ("$input_targetType".ToUpperInvariant() -eq 'FILEPATH') {
         $resultArgs = $input_arguments;
-        $sanitizedArgs = Sanitize-FileArguments -InputArgs $input_arguments;
 
-        if (([System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC))) {
-            $resultArgs = $sanitizedArgs;
+        $featureFlags = @{
+            audit     = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC_LOG)
+            activate  = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
+            telemetry = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_COLLECT)
+        }
+        if ($featureFlags.activate -or $featureFlags.audit -or $featureFlags.telemetry) {
+            $sanitizedArgs = Sanitize-FileArguments -InputArgs $input_arguments;
+            if ($featureFlags.activate) {
+                $resultArgs = $sanitizedArgs;
+            }
         }
 
         $contents += ". '$("$input_filePath".Replace("'", "''"))' $resultArgs".Trim()
@@ -156,7 +163,8 @@ try {
     $executionOperator;
     if ($input_runScriptInSeparateScope) {
         $executionOperator = '&'; 
-    } else {
+    }
+    else {
         $executionOperator = '.';
     }
     Assert-VstsPath -LiteralPath $powershellPath -PathType 'Leaf'
