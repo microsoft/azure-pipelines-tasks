@@ -77,6 +77,19 @@ function Get-AzureStoragePrimaryKey($storageAccount, [bool]$isArm)
     return $primaryStorageKey
 }
 
+function Get-SplitConfigStorageAccountName($publicConfigStorageAccountName)
+{
+    if(-not ([string]::IsNullOrEmpty($publicConfigStorageAccountName)) -and $publicConfigStorageAccountName.Contains("AccountKey"))
+    {
+        $publicConfig_StorageAccountName = $publicConfigStorageAccountName -split ";"
+        return $publicConfig_StorageAccountName[0]
+    }
+    else{
+        return $publicConfigStorageAccountName
+    }
+  
+}
+
 function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAccountKeysMap, [switch]$useArmStorage)
 {
     $diagnosticsConfigurations = @()
@@ -119,6 +132,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                     {
                         #We found a StorageAccount in the role's diagnostics configuration.  Use it.
                         $publicConfigStorageAccountName = $publicConfig.PublicConfig.StorageAccount
+                        $publicConfigStorageAccountName = Get-SplitConfigStorageAccountName $publicConfigStorageAccountName
                         Write-Verbose "Found PublicConfig.StorageAccount= '$publicConfigStorageAccountName'"
 
                         if ($storageAccountKeysMap.containsKey($role))
@@ -134,6 +148,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                             try
                             {
                                 $publicConfigStorageKey = Get-AzureStoragePrimaryKey $publicConfigStorageAccountName $useArmStorage.IsPresent
+                               
                             }
                             catch
                             {   
