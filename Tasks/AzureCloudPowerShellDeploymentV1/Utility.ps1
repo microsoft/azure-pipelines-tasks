@@ -87,7 +87,6 @@ function Get-SplitConfigStorageAccountName($publicConfigStorageAccountName)
     else{
         return $publicConfigStorageAccountName
     }
-  
 }
 
 function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAccountKeysMap, [switch]$useArmStorage)
@@ -148,7 +147,6 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                             try
                             {
                                 $publicConfigStorageKey = Get-AzureStoragePrimaryKey $publicConfigStorageAccountName $useArmStorage.IsPresent
-                               
                             }
                             catch
                             {   
