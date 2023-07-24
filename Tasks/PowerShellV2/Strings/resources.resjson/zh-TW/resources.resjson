@@ -44,10 +44,12 @@
   "loc.messages.JS_InvalidFilePath": "檔案路徑 '%s' 無效。需要到達 .ps1 檔案的路徑。",
   "loc.messages.JS_Stderr": "PowerShell 已將一或多行寫入標準錯誤資料流。",
   "loc.messages.JS_InvalidTargetType": "無效的目標型別 '%s'。值必須是下列其中一個: 'filepath' 或 'inline'",
+  "loc.messages.JS_SanitizerOutput": "Sanitizer changed input arguments. Output from sanitizer: '%s'",
   "loc.messages.PS_ExitCode": "PowerShell 已結束，代碼為 '{0}'。",
   "loc.messages.PS_FormattedCommand": "經過格式化的命令: {0}",
   "loc.messages.PS_InvalidActionPreference": "{0} 的動作喜好設定無效: ‘{1}’。值必須是以下其中之一: {2}",
   "loc.messages.PS_InvalidFilePath": "檔案路徑 '{0}' 無效。需要到達 .ps1 檔案的路徑。",
   "loc.messages.PS_UnableToDetermineExitCode": "未預期的例外狀況。無法從 PowerShell 判斷結束代碼。",
-  "loc.messages.PS_InvalidTargetType": "無效的目標型別 '{0}'。值必須是下列其中一個: 'filepath' 或 'inline'"
+  "loc.messages.PS_InvalidTargetType": "無效的目標型別 '{0}'。值必須是下列其中一個: 'filepath' 或 'inline'",
+  "loc.messages.PS_SanitizerOutput": "Sanitizer changed input arguments. Output from sanitizer: '{0}'"
 }

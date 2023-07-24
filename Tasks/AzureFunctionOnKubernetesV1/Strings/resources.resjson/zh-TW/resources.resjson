@@ -41,5 +41,5 @@
   "loc.messages.NoDataWrittenOnFile": "沒有任何資料寫入檔案 %s",
   "loc.messages.ServiceExternalIP": "服務 %s 的外部 IP 是 %s",
   "loc.messages.WritingDockerConfigToTempFile": "正在將 Docker 設定寫入暫存檔案。檔案路徑: %s，Docker 設定: %s",
-  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
+  "loc.messages.KubeloginFailed": "Kubelogin 驗證失敗。例外狀況: %s"
 }

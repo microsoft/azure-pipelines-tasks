@@ -38,8 +38,8 @@
   "loc.input.help.deploymentOutputs": "Geben Sie einen Namen für die Variable für die Ausgabevariable an, die den Ausgabenabschnitt des aktuellen Bereitstellungsobjekts im Zeichenfolgenformat enthält. Mit dem PowerShell-Cmdlet \"ConvertFrom-Json\" können Sie das JSON-Objekt analysieren und auf die einzelnen Ausgabewerte zugreifen. Weitere Informationen finden Sie [hier](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceManagerTemplateDeploymentV3#deployment-outputs).",
   "loc.input.label.addSpnToEnvironment": "Auf Dienstprinzipaldetails in Außerkraftsetzungsparametern zugreifen",
   "loc.input.help.addSpnToEnvironment": "Hiermit werden Dienstprinzipal-ID und -schlüssel des ausgewählten Azure-Endpunkts zur Ausführungsumgebung des Skripts hinzugefügt. Sie können die folgenden Variablen in Ihren Außerkraftsetzungsparametern wie \"-key $servicePrincipalKey\" verwenden: \"$servicePrincipalId\" und \"$servicePrincipalKey\".",
-  "loc.input.label.useWithoutJSON": "Use individual output values without JSON.Stringify applied",
-  "loc.input.help.useWithoutJSON": "Individual output values are being converted via JSON.Stringify by default. If you want to use the output values as it is without converting them via JSON.Stringify, enable this option. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceManagerTemplateDeploymentV3#deployment-outputs)",
+  "loc.input.label.useWithoutJSON": "Einzelne Ausgabewerte ohne Anwendung von JSON.Stringify verwenden",
+  "loc.input.help.useWithoutJSON": "Einzelne Ausgabewerte werden standardmäßig über JSON.Stringify konvertiert. Wenn Sie die Ausgabewerte so verwenden möchten, wie sie sind, ohne sie über JSON.Stringify zu konvertieren, aktivieren Sie diese Option. Weitere Informationen finden Sie [hier](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceManagerTemplateDeploymentV3#deployment-outputs)",
   "loc.messages.CheckResourceGroupExistence": "Überprüfen, ob die folgende Ressourcengruppe vorhanden ist: %s.",
   "loc.messages.ResourceGroupStatusFetchFailed": "Fehler beim Überprüfen des Ressourcengruppenstatus. Fehler: %s",
   "loc.messages.ResourceGroupStatus": "Die Ressourcengruppe ist vorhanden: %s.",
@@ -96,8 +96,8 @@
   "loc.messages.FailedToFetchAzureCLIVersion": "Fehler beim Abrufen der AZ CLI-Version vom Agent. Fehler: %s",
   "loc.messages.BicepBuildFailed": "Fehler bei \"az bicep build\". Fehler: %s",
   "loc.messages.BicepFileCleanupFailed": "Fehler beim Löschen der Bicep-Datei. Fehler: %s",
-  "loc.messages.LoginFailed": "Azure login failed: %s",
-  "loc.messages.MSILoginFailed": "Azure login failed using Managed Service Identity: %s",
-  "loc.messages.AuthSchemeNotSupported": "Auth Scheme %s is not supported",
-  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription: %s"
+  "loc.messages.LoginFailed": "Fehler bei der Azure-Anmeldung: %s",
+  "loc.messages.MSILoginFailed": "Fehler bei der Azure-Anmeldung mit einer verwalteten Dienstidentität: %s",
+  "loc.messages.AuthSchemeNotSupported": "Das Authentifizierungsschema „%s“ wird nicht unterstützt.",
+  "loc.messages.ErrorInSettingUpSubscription": "Fehler beim Einrichten des Abonnements: %s"
 }

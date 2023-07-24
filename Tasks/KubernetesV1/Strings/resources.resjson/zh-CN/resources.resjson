@@ -105,5 +105,5 @@
   "loc.messages.KubectlClientVersion": "Kubectl 客户端版本",
   "loc.messages.KubectlServerVersion": "Kubectl 服务器版本",
   "loc.messages.KubectlServerVerisonNotFound": "找不到 kubectl 服务器版本",
-  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
+  "loc.messages.KubeloginFailed": "Kubelogin 身份验证失败。异常: %s"
 }

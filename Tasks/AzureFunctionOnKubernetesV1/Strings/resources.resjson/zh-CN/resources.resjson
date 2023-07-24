@@ -41,5 +41,5 @@
   "loc.messages.NoDataWrittenOnFile": "没有任何数据写入到文件 %s",
   "loc.messages.ServiceExternalIP": "服务 %s 外部 IP 为 %s",
   "loc.messages.WritingDockerConfigToTempFile": "正在将 Docker 配置写入临时文件。文件路径: %s，Docker 配置: %s",
-  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
+  "loc.messages.KubeloginFailed": "Kubelogin 身份验证失败。异常: %s"
 }

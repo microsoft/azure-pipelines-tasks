@@ -105,5 +105,5 @@
   "loc.messages.KubectlClientVersion": "Kubectl 클라이언트 버전",
   "loc.messages.KubectlServerVersion": "Kubectl 서버 버전",
   "loc.messages.KubectlServerVerisonNotFound": "Kubectl 서버 버전을 찾을 수 없습니다.",
-  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
+  "loc.messages.KubeloginFailed": "Kubelogin 인증에 실패했습니다. 예외: %s"
 }

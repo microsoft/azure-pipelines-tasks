@@ -6,7 +6,7 @@
   "loc.releaseNotes": "Novità della versione 2.* <br /> Rimozione del supporto per la distribuzione WAR, impostazione delle opzioni di Web.Config e opzione per il comando di avvio per app per le funzioni di Azure per Linux.",
   "loc.group.displayName.AdditionalDeploymentOptions": "Opzioni di distribuzione aggiuntive",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Impostazioni applicazione e configurazione",
-  "loc.input.label.azureSubscription": "Azure Resource Manager connection",
+  "loc.input.label.azureSubscription": "Connessione ad Azure Resource Manager",
   "loc.input.help.azureSubscription": "Consente di selezionare la sottoscrizione di Azure Resource Manager per la distribuzione.",
   "loc.input.label.appType": "Tipo di app",
   "loc.input.help.appType": "Selezionare il tipo di app di Funzioni di Azure per la distribuzione.",

@@ -103,5 +103,5 @@
   "loc.messages.InvalidTimeoutValue": "Недопустимое значение времени ожидания. Введите допустимое число.",
   "loc.messages.RolloutStatusTimedout": "Сбой проверки состояния выпуска.",
   "loc.messages.EnvironmentLink": "Дополнительные сведения: %s",
-  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
+  "loc.messages.KubeloginFailed": "Сбой проверки подлинности Kubelogin. Исключение: %s"
 }

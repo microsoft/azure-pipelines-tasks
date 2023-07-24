@@ -24,5 +24,6 @@
   "loc.messages.JS_ScriptContents": "指令碼內容:",
   "loc.messages.JS_Stderr": "Bash 已將一或多行寫入標準錯誤資料流。",
   "loc.messages.JS_TranslatePathFailed": "無法將路徑 '%s' 轉譯成 Linux 檔案系統。",
-  "loc.messages.JS_BashEnvAlreadyDefined": "BASH_ENV 環境變數已設定為 '%s'，工作會以 '%s' 覆寫"
+  "loc.messages.JS_BashEnvAlreadyDefined": "BASH_ENV 環境變數已設定為 '%s'，工作會以 '%s' 覆寫",
+  "loc.messages.SanitizerOutput": "Sanitizer changed input arguments. Output from sanitizer: '%s'"
 }

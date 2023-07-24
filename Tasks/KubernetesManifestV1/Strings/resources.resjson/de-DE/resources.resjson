@@ -103,5 +103,5 @@
   "loc.messages.InvalidTimeoutValue": "Ungültiger Wert für Timeout. Geben Sie eine gültige Zahl ein.",
   "loc.messages.RolloutStatusTimedout": "Fehler beim Überprüfen des Rolloutstatus.",
   "loc.messages.EnvironmentLink": "Weitere Informationen finden Sie hier: %s",
-  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
+  "loc.messages.KubeloginFailed": "Fehler bei der Kubelogin-Authentifizierung. Ausnahme: %s"
 }
