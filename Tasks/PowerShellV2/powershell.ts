@@ -83,7 +83,8 @@ async function run() {
                 {
                     argsSplitSymbols: '``',
                     warningLocSymbol: 'JS_FileArgsSanitized',
-                    telemetryFeature: 'PowerShellV2'
+                    telemetryFeature: 'PowerShellV2',
+                    saniziteRegExp: /(?<!`)([^a-zA-Z0-9\\` _'"\-=\/:\.])/g
                 }
             );
             if (tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC')) {
