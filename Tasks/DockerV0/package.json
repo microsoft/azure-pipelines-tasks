@@ -8,6 +8,7 @@
     "azure-pipelines-task-lib": "^4.0.1-preview",
     "azure-pipelines-tasks-docker-common": "2.225.0",
     "esprima": "2.7.1",
+    "agent-base": "^6.0.2",
     "js-yaml": "4.1.0"
   },
   "devDependencies": {

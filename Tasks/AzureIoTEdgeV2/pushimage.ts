@@ -92,7 +92,12 @@ export async function run() {
         tl.debug(`The generated deployment file can't be found in the path: ${outputDeploymentJsonPath}`);
       } else {
         console.log(tl.loc('DeploymentFilePath', outputDeploymentJsonPath));
-        let deploymentJson = JSON.parse(fs.readFileSync(outputDeploymentJsonPath, Constants.UTF8));
+        let deploymentJson = null;
+#if NODE16
+        deploymentJson = JSON.parse(fs.readFileSync(outputDeploymentJsonPath, Constants.UTF8 as BufferEncoding));
+#else
+        deploymentJson = JSON.parse(fs.readFileSync(outputDeploymentJsonPath, Constants.UTF8));
+#endif
         // Expand docker credentials
         // Will replace the registryCredentials if the server match
         if (dockerCredentials != undefined && util.getModulesContent(deploymentJson)['$edgeAgent']['properties.desired'].runtime.settings.registryCredentials != undefined) {
