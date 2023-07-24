@@ -122,6 +122,6 @@
         "JS_Stderr": "Bash wrote one or more lines to the standard error stream.",
         "JS_TranslatePathFailed": "Unable to translate the path '%s' to the Linux file system.",
         "JS_BashEnvAlreadyDefined": "The BASH_ENV environment variable has already been set to a '%s', the task will override it with '%s'",
-        "FileArgsSanitized": "Arguments were sanitized to prevent command injection. Please check your input arguments: '%s'"
+        "SanitizerOutput": "Sanitizer changed input arguments. Output from sanitizer: '%s'"
     }
 }

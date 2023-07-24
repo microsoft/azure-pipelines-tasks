@@ -121,7 +121,7 @@ async function run() {
                 input_arguments,
                 {
                     argsSplitSymbols: '\\\\',
-                    warningLocSymbol: 'FileArgsSanitized',
+                    warningLocSymbol: 'SanitizerOutput',
                     telemetryFeature: 'BashV3',
                     saniziteRegExp: /(?<!\\)([^a-zA-Z0-9\\` _'"\-=\/:\.])/g
                 }

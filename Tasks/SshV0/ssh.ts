@@ -160,7 +160,7 @@ async function run() {
                         args,
                         {
                             argsSplitSymbols: '\\\\',
-                            warningLocSymbol: 'FileArgsSanitized',
+                            warningLocSymbol: 'SanitizerOutput',
                             telemetryFeature: 'SshV0',
                             saniziteRegExp: /(?<!\\)([^a-zA-Z0-9\\` _'"\-=\/:\.])/g
                         }

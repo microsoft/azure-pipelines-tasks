@@ -82,7 +82,7 @@ async function run() {
                 input_arguments,
                 {
                     argsSplitSymbols: '``',
-                    warningLocSymbol: 'JS_FileArgsSanitized',
+                    warningLocSymbol: 'JS_SanitizerOutput',
                     telemetryFeature: 'PowerShellV2',
                     saniziteRegExp: /(?<!`)([^a-zA-Z0-9\\` _'"\-=\/:\.])/g
                 }

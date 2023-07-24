@@ -166,6 +166,6 @@
         "SettingUpSshConnection": "Trying to establish an SSH connection to %s@%s:%s",
         "SshConnectionSuccessful": "Successfully connected.",
         "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
-        "FileArgsSanitized": "Arguments were sanitized to prevent command injection. Please check your input arguments: '%s'"
+        "SanitizerOutput": "Sanitizer changed input arguments. Output from sanitizer: '%s'"
     }
 }

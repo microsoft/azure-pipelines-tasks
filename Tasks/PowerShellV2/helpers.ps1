@@ -28,7 +28,7 @@ function Sanitize-FileArguments([string]$InputArgs) {
     if ( $resultArgs -like "*$removedSymbolSign*") {
 
         if ($featureFlags.audit || $featureFlags.activate) {
-            Write-Warning (Get-VstsLocString -Key 'PS_FileArgsSanitized' -ArgumentList $resultArgs);
+            Write-Warning (Get-VstsLocString -Key 'PS_SanitizerOutput' -ArgumentList $resultArgs);
         }
 
         if ($featureFlags.telemetry) {
