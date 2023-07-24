@@ -6,7 +6,7 @@
   "loc.releaseNotes": "버전 2의 새로운 기능* <br /> 제거된 WAR 배포 지원, Web.Config 옵션 설정, Linux Azure 함수 앱의 시작 명령 옵션.",
   "loc.group.displayName.AdditionalDeploymentOptions": "추가 배포 옵션",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "애플리케이션 및 구성 설정",
-  "loc.input.label.azureSubscription": "Azure Resource Manager connection",
+  "loc.input.label.azureSubscription": "Azure Resource Manager 연결",
   "loc.input.help.azureSubscription": "배포에 대한 Azure Resource Manager 구독을 선택합니다.",
   "loc.input.label.appType": "앱 유형",
   "loc.input.help.appType": "배포에 대한 Azure 함수 앱 유형을 선택합니다.",

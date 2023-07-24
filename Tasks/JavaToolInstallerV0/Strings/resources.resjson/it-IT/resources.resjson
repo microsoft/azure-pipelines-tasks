@@ -31,7 +31,7 @@
   "loc.messages.DownloadFromAzureBlobStorage": "Download degli artefatti da Archiviazione BLOB di Azure. Nome del contenitore: %s",
   "loc.messages.SuccessFullyFetchedItemList": "L'elenco di elementi è stato recuperato",
   "loc.messages.StorageAccountDoesNotExist": "Non è stato possibile recuperare l'account di archiviazione di Azure denominato %s.",
-  "loc.messages.RequestedUrlTooLong": "Requested URL is too long, this usually happen when you have a lot of Resource Groups in the subscription, try to set azureResourceGroupName input.",
+  "loc.messages.RequestedUrlTooLong": "L'URL richiesto è troppo lungo. Questo problema si verifica in genere quando nella sottoscrizione sono presenti molti gruppi di risorse, si tenta di impostare l'input azureResourceGroupName.",
   "loc.messages.UnzipExtractFile": "Estrazione del file: %s",
   "loc.messages.SevenZipExtractFile": "Estrazione del file: %s",
   "loc.messages.TarExtractFile": "Estrazione del file: %s",

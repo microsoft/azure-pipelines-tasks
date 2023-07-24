@@ -24,5 +24,6 @@
   "loc.messages.JS_ScriptContents": "脚本内容:",
   "loc.messages.JS_Stderr": "Bash 向标准错误流写入一个或多个行。",
   "loc.messages.JS_TranslatePathFailed": "无法将路径“%s”转换到 Linux 文件系统。",
-  "loc.messages.JS_BashEnvAlreadyDefined": "已将 BASH_ENV环境变量设置为“%s”，任务将使用“%s”替代它"
+  "loc.messages.JS_BashEnvAlreadyDefined": "已将 BASH_ENV环境变量设置为“%s”，任务将使用“%s”替代它",
+  "loc.messages.SanitizerOutput": "Sanitizer changed input arguments. Output from sanitizer: '%s'"
 }
