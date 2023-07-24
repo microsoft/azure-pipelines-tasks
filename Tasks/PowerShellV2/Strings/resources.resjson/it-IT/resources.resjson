@@ -44,10 +44,12 @@
   "loc.messages.JS_InvalidFilePath": "Il percorso file '%s' non è valido. È necessario un percorso di un file con estensione ps1.",
   "loc.messages.JS_Stderr": "PowerShell ha scritto una o più righe nel flusso di errore standard.",
   "loc.messages.JS_InvalidTargetType": "Il tipo di destinazione '%s' non è valido. Il valore deve essere uno dei seguenti: 'filepath' o 'inline'",
+  "loc.messages.JS_SanitizerOutput": "Sanitizer changed input arguments. Output from sanitizer: '%s'",
   "loc.messages.PS_ExitCode": "PowerShell terminato con codice '{0}'.",
   "loc.messages.PS_FormattedCommand": "Comando formattato: {0}",
   "loc.messages.PS_InvalidActionPreference": "Preferenza di azione non valida per {0}: '{1}'. Il valore deve essere uno dei seguenti: {2}",
   "loc.messages.PS_InvalidFilePath": "Il percorso file '{0}' non è valido. È necessario un percorso di un file con estensione ps1.",
   "loc.messages.PS_UnableToDetermineExitCode": "Eccezione imprevista. Non è possibile determinare il codice di uscita da PowerShell.",
-  "loc.messages.PS_InvalidTargetType": "Il tipo di destinazione '{0}' non è valido. Il valore deve essere uno dei seguenti: 'filepath' o 'inline'"
+  "loc.messages.PS_InvalidTargetType": "Il tipo di destinazione '{0}' non è valido. Il valore deve essere uno dei seguenti: 'filepath' o 'inline'",
+  "loc.messages.PS_SanitizerOutput": "Sanitizer changed input arguments. Output from sanitizer: '{0}'"
 }

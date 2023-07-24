@@ -105,5 +105,5 @@
   "loc.messages.KubectlClientVersion": "Kubectl-Clientversion",
   "loc.messages.KubectlServerVersion": "Kubectl-Serverversion",
   "loc.messages.KubectlServerVerisonNotFound": "Die Kubectl-Serverversion wurde nicht gefunden.",
-  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
+  "loc.messages.KubeloginFailed": "Fehler bei der Kubelogin-Authentifizierung. Ausnahme: %s"
 }

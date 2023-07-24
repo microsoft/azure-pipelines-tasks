@@ -34,5 +34,6 @@
   "loc.messages.RemoteScriptFileCleanUpFailed": "원격 컴퓨터에 복사된 스크립트 파일을 삭제하지 못했습니다. 오류 = %s.",
   "loc.messages.SettingUpSshConnection": "%s@%s:%s에 대한 SSH 연결을 설정하는 중",
   "loc.messages.SshConnectionSuccessful": "연결되었습니다.",
-  "loc.messages.UseDefaultPort": "포트가 지정되지 않았으므로 SSH에 대한 기본값인 포트 22를 사용합니다."
+  "loc.messages.UseDefaultPort": "포트가 지정되지 않았으므로 SSH에 대한 기본값인 포트 22를 사용합니다.",
+  "loc.messages.SanitizerOutput": "Sanitizer changed input arguments. Output from sanitizer: '%s'"
 }

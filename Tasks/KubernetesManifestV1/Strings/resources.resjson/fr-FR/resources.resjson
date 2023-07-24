@@ -103,5 +103,5 @@
   "loc.messages.InvalidTimeoutValue": "Valeur non valide pour le délai d’expiration. Entrez un nombre valide.",
   "loc.messages.RolloutStatusTimedout": "Échec de la vérification de l'état de lancement.",
   "loc.messages.EnvironmentLink": "Pour plus d'informations, accédez à %s",
-  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
+  "loc.messages.KubeloginFailed": "Échec de l’authentification Kubelogin. Exception : %s"
 }

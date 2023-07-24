@@ -103,5 +103,5 @@
   "loc.messages.InvalidTimeoutValue": "タイムアウトの値が無効です。有効な数値を入力してください。",
   "loc.messages.RolloutStatusTimedout": "ロールアウトの状態を確認できませんでした。",
   "loc.messages.EnvironmentLink": "詳細については、%s にアクセスしてください",
-  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
+  "loc.messages.KubeloginFailed": "Kubelogin 認証に失敗しました。例外: %s"
 }

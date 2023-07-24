@@ -105,5 +105,5 @@
   "loc.messages.KubectlClientVersion": "Версия клиента Kubectl",
   "loc.messages.KubectlServerVersion": "Версия сервера Kubectl",
   "loc.messages.KubectlServerVerisonNotFound": "Не удалось найти версию сервера kubectl",
-  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
+  "loc.messages.KubeloginFailed": "Сбой проверки подлинности Kubelogin. Исключение: %s"
 }
