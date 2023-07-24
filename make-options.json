@@ -226,6 +226,7 @@
         "AndroidSigningV3"
     ],
     "Node16_225": [
+        "UseDotNetV2",
         "KubernetesManifestV0",
         "KubernetesManifestV1",
         "AzureIoTEdgeV2",

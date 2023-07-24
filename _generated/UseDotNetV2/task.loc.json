@@ -189,5 +189,9 @@
     "OnlyExplicitVersionAllowed": "ms-resource:loc.messages.OnlyExplicitVersionAllowed",
     "SupportPhaseNotPresentInChannel": "ms-resource:loc.messages.SupportPhaseNotPresentInChannel",
     "DepricatedVersionNetCore": "ms-resource:loc.messages.DepricatedVersionNetCore"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.226.1",
+    "Node16-225": "2.226.0"
   }
 }
