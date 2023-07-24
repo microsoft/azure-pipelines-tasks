@@ -118,10 +118,18 @@ $AzureFileCopyRemoteJob = {
             $additionalArguments = "/Z:`"$azCopyDestinationPath`" /V:`"$logFilePath`" /S /Y"
         }
 
-        Write-DetailLogs "##[command] & `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"*****`" $additionalArguments"
+        $useSanitizer = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
+        Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $useSanitizer"
 
-        $azCopyCommand = "& `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"$containerSasToken`" $additionalArguments"
-        Invoke-Expression $azCopyCommand
+        if ($useSanitizer) {
+            $arguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV2"
+            Write-DetailLogs "##[command] & `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"*****`" $arguments"
+            & $azCopyExeLocation /Source:$containerURL /Dest:$targetPath /SourceSAS:$containerSasToken $arguments
+        } else {
+            Write-DetailLogs "##[command] & `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"*****`" $additionalArguments"
+            $azCopyCommand = "& `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"$containerSasToken`" $additionalArguments"
+            Invoke-Expression $azCopyCommand
+        }
     }
     catch
     {

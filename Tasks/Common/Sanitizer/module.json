@@ -1,0 +1,6 @@
+{
+    "messages": {
+        "PS_ScriptArgsSanitized": "Arguments are sanitized, input arguments result: '{0}'",
+        "PS_ScriptArgsNotSanitized": "Arguments passed sanitization without change."
+    }
+}

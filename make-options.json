@@ -227,6 +227,8 @@
     ],
     "Node16_225": [
         "UseDotNetV2",
+        "KubernetesManifestV0",
+        "KubernetesManifestV1",
         "AzureIoTEdgeV2",
         "DownloadFileshareArtifactsV1",
         "AzureVmssDeploymentV0",
