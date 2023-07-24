@@ -31,7 +31,7 @@
   "loc.messages.DownloadFromAzureBlobStorage": "正在從 Azure Blob 儲存體下載成品，容器名稱: %s",
   "loc.messages.SuccessFullyFetchedItemList": "已成功擷取項目清單",
   "loc.messages.StorageAccountDoesNotExist": "無法取得名稱為 %s 的 Azure 儲存體帳戶。",
-  "loc.messages.RequestedUrlTooLong": "Requested URL is too long, this usually happen when you have a lot of Resource Groups in the subscription, try to set azureResourceGroupName input.",
+  "loc.messages.RequestedUrlTooLong": "要求的 URL 太長，這通常在您的訂用帳戶中有許多資源群組時會發生，請嘗試設定 azureResourceGroupName 輸入。",
   "loc.messages.UnzipExtractFile": "正在解壓縮檔案: %s",
   "loc.messages.SevenZipExtractFile": "正在解壓縮檔案: %s",
   "loc.messages.TarExtractFile": "正在解壓縮檔案: %s",

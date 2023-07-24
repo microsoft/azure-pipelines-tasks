@@ -31,7 +31,7 @@
   "loc.messages.DownloadFromAzureBlobStorage": "Azure Blob Storage から成果物をダウンロードしています。コンテナー名: %s",
   "loc.messages.SuccessFullyFetchedItemList": "項目の一覧が正常にフェッチされました",
   "loc.messages.StorageAccountDoesNotExist": "名前 %s の Azure ストレージ アカウントを取得できませんでした。",
-  "loc.messages.RequestedUrlTooLong": "Requested URL is too long, this usually happen when you have a lot of Resource Groups in the subscription, try to set azureResourceGroupName input.",
+  "loc.messages.RequestedUrlTooLong": "要求の URL が長すぎます。多くの場合、この問題はサブスクリプションに多数のリソース グループがあるときに発生します。azureResourceGroupName の入力を設定してみてください。",
   "loc.messages.UnzipExtractFile": "次のファイルを抽出しています: %s",
   "loc.messages.SevenZipExtractFile": "次のファイルを抽出しています: %s",
   "loc.messages.TarExtractFile": "次のファイルを抽出しています: %s",
