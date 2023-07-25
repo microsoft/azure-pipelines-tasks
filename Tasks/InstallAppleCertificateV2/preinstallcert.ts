@@ -20,6 +20,7 @@ async function run() {
 
         // download decrypted contents
         secureFileId = tl.getInput('certSecureFile', true);
+        const opensslArgs = tl.getInput('opensslPkcsArgs', false);
         
         secureFileHelpers = new secureFilesCommon.SecureFileHelpers(retryCount);
         let certPath: string = await secureFileHelpers.downloadSecureFile(secureFileId);
@@ -27,7 +28,7 @@ async function run() {
         let certPwd: string = tl.getInput('certPwd');
 
         // get the P12 details - SHA1 hash, common name (CN) and expiration.
-        const p12Properties = await sign.getP12Properties(certPath, certPwd);
+        const p12Properties = await sign.getP12Properties(certPath, certPwd, opensslArgs);
         let commonName: string = p12Properties.commonName;
         const fingerprint: string = p12Properties.fingerprint,
             notBefore: Date = p12Properties.notBefore,
@@ -77,7 +78,7 @@ async function run() {
 
         const setUpPartitionIdACLForPrivateKey: boolean = tl.getBoolInput('setUpPartitionIdACLForPrivateKey', false);
         const useKeychainIfExists: boolean = true;
-        await sign.installCertInTemporaryKeychain(keychainPath, keychainPwd, certPath, certPwd, useKeychainIfExists, setUpPartitionIdACLForPrivateKey);
+        await sign.installCertInTemporaryKeychain(keychainPath, keychainPwd, certPath, certPwd, useKeychainIfExists, setUpPartitionIdACLForPrivateKey, opensslArgs);
 
         // set the keychain output variable.
         tl.setVariable('keychainPath', keychainPath);

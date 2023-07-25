@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Authentification des marchandises (pour les exécuteurs de tâches)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Tâche d’authentification pour le client de marchandises utilisé pour l’installation de la distribution de caisses de marchandises",
+  "loc.instanceNameFormat": "$(configFile) d’authentification de marchandises",
+  "loc.input.label.configFile": "fichier config.toml à authentifier",
+  "loc.input.help.configFile": "Chemin du fichier config.toml qui spécifie les registres à utiliser. Sélectionnez le fichier, pas le dossier. Exemple : « /.cargo/config.toml ».",
+  "loc.input.label.cargoServiceConnections": "Informations d’identification des registres situés en dehors de cette organisation/collection",
+  "loc.input.help.cargoServiceConnections": "Informations d’identification à utiliser pour les registres externes situés dans le fichier config.toml du projet. Pour les registres présents dans cette organisation/collection, n’indiquez aucune valeur. Les informations d’identification de la build sont utilisées automatiquement.",
+  "loc.messages.FailedToAddAuthentication": "Nous n’avons pas pu ajouter l’authentification.",
+  "loc.messages.ConfigTomlNotToml": "Le fichier que vous avez sélectionné pour l’authentification (%s) n’est pas un fichier .toml valide.",
+  "loc.messages.ConfigTomlDoesNotExist": "Le fichier .config.toml que vous avez sélectionné sur %s n’existe pas.",
+  "loc.messages.ConfigTomlMissingRegistry": "Le fichier config.toml que vous avez sélectionné doit contenir la table des registres",
+  "loc.messages.AuthenticatingThisConfigToml": "Ajout de l’authentification pour le Registre répertorié dans ce fichier config.toml au %s",
+  "loc.messages.AddingAuthRegistry": "Ajout de l’authentification pour le Registre : %s avec le nom de jeton : %s",
+  "loc.messages.AddingAuthExternalRegistry": "Ajout de l’authentification pour le Registre externe : %s avec le nom de jeton : %s"
+}

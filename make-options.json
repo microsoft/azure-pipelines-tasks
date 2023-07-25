@@ -80,7 +80,7 @@
         "DotNetCoreInstallerV1",
         "DownloadBuildArtifactsV0",
         "DownloadBuildArtifactsV1",
-        "DownloadFileshareArtifactsV0",
+        "DownloadFileshareArtifactsV1",
         "DownloadGitHubNugetPackageV1",
         "DownloadGitHubNpmPackageV1",
         "DownloadGitHubReleaseV0",
@@ -165,7 +165,6 @@
         "PublishTestResultsV1",
         "PublishTestResultsV2",
         "PublishToAzureServiceBusV1",
-        "PyPIPublisherV0",
         "PythonScriptV0",
         "QueryWorkItemsV0",
         "QuickPerfTestV1",
@@ -197,7 +196,6 @@
         "WindowsMachineFileCopyV2",
         "XamarinAndroidV1",
         "XamariniOSV2",
-        "XamarinTestCloudV1",
         "XcodeV5"
     ],
     "taskResources": [
@@ -228,6 +226,14 @@
         "AndroidSigningV3"
     ],
     "Node16_225": [
+        "AzureFunctionOnKubernetesV0",
+        "AzureFunctionOnKubernetesV1",
+        "UseDotNetV2",
+        "KubernetesManifestV0",
+        "KubernetesManifestV1",
+        "AzureIoTEdgeV2",
+        "DownloadFileshareArtifactsV1",
+        "AzureVmssDeploymentV0",
         "CargoAuthenticateV0",
         "AzureMysqlDeploymentV1",
         "AzureFunctionAppContainerV1"

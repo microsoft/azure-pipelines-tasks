@@ -40,7 +40,7 @@ var defaults = path.join(__dirname, "defaults.json");
 var faultyCSM = path.join(__dirname, "faultyCSM.json");
 var bicepbuildCmd = `az bicep build --file ${path.join(__dirname, "CSMwithBicep.bicep")}`;
 var bicepbuildwithWarning = `az bicep build --file ${path.join(__dirname, "CSMwithBicepWithWarning.bicep")}`;
-var azloginCommand = `az login --service-principal -u "id" --password="key" --tenant "tenant"`;
+var azloginCommand = `az login --service-principal -u "id" --password="key" --tenant "tenant" --allow-no-subscriptions`;
 var azaccountSet = `az account set --subscription "sId"`;
 var azlogoutCommand = `az account clear`
 
@@ -81,7 +81,7 @@ process.env["MOCK_NORMALIZE_SLASHES"] = "true";
 tr.setAnswers(a);
 
 tr.registerMock('azure-pipelines-task-lib/toolrunner', require('azure-pipelines-task-lib/mock-toolrunner'));
-tr.registerMock('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource', require('./mock_node_modules/azure-arm-resource'));
+tr.registerMock('azure-pipelines-tasks-azure-arm-rest/azure-arm-resource', require('./mock_node_modules/azure-arm-resource'));
 
 const fsClone = Object.assign({}, fs);
 fsClone.readFileSync = function(fileName: string): Buffer {

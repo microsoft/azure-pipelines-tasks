@@ -36,6 +36,7 @@ var fileToJson = util.fileToJson;
 var createYamlSnippetFile = util.createYamlSnippetFile;
 var createMarkdownDocFile = util.createMarkdownDocFile;
 var getTaskNodeVersion = util.getTaskNodeVersion;
+var callGenTaskDuringBuild = false;
 
 // global paths
 var buildPath = path.join(__dirname, '_build');
@@ -84,7 +85,7 @@ if (argv.task) {
         });
 
     // If base tasks was not found, try to find the task in the _generated tasks folder
-    if (taskList.length == 0 && fs.existsSync(genTaskPath)) { 
+    if (taskList.length == 0 && fs.existsSync(genTaskPath)) {
         taskList = matchFind(argv.task, genTaskPath, { noRecurse: true, matchBase: true })
             .map(function (item) {
                 return path.basename(item);
@@ -126,11 +127,18 @@ function getTaskList(taskList) {
     return tasksToBuild.sort();
 }
 
-CLI.clean = function() {
-    rm('-Rf', buildPath);
-    mkdir('-p', buildTasksPath);
+function ensureBuildTasksAndRemoveTestPath() {
+    if (!fs.existsSync(buildTasksPath)) {
+        mkdir('-p', buildTasksPath);
+    }
     rm('-Rf', testPath);
 };
+
+CLI.clean = function() {
+    rm('-Rf', buildPath);
+    ensureBuildTasksAndRemoveTestPath();
+};
+
 
 //
 // Generate documentation (currently only YAML snippets)
@@ -170,10 +178,20 @@ CLI.gendocs = function() {
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
 //
-CLI.build = function() {
-    CLI.clean();
+CLI.build = function() 
+{
+    if (process.env.TF_BUILD) {
+        fail('Please use serverBuild for CI builds for proper validation');
+    }
 
-    ensureTool('tsc', '--version', 'Version 2.3.4');
+    callGenTaskDuringBuild = true;
+    CLI.serverBuild();
+}
+
+CLI.serverBuild = function() {
+    ensureBuildTasksAndRemoveTestPath();
+
+    ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('npm', '--version', function (output) {
         if (semver.lt(output, '5.6.0')) {
             fail('Expected 5.6.0 or higher. To fix, run: npm install -g npm');
@@ -185,7 +203,8 @@ CLI.build = function() {
 
     // Need to validate generated tasks first
     const makeOptions = fileToJson(makeOptionsPath);
-    util.validateGeneratedTasks(baseConfigToolPath, taskList, makeOptions);
+
+    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, callGenTaskDuringBuild);
 
     allTasks.forEach(function(taskName) {
         let isGeneratedTask = false;
@@ -200,7 +219,7 @@ CLI.build = function() {
         } else {
             taskPath = path.join(tasksPath, taskName);
         }
-        
+
         ensureExists(taskPath);
 
         // load the task.json
@@ -213,6 +232,12 @@ CLI.build = function() {
 
             // fixup the outDir (required for relative pathing in legacy L0 tests)
             outDir = path.join(buildTasksPath, taskName);
+
+            if(fs.existsSync(outDir))
+            {
+                console.log('Remove existing outDir: ' + outDir);
+                rm('-rf', outDir);
+            }
 
             // create loc files
             createTaskLocJson(taskPath);
@@ -385,7 +410,7 @@ CLI.build = function() {
 //
 CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
     var minIstanbulVersion = '10';
-    ensureTool('tsc', '--version', 'Version 2.3.4');
+    ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('mocha', '--version', '6.2.3');
 
     // build the general tests and ps test infra
@@ -397,7 +422,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
     console.log('> copying ps test lib resources');
     mkdir('-p', path.join(buildTestsPath, 'lib'));
     matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(testsPath, 'lib'), path.join(buildTestsPath, 'lib'));
-    
+
     var suiteType = argv.suite || 'L0';
     function runTaskTests(taskName) {
         banner('Testing: ' + taskName);
@@ -407,7 +432,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
         var pattern2 = path.join(buildTasksPath, 'Common', taskName, 'Tests', suiteType + '.js');
         var taskPath = path.join('**', '_build', 'Tasks', taskName, "**", "*.js").replace(/\\/g, '/');
         var isNodeTask = util.isNodeTask(buildTasksPath, taskName);
-        
+
         var isReportWasFormed = false;
         var testsSpec = [];
 
@@ -429,7 +454,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
                 banner('Run Mocha Suits for node ' + nodeVersion);
                 // setup the version of node to run the tests
                 util.installNode(nodeVersion);
-                
+
 
                 if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
                     run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
@@ -486,7 +511,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
 
     try {
         // Installing node version 10 to run code coverage report, since common library tests run under node 6,
-        // which is incompatible with nyc 
+        // which is incompatible with nyc
         util.installNode(minIstanbulVersion);
         util.rm(path.join(coverageTasksPath, '*coverage-summary.json'));
         util.run(`nyc merge ${coverageTasksPath} ${path.join(coverageTasksPath, 'mergedcoverage.json')}`, true);
@@ -504,7 +529,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
 //
 
 CLI.testLegacy = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
-    ensureTool('tsc', '--version', 'Version 2.3.4');
+    ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('mocha', '--version', '6.2.3');
 
     if (argv.suite) {
@@ -920,19 +945,15 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
 }
 
 CLI.gentask = function() {
-    if (argv.rebuild) {
-        rm("-Rf", path.join(baseConfigToolPath, "bin"));
-    }
-
     const makeOptions = fileToJson(makeOptionsPath);
     const validate = argv.validate;
     const configsString = argv.configs;
 
     if (validate) {
-        util.validateGeneratedTasks(baseConfigToolPath, taskList, makeOptions);
+        util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, false);
         return;
     }
-    
+
     if (!configsString) {
         throw Error ('--configs is required');
     }
