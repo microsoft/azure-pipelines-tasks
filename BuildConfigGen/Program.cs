@@ -382,15 +382,16 @@ namespace BuildConfigGen
             foreach (var possibleExecutor in possibleExecutionHandlers)
             {
                 var handlers = taskHandlerContents[possibleExecutor]?.AsObject();
-                if (handlers == null) { return false; }
                 if (executorHasNodeHandler(handlers)) { return true; }
             }
             
             return false;
         }
 
-        private static bool executorHasNodeHandler(JsonObject executorHandlerContent)
+        private static bool executorHasNodeHandler(JsonObject? executorHandlerContent)
         {
+            if (executorHandlerContent == null) { return false; }
+
             foreach (var k in executorHandlerContent)
             {
                 if (k.Key.ToLower().StartsWith("node"))
