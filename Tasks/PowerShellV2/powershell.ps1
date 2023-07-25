@@ -1,6 +1,8 @@
 [CmdletBinding()]
 param()
 
+. $PSScriptRoot\helpers.ps1
+
 function Get-ActionPreference {
     param (
         [Parameter(Mandatory)]
@@ -59,7 +61,7 @@ try {
 
         $input_arguments = Get-VstsInput -Name 'arguments'
     }
-    elseif("$input_targetType".ToUpperInvariant() -eq "INLINE") {
+    elseif ("$input_targetType".ToUpperInvariant() -eq "INLINE") {
         $input_script = Get-VstsInput -Name 'script'
     }
     else {
@@ -92,7 +94,21 @@ try {
     # and we rely on PowerShell piping back NormalView error records (required because PowerShell Core changed the default to ConciseView)
     $contents += "`$ErrorView = 'NormalView'"
     if ("$input_targetType".ToUpperInvariant() -eq 'FILEPATH') {
-        $contents += ". '$("$input_filePath".Replace("'", "''"))' $input_arguments".Trim()
+        $resultArgs = $input_arguments;
+
+        $featureFlags = @{
+            audit     = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC_LOG)
+            activate  = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
+            telemetry = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_COLLECT)
+        }
+        if ($featureFlags.activate -or $featureFlags.audit -or $featureFlags.telemetry) {
+            $sanitizedArgs = Sanitize-FileArguments -InputArgs $input_arguments;
+            if ($featureFlags.activate) {
+                $resultArgs = $sanitizedArgs;
+            }
+        }
+
+        $contents += ". '$("$input_filePath".Replace("'", "''"))' $resultArgs".Trim()
         Write-Host (Get-VstsLocString -Key 'PS_FormattedCommand' -ArgumentList ($contents[-1]))
     }
     else {
@@ -147,7 +163,8 @@ try {
     $executionOperator;
     if ($input_runScriptInSeparateScope) {
         $executionOperator = '&'; 
-    } else {
+    }
+    else {
         $executionOperator = '.';
     }
     Assert-VstsPath -LiteralPath $powershellPath -PathType 'Leaf'
