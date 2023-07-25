@@ -235,6 +235,7 @@
         "DownloadFileshareArtifactsV1",
         "AzureVmssDeploymentV0",
         "CargoAuthenticateV0",
-        "HelmDeployV0"
+        "HelmDeployV0",
+        "AzureFunctionAppV1"
     ]
 }
