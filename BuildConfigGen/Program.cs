@@ -377,20 +377,31 @@ namespace BuildConfigGen
 
         private static bool hasNodeHandler(JsonNode taskHandlerContents)
         {
-            var handlers = taskHandlerContents["execution"]?.AsObject();
-            bool hasNodeHandler = false;
-            if (handlers == null) { return false; }
+            var possibleExecutionHandlers = new[] { "prejobexecution", "execution", "postjobexecution" };
 
-            foreach (var k in handlers)
+            foreach (var possibleExecutor in possibleExecutionHandlers)
+            {
+                var handlers = taskHandlerContents[possibleExecutor]?.AsObject();
+                if (handlers == null) { return false; }
+                if (executorHasNodeHandler(handlers)) { return true; }
+            }
+            
+            return false;
+        }
+
+        private static bool executorHasNodeHandler(JsonObject executorHandlerContent)
+        {
+            foreach (var k in executorHandlerContent)
             {
                 if (k.Key.ToLower().StartsWith("node"))
                 {
-                    hasNodeHandler = true;
-                    break;
+                    return true;
                 }
             }
-            return hasNodeHandler;
+
+            return false;
         }
+
 
         private static void CopyConfig(string taskTarget, string taskOutput, string? skipPathName, string? skipFileName, bool removeExtraFiles, bool throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor, Config.ConfigRecord config, bool allowPreprocessorDirectives)
         {
@@ -618,7 +629,7 @@ namespace BuildConfigGen
         {
             var targetNode = taskNode[target]?.AsObject();
 
-            if (targetNode != null)
+            if (targetNode != null && executorHasNodeHandler(targetNode))
             {
                 if (targetNode!.ContainsKey(nodeVersion))
                 {
