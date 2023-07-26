@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 226,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -80,6 +80,10 @@
     "Node10": {
       "target": "publishcodecoverageresults.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "publishcodecoverageresults.js",
+      "argumentFormat": ""
     }
   },
   "restrictions": {
@@ -96,5 +100,9 @@
     "IgnoringReportDirectory": "Ignoring coverage report directory with Html content as we are auto-generating Html content",
     "UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
     "GeneratedHtmlReport": "Generated code coverage html report: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.226.1",
+    "Node16-225": "1.226.0"
   }
 }
