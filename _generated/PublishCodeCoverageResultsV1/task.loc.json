@@ -96,5 +96,9 @@
     "IgnoringReportDirectory": "ms-resource:loc.messages.IgnoringReportDirectory",
     "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage",
     "GeneratedHtmlReport": "ms-resource:loc.messages.GeneratedHtmlReport"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.226.1",
+    "Node16-225": "1.226.0"
   }
 }
