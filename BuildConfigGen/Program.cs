@@ -144,7 +144,7 @@ namespace BuildConfigGen
             if (targetConfigs.Any(x => x.isNode))
             {
                 // Task may not have nodejs or packages.json (example: AutomatedAnalysisV0) 
-                if (!hasNodeHandler(taskHandlerContents))
+                if (!HasNodeHandler(taskHandlerContents))
                 {
                     Console.WriteLine($"Skipping {task} because task doesn't have node handler does not exist");
                     return;
@@ -375,20 +375,20 @@ namespace BuildConfigGen
             ensureUpdateModeVerifier!.WriteAllText(outputNodePackagePath, nodePackageContent, suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
-        private static bool hasNodeHandler(JsonNode taskHandlerContents)
+        private static bool HasNodeHandler(JsonNode taskHandlerContents)
         {
             var possibleExecutionHandlers = new[] { "prejobexecution", "execution", "postjobexecution" };
 
             foreach (var possibleExecutor in possibleExecutionHandlers)
             {
                 var handlers = taskHandlerContents[possibleExecutor]?.AsObject();
-                if (executorHasNodeHandler(handlers)) { return true; }
+                if (ExecutorHasNodeHandler(handlers)) { return true; }
             }
             
             return false;
         }
 
-        private static bool executorHasNodeHandler(JsonObject? executorHandlerContent)
+        private static bool ExecutorHasNodeHandler(JsonObject? executorHandlerContent)
         {
             if (executorHandlerContent == null) { return false; }
 
@@ -630,7 +630,7 @@ namespace BuildConfigGen
         {
             var targetNode = taskNode[target]?.AsObject();
 
-            if (targetNode != null && executorHasNodeHandler(targetNode))
+            if (targetNode != null && ExecutorHasNodeHandler(targetNode))
             {
                 if (targetNode!.ContainsKey(nodeVersion))
                 {
