@@ -20,7 +20,8 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
         Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsSanitized' -ArgumentList $sanitizedArguments);
     }
 
-    return $sanitizedArguments -split ' '
+    $arrayOfArguments = Split-Arguments -Arguments $sanitizedArguments
+    return $arrayOfArguments
 }
 
 function Get-SanitizedArguments([string]$inputArgs) {
@@ -51,4 +52,48 @@ function Publish-Telemetry($telemetry) {
     $feature = $script:taskName
     $telemetryJson = $telemetry | ConvertTo-Json -Compress
     Write-Host "##vso[telemetry.publish area=$area;feature=$feature]$telemetryJson"
+}
+
+# Splits a string into array of arguments, considering quotes.
+function Split-Arguments
+{
+    [OutputType([String[]])]
+    param(
+        [string]$arguments
+    )
+
+    # If the incoming arguments string is null or empty or space, return an empty array
+    if ([string]::IsNullOrWhiteSpace($arguments)) {
+        return New-Object string[] 0
+    }
+
+    # Use regular expression to match all possible formats of arguments:
+    # 1) "arg" (enclosed in double quotes)
+    # 2) 'arg' (enclosed in single quotes)
+    # 3) arg (not enclosed in quotes)
+    # Each match found by the regular expression will have several groups. 
+    # Group[0] is the whole match, Group[1] is the match for "arg", Group[2] is the match for 'arg'.
+    $matchesList = [System.Text.RegularExpressions.Regex]::Matches($arguments, "`"([^`"]*)`"|'([^']*)'|[^ ]+")
+
+    $result = @()
+
+    foreach ($match in $matchesList) {
+        # Attempt to get the argument from Group[1] (for "arg").
+        $arg = $match.Groups[1].Value
+
+        # If Group[1] didn't have a match (was not "arg" format), try Group[2] (for 'arg').
+        if ([string]::IsNullOrEmpty($arg)) {
+            $arg = $match.Groups[2].Value
+        }
+
+        # If neither Group[1] nor Group[2] had a match (was not enclosed in quotes), use the whole match (Group[0]).
+        if ([string]::IsNullOrEmpty($arg)) {
+            $arg = $match.Groups[0].Value
+        }
+
+        # Add the extracted argument to the result array.
+        $result += $arg
+    }
+    
+    return $result
 }
