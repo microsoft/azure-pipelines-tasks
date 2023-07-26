@@ -226,6 +226,8 @@
         "AndroidSigningV3"
     ],
     "Node16_225": [
+        "AzureRmWebAppDeploymentV3",
+        "AzureRmWebAppDeploymentV4",
         "AzureFunctionOnKubernetesV0",
         "AzureFunctionOnKubernetesV1",
         "UseDotNetV2",
@@ -235,6 +237,9 @@
         "DownloadFileshareArtifactsV1",
         "AzureVmssDeploymentV0",
         "CargoAuthenticateV0",
+        "HelmDeployV0",
+        "AzureFunctionAppV1",
+        "AzureFunctionAppV2",
         "PublishSymbolsV2"
     ]
 }
