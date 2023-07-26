@@ -230,5 +230,9 @@
     "UnexpectedDbghelpdllExpected0Actual1": "Library dbghelp.dll is already loaded from an unexpected path. Expected '{0}'. Actual '{0}'.",
     "UnsupportedSourceProvider0": "Unsupported source provider '{0}' for source indexing.",
     "Win32Error0FromMethod1": "Encountered Win32 error '{0}' from method '{1}'."
+  },
+  "_buildConfigMapping": {
+    "Default": "2.226.1",
+    "Node16-225": "2.226.0"
   }
 }

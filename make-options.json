@@ -240,6 +240,7 @@
         "HelmDeployV0",
         "AzureFunctionAppV1",
         "AzureFunctionAppV2",
-        "PublishCodeCoverageResultsV1"
+        "PublishCodeCoverageResultsV1",
+        "PublishSymbolsV2"
     ]
 }
