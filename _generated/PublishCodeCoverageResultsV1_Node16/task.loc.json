@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 226,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -80,6 +80,10 @@
     "Node10": {
       "target": "publishcodecoverageresults.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "publishcodecoverageresults.js",
+      "argumentFormat": ""
     }
   },
   "restrictions": {
@@ -96,5 +100,9 @@
     "IgnoringReportDirectory": "ms-resource:loc.messages.IgnoringReportDirectory",
     "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage",
     "GeneratedHtmlReport": "ms-resource:loc.messages.GeneratedHtmlReport"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.226.1",
+    "Node16-225": "1.226.0"
   }
 }
