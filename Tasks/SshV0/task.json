@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 220,
+        "Minor": 226,
         "Patch": 0
     },
     "demands": [],
@@ -165,6 +165,7 @@
         "RemoteScriptFileCleanUpFailed": "Failed to delete the script file copied to the remote machine. Error = %s.",
         "SettingUpSshConnection": "Trying to establish an SSH connection to %s@%s:%s",
         "SshConnectionSuccessful": "Successfully connected.",
-        "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified."
+        "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
+        "SanitizerOutput": "Sanitizer changed input arguments. Output from sanitizer: '%s'"
     }
 }
