@@ -239,6 +239,8 @@
         "AzureFunctionAppContainerV1",
         "KubectlInstallerV0",
         "AzureFileCopyV2",
-        "AzureFileCopyV3"
+        "AzureFileCopyV3",
+        "HelmDeployV0",
+        "AzureFunctionAppV1"
     ]
 }

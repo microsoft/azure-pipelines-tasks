@@ -144,7 +144,7 @@ namespace BuildConfigGen
             if (targetConfigs.Any(x => x.isNode))
             {
                 // Task may not have nodejs or packages.json (example: AutomatedAnalysisV0) 
-                if (!hasNodeHandler(taskHandlerContents))
+                if (!HasNodeHandler(taskHandlerContents))
                 {
                     Console.WriteLine($"Skipping {task} because task doesn't have node handler does not exist");
                     return;
@@ -375,21 +375,32 @@ namespace BuildConfigGen
             ensureUpdateModeVerifier!.WriteAllText(outputNodePackagePath, nodePackageContent, suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
-        private static bool hasNodeHandler(JsonNode taskHandlerContents)
+        private static bool HasNodeHandler(JsonNode taskHandlerContents)
         {
-            var handlers = taskHandlerContents["execution"]?.AsObject();
-            bool hasNodeHandler = false;
-            if (handlers == null) { return false; }
+            var possibleExecutionHandlers = new[] { "prejobexecution", "execution", "postjobexecution" };
 
-            foreach (var k in handlers)
+            foreach (var possibleExecutor in possibleExecutionHandlers)
+            {
+                var handlers = taskHandlerContents[possibleExecutor]?.AsObject();
+                if (ExecutorHasNodeHandler(handlers)) { return true; }
+            }
+            
+            return false;
+        }
+
+        private static bool ExecutorHasNodeHandler(JsonObject? executorHandlerContent)
+        {
+            if (executorHandlerContent == null) { return false; }
+
+            foreach (var k in executorHandlerContent)
             {
                 if (k.Key.ToLower().StartsWith("node"))
                 {
-                    hasNodeHandler = true;
-                    break;
+                    return true;
                 }
             }
-            return hasNodeHandler;
+
+            return false;
         }
 
         private static void CopyConfig(string taskTarget, string taskOutput, string? skipPathName, string? skipFileName, bool removeExtraFiles, bool throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor, Config.ConfigRecord config, bool allowPreprocessorDirectives)
@@ -618,7 +629,7 @@ namespace BuildConfigGen
         {
             var targetNode = taskNode[target]?.AsObject();
 
-            if (targetNode != null)
+            if (targetNode != null && ExecutorHasNodeHandler(targetNode))
             {
                 if (targetNode!.ContainsKey(nodeVersion))
                 {
