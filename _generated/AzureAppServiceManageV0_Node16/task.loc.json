@@ -19,7 +19,7 @@
   "version": {
     "Major": 0,
     "Minor": 226,
-    "Patch": 1
+    "Patch": 0
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -287,6 +287,10 @@
   "execution": {
     "Node10": {
       "target": "azureappservicemanage.js"
+    },
+    "Node16": {
+      "target": "azureappservicemanage.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -432,5 +436,9 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "SwapWithPreviewNotsupported": "ms-resource:loc.messages.SwapWithPreviewNotsupported",
     "InvalidActionForPublishProfileEndpoint": "ms-resource:loc.messages.InvalidActionForPublishProfileEndpoint"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.226.1",
+    "Node16-225": "0.226.0"
   }
 }

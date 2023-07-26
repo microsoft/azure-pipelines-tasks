@@ -432,5 +432,9 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "SwapWithPreviewNotsupported": "ms-resource:loc.messages.SwapWithPreviewNotsupported",
     "InvalidActionForPublishProfileEndpoint": "ms-resource:loc.messages.InvalidActionForPublishProfileEndpoint"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.226.1",
+    "Node16-225": "0.226.0"
   }
 }
