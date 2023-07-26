@@ -234,6 +234,13 @@
         "AzureIoTEdgeV2",
         "DownloadFileshareArtifactsV1",
         "AzureVmssDeploymentV0",
-        "CargoAuthenticateV0"
+        "CargoAuthenticateV0",
+        "AzureMysqlDeploymentV1",
+        "AzureFunctionAppContainerV1",
+        "KubectlInstallerV0",
+        "AzureFileCopyV2",
+        "AzureFileCopyV3",
+        "HelmDeployV0",
+        "AzureFunctionAppV1"
     ]
 }

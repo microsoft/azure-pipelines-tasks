@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 226,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [
     "azureps"
@@ -314,6 +314,10 @@
   "prejobexecution": {
     "Node10": {
       "target": "PreJobExecutionAzureFileCopy.js"
+    },
+    "Node16": {
+      "target": "PreJobExecutionAzureFileCopy.js",
+      "argumentFormat": ""
     }
   },
   "execution": {
@@ -368,5 +372,9 @@
     "AFC_PreexecutionJob_UnableToGetStorageKey": "ms-resource:loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey",
     "AFC_UninstallWinRMCustomScriptExtension": "ms-resource:loc.messages.AFC_UninstallWinRMCustomScriptExtension",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.226.1",
+    "Node16-225": "2.226.0"
   }
 }
