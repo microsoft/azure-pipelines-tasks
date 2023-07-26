@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 226,
-    "Patch": 1
+    "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -233,6 +233,10 @@
   "execution": {
     "Node10": {
       "target": "azurermwebappdeployment.js"
+    },
+    "Node16": {
+      "target": "azurermwebappdeployment.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -392,5 +396,9 @@
     "SyncingFunctionTriggers": "Syncing triggers for function app",
     "SyncFunctionTriggersSuccess": "Sync triggers for function app completed successfully",
     "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.226.1",
+    "Node16-225": "1.226.0"
   }
 }

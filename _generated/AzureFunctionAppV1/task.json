@@ -392,5 +392,9 @@
     "SyncingFunctionTriggers": "Syncing triggers for function app",
     "SyncFunctionTriggersSuccess": "Sync triggers for function app completed successfully",
     "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.226.1",
+    "Node16-225": "1.226.0"
   }
 }
