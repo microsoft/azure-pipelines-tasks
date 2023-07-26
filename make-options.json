@@ -244,7 +244,7 @@
         "AzureFileCopyV3",
         "HelmDeployV0",
         "AzureFunctionAppV1",
-	    "PublishCodeCoverageResultsV1",
+        "PublishCodeCoverageResultsV1",
         "PublishSymbolsV2"
     ]
 }
