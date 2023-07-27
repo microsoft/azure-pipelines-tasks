@@ -30,7 +30,7 @@ steps:
 
 - script: |
     rmdir /s /q _build
-    rmdir /s /q _package/nested-zips-layout
+    rmdir /s /q _package\nested-zips-layout
   displayName: Remove _build folder to reduce space
 
 # Sign all task zips as nuget packages
