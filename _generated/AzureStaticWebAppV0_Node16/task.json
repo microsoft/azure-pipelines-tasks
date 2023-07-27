@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 226,
-    "Patch": 1
+    "Patch": 0
   },
   "preview": true,
   "minimumAgentVersion": "1.95.0",
@@ -166,6 +166,14 @@
     "Node10": {
       "target": "index.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "index.js",
+      "argumentFormat": ""
     }
+  },
+  "_buildConfigMapping": {
+    "Default": "0.226.1",
+    "Node16-225": "0.226.0"
   }
 }
