@@ -28,7 +28,9 @@ steps:
 - script: node ./ci/stage-package.js true individually
   displayName: Stage tasks individually into the package directory
 
-- script: rmdir /s /q _build
+- script: |
+    rmdir /s /q _build
+    rmdir /s /q _package/nested-zips-layout
   displayName: Remove _build folder to reduce space
 
 # Sign all task zips as nuget packages
