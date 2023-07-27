@@ -241,6 +241,7 @@
         "AzureFunctionAppV1",
         "AzureFunctionAppV2",
         "PublishCodeCoverageResultsV1",
-        "PublishSymbolsV2"
+        "PublishSymbolsV2",
+        "AzureSpringCloudV0"
     ]
 }
