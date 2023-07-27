@@ -3,9 +3,10 @@ import path = require('path');
 import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
+import { sanitizeScriptArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
 var uuidV4 = require('uuid/v4');
 
-function getActionPreference(vstsInputName: string, defaultAction: string = 'Default', validActions: string[] = [ 'Default', 'Stop', 'Continue', 'SilentlyContinue' ]) {
+function getActionPreference(vstsInputName: string, defaultAction: string = 'Default', validActions: string[] = ['Default', 'Stop', 'Continue', 'SilentlyContinue']) {
     let result: string = tl.getInput(vstsInputName, false) || defaultAction;
 
     if (validActions.map(actionPreference => actionPreference.toUpperCase()).indexOf(result.toUpperCase()) < 0) {
@@ -75,7 +76,30 @@ async function run() {
 
         let script = '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
-            script = `. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim();
+            let resultArgs = input_arguments;
+
+            const featureFlags = {
+                audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
+                activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
+                telemetry: tl.getBoolFeatureFlag('AZP_75787_ENABLE_COLLECT')
+            };
+
+            if (featureFlags.activate || featureFlags.activate || featureFlags.telemetry) {
+                const sanitizedArgs = sanitizeScriptArgs(
+                    input_arguments,
+                    {
+                        argsSplitSymbols: '``',
+                        warningLocSymbol: 'JS_SanitizerOutput',
+                        telemetryFeature: 'PowerShellV2',
+                        saniziteRegExp: /(?<!`)([^a-zA-Z0-9\\` _'"\-=\/:\.])/g
+                    }
+                );
+                if (featureFlags.activate) {
+                    resultArgs = sanitizedArgs;
+                }
+            }
+
+            script = `. '${input_filePath.replace(/'/g, "''")}' ${resultArgs}`.trim();
         } else {
             script = `${input_script}`;
         }
@@ -123,7 +147,7 @@ async function run() {
         // Note, use "-Command" instead of "-File" to match the Windows implementation. Refer to
         // comment on Windows implementation for an explanation why "-Command" is preferred.
         console.log('========================== Starting Command Output ===========================');
-        
+
         const executionOperator = input_runScriptInSeparateScope ? '&' : '.';
         let powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
             .arg('-NoLogo')
