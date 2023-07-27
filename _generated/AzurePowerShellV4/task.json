@@ -205,5 +205,9 @@
     "JS_ExitCode": "PowerShell exited with code '%s'.",
     "JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+  },
+  "_buildConfigMapping": {
+    "Default": "4.226.1",
+    "Node16-225": "4.226.0"
   }
 }
