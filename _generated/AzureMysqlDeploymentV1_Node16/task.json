@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 226,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -190,6 +190,10 @@
   "execution": {
     "Node10": {
       "target": "azuremysqldeploy.js"
+    },
+    "Node16": {
+      "target": "azuremysqldeploy.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -226,5 +230,9 @@
     "NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure mysql server. Error: %s",
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
     "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.226.1",
+    "Node16-225": "1.226.0"
   }
 }
