@@ -119,5 +119,9 @@
     "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
     "RetryingWithVaultResourceIdFromResponse": "Retrying with vault resource Id reterieved from response : %s",
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+  },
+  "_buildConfigMapping": {
+    "Default": "1.226.1",
+    "Node16-225": "1.226.0"
   }
 }
