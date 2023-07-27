@@ -39,5 +39,9 @@
   "messages": {
     "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
     "VerifyKubectlInstallation": "Verifying kubectl installation..."
+  },
+  "_buildConfigMapping": {
+    "Default": "0.226.1",
+    "Node16-225": "0.226.0"
   }
 }

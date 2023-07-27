@@ -39,5 +39,9 @@
   "messages": {
     "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
     "VerifyKubectlInstallation": "ms-resource:loc.messages.VerifyKubectlInstallation"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.226.1",
+    "Node16-225": "0.226.0"
   }
 }
