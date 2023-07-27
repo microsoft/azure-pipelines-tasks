@@ -166,7 +166,8 @@ function Upload-FilesToAzureContainer
           [string][Parameter(Mandatory=$true)]$azCopyLocation,
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$destinationType,
-          [bool]$useDefaultArguments
+          [bool]$useDefaultArguments,
+          [string][Parameter(Mandatory=$false)]$containerSasToken = ""
     )
 
     try
@@ -219,15 +220,25 @@ function Upload-FilesToAzureContainer
         Write-Output (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
 
         $blobPrefix = $blobPrefix.Trim()
-        $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix).Trim("/")
+        $trailingChars = [regex]::Escape("/") + '+$'
+        $blobPrefix = $blobPrefix -replace $trailingChars, "/"
+        $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix.TrimStart("/"))
+
         $containerURL = $containerURL.Replace('$','`$')
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
 
-        Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
+        $useSanitizer = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
+        Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $useSanitizer"
 
-        $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"
-
-        Invoke-Expression $uploadToBlobCommand
+        if ($useSanitizer) {
+            $arguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV4"
+            Write-Output "##[command] & azcopy copy `"$sourcePath`" `"$containerURL`"  $arguments"
+            & azcopy copy $sourcePath $containerURL$containerSasToken $arguments
+        } else {
+            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
+            $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"    
+            Invoke-Expression $uploadToBlobCommand
+        }
 
         if($LASTEXITCODE -eq 0)
         {
@@ -1360,13 +1371,5 @@ function CleanUp-PSModulePathForHostedAgent {
 
         Write-Verbose "Found Az module path $azPSModulePath, will be used"
         $env:PSModulePath = ($azPSModulePath + ";" + $newEnvPSModulePath).Trim(";")
-    }
-}
-
-function Validate-AdditionalArguments([string]$additionalArguments)
-{ 
-    if($additionalArguments -match "[&;|]")
-    {
-        ThrowError -errorMessage (Get-VstsLocString -Key "AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters")
     }
 }

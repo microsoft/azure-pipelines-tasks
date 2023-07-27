@@ -22,6 +22,9 @@ Write-Verbose "additionalArguments = $additionalArguments"
 Write-Verbose "copyFilesInParallel = $copyFilesInParallel"
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy"
 
+Import-Module $PSScriptRoot/ps_modules/VstsTaskSdk
+Import-Module $PSScriptRoot/ps_modules/Sanitizer
+
 . $PSScriptRoot/RoboCopyJob.ps1
 . $PSScriptRoot/Utility.ps1
 
@@ -42,7 +45,6 @@ $envOperationStatus = 'Passed'
 
 Validate-SourcePath $sourcePath
 Validate-DestinationPath $targetPath $environmentName
-Validate-AdditionalArguments $additionalArguments
 
 if([string]::IsNullOrWhiteSpace($environmentName))
 {

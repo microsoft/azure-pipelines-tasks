@@ -80,7 +80,7 @@
         "DotNetCoreInstallerV1",
         "DownloadBuildArtifactsV0",
         "DownloadBuildArtifactsV1",
-        "DownloadFileshareArtifactsV0",
+        "DownloadFileshareArtifactsV1",
         "DownloadGitHubNugetPackageV1",
         "DownloadGitHubNpmPackageV1",
         "DownloadGitHubReleaseV0",
@@ -121,6 +121,7 @@
         "JenkinsDownloadArtifactsV1",
         "JenkinsQueueJobV2",
         "KubectlInstallerV0",
+        "KubeloginInstallerV0",
         "KubernetesV0",
         "KubernetesV1",
         "KubernetesManifestV0",
@@ -164,7 +165,6 @@
         "PublishTestResultsV1",
         "PublishTestResultsV2",
         "PublishToAzureServiceBusV1",
-        "PyPIPublisherV0",
         "PythonScriptV0",
         "QueryWorkItemsV0",
         "QuickPerfTestV1",
@@ -196,7 +196,6 @@
         "WindowsMachineFileCopyV2",
         "XamarinAndroidV1",
         "XamariniOSV2",
-        "XamarinTestCloudV1",
         "XcodeV5"
     ],
     "taskResources": [
@@ -216,10 +215,33 @@
         "Tests"
     ],
     "Node16": [
-        "CondaEnvironmentV0",
-        "CondaEnvironmentV1",
-        "FuncToolsInstallerV0",
-        "PackerBuildV0",
-        "PackerBuildV1"
+        "DownloadGitHubNugetPackageV1",
+        "KubernetesV0",
+        "NuGetPublisherV0",
+        "MysqlDeploymentOnMachineGroupV1",
+        "GitHubReleaseV0",
+        "GitHubReleaseV1",
+        "GitHubCommentV0",
+        "AndroidSigningV2",
+        "AndroidSigningV3"
+    ],
+    "Node16_225": [
+        "AzureRmWebAppDeploymentV3",
+        "AzureRmWebAppDeploymentV4",
+        "AzureFunctionOnKubernetesV0",
+        "AzureFunctionOnKubernetesV1",
+        "UseDotNetV2",
+        "KubernetesManifestV0",
+        "KubernetesManifestV1",
+        "AzureIoTEdgeV2",
+        "DownloadFileshareArtifactsV1",
+        "AzureVmssDeploymentV0",
+        "CargoAuthenticateV0",
+        "HelmDeployV0",
+        "AzureFunctionAppV1",
+        "AzureFunctionAppV2",
+        "PublishCodeCoverageResultsV1",
+        "PublishSymbolsV2",
+        "AzureAppServiceManageV0"
     ]
 }

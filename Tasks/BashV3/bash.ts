@@ -2,38 +2,51 @@ import fs = require('fs');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
-import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry'
-import { processBashEnvVariables } from './bashEnvProcessor';
+import { sanitizeScriptArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
 var uuidV4 = require('uuid/v4');
 
-const featureFlags = {
-    enableTelemetry: getFeatureFlagValue('AZP_TASK_FF_BASHV3_ENABLE_INPUT_ARGS_TELEMETRY', true),
-    enableSecureArgs: getFeatureFlagValue('AZP_TASK_FF_BASHV3_ENABLE_SECURE_ARGS', true)
-}
+async function runBashPwd(bashPath: string, directoryPath: string): Promise<string> {
+    let pwdOutput = '';
+    const bashPwd = tl.tool(bashPath).arg('-c').arg('pwd');
+    bashPwd.on('stdout', data => pwdOutput += data.toString());
 
-async function translateDirectoryPath(bashPath: string, directoryPath: string): Promise<string> {
-    let bashPwd = tl.tool(bashPath)
-        .arg('-c')
-        .arg('pwd');
-
-    let bashPwdOptions = <tr.IExecOptions>{
+    const bashPwdOptions = <tr.IExecOptions>{
         cwd: directoryPath,
         failOnStdErr: true,
         errStream: process.stdout,
         outStream: process.stdout,
         ignoreReturnCode: false
     };
-    let pwdOutput = '';
-    bashPwd.on('stdout', (data) => {
-        pwdOutput += data.toString();
-    });
+
     await bashPwd.exec(bashPwdOptions);
+
     pwdOutput = pwdOutput.trim();
+
     if (!pwdOutput) {
         throw new Error(tl.loc('JS_TranslatePathFailed', directoryPath));
     }
 
-    return `${pwdOutput}`;
+    return pwdOutput;
+}
+
+async function translateDirectoryPath(bashPath: string, directoryPath: string): Promise<string> {
+    if (directoryPath.endsWith('\\')) {
+        directoryPath = directoryPath.slice(0, -1);
+    }
+
+    const directoryPathTranslated = await runBashPwd(bashPath, directoryPath);
+
+    const parentDirectoryPath = directoryPath.split('\\').slice(0, -1).join('\\');
+
+    if (parentDirectoryPath.split('\\').join('')) {
+        const parentDirectoryPathTranslated = await runBashPwd(bashPath, parentDirectoryPath);
+
+        if (directoryPathTranslated == parentDirectoryPathTranslated) {
+            throw new Error(tl.loc('JS_TranslatePathFailed', directoryPath));
+        }
+    }
+
+    return directoryPathTranslated;
 }
 
 /**
@@ -102,40 +115,26 @@ async function run() {
                 targetFilePath = input_filePath;
             }
 
-            let resultArgs = input_arguments
+            let resultArgs = input_arguments;
 
-            if (featureFlags.enableSecureArgs || featureFlags.enableTelemetry) {
-                try {
-                    const [processedArgs, telemetry] = processBashEnvVariables(input_arguments)
+            const featureFlags = {
+                audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
+                activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
+                telemetry: tl.getBoolFeatureFlag('AZP_75787_ENABLE_COLLECT')
+            };
 
-                    if (featureFlags.enableSecureArgs) {
-                        const argsEnvVar = {
-                            envName: "BASHV3_INPUT_SCRIPT_ARGS",
-                            value: processedArgs.trim()
-                        };
-                        process.env[argsEnvVar.envName] = argsEnvVar.value;
-                        resultArgs = `$${argsEnvVar.envName}`
+            if (featureFlags.activate || featureFlags.activate || featureFlags.telemetry) {
+                const sanitizedArgs = sanitizeScriptArgs(
+                    input_arguments,
+                    {
+                        argsSplitSymbols: '\\\\',
+                        warningLocSymbol: 'SanitizerOutput',
+                        telemetryFeature: 'BashV3',
+                        saniziteRegExp: /(?<!\\)([^a-zA-Z0-9\\` _'"\-=\/:\.])/g
                     }
-
-                    if (featureFlags.enableTelemetry) {
-                        emitTelemetry('TaskHub', 'BashV3', telemetry)
-                    }
-                }
-                catch (err) {
-                    if (featureFlags.enableTelemetry) {
-                        tl.debug("Publishing error telemetry...");
-                        emitTelemetry('TaskHub', 'BashV3', {
-                            EnvProcessorError:
-                            {
-                                value: err.toString() || null,
-                                stack: err.stack || null,
-                            }
-                        });
-                    }
-
-                    if (featureFlags.enableSecureArgs) {
-                        throw err
-                    }
+                );
+                if (featureFlags.activate) {
+                    resultArgs = sanitizedArgs;
                 }
             }
 

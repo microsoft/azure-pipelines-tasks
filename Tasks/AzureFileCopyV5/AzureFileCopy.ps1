@@ -60,18 +60,21 @@ Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
 
 $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 
 # Update PSModulePath for hosted agent
 . "$PSScriptRoot\Utility.ps1"
+
 CleanUp-PSModulePathForHostedAgent
 
 $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
 $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
 if (Get-Module Az.Accounts -ListAvailable) {
-    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $vstsAccessToken
+    $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
+    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
 }
 else {
     Write-Verbose "No module found with name: Az.Accounts"
@@ -180,8 +183,14 @@ try {
     }
 
     Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArgumentsForBlobCopy
-    Validate-AdditionalArguments $additionalArguments
 
+    $useSanitizer = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
+    Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state (for sas token): $useSanitizer"
+    $containerSasToken = ""
+    if ($useSanitizer) {
+        $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInMinutes $sasTokenTimeOutInMinutes
+    }
+    
     # Uploading files to container
     Upload-FilesToAzureContainer -sourcePath $sourcePath `
                                 -endPoint $endpoint `
@@ -194,6 +203,7 @@ try {
                                 -destinationType $destination `
                                 -useDefaultArguments $useDefaultArgumentsForBlobCopy `
                                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy `
+                                -containerSasToken $containerSasToken
     
     # Complete the task if destination is azure blob
     if ($destination -eq "AzureBlob")
