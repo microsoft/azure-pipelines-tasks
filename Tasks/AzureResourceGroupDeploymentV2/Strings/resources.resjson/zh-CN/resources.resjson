@@ -53,6 +53,8 @@
   "loc.input.help.deploymentOutputs": "提供输出变量的变量名称，该输出变量中将包含字符串格式的当前部署对象的输出部分。可使用 \"ConvertFrom-Json\" PowerShell cmdlet 分析 JSON 对象并访问单个输出值。有关详细信息，请参阅[此链接](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)",
   "loc.input.label.addSpnToEnvironment": "在替代参数中访问服务主体详细信息",
   "loc.input.help.addSpnToEnvironment": "将选择的 Azure 终结点的服务主体 ID 和密钥添加到脚本的执行环境中。可以在 \"-key $servicePrincipalKey\" 等替代参数中使用以下变量: \"$servicePrincipalId\" 和 \"$servicePrincipalKey\"",
+  "loc.input.label.useWithoutJSON": "在未应用 JSON.Stringify 的情况下使用单个输出值",
+  "loc.input.help.useWithoutJSON": "默认情况下，单个输出值通过 JSON.Stringify 进行转换。如果你想要按原样使用输出值，而不通过 JSON.Stringify 转换它们，请启用此选项。有关更多详细详细，请参阅[此处](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)",
   "loc.messages.CheckResourceGroupExistence": "正在检查是否存在以下资源组: %s。",
   "loc.messages.ResourceGroupStatusFetchFailed": "未能检查资源组状态。错误: %s。",
   "loc.messages.ResourceGroupStatus": "资源组已存在: %s。",
