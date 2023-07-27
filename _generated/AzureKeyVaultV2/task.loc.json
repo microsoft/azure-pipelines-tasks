@@ -120,5 +120,9 @@
     "RetryingWithVaultResourceIdFromResponse": "ms-resource:loc.messages.RetryingWithVaultResourceIdFromResponse",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "InvalidKeyVaultName": "ms-resource:loc.messages.InvalidKeyVaultName"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.226.1",
+    "Node16-225": "2.226.0"
   }
 }
