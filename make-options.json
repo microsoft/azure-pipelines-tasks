@@ -243,6 +243,7 @@
         "PublishCodeCoverageResultsV1",
         "PublishSymbolsV2",
         "AzureAppServiceManageV0",
-        "AzureKeyVaultV1"
+        "AzureKeyVaultV1",
+        "AzurePowerShellV5"
     ]
 }
