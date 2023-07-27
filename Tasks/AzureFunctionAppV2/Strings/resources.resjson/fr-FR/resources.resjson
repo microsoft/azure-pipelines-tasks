@@ -6,7 +6,7 @@
   "loc.releaseNotes": "Nouveautés de la version 2.* <br /> prise en charge du déploiement WAR supprimé, définition des options de Web.Config et option de la commande Startup pour Azure Function Apps Linux.",
   "loc.group.displayName.AdditionalDeploymentOptions": "Options de déploiement supplémentaires",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Paramètres d’application et de configuration",
-  "loc.input.label.azureSubscription": "Connexion Azure Resource Manager",
+  "loc.input.label.azureSubscription": "Abonnement Azure",
   "loc.input.help.azureSubscription": "Sélectionnez l'abonnement Azure Resource Manager pour le déploiement.",
   "loc.input.label.appType": "Type d'application",
   "loc.input.help.appType": "Sélectionnez le type d’application de fonction Azure pour le déploiement.",
