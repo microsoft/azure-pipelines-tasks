@@ -31,6 +31,7 @@
   "loc.messages.DownloadFromAzureBlobStorage": "Descargando artefactos de Azure Blob Storage. Nombre del contenedor: %s",
   "loc.messages.SuccessFullyFetchedItemList": "La lista de elementos se recuperó correctamente.",
   "loc.messages.StorageAccountDoesNotExist": "No se pudo obtener la cuenta de Azure Storage con el nombre %s.",
+  "loc.messages.RequestedUrlTooLong": "La dirección URL solicitada es demasiado larga. Esto suele ocurrir cuando hay muchos grupos de recursos en la suscripción. Intente establecer la entrada azureResourceGroupName.",
   "loc.messages.UnzipExtractFile": "Extrayendo archivo: %s",
   "loc.messages.SevenZipExtractFile": "Extrayendo archivo: %s",
   "loc.messages.TarExtractFile": "Extrayendo archivo: %s",

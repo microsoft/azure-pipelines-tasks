@@ -53,6 +53,8 @@
   "loc.input.help.deploymentOutputs": "為輸出變數提供變數的名稱，該名稱會以字串格式包含目前部署物件的輸出區段。您可以使用 \"ConvertFrom-Json\" PowerShell Cmdlet 來剖析 JSON 物件，並存取個別的輸出值。如需詳細資料，請參閱[這裡](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)",
   "loc.input.label.addSpnToEnvironment": "存取覆寫參數中的服務主體詳細資料",
   "loc.input.help.addSpnToEnvironment": "將服務主體識別碼和您所選 Azure 端點的金鑰新增至指令碼的執行環境。您可以在 `-key $servicePrincipalKey` 等覆寫參數中使用以下變數: `$servicePrincipalId` 和 `$servicePrincipalKey`。",
+  "loc.input.label.useWithoutJSON": "使用未套用 JSON.Stringify 的個別輸出值",
+  "loc.input.help.useWithoutJSON": "正在根據預設透過 JSON.Stringify 轉換個別輸出值。如果您想要以原樣使用輸出值，而不是透過 JSON.Stringify 將其轉換，請啟用此選項。如需詳細資料，請參閱[此處](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)",
   "loc.messages.CheckResourceGroupExistence": "正在檢查下列資源群組是否存在: %s。",
   "loc.messages.ResourceGroupStatusFetchFailed": "無法查看資源群組狀態。錯誤: %s。",
   "loc.messages.ResourceGroupStatus": "已有資源群組: %s。",
