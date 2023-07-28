@@ -247,6 +247,7 @@
         "AzureFunctionAppV2",
         "PublishCodeCoverageResultsV1",
         "PublishSymbolsV2",
+        "AzureStaticWebAppV0",
         "AzureAppServiceManageV0",
         "AzureKeyVaultV1",
         "AzureKeyVaultV2",
