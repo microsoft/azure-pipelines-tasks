@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 226,
-    "Patch": 1
+    "Patch": 0
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -84,6 +84,10 @@
   "execution": {
     "Node10": {
       "target": "nlbtask.js"
+    },
+    "Node16": {
+      "target": "nlbtask.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -99,5 +103,9 @@
     "CouldNotFetchNetworkInterface": "ms-resource:loc.messages.CouldNotFetchNetworkInterface",
     "FailedSettingNetworkInterface": "ms-resource:loc.messages.FailedSettingNetworkInterface",
     "SettingTheNetworkInterface": "ms-resource:loc.messages.SettingTheNetworkInterface"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.226.1",
+    "Node16-225": "1.226.0"
   }
 }

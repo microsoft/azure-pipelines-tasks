@@ -99,5 +99,9 @@
     "CouldNotFetchNetworkInterface": "ms-resource:loc.messages.CouldNotFetchNetworkInterface",
     "FailedSettingNetworkInterface": "ms-resource:loc.messages.FailedSettingNetworkInterface",
     "SettingTheNetworkInterface": "ms-resource:loc.messages.SettingTheNetworkInterface"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.226.1",
+    "Node16-225": "1.226.0"
   }
 }
