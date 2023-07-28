@@ -16,7 +16,7 @@ export class azureclitask {
         var exitCode: number = 0;
         try{
             // sets the http proxy variables, when needed
-            let proxy = tl.getProxyConfiguration();
+            let proxy = tl.getHttpProxyConfiguration();
             var proxyFormattedUrl: string = proxy.proxyFormattedUrl;
             if(!!proxyFormattedUrl) {
                 process.env['http_proxy'] = proxyFormattedUrl;
