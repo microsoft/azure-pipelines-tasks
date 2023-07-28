@@ -251,6 +251,7 @@
         "AzureKeyVaultV1",
         "AzureKeyVaultV2",
         "AzurePowerShellV4",
-        "AzurePowerShellV5"
+        "AzurePowerShellV5",
+        "AzureResourceGroupDeploymentV2"
     ]
 }
