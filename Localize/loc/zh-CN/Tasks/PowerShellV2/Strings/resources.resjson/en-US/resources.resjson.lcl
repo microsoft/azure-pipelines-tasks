@@ -399,6 +399,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.JS_SanitizerOutput" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Sanitizer changed input arguments. Output from sanitizer: '%s']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[擦除系统更改了输入参数。来自擦除器的输出: “%s”]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.JS_Stderr" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[PowerShell wrote one or more lines to the standard error stream.]]></Val>
@@ -449,6 +458,15 @@
           <Val><![CDATA[Invalid target type '{0}'. The value must be one of: 'filepath' or 'inline']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[目标类型“{0}”无效。该值必须是以下值之一: “filepath” 或 “inline”]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.PS_SanitizerOutput" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Sanitizer changed input arguments. Output from sanitizer: '{0}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[擦除系统更改了输入参数。来自擦除器的输出: “{0}”]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
