@@ -74,5 +74,9 @@
     "NGCommon_UnabletoDetectNuGetVersio": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersio",
     "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.226.1",
+    "Node16-225": "0.226.0"
   }
 }
