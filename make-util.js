@@ -411,7 +411,11 @@ var downloadFile = function (url) {
 
         // download the file
         mkdir('-p', path.join(downloadPath, 'file'));
-        var result = syncRequest('GET', url);
+        var result = syncRequest('GET', url, {
+            retry: true,
+            retryDelay: 5000,
+            maxRetries: 3
+        });
         fs.writeFileSync(targetPath, result.getBody());
 
         // write the completed marker
