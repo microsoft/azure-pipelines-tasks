@@ -1,0 +1,33 @@
+{
+  "name": "vsts-tasks-azurewebappslotswap",
+  "version": "0.1.0",
+  "description": "Azure Pipelines Azure WebApp Slot Swap",
+  "main": "azurewebappslotswap.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^16.11.39",
+    "@types/q": "1.0.7",
+    "agent-base": "6.0.2",
+    "azure-pipelines-task-lib": "^4.4.0",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.225.1",
+    "azure-pipelines-tasks-utility-common": "^3.225.0",
+    "q": "1.4.1",
+    "xml2js": "^0.5.0"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
+  }
+}

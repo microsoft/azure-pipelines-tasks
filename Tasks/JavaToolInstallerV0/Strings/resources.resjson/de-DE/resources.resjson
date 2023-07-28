@@ -31,6 +31,7 @@
   "loc.messages.DownloadFromAzureBlobStorage": "Artefakte werden aus dem Azure-Blobspeicher heruntergeladen, Containername: %s",
   "loc.messages.SuccessFullyFetchedItemList": "Erfolgreich abgerufene Elementliste",
   "loc.messages.StorageAccountDoesNotExist": "Fehler beim Abrufen des Azure-Speicherkontos mit dem Namen %s.",
+  "loc.messages.RequestedUrlTooLong": "Die angeforderte URL ist zu lang. Dies geschieht in der Regel, wenn sich viele Ressourcengruppen im Abonnement befinden. Versuchen Sie, die AzureResourceGroupName-Eingabe festzulegen.",
   "loc.messages.UnzipExtractFile": "Die Datei wird extrahiert: %s",
   "loc.messages.SevenZipExtractFile": "Die Datei wird extrahiert: %s",
   "loc.messages.TarExtractFile": "Die Datei wird extrahiert: %s",

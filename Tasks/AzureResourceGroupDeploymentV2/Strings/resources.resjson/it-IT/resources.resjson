@@ -53,6 +53,8 @@
   "loc.input.help.deploymentOutputs": "Specificare un nome per la variabile di output che conterrà la sezione degli output dell'oggetto distribuzione corrente in formato stringa. È possibile usare il cmdlet \"ConvertFrom-Json\" di PowerShell per analizzare l'oggetto JSON e accedere ai singoli valori di output. Per maggiori dettagli, vedere [questo articolo](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)",
   "loc.input.label.addSpnToEnvironment": "Accedi ai dettagli dell'entità servizio nei parametri di override",
   "loc.input.help.addSpnToEnvironment": "Aggiunge l'ID entità servizio e la chiave dell'endpoint di Azure scelto all'ambiente di esecuzione dello script. Nei parametri di override è possibile usare le variabili `$servicePrincipalId` e `$servicePrincipalKey`, ad esempio `-key $servicePrincipalKey`",
+  "loc.input.label.useWithoutJSON": "Usare singoli valori di output senza JSON.Stringify applicato",
+  "loc.input.help.useWithoutJSON": "I singoli valori di output vengono convertiti tramite JSON.Stringify per impostazione predefinita. Se si vogliono usare i valori di output così come sono senza convertirli tramite JSON.Stringify, abilitare questa opzione. Per altre informazioni, vedere [qui](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)",
   "loc.messages.CheckResourceGroupExistence": "Verifica dell'esistenza del gruppo di risorse seguente: %s.",
   "loc.messages.ResourceGroupStatusFetchFailed": "Non è stato possibile verificare lo stato del gruppo di risorse: Errore: %s.",
   "loc.messages.ResourceGroupStatus": "Il gruppo di risorse %s esiste già.",
