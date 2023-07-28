@@ -245,6 +245,7 @@
         "HelmDeployV0",
         "AzureFunctionAppV1",
         "AzureFunctionAppV2",
+        "NuGetV0",
         "PublishCodeCoverageResultsV1",
         "PublishSymbolsV2",
         "AzureWebAppContainerV1",
