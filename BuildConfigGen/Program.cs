@@ -26,13 +26,15 @@ namespace BuildConfigGen
         {
             public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".json" };
 
-            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode16, bool isWif, string preprocessorVariableName, bool enableBuildConfigOverrides);
+            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, string? overriddenDirectoryName = null);
 
-            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode16: false, isWif: false, preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false);
-            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode16: true, isWif: false, preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true);
-            public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode16: true, isWif: true, preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true);
+            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false, deprecated: false);
+            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: false, nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: true);
+            public static readonly ConfigRecord Node16_225 = new ConfigRecord(name: nameof(Node16_225), constMappingKey: "Node16-225", isDefault: false, isNode: true, isWif: false, nodePackageVersion: "^16.11.39", nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: false, overriddenDirectoryName: "Node16");
+            public static readonly ConfigRecord Node20 = new ConfigRecord(name: nameof(Node20), constMappingKey: "Node20-225", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false);
+            public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true, deprecated: false);
 
-            public static ConfigRecord[] Configs = { Default, Node16, WorkloadIdentityFederation };
+            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, WorkloadIdentityFederation };
         }
 
         // ensureUpdateModeVerifier wraps all writes.  if writeUpdate=false, it tracks writes that would have occured
@@ -66,6 +68,7 @@ namespace BuildConfigGen
             }
 
             string[] configs = configsString.Split("|");
+            string errorMessage;
 
             Dictionary<string, Config.ConfigRecord> configdefs = new(Config.Configs.Where(x => !x.isDefault).Select(x => new KeyValuePair<string, Config.ConfigRecord>(x.name, x)));
             HashSet<Config.ConfigRecord> targetConfigs = new HashSet<Config.ConfigRecord>();
@@ -73,13 +76,18 @@ namespace BuildConfigGen
             foreach (var config in configs)
             {
                 if (configdefs.TryGetValue(config, out var matchedConfig))
-                {
+                {   
+                    if (matchedConfig.deprecated && writeUpdates) 
+                    {
+                        errorMessage = "The config with the name: " + matchedConfig.name + " is deprecated. Writing updates for deprecated configs is not allowed.";
+                        throw new Exception(errorMessage);
+                    }
                     targetConfigs.Add(matchedConfig);
                 }
                 else
                 {
-                    string configsList = "Configs specified must be one of: " + string.Join(',', Config.Configs.Where(x=>!x.isDefault).Select(x => x.name));
-                    throw new Exception(configsList);
+                    errorMessage = "Configs specified must be one of: " + string.Join(',', Config.Configs.Where(x=>!x.isDefault).Select(x => x.name));
+                    throw new Exception(errorMessage);
                 }
             }
 
@@ -133,10 +141,10 @@ namespace BuildConfigGen
             string taskHandler = Path.Combine(taskTargetPath, "task.json");
             JsonNode taskHandlerContents = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(taskHandler))!;
 
-            if (targetConfigs.Any(x => x.isNode16))
+            if (targetConfigs.Any(x => x.isNode))
             {
                 // Task may not have nodejs or packages.json (example: AutomatedAnalysisV0) 
-                if (!hasNodeHandler(taskHandlerContents))
+                if (!HasNodeHandler(taskHandlerContents))
                 {
                     Console.WriteLine($"Skipping {task} because task doesn't have node handler does not exist");
                     return;
@@ -161,7 +169,13 @@ namespace BuildConfigGen
                 }
                 else
                 {
-                    taskOutput = Path.Combine(gitRootPath, "_generated", @$"{task}_{config.name}");
+                    string directoryName = config.name;
+                    if (config.overriddenDirectoryName != null)
+                    {
+                        directoryName = config.overriddenDirectoryName;
+                    }
+
+                    taskOutput = Path.Combine(gitRootPath, "_generated", @$"{task}_{directoryName}");
                 }
 
                 if (config.enableBuildConfigOverrides)
@@ -189,9 +203,9 @@ namespace BuildConfigGen
                 WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.json");
                 WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.loc.json");
 
-                if (config.isNode16)
+                if (config.isNode)
                 {
-                    WriteNode16PackageJson(taskOutput);
+                    WriteNodePackageJson(taskOutput, config.nodePackageVersion);
                 }
             }
         }
@@ -217,13 +231,20 @@ namespace BuildConfigGen
 
         private static void GetBuildConfigFileOverridePaths(Config.ConfigRecord config, string taskTargetPath, out string path, out string readmeFile)
         {
+            string directoryName = config.name;
+
             if (!config.enableBuildConfigOverrides)
             {
                 throw new Exception("BUG: should not get here: !config.enableBuildConfigOverrides");
             }
+    
+            if (config.overriddenDirectoryName != null)
+            {
+                directoryName = config.overriddenDirectoryName;
+            }
 
-            path = Path.Combine(taskTargetPath, buildConfigs, config.name);
-            readmeFile = Path.Combine(taskTargetPath, buildConfigs, config.name, filesOverriddenForConfigGoHereReadmeTxt);
+            path = Path.Combine(taskTargetPath, buildConfigs, directoryName);
+            readmeFile = Path.Combine(taskTargetPath, buildConfigs, directoryName, filesOverriddenForConfigGoHereReadmeTxt);
         }
 
         private static void CopyConfigOverrides(string taskTargetPath, string taskOutput, Config.ConfigRecord config)
@@ -335,40 +356,51 @@ namespace BuildConfigGen
 
             outputTaskNode.AsObject().Add("_buildConfigMapping", configMapping);
 
-            if (config.isNode16)
+            if (config.isNode)
             {
-                AddNode16handler(outputTaskNode);
+                AddNodehandler(outputTaskNode, config.nodeHandler);
             }
 
             ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
-        private static void WriteNode16PackageJson(string taskOutputNode16)
+        private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion)
         {
-            string outputNode16PackagePath = Path.Combine(taskOutputNode16, "package.json");
-            JsonNode outputNod16PackagePath = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNode16PackagePath))!;
-            outputNod16PackagePath["dependencies"]!["@types/node"] = "^16.11.39";
+            string outputNodePackagePath = Path.Combine(taskOutputNode, "package.json");
+            JsonNode outputNodePackagePathJsonNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNodePackagePath))!;
+            outputNodePackagePathJsonNode["dependencies"]!["@types/node"] = nodeVersion;
             // We need to add newline since npm install command always add newline at the end of package.json
             // https://github.com/npm/npm/issues/18545
-            string node16PackageContent = outputNod16PackagePath.ToJsonString(jso) + Environment.NewLine;
-            ensureUpdateModeVerifier!.WriteAllText(outputNode16PackagePath, node16PackageContent, suppressValidationErrorIfTargetPathDoesntExist: false);
+            string nodePackageContent = outputNodePackagePathJsonNode.ToJsonString(jso) + Environment.NewLine;
+            ensureUpdateModeVerifier!.WriteAllText(outputNodePackagePath, nodePackageContent, suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
-        private static bool hasNodeHandler(JsonNode taskHandlerContents)
+        private static bool HasNodeHandler(JsonNode taskHandlerContents)
         {
-            var handlers = taskHandlerContents["execution"]?.AsObject();
-            bool hasNodeHandler = false;
-            if (handlers == null) { return false; }
+            var possibleExecutionHandlers = new[] { "prejobexecution", "execution", "postjobexecution" };
 
-            foreach (var k in handlers)
+            foreach (var possibleExecutor in possibleExecutionHandlers)
+            {
+                var handlers = taskHandlerContents[possibleExecutor]?.AsObject();
+                if (ExecutorHasNodeHandler(handlers)) { return true; }
+            }
+            
+            return false;
+        }
+
+        private static bool ExecutorHasNodeHandler(JsonObject? executorHandlerContent)
+        {
+            if (executorHandlerContent == null) { return false; }
+
+            foreach (var k in executorHandlerContent)
             {
                 if (k.Key.ToLower().StartsWith("node"))
                 {
-                    hasNodeHandler = true;
-                    break;
+                    return true;
                 }
             }
-            return hasNodeHandler;
+
+            return false;
         }
 
         private static void CopyConfig(string taskTarget, string taskOutput, string? skipPathName, string? skipFileName, bool removeExtraFiles, bool throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor, Config.ConfigRecord config, bool allowPreprocessorDirectives)
@@ -586,25 +618,25 @@ namespace BuildConfigGen
             throw new Exception("Execution block with Node not found.");
         }
 
-        private static void AddNode16handler(JsonNode taskNode)
+        private static void AddNodehandler(JsonNode taskNode, string nodeVersion)
         {
-            AddHandler(taskNode, "prejobexecution");
-            AddHandler(taskNode, "execution");
-            AddHandler(taskNode, "postjobexecution");
+            AddHandler(taskNode, "prejobexecution", nodeVersion);
+            AddHandler(taskNode, "execution", nodeVersion);
+            AddHandler(taskNode, "postjobexecution", nodeVersion);
         }
 
-        private static void AddHandler(JsonNode taskNode, string target)
+        private static void AddHandler(JsonNode taskNode, string target, string nodeVersion)
         {
             var targetNode = taskNode[target]?.AsObject();
 
-            if (targetNode != null)
+            if (targetNode != null && ExecutorHasNodeHandler(targetNode))
             {
-                if (targetNode!.ContainsKey("Node16"))
+                if (targetNode!.ContainsKey(nodeVersion))
                 {
-                    targetNode!.Remove("Node16");
+                    targetNode!.Remove(nodeVersion);
                 }
 
-                targetNode!.Add("Node16", new JsonObject
+                targetNode!.Add(nodeVersion, new JsonObject
                 {
                     ["target"] = GetExecutionPath(taskNode, target),
                     ["argumentFormat"] = ""
