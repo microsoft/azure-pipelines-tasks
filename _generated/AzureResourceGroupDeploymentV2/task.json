@@ -496,5 +496,9 @@
     "ManagedServiceIdentityDetails": "Please make sure the Managed Service Identity used for deployment is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal",
     "DeploymentGroupConfigurationFailedOnVM": "Failure for Virtual Machine '%s': %s",
     "TroubleshootingGuide": "Check out the troubleshooting guide to see if your issue is addressed: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.226.2",
+    "Node16-225": "2.226.1"
   }
 }
