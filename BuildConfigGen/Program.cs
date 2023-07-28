@@ -403,7 +403,6 @@ namespace BuildConfigGen
             return false;
         }
 
-
         private static void CopyConfig(string taskTarget, string taskOutput, string? skipPathName, string? skipFileName, bool removeExtraFiles, bool throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor, Config.ConfigRecord config, bool allowPreprocessorDirectives)
         {
             var paths = GitUtil.GetNonIgnoredFileListFromPath(taskTarget);
