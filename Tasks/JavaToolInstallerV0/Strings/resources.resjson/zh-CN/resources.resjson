@@ -31,6 +31,7 @@
   "loc.messages.DownloadFromAzureBlobStorage": "正在下载 Azure blob 存储中的项目，容器名称: %s",
   "loc.messages.SuccessFullyFetchedItemList": "已成功提取项列表",
   "loc.messages.StorageAccountDoesNotExist": "无法获取名为 %s 的 Azure 存储帐户。",
+  "loc.messages.RequestedUrlTooLong": "请求的 URL 太长，订阅中有大量资源组时通常会发生这种情况，请尝试设置 azureResourceGroupName 输入。",
   "loc.messages.UnzipExtractFile": "正在提取文件: %s",
   "loc.messages.SevenZipExtractFile": "正在提取文件: %s",
   "loc.messages.TarExtractFile": "正在提取文件: %s",

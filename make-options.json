@@ -237,11 +237,21 @@
         "DownloadFileshareArtifactsV1",
         "AzureVmssDeploymentV0",
         "CargoAuthenticateV0",
+        "AzureMysqlDeploymentV1",
+        "AzureFunctionAppContainerV1",
+        "KubectlInstallerV0",
+        "AzureFileCopyV2",
+        "AzureFileCopyV3",
         "HelmDeployV0",
         "AzureFunctionAppV1",
         "AzureFunctionAppV2",
         "PublishCodeCoverageResultsV1",
         "PublishSymbolsV2",
-        "AzureSpringCloudV0"
+        "AzureSpringCloudV0",
+        "AzureAppServiceManageV0",
+        "AzureKeyVaultV1",
+        "AzureKeyVaultV2",
+        "AzurePowerShellV4",
+        "AzurePowerShellV5"
     ]
 }
