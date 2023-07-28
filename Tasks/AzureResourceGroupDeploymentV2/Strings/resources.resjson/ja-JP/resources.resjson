@@ -53,6 +53,8 @@
   "loc.input.help.deploymentOutputs": "出力変数の変数の名前を指定します。これには、現在のデプロイ オブジェクトの出力セクションが文字列形式で含まれます。\"ConvertFrom-Json\" PowerShell コマンドレットを使用して JSON オブジェクトを解析し、個々の出力値にアクセスできます。詳細については、[こちら](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs) を参照してください",
   "loc.input.label.addSpnToEnvironment": "オーバーライド パラメーターでサービス プリンシパルの詳細にアクセスする",
   "loc.input.help.addSpnToEnvironment": "選択した Azure エンドポイントのサービス プリンシパル ID とキーを、スクリプトの実行環境に追加します。オーバーライド パラメーターで `-key $servicePrincipalKey` のように、`$servicePrincipalId` と `$servicePrincipalKey` の変数を使用できます",
+  "loc.input.label.useWithoutJSON": "個々の出力値を JSON.Stringify の適用なしで使用する",
+  "loc.input.help.useWithoutJSON": "個々の出力値は、既定では JSON.Stringify によって変換されます。JSON.Stringify による変換を経由しない元のままの出力値を使用したい場合は、このオプションを有効にします。詳細については、[こちら](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)を参照してください。",
   "loc.messages.CheckResourceGroupExistence": "次のリソース グループが存在するかどうか確認しています: %s。",
   "loc.messages.ResourceGroupStatusFetchFailed": "リソース グループの状態を確認できませんでした。エラー: %s。",
   "loc.messages.ResourceGroupStatus": "リソース グループが存在しています: %s。",

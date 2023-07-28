@@ -53,6 +53,8 @@
   "loc.input.help.deploymentOutputs": "Укажите имя для выходной переменной, которая будет содержать раздел выходных данных текущего объекта развертывания в строковом формате. Вы можете использовать командлет ConvertFrom-Json PowerShell для анализа объекта JSON и доступа к отдельным выходным значениям. Дополнительные сведения см. [здесь](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)",
   "loc.input.label.addSpnToEnvironment": "Доступ к сведениям о субъекте-службе в параметрах переопределения",
   "loc.input.help.addSpnToEnvironment": "Добавляет идентификатор субъекта-службы и ключ выбранной конечной точки Azure в среду выполнения скрипта. Переменные \"$servicePrincipalId\" и \"$servicePrincipalKey\" можно использовать в таких параметрах переопределения, как \"-key $servicePrincipalKey\"",
+  "loc.input.label.useWithoutJSON": "Использовать отдельные выходные значения без примененного JSON.Stringify",
+  "loc.input.help.useWithoutJSON": "Отдельные выходные значения преобразуются через JSON.Stringify по умолчанию. Если вы хотите использовать выходные значения без их преобразования через JSON.Stringify, включите этот параметр. Дополнительные сведения см. [здесь](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)",
   "loc.messages.CheckResourceGroupExistence": "Проверка наличия следующей группы ресурсов: %s.",
   "loc.messages.ResourceGroupStatusFetchFailed": "Не удалось проверить состояние группы ресурсов. Ошибка: %s.",
   "loc.messages.ResourceGroupStatus": "Такая группа ресурсов существует: %s.",
