@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 226,
-    "Patch": 1
+    "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -167,6 +167,10 @@
   "execution": {
     "Node10": {
       "target": "azurermwebappdeployment.js"
+    },
+    "Node16": {
+      "target": "azurermwebappdeployment.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -328,5 +332,9 @@
     "SingleContainerDeployment": "Single-container Deployment to the webapp '%s' as only the image detail was specified.",
     "MultiContainerDeploymentWithTransformation": "Multi-container deployment to the webapp '%s' with the transformation of Docker-Compose file as both image name and Docker-Compose file were specified",
     "MultiContainerDeploymentWithoutTransformation": "Multi-container deployment to the webapp '%s' without transformation of Docker-Compose file because only Docker-Compose file was specified."
+  },
+  "_buildConfigMapping": {
+    "Default": "1.226.1",
+    "Node16-225": "1.226.0"
   }
 }

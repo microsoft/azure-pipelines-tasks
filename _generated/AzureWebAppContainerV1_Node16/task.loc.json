@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 226,
-    "Patch": 1
+    "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -167,6 +167,10 @@
   "execution": {
     "Node10": {
       "target": "azurermwebappdeployment.js"
+    },
+    "Node16": {
+      "target": "azurermwebappdeployment.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -328,5 +332,9 @@
     "SingleContainerDeployment": "ms-resource:loc.messages.SingleContainerDeployment",
     "MultiContainerDeploymentWithTransformation": "ms-resource:loc.messages.MultiContainerDeploymentWithTransformation",
     "MultiContainerDeploymentWithoutTransformation": "ms-resource:loc.messages.MultiContainerDeploymentWithoutTransformation"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.226.1",
+    "Node16-225": "1.226.0"
   }
 }
