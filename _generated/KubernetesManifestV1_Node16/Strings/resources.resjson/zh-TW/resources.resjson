@@ -102,5 +102,6 @@
   "loc.messages.InvalidBaselineAndCanaryReplicas": "複本計數值無效。",
   "loc.messages.InvalidTimeoutValue": "逾時值無效。請輸入有效的數字。",
   "loc.messages.RolloutStatusTimedout": "推出狀態檢查失敗。",
-  "loc.messages.EnvironmentLink": "如需詳細資訊，請前往 %s"
+  "loc.messages.EnvironmentLink": "如需詳細資訊，請前往 %s",
+  "loc.messages.KubeloginFailed": "Kubelogin 驗證失敗。例外狀況: %s"
 }
