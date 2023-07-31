@@ -192,5 +192,9 @@
     "Info_Downloading": "ms-resource:loc.messages.Info_Downloading",
     "Info_UsingArtifactToolDownload": "ms-resource:loc.messages.Info_UsingArtifactToolDownload",
     "Info_ResolvedLatestVersion": "ms-resource:loc.messages.Info_ResolvedLatestVersion"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.226.1",
+    "Node16-225": "1.226.0"
   }
 }

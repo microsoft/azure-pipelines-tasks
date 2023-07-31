@@ -1,24 +1,24 @@
 {
   "id": "8d6e8f7e-267d-442d-8c92-1f586864c62f",
   "name": "DownloadPackage",
-  "friendlyName": "ms-resource:loc.friendlyName",
-  "description": "ms-resource:loc.description",
+  "friendlyName": "Download package",
+  "description": "Download a package from a package management feed in Azure Artifacts",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-package",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpMarkDown": "Requires the Azure Artifacts extension to be installed",
   "category": "Utility",
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
     "Minor": 226,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
-  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "releaseNotes": "Adds support to download Maven, Python, Universal and Npm packages.",
   "minimumAgentVersion": "2.144.0",
   "groups": [
     {
       "name": "advancedOptions",
-      "displayName": "ms-resource:loc.group.displayName.advancedOptions",
+      "displayName": "Advanced",
       "isExpanded": true
     }
   ],
@@ -26,7 +26,7 @@
     {
       "name": "packageType",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.packageType",
+      "label": "Package Type",
       "required": true,
       "defaultValue": "nuget",
       "options": {
@@ -41,7 +41,7 @@
     {
       "name": "feed",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.feed",
+      "label": "Feed",
       "defaultValue": "",
       "required": true,
       "properties": {
@@ -51,40 +51,40 @@
     {
       "name": "view",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.view",
+      "label": "View",
       "defaultValue": " ",
       "required": false,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.view"
+      "helpMarkDown": "Select a view to use only versions promoted to that view."
     },
     {
       "name": "definition",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.definition",
+      "label": "Package",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.definition"
+      "helpMarkDown": "If you don't find the package in the list, you can provide the package ID, which you can find using the instructions [here](https://go.microsoft.com/fwlink/?linkid=2086778)."
     },
     {
       "name": "version",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.version",
+      "label": "Version",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.version"
+      "helpMarkDown": "Version of the package. Use `latest` to download the latest version of the package at runtime."
     },
     {
       "name": "files",
       "type": "string",
-      "label": "ms-resource:loc.input.label.files",
+      "label": "Files",
       "defaultValue": "**",
       "visibleRule": "packageType = maven || packageType = pypi || packageType = upack",
       "required": false,
@@ -92,12 +92,12 @@
         "EditableOptions": "True"
       },
       "groupName": "advancedOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.files"
+      "helpMarkDown": "Specify which files to download using [file matching patterns](https://go.microsoft.com/fwlink/?linkid=2086953)."
     },
     {
       "name": "extract",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.extract",
+      "label": "Extract package contents",
       "defaultValue": "true",
       "required": false,
       "visibleRule": "packageType = nuget || packageType = npm",
@@ -105,15 +105,15 @@
         "EditableOptions": "True"
       },
       "groupName": "advancedOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.extract"
+      "helpMarkDown": "Instead of extracting the package contents and removing the archive, the artifact folder will contain the package archive."
     },
     {
       "name": "downloadPath",
       "type": "string",
-      "label": "ms-resource:loc.input.label.downloadPath",
+      "label": "Destination directory",
       "defaultValue": "$(System.ArtifactsDirectory)",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.downloadPath"
+      "helpMarkDown": "Path on the agent machine where the package will be downloaded"
     }
   ],
   "dataSourceBindings": [
@@ -163,7 +163,7 @@
       "resultTemplate": "{ \"Value\" : \"{{{normalizedVersion}}}\", \"DisplayValue\" : \"{{{version}}}\" }"
     }
   ],
-  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "instanceNameFormat": "Download Package $(definition)",
   "execution": {
     "Node10": {
       "target": "main.js",
@@ -175,22 +175,26 @@
     }
   },
   "messages": {
-    "FailedToGetPackageMetadata": "ms-resource:loc.messages.FailedToGetPackageMetadata",
-    "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage",
-    "PackageDownloadSuccessful": "ms-resource:loc.messages.PackageDownloadSuccessful",
-    "CredentialsNotFound": "ms-resource:loc.messages.CredentialsNotFound",
-    "StartingDownloadOfPackage": "ms-resource:loc.messages.StartingDownloadOfPackage",
-    "ExtractingPackage": "ms-resource:loc.messages.ExtractingPackage",
-    "PackageTypeNotSupported": "ms-resource:loc.messages.PackageTypeNotSupported",
-    "ExtractionFailed": "ms-resource:loc.messages.ExtractionFailed",
-    "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
-    "RedirectUrlError": "ms-resource:loc.messages.RedirectUrlError",
-    "UnsupportedArchiveType": "ms-resource:loc.messages.UnsupportedArchiveType",
-    "Error_UnexpectedErrorArtifactToolDownload": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactToolDownload",
-    "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
-    "Info_DownloadingArtifactTool": "ms-resource:loc.messages.Info_DownloadingArtifactTool",
-    "Info_Downloading": "ms-resource:loc.messages.Info_Downloading",
-    "Info_UsingArtifactToolDownload": "ms-resource:loc.messages.Info_UsingArtifactToolDownload",
-    "Info_ResolvedLatestVersion": "ms-resource:loc.messages.Info_ResolvedLatestVersion"
+    "FailedToGetPackageMetadata": "Fetching package metadata using url %s failed with error %s",
+    "FailedToDownloadPackage": "Failed to download package file from %s got the following error: %s",
+    "PackageDownloadSuccessful": "Package download successful",
+    "CredentialsNotFound": "Could not determine credentials to connect to Azure Artifacts service.",
+    "StartingDownloadOfPackage": "Starting download of package %s to location %s",
+    "ExtractingPackage": "Extracting package %s to directory %s",
+    "PackageTypeNotSupported": "Only Nuget, Python, Universal, Npm, and Maven packages types can be downloaded using this task.",
+    "ExtractionFailed": "Failed to extract package with error %s",
+    "RetryingOperation": "Operation failed, waiting %sms before retrying, retries remaining: %s",
+    "RedirectUrlError": "Unable to get redirect URL with error %.",
+    "UnsupportedArchiveType": "Unsupported archive type: %s",
+    "Error_UnexpectedErrorArtifactToolDownload": "An unexpected error occurred while trying to download the package. Exit code(%s) and error(%s)",
+    "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+    "Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
+    "Info_Downloading": "Downloading package: %s, version: %s using feed id: %s, project: %s",
+    "Info_UsingArtifactToolDownload": "Using artifact tool to download the package",
+    "Info_ResolvedLatestVersion": "Resolved latest package version: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.226.1",
+    "Node16-225": "1.226.0"
   }
 }
