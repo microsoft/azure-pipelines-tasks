@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 226,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "groups": [
@@ -561,7 +561,7 @@
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   },
   "_buildConfigMapping": {
-    "Default": "0.226.1",
-    "Node16-225": "0.226.0"
+    "Default": "0.226.3",
+    "Node16-225": "0.226.2"
   }
 }
