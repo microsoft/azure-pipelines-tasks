@@ -6,7 +6,7 @@ param (
     [object]$credential,
     [string]$cleanTargetBeforeCopy,
     [string]$additionalArguments
-    )    
+    )
 
     $sourcePath = $sourcePath.Trim().TrimEnd('\', '/')
     $targetPath = $targetPath.Trim().TrimEnd('\', '/')    
@@ -215,9 +215,17 @@ param (
 
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp
 
-        $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"                
-        Invoke-Expression $command        
-        
+        $useSanitizer = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
+        Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $useSanitizer"
+
+        if ($useSanitizer) {
+            $arguments = Protect-ScriptArguments -InputArgs $robocopyParameters -TaskName "WindowsMachineFileCopyV1"
+            & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy $arguments
+        } else {
+            $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
+            Invoke-Expression $command
+        }
+
         if ($LASTEXITCODE -ge 8)
         {
             $errorMessage = Get-LocalizedString -Key "Copying failed. Consult the robocopy logs for more details."            

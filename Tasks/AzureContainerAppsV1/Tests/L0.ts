@@ -102,7 +102,7 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.succeeded, 'AzureContainerAppsV1 task should have succeeded when creating a Container App using an image produced from the Oryx++ builder.');
 
             // Validate that the Azure CLI was set up correctly
-            assert(tr.stdout.includes('[MOCK] loginAzureRM called'), 'AzureContainerAppsV1 task should authenticate with the provided service connection.');
+            assert(tr.stdout.includes('[MOCK] loginAzure called'), 'AzureContainerAppsV1 task should authenticate with the provided service connection.');
             assert(tr.stdout.includes('[MOCK] setAzureCliDynamicInstall called'), 'AzureContainerAppsV1 task should have called ensure dynamic installation is enabled for the Azure CLI.');
 
             // Validate that the necessary Azure resources were created
@@ -162,7 +162,7 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.succeeded, 'AzureContainerAppsV1 task should have succeeded when creating a Container App using an image produced from a Dockerfile.');
 
             // Validate that the Azure CLI was set up correctly
-            assert(tr.stdout.includes('[MOCK] loginAzureRM called'), 'AzureContainerAppsV1 task should authenticate with the provided service connection.');
+            assert(tr.stdout.includes('[MOCK] loginAzure called'), 'AzureContainerAppsV1 task should authenticate with the provided service connection.');
             assert(tr.stdout.includes('[MOCK] setAzureCliDynamicInstall called'), 'AzureContainerAppsV1 task should have called ensure dynamic installation is enabled for the Azure CLI.');
 
             // Validate that the necessary Azure resources were created
@@ -217,7 +217,7 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.succeeded, 'AzureContainerAppsV1 task should have succeeded when creating a Container App using an image produced from a previously built image.');
 
             // Validate that the Azure CLI was set up correctly
-            assert(tr.stdout.includes('[MOCK] loginAzureRM called'), 'AzureContainerAppsV1 task should authenticate with the provided service connection.');
+            assert(tr.stdout.includes('[MOCK] loginAzure called'), 'AzureContainerAppsV1 task should authenticate with the provided service connection.');
             assert(tr.stdout.includes('[MOCK] setAzureCliDynamicInstall called'), 'AzureContainerAppsV1 task should have called ensure dynamic installation is enabled for the Azure CLI.');
 
             // Validate that the necessary Azure resources were created
@@ -261,7 +261,7 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.succeeded, 'AzureContainerAppsV1 task should have succeeded when creating a Container App with a new Container App environment.');
 
             // Validate that the Azure CLI was set up correctly
-            assert(tr.stdout.includes('[MOCK] loginAzureRM called'), 'AzureContainerAppsV1 task should authenticate with the provided service connection.');
+            assert(tr.stdout.includes('[MOCK] loginAzure called'), 'AzureContainerAppsV1 task should authenticate with the provided service connection.');
             assert(tr.stdout.includes('[MOCK] setAzureCliDynamicInstall called'), 'AzureContainerAppsV1 task should have called ensure dynamic installation is enabled for the Azure CLI.');
 
             // Validate that the necessary Azure resources were created
@@ -308,7 +308,7 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.succeeded, 'AzureContainerAppsV1 task should have succeeded when creating a Container App using a YAML configuration file and an image produced from the Oryx++ builder.');
 
             // Validate that the Azure CLI was set up correctly
-            assert(tr.stdout.includes('[MOCK] loginAzureRM called'), 'AzureContainerAppsV1 task should authenticate with the provided service connection.');
+            assert(tr.stdout.includes('[MOCK] loginAzure called'), 'AzureContainerAppsV1 task should authenticate with the provided service connection.');
             assert(tr.stdout.includes('[MOCK] setAzureCliDynamicInstall called'), 'AzureContainerAppsV1 task should have called ensure dynamic installation is enabled for the Azure CLI.');
 
             // Validate that the necessary Azure resources were created
@@ -364,7 +364,7 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.succeeded, 'AzureContainerAppsV1 task should have succeeded when creating a Container App using a YAML configuration file and a previously built image.');
 
             // Validate that the Azure CLI was set up correctly
-            assert(tr.stdout.includes('[MOCK] loginAzureRM called'), 'AzureContainerAppsV1 task should authenticate with the provided service connection.');
+            assert(tr.stdout.includes('[MOCK] loginAzure called'), 'AzureContainerAppsV1 task should authenticate with the provided service connection.');
             assert(tr.stdout.includes('[MOCK] setAzureCliDynamicInstall called'), 'AzureContainerAppsV1 task should have called ensure dynamic installation is enabled for the Azure CLI.');
 
             // Validate that the necessary Azure resources were created
@@ -404,7 +404,7 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.succeeded, 'AzureContainerAppsV1 task should have succeeded when updating an existing Container App using an image produced from the Oryx++ builder.');
 
             // Validate that the Azure CLI was set up correctly
-            assert(tr.stdout.includes('[MOCK] loginAzureRM called'), 'AzureContainerAppsV1 task should authenticate with the provided service connection.');
+            assert(tr.stdout.includes('[MOCK] loginAzure called'), 'AzureContainerAppsV1 task should authenticate with the provided service connection.');
             assert(tr.stdout.includes('[MOCK] setAzureCliDynamicInstall called'), 'AzureContainerAppsV1 task should have called ensure dynamic installation is enabled for the Azure CLI.');
 
             // Validate that the necessary Azure resources exist
@@ -455,7 +455,7 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.succeeded, 'AzureContainerAppsV1 task should have succeeded when updating an existing Container App using an image produced from a previously built image.');
 
             // Validate that the Azure CLI was set up correctly
-            assert(tr.stdout.includes('[MOCK] loginAzureRM called'), 'AzureContainerAppsV1 task should authenticate with the provided service connection.');
+            assert(tr.stdout.includes('[MOCK] loginAzure called'), 'AzureContainerAppsV1 task should authenticate with the provided service connection.');
             assert(tr.stdout.includes('[MOCK] setAzureCliDynamicInstall called'), 'AzureContainerAppsV1 task should have called ensure dynamic installation is enabled for the Azure CLI.');
 
             // Validate that the necessary Azure resources exist
@@ -490,7 +490,7 @@ describe('AzureContainerAppsV1 Suite', function () {
             assert(tr.succeeded, 'AzureContainerAppsV1 task should have succeeded when updating an existing Container App using a YAML configuration file and a previously built image.');
 
             // Validate that the Azure CLI was set up correctly
-            assert(tr.stdout.includes('[MOCK] loginAzureRM called'), 'AzureContainerAppsV1 task should authenticate with the provided service connection.');
+            assert(tr.stdout.includes('[MOCK] loginAzure called'), 'AzureContainerAppsV1 task should authenticate with the provided service connection.');
             assert(tr.stdout.includes('[MOCK] setAzureCliDynamicInstall called'), 'AzureContainerAppsV1 task should have called ensure dynamic installation is enabled for the Azure CLI.');
 
             // Validate that the necessary Azure resources exist

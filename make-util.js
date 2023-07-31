@@ -411,7 +411,11 @@ var downloadFile = function (url) {
 
         // download the file
         mkdir('-p', path.join(downloadPath, 'file'));
-        var result = syncRequest('GET', url);
+        var result = syncRequest('GET', url, {
+            retry: true,
+            retryDelay: 5000,
+            maxRetries: 3
+        });
         fs.writeFileSync(targetPath, result.getBody());
 
         // write the completed marker
@@ -1777,7 +1781,7 @@ exports.renameCodeCoverageOutput = renameCodeCoverageOutput;
 //------------------------------------------------------------------------------
 
 /**
- * Returns path to BuldConfigGenerator, if generator wasn't compile it will compile it
+ * Returns path to BuldConfigGenerator, build it if needed.  Fail on compilation failure
  * @returns Path to the executed file
  */
 var getBuildConfigGenerator = function (baseConfigToolPath) {
@@ -1792,22 +1796,21 @@ var getBuildConfigGenerator = function (baseConfigToolPath) {
         configToolBuildUtility = path.join(baseConfigToolPath, "dev.sh");
     }
 
-    if (!fs.existsSync(programPath)) {
-        console.log(`BuildConfigGen not found at ${programPath}. Starting build.`);
-        run(configToolBuildUtility, true);
-    }
+    // build configToolBuildUtility if needed.  (up-to-date check will skip build if not needed)
+    run(configToolBuildUtility, true);
 
     return programPath;
 };
 exports.getBuildConfigGenerator = getBuildConfigGenerator;
 
 /**
- * Function to validate generated tasks
+ * Function to validate or write generated tasks
  * @param {String} baseConfigToolPath Path to generating programm
  * @param {Array} taskList  Array with allowed tasks
  * @param {Object} makeOptions Object with all tasks
+ * @param {Boolean} writeUpdates Write Updates (false to validateOnly)
  */
-var validateGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions) {
+var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates) {
     if (!makeOptions) fail("makeOptions is not defined");
     const excludedMakeOptionKeys = ["tasks", "taskResources"];
     const validatingTasks = {};
@@ -1836,11 +1839,17 @@ var validateGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions)
             taskName,
         ];
 
+        var writeUpdateArg = "";
+        if(writeUpdates)
+        {
+            writeUpdateArg += " --write-updates";
+        }
+
         banner('Validating: ' + taskName);
-        run(`${programPath} ${args.join(' ')}`, true);
+        run(`${programPath} ${args.join(' ')} ${writeUpdateArg}`, true);
     }
 }
-exports.validateGeneratedTasks = validateGeneratedTasks;
+exports.processGeneratedTasks = processGeneratedTasks;
 
 /**
  * Function to generate new tasks
