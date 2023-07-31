@@ -136,7 +136,7 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, err.message);
     }
     finally {
-        if (isKubConfigLogoutRequired(command) || externalAuth) {
+        if (isKubConfigLogoutRequired(command)) {
             kubectlCli.logout();
         }
 
