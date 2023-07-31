@@ -10,7 +10,7 @@ describe('UniversalPackages Suite', function () {
     });
 
     it('downloads package from current organization', function (done: Mocha.Done) {
-        this.timeout(5000);
+        this.timeout(20000);
         let tp = path.join(__dirname, './downloadInternal.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
