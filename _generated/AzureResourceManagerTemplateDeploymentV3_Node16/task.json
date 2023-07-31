@@ -15,7 +15,7 @@
   "version": {
     "Major": 3,
     "Minor": 225,
-    "Patch": 5
+    "Patch": 4
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -265,6 +265,10 @@
   "execution": {
     "Node10": {
       "target": "main.js"
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -328,5 +332,9 @@
     "MSILoginFailed": "Azure login failed using Managed Service Identity: %s",
     "AuthSchemeNotSupported": "Auth Scheme %s is not supported",
     "ErrorInSettingUpSubscription": "Error in setting up subscription: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "3.225.5",
+    "Node16-225": "3.225.4"
   }
 }
