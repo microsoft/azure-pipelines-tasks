@@ -6,7 +6,6 @@
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/go-tool",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=867581) or [see the Go documentation](https://golang.org/doc/)",
     "category": "Tool",
-    "preview": true,
     "runsOn": [
         "Agent",
         "DeploymentGroup"

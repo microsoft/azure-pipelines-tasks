@@ -113,7 +113,7 @@ function getFileName(version: string): string {
 }
 
 function getDownloadUrl(source: string, filename: string): string {
-    return util.format("$s%s", source, filename);
+    return util.format("%s%s", source, filename);
 }
 
 function setGoEnvironmentVariables(goRoot: string) {

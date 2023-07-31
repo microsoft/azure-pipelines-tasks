@@ -6,7 +6,6 @@
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/go-tool",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
-  "preview": true,
   "runsOn": [
     "Agent",
     "DeploymentGroup"
