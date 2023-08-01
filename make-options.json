@@ -258,6 +258,10 @@
         "AzurePowerShellV4",
         "AzurePowerShellV5",
         "AzureResourceGroupDeploymentV2",
-        "DuffleInstallerV0"
+        "AzureResourceManagerTemplateDeploymentV3",
+        "DockerComposeV0",
+        "DuffleInstallerV0",
+        "IISWebAppDeploymentOnMachineGroupV0",
+        "NuGetAuthenticateV0"
     ]
 }

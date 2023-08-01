@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 221,
-    "Patch": 1
+    "Minor": 226,
+    "Patch": 0
   },
   "demands": [],
   "groups": [],
@@ -50,7 +50,7 @@
     "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed"
   },
   "_buildConfigMapping": {
-    "Default": "0.221.2",
-    "Node16-225": "0.221.1"
+    "Default": "0.226.1",
+    "Node16-225": "0.226.0"
   }
 }
