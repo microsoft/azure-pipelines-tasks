@@ -2,8 +2,9 @@ import fs = require('fs');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
-import { sanitizeScriptArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
 var uuidV4 = require('uuid/v4');
+import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
+import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry";
 
 async function runBashPwd(bashPath: string, directoryPath: string): Promise<string> {
     let pwdOutput = '';
@@ -123,18 +124,22 @@ async function run() {
                 telemetry: tl.getBoolFeatureFlag('AZP_75787_ENABLE_COLLECT')
             };
 
-            if (featureFlags.activate || featureFlags.activate || featureFlags.telemetry) {
-                const sanitizedArgs = sanitizeScriptArgs(
+            if (featureFlags.activate || featureFlags.audit || featureFlags.telemetry) {
+                const [sanitizedArgs, telemetry] = sanitizeArgs(
                     input_arguments,
-                    {
-                        argsSplitSymbols: '\\\\',
-                        warningLocSymbol: 'SanitizerOutput',
-                        telemetryFeature: 'BashV3',
-                        saniziteRegExp: /(?<!\\)([^a-zA-Z0-9\\` _'"\-=\/:\.])/g
-                    }
+                    { argsSplitSymbols: '\\\\' }
                 );
-                if (featureFlags.activate) {
-                    resultArgs = sanitizedArgs;
+                if (sanitizedArgs !== input_arguments) {
+                    if (featureFlags.telemetry && telemetry) {
+                        emitTelemetry('TaskHub', 'BashV3', telemetry);
+                    }
+                    const message = tl.loc('SanitizerOutput', sanitizedArgs);
+                    if (featureFlags.activate) {
+                        throw new Error(message);
+                    }
+                    if (featureFlags.audit) {
+                        tl.warning(message);
+                    }
                 }
             }
 
