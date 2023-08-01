@@ -1,6 +1,7 @@
 "use strict";
 
 import * as tl from "azure-pipelines-task-lib/task";
+import * as tr from "azure-pipelines-task-lib/toolrunner";
 import DockerComposeConnection from "./dockercomposeconnection";
 import * as sourceUtils from "azure-pipelines-tasks-docker-common/sourceutils";
 import * as imageUtils from "azure-pipelines-tasks-docker-common/containerimageutils";

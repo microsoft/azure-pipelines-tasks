@@ -2,6 +2,7 @@
 
 import * as fs from "fs";
 import * as tl from "azure-pipelines-task-lib/task";
+import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as yaml from "js-yaml";
 import DockerComposeConnection from "./dockercomposeconnection";
 import * as imageUtils from "azure-pipelines-tasks-docker-common/containerimageutils";
