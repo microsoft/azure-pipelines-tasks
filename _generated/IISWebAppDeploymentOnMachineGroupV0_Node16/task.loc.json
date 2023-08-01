@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 222,
-    "Patch": 2
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.104.1",
@@ -135,6 +135,10 @@
   "execution": {
     "Node10": {
       "target": "deployiiswebapp.js"
+    },
+    "Node16": {
+      "target": "deployiiswebapp.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -186,5 +190,9 @@
     "PackageDeploymentFailed": "ms-resource:loc.messages.PackageDeploymentFailed",
     "Updatemachinetoenablesecuretlsprotocol": "ms-resource:loc.messages.Updatemachinetoenablesecuretlsprotocol",
     "RetryToDeploy": "ms-resource:loc.messages.RetryToDeploy"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.222.2",
+    "Node16-225": "0.222.1"
   }
 }
