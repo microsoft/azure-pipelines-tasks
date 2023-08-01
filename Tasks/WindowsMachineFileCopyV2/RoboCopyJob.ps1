@@ -236,13 +236,21 @@ param (
     try
     {
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
-        
-        $useSanitizer = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
-        Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $useSanitizer"
 
-        if ($useSanitizer) {
-            $arguments = Protect-ScriptArguments -InputArgs $robocopyParameters -TaskName "WindowsMachineFileCopyV2"
-            & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy $arguments
+        $featureFlags = @{
+            audit     = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC_LOG)
+            activate  = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
+            telemetry = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_COLLECT)
+        }
+        Write-Debug "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $($featureFlags.activate)"
+        Write-Debug "Feature flag AZP_75787_ENABLE_NEW_LOGIC_LOG state: $($featureFlags.audit)"
+        Write-Debug "Feature flag AZP_75787_ENABLE_COLLECT state: $($featureFlags.telemetry)"
+
+        if ($featureFlags.activate -or $featureFlags.audit -or $featureFlags.telemetry) {
+            $sanitizedArguments = Protect-ScriptArguments -InputArgs $robocopyParameters -TaskName "WindowsMachineFileCopyV2"
+        }
+        if ($featureFlags.activate) {
+            & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy $sanitizedArguments
         } else {
             $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
             Invoke-Expression $command
@@ -258,6 +266,10 @@ param (
             $message = (Get-VstsLocString -Key "WFC_CopyingRecurivelyFrom0to1MachineSucceed" -ArgumentList $sourcePath, $targetPath, $fqdn)
             Write-Output $message
         }
+    }
+    catch {
+        Write-VstsTaskError -Message $_.Exception.Message
+        Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
     }
     finally
     {
