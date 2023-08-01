@@ -206,6 +206,7 @@ namespace BuildConfigGen
                 if (config.isNode)
                 {
                     WriteNodePackageJson(taskOutput, config.nodePackageVersion);
+                    WriteDevDependencyPackageJson(taskOutput, config.nodePackageVersion);
                 }
             }
         }
@@ -374,6 +375,20 @@ namespace BuildConfigGen
             string nodePackageContent = outputNodePackagePathJsonNode.ToJsonString(jso) + Environment.NewLine;
             ensureUpdateModeVerifier!.WriteAllText(outputNodePackagePath, nodePackageContent, suppressValidationErrorIfTargetPathDoesntExist: false);
         }
+
+        private static void WriteDevDependencyPackageJson(string taskOutputNode, string nodeVersion)
+        {
+            string outputNodePackagePath = Path.Combine(taskOutputNode, "package.json");
+            JsonNode outputNodePackagePathJsonNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNodePackagePath))!;
+            
+            // Upgrade typescript version for Node 20
+            if (nodeVersion == "^20.3.1") {
+                outputNodePackagePathJsonNode["devDependencies"]!["typescript"] = "4.8.4";
+            }
+            string nodePackageContent = outputNodePackagePathJsonNode.ToJsonString(jso) + Environment.NewLine;
+            ensureUpdateModeVerifier!.WriteAllText(outputNodePackagePath, nodePackageContent, suppressValidationErrorIfTargetPathDoesntExist: false);
+        }
+
 
         private static bool HasNodeHandler(JsonNode taskHandlerContents)
         {
