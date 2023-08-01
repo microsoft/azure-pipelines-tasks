@@ -1,7 +1,11 @@
 $featureFlags = @{
+    activate  = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
+    audit     = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC_LOG)
     telemetry = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_COLLECT)
 }
 
+Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $($featureFlags.activate)"
+Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC_LOG state: $($featureFlags.audit)"
 Write-Verbose "Feature flag AZP_75787_ENABLE_COLLECT state: $($featureFlags.telemetry)"
 
 $taskName = ""
@@ -18,7 +22,13 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
         Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsNotSanitized');
     }
     else {
-        Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsSanitized' -ArgumentList $sanitizedArguments);
+        $message = Get-VstsLocString -Key 'PS_ScriptArgsSanitized' -ArgumentList $sanitizedArguments
+        if ($featureFlags.activate) {
+            throw $message
+        }
+        if ($featureFlags.audit) {
+            Write-Warning $message
+        }
     }
 
     $arrayOfArguments = Split-Arguments -Arguments $sanitizedArguments
