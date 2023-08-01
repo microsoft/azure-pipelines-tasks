@@ -18,11 +18,8 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
 
     $sanitizedArguments = Get-SanitizedArguments -InputArgs $inputArgs
 
-    if ($sanitizedArguments -eq $inputArgs) {
-        Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsNotSanitized');
-    }
-    else {
-        $message = Get-VstsLocString -Key 'PS_ScriptArgsSanitized' -ArgumentList $sanitizedArguments
+    if ($sanitizedArguments -ne $inputArgs) {
+        $message = Get-VstsLocString -Key 'PS_ScriptArgsSanitized'
         if ($featureFlags.activate) {
             throw $message
         }
