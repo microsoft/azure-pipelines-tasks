@@ -104,15 +104,15 @@ try {
             $success, $sanitizedArgs, $telemetry = Sanitize-Arguments -InputArgs $input_arguments;
             if ($sanitizedArgs -ne $input_arguments) {
                 if ($featureFlags.telemetry -and $null -ne $telemetry) {
-                    Publish-Telemetry $telemetry
+                    Publish-Telemetry $telemetry;
                 }
 
-                $message = Get-VstsLocString -Key 'PS_SanitizerOutput' -ArgumentList $sanitizedArgs
+                $message = Get-VstsLocString -Key 'ScriptArgsSanitized';
                 if ($featureFlags.activate) {
                     throw $message;
                 }
                 if ($featureFlags.audit) {
-                    Write-Warning $message
+                    Write-Warning $message;
                 }
             }
         }

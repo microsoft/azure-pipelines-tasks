@@ -133,7 +133,7 @@ async function run() {
                     if (featureFlags.telemetry && telemetry) {
                         emitTelemetry('TaskHub', 'BashV3', telemetry);
                     }
-                    const message = tl.loc('SanitizerOutput', sanitizedArgs);
+                    const message = tl.loc('ScriptArgsSanitized');
                     if (featureFlags.activate) {
                         throw new Error(message);
                     }

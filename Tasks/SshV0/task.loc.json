@@ -166,6 +166,6 @@
     "SettingUpSshConnection": "ms-resource:loc.messages.SettingUpSshConnection",
     "SshConnectionSuccessful": "ms-resource:loc.messages.SshConnectionSuccessful",
     "UseDefaultPort": "ms-resource:loc.messages.UseDefaultPort",
-    "SanitizerOutput": "ms-resource:loc.messages.SanitizerOutput"
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   }
 }

@@ -92,7 +92,7 @@ async function run() {
                     if (featureFlags.telemetry && telemetry) {
                         emitTelemetry('TaskHub', 'PowerShellV2', telemetry);
                     }
-                    const message = tl.loc('JS_SanitizerOutput', sanitizedArgs);
+                    const message = tl.loc('ScriptArgsSanitized');
                     if (featureFlags.activate) {
                         throw new Error(message);
                     }
