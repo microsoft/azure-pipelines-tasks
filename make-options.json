@@ -257,6 +257,7 @@
         "AzureKeyVaultV2",
         "AzurePowerShellV4",
         "AzurePowerShellV5",
-        "AzureResourceGroupDeploymentV2"
+        "AzureResourceGroupDeploymentV2",
+        "DuffleInstallerV0"
     ]
 }

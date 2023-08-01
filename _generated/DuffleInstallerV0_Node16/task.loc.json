@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 221,
-    "Patch": 2
+    "Patch": 1
   },
   "demands": [],
   "groups": [],
@@ -39,10 +39,18 @@
   "execution": {
     "Node10": {
       "target": "src//duffle.js"
+    },
+    "Node16": {
+      "target": "src//duffle.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
     "DownloadDuffleFailed": "ms-resource:loc.messages.DownloadDuffleFailed",
     "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.221.2",
+    "Node16-225": "0.221.1"
   }
 }
