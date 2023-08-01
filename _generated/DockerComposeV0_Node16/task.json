@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 225,
-    "Patch": 2
+    "Patch": 1
   },
   "demands": [],
   "preview": "false",
@@ -338,6 +338,10 @@
     "Node10": {
       "target": "dockercompose.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "dockercompose.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -352,5 +356,9 @@
     "FileContentSynced": "Synced the file content to the disk. The content is %s.",
     "ImageNameWithoutTag": "Image name not specified with tag, pushing all tags of the image specified.",
     "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.225.2",
+    "Node16-225": "0.225.1"
   }
 }

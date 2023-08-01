@@ -352,5 +352,9 @@
     "FileContentSynced": "Synced the file content to the disk. The content is %s.",
     "ImageNameWithoutTag": "Image name not specified with tag, pushing all tags of the image specified.",
     "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.225.2",
+    "Node16-225": "0.225.1"
   }
 }
