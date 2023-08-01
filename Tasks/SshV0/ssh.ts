@@ -5,7 +5,8 @@ import * as fs from 'fs';
 import * as sshHelper from './ssh2helpers';
 import { v4 as generateRandomUUID } from 'uuid';
 import { ConnectConfig } from 'ssh2';
-import { sanitizeScriptArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
+import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
+import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry";
 
 /**
  * By default configuration, SSH runs on port 22.
@@ -162,18 +163,22 @@ async function run() {
                         telemetry: tl.getBoolFeatureFlag('AZP_75787_ENABLE_COLLECT')
                     };
 
-                    if (featureFlags.activate || featureFlags.activate || featureFlags.telemetry) {
-                        const sanitizedArgs = sanitizeScriptArgs(
+                    if (featureFlags.activate || featureFlags.audit || featureFlags.telemetry) {
+                        const [sanitizedArgs, telemetry] = sanitizeArgs(
                             args,
-                            {
-                                argsSplitSymbols: '\\\\',
-                                warningLocSymbol: 'SanitizerOutput',
-                                telemetryFeature: 'SshV0',
-                                saniziteRegExp: /(?<!\\)([^a-zA-Z0-9\\` _'"\-=\/:\.])/g
-                            }
+                            { argsSplitSymbols: '\\\\' }
                         );
-                        if (featureFlags.activate) {
-                            resultArgs = sanitizedArgs;
+                        if (sanitizedArgs !== args) {
+                            if (featureFlags.telemetry && telemetry) {
+                                emitTelemetry('TaskHub', 'SshV0', telemetry);
+                            }
+                            const message = tl.loc('SanitizerOutput', sanitizedArgs);
+                            if (featureFlags.activate) {
+                                throw new Error(message);
+                            }
+                            if (featureFlags.audit) {
+                                tl.warning(message);
+                            }
                         }
                     }
 
@@ -193,7 +198,7 @@ async function run() {
         }
 
     } catch (err) {
-        tl.setResult(tl.TaskResult.Failed, err);
+        tl.setResult(tl.TaskResult.Failed, err.message);
     } finally {
         //clean up script file if needed
         if (cleanUpScriptCmd) {
