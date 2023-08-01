@@ -11,7 +11,7 @@ Workload identity federation is an industry term & technology leveraging Open I
 
 ### Azure Service Connections schemes compared
 
-|                                                            | Service Principal with secret | Agent-assigned Managed Identity | Service Principal with federation |
+|                                                            | Service Principal with secret | Agent-assigned Managed Identity | Service Principal or Managed Identity with federation |
 |------------------------------------------------------------|-------------------------------|---------------------------------|-----------------------------------|
 | Secret-free                                                | No                            | Yes                             | Yes                               |
 | Constrains usage to                                        | Service Connection only       | Any process on the agent        | Service Connection only           |
