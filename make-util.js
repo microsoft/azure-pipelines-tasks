@@ -16,7 +16,7 @@ var downloadPath = path.join(__dirname, '_download');
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['4.0.2'];
+var allowedTypescriptVersions = ['4.0.2', '4.0.8'];
 
 //------------------------------------------------------------------------------
 // shell functions
