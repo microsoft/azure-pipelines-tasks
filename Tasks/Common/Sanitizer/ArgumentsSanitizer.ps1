@@ -16,7 +16,8 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
 
     if ($sanitizedArguments -eq $inputArgs) {
         Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsNotSanitized');
-    } else {
+    }
+    else {
         Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsSanitized' -ArgumentList $sanitizedArguments);
     }
 
@@ -28,20 +29,30 @@ function Get-SanitizedArguments([string]$inputArgs) {
 
     $removedSymbolSign = '_#removed#_';
     $argsSplitSymbols = '``';
+    [string[][]]$matchesChunks = @()
 
     # We're splitting by ``, removing all suspicious characters and then join
     $argsArr = $inputArgs -split $argsSplitSymbols;
-
+    $regex = '(?<!\\)([^a-zA-Z0-9\\ _''"\-=/:.])';
     for ($i = 0; $i -lt $argsArr.Length; $i++ ) {
+        ## We're adding matched values from splitted chunk for telemetry.
+        $argsArr[$i] -match $regex;
+        $matchesChunks += , $Matches.Values;
+
         ## '?<!`' - checking if before character no backtick. '([allowedchars])' - checking if character is allowed. Otherwise, replace to $removedSymbolSign
-        $argsArr[$i] = $argsArr[$i] -replace '(?<!\\)([^a-zA-Z0-9\\ _''"\-=/:.])', $removedSymbolSign;
+        $argsArr[$i] = $argsArr[$i] -replace $regex, $removedSymbolSign;
     }
 
     $resultArgs = $argsArr -join $argsSplitSymbols;
 
-    if ( $resultArgs -like "*$removedSymbolSign*" -and $featureFlags.telemetry) {
-        $removedSymbolsCount = [regex]::matches($resultArgs, $removedSymbolSign).count
-        Publish-Telemetry @{ 'removedSymbolsCount' = $removedSymbolsCount }
+    if ( $resultArgs -ne $inputArgs -and $featureFlags.telemetry) {
+        $argMatches = $matchesChunks | ForEach-Object { $_ } | Where-Object { $_ -ne $null }
+        $telemetry = @{
+            removedSymbols      = Join-Matches -Matches $argMatches
+            removedSymbolsCount = $argMatches.Count
+        }
+
+        Publish-Telemetry $telemetry
     }
 
     return $resultArgs;
@@ -55,8 +66,7 @@ function Publish-Telemetry($telemetry) {
 }
 
 # Splits a string into array of arguments, considering quotes.
-function Split-Arguments
-{
+function Split-Arguments {
     [OutputType([String[]])]
     param(
         [string]$arguments
@@ -71,7 +81,7 @@ function Split-Arguments
     # 1) "arg" (enclosed in double quotes)
     # 2) 'arg' (enclosed in single quotes)
     # 3) arg (not enclosed in quotes)
-    # Each match found by the regular expression will have several groups. 
+    # Each match found by the regular expression will have several groups.
     # Group[0] is the whole match, Group[1] is the match for "arg", Group[2] is the match for 'arg'.
     $matchesList = [System.Text.RegularExpressions.Regex]::Matches($arguments, "`"([^`"]*)`"|'([^']*)'|[^ ]+")
 
@@ -94,6 +104,25 @@ function Split-Arguments
         # Add the extracted argument to the result array.
         $result += $arg
     }
-    
+
     return $result
+}
+
+function Join-Matches {
+    param (
+        [Parameter(Mandatory = $true)]
+        [String[]]$Matches
+    )
+
+    $matchesData = @{}
+    foreach ($m in $Matches) {
+        if ($matchesData.ContainsKey($m)) {
+            $matchesData[$m]++
+        }
+        else {
+            $matchesData[$m] = 1
+        }
+    }
+
+    return $matchesData
 }
