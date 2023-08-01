@@ -226,6 +226,8 @@
         "AndroidSigningV3"
     ],
     "Node16_225": [
+        "AzureRmWebAppDeploymentV3",
+        "AzureRmWebAppDeploymentV4",
         "AzureFunctionOnKubernetesV0",
         "AzureFunctionOnKubernetesV1",
         "UseDotNetV2",
@@ -235,6 +237,26 @@
         "DownloadFileshareArtifactsV1",
         "AzureVmssDeploymentV0",
         "CargoAuthenticateV0",
-        "HelmDeployV0"
+        "AzureMysqlDeploymentV1",
+        "AzureFunctionAppContainerV1",
+        "KubectlInstallerV0",
+        "AzureFileCopyV2",
+        "AzureFileCopyV3",
+        "HelmDeployV0",
+        "AzureFunctionAppV1",
+        "AzureNLBManagementV1",
+        "AzureFunctionAppV2",
+        "NuGetV0",
+        "PublishCodeCoverageResultsV1",
+        "PublishSymbolsV2",
+        "AzureSpringCloudV0",
+        "AzureWebAppContainerV1",
+        "AzureStaticWebAppV0",
+        "AzureAppServiceManageV0",
+        "AzureKeyVaultV1",
+        "AzureKeyVaultV2",
+        "AzurePowerShellV4",
+        "AzurePowerShellV5",
+        "AzureResourceGroupDeploymentV2"
     ]
 }
