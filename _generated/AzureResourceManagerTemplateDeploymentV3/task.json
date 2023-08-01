@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 225,
-    "Patch": 5
+    "Minor": 226,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -330,7 +330,7 @@
     "ErrorInSettingUpSubscription": "Error in setting up subscription: %s"
   },
   "_buildConfigMapping": {
-    "Default": "3.225.5",
-    "Node16-225": "3.225.4"
+    "Default": "3.226.1",
+    "Node16-225": "3.226.0"
   }
 }
