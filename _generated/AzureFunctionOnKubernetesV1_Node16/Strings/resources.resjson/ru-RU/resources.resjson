@@ -40,5 +40,6 @@
   "loc.messages.KubernetesClusterResourceGroup": "Кластер Kubernetes %s, группа ресурсов %s.",
   "loc.messages.NoDataWrittenOnFile": "Данные не были записаны в файл %s",
   "loc.messages.ServiceExternalIP": "Внешний IP-адрес службы %s — %s.",
-  "loc.messages.WritingDockerConfigToTempFile": "Запись конфигурации Docker во временный файл. Путь к файлу: %s, конфигурация Docker: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "Запись конфигурации Docker во временный файл. Путь к файлу: %s, конфигурация Docker: %s",
+  "loc.messages.KubeloginFailed": "Сбой проверки подлинности Kubelogin. Исключение: %s"
 }
