@@ -191,7 +191,7 @@ CLI.build = function()
 CLI.serverBuild = function() {
     ensureBuildTasksAndRemoveTestPath();
 
-    ensureTool('tsc', '--version', 'Version 4.8.4');
+    ensureTool('tsc', '--version', 'Version 5.1.6');
 
     ensureTool('npm', '--version', function (output) {
         if (semver.lt(output, '5.6.0')) {
@@ -411,7 +411,7 @@ CLI.serverBuild = function() {
 //
 CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
     var minIstanbulVersion = '10';
-    ensureTool('tsc', '--version', 'Version 4.8.4');
+    ensureTool('tsc', '--version', 'Version 5.1.6');
     ensureTool('mocha', '--version', '6.2.3');
 
     // build the general tests and ps test infra
@@ -530,7 +530,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
 //
 
 CLI.testLegacy = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
-    ensureTool('tsc', '--version', 'Version 4.8.4');
+    ensureTool('tsc', '--version', 'Version 5.1.6');
     ensureTool('mocha', '--version', '6.2.3');
 
     if (argv.suite) {

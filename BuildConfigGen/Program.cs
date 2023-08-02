@@ -373,7 +373,7 @@ namespace BuildConfigGen
             // Upgrade typescript version for Node 20
             if (shouldUpdateTypescript)
             {
-                outputNodePackagePathJsonNode["devDependencies"]!["typescript"] = "4.8.4";
+                outputNodePackagePathJsonNode["devDependencies"]!["typescript"] = "5.1.6";
             }
 
             // We need to add newline since npm install command always add newline at the end of package.json
