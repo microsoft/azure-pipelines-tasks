@@ -6,7 +6,7 @@
   "loc.releaseNotes": "バージョン 2 の新機能。* <br />削除された WAR デプロイ サポート、Web.Config オプションの設定、Linux Azure Function Apps のスタートアップ コマンドのオプション。",
   "loc.group.displayName.AdditionalDeploymentOptions": "追加のデプロイ オプション",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "アプリケーションと構成の設定",
-  "loc.input.label.azureSubscription": "Azure サブスクリプション",
+  "loc.input.label.azureSubscription": "Azure Resource Manager 接続",
   "loc.input.help.azureSubscription": "配置用の Azure Resource Manager サブスクリプションを選択します。",
   "loc.input.label.appType": "アプリの種類",
   "loc.input.help.appType": "デプロイの Azure 関数アプリの種類を選択します。",
