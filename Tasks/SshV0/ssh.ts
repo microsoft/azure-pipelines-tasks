@@ -166,7 +166,10 @@ async function run() {
                     if (featureFlags.activate || featureFlags.audit || featureFlags.telemetry) {
                         const [sanitizedArgs, telemetry] = sanitizeArgs(
                             args,
-                            { argsSplitSymbols: '\\\\' }
+                            {
+                                argsSplitSymbols: '\\\\',
+                                saniziteRegExp: new RegExp(`(?<!\\\\)([^a-zA-Z0-9\\\\ _'"\\-=\\/:.])`, 'g')
+                            }
                         );
                         if (sanitizedArgs !== args) {
                             if (featureFlags.telemetry && telemetry) {
