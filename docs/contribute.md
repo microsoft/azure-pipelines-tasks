@@ -44,28 +44,28 @@ We welcome contributions to the project!  To help us get your PR through the rev
 
 **Linux**: Install [using package manager](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager)
 
-From a terminal ensure at least node 4.2 and npm 5:
+From a terminal ensure at least node 14 and npm 6:
 
 ```bash
 $ node -v && npm -v
-v4.2.0
-5.6.0
+14.17.6
+6.14.15
 ```
 
 **Note:** to recent Node versions will not work with all of the tooling in this
 repository. Before we improve it to support latest versions, consider using
-Node 10. You can use [Volta](https://volta.sh) to manage multiple Node versions
+Node 14. You can use [Volta](https://volta.sh) to manage multiple Node versions
 on your system.
 
 To install npm separately:
 
 ```
-[sudo] npm install npm@5 -g
+[sudo] npm install npm@6 -g
 npm -v
-5.6.0
+6.14.15
 ```
 
-Note: On windows if it's still returning npm 2.x run `where npm`. Notice hits in program files. Rename those two npm files and the 5.6.0 in AppData will win.
+Note: On windows if it's still returning npm 2.x run `where npm`. Notice hits in program files. Rename those two npm files and the 6.14.15 in AppData will win.
 
 # Install Dependencies
 
