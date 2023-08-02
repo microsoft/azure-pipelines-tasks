@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "devDependencies": {
-    "@types/mocha": "^5.2.7"
+    "@types/mocha": "^5.2.7",
+    "@tsconfig/node10": "1.0.9"
   }
 }
