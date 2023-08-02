@@ -44,8 +44,8 @@
     "semver": "4.3.3",
     "shelljs": "^0.8.5",
     "sync-request": "4.1.0",
-    "typed-rest-client": "^1.8.9",
-    "typescript": "4.0.8",
+    "typed-rest-client": "^1.8.11",
+    "typescript": "^5.1.6",
     "validator": "^13.7.0"
   }
 }
