@@ -1,7 +1,3 @@
 {
-    "compilerOptions": {
-        "target": "ES6",
-        "module": "commonjs",
-        "skipLibCheck": true
-    }
+    "extends": "@tsconfig/node10/tsconfig.json"
 }

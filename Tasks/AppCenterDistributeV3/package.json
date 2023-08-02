@@ -26,6 +26,7 @@
     "typed-rest-client": "^1.8.9"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "4.0.2",
+    "@tsconfig/node10": "1.0.9"
   }
 }
