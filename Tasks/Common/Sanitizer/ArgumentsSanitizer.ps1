@@ -10,7 +10,22 @@ Write-Verbose "Feature flag AZP_75787_ENABLE_COLLECT state: $($featureFlags.tele
 
 $taskName = ""
 
-# The only public function, which should be called from the task
+# public functions - start
+
+function Get-SanitizerFeatureFlags {
+    return $featureFlags
+}
+
+function Get-SanitizerCallStatus {
+    return $featureFlags.activate -or $featureFlags.audit -or $featureFlags.telemetry
+}
+
+function Get-SanitizerActivateStatus {
+    $activateFlag = $featureFlags.activate
+    Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $activateFlag"
+    return $activateFlag
+}
+
 # This is a wrapper for Get-SanitizedArguments to handle feature flags in one place
 # It will return sanitized arguments string if feature flag is enabled
 function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
@@ -21,7 +36,7 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
     if ($sanitizedArguments -eq $inputArgs) {
         Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsNotSanitized');
     } else {
-        $message = Get-VstsLocString -Key 'PS_ScriptArgsSanitized'
+        $message = (Get-VstsLocString -Key 'PS_ScriptArgsSanitized');
 
         if ($featureFlags.audit) {
             Write-Warning $message
@@ -35,6 +50,9 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
     return $arrayOfArguments
 }
 
+# public functions - end
+
+# !ATTENTION: don't write any console output in this method, because it will break result
 function Get-SanitizedArguments([string]$inputArgs) {
     $removedSymbolSign = '_#removed#_';
     $argsSplitSymbols = '``';
@@ -47,8 +65,9 @@ function Get-SanitizedArguments([string]$inputArgs) {
     $argsArr = $inputArgs -split $argsSplitSymbols;
 
     for ($i = 0; $i -lt $argsArr.Length; $i++ ) {
+
         ## We're adding matched values from splitted chunk for telemetry.
-        $argsArr[$i] -match $regex;
+        $argsArr[$i] -match $regex > $null;
         $matchesChunks += , $Matches.Values;
 
         ## '?<!`' - checking if before character no backtick. '([allowedchars])' - checking if character is allowed. Otherwise, replace to $removedSymbolSign

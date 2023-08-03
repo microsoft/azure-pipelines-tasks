@@ -215,19 +215,14 @@ param (
 
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp
 
-        $featureFlags = @{
-            audit     = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC_LOG)
-            activate  = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
-            telemetry = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_COLLECT)
-        }
-        Write-Debug "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $($featureFlags.activate)"
-        Write-Debug "Feature flag AZP_75787_ENABLE_NEW_LOGIC_LOG state: $($featureFlags.audit)"
-        Write-Debug "Feature flag AZP_75787_ENABLE_COLLECT state: $($featureFlags.telemetry)"
+        $useSanitizerCall = Get-SanitizerCallStatus
+        $useSanitizerActivate = Get-SanitizerActivateStatus
 
-        if ($featureFlags.activate -or $featureFlags.audit -or $featureFlags.telemetry) {
+        if ($useSanitizerCall) {
             $sanitizedArguments = Protect-ScriptArguments -InputArgs $robocopyParameters -TaskName "WindowsMachineFileCopyV1"
         }
-        if ($featureFlags.activate) {
+        
+        if ($useSanitizerActivate) {
             & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy $sanitizedArguments
         } else {
             $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"

@@ -118,17 +118,14 @@ $AzureFileCopyRemoteJob = {
             $additionalArguments = "/Z:`"$azCopyDestinationPath`" /V:`"$logFilePath`" /S /Y"
         }
 
-        $featureFlags = @{
-            audit     = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC_LOG)
-            activate  = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
-            telemetry = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_COLLECT)
-        }
-        Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $($featureFlags.activate)"
+        $useSanitizerCall = Get-SanitizerCallStatus
+        $useSanitizerActivate = Get-SanitizerActivateStatus
 
-        if ($featureFlags.activate -or $featureFlags.audit -or $featureFlags.telemetry){
+        if ($useSanitizerCall){
             $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV3"
         }
-        if ($featureFlags.activate) {
+
+        if ($useSanitizerActivate) {
             Write-DetailLogs "##[command] & `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"*****`" $sanitizedArguments"
             & $azCopyExeLocation /Source:$containerURL /Dest:$targetPath /SourceSAS:$containerSasToken $sanitizedArguments
         } else {
