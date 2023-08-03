@@ -58,19 +58,20 @@ function Get-SanitizedArguments([string]$inputArgs) {
     $argsSplitSymbols = '``';
     [string[][]]$matchesChunks = @()
 
-    # regex rule for removing symbols and telemetry 
+    # regex rule for removing symbols and telemetry.
+    # '?<!`' - checking if before character no backtick. '([allowedchars])' - checking if character is allowed. Otherwise, replace to $removedSymbolSign
     $regex = '(?<!\\)([^a-zA-Z0-9\\ _''"\-=/:.])';
 
     # We're splitting by ``, removing all suspicious characters and then join
     $argsArr = $inputArgs -split $argsSplitSymbols;
 
     for ($i = 0; $i -lt $argsArr.Length; $i++ ) {
+        [string[]]$matches = (Select-String $regex -input $argsArr[$i] -AllMatches) | ForEach-Object { $_.Matches }
+        if ($null -ne $matches ) {
+            $matchesChunks += , $matches;
+            $argsArr[$i] = $argsArr[$i] -replace $regex, $removedSymbolSign;
+        }
 
-        ## We're adding matched values from splitted chunk for telemetry.
-        $argsArr[$i] -match $regex > $null;
-        $matchesChunks += , $Matches.Values;
-
-        ## '?<!`' - checking if before character no backtick. '([allowedchars])' - checking if character is allowed. Otherwise, replace to $removedSymbolSign
         $argsArr[$i] = $argsArr[$i] -replace $regex, $removedSymbolSign;
     }
 
