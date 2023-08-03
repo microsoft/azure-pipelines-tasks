@@ -93,7 +93,7 @@ async function run() {
     }
   
     const kubelogin = new Kubelogin(helmutil.getTaskTempDir());
-    if (kubelogin.isAvailable()) {
+    if (kubelogin.isAvailable() && !externalAuth) {
         tl.debug('Kubelogin is installed. Converting kubeconfig.');
         const serviceConnection: string = tl.getInput('azureSubscriptionEndpoint', false);
         try {
@@ -136,7 +136,7 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, err.message);
     }
     finally {
-        if (isKubConfigLogoutRequired(command) || externalAuth) {
+        if (isKubConfigLogoutRequired(command)) {
             kubectlCli.logout();
         }
 

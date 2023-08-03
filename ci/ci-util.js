@@ -157,7 +157,7 @@ var initializePackagePath = function () {
 }
 exports.initializePackagePath = initializePackagePath;
 
-var linkNonAggregateLayoutContent = function (sourceRoot, destRoot, metadataOnly) {
+var linkNonAggregateLayoutContent = function (sourceRoot, destRoot, metadataOnly, copyFiles) {
     assert(sourceRoot, 'sourceRoot');
     assert(destRoot, 'destRoot');
     var metadataFileNames = ['TASK.JSON', 'TASK.LOC.JSON', 'STRINGS', 'ICON.PNG'];
@@ -192,10 +192,12 @@ var linkNonAggregateLayoutContent = function (sourceRoot, destRoot, metadataOnly
             var itemSourcePath = path.join(taskSourcePath, itemName);
             var itemDestPath = path.join(taskDestPath, itemName);
             if (fs.statSync(itemSourcePath).isDirectory()) {
-                fs.symlinkSync(itemSourcePath, itemDestPath, 'junction');
+                if (copyFiles) shell.cp('-R', itemSourcePath, itemDestPath);
+                else fs.symlinkSync(itemSourcePath, itemDestPath, 'junction');
             }
             else {
-                fs.linkSync(itemSourcePath, itemDestPath);
+                if (copyFiles) shell.cp(itemSourcePath, itemDestPath);
+                else fs.linkSync(itemSourcePath, itemDestPath);
             }
         });
     });
@@ -380,7 +382,7 @@ var createIndividualTaskZipFiles = function (omitLayoutVersion) {
     console.log('> Linking content for nested zips layout');
     var nestedZipsLayoutPath = path.join(packagePath, 'nested-zips-layout');
     fs.mkdirSync(nestedZipsLayoutPath);
-    linkNonAggregateLayoutContent(buildTasksPath, nestedZipsLayoutPath, /*metadataOnly*/false);
+    linkNonAggregateLayoutContent(buildTasksPath, nestedZipsLayoutPath, /*metadataOnly*/false,  /*copyFiles*/false);
 
     // create the nested task zips (part of the tasks layout)
     console.log();
@@ -390,7 +392,7 @@ var createIndividualTaskZipFiles = function (omitLayoutVersion) {
     // link the task metadata into the tasks layout
     console.log();
     console.log('> Linking metadata content for tasks');
-    linkNonAggregateLayoutContent(buildTasksPath, tasksLayoutPath, /*metadataOnly*/true);
+    linkNonAggregateLayoutContent(buildTasksPath, tasksLayoutPath, /*metadataOnly*/true, /*copyFiles*/true);
 
     if (!omitLayoutVersion) {
         // mark the layout with a version number.
