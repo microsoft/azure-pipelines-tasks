@@ -97,10 +97,18 @@ $AzureFileCopyRemoteJob = {
             $additionalArguments = "--recursive --log-level=INFO"
         }
 
-        Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $additionalArguments"
+        $useSanitizer = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
+        Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $useSanitizer"
 
-        $azCopyCommand = "& azcopy copy `"$containerURL/*$containerSasToken`" `"$targetPath`" $additionalArguments"
-        Invoke-Expression $azCopyCommand
+        if ($useSanitizer) {
+            $arguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV4"
+            Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $arguments"
+            & azcopy copy $targetPath $containerURL/*$containerSasToken $arguments
+        } else {
+            Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $additionalArguments"
+            $azCopyCommand = "& azcopy copy `"$containerURL/*$containerSasToken`" `"$targetPath`" $additionalArguments"
+            Invoke-Expression $azCopyCommand
+        }
     }
     catch
     {

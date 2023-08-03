@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as sshHelper from './ssh2helpers';
 import { v4 as generateRandomUUID } from 'uuid';
 import { ConnectConfig } from 'ssh2';
+import { sanitizeScriptArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
 
 /**
  * By default configuration, SSH runs on port 22.
@@ -133,12 +134,12 @@ async function run() {
                     scpConfig.password = password;
                 }
 
-                 //copy script file to remote machine
+                //copy script file to remote machine
                 tl.debug('Copying script to remote machine.');
                 await sshHelper.copyScriptToRemoteMachine(scriptFile, remoteScriptPath, scpConfig);
 
                 //change the line encodings
-                let originalScriptPath: string = ''; 
+                let originalScriptPath: string = '';
                 if (isWin) {
                     tl.debug('Fixing the line endings in case the file was created in Windows');
                     originalScriptPath = remoteScriptPath;
@@ -153,7 +154,30 @@ async function run() {
                 //run remote script file with args on the remote machine
                 let runScriptCmd = remoteScriptPath;
                 if (args) {
-                    runScriptCmd = runScriptCmd.concat(' ' + args);
+                    let resultArgs = args;
+
+                    const featureFlags = {
+                        audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
+                        activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
+                        telemetry: tl.getBoolFeatureFlag('AZP_75787_ENABLE_COLLECT')
+                    };
+
+                    if (featureFlags.activate || featureFlags.activate || featureFlags.telemetry) {
+                        const sanitizedArgs = sanitizeScriptArgs(
+                            args,
+                            {
+                                argsSplitSymbols: '\\\\',
+                                warningLocSymbol: 'SanitizerOutput',
+                                telemetryFeature: 'SshV0',
+                                saniziteRegExp: /(?<!\\)([^a-zA-Z0-9\\` _'"\-=\/:\.])/g
+                            }
+                        );
+                        if (featureFlags.activate) {
+                            resultArgs = sanitizedArgs;
+                        }
+                    }
+
+                    runScriptCmd = runScriptCmd.concat(' ' + resultArgs);
                 }
 
                 //setup command to clean up script file
