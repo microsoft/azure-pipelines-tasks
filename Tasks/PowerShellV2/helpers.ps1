@@ -34,7 +34,7 @@ function Sanitize-Arguments([string]$InputArgs) {
     $regex = '(?<!`)([^a-zA-Z0-9\\` _''"\-=\/:\.])'
     for ($i = 0; $i -lt $argsArr.Length; $i++ ) {
         ## '?<!`' - checking if before character no backtick. '^a-zA-Z0-9` _'"-' - checking if character is allowed. Insead replacing to #removed#
-        $argsArr[$i] -match $regex;
+        $argsArr[$i] -match $regex > $null;
         $matchesChunks += , $Matches.Values;
         $argsArr[$i] = $argsArr[$i] -replace $regex, $removedSymbolSign;
     }
