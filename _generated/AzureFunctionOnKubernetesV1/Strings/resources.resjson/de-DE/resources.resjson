@@ -40,5 +40,6 @@
   "loc.messages.KubernetesClusterResourceGroup": "Kubernetes-Cluster „%s“, Ressourcengruppe „%s“.",
   "loc.messages.NoDataWrittenOnFile": "In die Datei \"%s\" wurden keine Daten geschrieben.",
   "loc.messages.ServiceExternalIP": "Die externe IP-Adresse für den Dienst \"%s\" lautet %s.",
-  "loc.messages.WritingDockerConfigToTempFile": "Die Docker-Konfiguration wird in die temporäre Datei geschrieben. Dateipfad: %s, Docker-Konfiguration: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "Die Docker-Konfiguration wird in die temporäre Datei geschrieben. Dateipfad: %s, Docker-Konfiguration: %s",
+  "loc.messages.KubeloginFailed": "Fehler bei der Kubelogin-Authentifizierung. Ausnahme: %s"
 }
