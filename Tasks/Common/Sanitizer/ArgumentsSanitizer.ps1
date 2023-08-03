@@ -18,13 +18,16 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
 
     $sanitizedArguments = Get-SanitizedArguments -InputArgs $inputArgs
 
-    if ($sanitizedArguments -ne $inputArgs) {
+    if ($sanitizedArguments -eq $inputArgs) {
+        Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsNotSanitized');
+    } else {
         $message = Get-VstsLocString -Key 'PS_ScriptArgsSanitized'
-        if ($featureFlags.activate) {
-            throw $message
-        }
+
         if ($featureFlags.audit) {
             Write-Warning $message
+        } elseif ($featureFlags.activate) {
+            Write-Error $message
+            throw $message
         }
     }
 
@@ -33,14 +36,16 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
 }
 
 function Get-SanitizedArguments([string]$inputArgs) {
-
     $removedSymbolSign = '_#removed#_';
     $argsSplitSymbols = '``';
     [string[][]]$matchesChunks = @()
 
+    # regex rule for removing symbols and telemetry 
+    $regex = '(?<!\\)([^a-zA-Z0-9\\ _''"\-=/:.])';
+
     # We're splitting by ``, removing all suspicious characters and then join
     $argsArr = $inputArgs -split $argsSplitSymbols;
-    $regex = '(?<!\\)([^a-zA-Z0-9\\ _''"\-=/:.])';
+
     for ($i = 0; $i -lt $argsArr.Length; $i++ ) {
         ## We're adding matched values from splitted chunk for telemetry.
         $argsArr[$i] -match $regex;
@@ -52,7 +57,7 @@ function Get-SanitizedArguments([string]$inputArgs) {
 
     $resultArgs = $argsArr -join $argsSplitSymbols;
 
-    if ( $resultArgs -ne $inputArgs -and $featureFlags.telemetry) {
+    if ($resultArgs -like "*$removedSymbolSign*" -and $featureFlags.telemetry) {
         $argMatches = $matchesChunks | ForEach-Object { $_ } | Where-Object { $_ -ne $null }
         $telemetry = @{
             removedSymbols      = Join-Matches -Matches $argMatches
