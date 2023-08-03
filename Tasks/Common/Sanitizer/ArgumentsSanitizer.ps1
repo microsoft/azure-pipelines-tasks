@@ -38,11 +38,11 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
     } else {
         $message = (Get-VstsLocString -Key 'PS_ScriptArgsSanitized');
 
-        if ($featureFlags.audit) {
-            Write-Warning $message
-        } elseif ($featureFlags.activate) {
+        if ($featureFlags.activate) {
             Write-Error $message
             throw $message
+        } elseif ($featureFlags.audit) {
+            Write-Warning $message
         }
     }
 
