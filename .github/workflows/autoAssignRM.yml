@@ -1,0 +1,19 @@
+name: Auto Assign RM to Project Board
+
+on:
+  issues:
+    types:
+      - opened
+      - labeled
+
+jobs:
+  assign_one_project:
+    runs-on: ubuntu-latest
+    name: Assign to RM Project
+    steps:
+    - name: "Assign issues with 'Area: RM' label to project board"
+      uses: actions/add-to-project@v0.4.1
+      with:
+        project-url: https://github.com/orgs/microsoft/projects/892
+        github-token: ${{ secrets.RM_TOKEN }}
+        labeled: 'Area: RM'
