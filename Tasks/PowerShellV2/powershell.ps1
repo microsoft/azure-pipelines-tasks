@@ -101,7 +101,7 @@ try {
             telemetry = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_COLLECT)
         }
         if ($featureFlags.activate -or $featureFlags.audit -or $featureFlags.telemetry) {
-            $success, $sanitizedArgs, $telemetry = Sanitize-Arguments -InputArgs $input_arguments;
+            $sanitizedArgs, $telemetry = Sanitize-Arguments -InputArgs $input_arguments;
             if ($sanitizedArgs -ne $input_arguments) {
                 if ($featureFlags.telemetry -and $null -ne $telemetry) {
                     Publish-Telemetry $telemetry;
