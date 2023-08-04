@@ -122,6 +122,6 @@
         "JS_Stderr": "Bash wrote one or more lines to the standard error stream.",
         "JS_TranslatePathFailed": "Unable to translate the path '%s' to the Linux file system.",
         "JS_BashEnvAlreadyDefined": "The BASH_ENV environment variable has already been set to a '%s', the task will override it with '%s'",
-        "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: <https://aka.ms/ado/75787>"
+        "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
     }
 }
