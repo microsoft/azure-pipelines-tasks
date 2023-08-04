@@ -1,6 +1,7 @@
 {
+    "extends": "@tsconfig/node10/tsconfig.json",
     "compilerOptions": {
-        "target": "ES6",
-        "module": "commonjs"
+        "noImplicitAny": false,
+        "strictNullChecks": false,
     }
 }
