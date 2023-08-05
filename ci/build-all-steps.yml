@@ -63,10 +63,11 @@ steps:
     PACKAGE_TOKEN: $(Package.Token)
 
 # Build BuildConfigGen
-- task: DotNetCoreCLI@2
+- task: UseDotNet@2
   displayName: Build BuildConfigGen
   inputs:
-    command: build
+    packageType: sdk
+    version: 7.x
     projects: './BuildConfigGen/BuildConfigGen.csproj'
 
 # Clean
