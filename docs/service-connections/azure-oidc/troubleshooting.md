@@ -30,7 +30,7 @@ The following table lists [tasks](https://learn.microsoft.com/azure/devops/pipe
 | AzureFunctionAppContainerV1 | Available |
 | AzureFunctionAppV1 | Available |
 | AzureFunctionAppV2 | Available |
-| AzureFunctionOnKubernetesV1 | Available |
+| AzureFunctionOnKubernetesV1 | Not available yet |
 | AzureIoTEdgeV2 | Not available yet |
 | AzureKeyVaultV1 | Available |
 | AzureKeyVaultV2 | Available |
