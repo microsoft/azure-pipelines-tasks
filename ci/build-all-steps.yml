@@ -72,8 +72,7 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: Build BuildConfigGen
   inputs:
-    packageType: sdk
-    version: 7.x
+    command: build
     projects: './BuildConfigGen/BuildConfigGen.csproj'
 
 # Clean
