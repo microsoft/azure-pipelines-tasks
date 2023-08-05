@@ -85,12 +85,9 @@ The following table contains a list of known error messages and:
 
 ## Limitations & Known Issues
 
--   During private preview, breaking changes may be introduced.
 -   Support for Azure Service Connections only.
--   We plan to implement a breaking change around early July, which will require Workload Identity Service Connections to be updated or recreated.
--   Azure Tasks included with [Azure DevOps Azure Tasks](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines") only, no support for Marketplace extension Tasks yet.
+-   Azure Tasks included with [Azure DevOps Azure Tasks](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines) only, no support for Marketplace extension Tasks yet.
 -   AzCopy & Packer do not support Workload identity federation. The [AzureFileCopy](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-file-copy-v5?view=azure-pipelines "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-file-copy-v5?view=azure-pipelines") and [PackerBuild](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/packer-build-v1?view=azure-pipelines "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/packer-build-v1?view=azure-pipelines") tasks will be updated once the underlying tools receive support.
--   Not all 'in-the-box' [tasks](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/?view=azure-pipelines") have rolled out yet (see above).
 -   Convert does not validate whether pipelines consuming the Service Connection use unsupported tasks, have jobs that are in flight, or have a secret that is consumed in the [AzureCLI](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines "https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines") task (`addSpnToEnvironment`). As a result, converted Service Connections may have to be reverted back if there is a dependency on `addSpnToEnvironment` or tasks/tools that do not support OIDC.
 -   Using User-assigned Managed Identity is not available in all Azure regions, see [unsupported regions](https://learn.microsoft.com/azure/active-directory/workload-identities/workload-identity-federation-considerations#unsupported-regions-user-assigned-managed-identities).
 
@@ -107,37 +104,35 @@ The following table contains a list of known error messages and:
 1.  Q: I can't enable features for my organization. How can I find out who can?  
     A: Features can be enabled by organization admins. You can find organization owners on the organization settings page (`https://dev.azure.com/<org>/_settings/organizationOverview`)
 1.  Q: I don't have permissions to create a Service Principal in the Azure Active Directory tenant I use, what can I do?  
-    A: Please follow the [instructions for manual configuration](manual-configuration.md).
+    A: Please follow the [instructions for manual configuration](manual-configuration.md) of a Managed Identity or Service Principal.
 1.  Q: I don't see 'Federated credentials' under Service Principal 'Certificates & secrets' the Azure Portal, what can I do?  
-    A: Disable any adBlocker browser extensions you may use and/or refresh the browser.
+    A: Disable any browser extensions you may use and/or refresh the browser.
 1.  Q: I'm manually configuring a Service Connection but do not know what to provide for issuer URL, what should I enter?  
-    A: The issuer URL is `https://app.vstoken.visualstudio.com` (without trailing '/'). In an upcoming change this will be updated to include an Azure DevOps specific identifier.
-1.  Q: I'm using an Azure Active Directory credential to connect to Azure Container Registry with the Docker Service Connection, AKS with the Kubernetes Service Connection or Azure Service Fabric with the Service Fabric Service Connection. Is this available?  
+    A: The issuer URL is `https://vstoken.dev.azure.com/<organizationid>` (without trailing '/').
+2.  Q: I'm using an Azure Active Directory credential to connect to Azure Container Registry with the Docker Service Connection, AKS with the Kubernetes Service Connection or Azure Service Fabric with the Service Fabric Service Connection. Is this available?  
     A: For tasks targeting AKS, you can use the Azure Service Connection. We will update the Docker Registry Service Connection later.
-1.  Q: I converted a Service Connection to use Workload Identity federation. However, now I have broken pipelines.  
-    A: You may be using tasks that do not yet support Workload identity federation. A Service Connection that has been converted to use Workload identity federation can be reverted back for 2 months. Converting the Service Connection back to use a secret should address any issues that were the result of the conversion to use Workload identity federation.
-1.  Q: I'm using the [AzureCLI](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines) task with `addSpnToEnvironment: true` to get the Service Principal credentials and login with another tool.  
-    A: There is no Service Principal secret. You can set `addSpnToEnvironment: true` on the AzureCLI task to have the `idToken` environment variable populated. Tools that support Workload identity federation can consume this token. Put any code that consumes the `idToken` at the start of your script. The `idToken` is valid for 10 minutes, you'll receive a `AADSTS700024` message if you try to use an expired token. 
-1.  Q: I'm not using Azure, but another service that supports Workload identity federation. When can I use that?  
+3.  Q: I converted a Service Connection to use Workload Identity federation. However, now I have broken pipelines.  
+    A: You may be using tasks that do not yet support Workload identity federation. A Service Connection that has been converted to use Workload identity federation can be reverted back for 2 months. Reverting the Service Connection back to use a secret should address any issues that were the result of the conversion to use Workload identity federation.
+4.  Q: I'm using the [AzureCLI](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines) task with `addSpnToEnvironment: true` to get the Service Principal credentials and login with another tool.  
+    A: There is no Service Principal secret. You can set `addSpnToEnvironment: true` on the AzureCLI task to have the `idToken` environment variable populated. Tools that support Workload identity federation can consume this token. The `idToken` is valid for 10 minutes, you'll receive a `AADSTS700024` message if you try to use an expired token. Put any code that consumes the `idToken` at the start of your script. 
+5.  Q: I'm not using Azure, but another service (w.g. AWS, GCP) that supports Workload identity federation. When can I use that?  
     A: Marketplace tasks that use Service Connections can be updated to use Workload Identity federation later.
-1.  Q: I'm using Service Connections to access Sovereign clouds (e.g. Azure China), can I use Workload Identity federation?  
+6.  Q: I'm using Service Connections to access Sovereign clouds (e.g. Azure China), can I use Workload Identity federation?  
     A: Yes
-1.  Q: I'm using Azure DevOps Server, when will I be able to use Workload Identity federation?  
+7.  Q: I'm using Azure DevOps Server, when will I be able to use Workload Identity federation?  
     A: There are no plans to make Workload Identity federation available on Azure DevOps Server
-1.  Q: Can I create a Service Connection that uses Workload Identity federation through a REST API?  
-    A: Yes, you can use the [REST API](https://learn.microsoft.com/rest/api/azure/devops/serviceendpoint/endpoints/create?view=azure-devops-rest-7.1&tabs=HTTP "https://learn.microsoft.com/rest/api/azure/devops/serviceendpoint/endpoints/create?view=azure-devops-rest-7.1&tabs=HTTP"). Here is a sample [script](https://github.com/geekzter/azure-identity-scripts/blob/main/scripts/azure-devops/create_azurerm_msi_oidc_service_connection.ps1) and [request](https://github.com/geekzter/azure-pipeline-scripts/blob/main/scripts/serviceEndpointRequest.json).
-1.  Q: Can I use a Managed Identity instead of a Service Principal to set up Workload Identity federation?  
+8.  Q: Can I create a Service Connection that uses Workload Identity federation through a REST API?  
+    A: Yes, you can use the [REST API](https://learn.microsoft.com/rest/api/azure/devops/serviceendpoint/endpoints/create?view=azure-devops-rest-7.1&tabs=HTTP). Here is a sample [script](https://github.com/geekzter/azure-identity-scripts/blob/main/scripts/azure-devops/create_azurerm_msi_oidc_service_connection.ps1) and [request body](https://github.com/geekzter/azure-pipeline-scripts/blob/main/scripts/serviceEndpointRequest.json).
+9.  Q: Can I use a Managed Identity instead of a Service Principal to set up Workload Identity federation?  
     A: Yes, it is possible to use [Managed Identity for Workload Identity federation](https://learn.microsoft.com/en-us/azure/active-directory/workload-identities/workload-identity-federation-create-trust-user-assigned-managed-identity?pivots=identity-wif-mi-methods-azp). To set this up, use the [manual configuration](https://github.com/microsoft/azure-pipelines-tasks/blob/users/geekzter/oidc-preview-docs/docs/service-connections/azure-oidc/manual-configuration.md#federated-managed-identity) and populate `clientId`, `tenantId` from the Managed Identity's properties. [Here is a sample script](https://github.com/geekzter/azure-identity-scripts/blob/main/scripts/azure-devops/create_azurerm_msi_oidc_service_connection.ps1) to configure a Service Connection with a Federated Managed Identity.
-1.  Q: I'm using Terraform, how can I use Workload Identity federation?  
+10. Q: I'm using Terraform, how can I use Workload Identity federation?  
     A: There are 3 methods to use Terraform with OIDC:
        - We have added the `idToken` environment variable with the AzureCLI@2 task and `addSpnToEnvironment: true`. This will enable you to assign the [`ARM_OIDC_TOKEN`](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc#configuring-the-service-principal-in-terraform) environment variable consumed by the [azuread](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs#argument-reference) & [azurerm](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc#configuring-the-service-principal-in-terraform) providers:  
          `ARM_OIDC_TOKEN = idToken`  
          `ARM_USE_OIDC = 'true'`
        - Use the end-to-end sample at [Azure-Samples/azure-devops-terraform-oidc-ci-cd](https://github.com/Azure-Samples/azure-devops-terraform-oidc-ci-cd/tree/main).
        - Using one of the Terraform tasks from the Marketplace. We are making changes to task developers can obtain the token. Once that has completed the [DevLabs Terraform](https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks) and other extensions will be updated.
-1.  Q: I'm using AWS, how can I use Workload Identity federation?  
-    A: During the preview, we only support Azure Service Connections. We will add support for Marketplace extensions that come with their own Service Connection at a later point in time. Those extensions will then have to be updated by the publisher to take advantage of the capability.
-1.  Q: What are the pre-requisites to create an Azure Service Connection automatically?  
+11. Q: What are the pre-requisites to create an Azure Service Connection automatically?  
     A: The user creating the Service Connection needs permissions both in Azure as well as in Azure Active Directory:
        - In Azure Active Directory, either app registration creation should not [be disabled](https://learn.microsoft.com/azure/active-directory/roles/delegate-app-roles#restrict-who-can-create-applications) or the user should be in a privileged role e.g. [Application Developer](https://learn.microsoft.com/azure/active-directory/roles/permissions-reference#application-developer).
        - In Azure, the [Owner](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#owner) role on the scope of the Service Connection (in order to perform role assignment of Service Principal created for the Service Connection).  
