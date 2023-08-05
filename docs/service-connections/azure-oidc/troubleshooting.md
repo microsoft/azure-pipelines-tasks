@@ -108,7 +108,7 @@ The following table contains a list of known error messages and:
 1.  Q: I don't see 'Federated credentials' under Service Principal 'Certificates & secrets' the Azure Portal, what can I do?  
     A: Disable any browser extensions you may use and/or refresh the browser.
 1.  Q: I'm manually configuring a Service Connection but do not know what to provide for issuer URL, what should I enter?  
-    A: The issuer URL is `https://vstoken.dev.azure.com/<organizationid>` (without trailing '/').
+    A: The issuer URL is `https://vstoken.dev.azure.com/<organizationid>` (without trailing '/'). You can find the issuer url in the manual service connection creation dialog. You can also use this [script](https://github.com/geekzter/azure-devops-scripts/blob/main/scripts/get_organization.ps1) demonstrates how to use the REST API to retrieve the organization id.
 2.  Q: I'm using an Azure Active Directory credential to connect to Azure Container Registry with the Docker Service Connection, AKS with the Kubernetes Service Connection or Azure Service Fabric with the Service Fabric Service Connection. Is this available?  
     A: For tasks targeting AKS, you can use the Azure Service Connection. We will update the Docker Registry Service Connection later.
 3.  Q: I converted a Service Connection to use Workload Identity federation. However, now I have broken pipelines.  
