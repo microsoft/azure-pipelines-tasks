@@ -21,6 +21,12 @@ steps:
   inputs:
     versionSpec: 10.x
 
+# Use .NET SDK 7
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK 7.x'
+  inputs:
+    version: 7.x
+
 # npm install
 - script: npm install
   displayName: npm install
@@ -63,7 +69,7 @@ steps:
     PACKAGE_TOKEN: $(Package.Token)
 
 # Build BuildConfigGen
-- task: UseDotNet@2
+- task: DotNetCoreCLI@2
   displayName: Build BuildConfigGen
   inputs:
     packageType: sdk
