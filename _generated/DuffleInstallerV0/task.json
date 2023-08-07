@@ -44,5 +44,9 @@
   "messages": {
     "DownloadDuffleFailed": "Can not download the Duffle client of version %s. Check if the version is correct https://github.com/deislabs/duffle/releases",
     "DownloadStableVersionFailed": "Can not download Duffle stable version file from %s. Falling back to %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.226.1",
+    "Node16-225": "0.226.0"
   }
 }
