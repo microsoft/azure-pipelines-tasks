@@ -104,5 +104,6 @@
   "loc.messages.KubernetesServiceConnectionNotFound": "找不到 Kubernetes 服務連線詳細資料。",
   "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。",
   "loc.messages.SaveSupportedInHelmsV3Only": "只有 Helms V3 支援將圖表儲存至 Azure Container Registry。",
-  "loc.messages.OutputVariableDataSizeExceeded": "因為 Helm 命令輸出超過了支援的長度上限，所以未設定輸出變數。輸出長度: %s，支援的長度上限: %s"
+  "loc.messages.OutputVariableDataSizeExceeded": "因為 Helm 命令輸出超過了支援的長度上限，所以未設定輸出變數。輸出長度: %s，支援的長度上限: %s",
+  "loc.messages.KubeloginFailed": "Kubelogin 驗證失敗。例外狀況: %s"
 }
