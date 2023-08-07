@@ -24,5 +24,6 @@
   "loc.messages.JS_ScriptContents": "Skriptinhalte:",
   "loc.messages.JS_Stderr": "Bash hat mindestens eine Zeile in den Standardfehlerstream geschrieben.",
   "loc.messages.JS_TranslatePathFailed": "Der Pfad \"%s\" kann nicht in das Linux-Dateisystem übersetzt werden.",
-  "loc.messages.JS_BashEnvAlreadyDefined": "Die Umgebungsvariable „BASH_ENV“ wurde bereits auf „%s“ festgelegt. Die Aufgabe überschreibt sie mit „%s“."
+  "loc.messages.JS_BashEnvAlreadyDefined": "Die Umgebungsvariable „BASH_ENV“ wurde bereits auf „%s“ festgelegt. Die Aufgabe überschreibt sie mit „%s“.",
+  "loc.messages.SanitizerOutput": "Eingabeargumente wurden von Sanitizer geändert. Ausgabe von Sanitizer: %s"
 }

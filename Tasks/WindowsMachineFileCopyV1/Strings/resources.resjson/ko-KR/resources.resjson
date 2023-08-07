@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Windows 머신 파일 복사",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "원격 Windows 머신에 파일을 복사합니다.",
   "loc.instanceNameFormat": "$(SourcePath)에서 파일 복사",
   "loc.group.displayName.advanced": "고급 옵션",

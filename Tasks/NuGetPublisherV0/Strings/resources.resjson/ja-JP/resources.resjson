@@ -12,7 +12,7 @@
   "loc.input.label.feedName": "内部フィードの URL",
   "loc.input.help.feedName": "このアカウントでホストされる NuGet フィードの URL。",
   "loc.input.label.nuGetAdditionalArgs": "NuGet の引数",
-  "loc.input.help.nuGetAdditionalArgs": "NuGet.exe push に渡される追加引数。[詳細] (https://docs.microsoft.com/ja-JP/nuget/tools/cli-ref-push)。",
+  "loc.input.help.nuGetAdditionalArgs": "Additional arguments passed to NuGet.exe push. [More Information](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-push).",
   "loc.input.label.verbosity": "詳細",
   "loc.input.help.verbosity": "NuGet の詳細レベル",
   "loc.input.label.nuGetVersion": "NuGet バージョン",

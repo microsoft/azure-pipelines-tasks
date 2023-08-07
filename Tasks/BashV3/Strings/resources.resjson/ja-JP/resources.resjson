@@ -24,5 +24,6 @@
   "loc.messages.JS_ScriptContents": "スクリプト コンテンツ:",
   "loc.messages.JS_Stderr": "bash が標準エラー ストリームに 1 行以上を書き込みました。",
   "loc.messages.JS_TranslatePathFailed": "パス '%s' は、Linux ファイル システムに変換できません。",
-  "loc.messages.JS_BashEnvAlreadyDefined": "環境変数 BASH_ENV は既に '%s' に設定されていますが、このタスクはこれを '%s' で上書きします"
+  "loc.messages.JS_BashEnvAlreadyDefined": "環境変数 BASH_ENV は既に '%s' に設定されていますが、このタスクはこれを '%s' で上書きします",
+  "loc.messages.SanitizerOutput": "サニタイザーが入力引数を変更しました。サニタイザーからの出力: '%s'"
 }

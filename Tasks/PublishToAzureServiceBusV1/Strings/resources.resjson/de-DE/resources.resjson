@@ -18,6 +18,6 @@
   "loc.input.help.signatureKey": "Der Schlüssel für die Signatur in den Nachrichteneigenschaften. Ist dieser Wert leer, wird in den Nachrichteneigenschaften standardmäßig \"signature\" verwendet.",
   "loc.input.label.waitForCompletion": "Auf Abschluss der Aufgabe warten",
   "loc.input.help.waitForCompletion": "Bei \"true\" wartet die Aufgabe für die Dauer des angegebenen Aufgabenzeitlimits auf das TaskCompleted-Ereignis.",
-  "loc.input.label.useDataContractSerializer": "Serailizer für .NET-Datenverträge verwenden",
+  "loc.input.label.useDataContractSerializer": ".NET-Datenvertrags-Serialisierungsmodul verwenden",
   "loc.input.help.useDataContractSerializer": "Weitere Informationen finden Sie in der Aufgabendokumentation."
 }

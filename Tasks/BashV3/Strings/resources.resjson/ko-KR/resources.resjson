@@ -24,5 +24,6 @@
   "loc.messages.JS_ScriptContents": "스크립트 내용:",
   "loc.messages.JS_Stderr": "Bash가 표준 오류 스트림에 하나 이상의 줄을 썼습니다.",
   "loc.messages.JS_TranslatePathFailed": "'%s' 경로를 Linux 파일 시스템으로 변환할 수 없습니다.",
-  "loc.messages.JS_BashEnvAlreadyDefined": "BASH_ENV 환경 변수가 이미 '%s'(으)로 설정되어 있습니다. 작업에서 '%s'(으)로 재정의합니다."
+  "loc.messages.JS_BashEnvAlreadyDefined": "BASH_ENV 환경 변수가 이미 '%s'(으)로 설정되어 있습니다. 작업에서 '%s'(으)로 재정의합니다.",
+  "loc.messages.SanitizerOutput": "삭제기가 입력 인수를 변경했습니다. 삭제기의 출력: '%s'"
 }

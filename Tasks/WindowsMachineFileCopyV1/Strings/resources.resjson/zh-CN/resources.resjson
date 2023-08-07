@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Windows 计算机文件复制",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "将文件复制到远程 Windows 计算机",
   "loc.instanceNameFormat": "从 $(SourcePath)复制文件",
   "loc.group.displayName.advanced": "高级选项",

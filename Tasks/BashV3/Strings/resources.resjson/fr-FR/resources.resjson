@@ -24,5 +24,6 @@
   "loc.messages.JS_ScriptContents": "Contenu du script :",
   "loc.messages.JS_Stderr": "Bash a écrit une ou plusieurs lignes dans le flux d'erreurs standard.",
   "loc.messages.JS_TranslatePathFailed": "Impossible de traduire le chemin '%s' vers le système de fichiers Linux.",
-  "loc.messages.JS_BashEnvAlreadyDefined": "La variable d’environnement BASH_ENV a déjà été définie sur un « %s », la tâche la remplacera par « %s »."
+  "loc.messages.JS_BashEnvAlreadyDefined": "La variable d’environnement BASH_ENV a déjà été définie sur un « %s », la tâche la remplacera par « %s ».",
+  "loc.messages.SanitizerOutput": "Sanitizer a modifié les arguments d’entrée. Sortie du désinfectant : '%s'"
 }

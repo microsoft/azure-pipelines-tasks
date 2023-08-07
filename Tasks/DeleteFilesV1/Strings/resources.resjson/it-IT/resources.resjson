@@ -11,7 +11,7 @@
   "loc.input.label.RemoveSourceFolder": "Rimuovi cartella di origine",
   "loc.input.help.RemoveSourceFolder": "Verrà effettuato un tentativo di rimuovere anche la cartella di origine.",
   "loc.input.label.RemoveDotFiles": "Rimuovi i file che iniziano con un punto",
-  "loc.input.help.RemoveDotFiles": "È possibile eliminare i file che iniziano con un punto (.git, .dockerfile). Questi file vengono omessi, se non vengono specificati in modo esplicito, ad esempio '/.*'. Vedere questo [collegamento] (https://github.com/isaacs/minimatch#dot) per altre informazioni",
+  "loc.input.help.RemoveDotFiles": "Delete files starting with a dot (.git, .dockerfile). Omits these files if it's not specified explicitly (for example, '/.*'). Please see this [link](https://github.com/isaacs/minimatch#dot) for more info",
   "loc.messages.CantDeleteFiles": "Non è stato possibile eliminare uno o più file",
   "loc.messages.SkippingSymbolStore": "L'eliminazione per la condivisione file dell'archivio simboli verrà ignorata: %s",
   "loc.messages.NoFiles": "Non ci sono file da eliminare."

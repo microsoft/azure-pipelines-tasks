@@ -13,7 +13,7 @@
   "loc.input.label.signPayload": "Firma il messaggio",
   "loc.input.help.signPayload": "Se è impostata su true, il messaggio verrà firmato un certificato privato, se fornito.",
   "loc.input.label.certificateString": "Variabile del certificato",
-  "loc.input.help.certificateString": "Consente di specificare la variabile segreta che include il contenuto del certificato. Può trattarsi anche di un certificato archiviato in un Azure Key Vault che è [collegato] (https://docs.microsoft.com/it-it/vsts/pipelines/library/variable-groups?view=vsts#link-secrets-from-an-azure-key-vault-as-variables) a un gruppo di variabili usato da questa pipeline di versione.",
+  "loc.input.help.certificateString": "Specify the secret variable that contains the certificate content.  This can also be a certificate stored in an Azure key vault that is [linked](https://docs.microsoft.com/en-us/vsts/pipelines/library/variable-groups?view=vsts#link-secrets-from-an-azure-key-vault-as-variables) to a Variable Group used by this release pipeline.",
   "loc.input.label.signatureKey": "Chiave della proprietà della firma",
   "loc.input.help.signatureKey": "Chiave in cui deve essere inserita la firma nelle proprietà del messaggio. Se viene lasciata vuota, il valore predefinito è 'signature' nelle proprietà del messaggio",
   "loc.input.label.waitForCompletion": "Attendi il completamento dell'attività",

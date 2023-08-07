@@ -24,5 +24,6 @@
   "loc.messages.JS_ScriptContents": "Contenido del script:",
   "loc.messages.JS_Stderr": "Bash escribió una o varias líneas en la secuencia de error estándar.",
   "loc.messages.JS_TranslatePathFailed": "La ruta de acceso \"%s\" no se puede traducir al sistema de archivos de Linux.",
-  "loc.messages.JS_BashEnvAlreadyDefined": "La variable de entorno BASH_ENV ya se ha establecido en '%s'. La tarea la reemplazará por '%s'"
+  "loc.messages.JS_BashEnvAlreadyDefined": "La variable de entorno BASH_ENV ya se ha establecido en '%s'. La tarea la reemplazará por '%s'",
+  "loc.messages.SanitizerOutput": "Sanitizer cambió los argumentos de entrada. Salida de Sanitizer: “%s”"
 }
