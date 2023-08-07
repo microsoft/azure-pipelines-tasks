@@ -15,6 +15,6 @@ jobs:
       uses: actions/add-to-project@v0.4.1
       with:
         project-url: https://github.com/orgs/microsoft/projects/892
-        github-token: ${{ secrets.RM_TOKEN }}
+        github-token: ${{ secrets.RM_TOKEN }} #reach-out to v-mohithgc@microsoft.com / razvanmanole@microsoft.com if any issues with the token.
         labeled: Area:RM, Task:AzureAppService, Task:AzureCLI, Task:AzureCloudPowerShell, Task:AzureFileCopy, Task:AzureKeyVault, Task:AzureMonitor, Task:AzureMysqlDeployment, Task:AzurePowerShell, Task:AzureRmWebAppDeployment, Task:AzureWebApp, Task:Docker, Task:DotNetCore, Task:FileTransform, Task:Helm, Task:Kubernetes
         label-operator: OR
