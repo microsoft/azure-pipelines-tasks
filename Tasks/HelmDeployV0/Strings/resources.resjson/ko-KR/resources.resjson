@@ -104,5 +104,6 @@
   "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes 서비스 연결 정보를 찾을 수 없습니다.",
   "loc.messages.ExpiredServicePrincipal": "Azure의 액세스 토큰을 페치할 수 없습니다. 사용한 서비스 주체가 유효하고 만료되지 않았는지 확인하세요.",
   "loc.messages.SaveSupportedInHelmsV3Only": "Helms V3에서만 Azure Container Registry에 차트를 저장할 수 있습니다.",
-  "loc.messages.OutputVariableDataSizeExceeded": "Helm 명령 출력으로 설정되지 않은 출력 변수가 지원되는 최대 길이를 초과했습니다. 출력 길이: %s, 지원되는 최대 길이: %s"
+  "loc.messages.OutputVariableDataSizeExceeded": "Helm 명령 출력으로 설정되지 않은 출력 변수가 지원되는 최대 길이를 초과했습니다. 출력 길이: %s, 지원되는 최대 길이: %s",
+  "loc.messages.KubeloginFailed": "Kubelogin 인증에 실패했습니다. 예외: %s"
 }
