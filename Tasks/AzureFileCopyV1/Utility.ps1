@@ -279,11 +279,15 @@ function Upload-FilesToAzureContainer
             $blobStorageURI = $blobStorageEndpoint+$containerName+"/"+$blobPrefix
         }
 
-        $useSanitizer = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
-        Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $useSanitizer"
+        $useSanitizerCall = Get-SanitizerCallStatus
+        $useSanitizerActivate = Get-SanitizerActivateStatus
 
-        if ($useSanitizer) {
-            $additionalArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV1"
+        if ($useSanitizerCall) {
+            $sanitizedAdditionalArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV1"
+        }
+
+        if ($useSanitizerActivate) {
+            $additionalArguments = $sanitizedAdditionalArguments
         }
         
         Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments -BlobStorageURI $blobStorageURI
