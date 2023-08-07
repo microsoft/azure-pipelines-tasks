@@ -25,5 +25,5 @@
   "loc.messages.JS_Stderr": "Оболочка Bash записала одну или несколько строк в стандартный поток ошибок.",
   "loc.messages.JS_TranslatePathFailed": "Не удалось преобразовать путь \"%s\" для файловой системы Linux.",
   "loc.messages.JS_BashEnvAlreadyDefined": "Для переменной среды BASH_ENV уже задано значение \"%s\". Задача переопределит его на \"%s\"",
-  "loc.messages.SanitizerOutput": "Sanitizer changed input arguments. Output from sanitizer: '%s'"
+  "loc.messages.SanitizerOutput": "Санитайзер изменил входные аргументы. Выходные данные санитайзера: \"%s\""
 }

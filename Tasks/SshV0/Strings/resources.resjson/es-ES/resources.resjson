@@ -35,5 +35,5 @@
   "loc.messages.SettingUpSshConnection": "Intentando establecer una conexión SSH con %s@%s: %s",
   "loc.messages.SshConnectionSuccessful": "Conectado correctamente.",
   "loc.messages.UseDefaultPort": "Usando el puerto 22, que es el predeterminado para SSH, porque no se especificó ningún puerto.",
-  "loc.messages.SanitizerOutput": "Sanitizer changed input arguments. Output from sanitizer: '%s'"
+  "loc.messages.SanitizerOutput": "Sanitizer cambió los argumentos de entrada. Salida de Sanitizer: “%s”"
 }
