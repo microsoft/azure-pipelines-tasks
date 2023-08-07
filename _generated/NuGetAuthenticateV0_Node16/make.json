@@ -1,0 +1,18 @@
+{
+    "rm": [       
+        {
+            "items": [
+                "node_modules/azure-pipelines-tasks-artifacts-common/node_modules/azure-pipelines-task-lib"
+            ],
+            "options": "-Rf"
+        }
+    ],
+    "externals": {
+        "archivePackages": [
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/0.1.28/c.zip",
+                "dest": "./CredentialProviderV2/"
+            }
+        ]
+    }
+}
