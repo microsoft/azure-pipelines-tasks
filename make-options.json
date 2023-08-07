@@ -260,6 +260,7 @@
         "DockerComposeV0",
         "DuffleInstallerV0",
         "IISWebAppDeploymentOnMachineGroupV0",
-        "NuGetAuthenticateV0"
+        "NuGetAuthenticateV0",
+        "DownloadBuildArtifactsV0"
     ]
 }
