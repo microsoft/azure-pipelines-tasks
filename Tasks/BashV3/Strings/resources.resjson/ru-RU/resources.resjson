@@ -25,5 +25,5 @@
   "loc.messages.JS_Stderr": "Оболочка Bash записала одну или несколько строк в стандартный поток ошибок.",
   "loc.messages.JS_TranslatePathFailed": "Не удалось преобразовать путь \"%s\" для файловой системы Linux.",
   "loc.messages.JS_BashEnvAlreadyDefined": "Для переменной среды BASH_ENV уже задано значение \"%s\". Задача переопределит его на \"%s\"",
-  "loc.messages.SanitizerOutput": "Санитайзер изменил входные аргументы. Выходные данные санитайзера: \"%s\""
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
 }

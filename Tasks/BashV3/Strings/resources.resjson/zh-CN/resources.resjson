@@ -25,5 +25,5 @@
   "loc.messages.JS_Stderr": "Bash 向标准错误流写入一个或多个行。",
   "loc.messages.JS_TranslatePathFailed": "无法将路径“%s”转换到 Linux 文件系统。",
   "loc.messages.JS_BashEnvAlreadyDefined": "已将 BASH_ENV环境变量设置为“%s”，任务将使用“%s”替代它",
-  "loc.messages.SanitizerOutput": "擦除系统更改了输入参数。来自擦除器的输出: “%s”"
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
 }

@@ -25,5 +25,5 @@
   "loc.messages.JS_Stderr": "Bash a écrit une ou plusieurs lignes dans le flux d'erreurs standard.",
   "loc.messages.JS_TranslatePathFailed": "Impossible de traduire le chemin '%s' vers le système de fichiers Linux.",
   "loc.messages.JS_BashEnvAlreadyDefined": "La variable d’environnement BASH_ENV a déjà été définie sur un « %s », la tâche la remplacera par « %s ».",
-  "loc.messages.SanitizerOutput": "Sanitizer a modifié les arguments d’entrée. Sortie du désinfectant : '%s'"
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
 }

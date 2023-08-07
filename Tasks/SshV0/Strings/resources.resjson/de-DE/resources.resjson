@@ -35,5 +35,5 @@
   "loc.messages.SettingUpSshConnection": "Es wird versucht, eine SSH-Verbindung mit \"%s@%s:%s\" einzurichten.",
   "loc.messages.SshConnectionSuccessful": "Verbindung erfolgreich hergestellt.",
   "loc.messages.UseDefaultPort": "Port 22 wird als Standardeinstellung für SSH verwendet, da kein Port angegeben wurde.",
-  "loc.messages.SanitizerOutput": "Eingabeargumente wurden von Sanitizer geändert. Ausgabe von Sanitizer: %s"
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
 }

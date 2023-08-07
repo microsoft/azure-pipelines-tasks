@@ -35,5 +35,5 @@
   "loc.messages.SettingUpSshConnection": "%s@%s:%s への SSH 接続を確立しようとしています",
   "loc.messages.SshConnectionSuccessful": "正常に接続しました。",
   "loc.messages.UseDefaultPort": "ポートが指定されなかったため、SSH で既定のポート 22 を使用しています。",
-  "loc.messages.SanitizerOutput": "サニタイザーが入力引数を変更しました。サニタイザーからの出力: '%s'"
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
 }
