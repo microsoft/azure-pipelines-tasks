@@ -44,5 +44,9 @@
   "messages": {
     "DownloadDuffleFailed": "ms-resource:loc.messages.DownloadDuffleFailed",
     "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.226.1",
+    "Node16-225": "0.226.0"
   }
 }
