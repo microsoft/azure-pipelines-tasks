@@ -255,6 +255,11 @@
         "AzureKeyVaultV2",
         "AzurePowerShellV4",
         "AzurePowerShellV5",
-        "AzureResourceGroupDeploymentV2"
+        "AzureResourceGroupDeploymentV2",
+        "AzureResourceManagerTemplateDeploymentV3",
+        "DockerComposeV0",
+        "DuffleInstallerV0",
+        "IISWebAppDeploymentOnMachineGroupV0",
+        "NuGetAuthenticateV0"
     ]
 }
