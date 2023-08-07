@@ -35,5 +35,5 @@
   "loc.messages.SettingUpSshConnection": "Tentative d'établissement d'une connexion SSH à %s@%s:%s",
   "loc.messages.SshConnectionSuccessful": "Connexion réussie.",
   "loc.messages.UseDefaultPort": "Utilisation du port 22, qui représente la valeur par défaut pour SSH, car aucun port n'a été spécifié.",
-  "loc.messages.SanitizerOutput": "Sanitizer changed input arguments. Output from sanitizer: '%s'"
+  "loc.messages.SanitizerOutput": "Sanitizer a modifié les arguments d’entrée. Sortie du désinfectant : '%s'"
 }
