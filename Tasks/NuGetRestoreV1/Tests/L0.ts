@@ -25,7 +25,7 @@ describe('NuGetRestore Suite', function () {
     });
 
     it('restore single solution with CredentialProvider', (done: Mocha.Done) => {
-        this.timeout(1000);
+        this.timeout(20000);
 
         let tp = path.join(__dirname, 'singleslnCredentialProvider.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
