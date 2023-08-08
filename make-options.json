@@ -240,8 +240,6 @@
         "AzureMysqlDeploymentV1",
         "AzureFunctionAppContainerV1",
         "KubectlInstallerV0",
-        "AzureFileCopyV2",
-        "AzureFileCopyV3",
         "HelmDeployV0",
         "AzureFunctionAppV1",
         "AzureNLBManagementV1",
@@ -257,6 +255,11 @@
         "AzureKeyVaultV2",
         "AzurePowerShellV4",
         "AzurePowerShellV5",
-        "AzureResourceGroupDeploymentV2"
+        "AzureResourceGroupDeploymentV2",
+        "AzureResourceManagerTemplateDeploymentV3",
+        "DuffleInstallerV0",
+        "IISWebAppDeploymentOnMachineGroupV0",
+        "NuGetAuthenticateV0",
+        "DownloadBuildArtifactsV0"
     ]
 }

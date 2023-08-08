@@ -215,12 +215,15 @@ param (
 
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp
 
-        $useSanitizer = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
-        Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $useSanitizer"
+        $useSanitizerCall = Get-SanitizerCallStatus
+        $useSanitizerActivate = Get-SanitizerActivateStatus
 
-        if ($useSanitizer) {
-            $arguments = Protect-ScriptArguments -InputArgs $robocopyParameters -TaskName "WindowsMachineFileCopyV1"
-            & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy $arguments
+        if ($useSanitizerCall) {
+            $sanitizedArguments = Protect-ScriptArguments -InputArgs $robocopyParameters -TaskName "WindowsMachineFileCopyV1"
+        }
+        
+        if ($useSanitizerActivate) {
+            & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy $sanitizedArguments
         } else {
             $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
             Invoke-Expression $command
@@ -236,6 +239,10 @@ param (
             $message = (Get-LocalizedString -Key "Copying recursively from {0} to {1} on machine {2} succeeded" -ArgumentList $sourcePath, $targetPath, $fqdn)
             Write-Output $message            
         }        
+    }
+    catch {
+        Write-VstsTaskError -Message $_.Exception.Message
+        Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
     }
     finally
     {
