@@ -97,7 +97,7 @@ jobs:
     condition: succeeded()
     timeoutInMinutes: 180
     pool:
-      vmImage: windows-2022
+      name: 1ES-Shared-Hosted-Pool_Windows-Server-2022
     steps:
     - template: ci/build-all-tasks.yml
 
