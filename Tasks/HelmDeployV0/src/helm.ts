@@ -84,8 +84,9 @@ async function run() {
     var kubectlCli: kubernetescli;
     var externalAuth = connectionType === "None" && (command === "install" || command === "upgrade");
     if (externalAuth && !tl.getVariable("KUBECONFIG")) {
-        if (fs.existsSync("$HOME/.kube/config")) {
-            tl.setVariable("KUBECONFIG", "$HOME/.kube/config");
+        const kubeConfigPath = path.join(process.env.HOME, '.kube', 'config');
+        if (fs.existsSync(kubeConfigPath)) {
+            tl.setVariable("KUBECONFIG", kubeConfigPath);
         } else {
             tl.error("KUBECONFIG kube configuration file path must be set when connectionType is none and command is install or upgrade.");
         }
