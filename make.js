@@ -177,21 +177,23 @@ CLI.gendocs = function() {
 //
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
+// ex: node make.js build --task ShellScript --node Node20
 //
-CLI.build = function() 
+CLI.build = function(/** @type {{ node: string; task: string }} */ argv) 
 {
     if (process.env.TF_BUILD) {
         fail('Please use serverBuild for CI builds for proper validation');
     }
 
     callGenTaskDuringBuild = true;
-    CLI.serverBuild();
+    CLI.serverBuild(argv);
 }
 
-CLI.serverBuild = function() {
+CLI.serverBuild = function(/** @type {{ node: string; task: string }} */ argv) {
     ensureBuildTasksAndRemoveTestPath();
+    ensureTool('nvm');
 
-    ensureTool('tsc', '--version', 'Version 5.1.6');
+    ensureTool('tsc', '--version', 'Version 4.0.8');
 
     ensureTool('npm', '--version', function (output) {
         if (semver.lt(output, '5.6.0')) {
@@ -200,7 +202,26 @@ CLI.serverBuild = function() {
     });
 
     const removeNodeModules = taskList.length > 1;
-    const allTasks = getTaskList(taskList);
+    let allTasks = getTaskList(taskList);
+
+    const nodeVersion = argv.node ? argv.node : "Default";
+    if (nodeVersion == "Node20") {
+        run(`nvm install 20.3.1`);
+        run(`nvm use 20`);
+        run(`nvm list`);
+        ensureTool('node', '--version', 'v20.3.1');
+        allTasks = allTasks.filter((taskName) => {
+            return taskName.endsWith("Node20");
+        });
+    } else {
+        run(`nvm install 10.24.1`);
+        run(`nvm use 10`);
+        run(`nvm list`);
+        ensureTool('node', '--version', 'v10.24.1');
+        allTasks = allTasks.filter((taskName) => {
+            return !taskName.endsWith("Node20");
+        });
+    }
 
     // Need to validate generated tasks first
     const makeOptions = fileToJson(makeOptionsPath);
@@ -411,7 +432,7 @@ CLI.serverBuild = function() {
 //
 CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
     var minIstanbulVersion = '10';
-    ensureTool('tsc', '--version', 'Version 5.1.6');
+    ensureTool('tsc', '--version', 'Version 4.0.8');
     ensureTool('mocha', '--version', '6.2.3');
 
     // build the general tests and ps test infra
@@ -530,7 +551,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
 //
 
 CLI.testLegacy = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
-    ensureTool('tsc', '--version', 'Version 5.1.6');
+    ensureTool('tsc', '--version', 'Version 4.0.8');
     ensureTool('mocha', '--version', '6.2.3');
 
     if (argv.suite) {

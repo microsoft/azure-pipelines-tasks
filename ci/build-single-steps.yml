@@ -14,15 +14,22 @@ steps:
 - powershell: ./ci/start-collect-diagnostics.ps1
   displayName: Start collect diagnostics
 
-# Use node 14, npm 6
+# Use node 10, npm 6
 - task: NodeTool@0
-  displayName: Use node 14
+  displayName: Use node 10
   inputs:
-    versionSpec: 14.17.6
+    versionSpec: 10.x
 
 # npm install
 - script: npm install
   displayName: npm install
+
+# Install nvm tool
+- script: |
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  displayName: Install nvm
 
 # Verify min agent demands
 - script: |
@@ -43,8 +50,12 @@ steps:
 - script: node make.js clean
   displayName: Clean tasks
 
-# Build
+# Build tasks
 - script: node make.js serverBuild --task "$(task_pattern)"
+  displayName: Build
+
+# Build tasks Node20
+- script: node make.js serverBuild --task "$(task_pattern)" --node Node20
   displayName: Build
 
 # Check diff for task sources

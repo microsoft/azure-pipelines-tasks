@@ -10,9 +10,9 @@ steps:
   fetchDepth: 1
 
 - task: NodeTool@0
-  displayName: Use node 14
+  displayName: Use node 10
   inputs:
-    versionSpec: 14.17.6
+    versionSpec: 10.x
 
 - script: |
     cd azure-pipelines-tasks
