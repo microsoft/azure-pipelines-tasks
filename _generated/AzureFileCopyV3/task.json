@@ -307,5 +307,9 @@
     "AFC_PreexecutionJob_UnableToGetStorageKey": "Unable to fetch storage account key. Error: '{0}'",
     "AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment.",
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+  },
+  "_buildConfigMapping": {
+    "Default": "3.227.1",
+    "Node16-225": "3.227.0"
   }
 }
