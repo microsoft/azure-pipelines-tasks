@@ -179,6 +179,25 @@ To invoke a logging command, simply emit the command via standard output. For ex
             <td>
             </td>
         </tr>
+         <tr>
+            <td>
+                <p align="left">
+                    <code>##vso[task.setsecret]value</code>
+                </p>
+            </td>
+            <td>
+                
+            </td>
+            <td>
+                <p align="left">
+                    The value will be registered as a secret and masked out from log.<br>
+                    <b>Examples:</b> <br>
+                    <code>##vso[task.setsecret]MySeCrEtVaLuE</code><br>
+                </p>
+            </td>
+            <td>
+            </td>
+        </tr>
         <tr>
             <td>
                 <p align="left">
