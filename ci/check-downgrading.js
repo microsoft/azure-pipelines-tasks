@@ -5,7 +5,7 @@ const {
 } = require('fs');
 const { mkdir, rm } = require('shelljs');
 const { platform } = require('os');
-const { run, resolveTaskList } = require('./ci-util');
+const { run, resolveTaskList, logToPipeline } = require('./ci-util');
 const { eq, inc, parse, lte, neq } = require('semver');
 
 const taskVersionBumpingDocUrl = "https://aka.ms/azp-tasks-version-bumping";
@@ -13,7 +13,7 @@ const taskVersionBumpingDocUrl = "https://aka.ms/azp-tasks-version-bumping";
 const packageEndpoint = process.env['PACKAGE_VERSIONS_ENDPOINT'];
 
 if (!packageEndpoint) {
-  console.log('##vso[task.logissue type=error]Failed to get info from package endpoint because no endpoint was specified. Try setting the PACKAGE_VERSIONS_ENDPOINT environment variable.');
+  logToPipeline('error', 'Failed to get info from package endpoint because no endpoint was specified. Try setting the PACKAGE_VERSIONS_ENDPOINT environment variable.')
   process.exit(1);
 }
 
@@ -120,7 +120,7 @@ function getTasksVersions(tasks, basepath) {
     const taskJSONPath = join(basepath, 'Tasks' , x, 'task.json');
 
     if (!existsSync(taskJSONPath)) {
-      console.log(`##vso[task.logissue type=error]Task.json of ${x} does not exist by path ${taskJSONPath}`);
+      logToPipeline('error', `Task.json of ${x} does not exist by path ${taskJSONPath}`);
       process.exit(1);
     }
 
@@ -142,7 +142,7 @@ async function clientWrapper(url) {
   try {
     return await client.get(url);
   } catch (error) {
-    console.log(`##vso[task.logissue type=error]Cannot access to ${url} due to error ${error}`);
+    logToPipeline('error', `Cannot access to ${url} due to error ${error}`);
     process.exit(1);
   }
 }
@@ -151,7 +151,7 @@ async function getFeedTasksVersions() {
   const { result, statusCode } = await clientWrapper(packageEndpoint);
 
   if (statusCode !== 200) {
-    console.log(`##vso[task.logissue type=error]Failed while fetching feed versions.\nStatus code: ${statusCode}\nResult: ${result}`);
+    logToPipeline('error', `Failed while fetching feed versions.\nStatus code: ${statusCode}\nResult: ${result}`);
     process.exit(1);
   }
 
@@ -203,7 +203,7 @@ function compareLocalTaskLoc(localTasks) {
     const taskLocJSONPath = join(__dirname, '..', 'Tasks' , localTask.name, 'task.loc.json');
 
     if (!existsSync(taskLocJSONPath)) {
-      console.log(`##vso[task.logissue type=error]Task.json of ${localTask.name} does not exist by path ${taskLocJSONPath}`);
+      logToPipeline('error', `Task.json of ${localTask.name} does not exist by path ${taskLocJSONPath}`);
       process.exit(1);
     }
 
@@ -248,7 +248,7 @@ async function main({ task, sprint, week }) {
     console.warn(`\nProblems with ${messages.length} task(s) should be resolved:\n`);
 
     for (const message of messages) {
-      console.log(`##vso[task.logissue type=${message.type}]${message.payload}`);
+      logToPipeline(message.type, message.payload);
     }
 
     console.log('\nor you might have an outdated branch, try to merge/rebase your branch from master');
