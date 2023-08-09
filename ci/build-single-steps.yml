@@ -48,12 +48,8 @@ steps:
 - script: node make.js clean
   displayName: Clean tasks
 
-# Build tasks
+# Build
 - script: node make.js serverBuild --task "$(task_pattern)"
-  displayName: Build
-
-# Build tasks Node20
-- script: node make.js serverBuild --task "$(task_pattern)" --node Node20
   displayName: Build
 
 # Check diff for task sources
