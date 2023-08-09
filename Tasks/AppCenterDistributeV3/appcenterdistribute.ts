@@ -80,7 +80,7 @@ async function handleResponse(response: IHttpClientResponse): Promise<{ response
     if (statusCode < 200 || statusCode >= 300) {
         const statusCodeMsg = `http response code: ${statusCode}`;
         const message = bodyStr ? `${bodyStr} ${os.EOL}${statusCodeMsg}` : statusCodeMsg;
-        tl.debug(`---- Failed with error: ${message}`);
+        tl.debug(`---- Failed with Error: ${message}`);
         throw new Error(message);
     }
     tl.debug(`---- http call ${bodyStr}`);
