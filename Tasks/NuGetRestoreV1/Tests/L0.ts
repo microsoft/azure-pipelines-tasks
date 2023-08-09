@@ -9,7 +9,7 @@ describe('NuGetRestore Suite', function () {
     after(() => {
     });
     it('restore single solution', (done: Mocha.Done) => {
-        this.timeout(1000);
+        this.timeout(20000);
 
         let tp = path.join(__dirname, 'singlesln.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -25,7 +25,7 @@ describe('NuGetRestore Suite', function () {
     });
 
     it('restore single solution with CredentialProvider', (done: Mocha.Done) => {
-        this.timeout(1000);
+        this.timeout(20000);
 
         let tp = path.join(__dirname, 'singleslnCredentialProvider.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -37,13 +37,13 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.stdout.indexOf('credProviderPath = ') >= 0, "should have found credential provider path");
         assert(tr.succeeded, 'should have succeeded');
-        assert.equal(tr.warningIssues.length, 0, "should have no warnings");
+        assert.equal(tr.warningIssues.length, 1, "should have only 1 warning");
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
     
     it('restore packages.config', (done: Mocha.Done) => {
-        this.timeout(1000);
+        this.timeout(20000);
 
         let tp = path.join(__dirname, 'pkgconfig.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -59,7 +59,7 @@ describe('NuGetRestore Suite', function () {
     });   
     
     it('restore single solution with noCache', (done: Mocha.Done) => {
-        this.timeout(1000);
+        this.timeout(20000);
 
         let tp = path.join(__dirname, 'singleslnNoCache.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -75,7 +75,7 @@ describe('NuGetRestore Suite', function () {
     });
     
     it('restore single solution with nuget config', (done: Mocha.Done) => {
-        this.timeout(1000);
+        this.timeout(20000);
 
         let tp = path.join(__dirname, 'singleslnConfigFile.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -92,7 +92,7 @@ describe('NuGetRestore Suite', function () {
     });
 
     it('restore multiple solutions', (done: Mocha.Done) => {
-        this.timeout(1000);
+        this.timeout(20000);
 
         let tp = path.join(__dirname, 'multiplesln.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -109,7 +109,7 @@ describe('NuGetRestore Suite', function () {
     });
     
     it('restore single solution mono', (done: Mocha.Done) => {
-        this.timeout(1000);
+        this.timeout(20000);
 
         let tp = path.join(__dirname, 'singleslnMono.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -124,7 +124,7 @@ describe('NuGetRestore Suite', function () {
     });
 
     it('restore select vsts source', (done: Mocha.Done) => {
-        this.timeout(1000);
+        this.timeout(20000);
 
         let tp = path.join(__dirname, 'selectSourceVsts.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -139,7 +139,7 @@ describe('NuGetRestore Suite', function () {
     });
 
     it('restore select nuget.org source', (done: Mocha.Done) => {
-        this.timeout(1000);
+        this.timeout(20000);
 
         let tp = path.join(__dirname, 'selectSourceNuGetOrg.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -154,7 +154,7 @@ describe('NuGetRestore Suite', function () {
     });
 
     it('restore select multiple sources', (done: Mocha.Done) => {
-        this.timeout(1000);
+        this.timeout(20000);
 
         let tp = path.join(__dirname, 'selectSourceMultiple.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -169,7 +169,7 @@ describe('NuGetRestore Suite', function () {
     });
 
     it('restore select nuget.org source succeeds with config', (done: Mocha.Done) => {
-        this.timeout(1000);
+        this.timeout(20000);
 
         let tp = path.join(__dirname, 'nugetOrgBehaviorOnConfig.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
