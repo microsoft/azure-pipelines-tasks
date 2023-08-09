@@ -256,6 +256,7 @@
         "AzurePowerShellV4",
         "AzurePowerShellV5",
         "AzureResourceGroupDeploymentV2",
+<<<<<<< Updated upstream
         "AzureResourceManagerTemplateDeploymentV3",
         "DuffleInstallerV0",
         "IISWebAppDeploymentOnMachineGroupV0",
@@ -263,5 +264,14 @@
         "DownloadBuildArtifactsV0",
         "AzureFileCopyV2",
         "AzureFileCopyV3"
+=======
+        "NpmV1",
+        "MavenV4"
+    ],
+    "Node20": [
+        "HelmDeployV0",
+        "MavenV4",
+        "NpmV1"
+>>>>>>> Stashed changes
     ]
 }
