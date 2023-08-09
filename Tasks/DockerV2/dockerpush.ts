@@ -215,6 +215,10 @@ async function publishToImageMetadataStore(connection: ContainerConnection, imag
     }
 
     if (publishMetadataResourceIds.length > 0) {
+        // DO NOT CHANGE: Notation Azure Pipeline task depends on the 
+        // `RESOURCE_URIS` variables. Before modifying the name or content of 
+        // this variable, please contact the Notation maintainers. 
+        // See https://github.com/notaryproject/notation.
         tl.setVariable("RESOURCE_URIS", publishMetadataResourceIds.join(","));
     }
 
