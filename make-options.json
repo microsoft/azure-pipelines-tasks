@@ -260,6 +260,8 @@
         "DuffleInstallerV0",
         "IISWebAppDeploymentOnMachineGroupV0",
         "NuGetAuthenticateV0",
-        "DownloadBuildArtifactsV0"
+        "DownloadBuildArtifactsV0",
+        "AzureFileCopyV2",
+        "AzureFileCopyV3"
     ]
 }
