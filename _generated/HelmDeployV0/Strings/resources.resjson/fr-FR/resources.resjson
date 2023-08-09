@@ -104,5 +104,6 @@
   "loc.messages.KubernetesServiceConnectionNotFound": "Les détails de la connexion de service Kubernetes sont introuvables.",
   "loc.messages.ExpiredServicePrincipal": "Impossible de récupérer (fetch) le jeton d'accès pour Azure. Vérifiez si le principal de service utilisé est valide et s'il n'a pas expiré.",
   "loc.messages.SaveSupportedInHelmsV3Only": "L'enregistrement du chart dans Azure Container Registry est pris en charge uniquement dans Helms V3.",
-  "loc.messages.OutputVariableDataSizeExceeded": "La variable de sortie non définie en tant que sortie de la commande Helm a dépassé la longueur maximale prise en charge. Longueur de sortie : %s. Longueur maximale prise en charge : %s"
+  "loc.messages.OutputVariableDataSizeExceeded": "La variable de sortie non définie en tant que sortie de la commande Helm a dépassé la longueur maximale prise en charge. Longueur de sortie : %s. Longueur maximale prise en charge : %s",
+  "loc.messages.KubeloginFailed": "Échec de l’authentification Kubelogin. Exception : %s"
 }

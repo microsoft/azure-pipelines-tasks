@@ -9,14 +9,15 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 223,
-        "Patch": 0
+        "Minor": 226,
+        "Patch": 2
     },
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
     "minimumAgentVersion": "2.144.0",
+    "deprecated": true,
     "groups": [
         {
             "name": "advanced",

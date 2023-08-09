@@ -104,5 +104,6 @@
   "loc.messages.KubernetesServiceConnectionNotFound": "Die Details zur Kubernetes-Dienstverbindung wurden nicht gefunden.",
   "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist.",
   "loc.messages.SaveSupportedInHelmsV3Only": "Das Speichern des Diagramms in Azure Container Registry wird nur in Helm V3 unterstützt.",
-  "loc.messages.OutputVariableDataSizeExceeded": "Die Ausgabevariable wurde nicht festgelegt, weil die Helm-Befehlsausgabe die maximal unterstützte Länge überschritten hat. Ausgabelänge: %s, maximal unterstützte Länge: %s"
+  "loc.messages.OutputVariableDataSizeExceeded": "Die Ausgabevariable wurde nicht festgelegt, weil die Helm-Befehlsausgabe die maximal unterstützte Länge überschritten hat. Ausgabelänge: %s, maximal unterstützte Länge: %s",
+  "loc.messages.KubeloginFailed": "Fehler bei der Kubelogin-Authentifizierung. Ausnahme: %s"
 }
