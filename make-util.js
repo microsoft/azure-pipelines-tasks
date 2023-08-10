@@ -16,7 +16,7 @@ var downloadPath = path.join(__dirname, '_download');
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['4.0.2', '4.0.8'];
+var allowedTypescriptVersions = ['4.0.2', '4.0.8','5.1.6'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -331,6 +331,9 @@ exports.ensureTool = ensureTool;
 
 var installNode = function (nodeVersion) {
     switch (nodeVersion || '') {
+        case '20':
+            nodeVersion = 'v20.3.1';
+            break;
         case '16':
             nodeVersion = 'v16.17.1';
             break;
@@ -348,7 +351,7 @@ var installNode = function (nodeVersion) {
             nodeVersion = 'v5.10.1';
             break;
         default:
-            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14, 16`);
+            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14, 16, 20`);
     }
 
     if (nodeVersion === run('node -v')) {
