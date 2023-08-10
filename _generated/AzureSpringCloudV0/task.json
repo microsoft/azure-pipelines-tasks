@@ -18,7 +18,7 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 226,
+    "Minor": 227,
     "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
@@ -333,7 +333,7 @@
     "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern: %s. Please restrain the search pattern."
   },
   "_buildConfigMapping": {
-    "Default": "0.226.1",
-    "Node16-225": "0.226.0"
+    "Default": "0.227.1",
+    "Node16-225": "0.227.0"
   }
 }
