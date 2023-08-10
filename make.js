@@ -190,7 +190,7 @@ CLI.build = function()
 
 CLI.serverBuild = function() {
     ensureBuildTasksAndRemoveTestPath();
-    ensureTool('nvm');
+    //ensureTool('nvm');
 
     ensureTool('tsc', '--version', 'Version 4.0.8');
 
