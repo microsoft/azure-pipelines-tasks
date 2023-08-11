@@ -31,6 +31,14 @@ steps:
 - script: npm install
   displayName: npm install
 
+# Install nvm tool
+- script: |
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+  displayName: Install nvm
+
 # Verify min agent demands
 - script: |
     cd ci/verifyMinAgentDemands
@@ -84,29 +92,13 @@ steps:
   displayName: Clean tasks
 
 # Build Tasks
-- script: |
+- script:  |
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
     export NVM_DIR="$HOME/.nvm"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-    nvm --version
-    nvm install 10.24.1
-    nvm use 10.24.1
     node make.js serverBuild --task "$(task_pattern)"
   displayName: Build Tasks
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
-
-# Build Tasks Node20
-- script: |
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-    nvm --version
-    nvm install 20.3.1
-    nvm use 20.3.1
-    node make.js serverBuild --task "$(task_pattern)" --node Node20
-  displayName: Build Tasks Node20
   condition: and(succeeded(), ne(variables['numTasks'], 0))
 
 - script: node ./ci/after-build-check-tasks.js

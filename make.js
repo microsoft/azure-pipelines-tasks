@@ -177,20 +177,20 @@ CLI.gendocs = function() {
 //
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
-// ex: node make.js build --task ShellScript --node Node20
 //
-CLI.build = function(/** @type {{ node: string; task: string }} */ argv) 
+CLI.build = function() 
 {
     if (process.env.TF_BUILD) {
         fail('Please use serverBuild for CI builds for proper validation');
     }
 
     callGenTaskDuringBuild = true;
-    CLI.serverBuild(argv);
+    CLI.serverBuild();
 }
 
-CLI.serverBuild = function(/** @type {{ node: string; task: string }} */ argv) {
+CLI.serverBuild = function() {
     ensureBuildTasksAndRemoveTestPath();
+    ensureTool('nvm');
 
     ensureTool('tsc', '--version', 'Version 4.0.8');
 
@@ -207,30 +207,25 @@ CLI.serverBuild = function(/** @type {{ node: string; task: string }} */ argv) {
 
     util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, callGenTaskDuringBuild);
 
-    const nodeVersion = argv.node ? argv.node : "Default";
-    const allTasksNode20 = allTasks.filter((taskName) => {
-        return taskName.endsWith("Node20");
-    });
+    // Build task version Default
+    run(`nvm install 10.24.1`);
+    run(`nvm use 10`);
+    run(`nvm list`);
+    ensureTool('node', '--version', 'v10.24.1');
     const allTasksDefault = allTasks.filter((taskName) => {
         return !taskName.endsWith("Node20");
     });
+    allTasksDefault.forEach(buildTasks);
 
-    if (nodeVersion == "Node20") {
-        ensureTool('node', '--version', 'v20.3.1');
-        allTasksNode20.forEach(buildTasks);
-    } else if (nodeVersion == "Default") {
-        if (allTasksNode20) {
-            console.log(
-            "==========================================\n" + 
-            "IMPORTANT NOTE: There are additional tasks that need to be build with a different node configuration. \n" + 
-            "Unfortuantly, we cannot switch node versions while running make.js.  Run the following commands to continue: \n" +
-            "nvm use 20.3.1\n" +
-            "node make.js build --task taskName --node Node20\n" + 
-            "==========================================\n");
-        }
-        ensureTool('node', '--version', 'v10.24.1');
-        allTasksDefault.forEach(buildTasks);
-    }
+    // Build tasks version Node20
+    run(`nvm install 20.3.1`);
+    run(`nvm use 20`);
+    run(`nvm list`);
+    ensureTool('node', '--version', 'v20.3.1');
+    const allTasksNode20 = allTasks.filter((taskName) => {
+        return taskName.endsWith("Node20");
+    });
+    allTasksNode20.forEach(buildTasks);
 
     // Remove Commons from _generated folder as it is not required
     if (fs.existsSync(genTaskCommonPath)) {
