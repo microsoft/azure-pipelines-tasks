@@ -191,7 +191,7 @@ CLI.build = function(/** @type {{ node: string; task: string }} */ argv)
 
 CLI.serverBuild = function(/** @type {{ node: string; task: string }} */ argv) {
     ensureBuildTasksAndRemoveTestPath();
-
+    ensureNvmInstalled();
     ensureTool('tsc', '--version', 'Version 4.0.8');
     ensureTool('npm', '--version', function (output) {
         if (semver.lt(output, '5.6.0')) {
@@ -222,7 +222,7 @@ CLI.serverBuild = function(/** @type {{ node: string; task: string }} */ argv) {
             console.log(
             "==========================================\n" + 
             "IMPORTANT NOTE: There are additional tasks that need to be build with a different node configuration. \n" + 
-            "Unfortuantly, we cannot switch node versions while running make.js.  Run the following commands to continue: \n" +
+            "Unfortunately, we cannot switch node versions while running make.js.  Run the following commands to continue: \n" +
             "nvm use 20.3.1\n" +
             "node make.js build --task taskName --node Node20\n" + 
             "==========================================\n");

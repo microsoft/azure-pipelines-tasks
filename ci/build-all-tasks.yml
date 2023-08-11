@@ -10,7 +10,7 @@ steps:
 - task: NodeTool@0
   displayName: Use node 10
   inputs:
-    versionSpec: 10.x
+    versionSpec: 10.24.1
 
 # npm install
 - script: npm install
@@ -21,27 +21,17 @@ steps:
   displayName: Clean tasks
 
 # Build tasks
-- script: |
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-    nvm --version
-    nvm install 10.24.1
-    nvm use 10.24.1
-    node make.js serverBuild
+- script: node make.js serverBuild
   displayName: Build tasks
 
+# Use node 20, npm 6
+- task: NodeTool@0
+  displayName: Use node 20
+  inputs:
+    versionSpec: 20.3.1
+
 # Build tasks Node20
-- script: |
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-    nvm --version
-    nvm install 20.3.1
-    nvm use 20.3.1
-    node make.js serverBuild --node Node20
+- script: node make.js serverBuild --node Node20
   displayName: Build tasks Node20
 
 # Stage tasks individually into the package directory
