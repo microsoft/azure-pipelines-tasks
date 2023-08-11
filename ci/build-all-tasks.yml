@@ -20,7 +20,7 @@ steps:
 - script: node make.js clean
   displayName: Clean tasks
 
-# Build
+# Build tasks
 - script: |
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
     export NVM_DIR="$HOME/.nvm"
@@ -28,9 +28,21 @@ steps:
     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
     nvm --version
     nvm list
-    nvm install 10
+    nvm install 10.24.1
     node make.js serverBuild
   displayName: Build tasks
+
+# Build tasks Node20
+- script: |
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+    nvm --version
+    nvm list
+    nvm install 20.3.1
+    node make.js serverBuild --node Node20
+  displayName: Build tasks Node20
 
 # Stage tasks individually into the package directory
 - script: node ./ci/stage-package.js true individually

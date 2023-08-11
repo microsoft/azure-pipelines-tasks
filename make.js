@@ -177,20 +177,20 @@ CLI.gendocs = function() {
 //
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
+// ex: node make.js build --task ShellScript --node Node20
 //
-CLI.build = function() 
+CLI.build = function(/** @type {{ node: string; task: string }} */ argv) 
 {
     if (process.env.TF_BUILD) {
         fail('Please use serverBuild for CI builds for proper validation');
     }
 
     callGenTaskDuringBuild = true;
-    CLI.serverBuild();
+    CLI.serverBuild(argv);
 }
 
-CLI.serverBuild = function() {
+CLI.serverBuild = function(/** @type {{ node: string; task: string }} */ argv) {
     ensureBuildTasksAndRemoveTestPath();
-    //ensureTool('nvm');
 
     ensureTool('tsc', '--version', 'Version 4.0.8');
 
@@ -207,25 +207,20 @@ CLI.serverBuild = function() {
 
     util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, callGenTaskDuringBuild);
 
-    // Build task version Default
-    run(`nvm install 10.24.1`);
-    run(`nvm use 10`);
-    run(`nvm list`);
-    ensureTool('node', '--version', 'v10.24.1');
-    const allTasksDefault = allTasks.filter((taskName) => {
-        return !taskName.endsWith("Node20");
-    });
-    allTasksDefault.forEach(buildTasks);
-
-    // Build tasks version Node20
-    run(`nvm install 20.3.1`);
-    run(`nvm use 20`);
-    run(`nvm list`);
-    ensureTool('node', '--version', 'v20.3.1');
-    const allTasksNode20 = allTasks.filter((taskName) => {
-        return taskName.endsWith("Node20");
-    });
-    allTasksNode20.forEach(buildTasks);
+    const nodeVersion = argv.node ? argv.node : "Default";
+    if (nodeVersion == "Node20") {
+        ensureTool('node', '--version', 'v20.3.1');
+        const allTasksNode20 = allTasks.filter((taskName) => {
+            return taskName.endsWith("Node20");
+        });
+        allTasksNode20.forEach(buildTasks);
+    } else {
+        ensureTool('node', '--version', 'v10.24.1');
+        const allTasksDefault = allTasks.filter((taskName) => {
+            return !taskName.endsWith("Node20");
+        });
+        allTasksDefault.forEach(buildTasks);
+    }
 
     // Remove Commons from _generated folder as it is not required
     if (fs.existsSync(genTaskCommonPath)) {
