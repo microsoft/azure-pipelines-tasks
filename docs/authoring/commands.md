@@ -148,7 +148,7 @@ To invoke a logging command, simply emit the command via standard output. For ex
             <td>
             </td>
         </tr>
-         <tr>
+        <tr>
             <td>
                 <p align="left">
                     <code>##vso[task.setendpoint]value</code>
@@ -179,14 +179,13 @@ To invoke a logging command, simply emit the command via standard output. For ex
             <td>
             </td>
         </tr>
-         <tr>
+        <tr>
             <td>
                 <p align="left">
                     <code>##vso[task.setsecret]value</code>
                 </p>
             </td>
             <td>
-                
             </td>
             <td>
                 <p align="left">
