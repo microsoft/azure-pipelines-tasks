@@ -399,15 +399,6 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.JS_SanitizerOutput" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Sanitizer changed input arguments. Output from sanitizer: '%s']]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[삭제기가 입력 인수를 변경했습니다. 삭제기의 출력: '%s']]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
       <Item ItemId=";loc.messages.JS_Stderr" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[PowerShell wrote one or more lines to the standard error stream.]]></Val>
@@ -462,20 +453,20 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.PS_SanitizerOutput" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Sanitizer changed input arguments. Output from sanitizer: '{0}']]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[삭제기가 입력 인수를 변경했습니다. 삭제기의 출력: '{0}']]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
       <Item ItemId=";loc.messages.PS_UnableToDetermineExitCode" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unexpected exception. Unable to determine the exit code from powershell.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[예기치 않은 예외가 발생했습니다. PowerShell의 종료 코드를 확인할 수 없습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ScriptArgsSanitized" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backtick (`). More information is available here: https://aka.ms/ado/75787]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[셸에서 올바르게 실행되지 않을 수 있는 인수에서 검색된 문자입니다. 백틱(`)을 사용하여 이스케이프 특수 문자를 만드세요. 자세한 내용은 https://aka.ms/ado/75787을 참조하세요.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
