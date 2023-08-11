@@ -27,6 +27,7 @@ var copyTaskResources = util.copyTaskResources;
 var matchFind = util.matchFind;
 var matchCopy = util.matchCopy;
 var ensureTool = util.ensureTool;
+var ensureNvmInstalled = util.ensureNvmInstalled;
 var assert = util.assert;
 var getExternals = util.getExternals;
 var createResjson = util.createResjson;
@@ -68,6 +69,8 @@ if (semver.lt(process.versions.node, minNodeVer)) {
 
 // Node 14 is supported by the build system, but not currently by the agent. Block it for now
 var supportedNodeTargets = ["Node", "Node10"/*, "Node14"*/];
+var node10Version = '10.24.1';
+var node20Version = '20.3.1';
 
 // add node modules .bin to the path so we can dictate version of tsc etc...
 if (!test('-d', binPath)) {
@@ -192,7 +195,7 @@ CLI.build = function(/** @type {{ node: string; task: string }} */ argv)
 CLI.serverBuild = function(/** @type {{ node: string; task: string }} */ argv) {
     ensureBuildTasksAndRemoveTestPath();
     ensureNvmInstalled();
-    ensureTool('tsc', '--version', 'Version 4.0.8');
+    ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('npm', '--version', function (output) {
         if (semver.lt(output, '5.6.0')) {
             fail('Expected 5.6.0 or higher. To fix, run: npm install -g npm');
@@ -215,20 +218,20 @@ CLI.serverBuild = function(/** @type {{ node: string; task: string }} */ argv) {
     });
 
     if (nodeVersion == "Node20") {
-        ensureTool('node', '--version', 'v20.3.1');
-        allTasksNode20.forEach(buildTasks);
+        ensureTool('node', '--version', `v${node20Version}`);
+        allTasksNode20.forEach(taskName => buildTask(taskName, allTasksNode20.length));
     } else if (nodeVersion == "Default") {
         if (allTasksNode20) {
             console.log(
             "==========================================\n" + 
             "IMPORTANT NOTE: There are additional tasks that need to be build with a different node configuration. \n" + 
             "Unfortunately, we cannot switch node versions while running make.js.  Run the following commands to continue: \n" +
-            "nvm use 20.3.1\n" +
-            "node make.js build --task taskName --node Node20\n" + 
+            `nvm use ${node20Version}\n` +
+            `node make.js build --task ${argv.task} --node Node20\n` + 
             "==========================================\n");
         }
-        ensureTool('node', '--version', 'v10.24.1');
-        allTasksDefault.forEach(buildTasks);
+        ensureTool('node', '--version', `v${node10Version}`);
+        allTasksDefault.forEach(taskName => buildTask(taskName, allTasksDefault.length));
     }
 
     // Remove Commons from _generated folder as it is not required
@@ -239,193 +242,193 @@ CLI.serverBuild = function(/** @type {{ node: string; task: string }} */ argv) {
     banner('Build successful', true);
 }
 
-function buildTasks(taskName) {
-      let isGeneratedTask = false;
-      banner('Building: ' + taskName);
-      const removeNodeModules = taskList.length > 1;
- 
-      // If we have the task in generated folder, prefer to build from there and add all generated tasks which starts with task name
-      var taskPath = path.join(genTaskPath, taskName);
-      if (fs.existsSync(taskPath)) {
-          // Need to add all tasks which starts with task name
-          console.log('Found generated task: ' + taskName);
-          isGeneratedTask = true;
-      } else {
-          taskPath = path.join(tasksPath, taskName);
-      }
+function buildTask(taskName, taskListLength) {
+    let isGeneratedTask = false;
+    banner('Building: ' + taskName);
+    const removeNodeModules = taskListLength > 1;
 
-      ensureExists(taskPath);
+    // If we have the task in generated folder, prefer to build from there and add all generated tasks which starts with task name
+    var taskPath = path.join(genTaskPath, taskName);
+    if (fs.existsSync(taskPath)) {
+        // Need to add all tasks which starts with task name
+        console.log('Found generated task: ' + taskName);
+        isGeneratedTask = true;
+    } else {
+        taskPath = path.join(tasksPath, taskName);
+    }
 
-      // load the task.json
-      var outDir;
-      var shouldBuildNode = test('-f', path.join(taskPath, 'tsconfig.json'));
-      var taskJsonPath = path.join(taskPath, 'task.json');
-      if (test('-f', taskJsonPath)) {
-          var taskDef = fileToJson(taskJsonPath);
-          validateTask(taskDef);
+    ensureExists(taskPath);
 
-          // fixup the outDir (required for relative pathing in legacy L0 tests)
-          outDir = path.join(buildTasksPath, taskName);
+    // load the task.json
+    var outDir;
+    var shouldBuildNode = test('-f', path.join(taskPath, 'tsconfig.json'));
+    var taskJsonPath = path.join(taskPath, 'task.json');
+    if (test('-f', taskJsonPath)) {
+        var taskDef = fileToJson(taskJsonPath);
+        validateTask(taskDef);
 
-          if(fs.existsSync(outDir))
-          {
-              console.log('Remove existing outDir: ' + outDir);
-              rm('-rf', outDir);
-          }
+        // fixup the outDir (required for relative pathing in legacy L0 tests)
+        outDir = path.join(buildTasksPath, taskName);
 
-          // create loc files
-          createTaskLocJson(taskPath);
-          createResjson(taskDef, taskPath);
+        if(fs.existsSync(outDir))
+        {
+            console.log('Remove existing outDir: ' + outDir);
+            rm('-rf', outDir);
+        }
 
-          // determine the type of task
-          shouldBuildNode = shouldBuildNode || supportedNodeTargets.some(node => taskDef.execution.hasOwnProperty(node));
-      } else {
-          outDir = path.join(buildTasksPath, path.basename(taskPath));
-      }
+        // create loc files
+        createTaskLocJson(taskPath);
+        createResjson(taskDef, taskPath);
 
-      mkdir('-p', outDir);
+        // determine the type of task
+        shouldBuildNode = shouldBuildNode || supportedNodeTargets.some(node => taskDef.execution.hasOwnProperty(node));
+    } else {
+        outDir = path.join(buildTasksPath, path.basename(taskPath));
+    }
 
-      // get externals
-      var taskMakePath = path.join(taskPath, 'make.json');
-      var taskMake = test('-f', taskMakePath) ? fileToJson(taskMakePath) : {};
-      if (taskMake.hasOwnProperty('externals')) {
-          console.log('');
-          console.log('> getting task externals');
-          getExternals(taskMake.externals, outDir);
-      }
+    mkdir('-p', outDir);
 
-      //--------------------------------
-      // Common: build, copy, install
-      //--------------------------------
-      var commonPacks = [];
-      if (taskMake.hasOwnProperty('common')) {
-          var common = taskMake['common'];
+    // get externals
+    var taskMakePath = path.join(taskPath, 'make.json');
+    var taskMake = test('-f', taskMakePath) ? fileToJson(taskMakePath) : {};
+    if (taskMake.hasOwnProperty('externals')) {
+        console.log('');
+        console.log('> getting task externals');
+        getExternals(taskMake.externals, outDir);
+    }
 
-          common.forEach(function(mod) {
-              var modPath = path.join(taskPath, mod['module']);
-              var modName = path.basename(modPath);
-              var modOutDir = path.join(buildTasksCommonPath, modName);
+    //--------------------------------
+    // Common: build, copy, install
+    //--------------------------------
+    var commonPacks = [];
+    if (taskMake.hasOwnProperty('common')) {
+        var common = taskMake['common'];
 
-              if (!test('-d', modOutDir)) {
-                  banner('Building module ' + modPath, true);
+        common.forEach(function(mod) {
+            var modPath = path.join(taskPath, mod['module']);
+            var modName = path.basename(modPath);
+            var modOutDir = path.join(buildTasksCommonPath, modName);
 
-                  // Ensure that Common folder exists for _generated tasks, otherwise copy it from Tasks folder
-                  if (!fs.existsSync(genTaskCommonPath) && isGeneratedTask) {
-                      cp('-Rf', path.resolve(tasksPath, "Common"), genTaskCommonPath);
-                  }
+            if (!test('-d', modOutDir)) {
+                banner('Building module ' + modPath, true);
 
-                  mkdir('-p', modOutDir);
+                // Ensure that Common folder exists for _generated tasks, otherwise copy it from Tasks folder
+                if (!fs.existsSync(genTaskCommonPath) && isGeneratedTask) {
+                    cp('-Rf', path.resolve(tasksPath, "Common"), genTaskCommonPath);
+                }
 
-                  // create loc files
-                  var modJsonPath = path.join(modPath, 'module.json');
-                  if (test('-f', modJsonPath)) {
-                      createResjson(fileToJson(modJsonPath), modPath);
-                  }
+                mkdir('-p', modOutDir);
 
-                  // npm install and compile
-                  if ((mod.type === 'node' && mod.compile == true) || test('-f', path.join(modPath, 'tsconfig.json'))) {
-                      buildNodeTask(modPath, modOutDir);
-                  }
+                // create loc files
+                var modJsonPath = path.join(modPath, 'module.json');
+                if (test('-f', modJsonPath)) {
+                    createResjson(fileToJson(modJsonPath), modPath);
+                }
 
-                  // copy default resources and any additional resources defined in the module's make.json
-                  console.log();
-                  console.log('> copying module resources');
-                  var modMakePath = path.join(modPath, 'make.json');
-                  var modMake = test('-f', modMakePath) ? fileToJson(modMakePath) : {};
-                  copyTaskResources(modMake, modPath, modOutDir);
+                // npm install and compile
+                if ((mod.type === 'node' && mod.compile == true) || test('-f', path.join(modPath, 'tsconfig.json'))) {
+                    buildNodeTask(modPath, modOutDir);
+                }
 
-                  // get externals
-                  if (modMake.hasOwnProperty('externals')) {
-                      console.log('');
-                      console.log('> getting module externals');
-                      getExternals(modMake.externals, modOutDir);
-                  }
+                // copy default resources and any additional resources defined in the module's make.json
+                console.log();
+                console.log('> copying module resources');
+                var modMakePath = path.join(modPath, 'make.json');
+                var modMake = test('-f', modMakePath) ? fileToJson(modMakePath) : {};
+                copyTaskResources(modMake, modPath, modOutDir);
 
-                  if (mod.type === 'node' && mod.compile == true || test('-f', path.join(modPath, 'package.json'))) {
-                      var commonPack = util.getCommonPackInfo(modOutDir);
+                // get externals
+                if (modMake.hasOwnProperty('externals')) {
+                    console.log('');
+                    console.log('> getting module externals');
+                    getExternals(modMake.externals, modOutDir);
+                }
 
-                      // assert the pack file does not already exist (name should be unique)
-                      if (test('-f', commonPack.packFilePath)) {
-                          fail(`Pack file already exists: ${commonPack.packFilePath}`);
-                      }
+                if (mod.type === 'node' && mod.compile == true || test('-f', path.join(modPath, 'package.json'))) {
+                    var commonPack = util.getCommonPackInfo(modOutDir);
 
-                      // pack the Node module. a pack file is required for dedupe.
-                      // installing from a folder creates a symlink, and does not dedupe.
-                      cd(path.dirname(modOutDir));
-                      run(`npm pack ./${path.basename(modOutDir)}`);
-                  }
-              }
+                    // assert the pack file does not already exist (name should be unique)
+                    if (test('-f', commonPack.packFilePath)) {
+                        fail(`Pack file already exists: ${commonPack.packFilePath}`);
+                    }
 
-              // store the npm pack file info
-              if (mod.type === 'node' && mod.compile == true) {
-                  commonPacks.push(util.getCommonPackInfo(modOutDir));
-              // copy ps module resources to the task output dir
-              } else if (mod.type === 'ps') {
-                  console.log();
-                  console.log('> copying ps module to task');
-                  var dest;
-                  if (mod.hasOwnProperty('dest')) {
-                      dest = path.join(outDir, mod.dest, modName);
-                  } else {
-                      dest = path.join(outDir, 'ps_modules', modName);
-                  }
+                    // pack the Node module. a pack file is required for dedupe.
+                    // installing from a folder creates a symlink, and does not dedupe.
+                    cd(path.dirname(modOutDir));
+                    run(`npm pack ./${path.basename(modOutDir)}`);
+                }
+            }
 
-                  matchCopy('!Tests', modOutDir, dest, { noRecurse: true, matchBase: true });
-              }
-          });
+            // store the npm pack file info
+            if (mod.type === 'node' && mod.compile == true) {
+                commonPacks.push(util.getCommonPackInfo(modOutDir));
+            // copy ps module resources to the task output dir
+            } else if (mod.type === 'ps') {
+                console.log();
+                console.log('> copying ps module to task');
+                var dest;
+                if (mod.hasOwnProperty('dest')) {
+                    dest = path.join(outDir, mod.dest, modName);
+                } else {
+                    dest = path.join(outDir, 'ps_modules', modName);
+                }
 
-          // npm install the common modules to the task dir
-          if (commonPacks.length) {
-              cd(taskPath);
-              var installPaths = commonPacks.map(function (commonPack) {
-                  return `file:${path.relative(taskPath, commonPack.packFilePath)}`;
-              });
-              run(`npm install --save-exact ${installPaths.join(' ')}`);
-          }
-      }
+                matchCopy('!Tests', modOutDir, dest, { noRecurse: true, matchBase: true });
+            }
+        });
 
-      // build Node task
-      if (shouldBuildNode) {
-          buildNodeTask(taskPath, outDir);
-      }
+        // npm install the common modules to the task dir
+        if (commonPacks.length) {
+            cd(taskPath);
+            var installPaths = commonPacks.map(function (commonPack) {
+                return `file:${path.relative(taskPath, commonPack.packFilePath)}`;
+            });
+            run(`npm install --save-exact ${installPaths.join(' ')}`);
+        }
+    }
 
-      // remove the hashes for the common packages, they change every build
-      if (commonPacks.length) {
-          var lockFilePath = path.join(taskPath, 'package-lock.json');
-          if (!test('-f', lockFilePath)) {
-              lockFilePath = path.join(taskPath, 'npm-shrinkwrap.json');
-          }
-          var packageLock = fileToJson(lockFilePath);
-          Object.keys(packageLock.dependencies).forEach(function (dependencyName) {
-              commonPacks.forEach(function (commonPack) {
-                  if (dependencyName == commonPack.packageName) {
-                      delete packageLock.dependencies[dependencyName].integrity;
-                  }
-              });
-          });
-          fs.writeFileSync(lockFilePath, JSON.stringify(packageLock, null, '  '));
-      }
+    // build Node task
+    if (shouldBuildNode) {
+        buildNodeTask(taskPath, outDir);
+    }
 
-      // copy default resources and any additional resources defined in the task's make.json
-      console.log();
-      console.log('> copying task resources');
-      copyTaskResources(taskMake, taskPath, outDir);
+    // remove the hashes for the common packages, they change every build
+    if (commonPacks.length) {
+        var lockFilePath = path.join(taskPath, 'package-lock.json');
+        if (!test('-f', lockFilePath)) {
+            lockFilePath = path.join(taskPath, 'npm-shrinkwrap.json');
+        }
+        var packageLock = fileToJson(lockFilePath);
+        Object.keys(packageLock.dependencies).forEach(function (dependencyName) {
+            commonPacks.forEach(function (commonPack) {
+                if (dependencyName == commonPack.packageName) {
+                    delete packageLock.dependencies[dependencyName].integrity;
+                }
+            });
+        });
+        fs.writeFileSync(lockFilePath, JSON.stringify(packageLock, null, '  '));
+    }
 
-      if (removeNodeModules) {
-          const taskNodeModulesPath = path.join(taskPath, 'node_modules');
+    // copy default resources and any additional resources defined in the task's make.json
+    console.log();
+    console.log('> copying task resources');
+    copyTaskResources(taskMake, taskPath, outDir);
 
-          if (fs.existsSync(taskNodeModulesPath)) {
-              console.log('\n> removing node modules');
-              rm('-Rf', taskNodeModulesPath);
-          }
+    if (removeNodeModules) {
+        const taskNodeModulesPath = path.join(taskPath, 'node_modules');
 
-          const taskTestsNodeModulesPath = path.join(taskPath, 'Tests', 'node_modules');
+        if (fs.existsSync(taskNodeModulesPath)) {
+            console.log('\n> removing node modules');
+            rm('-Rf', taskNodeModulesPath);
+        }
 
-          if (fs.existsSync(taskTestsNodeModulesPath)) {
-              console.log('\n> removing task tests node modules');
-              rm('-Rf', taskTestsNodeModulesPath);
-          }
-      }
+        const taskTestsNodeModulesPath = path.join(taskPath, 'Tests', 'node_modules');
+
+        if (fs.existsSync(taskTestsNodeModulesPath)) {
+            console.log('\n> removing task tests node modules');
+            rm('-Rf', taskTestsNodeModulesPath);
+        }
+    }
 }
 
 //
@@ -436,7 +439,7 @@ function buildTasks(taskName) {
 //
 CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
     var minIstanbulVersion = '10';
-    ensureTool('tsc', '--version', 'Version 4.0.8');
+    ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('mocha', '--version', '6.2.3');
 
     // build the general tests and ps test infra
@@ -555,7 +558,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
 //
 
 CLI.testLegacy = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
-    ensureTool('tsc', '--version', 'Version 4.0.8');
+    ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('mocha', '--version', '6.2.3');
 
     if (argv.suite) {

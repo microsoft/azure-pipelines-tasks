@@ -16,7 +16,7 @@ var downloadPath = path.join(__dirname, '_download');
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['4.0.2', '4.0.8', '5.1.6'];
+var allowedTypescriptVersions = ['4.0.2', '5.1.6'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -330,22 +330,23 @@ var ensureTool = function (name, versionArgs, validate) {
 exports.ensureTool = ensureTool;
 
 var ensureNvmInstalled = function () {
-    console.log('nvm tool: ');
     var toolPath = shell.which('nvm');
     if (!toolPath) {
         console.log(
             "==========================================\n" + 
             "IMPORTANT NOTE: nvm is not installed.  Please use the following command to install nvm latest: \n" + 
-            "On Linux \n" +
+            "On Linux: \n" +
             "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \n" +
             "export NVM_DIR=\"$HOME/.nvm\"\n" +
             "[ -s \"$NVM_DIR/nvm.sh\" ] && \. \"$NVM_DIR/nvm.sh\"  # This loads nvm\n" +
             "[ -s \"$NVM_DIR/bash_completion\" ] && \. \"$NVM_DIR/bash_completion\"  # This loads nvm bash_completion\n" + 
-            "On Windows \n" +
+            "On Windows: \n" +
             "winget search nvm-windows \n" + 
             "Winget install nvm-windows\n" + 
             "==========================================\n"
         );
+    } else {
+        console.log('nvm tool: ' + toolPath + '');
     }
 }
 exports.ensureNvmInstalled = ensureNvmInstalled;
