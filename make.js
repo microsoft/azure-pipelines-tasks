@@ -209,7 +209,7 @@ CLI.serverBuild = function(/** @type {{ node: string; task: string }} */ argv) {
 
     util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, callGenTaskDuringBuild);
 
-    const nodeVersion = argv.node ? argv.node : "Default";
+    const nodeVersion = (argv.node && argv.node == "Node20") ? argv.node : "Default";
     const allTasksNode20 = allTasks.filter((taskName) => {
         return taskName.endsWith("Node20");
     });
@@ -227,7 +227,7 @@ CLI.serverBuild = function(/** @type {{ node: string; task: string }} */ argv) {
             "IMPORTANT NOTE: There are additional tasks that need to be build with a different node configuration. \n" + 
             "Unfortunately, we cannot switch node versions while running make.js.  Run the following commands to continue: \n" +
             `nvm use ${node20Version}\n` +
-            `node make.js build --task ${argv.task} --node Node20\n` + 
+            `node make.js build ${argv.task ? `--task ${argv.task} ` : ''}--node Node20\n` + 
             "==========================================\n");
         }
         ensureTool('node', '--version', `v${node10Version}`);
