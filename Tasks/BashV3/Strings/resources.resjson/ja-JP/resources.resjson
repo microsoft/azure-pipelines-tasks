@@ -25,5 +25,5 @@
   "loc.messages.JS_Stderr": "bash が標準エラー ストリームに 1 行以上を書き込みました。",
   "loc.messages.JS_TranslatePathFailed": "パス '%s' は、Linux ファイル システムに変換できません。",
   "loc.messages.JS_BashEnvAlreadyDefined": "環境変数 BASH_ENV は既に '%s' に設定されていますが、このタスクはこれを '%s' で上書きします",
-  "loc.messages.SanitizerOutput": "サニタイザーが入力引数を変更しました。サニタイザーからの出力: '%s'"
+  "loc.messages.ScriptArgsSanitized": "シェルによって正しく実行されない可能性のある引数の文字が検出されました。円記号 (\\) を使用して特殊文字をエスケープしてください。詳細についてはこちら: https://aka.ms/ado/75787"
 }

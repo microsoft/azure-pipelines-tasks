@@ -44,12 +44,11 @@
   "loc.messages.JS_InvalidFilePath": "无效的文件路径“%s”。需要 .ps1 文件的路径。",
   "loc.messages.JS_Stderr": "PowerShell 向标准错误流写入一个或多个行。",
   "loc.messages.JS_InvalidTargetType": "目标类型“%s”无效。该值必须是以下值之一: “filepath” 或 “inline”",
-  "loc.messages.JS_SanitizerOutput": "擦除系统更改了输入参数。来自擦除器的输出: “%s”",
   "loc.messages.PS_ExitCode": "PowerShell 已退出，代码为“{0}”。",
   "loc.messages.PS_FormattedCommand": "已设置格式的命令: {0}",
   "loc.messages.PS_InvalidActionPreference": "{0} 的操纵首选项无效:“{1}”。值必须为以下值之一: {2}",
   "loc.messages.PS_InvalidFilePath": "无效的文件路径“{0}”。需要 .ps1 文件的路径。",
   "loc.messages.PS_UnableToDetermineExitCode": "出现意外异常。无法确定 powershell 的退出代码。",
   "loc.messages.PS_InvalidTargetType": "目标类型“{0}”无效。该值必须是以下值之一: “filepath” 或 “inline”",
-  "loc.messages.PS_SanitizerOutput": "擦除系统更改了输入参数。来自擦除器的输出: “{0}”"
+  "loc.messages.ScriptArgsSanitized": "在参数中检测到可能无法由 shell 正确执行的字符。请使用反引号斜杠 (`) 转义特殊字符。有关详细信息，请访问此处: https://aka.ms/ado/75787"
 }
