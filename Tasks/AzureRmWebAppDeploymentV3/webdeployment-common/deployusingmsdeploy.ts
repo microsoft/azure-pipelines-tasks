@@ -175,8 +175,8 @@ async function executeMSDeploy(msDeployCmdArgs) {
             tl.debug("arg#" + i + ": " + msDeployCmdArgs[i]);
         }
 #if NODE16
-        // windowsVerbatimArguments should be false, otherwise see https://github.com/microsoft/azure-pipelines-tasks/issues/17634
-        await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj, windowsVerbatimArguments: false});
+        // shell should be true, otherwise see https://github.com/microsoft/azure-pipelines-tasks/issues/17634
+        await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj, windowsVerbatimArguments: true, shell: true});
 #else
         await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj, windowsVerbatimArguments: true});
 #endif
