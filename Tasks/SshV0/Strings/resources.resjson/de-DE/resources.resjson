@@ -35,5 +35,5 @@
   "loc.messages.SettingUpSshConnection": "Es wird versucht, eine SSH-Verbindung mit \"%s@%s:%s\" einzurichten.",
   "loc.messages.SshConnectionSuccessful": "Verbindung erfolgreich hergestellt.",
   "loc.messages.UseDefaultPort": "Port 22 wird als Standardeinstellung für SSH verwendet, da kein Port angegeben wurde.",
-  "loc.messages.SanitizerOutput": "Eingabeargumente wurden von Sanitizer geändert. Ausgabe von Sanitizer: %s"
+  "loc.messages.ScriptArgsSanitized": "Erkannte Zeichen in Argumenten, die von der Shell möglicherweise nicht ordnungsgemäß ausgeführt werden. Verwenden Sie einen umgekehrten Schrägstrich (\\), um Sonderzeichen mit Escapezeichen zu versehen. Weitere Informationen finden Sie hier: https://aka.ms/ado/75787"
 }

@@ -35,5 +35,5 @@
   "loc.messages.SettingUpSshConnection": "正在尝试建立与 %s@%s:%s 的 SSH 连接",
   "loc.messages.SshConnectionSuccessful": "已成功连接。",
   "loc.messages.UseDefaultPort": "由于未指定端口，将使用SSH 的默认端口 22。",
-  "loc.messages.SanitizerOutput": "擦除系统更改了输入参数。来自擦除器的输出: “%s”"
+  "loc.messages.ScriptArgsSanitized": "在参数中检测到可能无法由 shell 正确执行的字符。请使用反斜杠 (\\) 转义特殊字符。有关详细信息，请访问此处: https://aka.ms/ado/75787"
 }
