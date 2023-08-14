@@ -10,6 +10,7 @@ param (
     )
     Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" 
     Import-VstsLocStrings -LiteralPath $scriptRoot/Task.json
+    Import-Module "$scriptRoot\ps_modules\Sanitizer"
 
     . "$scriptRoot/Utility.ps1"
 
