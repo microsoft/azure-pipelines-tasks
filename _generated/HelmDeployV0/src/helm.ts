@@ -84,7 +84,12 @@ async function run() {
     var kubectlCli: kubernetescli;
     var externalAuth = connectionType === "None" && (command === "install" || command === "upgrade");
     if (externalAuth && !tl.getVariable("KUBECONFIG")) {
-        tl.error("KUBECONFIG kube configuration file path must be set when connectionType is none and command is install or upgrade.");
+        const kubeConfigPath = path.join(process.env.HOME, '.kube', 'config');
+        if (fs.existsSync(kubeConfigPath)) {
+            tl.setVariable("KUBECONFIG", kubeConfigPath);
+        } else {
+            tl.error("KUBECONFIG kube configuration file path must be set when connectionType is none and command is install or upgrade.");
+        }
     }
     if (isKubConfigRequired || externalAuth) {
         var kubeconfigfilePath = (command === "logout" || externalAuth) ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
