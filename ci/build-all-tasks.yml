@@ -20,11 +20,6 @@ steps:
 - script: node make.js clean
   displayName: Clean tasks
 
-# Install nvm tool
-- script: |
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-  displayName: Install nvm
-
 # Build
 - script: node make.js serverBuild
   displayName: Build tasks
