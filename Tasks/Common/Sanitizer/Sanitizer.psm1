@@ -10,5 +10,8 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
 # Don't source the private functions.
 . $PSScriptRoot/ArgumentsSanitizer.ps1
 
-# Export only the public functions.
+# Export public functions.
+Export-ModuleMember -Function Get-SanitizerFeatureFlags
+Export-ModuleMember -Function Get-SanitizerCallStatus
+Export-ModuleMember -Function Get-SanitizerActivateStatus
 Export-ModuleMember -Function Protect-ScriptArguments

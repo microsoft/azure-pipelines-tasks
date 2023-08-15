@@ -19,7 +19,13 @@ steps:
 - task: NodeTool@0
   displayName: Use node 10
   inputs:
-    versionSpec: 10.x
+    versionSpec: 10.24.1
+
+# Use .NET SDK 7
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK 7.x'
+  inputs:
+    version: 7.x
 
 # npm install
 - script: npm install
@@ -48,6 +54,10 @@ steps:
   env:
     PACKAGE_ENDPOINT: $(Package.Endpoint)
     PACKAGE_TOKEN: $(Package.Token)
+
+- script: node ./ci/before-build-check-tasks.js
+  displayName: Check that tasks has no duplicated libs
+  condition: and(succeeded(), eq(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
 
 - script: node ./ci/check-downgrading.js --task "$(task_pattern)" --sprint $(currentSprint) --week $(currentSprintWeek)
   displayName: Check for downgrading tasks
@@ -78,7 +88,24 @@ steps:
   displayName: Build Tasks
   condition: and(succeeded(), ne(variables['numTasks'], 0))
 
-- script: node ./ci/check-tasks.js
+# Use node 20, npm 6
+- task: NodeTool@0
+  displayName: Use node 20
+  inputs:
+    versionSpec: 20.3.1
+
+# Build Tasks Node20
+- script: node make.js serverBuild --task "$(task_pattern)" --node Node20
+  displayName: Build Tasks Node20
+  condition: and(succeeded(), ne(variables['numTasks'], 0))
+
+# Use node 10, npm 6
+- task: NodeTool@0
+  displayName: Use node 10
+  inputs:
+    versionSpec: 10.24.1
+
+- script: node ./ci/after-build-check-tasks.js
   displayName: Check that tasks has no duplicated libs
   condition: and(succeeded(), eq(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
 

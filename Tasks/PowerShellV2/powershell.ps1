@@ -94,7 +94,6 @@ try {
     # and we rely on PowerShell piping back NormalView error records (required because PowerShell Core changed the default to ConciseView)
     $contents += "`$ErrorView = 'NormalView'"
     if ("$input_targetType".ToUpperInvariant() -eq 'FILEPATH') {
-        $resultArgs = $input_arguments;
 
         $featureFlags = @{
             audit     = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC_LOG)
@@ -102,13 +101,23 @@ try {
             telemetry = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_COLLECT)
         }
         if ($featureFlags.activate -or $featureFlags.audit -or $featureFlags.telemetry) {
-            $sanitizedArgs = Sanitize-FileArguments -InputArgs $input_arguments;
-            if ($featureFlags.activate) {
-                $resultArgs = $sanitizedArgs;
+            $sanitizedArgs, $telemetry = Sanitize-Arguments -InputArgs $input_arguments;
+            if ($sanitizedArgs -ne $input_arguments) {
+                if ($featureFlags.telemetry -and $null -ne $telemetry) {
+                    Publish-Telemetry $telemetry;
+                }
+
+                $message = Get-VstsLocString -Key 'ScriptArgsSanitized';
+                if ($featureFlags.activate) {
+                    throw $message;
+                }
+                if ($featureFlags.audit) {
+                    Write-Warning $message;
+                }
             }
         }
 
-        $contents += ". '$("$input_filePath".Replace("'", "''"))' $resultArgs".Trim()
+        $contents += ". '$("$input_filePath".Replace("'", "''"))' $input_arguments".Trim()
         Write-Host (Get-VstsLocString -Key 'PS_FormattedCommand' -ArgumentList ($contents[-1]))
     }
     else {
@@ -241,6 +250,10 @@ try {
     if ($failed) {
         Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
     }
+}
+catch {
+    Write-VstsTaskError -Message $_.Exception.Message
+    Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
 }
 finally {
     Trace-VstsLeavingInvocation $MyInvocation

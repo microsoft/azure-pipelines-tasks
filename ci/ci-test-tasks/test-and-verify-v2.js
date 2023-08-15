@@ -46,6 +46,7 @@ async function start(taskName) {
     console.log(`Detected buildconfigs ${JSON.stringify(configs)}`);
     const promises = [];
     for (const config of configs) {
+      console.log(`Running tests for ${taskName} with config ${config} for pipeline ${pipeline.name}`)
       const pipelineBuild = await runTestPipeline(pipeline, config);
       const promise = new Promise((resolve, reject) => verifyBuildStatus(taskName, pipelineBuild, resolve, reject))
       promises.push(promise);
@@ -69,7 +70,7 @@ function getBuildConfigs(task) {
       const itemPath = path.join('_generated', item);
       const stats = fs.statSync(itemPath);
 
-      if (stats.isDirectory() && item.indexOf(task) !== -1) {
+      if (stats.isDirectory() && item.startsWith(task)) {
         tasksToTest.push(item);
       }
     }
