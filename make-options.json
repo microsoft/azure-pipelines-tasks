@@ -258,7 +258,6 @@
         "AzureResourceGroupDeploymentV2",
         "AzureResourceManagerTemplateDeploymentV3",
         "DuffleInstallerV0",
-        "IISWebAppDeploymentOnMachineGroupV0",
         "NuGetAuthenticateV0",
         "DownloadBuildArtifactsV0"
     ]
