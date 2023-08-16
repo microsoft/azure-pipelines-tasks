@@ -75,7 +75,7 @@ export default class DockerComposeConnection extends ContainerConnection {
         });
     }
 
-    public async execCommandWithLogging(command: tr.ToolRunner, options?: tr.IExecOptions): Promise<string> {
+    public async execCommandWithLogging(command, options?: tr.IExecOptions): Promise<string> {
         // setup variable to store the command output
         let output = "";
         command.on("stdout", data => {
@@ -85,9 +85,11 @@ export default class DockerComposeConnection extends ContainerConnection {
         command.on("stderr", data => {
             output += data;
         });
-
+#if NODE16
         await this.execCommand(command, options);
-
+#else
+        await this.execCommand(command as unknown as tr.ToolRunner, options);
+#endif
         return output || '\n';
     }
 

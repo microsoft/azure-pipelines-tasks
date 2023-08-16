@@ -261,6 +261,7 @@
         "NuGetAuthenticateV0",
         "DownloadBuildArtifactsV0",
         "AzureFileCopyV2",
-        "AzureFileCopyV3"
+        "AzureFileCopyV3",
+        "DockerComposeV0"
     ]
 }
