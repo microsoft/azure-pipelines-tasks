@@ -209,6 +209,8 @@ CLI.serverBuild = function(/** @type {{ node: string; task: string }} */ argv) {
 
     util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, callGenTaskDuringBuild);
 
+    // Ensure we wrap build function after generator's changes to store only files that changes after the build 
+    const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTask, genTaskPath, callGenTaskDuringBuild);
     const nodeVersion = (argv.node && argv.node == "Node20") ? argv.node : "Default";
     const allTasksNode20 = allTasks.filter((taskName) => {
         return taskName.endsWith("Node20");
@@ -219,7 +221,7 @@ CLI.serverBuild = function(/** @type {{ node: string; task: string }} */ argv) {
 
     if (nodeVersion == "Node20") {
         ensureTool('node', '--version', `v${node20Version}`);
-        allTasksNode20.forEach(taskName => buildTask(taskName, allTasksNode20.length));
+        allTasksNode20.forEach(taskName => buildTaskWrapped(taskName, allTasksNode20.length));
     } else if (nodeVersion == "Default") {
         if (allTasksNode20) {
             console.log(
@@ -231,7 +233,7 @@ CLI.serverBuild = function(/** @type {{ node: string; task: string }} */ argv) {
             "==========================================\n");
         }
         ensureTool('node', '--version', `v${node10Version}`);
-        allTasksDefault.forEach(taskName => buildTask(taskName, allTasksDefault.length));
+        allTasksDefault.forEach(taskName => buildTaskWrapped(taskName, allTasksDefault.length));
     }
 
     // Remove Commons from _generated folder as it is not required
