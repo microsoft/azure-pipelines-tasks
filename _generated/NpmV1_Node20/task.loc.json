@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 221,
+    "Minor": 227,
     "Patch": 0
   },
   "runsOn": [
@@ -211,7 +211,7 @@
     "NGCommon_AreaNotFoundInSps": "ms-resource:loc.messages.NGCommon_AreaNotFoundInSps"
   },
   "_buildConfigMapping": {
-    "Default": "1.221.1",
-    "Node20-225": "1.221.0"
+    "Default": "1.227.1",
+    "Node20-225": "1.227.0"
   }
 }
