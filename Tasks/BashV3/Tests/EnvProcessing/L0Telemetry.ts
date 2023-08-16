@@ -1,5 +1,5 @@
 import assert = require('assert');
-import { processBashEnvVariables } from '../../bashEnvProcessor';
+import { expandBashEnvVariables } from '../../helpers';
 
 export const EnvProcessingTelemetryTests = () => {
     // maybe we should treat that differently
@@ -7,7 +7,7 @@ export const EnvProcessingTelemetryTests = () => {
         const argsLine = '$ ${} $';
         const expectedTelemetry = { foundPrefixes: 3 };
 
-        const [_, resultTelemetry] = processBashEnvVariables(argsLine);
+        const [_, resultTelemetry] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(resultTelemetry.foundPrefixes, expectedTelemetry.foundPrefixes);
     })
@@ -15,7 +15,7 @@ export const EnvProcessingTelemetryTests = () => {
         const argsLine = '${';
         const expectedTelemetry = { notClosedBraceSyntaxPosition: 1 };
 
-        const [_, resultTelemetry] = processBashEnvVariables(argsLine);
+        const [_, resultTelemetry] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(resultTelemetry.notClosedBraceSyntaxPosition, expectedTelemetry.notClosedBraceSyntaxPosition);
     })
@@ -23,7 +23,7 @@ export const EnvProcessingTelemetryTests = () => {
         const argsLine = "'${' ${";
         const expectedTelemetry = { notClosedBraceSyntaxPosition: 6 };
 
-        const [_, resultTelemetry] = processBashEnvVariables(argsLine);
+        const [_, resultTelemetry] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(resultTelemetry.notClosedBraceSyntaxPosition, expectedTelemetry.notClosedBraceSyntaxPosition);
     })
@@ -31,7 +31,7 @@ export const EnvProcessingTelemetryTests = () => {
         const argsLine = "' $A";
         const expectedTelemetry = { unmatchedQuotes: 1 };
 
-        const [_, resultTelemetry] = processBashEnvVariables(argsLine);
+        const [_, resultTelemetry] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(resultTelemetry.unmatchedQuotes, expectedTelemetry.unmatchedQuotes);
     })
@@ -40,7 +40,7 @@ export const EnvProcessingTelemetryTests = () => {
         const argsLine = "'$VAR1' '$VAR2' '3'";
         const expectedTelemetry = { quottedBlocks: 2 };
 
-        const [_, resultTelemetry] = processBashEnvVariables(argsLine);
+        const [_, resultTelemetry] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(resultTelemetry.quottedBlocks, expectedTelemetry.quottedBlocks);
     })
@@ -48,7 +48,7 @@ export const EnvProcessingTelemetryTests = () => {
         const argsLine = "$\\VAR1 '$\\VAR2' $\\VAR3";
         const expectedTelemetry = { variablesStartsFromES: 2 };
 
-        const [_, resultTelemetry] = processBashEnvVariables(argsLine);
+        const [_, resultTelemetry] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(resultTelemetry.variablesStartsFromES, expectedTelemetry.variablesStartsFromES);
     })
@@ -56,7 +56,7 @@ export const EnvProcessingTelemetryTests = () => {
         const argsLine = "${!VAR1} ${!VAR2}";
         const expectedTelemetry = { indirectExpansion: 2 };
 
-        const [_, resultTelemetry] = processBashEnvVariables(argsLine);
+        const [_, resultTelemetry] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(resultTelemetry.indirectExpansion, expectedTelemetry.indirectExpansion);
     })
@@ -64,7 +64,7 @@ export const EnvProcessingTelemetryTests = () => {
         const argsLine = "'${!VAR1}'";
         const expectedTelemetry = { indirectExpansion: 0 };
 
-        const [_, resultTelemetry] = processBashEnvVariables(argsLine);
+        const [_, resultTelemetry] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(resultTelemetry.indirectExpansion, expectedTelemetry.indirectExpansion);
     })

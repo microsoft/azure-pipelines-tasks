@@ -1,12 +1,12 @@
 import assert = require('assert');
-import { processBashEnvVariables } from '../../bashEnvProcessor';
+import { expandBashEnvVariables } from '../../helpers';
 
 export const BashEnvProcessingTests = () => {
     it('Handles empty line', () => {
         const argsLine = '';
         const expectedArgs = '';
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
@@ -15,7 +15,7 @@ export const BashEnvProcessingTests = () => {
         const expectedArgs = 'value1 2';
         process.env['VAR1'] = 'value1'
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
@@ -24,7 +24,7 @@ export const BashEnvProcessingTests = () => {
         const expectedArgs = 'value1 2';
         process.env['VAR1'] = 'value1'
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
@@ -34,7 +34,7 @@ export const BashEnvProcessingTests = () => {
         process.env['VAR1'] = 'value1'
         process.env['VAR2'] = 'value2'
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
@@ -45,7 +45,7 @@ export const BashEnvProcessingTests = () => {
         process.env['VAR2'] = 'value2'
         process.env['VAR3'] = 'value3'
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
@@ -56,7 +56,7 @@ export const BashEnvProcessingTests = () => {
         process.env['VAR2'] = 'value2'
         process.env['VAR3'] = 'value3'
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
@@ -67,7 +67,7 @@ export const BashEnvProcessingTests = () => {
         process.env['VAR2'] = '2'
         process.env['VAR3'] = '3'
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
@@ -77,7 +77,7 @@ export const BashEnvProcessingTests = () => {
         process.env['VAR1'] = '1'
         process.env['VAR2'] = '2'
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
@@ -89,7 +89,7 @@ export const BashEnvProcessingTests = () => {
         process.env['VAR2'] = '2'
         process.env['NESTED'] = 'nested'
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
@@ -99,7 +99,7 @@ export const BashEnvProcessingTests = () => {
         const expectedArgs = '$VAR1';
         process.env['VAR1'] = 'value1'
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
@@ -108,7 +108,7 @@ export const BashEnvProcessingTests = () => {
         const expectedArgs = '$VAR1';
         process.env['VAR1'] = 'value1'
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
@@ -118,7 +118,7 @@ export const BashEnvProcessingTests = () => {
         const expectedArgs = 'AR1';
         process.env['VAR1'] = 'value1'
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
@@ -129,7 +129,7 @@ export const BashEnvProcessingTests = () => {
         process.env['VAR1'] = 'value1'
         process.env['VAR2'] = 'value2'
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
@@ -140,7 +140,7 @@ export const BashEnvProcessingTests = () => {
         process.env['VAR1'] = 'value1'
         process.env['VAR2'] = 'value2'
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
@@ -152,7 +152,7 @@ export const BashEnvProcessingTests = () => {
         process.env['VAR2'] = 'value2'
         process.env['VAR3'] = 'value3'
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
@@ -163,7 +163,7 @@ export const BashEnvProcessingTests = () => {
         process.env['VAR1'] = 'value1'
         process.env['VAR2'] = 'value2'
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
@@ -174,7 +174,7 @@ export const BashEnvProcessingTests = () => {
         process.env['VAR1'] = 'value1'
         process.env['VAR2'] = 'value2'
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
@@ -185,7 +185,7 @@ export const BashEnvProcessingTests = () => {
         process.env['VAR2'] = 'value2'
         process.env['VAR2'] = 'value3'
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })
@@ -198,7 +198,7 @@ export const BashEnvProcessingTests = () => {
         process.env['a'] = 'value3'
         process.env['a:b'] = 'value4'
 
-        const [actualArgs] = processBashEnvVariables(argsLine);
+        const [actualArgs] = expandBashEnvVariables(argsLine);
 
         assert.deepStrictEqual(actualArgs, expectedArgs);
     })

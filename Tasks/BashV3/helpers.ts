@@ -1,4 +1,4 @@
-type BashTelemetry = {
+type BashEnvTelemetry = {
     foundPrefixes: number,
     quottedBlocks: number,
     variablesExpanded: number,
@@ -16,7 +16,7 @@ type BashTelemetry = {
     invalidEnvName: number,
 }
 
-export function processBashEnvVariables(argsLine: string): [string, BashTelemetry] {
+export function expandBashEnvVariables(argsLine: string): [string, BashEnvTelemetry] {
     const envPrefix = '$'
     const quote = '\''
     const escapingSymbol = '\\'
@@ -25,7 +25,7 @@ export function processBashEnvVariables(argsLine: string): [string, BashTelemetr
     let startIndex = 0
     // backslash - just backslash
     // ES (escaping symbol) - active backslash
-    const telemetry: BashTelemetry = {
+    const telemetry: BashEnvTelemetry = {
         foundPrefixes: 0,
         quottedBlocks: 0,
         variablesExpanded: 0,

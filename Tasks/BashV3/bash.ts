@@ -5,6 +5,7 @@ import tr = require('azure-pipelines-task-lib/toolrunner');
 var uuidV4 = require('uuid/v4');
 import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
 import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry";
+import { expandBashEnvVariables } from './helpers';
 
 async function runBashPwd(bashPath: string, directoryPath: string): Promise<string> {
     let pwdOutput = '';
@@ -116,44 +117,16 @@ async function run() {
                 targetFilePath = input_filePath;
             }
 
-            let resultArgs = input_arguments;
-
-            const featureFlags = {
-                audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
-                activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
-                telemetry: tl.getBoolFeatureFlag('AZP_75787_ENABLE_COLLECT')
-            };
-
-            if (featureFlags.activate || featureFlags.audit || featureFlags.telemetry) {
-                const [sanitizedArgs, telemetry] = sanitizeArgs(
-                    input_arguments,
-                    {
-                        argsSplitSymbols: '\\\\',
-                        saniziteRegExp: new RegExp(`(?<!\\\\)([^a-zA-Z0-9\\\\ _'"\\-=\\/:.])`, 'g')
-                    }
-                );
-                if (sanitizedArgs !== input_arguments) {
-                    if (featureFlags.telemetry && telemetry) {
-                        emitTelemetry('TaskHub', 'BashV3', telemetry);
-                    }
-                    const message = tl.loc('ScriptArgsSanitized');
-                    if (featureFlags.activate) {
-                        throw new Error(message);
-                    }
-                    if (featureFlags.audit) {
-                        tl.warning(message);
-                    }
-                }
-            }
+            validateFileArgs(input_arguments);
 
             // Choose behavior:
             // If they've set old_source_behavior, source the script. This is what we used to do and needs to hang around forever for back compat reasons
             // If they've not, execute the script with bash. This is our new desired behavior.
             // See https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/bashnote.md
             if (old_source_behavior) {
-                contents = `. '${targetFilePath.replace(/'/g, "'\\''")}' ${resultArgs}`.trim();
+                contents = `. '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
             } else {
-                contents = `exec bash '${targetFilePath.replace(/'/g, "'\\''")}' ${resultArgs}`.trim();
+                contents = `exec bash '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
             }
             console.log(tl.loc('JS_FormattedCommand', contents));
         }
@@ -234,19 +207,49 @@ async function run() {
 
         tl.setResult(result, null, true);
     }
-    catch (err) {
+    catch (err: any) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed', true);
     }
 }
 
-function getFeatureFlagValue(featureFlagName: string, defaultValue: boolean = false): boolean {
-    const ffValue = process.env[featureFlagName]
+function validateFileArgs(inputArguments: string): void {
+    const featureFlags = {
+        audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
+        activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
+        telemetry: tl.getBoolFeatureFlag('AZP_75787_ENABLE_COLLECT')
+    };
 
-    if (!ffValue) {
-        return defaultValue
+    if (featureFlags.activate || featureFlags.audit || featureFlags.telemetry) {
+        tl.debug('Validating file args...');
+        const [expandedArgs, envTelemetry] = expandBashEnvVariables(inputArguments);
+        tl.debug(`Expanded file args: ${expandedArgs}`);
+
+        const [sanitizedArgs, sanitizerTelemetry] = sanitizeArgs(
+            expandedArgs,
+            {
+                argsSplitSymbols: '\\\\',
+                saniziteRegExp: new RegExp(`(?<!\\\\)([^a-zA-Z0-9\\\\ _'"\\-=\\/:.])`, 'g')
+            }
+        );
+        if (sanitizedArgs !== inputArguments) {
+            if (featureFlags.telemetry && (sanitizerTelemetry || envTelemetry)) {
+                const telemetry = {
+                    ...envTelemetry ?? {},
+                    ...sanitizerTelemetry ?? {}
+                };
+                emitTelemetry('TaskHub', 'BashV3', telemetry);
+            }
+            if (sanitizedArgs !== expandedArgs) {
+                const message = tl.loc('ScriptArgsSanitized');
+                if (featureFlags.activate) {
+                    throw new Error(message);
+                }
+                if (featureFlags.audit) {
+                    tl.warning(message);
+                }
+            }
+        }
     }
-
-    return ffValue.toLowerCase() === "true"
 }
 
 run();
