@@ -1,9 +1,0 @@
-{
-    "archivePackages": [
-        {
-            "archiveName": "MSDeploy.zip",
-            "url": "https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/MSDeploy.zip",
-            "dest": "./"
-        }
-    ]
-}
