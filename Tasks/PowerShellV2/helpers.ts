@@ -44,24 +44,11 @@ export function expandPowerShellEnvVariables(argsLine: string): [string, Process
     let startIndex = 0
 
     while (true) {
-        const quoteIndex = result.indexOf(quote, startIndex)
-        if (quoteIndex >= 0) {
-            const nextQuoteIndex = result.indexOf(quote, quoteIndex + 1)
-            if (nextQuoteIndex < 0) {
-                break
-            }
-
-            startIndex = nextQuoteIndex + quote.length
-            telemetry.envQuottedBlocks++
-            continue
-        }
-
         const expansionPrefixIndex = result.indexOf(expansionPrefix, startIndex)
         if (expansionPrefixIndex >= 0) {
             const expansionSuffixIndex = result.indexOf(expansionSuffix, startIndex)
             if (expansionSuffixIndex < 0) {
                 telemetry.unmatchedExpansionSyntax++;
-                break;
             }
 
             startIndex = expansionSuffixIndex + expansionSuffix.length
@@ -93,6 +80,18 @@ export function expandPowerShellEnvVariables(argsLine: string): [string, Process
             }
 
             telemetry.escapedEscapingSymbols++
+        }
+
+        const quoteIndex = result.indexOf(quote, startIndex)
+        if (quoteIndex >= 0 && prefixIndex > quoteIndex) {
+            const nextQuoteIndex = result.indexOf(quote, quoteIndex + 1)
+            if (nextQuoteIndex < 0) {
+                break
+            }
+
+            startIndex = nextQuoteIndex + 1
+
+            continue
         }
 
         let envName = '';
