@@ -6,7 +6,7 @@ function Publish-Telemetry($Telemetry) {
     Write-Host "##vso[telemetry.publish area=$area;feature=$feature]$telemetryJson"
 }
 
-function Combine-Matches {
+function Merge-Matches {
     param (
         [Parameter(Mandatory = $true)]
         [String[]]$Matches
@@ -49,7 +49,7 @@ function Sanitize-Arguments([string]$InputArgs) {
     if ( $resultArgs -ne $InputArgs) {
         $argMatches = $matchesChunks | ForEach-Object { $_ } | Where-Object { $_ -ne $null }
         $telemetry = @{
-            removedSymbols      = Combine-Matches -Matches $argMatches
+            removedSymbols      = Merge-Matches -Matches $argMatches
             removedSymbolsCount = $argMatches.Count
         }
     }
