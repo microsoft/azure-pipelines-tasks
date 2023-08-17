@@ -2,10 +2,10 @@ import fs = require('fs');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
+import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
+import { ArgsSanitizingError } from './utils/errors';
+import { validateFileArgs } from './helpers';
 var uuidV4 = require('uuid/v4');
-import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
-import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry";
-import { expandBashEnvVariables } from './helpers';
 
 async function runBashPwd(bashPath: string, directoryPath: string): Promise<string> {
     let pwdOutput = '';
@@ -117,7 +117,16 @@ async function run() {
                 targetFilePath = input_filePath;
             }
 
-            validateFileArgs(input_arguments);
+            try {
+                validateFileArgs(input_arguments);
+            }
+            catch (error: any) {
+                if (error instanceof ArgsSanitizingError) {
+                    throw error;
+                }
+
+                emitTelemetry('TaskHub', 'BashV3', { UnexpectedError: error.stack ?? error.message ?? JSON.stringify(error) ?? 'unknown' });
+            }
 
             // Choose behavior:
             // If they've set old_source_behavior, source the script. This is what we used to do and needs to hang around forever for back compat reasons
@@ -209,46 +218,6 @@ async function run() {
     }
     catch (err: any) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed', true);
-    }
-}
-
-function validateFileArgs(inputArguments: string): void {
-    const featureFlags = {
-        audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
-        activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
-        telemetry: tl.getBoolFeatureFlag('AZP_75787_ENABLE_COLLECT')
-    };
-
-    if (featureFlags.activate || featureFlags.audit || featureFlags.telemetry) {
-        tl.debug('Validating file args...');
-        const [expandedArgs, envTelemetry] = expandBashEnvVariables(inputArguments);
-        tl.debug(`Expanded file args: ${expandedArgs}`);
-
-        const [sanitizedArgs, sanitizerTelemetry] = sanitizeArgs(
-            expandedArgs,
-            {
-                argsSplitSymbols: '\\\\',
-                saniziteRegExp: new RegExp(`(?<!\\\\)([^a-zA-Z0-9\\\\ _'"\\-=\\/:.])`, 'g')
-            }
-        );
-        if (sanitizedArgs !== inputArguments) {
-            if (featureFlags.telemetry && (sanitizerTelemetry || envTelemetry)) {
-                const telemetry = {
-                    ...envTelemetry ?? {},
-                    ...sanitizerTelemetry ?? {}
-                };
-                emitTelemetry('TaskHub', 'BashV3', telemetry);
-            }
-            if (sanitizedArgs !== expandedArgs) {
-                const message = tl.loc('ScriptArgsSanitized');
-                if (featureFlags.activate) {
-                    throw new Error(message);
-                }
-                if (featureFlags.audit) {
-                    tl.warning(message);
-                }
-            }
-        }
     }
 }
 

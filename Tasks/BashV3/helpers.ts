@@ -1,3 +1,8 @@
+import tl = require('azure-pipelines-task-lib/task');
+import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
+import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry";
+import { ArgsSanitizingError } from './utils/errors';
+
 type BashEnvTelemetry = {
     foundPrefixes: number,
     quottedBlocks: number,
@@ -169,4 +174,44 @@ function findEnclosingBraceIndex(input: string, targetIndex: number) {
 function isValidEnvName(envName) {
     const regex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
     return regex.test(envName);
+}
+
+export function validateFileArgs(inputArguments: string): void {
+    const featureFlags = {
+        audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
+        activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
+        telemetry: tl.getBoolFeatureFlag('AZP_75787_ENABLE_COLLECT')
+    };
+
+    if (featureFlags.activate || featureFlags.audit || featureFlags.telemetry) {
+        tl.debug('Validating file args...');
+        const [expandedArgs, envTelemetry] = expandBashEnvVariables(inputArguments);
+        tl.debug(`Expanded file args: ${expandedArgs}`);
+
+        const [sanitizedArgs, sanitizerTelemetry] = sanitizeArgs(
+            expandedArgs,
+            {
+                argsSplitSymbols: '\\\\',
+                saniziteRegExp: new RegExp(`(?<!\\\\)([^a-zA-Z0-9\\\\ _'"\\-=\\/:.])`, 'g')
+            }
+        );
+        if (sanitizedArgs !== inputArguments) {
+            if (featureFlags.telemetry && (sanitizerTelemetry || envTelemetry)) {
+                const telemetry = {
+                    ...envTelemetry ?? {},
+                    ...sanitizerTelemetry ?? {}
+                };
+                emitTelemetry('TaskHub', 'BashV3', telemetry);
+            }
+            if (sanitizedArgs !== expandedArgs) {
+                const message = tl.loc('ScriptArgsSanitized');
+                if (featureFlags.activate) {
+                    throw new ArgsSanitizingError(message);
+                }
+                if (featureFlags.audit) {
+                    tl.warning(message);
+                }
+            }
+        }
+    }
 }
