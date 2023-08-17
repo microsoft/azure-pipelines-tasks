@@ -95,27 +95,7 @@ try {
     $contents += "`$ErrorView = 'NormalView'"
     if ("$input_targetType".ToUpperInvariant() -eq 'FILEPATH') {
 
-        $featureFlags = @{
-            audit     = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC_LOG)
-            activate  = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
-            telemetry = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_COLLECT)
-        }
-        if ($featureFlags.activate -or $featureFlags.audit -or $featureFlags.telemetry) {
-            $sanitizedArgs, $telemetry = Sanitize-Arguments -InputArgs $input_arguments;
-            if ($sanitizedArgs -ne $input_arguments) {
-                if ($featureFlags.telemetry -and $null -ne $telemetry) {
-                    Publish-Telemetry $telemetry;
-                }
-
-                $message = Get-VstsLocString -Key 'ScriptArgsSanitized';
-                if ($featureFlags.activate) {
-                    throw $message;
-                }
-                if ($featureFlags.audit) {
-                    Write-Warning $message;
-                }
-            }
-        }
+        Test-FileArgs $input_arguments
 
         $contents += ". '$("$input_filePath".Replace("'", "''"))' $input_arguments".Trim()
         Write-Host (Get-VstsLocString -Key 'PS_FormattedCommand' -ArgumentList ($contents[-1]))
