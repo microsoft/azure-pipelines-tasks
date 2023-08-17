@@ -26,8 +26,6 @@ export function expandPowerShellEnvVariables(argsLine: string): [string, Process
     const bracedEnvPrefix = '${env:'
     const quote = '\''
     const escapingSymbol = '`'
-    const expansionPrefix = '$('
-    const expansionSuffix = ')'
 
     const telemetry: ProcessEnvPowerShellTelemetry = {
         foundPrefixes: 0,
@@ -51,26 +49,22 @@ export function expandPowerShellEnvVariables(argsLine: string): [string, Process
     let startIndex = 0
 
     while (true) {
-        const expansionPrefixIndex = result.indexOf(expansionPrefix, startIndex)
-        if (expansionPrefixIndex >= 0) {
-            const expansionSuffixIndex = result.indexOf(expansionSuffix, startIndex)
-            if (expansionSuffixIndex < 0) {
-                telemetry.unmatchedExpansionSyntax++;
-            }
-
-            startIndex = expansionSuffixIndex + expansionSuffix.length
-            telemetry.expansionSyntax++
-            continue
+        const loweredResult = result.toLowerCase()
+        const basicPrefixIndex = loweredResult.indexOf(basicEnvPrefix, startIndex)
+        const bracedPrefixIndex = loweredResult.indexOf(bracedEnvPrefix, startIndex)
+        const foundPrefixes = [basicPrefixIndex, bracedPrefixIndex].filter(i => i >= 0)
+        if (foundPrefixes.length === 0) {
+            break;
         }
 
-        let prefixIndex = result.toLowerCase().indexOf(basicEnvPrefix, startIndex)
+        const prefixIndex = Math.min(...foundPrefixes)
+
+        const isBraceSyntax = prefixIndex === bracedPrefixIndex
+        if (isBraceSyntax) {
+            telemetry.braceSyntaxEntries++;
+        }
 
         if (prefixIndex < 0) {
-            prefixIndex = result.toLowerCase().indexOf('${env:', startIndex)
-            if (prefixIndex < 0) {
-                break;
-            }
-            telemetry.bracedEnvSyntax++
             break;
         }
 
@@ -104,25 +98,14 @@ export function expandPowerShellEnvVariables(argsLine: string): [string, Process
         let envName = '';
         let envEndIndex = 0;
 
-        let isBraceSyntax = false
-
-        if (result[prefixIndex + 1] === '${env:') {
-            isBraceSyntax = true
-
-            telemetry.braceSyntaxEntries++
-        }
-
-        const envStartIndex = prefixIndex + basicEnvPrefix.length
+        const envStartIndex = prefixIndex + (isBraceSyntax ? bracedEnvPrefix.length : basicEnvPrefix.length)
 
         if (isBraceSyntax) {
             envEndIndex = findEnclosingBraceIndex(result, prefixIndex)
             if (envEndIndex === 0) {
-                // startIndex++
-
                 telemetry.notClosedBraceSyntaxPosition = prefixIndex + 1 // +{
-                // throw new Error(...)
+
                 break;
-                // continue
             }
 
             envName = result.substring(envStartIndex, envEndIndex)
@@ -152,7 +135,7 @@ export function expandPowerShellEnvVariables(argsLine: string): [string, Process
         }
 
         const envValue = process.env[envName] ?? '';
-        const tail = result.substring(envEndIndex)
+        const tail = result.substring(isBraceSyntax ? envEndIndex + 1 : envEndIndex)
 
         result = head + envValue + tail;
         startIndex = prefixIndex + envValue.length

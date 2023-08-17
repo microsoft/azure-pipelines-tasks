@@ -11,7 +11,7 @@ export const testEnvExpansion = () => {
             "$env:VAR1 2", ["VAR1=1"], "1 2"
         ], [
             'Expanding env variables with brace syntax',
-            '${env:VAR1} 2', ['VAR1=val1'], '${env:VAR1} 2'
+            '${env:VAR1} 2', ['VAR1=1'], '1 2'
         ], [
             'Expanding multiple env variables',
             '1 $env:VAR1 $env:VAR2', ['VAR1=val1', 'VAR2=val2'], '1 val1 val2'
