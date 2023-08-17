@@ -48,7 +48,7 @@ export function expandBashEnvVariables(argsLine: string): [string, BashEnvTeleme
         invalidEnvName: 0 // 0 means no this issue,
     }
 
-    for (let i = 0; i < argsLine.length; i++) {
+    while (true) {
         const prefixIndex = result.indexOf(envPrefix, startIndex)
         if (prefixIndex < 0) {
             break;
