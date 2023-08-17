@@ -1,7 +1,7 @@
 import assert = require('assert');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import { BashEnvProcessingTests, EnvProcessingTelemetryTests } from './EnvProcessing';
+import { BashEnvProcessingTests, EnvProcessingTelemetryTests } from './EnvExpansion';
 
 describe('Bash Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 80000);
