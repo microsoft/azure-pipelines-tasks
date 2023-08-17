@@ -2,141 +2,82 @@ import assert = require('assert');
 import { expandPowerShellEnvVariables } from '../helpers';
 
 export const testEnvExpansion = () => {
-    it('Should expand env variable in string', () => {
-        const argsLine = '$env:VAR1 2';
-        const expectedArgs = 'value1 2';
-        process.env['VAR1'] = 'value1'
+    const testSuites: [string, string, string[], string][] = [
+        [
+            "Handles empty line",
+            "", [], ""
+        ], [
+            "Expanding known env variables",
+            "$env:VAR1 2", ["VAR1=1"], "1 2"
+        ], [
+            'Expanding env variables with brace syntax',
+            '${env:VAR1} 2', ['VAR1=val1'], '${env:VAR1} 2'
+        ], [
+            'Expanding multiple env variables',
+            '1 $env:VAR1 $env:VAR2', ['VAR1=val1', 'VAR2=val2'], '1 val1 val2'
+        ], [
+            'Expanding multiple env variables 2',
+            '$env:VAR1 $env:VAR2', ['VAR1=1', 'VAR2=2'], '1 2'
+        ], [
+            'Expanding multiple close env variables',
+            '$env:VAR1 $env:VAR2$env:VAR3', ['VAR1=1', 'VAR2=2', 'VAR3=3'], '1 23'
+        ], [
+            'Expanding multiple close env variables 2',
+            '$env:VAR1 ${env:VAR2}_$env:VAR3', ['VAR1=1', 'VAR2=2', 'VAR3=3'], '1 2_3'
+        ], [
+            'Expanding multiple close env variables 3',
+            '$env:VAR1$env:VAR2$env:VAR3', ['VAR1=1', 'VAR2=2', 'VAR3=3'], '123'
+        ], [
+            'Not expanding nested env variables',
+            '$env:VAR1 $env:VAR2', ['VAR1=$env:NESTED', 'VAR2=2', 'NESTED=nested'], '$env:NESTED 2'
+        ], [
+            'Not expanding if backtick before env var',
+            '`$env:VAR1', ['VAR1=val1'], '$env:VAR1'
+        ], [
+            'Not expanding if backtick at start of env var',
+            '$`env:VAR1', ['VAR1=val1'], '$`env:VAR1'
+        ], [
+            'Incorrectly expanding if backtick inside env var',
+            '$env:VA`R1', ['VAR1=val1'], 'R1'
+        ], [
+            'If variable inside single quotes, it should be ignored',
+            '$env:VAR1 \'$env:VAR2\'', ['VAR1=val1', 'VAR2=val2'], 'val1 \'$env:VAR2\''
+        ], [
+            'If variable inside single quotes, it should be ignored 2',
+            '$env:VAR1 \' _ $env:VAR2 _ \'', ['VAR1=val1', 'VAR2=val2'], 'val1 \' _ $env:VAR2 _ \''
+        ], [
+            'If variable inside single quotes, it should be ignored 3',
+            '$env:VAR1 \' _ $env:VAR2 _ \'\'$env:VAR3\'', ['VAR1=val1', 'VAR2=val2', 'VAR3=val3'], 'val1 \' _ $env:VAR2 _ \'\'$env:VAR3\''
+        ], [
+            'If variable inside double quotes, it should be expanded',
+            '$env:VAR1 "$env:VAR2"', ['VAR1=val1', 'VAR2=val2'], 'val1 "val2"'
+        ], [
+            'If quotes closed, variable should be expanded',
+            '\'\'$env:VAR1', ['VAR1=val1'], '\'\'val1'
+        ], [
+            'If quotes closed, variable should be expanded 2',
+            '\'\'$env:VAR1\'\'', ['VAR1=val1'], '\'\'val1\'\''
+        ], [
+            'If variable is does not exists, it should be empty string',
+            '$env:VAR1 2', ['VAR1='], ' 2'
+        ],
+    ]
 
-        const [actualArgs] = expandPowerShellEnvVariables(argsLine);
+    for (const [testName, input, variables, expected] of testSuites) {
+        it(testName, () => {
+            for (const variable of variables) {
+                const [name, value] = variable.split('=');
+                if (value) {
+                    process.env[name] = value;
+                }
+                else {
+                    delete process.env[name];
+                }
+            }
 
-        assert.deepStrictEqual(actualArgs, expectedArgs);
-    })
-    it('Should expand 2 close env variables', () => {
-        const argsLine = '$env:VAR1 $env:VAR2';
-        const expectedArgs = 'value1 value2';
-        process.env['VAR1'] = 'value1'
-        process.env['VAR2'] = 'value2'
+            const [actual] = expandPowerShellEnvVariables(input);
 
-        const [actualArgs] = expandPowerShellEnvVariables(argsLine);
-
-        assert.deepStrictEqual(actualArgs, expectedArgs);
-    })
-    it('Should ignore nested variables', () => {
-        const argsLine = '$env:VAR1 $env:VAR2';
-        const expectedArgs = '$env:NESTED 2';
-        process.env['VAR1'] = '$env:NESTED'
-        process.env['VAR2'] = '2'
-        process.env['NESTED'] = 'nested'
-
-        const [actualArgs] = expandPowerShellEnvVariables(argsLine);
-
-        assert.deepStrictEqual(actualArgs, expectedArgs);
-    })
-
-    it('Backtick before env var', () => {
-        const argsLine = '`$env:VAR1';
-        const expectedArgs = '$env:VAR1';
-        process.env['VAR1'] = 'value1'
-
-        const [actualArgs] = expandPowerShellEnvVariables(argsLine);
-
-        assert.deepStrictEqual(actualArgs, expectedArgs);
-    })
-
-    it('Backtick inside env var', () => {
-        const argsLine = '$env:V`AR1';
-        const expectedArgs = 'AR1';
-        process.env['VAR1'] = 'value1'
-
-        const [actualArgs] = expandPowerShellEnvVariables(argsLine);
-
-        assert.deepStrictEqual(actualArgs, expectedArgs);
-    })
-
-    it(`If it's inside the single quotes - it should be ignored`, () => {
-        const argsLine = `$env:VAR1 '$env:VAR2'`;
-        const expectedArgs = `value1 '$env:VAR2'`;
-        process.env['VAR1'] = 'value1'
-        process.env['VAR2'] = 'value2'
-
-        const [actualArgs] = expandPowerShellEnvVariables(argsLine);
-
-        assert.deepStrictEqual(actualArgs, expectedArgs);
-    })
-
-    it(`If it's inside the single quotes - it should be ignored 2`, () => {
-        const argsLine = `$env:VAR1 ' _ $env:VAR2 _ '`;
-        const expectedArgs = `value1 ' _ $env:VAR2 _ '`;
-        process.env['VAR1'] = 'value1'
-        process.env['VAR2'] = 'value2'
-
-        const [actualArgs] = expandPowerShellEnvVariables(argsLine);
-
-        assert.deepStrictEqual(actualArgs, expectedArgs);
-    })
-
-    it(`If it's inside the single quotes - it should be ignored 3`, () => {
-        const argsLine = `$env:VAR1 ' _ $env:VAR2 _ ''$env:VAR3'`;
-        const expectedArgs = `value1 ' _ $env:VAR2 _ ''$env:VAR3'`;
-        process.env['VAR1'] = 'value1'
-        process.env['VAR2'] = 'value2'
-        process.env['VAR3'] = 'value3'
-
-        const [actualArgs] = expandPowerShellEnvVariables(argsLine);
-
-        assert.deepStrictEqual(actualArgs, expectedArgs);
-    })
-
-    it(`If it's inside the double quotes - it should be expanded`, () => {
-        const argsLine = `$env:VAR1 "$env:VAR2"`;
-        const expectedArgs = `value1 "value2"`;
-        process.env['VAR1'] = 'value1'
-        process.env['VAR2'] = 'value2'
-
-        const [actualArgs] = expandPowerShellEnvVariables(argsLine);
-
-        assert.deepStrictEqual(actualArgs, expectedArgs);
-    })
-
-    it(`Close quotes`, () => {
-        const argsLine = `''$env:VAR1 $env:VAR2`;
-        const expectedArgs = `''value1 value2`;
-        process.env['VAR1'] = 'value1'
-        process.env['VAR2'] = 'value2'
-
-        const [actualArgs] = expandPowerShellEnvVariables(argsLine);
-
-        assert.deepStrictEqual(actualArgs, expectedArgs);
-    })
-
-    it('Should handle if escaping character escaped before env', () => {
-        const argsLine = '``$env:VAR1';
-        const expectedArgs = '``value1';
-        process.env['VAR1'] = 'value1'
-
-        const [actualArgs] = expandPowerShellEnvVariables(argsLine);
-
-        assert.deepStrictEqual(actualArgs, expectedArgs);
-    })
-
-    it('Should process env var also with mismatched cases of prefix', () => {
-        const argsLine = '$eNv:VAR1';
-        const expectedArgs = 'value1';
-        process.env['VAR1'] = 'value1'
-
-        const [actualArgs] = expandPowerShellEnvVariables(argsLine);
-
-        assert.deepStrictEqual(actualArgs, expectedArgs);
-    })
-
-    it('Should process close env vars', () => {
-        const argsLine = '$env:VAR1$env:VAR2';
-        const expectedArgs = 'value1value2';
-        process.env['VAR1'] = 'value1'
-        process.env['VAR2'] = 'value2'
-
-        const [actualArgs] = expandPowerShellEnvVariables(argsLine);
-
-        assert.deepStrictEqual(actualArgs, expectedArgs);
-    })
+            assert.deepStrictEqual(actual, expected);
+        });
+    }
 }

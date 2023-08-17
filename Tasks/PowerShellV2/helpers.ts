@@ -12,6 +12,9 @@ type ProcessEnvPowerShellTelemetry = {
     variableStartsFromBacktick: number,
     variablesWithBacktickInside: number,
     envQuottedBlocks: number,
+    braceSyntaxEntries: number,
+    bracedVariables: number,
+    notClosedBraceSyntaxPosition: number,
     // blockers
     bracedEnvSyntax: number,
     expansionSyntax: number,
@@ -19,7 +22,8 @@ type ProcessEnvPowerShellTelemetry = {
 }
 
 export function expandPowerShellEnvVariables(argsLine: string): [string, ProcessEnvPowerShellTelemetry] {
-    const envPrefix = '$env:'
+    const basicEnvPrefix = '$env:'
+    const bracedEnvPrefix = '${env:'
     const quote = '\''
     const escapingSymbol = '`'
     const expansionPrefix = '$('
@@ -34,6 +38,9 @@ export function expandPowerShellEnvVariables(argsLine: string): [string, Process
         variableStartsFromBacktick: 0,
         variablesWithBacktickInside: 0,
         envQuottedBlocks: 0,
+        braceSyntaxEntries: 0,
+        bracedVariables: 0,
+        notClosedBraceSyntaxPosition: 0,
         // blockers
         bracedEnvSyntax: 0,
         expansionSyntax: 0,
@@ -56,7 +63,7 @@ export function expandPowerShellEnvVariables(argsLine: string): [string, Process
             continue
         }
 
-        let prefixIndex = result.toLowerCase().indexOf(envPrefix, startIndex)
+        let prefixIndex = result.toLowerCase().indexOf(basicEnvPrefix, startIndex)
 
         if (prefixIndex < 0) {
             prefixIndex = result.toLowerCase().indexOf('${env:', startIndex)
@@ -97,10 +104,34 @@ export function expandPowerShellEnvVariables(argsLine: string): [string, Process
         let envName = '';
         let envEndIndex = 0;
 
-        const envStartIndex = prefixIndex + envPrefix.length
+        let isBraceSyntax = false
 
-        envName = result.substring(envStartIndex).split(/[ |"|'|;|$]/)[0]
-        envEndIndex = envStartIndex + envName.length
+        if (result[prefixIndex + 1] === '${env:') {
+            isBraceSyntax = true
+
+            telemetry.braceSyntaxEntries++
+        }
+
+        const envStartIndex = prefixIndex + basicEnvPrefix.length
+
+        if (isBraceSyntax) {
+            envEndIndex = findEnclosingBraceIndex(result, prefixIndex)
+            if (envEndIndex === 0) {
+                // startIndex++
+
+                telemetry.notClosedBraceSyntaxPosition = prefixIndex + 1 // +{
+                // throw new Error(...)
+                break;
+                // continue
+            }
+
+            envName = result.substring(envStartIndex, envEndIndex)
+
+            telemetry.bracedVariables++
+        } else {
+            envName = result.substring(envStartIndex).split(/[ |"|'|;|$]/)[0]
+            envEndIndex = envStartIndex + envName.length
+        }
 
         if (envName.startsWith(escapingSymbol)) {
             const sanitizedEnvName = '$env:' + envName.substring(1)
@@ -132,6 +163,15 @@ export function expandPowerShellEnvVariables(argsLine: string): [string, Process
     }
 
     return [result, telemetry]
+}
+
+function findEnclosingBraceIndex(input: string, targetIndex: number) {
+    for (let i = 0; i < input.length; i++) {
+        if (input[i] === "}" && i > targetIndex) {
+            return i
+        }
+    }
+    return 0
 }
 
 export function validateFileArgs(inputArguments: string): void {
