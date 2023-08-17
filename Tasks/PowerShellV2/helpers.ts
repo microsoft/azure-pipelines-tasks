@@ -1,6 +1,7 @@
 import tl = require('azure-pipelines-task-lib/task');
 import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
 import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry"
+import { ArgsSanitizingError } from './utils/errors';
 
 type ProcessEnvPowerShellTelemetry = {
     foundPrefixes: number,
@@ -17,7 +18,7 @@ type ProcessEnvPowerShellTelemetry = {
     unmatchedExpansionSyntax: number
 }
 
-function expandPowerShellEnvVariables(argsLine: string): [string, ProcessEnvPowerShellTelemetry] {
+export function expandPowerShellEnvVariables(argsLine: string): [string, ProcessEnvPowerShellTelemetry] {
     const envPrefix = '$env:'
     const quote = '\''
     const escapingSymbol = '`'
@@ -38,6 +39,7 @@ function expandPowerShellEnvVariables(argsLine: string): [string, ProcessEnvPowe
         expansionSyntax: 0,
         unmatchedExpansionSyntax: 0
     }
+
     let result = argsLine
     let startIndex = 0
 
@@ -163,7 +165,7 @@ export function validateFileArgs(inputArguments: string): void {
             if (sanitizedArgs !== expandedArgs) {
                 const message = tl.loc('ScriptArgsSanitized');
                 if (featureFlags.activate) {
-                    throw new Error(message);
+                    throw new ArgsSanitizingError(message);
                 }
                 if (featureFlags.audit) {
                     tl.warning(message);

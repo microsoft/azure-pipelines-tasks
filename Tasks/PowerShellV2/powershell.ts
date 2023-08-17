@@ -4,6 +4,8 @@ import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
 import { validateFileArgs } from './helpers';
+import { ArgsSanitizingError } from './utils/errors';
+import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
 var uuidV4 = require('uuid/v4');
 
 function getActionPreference(vstsInputName: string, defaultAction: string = 'Default', validActions: string[] = ['Default', 'Stop', 'Continue', 'SilentlyContinue']) {
@@ -77,7 +79,16 @@ async function run() {
         let script = '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
 
-            validateFileArgs(input_arguments);
+            try {
+                validateFileArgs(input_arguments);
+            }
+            catch (error) {
+                if (error instanceof ArgsSanitizingError) {
+                    throw error;
+                }
+
+                emitTelemetry('TaskHub', 'PowerShellV2', { UnexpectedError: error.stack ?? error.message ?? JSON.stringify(error) ?? 'unknown' });
+            }
 
             script = `. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim();
         } else {
