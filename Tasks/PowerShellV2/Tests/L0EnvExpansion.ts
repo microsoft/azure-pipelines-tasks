@@ -26,6 +26,9 @@ export const testEnvExpansion = () => {
             '$env:VAR1 ${env:VAR2}_$env:VAR3', ['VAR1=1', 'VAR2=2', 'VAR3=3'], '1 2_3'
         ], [
             'Expanding multiple close env variables 3',
+            '${env:VAR1}$env:VAR2', ['VAR1=1', 'VAR2=2',], '12'
+        ], [
+            'Expanding multiple close env variables 3',
             '$env:VAR1$env:VAR2$env:VAR3', ['VAR1=1', 'VAR2=2', 'VAR3=3'], '123'
         ], [
             'Not expanding nested env variables',
@@ -60,7 +63,10 @@ export const testEnvExpansion = () => {
         ], [
             'If variable is does not exists, it should be empty string',
             '$env:VAR1 2', ['VAR1='], ' 2'
-        ],
+        ],[
+            'Env var case-insensitive',
+            '$enV:VaR1 ${Env:Var1}', ['var1=1'], '1 1'
+        ]
     ]
 
     for (const [testName, input, variables, expected] of testSuites) {
