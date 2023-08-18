@@ -432,9 +432,10 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
                 
 
                 if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
-                    run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
-                    util.renameCodeCoverageOutput(coverageTasksPath, taskName);
+                    //run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);//
+                    //util.renameCodeCoverageOutput(coverageTasksPath, taskName);//
                     isReportWasFormed = true;
+                    run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
                 }
                 else {
                     run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);

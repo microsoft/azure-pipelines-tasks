@@ -5,41 +5,45 @@ export class MocksRegistrator {
     public static register(taskRunner: TaskMockRunner) {
         let secureFileHelperMock = require('./secure-files-mock.js');
         taskRunner.registerMock('azure-pipelines-tasks-securefiles-common/securefiles-common', secureFileHelperMock);
-
         class MockStats {
             mode = 600;
         };
         class MockUser {
             username = "testUser";
         };
-
-        taskRunner.registerMock('fs', {
-            writeFileSync: function (filePath, contents) {
-            },
-            existsSync: function (filePath, contents) {
-                return true;
-            },
-            readFileSync: function (filePath) {
+        const fs = require('fs');
+        const fsClone = Object.assign({}, fs);
+        const fsClone2 = Object.assign({}, fs);
+        fsClone.writeFileSync = function (filePath, contents) { };
+        fsClone.existsSync = function (filePath, contents) {
+            return true;
+        };
+        fsClone.readFileSync = function (filePath) {
+            //return 'contents';
+            if (filePath.endsWith("known_hosts")) {
                 return 'contents';
-            },
-            statSync: function (filePath) {
-                let s: MockStats = new MockStats();
-                return s;
-            },
-            chmodSync: function (filePath, string) {
             }
-        });
-
+            return fsClone2.readFileSync(filePath, 'utf-8');
+        };
+        fsClone.statSync = function (filePath) {
+            let s = new MockStats();
+            return s;
+        };
+        fsClone.chmodSync = function (filePath, string) { };
+        taskRunner.registerMock('fs', fsClone);
+        
+        const os = require('os');
+        const osClone = Object.assign({}, os);
         taskRunner.registerMock('os', {
             userInfo: function () {
-                let user: MockUser = new MockUser();
+                let user = new MockUser();
                 return user;
             },
             type: function () {
-                return os.type();
+                return osClone.type();
             },
             homedir: function () {
-                return os.homedir();
+                return osClone.homedir();
             }
         });
     }

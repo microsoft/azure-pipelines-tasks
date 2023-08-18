@@ -44,7 +44,7 @@ describe('InstallAppleProvisioningProfile Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        let expectedErr: string = "loc_mock_InputProvisioningProfileNotFound /build/source/doesnotexist.provisionprofile";
+        let expectedErr: string = "InputProvisioningProfileNotFound /build/source/doesnotexist.provisionprofile";
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'Error message should have said: ' + expectedErr);
         assert(tr.failed, 'task should have failed');
@@ -90,7 +90,7 @@ describe('InstallAppleProvisioningProfile Suite', function () {
 
         assert(tr.failed, 'task should have failed');
         assert(tr.errorIssues.length > 0, 'should have written to stderr');
-        assert(tr.errorIssues[0].indexOf('Error: loc_mock_InstallRequiresMac') >= 0, 'error message should match expected');
+        assert(tr.errorIssues[0].indexOf('Error: InstallRequiresMac') >= 0, 'error message should match expected');
 
         done();
     });

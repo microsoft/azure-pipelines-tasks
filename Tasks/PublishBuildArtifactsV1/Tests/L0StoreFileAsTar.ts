@@ -20,13 +20,14 @@ taskRunner.setAnswers(goodAnswers);
 taskRunner.registerMock('azure-pipelines-task-lib/toolrunner', MockToolRunner);
 
 const pathClone = Object.assign({}, path);
+const pathClone2 = Object.assign({}, path);
 
 pathClone.basename = function(inputPath) {
   if (inputPath === '/bin/release/file') {
     return 'file';
   }
 
-  return path.basename(inputPath);
+  return pathClone2.basename(inputPath);
 };
 
 pathClone.dirname = function(inputPath) {
@@ -34,7 +35,7 @@ pathClone.dirname = function(inputPath) {
     return '/bin/release';
   }
 
-  return path.dirname(inputPath);
+  return pathClone2.dirname(inputPath);
 };
 
 taskRunner.registerMock('path', pathClone);

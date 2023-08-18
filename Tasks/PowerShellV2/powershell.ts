@@ -3,7 +3,7 @@ import path = require('path');
 import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
-var uuidV4 = require('uuid/v4');
+var uuid = require('uuid');
 
 function getActionPreference(vstsInputName: string, defaultAction: string = 'Default', validActions: string[] = [ 'Default', 'Stop', 'Continue', 'SilentlyContinue' ]) {
     let result: string = tl.getInput(vstsInputName, false) || defaultAction;
@@ -94,7 +94,7 @@ async function run() {
         }
         contents.push(script);
         // log with detail to avoid a warning output.
-        tl.logDetail(uuidV4(), tl.loc('JS_FormattedCommand', script), null, 'command', 'command', 0);
+        tl.logDetail(uuid.v4(), tl.loc('JS_FormattedCommand', script), null, 'command', 'command', 0);
 
         if (!input_ignoreLASTEXITCODE) {
             contents.push(`if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {`);
@@ -109,7 +109,7 @@ async function run() {
         tl.assertAgent('2.115.0');
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
-        let filePath = path.join(tempDirectory, uuidV4() + '.ps1');
+        let filePath = path.join(tempDirectory, uuid.v4() + '.ps1');
         fs.writeFileSync(
             filePath,
             '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.

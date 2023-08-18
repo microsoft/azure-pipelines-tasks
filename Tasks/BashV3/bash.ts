@@ -4,7 +4,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
 import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry'
 import { processBashEnvVariables } from './bashEnvProcessor';
-var uuidV4 = require('uuid/v4');
+var uuid = require('uuid');
 
 const featureFlags = {
     enableTelemetry: getFeatureFlagValue('AZP_TASK_FF_BASHV3_ENABLE_INPUT_ARGS_TELEMETRY', true),
@@ -183,7 +183,7 @@ async function run() {
         tl.assertAgent('2.115.0');
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
-        let fileName = uuidV4() + '.sh';
+        let fileName = uuid.v4() + '.sh';
         let filePath = path.join(tempDirectory, fileName);
 
         fs.writeFileSync(

@@ -72,7 +72,7 @@ describe("Maven L0 Suite", function () {
 
         assert(testRunner.invokedToolCount == 0, "should not have run maven");
         assert(testRunner.failed, "task should have failed");
-        assert(testRunner.createdErrorIssue("Unhandled: Input required: mavenVersionSelection"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
+        assert(testRunner.createdErrorIssue("loc_mock_LIB_UnhandledEx loc_mock_LIB_InputRequired mavenVersionSelection"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
 
         done();
     });
@@ -86,7 +86,7 @@ describe("Maven L0 Suite", function () {
 
         assert(testRunner.invokedToolCount == 0, "should not have run maven");
         assert(testRunner.failed, "task should have failed");
-        assert(testRunner.createdErrorIssue("Unhandled: Input required: mavenFeedAuthenticate"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
+        assert(testRunner.createdErrorIssue("loc_mock_LIB_UnhandledEx loc_mock_LIB_InputRequired mavenFeedAuthenticate"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
 
         done();
     });
@@ -136,7 +136,7 @@ describe("Maven L0 Suite", function () {
 
         assert(testRunner.invokedToolCount == 0, "should not have run maven");
         assert(testRunner.failed, "task should have failed");
-        assert(testRunner.createdErrorIssue("Unhandled: Input required: mavenPath"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
+        assert(testRunner.createdErrorIssue("loc_mock_LIB_UnhandledEx loc_mock_LIB_InputRequired mavenPath"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
 
         done();
     });
@@ -150,7 +150,7 @@ describe("Maven L0 Suite", function () {
 
         assert(testRunner.invokedToolCount == 0, "should not have run maven");
         assert(testRunner.failed, "task should have failed");
-        assert(testRunner.createdErrorIssue("Unhandled: Not found /not/a/valid/maven/path/"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
+        assert(testRunner.createdErrorIssue("loc_mock_LIB_UnhandledEx Not found /not/a/valid/maven/path/"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
 
         done();
     });
@@ -299,7 +299,7 @@ describe("Maven L0 Suite", function () {
 
         assert(testRunner.invokedToolCount == 0, "should not have run maven");
         assert(testRunner.failed, "task should have failed");
-        assert(testRunner.createdErrorIssue("Unhandled: Input required: goals"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
+        assert(testRunner.createdErrorIssue("loc_mock_LIB_UnhandledEx loc_mock_LIB_InputRequired goals"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
 
         done();
     });
@@ -327,7 +327,7 @@ describe("Maven L0 Suite", function () {
 
         assert(testRunner.invokedToolCount == 0, "should not have run maven");
         assert(testRunner.failed, "task should have failed");
-        assert(testRunner.createdErrorIssue("Unhandled: Input required: testResultsFiles"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
+        assert(testRunner.createdErrorIssue("loc_mock_LIB_UnhandledEx loc_mock_LIB_InputRequired testResultsFiles"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
 
         done();
     });
@@ -341,7 +341,7 @@ describe("Maven L0 Suite", function () {
 
         assert(testRunner.invokedToolCount == 0, "should not have run maven");
         assert(testRunner.failed, "task should have failed");
-        assert(testRunner.createdErrorIssue("Unhandled: Input required: javaHomeSelection"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
+        assert(testRunner.createdErrorIssue("loc_mock_LIB_UnhandledEx loc_mock_LIB_InputRequired javaHomeSelection"), "Did not create expected error issue, issues created: " + testRunner.errorIssues);
 
         done();
     });

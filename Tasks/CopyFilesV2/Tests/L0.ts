@@ -129,7 +129,7 @@ describe('CopyFiles L0 Suite', function () {
         runner.run();
 
         assert(runner.failed, 'should have failed');
-        assert(runner.createdErrorIssue('Error: Input required: Contents'), 'should have created error issue');
+        assert(runner.createdErrorIssue('Error: loc_mock_LIB_InputRequired Contents'), 'should have created error issue');
         done();
     });
 
@@ -141,7 +141,7 @@ describe('CopyFiles L0 Suite', function () {
         runner.run();
 
         assert(runner.failed, 'should have failed');
-        assert(runner.createdErrorIssue('Error: Input required: SourceFolder'), 'should have created error issue');
+        assert(runner.createdErrorIssue('Error: loc_mock_LIB_InputRequired SourceFolder'), 'should have created error issue');
         done();
     });
 
@@ -153,7 +153,7 @@ describe('CopyFiles L0 Suite', function () {
         runner.run();
 
         assert(runner.failed, 'should have failed');
-        assert(runner.createdErrorIssue('Error: Input required: TargetFolder'), 'should have created error issue');
+        assert(runner.createdErrorIssue('Error: loc_mock_LIB_InputRequired TargetFolder'), 'should have created error issue');
         done();
     });
 
@@ -175,7 +175,7 @@ describe('CopyFiles L0 Suite', function () {
         let testPath = path.join(__dirname, 'L0failsIfTargetFileIsDir.js');
         let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
         runner.run();
-
+        //console.log(runner);
         assert(runner.failed, 'should have failed');
         assert(runner.createdErrorIssue(`Error: loc_mock_TargetIsDir ${path.normalize('/srcDir/someOtherDir/file1.file')} ${path.normalize('/destDir/someOtherDir/file1.file')}`), 'should have created error issue');
         done();

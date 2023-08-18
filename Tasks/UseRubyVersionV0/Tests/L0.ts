@@ -32,11 +32,11 @@ describe('UseRubyVersion L0 Suite', function () {
         tr.run();
 
         assert(tr.failed, 'task should have failed');
-        assert(tr.stdout.includes('loc_mock_VersionNotFound 3.x'), 'error message not as expected');
-        assert(tr.stdout.includes('loc_mock_ListAvailableVersions $(Agent.ToolsDirectory)'), 'list of available versions is not printed as expected');
+        assert(tr.stdout.includes('VersionNotFound 3.x'), 'error message not as expected');
+        assert(tr.stdout.includes('ListAvailableVersions $(Agent.ToolsDirectory)'), 'list of available versions is not printed as expected');
         assert(tr.stdout.includes('2.7.13'), 'list of available versions is not printed as expected');
-        assert(tr.stdout.includes('loc_mock_ToolNotFoundMicrosoftHosted Ruby https://aka.ms/hosted-agent-software'));
-        assert(tr.stdout.includes('loc_mock_ToolNotFoundSelfHosted Ruby https://go.microsoft.com/fwlink/?linkid=2005989'));
+        assert(tr.stdout.includes('ToolNotFoundMicrosoftHosted Ruby https://aka.ms/hosted-agent-software'));
+        assert(tr.stdout.includes('ToolNotFoundSelfHosted Ruby https://go.microsoft.com/fwlink/?linkid=2005989'));
     });
 
     it('sets PATH correctly on Linux', function () {

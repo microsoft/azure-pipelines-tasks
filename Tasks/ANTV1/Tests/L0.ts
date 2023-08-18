@@ -25,10 +25,9 @@ describe('ANT Suite', function () {
         const testPath = path.join(__dirname, 'L0MissingAntBuildFile.js')
         const runner: MockTestRunner = new MockTestRunner(testPath);
         runner.run();
-
         assert(runner.invokedToolCount == 0, 'should not have run ANT');
         assert(runner.failed, 'task should have failed');
-        assert(runner.stdOutContained('Input required: antBuildFile'), 'wrong error message');
+        assert(runner.stdOutContained('loc_mock_LIB_InputRequired antBuildFile'), 'wrong error message');
         done();
     })
 
@@ -39,7 +38,7 @@ describe('ANT Suite', function () {
 
         assert(runner.invokedToolCount == 0, 'should not have run ANT');
         assert(runner.failed, 'task should have failed');
-        assert(runner.stdOutContained('Input required: javaHomeSelection'), 'wrong error message"');
+        assert(runner.stdOutContained('loc_mock_LIB_InputRequired javaHomeSelection'), 'wrong error message"');
         done();
     })
 
@@ -50,7 +49,7 @@ describe('ANT Suite', function () {
 
         assert(runner.invokedToolCount == 0, 'should not have run ANT');
         assert(runner.failed, 'task should have failed');
-        assert(runner.stdOutContained('Input required: testResultsFiles'), 'wrong error message:"');
+        assert(runner.stdOutContained('loc_mock_LIB_InputRequired testResultsFiles'), 'wrong error message:"');
         done();
     })
 

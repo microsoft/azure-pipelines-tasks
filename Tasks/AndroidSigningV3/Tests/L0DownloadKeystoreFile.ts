@@ -11,7 +11,8 @@ tr.setInput('keystoreFile', 'mySecureFileId');
 process.env['AGENT_VERSION'] = '2.116.0';
 
 const secureFileHelperMock = require('azure-pipelines-tasks-securefiles-common/securefiles-common-mock');
-tr.registerMock('azure-pipelines-tasks-securefiles-common/securefiles-common', secureFileHelperMock);
+const secureFileHelper = require('azure-pipelines-tasks-securefiles-common/securefiles-common');
+tr.registerMock(secureFileHelper, secureFileHelperMock);
 
 // provide answers for task mock
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{

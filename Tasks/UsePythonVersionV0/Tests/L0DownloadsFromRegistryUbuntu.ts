@@ -53,7 +53,8 @@ enum Platform {
     Linux
 }
 
-taskRunner.registerMock('./taskutil', {
+let tu = require('../taskutil');
+taskRunner.registerMock(tu, {
     Platform,
     getPlatform() {
         return Platform.Linux;
@@ -87,11 +88,14 @@ taskRunner.registerMock('typed-rest-client', {
 });
 
 const lsbPath = '/etc/lsb-release';
+
+
+const fsClone2 = Object.assign({}, fs);
 taskRunner.registerMock('fs', {
     ...fs,
     existsSync(filePath) {
         if (filePath !== lsbPath) {
-            throw new Error(`Tried to check the wrong file for existance: ${filePath}`);
+            return fsClone2.existsSync(filePath);
         }
 
         return true;
@@ -99,7 +103,7 @@ taskRunner.registerMock('fs', {
 
     readFileSync(filePath) {
         if (filePath !== lsbPath) {
-            throw new Error(`Tried to read the wrong file: ${filePath}`);
+            return fsClone2.readFileSync(filePath, 'utf-8');
         }
 
         return 'DISTRIB_RELEASE=18.04';

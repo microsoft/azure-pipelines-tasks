@@ -9,9 +9,6 @@ const taskPath = path.join(__dirname, '..', 'maventask.js');
 
 const tmr = new TaskMockRunner(taskPath);
 
-// Common initial setup
-initializeTest(tmr);
-
 // Set Inputs
 const inputs: MavenTaskInputs = {
     mavenVersionSelection: 'Default',
@@ -40,6 +37,9 @@ const mavenBin = path.join(mavenHome, 'bin', 'mvn');
 // Set up environment variables (task-lib does not support mocking getVariable)
 // Env vars in the mock framework must replace '.' with '_'
 delete process.env.M2_HOME; // Remove in case process running this test has it already set
+
+// Common initial setup
+initializeTest(tmr);
 
 // Provide answers for task mock
 const answers: TaskLibAnswers = {
@@ -108,7 +108,8 @@ const fileUtilsMock = {
     }
 };
 
-tmr.registerMock('./fileUtils', fileUtilsMock);
+let fu = require('../utils/fileUtils');
+tmr.registerMock(fu, fileUtilsMock);
 
 const spotbugsPublishMock = {
     PublishSpotbugsReport: function (mavenPOMFile: string, buildOutput: BuildOutput): void {
@@ -116,7 +117,8 @@ const spotbugsPublishMock = {
     }
 };
 
-tmr.registerMock('./publishSpotbugsReport', spotbugsPublishMock);
+let sp = require('../spotbugsTool/publishSpotbugsReport');
+tmr.registerMock(sp, spotbugsPublishMock);
 
 // Run task
 tmr.run();

@@ -12,7 +12,7 @@ describe('FtpUploadV1 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('Input required: serverEndpoint'), 'Should have printed: Input required: serverEndpoint');
+        assert(tr.stdOutContained('loc_mock_LIB_InputRequired serverEndpoint'), 'Should have printed: loc_mock_LIB_InputRequired serverEndpoint');
         assert(tr.failed, 'task should have failed');
 
         done();
@@ -24,7 +24,7 @@ describe('FtpUploadV1 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('Input required: rootFolder'), 'Should have printed: Input required: rootFolder');
+        assert(tr.stdOutContained('loc_mock_LIB_InputRequired rootFolder'), 'Should have printed: loc_mock_LIB_InputRequired rootFolder');
         assert(tr.failed, 'task should have failed');
 
         done();
@@ -36,7 +36,7 @@ describe('FtpUploadV1 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('Input required: filePatterns'), 'Should have printed: Input required: filePatterns');
+        assert(tr.stdOutContained('loc_mock_LIB_InputRequired filePatterns'), 'Should have printed: loc_mock_LIB_InputRequired filePatterns');
         assert(tr.failed, 'task should have failed');
 
         done();
@@ -48,7 +48,7 @@ describe('FtpUploadV1 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('Input required: remotePath'), 'Should have printed: Input required: remotePath');
+        assert(tr.stdOutContained('loc_mock_LIB_InputRequired remotePath'), 'Should have printed: loc_mock_LIB_InputRequired remotePath');
         assert(tr.failed, 'task should have failed');
 
         done();
@@ -60,7 +60,7 @@ describe('FtpUploadV1 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('Input required: clean'), 'Should have printed: Input required: clean');
+        assert(tr.stdOutContained('loc_mock_LIB_InputRequired clean'), 'Should have printed: loc_mock_LIB_InputRequired clean');
         assert(tr.failed, 'task should have failed');
 
         done();
@@ -72,7 +72,7 @@ describe('FtpUploadV1 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('Input required: overwrite'), 'Should have printed: Input required: overwrite');
+        assert(tr.stdOutContained('loc_mock_LIB_InputRequired overwrite'), 'Should have printed: loc_mock_LIB_InputRequired overwrite');
         assert(tr.failed, 'task should have failed');
 
         done();
@@ -84,7 +84,7 @@ describe('FtpUploadV1 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('Input required: preservePaths'), 'Should have printed: Input required: preservePaths');
+        assert(tr.stdOutContained('loc_mock_LIB_InputRequired preservePaths'), 'Should have printed: loc_mock_LIB_InputRequired preservePaths');
         assert(tr.failed, 'task should have failed');
 
         done();
@@ -97,7 +97,7 @@ describe('FtpUploadV1 Suite', function () {
         tr.run();
 
         assert(tr.invokedToolCount === 0, 'should not run anything');
-        assert(tr.stdOutContained('Input required: trustSSL'), 'Should have printed: Input required: trustSSL');
+        assert(tr.stdOutContained('loc_mock_LIB_InputRequired trustSSL'), 'Should have printed: loc_mock_LIB_InputRequired trustSSL');
         assert(tr.failed, 'task should have failed');
 
         done();
@@ -109,7 +109,7 @@ describe('FtpUploadV1 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('loc_mock_FTPNoProtocolSpecified'), 'Should have printed: loc_mock_FTPNoProtocolSpecified');
+        assert(tr.stdOutContained('FTPNoProtocolSpecified'), 'Should have printed: FTPNoProtocolSpecified');
         assert(tr.failed, 'task should have failed');
 
         done();
@@ -121,7 +121,7 @@ describe('FtpUploadV1 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('loc_mock_FTPNoHostSpecified'), 'Should have printed: loc_mock_FTPNoHostSpecified');
+        assert(tr.stdOutContained('FTPNoHostSpecified'), 'Should have printed: FTPNoHostSpecified');
         assert(tr.failed, 'task should have failed');
 
         done();

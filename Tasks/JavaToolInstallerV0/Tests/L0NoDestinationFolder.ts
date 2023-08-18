@@ -12,6 +12,9 @@ tr.setInput("jdkPath", srcPath);
 //tr.setInput('destinationFolder', 'dirName');
 tr.setInput("cleanDestinationFolder", "false");
 
+process.env["AGENT_TEMPDIRECTORY"] = process.cwd();
+
+
 // provide answers for task mock
 const a: mockanswer.TaskLibAnswers = <mockanswer.TaskLibAnswers>{
     checkPath: { },

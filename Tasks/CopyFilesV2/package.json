@@ -10,10 +10,10 @@
   "author": "Microsoft Corporation",
   "license": "MIT",
   "dependencies": {
-    "@types/node": "^16.11.59",
     "@types/mocha": "^5.2.7",
+    "@types/node": "^16.11.59",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-task-lib": "^4.0.0-preview"
+    "azure-pipelines-task-lib": "file:azure-pipelines-task-lib-4.4.0_1.tgz"
   },
   "devDependencies": {
     "typescript": "4.0.2"

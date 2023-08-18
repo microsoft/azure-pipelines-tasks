@@ -137,7 +137,7 @@ describe('GulpV0 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('loc_mock_GulpNotInstalled'), 'Should have printed: loc_mock_GulpNotInstalled');
+        assert(tr.stdOutContained('GulpNotInstalled'), 'Should have printed: GulpNotInstalled');
         assert(tr.failed, 'should have failed');
 
         done();
@@ -149,7 +149,7 @@ describe('GulpV0 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('loc_mock_NpmFailed'), 'Should have printed: loc_mock_NpmFailed');
+        assert(tr.stdOutContained('NpmFailed'), 'Should have printed: NpmFailed');
         assert(tr.invokedToolCount == 2, 'should exit before running Gulp');
         assert(tr.failed, 'should have failed');
 
@@ -163,7 +163,7 @@ describe('GulpV0 Suite', function () {
         tr.run();
 
         assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run gulp');
-        assert(tr.stdOutContained('loc_mock_GulpFailed'), 'Should have printed: loc_mock_GulpFailed');
+        assert(tr.stdOutContained('GulpFailed'), 'Should have printed: GulpFailed');
         assert(tr.invokedToolCount == 1, 'should have run npm and gulp');
         assert(tr.failed, 'should have failed');
 
@@ -177,7 +177,7 @@ describe('GulpV0 Suite', function () {
         tr.run();
 
         assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run gulp');
-        assert(tr.stdOutContained('loc_mock_IstanbulFailed'), 'Should have printed: loc_mock_IstanbulFailed');
+        assert(tr.stdOutContained('IstanbulFailed'), 'Should have printed: IstanbulFailed');
         assert(tr.invokedToolCount == 3, 'should have run npm, gulp and istanbul');
         assert(tr.failed, 'should have failed');
 
@@ -233,7 +233,7 @@ describe('GulpV0 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('loc_mock_IstanbulFaile'), 'Should have printed: loc_mock_IstanbulFaile');
+        assert(tr.stdOutContained('IstanbulFaile'), 'Should have printed: IstanbulFaile');
         assert(tr.invokedToolCount == 3, 'should exit while running istanbul');
         assert(tr.failed, 'should have failed');
 

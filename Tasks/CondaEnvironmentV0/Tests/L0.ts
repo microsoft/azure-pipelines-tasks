@@ -31,7 +31,7 @@ describe('CondaEnvironment L0 Suite', function () {
 
         testRunner.run();
 
-        assert(testRunner.createdErrorIssue('loc_mock_CondaNotFound'));
+        assert(testRunner.createdErrorIssue('CondaNotFound'));
         assert(testRunner.failed, 'task should have failed');
         done();
     });

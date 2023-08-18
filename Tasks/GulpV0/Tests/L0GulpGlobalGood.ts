@@ -63,6 +63,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "getVariable": {
         "System.DefaultWorkingDirectory": "/user/build",
     },
+    "find": {
+        "/user/build": [
+            "/user/build/test-results/TEST-FILES.xml"
+        ]
+    }
 };
 tr.setAnswers(a);
 

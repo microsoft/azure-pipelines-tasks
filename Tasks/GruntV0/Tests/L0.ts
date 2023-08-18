@@ -86,7 +86,7 @@ describe('GruntV0 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('loc_mock_GruntCliNotInstalled'), 'Should have printed: loc_mock_GruntCliNotInstalled');
+        assert(tr.stdOutContained('GruntCliNotInstalled'), 'Should have printed: GruntCliNotInstalled');
         assert(tr.failed, 'task should have failed');
 
         done();
@@ -112,7 +112,7 @@ describe('GruntV0 Suite', function () {
         tr.run();
 
         assert(tr.invokedToolCount == 2, 'should have only run npm');
-        assert(tr.stdOutContained('loc_mock_NpmFailed'), 'Should have printed: loc_mock_NpmFailed');
+        assert(tr.stdOutContained('NpmFailed'), 'Should have printed: NpmFailed');
         assert(tr.failed, 'task should have failed');
 
         done();
@@ -127,7 +127,7 @@ describe('GruntV0 Suite', function () {
         assert(tr.ran('/usr/local/bin/grunt build test --gruntfile gruntfile.js -v'), 'it should have run grunt');
         assert(tr.invokedToolCount == 1, 'should have only run npm and Grunt');
         // success scripts don't necessarily set a result
-        assert(tr.stdOutContained('loc_mock_GruntFailed'), 'Should have printed: loc_mock_GruntFailed');
+        assert(tr.stdOutContained('GruntFailed'), 'Should have printed: GruntFailed');
         assert(tr.failed, 'task should have failed');
 
         done();
@@ -140,7 +140,7 @@ describe('GruntV0 Suite', function () {
         tr.run();
 
         assert(tr.invokedToolCount == 3, 'should have only run npm and Grunt');
-        assert(tr.stdOutContained('loc_mock_IstanbulFailed'), 'Should have printed: loc_mock_IstanbulFailed');
+        assert(tr.stdOutContained('IstanbulFailed'), 'Should have printed: IstanbulFailed');
         assert(tr.failed, 'task should have failed');
 
         done();
@@ -236,7 +236,7 @@ describe('GruntV0 Suite', function () {
 
         assert(tr.failed, 'task should have failed');
         assert(tr.invokedToolCount == 3, 'should exit while running istanbul');
-        assert(tr.stdOutContained('loc_mock_IstanbulFailed'), 'Should have printed: loc_mock_IstanbulFailed');
+        assert(tr.stdOutContained('IstanbulFailed'), 'Should have printed: IstanbulFailed');
         assert(tr.failed, 'task should have failed');
 
         done();

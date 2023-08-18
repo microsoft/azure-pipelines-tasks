@@ -9,7 +9,8 @@
                 "node_modules/azure-pipelines-tasks-java-common/node_modules/azure-pipelines-task-lib",
                 "node_modules/azure-pipelines-tasks-java-common/node_modules/azure-pipeline-tool-lib",
                 "node_modules/azure-pipelines-tasks-packaging-common/node_modules/azure-pipelines-task-lib",
-                "node_modules/azure-pipelines-tasks-packaging-common/node_modules/azure-pipeline-tool-lib"
+                "node_modules/azure-pipelines-tasks-packaging-common/node_modules/azure-pipeline-tool-lib",
+                "node_modules/azure-pipelines-tool-lib/node_modules/azure-pipeline-tool-lib"
             ],
             "options": "-Rf"
         }

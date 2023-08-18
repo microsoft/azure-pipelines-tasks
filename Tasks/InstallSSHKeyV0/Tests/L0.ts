@@ -48,7 +48,7 @@ describe('InstallSSHKey Suite', function () {
         testRunner.run();
 
         assert(testRunner.failed, 'task should have failed');
-        assert(testRunner.stdOutContained('loc_mock_SSHKeyAlreadyInstalled'), 'expected error: SSH key already installed');
+        assert(testRunner.stdOutContained('SSHKeyAlreadyInstalled'), 'expected error: SSH key already installed');
 
         done();
     });
@@ -62,7 +62,7 @@ describe('InstallSSHKey Suite', function () {
         testRunner.run();
 
         assert(testRunner.failed, 'task should have failed');
-        assert(testRunner.stdOutContained('loc_mock_SSHKeyAlreadyInstalled'), 'expected error: SSH key already installed');
+        assert(testRunner.stdOutContained('SSHKeyAlreadyInstalled'), 'expected error: SSH key already installed');
 
         done();
     });
@@ -76,7 +76,7 @@ describe('InstallSSHKey Suite', function () {
         testRunner.run();
 
         assert(testRunner.failed, 'task should have failed');
-        assert(testRunner.stdOutContained('loc_mock_SSHPublicKeyMalformed'), 'expected error: SSH key malformed');
+        assert(testRunner.stdOutContained('SSHPublicKeyMalformed'), 'expected error: SSH key malformed');
 
         done();
     });

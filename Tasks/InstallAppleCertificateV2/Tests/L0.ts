@@ -124,7 +124,7 @@ describe('InstallAppleCertificate Suite', function () {
 
         assert(tr.failed, 'task should have failed');
         assert(tr.errorIssues.length > 0, 'should have written to stderr');
-        assert(tr.errorIssues[0].indexOf('Error: loc_mock_CertExpiredError') >= 0, 'error message should match expected');
+        assert(tr.errorIssues[0].indexOf('Error: CertExpiredError') >= 0, 'error message should match expected');
 
         done();
     });
@@ -137,7 +137,7 @@ describe('InstallAppleCertificate Suite', function () {
 
         assert(tr.failed, 'task should have failed');
         assert(tr.errorIssues.length > 0, 'should have written to stderr');
-        assert(tr.errorIssues[0].indexOf('Error: loc_mock_InstallRequiresMac') >= 0, 'error message should match expected');
+        assert(tr.errorIssues[0].indexOf('Error: InstallRequiresMac') >= 0, 'error message should match expected');
 
         done();
     });

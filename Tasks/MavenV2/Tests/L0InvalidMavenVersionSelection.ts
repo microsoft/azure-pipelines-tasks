@@ -9,9 +9,6 @@ const taskPath = path.join(__dirname, "..", "maventask.js");
 
 const taskRunner = new TaskMockRunner(taskPath);
 
-// Common initial setup
-initializeTest(taskRunner);
-
 // Set Inputs
 const inputs: MavenTaskInputs = {
     mavenVersionSelection: "garbage",
@@ -29,6 +26,9 @@ setInputs(taskRunner, inputs);
 // Set up environment variables (task-lib does not support mocking getVariable)
 // Env vars in the mock framework must replace '.' with '_'
 delete process.env['M2_HOME'] // Remove in case process running this test has it already set
+
+// Common initial setup
+initializeTest(taskRunner);
 
 // Provide answers for task mock
 const answers: TaskLibAnswers = {

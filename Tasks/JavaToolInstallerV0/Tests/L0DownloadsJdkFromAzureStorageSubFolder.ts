@@ -20,6 +20,7 @@ tr.setInput("cleanDestinationDirectory", "true");
 
 process.env['AGENT_TOOLSDIRECTORY'] = '/tool';
 process.env['AGENT_VERSION'] = '2.194.0';
+process.env["AGENT_TEMPDIRECTORY"] = process.cwd();
 
 process.env['ENDPOINT_URL_ID1'] = 'http://url';
 process.env['ENDPOINT_AUTH_PARAMETER_connection1_username'] = 'dummyusername';
@@ -79,7 +80,8 @@ tr.registerMock("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common", {
     }
 });
 
-tr.registerMock('./AzureStorageArtifacts/AzureStorageArtifactDownloader',{
+let atad = require('../AzureStorageArtifacts/AzureStorageArtifactDownloader');
+tr.registerMock(atad, {
     AzureStorageArtifactDownloader: function(A,B,C) {
         return {
             downloadArtifacts: function(A,B) {

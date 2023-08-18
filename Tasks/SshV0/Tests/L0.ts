@@ -101,7 +101,7 @@ describe('SshV0 Suite', function() {
 
         runValidations(() => {
             assert(tr.invokedToolCount == 0, 'should not have run any tools');
-            assert(tr.stdout.indexOf('loc_mock_UseDefaultPort') >= 0, 'default port 22 was not used');
+            assert(tr.stdout.indexOf('UseDefaultPort') >= 0, 'default port 22 was not used');
         }, tr, done);
     });
 
@@ -119,7 +119,7 @@ describe('SshV0 Suite', function() {
         runValidations(() => {
             assert(tr.invokedToolCount == 0, 'should not have run any tools');
             assert(tr.failed, 'task should have failed');
-            assert(tr.stdout.indexOf('loc_mock_ConnectionFailed Error: Cannot parse privateKey: Malformed OpenSSH private key. Bad passphrase?') >= 0, 'wrong error message: "' + tr.stdout + '"');
+            assert(tr.stdout.indexOf('ConnectionFailed Error: Cannot parse privateKey: Malformed OpenSSH private key. Bad passphrase?') >= 0, 'wrong error message: "' + tr.stdout + '"');
         }, tr, done);
     });
 

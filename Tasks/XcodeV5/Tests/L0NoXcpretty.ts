@@ -24,7 +24,8 @@ tr.setInput('xcodeDeveloperDir', '');
 tr.setInput('useXcpretty', 'false');
 tr.setInput('publishJUnitResults', 'true');
 
-tr.registerMock('./xcodeutils', {
+let xcu = require('../xcodeutils');
+tr.registerMock(xcu, {
     getUniqueLogFileName: function (logPrefix: string) {
         return '/build/temp' + logPrefix + '.log';
     },

@@ -98,17 +98,17 @@ describe('UsePythonVersion L0 Suite', function () {
 
         testRunner.run();
 
-        assert(testRunner.createdErrorIssue('loc_mock_DownloadFailed Error: loc_mock_DownloadNotFound 3.11.x x64'));
+        assert(testRunner.createdErrorIssue('DownloadFailed Error: DownloadNotFound 3.11.x x64'));
 
         const errorMessage = [
-            'loc_mock_VersionNotFound 3.11.x x64',
-            'loc_mock_ListAvailableVersions $(Agent.ToolsDirectory)',
+            'VersionNotFound 3.11.x x64',
+            'ListAvailableVersions $(Agent.ToolsDirectory)',
             '2.6.0 (x86)',
             '2.7.13 (x86)',
             '2.6.0 (x64)',
             '2.7.13 (x64)',
-            'loc_mock_ToolNotFoundMicrosoftHosted Python https://aka.ms/hosted-agent-software',
-            'loc_mock_ToolNotFoundSelfHosted Python https://go.microsoft.com/fwlink/?linkid=871498',
+            'ToolNotFoundMicrosoftHosted Python https://aka.ms/hosted-agent-software',
+            'ToolNotFoundSelfHosted Python https://go.microsoft.com/fwlink/?linkid=871498',
         ].join('\r\n');
 
         assert(testRunner.createdErrorIssue(errorMessage));

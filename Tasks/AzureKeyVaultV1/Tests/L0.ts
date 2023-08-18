@@ -84,7 +84,7 @@ describe('Azure Key Vault', function () {
         tr.run();
         try {
             assert(tr.failed, "Should have failed");
-            assert(tr.stdout.indexOf("Error: Input required: KeyVaultName") > 0, "Error: Input required: KeyVaultName");
+            assert(tr.stdout.indexOf("Error: loc_mock_LIB_InputRequired KeyVaultName") > 0, "Error: Input required: KeyVaultName");
 
             done();
         }
@@ -101,7 +101,7 @@ describe('Azure Key Vault', function () {
         tr.run();
         try {
             assert(tr.failed, "Should have failed");
-            assert(tr.stdout.indexOf("Error: Input required: SecretsFilter") > 0, "Error: Input required: SecretsFilter");
+            assert(tr.stdout.indexOf("Error: loc_mock_LIB_InputRequired SecretsFilter") > 0, "Error: Input required: SecretsFilter");
 
             done();
         }

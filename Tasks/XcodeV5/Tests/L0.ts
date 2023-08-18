@@ -261,7 +261,7 @@ describe('Xcode L0 Suite', function () {
 
         assert(tr.invokedToolCount === 3, 'should have run xcodebuild for version, build, and archive.');
         assert(tr.failed, 'task should have failed');
-        assert(tr.stdout.indexOf('##vso[task.issue type=error;]Error: loc_mock_ExportOptionsPlistInvalidFilePath') >= 0,
+        assert(tr.stdout.indexOf('##vso[task.issue type=error;]Error: ExportOptionsPlistInvalidFilePath') >= 0,
             'Build should show error indicating invalid Plist file path.');
 
         done();
@@ -665,7 +665,7 @@ describe('Xcode L0 Suite', function () {
         tr.run();
 
         assert(tr.succeeded, 'post xcode task should have succeeded');
-        assert(tr.stdout.indexOf('##vso[task.issue type=warning;]loc_mock_NoTestResultsFound /home/build/**/build/reports/junit.xml') > 0,
+        assert(tr.stdout.indexOf('##vso[task.issue type=warning;]NoTestResultsFound /home/build/**/build/reports/junit.xml') > 0,
             'test result should not have been published when they are empty');
         done();
     });
@@ -676,7 +676,7 @@ describe('Xcode L0 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdout.indexOf('##vso[task.issue type=warning;]loc_mock_XcprettyNotInstalled') > 0, 'warning message should indicate that xcpretty has to be installed.')
+        assert(tr.stdout.indexOf('##vso[task.issue type=warning;]XcprettyNotInstalled') > 0, 'warning message should indicate that xcpretty has to be installed.')
         assert(tr.succeeded, 'post xcode task should have succeeded with warnings');
         done();
     });

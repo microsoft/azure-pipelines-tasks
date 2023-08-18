@@ -97,7 +97,7 @@ describe('FtpUploadV2 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('loc_mock_FTPNoProtocolSpecified'), 'Should have printed: loc_mock_FTPNoProtocolSpecified');
+        assert(tr.stdOutContained('FTPNoProtocolSpecified'), 'Should have printed: FTPNoProtocolSpecified');
         assert(tr.failed, 'task should have failed');
 
         done();
@@ -109,7 +109,7 @@ describe('FtpUploadV2 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('loc_mock_FTPNoHostSpecified'), 'Should have printed: loc_mock_FTPNoHostSpecified');
+        assert(tr.stdOutContained('FTPNoHostSpecified'), 'Should have printed: FTPNoHostSpecified');
         assert(tr.failed, 'task should have failed');
 
         done();
@@ -121,7 +121,7 @@ describe('FtpUploadV2 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('loc_mock_NoFilesFound'), 'Should have printed: loc_mock_NoFilesFound');
+        assert(tr.stdOutContained('NoFilesFound'), 'Should have printed: NoFilesFound');
         assert(tr.failed, 'task should have failed');
 
         done();

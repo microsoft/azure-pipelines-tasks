@@ -76,7 +76,7 @@
     "Node16": {
       "target": "cmdline.js",
       "argumentFormat": ""
-  }
+    }
   },
   "messages": {
     "GeneratingScript": "ms-resource:loc.messages.GeneratingScript",

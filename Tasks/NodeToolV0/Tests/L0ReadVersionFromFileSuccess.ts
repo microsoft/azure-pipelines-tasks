@@ -34,11 +34,12 @@ tlClone.assertAgent = function(variable: string) {
 tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
 //create fs mock
+const fsClone = Object.assign({}, fs);
 tmr.registerMock('fs', {
     ...fs,
     readFileSync: function (path, options) {
         if (path != 'src/.nvmrc') {
-            return fs.readFileSync(path, options);
+            return fsClone.readFileSync(path, options);
         }
 
         return '11.3.0';

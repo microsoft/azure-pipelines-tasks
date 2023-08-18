@@ -69,8 +69,8 @@ fsClone.writeFileSync = function (filePath, contents, options) {
 taskRunner.registerMock('fs', fsClone);
 
 // Mock uuidv4
-taskRunner.registerMock('uuid/v4', function () {
+taskRunner.registerMock('uuid', {v4: function () {
     return 'fileName';
-});
+}});
 
 taskRunner.run();

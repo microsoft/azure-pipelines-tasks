@@ -10,9 +10,6 @@ const taskPath = path.join(__dirname, '..', 'maventask.js');
 
 const taskRunner = new TaskMockRunner(taskPath);
 
-// Common initial setup
-initializeTest(taskRunner);
-
 // Set Inputs
 const inputs: MavenTaskInputs = {
     mavenVersionSelection: 'Default',
@@ -36,6 +33,9 @@ setInputs(taskRunner, inputs);
 // Set up environment variables (task-lib does not support mocking getVariable)
 // Env vars in the mock framework must replace '.' with '_'
 delete process.env.M2_HOME; // Remove in case process running this test has it already set
+
+// Common initial setup
+initializeTest(taskRunner);
 
 // Provide answers for task mock
 const answers: TaskLibAnswers = {
@@ -103,6 +103,7 @@ taskRunner.registerMock('azure-pipelines-tasks-codecoverage-tools/codecoveragefa
 const originalPomXmlContents = 'original pom.xml contents';
 
 const fsClone = Object.assign({}, fs);
+const fsClone2 = Object.assign({}, fs);
 Object.assign(fsClone, {
     readFileSync(filename: string, encoding: BufferEncoding): string {
         if (filename === 'pom.xml' && encoding === 'utf8') {
@@ -110,7 +111,7 @@ Object.assign(fsClone, {
             return originalPomXmlContents;
         }
 
-        return fs.readFileSync(filename, encoding);
+        return fsClone2.readFileSync(filename, encoding);
     },
     writeFileSync(filename: string, data: any): void {
         if (filename === 'pom.xml') {
@@ -122,7 +123,7 @@ Object.assign(fsClone, {
             throw new Error(`Trying to write unknown data into pom.xml; data=${data}`);
         }
 
-        fs.writeFileSync(filename, data);
+        fsClone2.writeFileSync(filename, data);
     }
 });
 taskRunner.registerMock('fs', fsClone);

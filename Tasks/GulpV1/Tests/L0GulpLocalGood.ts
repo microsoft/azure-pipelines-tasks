@@ -50,6 +50,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "match": {
         "**/TEST-*.xml": ["/user/build/fun/test-123.xml"],
     },
+    "find": {
+        "/user/build": [
+            "/user/build/test-results/TEST-FILES.xml"
+        ]
+    }
 };
 tr.setAnswers(a);
 

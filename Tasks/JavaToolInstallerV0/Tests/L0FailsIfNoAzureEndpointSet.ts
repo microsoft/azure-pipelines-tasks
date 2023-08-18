@@ -22,4 +22,6 @@ process.env['ENDPOINT_AUTH_PARAMETER_connection1_username'] = 'dummyusername';
 process.env['ENDPOINT_AUTH_PARAMETER_connection1_password'] = 'dummypassword';
 process.env['ENDPOINT_DATA_ID1_acceptUntrustedCerts'] = 'true';
 
+process.env["AGENT_TEMPDIRECTORY"] = process.cwd();
+
 tr.run();

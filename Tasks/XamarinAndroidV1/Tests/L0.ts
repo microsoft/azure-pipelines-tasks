@@ -70,7 +70,7 @@ describe("XamarinAndroid L0 Suite", function () {
         testRunner.run();
 
         assert(testRunner.failed, "task should have failed");
-        assert(testRunner.createdErrorIssue("loc_mock_NoMatchingProjects **/home*.csproj"), "task did not throw expected error, errors thrown: " + testRunner.errorIssues);
+        assert(testRunner.createdErrorIssue("NoMatchingProjects **/home*.csproj"), "task did not throw expected error, errors thrown: " + testRunner.errorIssues);
         assert(testRunner.invokedToolCount == 0, "task should not have run XamarinAndroid");
 
         done();
