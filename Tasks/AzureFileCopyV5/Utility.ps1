@@ -4,6 +4,8 @@ $ErrorActionPreference = 'Stop'
 $azureStackEnvironment = "AzureStack"
 $jobId = $env:SYSTEM_JOBID;
 
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+
 function Get-AzureCmdletsVersion
 {
     return (Get-Module AzureRM -ListAvailable).Version
@@ -240,13 +242,16 @@ function Upload-FilesToAzureContainer
 
         }
 
-        $useSanitizer = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
-        Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $useSanitizer"
+        $useSanitizerCall = Get-SanitizerCallStatus
+        $useSanitizerActivate = Get-SanitizerActivateStatus
+        
+        if ($useSanitizerCall) {
+            $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV5"
+        }
 
-        if ($useSanitizer) {
-            $arguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV5"
-            Write-Output "##[command] & azcopy copy `"$sourcePath`" `"$containerURL`"  $arguments"
-            & azcopy copy $sourcePath $containerURL$containerSasToken $arguments
+        if ($useSanitizerActivate) {
+            Write-Output "##[command] & azcopy copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
+            & azcopy copy $sourcePath $containerURL$containerSasToken $sanitizedArguments
         } else {
             Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
             $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"

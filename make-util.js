@@ -16,7 +16,7 @@ var downloadPath = path.join(__dirname, '_download');
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['4.0.2', '4.0.8'];
+var allowedTypescriptVersions = ['4.0.2', '5.1.6'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -329,8 +329,33 @@ var ensureTool = function (name, versionArgs, validate) {
 }
 exports.ensureTool = ensureTool;
 
+var ensureNvmInstalled = function () {
+    var toolPath = shell.which('nvm');
+    if (!toolPath) {
+        console.log(
+            "==========================================\n" + 
+            "IMPORTANT NOTE: nvm is not installed.  Please use the following command to install nvm latest: \n" + 
+            "On Linux: \n" +
+            "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \n" +
+            "export NVM_DIR=\"$HOME/.nvm\"\n" +
+            "[ -s \"$NVM_DIR/nvm.sh\" ] && \. \"$NVM_DIR/nvm.sh\"  # This loads nvm\n" +
+            "[ -s \"$NVM_DIR/bash_completion\" ] && \. \"$NVM_DIR/bash_completion\"  # This loads nvm bash_completion\n" + 
+            "On Windows: \n" +
+            "winget search nvm-windows \n" + 
+            "Winget install nvm-windows\n" + 
+            "==========================================\n"
+        );
+    } else {
+        console.log('nvm tool: ' + toolPath + '');
+    }
+}
+exports.ensureNvmInstalled = ensureNvmInstalled;
+
 var installNode = function (nodeVersion) {
     switch (nodeVersion || '') {
+        case '20':
+            nodeVersion = 'v20.3.1';
+            break;
         case '16':
             nodeVersion = 'v16.17.1';
             break;
@@ -348,7 +373,7 @@ var installNode = function (nodeVersion) {
             nodeVersion = 'v5.10.1';
             break;
         default:
-            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14, 16`);
+            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14, 16, 20`);
     }
 
     if (nodeVersion === run('node -v')) {

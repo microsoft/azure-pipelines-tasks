@@ -182,11 +182,11 @@ try {
 
     Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArgumentsForBlobCopy
 
+    $useSanitizerActivate = Get-SanitizerActivateStatus
 
-    $useSanitizer = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
-    Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state (for sas token): $useSanitizer"
     $containerSasToken = ""
-    if ($useSanitizer) {
+    if ($useSanitizerActivate) {
+        Write-Verbose "Feature flag sanitizer is active (for sas token)"
         $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInMinutes $sasTokenTimeOutInMinutes
     }
     
