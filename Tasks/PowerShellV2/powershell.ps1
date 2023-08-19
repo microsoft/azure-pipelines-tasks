@@ -2,6 +2,7 @@
 param()
 
 . $PSScriptRoot\helpers.ps1
+. $PSScriptRoot\errors.ps1
 
 function Get-ActionPreference {
     param (
@@ -95,7 +96,20 @@ try {
     $contents += "`$ErrorView = 'NormalView'"
     if ("$input_targetType".ToUpperInvariant() -eq 'FILEPATH') {
 
-        Test-FileArgs $input_arguments
+        try {
+            Test-FileArgs $input_arguments
+        }
+        catch [ArgsSanitizingException] {
+
+            throw
+        }
+        catch {
+            $telemetry = @{
+                'UnexpectedError' = $_.Exception.Message
+                'ErrorStackTrace' = $_.Exception.StackTrace
+            }
+            Publish-Telemetry $telemetry
+        }
 
         $contents += ". '$("$input_filePath".Replace("'", "''"))' $input_arguments".Trim()
         Write-Host (Get-VstsLocString -Key 'PS_FormattedCommand' -ArgumentList ($contents[-1]))

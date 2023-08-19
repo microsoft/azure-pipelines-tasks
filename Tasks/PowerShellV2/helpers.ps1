@@ -1,3 +1,5 @@
+. $PSScriptRoot\errors.ps1
+
 function Publish-Telemetry($Telemetry) {
     Assert-VstsAgent -Minimum '2.115.0'
     $area = 'TaskHub'
@@ -200,7 +202,7 @@ function Test-FileArgs([string]$inputArguments) {
             if ($sanitizedArgs -ne $expandedArgs) {
                 $message = Get-VstsLocString -Key 'ScriptArgsSanitized';
                 if ($featureFlags.activate) {
-                    throw $message;
+                    throw [ArgsSanitizingException] $message;
                 }
                 if ($featureFlags.audit) {
                     Write-Warning $message;

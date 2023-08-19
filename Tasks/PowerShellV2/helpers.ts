@@ -1,7 +1,7 @@
 import tl = require('azure-pipelines-task-lib/task');
 import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
 import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry"
-import { ArgsSanitizingError } from './utils/errors';
+import { ArgsSanitizingError } from './errors';
 
 type ProcessEnvPowerShellTelemetry = {
     foundPrefixes: number,

@@ -4,7 +4,7 @@ import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
 import { validateFileArgs } from './helpers';
-import { ArgsSanitizingError } from './utils/errors';
+import { ArgsSanitizingError } from './errors';
 import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
 var uuidV4 = require('uuid/v4');
 
