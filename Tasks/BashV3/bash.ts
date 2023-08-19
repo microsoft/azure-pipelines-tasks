@@ -125,7 +125,12 @@ async function run() {
                     throw error;
                 }
 
-                emitTelemetry('TaskHub', 'BashV3', { UnexpectedError: error.stack ?? error.message ?? JSON.stringify(error) ?? 'unknown' });
+                emitTelemetry('TaskHub', 'BashV3',
+                    {
+                        UnexpectedError: error?.message ?? JSON.stringify(error) ?? null,
+                        ErrorStackTrace: error?.stack ?? null
+                    }
+                );
             }
 
             // Choose behavior:
