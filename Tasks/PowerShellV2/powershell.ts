@@ -87,7 +87,12 @@ async function run() {
                     throw error;
                 }
 
-                emitTelemetry('TaskHub', 'PowerShellV2', { UnexpectedError: error.stack ?? error.message ?? JSON.stringify(error) ?? 'unknown' });
+                emitTelemetry('TaskHub', 'PowerShellV2',
+                    {
+                        UnexpectedError: error.message ?? JSON.stringify(error) ?? null,
+                        ErrorStackTrace: error.stack ?? null
+                    }
+                );
             }
 
             script = `. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim();
