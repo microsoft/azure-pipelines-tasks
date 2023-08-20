@@ -60,62 +60,49 @@ function Sanitize-Arguments([string]$InputArgs) {
 }
 
 function Expand-EnvVariables([string]$ArgsLine) {
-    $envPrefix = '$env:'
+    $basicEnvPrefix = '$env:'
+    $bracedEnvPrefix = '${env:'
     $quote = "'"
     $escapingSymbol = '`'
-    $expansionPrefix = '$('
-    $expansionSuffix = ')'
 
     $telemetry = @{
-        foundPrefixes               = 0
-        someVariablesInsideQuotes   = 0
-        variablesExpanded           = 0
-        escapedVariables            = 0
-        escapedEscapingSymbols      = 0
-        variableStartsFromBacktick  = 0
-        variablesWithBacktickInside = 0
-        envQuottedBlocks            = 0
+        foundPrefixes                = 0
+        someVariablesInsideQuotes    = 0
+        variablesExpanded            = 0
+        escapedVariables             = 0
+        escapedEscapingSymbols       = 0
+        variableStartsFromBacktick   = 0
+        variablesWithBacktickInside  = 0
+        envQuottedBlocks             = 0
+        braceSyntaxEntries           = 0
+        bracedVariables              = 0
+        notClosedBraceSyntaxPosition = 0
         # blockers
-        bracedEnvSyntax             = 0
-        expansionSyntax             = 0
-        unmatchedExpansionSyntax    = 0
+        bracedEnvSyntax              = 0
+        expansionSyntax              = 0
+        unmatchedExpansionSyntax     = 0
     }
+
     $result = $ArgsLine
     $startIndex = 0
 
     while ($true) {
-        $quoteIndex = $result.IndexOf($quote, $startIndex)
-        if ($quoteIndex -ge 0) {
-            $nextQuoteIndex = $result.IndexOf($quote, $quoteIndex + 1)
-            if ($nextQuoteIndex -lt 0) {
-                break
-            }
-
-            $startIndex = $nextQuoteIndex + $quote.Length
-            $telemetry.envQuottedBlocks++
-            continue
+        $loweredResult = $result.ToLower()
+        $basicPrefixIndex = $loweredResult.IndexOf($basicEnvPrefix, $startIndex)
+        $bracedPrefixIndex = $loweredResult.IndexOf($bracedEnvPrefix, $startIndex)
+        $foundPrefixes = @($basicPrefixIndex, $bracedPrefixIndex) | Where-Object { $_ -ge 0 }
+        if ($foundPrefixes.Count -eq 0) {
+            break;
         }
 
-        $expansionPrefixIndex = $result.IndexOf($expansionPrefix, $startIndex)
-        if ($expansionPrefixIndex -ge 0) {
-            $expansionSuffixIndex = $result.IndexOf($expansionSuffix, $startIndex)
-            if ($expansionSuffixIndex -lt 0) {
-                $telemetry.unmatchedExpansionSyntax++;
-                break;
-            }
+        $prefixIndex = $foundPrefixes | Measure-Object -Minimum | Select-Object -ExpandProperty Minimum
 
-            $startIndex = $expansionSuffixIndex + $expansionSuffix.Length
-            $telemetry.expansionSyntax++
-            continue
+        [bool]$isBraceSyntax = $prefixIndex -eq $bracedPrefixIndex
+        if ($isBraceSyntax) {
+            $telemetry.braceSyntaxEntries++
         }
 
-        $prefixIndex = $result.ToLower().IndexOf($envPrefix, $startIndex)
         if ($prefixIndex -lt 0) {
-            $prefixIndex = $result.ToLower().IndexOf('${env:', $startIndex)
-            if ($prefixIndex -lt 0) {
-                break;
-            }
-            $telemetry.bracedEnvSyntax++
             break;
         }
 
@@ -134,13 +121,45 @@ function Expand-EnvVariables([string]$ArgsLine) {
             $telemetry.escapedEscapingSymbols++
         }
 
+        $quoteIndex = $result.IndexOf($quote, $startIndex)
+        if ($quoteIndex -ge 0 -and $prefixIndex -gt $quoteIndex) {
+            $nextQuoteIndex = $result.IndexOf($quote, $quoteIndex + 1)
+            if ($nextQuoteIndex -lt 0) {
+                break
+            }
+
+            $startIndex = $nextQuoteIndex + 1
+
+            continue
+        }
+
         $envName = ''
         $envEndIndex = 0
 
-        $envStartIndex = $prefixIndex + $envPrefix.Length
+        $envStartIndex = $prefixIndex;
+        if ($isBraceSyntax) {
+            $envStartIndex += $bracedEnvPrefix.Length
+        }
+        else {
+            $envStartIndex += $basicEnvPrefix.Length
+        }
 
-        $envName = $result.Substring($envStartIndex).Split(' ', '"', "'", ';', '$')[0]
-        $envEndIndex = $envStartIndex + $envName.Length
+        if ($isBraceSyntax) {
+            $envEndIndex = Find-EnclosingBraceIndex $result $prefixIndex
+            if ($envEndIndex -eq 0) {
+                $telemetry.notClosedBraceSyntaxPosition = $prefixIndex + 1 # +{
+
+                break
+            }
+
+            $envName = $result.Substring($envStartIndex, $envEndIndex - $envStartIndex)
+
+            $telemetry.bracedVariables++
+        }
+        else {
+            $envName = $result.Substring($envStartIndex).Split(' ', '"', "'", ';', '$')[0]
+            $envEndIndex = $envStartIndex + $envName.Length
+        }
 
         if ($envName.StartsWith($escapingSymbol)) {
             $sanitizedEnvName = '$env:' + $envName.Substring(1)
@@ -160,10 +179,15 @@ function Expand-EnvVariables([string]$ArgsLine) {
             $telemetry.variablesWithBacktickInside++
         }
 
-        $envValue = [Environment]::GetEnvironmentVariable($envName, [System.EnvironmentVariableTarget]::Process)
+        $envValue = [Environment]::GetEnvironmentVariable($envName, 'Process')
         if (!$envValue) {
             $envValue = ''
         }
+
+        if ($isBraceSyntax) {
+            $envEndIndex++
+        }
+
         $tail = $result.Substring($envEndIndex)
 
         $result = $head + $envValue + $tail
@@ -175,6 +199,15 @@ function Expand-EnvVariables([string]$ArgsLine) {
     }
 
     return $($result, $telemetry)
+}
+
+function Find-EnclosingBraceIndex($tail, $targetIndex) {
+    for ($i = 0; $i -lt $tail.Length; $i++) {
+        if ($tail[$i] -eq "}" -and $i -gt $targetIndex) {
+            return $i
+        }
+    }
+    return 0
 }
 
 function Test-FileArgs([string]$inputArguments) {

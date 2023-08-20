@@ -100,7 +100,6 @@ try {
             Test-FileArgs $input_arguments
         }
         catch [ArgsSanitizingException] {
-
             throw
         }
         catch {
