@@ -186,5 +186,9 @@
     "PackageDeploymentFailed": "ms-resource:loc.messages.PackageDeploymentFailed",
     "Updatemachinetoenablesecuretlsprotocol": "ms-resource:loc.messages.Updatemachinetoenablesecuretlsprotocol",
     "RetryToDeploy": "ms-resource:loc.messages.RetryToDeploy"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.227.2",
+    "Node16-225": "0.227.1"
   }
 }
