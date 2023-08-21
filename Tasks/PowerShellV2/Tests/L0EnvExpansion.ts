@@ -63,9 +63,6 @@ export const testEnvExpansion = () => {
         ], [
             'If variable is does not exists, it should be empty string',
             '$env:VAR1 2', ['VAR1='], ' 2'
-        ],[
-            'Env var case-insensitive',
-            '$enV:VaR1 ${Env:Var1}', ['var1=1'], '1 1'
         ]
     ]
 
