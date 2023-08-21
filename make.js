@@ -962,10 +962,9 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
 
     var zip = new admzip();
     zip.addLocalFolder(sprintlyZipContentsPath);
-	  zip.writeZip(sprintlyZipPath);
+    zip.writeZip(sprintlyZipPath);
 
     console.log('Creating sprintly zip file from folder complete.');
-
     console.log('\n# Cleaning up folders');
     console.log(`Deleting temporary workspace directory ${tempWorkspaceDirectory}`);
     rm('-Rf', tempWorkspaceDirectory);
@@ -988,6 +987,13 @@ CLI.gentask = function() {
     }
 
     const newMakeOptions = util.generateTasks(baseConfigToolPath, taskList, configsString, makeOptions);
+    taskList.forEach(function (taskName) {
+        const taskPath = path.join(genTaskPath, taskName + "_" + configsString);
+        if (fs.existsSync(taskPath)) {
+            console.log(`Running \"npm update\" command in ${taskPath}`);
+            run(`npm update --prefix ${taskPath}`);
+        }
+    });
     fs.writeFileSync(makeOptionsPath, JSON.stringify(newMakeOptions, null, 4));
 }
 
