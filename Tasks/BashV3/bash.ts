@@ -2,7 +2,7 @@ import fs = require('fs');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
-var uuidV4 = require('uuid/v4');
+var uuid = require('uuid');
 import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
 import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry";
 
@@ -171,7 +171,7 @@ async function run() {
         tl.assertAgent('2.115.0');
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
-        let fileName = uuidV4() + '.sh';
+        let fileName = uuid.v4() + '.sh';
         let filePath = path.join(tempDirectory, fileName);
 
         fs.writeFileSync(
