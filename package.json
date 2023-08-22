@@ -43,7 +43,7 @@
     "q": "1.4.1",
     "semver": "4.3.3",
     "shelljs": "^0.8.5",
-    "sync-request": "6.1.0",
+    "sync-request": "5.0.0",
     "typed-rest-client": "^1.8.9",
     "typescript": "4.0.2",
     "validator": "^13.7.0"

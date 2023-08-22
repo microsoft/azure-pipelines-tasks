@@ -191,7 +191,7 @@ CLI.build = function(/** @type {{ task: string }} */ argv)
     CLI.serverBuild(argv);
 }
 
-CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
+CLI.serverBuild = function(/** @type {{ task: string }} */ argv) {
     ensureBuildTasksAndRemoveTestPath();
     ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('npm', '--version', function (output) {
@@ -219,13 +219,13 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     if (allTasksNode20.length > 0) {
         util.installNode('20');
         ensureTool('node', '--version', `v${node20Version}`);
-        allTasksNode20.forEach(taskName => buildTask(taskName, allTasksNode20.length, 20));
+        allTasksNode20.forEach(taskName => buildTaskWrapped(taskName, allTasksNode20.length, 20));
 
     } 
     if (allTasksDefault.length > 0) {
         util.installNode('10');
         ensureTool('node', '--version', `v${node10Version}`);
-        allTasksDefault.forEach(taskName => buildTask(taskName, allTasksDefault.length, 10));
+        allTasksDefault.forEach(taskName => buildTaskWrapped(taskName, allTasksDefault.length, 10));
     }
 
     // Remove Commons from _generated folder as it is not required
