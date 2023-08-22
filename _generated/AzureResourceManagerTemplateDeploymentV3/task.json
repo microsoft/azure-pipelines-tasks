@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 226,
+    "Minor": 227,
     "Patch": 1
   },
   "demands": [],
@@ -330,7 +330,7 @@
     "ErrorInSettingUpSubscription": "Error in setting up subscription: %s"
   },
   "_buildConfigMapping": {
-    "Default": "3.226.1",
-    "Node16-225": "3.226.0"
+    "Default": "3.227.1",
+    "Node16-225": "3.227.0"
   }
 }
