@@ -17,7 +17,7 @@
     "version": {
         "Major": 3,
         "Minor": 225,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
     "demands": [],
@@ -177,6 +177,16 @@
             "required": false,
             "groupName": "codeCoverage",
             "helpMarkDown": "Set this to 'true' if gradle version is >= 5.x.'True' by default.",
+            "visibleRule": "codeCoverageTool = JaCoCo"
+        },
+        {
+            "name": "useJacocoGradleTemplateV2",
+            "type": "boolean",
+            "label": "Use JacocoGradleTemplateV2",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Set useJacocoGradleTemplateV2",
             "visibleRule": "codeCoverageTool = JaCoCo"
         },
         {

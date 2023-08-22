@@ -17,7 +17,7 @@
   "version": {
     "Major": 3,
     "Minor": 225,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [],
@@ -177,6 +177,16 @@
       "required": false,
       "groupName": "codeCoverage",
       "helpMarkDown": "ms-resource:loc.input.help.gradle5xOrHigher",
+      "visibleRule": "codeCoverageTool = JaCoCo"
+    },
+    {
+      "name": "useJacocoGradleTemplateV2",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useJacocoGradleTemplateV2",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.useJacocoGradleTemplateV2",
       "visibleRule": "codeCoverageTool = JaCoCo"
     },
     {

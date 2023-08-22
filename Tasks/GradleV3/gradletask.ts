@@ -34,6 +34,7 @@ async function run() {
         const testResultsFiles: string = tl.getInput('testResultsFiles', true);
         const inputTasks: string[] = tl.getDelimitedInput('tasks', ' ', true);
         const gradle5xOrHigher: boolean = tl.getBoolInput('gradle5xOrHigher');
+        const useJacocoGradleTemplateV2: boolean = tl.getBoolInput('useJacocoGradleTemplateV2');
 
         const isCodeCoverageOpted: boolean = (typeof codeCoverageTool !== 'undefined' && codeCoverageTool && codeCoverageTool.toLowerCase() !== 'none');
         const buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Gradle);
@@ -88,7 +89,8 @@ async function run() {
                     reportDirectoryName: reportDirectoryName,
                     summaryFileName: codeCoveragePreset.summaryFileName,
                     isMultiModule: isMultiModule,
-                    gradle5xOrHigher: gradle5xOrHigher
+                    gradle5xOrHigher: gradle5xOrHigher,
+                    useJacocoGradleTemplateV2: useJacocoGradleTemplateV2,
                 };
 
                 await enableCodeCoverageAsync(codeCoverageSettings);
