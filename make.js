@@ -180,9 +180,8 @@ CLI.gendocs = function() {
 //
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
-// ex: node make.js build --task ShellScript --node Node20
 //
-CLI.build = function(/** @type {{ node: string; task: string }} */ argv) 
+CLI.build = function(/** @type {{ task: string }} */ argv) 
 {
     if (process.env.TF_BUILD) {
         fail('Please use serverBuild for CI builds for proper validation');
@@ -192,9 +191,8 @@ CLI.build = function(/** @type {{ node: string; task: string }} */ argv)
     CLI.serverBuild(argv);
 }
 
-CLI.serverBuild = function(/** @type {{ node: string; task: string }} */ argv) {
+CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     ensureBuildTasksAndRemoveTestPath();
-    ensureNvmInstalled();
     ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('npm', '--version', function (output) {
         if (semver.lt(output, '5.6.0')) {
@@ -209,29 +207,23 @@ CLI.serverBuild = function(/** @type {{ node: string; task: string }} */ argv) {
 
     util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, callGenTaskDuringBuild);
 
-    const nodeVersion = (argv.node && argv.node == "Node20") ? argv.node : "Default";
     const allTasksNode20 = allTasks.filter((taskName) => {
-        return taskName.endsWith("Node20");
+        return getNodeVersion(buildTasksPath, taskName) == 20;
     });
     const allTasksDefault = allTasks.filter((taskName) => {
-        return !taskName.endsWith("Node20");
+        return getNodeVersion(buildTasksPath, taskName) != 20;
     });
 
-    if (nodeVersion == "Node20") {
+    if (allTasksNode20.length > 0) {
+        util.installNode('20');
         ensureTool('node', '--version', `v${node20Version}`);
-        allTasksNode20.forEach(taskName => buildTask(taskName, allTasksNode20.length));
-    } else if (nodeVersion == "Default") {
-        if (allTasksNode20) {
-            console.log(
-            "==========================================\n" + 
-            "IMPORTANT NOTE: There are additional tasks that need to be build with a different node configuration. \n" + 
-            "Unfortunately, we cannot switch node versions while running make.js.  Run the following commands to continue: \n" +
-            `nvm use ${node20Version}\n` +
-            `node make.js build ${argv.task ? `--task ${argv.task} ` : ''}--node Node20\n` + 
-            "==========================================\n");
-        }
+        allTasksNode20.forEach(taskName => buildTask(taskName, allTasksNode20.length, 20));
+
+    } 
+    if (allTasksDefault.length > 0) {
+        util.installNode('10');
         ensureTool('node', '--version', `v${node10Version}`);
-        allTasksDefault.forEach(taskName => buildTask(taskName, allTasksDefault.length));
+        allTasksDefault.forEach(taskName => buildTask(taskName, allTasksDefault.length, 10));
     }
 
     // Remove Commons from _generated folder as it is not required
@@ -242,9 +234,28 @@ CLI.serverBuild = function(/** @type {{ node: string; task: string }} */ argv) {
     banner('Build successful', true);
 }
 
-function buildTask(taskName, taskListLength) {
+function getNodeVersion (buildPath, taskName) {
+    var taskJsonPath = path.join(buildPath, taskName, "task.json");
+    if (!fs.existsSync(taskJsonPath)) {
+        console.warn('Unable to find task.json, defaulting to use Node 10');
+        return 10;
+    }
+    var taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
+    var taskJson = JSON.parse(taskJsonContents);
+    var execution = taskJson['execution'] || taskJson['prejobexecution'];
+    var nodeVersion = 10;
+    for (var key of Object.keys(execution)) {
+        const executor = key.toLocaleLowerCase();
+        if (!executor.startsWith('node')) continue;
+        version = executor.replace('node', '');
+        nodeVersion = parseInt(version) || 10;
+    }
+    return nodeVersion;
+}
+
+function buildTask(taskName, taskListLength, nodeVersion) {
     let isGeneratedTask = false;
-    banner('Building: ' + taskName);
+    banner(`Building task ${taskName} using Node.js ${nodeVersion}`);
     const removeNodeModules = taskListLength > 1;
 
     // If we have the task in generated folder, prefer to build from there and add all generated tasks which starts with task name
