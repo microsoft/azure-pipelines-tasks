@@ -1015,8 +1015,12 @@ CLI.gentask = function() {
     taskList.forEach(function (taskName) {
         const taskPath = path.join(genTaskPath, taskName + "_" + configsString);
         if (fs.existsSync(taskPath)) {
+            cd(taskPath);
             console.log(`Running \"npm update\" command in ${taskPath}`);
-            run(`npm update --prefix ${taskPath}`);
+            run(`npm update`);
+            console.log(`Running \"npm install\" command in ${taskPath}`);
+            run(`npm install`);
+            cd(__dirname);
         }
     });
     fs.writeFileSync(makeOptionsPath, JSON.stringify(newMakeOptions, null, 4));
