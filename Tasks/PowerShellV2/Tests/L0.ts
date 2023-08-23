@@ -4,6 +4,7 @@ import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import { testEnvExpansion } from './L0EnvExpansion';
 import { testPowerShellImpl } from './powershellImpl/L0';
+import { runValidateFileArgsTests } from './L0ValidateFileArgs';
 
 describe('PowerShell Suite', function () {
     this.timeout(60000);
@@ -100,6 +101,7 @@ describe('PowerShell Suite', function () {
     });
 
     describe('Environment variable expansion', testEnvExpansion);
+    describe('Validate file arguments', runValidateFileArgsTests)
 
     describe('PowerShell implementation tests', testPowerShellImpl);
 });
