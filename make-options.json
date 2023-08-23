@@ -263,8 +263,5 @@
         "AzureFileCopyV2",
         "AzureFileCopyV3",
         "DockerComposeV0"
-    ],
-    "Node20": [
-        "HelmDeployV0"
     ]
 }
