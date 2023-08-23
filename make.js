@@ -479,7 +479,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
     function runTaskTests(taskName) {
         banner('Testing: ' + taskName);
         // find the tests
-        var nodeVersions = argv.node ? new Array(argv.node) : getTaskNodeVersion(buildTasksPath, taskName);
+        var nodeVersions = argv.node ? new Array(argv.node) : [Math.max(...getTaskNodeVersion(buildTasksPath, taskName))];
         var pattern1 = path.join(buildTasksPath, taskName, 'Tests', suiteType + '.js');
         var pattern2 = path.join(buildTasksPath, 'Common', taskName, 'Tests', suiteType + '.js');
         var taskPath = path.join('**', '_build', 'Tasks', taskName, "**", "*.js").replace(/\\/g, '/');
