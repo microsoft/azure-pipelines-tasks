@@ -244,7 +244,7 @@ function getNodeVersion (taskName) {
     } else {
         taskJsonPath = path.join(tasksPath, taskName, "task.json");
         if (!fs.existsSync(taskJsonPath)) {
-            console.warn('Unable to find task.json in _generated folder and Tasks folder, defaulting to use Node 10');
+            console.error('Unable to find task.json file in _generated folder or Tasks folder.');
             return 10;
         }
         console.log(`Found task.json for ${taskName} in Tasks folder`)
@@ -256,8 +256,10 @@ function getNodeVersion (taskName) {
     var nodeVersion = 10;
     for (var key of Object.keys(execution)) {
         const executor = key.toLocaleLowerCase();
-        if (!executor.startsWith('node')) continue;
-        version = parseInt(executor.replace('node', ''));
+        if (!executor.startsWith('node')) {
+            console.error(`Invalid task.json file, unable to parse node version from ${taskJsonPath}.`);
+        }
+        const version = parseInt(executor.replace('node', ''));
         if (version > nodeVersion) {
             nodeVersion = version;
         }
@@ -1015,8 +1017,6 @@ CLI.gentask = function() {
         if (fs.existsSync(taskPath)) {
             console.log(`Running \"npm update\" command in ${taskPath}`);
             run(`npm update --prefix ${taskPath}`);
-            console.log(`Running \"npm install\" command in ${taskPath}`);
-            run(`npm install --prefix ${taskPath}`);
         }
     });
     fs.writeFileSync(makeOptionsPath, JSON.stringify(newMakeOptions, null, 4));
