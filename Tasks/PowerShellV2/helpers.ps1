@@ -1,7 +1,6 @@
 . $PSScriptRoot\errors.ps1
 
 function Publish-Telemetry($Telemetry) {
-    Assert-VstsAgent -Minimum '2.115.0'
     $area = 'TaskHub'
     $feature = 'PowerShellV2'
     $telemetryJson = $Telemetry | ConvertTo-Json -Compress
