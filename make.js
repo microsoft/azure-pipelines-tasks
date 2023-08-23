@@ -27,7 +27,6 @@ var copyTaskResources = util.copyTaskResources;
 var matchFind = util.matchFind;
 var matchCopy = util.matchCopy;
 var ensureTool = util.ensureTool;
-var ensureNvmInstalled = util.ensureNvmInstalled;
 var assert = util.assert;
 var getExternals = util.getExternals;
 var createResjson = util.createResjson;
@@ -210,10 +209,10 @@ CLI.serverBuild = function(/** @type {{ task: string }} */ argv) {
     // Ensure we wrap build function after generator's changes to store only files that changes after the build 
     const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTask, genTaskPath, callGenTaskDuringBuild);
     const allTasksNode20 = allTasks.filter((taskName) => {
-        return getNodeVersion(buildTasksPath, taskName) == 20;
+        return getNodeVersion(taskName) == 20;
     });
     const allTasksDefault = allTasks.filter((taskName) => {
-        return getNodeVersion(buildTasksPath, taskName) != 20;
+        return getNodeVersion(taskName) != 20;
     });
 
     if (allTasksNode20.length > 0) {
@@ -236,12 +235,21 @@ CLI.serverBuild = function(/** @type {{ task: string }} */ argv) {
     banner('Build successful', true);
 }
 
-function getNodeVersion (buildPath, taskName) {
-    var taskJsonPath = path.join(buildPath, taskName, "task.json");
-    if (!fs.existsSync(taskJsonPath)) {
-        console.warn('Unable to find task.json, defaulting to use Node 10');
-        return 10;
+function getNodeVersion (taskName) {
+    var taskJsonPath = path.join(genTaskPath, taskName, "task.json");
+    // We prefer tasks in _generated folder because they might contain node20 version
+    // while the tasks in Tasks/ folder still could use only node16 handler 
+    if (fs.existsSync(taskJsonPath)) {
+        console.log(`Found task.json for ${taskName} in _generated folder`);
+    } else {
+        taskJsonPath = path.join(tasksPath, taskName, "task.json");
+        if (!fs.existsSync(taskJsonPath)) {
+            console.warn('Unable to find task.json in _generated folder and Tasks folder, defaulting to use Node 10');
+            return 10;
+        }
+        console.log(`Found task.json for ${taskName} in Tasks folder`)
     }
+
     var taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
     var taskJson = JSON.parse(taskJsonContents);
     var execution = taskJson['execution'] || taskJson['prejobexecution'];
@@ -249,8 +257,10 @@ function getNodeVersion (buildPath, taskName) {
     for (var key of Object.keys(execution)) {
         const executor = key.toLocaleLowerCase();
         if (!executor.startsWith('node')) continue;
-        version = executor.replace('node', '');
-        nodeVersion = parseInt(version) || 10;
+        version = parseInt(executor.replace('node', ''));
+        if (version > nodeVersion) {
+            nodeVersion = version;
+        }
     }
     return nodeVersion;
 }
@@ -1005,6 +1015,8 @@ CLI.gentask = function() {
         if (fs.existsSync(taskPath)) {
             console.log(`Running \"npm update\" command in ${taskPath}`);
             run(`npm update --prefix ${taskPath}`);
+            console.log(`Running \"npm install\" command in ${taskPath}`);
+            run(`npm install --prefix ${taskPath}`);
         }
     });
     fs.writeFileSync(makeOptionsPath, JSON.stringify(newMakeOptions, null, 4));
