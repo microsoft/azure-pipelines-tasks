@@ -221,9 +221,7 @@
         "MysqlDeploymentOnMachineGroupV1",
         "GitHubReleaseV0",
         "GitHubReleaseV1",
-        "GitHubCommentV0",
-        "AndroidSigningV2",
-        "AndroidSigningV3"
+        "GitHubCommentV0"
     ],
     "Node16_225": [
         "AzureRmWebAppDeploymentV3",
@@ -262,12 +260,24 @@
         "DownloadBuildArtifactsV0",
         "AzureFileCopyV2",
         "AzureFileCopyV3",
-        "DockerComposeV0"
+        "DockerComposeV0",
+        "AndroidSigningV2"
     ],
     "Node20": [
         "HelmDeployV0",
         "NpmV1",
         "MavenV4",
-        "NpmV0"
+        "NpmV0",
+        "AndroidSigningV2",
+        "AndroidSigningV3",
+        "ANTV1",
+        "AzureAppServiceManageV0",
+        "AzureRmWebAppDeploymentV3",
+        "AzureRmWebAppDeploymentV4",
+        "AzureFunctionOnKubernetesV0",
+        "AzureFunctionOnKubernetesV1",
+        "UseDotNetV2",
+        "KubernetesManifestV0",
+        "KubernetesManifestV1"
     ]
 }

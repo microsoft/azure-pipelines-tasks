@@ -165,9 +165,9 @@ mockery.registerMock('./versioninstaller', {
 mockery.registerMock('./nugetinstaller', {
     NuGetInstaller: {
         installNuGet: function (version) {
-            return new Promise((resolve, reject) => {
+            return new Promise<void>((resolve, reject) => {
                 resolve();
-            })
+            });            
         }
     }
 });

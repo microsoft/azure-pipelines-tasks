@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 226,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "groups": [
@@ -123,7 +123,8 @@
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
   },
   "_buildConfigMapping": {
-    "Default": "0.226.1",
-    "Node16-225": "0.226.0"
+    "Default": "0.226.4",
+    "Node16-225": "0.226.2",
+    "Node20-225": "0.226.3"
   }
 }

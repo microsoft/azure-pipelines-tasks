@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 225,
-    "Patch": 0
+    "Patch": 5
   },
   "demands": [
     "JDK"
@@ -185,7 +185,8 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "2.225.1",
-    "Node16-219": "2.225.0"
+    "Default": "2.225.7",
+    "Node16-225": "2.225.5",
+    "Node20-225": "2.225.6"
   }
 }

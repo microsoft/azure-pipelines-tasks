@@ -19,7 +19,7 @@
   "version": {
     "Major": 0,
     "Minor": 226,
-    "Patch": 1
+    "Patch": 4
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "$(Action): $(WebAppName)",
