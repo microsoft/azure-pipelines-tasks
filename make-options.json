@@ -221,8 +221,7 @@
         "MysqlDeploymentOnMachineGroupV1",
         "GitHubReleaseV0",
         "GitHubReleaseV1",
-        "GitHubCommentV0",
-        "AndroidSigningV3"
+        "GitHubCommentV0"
     ],
     "Node16_225": [
         "AzureRmWebAppDeploymentV3",
