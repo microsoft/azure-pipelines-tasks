@@ -267,6 +267,7 @@
     "Node20": [
         "HelmDeployV0",
         "NpmV1",
-        "MavenV4"
+        "MavenV4",
+        "NpmV0"
     ]
 }
