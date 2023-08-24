@@ -42,10 +42,12 @@ export const runValidateFileArgsTests = () => {
         [
             "If dangerous symbols are present, and FF is on",
             "test; whoami", ['AZP_75787_ENABLE_NEW_LOGIC=true']
-        ],
-        [
+        ], [
             "If inside args line is env variable with dangerous symbols",
             "test $env:VAR1 test", ["VAR1=12;3", "AZP_75787_ENABLE_NEW_LOGIC=true"]
+        ], [
+            "If inside args line not correct env syntax",
+            "test $venv:VAR1 test", ["VAR1=123", "AZP_75787_ENABLE_NEW_LOGIC=true"]
         ]
     ]
     for (const [testName, inputArguments, envVariables] of throwTestSuites) {

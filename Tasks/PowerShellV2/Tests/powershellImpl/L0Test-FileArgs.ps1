@@ -61,6 +61,11 @@ $throwTestSuites = @(
         Name      = 'If inside args line is env variable with dangerous symbols'
         Input     = 'test $env:VAR1 test'
         Variables = @('VAR1=12;3', 'AZP_75787_ENABLE_NEW_LOGIC=true')
+    },
+    @{
+        Name = 'If inside args line not correct env syntax'
+        Input = 'test $venv:VAR1 test'
+        Variables = @('VAR1=123', 'AZP_75787_ENABLE_NEW_LOGIC=true')
     }
 )
 foreach ($test in $throwTestSuites) {
