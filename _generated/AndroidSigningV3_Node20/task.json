@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 225,
-    "Patch": 1
+    "Minor": 227,
+    "Patch": 0
   },
   "releaseNotes": "This version of the task uses apksigner instead of jarsigner to sign APKs.",
   "demands": [
@@ -177,6 +177,10 @@
       "target": "preandroidsigning.js",
       "argumentFormat": ""
     },
+    "Node16": {
+      "target": "preandroidsigning.js",
+      "argumentFormat": ""
+    },
     "Node20": {
       "target": "preandroidsigning.js",
       "argumentFormat": ""
@@ -187,6 +191,10 @@
       "target": "androidsigning.js",
       "argumentFormat": ""
     },
+    "Node16": {
+      "target": "androidsigning.js",
+      "argumentFormat": ""
+    },
     "Node20": {
       "target": "androidsigning.js",
       "argumentFormat": ""
@@ -194,6 +202,10 @@
   },
   "postjobexecution": {
     "Node10": {
+      "target": "postandroidsigning.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "postandroidsigning.js",
       "argumentFormat": ""
     },
@@ -220,7 +232,7 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "3.225.2",
-    "Node20-225": "3.225.1"
+    "Default": "3.227.1",
+    "Node20-225": "3.227.0"
   }
 }

@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 225,
-    "Patch": 7
+    "Minor": 227,
+    "Patch": 2
   },
   "demands": [
     "JDK"

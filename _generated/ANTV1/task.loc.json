@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 212,
+    "Minor": 227,
     "Patch": 1
   },
   "demands": [
@@ -268,7 +268,7 @@
     "NoTestResults": "ms-resource:loc.messages.NoTestResults"
   },
   "_buildConfigMapping": {
-    "Default": "1.212.1",
-    "Node20-225": "1.212.0"
+    "Default": "1.227.1",
+    "Node20-225": "1.227.0"
   }
 }
