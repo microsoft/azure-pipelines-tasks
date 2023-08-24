@@ -9,7 +9,6 @@ type BashEnvTelemetry = {
     variablesExpanded: number,
     escapedVariables: number,
     escapedEscapingSymbols: number,
-    variablesStartsFromES: number,
     braceSyntaxEntries: number,
     bracedVariables: number,
     // possibly blockers
@@ -17,8 +16,9 @@ type BashEnvTelemetry = {
     // blockers
     unmatchedQuotes: number, // like "Hello, world!
     notClosedBraceSyntaxPosition: number, // 0 means no this issue,
-    indirectExpansion: number,
+    indirectExpansionTries: number,
     invalidEnvName: number,
+    notExistingEnv: number
 }
 
 export function expandBashEnvVariables(argsLine: string): [string, BashEnvTelemetry] {
@@ -36,16 +36,16 @@ export function expandBashEnvVariables(argsLine: string): [string, BashEnvTeleme
         variablesExpanded: 0,
         escapedVariables: 0,
         escapedEscapingSymbols: 0,
-        variablesStartsFromES: 0,
         braceSyntaxEntries: 0,
         bracedVariables: 0,
         // possibly blockers
         variablesWithESInside: 0,
         // blockers
-        unmatchedQuotes: 0, // like "Hello, world!
+        unmatchedQuotes: 0,
         notClosedBraceSyntaxPosition: 0,
-        indirectExpansion: 0,
-        invalidEnvName: 0 // 0 means no this issue,
+        indirectExpansionTries: 0,
+        invalidEnvName: 0, // 0 means no this issue,
+        notExistingEnv: 0
     }
 
     while (true) {
@@ -74,8 +74,6 @@ export function expandBashEnvVariables(argsLine: string): [string, BashEnvTeleme
             const nextQuoteIndex = result.indexOf(quote, quoteIndex + 1)
             if (nextQuoteIndex < 0) {
                 telemetry.unmatchedQuotes = 1
-                // we properly should throw error here
-                // throw new Error('Quotes not enclosed.')
                 break
             }
 
@@ -101,16 +99,12 @@ export function expandBashEnvVariables(argsLine: string): [string, BashEnvTeleme
         if (isBraceSyntax) {
             envEndIndex = findEnclosingBraceIndex(result, prefixIndex)
             if (envEndIndex === 0) {
-                // startIndex++
-
                 telemetry.notClosedBraceSyntaxPosition = prefixIndex + 1 // +{
-                // throw new Error(...)
                 break;
-                // continue
             }
 
             if (result[prefixIndex + envPrefix.length + 1] === '!') {
-                telemetry.indirectExpansion++
+                telemetry.indirectExpansionTries++
                 // We're just skipping indirect expansion
                 startIndex = envEndIndex
                 continue
@@ -124,31 +118,26 @@ export function expandBashEnvVariables(argsLine: string): [string, BashEnvTeleme
             envEndIndex = envStartIndex + envName.length
         }
 
-        if (!isBraceSyntax && envName.startsWith(escapingSymbol)) {
-            const sanitizedEnvName = '$' + (isBraceSyntax ? '{' : '') + envName.substring(1) + (isBraceSyntax ? '}' : '')
-            result = result.substring(0, prefixIndex) + sanitizedEnvName + result.substring(envEndIndex + +isBraceSyntax)
-            startIndex = prefixIndex + sanitizedEnvName.length
-
-            telemetry.variablesStartsFromES++
-
-            continue
-        }
-
-        let head = result.substring(0, prefixIndex)
-        if (!isBraceSyntax && envName.includes(escapingSymbol)) {
-            head = head + envName.split(escapingSymbol)[1]
-            envName = envName.split(escapingSymbol)[0]
-
-            telemetry.variablesWithESInside++
-        }
-
         if (!isValidEnvName(envName)) {
             telemetry.invalidEnvName++
             startIndex = envEndIndex
             continue
         }
 
-        const envValue = process.env[envName] ?? '';
+        const head = result.substring(0, prefixIndex)
+        if (!isBraceSyntax && envName.includes(escapingSymbol)) {
+            telemetry.variablesWithESInside++
+        }
+
+        // We need case-sensetive env search for windows as well.
+        let envValue = { ...process.env }[envName];
+        // in case we don't have such variable, we just leave it as is
+        if (!envValue) {
+            telemetry.notExistingEnv++
+            startIndex = envEndIndex
+            continue
+        }
+
         const tail = result.substring(envEndIndex + +isBraceSyntax)
 
         result = head + envValue + tail

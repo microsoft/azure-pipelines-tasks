@@ -152,9 +152,9 @@ describe('Bash Suite', function () {
     });
 
     describe('File args env processing tests', () => {
-        EnvProcessingTelemetryTests()
-
         BashEnvProcessingTests()
+
+        EnvProcessingTelemetryTests()
 
         runValidateFileArgsTests()
     })
