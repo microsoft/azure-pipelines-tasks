@@ -19,7 +19,7 @@ steps:
 - task: NodeTool@0
   displayName: Use node 10
   inputs:
-    versionSpec: 10.x
+    versionSpec: 10.24.1
 
 # Use .NET SDK 7
 - task: UseDotNet@2
