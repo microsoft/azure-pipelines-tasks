@@ -80,6 +80,7 @@ function Expand-EnvVariables([string]$ArgsLine) {
         bracedEnvSyntax              = 0
         expansionSyntax              = 0
         unmatchedExpansionSyntax     = 0
+        notExistingEnv               = 0
     }
 
     $result = $ArgsLine
@@ -180,7 +181,9 @@ function Expand-EnvVariables([string]$ArgsLine) {
 
         $envValue = [Environment]::GetEnvironmentVariable($envName, 'Process')
         if (!$envValue) {
-            $envValue = ''
+            $telemetry.notExistingEnv++
+            $startIndex = $envEndIndex
+            continue
         }
 
         if ($isBraceSyntax) {

@@ -72,10 +72,10 @@ $testSuites = @(
         Expected  = '$`env:VAR1'
     },
     @{
-        Name      = 'Incorrectly expanding if backtick inside env var'
+        Name      = 'Not expanding if backtick inside env var'
         Input     = '$env:VA`R1'
         Variables = @('VAR1=val1')
-        Expected  = 'R1'
+        Expected  = '$env:VA`R1'
     },
     @{
         Name      = 'If variable inside single quotes, it should be ignored'
@@ -114,10 +114,28 @@ $testSuites = @(
         Expected  = '''''val1'''''
     },
     @{
-        Name      = 'If variable does not exists, it should be empty string'
+        Name      = 'If variable does not exists, it should not expand'
         Input     = '$env:VAR1 2'
         Variables = @('VAR1=')
-        Expected  = ' 2'
+        Expected  = '$env:VAR1 2'
+    },
+    @{
+        Name = 'If variable syntax is incorrect, it should leave it as is'
+        Input = '$venv:VAR1 ${_env:VAR2}'
+        Variables = @('VAR1=val1', 'VAR2=val2')
+        Expected = '$venv:VAR1 ${_env:VAR2}'
+    },
+    @{
+        Name = 'If closing brace is not present, it should leave it as is'
+        Input = '$env:VAR1 ${env:VAR2'
+        Variables = @('VAR1=val1', 'VAR2=val2')
+        Expected = 'val1 ${env:VAR2'
+    },
+    @{
+        Name = 'If closing brace is not present, it should leave it as is 2'
+        Input = '${env:VAR1 ${env:VAR2}'
+        Variables = @('VAR1=val1', 'VAR2=val2')
+        Expected = '${env:VAR1 ${env:VAR2}'
     }
 )
 

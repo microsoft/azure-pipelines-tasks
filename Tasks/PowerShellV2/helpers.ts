@@ -18,7 +18,8 @@ type ProcessEnvPowerShellTelemetry = {
     // blockers
     bracedEnvSyntax: number,
     expansionSyntax: number,
-    unmatchedExpansionSyntax: number
+    unmatchedExpansionSyntax: number,
+    notExistingEnv: number
 }
 
 export function expandPowerShellEnvVariables(argsLine: string): [string, ProcessEnvPowerShellTelemetry] {
@@ -42,7 +43,8 @@ export function expandPowerShellEnvVariables(argsLine: string): [string, Process
         // blockers
         bracedEnvSyntax: 0,
         expansionSyntax: 0,
-        unmatchedExpansionSyntax: 0
+        unmatchedExpansionSyntax: 0,
+        notExistingEnv: 0
     }
 
     let result = argsLine
@@ -52,6 +54,7 @@ export function expandPowerShellEnvVariables(argsLine: string): [string, Process
         const loweredResult = result.toLowerCase()
         const basicPrefixIndex = loweredResult.indexOf(basicEnvPrefix, startIndex)
         const bracedPrefixIndex = loweredResult.indexOf(bracedEnvPrefix, startIndex)
+
         const foundPrefixes = [basicPrefixIndex, bracedPrefixIndex].filter(i => i >= 0)
         if (foundPrefixes.length === 0) {
             break;
@@ -117,7 +120,7 @@ export function expandPowerShellEnvVariables(argsLine: string): [string, Process
         }
 
         if (envName.startsWith(escapingSymbol)) {
-            const sanitizedEnvName = '$env:' + envName.substring(1)
+            const sanitizedEnvName = basicEnvPrefix + envName.substring(1)
             result = result.substring(0, prefixIndex) + sanitizedEnvName + result.substring(envEndIndex)
             startIndex = prefixIndex + sanitizedEnvName.length
 
@@ -134,7 +137,14 @@ export function expandPowerShellEnvVariables(argsLine: string): [string, Process
             telemetry.variablesWithBacktickInside++
         }
 
-        const envValue = process.env[envName] ?? '';
+        const envValue = process.env[envName];
+        // in case we don't have such variable, we just leave it as is
+        if (!envValue) {
+            telemetry.notExistingEnv++
+            startIndex = envEndIndex
+            continue
+        }
+
         const tail = result.substring(isBraceSyntax ? envEndIndex + 1 : envEndIndex)
 
         result = head + envValue + tail;
