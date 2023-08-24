@@ -9,9 +9,6 @@ const taskPath = path.join(__dirname, "..", "maventask.js");
 
 const taskRunner = new TaskMockRunner(taskPath);
 
-// Common initial setup
-initializeTest(taskRunner);
-
 // Set Inputs
 const inputs: MavenTaskInputs = {
     mavenVersionSelection: "Default",
@@ -35,6 +32,9 @@ setInputs(taskRunner, inputs);
 const mavenHome = "/anotherHome/";
 const mavenBin =  path.join(mavenHome, "bin", "mvn");
 process.env["M2_HOME"] = mavenHome;
+
+// Common initial setup
+initializeTest(taskRunner);
 
 // Provide answers for task mock
 const answers: TaskLibAnswers = {
