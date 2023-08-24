@@ -222,7 +222,6 @@
         "GitHubReleaseV0",
         "GitHubReleaseV1",
         "GitHubCommentV0",
-        "AndroidSigningV2",
         "AndroidSigningV3"
     ],
     "Node16_225": [
