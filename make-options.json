@@ -217,7 +217,6 @@
     "Node16": [
         "DownloadGitHubNugetPackageV1",
         "KubernetesV0",
-        "NuGetPublisherV0",
         "MysqlDeploymentOnMachineGroupV1",
         "GitHubReleaseV0",
         "GitHubReleaseV1",
