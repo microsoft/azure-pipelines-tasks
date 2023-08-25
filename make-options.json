@@ -218,8 +218,7 @@
         "KubernetesV0",
         "NuGetPublisherV0",
         "MysqlDeploymentOnMachineGroupV1",
-        "GitHubReleaseV1",
-        "GitHubCommentV0"
+        "GitHubReleaseV1"
     ],
     "Node16_225": [
         "AzureRmWebAppDeploymentV3",
