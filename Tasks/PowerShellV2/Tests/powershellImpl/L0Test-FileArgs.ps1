@@ -24,6 +24,11 @@ $notThrowTestSuites = @(
         Name      = 'If inside the args line is env variable with no dangerous symbols'
         Input     = 'test $env:VAR1 test'
         Variables = @('VAR1=1', 'AZP_75787_ENABLE_NEW_LOGIC=true')
+    },
+    @{
+        Name      = 'Accepts allowed symbols'
+        Input     = 'a A 1 \ ` _ '' " - = / : . * , + ~ ? %'
+        Variables = @('AZP_75787_ENABLE_NEW_LOGIC=true')
     }
 )
 foreach ($test in $notThrowTestSuites) {
@@ -63,8 +68,8 @@ $throwTestSuites = @(
         Variables = @('VAR1=12;3', 'AZP_75787_ENABLE_NEW_LOGIC=true')
     },
     @{
-        Name = 'If inside args line not correct env syntax'
-        Input = 'test $venv:VAR1 test'
+        Name      = 'If inside args line not correct env syntax'
+        Input     = 'test $venv:VAR1 test'
         Variables = @('VAR1=123', 'AZP_75787_ENABLE_NEW_LOGIC=true')
     }
 )

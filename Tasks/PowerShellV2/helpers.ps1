@@ -228,7 +228,7 @@ function Test-FileArgs([string]$inputArguments) {
 
         $sanitizedArgs, $sanitizerTelemetry = Sanitize-Arguments -InputArgs $expandedArgs;
 
-        if ($sanitizedArgs -ne $input_arguments) {
+        if ($sanitizedArgs -ne $inputArguments) {
             if ($featureFlags.telemetry -and (($null -ne $sanitizerTelemetry) -or ($null -ne $expandTelemetry))) {
                 $telemetry = $expandTelemetry;
                 if ($null -ne $sanitizerTelemetry) {

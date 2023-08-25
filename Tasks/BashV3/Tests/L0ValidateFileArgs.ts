@@ -16,6 +16,9 @@ export const runValidateFileArgsTests = () => {
         ], [
             "If inside the args line is env variable with no dangerous symbols",
             "test $VAR1 test", ["VAR1=1", "AZP_75787_ENABLE_NEW_LOGIC=true"]
+        ], [
+            "Accepts allowed symbols",
+            "a A 1 \\ _ ' \" - = / : . * + %", ["AZP_75787_ENABLE_NEW_LOGIC=true"]
         ]
     ];
 
