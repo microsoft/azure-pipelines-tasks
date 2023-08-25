@@ -16,7 +16,7 @@ var downloadPath = path.join(__dirname, '_download');
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['4.0.2', '4.0.8'];
+var allowedTypescriptVersions = ['4.0.2', '5.1.6'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -331,6 +331,9 @@ exports.ensureTool = ensureTool;
 
 var installNode = function (nodeVersion) {
     switch (nodeVersion || '') {
+        case '20':
+            nodeVersion = 'v20.3.1';
+            break;
         case '16':
             nodeVersion = 'v16.17.1';
             break;
@@ -338,7 +341,7 @@ var installNode = function (nodeVersion) {
             nodeVersion = 'v14.10.1';
             break;
         case '10':
-            nodeVersion = 'v10.21.0';
+            nodeVersion = 'v10.24.1';
             break;
         case '6':
         case '':
@@ -348,7 +351,7 @@ var installNode = function (nodeVersion) {
             nodeVersion = 'v5.10.1';
             break;
         default:
-            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14, 16`);
+            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14, 16, 20`);
     }
 
     if (nodeVersion === run('node -v')) {
@@ -1886,5 +1889,74 @@ var generateTasks = function(baseConfigToolPath, taskList, configsString, makeOp
     return newMakeOptions;
 }
 exports.generateTasks = generateTasks;
+
+/**
+ * Wrapper for buildTask function which compares diff between source and generated tasks
+ * @param {Function} originalFunction - Original buildTask function
+ * @param {string} genTaskPath - path to generated folder
+ * @param {boolean} callGenTaskDuringBuild - if false, the sync step will be skipped
+ * @returns {Function} - wrapped buildTask function which compares diff between source and generated tasks
+ * and copy files from generated to source if needed
+ */
+function syncGeneratedFilesWrapper(originalFunction, genTaskPath, callGenTaskDuringBuild = false) {
+    const allowedFilesToCopy = ["package.json", "package-lock.json"];
+    const genTaskBasePath = path.basename(genTaskPath);
+
+    if (!originalFunction || originalFunction instanceof Function === false) throw Error('originalFunction is not defined');
+    // If the task is building on the ci, we don't want to sync files
+    if (callGenTaskDuringBuild === false) return originalFunction;
+
+    console.log(
+        "Syncing generated files with source task...\n" +
+        "----------------------------------------------\n" +
+        "Getting list of uncommitted changes");
+    
+    const initialDiffOutput = run(`git diff --name-only`)
+    console.log(
+        "uncommitted changes:\n" + 
+        `${initialDiffOutput}\n` +
+        "----------------------------------------------");
+
+    return function(taskName, ...args) {
+        // git diff --name-only return "/"" as separator
+        originalFunction.apply(this, [taskName, ...args]);
+
+        const genTaskPath = `${genTaskBasePath}/${taskName}/`;
+        // if it's not a generated task, we don't need to sync files
+        if (!fs.existsSync(genTaskPath)) return;
+
+        const changedPaths = [];
+        const afterTaskBuildDiff = run(`git diff --name-only`);
+
+        afterTaskBuildDiff.split("\n").forEach((line) => {
+            // We skip files that are not in the generated task folder or are already in the initial diff   
+            if (!line.includes(genTaskPath) || initialDiffOutput.includes(line)) return;
+            changedPaths.push(line);
+        });
+
+        if (changedPaths.length === 0) return;
+
+        console.log(
+            "The following generated files where updated in source task after build and added to staged, please commit them to the repo:\n" +
+            `${changedPaths}\n` +
+            "----------------------------------------------\n" +
+            "The following files were copied to source task:");
+
+        changedPaths.forEach((filePath) => {
+            const fileName = path.basename(filePath);
+            if (allowedFilesToCopy.indexOf(fileName) === -1) return;
+            const [baseTaskName, config] = taskName.split("_");
+            let dest = path.join(__dirname, 'Tasks', baseTaskName, fileName);
+            if (config) {
+                dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, fileName);
+            }
+
+            fs.copyFileSync(filePath, dest);
+            console.log(`from ${filePath} to ${dest}`);
+        });
+    }
+}
+
+exports.syncGeneratedFilesWrapper = syncGeneratedFilesWrapper;
 
 //------------------------------------------------------------------------------
