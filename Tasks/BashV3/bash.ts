@@ -2,9 +2,10 @@ import fs = require('fs');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
+import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
+import { ArgsSanitizingError } from './utils/errors';
+import { validateFileArgs } from './helpers';
 var uuidV4 = require('uuid/v4');
-import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
-import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry";
 
 async function runBashPwd(bashPath: string, directoryPath: string): Promise<string> {
     let pwdOutput = '';
@@ -116,34 +117,20 @@ async function run() {
                 targetFilePath = input_filePath;
             }
 
-            let resultArgs = input_arguments;
+            try {
+                validateFileArgs(input_arguments);
+            }
+            catch (error: any) {
+                if (error instanceof ArgsSanitizingError) {
+                    throw error;
+                }
 
-            const featureFlags = {
-                audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
-                activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
-                telemetry: tl.getBoolFeatureFlag('AZP_75787_ENABLE_COLLECT')
-            };
-
-            if (featureFlags.activate || featureFlags.audit || featureFlags.telemetry) {
-                const [sanitizedArgs, telemetry] = sanitizeArgs(
-                    input_arguments,
+                emitTelemetry('TaskHub', 'BashV3',
                     {
-                        argsSplitSymbols: '\\\\',
-                        saniziteRegExp: new RegExp(`(?<!\\\\)([^a-zA-Z0-9\\\\ _'"\\-=\\/:.])`, 'g')
+                        UnexpectedError: error?.message ?? JSON.stringify(error) ?? null,
+                        ErrorStackTrace: error?.stack ?? null
                     }
                 );
-                if (sanitizedArgs !== input_arguments) {
-                    if (featureFlags.telemetry && telemetry) {
-                        emitTelemetry('TaskHub', 'BashV3', telemetry);
-                    }
-                    const message = tl.loc('ScriptArgsSanitized');
-                    if (featureFlags.activate) {
-                        throw new Error(message);
-                    }
-                    if (featureFlags.audit) {
-                        tl.warning(message);
-                    }
-                }
             }
 
             // Choose behavior:
@@ -151,9 +138,9 @@ async function run() {
             // If they've not, execute the script with bash. This is our new desired behavior.
             // See https://github.com/Microsoft/azure-pipelines-tasks/blob/master/docs/bashnote.md
             if (old_source_behavior) {
-                contents = `. '${targetFilePath.replace(/'/g, "'\\''")}' ${resultArgs}`.trim();
+                contents = `. '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
             } else {
-                contents = `exec bash '${targetFilePath.replace(/'/g, "'\\''")}' ${resultArgs}`.trim();
+                contents = `exec bash '${targetFilePath.replace(/'/g, "'\\''")}' ${input_arguments}`.trim();
             }
             console.log(tl.loc('JS_FormattedCommand', contents));
         }
@@ -234,19 +221,9 @@ async function run() {
 
         tl.setResult(result, null, true);
     }
-    catch (err) {
+    catch (err: any) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed', true);
     }
-}
-
-function getFeatureFlagValue(featureFlagName: string, defaultValue: boolean = false): boolean {
-    const ffValue = process.env[featureFlagName]
-
-    if (!ffValue) {
-        return defaultValue
-    }
-
-    return ffValue.toLowerCase() === "true"
 }
 
 run();
