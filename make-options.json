@@ -276,6 +276,10 @@
         "AzureFunctionOnKubernetesV1",
         "UseDotNetV2",
         "KubernetesManifestV0",
-        "KubernetesManifestV1"
+        "KubernetesManifestV1",
+        "AzureIoTEdgeV2",
+        "DownloadFileshareArtifactsV1",
+        "CargoAuthenticateV0",
+        "AzureFunctionAppContainerV1"
     ]
 }

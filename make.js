@@ -454,6 +454,21 @@ function buildTask(taskName, taskListLength, nodeVersion) {
             rm('-Rf', taskTestsNodeModulesPath);
         }
     }
+
+    var buildTasksNodeModules = path.join(buildTasksPath, taskName, 'node_modules');
+    var duplicateTaskLibPaths = [
+        'azure-pipelines-tasks-java-common',
+        'azure-pipelines-tasks-codecoverage-tools',
+        'azure-pipelines-tasks-codeanalysis-common',
+        'azure-pipelines-tool-lib',
+        'azure-pipelines-tasks-utility-common'];
+    for (var duplicateTaskPath of duplicateTaskLibPaths) {
+        const buildTasksDuplicateNodeModules = path.join(buildTasksNodeModules, duplicateTaskPath, 'node_modules', 'azure-pipelines-task-lib');
+        if (fs.existsSync(buildTasksDuplicateNodeModules)) {
+            console.log(`\n> removing duplicate task lib node_modules in ${buildTasksDuplicateNodeModules}`);
+            rm('-Rf', buildTasksDuplicateNodeModules);
+        }
+    }
 }
 
 //

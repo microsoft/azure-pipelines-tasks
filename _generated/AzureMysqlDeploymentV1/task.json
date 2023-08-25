@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 226,
-    "Patch": 1
+    "Minor": 227,
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -228,7 +228,7 @@
     "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern"
   },
   "_buildConfigMapping": {
-    "Default": "1.226.1",
-    "Node16-225": "1.226.0"
+    "Default": "1.227.2",
+    "Node16-225": "1.227.1"
   }
 }
