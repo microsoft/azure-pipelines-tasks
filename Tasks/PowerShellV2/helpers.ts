@@ -17,8 +17,6 @@ type ProcessEnvPowerShellTelemetry = {
     notClosedBraceSyntaxPosition: number,
     // blockers
     bracedEnvSyntax: number,
-    expansionSyntax: number,
-    unmatchedExpansionSyntax: number,
     notExistingEnv: number
 }
 
@@ -42,8 +40,6 @@ export function expandPowerShellEnvVariables(argsLine: string): [string, Process
         notClosedBraceSyntaxPosition: 0,
         // blockers
         bracedEnvSyntax: 0,
-        expansionSyntax: 0,
-        unmatchedExpansionSyntax: 0,
         notExistingEnv: 0
     }
 
