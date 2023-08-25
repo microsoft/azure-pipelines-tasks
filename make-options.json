@@ -229,7 +229,6 @@
         "UseDotNetV2",
         "KubernetesManifestV0",
         "KubernetesManifestV1",
-        "DownloadFileshareArtifactsV1",
         "AzureVmssDeploymentV0",
         "AzureMysqlDeploymentV1",
         "AzureFunctionAppContainerV1",
