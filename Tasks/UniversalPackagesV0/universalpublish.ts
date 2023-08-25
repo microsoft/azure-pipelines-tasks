@@ -8,6 +8,7 @@ import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common/univ
 import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
 import * as auth from "azure-pipelines-tasks-packaging-common/universal/Authentication";
 import { logError } from 'azure-pipelines-tasks-packaging-common/util';
+import { getProjectAndFeedIdFromInputParam, logError } from 'azure-pipelines-tasks-packaging-common/util';
 
 const packageAlreadyExistsError = 17;
 const numRetries = 1;
@@ -218,6 +219,7 @@ async function getNextPackageVersion(
     feedId: string,
     packageName: string) {
     let version: string;
+    // Will get the highest package version available. Returns 0.0.0 as version if package name contains no versions.
     const highestVersion = await artifactToolUtilities.getHighestPackageVersionFromFeed(
         feedUri,
         accessToken,
