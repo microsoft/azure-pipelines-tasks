@@ -72,6 +72,10 @@
     "Node10": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -81,7 +85,6 @@
   },
   "_buildConfigMapping": {
     "Default": "1.227.3",
-    "Node16-225": "1.227.1",
     "Node20-225": "1.227.2"
   }
 }
