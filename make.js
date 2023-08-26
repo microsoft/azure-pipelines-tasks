@@ -244,7 +244,7 @@ function getNodeVersion (taskName) {
     } else {
         taskJsonPath = path.join(tasksPath, taskName, "task.json");
         if (!fs.existsSync(taskJsonPath)) {
-            console.error('Unable to find task.json file in _generated folder or Tasks folder.');
+            console.error(`Unable to find task.json file for ${taskName} in _generated folder or Tasks folder.`);
             return 10;
         }
         console.log(`Found task.json for ${taskName} in Tasks folder`)
@@ -257,7 +257,7 @@ function getNodeVersion (taskName) {
     for (var key of Object.keys(execution)) {
         const executor = key.toLocaleLowerCase();
         if (!executor.startsWith('node')) {
-            console.error(`Invalid task.json file, unable to parse node version from ${taskJsonPath}.`);
+            continue;
         }
         const version = parseInt(executor.replace('node', ''));
         if (version > nodeVersion) {
@@ -455,6 +455,7 @@ function buildTask(taskName, taskListLength, nodeVersion) {
         }
     }
 
+    // remove duplicated task libs node modules from build tasks.
     var buildTasksNodeModules = path.join(buildTasksPath, taskName, 'node_modules');
     var duplicateTaskLibPaths = [
         'azure-pipelines-tasks-java-common',
@@ -465,7 +466,7 @@ function buildTask(taskName, taskListLength, nodeVersion) {
     for (var duplicateTaskPath of duplicateTaskLibPaths) {
         const buildTasksDuplicateNodeModules = path.join(buildTasksNodeModules, duplicateTaskPath, 'node_modules', 'azure-pipelines-task-lib');
         if (fs.existsSync(buildTasksDuplicateNodeModules)) {
-            console.log(`\n> removing duplicate task lib node_modules in ${buildTasksDuplicateNodeModules}`);
+            console.log(`\n> removing duplicated task-lib node modules in ${buildTasksDuplicateNodeModules}`);
             rm('-Rf', buildTasksDuplicateNodeModules);
         }
     }
@@ -1036,8 +1037,22 @@ CLI.gentask = function() {
             console.log(`Running \"npm install\" command in ${taskPath}`);
             run(`npm install`);
             cd(__dirname);
+
+            // copy package.json and package-lock.json from generated tasks to the Tasks\taskname\_buildConfig\nodeversion folder.
+            const packageJsonPath = path.join(taskPath, 'package.json');
+            const packageLockJsonPath = path.join(taskPath, 'package-lock.json');
+            const buildConfigsPath = path.join(tasksPath, taskName, '_buildConfigs', configsString);
+            if (fs.existsSync(packageJsonPath) && fs.existsSync(buildConfigsPath)) {
+                console.log(`Copying package.json from ${taskPath} to ${buildConfigsPath} folder.`);
+                cp(packageJsonPath, path.join(buildConfigsPath, 'package.json'));
+            }
+            if (fs.existsSync(packageLockJsonPath) && fs.existsSync(buildConfigsPath)) {
+                console.log(`Copying package-lock.json from ${taskPath} to ${buildConfigsPath} folder.`);
+                cp(packageLockJsonPath, path.join(buildConfigsPath, 'package-lock.json'));
+            }
         }
     });
+
     fs.writeFileSync(makeOptionsPath, JSON.stringify(newMakeOptions, null, 4));
 }
 

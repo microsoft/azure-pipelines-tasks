@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 226,
-    "Patch": 1
+    "Minor": 227,
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -122,7 +122,8 @@
     "InvalidKeyVaultName": "ms-resource:loc.messages.InvalidKeyVaultName"
   },
   "_buildConfigMapping": {
-    "Default": "2.226.1",
-    "Node16-225": "2.226.0"
+    "Default": "2.227.3",
+    "Node16-225": "2.227.1",
+    "Node20-225": "2.227.2"
   }
 }

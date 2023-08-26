@@ -280,6 +280,20 @@
         "AzureIoTEdgeV2",
         "DownloadFileshareArtifactsV1",
         "CargoAuthenticateV0",
-        "AzureFunctionAppContainerV1"
+        "AzureFunctionAppContainerV1",
+        "AzureMysqlDeploymentV1",
+        "AzureFunctionAppV1",
+        "AzureFunctionAppV2",
+        "AzureNLBManagementV1",
+        "KubectlInstallerV0",
+        "NuGetV0",
+        "PublishCodeCoverageResultsV1",
+        "AzureKeyVaultV1",
+        "AzureKeyVaultV2",
+        "AzureStaticWebAppV0",
+        "AzureWebAppContainerV1",
+        "PublishSymbolsV2",
+        "DuffleInstallerV0",
+        "NuGetAuthenticateV0"
     ]
 }
