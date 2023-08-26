@@ -215,13 +215,10 @@
         "Tests"
     ],
     "Node16": [
-        "DownloadGitHubNugetPackageV1",
         "KubernetesV0",
         "NuGetPublisherV0",
         "MysqlDeploymentOnMachineGroupV1",
-        "GitHubReleaseV0",
-        "GitHubReleaseV1",
-        "GitHubCommentV0"
+        "GitHubReleaseV1"
     ],
     "Node16_225": [
         "AzureRmWebAppDeploymentV3",
@@ -231,7 +228,6 @@
         "UseDotNetV2",
         "KubernetesManifestV0",
         "KubernetesManifestV1",
-        "DownloadFileshareArtifactsV1",
         "AzureVmssDeploymentV0",
         "AzureMysqlDeploymentV1",
         "AzureFunctionAppContainerV1",
