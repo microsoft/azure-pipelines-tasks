@@ -10,7 +10,7 @@ import * as toollib from "azure-pipelines-tool-lib/tool";
 export function getArtifactToolLocation(dirName: string): string {
     let toolPath: string = path.join(dirName, "ArtifactTool.exe");
     if (tl.osType() !== "Windows_NT"){
-        toolPath = path.join(dirName, "artifacttool");
+        toolPath = path.join(dirName, "ArtifactTool");
     }
     return toolPath;
 }
@@ -18,7 +18,7 @@ export function getArtifactToolLocation(dirName: string): string {
 function _createExtractFolder(dest?: string): string {
     if (!dest) {
         // create a temp dir
-        dest = path.join(tl.getVariable("Agent.TempDirectory"), "artifactTool");
+        dest = path.join(tl.getVariable("Agent.TempDirectory"), "ArtifactTool");
     }
     tl.mkdirP(dest);
     return dest;
