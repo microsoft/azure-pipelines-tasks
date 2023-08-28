@@ -1,4 +1,0 @@
-{
-  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Компьютер должен использовать протокол TLS 1.2 или более поздней версии. Дополнительные сведения о том, как включить TLS на вашем компьютере: https://aka.ms/enableTlsv2.",
-  "loc.messages.JarPathNotPresent": "Отсутствует путь к jar-файлу Java."
-}
