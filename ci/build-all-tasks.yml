@@ -24,16 +24,6 @@ steps:
 - script: node make.js serverBuild
   displayName: Build tasks
 
-# Use node 20, npm 6
-- task: NodeTool@0
-  displayName: Use node 20
-  inputs:
-    versionSpec: 20.3.1
-
-# Build tasks Node20
-- script: node make.js serverBuild --node Node20
-  displayName: Build tasks Node20
-
 # Stage tasks individually into the package directory
 - script: node ./ci/stage-package.js true individually
   displayName: Stage tasks individually into the package directory

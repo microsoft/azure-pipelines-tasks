@@ -88,23 +88,6 @@ steps:
   displayName: Build Tasks
   condition: and(succeeded(), ne(variables['numTasks'], 0))
 
-# Use node 20, npm 6
-- task: NodeTool@0
-  displayName: Use node 20
-  inputs:
-    versionSpec: 20.3.1
-
-# Build Tasks Node20
-- script: node make.js serverBuild --task "$(task_pattern)" --node Node20
-  displayName: Build Tasks Node20
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
-
-# Use node 10, npm 6
-- task: NodeTool@0
-  displayName: Use node 10
-  inputs:
-    versionSpec: 10.24.1
-
 - script: node ./ci/after-build-check-tasks.js
   displayName: Check that tasks has no duplicated libs
   condition: and(succeeded(), eq(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))

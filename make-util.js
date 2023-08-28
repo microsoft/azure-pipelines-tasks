@@ -11,7 +11,8 @@ var shell = require('shelljs');
 var syncRequest = require('sync-request');
 
 // global paths
-var downloadPath = path.join(__dirname, '_download');
+var repoPath = __dirname;
+var downloadPath = path.join(repoPath, '_download');
 
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
@@ -329,28 +330,6 @@ var ensureTool = function (name, versionArgs, validate) {
 }
 exports.ensureTool = ensureTool;
 
-var ensureNvmInstalled = function () {
-    var toolPath = shell.which('nvm');
-    if (!toolPath) {
-        console.log(
-            "==========================================\n" + 
-            "IMPORTANT NOTE: nvm is not installed.  Please use the following command to install nvm latest: \n" + 
-            "On Linux: \n" +
-            "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \n" +
-            "export NVM_DIR=\"$HOME/.nvm\"\n" +
-            "[ -s \"$NVM_DIR/nvm.sh\" ] && \. \"$NVM_DIR/nvm.sh\"  # This loads nvm\n" +
-            "[ -s \"$NVM_DIR/bash_completion\" ] && \. \"$NVM_DIR/bash_completion\"  # This loads nvm bash_completion\n" + 
-            "On Windows: \n" +
-            "winget search nvm-windows \n" + 
-            "Winget install nvm-windows\n" + 
-            "==========================================\n"
-        );
-    } else {
-        console.log('nvm tool: ' + toolPath + '');
-    }
-}
-exports.ensureNvmInstalled = ensureNvmInstalled;
-
 var installNode = function (nodeVersion) {
     switch (nodeVersion || '') {
         case '20':
@@ -363,7 +342,7 @@ var installNode = function (nodeVersion) {
             nodeVersion = 'v14.10.1';
             break;
         case '10':
-            nodeVersion = 'v10.21.0';
+            nodeVersion = 'v10.24.1';
             break;
         case '6':
         case '':
@@ -1932,8 +1911,7 @@ function syncGeneratedFilesWrapper(originalFunction, genTaskPath, callGenTaskDur
         "Syncing generated files with source task...\n" +
         "----------------------------------------------\n" +
         "Getting list of uncommitted changes");
-    
-    const initialDiffOutput = run(`git diff --name-only`)
+    const initialDiffOutput = run(`git -C "${repoPath}" diff --name-only`)
     console.log(
         "uncommitted changes:\n" + 
         `${initialDiffOutput}\n` +
