@@ -2,6 +2,7 @@
 param()
 
 . $PSScriptRoot\helpers.ps1
+. $PSScriptRoot\errors.ps1
 
 function Get-ActionPreference {
     param (
@@ -94,21 +95,22 @@ try {
     # and we rely on PowerShell piping back NormalView error records (required because PowerShell Core changed the default to ConciseView)
     $contents += "`$ErrorView = 'NormalView'"
     if ("$input_targetType".ToUpperInvariant() -eq 'FILEPATH') {
-        $resultArgs = $input_arguments;
 
-        $featureFlags = @{
-            audit     = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC_LOG)
-            activate  = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
-            telemetry = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_COLLECT)
+        try {
+            Test-FileArgs $input_arguments
         }
-        if ($featureFlags.activate -or $featureFlags.audit -or $featureFlags.telemetry) {
-            $sanitizedArgs = Sanitize-FileArguments -InputArgs $input_arguments;
-            if ($featureFlags.activate) {
-                $resultArgs = $sanitizedArgs;
+        catch [ArgsSanitizingException] {
+            throw
+        }
+        catch {
+            $telemetry = @{
+                'UnexpectedError' = $_.Exception.Message
+                'ErrorStackTrace' = $_.Exception.StackTrace
             }
+            Publish-Telemetry $telemetry
         }
 
-        $contents += ". '$("$input_filePath".Replace("'", "''"))' $resultArgs".Trim()
+        $contents += ". '$("$input_filePath".Replace("'", "''"))' $input_arguments".Trim()
         Write-Host (Get-VstsLocString -Key 'PS_FormattedCommand' -ArgumentList ($contents[-1]))
     }
     else {
@@ -241,6 +243,10 @@ try {
     if ($failed) {
         Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
     }
+}
+catch {
+    Write-VstsTaskError -Message $_.Exception.Message
+    Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
 }
 finally {
     Trace-VstsLeavingInvocation $MyInvocation

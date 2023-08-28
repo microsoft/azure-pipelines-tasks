@@ -215,15 +215,9 @@
         "Tests"
     ],
     "Node16": [
-        "DownloadGitHubNugetPackageV1",
         "KubernetesV0",
-        "NuGetPublisherV0",
         "MysqlDeploymentOnMachineGroupV1",
-        "GitHubReleaseV0",
-        "GitHubReleaseV1",
-        "GitHubCommentV0",
-        "AndroidSigningV2",
-        "AndroidSigningV3"
+        "GitHubReleaseV1"
     ],
     "Node16_225": [
         "AzureRmWebAppDeploymentV3",
@@ -233,10 +227,7 @@
         "UseDotNetV2",
         "KubernetesManifestV0",
         "KubernetesManifestV1",
-        "AzureIoTEdgeV2",
-        "DownloadFileshareArtifactsV1",
         "AzureVmssDeploymentV0",
-        "CargoAuthenticateV0",
         "AzureMysqlDeploymentV1",
         "AzureFunctionAppContainerV1",
         "KubectlInstallerV0",
@@ -255,6 +246,13 @@
         "AzureKeyVaultV2",
         "AzurePowerShellV4",
         "AzurePowerShellV5",
-        "AzureResourceGroupDeploymentV2"
+        "AzureResourceGroupDeploymentV2",
+        "AzureResourceManagerTemplateDeploymentV3",
+        "DuffleInstallerV0",
+        "NuGetAuthenticateV0",
+        "DownloadBuildArtifactsV0",
+        "AzureFileCopyV2",
+        "AzureFileCopyV3",
+        "DockerComposeV0"
     ]
 }

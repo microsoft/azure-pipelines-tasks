@@ -3,7 +3,9 @@ import path = require('path');
 import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
-import { sanitizeScriptArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
+import { validateFileArgs } from './helpers';
+import { ArgsSanitizingError } from './errors';
+import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
 var uuidV4 = require('uuid/v4');
 
 function getActionPreference(vstsInputName: string, defaultAction: string = 'Default', validActions: string[] = ['Default', 'Stop', 'Continue', 'SilentlyContinue']) {
@@ -76,30 +78,24 @@ async function run() {
 
         let script = '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
-            let resultArgs = input_arguments;
 
-            const featureFlags = {
-                audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
-                activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
-                telemetry: tl.getBoolFeatureFlag('AZP_75787_ENABLE_COLLECT')
-            };
+            try {
+                validateFileArgs(input_arguments);
+            }
+            catch (error) {
+                if (error instanceof ArgsSanitizingError) {
+                    throw error;
+                }
 
-            if (featureFlags.activate || featureFlags.activate || featureFlags.telemetry) {
-                const sanitizedArgs = sanitizeScriptArgs(
-                    input_arguments,
+                emitTelemetry('TaskHub', 'PowerShellV2',
                     {
-                        argsSplitSymbols: '``',
-                        warningLocSymbol: 'JS_SanitizerOutput',
-                        telemetryFeature: 'PowerShellV2',
-                        saniziteRegExp: /(?<!`)([^a-zA-Z0-9\\` _'"\-=\/:\.])/g
+                        UnexpectedError: error?.message ?? JSON.stringify(error) ?? null,
+                        ErrorStackTrace: error?.stack ?? null
                     }
                 );
-                if (featureFlags.activate) {
-                    resultArgs = sanitizedArgs;
-                }
             }
 
-            script = `. '${input_filePath.replace(/'/g, "''")}' ${resultArgs}`.trim();
+            script = `. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim();
         } else {
             script = `${input_script}`;
         }

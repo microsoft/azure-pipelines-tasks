@@ -1,6 +1,7 @@
 import path = require('path');
 import sign = require('azure-pipelines-tasks-ios-signing-common/ios-signing-common');
 import secureFilesCommon = require('azure-pipelines-tasks-securefiles-common/securefiles-common');
+import { OpenSSlError } from 'azure-pipelines-tasks-ios-signing-common/errors/OpenSSlError';
 import * as tl from 'azure-pipelines-task-lib/task';
 import os = require('os');
 
@@ -88,6 +89,9 @@ async function run() {
         tl.setVariable('APPLE_CERTIFICATE_SIGNING_IDENTITY', commonName);
         tl.setVariable('APPLE_CERTIFICATE_KEYCHAIN', keychainPath);
     } catch (err) {
+        if (err instanceof OpenSSlError) {
+            tl.warning(tl.loc('OpenSSLError'));
+        }
         tl.setResult(tl.TaskResult.Failed, err);
     } finally {
         // delete certificate from temp location after installing

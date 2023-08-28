@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 226,
+    "Minor": 227,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -658,7 +658,7 @@
     "RunFromZipPreventsFileInUseError": "ms-resource:loc.messages.RunFromZipPreventsFileInUseError"
   },
   "_buildConfigMapping": {
-    "Default": "4.226.1",
-    "Node16-225": "4.226.0"
+    "Default": "4.227.1",
+    "Node16-225": "4.227.0"
   }
 }
