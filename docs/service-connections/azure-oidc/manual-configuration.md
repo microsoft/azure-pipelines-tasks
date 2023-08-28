@@ -21,7 +21,9 @@ Press next and this will bring you to the second step.
 -   Go to the [Azure Portal](https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps) or [Azure Active Directory Portal](https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps)
 -   Click on the 'New registration' link:
     </br><img src="new-app-reg.png" width="133"/>
--   Give the new App Registration a name
+-   Give the new App Registration a name and create but do not close the window as you will need to enter some details from here in the service connection.
+
+## Create Service Connection (step 2)
 -   Enter the following details into the service connection creation panel:
     - Copy the `Application (client) ID` field from the `Overview` blade of the `App registration` page and paste this into the `Service Principal Id` field in the service connection creation panel.
     - Copy the `Directory (tenant) ID` field from the `Overview` blade of the `App registration` page and paste this into the `Tenant ID` field in the service connection creation panel.
@@ -36,7 +38,6 @@ Press next and this will bring you to the second step.
     - Copy the `Subject identifier` field from the service connection creation panel, for example `sc://ggurgulr0/workload-identity-federation1/mySc`
     (this is sc://`your organization name`/`your project name`/`your service connection name`) and paste it into the `Subject identifier` field in Azure `Add a credential` blade
     ![image](https://github.com/microsoft/azure-pipelines-tasks/assets/3975111/5abd6fbe-7d48-4b38-9793-8158f9b6f77d)
-
 
 ## Grant permissions
 
