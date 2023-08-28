@@ -17,8 +17,6 @@ param (
     [string]$additionalArguments
     )
 
-    Import-Module $PSScriptRoot\ps_modules\Sanitizer
-
     Write-Verbose "fqdn = $fqdn"
     Write-Verbose "storageAccount = $storageAccount"
     Write-Verbose "containerName = $containerName"
