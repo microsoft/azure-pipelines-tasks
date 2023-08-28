@@ -42,13 +42,15 @@ Press next and this will bring you to the second step.
 
 The Service Principal created needs to be given access to the target Azure scope e.g. an Azure Subscription. This is done under Access Control (IAM):
 
-<img src="iam.png" width="150"/>
+![image](https://github.com/microsoft/azure-pipelines-tasks/assets/3975111/4456efbd-436e-426f-bf55-d93b405b88e3)
+
 
 ## Federated Managed Identity
 
-Instead of a Service Principal, you can also configure a Managed Identity:
+Instead of a Service Principal, you can also configure a Managed Identity, which also has Federated Identity blade.
 
-<img src="multi-window-msi-annotated.png" width="2124"/>
+![Uploading image.png…]()
+
 
 You can use Terraform to create a Service Connection with a Managed Identity. See [azuredevops_serviceendpoint_azurerm documentation](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/serviceendpoint_azurerm#workload-identity-federation-manual-azurerm-service-endpoint-subscription-scoped) and end-to-end sample at [Azure-Samples/azure-devops-terraform-oidc-ci-cd](https://github.com/Azure-Samples/azure-devops-terraform-oidc-ci-cd/tree/main).
 
