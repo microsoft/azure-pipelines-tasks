@@ -214,11 +214,6 @@
         "task.loc.json",
         "Tests"
     ],
-    "Node16": [
-        "KubernetesV0",
-        "MysqlDeploymentOnMachineGroupV1",
-        "GitHubReleaseV1"
-    ],
     "Node16_225": [
         "AzureRmWebAppDeploymentV3",
         "AzureRmWebAppDeploymentV4",
