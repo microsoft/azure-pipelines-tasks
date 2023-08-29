@@ -298,7 +298,6 @@
         "AzureVmssDeploymentV0",
         "AppCenterDistributeV1",
         "AppCenterDistributeV2",
-        "AppCenterDistributeV3",
         "AppCenterTestV1",
         "ArchiveFilesV2",
         "AzureAppServiceSettingsV1",
@@ -311,6 +310,14 @@
         "CMakeV1",
         "CmdLineV2",
         "CocoaPodsV0",
-        "CUrlUploaderV2"
+        "CUrlUploaderV2",
+        "CondaAuthenticateV0",
+        "CondaEnvironmentV0",
+        "CondaEnvironmentV1",
+        "ContainerBuildV0",
+        "ContainerStructureTestV0",
+        "CopyFilesOverSSHV0",
+        "CopyFilesV2",
+        "DecryptFileV1"
     ]
 }
