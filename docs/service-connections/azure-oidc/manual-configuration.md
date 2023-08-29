@@ -44,7 +44,9 @@ Press next and this will bring you to the second step.
 ## Grant permissions
 
 The Service Principal created needs to be given access to the target Azure scope e.g. an Azure Subscription.
-This is done under Access Control (IAM).
+This is done under Access Control (IAM):
+
+<img src="iam.png" width="150"/>
 
 
 ## Federated Managed Identity
