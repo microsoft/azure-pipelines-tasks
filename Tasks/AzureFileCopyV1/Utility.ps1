@@ -4,8 +4,6 @@ $ErrorActionPreference = 'Stop'
 $azureStackEnvironment = "AzureStack"
 $jobId = $env:SYSTEM_JOBID;
 
-Import-Module $PSScriptRoot\ps_modules\Sanitizer
-
 function Get-DeploymentModulePath
 {
     Write-Output "$PSScriptRoot\DeploymentUtilities"

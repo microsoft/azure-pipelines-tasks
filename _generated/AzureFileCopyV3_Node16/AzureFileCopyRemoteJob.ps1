@@ -10,8 +10,6 @@ $AzureFileCopyRemoteJob = {
         [switch]$EnableDetailedLogging
     )
 
-    Import-Module $PSScriptRoot\ps_modules\Sanitizer
-
     function Write-DetailLogs
     {
         [CmdletBinding()]
