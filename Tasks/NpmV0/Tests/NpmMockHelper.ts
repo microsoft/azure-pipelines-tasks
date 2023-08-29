@@ -129,7 +129,7 @@ export class NpmMockHelper {
     }
 
     public registerNugetLocationHelpersMock() {
-        this.tmr.registerMock('azure-pipelines-tasks-packaging-common/locationUtilities', {
+        this.tmr.registerMock('packaging-common/locationUtilities', {
             getPackagingUris: function(input) {
                 const collectionUrl: string = "https://vsts/packagesource";
                 return {
