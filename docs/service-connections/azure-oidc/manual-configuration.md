@@ -27,7 +27,8 @@ Press next and this will bring you to the second step.
 -   Enter the following details into the service connection creation panel:
     - Copy the `Application (client) ID` field from the `Overview` blade of the `App registration` page and paste this into the `Service Principal Id` field in the service connection creation panel.
     - Copy the `Directory (tenant) ID` field from the `Overview` blade of the `App registration` page and paste this into the `Tenant ID` field in the service connection creation panel.
-      ![image](https://github.com/microsoft/azure-pipelines-tasks/assets/3975111/d7e97952-8683-4ee7-894d-73caee0b9f78)
+      ![image](https://github.com/microsoft/azure-pipelines-tasks/assets/3975111/ae400486-7e2b-4d20-b008-881b967d5433)
+
 -   Navigate to 'Certificates & secrets' of the `App registration` you created:
     </br><img src="certificates-and-secrets.png" width="158"/>
 -   Select 'Federated Credentials':
@@ -37,7 +38,8 @@ Press next and this will bring you to the second step.
     - Copy the `Issuer` field from the service connection creation panel, for example `https://vstoken.dev.azure.com/6804a3a0-e94c-41ae-9343-c5676fd58375` (no trailing '/') and paste it into the `Issuer` field in Azure `Add a credential` blade. Note that the issuer is unique for every Azure DevOps organization.
     - Copy the `Subject identifier` field from the service connection creation panel, for example `sc://ggurgulr0/workload-identity-federation1/mySc`
     (this is sc://`your organization name`/`your project name`/`your service connection name`) and paste it into the `Subject identifier` field in Azure `Add a credential` blade
-    ![image](https://github.com/microsoft/azure-pipelines-tasks/assets/3975111/5abd6fbe-7d48-4b38-9793-8158f9b6f77d)
+    ![Zrzut ekranu 2023-08-28 175325](https://github.com/microsoft/azure-pipelines-tasks/assets/3975111/f746db8b-5f84-403d-a70e-c55a0ada4596)
+
 
 ## Grant permissions
 
