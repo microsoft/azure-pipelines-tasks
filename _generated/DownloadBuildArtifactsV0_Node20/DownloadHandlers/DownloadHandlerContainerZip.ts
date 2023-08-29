@@ -104,7 +104,6 @@ export class DownloadHandlerContainerZip extends DownloadHandler {
                     if (tl.exist(this.zipLocation)) {
                         tl.rmRF(this.zipLocation);
                     }
-
                     resolve(undefined);
 
                 }).catch((error) => {
