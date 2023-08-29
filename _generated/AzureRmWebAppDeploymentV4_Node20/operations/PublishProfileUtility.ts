@@ -108,6 +108,9 @@ export class PublishProfileUtility {
 			   outStream: process.stdout,
 			   failOnStdErr: true,
                windowsVerbatimArguments: true,
+               // shell should be true, otherwise see https://github.com/microsoft/azure-pipelines-tasks/issues/17634
+               // workaround https://github.com/nodejs/node/issues/7367#issuecomment-229728704
+               shell: true 
              });
         } catch (error) {
             cmdError = error;

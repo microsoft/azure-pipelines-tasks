@@ -252,16 +252,20 @@ function getNodeVersion (taskName) {
 
     var taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
     var taskJson = JSON.parse(taskJsonContents);
-    var execution = taskJson['execution'] || taskJson['prejobexecution'];
+    const executions = ['execution', 'prejobexecution']
+                    .map(key => taskJson[key]);
     var nodeVersion = 10;
-    for (var key of Object.keys(execution)) {
-        const executor = key.toLocaleLowerCase();
-        if (!executor.startsWith('node')) {
-            continue;
-        }
-        const version = parseInt(executor.replace('node', ''));
-        if (version > nodeVersion) {
-            nodeVersion = version;
+    for (const executors of executions) {
+        if (!executors) continue;
+        for (var key of Object.keys(executors)) {
+            const executor = key.toLocaleLowerCase();
+            if (!executor.startsWith('node')) {
+                continue;
+            }
+            const version = parseInt(executor.replace('node', ''));
+            if (version > nodeVersion) {
+                nodeVersion = version;
+            }
         }
     }
     return nodeVersion;

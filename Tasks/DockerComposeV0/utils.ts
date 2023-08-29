@@ -13,6 +13,10 @@ export function getFinalComposeFileName(): string {
 export function writeFileSync(filename: string, data: any, options?: { encoding?: BufferEncoding; mode?: number; flag?: string; }): void {
     fs.writeFileSync(filename, data, options);
 }
+#elseif NODE20
+export function writeFileSync(filename: string, data: any, options?: { encoding?: BufferEncoding; mode?: number; flag?: string; }): void {
+    fs.writeFileSync(filename, data, options);
+}
 #else
 export function writeFileSync(filename: string, data: any, options?: { encoding?: string; mode?: number; flag?: string; }): void {
     fs.writeFileSync(filename, data, options);

@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 227,
-    "Patch": 2
+    "Patch": 4
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -768,8 +768,8 @@
     "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM"
   },
   "_buildConfigMapping": {
-    "Default": "3.227.4",
-    "Node16-225": "3.227.2",
-    "Node20-225": "3.227.3"
+    "Default": "3.227.6",
+    "Node16-225": "3.227.4",
+    "Node20-225": "3.227.5"
   }
 }

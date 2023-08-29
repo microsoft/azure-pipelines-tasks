@@ -284,6 +284,11 @@
         "AzureWebAppContainerV1",
         "PublishSymbolsV2",
         "DuffleInstallerV0",
-        "NuGetAuthenticateV0"
+        "NuGetAuthenticateV0",
+        "AzureFileCopyV2",
+        "AzureFileCopyV3",
+        "DockerComposeV0",
+        "DownloadBuildArtifactsV0",
+        "AzureVmssDeploymentV0"
     ]
 }

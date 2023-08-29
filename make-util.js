@@ -1716,13 +1716,17 @@ var getTaskNodeVersion = function(buildPath, taskName) {
     }
     var taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
     var taskJson = JSON.parse(taskJsonContents);
-    var execution = taskJson['execution'] || taskJson['prejobexecution'];
-    for (var key of Object.keys(execution)) {
-        const executor = key.toLocaleLowerCase();
-        if (!executor.startsWith('node')) continue;
-        
-        const version = executor.replace('node', '');
-        nodes.push(parseInt(version) || 6);
+    const executions = ['execution', 'prejobexecution']
+            .map(key => taskJson[key]);
+    for (const executors of executions) {
+        if (!executors) continue;
+        for (var key of Object.keys(executors)) {
+            const executor = key.toLocaleLowerCase();
+            if (!executor.startsWith('node')) continue;
+            
+            const version = executor.replace('node', '');
+            nodes.push(parseInt(version) || 6);
+        }
     }
 
     if (nodes.length) {

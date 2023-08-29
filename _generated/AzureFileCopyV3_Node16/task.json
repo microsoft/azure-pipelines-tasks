@@ -14,7 +14,7 @@
   "version": {
     "Major": 3,
     "Minor": 227,
-    "Patch": 2
+    "Patch": 4
   },
   "demands": [
     "azureps"
@@ -313,7 +313,8 @@
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
   },
   "_buildConfigMapping": {
-    "Default": "3.227.3",
-    "Node16-225": "3.227.2"
+    "Default": "3.227.6",
+    "Node16-225": "3.227.4",
+    "Node20-225": "3.227.5"
   }
 }
