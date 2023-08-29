@@ -113,8 +113,12 @@ export function createZipStream(symbolsPaths: string[], symbolsRoot: string): No
     return zipStream;
 }
 
-export function createZipFile(zipStream: NodeJS.ReadableStream, filename: string): Promise<string> {
+export function createZipFile(zipStream: NodeJS.ReadableStream, filename: string): Promise<void> {
+#if NODE20
+    return new Promise<void>((resolve, reject) => {
+#else
     return new Promise((resolve, reject) => {
+#endif
         zipStream.pipe(fs.createWriteStream(filename))
             .on('finish', function () {
                 resolve();

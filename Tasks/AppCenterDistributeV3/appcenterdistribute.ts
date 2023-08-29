@@ -165,7 +165,11 @@ async function loadReleaseIdUntilSuccess(apiServer: string, apiVersion: string, 
  * @returns {Promise<any>} - the promise is resolved once the upload has been reported as completed.
 */
 async function uploadRelease(releaseUploadParams: UploadInfo, file: string) {
+#if NODE20
+    return new Promise<void>((resolve, reject) => {
+#else
     return new Promise((resolve, reject) => {
+#endif
         const assetId = releaseUploadParams.package_asset_id;
         const urlEncodedToken = releaseUploadParams.url_encoded_token;
         const uploadDomain = releaseUploadParams.upload_domain;
