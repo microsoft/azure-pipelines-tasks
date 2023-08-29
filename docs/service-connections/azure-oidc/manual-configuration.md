@@ -39,8 +39,7 @@ Press next and this will bring you to the second step.
     - Copy the `Subject identifier` field from the service connection creation panel, for example `sc://ggurgulr0/workload-identity-federation1/mySc`
     (this is sc://`your organization name`/`your project name`/`your service connection name`) and paste it into the `Subject identifier` field in Azure `Add a credential` blade
     ![Zrzut ekranu 2023-08-28 175325](https://github.com/microsoft/azure-pipelines-tasks/assets/3975111/4b79a11c-1c64-430b-8615-f3d9240e32e0)
-
-
+-   Click Add and save the Federated Credential. Click "Verify and Save" and save the Service Connection.
 
 ## Grant permissions
 
