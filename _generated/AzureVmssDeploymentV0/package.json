@@ -5,7 +5,6 @@
     "@types/mocha": "^9.1.1",
     "@types/node": "^10.17.0",
     "@types/q": "1.0.7",
-    "agent-base": "^6.0.2",
     "artifact-engine": "^1.2.0",
     "azp-tasks-az-blobstorage-provider": "^2.219.1",
     "azure-pipelines-task-lib": "^3.4.0",
