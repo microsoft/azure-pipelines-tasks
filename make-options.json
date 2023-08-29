@@ -146,6 +146,7 @@
         "NuGetCommandV2",
         "NuGetPackagerV0",
         "NuGetPublisherV0",
+        "NuGetRestoreV1",
         "NuGetToolInstallerV0",
         "NuGetToolInstallerV1",
         "OpenPolicyAgentInstallerV0",
