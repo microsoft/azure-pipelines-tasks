@@ -305,6 +305,12 @@
         "AzureCLIV1",
         "AzureCLIV2",
         "AzureContainerAppsV0",
-        "AzureContainerAppsV1"
+        "AzureContainerAppsV1",
+        "AzureWebAppV1",
+        "BashV3",
+        "CMakeV1",
+        "CmdLineV2",
+        "CocoaPodsV0",
+        "CUrlUploaderV2"
     ]
 }

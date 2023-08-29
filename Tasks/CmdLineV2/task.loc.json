@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 212,
-    "Patch": 0
+    "Minor": 227,
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "showEnvironmentVariables": true,
@@ -76,7 +76,7 @@
     "Node16": {
       "target": "cmdline.js",
       "argumentFormat": ""
-  }
+    }
   },
   "messages": {
     "GeneratingScript": "ms-resource:loc.messages.GeneratingScript",
