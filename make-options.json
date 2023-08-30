@@ -327,11 +327,6 @@
         "DotNetCoreInstallerV0",
         "DotNetCoreInstallerV1",
         "AzureFileCopyV4",
-        "AzureFileCopyV5",
-        "DownloadGitHubNpmPackageV1",
-        "DownloadGitHubNugetPackageV1",
-        "DownloadGitHubReleaseV0",
-        "DownloadPackageV0",
-        "DownloadPackageV1"
+        "AzureFileCopyV5"
     ]
 }
