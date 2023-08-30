@@ -318,6 +318,13 @@
         "ContainerStructureTestV0",
         "CopyFilesOverSSHV0",
         "CopyFilesV2",
-        "DecryptFileV1"
+        "DecryptFileV1",
+        "DeleteFilesV1",
+        "DockerInstallerV0",
+        "DockerV0",
+        "DockerV1",
+        "DotNetCoreCLIV2",
+        "DotNetCoreInstallerV0",
+        "DotNetCoreInstallerV1"
     ]
 }
