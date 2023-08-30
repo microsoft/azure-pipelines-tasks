@@ -11,7 +11,8 @@ var shell = require('shelljs');
 var syncRequest = require('sync-request');
 
 // global paths
-var downloadPath = path.join(__dirname, '_download');
+var repoPath = __dirname;
+var downloadPath = path.join(repoPath, '_download');
 
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
@@ -1910,8 +1911,7 @@ function syncGeneratedFilesWrapper(originalFunction, genTaskPath, callGenTaskDur
         "Syncing generated files with source task...\n" +
         "----------------------------------------------\n" +
         "Getting list of uncommitted changes");
-    
-    const initialDiffOutput = run(`git diff --name-only`)
+    const initialDiffOutput = run(`git -C "${repoPath}" diff --name-only`)
     console.log(
         "uncommitted changes:\n" + 
         `${initialDiffOutput}\n` +
