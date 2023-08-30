@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 227,
-    "Patch": 5
+    "Minor": 228,
+    "Patch": 1
   },
   "satisfies": [
     "DotNetCore"
@@ -191,8 +191,7 @@
     "DepricatedVersionNetCore": "ms-resource:loc.messages.DepricatedVersionNetCore"
   },
   "_buildConfigMapping": {
-    "Default": "2.227.5",
-    "Node16-225": "2.227.3",
-    "Node20-225": "2.227.4"
+    "Default": "2.228.1",
+    "Node16-225": "2.228.0"
   }
 }
