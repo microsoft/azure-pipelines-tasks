@@ -69,7 +69,7 @@ The following table lists [tasks](https://learn.microsoft.com/azure/devops/pipe
 
 ## Error messages
 
-The following table contains a list of known error messages and:
+The following table contains a list of known error messages:
 
 | Message | Plausible issue |
 |---------|-----------------|
