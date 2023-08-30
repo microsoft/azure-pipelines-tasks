@@ -99,12 +99,15 @@ try {
         try {
             Test-FileArgs $input_arguments
         }
-        catch [ArgsSanitizingException] {
-            throw
-        }
         catch {
+            $message = $_.Exception.Message
+
+            if ($message -eq (Get-VstsLocString -Key 'ScriptArgsSanitized')) {
+                throw $message;
+            }
+
             $telemetry = @{
-                'UnexpectedError' = $_.Exception.Message
+                'UnexpectedError' = $message
                 'ErrorStackTrace' = $_.Exception.StackTrace
             }
             Publish-Telemetry $telemetry

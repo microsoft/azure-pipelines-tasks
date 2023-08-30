@@ -1,5 +1,3 @@
-. $PSScriptRoot\errors.ps1
-
 function Publish-Telemetry($Telemetry) {
     $area = 'TaskHub'
     $feature = 'PowerShellV2'
@@ -240,7 +238,7 @@ function Test-FileArgs([string]$inputArguments) {
             if ($sanitizedArgs -ne $expandedArgs) {
                 $message = Get-VstsLocString -Key 'ScriptArgsSanitized';
                 if ($featureFlags.activate) {
-                    throw [ArgsSanitizingException] $message;
+                    throw $message;
                 }
                 if ($featureFlags.audit) {
                     Write-Warning $message;
