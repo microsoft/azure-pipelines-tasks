@@ -256,6 +256,16 @@
         "DownloadGitHubNugetPackageV1",
         "DownloadGitHubReleaseV0",
         "DownloadPackageV0",
-        "DownloadPackageV1"
+        "DownloadPackageV1",
+        "DownloadSecureFileV1",
+        "ExtractFilesV1",
+        "FileTransformV1",
+        "FileTransformV2",
+        "FtpUploadV1",
+        "FtpUploadV2",
+        "FuncToolsInstallerV0",
+        "GitHubCommentV0",
+        "GitHubReleaseV0",
+        "GitHubReleaseV1"
     ]
 }

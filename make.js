@@ -1035,7 +1035,7 @@ CLI.gentask = function() {
             const fileNames = ['package.json', 'package-lock.json', 'npm-shrinkwrap.json'];
             const buildConfigsPath = path.join(tasksPath, taskName, '_buildConfigs', configsString);
             if (fs.existsSync(buildConfigsPath)) {
-                for (fileName in fileNames) {
+                for (const fileName of fileNames) {
                     const filePath = path.join(taskPath, fileName);
                     if (fs.existsSync(filePath)) {
                         console.log(`Copying ${fileName} from ${taskPath} to ${buildConfigsPath} folder.`);
