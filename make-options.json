@@ -325,6 +325,8 @@
         "DockerV1",
         "DotNetCoreCLIV2",
         "DotNetCoreInstallerV0",
-        "DotNetCoreInstallerV1"
+        "DotNetCoreInstallerV1",
+        "AzureFileCopyV4",
+        "AzureFileCopyV5"
     ]
 }

@@ -14,7 +14,7 @@
   "version": {
     "Major": 4,
     "Minor": 227,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [
     "azureps"
@@ -236,6 +236,11 @@
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "prejobexecution": {
+    "Node10": {
+      "target": "PreJobExecutionAzureFileCopy.js"
+    }
+  },
   "execution": {
     "PowerShell3": {
       "target": "AzureFileCopy.ps1"
