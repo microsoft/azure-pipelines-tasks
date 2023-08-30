@@ -55,7 +55,11 @@ export class MultiFilePackage extends Package {
     }
 
     private async getPackageFileContent(fileMetadata: any, feedId: string, project: string, packageMetadata: any): Promise<PackageFileResult|null> {
-        if (fileMetadata.protocolMetadata.data.storageId) {
+        const protocolFileData = fileMetadata.protocolMetadata.data;
+
+        // sometimes the file info has PascalCase keys, sometimes camelCase
+        const storageId = protocolFileData.storageId || protocolFileData.StorageId;
+        if (storageId) {
             tl.debug(`Getting download url for file ${fileMetadata.name}.`)
             
             try {
@@ -73,14 +77,12 @@ export class MultiFilePackage extends Package {
             }
         }
 
-        if(fileMetadata.protocolMetadata.data.content)
+        const content = protocolFileData.content || protocolFileData.Content;
+        if(content)
         {
             tl.debug(`Getting literal content for file ${fileMetadata.name}.`)
 
-            return new PackageFileResult(
-                fileMetadata.name, 
-                fileMetadata.protocolMetadata.data.content, 
-                false);
+            return new PackageFileResult(fileMetadata.name, content, false);
         }
         
         tl.warning(tl.loc("SkippingFileWithNoContent", fileMetadata.name));
