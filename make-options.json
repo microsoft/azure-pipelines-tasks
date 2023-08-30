@@ -250,5 +250,12 @@
         "AzureFileCopyV2",
         "AzureFileCopyV3",
         "DockerComposeV0"
+    ],
+    "Node20": [
+        "DownloadGitHubNpmPackageV1",
+        "DownloadGitHubNugetPackageV1",
+        "DownloadGitHubReleaseV0",
+        "DownloadPackageV0",
+        "DownloadPackageV1"
     ]
 }
