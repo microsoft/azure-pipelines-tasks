@@ -2,7 +2,6 @@
 param()
 
 . $PSScriptRoot\helpers.ps1
-. $PSScriptRoot\errors.ps1
 
 function Get-ActionPreference {
     param (
