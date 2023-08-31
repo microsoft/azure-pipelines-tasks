@@ -277,6 +277,9 @@
         "InstallSSHKeyV0",
         "JavaToolInstallerV0",
         "JenkinsDownloadArtifactsV1",
-        "JenkinsQueueJobV2"
+        "JenkinsQueueJobV2",
+        "KubeloginInstallerV0",
+        "KubernetesV1",
+        "MSBuildV1"
     ]
 }
