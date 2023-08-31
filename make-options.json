@@ -271,6 +271,11 @@
         "GoV0",
         "HelmInstallerV0",
         "HelmInstallerV1",
-        "IISWebAppDeploymentOnMachineGroupV0"
+        "IISWebAppDeploymentOnMachineGroupV0",
+        "InstallAppleCertificateV2",
+        "InstallAppleProvisioningProfileV1",
+        "InstallSSHKeyV0",
+        "JavaToolInstallerV0",
+        "JenkinsDownloadArtifactsV1"
     ]
 }
