@@ -15,7 +15,7 @@
   "version": {
     "Major": 2,
     "Minor": 227,
-    "Patch": 2
+    "Patch": 1
   },
   "groups": [
     {
@@ -145,6 +145,10 @@
     "Node16": {
       "target": "jenkinsqueuejobtask.js",
       "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "jenkinsqueuejobtask.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -163,5 +167,9 @@
     "JenkinsJobFailed": "ms-resource:loc.messages.JenkinsJobFailed",
     "JenkinsJobFailedtoQueue": "ms-resource:loc.messages.JenkinsJobFailedtoQueue",
     "JenkinsJobQueueUriInvalid": "ms-resource:loc.messages.JenkinsJobQueueUriInvalid"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.227.2",
+    "Node20-225": "2.227.1"
   }
 }

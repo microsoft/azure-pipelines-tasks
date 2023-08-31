@@ -276,6 +276,7 @@
         "InstallAppleProvisioningProfileV1",
         "InstallSSHKeyV0",
         "JavaToolInstallerV0",
-        "JenkinsDownloadArtifactsV1"
+        "JenkinsDownloadArtifactsV1",
+        "JenkinsQueueJobV2"
     ]
 }
