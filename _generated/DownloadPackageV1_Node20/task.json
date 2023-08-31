@@ -186,6 +186,7 @@
     "StartingDownloadOfPackage": "Starting download of package %s to location %s",
     "ExtractingPackage": "Extracting package %s to directory %s",
     "PackageTypeNotSupported": "Only Nuget, Python, Universal, Npm, and Maven packages types can be downloaded using this task.",
+    "SkippingFileWithNoContent": "ms-resource:loc.messages.SkippingFileWithNoContent",
     "ExtractionFailed": "Failed to extract package with error %s",
     "RetryingOperation": "Operation failed, waiting %sms before retrying, retries remaining: %s",
     "RedirectUrlError": "Unable to get redirect URL with error %.",

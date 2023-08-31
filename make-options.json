@@ -278,6 +278,16 @@
         "JenkinsQueueJobV2",
         "KubeloginInstallerV0",
         "KubernetesV1",
-        "MSBuildV1"
+        "MSBuildV1",
+        "NodeToolV0",
+        "NpmAuthenticateV0",
+        "NuGetAuthenticateV1",
+        "NuGetCommandV2",
+        "NuGetInstallerV0",
+        "NodeTaskRunnerInstallerV0",
+        "MavenV2",
+        "MavenV3",
+        "MavenAuthenticateV0",
+        "MysqlDeploymentOnMachineGroupV1"
     ]
 }
