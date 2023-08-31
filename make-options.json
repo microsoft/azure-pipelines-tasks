@@ -266,6 +266,11 @@
         "FuncToolsInstallerV0",
         "GitHubCommentV0",
         "GitHubReleaseV0",
-        "GitHubReleaseV1"
+        "GitHubReleaseV1",
+        "GoToolV0",
+        "GoV0",
+        "HelmInstallerV0",
+        "HelmInstallerV1",
+        "IISWebAppDeploymentOnMachineGroupV0"
     ]
 }

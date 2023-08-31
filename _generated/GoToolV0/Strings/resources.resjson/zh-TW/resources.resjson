@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Go 工具安裝程式",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?linkid=867581)或[參閱 Go 文件](https://golang.org/doc/)",
+  "loc.description": "在快取中尋找，或下載特定版本的 Go 並將其新增至 PATH",
+  "loc.instanceNameFormat": "使用 Go $(version)",
+  "loc.group.displayName.advanced": "進階",
+  "loc.input.label.version": "版本",
+  "loc.input.help.version": "要下載 (必要的話) 並使用的 Go 版本。範例: 1.9.3",
+  "loc.input.label.goPath": "GOPATH",
+  "loc.input.help.goPath": "GOPATH 環境變數的自訂值。",
+  "loc.input.label.goBin": "GOBIN",
+  "loc.input.help.goBin": "GOBIN 環境變數的自訂值。",
+  "loc.messages.FailedToDownload": "無法下載 Go %s 版。請驗證版本有效，並解決其他任何問題。錯誤: %s",
+  "loc.messages.TempDirNotSet": "應設定 'Agent.TempDirectory' 環境變數。"
+}
