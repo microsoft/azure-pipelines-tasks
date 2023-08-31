@@ -80,6 +80,13 @@
       "visibleRule": "credsType = inputs"
     },
     {
+      "name": "implicitFTPS",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.implicitFTPS",
+      "defaultValue": "false",
+      "required": false
+    },
+    {
       "name": "rootFolder",
       "aliases": [
         "rootDirectory"

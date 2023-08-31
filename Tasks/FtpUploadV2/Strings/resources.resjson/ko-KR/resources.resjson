@@ -11,6 +11,7 @@
   "loc.input.label.serverUrl": "서버 URL",
   "loc.input.label.username": "사용자 이름",
   "loc.input.label.password": "암호",
+  "loc.input.label.implicitFTPS": "암시적 FTPS 사용",
   "loc.input.label.rootFolder": "루트 폴더",
   "loc.input.help.rootFolder": "파일을 업로드할 소스 폴더입니다.",
   "loc.input.label.filePatterns": "파일 패턴",
