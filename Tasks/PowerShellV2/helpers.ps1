@@ -218,7 +218,7 @@ function Test-FileArgs([string]$inputArguments) {
     }
 
     ## get values of all keys
-    Write-Debug "Feature flags state: @featureFlags"
+    Write-Debug "Feature flags state: $($featureFlags | ConvertTo-Json -Compress)"
 
     if ($featureFlags.activate -or $featureFlags.audit -or $featureFlags.telemetry) {
         Write-Debug "Validating file arguments."
