@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Установщик Open Policy Agent",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.description": "Установить Open Policy Agent на компьютере агента",
+  "loc.instanceNameFormat": "Установить OPA $(opaVersion)",
+  "loc.input.label.opaVersion": "Спецификация версии OPA",
+  "loc.input.help.opaVersion": "Укажите устанавливаемую версию Open Policy Agent",
+  "loc.messages.DownloadOpaFailedFromLocation": "Не удалось скачать OPA из расположения %s. Ошибка %s",
+  "loc.messages.OpaLatestNotKnown": "Не удается получить сведения о последней версии OpenPolicyAgent из %s. Ошибка: %s. Используется версия OpenPolicyAgent по умолчанию: %s.",
+  "loc.messages.NotAValidSemverVersion": "Версия указана в неправильном формате. Примеры: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
+  "loc.messages.VerifyOpaInstallation": "Проверка установки OPA..."
+}

@@ -23,7 +23,11 @@ export function copyFile(sourceFile: string, destinationFolder: string): void {
 
 export async function download(url: string, downloadPath: string): Promise<void> {
     var file = fs.createWriteStream(downloadPath);
+#if NODE20
+    await new Promise<void>((resolve, reject) => {
+#else
     await new Promise((resolve, reject) => {
+#endif
         var req = https.request(url, res => {
             tl.debug("statusCode: " + res.statusCode);
             res.pipe(file);

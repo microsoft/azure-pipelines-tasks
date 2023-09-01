@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "コード カバレッジ結果 v2 の公開",
+  "loc.helpMarkDown": "[このタスクの詳細](https://learn.microsoft.com/ja-jp/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2?view=azure-pipelines)",
+  "loc.description": "ビルドからコード カバレッジの結果を公開します",
+  "loc.instanceNameFormat": "コード カバレッジ結果の公開",
+  "loc.input.label.summaryFileLocation": "概要ファイルへのパス",
+  "loc.input.help.summaryFileLocation": "行、メソッド、クラスのカバレッジなど、コード カバレッジ統計情報を含む概要ファイルへのパス。複数の概要ファイルが 1 つのレポートに統合されます。複数行の minimatch パターンがサポートされています。[詳細情報](https://aka.ms/minimatchexamples)",
+  "loc.input.label.pathToSources": "ソース ファイルへのパス",
+  "loc.input.help.pathToSources": "カバレッジ XML レポートにソース ファイルへの絶対パスが含まれていない場合は、ソース ファイルへのパスが必要です。例: JaCoCo レポートでは絶対パスは使用されず、Java アプリの JaCoCo カバレッジを公開する場合、パターンは `$(System.DefaultWorkingDirectory)/MyApp/src/main/java/` のようになります。<br />この入力は、テストが Docker コンテナーで実行されている場合にも必要です。この入力は、ホスト上のソース ファイルへの絶対パスを指している必要があります。例: `$(System.DefaultWorkingDirectory)/MyApp/`",
+  "loc.input.label.failIfCoverageEmpty": "コード カバレッジの結果が見つからない場合に失敗させる",
+  "loc.input.help.failIfCoverageEmpty": "コード カバレッジが発行する結果を生成しないと、タスクは失敗します。",
+  "loc.messages.FoundNMatchesForPattern": "%s 件の結果がパターン %s に一致するものとして見つかりました",
+  "loc.messages.NoCodeCoverage": "発行するコード カバレッジの結果が見つかりませんでした。"
+}

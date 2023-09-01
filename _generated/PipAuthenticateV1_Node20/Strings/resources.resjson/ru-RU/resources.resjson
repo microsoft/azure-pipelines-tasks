@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "Проверка подлинности pip Python",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/pip-authenticate) или [документацию по pip](https://pip.pypa.io/en/stable/reference/pip_install/)",
+  "loc.description": "Задача проверки подлинности для клиента pip, используемого для установки дистрибутивов Python",
+  "loc.instanceNameFormat": "Проверка подлинности Pip",
+  "loc.group.displayName.feedAuthentication": "Веб-каналы и проверка подлинности",
+  "loc.input.label.artifactFeeds": "Мои веб-каналы (выберите ниже)",
+  "loc.input.help.artifactFeeds": "Выберите веб-каналы для проверки подлинности, присутствующие в этой организации",
+  "loc.input.label.pythonDownloadServiceConnections": "Веб-каналы из внешних организаций",
+  "loc.input.help.pythonDownloadServiceConnections": "Выберите конечные точки для проверки подлинности за пределами этой организации.",
+  "loc.input.label.onlyAddExtraIndex": "Не задавать URL-адрес первичного индекса",
+  "loc.input.help.onlyAddExtraIndex": "Если задано значение true, веб-канал не будет задан как URL-адрес первичного индекса. Все настроенные веб-каналы и конечные точки будут заданы как URL-адреса дополнительного индекса. По умолчанию используется значение false.",
+  "loc.messages.Info_AddingInternalFeeds": "Добавление сведений о проверке подлинности для внутренних веб-каналов (%s).",
+  "loc.messages.Info_AddingExternalFeeds": "Добавление сведений о проверке подлинности для внешней конечной точки %s.",
+  "loc.messages.Info_SuccessAddingAuth": "Проверка подлинности успешно добавлена для внутренних веб-каналов (%s) и внешней конечной точки (%s).",
+  "loc.messages.Info_AddingPasswordAuthEntry": "Добавление записи проверки подлинности для пароля пользователя для веб-канала %s",
+  "loc.messages.Info_AddingTokenAuthEntry": "Добавление записи проверки подлинности токена для веб-канала %s",
+  "loc.messages.Error_FailedToParseFeedUrlAndAuth": "Не удалось проанализировать URL-адрес веб-канала и добавить сведения о проверке подлинности. %s",
+  "loc.messages.FailedToGetPackagingUri": "Не удалось получить URI упаковки, используется URI коллекции по умолчанию.",
+  "loc.messages.FailedToAddAuthentication": "Не удалось добавить проверку подлинности.",
+  "loc.messages.Warn_TooManyFeedEntries": "Слишком много записей веб-каналов для проверки подлинности. Сократите число репозиториев в задаче.",
+  "loc.messages.Warning_SessionCreationFailed": "Не удалось создать сеанс происхождения: %s"
+}

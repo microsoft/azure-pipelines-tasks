@@ -288,6 +288,16 @@
         "MavenV2",
         "MavenV3",
         "MavenAuthenticateV0",
-        "MysqlDeploymentOnMachineGroupV1"
+        "MysqlDeploymentOnMachineGroupV1",
+        "NuGetRestoreV1",
+        "NuGetToolInstallerV0",
+        "NuGetToolInstallerV1",
+        "OpenPolicyAgentInstallerV0",
+        "PipAuthenticateV0",
+        "PipAuthenticateV1",
+        "PowerShellV2",
+        "PowerShellOnTargetMachinesV3",
+        "PublishBuildArtifactsV1",
+        "NuGetPublisherV0"
     ]
 }
