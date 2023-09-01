@@ -296,7 +296,7 @@
         "PipAuthenticateV0",
         "PipAuthenticateV1",
         "PowerShellV2",
-        "PowerShellOnTargetMachinesV3",
+        "PublishCodeCoverageResultsV2",
         "PublishBuildArtifactsV1",
         "NuGetPublisherV0"
     ]
