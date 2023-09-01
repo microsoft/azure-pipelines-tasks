@@ -146,6 +146,7 @@
         "NuGetCommandV2",
         "NuGetPackagerV0",
         "NuGetPublisherV0",
+        "NuGetRestoreV1",
         "NuGetToolInstallerV0",
         "NuGetToolInstallerV1",
         "OpenPolicyAgentInstallerV0",
@@ -215,8 +216,6 @@
         "Tests"
     ],
     "Node16_225": [
-        "AzureRmWebAppDeploymentV3",
-        "AzureRmWebAppDeploymentV4",
         "AzureFunctionOnKubernetesV0",
         "AzureFunctionOnKubernetesV1",
         "UseDotNetV2",

@@ -8,8 +8,6 @@ param (
     [string]$additionalArguments
     )
 
-    Import-Module $PSScriptRoot\ps_modules\Sanitizer
-
     $sourcePath = $sourcePath.Trim().TrimEnd('\', '/')
     $targetPath = $targetPath.Trim().TrimEnd('\', '/')    
 
