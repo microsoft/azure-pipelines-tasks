@@ -1,0 +1,34 @@
+{
+  "id": "01FA79EB-4C54-41B5-A16F-5CD8D60DB88D",
+  "name": "PublishPipelineMetadata",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 227,
+    "Patch": 2
+  },
+  "minimumAgentVersion": "2.144.0",
+  "preview": true,
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "showEnvironmentVariables": true,
+  "execution": {
+    "Node10": {
+      "target": "publishmetadata.js"
+    },
+    "Node16": {
+      "target": "publishmetadata.js"
+    }
+  },
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "_buildConfigMapping": {
+    "Default": "0.227.2",
+    "Node20-225": "0.227.1"
+  }
+}

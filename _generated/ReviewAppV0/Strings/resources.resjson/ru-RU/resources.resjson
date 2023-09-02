@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Проверить приложение",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.description": "Используйте эту задачу в поставщике этапа развертывания, чтобы динамически создать ресурс",
+  "loc.instanceNameFormat": "Динамический ресурс, созданный с помощью $(resourceName)",
+  "loc.releaseNotes": "Используйте эту задачу в поставщике этапа развертывания, чтобы динамически создать ресурс",
+  "loc.input.label.resourceName": "Имя ресурса",
+  "loc.input.help.resourceName": "Имя существующего ресурса в среде, который будет использоваться для сведений о типах ресурсов",
+  "loc.input.label.baseEnvironmentName": "Имя среды",
+  "loc.input.label.reviewResourceName": "Проверить имя ресурса",
+  "loc.messages.CreatedDynamicResource": "Динамический ресурс создается с помощью %s"
+}

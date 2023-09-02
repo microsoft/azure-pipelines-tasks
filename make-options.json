@@ -298,6 +298,12 @@
         "PowerShellV2",
         "PublishCodeCoverageResultsV2",
         "PublishBuildArtifactsV1",
-        "NuGetPublisherV0"
+        "NuGetPublisherV0",
+        "PublishPipelineMetadataV0",
+        "PublishTestResultsV1",
+        "PublishTestResultsV2",
+        "PythonScriptV0",
+        "ReviewAppV0",
+        "ShellScriptV2"
     ]
 }
