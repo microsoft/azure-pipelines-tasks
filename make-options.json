@@ -304,6 +304,13 @@
         "PublishTestResultsV2",
         "PythonScriptV0",
         "ReviewAppV0",
-        "ShellScriptV2"
+        "ShellScriptV2",
+        "SshV0",
+        "TwineAuthenticateV0",
+        "TwineAuthenticateV1",
+        "UniversalPackagesV0",
+        "UseNodeV1",
+        "UsePythonVersionV0",
+        "UseRubyVersionV0"
     ]
 }

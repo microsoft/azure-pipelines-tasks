@@ -3,7 +3,9 @@ import * as task from 'azure-pipelines-task-lib/task';
 import { pythonScript } from './pythonscript';
 
 (async () => {
+#if NODE20
     let error: any | undefined;
+#endif
     try {
         task.setResourcePath(path.join(__dirname, 'task.json'));
         await pythonScript({
@@ -17,7 +19,11 @@ import { pythonScript } from './pythonscript';
         });
         task.setResult(task.TaskResult.Succeeded, "");
     } catch (e) {
+#if NODE20
         error = e;
         task.setResult(task.TaskResult.Failed, error.message);
+#else
+        task.setResult(task.TaskResult.Failed, e.message);
+#endif
     }
 })();

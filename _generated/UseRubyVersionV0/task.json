@@ -1,0 +1,79 @@
+{
+  "id": "630C472C-CDE7-4CD8-BA13-E00CA5FF180B",
+  "name": "UseRubyVersion",
+  "friendlyName": "Use Ruby version",
+  "description": "Use the specified version of Ruby from the tool cache, optionally adding it to the PATH",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/use-ruby-version",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2005989) or [see the Ruby documentation](https://www.ruby-lang.org/)",
+  "category": "Tool",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 228,
+    "Patch": 1
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.182.1",
+  "instanceNameFormat": "Use Ruby $(versionSpec)",
+  "inputs": [
+    {
+      "name": "versionSpec",
+      "type": "string",
+      "label": "Version spec",
+      "required": true,
+      "defaultValue": ">= 2.4",
+      "helpMarkDown": "Version range or exact version of a Ruby version to use."
+    },
+    {
+      "name": "addToPath",
+      "type": "boolean",
+      "label": "Add to PATH",
+      "required": false,
+      "defaultValue": "true",
+      "helpMarkDown": "Prepend the retrieved Ruby version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable."
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "rubyLocation",
+      "description": "The resolved folder of the Ruby distribution."
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ListAvailableVersions": "Available versions:",
+    "PlatformNotRecognized": "Platform not recognized",
+    "ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",
+    "ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
+    "VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory.",
+    "ExactVersionNotRecommended": "Specifying an exact version is not recommended on Microsoft-Hosted agents. Patch versions of Ruby can be replaced by new ones on Hosted agents without notice, which will cause builds to fail unexpectedly. It is recommended to specify only major or major and minor version (Example: `2` or `2.4`)"
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "rubyLocation",
+        "PATH"
+      ]
+    }
+  },
+  "_buildConfigMapping": {
+    "Default": "0.228.1",
+    "Node20-225": "0.228.0"
+  }
+}
