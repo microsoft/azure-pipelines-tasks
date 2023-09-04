@@ -127,7 +127,8 @@ function Upload-FilesToAzureContainer
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$destinationType,
           [bool]$useDefaultArguments,
-          [string]$azCopyLogFilePath
+          [string]$azCopyLogFilePath,
+          [bool]$useSanitizerActivate = $false
     )
 
     try
@@ -160,16 +161,9 @@ function Upload-FilesToAzureContainer
             )
         }
 
-        $useSanitizerCall = Get-SanitizerCallStatus
-        $useSanitizerActivate = Get-SanitizerActivateStatus
-
-        if ($useSanitizerCall) {
-            $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV3"
-        }
-
         if ($useSanitizerActivate) {
-            Write-Output "##[command] & azcopy /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $sanitizedArguments"
-            & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$containerURL /@:$responseFile $sanitizedArguments
+            Write-Output "##[command] & azcopy /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"
+            & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$containerURL /@:$responseFile $additionalArguments
         } else {
             Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"   
             $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"
@@ -921,7 +915,8 @@ function Copy-FilesToAzureVMsFromStorageContainer
         [string]$additionalArguments,
         [string]$azCopyToolLocation,
         [scriptblock]$fileCopyJobScript,
-        [bool]$enableDetailedLogging
+        [bool]$enableDetailedLogging,
+        [bool]$useSanitizerActivate = $false
     )
 
     # Generate storage container URL
@@ -941,7 +936,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
     $azCopyToolFileContentsString = $azCopyToolFileContents -join ";"
 
     # script block arguments
-    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments' -azCopyToolFileNamesString '$azCopyToolFileNamesString' -azCopyToolFileContentsString '$azCopyToolFileContentsString'"
+    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments' -azCopyToolFileNamesString '$azCopyToolFileNamesString' -azCopyToolFileContentsString '$azCopyToolFileContentsString' -useSanitizerActivate $useSanitizerActivate"
     if($cleanTargetBeforeCopy)
     {
         $scriptBlockArgs += " -CleanTargetBeforeCopy"
