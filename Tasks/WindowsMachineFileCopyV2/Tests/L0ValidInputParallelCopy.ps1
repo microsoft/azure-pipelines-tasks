@@ -14,6 +14,9 @@ Register-Mock Get-VstsInput { return $validApplicationPath } -ParametersEvaluato
 Register-Mock Get-VstsInput { return $true } -ParametersEvaluator{ $Name -eq  "CleanTargetBeforeCopy" }
 Register-Mock Get-VstsInput { return $true } -ParametersEvaluator{ $Name -eq  "CopyFilesInParallel" }
 
+Register-Mock Get-SanitizerCallStatus { return $false }
+Register-Mock Get-SanitizerActivateStatus { return $false }
+
 Register-Mock Get-EnvironmentResources { return $validResources } -ParametersEvaluator {$EnvironmentName -eq $validEnvironmentName}
 
 Register-Mock Register-Environment { return GetEnvironmentWithStandardProvider $validEnvironmentName } -ParametersEvaluator{$EnvironmentName -eq $validEnvironmentName}

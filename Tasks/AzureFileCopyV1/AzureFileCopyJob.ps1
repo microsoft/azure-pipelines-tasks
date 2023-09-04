@@ -14,7 +14,8 @@ param (
     [string]$httpProtocolOption,
     [string]$skipCACheckOption,
     [string]$enableDetailedLogging,
-    [string]$additionalArguments
+    [string]$additionalArguments,
+    [bool]$useSanitizerActivate = $false
     )
 
     Write-Verbose "fqdn = $fqdn"
@@ -51,15 +52,8 @@ param (
         $blobStorageURI = $blobStorageEndpoint+$containerName+"/"+$blobPrefix
     }
 
-    $useSanitizerCall = Get-SanitizerCallStatus
-    $useSanitizerActivate = Get-SanitizerActivateStatus
-
-    if ($useSanitizerCall) {
-        $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV1"
-    }
-
     if ($useSanitizerActivate) {
-        Copy-ToAzureMachines -MachineDnsName $fqdn -StorageAccountName $storageAccount -ContainerName $containerName -SasToken $sasToken -DestinationPath $targetPath -Credential $credential -AzCopyLocation $azCopyLocation -AdditionalArguments $sanitizedArguments -BlobStorageURI $blobStorageURI -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption
+        Copy-ToAzureMachines -MachineDnsName $fqdn -StorageAccountName $storageAccount -ContainerName $containerName -SasToken $sasToken -DestinationPath $targetPath -Credential $credential -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments -BlobStorageURI $blobStorageURI -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption
     } else {
         [String]$copyToAzureMachinesBlockString = [string]::Empty
         if([string]::IsNullOrWhiteSpace($additionalArguments))
