@@ -3,8 +3,8 @@
     "name": "AzureSpringCloud",
     "friendlyName": "Azure Spring Apps",
     "description": "Deploy applications to Azure Spring Apps and manage deployments.",
-    "helpUrl": "https://aka.ms/azurespringapps",
-    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurespringapps)",
+    "helpUrl": "https://learn.microsoft.com/en-gb/azure/devops/pipelines/tasks/reference/azure-spring-cloud-v0?view=azure-pipelines",
+    "helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/en-gb/azure/devops/pipelines/tasks/reference/azure-spring-cloud-v0?view=azure-pipelines)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -231,6 +231,7 @@
             "options": {
                 "Java_8": "Java 8",
                 "Java_11": "Java 11",
+                "Java_17": "Java 17",
                 "NetCore_31": ".Net Core 3.1"
             },
             "visibleRule": "Action = Deploy && DeploymentType = Artifacts"
