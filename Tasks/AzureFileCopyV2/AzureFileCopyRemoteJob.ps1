@@ -7,7 +7,8 @@ $AzureFileCopyRemoteJob = {
         [string]$azCopyToolFileNamesString,
         [string]$azCopyToolFileContentsString,
         [switch]$CleanTargetBeforeCopy,
-        [switch]$EnableDetailedLogging
+        [switch]$EnableDetailedLogging,
+        [bool]$useSanitizerActivate = $false
     )
 
     function Write-DetailLogs
@@ -118,18 +119,11 @@ $AzureFileCopyRemoteJob = {
             $additionalArguments = "/Z:`"$azCopyDestinationPath`" /V:`"$logFilePath`" /S /Y"
         }
 
-        $useSanitizerCall = Get-SanitizerCallStatus
-        $useSanitizerActivate = Get-SanitizerActivateStatus
+        Write-DetailLogs "##[command] & `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"*****`" $additionalArguments"
 
-        if ($useSanitizerCall) {
-            $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV2"
-        }
-        
         if ($useSanitizerActivate) {
-            Write-DetailLogs "##[command] & `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"*****`" $sanitizedArguments"
-            & $azCopyExeLocation /Source:$containerURL /Dest:$targetPath /SourceSAS:$containerSasToken $sanitizedArguments
+            & $azCopyExeLocation /Source:$containerURL /Dest:$targetPath /SourceSAS:$containerSasToken $additionalArguments
         } else {
-            Write-DetailLogs "##[command] & `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"*****`" $additionalArguments"
             $azCopyCommand = "& `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"$containerSasToken`" $additionalArguments"
             Invoke-Expression $azCopyCommand
         }
