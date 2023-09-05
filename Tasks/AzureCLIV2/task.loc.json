@@ -171,6 +171,15 @@
       "visibleRule": "scriptType = ps || scriptType = pscore",
       "helpMarkDown": "ms-resource:loc.input.help.powerShellIgnoreLASTEXITCODE",
       "groupName": "advanced"
+    },
+    {
+      "name": "visibleAzLogin",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.visibleAzLogin",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.visibleAzLogin",
+      "groupName": "advanced"
     }
   ],
   "execution": {
