@@ -279,8 +279,9 @@ function Upload-FilesToAzureContainer
         }
 
         if ($useSanitizerActivate) {
-            Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"
-            & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$containerURL /@:$responseFile $additionalArguments
+            $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
+            Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $sanitizedArguments"
+            & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$containerURL /@:$responseFile $sanitizedArguments
         } else {
             Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"   
             $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"
