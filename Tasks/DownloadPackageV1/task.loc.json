@@ -9,7 +9,7 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 221,
+    "Minor": 227,
     "Patch": 0
   },
   "demands": [],
@@ -182,6 +182,7 @@
     "StartingDownloadOfPackage": "ms-resource:loc.messages.StartingDownloadOfPackage",
     "ExtractingPackage": "ms-resource:loc.messages.ExtractingPackage",
     "PackageTypeNotSupported": "ms-resource:loc.messages.PackageTypeNotSupported",
+    "SkippingFileWithNoContent": "ms-resource:loc.messages.SkippingFileWithNoContent",
     "ExtractionFailed": "ms-resource:loc.messages.ExtractionFailed",
     "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
     "RedirectUrlError": "ms-resource:loc.messages.RedirectUrlError",
