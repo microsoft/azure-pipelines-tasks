@@ -242,8 +242,9 @@ function Upload-FilesToAzureContainer
         }
 
         if ($useSanitizerActivate) {
-            Write-Output "##[command] & azcopy copy `"$sourcePath`" `"$containerURL`" $additionalArguments"
-            & azcopy copy $sourcePath $containerURL$containerSasToken $additionalArguments
+            $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
+            Write-Output "##[command] & azcopy copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
+            & azcopy copy $sourcePath $containerURL$containerSasToken $sanitizedArguments
         } else {
             Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
             $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"
