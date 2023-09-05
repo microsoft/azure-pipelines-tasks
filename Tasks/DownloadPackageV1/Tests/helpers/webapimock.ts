@@ -85,7 +85,8 @@ class RestMock {
                     name: "packageName.jar",
                     protocolMetadata: {
                         data: {
-                            storageId: "storageId"
+                            storageId: "storageId",
+                            content: null
                         }
                     }
                 },
@@ -102,7 +103,8 @@ class RestMock {
                     name: "packageName.xml",
                     protocolMetadata: {
                         data: {
-                            storageId: null
+                            storageId: null,
+                            content: null
                         }
                     }
                 }
