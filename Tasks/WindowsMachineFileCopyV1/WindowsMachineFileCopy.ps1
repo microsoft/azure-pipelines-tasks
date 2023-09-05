@@ -42,7 +42,7 @@ if ($useSanitizerCall) {
 }
 
 if ($useSanitizerActivate) {
-    $additionalArguments = $sanitizedArguments
+    $additionalArguments = $sanitizedArguments -join " "
 }
 
 # keep machineNames parameter name unchanged due to back compatibility

@@ -103,8 +103,8 @@ if ($useSanitizerCall) {
 }
 
 if ($useSanitizerActivate) {
-    $additionalArgumentsForBlobCopy = $sanitizedArgumentsForBlobCopy
-    $additionalArgumentsForVMCopy = $sanitizedArgumentsForVMCopy
+    $additionalArgumentsForBlobCopy = $sanitizedArgumentsForBlobCopy -join " "
+    $additionalArgumentsForVMCopy = $sanitizedArgumentsForVMCopy -join " "
 }
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####

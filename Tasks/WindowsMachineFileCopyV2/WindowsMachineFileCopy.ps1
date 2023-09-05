@@ -29,7 +29,7 @@ if ($useSanitizerCall) {
 }
 
 if ($useSanitizerActivate) {
-    $additionalArguments = $sanitizedArguments
+    $additionalArguments = $sanitizedArguments -join " "
 }
 
 try 

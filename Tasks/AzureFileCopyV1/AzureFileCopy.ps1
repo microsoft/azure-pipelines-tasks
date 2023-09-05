@@ -85,7 +85,7 @@ if ($useSanitizerCall) {
 }
 
 if ($useSanitizerActivate) {
-    $additionalArguments = $sanitizedArguments
+    $additionalArguments = $sanitizedArguments -join " "
 }
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
