@@ -227,10 +227,6 @@
     ],
     "instanceNameFormat": "Deploy $(app) to Visual Studio App Center",
     "execution": {
-        "Node10": {
-            "target": "appcenterdistribute.js",
-            "argumentFormat": ""
-        },
         "Node16": {
             "target": "appcenterdistribute.js",
             "argumentFormat": ""
