@@ -124,27 +124,3 @@ jobs:
     - template: ci/build-all-steps.yml
       parameters:
         os: Darwin
-
-  - job: buildSharedNpm_win
-    displayName: Build shared npm packages (Win)
-    condition: eq(variables.os, 'Windows_NT')
-    pool:
-      vmImage: windows-2022
-    steps:
-    - template: ci/build-common-npm.yml
-
-  - job: buildSharedNpm_linux
-    displayName: Build shared npm packages (Linux)
-    condition: eq(variables.os, 'Linux')
-    pool:
-      vmImage: ubuntu-20.04
-    steps:
-    - template: ci/build-common-npm.yml
-
-  - job: buildSharedNpm_darwin
-    displayName: Build shared npm packages (macOS)
-    condition: eq(variables.os, 'Darwin')
-    pool:
-      vmImage: macos-11
-    steps:
-    - template: ci/build-common-npm.yml
