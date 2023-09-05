@@ -5,7 +5,8 @@ $AzureFileCopyRemoteJob = {
         [string]$containerSasToken,
         [string]$additionalArguments,
         [switch]$CleanTargetBeforeCopy,
-        [switch]$EnableDetailedLogging
+        [switch]$EnableDetailedLogging,
+        [bool]$useSanitizerActivate = $false
     )
 
     function Write-DetailLogs
@@ -97,14 +98,8 @@ $AzureFileCopyRemoteJob = {
             $additionalArguments = "--recursive --log-level=INFO"
         }
 
-        $useSanitizerCall = Get-SanitizerCallStatus
-        $useSanitizerActivate = Get-SanitizerActivateStatus
-
-        if ($useSanitizerCall) {
-            $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV5"
-        }
-
         if ($useSanitizerActivate) {
+            $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
             Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $sanitizedArguments"
             & azcopy copy $targetPath $containerURL/*$containerSasToken $sanitizedArguments
         } else {
