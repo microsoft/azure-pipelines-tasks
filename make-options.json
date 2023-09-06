@@ -311,6 +311,11 @@
         "UniversalPackagesV0",
         "UseNodeV1",
         "UsePythonVersionV0",
-        "UseRubyVersionV0"
+        "UseRubyVersionV0",
+        "VsTestV2",
+        "VsTestV3",
+        "XamarinAndroidV1",
+        "XamariniOSV2",
+        "XcodeV5"
     ]
 }
