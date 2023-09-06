@@ -6,7 +6,8 @@ param (
     [object]$credential,
     [string]$cleanTargetBeforeCopy,
     [string]$additionalArguments,
-    [string]$scriptRoot
+    [string]$scriptRoot,
+    [bool]$useSanitizerActivate = $false
     )
     Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" 
     Import-VstsLocStrings -LiteralPath $scriptRoot/Task.json
@@ -237,14 +238,8 @@ param (
     {
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
 
-        $useSanitizerCall = Get-SanitizerCallStatus
-        $useSanitizerActivate = Get-SanitizerActivateStatus
-
-        if ($useSanitizerCall) {
-            $sanitizedArguments = Protect-ScriptArguments -InputArgs $robocopyParameters -TaskName "WindowsMachineFileCopyV2"
-        }
-
         if ($useSanitizerActivate) {
+            $sanitizedArguments = [regex]::Split($robocopyParameters, ' (?=(?:[^"]|"[^"]*")*$)')
             & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy $sanitizedArguments
         } else {
             $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
