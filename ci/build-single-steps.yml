@@ -43,6 +43,10 @@ steps:
 - script: node make.js clean
   displayName: Clean tasks
 
+# Generate Tasks
+- script: node make.js gentask --configs Node20 --task "$(task_pattern)"
+  displayName: Generate Tasks
+
 # Build Tasks
 - script: node make.js serverBuild --task "$(task_pattern)"
   displayName: Build Tasks
