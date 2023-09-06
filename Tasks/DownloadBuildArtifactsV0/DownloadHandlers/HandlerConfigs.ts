@@ -12,6 +12,7 @@ export interface IBaseHandlerConfig {
 export interface IContainerHandlerConfig extends IBaseHandlerConfig {
     endpointUrl: string;
     templatePath: string;
+    preferRedirect: boolean;
     handler: PersonalAccessTokenCredentialHandler;
 }
 

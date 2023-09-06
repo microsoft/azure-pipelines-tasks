@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 228,
-    "Patch": 0
+    "Patch": 1
   },
   "groups": [
     {
@@ -203,6 +203,15 @@
       "groupName": "advanced",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.retryDownloadCount"
+    },
+    {
+      "name": "retryRedirectDownloadCount",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.retryRedirectDownloadCount",
+      "defaultValue": "0",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.retryRedirectDownloadCount"
     },
     {
       "name": "extractTars",
