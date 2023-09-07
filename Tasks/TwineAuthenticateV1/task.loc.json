@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 213,
+    "Minor": 220,
     "Patch": 0
   },
   "runsOn": [
@@ -43,7 +43,7 @@
       "required": "false",
       "groupName": "feedAuthentication",
       "properties": {
-        "EditableOptions": "True"
+        "EditableOptions": "False"
       }
     },
     {
@@ -65,9 +65,9 @@
     {
       "target": "artifactFeed",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.name}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if projectName}}{{{projectName}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "execution": {

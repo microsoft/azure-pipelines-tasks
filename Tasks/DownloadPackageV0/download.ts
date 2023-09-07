@@ -5,7 +5,7 @@ var path = require('path')
 import * as corem from 'azure-devops-node-api/CoreApi';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as vsom from 'azure-devops-node-api/VsoClient';
-import { getProjectAndFeedIdFromInputParam } from "azure-pipelines-tasks-packaging-common-v3/util"
+import { getProjectAndFeedIdFromInputParam } from "azure-pipelines-tasks-packaging-common/util"
 import stream = require('stream');
 import { getConnection } from './connections';
 import { WebApi } from 'azure-devops-node-api';
@@ -13,6 +13,7 @@ import { WebApi } from 'azure-devops-node-api';
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function main(): Promise<void> {
+	tl.warning("This task will be deprecated soon. Please switch to using DownloadPackage@1");
 	var feed = getProjectAndFeedIdFromInputParam("feed");
 	if(feed.projectId) {
 		throw new Error(tl.loc("UnsupportedProjectScopedFeeds"));
@@ -100,10 +101,13 @@ export async function downloadPackage(feedConnection: WebApi, pkgsConnection: We
 				});
 				await unzipPromise;
 				
-				if (tl.exist(zipLocation)) {
-					tl.rmRF(zipLocation);
+				if (tl.exist(zipLocation)) {                        
+					try {
+						tl.rmRF(zipLocation);
+					} catch (error) {
+						tl.warning(tl.loc("OperationFailed", "rmRF", error));
+					}
 				}
-
 				return resolve();
 			}
 			else {

@@ -2,16 +2,16 @@
 import path = require('path');
 import fs = require('fs');
 
-var msDeploy = require('azure-pipelines-tasks-webdeployment-common-v4/deployusingmsdeploy.js');
-var utility = require('azure-pipelines-tasks-webdeployment-common-v4/utility.js');
-var fileTransformationsUtility = require('azure-pipelines-tasks-webdeployment-common-v4/fileTransformationsUtility.js');
+var msDeploy = require('azure-pipelines-tasks-webdeployment-common/deployusingmsdeploy.js');
+var utility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
+var fileTransformationsUtility = require('azure-pipelines-tasks-webdeployment-common/fileTransformationsUtility.js');
 
 async function run()
 {
 	try
 	{
 		tl.setResourcePath(path.join( __dirname, 'task.json'));
-		tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-webdeployment-common-v4/module.json'));
+		tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-webdeployment-common/module.json'));
 		var webSiteName: string = tl.getInput('WebSiteName', true);
 		var virtualApplication: string = tl.getInput('VirtualApplication', false);
 		var webDeployPkg: string = tl.getPathInput('Package', true);

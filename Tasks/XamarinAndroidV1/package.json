@@ -23,7 +23,7 @@
     "@types/q": "^1.5.1",
     "azure-pipelines-task-lib": "^4.0.0-preview",
     "azure-pipelines-tasks-java-common": "^2.198.1",
-    "azure-pipelines-tasks-msbuildhelpers-v3": "^3.210.0"
+    "azure-pipelines-tasks-msbuildhelpers": "^3.210.1"
   },
   "devDependencies": {
     "typescript": "4.0.2"

@@ -2,31 +2,53 @@ import fs = require('fs');
 import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
+import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
+import { ArgsSanitizingError } from './utils/errors';
+import { validateFileArgs } from './helpers';
 var uuidV4 = require('uuid/v4');
 
-async function translateDirectoryPath(bashPath: string, directoryPath: string): Promise<string> {
-    let bashPwd = tl.tool(bashPath)
-        .arg('-c')
-        .arg('pwd');
+async function runBashPwd(bashPath: string, directoryPath: string): Promise<string> {
+    let pwdOutput = '';
+    const bashPwd = tl.tool(bashPath).arg('-c').arg('pwd');
+    bashPwd.on('stdout', data => pwdOutput += data.toString());
 
-    let bashPwdOptions = <tr.IExecOptions>{
+    const bashPwdOptions = <tr.IExecOptions>{
         cwd: directoryPath,
         failOnStdErr: true,
         errStream: process.stdout,
         outStream: process.stdout,
         ignoreReturnCode: false
     };
-    let pwdOutput = '';
-    bashPwd.on('stdout', (data) => {
-        pwdOutput += data.toString();
-    });
+
     await bashPwd.exec(bashPwdOptions);
+
     pwdOutput = pwdOutput.trim();
+
     if (!pwdOutput) {
         throw new Error(tl.loc('JS_TranslatePathFailed', directoryPath));
     }
 
-    return `${pwdOutput}`;
+    return pwdOutput;
+}
+
+async function translateDirectoryPath(bashPath: string, directoryPath: string): Promise<string> {
+    if (directoryPath.endsWith('\\')) {
+        directoryPath = directoryPath.slice(0, -1);
+    }
+
+    const directoryPathTranslated = await runBashPwd(bashPath, directoryPath);
+
+    const parentDirectoryPath = directoryPath.split('\\').slice(0, -1).join('\\');
+
+    if (parentDirectoryPath.split('\\').join('')) {
+        const parentDirectoryPathTranslated = await runBashPwd(bashPath, parentDirectoryPath);
+
+        if (directoryPathTranslated == parentDirectoryPathTranslated) {
+            throw new Error(tl.loc('JS_TranslatePathFailed', directoryPath));
+        }
+    }
+
+    return directoryPathTranslated;
 }
 
 /**
@@ -94,6 +116,23 @@ async function run() {
             else {
                 targetFilePath = input_filePath;
             }
+
+            try {
+                validateFileArgs(input_arguments);
+            }
+            catch (error: any) {
+                if (error instanceof ArgsSanitizingError) {
+                    throw error;
+                }
+
+                emitTelemetry('TaskHub', 'BashV3',
+                    {
+                        UnexpectedError: error?.message ?? JSON.stringify(error) ?? null,
+                        ErrorStackTrace: error?.stack ?? null
+                    }
+                );
+            }
+
             // Choose behavior:
             // If they've set old_source_behavior, source the script. This is what we used to do and needs to hang around forever for back compat reasons
             // If they've not, execute the script with bash. This is our new desired behavior.
@@ -121,7 +160,8 @@ async function run() {
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let fileName = uuidV4() + '.sh';
         let filePath = path.join(tempDirectory, fileName);
-        await fs.writeFileSync(
+
+        fs.writeFileSync(
             filePath,
             contents,
             { encoding: 'utf8' });
@@ -181,7 +221,7 @@ async function run() {
 
         tl.setResult(result, null, true);
     }
-    catch (err) {
+    catch (err: any) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed', true);
     }
 }

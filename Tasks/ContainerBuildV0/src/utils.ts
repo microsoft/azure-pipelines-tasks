@@ -6,7 +6,7 @@ import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as crypto from "crypto";
 import * as path from 'path';
 import fs = require('fs');
-import webclient = require("azure-pipelines-tasks-azure-arm-rest-v2/webClient");
+import webclient = require("azure-pipelines-tasks-azure-arm-rest/webClient");
 import * as os from "os";
 import * as util from "util";
 import ConsistentHashing = require("consistent-hashing");
@@ -65,7 +65,7 @@ export async function downloadBuildctl(version: string): Promise<string> {
 
     tl.debug('Buildctl path: ' + buildctlpath);
 
-    fs.chmodSync(buildctlpath, "644");
+    fs.chmodSync(buildctlpath, "777");
     return buildctlpath;
 }
 

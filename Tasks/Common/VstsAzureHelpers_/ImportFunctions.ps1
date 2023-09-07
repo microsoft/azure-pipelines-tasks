@@ -84,8 +84,8 @@ function Import-FromModulePath {
         }
 
         # Attempt to resolve the module.
-        Write-Verbose "Attempting to find the module '$name' from the module path."
         if ($azurePsVersion) {
+            Write-Verbose "Attempting to find the module '$name' from the module path for version '$azurePsVersion'."
             $module = Get-Module -Name $name -ListAvailable | Where-Object {$_.Version -eq $azurePsVersion} | Select-Object -First 1
             if (!$module) {
                 Write-Verbose "No module found with name: $name, version: $azurePsVersion"
@@ -93,6 +93,7 @@ function Import-FromModulePath {
             }
         }
         else {
+            Write-Verbose "Attempting to find the module '$name' from the module path for latest available version"
             $module = Get-Module -Name $name -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
             $sdkVersion = Get-SdkVersion
             if ((!$module) -or ($sdkVersion -and ($module.Version -lt [version]$sdkVersion))) {

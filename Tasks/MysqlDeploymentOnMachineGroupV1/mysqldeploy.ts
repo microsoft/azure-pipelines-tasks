@@ -11,7 +11,7 @@ async function run() {
     try {
         task.debug('Task execution started');
         task.setResourcePath(path.join( __dirname, 'task.json'));
-        task.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-webdeployment-common-v4/module.json'));
+        task.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-webdeployment-common/module.json'));
         // Get all task input parameters
         mysqlTaskParameter = new MysqlTaskParameter();
         task.debug('parsed task inputs');

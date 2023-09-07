@@ -2,6 +2,8 @@
   "loc.messages.AZ_AzureRMProfileModuleNotFound": "Модуль \"AzureRM.Profile\" не найден. Возможно, модуль \"AzureRM\" установлен не полностью. Выполнение следующих команд PowerShell из сеанса с повышенными правами может разрешить эту проблему: Import-Module AzureRM; Install-AzureRM",
   "loc.messages.AZ_CertificateAuthNotSupported": "Проверка подлинности на основе сертификатов не поддерживается. Модуль Azure PowerShell не найден.",
   "loc.messages.AZ_CredentialsError": "Произошла ошибка с учетными данными Azure, используемыми для развертывания.",
+  "loc.messages.AZ_CouldNotGenerateOidcToken": "Не удалось создать утверждение клиента для федеративного входа.",
+  "loc.messages.AZ_FederatedTokenFailure": "Не удалось получить федеративный токен для федерации удостоверений рабочей нагрузки. {0}",
   "loc.messages.AZ_ModuleNotFound": "Не удалось найти модули \"{1}\" с версией \"{0}\". Если модуль был установлен недавно, повторите попытку, перезапустив агент задач Azure Pipelines.",
   "loc.messages.AZ_RequiresMinVersion0": "Минимальная требуемая версия ({0}) модуля Azure PowerShell не установлена.",
   "loc.messages.AZ_ServicePrincipalError": "Произошла ошибка с субъектом-службой, используемой для развертывания.",

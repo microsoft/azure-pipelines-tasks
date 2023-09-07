@@ -17,10 +17,10 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "@types/node": "^10.17.0",
-    "@types/q": "^1.5.0",
     "@types/mocha": "^5.2.7",
-    "azure-pipelines-task-lib": "3.0.6-preview.0",
+    "@types/node": "^16.11.39",
+    "@types/q": "^1.5.0",
+    "azure-pipelines-task-lib": "^4.1.0",
     "uuid": "^8.3.0"
   },
   "devDependencies": {

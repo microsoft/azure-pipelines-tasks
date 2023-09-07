@@ -1,13 +1,13 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import { Package } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
-import { generateTemporaryFolderForDeployment } from 'azure-pipelines-tasks-webdeployment-common-v4/utility';
-import { archiveFolder } from 'azure-pipelines-tasks-webdeployment-common-v4/ziputility';
-import { advancedFileTransformations } from 'azure-pipelines-tasks-webdeployment-common-v4/fileTransformationsUtility';
+import { Package } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
+import { generateTemporaryFolderForDeployment } from 'azure-pipelines-tasks-webdeployment-common/utility';
+import { archiveFolder } from 'azure-pipelines-tasks-webdeployment-common/ziputility';
+import { advancedFileTransformations } from 'azure-pipelines-tasks-webdeployment-common/fileTransformationsUtility';
 
 async function main() {
     tl.setResourcePath(path.join( __dirname, 'task.json'));
-    tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-webdeployment-common-v4/module.json'));
+    tl.setResourcePath(path.join( __dirname, 'node_modules/azure-pipelines-tasks-webdeployment-common/module.json'));
     let webPackage = new Package(tl.getPathInput('folderPath', true));
     let packagePath = webPackage.getPath();
     let fileType = tl.getInput("fileType", false);

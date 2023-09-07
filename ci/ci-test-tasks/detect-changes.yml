@@ -1,0 +1,35 @@
+pr:
+  - master
+
+jobs:
+- job: detect_changes
+  displayName: Detect changes
+  pool:
+    vmImage: ubuntu-20.04
+  steps:
+  - script: |
+      git remote add ms https://github.com/microsoft/azure-pipelines-tasks.git
+      git fetch ms master > tmp 2>&1 || cat tmp > '/tmp/stderr-contents-git_fetch.txt'
+      git diff --name-only ms/master
+      echo "##vso[task.setvariable variable=TASKS;isoutput=true]$(node ./ci/ci-test-tasks/detect-changed-tasks.js $(git diff --name-only ms/master))"
+    displayName: 'Detect changed tasks'
+    name: detect
+ 
+- job: run_main_test_pipeline
+  displayName: Run main test pipeline
+  condition: and(succeeded(),gt(length(dependencies.detect_changes.outputs['detect.TASKS']), 0))
+  dependsOn: detect_changes
+  variables:
+      - name: tasks
+        value: $[dependencies.detect_changes.outputs['detect.TASKS']]
+  pool:
+    vmImage: ubuntu-20.04
+  steps:
+  - script: |
+      npm i axios
+    displayName: npm i axios
+  - script: |
+      echo $(tasks)
+      node ./ci/ci-test-tasks/run-main-and-verify.js $(ADOToken) $(ADOUrl) $(System.TeamProject) $(MainPipelineId) $(tasks)
+    displayName: 'Run test pipelines and verify results'
+    failOnStderr: true

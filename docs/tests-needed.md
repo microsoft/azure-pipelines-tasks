@@ -24,6 +24,7 @@ of untested tasks to 0!
 | AzureCLIV1 | @bishal-pdmsft |  |
 | AzureCLIV2 | @bishal-pdmsft  |  |
 | AzureCloudPowerShellDeploymentV1 | @kmkumaran |  |
+| AzureCloudPowerShellDeploymentV2 | @kmkumaran |  |
 | AzureFileCopyV1 | @kmkumaran | :heavy_check_mark: |
 | AzureFileCopyV2 | @kmkumaran | :heavy_check_mark: |
 | AzureFileCopyV3 | @kmkumaran | :heavy_check_mark: |
@@ -70,7 +71,7 @@ of untested tasks to 0!
 | DotNetCoreInstallerV0 | @bishal-pdmsft | :heavy_check_mark: |
 | DotNetCoreInstallerV1 | @bishal-pdmsft | :heavy_check_mark: |
 | DownloadBuildArtifactsV0 | @Lovakumar      @omeshp |  |
-| DownloadFileshareArtifactsV0 | @Lovakumar      @omeshp |  |
+| DownloadFileshareArtifactsV1 | @Lovakumar      @omeshp |  |
 | DownloadGitHubReleaseV0 |  |  |
 | DownloadPackageV0 | @zjrunner |  |
 | DownloadPackageV1 |  | :heavy_check_mark: |

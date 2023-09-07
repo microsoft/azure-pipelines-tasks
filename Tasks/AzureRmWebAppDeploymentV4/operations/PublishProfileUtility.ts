@@ -5,7 +5,7 @@ import * as Constant from './Constants';
 import path = require('path');
 import Q = require('q');
 
-var packageUtility = require('azure-pipelines-tasks-webdeployment-common-v4/packageUtility.js');
+var packageUtility = require('azure-pipelines-tasks-webdeployment-common/packageUtility.js');
 var parseString = require('xml2js').parseString;
 const ERROR_FILE_NAME = "error.txt";
 

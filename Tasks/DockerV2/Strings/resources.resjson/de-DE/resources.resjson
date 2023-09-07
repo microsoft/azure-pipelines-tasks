@@ -34,6 +34,7 @@
   "loc.messages.ContainerDockerFileNotFound": "Es wurde keine Docker-Datei gefunden, die \"%s\" entspricht.",
   "loc.messages.CantWriteDataToFile": "In die Datei \"%s\" können keine Daten geschrieben werden. Fehler: %s",
   "loc.messages.CouldNotFindDockerConfig": "Die Docker-Konfiguration wurde nicht gefunden. Entweder ist die DOCKER_CONFIG-Variable nicht festgelegt, oder die Konfigurationsdatei befindet sich nicht im temporären Verzeichnis, oder die Datei ist nicht vorhanden. DOCKER_CONFIG: %s",
+  "loc.messages.MSIFetchError": "Ein Zugriffstoken für den verwalteten Dienstprinzipal konnte nicht abgerufen werden. Konfigurieren Sie die verwaltete Dienstidentität (MSI) für den virtuellen Computer (https://aka.ms/azure-msi-docs). Statuscode: %s, Statusmeldung: %s",
   "loc.messages.DockerHostVariableWarning": "Die DOCKER_HOST-Variable ist festgelegt. Stellen Sie sicher, dass der Docker-Daemon auf \"%s\" ausgeführt wird.",
   "loc.messages.DeletingDockerConfigDirectory": "Das Docker-Konfigurationsverzeichnis wird gelöscht. Pfad: %s",
   "loc.messages.DeletingAuthDataFromDockerConfig": "Die Authentifizierungsdaten für die Registrierung werden aus der Docker-Konfigurationsdatei gelöscht. Registrierung: %s, neue Docker-Konfiguration: %s",

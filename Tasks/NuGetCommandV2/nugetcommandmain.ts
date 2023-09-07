@@ -1,9 +1,9 @@
 import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 
-import * as nuGetGetter from "azure-pipelines-tasks-packaging-common-v3/nuget/NuGetToolGetter";
-import * as peParser from "azure-pipelines-tasks-packaging-common-v3/pe-parser";
-import {VersionInfo} from "azure-pipelines-tasks-packaging-common-v3/pe-parser/VersionResource";
+import * as nuGetGetter from "azure-pipelines-tasks-packaging-common/nuget/NuGetToolGetter";
+import * as peParser from "azure-pipelines-tasks-packaging-common/pe-parser";
+import {VersionInfo} from "azure-pipelines-tasks-packaging-common/pe-parser/VersionResource";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import * as nugetCustom from "./nugetcustom";
 import * as nugetPack from "./nugetpack";

@@ -41,6 +41,7 @@ function Validate-DestinationPath(
         ThrowError -errorMessage (Get-VstsLocString -Key "WFC_RemoteDestinationPathCannotContainEnvironmentVariables" -ArgumentList $value)
     }
 }
+
 # $sourcePath, $targetPath, $credential, $cleanTargetBeforeCopy, $additionalArguments
 # $adminUserName, $adminPassword
 function Copy-OnLocalMachine(

@@ -30,6 +30,7 @@ class RestoreOptions implements INuGetCommandOptions {
 }
 
 async function main(): Promise<void> {
+    tl.warning("This task will be deprecated soon. Please switch to using NuGetCommand@2's 'restore' option");
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
         tl.debug("getting the uris");
@@ -69,7 +70,7 @@ async function main(): Promise<void> {
         try {
             nuGetPath = tl.getVariable(nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR);
             if (!nuGetPath){
-                nuGetPath = await nuGetGetter.getNuGet("4.0.0");
+                nuGetPath = await nuGetGetter.getNuGet("4.9.6");
             }
             tl.debug(`Using NuGet in path: ${nuGetPath}`);
         }
@@ -134,6 +135,8 @@ async function main(): Promise<void> {
         
         let credCleanup = () => { return; };
         
+        let isNugetOrgBehaviorWarn = false;
+
         // Now that the NuGetConfigHelper was initialized with all the known information we can proceed
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === "select" ) {
@@ -153,8 +156,19 @@ async function main(): Promise<void> {
                 }
             }
 
-            let includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
+            const includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
             if (includeNuGetOrg) {
+                // If includeNuGetOrg is true, check the INCLUDE_NUGETORG_BEHAVIOR env variable to determine task result 
+                // this allows compliance checks to warn or break the task if consuming from nuget.org directly 
+                const nugetOrgBehavior = includeNuGetOrg ? tl.getVariable("INCLUDE_NUGETORG_BEHAVIOR") : undefined;
+                tl.debug(`NugetOrgBehavior: ${nugetOrgBehavior}`);
+
+                if(nugetOrgBehavior?.toLowerCase() == "fail"){
+                    throw new Error(tl.loc("Error_IncludeNuGetOrgEnabled"));
+                } else if (nugetOrgBehavior?.toLowerCase() == "warn"){
+                    isNugetOrgBehaviorWarn = true;
+                }
+
                 let nuGetUrl: string = nuGetVersion.productVersion.a < 3 ? NUGET_ORG_V2_URL : NUGET_ORG_V3_URL;
                 sources.push(<IPackageSource>
                 {
@@ -218,7 +232,9 @@ async function main(): Promise<void> {
             credCleanup();
         }
 
-        tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesInstalledSuccessfully"));
+        isNugetOrgBehaviorWarn 
+        ? tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Warning_IncludeNuGetOrgEnabled"))
+        : tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesInstalledSuccessfully"));
     } catch (err) {
         tl.error(err);
 

@@ -1,16 +1,16 @@
 import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 import { TaskParameters } from '../operations/TaskParameters';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
 import { AzureResourceFilterUtility } from '../operations/AzureResourceFilterUtility';
 import { KuduServiceUtility } from '../operations/KuduServiceUtility';
-import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service';
-import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
+import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
 import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 import tl = require('azure-pipelines-task-lib/task');
-import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common-v4/ParameterParserUtility';
+import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
 import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
-import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common-v4/packageUtility';
+import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { AzureDeployPackageArtifactAlias } from '../operations/Constants';
 
 export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvider{
@@ -30,6 +30,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     }
 
     public async PreDeploymentStep() {
+
         if (this.taskParams.WebAppKind.includes("functionAppContainer")){
             tl.warning(`Recommendation: Use Azure Functions for container Task to deploy Function app.`);
         }
@@ -55,24 +56,19 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     public async DeployWebAppStep() {}
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if(!this.kuduServiceUtility){
-            tl.debug('Kudu service utility not found.');
-            return;
-        }
-
-        await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
-        if(!isDeploymentSuccess) {
+        if(this.kuduServiceUtility) {
+            await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
             this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
-        } 
-        else{
-            this.activeDeploymentID =  this.kuduServiceUtility.getDeploymentID();
-        }  
-        tl.debug('Active DeploymentId :' + this.activeDeploymentID);
-        let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
-            ? this.taskParams.VirtualApplication : null);
-        console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
-        tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
-    }
+            tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
+        }
+        
+        if(this.appServiceUtility) {
+            let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
+                ? this.taskParams.VirtualApplication : null);
+            console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
+            tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
+        }
+    }    
 
     protected async PostDeploymentStep() {
         if(this.taskParams.AppSettings) {

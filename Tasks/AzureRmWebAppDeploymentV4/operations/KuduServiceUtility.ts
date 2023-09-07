@@ -5,13 +5,13 @@ import path = require('path');
 import { DeploymentType, TaskParameters } from './TaskParameters';
 
 import { AzureDeployPackageArtifactAlias } from './Constants';
-import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azure-arm-rest-v2/constants';
-import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu';
+import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azure-arm-rest/constants';
+import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
 
-import webClient = require('azure-pipelines-tasks-azure-arm-rest-v2/webClient');
+import webClient = require('azure-pipelines-tasks-azure-arm-rest/webClient');
 
-var deployUtility = require('azure-pipelines-tasks-webdeployment-common-v4/utility.js');
-var zipUtility = require('azure-pipelines-tasks-webdeployment-common-v4/ziputility.js');
+var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
+var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility.js');
 const physicalRootPath: string = '/site/wwwroot';
 const deploymentFolder: string = 'site/deployments';
 const manifestFileName: string = 'manifest';
@@ -505,7 +505,6 @@ export class KuduServiceUtility {
             buildProjectUrl: buildProject ? collectionUrl + buildProject : "",
             repositoryUrl: repositoryUrl,
             branch: branch,
-            deploymentID: deploymentID,
             teamProjectName: tl.getVariable("system.teamproject")
         };
        
