@@ -486,10 +486,6 @@
     ],
     "instanceNameFormat": "Test with Visual Studio App Center",
     "execution": {
-        "Node10": {
-            "target": "appcentertest.js",
-            "argumentFormat": ""
-        },
         "Node16": {
             "target": "appcentertest.js",
             "argumentFormat": ""

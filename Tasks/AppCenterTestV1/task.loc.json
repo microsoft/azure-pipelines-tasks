@@ -486,10 +486,6 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
-      "target": "appcentertest.js",
-      "argumentFormat": ""
-    },
     "Node16": {
       "target": "appcentertest.js",
       "argumentFormat": ""
