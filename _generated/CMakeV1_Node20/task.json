@@ -21,8 +21,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 227,
-    "Patch": 1
+    "Minor": 228,
+    "Patch": 2
   },
   "minimumAgentVersion": "1.91.0",
   "instanceNameFormat": "CMake $(cmakeArgs)",
@@ -75,7 +75,7 @@
     "CMakeFailed": "CMake failed with error: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.227.2",
-    "Node20-225": "1.227.1"
+    "Default": "1.228.3",
+    "Node20-225": "1.228.2"
   }
 }

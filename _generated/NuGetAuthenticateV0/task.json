@@ -13,8 +13,8 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 227,
-    "Patch": 4
+    "Minor": 228,
+    "Patch": 6
   },
   "deprecated": true,
   "minimumAgentVersion": "2.120.0",
@@ -47,8 +47,8 @@
   },
   "messages": {},
   "_buildConfigMapping": {
-    "Default": "0.227.4",
-    "Node16-225": "0.227.2",
-    "Node20-225": "0.227.3"
+    "Default": "0.228.6",
+    "Node16-225": "0.228.4",
+    "Node20-225": "0.228.5"
   }
 }

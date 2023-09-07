@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 227,
-    "Patch": 2
+    "Minor": 228,
+    "Patch": 3
   },
   "releaseNotes": "Match pattern consistency.",
   "demands": [],

@@ -18,8 +18,8 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 227,
-    "Patch": 3
+    "Minor": 228,
+    "Patch": 4
   },
   "preview": true,
   "minimumAgentVersion": "2.144.0",
@@ -223,7 +223,7 @@
     "UpdateContainerAppRegistryDetailsFailed": "ms-resource:loc.messages.UpdateContainerAppRegistryDetailsFailed"
   },
   "_buildConfigMapping": {
-    "Default": "0.227.3",
-    "Node20-225": "0.227.2"
+    "Default": "0.228.4",
+    "Node20-225": "0.228.3"
   }
 }
