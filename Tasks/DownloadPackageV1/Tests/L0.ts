@@ -192,7 +192,7 @@ describe("Download multi file package suite", function() {
         tl.rmRF(rootDir);
     });
 
-    it("only downloads jar and pom files from the maven archive and doesn't extract them", (done: MochaDone) => {
+    it("only downloads jar and pom files from the maven archive and doesn't extract them", (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0DownloadMultiFilePackage.js");
