@@ -23,7 +23,6 @@ Write-Verbose "copyFilesInParallel = $copyFilesInParallel"
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy"
 
 Import-Module $PSScriptRoot/ps_modules/VstsTaskSdk
-Import-Module $PSScriptRoot/ps_modules/Sanitizer
 
 . $PSScriptRoot/RoboCopyJob.ps1
 . $PSScriptRoot/Utility.ps1
@@ -32,6 +31,19 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal" -ErrorAction Ignore
+
+# Sanitizer
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+$useSanitizerCall = Get-SanitizerCallStatus
+$useSanitizerActivate = Get-SanitizerActivateStatus
+
+if ($useSanitizerCall) {
+    $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "WindowsMachineFileCopyV1"
+}
+
+if ($useSanitizerActivate) {
+    $additionalArguments = $sanitizedArguments -join " "
+}
 
 # keep machineNames parameter name unchanged due to back compatibility
 $machineFilter = $machineNames
@@ -52,7 +64,7 @@ if([string]::IsNullOrWhiteSpace($environmentName))
 
     Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $targetPath)
     Copy-OnLocalMachine -sourcePath $sourcePath -targetPath $targetPath -adminUserName $adminUserName -adminPassword $adminPassword `
-                        -cleanTargetBeforeCopy $cleanTargetBeforeCopy -additionalArguments $additionalArguments
+                        -cleanTargetBeforeCopy $cleanTargetBeforeCopy -additionalArguments $additionalArguments -useSanitizerActivate $useSanitizerActivate
     Write-Verbose "Files copied to destination successfully."
 }
 else
@@ -86,7 +98,7 @@ else
 
             Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
 
-            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments
+            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate
         } 
     }
     else
@@ -101,7 +113,7 @@ else
 
             Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
 
-            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments
+            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate
 
             $Jobs.Add($job.Id, $resourceProperties)
         }        

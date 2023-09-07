@@ -21,87 +21,71 @@ export class MultiFilePackage extends Package {
         return new Set<string>(match(files, this.pattern));
     }
 
-    private async getPackageFileDownloadUrl(
-        feedId: string,
-        project: string,
-        packageMetadata: any,
-        fileMetadata: any
-    ): Promise<Map<string, PackageFileResult>> {
-        return new Promise<Map<string, PackageFileResult>>((resolve, reject) => {
-            this.getUrl(
-                this.pkgsConnection.vsoClient,
-                this.packageProtocolAreaName,
-                this.packageProtocolDownloadAreadId,
-                this.getRouteParams(feedId, project, packageMetadata, fileMetadata)
-            )
-                .then(downloadUrl => {
-                    var url = new Map<string, PackageFileResult>();
-                    url[fileMetadata.name] = new PackageFileResult(downloadUrl, true);
-                    return resolve(url);
-                })
-                .catch(error => {
-                    tl.debug("Getting download url for file " + fileMetadata.name + " failed with error: " + error);
-                    throw reject(error);
-                });
-        });
-    }
-
-    private async getPackageFileContent(fileMetadata: any): Promise<Map<string, PackageFileResult>> {
-        return new Promise<Map<string, PackageFileResult>>((resolve, reject) => {
-            var resultMap = new Map<string, PackageFileResult>();
-            var content = fileMetadata.protocolMetadata.data.content as string;
-
-            if(typeof content !='undefined' && content)
-            {
-                resultMap[fileMetadata.name] = new PackageFileResult(content, false);
-                return resolve(resultMap);
-            }
-
-            throw reject('Unable to download package with empty content.');
-        });
-    }
-
     async getDownloadUrls(feedId: string, project: string, packageId: string, packageVersion: string): Promise<Map<string, PackageFileResult>> {
-        return new Promise<Map<string, PackageFileResult>>((resolve, reject) => {
-            return this.getPackageMetadata(this.feedConnection, {
+        const packageMetadata = await this.getPackageMetadata(this.feedConnection, {
                 feedId: feedId,
                 project: project,
                 packageId: packageId,
                 packageVersionId: packageVersion
-            })
-                .then(packageMetadata => {
-                    var fileMetadatas: any[] = packageMetadata.files;
-                    tl.debug("Found " + fileMetadatas.length + " files in this package.");
-                    var filteredFileList: Set<string> = this.filterFilesMinimatch(fileMetadatas);
-                    tl.debug(filteredFileList.size + " files match filter criteria.");
+            });
 
-                    var pkgFileUrlPromises: Promise<Map<string, PackageFileResult>>[] = [];
+        var fileMetadatas: any[] = packageMetadata.files;
+        tl.debug("Found " + fileMetadatas.length + " files in this package.");
+        var filteredFileList: Set<string> = this.filterFilesMinimatch(fileMetadatas);
+        tl.debug(filteredFileList.size + " files match filter criteria.");
 
-                    for (let i = 0; i < fileMetadatas.length; i++) {
-                        if (filteredFileList.has(fileMetadatas[i].name)) {
-                            const fileMetadata = fileMetadatas[i];
-                            pkgFileUrlPromises.push(
-                                fileMetadata.protocolMetadata.data.storageId != null
-                                    ? this.getPackageFileDownloadUrl(feedId, project, packageMetadata, fileMetadata)
-                                    : this.getPackageFileContent(fileMetadata)
-                            );
-                        }
-                    }
-                    return Promise.all(pkgFileUrlPromises)
-                        .then(urls => {
-                            var downloadUrls = new Map<string, PackageFileResult>();
-                            urls.forEach(url => {
-                                downloadUrls = { ...downloadUrls, ...url };
-                            });
-                            return resolve(downloadUrls);
-                        })
-                        .catch(error => {
-                            throw error;
-                        });
-                })
-                .catch(error => {
-                    return reject(error);
-                });
-        });
+        const fileContentPromises: Promise<PackageFileResult>[] = [];
+        for (const fileMetadata of fileMetadatas) {
+            if (filteredFileList.has(fileMetadata.name)) {
+                fileContentPromises.push(
+                    this.getPackageFileContent(fileMetadata, feedId, project, packageMetadata));
+            }
+        }
+
+        const fileContents = await Promise.all(fileContentPromises);
+        
+        const fileContentsMap = new Map<string, PackageFileResult>();
+        for (const fileContent of fileContents) {
+            if(fileContent) {
+                fileContentsMap[fileContent.FileName] = fileContent
+            }
+        }
+
+        return fileContentsMap;
+    }
+
+    private async getPackageFileContent(fileMetadata: any, feedId: string, project: string, packageMetadata: any): Promise<PackageFileResult|null> {
+        const protocolFileData = fileMetadata.protocolMetadata.data;
+
+        // sometimes the file info has PascalCase keys, sometimes camelCase
+        const storageId = protocolFileData.storageId || protocolFileData.StorageId;
+        if (storageId) {
+            tl.debug(`Getting download url for file ${fileMetadata.name}.`)
+            
+            try {
+                const downloadUrl = await this.getUrl(
+                    this.pkgsConnection.vsoClient,
+                    this.packageProtocolAreaName,
+                    this.packageProtocolDownloadAreadId,
+                    this.getRouteParams(feedId, project, packageMetadata, fileMetadata));
+    
+                return new PackageFileResult(fileMetadata.name, downloadUrl, true);
+            }
+            catch(error) {
+                    tl.debug("Getting download url for file " + fileMetadata.name + " failed with error: " + error);
+                    throw error;
+            }
+        }
+
+        const content = protocolFileData.content || protocolFileData.Content;
+        if(content)
+        {
+            tl.debug(`Getting literal content for file ${fileMetadata.name}.`)
+
+            return new PackageFileResult(fileMetadata.name, content, false);
+        }
+        
+        tl.warning(tl.loc("SkippingFileWithNoContent", fileMetadata.name));
+        return null;
     }
 }
