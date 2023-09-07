@@ -25,6 +25,14 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         '/home/repo/src': true
     },
     'exec': {
+        'gradlew.bat --version': {
+            'code': 0,
+            'stdout': 'More sample gradle output'
+        },
+        'gradlew --version': {
+            'code': 0,
+            'stdout': 'More sample gradle output'
+        },
         'gradlew.bat properties': {
             'code': 0,
             'stdout': 'More sample gradle output'
