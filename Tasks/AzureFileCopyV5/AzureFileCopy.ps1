@@ -65,13 +65,15 @@ $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 
 # Update PSModulePath for hosted agent
 . "$PSScriptRoot\Utility.ps1"
+
 CleanUp-PSModulePathForHostedAgent
 
 $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
 $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
 if (Get-Module Az.Accounts -ListAvailable) {
-    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $vstsAccessToken
+    $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
+    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
 }
 else {
     Write-Verbose "No module found with name: Az.Accounts"
@@ -89,6 +91,21 @@ $enableDetailedLogging = ($env:system_debug -eq "true")
 
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
+
+# Sanitizer
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+$useSanitizerCall = Get-SanitizerCallStatus
+$useSanitizerActivate = Get-SanitizerActivateStatus
+
+if ($useSanitizerCall) {
+    $sanitizedArgumentsForBlobCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForBlobCopy -TaskName "AzureFileCopyV5"
+    $sanitizedArgumentsForVMCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForVMCopy -TaskName "AzureFileCopyV5"
+}
+
+if ($useSanitizerActivate) {
+    $additionalArgumentsForBlobCopy = $sanitizedArgumentsForBlobCopy -join " "
+    $additionalArgumentsForVMCopy = $sanitizedArgumentsForVMCopy -join " "
+}
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
 try {
@@ -180,8 +197,13 @@ try {
     }
 
     Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArgumentsForBlobCopy
-    Validate-AdditionalArguments $additionalArguments
 
+    $containerSasToken = ""
+    if ($useSanitizerActivate) {
+        Write-Verbose "Feature flag sanitizer is active (for sas token)"
+        $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInMinutes $sasTokenTimeOutInMinutes
+    }
+    
     # Uploading files to container
     Upload-FilesToAzureContainer -sourcePath $sourcePath `
                                 -endPoint $endpoint `
@@ -194,6 +216,8 @@ try {
                                 -destinationType $destination `
                                 -useDefaultArguments $useDefaultArgumentsForBlobCopy `
                                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy `
+                                -containerSasToken $containerSasToken `
+                                -useSanitizerActivate $useSanitizerActivate
     
     # Complete the task if destination is azure blob
     if ($destination -eq "AzureBlob")
@@ -249,7 +273,8 @@ try {
                                                 -additionalArguments $additionalArgumentsForVMCopy `
                                                 -azCopyToolLocation $azCopyLocation `
                                                 -fileCopyJobScript $AzureFileCopyRemoteJob `
-                                                -enableDetailedLogging $enableDetailedLogging
+                                                -enableDetailedLogging $enableDetailedLogging `
+                                                -useSanitizerActivate $useSanitizerActivate
 
         Write-Output (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName)
     }

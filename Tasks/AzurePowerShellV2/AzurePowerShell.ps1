@@ -29,7 +29,7 @@ if ($targetAzurePs -eq $otherVersion) {
     if ($customTargetAzurePs -eq $null) {
         throw (Get-VstsLocString -Key InvalidAzurePsVersion $customTargetAzurePs)
     } else {
-        $targetAzurePs = $customTargetAzurePs.Trim()        
+        $targetAzurePs = $customTargetAzurePs.Trim()
     }
 }
 
@@ -80,7 +80,8 @@ try {
     if (($authScheme -eq 'WorkloadIdentityFederation') -and (Get-Module Az.Accounts -ListAvailable)) {
         $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
         $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
-        Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $serviceName -vstsAccessToken $vstsAccessToken
+        $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
+        Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $serviceName -encryptedToken $encryptedToken
     }
     else {
         Initialize-Azure -azurePsVersion $targetAzurePs

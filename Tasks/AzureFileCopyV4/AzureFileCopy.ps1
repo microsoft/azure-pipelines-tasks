@@ -71,7 +71,8 @@ $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
 $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
 if (Get-Module Az.Accounts -ListAvailable) {
-    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $vstsAccessToken
+    $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
+    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
 }
 else {
     Initialize-AzureRMModule -Endpoint $endpoint
@@ -88,6 +89,21 @@ $enableDetailedLogging = ($env:system_debug -eq "true")
 
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
+
+# Sanitizer
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+$useSanitizerCall = Get-SanitizerCallStatus
+$useSanitizerActivate = Get-SanitizerActivateStatus
+
+if ($useSanitizerCall) {
+    $sanitizedArgumentsForBlobCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForBlobCopy -TaskName "AzureFileCopyV4"
+    $sanitizedArgumentsForVMCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForVMCopy -TaskName "AzureFileCopyV4"
+}
+
+if ($useSanitizerActivate) {
+    $additionalArgumentsForBlobCopy = $sanitizedArgumentsForBlobCopy -join " "
+    $additionalArgumentsForVMCopy = $sanitizedArgumentsForVMCopy -join " "
+}
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
 try {
@@ -179,8 +195,13 @@ try {
     }
 
     Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArgumentsForBlobCopy
-    Validate-AdditionalArguments $additionalArguments
 
+    $containerSasToken = ""
+    if ($useSanitizerActivate) {
+        Write-Verbose "Feature flag sanitizer is active (for sas token)"
+        $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInMinutes $sasTokenTimeOutInMinutes
+    }
+    
     # Uploading files to container
     Upload-FilesToAzureContainer -sourcePath $sourcePath `
                                 -endPoint $endpoint `
@@ -191,7 +212,9 @@ try {
                                 -azCopyLocation $azCopyLocation `
                                 -additionalArguments $additionalArgumentsForBlobCopy `
                                 -destinationType $destination `
-                                -useDefaultArguments $useDefaultArgumentsForBlobCopy
+                                -useDefaultArguments $useDefaultArgumentsForBlobCopy `
+                                -containerSasToken $containerSasToken `
+                                -useSanitizerActivate $useSanitizerActivate
     
     # Complete the task if destination is azure blob
     if ($destination -eq "AzureBlob")
@@ -247,7 +270,8 @@ try {
                                                 -additionalArguments $additionalArgumentsForVMCopy `
                                                 -azCopyToolLocation $azCopyLocation `
                                                 -fileCopyJobScript $AzureFileCopyRemoteJob `
-                                                -enableDetailedLogging $enableDetailedLogging
+                                                -enableDetailedLogging $enableDetailedLogging `
+                                                -useSanitizerActivate $useSanitizerActivate
 
         Write-Output (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName)
     }

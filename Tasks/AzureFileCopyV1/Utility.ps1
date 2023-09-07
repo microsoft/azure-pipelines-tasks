@@ -278,15 +278,8 @@ function Upload-FilesToAzureContainer
         {
             $blobStorageURI = $blobStorageEndpoint+$containerName+"/"+$blobPrefix
         }
-
-        if([string]::IsNullOrWhiteSpace($additionalArguments))
-        {
-            $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey  $storageKey -AzCopyLocation $azCopyLocation -BlobStorageURI $blobStorageURI
-        }
-        else
-        {
-            $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments -BlobStorageURI $blobStorageURI
-        }
+        
+        Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments -BlobStorageURI $blobStorageURI
     }
     catch
     {
@@ -1008,7 +1001,8 @@ function Copy-FilesSequentiallyToAzureVMs
           [string]$skipCACheckOption,
           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments,
-          [string][Parameter(Mandatory=$true)]$connectionType)
+          [string][Parameter(Mandatory=$true)]$connectionType,
+          [string][Parameter(Mandatory=$false)]$useSanitizerActivate = $false)
 
     foreach ($resource in $azureVMResourcesProperties.Keys)
     {
@@ -1022,7 +1016,7 @@ function Copy-FilesSequentiallyToAzureVMs
         $deploymentUtilitiesLocation = Get-DeploymentModulePath
         $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList `
                             $deploymentutilitieslocation, $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $blobStorageEndpoint, $azCopyLocation, $targetPath, $azureVMsCredentials, `
-                            $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocol, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
+                            $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocol, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments, $useSanitizerActivate
 
         $status = $copyResponse.Status
 
@@ -1062,7 +1056,8 @@ function Copy-FilesParallellyToAzureVMs
           [string]$skipCACheckOption,
           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments,
-          [string][Parameter(Mandatory=$true)]$connectionType)
+          [string][Parameter(Mandatory=$true)]$connectionType,
+          [string][Parameter(Mandatory=$false)]$useSanitizerActivate = $false)
 
     [hashtable]$Jobs = @{}
     $dtlsdkErrors = @()
@@ -1078,7 +1073,7 @@ function Copy-FilesParallellyToAzureVMs
 
         $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList `
                    $deploymentutilitieslocation, $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $blobStorageEndpoint, $azCopyLocation, $targetPath, $azureVmsCredentials, `
-                   $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocol, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
+                   $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocol, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments, $useSanitizerActivate
 
         $Jobs.Add($job.Id, $resourceProperties)
     }
@@ -1151,7 +1146,8 @@ function Copy-FilesToAzureVMsFromStorageContainer
           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$copyFilesInParallel,
-          [string][Parameter(Mandatory=$true)]$connectionType)
+          [string][Parameter(Mandatory=$true)]$connectionType,
+          [string][Parameter(Mandatory=$false)]$useSanitizerActivate = $false)
 
     # copies files sequentially
     if ($copyFilesInParallel -eq "false" -or ( $azureVMResourcesProperties.Count -eq 1 ))
@@ -1162,7 +1158,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
                 -blobStorageEndpoint $blobStorageEndpoint -targetPath $targetPath -azCopyLocation $azCopyLocation `
                 -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $communicationProtocol -skipCACheckOption $skipCACheckOption `
-                -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -connectionType $connectionType
+                -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -connectionType $connectionType -useSanitizerActivate $useSanitizerActivate
     }
     # copies files parallelly
     else
@@ -1172,7 +1168,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
                 -blobStorageEndpoint $blobStorageEndpoint -targetPath $targetPath -azCopyLocation $azCopyLocation `
                 -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $communicationProtocol -skipCACheckOption $skipCACheckOption `
-                -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -connectionType $connectionType
+                -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -connectionType $connectionType -useSanitizerActivate $useSanitizerActivate
     }
 
     # if no error thrown, copy successfully succeeded
@@ -1465,13 +1461,5 @@ function Check-ContainerNameAndArgs
     if($containerName -eq '$root' -and $additionalArguments -like '* /S *')
     {
         Write-Warning (Get-vstsLocString -Key "AFC_RootContainerAndDirectory")
-    }
-}
-
-function Validate-AdditionalArguments([string]$additionalArguments)
-{
-    if($additionalArguments -match "[&;|]")
-    {
-        ThrowError -errorMessage (Get-VstsLocString -Key "AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters")
     }
 }

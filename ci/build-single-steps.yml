@@ -14,11 +14,11 @@ steps:
 - powershell: ./ci/start-collect-diagnostics.ps1
   displayName: Start collect diagnostics
 
-# Use node 8, npm 5
+# Use node 10, npm 6
 - task: NodeTool@0
-  displayName: Use node 8
+  displayName: Use node 10
   inputs:
-    versionSpec: 8.x
+    versionSpec: 10.24.1
 
 # npm install
 - script: npm install
@@ -39,9 +39,13 @@ steps:
     Write-Host "##vso[task.setVariable variable=task_pattern]$taskPattern"
   displayName: Set task_pattern
 
-# Build
-- script: node make.js build --task "$(task_pattern)"
-  displayName: Build
+# Clean
+- script: node make.js clean
+  displayName: Clean tasks
+
+# Build Tasks
+- script: node make.js serverBuild --task "$(task_pattern)"
+  displayName: Build Tasks
 
 # Check diff for task sources
 - script: node ./ci/verify-source-changes.js "$(task_pattern)"

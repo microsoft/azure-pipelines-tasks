@@ -9,7 +9,7 @@
   "author": "Lawrence Gripper",
   "version": {
     "Major": 0,
-    "Minor": 221,
+    "Minor": 227,
     "Patch": 0
   },
   "runsOn": [
@@ -126,6 +126,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "nugetpublisher.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "nugetpublisher.js",
       "argumentFormat": ""
     }

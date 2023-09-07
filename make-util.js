@@ -11,12 +11,13 @@ var shell = require('shelljs');
 var syncRequest = require('sync-request');
 
 // global paths
-var downloadPath = path.join(__dirname, '_download');
+var repoPath = __dirname;
+var downloadPath = path.join(repoPath, '_download');
 
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['2.3.4', '4.0.2'];
+var allowedTypescriptVersions = ['4.0.2', '5.1.6'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -159,11 +160,11 @@ var buildNodeTask = function (taskPath, outDir) {
     var overrideTscPath;
     if (test('-f', packageJsonPath)) {
         // verify no dev dependencies
-        // we allow a TS dev-dependency to indicate a task should use a different TS version
+        // we allow only two dev dependencies: typescript and @tsconfig/node10
         var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
         var devDeps = packageJson.devDependencies ? Object.keys(packageJson.devDependencies).length : 0;
-        if (devDeps == 1 && packageJson.devDependencies["typescript"]) {
-            var version = packageJson.devDependencies["typescript"];
+        if (devDeps === 1 && packageJson.devDependencies['typescript'] || (devDeps === 2 && packageJson.devDependencies['typescript'] && packageJson.devDependencies['@tsconfig/node10'])) {
+            var version = packageJson.devDependencies['typescript'];
             if (!allowedTypescriptVersions.includes(version)) {
                 fail(`The package.json specifies a different TS version (${version}) that the allowed versions: ${allowedTypescriptVersions}. Offending package.json: ${packageJsonPath}`);
             }
@@ -331,6 +332,9 @@ exports.ensureTool = ensureTool;
 
 var installNode = function (nodeVersion) {
     switch (nodeVersion || '') {
+        case '20':
+            nodeVersion = 'v20.3.1';
+            break;
         case '16':
             nodeVersion = 'v16.17.1';
             break;
@@ -338,7 +342,7 @@ var installNode = function (nodeVersion) {
             nodeVersion = 'v14.10.1';
             break;
         case '10':
-            nodeVersion = 'v10.21.0';
+            nodeVersion = 'v10.24.1';
             break;
         case '6':
         case '':
@@ -348,7 +352,7 @@ var installNode = function (nodeVersion) {
             nodeVersion = 'v5.10.1';
             break;
         default:
-            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14, 16`);
+            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14, 16, 20`);
     }
 
     if (nodeVersion === run('node -v')) {
@@ -411,7 +415,11 @@ var downloadFile = function (url) {
 
         // download the file
         mkdir('-p', path.join(downloadPath, 'file'));
-        var result = syncRequest('GET', url);
+        var result = syncRequest('GET', url, {
+            retry: true,
+            retryDelay: 5000,
+            maxRetries: 3
+        });
         fs.writeFileSync(targetPath, result.getBody());
 
         // write the completed marker
@@ -1777,7 +1785,7 @@ exports.renameCodeCoverageOutput = renameCodeCoverageOutput;
 //------------------------------------------------------------------------------
 
 /**
- * Returns path to BuldConfigGenerator, if generator wasn't compile it will compile it
+ * Returns path to BuldConfigGenerator, build it if needed.  Fail on compilation failure
  * @returns Path to the executed file
  */
 var getBuildConfigGenerator = function (baseConfigToolPath) {
@@ -1792,22 +1800,21 @@ var getBuildConfigGenerator = function (baseConfigToolPath) {
         configToolBuildUtility = path.join(baseConfigToolPath, "dev.sh");
     }
 
-    if (!fs.existsSync(programPath)) {
-        console.log(`BuildConfigGen not found at ${programPath}. Starting build.`);
-        run(configToolBuildUtility, true);
-    }
+    // build configToolBuildUtility if needed.  (up-to-date check will skip build if not needed)
+    run(configToolBuildUtility, true);
 
     return programPath;
 };
 exports.getBuildConfigGenerator = getBuildConfigGenerator;
 
 /**
- * Function to validate generated tasks
+ * Function to validate or write generated tasks
  * @param {String} baseConfigToolPath Path to generating programm
  * @param {Array} taskList  Array with allowed tasks
  * @param {Object} makeOptions Object with all tasks
+ * @param {Boolean} writeUpdates Write Updates (false to validateOnly)
  */
-var validateGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions) {
+var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates) {
     if (!makeOptions) fail("makeOptions is not defined");
     const excludedMakeOptionKeys = ["tasks", "taskResources"];
     const validatingTasks = {};
@@ -1836,11 +1843,17 @@ var validateGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions)
             taskName,
         ];
 
+        var writeUpdateArg = "";
+        if(writeUpdates)
+        {
+            writeUpdateArg += " --write-updates";
+        }
+
         banner('Validating: ' + taskName);
-        run(`${programPath} ${args.join(' ')}`, true);
+        run(`${programPath} ${args.join(' ')} ${writeUpdateArg}`, true);
     }
 }
-exports.validateGeneratedTasks = validateGeneratedTasks;
+exports.processGeneratedTasks = processGeneratedTasks;
 
 /**
  * Function to generate new tasks
@@ -1877,5 +1890,73 @@ var generateTasks = function(baseConfigToolPath, taskList, configsString, makeOp
     return newMakeOptions;
 }
 exports.generateTasks = generateTasks;
+
+/**
+ * Wrapper for buildTask function which compares diff between source and generated tasks
+ * @param {Function} originalFunction - Original buildTask function
+ * @param {string} genTaskPath - path to generated folder
+ * @param {boolean} callGenTaskDuringBuild - if false, the sync step will be skipped
+ * @returns {Function} - wrapped buildTask function which compares diff between source and generated tasks
+ * and copy files from generated to source if needed
+ */
+function syncGeneratedFilesWrapper(originalFunction, genTaskPath, callGenTaskDuringBuild = false) {
+    const allowedFilesToCopy = ["package.json", "package-lock.json"];
+    const genTaskBasePath = path.basename(genTaskPath);
+
+    if (!originalFunction || originalFunction instanceof Function === false) throw Error('originalFunction is not defined');
+    // If the task is building on the ci, we don't want to sync files
+    if (callGenTaskDuringBuild === false) return originalFunction;
+
+    console.log(
+        "Syncing generated files with source task...\n" +
+        "----------------------------------------------\n" +
+        "Getting list of uncommitted changes");
+    const initialDiffOutput = run(`git -C "${repoPath}" diff --name-only`)
+    console.log(
+        "uncommitted changes:\n" + 
+        `${initialDiffOutput}\n` +
+        "----------------------------------------------");
+
+    return function(taskName, ...args) {
+        // git diff --name-only return "/"" as separator
+        originalFunction.apply(this, [taskName, ...args]);
+
+        const genTaskPath = `${genTaskBasePath}/${taskName}/`;
+        // if it's not a generated task, we don't need to sync files
+        if (!fs.existsSync(genTaskPath)) return;
+
+        const changedPaths = [];
+        const afterTaskBuildDiff = run(`git diff --name-only`);
+
+        afterTaskBuildDiff.split("\n").forEach((line) => {
+            // We skip files that are not in the generated task folder or are already in the initial diff   
+            if (!line.includes(genTaskPath) || initialDiffOutput.includes(line)) return;
+            changedPaths.push(line);
+        });
+
+        if (changedPaths.length === 0) return;
+
+        console.log(
+            "The following generated files where updated in source task after build and added to staged, please commit them to the repo:\n" +
+            `${changedPaths}\n` +
+            "----------------------------------------------\n" +
+            "The following files were copied to source task:");
+
+        changedPaths.forEach((filePath) => {
+            const fileName = path.basename(filePath);
+            if (allowedFilesToCopy.indexOf(fileName) === -1) return;
+            const [baseTaskName, config] = taskName.split("_");
+            let dest = path.join(__dirname, 'Tasks', baseTaskName, fileName);
+            if (config) {
+                dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, fileName);
+            }
+
+            fs.copyFileSync(filePath, dest);
+            console.log(`from ${filePath} to ${dest}`);
+        });
+    }
+}
+
+exports.syncGeneratedFilesWrapper = syncGeneratedFilesWrapper;
 
 //------------------------------------------------------------------------------

@@ -90,16 +90,6 @@ function Validate-DestinationPath(
     }
 }
 
-function Validate-AdditionalArguments([string]$additionalArguments)
-{    
-    if($additionalArguments -match "[&;|]")
-    {
-        $additionalArgumentsValidationErrorMessage = "Additional arguments can't include separator characters '&', ';' and '|'. Please verify input. To learn more about argument validation, please check https://aka.ms/azdo-task-argument-validation"
-
-        ThrowError -errorMessage (Get-LocalizedString -Key $additionalArgumentsValidationErrorMessage)
-    }
-}
-
 # $sourcePath, $targetPath, $credential, $cleanTargetBeforeCopy, $additionalArguments
 # $adminUserName, $adminPassword
 function Copy-OnLocalMachine(
@@ -108,9 +98,10 @@ function Copy-OnLocalMachine(
     [string] $adminUserName,
     [string] $adminPassword,
     [string] $cleanTargetBeforeCopy,
-    [string] $additionalArguments
+    [string] $additionalArguments,
+    [bool] $useSanitizerActivate = $false
     )
 {
     $credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $adminUserName, $adminPassword
-    Invoke-Command -ScriptBlock $CopyJob -ArgumentList "", $sourcePath, $targetPath, $credential, $cleanTargetBeforeCopy, $additionalArguments
+    Invoke-Command -ScriptBlock $CopyJob -ArgumentList "", $sourcePath, $targetPath, $credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate
 }

@@ -11,9 +11,13 @@ import { ICoreApi } from "azure-devops-node-api/CoreApi";
 import stream = require("stream");
 
 export class PackageFileResult {
+    private fileName: string;
     private value: string;
     private isUrl: boolean;
 
+    get FileName() {
+        return this.fileName;
+    }
     get Value() {
         return this.value;
     }
@@ -21,7 +25,8 @@ export class PackageFileResult {
         return this.isUrl;
     }
 
-    constructor(value: string, isUrl: boolean) {
+    constructor(fileName: string, value: string, isUrl: boolean) {
+        this.fileName = fileName;
         this.value = value;
         this.isUrl = isUrl;
     }
