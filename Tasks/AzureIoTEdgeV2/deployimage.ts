@@ -254,11 +254,7 @@ export async function run(telemetryEvent: TelemetryEvent): Promise<void> {
   for (let path of findPaths) {
     console.log(tl.loc('CheckValidJson', path));
     try {
-#if NODE16
       deploymentJson = JSON.parse(fs.readFileSync(path, Constants.UTF8 as BufferEncoding));
-#else
-      deploymentJson = JSON.parse(fs.readFileSync(path, Constants.UTF8));
-#endif
     } catch (e) {
       console.log(tl.loc('Invalid'));
       continue;

@@ -7,10 +7,9 @@ $AzureFileCopyRemoteJob = {
         [string]$azCopyToolFileNamesString,
         [string]$azCopyToolFileContentsString,
         [switch]$CleanTargetBeforeCopy,
-        [switch]$EnableDetailedLogging
+        [switch]$EnableDetailedLogging,
+        [bool]$useSanitizerActivate = $false
     )
-
-    Import-Module $PSScriptRoot\ps_modules\Sanitizer
 
     function Write-DetailLogs
     {
@@ -120,14 +119,8 @@ $AzureFileCopyRemoteJob = {
             $additionalArguments = "/Z:`"$azCopyDestinationPath`" /V:`"$logFilePath`" /S /Y"
         }
 
-        $useSanitizerCall = Get-SanitizerCallStatus
-        $useSanitizerActivate = Get-SanitizerActivateStatus
-
-        if ($useSanitizerCall) {
-            $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV2"
-        }
-        
         if ($useSanitizerActivate) {
+            $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
             Write-DetailLogs "##[command] & `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"*****`" $sanitizedArguments"
             & $azCopyExeLocation /Source:$containerURL /Dest:$targetPath /SourceSAS:$containerSasToken $sanitizedArguments
         } else {

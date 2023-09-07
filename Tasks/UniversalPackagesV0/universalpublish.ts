@@ -1,13 +1,12 @@
-import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
-import { ProvenanceHelper } from "azure-pipelines-tasks-packaging-common/provenance";
-import { getProjectAndFeedIdFromInputParam } from 'azure-pipelines-tasks-packaging-common/util';
-import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import * as tl from "azure-pipelines-task-lib";
 import { IExecOptions, IExecSyncResult } from "azure-pipelines-task-lib/toolrunner";
+import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
+import { ProvenanceHelper } from "azure-pipelines-tasks-packaging-common/provenance";
 import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner";
 import * as artifactToolUtilities from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolUtilities";
 import * as auth from "azure-pipelines-tasks-packaging-common/universal/Authentication";
-import { logError } from 'azure-pipelines-tasks-packaging-common/util';
+import { getProjectAndFeedIdFromInputParam, logError } from 'azure-pipelines-tasks-packaging-common/util';
+import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 
 const packageAlreadyExistsError = 17;
 const numRetries = 1;
@@ -218,6 +217,7 @@ async function getNextPackageVersion(
     feedId: string,
     packageName: string) {
     let version: string;
+    // Will get the highest package version available. Returns 0.0.0 as version if package name contains no versions.
     const highestVersion = await artifactToolUtilities.getHighestPackageVersionFromFeed(
         feedUri,
         accessToken,

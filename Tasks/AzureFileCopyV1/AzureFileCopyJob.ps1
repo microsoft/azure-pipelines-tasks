@@ -14,10 +14,9 @@ param (
     [string]$httpProtocolOption,
     [string]$skipCACheckOption,
     [string]$enableDetailedLogging,
-    [string]$additionalArguments
+    [string]$additionalArguments,
+    [bool]$useSanitizerActivate = $false
     )
-
-    Import-Module $PSScriptRoot\ps_modules\Sanitizer
 
     Write-Verbose "fqdn = $fqdn"
     Write-Verbose "storageAccount = $storageAccount"
@@ -53,14 +52,8 @@ param (
         $blobStorageURI = $blobStorageEndpoint+$containerName+"/"+$blobPrefix
     }
 
-    $useSanitizerCall = Get-SanitizerCallStatus
-    $useSanitizerActivate = Get-SanitizerActivateStatus
-
-    if ($useSanitizerCall) {
-        $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV1"
-    }
-
     if ($useSanitizerActivate) {
+        $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
         Copy-ToAzureMachines -MachineDnsName $fqdn -StorageAccountName $storageAccount -ContainerName $containerName -SasToken $sasToken -DestinationPath $targetPath -Credential $credential -AzCopyLocation $azCopyLocation -AdditionalArguments $sanitizedArguments -BlobStorageURI $blobStorageURI -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption
     } else {
         [String]$copyToAzureMachinesBlockString = [string]::Empty
