@@ -16,6 +16,7 @@ export interface ICodeCoverageSettings {
     summaryFileName: string;
     isMultiModule: boolean;
     gradle5xOrHigher: boolean;
+    gradleMajorVersion: number;
 }
 
 export interface IPublishCodeCoverageSettings {

@@ -13,7 +13,7 @@ const TESTRUN_SYSTEM = 'VSTS - gradle';
  * @param {ICodeCoverageSettings} settings  - collection of settings to setup and enable code coverage
  * @returns {Q.Promise<boolean>} status of code coverage enabler
  */
-export function enableCodeCoverageAsync(settings: ICodeCoverageSettings): Q.Promise<boolean> {
+export function enableCodeCoverageAsync(settings: ICodeCoverageSettings): Q.Promise<string> {
     const buildProperties: { [key: string]: string } = {};
 
     buildProperties['buildfile'] = path.join(settings.workingDirectory, 'build.gradle');
@@ -23,6 +23,7 @@ export function enableCodeCoverageAsync(settings: ICodeCoverageSettings): Q.Prom
     buildProperties['reportdirectory'] = settings.reportDirectoryName;
     buildProperties['ismultimodule'] = String(settings.isMultiModule);
     buildProperties['gradle5xOrHigher'] = String(settings.gradle5xOrHigher);
+    buildProperties['gradleMajorVersion'] = String(settings.gradleMajorVersion);
 
     const codeCoverageEnabler: ICodeCoverageEnabler = new CodeCoverageEnablerFactory().getTool('gradle', settings.codeCoverageTool.toLowerCase());
     return codeCoverageEnabler.enableCodeCoverage(buildProperties);

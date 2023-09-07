@@ -1,6 +1,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as javaCommon from 'azure-pipelines-tasks-java-common/java-common';
-import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
+import { IExecOptions, ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
+import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
 
 // Setting the access token env var to both VSTS and AZURE_ARTIFACTS for
 // backwards compatibility with repos that already use the older env var.
@@ -87,4 +88,28 @@ export function setGradleOpts(gradleOptions: string): void {
         process.env['GRADLE_OPTS'] = gradleOptions;
         tl.debug(`GRADLE_OPTS is now set to ${gradleOptions}`);
     }
+}
+
+/**
+ * Get Gradle major version number
+ * @param {string} wrapperScript - Relative path from the repository root to the Gradle Wrapper script.
+ * @returns {number} Gradle major version number
+ */
+export function getGradleMajorVersion(wrapperScript: string): number {
+    const gradleVersionRunner: ToolRunner = tl.tool(wrapperScript);
+    gradleVersionRunner.arg('--version');
+
+    const data: string = gradleVersionRunner.execSync().stdout;
+    if (typeof data !== 'undefined' && data) {
+        const regex: RegExp = new RegExp(/Gradle (\d+\.\d+(\.\d+)?)/);
+        const match = data.match(regex);
+        if (match && match.length > 1) {
+            const gradleVersion: string = match[1]
+            const gradleMajorVersion: number = parseInt(gradleVersion);
+            tl.debug(`Gradle version: ${gradleVersion}`);
+            emitTelemetry('TaskHub', 'GradleV3', { gradleVersion: gradleVersion, gradleMajorVersion: gradleMajorVersion });
+            return gradleMajorVersion;
+        }
+    }
+    return null;
 }
