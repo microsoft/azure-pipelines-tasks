@@ -29,7 +29,7 @@ jobs:
 - job: run_main_test_pipeline
   displayName: Run main test pipeline
   condition: and(succeeded(),gt(length(dependencies.detect_changes.outputs['detect.TASKS']), 0))
-  dependsOn: detect_changes, get_ado_token
+  dependsOn: [ detect_changes , get_ado_token ]
   variables:
       - name: tasks
         value: $[dependencies.detect_changes.outputs['detect.TASKS']]
