@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 228,
-    "Patch": 2
+    "Patch": 3
   },
   "releaseNotes": "Use this task under deploy phase provider to create a resource dynamically",
   "inputs": [

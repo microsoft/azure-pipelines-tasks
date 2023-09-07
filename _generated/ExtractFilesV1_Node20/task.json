@@ -19,8 +19,8 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 1,
-    "Minor": 227,
-    "Patch": 1
+    "Minor": 228,
+    "Patch": 2
   },
   "instanceNameFormat": "Extract files $(message)",
   "inputs": [
@@ -118,7 +118,7 @@
     "SucceedMsg": "Successfully extracted all files."
   },
   "_buildConfigMapping": {
-    "Default": "1.227.2",
-    "Node20-225": "1.227.1"
+    "Default": "1.228.3",
+    "Node20-225": "1.228.2"
   }
 }

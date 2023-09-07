@@ -11,8 +11,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 227,
-    "Patch": 1
+    "Minor": 228,
+    "Patch": 2
   },
   "minimumAgentVersion": "2.144.0",
   "preview": true,
@@ -31,7 +31,7 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "0.227.2",
-    "Node20-225": "0.227.1"
+    "Default": "0.228.3",
+    "Node20-225": "0.228.2"
   }
 }

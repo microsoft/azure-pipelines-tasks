@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 227,
-    "Patch": 2
+    "Minor": 228,
+    "Patch": 3
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "dotnet restore",
@@ -146,7 +146,7 @@
     "NetCore3Update": "Info: Azure Pipelines hosted agents have been updated to contain .Net Core 3.x SDK/Runtime along with 2.2 & 2.1. Unless you have locked down a SDK version for your project(s), 3.x SDK might be picked up which might have breaking behavior as compared to previous versions. \nSome commonly encountered changes are: \nIf you're using `Publish` command with -o or --Output argument, you will see that the output folder is now being created at root directory rather than Project File's directory. To learn about more such changes and troubleshoot, refer here: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/dotnet-core-cli?view=azure-devops#troubleshooting"
   },
   "_buildConfigMapping": {
-    "Default": "1.227.2",
-    "Node20-225": "1.227.1"
+    "Default": "1.228.3",
+    "Node20-225": "1.228.2"
   }
 }
