@@ -25,6 +25,8 @@ jobs:
       scriptType: 'pscore'
       scriptLocation: 'inlineScript'
       inlineScript: 'Write-Host "##vso[task.setvariable variable=ADOTOKEN;isOutput=true;issecret=true]$(az account get-access-token)"'
+    displayName: 'Get ADO Token using WIF'
+    name: token
 
 - job: run_main_test_pipeline
   displayName: Run main test pipeline
@@ -34,7 +36,7 @@ jobs:
       - name: tasks
         value: $[dependencies.detect_changes.outputs['detect.TASKS']]
       - name: adoToken
-        value: $[dependencies.get_ado_token.outputs['get_ado_token.ADOTOKEN']]
+        value: $[dependencies.get_ado_token.outputs['token.ADOTOKEN']]
   pool:
     vmImage: ubuntu-20.04
   steps:
@@ -43,6 +45,6 @@ jobs:
     displayName: npm i axios
   - script: |
       echo $(tasks)
-      node ./ci/ci-test-tasks/test-and-verify-v2.js $(adoToken)) $(ADOUrl) $(System.TeamProject) $(tasks)
+      node ./ci/ci-test-tasks/test-and-verify-v2.js $(adoToken) $(ADOUrl) $(System.TeamProject) $(tasks)
     displayName: 'Run test pipelines and verify results'
     failOnStderr: true
