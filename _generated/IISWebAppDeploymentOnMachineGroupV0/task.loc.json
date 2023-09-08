@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 227,
-    "Patch": 2
+    "Minor": 228,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.104.1",
@@ -188,7 +188,7 @@
     "RetryToDeploy": "ms-resource:loc.messages.RetryToDeploy"
   },
   "_buildConfigMapping": {
-    "Default": "0.227.2",
-    "Node16-225": "0.227.1"
+    "Default": "0.228.1",
+    "Node16-225": "0.228.0"
   }
 }
