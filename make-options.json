@@ -227,7 +227,6 @@
         "KubectlInstallerV0",
         "HelmDeployV0",
         "AzureFunctionAppV1",
-        "AzureNLBManagementV1",
         "AzureFunctionAppV2",
         "NuGetV0",
         "PublishCodeCoverageResultsV1",
