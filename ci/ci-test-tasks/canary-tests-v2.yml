@@ -24,7 +24,7 @@ jobs:
       azureSubscription: 'ci-test-tasks'
       scriptType: 'pscore'
       scriptLocation: 'inlineScript'
-      inlineScript: '$adoToken_HT = $(try {az account get-access-token} catch {Write-Host $_}) | ConvertFrom-Json; Write-Host "##vso[task.setvariable variable=ADOTOKEN;isOutput=true;issecret=true]$($adoToken_HT.accessToken)"'
+      inlineScript: 'try {az account get-access-token} catch {Write-Host $_})'
     displayName: 'Get ADO Token using WIF'
     name: token
 
