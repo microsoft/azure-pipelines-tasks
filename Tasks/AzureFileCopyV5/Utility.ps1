@@ -4,8 +4,6 @@ $ErrorActionPreference = 'Stop'
 $azureStackEnvironment = "AzureStack"
 $jobId = $env:SYSTEM_JOBID;
 
-Import-Module $PSScriptRoot\ps_modules\Sanitizer
-
 function Get-AzureCmdletsVersion
 {
     return (Get-Module AzureRM -ListAvailable).Version
@@ -170,7 +168,8 @@ function Upload-FilesToAzureContainer
           [string][Parameter(Mandatory=$true)]$destinationType,
           [bool]$useDefaultArguments,
           [bool]$cleanTargetBeforeCopy,
-          [string][Parameter(Mandatory=$false)]$containerSasToken = ""
+          [string][Parameter(Mandatory=$false)]$containerSasToken = "",
+          [bool]$useSanitizerActivate = $false
     )
 
     try
@@ -242,14 +241,8 @@ function Upload-FilesToAzureContainer
 
         }
 
-        $useSanitizerCall = Get-SanitizerCallStatus
-        $useSanitizerActivate = Get-SanitizerActivateStatus
-        
-        if ($useSanitizerCall) {
-            $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV5"
-        }
-
         if ($useSanitizerActivate) {
+            $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
             Write-Output "##[command] & azcopy copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
             & azcopy copy $sourcePath $containerURL$containerSasToken $sanitizedArguments
         } else {
@@ -990,7 +983,8 @@ function Copy-FilesToAzureVMsFromStorageContainer
         [string]$additionalArguments,
         [string]$azCopyToolLocation,
         [scriptblock]$fileCopyJobScript,
-        [bool]$enableDetailedLogging
+        [bool]$enableDetailedLogging,
+        [bool]$useSanitizerActivate = $false
     )
 
     # Generate storage container URL
@@ -1007,7 +1001,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
     }
 
     # script block arguments
-    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments'"
+    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments' -useSanitizerActivate $useSanitizerActivate"
     if($cleanTargetBeforeCopy)
     {
         $scriptBlockArgs += " -CleanTargetBeforeCopy"

@@ -3,8 +3,9 @@ import path = require('path');
 import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
-import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
-import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry";
+import { validateFileArgs } from './helpers';
+import { ArgsSanitizingError } from './errors';
+import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
 var uuidV4 = require('uuid/v4');
 
 function getActionPreference(vstsInputName: string, defaultAction: string = 'Default', validActions: string[] = ['Default', 'Stop', 'Continue', 'SilentlyContinue']) {
@@ -77,29 +78,21 @@ async function run() {
 
         let script = '';
         if (input_targetType.toUpperCase() == 'FILEPATH') {
-            const featureFlags = {
-                audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
-                activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
-                telemetry: tl.getBoolFeatureFlag('AZP_75787_ENABLE_COLLECT')
-            };
 
-            if (featureFlags.activate || featureFlags.audit || featureFlags.telemetry) {
-                const [sanitizedArgs, telemetry] = sanitizeArgs(
-                    input_arguments,
-                    { argsSplitSymbols: '``' }
-                );
-                if (sanitizedArgs !== input_arguments) {
-                    if (featureFlags.telemetry && telemetry) {
-                        emitTelemetry('TaskHub', 'PowerShellV2', telemetry);
-                    }
-                    const message = tl.loc('ScriptArgsSanitized');
-                    if (featureFlags.activate) {
-                        throw new Error(message);
-                    }
-                    if (featureFlags.audit) {
-                        tl.warning(message);
-                    }
+            try {
+                validateFileArgs(input_arguments);
+            }
+            catch (error) {
+                if (error instanceof ArgsSanitizingError) {
+                    throw error;
                 }
+
+                emitTelemetry('TaskHub', 'PowerShellV2',
+                    {
+                        UnexpectedError: error?.message ?? JSON.stringify(error) ?? null,
+                        ErrorStackTrace: error?.stack ?? null
+                    }
+                );
             }
 
             script = `. '${input_filePath.replace(/'/g, "''")}' ${input_arguments}`.trim();
