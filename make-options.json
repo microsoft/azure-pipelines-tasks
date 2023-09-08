@@ -217,7 +217,6 @@
     ],
     "Node16_225": [
         "AzureFunctionOnKubernetesV0",
-        "AzureFunctionOnKubernetesV1",
         "UseDotNetV2",
         "KubernetesManifestV0",
         "KubernetesManifestV1",
