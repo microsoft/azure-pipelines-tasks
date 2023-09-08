@@ -235,7 +235,6 @@
         "AzureSpringCloudV0",
         "AzureWebAppContainerV1",
         "AzureStaticWebAppV0",
-        "AzureAppServiceManageV0",
         "AzureKeyVaultV1",
         "AzureKeyVaultV2",
         "AzurePowerShellV4",
