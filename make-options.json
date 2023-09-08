@@ -223,7 +223,6 @@
         "KubernetesManifestV1",
         "AzureVmssDeploymentV0",
         "AzureMysqlDeploymentV1",
-        "AzureFunctionAppContainerV1",
         "KubectlInstallerV0",
         "HelmDeployV0",
         "AzureFunctionAppV1",
