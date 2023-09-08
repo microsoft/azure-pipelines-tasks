@@ -15,7 +15,7 @@ param (
     [string]$skipCACheckOption,
     [string]$enableDetailedLogging,
     [string]$additionalArguments,
-    [bool]$useSanitizerActivate = $false
+    [string]$useSanitizerActivate
     )
 
     Write-Verbose "fqdn = $fqdn"
@@ -52,7 +52,8 @@ param (
         $blobStorageURI = $blobStorageEndpoint+$containerName+"/"+$blobPrefix
     }
 
-    if ($useSanitizerActivate) {
+    if (($useSanitizerActivate -eq "true") -and (-not [string]::IsNullOrWhiteSpace($additionalArguments))) {
+        # Splitting arguments on space, but not on space inside quotes
         $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
         Copy-ToAzureMachines -MachineDnsName $fqdn -StorageAccountName $storageAccount -ContainerName $containerName -SasToken $sasToken -DestinationPath $targetPath -Credential $credential -AzCopyLocation $azCopyLocation -AdditionalArguments $sanitizedArguments -BlobStorageURI $blobStorageURI -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption
     } else {
