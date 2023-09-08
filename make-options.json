@@ -236,7 +236,6 @@
         "AzureWebAppContainerV1",
         "AzureStaticWebAppV0",
         "AzureAppServiceManageV0",
-        "AzureKeyVaultV1",
         "AzureKeyVaultV2",
         "AzurePowerShellV4",
         "AzurePowerShellV5",
