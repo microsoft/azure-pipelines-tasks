@@ -24,7 +24,7 @@ jobs:
       azureSubscription: 'ci-test-tasks'
       scriptType: 'pscore'
       scriptLocation: 'inlineScript'
-      inlineScript: 'try {az account get-access-token} catch {Write-Host $_})'
+      inlineScript: 'try {az account get-access-token} catch { $Exception = $_; $Exception | Format-List * -Force | Out-String ; $Exception.InvocationInfo | Format-List * -Force | Out-String ; for ($i = 0; $Exception; $i++, ($Exception = $Exception.InnerException)) { Write-Host ("$i" * 80) ; $Exception | Format-List * -Force | Out-String  }  })'
     displayName: 'Get ADO Token using WIF'
     name: token
 
