@@ -60,7 +60,6 @@ Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-Import-Module $PSScriptRoot\ps_modules\Sanitizer
 
 $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 
@@ -92,6 +91,21 @@ $enableDetailedLogging = ($env:system_debug -eq "true")
 
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
+
+# Sanitizer
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+$useSanitizerCall = Get-SanitizerCallStatus
+$useSanitizerActivate = Get-SanitizerActivateStatus
+
+if ($useSanitizerCall) {
+    $sanitizedArgumentsForBlobCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForBlobCopy -TaskName "AzureFileCopyV5"
+    $sanitizedArgumentsForVMCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForVMCopy -TaskName "AzureFileCopyV5"
+}
+
+if ($useSanitizerActivate) {
+    $additionalArgumentsForBlobCopy = $sanitizedArgumentsForBlobCopy -join " "
+    $additionalArgumentsForVMCopy = $sanitizedArgumentsForVMCopy -join " "
+}
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
 try {
@@ -184,10 +198,9 @@ try {
 
     Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArgumentsForBlobCopy
 
-    $useSanitizer = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
-    Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state (for sas token): $useSanitizer"
     $containerSasToken = ""
-    if ($useSanitizer) {
+    if ($useSanitizerActivate) {
+        Write-Verbose "Feature flag sanitizer is active (for sas token)"
         $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInMinutes $sasTokenTimeOutInMinutes
     }
     
@@ -203,7 +216,8 @@ try {
                                 -destinationType $destination `
                                 -useDefaultArguments $useDefaultArgumentsForBlobCopy `
                                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy `
-                                -containerSasToken $containerSasToken
+                                -containerSasToken $containerSasToken `
+                                -useSanitizerActivate $useSanitizerActivate
     
     # Complete the task if destination is azure blob
     if ($destination -eq "AzureBlob")
@@ -259,7 +273,8 @@ try {
                                                 -additionalArguments $additionalArgumentsForVMCopy `
                                                 -azCopyToolLocation $azCopyLocation `
                                                 -fileCopyJobScript $AzureFileCopyRemoteJob `
-                                                -enableDetailedLogging $enableDetailedLogging
+                                                -enableDetailedLogging $enableDetailedLogging `
+                                                -useSanitizerActivate $useSanitizerActivate
 
         Write-Output (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName)
     }

@@ -167,7 +167,8 @@ function Upload-FilesToAzureContainer
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$destinationType,
           [bool]$useDefaultArguments,
-          [string][Parameter(Mandatory=$false)]$containerSasToken = ""
+          [string][Parameter(Mandatory=$false)]$containerSasToken = "",
+          [bool]$useSanitizerActivate = $false
     )
 
     try
@@ -227,13 +228,10 @@ function Upload-FilesToAzureContainer
         $containerURL = $containerURL.Replace('$','`$')
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
 
-        $useSanitizer = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
-        Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $useSanitizer"
-
-        if ($useSanitizer) {
-            $arguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV4"
-            Write-Output "##[command] & azcopy copy `"$sourcePath`" `"$containerURL`"  $arguments"
-            & azcopy copy $sourcePath $containerURL$containerSasToken $arguments
+        if ($useSanitizerActivate) {
+            $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
+            Write-Output "##[command] & azcopy copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
+            & azcopy copy $sourcePath $containerURL$containerSasToken $sanitizedArguments
         } else {
             Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
             $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"    
@@ -972,7 +970,8 @@ function Copy-FilesToAzureVMsFromStorageContainer
         [string]$additionalArguments,
         [string]$azCopyToolLocation,
         [scriptblock]$fileCopyJobScript,
-        [bool]$enableDetailedLogging
+        [bool]$enableDetailedLogging,
+        [bool]$useSanitizerActivate = $false
     )
 
     # Generate storage container URL
@@ -989,7 +988,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
     }
 
     # script block arguments
-    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments'"
+    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments' -useSanitizerActivate $useSanitizerActivate"
     if($cleanTargetBeforeCopy)
     {
         $scriptBlockArgs += " -CleanTargetBeforeCopy"

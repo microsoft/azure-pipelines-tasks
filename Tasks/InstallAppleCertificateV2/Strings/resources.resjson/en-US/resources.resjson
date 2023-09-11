@@ -32,5 +32,6 @@
   "loc.messages.SetKeyPartitionListCommandFailed": "Error setting the partition_id ACL for the private key. Verify that the `Keychain password` is correct, or use a `Temporary Keychain` instead.",
   "loc.messages.InstallRequiresMac": "Install Apple Certificate requires a macOS agent. Installing Apple Certificates on Linux or Windows is not supported by Apple.",
   "loc.messages.CertNotValidYetError": "Certificate \"%s\" (fingerprint: %s) isn't valid until %s",
-  "loc.messages.CertExpiredError": "Certificate \"%s\" (fingerprint: %s) expired on %s"
+  "loc.messages.CertExpiredError": "Certificate \"%s\" (fingerprint: %s) expired on %s",
+  "loc.messages.OpenSSLError": "Error parsing certificate. This might be caused by an unsupported algorithm. If you're using old certificate with a new OpenSSL version try to set -legacy flag in opensslPkcsArgs input."
 }
