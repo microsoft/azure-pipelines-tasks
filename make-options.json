@@ -242,7 +242,6 @@
         "AzurePowerShellV5",
         "AzureResourceGroupDeploymentV2",
         "AzureResourceManagerTemplateDeploymentV3",
-        "DuffleInstallerV0",
         "NuGetAuthenticateV0",
         "DownloadBuildArtifactsV0",
         "AzureFileCopyV2",
