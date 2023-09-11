@@ -219,7 +219,6 @@
         "AzureFunctionOnKubernetesV0",
         "AzureFunctionOnKubernetesV1",
         "UseDotNetV2",
-        "KubernetesManifestV0",
         "KubernetesManifestV1",
         "AzureVmssDeploymentV0",
         "AzureMysqlDeploymentV1",
