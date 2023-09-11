@@ -18,13 +18,8 @@
   "preview": false,
   "version": {
     "Major": 0,
-<<<<<<< HEAD
     "Minor": 228,
-    "Patch": 0
-=======
-    "Minor": 227,
     "Patch": 1
->>>>>>> master
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -236,7 +231,6 @@
       "options": {
         "Java_8": "Java 8",
         "Java_11": "Java 11",
-        "Java_17": "Java 17",
         "NetCore_31": ".Net Core 3.1"
       },
       "visibleRule": "Action = Deploy && DeploymentType = Artifacts"
@@ -337,5 +331,9 @@
     "InvalidAzureSpringAppsResourceId": "ms-resource:loc.messages.InvalidAzureSpringAppsResourceId",
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
     "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.228.1",
+    "Node16-225": "0.228.0"
   }
 }

@@ -57,7 +57,7 @@ export class TaskParametersUtility {
             DeploymentType: tl.getInput(Inputs.deploymentType, false),
             UseStagingDeployment: tl.getBoolInput(Inputs.useStagingDeployment, true),
             CreateNewDeployment: tl.getBoolInput(Inputs.createNewDeployment, false),
-            DeploymentName: tl.getInput(Inputs.deploymentName, !tl.getBoolInput(Inputs.useStagingDeployment, true)),
+            DeploymentName: tl.getInput(Inputs.deploymentName, tl.getInput(Inputs.action, true) != Actions.deleteStagingDeployment && !tl.getBoolInput(Inputs.useStagingDeployment, true)),
             EnvironmentVariables: tl.getInput(Inputs.environmentVariables, false),
             JvmOptions: tl.getInput(Inputs.jvmOptions, false),
             RuntimeVersion: tl.getInput(Inputs.runtimeVersion, false),

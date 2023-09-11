@@ -3,7 +3,7 @@
   "name": "AzureSpringCloud",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/azurespringapps",
+  "helpUrl": "https://learn.microsoft.com/en-gb/azure/devops/pipelines/tasks/reference/azure-spring-cloud-v0?view=azure-pipelines",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -15,10 +15,10 @@
     "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
-  "preview": true,
+  "preview": false,
   "version": {
     "Major": 0,
-    "Minor": 227,
+    "Minor": 228,
     "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
@@ -337,7 +337,7 @@
     "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern"
   },
   "_buildConfigMapping": {
-    "Default": "0.227.1",
-    "Node16-225": "0.227.0"
+    "Default": "0.228.1",
+    "Node16-225": "0.228.0"
   }
 }

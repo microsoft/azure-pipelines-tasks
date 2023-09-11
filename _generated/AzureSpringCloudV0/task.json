@@ -19,7 +19,7 @@
   "version": {
     "Major": 0,
     "Minor": 228,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -331,5 +331,9 @@
     "InvalidAzureSpringAppsResourceId": "Invalid Azure Spring Apps resource identifier: %s",
     "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s. Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
     "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern: %s. Please restrain the search pattern."
+  },
+  "_buildConfigMapping": {
+    "Default": "0.228.1",
+    "Node16-225": "0.228.0"
   }
 }
