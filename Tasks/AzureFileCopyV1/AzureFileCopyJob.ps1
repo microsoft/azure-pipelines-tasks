@@ -53,9 +53,8 @@ param (
     }
 
     if (($useSanitizerActivate -eq "true") -and (-not [string]::IsNullOrWhiteSpace($additionalArguments))) {
-        # Splitting arguments on space, but not on space inside quotes
-        $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
-        Copy-ToAzureMachines -MachineDnsName $fqdn -StorageAccountName $storageAccount -ContainerName $containerName -SasToken $sasToken -DestinationPath $targetPath -Credential $credential -AzCopyLocation $azCopyLocation -AdditionalArguments $sanitizedArguments -BlobStorageURI $blobStorageURI -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption
+        # not splitting $additionalArguments, since copy-toazuremachines expects it as a single string
+        Copy-ToAzureMachines -MachineDnsName $fqdn -StorageAccountName $storageAccount -ContainerName $containerName -SasToken $sasToken -DestinationPath $targetPath -Credential $credential -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments -BlobStorageURI $blobStorageURI -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption
     } else {
         [String]$copyToAzureMachinesBlockString = [string]::Empty
         if([string]::IsNullOrWhiteSpace($additionalArguments))
