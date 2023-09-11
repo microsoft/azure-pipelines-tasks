@@ -230,7 +230,6 @@
         "AzureNLBManagementV1",
         "AzureFunctionAppV2",
         "NuGetV0",
-        "PublishCodeCoverageResultsV1",
         "PublishSymbolsV2",
         "AzureSpringCloudV0",
         "AzureWebAppContainerV1",
