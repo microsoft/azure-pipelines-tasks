@@ -1,5 +1,3 @@
-. $PSScriptRoot\errors.ps1
-
 function Publish-Telemetry($Telemetry) {
     $area = 'TaskHub'
     $feature = 'PowerShellV2'
@@ -220,7 +218,7 @@ function Test-FileArgs([string]$inputArguments) {
     }
 
     ## get values of all keys
-    Write-Debug "Feature flags state: @featureFlags"
+    Write-Debug "Feature flags state: $($featureFlags | ConvertTo-Json -Compress)"
 
     if ($featureFlags.activate -or $featureFlags.audit -or $featureFlags.telemetry) {
         Write-Debug "Validating file arguments."
@@ -240,7 +238,7 @@ function Test-FileArgs([string]$inputArguments) {
             if ($sanitizedArgs -ne $expandedArgs) {
                 $message = Get-VstsLocString -Key 'ScriptArgsSanitized';
                 if ($featureFlags.activate) {
-                    throw [ArgsSanitizingException] $message;
+                    throw $message;
                 }
                 if ($featureFlags.audit) {
                     Write-Warning $message;
