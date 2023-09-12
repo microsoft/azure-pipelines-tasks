@@ -7,7 +7,7 @@ param (
     [string]$cleanTargetBeforeCopy,
     [string]$additionalArguments,
     [string]$scriptRoot,
-    [bool]$useSanitizerActivate = $false
+    [string]$useSanitizerActivate
     )
     Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" 
     Import-VstsLocStrings -LiteralPath $scriptRoot/Task.json
@@ -238,9 +238,10 @@ param (
     {
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
 
-        if ($useSanitizerActivate) {
+        if ($useSanitizerActivate -eq "true") {
+            # Splitting arguments on space, but not on space inside quotes
             $sanitizedArguments = [regex]::Split($robocopyParameters, ' (?=(?:[^"]|"[^"]*")*$)')
-            & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy $sanitizedArguments
+            & robocopy "$sourceDirectory" "$destinationNetworkPath" "$filesToCopy" $sanitizedArguments
         } else {
             $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
             Invoke-Expression $command
