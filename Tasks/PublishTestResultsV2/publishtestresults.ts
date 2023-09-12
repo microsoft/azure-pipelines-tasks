@@ -72,6 +72,7 @@ async function run() {
         const testRunTitle = tl.getInput('testRunTitle');
         const publishRunAttachments = tl.getInput('publishRunAttachments');
         const failTaskOnFailedTests = tl.getInput('failTaskOnFailedTests');
+	const failTaskOnMissingResultsFile: boolean = tl.getBoolInput('failTaskOnMissingResultsFile');
         let searchFolder = tl.getInput('searchFolder');
 
         tl.debug('testRunner: ' + testRunner);
@@ -82,6 +83,7 @@ async function run() {
         tl.debug('testRunTitle: ' + testRunTitle);
         tl.debug('publishRunAttachments: ' + publishRunAttachments);
         tl.debug('failTaskOnFailedTests: ' + failTaskOnFailedTests);
+	tl.debug('failTaskOnMissingResultsFile: ' + failTaskOnMissingResultsFile);
 
         if (isNullOrWhitespace(searchFolder)) {
             searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
@@ -111,6 +113,7 @@ async function run() {
         ci.addToConsolidatedCi('config', config);
         ci.addToConsolidatedCi('platform', platform);
         ci.addToConsolidatedCi('testResultsFilesCount', testResultsFilesCount);
+	ci.addToConsolidatedCi('failTaskOnMissingResultsFile', failTaskOnMissingResultsFile);
 
         const dotnetVersion = getDotNetVersion();
         ci.addToConsolidatedCi('dotnetVersion', dotnetVersion);
@@ -121,7 +124,11 @@ async function run() {
         }
 
         if (testResultsFilesCount === 0) {
-            tl.warning('No test result files matching ' + testResultsFiles + ' were found.');
+              if (failTaskOnMissingResultsFile) {
+                tl.setResult(tl.TaskResult.Failed, tl.loc('NoMatchingFilesFound', testResultsFiles));
+            } else {
+                tl.warning(tl.loc('NoMatchingFilesFound', testResultsFiles));
+            }
             ci.addToConsolidatedCi('noResultsFileFound', true);
         } else {
             const osType = tl.osType();
