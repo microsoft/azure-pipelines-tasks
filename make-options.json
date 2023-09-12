@@ -216,7 +216,6 @@
         "Tests"
     ],
     "Node16_225": [
-        "AzureFunctionOnKubernetesV0",
         "UseDotNetV2",
         "KubernetesManifestV0",
         "KubernetesManifestV1",
@@ -234,7 +233,6 @@
         "AzureSpringCloudV0",
         "AzureWebAppContainerV1",
         "AzureStaticWebAppV0",
-        "AzureAppServiceManageV0",
         "AzureKeyVaultV1",
         "AzureKeyVaultV2",
         "AzurePowerShellV4",
