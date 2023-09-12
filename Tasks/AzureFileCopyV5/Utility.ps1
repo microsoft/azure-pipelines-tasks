@@ -242,6 +242,7 @@ function Upload-FilesToAzureContainer
         }
 
         if ($useSanitizerActivate) {
+            # Splitting arguments on space, but not on space inside quotes
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
             Write-Output "##[command] & azcopy copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
             & azcopy copy $sourcePath $containerURL$containerSasToken $sanitizedArguments
@@ -1001,7 +1002,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
     }
 
     # script block arguments
-    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments' -useSanitizerActivate $useSanitizerActivate"
+    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments'"
     if($cleanTargetBeforeCopy)
     {
         $scriptBlockArgs += " -CleanTargetBeforeCopy"
@@ -1009,6 +1010,10 @@ function Copy-FilesToAzureVMsFromStorageContainer
     if($enableDetailedLogging)
     {
         $scriptBlockArgs += " -EnableDetailedLogging"
+    }
+    if($useSanitizerActivate)
+    {
+        $scriptBlockArgs += " -useSanitizerActivate"
     }
 
     $remoteScriptJobArguments = @{
