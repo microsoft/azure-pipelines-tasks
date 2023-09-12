@@ -42,8 +42,8 @@ namespace BuildConfigGen
 
         /// <param name="task">The task to generate build configs for</param>
         /// <param name="configs">List of configs to generate seperated by |</param>
-        /// <param name="writeVersionMap">Write versionMap if true, else validate that the output is up-to-date</param>
-        static void Main(string task, string configs, bool writeVersionMap = false)
+        /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
+        static void Main(string task, string configs, bool writeUpdates = false)
         {
             // error handling strategy:
             // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
@@ -51,11 +51,11 @@ namespace BuildConfigGen
             // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
             foreach (var t in task.Split(','))
             {
-                Main3(t, configs, writeVersionMap);
+                Main3(t, configs, writeUpdates);
             }
         }
 
-        private static void Main3(string task, string configsString, bool writeVersionMap)
+        private static void Main3(string task, string configsString, bool writeUpdates)
         {
             if (string.IsNullOrEmpty(task))
             {
@@ -77,7 +77,7 @@ namespace BuildConfigGen
             {
                 if (configdefs.TryGetValue(config, out var matchedConfig))
                 {   
-                    if (matchedConfig.deprecated && writeVersionMap) 
+                    if (matchedConfig.deprecated && writeUpdates) 
                     {
                         errorMessage = "The config with the name: " + matchedConfig.name + " is deprecated. Writing updates for deprecated configs is not allowed.";
                         throw new Exception(errorMessage);
@@ -93,7 +93,7 @@ namespace BuildConfigGen
 
             try
             {
-                ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeVersionMap);
+                ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
 
                 Main2(task, targetConfigs);
 
@@ -110,7 +110,7 @@ namespace BuildConfigGen
 
         private static void ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(string task, bool skipContentCheck)
         {
-            // if !writeVersionMap, error if we have written any updates
+            // if !writeUpdates, error if we have written any updates
             var verifyErrors = ensureUpdateModeVerifier!.GetVerifyErrors(skipContentCheck).ToList();
             if (verifyErrors.Count != 0)
             {
