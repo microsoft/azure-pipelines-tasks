@@ -1002,7 +1002,7 @@ function Copy-FilesSequentiallyToAzureVMs
           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$connectionType,
-          [string][Parameter(Mandatory=$false)]$useSanitizerActivate = $false)
+          [string][Parameter(Mandatory=$false)]$useSanitizerActivate)
 
     foreach ($resource in $azureVMResourcesProperties.Keys)
     {
@@ -1057,7 +1057,7 @@ function Copy-FilesParallellyToAzureVMs
           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$connectionType,
-          [string][Parameter(Mandatory=$false)]$useSanitizerActivate = $false)
+          [string][Parameter(Mandatory=$false)]$useSanitizerActivate)
 
     [hashtable]$Jobs = @{}
     $dtlsdkErrors = @()
@@ -1147,7 +1147,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$copyFilesInParallel,
           [string][Parameter(Mandatory=$true)]$connectionType,
-          [string][Parameter(Mandatory=$false)]$useSanitizerActivate = $false)
+          [string][Parameter(Mandatory=$false)]$useSanitizerActivate)
 
     # copies files sequentially
     if ($copyFilesInParallel -eq "false" -or ( $azureVMResourcesProperties.Count -eq 1 ))
