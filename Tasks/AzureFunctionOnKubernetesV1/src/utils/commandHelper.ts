@@ -30,12 +30,8 @@ export class CommandHelper {
         if (!registry) {
             tl.debug('Neither dockerHubNamespace is provided nor found registry info from Docker login. The deployment will fail.');
         }
-#if NODE16
         // dirty hack for node 16 because kubernetes-common usu task-lib version 3 and node16 version of the task uses task-lib v4 now so types are incompatible
         return FuncKubernetesUtility.getFuncDeployCommand(this.funcPath, secretName, appName, namespace, null, registry, pullSecretName, args) as unknown as tr.ToolRunner;
-#else
-        return FuncKubernetesUtility.getFuncDeployCommand(this.funcPath, secretName, appName, namespace, null, registry, pullSecretName, args);
-#endif
     }
 
     public getCreateDockerRegistrySecretCommand(secretName: string, namespace: string): tr.ToolRunner {
