@@ -15,10 +15,22 @@ $copyFilesInParallel = Get-VstsInput -Name CopyFilesInParallel
 
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
-Import-Module $PSScriptRoot\ps_modules\Sanitizer
 
 . $PSScriptRoot/RoboCopyJob.ps1
 . $PSScriptRoot/Utility.ps1
+
+# Sanitizer
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+$useSanitizerCall = Get-SanitizerCallStatus
+$useSanitizerActivate = Get-SanitizerActivateStatus
+
+if ($useSanitizerCall) {
+    $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "WindowsMachineFileCopyV2"
+}
+
+if ($useSanitizerActivate) {
+    $additionalArguments = $sanitizedArguments -join " "
+}
 
 try 
 {
@@ -53,7 +65,7 @@ try
 
             Write-Output (Get-VstsLocString -Key "WFC_CopyStartedFor0" -ArgumentList $machine)
 
-            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments, $PSScriptRoot
+            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments, $PSScriptRoot, $useSanitizerActivate
         } 
     }
     else
@@ -65,7 +77,7 @@ try
 
             Write-Output (Get-VstsLocString -Key "WFC_CopyStartedFor0" -ArgumentList $machine)
 
-            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments, $PSScriptRoot
+            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments, $PSScriptRoot, $useSanitizerActivate
 
             $Jobs.Add($job.Id, $machine)
         }        
