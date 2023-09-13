@@ -231,7 +231,6 @@
         "AzureWebAppContainerV1",
         "AzureStaticWebAppV0",
         "AzurePowerShellV4",
-        "AzureResourceGroupDeploymentV2",
         "AzureResourceManagerTemplateDeploymentV3",
         "DuffleInstallerV0",
         "NuGetAuthenticateV0",
