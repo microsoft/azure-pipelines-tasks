@@ -230,7 +230,6 @@
         "AzureSpringCloudV0",
         "AzureWebAppContainerV1",
         "AzureStaticWebAppV0",
-        "AzurePowerShellV4",
         "AzureResourceManagerTemplateDeploymentV3",
         "DuffleInstallerV0",
         "NuGetAuthenticateV0",
