@@ -95,26 +95,21 @@ try {
     $contents += "`$ErrorView = 'NormalView'"
     if ("$input_targetType".ToUpperInvariant() -eq 'FILEPATH') {
 
-        $featureFlags = @{
-            audit     = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC_LOG)
-            activate  = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
-            telemetry = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_COLLECT)
+        try {
+            Test-FileArgs $input_arguments
         }
-        if ($featureFlags.activate -or $featureFlags.audit -or $featureFlags.telemetry) {
-            $sanitizedArgs, $telemetry = Sanitize-Arguments -InputArgs $input_arguments;
-            if ($sanitizedArgs -ne $input_arguments) {
-                if ($featureFlags.telemetry -and $null -ne $telemetry) {
-                    Publish-Telemetry $telemetry;
-                }
+        catch {
+            $message = $_.Exception.Message
 
-                $message = Get-VstsLocString -Key 'ScriptArgsSanitized';
-                if ($featureFlags.activate) {
-                    throw $message;
-                }
-                if ($featureFlags.audit) {
-                    Write-Warning $message;
-                }
+            if ($message -eq (Get-VstsLocString -Key 'ScriptArgsSanitized')) {
+                throw $message;
             }
+
+            $telemetry = @{
+                'UnexpectedError' = $message
+                'ErrorStackTrace' = $_.Exception.StackTrace
+            }
+            Publish-Telemetry $telemetry
         }
 
         $contents += ". '$("$input_filePath".Replace("'", "''"))' $input_arguments".Trim()

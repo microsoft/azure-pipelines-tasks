@@ -10,7 +10,7 @@ steps:
 - task: NodeTool@0
   displayName: Use node 10
   inputs:
-    versionSpec: 10.x
+    versionSpec: 10.24.1
 
 # npm install
 - script: npm install
@@ -20,7 +20,7 @@ steps:
 - script: node make.js clean
   displayName: Clean tasks
 
-# Build
+# Build tasks
 - script: node make.js serverBuild
   displayName: Build tasks
 
