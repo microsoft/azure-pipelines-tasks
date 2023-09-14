@@ -222,7 +222,6 @@
         "AzureVmssDeploymentV0",
         "AzureFunctionAppContainerV1",
         "KubectlInstallerV0",
-        "HelmDeployV0",
         "AzureFunctionAppV1",
         "AzureFunctionAppV2",
         "PublishCodeCoverageResultsV1",
