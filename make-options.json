@@ -229,7 +229,6 @@
         "AzureWebAppContainerV1",
         "AzureResourceManagerTemplateDeploymentV3",
         "NuGetAuthenticateV0",
-        "DownloadBuildArtifactsV0",
         "AzureFileCopyV2",
         "AzureFileCopyV3",
         "DockerComposeV0"
