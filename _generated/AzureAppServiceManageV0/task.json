@@ -19,7 +19,7 @@
   "version": {
     "Major": 0,
     "Minor": 228,
-    "Patch": 1
+    "Patch": 2
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -287,10 +287,6 @@
   "execution": {
     "Node10": {
       "target": "azureappservicemanage.js"
-    },
-    "Node16": {
-      "target": "azureappservicemanage.js",
-      "argumentFormat": ""
     }
   },
   "messages": {
@@ -436,5 +432,9 @@
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
     "SwapWithPreviewNotsupported": "Swap with preview isn't supported for Linux webapps and Container webapps.",
     "InvalidActionForPublishProfileEndpoint": "Invalid Action selected to use with publish profile endpoint!. Supported actions are 'Start/Stop all continuous webjobs' & 'Install Extensions'"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.228.2",
+    "Node16-225": "0.228.1"
   }
 }

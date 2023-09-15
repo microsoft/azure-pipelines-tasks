@@ -6,6 +6,10 @@ export class AzureResourceFilterUtility {
     public static async getResourceGroupName(endpoint: AzureEndpoint, resourceName: string): Promise<string> {
         var azureResources: Resources = new Resources(endpoint);
         var filteredResources: Array<any> = await azureResources.getResources('Microsoft.Web/Sites', resourceName);
+        filteredResources = filteredResources.filter(
+            (obj, index) =>
+                filteredResources.findIndex((item) => item.id === obj.id) === index
+        );
         let resourceGroupName: string;
         if(!filteredResources || filteredResources.length == 0) {
             throw new Error(tl.loc('ResourceDoesntExist', resourceName));
