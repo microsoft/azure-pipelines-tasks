@@ -222,7 +222,6 @@
         "AzureFunctionAppContainerV1",
         "AzureFunctionAppV1",
         "AzureFunctionAppV2",
-        "PublishCodeCoverageResultsV1",
         "PublishSymbolsV2",
         "AzureSpringCloudV0",
         "AzureWebAppContainerV1",
