@@ -15,6 +15,16 @@ export class azureclitask {
         var toolExecutionError = null;
         var exitCode: number = 0;
         try{
+            // sets the http proxy variables, when needed
+            let proxy = tl.getHttpProxyConfiguration();
+			if(!!proxy) {
+				var proxyFormattedUrl: string = proxy.proxyFormattedUrl;
+				if(!!proxyFormattedUrl) {
+					process.env['http_proxy'] = proxyFormattedUrl;
+					process.env['https_proxy'] = proxyFormattedUrl;
+				}
+            }
+        
             var scriptType: ScriptType = ScriptTypeFactory.getSriptType();
             var tool: any = await scriptType.getTool();
             var cwd: string = tl.getPathInput("cwd", true, false);
