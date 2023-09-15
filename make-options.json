@@ -219,7 +219,6 @@
         "UseDotNetV2",
         "KubernetesManifestV1",
         "AzureVmssDeploymentV0",
-        "AzureFunctionAppContainerV1",
         "AzureFunctionAppV1",
         "AzureFunctionAppV2",
         "PublishSymbolsV2",
