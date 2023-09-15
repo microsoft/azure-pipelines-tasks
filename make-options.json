@@ -217,7 +217,6 @@
     ],
     "Node16_225": [
         "UseDotNetV2",
-        "KubernetesManifestV0",
         "KubernetesManifestV1",
         "AzureVmssDeploymentV0",
         "AzureFunctionAppContainerV1",
