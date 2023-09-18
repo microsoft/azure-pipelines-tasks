@@ -214,7 +214,7 @@ function getAccessOption(options: FtpOptions): ftp.AccessOptions {
         secure = "implicit";
     }
     else {
-       secure = protocol != undefined ? protocol.toLowerCase() === "ftps:" : false;
+       secure = !!protocol && protocol.toLowerCase() === "ftps:";
     }
 
     const secureOptions: any = { rejectUnauthorized: !options.trustSSL };
