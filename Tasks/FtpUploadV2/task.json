@@ -80,6 +80,13 @@
             "visibleRule": "credsType = inputs"
         },
         {
+            "name": "implicitFTPS",
+            "type": "boolean",
+            "label": "Use implicit FTPS",
+            "defaultValue": "false",
+            "required": false
+        },
+        {
             "name": "rootFolder",
             "aliases": [
                 "rootDirectory"
