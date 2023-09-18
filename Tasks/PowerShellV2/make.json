@@ -21,5 +21,13 @@
                 ]
             }
         ]
-    }
+    },
+    "rm": [
+        {
+            "items": [
+                "node_modules/mockery"
+            ],
+            "options": "-Rf"
+        }
+    ]
 }
