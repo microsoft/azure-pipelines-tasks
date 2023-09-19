@@ -1786,7 +1786,8 @@ exports.renameCodeCoverageOutput = renameCodeCoverageOutput;
 
 /**
  * Returns path to BuldConfigGenerator, build it if needed.  Fail on compilation failure
- * @returns Path to the executed file
+ * @param {String} baseConfigToolPath base build config tool path
+ * @returns {String} Path to the executed file
  */
 var getBuildConfigGenerator = function (baseConfigToolPath) {
     var programPath = "";

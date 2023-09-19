@@ -35,23 +35,82 @@ function Get-AadSecurityToken
     $clientApplicationId = $connectResult.AzureActiveDirectoryMetadata.ClientApplication
     Write-Host (Get-VstsLocString -Key ClientAppId -ArgumentList $clientApplicationId)
 
-    # Acquire AAD access token
-    Add-Type -LiteralPath "$PSScriptRoot\Microsoft.IdentityModel.Clients.ActiveDirectory.dll"
-    $authContext = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext -ArgumentList @($authority)
-    $authParams = $ConnectedServiceEndpoint.Auth.Parameters
-    $userCredential = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.UserCredential -ArgumentList @($authParams.Username, $authParams.Password)
-
-    try
+    # MSAL flag
+    $useMSAL = $false
+    $rawOverrideUseMSAL = Get-VstsTaskVariable -Name 'USE_MSAL'
+    try 
     {
-        # Acquiring a token using UserCredential implies a non-interactive flow. No credential prompts will occur.
-        $accessToken = $authContext.AcquireToken($clusterApplicationId, $clientApplicationId, $userCredential).AccessToken
-    }
-    catch
+        if($rawOverrideUseMSAL) {
+            Write-Verbose "MSAL - USE_MSAL override is found: $rawOverrideUseMSAL"
+            $useMSAL = [bool]::Parse($rawOverrideUseMSAL)
+        }
+    } 
+    catch 
     {
-        throw (Get-VstsLocString -Key ErrorOnAcquireToken -ArgumentList $_)
+        # this is not a blocker error, so we're informing
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "MSAL - USE_MSAL couldn't be parsed due to error $exceptionMessage. useMSAL=$useMSAL is used instead"
     }
+    
+    # Acquire AAD access token - MSAL
+    if ($useMSAL) 
+    {
+        $accessToken = @{
+            token_type = $null
+            access_token = $null
+            expires_on = $null
+        }
 
-    return $accessToken
+        $tenantId = $connectResult.AzureActiveDirectoryMetadata.TenantId
+
+        # load the MSAL library
+        Add-Type -Path "$PSScriptRoot\msal\Microsoft.Identity.Client.dll"
+
+        $authParams = $ConnectedServiceEndpoint.Auth.Parameters
+        
+        $msalClientInstance = [Microsoft.Identity.Client.PublicClientApplicationBuilder]::Create($clientApplicationId).WithAuthority($authority, $tenantId).Build()
+        
+        # scopes
+        $azureActiveDirectoryResourceId = $clusterApplicationId + "/.default"
+        $scopes = [Collections.Generic.List[string]]@($azureActiveDirectoryResourceId)
+
+        # fetch
+        try {
+            Write-Verbose "Fetching Access Token - MSAL"
+            $tokenResult = $msalClientInstance.AcquireTokenByUsernamePassword($scopes, $authParams.Username, $authParams.Password).ExecuteAsync().GetAwaiter().GetResult()
+        }
+        catch {
+            $exceptionMessage = $_.Exception.Message.ToString()
+            Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AadSecurityToken) (MSAL)"
+            throw (Get-VstsLocString -Key ErrorOnAcquireToken -ArgumentList $_)
+        }
+
+        $accessToken.token_type = $tokenResult.TokenType
+        $accessToken.access_token = $tokenResult.AccessToken
+        $accessToken.expires_on = $tokenResult.ExpiresOn.ToUnixTimeSeconds()
+
+        return $accessToken.access_token
+    }
+    # Acquire AAD access token - ADAL
+    else 
+    {
+        Add-Type -LiteralPath "$PSScriptRoot\Microsoft.IdentityModel.Clients.ActiveDirectory.dll"
+        $authContext = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext -ArgumentList @($authority)
+        $authParams = $ConnectedServiceEndpoint.Auth.Parameters
+        $userCredential = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.UserCredential -ArgumentList @($authParams.Username, $authParams.Password)
+
+        try
+        {
+            # Acquiring a token using UserCredential implies a non-interactive flow. No credential prompts will occur.
+            $accessToken = $authContext.AcquireToken($clusterApplicationId, $clientApplicationId, $userCredential).AccessToken
+        }
+        catch
+        {
+            throw (Get-VstsLocString -Key ErrorOnAcquireToken -ArgumentList $_)
+        }
+
+        return $accessToken
+    }
 }
 
 function Add-Certificate
