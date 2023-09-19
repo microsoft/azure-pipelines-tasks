@@ -174,7 +174,13 @@ async function executeMSDeploy(msDeployCmdArgs) {
         for(var i = 0 ; i < msDeployCmdArgs.length ; i++ ) {
             tl.debug("arg#" + i + ": " + msDeployCmdArgs[i]);
         }
+#if NODE16
+        // shell should be true, otherwise see https://github.com/microsoft/azure-pipelines-tasks/issues/17634
+        // workaround https://github.com/nodejs/node/issues/7367#issuecomment-229728704
+        await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj, windowsVerbatimArguments: true, shell: true});
+#else
         await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj, windowsVerbatimArguments: true});
+#endif
         deferred.resolve("Azure App service successfully deployed");
     } catch (error) {
         msDeployError = error;
