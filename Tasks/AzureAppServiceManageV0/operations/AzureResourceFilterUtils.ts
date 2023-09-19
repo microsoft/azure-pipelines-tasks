@@ -7,6 +7,10 @@ export class AzureResourceFilterUtils {
         var azureResources: Resources = new Resources(endpoint);
         var filteredResources: Array<any> = await azureResources.getResources(resourceType, resourceName);
         let resourceGroupName: string;
+        filteredResources = filteredResources.filter(
+            (obj, index) =>
+                filteredResources.findIndex((item) => item.id === obj.id) === index
+        );
         if(!filteredResources || filteredResources.length == 0) {
             throw new Error(tl.loc('ResourceDoesntExist', resourceName));
         }
