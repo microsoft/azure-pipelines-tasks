@@ -185,6 +185,8 @@ CLI.build = function(/** @type {{ task: string }} */ argv)
     if (process.env.TF_BUILD) {
         fail('Please use serverBuild for CI builds for proper validation');
     }
+
+    callGenTaskDuringBuild = true;
     CLI.serverBuild(argv);
 }
 
@@ -197,15 +199,15 @@ CLI.serverBuild = function(/** @type {{ task: string }} */ argv) {
         }
     });
 
-    var allTasks = getTaskList(taskList);
+    const allTasks = getTaskList(taskList);
+
     // Need to validate generated tasks first
     const makeOptions = fileToJson(makeOptionsPath);
 
-    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, true);
-    allTasks = getTaskList(taskList);
+    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, callGenTaskDuringBuild);
 
     // Ensure we wrap build function after generator's changes to store only files that changes after the build 
-    const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTask, genTaskPath, true);
+    const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTask, genTaskPath, callGenTaskDuringBuild);
     const allTasksNode20 = allTasks.filter((taskName) => {
         return getNodeVersion(taskName) == 20;
     });
