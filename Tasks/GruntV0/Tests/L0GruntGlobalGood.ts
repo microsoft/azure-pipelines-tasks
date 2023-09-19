@@ -60,6 +60,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "**/TEST-*.xml": ["/user/build/fun/test-123.xml"],
         "**/*.js": ["/test/test.js"],
     },
+    "find": {
+        "/user/build": ["/user/build/fun/test-123.xml"]
+    }
 };
 tr.setAnswers(a);
 
