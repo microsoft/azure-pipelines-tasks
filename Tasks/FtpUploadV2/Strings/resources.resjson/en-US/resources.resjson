@@ -11,6 +11,7 @@
   "loc.input.label.serverUrl": "Server URL",
   "loc.input.label.username": "Username",
   "loc.input.label.password": "Password",
+  "loc.input.label.implicitFTPS": "Use implicit FTPS",
   "loc.input.label.rootFolder": "Root folder",
   "loc.input.help.rootFolder": "The source folder to upload files from.",
   "loc.input.label.filePatterns": "File patterns",
