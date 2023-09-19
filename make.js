@@ -185,8 +185,6 @@ CLI.build = function(/** @type {{ task: string }} */ argv)
     if (process.env.TF_BUILD) {
         fail('Please use serverBuild for CI builds for proper validation');
     }
-
-    callGenTaskDuringBuild = true;
     CLI.serverBuild(argv);
 }
 
@@ -199,18 +197,15 @@ CLI.serverBuild = function(/** @type {{ task: string }} */ argv) {
         }
     });
 
-    const allTasks = getTaskList(taskList);
-
+    var allTasks = getTaskList(taskList);
     // Need to validate generated tasks first
     const makeOptions = fileToJson(makeOptionsPath);
 
-    if (!callGenTaskDuringBuild) {
-        generateTasksOnServerBuild();
-    }
-    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, callGenTaskDuringBuild);
+    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, true);
+    allTasks = getTaskList(taskList);
 
     // Ensure we wrap build function after generator's changes to store only files that changes after the build 
-    const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTask, genTaskPath, callGenTaskDuringBuild);
+    const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTask, genTaskPath, true);
     const allTasksNode20 = allTasks.filter((taskName) => {
         return getNodeVersion(taskName) == 20;
     });
@@ -1051,44 +1046,6 @@ CLI.gentask = function() {
     });
 
     fs.writeFileSync(makeOptionsPath, JSON.stringify(newMakeOptions, null, 4));
-}
-
-function generateTasksOnServerBuild() {
-    //generate tasks
-    taskList.forEach(function (taskName) {
-        //read configs from versionmap.txt
-        const versionMapPath = path.join(genTaskPath, taskName + ".versionmap.txt");
-        if (!fs.existsSync(versionMapPath)) {
-            console.error(`No ${taskName}versionmap.txt file found under _generated folder.`);
-        }
-        const configs = [];
-        var versionMapContents = fs.readFileSync(versionMapPath, { encoding: 'utf-8' });
-        const versionMapLines = versionMapContents.split('\n');
-        for (const line of versionMapLines) {
-            const config = line.split('|')[0].trim();
-            if (config != "Default") {
-                configs.push(config);
-            }
-        }
-        const configsArr = configs.join('|').slice(0, -1).replace(/-/g, '_');
-        const args = `--write-updates --configs "${configsArr}"`;
-        const programPath = util.getBuildConfigGenerator(baseConfigToolPath);
-        const buildArgs = args + ` --task ${taskName}`;
-
-        banner('Generating: ' + taskName);
-        run(`${programPath} ${buildArgs}` , true);
-
-        for (const config of configs) {
-            const buildConfigsPath = path.join(tasksPath, taskName, '_buildConfigs', config.split('-')[0]);
-            const generatedTaskPath = path.join(genTaskPath, taskName + "_" + config.split('-')[0]);
-            console.log(`Copying all files from ${buildConfigsPath} to ${generatedTaskPath} folder.`);
-            if (fs.existsSync(buildConfigsPath) && fs.existsSync(generatedTaskPath)) {
-                // copy all files from Tasks\taskname\_buildConfig\nodeversion folder to _generated\TaskName folder.
-                cp('-Rf', path.join(buildConfigsPath, '*'), generatedTaskPath);
-                rm(path.join(generatedTaskPath, 'FilesOverriddenForConfigGoHereREADME.txt'));
-            }
-        }
-    });
 }
 
 var command  = argv._[0];
