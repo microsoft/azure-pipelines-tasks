@@ -88,7 +88,7 @@ export async function run(artifactToolPath: string): Promise<void> {
         if (versionRadio === "custom") {
             version = tl.getInput("versionPublish");
         }
-        else if (versionRadio in ["major", "minor", "patch"]) {
+        else if (["major", "minor", "patch"].includes(versionRadio.toLowerCase())) {
             feedUri = await pkgLocationUtils.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
             version = await getNextPackageVersion(feedUri, accessToken, projectId, feedId, packageName);
         } else {
