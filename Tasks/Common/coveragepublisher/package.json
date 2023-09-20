@@ -1,13 +1,14 @@
 {
   "name": "coveragepublisher",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
   },
   "dependencies": {
-    "azure-pipelines-task-lib": "^2.8.0",
+    "azure-pipelines-task-lib": "^4.1.0",
+    "@types/node": "^16.11.39",
     "os": "^0.1.1",
     "uuid": "^3.3.2"
   },
