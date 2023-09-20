@@ -236,35 +236,30 @@ CLI.serverBuild = function(/** @type {{ task: string }} */ argv) {
 }
 
 function getNodeVersion (taskName) {
-    var taskJsonPath = path.join(genTaskPath, taskName, "task.json");
+    var packageJsonPath = path.join(genTaskPath, taskName, "package.json");
     // We prefer tasks in _generated folder because they might contain node20 version
     // while the tasks in Tasks/ folder still could use only node16 handler 
-    if (fs.existsSync(taskJsonPath)) {
-        console.log(`Found task.json for ${taskName} in _generated folder`);
+    if (fs.existsSync(packageJsonPath)) {
+        console.log(`Found package.json for ${taskName} in _generated folder`);
     } else {
-        taskJsonPath = path.join(tasksPath, taskName, "task.json");
-        if (!fs.existsSync(taskJsonPath)) {
-            console.error('Unable to find task.json file in _generated folder or Tasks folder.');
+        packageJsonPath = path.join(tasksPath, taskName, "package.json");
+        if (!fs.existsSync(packageJsonPath)) {
+            console.error(`Unable to find package.json file for ${taskName} in _generated folder or Tasks folder, using default node 10.`);
             return 10;
         }
-        console.log(`Found task.json for ${taskName} in Tasks folder`)
+        console.log(`Found package.json for ${taskName} in Tasks folder`)
     }
 
-    var taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
-    var taskJson = JSON.parse(taskJsonContents);
-    var execution = taskJson['execution'] || taskJson['prejobexecution'];
-    var nodeVersion = 10;
-    for (var key of Object.keys(execution)) {
-        const executor = key.toLocaleLowerCase();
-        if (!executor.startsWith('node')) {
-            console.error(`Invalid task.json file, unable to parse node version from ${taskJsonPath}.`);
-        }
-        const version = parseInt(executor.replace('node', ''));
-        if (version > nodeVersion) {
-            nodeVersion = version;
-        }
+    var packageJsonContents = fs.readFileSync(packageJsonPath, { encoding: 'utf-8' });
+    var packageJson = JSON.parse(packageJsonContents);
+    if (packageJson.dependencies && packageJson.dependencies["@types/node"]) {
+        // Extracting major version from the node version
+        const nodeVersion = packageJson.dependencies["@types/node"].replace('^', '');
+        return nodeVersion.split('.')[0];
+    } else {
+        console.log("Node version not found in dependencies, using default node 10.");
+        return 10;
     }
-    return nodeVersion;
 }
 
 function buildTask(taskName, taskListLength, nodeVersion) {
@@ -452,6 +447,21 @@ function buildTask(taskName, taskListLength, nodeVersion) {
         if (fs.existsSync(taskTestsNodeModulesPath)) {
             console.log('\n> removing task tests node modules');
             rm('-Rf', taskTestsNodeModulesPath);
+        }
+    }
+
+    // remove duplicated task libs node modules from build tasks.
+    var buildTasksNodeModules = path.join(buildTasksPath, taskName, 'node_modules');
+    var duplicateTaskLibPaths = [
+        'azure-pipelines-tasks-java-common', 'azure-pipelines-tasks-codecoverage-tools', 'azure-pipelines-tasks-codeanalysis-common',
+        'azure-pipelines-tool-lib', 'azure-pipelines-tasks-utility-common', 'azure-pipelines-tasks-packaging-common', 'artifact-engine',
+        'azure-pipelines-tasks-azure-arm-rest'
+    ];
+    for (var duplicateTaskPath of duplicateTaskLibPaths) {
+        const buildTasksDuplicateNodeModules = path.join(buildTasksNodeModules, duplicateTaskPath, 'node_modules', 'azure-pipelines-task-lib');
+        if (fs.existsSync(buildTasksDuplicateNodeModules)) {
+            console.log(`\n> removing duplicated task-lib node modules in ${buildTasksDuplicateNodeModules}`);
+            rm('-Rf', buildTasksDuplicateNodeModules);
         }
     }
 }
@@ -1021,8 +1031,22 @@ CLI.gentask = function() {
             console.log(`Running \"npm install\" command in ${taskPath}`);
             run(`npm install`);
             cd(__dirname);
+
+            // copy package.json, package-lock.json and npm-shrinkwrap.json files from generated tasks to the Tasks\taskname\_buildConfig\nodeversion folder.
+            const fileNames = ['package.json', 'package-lock.json', 'npm-shrinkwrap.json'];
+            const buildConfigsPath = path.join(tasksPath, taskName, '_buildConfigs', configsString);
+            if (fs.existsSync(buildConfigsPath)) {
+                for (const fileName of fileNames) {
+                    const filePath = path.join(taskPath, fileName);
+                    if (fs.existsSync(filePath)) {
+                        console.log(`Copying ${fileName} from ${taskPath} to ${buildConfigsPath} folder.`);
+                        cp(filePath, path.join(buildConfigsPath, fileName));
+                    }
+                }
+            }
         }
     });
+
     fs.writeFileSync(makeOptionsPath, JSON.stringify(newMakeOptions, null, 4));
 }
 

@@ -1901,7 +1901,7 @@ exports.generateTasks = generateTasks;
  * and copy files from generated to source if needed
  */
 function syncGeneratedFilesWrapper(originalFunction, genTaskPath, callGenTaskDuringBuild = false) {
-    const allowedFilesToCopy = ["package.json", "package-lock.json"];
+    const allowedFilesToCopy = ["package.json", "package-lock.json", "npm-shrinkwrap.json"];
     const genTaskBasePath = path.basename(genTaskPath);
 
     if (!originalFunction || originalFunction instanceof Function === false) throw Error('originalFunction is not defined');

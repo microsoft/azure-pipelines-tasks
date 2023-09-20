@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 228,
-    "Patch": 2
+    "Patch": 1
   },
   "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
   "demands": [
@@ -410,6 +410,10 @@
     "Node16": {
       "target": "maventask.js",
       "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "maventask.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -449,5 +453,9 @@
     "EffectivePomInvalid": "Could not parse the effective POM.",
     "AuthenticationNotNecessary": "No Artifacts feeds requiring authentication were found. Disable 'Authenticate with Artifacts feeds' for faster builds.",
     "UsingAuthFeed": "Using Artifacts feed: "
+  },
+  "_buildConfigMapping": {
+    "Default": "2.228.2",
+    "Node20-225": "2.228.1"
   }
 }

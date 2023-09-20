@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 228,
-    "Patch": 2
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -410,6 +410,10 @@
     "Node16": {
       "target": "maventask.js",
       "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "maventask.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -449,5 +453,9 @@
     "EffectivePomInvalid": "ms-resource:loc.messages.EffectivePomInvalid",
     "AuthenticationNotNecessary": "ms-resource:loc.messages.AuthenticationNotNecessary",
     "UsingAuthFeed": "ms-resource:loc.messages.UsingAuthFeed"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.228.2",
+    "Node20-225": "2.228.1"
   }
 }
