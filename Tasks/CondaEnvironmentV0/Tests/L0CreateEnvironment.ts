@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import * as mockery from 'mockery';
+import * as libMocker from 'azure-pipelines-task-lib/lib-mocker';
 
 import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 
@@ -31,8 +31,7 @@ taskRunner.registerMock('azure-pipelines-tool-lib/tool', {
 });
 
 // Mock other dependencies
-mockery.registerMock('fs', {
-    existsSync: () => false
-});
+const fsObj = require('fs');
+libMocker.registerMock('fs', Object.assign({}, fsObj, { existsSync: () => false }));
 
 taskRunner.run();
