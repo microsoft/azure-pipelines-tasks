@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 228,
-    "Patch": 1
+    "Patch": 3
   },
   "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
   "minimumAgentVersion": "2.104.1",
@@ -768,7 +768,7 @@
     "CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
   },
   "_buildConfigMapping": {
-    "Default": "3.228.2",
-    "Node16-225": "3.228.1"
+    "Default": "3.228.4",
+    "Node16-225": "3.228.3"
   }
 }
