@@ -6,7 +6,7 @@ export class AzureResourceFilterUtils {
     public static async getResourceGroupName(endpoint: AzureEndpoint, resourceType: string, resourceName: string): Promise<string> {
         const azureResources: Resources = new Resources(endpoint);
         const resources: Array<any> = await azureResources.getResources(resourceType, resourceName);
-        const resourceGroupIds: Array<any> = [...new Set(resources.map(r => r.id as string))];
+        const resourceGroupIds: string[] = [...new Set(resources.map(r => r.id as string))];
         if(!resourceGroupIds || resourceGroupIds.length == 0) {
             throw new Error(tl.loc('ResourceDoesntExist', resourceName));
         }
