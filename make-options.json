@@ -16,6 +16,7 @@
         "AzureCloudPowerShellDeploymentV2",
         "AzureContainerAppsV0",
         "AzureContainerAppsV1",
+        "AzureFileCopyV1",
         "AzureFileCopyV2",
         "AzureFileCopyV3",
         "AzureFileCopyV4",
