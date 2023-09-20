@@ -152,7 +152,7 @@ describe('GruntV0 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('Input required: cwd'), 'Should have printed: Input required: cwd');
+        assert(tr.stdOutContained('loc_mock_LIB_InputRequired cwd'), 'Should have printed: loc_mock_LIB_InputRequired cwd');
         assert(tr.invokedToolCount == 0, 'should exit before running Grunt');
         assert(tr.failed, 'should have failed');
 
@@ -165,7 +165,7 @@ describe('GruntV0 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('Input required: gruntFile'), 'Should have printed: Input required: gruntFile');
+        assert(tr.stdOutContained('loc_mock_LIB_InputRequired gruntFile'), 'Should have printed: loc_mock_LIB_InputRequired gruntFile');
         assert(tr.invokedToolCount == 0, 'should exit before running Grunt');
         assert(tr.failed, 'should have failed');
 
@@ -178,7 +178,7 @@ describe('GruntV0 Suite', function () {
 
         tr.run();
 
-        assert(tr.stdOutContained('Input required: gruntCli'), 'Should have printed: Input required: gruntCli');
+        assert(tr.stdOutContained('loc_mock_LIB_InputRequired gruntCli'), 'Should have printed: loc_mock_LIB_InputRequired gruntCli');
         assert(tr.invokedToolCount == 0, 'should exit before running Grunt');
         assert(tr.failed, 'should have failed');
 
@@ -193,7 +193,7 @@ describe('GruntV0 Suite', function () {
 
         assert(tr.invokedToolCount == 0, 'should exit before running gulp');
         assert(tr.failed, 'task should have failed');
-        assert(tr.stdOutContained('Input required: testResultsFiles'), 'Should have printed: Input required: testResultsFiles');
+        assert(tr.stdOutContained('loc_mock_LIB_InputRequired testResultsFiles'), 'Should have printed: loc_mock_LIB_InputRequired testResultsFiles');
 
         done();
     });
@@ -222,7 +222,7 @@ describe('GruntV0 Suite', function () {
         tr.run();
 
         assert(tr.invokedToolCount == 0, 'should exit before running grunt');
-        assert(tr.stdOutContained('Input required: testFiles'), 'Should have printed: Input required: testFiles');
+        assert(tr.stdOutContained('loc_mock_LIB_InputRequired testFiles'), 'Should have printed: loc_mock_LIB_InputRequired testFiles');
         assert(tr.failed, 'task should have failed');
 
         done();
