@@ -186,5 +186,9 @@
     "PackageDeploymentFailed": "Failed to deploy web package to IIS website.",
     "Updatemachinetoenablesecuretlsprotocol": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.",
     "RetryToDeploy": "Retrying to deploy the package."
+  },
+  "_buildConfigMapping": {
+    "Default": "0.229.1",
+    "Node16-225": "0.229.0"
   }
 }
