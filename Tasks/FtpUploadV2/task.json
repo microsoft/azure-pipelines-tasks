@@ -18,7 +18,7 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 211,
+        "Minor": 228,
         "Patch": 0
     },
     "minimumAgentVersion": "2.182.1",
@@ -78,6 +78,13 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "credsType = inputs"
+        },
+        {
+            "name": "implicitFTPS",
+            "type": "boolean",
+            "label": "Use implicit FTPS",
+            "defaultValue": "false",
+            "required": false
         },
         {
             "name": "rootFolder",
