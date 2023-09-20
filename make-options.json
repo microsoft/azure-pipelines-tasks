@@ -228,6 +228,7 @@
         "AzureFileCopyV2",
         "AzureFileCopyV3",
         "DockerComposeV0",
+        "IISWebAppDeploymentOnMachineGroupV0",
         "AzureRmWebAppDeploymentV3"
     ],
     "Node20": [
