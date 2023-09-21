@@ -511,17 +511,16 @@ namespace BuildConfigGen
                 }
             }
 
-            if (config.writeNpmrc)
-            {
-                string targetPath = Path.Combine(taskOutput, ".npmrc");
-                ensureUpdateModeVerifier!.WriteAllText(targetPath, @"scripts-prepend-node-path=true
-", false);
-            }
-
             if (removeExtraFiles)
             {
                 foreach (var pathToRemoveFromOutput in pathsToRemoveFromOutput)
                 {
+                    // todo: handle .npmrc properly -- ensure it's content validated properly if written by buildconfiggen
+                    if(pathToRemoveFromOutput == ".npmrc")
+                    {
+                        continue;
+                    }
+
                     string targetPath = Path.Combine(taskOutput, pathToRemoveFromOutput);
                     Console.WriteLine($"Adding .tmp extension to extra file in output directory (should cause it to be ignored by .gitignore): {pathToRemoveFromOutput}");
 
@@ -533,6 +532,14 @@ namespace BuildConfigGen
 
                     ensureUpdateModeVerifier!.Move(targetPath, destFileName);
                 }
+            }
+
+            // https://stackoverflow.com/questions/51293566/how-to-include-the-path-for-the-node-binary-npm-was-executed-with
+            if (config.writeNpmrc)
+            {
+                string targetPath = Path.Combine(taskOutput, ".npmrc");
+                ensureUpdateModeVerifier!.WriteAllText(targetPath, @"scripts-prepend-node-path=true
+", false);
             }
         }
 
@@ -547,7 +554,7 @@ namespace BuildConfigGen
 
             if (ReadVersionMap(versionMapFile, out versionMap, out var maxVersionNullable))
             {
-                maxVersion = maxVersionNullable;
+                maxVersion = maxVersionNullable!;
             }
             else
             {
@@ -558,9 +565,9 @@ namespace BuildConfigGen
 
             bool defaultVersionMatchesSourceVersion = defaultVersion == inputVersion;
 
-            if (!(maxVersion is null) && inputVersion < maxVersion && !defaultVersionMatchesSourceVersion)
+            if (inputVersion <= maxVersion && !defaultVersionMatchesSourceVersion)
             {
-                throw new Exception($"inputVersion={inputVersion} version specified in task taskTarget={taskTarget} must not be less than maxversion maxVersion={maxVersion} specified in versionMapFile{versionMapFile}, or must match defaultVersion={defaultVersion} in {versionMapFile}");
+                throw new Exception($"inputVersion={inputVersion} version specified in task taskTarget={taskTarget} must not be less or equal to maxversion maxVersion={maxVersion} specified in versionMapFile{versionMapFile}, or must match defaultVersion={defaultVersion} in {versionMapFile}");
             }
 
             configTaskVersionMapping = new();
@@ -592,30 +599,25 @@ namespace BuildConfigGen
                 }
             }
 
-            TaskVersion baseVersion;
+            TaskVersion baseVersion = maxVersion;
 
-            if (maxVersion!.Minor == currentSprint)
+            bool baseVersionIsCurrentSprint = baseVersion.Minor == currentSprint;
+
+            int offset;
+
+            if (baseVersionIsCurrentSprint)
             {
-                baseVersion = maxVersion;
+                offset = 1;
             }
             else
             {
                 baseVersion = inputVersion.CloneWithMinorAndPatch(currentSprint, 0);
+                offset = 0;
             }
 
-            int c = 1;
             if (!allConfigsMappedAndValid)
             {
                 configTaskVersionMapping.Clear();
-
-                foreach (var config in targetConfigs)
-                {
-                    if (!config.isDefault)
-                    {
-                        configTaskVersionMapping.Add(config, baseVersion.CloneWithPatch(inputVersion.Patch + c));
-                        c++;
-                    }
-                }
 
                 if (defaultVersionMatchesSourceVersion)
                 {
@@ -623,8 +625,19 @@ namespace BuildConfigGen
                 }
                 else
                 {
-                    configTaskVersionMapping.Add(Config.Default, baseVersion.CloneWithPatch(inputVersion.Patch + c));
+                    configTaskVersionMapping.Add(Config.Default, baseVersion.CloneWithPatch(baseVersion.Patch + offset));
+                    offset++;
                 }
+
+                foreach (var config in targetConfigs)
+                {
+                    if (!config.isDefault)
+                    {
+                        configTaskVersionMapping.Add(config, baseVersion.CloneWithPatch(baseVersion.Patch + offset));
+                        offset++;
+                    }
+                }
+
             }
 
             WriteVersionMapFile(versionMapFile, configTaskVersionMapping, targetConfigs: targetConfigs);
