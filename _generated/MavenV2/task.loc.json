@@ -449,5 +449,9 @@
     "EffectivePomInvalid": "ms-resource:loc.messages.EffectivePomInvalid",
     "AuthenticationNotNecessary": "ms-resource:loc.messages.AuthenticationNotNecessary",
     "UsingAuthFeed": "ms-resource:loc.messages.UsingAuthFeed"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.228.2",
+    "Node20-225": "2.228.1"
   }
 }
