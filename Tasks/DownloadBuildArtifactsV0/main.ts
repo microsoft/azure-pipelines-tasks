@@ -348,7 +348,6 @@ async function main(): Promise<void> {
                             // In this new flow, attempt to download through following the redirect but fall back to downloading from TFS if this fails.
                             const downloaderOptions: engine.ArtifactEngineOptions = configureDownloaderOptions(retryRedirectLimitDownload);
                             const handlerConfig: IContainerHandlerConfig = { ...config, downloaderOptions, endpointUrl, templatePath: redirectTemplatePath, handler, preferRedirect: true };
-                            console.log(JSON.stringify(handlerConfig));
                             const downloadHandler: DownloadHandlerContainer = new DownloadHandlerContainer(handlerConfig);
                             const downloadPromise: Promise<models.ArtifactDownloadTicket[]> = executeWithRetries(
                                 operationName,
