@@ -11,6 +11,7 @@ import { PmdTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/PmdToo
 import { CheckstyleTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/CheckstyleTool';
 import { FindbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/FindbugsTool';
 import { AnalysisResult } from 'azure-pipelines-tasks-codeanalysis-common/Common/AnalysisResult';
+import { extractGradleVersion } from '../Modules/environment';
 
 let isWindows: RegExpMatchArray = os.type().match(/^Win/);
 let gradleWrapper: string = isWindows ? 'gradlew.bat' : 'gradlew';
@@ -924,4 +925,22 @@ describe('Gradle L0 Suite', function () {
     });
     // /* END Tools tests */
 
+    it('extractGradleVersion returns correct results', (done) => {
+        const log1: string = 'Gradle 4.0.1';
+        const log2: string = 'Gradle 4.0';
+        const log3: string = 'Gradle 3.5-rc-2';
+        const log4: string = 'Gradle 8.5-20230916222118+0000';
+        const log5: string = 'Gradle 8.5-20230916222118-0000';
+        const log6: string = 'Gradle 8.4-branch-ljacomet_kotlin_kotlin_1_9_10-20230901164331+0000'
+        const log7: string = '';
+        assert(extractGradleVersion(log1) === '4.0.1', 'extractGradleVersion should return 4.0.1');
+        assert(extractGradleVersion(log2) === '4.0', 'extractGradleVersion should return 4.0');
+        assert(extractGradleVersion(log3) === '3.5-rc-2', 'extractGradleVersion should return 3.5-rc-2');
+        assert(extractGradleVersion(log4) === '8.5-20230916222118+0000', 'extractGradleVersion should return 8.5-20230916222118+0000');
+        assert(extractGradleVersion(log5) === '8.5-20230916222118-0000', 'extractGradleVersion should return 8.5-20230916222118-0000');
+        assert(extractGradleVersion(log6) === '8.4-branch-ljacomet_kotlin_kotlin_1_9_10-20230901164331+0000', 'extractGradleVersion should return 8.4-branch-ljacomet_kotlin_kotlin_1_9_10-20230901164331+0000');
+        assert(extractGradleVersion(log7) === 'unknown', 'extractGradleVersion should return unknown');
+
+        done();
+    });
 });

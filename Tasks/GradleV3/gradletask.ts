@@ -9,7 +9,7 @@ import { FindbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/F
 import { SpotbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/SpotbugsTool';
 import { IAnalysisTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/IAnalysisTool';
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
-import { getExecOptions, setJavaHome, setGradleOpts, getGradleMajorVersion } from './Modules/environment';
+import { getExecOptions, setJavaHome, setGradleOpts, getGradleVersion } from './Modules/environment';
 import { configureWrapperScript, isMultiModuleProject } from './Modules/project-configuration';
 import { enableCodeCoverageAsync, publishTestResults, publishCodeCoverageResultsAsync, resolveCodeCoveragePreset } from './Modules/code-coverage';
 import { ICodeAnalysisResult, ICodeCoveragePreset, ICodeCoverageSettings, IPublishCodeCoverageSettings, ITaskResult } from './interfaces';
@@ -75,8 +75,8 @@ async function run() {
                 reportingTaskName = codeCoveragePreset.reportingTaskName;
                 // END: determine isMultiModule
 
-                // Determine gradle major version
-                const gradleMajorVersion: number = await getGradleMajorVersion(wrapperScript);
+                // Determine gradle version
+                const gradleVersion: string = getGradleVersion(wrapperScript);
 
                 // Clean the report directory before enabling code coverage
                 tl.rmRF(reportDirectory);
@@ -92,7 +92,7 @@ async function run() {
                     summaryFileName: codeCoveragePreset.summaryFileName,
                     isMultiModule: isMultiModule,
                     gradle5xOrHigher: gradle5xOrHigher,
-                    gradleMajorVersion: gradleMajorVersion
+                    gradleVersion: gradleVersion
                 };
 
                 await enableCodeCoverageAsync(codeCoverageSettings);

@@ -91,25 +91,29 @@ export function setGradleOpts(gradleOptions: string): void {
 }
 
 /**
- * Get Gradle major version number
+ * Determine Gradle version by running ./gradlew --version
  * @param {string} wrapperScript - Relative path from the repository root to the Gradle Wrapper script.
- * @returns {number} Gradle major version number
+ * @returns {string} Gradle version
  */
-export function getGradleMajorVersion(wrapperScript: string): number {
+export function getGradleVersion(wrapperScript: string): string {
     const gradleVersionRunner: ToolRunner = tl.tool(wrapperScript);
     gradleVersionRunner.arg('--version');
 
-    const data: string = gradleVersionRunner.execSync().stdout;
-    if (typeof data !== 'undefined' && data) {
-        const regex: RegExp = new RegExp(/Gradle (\d+\.\d+(\.\d+)?)/);
-        const match = data.match(regex);
-        if (match && match.length > 1) {
-            const gradleVersion: string = match[1]
-            const gradleMajorVersion: number = parseInt(gradleVersion);
-            tl.debug(`Gradle version: ${gradleVersion}`);
-            emitTelemetry('TaskHub', 'GradleV3', { gradleVersion: gradleVersion, gradleMajorVersion: gradleMajorVersion });
-            return gradleMajorVersion;
-        }
+    const gradleOutput: string = gradleVersionRunner.execSync().stdout;
+    const gradleVersion: string = extractGradleVersion(gradleOutput);
+
+    if (gradleVersion === 'unknown'){
+        tl.warning(tl.loc('UnableToExtractGradleVersion'));
     }
-    return null;
+
+    tl.debug(`Gradle version: ${gradleVersion}`);
+    emitTelemetry('TaskHub', 'GradleV3', { gradleVersion: gradleVersion });
+
+    return gradleVersion;
+}
+
+export function extractGradleVersion(str: string): string {
+    const regex = /^Gradle (?<version>\d+\.\d+(?:\.\d+)?.*$)/m;
+    const match = str.match(regex);
+    return match?.groups?.version || 'unknown';
 }
