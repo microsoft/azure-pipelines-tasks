@@ -26,13 +26,13 @@ namespace BuildConfigGen
         {
             public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".json" };
 
-            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, string? overriddenDirectoryName = null);
+            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, bool writeNpmrc, string? overriddenDirectoryName = null);
 
-            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false, deprecated: false, shouldUpdateTypescript: false);
-            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: false, nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: true, shouldUpdateTypescript: false);
-            public static readonly ConfigRecord Node16_225 = new ConfigRecord(name: nameof(Node16_225), constMappingKey: "Node16-225", isDefault: false, isNode: true, isWif: false, nodePackageVersion: "^16.11.39", nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, overriddenDirectoryName: "Node16");
-            public static readonly ConfigRecord Node20 = new ConfigRecord(name: nameof(Node20), constMappingKey: "Node20-225", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true);
-            public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false);
+            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false, deprecated: false, shouldUpdateTypescript: false, writeNpmrc:false);
+            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: false, nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: true, shouldUpdateTypescript: false, writeNpmrc: false);
+            public static readonly ConfigRecord Node16_225 = new ConfigRecord(name: nameof(Node16_225), constMappingKey: "Node16-225", isDefault: false, isNode: true, isWif: false, nodePackageVersion: "^16.11.39", nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, overriddenDirectoryName: "Node16", writeNpmrc: false);
+            public static readonly ConfigRecord Node20 = new ConfigRecord(name: nameof(Node20), constMappingKey: "Node20-225", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true);
+            public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
 
             public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, WorkloadIdentityFederation };
         }
@@ -43,7 +43,7 @@ namespace BuildConfigGen
         /// <param name="task">The task to generate build configs for</param>
         /// <param name="configs">List of configs to generate seperated by |</param>
         /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
-        static void Main(string task, string configs, bool writeUpdates = false)
+        static void Main(string task, string configs, int currentSprint, bool writeUpdates = false)
         {
             // error handling strategy:
             // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
@@ -51,11 +51,11 @@ namespace BuildConfigGen
             // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
             foreach (var t in task.Split(','))
             {
-                Main3(t, configs, writeUpdates);
+                Main3(t, configs, writeUpdates, currentSprint);
             }
         }
 
-        private static void Main3(string task, string configsString, bool writeUpdates)
+        private static void Main3(string task, string configsString, bool writeUpdates, int currentSprint)
         {
             if (string.IsNullOrEmpty(task))
             {
@@ -76,8 +76,8 @@ namespace BuildConfigGen
             foreach (var config in configs)
             {
                 if (configdefs.TryGetValue(config, out var matchedConfig))
-                {   
-                    if (matchedConfig.deprecated && writeUpdates) 
+                {
+                    if (matchedConfig.deprecated && writeUpdates)
                     {
                         errorMessage = "The config with the name: " + matchedConfig.name + " is deprecated. Writing updates for deprecated configs is not allowed.";
                         throw new Exception(errorMessage);
@@ -86,7 +86,7 @@ namespace BuildConfigGen
                 }
                 else
                 {
-                    errorMessage = "Configs specified must be one of: " + string.Join(',', Config.Configs.Where(x=>!x.isDefault).Select(x => x.name));
+                    errorMessage = "Configs specified must be one of: " + string.Join(',', Config.Configs.Where(x => !x.isDefault).Select(x => x.name));
                     throw new Exception(errorMessage);
                 }
             }
@@ -95,7 +95,7 @@ namespace BuildConfigGen
             {
                 ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
 
-                Main2(task, targetConfigs);
+                Main2(task, currentSprint, targetConfigs);
 
                 ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: false);
             }
@@ -126,7 +126,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void Main2(string task, HashSet<Config.ConfigRecord> targetConfigs)
+        private static void Main2(string task, int currentSprint, HashSet<Config.ConfigRecord> targetConfigs)
         {
             string currentDir = Environment.CurrentDirectory;
 
@@ -158,7 +158,7 @@ namespace BuildConfigGen
                 ensureUpdateModeVerifier!.DirectoryCreateDirectory(generatedFolder, false);
             }
 
-            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping, targetConfigs: targetConfigs);
+            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping, targetConfigs: targetConfigs, currentSprint);
 
             foreach (var config in targetConfigs)
             {
@@ -213,7 +213,7 @@ namespace BuildConfigGen
 
         private static void EnsureBuildConfigFileOverrides(Config.ConfigRecord config, string taskTargetPath)
         {
-            if(!config.enableBuildConfigOverrides)
+            if (!config.enableBuildConfigOverrides)
             {
                 throw new Exception("BUG: should not get here: !config.enableBuildConfigOverrides");
             }
@@ -237,7 +237,7 @@ namespace BuildConfigGen
             {
                 throw new Exception("BUG: should not get here: !config.enableBuildConfigOverrides");
             }
-    
+
             if (config.overriddenDirectoryName != null)
             {
                 directoryName = config.overriddenDirectoryName;
@@ -369,7 +369,7 @@ namespace BuildConfigGen
             string outputNodePackagePath = Path.Combine(taskOutputNode, "package.json");
             JsonNode outputNodePackagePathJsonNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNodePackagePath))!;
             outputNodePackagePathJsonNode["dependencies"]!["@types/node"] = nodeVersion;
-            
+
             // Upgrade typescript version for Node 20
             if (shouldUpdateTypescript)
             {
@@ -391,7 +391,7 @@ namespace BuildConfigGen
                 var handlers = taskHandlerContents[possibleExecutor]?.AsObject();
                 if (ExecutorHasNodeHandler(handlers)) { return true; }
             }
-            
+
             return false;
         }
 
@@ -475,6 +475,13 @@ namespace BuildConfigGen
                 }
             }
 
+            if (config.writeNpmrc)
+            {
+                string targetPath = Path.Combine(taskOutput, ".npmrc");
+                ensureUpdateModeVerifier!.WriteAllText(targetPath, @"scripts-prepend-node-path=true
+", false);
+            }
+
             if (removeExtraFiles)
             {
                 foreach (var pathToRemoveFromOutput in pathsToRemoveFromOutput)
@@ -493,20 +500,31 @@ namespace BuildConfigGen
             }
         }
 
-        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs)
+        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint)
         {
             Dictionary<string, TaskVersion> versionMap;
-            TaskVersion? maxVersion;
-
-            string versionMapFile = Path.Combine(gitRootPath, "_generated", @$"{task}.versionmap.txt");
-
-            ReadVersionMap(versionMapFile, out versionMap, out maxVersion);
+            TaskVersion maxVersion;
 
             var inputVersion = GetInputVersion(taskTarget);
 
-            if (!(maxVersion is null) && inputVersion < maxVersion)
+            string versionMapFile = Path.Combine(gitRootPath, "_generated", @$"{task}.versionmap.txt");
+
+            if (ReadVersionMap(versionMapFile, out versionMap, out var maxVersionNullable))
             {
-                throw new Exception($"version specified in task {taskTarget} must not be less than maxversion {maxVersion} specified in {versionMapFile}");
+                maxVersion = maxVersionNullable;
+            }
+            else
+            {
+                maxVersion = inputVersion;
+            }
+
+            TaskVersion defaultVersion = versionMap[Config.Default.name];
+
+            bool defaultVersionMatchesSourceVersion = defaultVersion == inputVersion;
+
+            if (!(maxVersion is null) && inputVersion < maxVersion && !defaultVersionMatchesSourceVersion)
+            {
+                throw new Exception($"inputVersion={inputVersion} version specified in task taskTarget={taskTarget} must not be less than maxversion maxVersion={maxVersion} specified in versionMapFile{versionMapFile}, or must match defaultVersion={defaultVersion} in {versionMapFile}");
             }
 
             configTaskVersionMapping = new();
@@ -538,7 +556,18 @@ namespace BuildConfigGen
                 }
             }
 
-            int c = 0;
+            TaskVersion baseVersion;
+
+            if (maxVersion!.Minor == currentSprint)
+            {
+                baseVersion = maxVersion;
+            }
+            else
+            {
+                baseVersion = inputVersion.CloneWithMinorAndPatch(currentSprint, 0);
+            }
+
+            int c = 1;
             if (!allConfigsMappedAndValid)
             {
                 configTaskVersionMapping.Clear();
@@ -547,13 +576,19 @@ namespace BuildConfigGen
                 {
                     if (!config.isDefault)
                     {
-                        configTaskVersionMapping.Add(config, inputVersion.CloneWithPatch(inputVersion.Patch + c));
+                        configTaskVersionMapping.Add(config, baseVersion.CloneWithPatch(inputVersion.Patch + c));
                         c++;
                     }
                 }
 
-                // ensure version goes last
-                configTaskVersionMapping.Add(Config.Default, inputVersion.CloneWithPatch(inputVersion.Patch + c));
+                if (defaultVersionMatchesSourceVersion)
+                {
+                    configTaskVersionMapping.Add(Config.Default, inputVersion);
+                }
+                else
+                {
+                    configTaskVersionMapping.Add(Config.Default, baseVersion.CloneWithPatch(inputVersion.Patch + c));
+                }
             }
 
             WriteVersionMapFile(versionMapFile, configTaskVersionMapping, targetConfigs: targetConfigs);
@@ -651,7 +686,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void ReadVersionMap(string versionMapFile, out Dictionary<string, TaskVersion> versionMap, out TaskVersion? maxVersion)
+        private static bool ReadVersionMap(string versionMapFile, out Dictionary<string, TaskVersion> versionMap, [NotNullWhen(returnValue: true)] out TaskVersion? maxVersion)
         {
             versionMap = new();
             maxVersion = null;
@@ -677,7 +712,16 @@ namespace BuildConfigGen
                         }
                     }
                 }
+
+                if (maxVersion is null)
+                {
+                    throw new Exception($"expected Default version to be present in {versionMapFile}");
+                }
+
+                return true;
             }
+
+            return false;
         }
 
         private static void CopyFile(string sourcePath, string targetPath)
