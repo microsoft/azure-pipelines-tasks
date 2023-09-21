@@ -310,7 +310,9 @@
     "TarExtractionNotSupportedInWindows": "ms-resource:loc.messages.TarExtractionNotSupportedInWindows",
     "NoTarsFound": "ms-resource:loc.messages.NoTarsFound",
     "CleaningDestinationFolder": "ms-resource:loc.messages.CleaningDestinationFolder",
-    "NoFolderToClean": "ms-resource:loc.messages.NoFolderToClean"
+    "NoFolderToClean": "ms-resource:loc.messages.NoFolderToClean",
+    "PreferRedirect": "ms-resource:loc.messages.PreferRedirect",
+    "FollowingDownloadRedirectFailed": "ms-resource:loc.messages.FollowingDownloadRedirectFailed"
   },
   "outputVariables": [
     {
