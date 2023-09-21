@@ -28,7 +28,7 @@ namespace BuildConfigGen
 
             public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, bool writeNpmrc, string? overriddenDirectoryName = null);
 
-            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false, deprecated: false, shouldUpdateTypescript: false, writeNpmrc:false);
+            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
             public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: false, nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: true, shouldUpdateTypescript: false, writeNpmrc: false);
             public static readonly ConfigRecord Node16_225 = new ConfigRecord(name: nameof(Node16_225), constMappingKey: "Node16-225", isDefault: false, isNode: true, isWif: false, nodePackageVersion: "^16.11.39", nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, overriddenDirectoryName: "Node16", writeNpmrc: false);
             public static readonly ConfigRecord Node20 = new ConfigRecord(name: nameof(Node20), constMappingKey: "Node20-225", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true);
@@ -42,20 +42,21 @@ namespace BuildConfigGen
 
         /// <param name="task">The task to generate build configs for</param>
         /// <param name="configs">List of configs to generate seperated by |</param>
+        /// <param name="currentSprint">Overide current sprint; omit to get from whatsprintis.it</param>
         /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
-        static void Main(string task, string configs, int currentSprint, bool writeUpdates = false)
+        static void Main(string task, string configs, int? currentSprint, bool writeUpdates = false)
         {
             // error handling strategy:
             // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
             // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
             // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
-            foreach (var t in task.Split(','))
+            foreach (var t in task.Split(',', '|'))
             {
                 Main3(t, configs, writeUpdates, currentSprint);
             }
         }
 
-        private static void Main3(string task, string configsString, bool writeUpdates, int currentSprint)
+        private static void Main3(string task, string configsString, bool writeUpdates, int? currentSprint)
         {
             if (string.IsNullOrEmpty(task))
             {
@@ -108,6 +109,19 @@ namespace BuildConfigGen
             }
         }
 
+        private static int GetCurrentSprint()
+        {
+            string url = "https://whatsprintis.it";
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+
+            string json = httpClient.GetStringAsync(url).Result;
+            JsonDocument currentSprintData = JsonDocument.Parse(json);
+            int currentSprint = currentSprintData.RootElement.GetProperty("sprint").GetInt32();
+
+            return currentSprint;
+        }
+
         private static void ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(string task, bool skipContentCheck)
         {
             // if !writeUpdates, error if we have written any updates
@@ -126,8 +140,13 @@ namespace BuildConfigGen
             }
         }
 
-        private static void Main2(string task, int currentSprint, HashSet<Config.ConfigRecord> targetConfigs)
+        private static void Main2(string task, int? currentSprint, HashSet<Config.ConfigRecord> targetConfigs)
         {
+            if(!currentSprint.HasValue)
+            {
+                currentSprint = GetCurrentSprint();
+            }
+
             string currentDir = Environment.CurrentDirectory;
 
             string gitRootPath = GitUtil.GetGitRootPath(currentDir);
@@ -158,7 +177,7 @@ namespace BuildConfigGen
                 ensureUpdateModeVerifier!.DirectoryCreateDirectory(generatedFolder, false);
             }
 
-            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping, targetConfigs: targetConfigs, currentSprint);
+            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping, targetConfigs: targetConfigs, currentSprint.Value, out bool defaultVersionLessThanConfigs);
 
             foreach (var config in targetConfigs)
             {
@@ -166,6 +185,23 @@ namespace BuildConfigGen
                 if (config.isDefault)
                 {
                     taskOutput = Path.Combine(gitRootPath, "_generated", task);
+
+                    if (defaultVersionLessThanConfigs)
+                    {
+                        // It's no longer necessary to write the mapping to the 'default' configuration, as the 'base' version will be the lowest
+                        // so there is no need to generate the 'default' configuration
+
+                        if (Directory.Exists(taskOutput))
+                        {
+                            ensureUpdateModeVerifier!.DeleteDirectoryRecursive(taskOutput);
+                        }
+
+                        continue;
+                    }
+                    else
+                    {
+                        // for rebuilding existing tasks where version is not changed, don't force deleting the default generated task
+                    }
                 }
                 else
                 {
@@ -500,7 +536,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint)
+        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, out bool defaultVersionLessThanConfigs)
         {
             Dictionary<string, TaskVersion> versionMap;
             TaskVersion maxVersion;
@@ -592,6 +628,8 @@ namespace BuildConfigGen
             }
 
             WriteVersionMapFile(versionMapFile, configTaskVersionMapping, targetConfigs: targetConfigs);
+
+            defaultVersionLessThanConfigs = inputVersion < maxVersion;
         }
 
         private static TaskVersion GetInputVersion(string taskTarget)
