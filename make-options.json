@@ -229,5 +229,8 @@
         "AzureFileCopyV3",
         "DockerComposeV0",
         "AzureRmWebAppDeploymentV3"
+    ],
+    "Node20": [
+        "UseDotNetV2"
     ]
 }

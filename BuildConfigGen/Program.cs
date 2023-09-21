@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -8,12 +9,15 @@ namespace BuildConfigGen
 
     internal class Knob
     {
-        public static readonly Knob Default = new Knob { SourceDirectoriesMustContainPlaceHolders = false };
+        public static readonly Knob Default = new Knob { SourceDirectoriesMustContainPlaceHolders = false, GeneratedFilesUnderSourceControl = false };
 
         // when true, Source Directories must contain _buildConfigs placeholders for each build config
         // _buildConfigs are written to each directory when --write-updates is specified
         // setting to false for now so we're not forced to check in a lot of placeholders to tasks that don't use them
         public bool SourceDirectoriesMustContainPlaceHolders { get; init; }
+
+        // when true, generated files expected to be under source control
+        public bool GeneratedFilesUnderSourceControl { get; init; }
     }
 
     internal class Program
@@ -26,13 +30,13 @@ namespace BuildConfigGen
         {
             public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".json" };
 
-            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, string? overriddenDirectoryName = null);
+            public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, bool writeNpmrc, string? overriddenDirectoryName = null);
 
-            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false, deprecated: false, shouldUpdateTypescript: false);
-            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: false, nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: true, shouldUpdateTypescript: false);
-            public static readonly ConfigRecord Node16_225 = new ConfigRecord(name: nameof(Node16_225), constMappingKey: "Node16-225", isDefault: false, isNode: true, isWif: false, nodePackageVersion: "^16.11.39", nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, overriddenDirectoryName: "Node16");
-            public static readonly ConfigRecord Node20 = new ConfigRecord(name: nameof(Node20), constMappingKey: "Node20-225", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true);
-            public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false);
+            public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
+            public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: false, nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: true, shouldUpdateTypescript: false, writeNpmrc: false);
+            public static readonly ConfigRecord Node16_225 = new ConfigRecord(name: nameof(Node16_225), constMappingKey: "Node16-225", isDefault: false, isNode: true, isWif: false, nodePackageVersion: "^16.11.39", nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false, overriddenDirectoryName: "Node16");
+            public static readonly ConfigRecord Node20 = new ConfigRecord(name: nameof(Node20), constMappingKey: "Node20-225", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: false);
+            public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
 
             public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, WorkloadIdentityFederation };
         }
@@ -49,7 +53,7 @@ namespace BuildConfigGen
             // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
             // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
             // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
-            foreach (var t in task.Split(','))
+            foreach (var t in task.Split(new[] { ',', '|' }))
             {
                 Main3(t, configs, writeUpdates);
             }
@@ -186,7 +190,6 @@ namespace BuildConfigGen
                 CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
 
 
-
                 if (config.enableBuildConfigOverrides)
                 {
                     CopyConfigOverrides(taskTargetPath, taskOutput, config);
@@ -196,7 +199,7 @@ namespace BuildConfigGen
                 // don't check content as preprocessor hasn't run
                 ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: true);
 
-                HandlePreprocessingInTarget(taskOutput, config);
+                HandlePreprocessingInTarget(taskTargetPath, taskOutput, config, skipPathName: buildConfigs);
 
                 WriteInputTaskJson(taskTargetPath, configTaskVersionMapping, "task.json");
                 WriteInputTaskJson(taskTargetPath, configTaskVersionMapping, "task.loc.json");
@@ -273,15 +276,19 @@ namespace BuildConfigGen
             }
         }
 
-        private static void HandlePreprocessingInTarget(string taskOutput, Config.ConfigRecord config)
+        private static void HandlePreprocessingInTarget(string taskTargetPath, string taskOutput, Config.ConfigRecord config, string skipPathName)
         {
-            var nonIgnoredFilesInTarget = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(taskOutput));
+            // get the list of files to process from the source
+            var nonIgnoredFilesInSource = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(taskTargetPath));
 
-            foreach (var file in nonIgnoredFilesInTarget)
+            foreach (var file in nonIgnoredFilesInSource)
             {
                 string taskOutputFile = Path.Combine(taskOutput, file);
 
-                PreprocessIfExtensionEnabledInConfig(taskOutputFile, config, validateAndWriteChanges: true, out _);
+                if (!MatchSubpath(skipPathName, taskOutputFile))
+                {
+                    PreprocessIfExtensionEnabledInConfig(taskOutputFile, config, validateAndWriteChanges: true, out _);
+                }
             }
         }
 
@@ -416,14 +423,31 @@ namespace BuildConfigGen
 
             HashSet<string> pathsToRemoveFromOutput;
 
-            // In case if task was not generated yet, we don't need to get the list of files to remove, because taskOutput not exists yet
-            if (Directory.Exists(taskOutput))
+            if (Knob.Default.GeneratedFilesUnderSourceControl)
             {
-                pathsToRemoveFromOutput = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(taskOutput));
+                // In case if task was not generated yet, we don't need to get the list of files to remove, because taskOutput not exists yet
+                if (Directory.Exists(taskOutput))
+                {
+                    pathsToRemoveFromOutput = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(taskOutput));
+                }
+                else
+                {
+                    pathsToRemoveFromOutput = new HashSet<string>();
+                }
             }
             else
             {
                 pathsToRemoveFromOutput = new HashSet<string>();
+
+                if (removeExtraFiles)
+                {
+                    if (Directory.Exists(taskOutput))
+                    {
+                        Console.WriteLine($"{taskOutput} exists, deleting...");
+                        Directory.Delete(taskOutput, true);
+                        ensureUpdateModeVerifier!.DirectoryDeleteDirectoryRecurisve(taskOutput);
+                    }
+                }
             }
 
             foreach (var path in paths)
@@ -449,7 +473,7 @@ namespace BuildConfigGen
                     }
                 }
 
-                if (skipPathName != null && sourcePath.Contains(string.Concat(skipPathName, Path.DirectorySeparatorChar)))
+                if (skipPathName != null && MatchSubpath(skipPathName, sourcePath))
                 {
                     // skip the path!  (this is used to skip _buildConfigs in the source task path)
                 }
@@ -475,22 +499,38 @@ namespace BuildConfigGen
                 }
             }
 
-            if (removeExtraFiles)
+            
+            if(config.writeNpmrc)
             {
-                foreach (var pathToRemoveFromOutput in pathsToRemoveFromOutput)
+                string targetPath = Path.Combine(taskOutput, ".npmrc");
+                ensureUpdateModeVerifier!.WriteAllText(targetPath, @"scripts-prepend-node-path=true
+", false);
+            }
+
+            if (Knob.Default.GeneratedFilesUnderSourceControl)
+            {
+                if (removeExtraFiles)
                 {
-                    string targetPath = Path.Combine(taskOutput, pathToRemoveFromOutput);
-                    Console.WriteLine($"Adding .tmp extension to extra file in output directory (should cause it to be ignored by .gitignore): {pathToRemoveFromOutput}");
-
-                    string destFileName = targetPath + ".tmp";
-                    if (File.Exists(destFileName))
+                    foreach (var pathToRemoveFromOutput in pathsToRemoveFromOutput)
                     {
-                        throw new Exception($"{destFileName} already exists; please clean up");
-                    }
+                        string targetPath = Path.Combine(taskOutput, pathToRemoveFromOutput);
+                        Console.WriteLine($"Adding .tmp extension to extra file in output directory (should cause it to be ignored by .gitignore): {pathToRemoveFromOutput}");
 
-                    ensureUpdateModeVerifier!.Move(targetPath, destFileName);
+                        string destFileName = targetPath + ".tmp";
+                        if (File.Exists(destFileName))
+                        {
+                            throw new Exception($"{destFileName} already exists; please clean up");
+                        }
+
+                        ensureUpdateModeVerifier!.Move(targetPath, destFileName);
+                    }
                 }
             }
+        }
+
+        private static bool MatchSubpath(string subpath, string path)
+        {
+            return path.Contains(string.Concat(subpath, Path.DirectorySeparatorChar));
         }
 
         private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs)

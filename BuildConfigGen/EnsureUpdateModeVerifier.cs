@@ -251,5 +251,22 @@ namespace BuildConfigGen
             string targetFile = tempFile ?? sourceFile ?? filePath;
             return targetFile;
         }
+
+        internal void DirectoryDeleteDirectoryRecurisve(string dirName)
+        {
+            if (verifyOnly)
+            {
+
+#warning  we need to remove directory from 'virtual' file system
+                //if (Directory.Exists(dirName))
+                //{
+                //VerifyErrors.Add($"Directory {dirName} should not exist");
+                //}
+            }
+            else
+            {
+                Directory.Delete(dirName, true);
+            }
+        }
     }
 }

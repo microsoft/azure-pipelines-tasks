@@ -32,7 +32,8 @@ bld/
 temp/
 _common/
 _build/
-!_generated/*versionmap.txt
+_generated/**
+!_generated/*.versionmap.txt
 _download/
 _package/
 _test/
