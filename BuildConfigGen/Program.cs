@@ -177,7 +177,9 @@ namespace BuildConfigGen
                 ensureUpdateModeVerifier!.DirectoryCreateDirectory(generatedFolder, false);
             }
 
-            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping, targetConfigs: targetConfigs, currentSprint.Value, out bool defaultVersionLessThanConfigs);
+            string versionMapFile = Path.Combine(gitRootPath, "_generated", @$"{task}.versionmap.txt");
+
+            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping, targetConfigs: targetConfigs, currentSprint.Value, versionMapFile);
 
             foreach (var config in targetConfigs)
             {
@@ -204,8 +206,6 @@ namespace BuildConfigGen
 
                 CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
 
-
-
                 if (config.enableBuildConfigOverrides)
                 {
                     CopyConfigOverrides(taskTargetPath, taskOutput, config);
@@ -227,6 +227,9 @@ namespace BuildConfigGen
                     WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript);
                 }
             }
+
+            // delay updating version map file until after buildconfigs generated
+            WriteVersionMapFile(versionMapFile, configTaskVersionMapping, targetConfigs: targetConfigs);
         }
 
 
@@ -526,14 +529,12 @@ namespace BuildConfigGen
             }
         }
 
-        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, out bool defaultVersionLessThanConfigs)
+        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string versionMapFile)
         {
             Dictionary<string, TaskVersion> versionMap;
             TaskVersion maxVersion;
 
             var inputVersion = GetInputVersion(taskTarget);
-
-            string versionMapFile = Path.Combine(gitRootPath, "_generated", @$"{task}.versionmap.txt");
 
             if (ReadVersionMap(versionMapFile, out versionMap, out var maxVersionNullable))
             {
@@ -590,6 +591,7 @@ namespace BuildConfigGen
 
             if (baseVersionIsCurrentSprint)
             {
+                offset = 1;
             }
             else
             {
@@ -609,15 +611,7 @@ namespace BuildConfigGen
                 if (defaultVersionMatchesSourceVersion)
                 {
                     configTaskVersionMapping.Add(Config.Default, inputVersion);
-                }
-                else
-                {
-                    configTaskVersionMapping.Add(Config.Default, baseVersion.CloneWithPatch(baseVersion.Patch + offset));
-                    offset++;
-                }
 
-                if (defaultVersionMatchesSourceVersion)
-                {
                     foreach (var config in targetConfigs)
                     {
                         if (!config.isDefault)
@@ -628,6 +622,11 @@ namespace BuildConfigGen
                             }
                         }
                     }
+                }
+                else
+                {
+                    configTaskVersionMapping.Add(Config.Default, baseVersion.CloneWithPatch(baseVersion.Patch + offset));
+                    offset++;
                 }
 
                 foreach (var config in targetConfigs)
@@ -646,10 +645,6 @@ namespace BuildConfigGen
                     }
                 }
             }
-
-            WriteVersionMapFile(versionMapFile, configTaskVersionMapping, targetConfigs: targetConfigs);
-
-            defaultVersionLessThanConfigs = inputVersion < maxVersion;
         }
 
         private static TaskVersion GetInputVersion(string taskTarget)
