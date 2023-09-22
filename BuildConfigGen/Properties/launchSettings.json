@@ -2,7 +2,7 @@
   "profiles": {
     "BuildConfigGen": {
       "commandName": "Project",
-      "commandLineArgs": "--task AndroidSigningV2,AndroidSigningV3,DockerComposeV0,DownloadFileshareArtifactsV1,DownloadPackageV1,FuncToolsInstallerV0,GitHubCommentV0,KubernetesManifestV0,KubernetesV0,MysqlDeploymentOnMachineGroupV1,NuGetRestoreV1,PackerBuildV0,PackerBuildV1,PublishCodeCoverageResultsV1 --configs Node16_225 --write-updates"
+      "commandLineArgs": "--task AndroidSigningV2|AndroidSigningV3|ANTV1|ArchiveFilesV2|BashV3|BatchScriptV1|CMakeV1|CmdLineV2|CocoaPodsV0|CondaEnvironmentV0|CondaEnvironmentV1|CopyFilesV2|CopyFilesOverSSHV0|CUrlUploaderV2|DecryptFileV1|DeleteFilesV1|DownloadSecureFileV1|ExtractFilesV1|FtpUploadV1|FtpUploadV2|GradleV2|GruntV0|GulpV0|GulpV1|InstallAppleCertificateV2|InstallAppleProvisioningProfileV1|InstallSSHKeyV0|JavaToolInstallerV0|JenkinsQueueJobV2|MavenV2|MavenV3|MavenV4|MSBuildV1|NodeTaskRunnerInstallerV0|NodeToolV0|PowerShellV2|PublishBuildArtifactsV1|SshV0|UseNodeV1|UsePythonVersionV0|UseRubyVersionV0|VSBuildV1|XamarinAndroidV1|XamariniOSV2 --configs Node20 --write-updates"
     }
   }
 }
