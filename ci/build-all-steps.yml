@@ -67,7 +67,8 @@ steps:
         ne(variables['numTasks'], 0),
         ne(variables['COURTESY_PUSH'], 'true'),
         eq(variables['build.reason'], 'PullRequest'),
-        eq(variables['System.PullRequest.TargetBranch'], 'master')
+        eq(variables['System.PullRequest.TargetBranch'], 'master'),
+        ne(variables['Build.SourceBranch'], 'refs/heads/users/merlynop/node20_updates')
       )
   env:
     PACKAGE_TOKEN: $(Package.Token)
