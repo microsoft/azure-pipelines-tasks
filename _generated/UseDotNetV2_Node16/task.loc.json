@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 228,
-    "Patch": 0
+    "Patch": 3
   },
   "satisfies": [
     "DotNetCore"
@@ -196,6 +196,7 @@
   },
   "_buildConfigMapping": {
     "Default": "2.228.1",
-    "Node16-225": "2.228.0"
+    "Node16-225": "2.228.3",
+    "Node20-225": "2.228.2"
   }
 }
