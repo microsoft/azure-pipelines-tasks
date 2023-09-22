@@ -603,20 +603,24 @@ namespace BuildConfigGen
 
             bool baseVersionIsCurrentSprint = baseVersion.Minor == currentSprint;
 
-            int offset;
+            int offset = 0;
 
             if (baseVersionIsCurrentSprint)
             {
-                offset = 1;
             }
             else
             {
                 baseVersion = inputVersion.CloneWithMinorAndPatch(currentSprint, 0);
-                offset = 0;
             }
 
             if (!allConfigsMappedAndValid)
             {
+                var old = new Dictionary<Config.ConfigRecord, TaskVersion>();
+                foreach (var x in configTaskVersionMapping)
+                {
+                    old.Add(x.Key, x.Value);
+                }
+
                 configTaskVersionMapping.Clear();
 
                 if (defaultVersionMatchesSourceVersion)
@@ -629,15 +633,35 @@ namespace BuildConfigGen
                     offset++;
                 }
 
-                foreach (var config in targetConfigs)
+                if (defaultVersionMatchesSourceVersion)
                 {
-                    if (!config.isDefault)
+                    foreach (var config in targetConfigs)
                     {
-                        configTaskVersionMapping.Add(config, baseVersion.CloneWithPatch(baseVersion.Patch + offset));
-                        offset++;
+                        if (!config.isDefault)
+                        {
+                            if (old.TryGetValue(config, out var oldVersion))
+                            {
+                                configTaskVersionMapping.Add(config, oldVersion);
+                            }
+                        }
                     }
                 }
 
+                foreach (var config in targetConfigs)
+                {
+                    if (!config.isDefault && !configTaskVersionMapping.ContainsKey(config))
+                    {
+                        TaskVersion targetVersion;
+                        do
+                        {
+                            targetVersion = baseVersion.CloneWithPatch(baseVersion.Patch + offset);
+                            offset++;
+                        }
+                        while (configTaskVersionMapping.Values.Contains(targetVersion));
+
+                        configTaskVersionMapping.Add(config, targetVersion);
+                    }
+                }
             }
 
             WriteVersionMapFile(versionMapFile, configTaskVersionMapping, targetConfigs: targetConfigs);
