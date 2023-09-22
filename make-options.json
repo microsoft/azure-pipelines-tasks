@@ -48,6 +48,7 @@
         "AzureWebAppContainerV1",
         "AzureVmssDeploymentV0",
         "BashV3",
+        "BatchScriptV1",
         "CacheBetaV0",
         "CacheBetaV1",
         "CacheV2",
@@ -187,6 +188,7 @@
         "UseNodeV1",
         "UsePythonVersionV0",
         "UseRubyVersionV0",
+        "VSBuildV1",
         "VsTestV1",
         "VsTestV2",
         "VsTestV3",
@@ -235,7 +237,6 @@
         "ANTV1",
         "ArchiveFilesV2",
         "BashV3",
-        "BatchScriptV1",
         "CMakeV1",
         "CmdLineV2",
         "CocoaPodsV0",
@@ -271,9 +272,6 @@
         "UseDotNetV2",
         "UseNodeV1",
         "UsePythonVersionV0",
-        "UseRubyVersionV0",
-        "VSBuildV1",
-        "XamarinAndroidV1",
-        "XamariniOSV2"
+        "UseRubyVersionV0"
     ]
 }
