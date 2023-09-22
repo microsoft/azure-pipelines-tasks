@@ -1,100 +1,100 @@
 {
-  "id": "2A7EBC54-C13E-490E-81A5-D7561AB7CD97",
-  "name": "PublishCodeCoverageResults",
-  "friendlyName": "Publish code coverage results",
-  "description": "Publish Cobertura or JaCoCo code coverage results from a build",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-code-coverage-results",
-  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "category": "Test",
-  "visibility": [
-    "Build"
-  ],
-  "runsOn": [
-    "Agent",
-    "DeploymentGroup"
-  ],
-  "author": "Microsoft Corporation",
-  "version": {
-    "Major": 1,
-    "Minor": 226,
-    "Patch": 1
-  },
-  "demands": [],
-  "minimumAgentVersion": "2.182.1",
-  "instanceNameFormat": "Publish code coverage from $(summaryFileLocation)",
-  "inputs": [
-    {
-      "name": "codeCoverageTool",
-      "type": "pickList",
-      "label": "Code coverage tool",
-      "required": true,
-      "defaultValue": "JaCoCo",
-      "helpMarkDown": "The tool with which code coverage results are generated.",
-      "options": {
-        "Cobertura": "Cobertura",
-        "JaCoCo": "JaCoCo"
-      }
+    "id": "2A7EBC54-C13E-490E-81A5-D7561AB7CD97",
+    "name": "PublishCodeCoverageResults",
+    "friendlyName": "Publish code coverage results",
+    "description": "Publish Cobertura or JaCoCo code coverage results from a build",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-code-coverage-results",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
+    "category": "Test",
+    "visibility": [
+        "Build"
+    ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 228,
+        "Patch": 0
     },
-    {
-      "name": "summaryFileLocation",
-      "type": "string",
-      "label": "Summary file",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Path of the summary file containing code coverage statistics, such as line, method, and class coverage. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`"
+    "demands": [],
+    "minimumAgentVersion": "2.182.1",
+    "instanceNameFormat": "Publish code coverage from $(summaryFileLocation)",
+    "inputs": [
+        {
+            "name": "codeCoverageTool",
+            "type": "pickList",
+            "label": "Code coverage tool",
+            "required": true,
+            "defaultValue": "JaCoCo",
+            "helpMarkDown": "The tool with which code coverage results are generated.",
+            "options": {
+                "Cobertura": "Cobertura",
+                "JaCoCo": "JaCoCo"
+            }
+        },
+        {
+            "name": "summaryFileLocation",
+            "type": "string",
+            "label": "Summary file",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path of the summary file containing code coverage statistics, such as line, method, and class coverage. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`"
+        },
+        {
+            "name": "pathToSources",
+            "type": "string",
+            "label": "Path to Source files",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path to source files is required when coverage XML reports do not contain absolute path to source files. For e.g., JaCoCo reports do not use absolute paths and when publishing JaCoCo coverage for Java apps, the pattern would be similar to `$(System.DefaultWorkingDirectory)/MyApp/src/main/java/`.<br />This input is also needed if tests are run in a docker container. This input should point to absolute path to source files on the host. For e.g., `$(System.DefaultWorkingDirectory)/MyApp/`"
+        },
+        {
+            "name": "reportDirectory",
+            "type": "string",
+            "label": "Report directory",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path of the code coverage HTML report directory. The report directory is published for later viewing as an artifact of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`"
+        },
+        {
+            "name": "additionalCodeCoverageFiles",
+            "type": "string",
+            "label": "Additional files",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "File path pattern specifying any additional code coverage files to be published as artifacts of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/**/*.exec`"
+        },
+        {
+            "name": "failIfCoverageEmpty",
+            "type": "boolean",
+            "label": "Fail when code coverage results are missing",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Fail the task if code coverage did not produce any results to publish."
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "publishcodecoverageresults.js",
+            "argumentFormat": ""
+        }
     },
-    {
-      "name": "pathToSources",
-      "type": "string",
-      "label": "Path to Source files",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Path to source files is required when coverage XML reports do not contain absolute path to source files. For e.g., JaCoCo reports do not use absolute paths and when publishing JaCoCo coverage for Java apps, the pattern would be similar to `$(System.DefaultWorkingDirectory)/MyApp/src/main/java/`.<br />This input is also needed if tests are run in a docker container. This input should point to absolute path to source files on the host. For e.g., `$(System.DefaultWorkingDirectory)/MyApp/`"
+    "restrictions": {
+        "settableVariables": {
+            "allowed": []
+        }
     },
-    {
-      "name": "reportDirectory",
-      "type": "string",
-      "label": "Report directory",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Path of the code coverage HTML report directory. The report directory is published for later viewing as an artifact of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`"
-    },
-    {
-      "name": "additionalCodeCoverageFiles",
-      "type": "string",
-      "label": "Additional files",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "File path pattern specifying any additional code coverage files to be published as artifacts of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/**/*.exec`"
-    },
-    {
-      "name": "failIfCoverageEmpty",
-      "type": "boolean",
-      "label": "Fail when code coverage results are missing",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "Fail the task if code coverage did not produce any results to publish."
+    "messages": {
+        "FoundNMatchesForPattern": "Found %s result(s) matching pattern: %s",
+        "MultipleSummaryFilesFound": "Multiple file or directory matches were found. Using the first match: %s",
+        "NoCodeCoverage": "No code coverage results were found to publish.",
+        "InstallDotNetCoreForHtmlReport": "Please install dotnet core to enable automatic generation of Html report.",
+        "FailedToGenerateHtmlReport": "Failed to generate Html report. Error: %s",
+        "IgnoringReportDirectory": "Ignoring coverage report directory with Html content as we are auto-generating Html content",
+        "UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
+        "GeneratedHtmlReport": "Generated code coverage html report: %s"
     }
-  ],
-  "execution": {
-    "Node10": {
-      "target": "publishcodecoverageresults.js",
-      "argumentFormat": ""
-    }
-  },
-  "restrictions": {
-    "settableVariables": {
-      "allowed": []
-    }
-  },
-  "messages": {
-    "FoundNMatchesForPattern": "Found %s result(s) matching pattern: %s",
-    "MultipleSummaryFilesFound": "Multiple file or directory matches were found. Using the first match: %s",
-    "NoCodeCoverage": "No code coverage results were found to publish.",
-    "InstallDotNetCoreForHtmlReport": "Please install dotnet core to enable automatic generation of Html report.",
-    "FailedToGenerateHtmlReport": "Failed to generate Html report. Error: %s",
-    "IgnoringReportDirectory": "Ignoring coverage report directory with Html content as we are auto-generating Html content",
-    "UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
-    "GeneratedHtmlReport": "Generated code coverage html report: %s"
-  }
 }
