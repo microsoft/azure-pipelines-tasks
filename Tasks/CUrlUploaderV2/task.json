@@ -1,138 +1,138 @@
 {
-    "id": "AD8974D8-DE11-11E4-B2FE-7FB898A745F3",
-    "name": "cURLUploader",
-    "friendlyName": "cURL upload files",
-    "description": "Use cURL's supported protocols to upload files",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/curl-upload-files",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627418)",
-    "category": "Utility",
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 2,
-        "Minor": 211,
-        "Patch": 0
-    },
-    "runsOn": [
-        "Agent",
-        "DeploymentGroup"
-    ],
-    "demands": [],
-    "minimumAgentVersion": "2.182.1",
-    "groups": [
-        {
-            "name": "advanced",
-            "displayName": "Advanced",
-            "isExpanded": false
-        }
-    ],
-    "inputs": [
-        {
-            "name": "files",
-            "type": "filePath",
-            "label": "Files",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "File(s) to be uploaded. Wildcards can be used. For example, `**/*.zip` for all ZIP files in all subfolders."
-        },
-        {
-            "name": "authType",
-            "type": "pickList",
-            "label": "Authentication Method",
-            "defaultValue": "ServiceEndpoint",
-            "helpMarkDown": "",
-            "options": {
-                "ServiceEndpoint": "Service connection",
-                "UserAndPass": "Username and password"
-            }
-        },
-        {
-            "name": "serviceEndpoint",
-            "type": "connectedService:Generic",
-            "label": "Service Connection",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "The service connection with the credentials for the server authentication. Use the Generic service connection type for the service connection.",
-            "visibleRule": "authType = ServiceEndpoint"
-        },
-        {
-            "name": "username",
-            "type": "string",
-            "label": "Username",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Specify the username for server authentication.",
-            "visibleRule": "authType = UserAndPass"
-        },
-        {
-            "name": "password",
-            "type": "string",
-            "label": "Password",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Specify the password for server authentication. Use a new build variable with its lock enabled on the Variables tab to encrypt this value.",
-            "visibleRule": "authType = UserAndPass"
-        },
-        {
-            "name": "url",
-            "type": "string",
-            "label": "URL",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Specify the URL to where the file(s) will be uploaded. The directory should end with a trailing slash. Possible URL protocols include `DICT://`, `FILE://`, `FTP://`, `FTPS://`, `GOPHER://`, `HTTP://`, `HTTPS://`, `IMAP://`, `IMAPS://`, `LDAP://`, `LDAPS://`, `POP3://`, `POP3S://`, `RTMP://`, `RTSP://`, `SCP://`, `SFTP://`, `SMTP://`, `SMTPS://`, `TELNET://` and `TFTP://`.",
-            "visibleRule": "authType = UserAndPass"
-        },
-        {
-            "name": "remotePath",
-            "type": "string",
-            "label": "Remote Directory",
-            "defaultValue": "upload/$(Build.BuildId)/",
-            "required": false,
-            "helpMarkDown": "If supplied, this is the sub-folder on the remote server for the URL supplied in the credentials."
-        },
-        {
-            "name": "options",
-            "type": "string",
-            "label": "Optional Arguments",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Additional arguments that will be passed to cURL."
-        },
-        {
-            "name": "redirectStderr",
-            "type": "boolean",
-            "label": "Redirect Standard Error to Standard Out",
-            "defaultValue": "true",
-            "required": false,
-            "groupName": "advanced",
-            "helpMarkDown": "Adds '--stderr -' as an argument to cURL. By default, cURL writes its progress bar to stderr, which is interpreted by the build as error output. Enabling this checkbox suppresses that behavior."
-        }
-    ],
-    "instanceNameFormat": "Upload $(files) with cURL",
-    "execution": {
-        "Node10": {
-            "target": "curluploader.js",
-            "argumentFormat": ""
-        },
-        "Node16": {
-            "target": "curluploader.js",
-            "argumentFormat": ""
-        }
-    },
-    "restrictions": {
-        "commands": {
-            "mode": "restricted"
-        },
-        "settableVariables": {
-            "allowed": []
-        }
-    },
-    "messages": {
-        "CurlReturnCode": "curl exited with return code: %d",
-        "CurlFailed": "curl failed with error: %s",
-        "NoMatchingFilesFound": "No matching files were found with search pattern: %s",
-        "UploadingFiles": "Uploading file(s): %s",
-        "CurlNotFound": "curl was not found in the PATH.",
-        "NotAllFilesUploaded": "Not all files were uploaded; Uploaded: %d; Total: %d",
-        "IncompleteEndpoint": "The service connection does not contain all required fields."
+  "id": "AD8974D8-DE11-11E4-B2FE-7FB898A745F3",
+  "name": "cURLUploader",
+  "friendlyName": "cURL upload files",
+  "description": "Use cURL's supported protocols to upload files",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/curl-upload-files",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627418)",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 211,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [],
+  "minimumAgentVersion": "2.182.1",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
     }
+  ],
+  "inputs": [
+    {
+      "name": "files",
+      "type": "filePath",
+      "label": "Files",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "File(s) to be uploaded. Wildcards can be used. For example, `**/*.zip` for all ZIP files in all subfolders."
+    },
+    {
+      "name": "authType",
+      "type": "pickList",
+      "label": "Authentication Method",
+      "defaultValue": "ServiceEndpoint",
+      "helpMarkDown": "",
+      "options": {
+        "ServiceEndpoint": "Service connection",
+        "UserAndPass": "Username and password"
+      }
+    },
+    {
+      "name": "serviceEndpoint",
+      "type": "connectedService:Generic",
+      "label": "Service Connection",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The service connection with the credentials for the server authentication. Use the Generic service connection type for the service connection.",
+      "visibleRule": "authType = ServiceEndpoint"
+    },
+    {
+      "name": "username",
+      "type": "string",
+      "label": "Username",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Specify the username for server authentication.",
+      "visibleRule": "authType = UserAndPass"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "label": "Password",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Specify the password for server authentication. Use a new build variable with its lock enabled on the Variables tab to encrypt this value.",
+      "visibleRule": "authType = UserAndPass"
+    },
+    {
+      "name": "url",
+      "type": "string",
+      "label": "URL",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Specify the URL to where the file(s) will be uploaded. The directory should end with a trailing slash. Possible URL protocols include `DICT://`, `FILE://`, `FTP://`, `FTPS://`, `GOPHER://`, `HTTP://`, `HTTPS://`, `IMAP://`, `IMAPS://`, `LDAP://`, `LDAPS://`, `POP3://`, `POP3S://`, `RTMP://`, `RTSP://`, `SCP://`, `SFTP://`, `SMTP://`, `SMTPS://`, `TELNET://` and `TFTP://`.",
+      "visibleRule": "authType = UserAndPass"
+    },
+    {
+      "name": "remotePath",
+      "type": "string",
+      "label": "Remote Directory",
+      "defaultValue": "upload/$(Build.BuildId)/",
+      "required": false,
+      "helpMarkDown": "If supplied, this is the sub-folder on the remote server for the URL supplied in the credentials."
+    },
+    {
+      "name": "options",
+      "type": "string",
+      "label": "Optional Arguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Additional arguments that will be passed to cURL."
+    },
+    {
+      "name": "redirectStderr",
+      "type": "boolean",
+      "label": "Redirect Standard Error to Standard Out",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Adds '--stderr -' as an argument to cURL. By default, cURL writes its progress bar to stderr, which is interpreted by the build as error output. Enabling this checkbox suppresses that behavior."
+    }
+  ],
+  "instanceNameFormat": "Upload $(files) with cURL",
+  "execution": {
+    "Node10": {
+      "target": "curluploader.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "curluploader.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
+  },
+  "messages": {
+    "CurlReturnCode": "curl exited with return code: %d",
+    "CurlFailed": "curl failed with error: %s",
+    "NoMatchingFilesFound": "No matching files were found with search pattern: %s",
+    "UploadingFiles": "Uploading file(s): %s",
+    "CurlNotFound": "curl was not found in the PATH.",
+    "NotAllFilesUploaded": "Not all files were uploaded; Uploaded: %d; Total: %d",
+    "IncompleteEndpoint": "The service connection does not contain all required fields."
+  }
 }

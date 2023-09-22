@@ -1,0 +1,29 @@
+{
+  "name": "vsts-copyssh-task",
+  "version": "1.0.0",
+  "description": "Azure Pipelines Copy Files over SSH Tasks",
+  "main": "copyfilesoverssh.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft.com/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft.com/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft.com/vsts-tasks#readme",
+  "dependencies": {
+    "ssh2": "^1.4.0",
+    "ssh2-sftp-client": "^7.0.4",
+    "minimatch": "^3.0.4",
+    "azure-pipelines-task-lib": "^4.0.0-preview",
+    "@types/mocha": "^5.2.7"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
+  }
+}

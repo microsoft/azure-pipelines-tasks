@@ -1,0 +1,27 @@
+{
+  "name": "ExtractFiles",
+  "version": "1.0.2",
+  "description": "Extract Files Task",
+  "main": "extractfilestask.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/q": "^1.0.7",
+    "@types/node": "^20.3.1",
+    "@types/mocha": "^9.1.1",
+    "azure-pipelines-task-lib": "^4.0.1-preview",
+    "collections": "3.0.0",
+    "minimatch": "^3.0.4"
+  },
+  "devDependencies": {
+    "typescript": "5.1.6"
+  }
+}

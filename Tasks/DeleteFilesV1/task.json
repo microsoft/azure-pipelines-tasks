@@ -1,90 +1,90 @@
 {
-    "id": "B7E8B412-0437-4065-9371-EDC5881DE25B",
-    "name": "DeleteFiles",
-    "friendlyName": "Delete files",
-    "description": "Delete folders, or files matching a pattern",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/delete-files",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=722333)",
-    "category": "Utility",
-    "visibility": [
-        "Build"
-    ],
-    "runsOn": [
-        "Agent",
-        "DeploymentGroup"
-    ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 1,
-        "Minor": 211,
-        "Patch": 0
-    },
-    "demands": [],
-    "minimumAgentVersion": "2.182.1",
-    "groups": [
-        {
-            "name": "advanced",
-            "displayName": "Advanced",
-            "isExpanded": false
-        }
-    ],
-    "inputs": [
-        {
-            "name": "SourceFolder",
-            "type": "filePath",
-            "label": "Source Folder",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "The source folder that the deletion(s) will be run from. Empty is the root of the repo. Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)"
-        },
-        {
-            "name": "Contents",
-            "type": "multiLine",
-            "label": "Contents",
-            "defaultValue": "myFileShare",
-            "required": true,
-            "helpMarkDown": "File/folder paths to delete. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=722333)"
-        },
-        {
-            "name": "RemoveSourceFolder",
-            "type": "boolean",
-            "label": "Remove SourceFolder",
-            "defaultValue": false,
-            "required": false,
-            "helpMarkDown": "Attempt to remove the source folder as well."
-        },
-        {
-            "name": "RemoveDotFiles",
-            "type": "boolean",
-            "label": "Remove files starting with a dot",
-            "defaultValue": false,
-            "required": false,
-            "helpMarkDown": "Delete files starting with a dot (.git, .dockerfile). Omits these files if it's not specified explicitly (for example, '/.*'). Please see this [link](https://github.com/isaacs/minimatch#dot) for more info",
-            "groupName": "advanced"
-        }
-    ],
-    "instanceNameFormat": "Delete files from $(SourceFolder)",
-    "execution": {
-        "Node10": {
-            "target": "deletefiles.js",
-            "argumentFormat": ""
-        },
-        "Node16": {
-            "target": "deletefiles.js",
-            "argumentFormat": ""
-        }
-    },
-    "restrictions": {
-        "commands": {
-            "mode": "restricted"
-        },
-        "settableVariables": {
-            "allowed": []
-        }
-    },
-    "messages": {
-        "CantDeleteFiles": "Couldn't delete one or more files",
-        "SkippingSymbolStore": "Skipping delete for symbol store file share: %s",
-        "NoFiles": "No files to delete."
+  "id": "B7E8B412-0437-4065-9371-EDC5881DE25B",
+  "name": "DeleteFiles",
+  "friendlyName": "Delete files",
+  "description": "Delete folders, or files matching a pattern",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/delete-files",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=722333)",
+  "category": "Utility",
+  "visibility": [
+    "Build"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 211,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.182.1",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
     }
+  ],
+  "inputs": [
+    {
+      "name": "SourceFolder",
+      "type": "filePath",
+      "label": "Source Folder",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "The source folder that the deletion(s) will be run from. Empty is the root of the repo. Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)"
+    },
+    {
+      "name": "Contents",
+      "type": "multiLine",
+      "label": "Contents",
+      "defaultValue": "myFileShare",
+      "required": true,
+      "helpMarkDown": "File/folder paths to delete. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=722333)"
+    },
+    {
+      "name": "RemoveSourceFolder",
+      "type": "boolean",
+      "label": "Remove SourceFolder",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "Attempt to remove the source folder as well."
+    },
+    {
+      "name": "RemoveDotFiles",
+      "type": "boolean",
+      "label": "Remove files starting with a dot",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "Delete files starting with a dot (.git, .dockerfile). Omits these files if it's not specified explicitly (for example, '/.*'). Please see this [link](https://github.com/isaacs/minimatch#dot) for more info",
+      "groupName": "advanced"
+    }
+  ],
+  "instanceNameFormat": "Delete files from $(SourceFolder)",
+  "execution": {
+    "Node10": {
+      "target": "deletefiles.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "deletefiles.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
+  },
+  "messages": {
+    "CantDeleteFiles": "Couldn't delete one or more files",
+    "SkippingSymbolStore": "Skipping delete for symbol store file share: %s",
+    "NoFiles": "No files to delete."
+  }
 }

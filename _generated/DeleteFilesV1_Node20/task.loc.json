@@ -1,0 +1,98 @@
+{
+  "id": "B7E8B412-0437-4065-9371-EDC5881DE25B",
+  "name": "DeleteFiles",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/delete-files",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 228,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.182.1",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "SourceFolder",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SourceFolder",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SourceFolder"
+    },
+    {
+      "name": "Contents",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.Contents",
+      "defaultValue": "myFileShare",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Contents"
+    },
+    {
+      "name": "RemoveSourceFolder",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RemoveSourceFolder",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.RemoveSourceFolder"
+    },
+    {
+      "name": "RemoveDotFiles",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RemoveDotFiles",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.RemoveDotFiles",
+      "groupName": "advanced"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "deletefiles.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "deletefiles.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "deletefiles.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
+  },
+  "messages": {
+    "CantDeleteFiles": "ms-resource:loc.messages.CantDeleteFiles",
+    "SkippingSymbolStore": "ms-resource:loc.messages.SkippingSymbolStore",
+    "NoFiles": "ms-resource:loc.messages.NoFiles"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.211.0",
+    "Node20-225": "1.228.0"
+  }
+}

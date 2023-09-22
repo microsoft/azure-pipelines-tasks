@@ -1,0 +1,105 @@
+{
+  "id": "7C6A6b71-4355-4AFC-A274-480EAB5678E9",
+  "name": "DecryptFile",
+  "friendlyName": "Decrypt file (OpenSSL)",
+  "description": "Decrypt a file using OpenSSL",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/decrypt-file",
+  "helpMarkDown": "",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 228,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "2.182.1",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "instanceNameFormat": "Decrypt $(inFile)",
+  "inputs": [
+    {
+      "name": "cipher",
+      "type": "string",
+      "label": "Cypher",
+      "defaultValue": "des3",
+      "required": true,
+      "helpMarkDown": "Encryption cypher to use. See [cypher suite names](https://go.microsoft.com/fwlink/?LinkID=627129) for a complete list of possible values."
+    },
+    {
+      "name": "inFile",
+      "type": "filePath",
+      "label": "Encrypted file",
+      "required": true,
+      "helpMarkDown": "Relative path of file to decrypt."
+    },
+    {
+      "name": "passphrase",
+      "type": "string",
+      "label": "Passphrase",
+      "required": true,
+      "helpMarkDown": "Passphrase to use for decryption. **Use a Variable to encrypt the passphrase.**"
+    },
+    {
+      "name": "outFile",
+      "type": "filePath",
+      "label": "Decrypted file path",
+      "required": false,
+      "helpMarkDown": "Optional filename for decrypted file. Defaults to the Encrypted File with a \".out\" extension"
+    },
+    {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
+      "type": "filePath",
+      "label": "Working directory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Working directory for decryption. Defaults to the root of the repository.",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "decrypt.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "decrypt.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "decrypt.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
+  },
+  "messages": {
+    "OpenSSLReturnCode": "openssl exited with return code: %d",
+    "OpenSSLFailed": "openssl failed with error: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.211.0",
+    "Node20-225": "1.228.0"
+  }
+}
