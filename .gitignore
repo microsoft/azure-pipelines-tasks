@@ -213,3 +213,4 @@ LoadTest.code-workspace
 .idea/
 .nyc_output/
 _dotnetsdk/
+/Tasks/AndroidSigningV2/_buildConfigs/Node20/FilesOverriddenForConfigGoHereREADME.txt

@@ -536,22 +536,26 @@ namespace BuildConfigGen
 
             var inputVersion = GetInputVersion(taskTarget);
 
-            if (ReadVersionMap(versionMapFile, out versionMap, out var maxVersionNullable))
-            {
-                maxVersion = maxVersionNullable!;
-            }
-            else
-            {
-                maxVersion = inputVersion;
-            }
+            bool defaultVersionMatchesSourceVersion;
 
-            TaskVersion defaultVersion = versionMap[Config.Default.name];
-
-            bool defaultVersionMatchesSourceVersion = defaultVersion == inputVersion;
-
-            if (inputVersion <= maxVersion && !defaultVersionMatchesSourceVersion)
             {
-                throw new Exception($"inputVersion={inputVersion} version specified in task taskTarget={taskTarget} must not be less or equal to maxversion maxVersion={maxVersion} specified in versionMapFile{versionMapFile}, or must match defaultVersion={defaultVersion} in {versionMapFile}");
+                TaskVersion? defaultVersion = null;
+                if (ReadVersionMap(versionMapFile, out versionMap, out var maxVersionNullable))
+                {
+                    maxVersion = maxVersionNullable!;
+                    defaultVersion = versionMap[Config.Default.name];
+                    defaultVersionMatchesSourceVersion = defaultVersion == inputVersion;
+                }
+                else
+                {
+                    maxVersion = inputVersion;
+                    defaultVersionMatchesSourceVersion = true;
+                }
+
+                if (inputVersion <= maxVersion && !defaultVersionMatchesSourceVersion)
+                {
+                    throw new Exception($"inputVersion={inputVersion} version specified in task taskTarget={taskTarget} must not be less or equal to maxversion maxVersion={maxVersion} specified in versionMapFile{versionMapFile}, or must match defaultVersion={defaultVersion} in {versionMapFile}");
+                }
             }
 
             configTaskVersionMapping = new();

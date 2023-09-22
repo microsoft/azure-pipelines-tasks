@@ -71,7 +71,7 @@ internal class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
 
     public TaskVersion CloneWithMinorAndPatch(int minor, int overridePatch)
     {
-        return new TaskVersion(Major, Minor, overridePatch);
+        return new TaskVersion(Major, minor, overridePatch);
     }
 
     public TaskVersion CloneWithPatch(int overridePatch)
