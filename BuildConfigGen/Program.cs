@@ -185,23 +185,6 @@ namespace BuildConfigGen
                 if (config.isDefault)
                 {
                     taskOutput = Path.Combine(gitRootPath, "_generated", task);
-
-                    if (defaultVersionLessThanConfigs)
-                    {
-                        // It's no longer necessary to write the mapping to the 'default' configuration, as the 'base' version will be the lowest
-                        // so there is no need to generate the 'default' configuration
-
-                        if (Directory.Exists(taskOutput))
-                        {
-                            ensureUpdateModeVerifier!.DeleteDirectoryRecursive(taskOutput);
-                        }
-
-                        continue;
-                    }
-                    else
-                    {
-                        // for rebuilding existing tasks where version is not changed, don't force deleting the default generated task
-                    }
                 }
                 else
                 {
