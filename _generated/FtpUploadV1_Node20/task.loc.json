@@ -18,8 +18,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 228,
-    "Patch": 0
+    "Minor": 229,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -197,7 +197,7 @@
     "UploadSucceedRes": "ms-resource:loc.messages.UploadSucceedRes"
   },
   "_buildConfigMapping": {
-    "Default": "1.211.0",
-    "Node20-225": "1.228.0"
+    "Default": "1.229.0",
+    "Node20-225": "1.229.1"
   }
 }

@@ -21,8 +21,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 228,
-    "Patch": 0
+    "Minor": 229,
+    "Patch": 1
   },
   "minimumAgentVersion": "1.91.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -75,7 +75,7 @@
     "CMakeFailed": "ms-resource:loc.messages.CMakeFailed"
   },
   "_buildConfigMapping": {
-    "Default": "1.212.0",
-    "Node20-225": "1.228.0"
+    "Default": "1.229.0",
+    "Node20-225": "1.229.1"
   }
 }

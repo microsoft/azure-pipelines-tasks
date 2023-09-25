@@ -18,7 +18,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 228,
+    "Minor": 229,
     "Patch": 0
   },
   "minimumAgentVersion": "2.182.1",
@@ -216,7 +216,7 @@
     "UploadFailed": "ms-resource:loc.messages.UploadFailed"
   },
   "_buildConfigMapping": {
-    "Default": "2.228.0",
-    "Node20-225": "2.228.1"
+    "Default": "2.229.0",
+    "Node20-225": "2.229.1"
   }
 }

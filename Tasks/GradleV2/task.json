@@ -1,23 +1,34 @@
 {
-    "id": "8D8EEBD8-2B94-4C97-85AF-839254CC6DA4",
-    "name": "Gradle",
-    "friendlyName": "Gradle",
-    "description": "Build using a Gradle wrapper script",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/gradle",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613720) or [see the Gradle documentation](https://docs.gradle.org/current/userguide/userguide.html)",
-    "category": "Build",
-    "visibility": [
-        "Build"
-    ],
-    "runsOn": [
-        "Agent",
-        "DeploymentGroup"
-    ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 2,
-        "Minor": 229,
-        "Patch": 0
+  "id": "8D8EEBD8-2B94-4C97-85AF-839254CC6DA4",
+  "name": "Gradle",
+  "friendlyName": "Gradle",
+  "description": "Build using a Gradle wrapper script",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/gradle",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613720) or [see the Gradle documentation](https://docs.gradle.org/current/userguide/userguide.html)",
+  "category": "Build",
+  "visibility": [
+    "Build"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 229,
+    "Patch": 0
+  },
+  "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
+  "demands": [
+    "java"
+  ],
+  "minimumAgentVersion": "1.91.0",
+  "groups": [
+    {
+      "name": "junitTestResults",
+      "displayName": "JUnit Test Results",
+      "isExpanded": true
     },
     {
       "name": "codeCoverage",

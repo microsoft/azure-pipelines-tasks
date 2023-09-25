@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@types/mocha": "^9.1.1",
-    "@types/node": "^20.6.3",
+    "@types/node": "^20.6.5",
     "@types/q": "^1.5.4",
     "azure-pipelines-task-lib": "^4.6.0",
     "azure-pipelines-tasks-codeanalysis-common": "2.223.0",

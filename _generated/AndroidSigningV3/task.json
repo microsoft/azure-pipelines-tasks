@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 227,
+    "Minor": 229,
     "Patch": 0
   },
   "releaseNotes": "This version of the task uses apksigner instead of jarsigner to sign APKs.",
@@ -220,7 +220,7 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "3.227.0",
-    "Node20-225": "3.228.0"
+    "Default": "3.229.0",
+    "Node20-225": "3.229.1"
   }
 }
