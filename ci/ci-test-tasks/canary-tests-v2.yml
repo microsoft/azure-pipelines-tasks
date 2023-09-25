@@ -1,5 +1,6 @@
-pr:
+trigger:
   - master
+  - releases/*
 
 jobs:
 - job: detect_changes
