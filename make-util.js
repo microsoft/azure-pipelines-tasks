@@ -1786,7 +1786,8 @@ exports.renameCodeCoverageOutput = renameCodeCoverageOutput;
 
 /**
  * Returns path to BuldConfigGenerator, build it if needed.  Fail on compilation failure
- * @returns Path to the executed file
+ * @param {String} baseConfigToolPath base build config tool path
+ * @returns {String} Path to the executed file
  */
 var getBuildConfigGenerator = function (baseConfigToolPath) {
     var programPath = "";
@@ -1900,7 +1901,7 @@ exports.generateTasks = generateTasks;
  * and copy files from generated to source if needed
  */
 function syncGeneratedFilesWrapper(originalFunction, genTaskPath, callGenTaskDuringBuild = false) {
-    const allowedFilesToCopy = ["package.json", "package-lock.json"];
+    const allowedFilesToCopy = ["package.json", "package-lock.json", "npm-shrinkwrap.json"];
     const genTaskBasePath = path.basename(genTaskPath);
 
     if (!originalFunction || originalFunction instanceof Function === false) throw Error('originalFunction is not defined');

@@ -189,7 +189,7 @@ export function validateFileArgs(inputArguments: string): void {
                     ...expandTelemetry ?? {},
                     ...sanitizeTelemetry ?? {}
                 };
-                emitTelemetry('TaskHub', 'BashV3', telemetry);
+                emitTelemetry('TaskHub', 'PowerShellV2', telemetry);
             }
             if (sanitizedArgs !== expandedArgs) {
                 const message = tl.loc('ScriptArgsSanitized');
