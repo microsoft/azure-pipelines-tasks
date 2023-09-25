@@ -1,34 +1,24 @@
 {
-  "id": "3A6A2D63-F2B2-4E93-BCF9-0CBE22F5DC26",
-  "name": "Ant",
-  "friendlyName": "Ant",
-  "description": "Build with Apache Ant",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/ant",
-  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613718) or [see the Ant documentation](http://ant.apache.org/)",
-  "category": "Build",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "runsOn": [
-    "Agent",
-    "DeploymentGroup"
-  ],
-  "author": "Microsoft Corporation",
-  "version": {
-    "Major": 1,
-    "Minor": 212,
-    "Patch": 0
-  },
-  "demands": [
-    "ant"
-  ],
-  "minimumAgentVersion": "1.89.0",
-  "groups": [
-    {
-      "name": "junitTestResults",
-      "displayName": "JUnit Test Results",
-      "isExpanded": true
+    "id": "3A6A2D63-F2B2-4E93-BCF9-0CBE22F5DC26",
+    "name": "Ant",
+    "friendlyName": "Ant",
+    "description": "Build with Apache Ant",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/ant",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613718) or [see the Ant documentation](http://ant.apache.org/)",
+    "category": "Build",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 229,
+        "Patch": 0
     },
     {
       "name": "codeCoverage",
