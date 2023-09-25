@@ -1,5 +1,6 @@
-pr:
+trigger:
   - master
+  - releases/*
 
 jobs:
 - job: detect_changes
@@ -18,6 +19,7 @@ jobs:
   displayName: Run main test pipeline
   condition: and(succeeded(),gt(length(dependencies.detect_changes.outputs['detect.TASKS']), 0))
   dependsOn: detect_changes
+  timeoutInMinutes: 180
   variables:
       - name: tasks
         value: $[dependencies.detect_changes.outputs['detect.TASKS']]
