@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 228,
-    "Patch": 3
+    "Minor": 229,
+    "Patch": 0
   },
   "satisfies": [
     "DotNetCore"
@@ -196,7 +196,7 @@
   },
   "_buildConfigMapping": {
     "Default": "2.228.1",
-    "Node16-225": "2.228.3",
+    "Node16-225": "2.229.0",
     "Node20-225": "2.228.2"
   }
 }
