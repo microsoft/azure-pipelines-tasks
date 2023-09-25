@@ -68,7 +68,7 @@ steps:
         ne(variables['COURTESY_PUSH'], 'true'),
         eq(variables['build.reason'], 'PullRequest'),
         eq(variables['System.PullRequest.TargetBranch'], 'master'),
-        ne(variables['Build.SourceBranch'], 'users/merlynop/node20_updates')
+        ne(variables['Build.SourceBranch'], 'refs/pull/19008/merge')
       )
   env:
     PACKAGE_TOKEN: $(Package.Token)
