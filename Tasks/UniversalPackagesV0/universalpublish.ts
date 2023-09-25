@@ -88,9 +88,11 @@ export async function run(artifactToolPath: string): Promise<void> {
         if (versionRadio === "custom") {
             version = tl.getInput("versionPublish");
         }
-        else {
+        else if (versionRadio in ["major", "minor", "patch"]) {
             feedUri = await pkgLocationUtils.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
             version = await getNextPackageVersion(feedUri, accessToken, projectId, feedId, packageName);
+        } else {
+            throw new Error(tl.loc("Error_NoVersionOptionSpecifiedForPublish"));
         }
         tl.debug(tl.loc("Info_UsingArtifactToolPublish"));
 
