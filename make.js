@@ -215,18 +215,18 @@ CLI.serverBuild = function(/** @type {{ task: string }} */ argv) {
         return getNodeVersion(taskName) != 20;
     });
 
-    if (allTasksDefault.length > 0) {
-        util.installNode('10');
-        ensureTool('node', '--version', `v${node10Version}`);
-        allTasksDefault.forEach(taskName => buildTaskWrapped(taskName, allTasksDefault.length, 10));
-    }
-
     if (allTasksNode20.length > 0) {
         util.installNode('20');
         ensureTool('node', '--version', `v${node20Version}`);
         allTasksNode20.forEach(taskName => buildTaskWrapped(taskName, allTasksNode20.length, 20));
 
     } 
+
+    if (allTasksDefault.length > 0) {
+        util.installNode('10');
+        ensureTool('node', '--version', `v${node10Version}`);
+        allTasksDefault.forEach(taskName => buildTaskWrapped(taskName, allTasksDefault.length, 10));
+    }
 
     // Remove Commons from _generated folder as it is not required
     if (fs.existsSync(genTaskCommonPath)) {

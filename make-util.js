@@ -1894,28 +1894,6 @@ exports.generateTasks = generateTasks;
 
 
 /**
- * Function to check is file are identical in git
- * @param {String} sourcePath Path to source file
- * @param {String} destinationPath Path to destination file
- * @returns {Boolean} 
- **/
-function isGitFilesIdentical(sourcePath, destinationPath) {
-    let isIdentical = true;
-    
-    try {
-        ncp.execSync(`git diff --no-index ${sourcePath} ${destinationPath} --numstat`);
-    } catch (error) {
-        const message = error.output ? error.output.toString() : error.message;
-        // If we found some diff, we need to copy the file, otherwise throw error
-        if (!message.indexOf(sourcePath)) throw error;
-
-        isIdentical = false;
-    } 
-
-    return isIdentical;
-}
-
-/**
  * Wrapper for buildTask function which compares diff between source and generated tasks
  * @param {Function} originalFunction - Original buildTask function
  * @param {string} basicGenTaskPath - path to generated folder
@@ -1953,15 +1931,14 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTa
         copyCandidates.forEach((candidatePath) => {
             const relativePath = path.relative(genTaskPath, candidatePath);
             let dest = path.join(__dirname, 'Tasks', baseTaskName, relativePath);
-            let isIdentical = false;
 
             if (config) {  
-                isIdentical = isGitFilesIdentical(candidatePath, dest);             
                 dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
             }
             
-            // if the destination path doesn't exist in _buildConfigs, and the files are identical, we don't need to copy them
-            if (!fs.existsSync(dest) && isIdentical) return
+            // if the destination path doesn't exist in Task/_buildConfigs, 
+            // we assume that the file was added by the generator from the source and will be handles while we build default task version
+            if (!fs.existsSync(dest) && config) return
             
             const folderPath = path.dirname(dest);
             if (!fs.existsSync(folderPath)) {
