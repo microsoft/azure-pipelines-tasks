@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 228,
+    "Minor": 229,
     "Patch": 0
   },
   "demands": [
@@ -198,6 +198,6 @@
   },
   "_buildConfigMapping": {
     "Default": "1.217.0",
-    "Node20-225": "1.228.0"
+    "Node20-225": "1.229.0"
   }
 }

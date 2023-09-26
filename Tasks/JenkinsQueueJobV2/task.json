@@ -1,167 +1,167 @@
 {
-  "id": "c24b86d4-4256-4925-9a29-246f81aa64a7",
-  "name": "JenkinsQueueJob",
-  "friendlyName": "Jenkins queue job",
-  "description": "Queue a job on a Jenkins server",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/jenkins-queue-job",
-  "helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=816956). This task queues a job on a [Jenkins](https://jenkins.io/) server. Full integration capabilities require installation of the [Team Foundation Server Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Team+Foundation+Server+Plugin) on Jenkins.",
-  "category": "Build",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "author": "Microsoft",
-  "demands": [],
-  "version": {
-    "Major": 2,
-    "Minor": 217,
-    "Patch": 0
-  },
-  "groups": [
-    {
-      "name": "advanced",
-      "displayName": "Advanced",
-      "isExpanded": true
+    "id": "c24b86d4-4256-4925-9a29-246f81aa64a7",
+    "name": "JenkinsQueueJob",
+    "friendlyName": "Jenkins queue job",
+    "description": "Queue a job on a Jenkins server",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/jenkins-queue-job",
+    "helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=816956). This task queues a job on a [Jenkins](https://jenkins.io/) server. Full integration capabilities require installation of the [Team Foundation Server Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Team+Foundation+Server+Plugin) on Jenkins.",
+    "category": "Build",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft",
+    "demands": [],
+    "version": {
+        "Major": 2,
+        "Minor": 217,
+        "Patch": 0
+    },
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": true
+        }
+    ],
+    "minimumAgentVersion":  "2.144.0",
+    "instanceNameFormat": "Queue Jenkins job: $(jobName)",
+    "inputs": [
+        {
+            "name": "serverEndpoint",
+            "type": "connectedService:Jenkins",
+            "label": "Jenkins service connection",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the service connection for your Jenkins instance.  To create one, click the Manage link and create a new Jenkins service connection."
+        },
+        {
+            "name": "jobName",
+            "type": "string",
+            "label": "Job name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The name of the Jenkins job to queue.  This must exactly match the job name on the Jenkins server."
+        },
+        {
+            "name": "isMultibranchJob",
+            "type": "boolean",
+            "label": "Job is of multibranch pipeline type",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "This job is of multibranch pipeline type.  If selected, enter the appropriate branch name. Requires Team Foundation Server Plugin for Jenkins v5.3.4 or later."
+        },
+        {
+            "name": "multibranchPipelineBranch",
+            "type": "string",
+            "label": "Multibranch pipeline branch",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "isMultibranchJob = true",
+            "helpMarkDown": "Queue this multibranch pipeline job on the specified branch. This requires Team Foundation Server Plugin for Jenkins v5.3.4 or later."
+        },
+        {
+            "name": "captureConsole",
+            "type": "boolean",
+            "label": "Capture console output and wait for completion",
+            "defaultValue": true,
+            "required": true,
+            "helpMarkDown": "If selected, this task will capture the Jenkins build console output, wait for the Jenkins build to complete, and succeed/fail based on the Jenkins build result.  Otherwise, once the Jenkins job is successfully queued, this task will successfully complete without waiting for the Jenkins build to run."
+        },
+        {
+            "name": "capturePipeline",
+            "type": "boolean",
+            "label": "Capture pipeline output and wait for pipeline completion",
+            "defaultValue": true,
+            "required": true,
+            "helpMarkDown": "If selected, this task will capture the full Jenkins build pipeline console output, wait for the full Jenkins build pipeline to complete, and succeed/fail based on the Jenkins build pipeline result.  Otherwise, once the first Jenkins job completes, this task will successfully complete without waiting for full Jenkins build pipeline to run.",
+            "visibleRule": "captureConsole = true"
+        },
+        {
+            "name": "parameterizedJob",
+            "aliases": [
+                "isParameterizedJob"
+            ],
+            "type": "boolean",
+            "label": "Parameterized job",
+            "defaultValue": false,
+            "required": true,
+            "helpMarkDown": "Select if the Jenkins job accepts parameters. This should be selected even if all default parameter values are used and no parameters are actually specified.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "jobParameters",
+            "type": "multiLine",
+            "label": "Job parameters",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specify job parameters, one per line, in the form <b>`<parameterName>=<parameterValue>`</b><p>To set a parameter to an empty value (useful for overriding a default value), leave off the parameter value. For example, specify <b>`<parameterName>=`</b><p>Variables are supported. For example, to set a <b>`commitId`</b> parameter value to the Git commit ID of the build, use: <b>`commitId=$(Build.SourceVersion)`</b>. See the [documentation on variables](https://go.microsoft.com/fwlink/?linkid=875288) for more details.<p>Supported Jenkins parameter types are: <ul><li>`Boolean`</li><li>`Choice`</li><li>`Password`</li><li>`String`</li></ul>",
+            "groupName": "advanced",
+            "visibleRule": "parameterizedJob = true",
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            }
+        },
+        {
+            "name": "failOnUnstableResult",
+            "type": "boolean",
+            "label": "Fail on unstable result",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Specifies strictness of a success definition: whether to consider unstable as a failure or not. False for non-strict, and true for strict version.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "retryCount",
+            "type": "string",
+            "label": "Number of retries for failed connection",
+            "defaultValue": "3",
+            "required": false,
+            "helpMarkDown": "Specify number of retries on errors or failures",
+            "groupName": "advanced"
+        },
+        {
+            "name": "delayBetweenRetries",
+            "type": "string",
+            "label": "Time between retries",
+            "defaultValue": "60",
+            "required": false,
+            "helpMarkDown": "Specify time between retries. This is specified in seconds",
+            "groupName": "advanced"
+        }
+    ],
+    "outputVariables": [
+        {
+            "name": "JENKINS_JOB_ID",
+            "description": "The ID of the Jenkins job instance queued by this task. Use this variable in the Jenkins Download Artifacts task to download the artifacts for this particular job instance."
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "jenkinsqueuejobtask.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
+            "target": "jenkinsqueuejobtask.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "FailedToGenerateSummary": "Failed to generate build summary.",
+        "succeeded": "succeeded",
+        "unstable": "unstable",
+        "failed": "failed",
+        "notbuilt": "not built",
+        "aborted": "aborted",
+        "unknown": "unknown",
+        "console": "console",
+        "JenkinsPipelineComplete": "Jenkins pipeline complete",
+        "JenkinsJobComplete": "Jenkins job complete",
+        "JenkinsJobQueued": "Jenkins job queued",
+        "JenkinsPipelineFailed": "Jenkins pipeline failed",
+        "JenkinsJobFailed": "Jenkins job failed",
+        "JenkinsJobFailedtoQueue": "Jenkins job failed to queue",
+        "JenkinsJobQueueUriInvalid": "The URI of the job queue returned by Jenkins could not be reached (%s).  Verify the 'Jenkins URL' is configured correctly on your Jenkins server under `Manage Jenkins`, `Configure System`.  Error details: %s"
     }
-  ],
-  "minimumAgentVersion": "2.144.0",
-  "instanceNameFormat": "Queue Jenkins job: $(jobName)",
-  "inputs": [
-    {
-      "name": "serverEndpoint",
-      "type": "connectedService:Jenkins",
-      "label": "Jenkins service connection",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Select the service connection for your Jenkins instance.  To create one, click the Manage link and create a new Jenkins service connection."
-    },
-    {
-      "name": "jobName",
-      "type": "string",
-      "label": "Job name",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "The name of the Jenkins job to queue.  This must exactly match the job name on the Jenkins server."
-    },
-    {
-      "name": "isMultibranchJob",
-      "type": "boolean",
-      "label": "Job is of multibranch pipeline type",
-      "defaultValue": false,
-      "required": false,
-      "helpMarkDown": "This job is of multibranch pipeline type.  If selected, enter the appropriate branch name. Requires Team Foundation Server Plugin for Jenkins v5.3.4 or later."
-    },
-    {
-      "name": "multibranchPipelineBranch",
-      "type": "string",
-      "label": "Multibranch pipeline branch",
-      "defaultValue": "",
-      "required": true,
-      "visibleRule": "isMultibranchJob = true",
-      "helpMarkDown": "Queue this multibranch pipeline job on the specified branch. This requires Team Foundation Server Plugin for Jenkins v5.3.4 or later."
-    },
-    {
-      "name": "captureConsole",
-      "type": "boolean",
-      "label": "Capture console output and wait for completion",
-      "defaultValue": true,
-      "required": true,
-      "helpMarkDown": "If selected, this task will capture the Jenkins build console output, wait for the Jenkins build to complete, and succeed/fail based on the Jenkins build result.  Otherwise, once the Jenkins job is successfully queued, this task will successfully complete without waiting for the Jenkins build to run."
-    },
-    {
-      "name": "capturePipeline",
-      "type": "boolean",
-      "label": "Capture pipeline output and wait for pipeline completion",
-      "defaultValue": true,
-      "required": true,
-      "helpMarkDown": "If selected, this task will capture the full Jenkins build pipeline console output, wait for the full Jenkins build pipeline to complete, and succeed/fail based on the Jenkins build pipeline result.  Otherwise, once the first Jenkins job completes, this task will successfully complete without waiting for full Jenkins build pipeline to run.",
-      "visibleRule": "captureConsole = true"
-    },
-    {
-      "name": "parameterizedJob",
-      "aliases": [
-        "isParameterizedJob"
-      ],
-      "type": "boolean",
-      "label": "Parameterized job",
-      "defaultValue": false,
-      "required": true,
-      "helpMarkDown": "Select if the Jenkins job accepts parameters. This should be selected even if all default parameter values are used and no parameters are actually specified.",
-      "groupName": "advanced"
-    },
-    {
-      "name": "jobParameters",
-      "type": "multiLine",
-      "label": "Job parameters",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Specify job parameters, one per line, in the form <b>`<parameterName>=<parameterValue>`</b><p>To set a parameter to an empty value (useful for overriding a default value), leave off the parameter value. For example, specify <b>`<parameterName>=`</b><p>Variables are supported. For example, to set a <b>`commitId`</b> parameter value to the Git commit ID of the build, use: <b>`commitId=$(Build.SourceVersion)`</b>. See the [documentation on variables](https://go.microsoft.com/fwlink/?linkid=875288) for more details.<p>Supported Jenkins parameter types are: <ul><li>`Boolean`</li><li>`Choice`</li><li>`Password`</li><li>`String`</li></ul>",
-      "groupName": "advanced",
-      "visibleRule": "parameterizedJob = true",
-      "properties": {
-        "resizable": "true",
-        "rows": "4"
-      }
-    },
-    {
-      "name": "failOnUnstableResult",
-      "type": "boolean",
-      "label": "Fail on unstable result",
-      "defaultValue": false,
-      "required": false,
-      "helpMarkDown": "Specifies strictness of a success definition: whether to consider unstable as a failure or not. False for non-strict, and true for strict version.",
-      "groupName": "advanced"
-    },
-    {
-      "name": "retryCount",
-      "type": "string",
-      "label": "Number of retries for failed connection",
-      "defaultValue": "3",
-      "required": false,
-      "helpMarkDown": "Specify number of retries on errors or failures",
-      "groupName": "advanced"
-    },
-    {
-      "name": "delayBetweenRetries",
-      "type": "string",
-      "label": "Time between retries",
-      "defaultValue": "60",
-      "required": false,
-      "helpMarkDown": "Specify time between retries. This is specified in seconds",
-      "groupName": "advanced"
-    }
-  ],
-  "outputVariables": [
-    {
-      "name": "JENKINS_JOB_ID",
-      "description": "The ID of the Jenkins job instance queued by this task. Use this variable in the Jenkins Download Artifacts task to download the artifacts for this particular job instance."
-    }
-  ],
-  "execution": {
-    "Node10": {
-      "target": "jenkinsqueuejobtask.js",
-      "argumentFormat": ""
-    },
-    "Node16": {
-      "target": "jenkinsqueuejobtask.js",
-      "argumentFormat": ""
-    }
-  },
-  "messages": {
-    "FailedToGenerateSummary": "Failed to generate build summary.",
-    "succeeded": "succeeded",
-    "unstable": "unstable",
-    "failed": "failed",
-    "notbuilt": "not built",
-    "aborted": "aborted",
-    "unknown": "unknown",
-    "console": "console",
-    "JenkinsPipelineComplete": "Jenkins pipeline complete",
-    "JenkinsJobComplete": "Jenkins job complete",
-    "JenkinsJobQueued": "Jenkins job queued",
-    "JenkinsPipelineFailed": "Jenkins pipeline failed",
-    "JenkinsJobFailed": "Jenkins job failed",
-    "JenkinsJobFailedtoQueue": "Jenkins job failed to queue",
-    "JenkinsJobQueueUriInvalid": "The URI of the job queue returned by Jenkins could not be reached (%s).  Verify the 'Jenkins URL' is configured correctly on your Jenkins server under `Manage Jenkins`, `Configure System`.  Error details: %s"
-  }
 }
