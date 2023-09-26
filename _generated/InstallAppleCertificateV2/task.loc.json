@@ -1,0 +1,187 @@
+{
+  "id": "d2eff759-736d-4b7b-8554-7ba0960d49d6",
+  "name": "InstallAppleCertificate",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/install-apple-certificate",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 227,
+    "Patch": 0
+  },
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [
+    "xcode"
+  ],
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": true
+    }
+  ],
+  "minimumAgentVersion": "2.182.1",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "certSecureFile",
+      "type": "secureFile",
+      "label": "ms-resource:loc.input.label.certSecureFile",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.certSecureFile"
+    },
+    {
+      "name": "certPwd",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.certPwd",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.certPwd"
+    },
+    {
+      "name": "keychain",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.keychain",
+      "defaultValue": "temp",
+      "required": true,
+      "options": {
+        "default": "Default Keychain",
+        "temp": "Temporary Keychain",
+        "custom": "Custom Keychain"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.keychain",
+      "groupName": "advanced"
+    },
+    {
+      "name": "keychainPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.keychainPassword",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.keychainPassword",
+      "visibleRule": "keychain = custom || keychain = default",
+      "groupName": "advanced"
+    },
+    {
+      "name": "customKeychainPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customKeychainPath",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.customKeychainPath",
+      "visibleRule": "keychain = custom",
+      "groupName": "advanced"
+    },
+    {
+      "name": "deleteCert",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.deleteCert",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.deleteCert",
+      "visibleRule": "keychain = custom || keychain = default",
+      "groupName": "advanced"
+    },
+    {
+      "name": "deleteCustomKeychain",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.deleteCustomKeychain",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.deleteCustomKeychain",
+      "visibleRule": "keychain = custom",
+      "groupName": "advanced"
+    },
+    {
+      "name": "signingIdentity",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.signingIdentity",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.signingIdentity",
+      "groupName": "advanced"
+    },
+    {
+      "name": "setUpPartitionIdACLForPrivateKey",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.setUpPartitionIdACLForPrivateKey",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.setUpPartitionIdACLForPrivateKey",
+      "groupName": "advanced"
+    },
+    {
+      "name": "opensslPkcsArgs",
+      "type": "string",
+      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.opensslPkcsArgs",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.opensslPkcsArgs",
+      "groupName": "advanced"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "signingIdentity",
+      "description": "The resolved Common Name of the subject in the signing certificate. Either supplied as an input or parsed from the P12 certificate file."
+    },
+    {
+      "name": "keychainPath",
+      "description": "The path for the keychain file with the certificate."
+    }
+  ],
+  "prejobexecution": {
+    "Node10": {
+      "target": "preinstallcert.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "preinstallcert.js",
+      "argumentFormat": ""
+    }
+  },
+  "postjobexecution": {
+    "Node10": {
+      "target": "postinstallcert.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "postinstallcert.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "signingIdentity",
+        "keychainPassword",
+        "keychainPath",
+        "APPLE_CERTIFICATE_SIGNING_IDENTITY",
+        "APPLE_CERTIFICATE_KEYCHAIN"
+      ]
+    }
+  },
+  "messages": {
+    "INVALID_P12": "ms-resource:loc.messages.INVALID_P12",
+    "NoP12PwdWarning": "ms-resource:loc.messages.NoP12PwdWarning",
+    "P12PrivateKeyNameNotFound": "ms-resource:loc.messages.P12PrivateKeyNameNotFound",
+    "SetKeyPartitionListCommandNotFound": "ms-resource:loc.messages.SetKeyPartitionListCommandNotFound",
+    "SetKeyPartitionListCommandFailed": "ms-resource:loc.messages.SetKeyPartitionListCommandFailed",
+    "InstallRequiresMac": "ms-resource:loc.messages.InstallRequiresMac",
+    "CertNotValidYetError": "ms-resource:loc.messages.CertNotValidYetError",
+    "CertExpiredError": "ms-resource:loc.messages.CertExpiredError",
+    "OpenSSLError": "ms-resource:loc.messages.OpenSSLError"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.227.0",
+    "Node20-225": "2.229.0"
+  }
+}
