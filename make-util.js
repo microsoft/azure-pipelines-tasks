@@ -1953,9 +1953,10 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTa
         copyCandidates.forEach((candidatePath) => {
             const relativePath = path.relative(genTaskPath, candidatePath);
             let dest = path.join(__dirname, 'Tasks', baseTaskName, relativePath);
-            let isIdentical = config && isGitFilesIdentical(candidatePath, dest);
+            let isIdentical = false;
 
-            if (config) {               
+            if (config) {  
+                isIdentical = isGitFilesIdentical(candidatePath, dest);             
                 dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
             }
             
