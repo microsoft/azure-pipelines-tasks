@@ -248,7 +248,6 @@
         "DownloadSecureFileV1",
         "ExtractFilesV1",
         "FtpUploadV1",
-        "GradleV2",
         "GruntV0",
         "GulpV0",
         "GulpV1",
