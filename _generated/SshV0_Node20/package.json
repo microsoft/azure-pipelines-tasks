@@ -5,7 +5,7 @@
   },
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^20.7.0",
+    "@types/node": "^20.3.1",
     "@types/q": "^1.0.7",
     "@types/ssh2": "1.11.6",
     "@types/ssh2-sftp-client": "^5.2.0",

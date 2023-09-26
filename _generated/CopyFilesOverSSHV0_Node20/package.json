@@ -18,7 +18,7 @@
   "homepage": "https://github.com/Microsoft.com/vsts-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^20.7.0",
+    "@types/node": "^20.3.1",
     "azure-pipelines-task-lib": "^4.0.0-preview",
     "minimatch": "^3.0.4",
     "ssh2": "^1.4.0",
