@@ -1892,6 +1892,29 @@ var generateTasks = function(baseConfigToolPath, taskList, configsString, makeOp
 }
 exports.generateTasks = generateTasks;
 
+
+/**
+ * Function to check is file are identical in git
+ * @param {String} sourcePath Path to source file
+ * @param {String} destinationPath Path to destination file
+ * @returns {Boolean} 
+ **/
+function isGitFilesIdentical(sourcePath, destinationPath) {
+    let isIdentical = true;
+    
+    try {
+        ncp.execSync(`git diff --no-index ${sourcePath} ${destinationPath} --numstat`);
+    } catch (error) {
+        const message = error.output ? error.output.toString() : error.message;
+        // If we found some diff, we need to copy the file, otherwise throw error
+        if (!message.indexOf(sourcePath)) throw error;
+
+        isIdentical = false;
+    } 
+
+    return isIdentical;
+}
+
 /**
  * Wrapper for buildTask function which compares diff between source and generated tasks
  * @param {Function} originalFunction - Original buildTask function
@@ -1914,30 +1937,39 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTa
 
         // if it's not a generated task, we don't need to sync files
         if (!fs.existsSync(genTaskPath)) return;
-        const [baseTaskName, config] = taskName.split("_");
 
-        runtimeChangedFiles.forEach((fileName) => {
-            const filePath = path.join(genTaskPath, fileName);
-            if (!fs.existsSync(filePath)) return;
+        const [ baseTaskName, config ] = taskName.split("_");
+        const copyCandidates = shell.find(genTaskPath)
+            .filter(function (item) { 
+                // ignore node_modules
+                if (item.indexOf("node_modules") !== -1) return false
+                // ignore everything except package.json, package-lock.json, npm-shrinkwrap.json
+                if (!runtimeChangedFiles.some((pattern) => item.indexOf(pattern) !== -1)) return false;
+                
+                return path.normalize(item) != root;
+            });
+
+
+        copyCandidates.forEach((candidatePath) => {
+            const relativePath = path.relative(genTaskPath, candidatePath);
+            let dest = path.join(__dirname, 'Tasks', baseTaskName, relativePath);
+            let isIdentical = config && isGitFilesIdentical(candidatePath, dest);
+
+            if (config) {               
+                dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
+            }
             
-            let dest = path.join(__dirname, 'Tasks', baseTaskName, fileName);
-            if (config) {
-                dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, fileName);
+            // if the destination path doesn't exist in _buildConfigs, and the files are identical, we don't need to copy them
+            if (!fs.existsSync(dest) && isIdentical) return
+            
+            const folderPath = path.dirname(dest);
+            if (!fs.existsSync(folderPath)) {
+                console.log(`Creating folder ${folderPath}`);
+                shell.mkdir('-p', folderPath);
             }
 
-            // Prefer execSync instead of run, because gir diff throw error if there is a diff between files
-            try {
-                ncp.execSync(`git diff --no-index ${filePath} ${dest} --numstat`);
-                console.log(`${filePath} and ${dest} are identical`);
-            } catch (error) {
-                const message = error.output ? error.output.toString() : error.message;
-
-                // If we found some diff, we need to copy the file
-                if (message.indexOf(fileName)) {
-                    console.log(`Copying from ${filePath} to ${dest}`);
-                    fs.copyFileSync(filePath, dest);
-                }
-            }
+            console.log(`Copying ${candidatePath} to ${dest}`);
+            fs.copyFileSync(candidatePath, dest);
         });
     }
 }
