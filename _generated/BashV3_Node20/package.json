@@ -19,7 +19,7 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^9.1.1",
-    "@types/node": "^20.6.5",
+    "@types/node": "^20.7.0",
     "azure-pipelines-task-lib": "^4.4.0",
     "azure-pipelines-tasks-utility-common": "^3.225.1",
     "uuid": "^3.0.1"

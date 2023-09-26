@@ -8,7 +8,7 @@
     "test": "node ../../make.js test --task NodeTaskRunnerInstallerV0"
   },
   "dependencies": {
-    "@types/node": "^20.6.5",
+    "@types/node": "^20.7.0",
     "azure-pipelines-task-lib": "^4.2.0",
     "azure-pipelines-tool-lib": "^2.0.0-preview"
   },
