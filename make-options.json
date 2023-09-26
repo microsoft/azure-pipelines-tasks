@@ -267,6 +267,6 @@
         "SshV0",
         "UseDotNetV2",
         "UseNodeV1",
-        "UsePythonVersionV0",
+        "UsePythonVersionV0"
     ]
 }
