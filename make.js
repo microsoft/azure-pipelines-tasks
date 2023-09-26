@@ -206,7 +206,7 @@ CLI.serverBuild = function(/** @type {{ task: string }} */ argv) {
 
     util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, callGenTaskDuringBuild);
 
-    // Ensure we wrap build function after generator's changes to store only files that changes after the build 
+    // Wrap build function  to store files that changes after the build 
     const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTask, genTaskPath, callGenTaskDuringBuild);
     const allTasksNode20 = allTasks.filter((taskName) => {
         return getNodeVersion(taskName) == 20;
@@ -240,14 +240,14 @@ function getNodeVersion (taskName) {
     // We prefer tasks in _generated folder because they might contain node20 version
     // while the tasks in Tasks/ folder still could use only node16 handler 
     if (fs.existsSync(packageJsonPath)) {
-        console.log(`Found package.json for ${taskName} in _generated folder`);
+        console.log(`Found package.json for ${taskName} in _generated folder ${packageJsonPath}`);
     } else {
         packageJsonPath = path.join(tasksPath, taskName, "package.json");
         if (!fs.existsSync(packageJsonPath)) {
             console.error(`Unable to find package.json file for ${taskName} in _generated folder or Tasks folder, using default node 10.`);
             return 10;
         }
-        console.log(`Found package.json for ${taskName} in Tasks folder`)
+        console.log(`Found package.json for ${taskName} in Tasks folder ${packageJsonPath}`)
     }
 
     var packageJsonContents = fs.readFileSync(packageJsonPath, { encoding: 'utf-8' });
@@ -255,6 +255,7 @@ function getNodeVersion (taskName) {
     if (packageJson.dependencies && packageJson.dependencies["@types/node"]) {
         // Extracting major version from the node version
         const nodeVersion = packageJson.dependencies["@types/node"].replace('^', '');
+        console.log(`Node verion from @types/node in package.json is ${nodeVersion} returning ${nodeVersion.split('.')[0]}`);
         return nodeVersion.split('.')[0];
     } else {
         console.log("Node version not found in dependencies, using default node 10.");

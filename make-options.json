@@ -240,8 +240,6 @@
         "CMakeV1",
         "CmdLineV2",
         "CocoaPodsV0",
-        "CondaEnvironmentV0",
-        "CondaEnvironmentV1",
         "CopyFilesV2",
         "CopyFilesOverSSHV0",
         "CUrlUploaderV2",
@@ -250,7 +248,6 @@
         "DownloadSecureFileV1",
         "ExtractFilesV1",
         "FtpUploadV1",
-        "FtpUploadV2",
         "GradleV2",
         "GruntV0",
         "GulpV0",
@@ -259,7 +256,6 @@
         "InstallAppleProvisioningProfileV1",
         "InstallSSHKeyV0",
         "JavaToolInstallerV0",
-        "JenkinsQueueJobV2",
         "MavenV2",
         "MavenV3",
         "MavenV4",
@@ -272,6 +268,5 @@
         "UseDotNetV2",
         "UseNodeV1",
         "UsePythonVersionV0",
-        "UseRubyVersionV0"
     ]
 }
