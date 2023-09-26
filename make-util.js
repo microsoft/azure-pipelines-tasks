@@ -1935,10 +1935,6 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTa
                 dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
             }
             
-            // if the destination path doesn't exist in Task/_buildConfigs, 
-            // we assume that the file was added by the generator from the source and will be handles while we build default task version
-            if (!fs.existsSync(dest) && config) return
-            
             const folderPath = path.dirname(dest);
             if (!fs.existsSync(folderPath)) {
                 console.log(`Creating folder ${folderPath}`);
