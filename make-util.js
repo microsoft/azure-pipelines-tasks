@@ -331,28 +331,22 @@ var ensureTool = function (name, versionArgs, validate) {
 exports.ensureTool = ensureTool;
 
 var installNode = function (nodeVersion) {
-    switch (nodeVersion || '') {
-        case '20':
-            nodeVersion = 'v20.3.1';
-            break;
-        case '16':
-            nodeVersion = 'v16.17.1';
-            break;
-        case '14':
-            nodeVersion = 'v14.10.1';
-            break;
-        case '10':
-            nodeVersion = 'v10.24.1';
-            break;
-        case '6':
-        case '':
-            nodeVersion = 'v6.10.3';
-            break;
-        case '5':
-            nodeVersion = 'v5.10.1';
-            break;
-        default:
-            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14, 16, 20`);
+    const versions = {
+        20: 'v20.3.1',
+        16: 'v16.17.1',
+        14: 'v14.10.1',
+        10: 'v10.24.1',
+        6: 'v6.10.3',
+        5: 'v5.10.1',
+    };
+
+    if (!nodeVersion) {
+        nodeVersion = versions[6];
+    } else {
+        if (!versions[nodeVersion]) {
+            fail(`Unexpected node version '${nodeVersion}'. Supported versions: ${Object.keys(versions).join(', ')}`);
+        };
+        nodeVersion = versions[nodeVersion];
     }
 
     if (nodeVersion === run('node -v')) {
