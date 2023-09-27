@@ -21,7 +21,7 @@
     "@types/mocha": "^5.2.7",
     "@types/shelljs": "^0.3.0",
     "request": "^2.88.2",
-    "azure-pipelines-task-lib": "^4.0.0-preview"
+    "azure-pipelines-task-lib": "^5.0.0-preview.0"
   },
   "devDependencies": {
     "typescript": "4.0.2"
