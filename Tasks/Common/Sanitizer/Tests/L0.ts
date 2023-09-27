@@ -6,7 +6,7 @@ import Q = require('q');
 import assert = require('assert');
 import path = require('path');
 
-var psm = require('../../../Tests/lib/psRunner');
+var psm = require('../../../../Tests/lib/psRunner');
 var psr = null;
 
 describe('Security Suite', function () {
