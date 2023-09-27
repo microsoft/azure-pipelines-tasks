@@ -251,7 +251,6 @@
         "GruntV0",
         "GulpV0",
         "GulpV1",
-        "InstallAppleProvisioningProfileV1",
         "InstallSSHKeyV0",
         "JavaToolInstallerV0",
         "MSBuildV1",
