@@ -1,551 +1,551 @@
 {
-  "id": "AFA7D54D-537B-4DC8-B60A-E0EEEA2C9A87",
-  "name": "HelmDeploy",
-  "friendlyName": "Package and deploy Helm charts",
-  "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running helm commands",
-  "helpUrl": "https://aka.ms/azpipes-helm-tsg",
-  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Helm documentation](https://helm.sh/docs/)",
-  "category": "Deploy",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "author": "Microsoft Corporation",
-  "version": {
-    "Major": 0,
-    "Minor": 226,
-    "Patch": 9
-  },
-  "demands": [],
-  "groups": [
-    {
-      "name": "cluster",
-      "displayName": "Kubernetes Cluster",
-      "isExpanded": true,
-      "visibleRule": "command != logout && command != package && command != save"
+    "id": "AFA7D54D-537B-4DC8-B60A-E0EEEA2C9A87",
+    "name": "HelmDeploy",
+    "friendlyName": "Package and deploy Helm charts",
+    "description": "Deploy, configure, update a Kubernetes cluster in Azure Container Service by running helm commands",
+    "helpUrl": "https://aka.ms/azpipes-helm-tsg",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Helm documentation](https://helm.sh/docs/)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 229,
+        "Patch": 0
     },
-    {
-      "name": "commands",
-      "displayName": "Commands",
-      "isExpanded": true
+    "demands": [],
+    "groups": [
+        {
+            "name": "cluster",
+            "displayName": "Kubernetes Cluster",
+            "isExpanded": true,
+            "visibleRule": "command != logout && command != package && command != save"
+        },
+        {
+            "name": "commands",
+            "displayName": "Commands",
+            "isExpanded": true
+        },
+        {
+            "name": "azureContainerRegistry",
+            "displayName": "Azure Container Registry",
+            "isExpanded": true,
+            "visibleRule": "command == save"
+        },
+        {
+            "name": "tls",
+            "displayName": "TLS",
+            "isExpanded": false,
+            "visibleRule": "command != login && command != logout && command != package && command != save"
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false,
+            "visibleRule": "command != login && command != logout && command != package && command != save"
+        }
+    ],
+    "inputs": [
+        {
+            "name": "connectionType",
+            "type": "pickList",
+            "label": "Connection Type",
+            "defaultValue": "Azure Resource Manager",
+            "required": true,
+            "options": {
+                "Azure Resource Manager": "Azure Resource Manager",
+                "Kubernetes Service Connection": "Kubernetes Service Connection",
+                "None": "None"
+            },
+            "helpMarkDown": "Select 'Azure Resource Manager' to connect to an Azure Kubernetes Service by using Azure Service Connection. Select 'Kubernetes Service Connection' to connect to any Kubernetes cluster by using kubeconfig or Service Account",
+            "groupName": "cluster"
+        },
+        {
+            "name": "azureSubscriptionEndpoint",
+            "aliases": [
+                "azureSubscription"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "helpMarkDown": "Select an Azure subscription, which has your Azure Container Registry.",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "cluster"
+        },
+        {
+            "name": "azureResourceGroup",
+            "label": "Resource group",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure Resource Group.",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "cluster",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "kubernetesCluster",
+            "label": "Kubernetes cluster",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure Managed Cluster.",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "cluster",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "useClusterAdmin",
+            "type": "boolean",
+            "label": "Use cluster admin credentials",
+            "defaultValue": "false",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "groupName": "cluster",
+            "helpMarkDown": "Use cluster administrator credentials instead of default cluster user credentials."
+        },
+        {
+            "name": "kubernetesServiceEndpoint",
+            "aliases": [
+                "kubernetesServiceConnection"
+            ],
+            "type": "connectedService:kubernetes",
+            "label": "Kubernetes Service Connection",
+            "helpMarkDown": "Select a Kubernetes service connection.",
+            "visibleRule": "connectionType = Kubernetes Service Connection",
+            "required": true,
+            "groupName": "cluster"
+        },
+        {
+            "name": "namespace",
+            "label": "Namespace",
+            "type": "string",
+            "helpMarkDown": "Specify K8 namespace to use. Use Tiller namespace can be specified in the advanced section of the task or by passing the --tiller-namespace option as argument.",
+            "defaultValue": "",
+            "groupName": "cluster"
+        },
+        {
+            "name": "azureSubscriptionEndpointForACR",
+            "aliases": [
+                "azureSubscriptionForACR"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription for Container Registry",
+            "helpMarkDown": "Select an Azure subscription, which has your Azure Container Registry.",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "azureContainerRegistry"
+        },
+        {
+            "name": "azureResourceGroupForACR",
+            "label": "Resource group",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure Resource Group, which has your Container Registry.",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "azureContainerRegistry",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "azureContainerRegistry",
+            "label": "Azure Container Registry",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure Container Registry which will be used for pushing helm charts.",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "azureContainerRegistry"
+        },
+        {
+            "name": "command",
+            "type": "pickList",
+            "label": "Command",
+            "defaultValue": "ls",
+            "required": true,
+            "options": {
+                "create": "create",
+                "delete": "delete",
+                "expose": "expose",
+                "get": "get",
+                "init": "init",
+                "install": "install",
+                "login": "login",
+                "logout": "logout",
+                "ls": "ls",
+                "package": "package",
+                "rollback": "rollback",
+                "save": "save",
+                "upgrade": "upgrade",
+                "uninstall": "uninstall"
+            },
+            "helpMarkDown": "Select a helm command.",
+            "groupName": "commands",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "chartType",
+            "type": "pickList",
+            "label": "Chart Type",
+            "required": true,
+            "options": {
+                "Name": "Name",
+                "FilePath": "File Path"
+            },
+            "helpMarkDown": "Select how you want to enter chart info. You can either provide name of the chart or folder/file path to the chart.",
+            "groupName": "commands",
+            "visibleRule": "command == install || command == upgrade",
+            "defaultValue": "Name",
+            "properties": {
+                "EditableOptions": "False"
+            }
+        },
+        {
+            "name": "chartName",
+            "label": "Chart Name",
+            "type": "string",
+            "helpMarkDown": "Chart reference to install, this can be a url or a chart name. For example, if chart name is 'stable/mysql', the task will run 'helm install stable/mysql'.",
+            "defaultValue": "",
+            "visibleRule": "chartType == Name",
+            "required": "true",
+            "groupName": "commands"
+        },
+        {
+            "name": "chartPath",
+            "label": "Chart Path",
+            "type": "filePath",
+            "helpMarkDown": "Path to the chart to install. This can be a path to a packaged chart or a path to an unpacked chart directory. For example, if './redis' is specified the task will run 'helm install ./redis'.",
+            "defaultValue": "",
+            "visibleRule": "chartType == FilePath || command == package",
+            "required": "true",
+            "groupName": "commands"
+        },
+        {
+            "name": "version",
+            "label": "Version",
+            "aliases": [
+                "chartVersion"
+            ],
+            "type": "string",
+            "helpMarkDown": "Specify the exact chart version to install. If this is not specified, the latest version is installed. Set the version on the chart to this semver version​",
+            "defaultValue": "",
+            "visibleRule": "command == package || command == install || command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "releaseName",
+            "label": "Release Name",
+            "type": "string",
+            "helpMarkDown": "Release name. If unspecified, it will autogenerate one for you.",
+            "defaultValue": "",
+            "visibleRule": "command == install || command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "overrideValues",
+            "label": "Set Values",
+            "type": "string",
+            "helpMarkDown": "Set values on the command line (can specify multiple or separate values with commas or newlines: key1=val1,key2=val2 or <br>key1=val1<br>key2=val2<br>). The task will construct the helm command by using these set values. For example, helm install --set key1=val1 ./redis.",
+            "defaultValue": "",
+            "visibleRule": "command == install || command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "valueFile",
+            "label": "Value File",
+            "type": "filePath",
+            "defaultValue": "",
+            "helpMarkDown": "Specify values in a YAML file or a URL. For example, specifying myvalues.yaml will result in 'helm install --values=myvals.yaml'.",
+            "visibleRule": "command == install || command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "destination",
+            "label": "Destination",
+            "type": "string",
+            "defaultValue": "$(Build.ArtifactStagingDirectory)",
+            "helpMarkDown": "Specify values in a YAML file or a URL.",
+            "visibleRule": "command == package",
+            "groupName": "commands"
+        },
+        {
+            "name": "canaryimage",
+            "aliases": [
+                "canaryImage"
+            ],
+            "type": "boolean",
+            "label": "Use canary image version.",
+            "defaultValue": "false",
+            "helpMarkDown": "Use the canary Tiller image, the latest pre-release version of Tiller.",
+            "visibleRule": "command == init",
+            "groupName": "commands"
+        },
+        {
+            "name": "upgradetiller",
+            "aliases": [
+                "upgradeTiller"
+            ],
+            "type": "boolean",
+            "label": "Upgrade Tiller",
+            "defaultValue": "true",
+            "helpMarkDown": "Upgrade if Tiller is already installed.",
+            "visibleRule": "command == init",
+            "groupName": "commands"
+        },
+        {
+            "name": "updatedependency",
+            "aliases": [
+                "updateDependency"
+            ],
+            "type": "boolean",
+            "label": "Update Dependency",
+            "defaultValue": "false",
+            "helpMarkDown": "Run helm dependency update before installing the chart. Update dependencies from 'requirements.yaml' to dir 'charts/' before packaging",
+            "visibleRule": "command == install || command == package",
+            "groupName": "commands"
+        },
+        {
+            "name": "save",
+            "type": "boolean",
+            "label": "Save",
+            "defaultValue": "true",
+            "helpMarkDown": "Save packaged chart to local chart repository (default true)​",
+            "visibleRule": "command == package",
+            "groupName": "commands"
+        },
+        {
+            "name": "install",
+            "type": "boolean",
+            "label": "Install if release not present.",
+            "defaultValue": "true",
+            "helpMarkDown": "If a release by this name doesn't already exist, run an install​.",
+            "visibleRule": "command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "recreate",
+            "type": "boolean",
+            "label": "Recreate Pods.",
+            "defaultValue": "false",
+            "helpMarkDown": "Performs pods restart for the resource if applicable.",
+            "visibleRule": "command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "resetValues",
+            "type": "boolean",
+            "label": "Reset Values.",
+            "defaultValue": "false",
+            "helpMarkDown": "Reset the values to the ones built into the chart.",
+            "visibleRule": "command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "force",
+            "type": "boolean",
+            "label": "Force",
+            "defaultValue": "false",
+            "helpMarkDown": "Force resource update through delete/recreate if needed​",
+            "visibleRule": "command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "waitForExecution",
+            "type": "boolean",
+            "label": "Wait",
+            "defaultValue": "true",
+            "helpMarkDown": "Block till command execution completes.",
+            "visibleRule": "command == init || command == install || command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "arguments",
+            "type": "multiLine",
+            "properties": {
+                "resizable": "true",
+                "rows": "2"
+            },
+            "label": "Arguments",
+            "helpMarkDown": "Helm command options.",
+            "groupName": "commands",
+            "visibleRule": "command != login && command != logout"
+        },
+        {
+            "name": "enableTls",
+            "type": "boolean",
+            "label": "Enable TLS",
+            "defaultValue": "false",
+            "helpMarkDown": "Enables using SSL between Helm and Tiller.",
+            "groupName": "tls"
+        },
+        {
+            "name": "caCert",
+            "type": "secureFile",
+            "label": "CA certificate",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "CA cert used to issue certificate for tiller and helm client.",
+            "visibleRule": "enableTls == true",
+            "groupName": "tls"
+        },
+        {
+            "name": "certificate",
+            "type": "secureFile",
+            "label": "Certificate",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Specify Tiller certificate or Helm client certificate",
+            "visibleRule": "enableTls == true",
+            "groupName": "tls"
+        },
+        {
+            "name": "privatekey",
+            "type": "secureFile",
+            "label": "Key",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Specify Tiller Key or Helm client key",
+            "visibleRule": "enableTls == true",
+            "groupName": "tls"
+        },
+        {
+            "name": "tillernamespace",
+            "aliases": [
+                "tillerNamespace"
+            ],
+            "label": "Tiller namespace",
+            "helpMarkDown": "Specify K8 namespace of tiller.",
+            "type": "string",
+            "groupName": "advanced"
+        },
+        {
+            "name": "failOnStderr",
+            "type": "boolean",
+            "label": "Fail on Standard Error",
+            "defaultValue": "false",
+            "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely on the exit code to determine failure.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "publishPipelineMetadata",
+            "type": "boolean",
+            "label": "Publish pipeline metadata",
+            "defaultValue": "true",
+            "helpMarkDown": "If this is true, the task will collect and publish deployment metadata",
+            "groupName": "advanced"
+        },
+        {
+            "name": "chartNameForACR",
+            "label": "Chart Name For Azure Container Registry",
+            "type": "string",
+            "helpMarkDown": "Chart name with which the chart will be stored in Azure Container Registry.",
+            "defaultValue": "",
+            "visibleRule": "command == save",
+            "required": "true",
+            "groupName": "commands"
+        },
+        {
+            "name": "chartPathForACR",
+            "label": "Chart Path for Azure Container Registry",
+            "type": "filePath",
+            "helpMarkDown": "Path to the chart directory.",
+            "defaultValue": "",
+            "visibleRule": "command == save",
+            "required": "true",
+            "groupName": "commands"
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "kubernetesCluster",
+            "endpointId": "$(azureSubscriptionEndpoint)",
+            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{{{name}}}"
+        },
+        {
+            "target": "azureResourceGroup",
+            "endpointId": "$(azureSubscriptionEndpoint)",
+            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31&$skiptoken={{{skiptoken}}}",
+            "callbackContextTemplate": "{\"skiptoken\": \"{{#getTokenValue response.nextLink}}{{extractUrlQueryParameter %24skiptoken}}{{/getTokenValue}}\"}",
+            "callbackRequiredTemplate": "{{isTokenPresent response.nextLink}}",
+            "initialContextTemplate": "{\"skiptoken\": \"\"}",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
+        },
+        {
+            "target": "azureResourceGroupForACR",
+            "endpointId": "$(azureSubscriptionEndpointForACR)",
+            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
+        },
+        {
+            "target": "azureContainerRegistry",
+            "endpointId": "$(azureSubscriptionEndpointForACR)",
+            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroupForACR)/providers/Microsoft.ContainerRegistry/registries?api-version=2019-05-01",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{ \"Value\" : \"{{{properties.loginServer}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        }
+    ],
+    "instanceNameFormat": "helm $(command)",
+    "showEnvironmentVariables": true,
+    "outputVariables": [
+        {
+            "name": "helmExitCode",
+            "description": "Exit code emitted from the execution of specified Helm command"
+        },
+        {
+            "name": "helmOutput",
+            "description": "Output emitted from the execution of specified Helm command"
+        }
+    ],
+    "prejobexecution": {
+        "Node10": {
+            "target": "src//downloadsecurefiles.js"
+        }
     },
-    {
-      "name": "azureContainerRegistry",
-      "displayName": "Azure Container Registry",
-      "isExpanded": true,
-      "visibleRule": "command == save"
+    "execution": {
+        "Node10": {
+            "target": "src//helm.js"
+        }
     },
-    {
-      "name": "tls",
-      "displayName": "TLS",
-      "isExpanded": false,
-      "visibleRule": "command != login && command != logout && command != package && command != save"
+    "postjobexecution": {
+        "Node10": {
+            "target": "src//deletesecurefiles.js"
+        }
     },
-    {
-      "name": "advanced",
-      "displayName": "Advanced",
-      "isExpanded": false,
-      "visibleRule": "command != login && command != logout && command != package && command != save"
+    "messages": {
+        "CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s.",
+        "KubeConfigFilePath": "Kubeconfig file path: %s",
+        "KubernetesClusterInfo": "Kubernetes cluster Id : %s, kubernetes server version %s, kuberenettes provision state %s",
+        "KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",
+        "ClusterNotProvisioned": "Observed that the cluster %s is in %s state.",
+        "ClusterNotFound": "%s cluster does not exists",
+        "FailedToListClusters": "Failed to list managed clusters in the subscription. %s",
+        "RetryingRequest": "Retrying request after %s seconds.",
+        "PatternNotFoundInFilePath": "Pattern not found in file path %s.",
+        "CantResolvePatternInPath": "Can not resolve pattern in file path %s.",
+        "PatternFoundInPath": "Pattern found in file path %s.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+        "SkipDeleteSecureFiles": "TLS not enabled in the Task. Skipping delete of certificates.",
+        "SkipDownloadSecureFiles": "TLS not enabled in the Task. Skipping download of certificates.",
+        "FileNotFound": "File not found at %s",
+        "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "SaveSupportedInHelmsV3Only": "Save chart to Azure Container Registry is only supported in Helms V3.",
+        "OutputVariableDataSizeExceeded": "Output variable not set as Helm command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
+        "KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
     }
-  ],
-  "inputs": [
-    {
-      "name": "connectionType",
-      "type": "pickList",
-      "label": "Connection Type",
-      "defaultValue": "Azure Resource Manager",
-      "required": true,
-      "options": {
-        "Azure Resource Manager": "Azure Resource Manager",
-        "Kubernetes Service Connection": "Kubernetes Service Connection",
-        "None": "None"
-      },
-      "helpMarkDown": "Select 'Azure Resource Manager' to connect to an Azure Kubernetes Service by using Azure Service Connection. Select 'Kubernetes Service Connection' to connect to any Kubernetes cluster by using kubeconfig or Service Account",
-      "groupName": "cluster"
-    },
-    {
-      "name": "azureSubscriptionEndpoint",
-      "aliases": [
-        "azureSubscription"
-      ],
-      "type": "connectedService:AzureRM",
-      "label": "Azure subscription",
-      "helpMarkDown": "Select an Azure subscription, which has your Azure Container Registry.",
-      "visibleRule": "connectionType = Azure Resource Manager",
-      "defaultValue": "",
-      "required": true,
-      "groupName": "cluster"
-    },
-    {
-      "name": "azureResourceGroup",
-      "label": "Resource group",
-      "type": "pickList",
-      "helpMarkDown": "Select an Azure Resource Group.",
-      "visibleRule": "connectionType = Azure Resource Manager",
-      "defaultValue": "",
-      "required": true,
-      "groupName": "cluster",
-      "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
-      "name": "kubernetesCluster",
-      "label": "Kubernetes cluster",
-      "type": "pickList",
-      "helpMarkDown": "Select an Azure Managed Cluster.",
-      "visibleRule": "connectionType = Azure Resource Manager",
-      "defaultValue": "",
-      "required": true,
-      "groupName": "cluster",
-      "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
-      "name": "useClusterAdmin",
-      "type": "boolean",
-      "label": "Use cluster admin credentials",
-      "defaultValue": "false",
-      "visibleRule": "connectionType = Azure Resource Manager",
-      "groupName": "cluster",
-      "helpMarkDown": "Use cluster administrator credentials instead of default cluster user credentials."
-    },
-    {
-      "name": "kubernetesServiceEndpoint",
-      "aliases": [
-        "kubernetesServiceConnection"
-      ],
-      "type": "connectedService:kubernetes",
-      "label": "Kubernetes Service Connection",
-      "helpMarkDown": "Select a Kubernetes service connection.",
-      "visibleRule": "connectionType = Kubernetes Service Connection",
-      "required": true,
-      "groupName": "cluster"
-    },
-    {
-      "name": "namespace",
-      "label": "Namespace",
-      "type": "string",
-      "helpMarkDown": "Specify K8 namespace to use. Use Tiller namespace can be specified in the advanced section of the task or by passing the --tiller-namespace option as argument.",
-      "defaultValue": "",
-      "groupName": "cluster"
-    },
-    {
-      "name": "azureSubscriptionEndpointForACR",
-      "aliases": [
-        "azureSubscriptionForACR"
-      ],
-      "type": "connectedService:AzureRM",
-      "label": "Azure subscription for Container Registry",
-      "helpMarkDown": "Select an Azure subscription, which has your Azure Container Registry.",
-      "defaultValue": "",
-      "required": true,
-      "groupName": "azureContainerRegistry"
-    },
-    {
-      "name": "azureResourceGroupForACR",
-      "label": "Resource group",
-      "type": "pickList",
-      "helpMarkDown": "Select an Azure Resource Group, which has your Container Registry.",
-      "defaultValue": "",
-      "required": true,
-      "groupName": "azureContainerRegistry",
-      "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
-      "name": "azureContainerRegistry",
-      "label": "Azure Container Registry",
-      "type": "pickList",
-      "helpMarkDown": "Select an Azure Container Registry which will be used for pushing helm charts.",
-      "defaultValue": "",
-      "required": true,
-      "groupName": "azureContainerRegistry"
-    },
-    {
-      "name": "command",
-      "type": "pickList",
-      "label": "Command",
-      "defaultValue": "ls",
-      "required": true,
-      "options": {
-        "create": "create",
-        "delete": "delete",
-        "expose": "expose",
-        "get": "get",
-        "init": "init",
-        "install": "install",
-        "login": "login",
-        "logout": "logout",
-        "ls": "ls",
-        "package": "package",
-        "rollback": "rollback",
-        "save": "save",
-        "upgrade": "upgrade",
-        "uninstall": "uninstall"
-      },
-      "helpMarkDown": "Select a helm command.",
-      "groupName": "commands",
-      "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
-      "name": "chartType",
-      "type": "pickList",
-      "label": "Chart Type",
-      "required": true,
-      "options": {
-        "Name": "Name",
-        "FilePath": "File Path"
-      },
-      "helpMarkDown": "Select how you want to enter chart info. You can either provide name of the chart or folder/file path to the chart.",
-      "groupName": "commands",
-      "visibleRule": "command == install || command == upgrade",
-      "defaultValue": "Name",
-      "properties": {
-        "EditableOptions": "False"
-      }
-    },
-    {
-      "name": "chartName",
-      "label": "Chart Name",
-      "type": "string",
-      "helpMarkDown": "Chart reference to install, this can be a url or a chart name. For example, if chart name is 'stable/mysql', the task will run 'helm install stable/mysql'.",
-      "defaultValue": "",
-      "visibleRule": "chartType == Name",
-      "required": "true",
-      "groupName": "commands"
-    },
-    {
-      "name": "chartPath",
-      "label": "Chart Path",
-      "type": "filePath",
-      "helpMarkDown": "Path to the chart to install. This can be a path to a packaged chart or a path to an unpacked chart directory. For example, if './redis' is specified the task will run 'helm install ./redis'.",
-      "defaultValue": "",
-      "visibleRule": "chartType == FilePath || command == package",
-      "required": "true",
-      "groupName": "commands"
-    },
-    {
-      "name": "version",
-      "label": "Version",
-      "aliases": [
-        "chartVersion"
-      ],
-      "type": "string",
-      "helpMarkDown": "Specify the exact chart version to install. If this is not specified, the latest version is installed. Set the version on the chart to this semver version​",
-      "defaultValue": "",
-      "visibleRule": "command == package || command == install || command == upgrade",
-      "groupName": "commands"
-    },
-    {
-      "name": "releaseName",
-      "label": "Release Name",
-      "type": "string",
-      "helpMarkDown": "Release name. If unspecified, it will autogenerate one for you.",
-      "defaultValue": "",
-      "visibleRule": "command == install || command == upgrade",
-      "groupName": "commands"
-    },
-    {
-      "name": "overrideValues",
-      "label": "Set Values",
-      "type": "string",
-      "helpMarkDown": "Set values on the command line (can specify multiple or separate values with commas or newlines: key1=val1,key2=val2 or <br>key1=val1<br>key2=val2<br>). The task will construct the helm command by using these set values. For example, helm install --set key1=val1 ./redis.",
-      "defaultValue": "",
-      "visibleRule": "command == install || command == upgrade",
-      "groupName": "commands"
-    },
-    {
-      "name": "valueFile",
-      "label": "Value File",
-      "type": "filePath",
-      "defaultValue": "",
-      "helpMarkDown": "Specify values in a YAML file or a URL. For example, specifying myvalues.yaml will result in 'helm install --values=myvals.yaml'.",
-      "visibleRule": "command == install || command == upgrade",
-      "groupName": "commands"
-    },
-    {
-      "name": "destination",
-      "label": "Destination",
-      "type": "string",
-      "defaultValue": "$(Build.ArtifactStagingDirectory)",
-      "helpMarkDown": "Specify values in a YAML file or a URL.",
-      "visibleRule": "command == package",
-      "groupName": "commands"
-    },
-    {
-      "name": "canaryimage",
-      "aliases": [
-        "canaryImage"
-      ],
-      "type": "boolean",
-      "label": "Use canary image version.",
-      "defaultValue": "false",
-      "helpMarkDown": "Use the canary Tiller image, the latest pre-release version of Tiller.",
-      "visibleRule": "command == init",
-      "groupName": "commands"
-    },
-    {
-      "name": "upgradetiller",
-      "aliases": [
-        "upgradeTiller"
-      ],
-      "type": "boolean",
-      "label": "Upgrade Tiller",
-      "defaultValue": "true",
-      "helpMarkDown": "Upgrade if Tiller is already installed.",
-      "visibleRule": "command == init",
-      "groupName": "commands"
-    },
-    {
-      "name": "updatedependency",
-      "aliases": [
-        "updateDependency"
-      ],
-      "type": "boolean",
-      "label": "Update Dependency",
-      "defaultValue": "false",
-      "helpMarkDown": "Run helm dependency update before installing the chart. Update dependencies from 'requirements.yaml' to dir 'charts/' before packaging",
-      "visibleRule": "command == install || command == package",
-      "groupName": "commands"
-    },
-    {
-      "name": "save",
-      "type": "boolean",
-      "label": "Save",
-      "defaultValue": "true",
-      "helpMarkDown": "Save packaged chart to local chart repository (default true)​",
-      "visibleRule": "command == package",
-      "groupName": "commands"
-    },
-    {
-      "name": "install",
-      "type": "boolean",
-      "label": "Install if release not present.",
-      "defaultValue": "true",
-      "helpMarkDown": "If a release by this name doesn't already exist, run an install​.",
-      "visibleRule": "command == upgrade",
-      "groupName": "commands"
-    },
-    {
-      "name": "recreate",
-      "type": "boolean",
-      "label": "Recreate Pods.",
-      "defaultValue": "false",
-      "helpMarkDown": "Performs pods restart for the resource if applicable.",
-      "visibleRule": "command == upgrade",
-      "groupName": "commands"
-    },
-    {
-      "name": "resetValues",
-      "type": "boolean",
-      "label": "Reset Values.",
-      "defaultValue": "false",
-      "helpMarkDown": "Reset the values to the ones built into the chart.",
-      "visibleRule": "command == upgrade",
-      "groupName": "commands"
-    },
-    {
-      "name": "force",
-      "type": "boolean",
-      "label": "Force",
-      "defaultValue": "false",
-      "helpMarkDown": "Force resource update through delete/recreate if needed​",
-      "visibleRule": "command == upgrade",
-      "groupName": "commands"
-    },
-    {
-      "name": "waitForExecution",
-      "type": "boolean",
-      "label": "Wait",
-      "defaultValue": "true",
-      "helpMarkDown": "Block till command execution completes.",
-      "visibleRule": "command == init || command == install || command == upgrade",
-      "groupName": "commands"
-    },
-    {
-      "name": "arguments",
-      "type": "multiLine",
-      "properties": {
-        "resizable": "true",
-        "rows": "2"
-      },
-      "label": "Arguments",
-      "helpMarkDown": "Helm command options.",
-      "groupName": "commands",
-      "visibleRule": "command != login && command != logout"
-    },
-    {
-      "name": "enableTls",
-      "type": "boolean",
-      "label": "Enable TLS",
-      "defaultValue": "false",
-      "helpMarkDown": "Enables using SSL between Helm and Tiller.",
-      "groupName": "tls"
-    },
-    {
-      "name": "caCert",
-      "type": "secureFile",
-      "label": "CA certificate",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "CA cert used to issue certificate for tiller and helm client.",
-      "visibleRule": "enableTls == true",
-      "groupName": "tls"
-    },
-    {
-      "name": "certificate",
-      "type": "secureFile",
-      "label": "Certificate",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Specify Tiller certificate or Helm client certificate",
-      "visibleRule": "enableTls == true",
-      "groupName": "tls"
-    },
-    {
-      "name": "privatekey",
-      "type": "secureFile",
-      "label": "Key",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Specify Tiller Key or Helm client key",
-      "visibleRule": "enableTls == true",
-      "groupName": "tls"
-    },
-    {
-      "name": "tillernamespace",
-      "aliases": [
-        "tillerNamespace"
-      ],
-      "label": "Tiller namespace",
-      "helpMarkDown": "Specify K8 namespace of tiller.",
-      "type": "string",
-      "groupName": "advanced"
-    },
-    {
-      "name": "failOnStderr",
-      "type": "boolean",
-      "label": "Fail on Standard Error",
-      "defaultValue": "false",
-      "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely on the exit code to determine failure.",
-      "groupName": "advanced"
-    },
-    {
-      "name": "publishPipelineMetadata",
-      "type": "boolean",
-      "label": "Publish pipeline metadata",
-      "defaultValue": "true",
-      "helpMarkDown": "If this is true, the task will collect and publish deployment metadata",
-      "groupName": "advanced"
-    },
-    {
-      "name": "chartNameForACR",
-      "label": "Chart Name For Azure Container Registry",
-      "type": "string",
-      "helpMarkDown": "Chart name with which the chart will be stored in Azure Container Registry.",
-      "defaultValue": "",
-      "visibleRule": "command == save",
-      "required": "true",
-      "groupName": "commands"
-    },
-    {
-      "name": "chartPathForACR",
-      "label": "Chart Path for Azure Container Registry",
-      "type": "filePath",
-      "helpMarkDown": "Path to the chart directory.",
-      "defaultValue": "",
-      "visibleRule": "command == save",
-      "required": "true",
-      "groupName": "commands"
-    }
-  ],
-  "dataSourceBindings": [
-    {
-      "target": "kubernetesCluster",
-      "endpointId": "$(azureSubscriptionEndpoint)",
-      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
-      "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{{{name}}}"
-    },
-    {
-      "target": "azureResourceGroup",
-      "endpointId": "$(azureSubscriptionEndpoint)",
-      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31&$skiptoken={{{skiptoken}}}",
-      "callbackContextTemplate": "{\"skiptoken\": \"{{#getTokenValue response.nextLink}}{{extractUrlQueryParameter %24skiptoken}}{{/getTokenValue}}\"}",
-      "callbackRequiredTemplate": "{{isTokenPresent response.nextLink}}",
-      "initialContextTemplate": "{\"skiptoken\": \"\"}",
-      "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
-    },
-    {
-      "target": "azureResourceGroupForACR",
-      "endpointId": "$(azureSubscriptionEndpointForACR)",
-      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
-      "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
-    },
-    {
-      "target": "azureContainerRegistry",
-      "endpointId": "$(azureSubscriptionEndpointForACR)",
-      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroupForACR)/providers/Microsoft.ContainerRegistry/registries?api-version=2019-05-01",
-      "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{properties.loginServer}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
-    }
-  ],
-  "instanceNameFormat": "helm $(command)",
-  "showEnvironmentVariables": true,
-  "outputVariables": [
-    {
-      "name": "helmExitCode",
-      "description": "Exit code emitted from the execution of specified Helm command"
-    },
-    {
-      "name": "helmOutput",
-      "description": "Output emitted from the execution of specified Helm command"
-    }
-  ],
-  "prejobexecution": {
-    "Node10": {
-      "target": "src//downloadsecurefiles.js"
-    }
-  },
-  "execution": {
-    "Node10": {
-      "target": "src//helm.js"
-    }
-  },
-  "postjobexecution": {
-    "Node10": {
-      "target": "src//deletesecurefiles.js"
-    }
-  },
-  "messages": {
-    "CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s.",
-    "KubeConfigFilePath": "Kubeconfig file path: %s",
-    "KubernetesClusterInfo": "Kubernetes cluster Id : %s, kubernetes server version %s, kuberenettes provision state %s",
-    "KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",
-    "ClusterNotProvisioned": "Observed that the cluster %s is in %s state.",
-    "ClusterNotFound": "%s cluster does not exists",
-    "FailedToListClusters": "Failed to list managed clusters in the subscription. %s",
-    "RetryingRequest": "Retrying request after %s seconds.",
-    "PatternNotFoundInFilePath": "Pattern not found in file path %s.",
-    "CantResolvePatternInPath": "Can not resolve pattern in file path %s.",
-    "PatternFoundInPath": "Pattern found in file path %s.",
-    "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
-    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-    "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
-    "SkipDeleteSecureFiles": "TLS not enabled in the Task. Skipping delete of certificates.",
-    "SkipDownloadSecureFiles": "TLS not enabled in the Task. Skipping download of certificates.",
-    "FileNotFound": "File not found at %s",
-    "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
-    "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
-    "SaveSupportedInHelmsV3Only": "Save chart to Azure Container Registry is only supported in Helms V3.",
-    "OutputVariableDataSizeExceeded": "Output variable not set as Helm command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
-    "KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
-  }
 }
