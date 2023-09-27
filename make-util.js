@@ -1892,6 +1892,7 @@ var generateTasks = function(baseConfigToolPath, taskList, configsString, makeOp
 }
 exports.generateTasks = generateTasks;
 
+
 /**
  * Wrapper for buildTask function which compares diff between source and generated tasks
  * @param {Function} originalFunction - Original buildTask function
