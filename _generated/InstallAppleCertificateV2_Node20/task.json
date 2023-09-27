@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 229,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "Fixes codesign hangs on a self hosted agent. A Keychain password is now required to use `Default Keychain` or `Custom Keychain`. Microsoft hosted builds should use `Temporary Keychain`.",
   "runsOn": [
@@ -189,7 +189,7 @@
     "OpenSSLError": "Error parsing certificate. This might be caused by an unsupported algorithm. If you're using old certificate with a new OpenSSL version try to set -legacy flag in opensslPkcsArgs input."
   },
   "_buildConfigMapping": {
-    "Default": "2.227.0",
-    "Node20-225": "2.229.0"
+    "Default": "2.229.0",
+    "Node20-225": "2.229.1"
   }
 }

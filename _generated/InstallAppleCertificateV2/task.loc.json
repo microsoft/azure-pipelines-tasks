@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 227,
+    "Minor": 229,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -181,7 +181,7 @@
     "OpenSSLError": "ms-resource:loc.messages.OpenSSLError"
   },
   "_buildConfigMapping": {
-    "Default": "2.227.0",
-    "Node20-225": "2.229.0"
+    "Default": "2.229.0",
+    "Node20-225": "2.229.1"
   }
 }

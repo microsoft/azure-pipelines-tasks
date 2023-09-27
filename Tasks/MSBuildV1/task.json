@@ -1,195 +1,195 @@
 {
-    "id": "C6C4C611-AA2E-4A33-B606-5EABA2196824",
-    "name": "MSBuild",
-    "friendlyName": "MSBuild",
-    "description": "Build with MSBuild",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/msbuild",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613724)",
-    "category": "Build",
-    "visibility": [
-        "Build"
-    ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 1,
-        "Minor": 229,
-        "Patch": 0
-    },
-    "demands": [
-        "msbuild"
-    ],
-    "minimumAgentVersion": "1.95.0",
-    "groups": [
-        {
-            "name": "advanced",
-            "displayName": "Advanced",
-            "isExpanded": false
-        }
-    ],
-    "inputs": [
-        {
-            "name": "solution",
-            "type": "filePath",
-            "label": "Project",
-            "defaultValue": "**/*.sln",
-            "required": true,
-            "helpMarkDown": "Relative path from repo root of the project(s) or solution(s) to run.  Wildcards can be used.  For example, `**/*.csproj` for all csproj files in all sub folders."
-        },
-        {
-            "name": "msbuildLocationMethod",
-            "type": "radio",
-            "label": "MSBuild",
-            "required": false,
-            "defaultValue": "version",
-            "options": {
-                "version": "Version",
-                "location": "Specify Location"
-            }
-        },
-        {
-            "name": "msbuildVersion",
-            "type": "pickList",
-            "label": "MSBuild Version",
-            "required": false,
-            "defaultValue": "latest",
-            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead. On an macOS agent, xbuild (Mono) will be used if version is lower than 15.0.",
-            "visibleRule": "msbuildLocationMethod = version",
-            "options": {
-                "latest": "Latest",
-                "17.0": "MSBuild 17.0",
-                "16.0": "MSBuild 16.0",
-                "15.0": "MSBuild 15.0",
-                "14.0": "MSBuild 14.0",
-                "12.0": "MSBuild 12.0",
-                "4.0": "MSBuild 4.0"
-            }
-        },
-        {
-            "name": "msbuildArchitecture",
-            "type": "pickList",
-            "label": "MSBuild Architecture",
-            "defaultValue": "x86",
-            "required": false,
-            "helpMarkDown": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
-            "visibleRule": "msbuildLocationMethod = version",
-            "options": {
-                "x86": "MSBuild x86",
-                "x64": "MSBuild x64"
-            }
-        },
-        {
-            "name": "msbuildLocation",
-            "type": "string",
-            "label": "Path to MSBuild",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Optionally supply the path to MSBuild.",
-            "visibleRule": "msbuildLocationMethod = location"
-        },
-        {
-            "name": "platform",
-            "type": "string",
-            "label": "Platform",
-            "defaultValue": "",
-            "required": false
-        },
-        {
-            "name": "configuration",
-            "type": "string",
-            "label": "Configuration",
-            "defaultValue": "",
-            "required": false
-        },
-        {
-            "name": "msbuildArguments",
-            "type": "string",
-            "label": "MSBuild Arguments",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Additional arguments passed to MSBuild (on Windows) and xbuild (on macOS)."
-        },
-        {
-            "name": "clean",
-            "type": "boolean",
-            "label": "Clean",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Run a clean build (/t:clean) prior to the build."
-        },
-        {
-            "name": "maximumCpuCount",
-            "type": "boolean",
-            "label": "Build in Parallel",
-            "defaultValue": "false",
-            "required": false,
-            "groupName": "advanced",
-            "helpMarkDown": "If your MSBuild target configuration is compatible with building in parallel, you can optionally check this input to pass the /m switch to MSBuild (Windows only). If your target configuration is not compatible with building in parallel, checking this option may cause your build to result in file-in-use errors, or intermittent or inconsistent build failures."
-        },
-        {
-            "name": "restoreNugetPackages",
-            "type": "boolean",
-            "label": "Restore NuGet Packages",
-            "defaultValue": "false",
-            "required": false,
-            "groupName": "advanced",
-            "helpMarkDown": "This option is deprecated. To restore NuGet packages, add a [NuGet](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget) task before the build."
-        },
-        {
-            "name": "logProjectEvents",
-            "type": "boolean",
-            "label": "Record Project Details",
-            "defaultValue": "false",
-            "required": false,
-            "groupName": "advanced",
-            "helpMarkDown": "Optionally record timeline details for each project (Windows only)."
-        },
-        {
-            "name": "createLogFile",
-            "type": "boolean",
-            "label": "Create Log File",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Optionally create a log file (Windows only).",
-            "groupName": "advanced"
-        },
-        {
-            "name": "logFileVerbosity",
-            "type": "pickList",
-            "label": "Log File Verbosity",
-            "defaultValue": "normal",
-            "required": false,
-            "helpMarkDown": "Optional log file verbosity.",
-            "groupName": "advanced",
-            "options": {
-                "quiet": "Quiet",
-                "minimal": "Minimal",
-                "normal": "Normal",
-                "detailed": "Detailed",
-                "diagnostic": "Diagnostic"
-            },
-            "visibleRule": "createLogFile = true"
-        }
-    ],
-    "instanceNameFormat": "Build solution $(solution)",
-    "execution": {
-        "PowerShell3": {
-            "target": "MSBuild.ps1",
-            "platforms": [
-                "windows"
-            ]
-        },
-        "Node10": {
-            "target": "msbuild.js",
-            "argumentFormat": ""
-        },
-        "Node16": {
-            "target": "msbuild.js",
-            "argumentFormat": ""
-        }
-    },
-    "messages": {
-        "RecordProjectDetailsOnlySupportedOnWindows": "`Record Project Details` is only supported on Windows.",
-        "CreateLogFileOnlySupportedOnWindows": "`Create Log File` is only supported on Windows.",
-        "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
+  "id": "C6C4C611-AA2E-4A33-B606-5EABA2196824",
+  "name": "MSBuild",
+  "friendlyName": "MSBuild",
+  "description": "Build with MSBuild",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/msbuild",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613724)",
+  "category": "Build",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 229,
+    "Patch": 0
+  },
+  "demands": [
+    "msbuild"
+  ],
+  "minimumAgentVersion": "1.95.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
     }
+  ],
+  "inputs": [
+    {
+      "name": "solution",
+      "type": "filePath",
+      "label": "Project",
+      "defaultValue": "**/*.sln",
+      "required": true,
+      "helpMarkDown": "Relative path from repo root of the project(s) or solution(s) to run.  Wildcards can be used.  For example, `**/*.csproj` for all csproj files in all sub folders."
+    },
+    {
+      "name": "msbuildLocationMethod",
+      "type": "radio",
+      "label": "MSBuild",
+      "required": false,
+      "defaultValue": "version",
+      "options": {
+        "version": "Version",
+        "location": "Specify Location"
+      }
+    },
+    {
+      "name": "msbuildVersion",
+      "type": "pickList",
+      "label": "MSBuild Version",
+      "required": false,
+      "defaultValue": "latest",
+      "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead. On an macOS agent, xbuild (Mono) will be used if version is lower than 15.0.",
+      "visibleRule": "msbuildLocationMethod = version",
+      "options": {
+        "latest": "Latest",
+        "17.0": "MSBuild 17.0",
+        "16.0": "MSBuild 16.0",
+        "15.0": "MSBuild 15.0",
+        "14.0": "MSBuild 14.0",
+        "12.0": "MSBuild 12.0",
+        "4.0": "MSBuild 4.0"
+      }
+    },
+    {
+      "name": "msbuildArchitecture",
+      "type": "pickList",
+      "label": "MSBuild Architecture",
+      "defaultValue": "x86",
+      "required": false,
+      "helpMarkDown": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
+      "visibleRule": "msbuildLocationMethod = version",
+      "options": {
+        "x86": "MSBuild x86",
+        "x64": "MSBuild x64"
+      }
+    },
+    {
+      "name": "msbuildLocation",
+      "type": "string",
+      "label": "Path to MSBuild",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Optionally supply the path to MSBuild.",
+      "visibleRule": "msbuildLocationMethod = location"
+    },
+    {
+      "name": "platform",
+      "type": "string",
+      "label": "Platform",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "configuration",
+      "type": "string",
+      "label": "Configuration",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "msbuildArguments",
+      "type": "string",
+      "label": "MSBuild Arguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Additional arguments passed to MSBuild (on Windows) and xbuild (on macOS)."
+    },
+    {
+      "name": "clean",
+      "type": "boolean",
+      "label": "Clean",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Run a clean build (/t:clean) prior to the build."
+    },
+    {
+      "name": "maximumCpuCount",
+      "type": "boolean",
+      "label": "Build in Parallel",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "If your MSBuild target configuration is compatible with building in parallel, you can optionally check this input to pass the /m switch to MSBuild (Windows only). If your target configuration is not compatible with building in parallel, checking this option may cause your build to result in file-in-use errors, or intermittent or inconsistent build failures."
+    },
+    {
+      "name": "restoreNugetPackages",
+      "type": "boolean",
+      "label": "Restore NuGet Packages",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "This option is deprecated. To restore NuGet packages, add a [NuGet](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget) task before the build."
+    },
+    {
+      "name": "logProjectEvents",
+      "type": "boolean",
+      "label": "Record Project Details",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Optionally record timeline details for each project (Windows only)."
+    },
+    {
+      "name": "createLogFile",
+      "type": "boolean",
+      "label": "Create Log File",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Optionally create a log file (Windows only).",
+      "groupName": "advanced"
+    },
+    {
+      "name": "logFileVerbosity",
+      "type": "pickList",
+      "label": "Log File Verbosity",
+      "defaultValue": "normal",
+      "required": false,
+      "helpMarkDown": "Optional log file verbosity.",
+      "groupName": "advanced",
+      "options": {
+        "quiet": "Quiet",
+        "minimal": "Minimal",
+        "normal": "Normal",
+        "detailed": "Detailed",
+        "diagnostic": "Diagnostic"
+      },
+      "visibleRule": "createLogFile = true"
+    }
+  ],
+  "instanceNameFormat": "Build solution $(solution)",
+  "execution": {
+    "PowerShell3": {
+      "target": "MSBuild.ps1",
+      "platforms": [
+        "windows"
+      ]
+    },
+    "Node10": {
+      "target": "msbuild.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "msbuild.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "RecordProjectDetailsOnlySupportedOnWindows": "`Record Project Details` is only supported on Windows.",
+    "CreateLogFileOnlySupportedOnWindows": "`Create Log File` is only supported on Windows.",
+    "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
+  }
 }
