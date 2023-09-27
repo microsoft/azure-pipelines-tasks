@@ -255,9 +255,6 @@
         "InstallAppleProvisioningProfileV1",
         "InstallSSHKeyV0",
         "JavaToolInstallerV0",
-        "MavenV2",
-        "MavenV3",
-        "MavenV4",
         "MSBuildV1",
         "NodeTaskRunnerInstallerV0",
         "NodeToolV0",
@@ -265,7 +262,6 @@
         "PublishBuildArtifactsV1",
         "SshV0",
         "UseDotNetV2",
-        "UseNodeV1",
-        "UsePythonVersionV0"
+        "UseNodeV1"
     ]
 }
