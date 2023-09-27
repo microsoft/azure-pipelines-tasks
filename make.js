@@ -221,7 +221,6 @@ CLI.serverBuild = function(/** @type {{ task: string }} */ argv) {
         allTasksNode20.forEach(taskName => buildTaskWrapped(taskName, allTasksNode20.length, 20));
 
     } 
-
     if (allTasksDefault.length > 0) {
         util.installNode('10');
         ensureTool('node', '--version', `v${node10Version}`);
