@@ -142,7 +142,7 @@ namespace BuildConfigGen
 
         private static void Main2(string task, int? currentSprint, HashSet<Config.ConfigRecord> targetConfigs)
         {
-            if(!currentSprint.HasValue)
+            if (!currentSprint.HasValue)
             {
                 currentSprint = GetCurrentSprint();
             }
@@ -502,7 +502,7 @@ namespace BuildConfigGen
                 foreach (var pathToRemoveFromOutput in pathsToRemoveFromOutput)
                 {
                     // todo: handle .npmrc properly -- ensure it's content validated properly if written by buildconfiggen
-                    if(pathToRemoveFromOutput == ".npmrc")
+                    if (pathToRemoveFromOutput == ".npmrc")
                     {
                         continue;
                     }
@@ -677,11 +677,18 @@ namespace BuildConfigGen
             string inputTaskPath = Path.Combine(taskTarget, fileName);
             JsonNode inputTaskNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(inputTaskPath))!;
 
-            inputTaskNode["version"]!["Major"] = configTaskVersion[Config.Default].Major;
-            inputTaskNode["version"]!["Minor"] = configTaskVersion[Config.Default].Minor;
-            inputTaskNode["version"]!["Patch"] = configTaskVersion[Config.Default].Patch;
+            if (
+                ((int)inputTaskNode["version"]!["Major"]!) != configTaskVersion[Config.Default].Major
+                || ((int)inputTaskNode["version"]!["Minor"]!) != configTaskVersion[Config.Default].Minor
+                || ((int)inputTaskNode["version"]!["Patch"]!) != configTaskVersion[Config.Default].Patch
+                )
+            {
+                inputTaskNode["version"]!["Major"] = configTaskVersion[Config.Default].Major;
+                inputTaskNode["version"]!["Minor"] = configTaskVersion[Config.Default].Minor;
+                inputTaskNode["version"]!["Patch"] = configTaskVersion[Config.Default].Patch;
 
-            ensureUpdateModeVerifier!.WriteAllText(inputTaskPath, inputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
+                ensureUpdateModeVerifier!.WriteAllText(inputTaskPath, inputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
+            }
         }
 
         private static void WriteVersionMapFile(string versionMapFile, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersion, HashSet<Config.ConfigRecord> targetConfigs)
