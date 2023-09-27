@@ -14,6 +14,8 @@ var syncRequest = require('sync-request');
 var repoPath = __dirname;
 var downloadPath = path.join(repoPath, '_download');
 
+const isNoColor = process.env['NO_COLOR'] ? process.env['NO_COLOR'].toLowerCase() == 'true' : false;
+
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
@@ -109,8 +111,7 @@ var rp = function (relPath) {
 exports.rp = rp;
 
 var fail = function (message) {
-    console.error('ERROR: ' + message);
-    process.exit(1);
+    throw Error(message);
 }
 exports.fail = fail;
 
@@ -128,6 +129,22 @@ var pathExists = function (checkPath) {
     return test('-d', checkPath) || test('-f', checkPath);
 }
 exports.pathExists = pathExists;
+
+function log(message, type) {
+    switch (type) {
+        case 'error':
+        case 'err':
+            if (!isNoColor) {
+                message = '\x1b[31m' + message + '\x1b[0m';
+            }
+            console.error(message);
+            break;
+
+        default:
+            console.log(message);
+    }
+}
+exports.log = log;
 
 /**
  * Given a module path, gets the info used for generating a pack file
@@ -297,10 +314,10 @@ var run = function (cl, inheritStreams, noHeader) {
     }
     catch (err) {
         if (!inheritStreams) {
-            console.error(err.output ? err.output.toString() : err.message);
+            log(err.output ? err.output.toString() : err.message, 'error');
         }
 
-        process.exit(1);
+        fail(err);
     }
 
     return (output || '').toString().trim();
@@ -331,28 +348,21 @@ var ensureTool = function (name, versionArgs, validate) {
 exports.ensureTool = ensureTool;
 
 var installNode = function (nodeVersion) {
-    switch (nodeVersion || '') {
-        case '20':
-            nodeVersion = 'v20.3.1';
-            break;
-        case '16':
-            nodeVersion = 'v16.17.1';
-            break;
-        case '14':
-            nodeVersion = 'v14.10.1';
-            break;
-        case '10':
-            nodeVersion = 'v10.24.1';
-            break;
-        case '6':
-        case '':
-            nodeVersion = 'v6.10.3';
-            break;
-        case '5':
-            nodeVersion = 'v5.10.1';
-            break;
-        default:
-            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14, 16, 20`);
+    if (!nodeVersion) {
+        nodeVersion = 'v6.10.3';
+    } else {
+        const versions = {
+            20: 'v20.3.1',
+            16: 'v16.17.1',
+            14: 'v14.10.1',
+            10: 'v10.24.1',
+            6: 'v6.10.3',
+            5: 'v5.10.1',
+        };
+        if (!versions[nodeVersion]) {
+            fail(`Unexpected node version '${nodeVersion}'. Supported versions: ${Object.keys(versions).join(', ')}`);
+        };
+        nodeVersion = versions[nodeVersion];
     }
 
     if (nodeVersion === run('node -v')) {

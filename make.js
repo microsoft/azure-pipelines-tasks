@@ -60,6 +60,11 @@ var genTaskCommonPath = path.join(__dirname, '_generated', 'Common');
 
 var CLI = {};
 
+process.on('uncaughtException', err => {
+    util.log(err, 'err');
+    process.exit(1);
+})
+
 // node min version
 var minNodeVer = '6.10.3';
 if (semver.lt(process.versions.node, minNodeVer)) {
@@ -513,24 +518,18 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
         }
 
         nodeVersions.forEach(function (nodeVersion) {
-            try {
-                nodeVersion = String(nodeVersion);
-                banner('Run Mocha Suits for node ' + nodeVersion);
-                // setup the version of node to run the tests
-                util.installNode(nodeVersion);
+            nodeVersion = String(nodeVersion);
+            banner('Run Mocha Suits for node ' + nodeVersion);
+            // setup the version of node to run the tests
+            util.installNode(nodeVersion);
 
-
-                if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
-                    run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
-                    util.renameCodeCoverageOutput(coverageTasksPath, taskName);
-                    isReportWasFormed = true;
-                }
-                else {
-                    run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
-                }
-            }  catch (e) {
-                console.error(e);
-                process.exit(1);
+            if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
+                run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+                util.renameCodeCoverageOutput(coverageTasksPath, taskName);
+                isReportWasFormed = true;
+            }
+            else {
+                run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
             }
         });
     }
