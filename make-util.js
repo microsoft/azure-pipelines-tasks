@@ -281,7 +281,7 @@ var matchCopy = function (pattern, sourceRoot, destRoot, options) {
 }
 exports.matchCopy = matchCopy;
 
-var run = function (cl, inheritStreams, noHeader) {
+var run = function (cl, inheritStreams, noHeader, throwOnErr) {
     if (!noHeader) {
         console.log();
         console.log('> ' + cl);
@@ -300,7 +300,11 @@ var run = function (cl, inheritStreams, noHeader) {
             console.error(err.output ? err.output.toString() : err.message);
         }
 
-        process.exit(1);
+        if (throwOnErr) {
+            throw err;
+        } else {
+            process.exit(1);
+        }
     }
 
     return (output || '').toString().trim();

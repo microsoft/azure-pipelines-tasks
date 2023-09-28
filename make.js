@@ -488,6 +488,8 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
     matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(testsPath, 'lib'), path.join(buildTestsPath, 'lib'));
 
     var suiteType = argv.suite || 'L0';
+    var failedTasks = [];
+
     function runTaskTests(taskName) {
         banner('Testing: ' + taskName);
         // find the tests
@@ -521,16 +523,16 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
 
 
                 if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
-                    run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+                    run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true, /*noHeader*/undefined, true);
                     util.renameCodeCoverageOutput(coverageTasksPath, taskName);
                     isReportWasFormed = true;
                 }
                 else {
-                    run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+                    run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true, undefined, true);
                 }
             }  catch (e) {
-                console.error(e);
-                process.exit(1);
+                // Error while running tests, set that the tests failed
+                failedTasks.push(taskName);
             }
         });
     }
@@ -544,6 +546,14 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
             runTaskTests(taskName);
         }
     });
+
+    if (failedTasks.length > 0) {
+        failedTasks.forEach(function(taskName) {
+            console.error(`Task ${taskName} failed`);
+        });
+
+        process.exit(1);
+    }
 
     if (!argv.task) {
         banner('Running common library tests');
