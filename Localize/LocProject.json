@@ -370,24 +370,6 @@
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "Tasks\\Common\\AzureRmDeploy-common\\azure-arm-rest\\Strings\\resources.resjson\\en-US\\resources.resjson",
-            "CopyOption": "LangIDOnPath",
-            "OutputPath": "Tasks\\Common\\AzureRmDeploy-common\\azure-arm-rest\\Strings\\resources.resjson"
-          },
-          {
-            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "Tasks\\Common\\AzureRmDeploy-common\\Strings\\resources.resjson\\en-US\\resources.resjson",
-            "CopyOption": "LangIDOnPath",
-            "OutputPath": "Tasks\\Common\\AzureRmDeploy-common\\Strings\\resources.resjson"
-          },
-          {
-            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
-            "SourceFile": "Tasks\\Common\\AzureRmDeploy-common\\webdeployment-common\\Strings\\resources.resjson\\en-US\\resources.resjson",
-            "CopyOption": "LangIDOnPath",
-            "OutputPath": "Tasks\\Common\\AzureRmDeploy-common\\webdeployment-common\\Strings\\resources.resjson"
-          },
-          {
-            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "Tasks\\Common\\coveragepublisher\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\Common\\coveragepublisher\\Strings\\resources.resjson"
