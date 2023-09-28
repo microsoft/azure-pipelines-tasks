@@ -44,12 +44,11 @@
   "loc.messages.JS_InvalidFilePath": "Chemin de fichier non valide : '%s'. Le chemin d'un fichier .ps1 est obligatoire.",
   "loc.messages.JS_Stderr": "PowerShell a écrit une ou plusieurs lignes dans le flux d'erreurs standard.",
   "loc.messages.JS_InvalidTargetType": "Type de cible « %s » non valide. La valeur doit être l’une des suivantes : 'FilePath’ou’inline'",
-  "loc.messages.JS_SanitizerOutput": "Sanitizer a modifié les arguments d’entrée. Sortie du désinfectant : '%s'",
   "loc.messages.PS_ExitCode": "Arrêt de PowerShell. Code de sortie : '{0}'.",
   "loc.messages.PS_FormattedCommand": "Commande mise en forme : {0}",
   "loc.messages.PS_InvalidActionPreference": "Préférence d’action non valide pour {0}: «{1}». La valeur doit être l’une des suivantes : {2}",
   "loc.messages.PS_InvalidFilePath": "Chemin de fichier '{0}' non valide. Le chemin d'un fichier .ps1 est obligatoire.",
   "loc.messages.PS_UnableToDetermineExitCode": "Exception inattendue. Impossible de déterminer le code de sortie de PowerShell.",
   "loc.messages.PS_InvalidTargetType": "Type de cible « {0} » non valide. La valeur doit être l’une des suivantes : 'FilePath’ou’inline'",
-  "loc.messages.PS_SanitizerOutput": "Le désinfectant a modifié les arguments d’entrée. Sortie du désinfectant : '{0}'"
+  "loc.messages.ScriptArgsSanitized": "Caractères détectés dans les arguments qui peuvent ne pas être exécutés correctement par le shell. Veuillez échapper les caractères spéciaux en utilisant le backtick (`). Plus d'informations sont disponibles ici: https://aka.ms/ado/75787"
 }

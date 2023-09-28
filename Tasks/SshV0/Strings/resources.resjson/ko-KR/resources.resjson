@@ -35,5 +35,5 @@
   "loc.messages.SettingUpSshConnection": "%s@%s:%s에 대한 SSH 연결을 설정하는 중",
   "loc.messages.SshConnectionSuccessful": "연결되었습니다.",
   "loc.messages.UseDefaultPort": "포트가 지정되지 않았으므로 SSH에 대한 기본값인 포트 22를 사용합니다.",
-  "loc.messages.SanitizerOutput": "삭제기가 입력 인수를 변경했습니다. 삭제기의 출력: '%s'"
+  "loc.messages.ScriptArgsSanitized": "셸에서 올바르게 실행되지 않을 수 있는 인수에서 검색된 문자입니다. 백슬래시(\\)를 사용하여 이스케이프 특수 문자를 만드세요. 자세한 내용은 https://aka.ms/ado/75787을 참조하세요."
 }
