@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 227,
+    "Minor": 228,
     "Patch": 0
   },
   "releaseNotes": "What's new in version 2.* <br /> Removed WAR Deploy Support, setting Web.Config options, and the option for the Startup command for Linux Azure Function Apps.",
@@ -367,7 +367,7 @@
     "DeploymentTypeNotSupportedForLinuxConsumption": "The Deployment Type option does not apply for Linux Consumption."
   },
   "_buildConfigMapping": {
-    "Default": "2.227.1",
-    "Node16-225": "2.227.0"
+    "Default": "2.228.1",
+    "Node16-225": "2.228.0"
   }
 }
