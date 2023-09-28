@@ -60,7 +60,7 @@ function Get-SanitizedArguments([string]$inputArgs) {
 
     # regex rule for removing symbols and telemetry.
     # '?<!`' - checking if before character no backtick. '([allowedchars])' - checking if character is allowed. Otherwise, replace to $removedSymbolSign
-    $regex = '(?<!`)([^a-zA-Z0-9\\` _''"\-=\/:\.*,+~?%])';
+    $regex = '(?<!`)([^a-zA-Z0-9\\` _''"\-=\/:\.*,+~?%\n])';
 
     # We're splitting by ``, removing all suspicious characters and then join
     $argsArr = $inputArgs -split $argsSplitSymbols;

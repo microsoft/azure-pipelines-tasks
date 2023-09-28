@@ -27,7 +27,8 @@ $inputArgsSuites = @(
     'a A 1 \ ` _ '' " - = / : . * , + ~ ? %',    # Just each allowed symbol
     '',
     'test 1',
-    'test `; whoami `&`& echo test'
+    'test `; whoami `&`& echo test',
+    "line 1 `n line 2"
 )
 
 foreach ($inputArgs in $inputArgsSuites) {
