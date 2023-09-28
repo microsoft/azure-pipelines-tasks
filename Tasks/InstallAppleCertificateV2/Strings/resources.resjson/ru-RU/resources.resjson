@@ -32,5 +32,6 @@
   "loc.messages.SetKeyPartitionListCommandFailed": "Ошибка при установке ACL partition_id для закрытого ключа. Проверьте правильность пароля цепочки ключей или используйте временную цепочку ключей.",
   "loc.messages.InstallRequiresMac": "Для установки сертификата Apple требуется агент macOS. Установка сертификатов Apple в Linux или Windows не поддерживается Apple.",
   "loc.messages.CertNotValidYetError": "Сертификат \"%s\" (отпечаток: %s) является недействительным до %s",
-  "loc.messages.CertExpiredError": "Срок действия сертификата \"%s\" (отпечаток: %s) истек %s"
+  "loc.messages.CertExpiredError": "Срок действия сертификата \"%s\" (отпечаток: %s) истек %s",
+  "loc.messages.OpenSSLError": "Error parsing certificate. This might be caused by an unsupported algorithm. If you're using old certificate with a new OpenSSL version try to set -legacy flag in opensslPkcsArgs input."
 }

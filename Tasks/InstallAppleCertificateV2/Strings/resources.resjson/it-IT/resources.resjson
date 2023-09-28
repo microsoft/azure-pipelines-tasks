@@ -32,5 +32,6 @@
   "loc.messages.SetKeyPartitionListCommandFailed": "Si è verificato un errore durante l'impostazione dell'ACL partition_id per la chiave privata. Verificare che il valore di `Password keychain` sia corretto oppure usare `Keychain temporaneo` instead.",
   "loc.messages.InstallRequiresMac": "Per installare un certificato Apple, è richiesto un agente macOS. L'installazione di certificati Apple in Linux o Windows non è supportata da Apple.",
   "loc.messages.CertNotValidYetError": "Il certificato \"%s\" (impronta digitale: %s) non è valido fino al giorno %s",
-  "loc.messages.CertExpiredError": "Il certificato \"%s\" (impronta digitale: %s) è scaduto il giorno %s"
+  "loc.messages.CertExpiredError": "Il certificato \"%s\" (impronta digitale: %s) è scaduto il giorno %s",
+  "loc.messages.OpenSSLError": "Error parsing certificate. This might be caused by an unsupported algorithm. If you're using old certificate with a new OpenSSL version try to set -legacy flag in opensslPkcsArgs input."
 }

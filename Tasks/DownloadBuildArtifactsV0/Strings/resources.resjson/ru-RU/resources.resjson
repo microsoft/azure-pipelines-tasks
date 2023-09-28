@@ -37,6 +37,8 @@
   "loc.input.help.checkDownloadedFiles": "Если этот флажок установлен, задача сборки проверит, чтобы все файлы были полностью загружены.",
   "loc.input.label.retryDownloadCount": "Число повторных попыток",
   "loc.input.help.retryDownloadCount": "Необязательное число повторных попыток загрузки артефактов сборки в случае сбоя загрузки.",
+  "loc.input.label.retryRedirectDownloadCount": "Retry count for redirect download",
+  "loc.input.help.retryRedirectDownloadCount": "Optional number of times to retry downloading a build artifact if the download based on redirect fails. If your network does not allow following the redirect, you can set this to -1 to always download streamed response from Azure DevOps instead.",
   "loc.input.label.extractTars": "Извлечь все файлы, хранящихся в TAR-архивах",
   "loc.input.help.extractTars": "Включите этот параметр, чтобы извлечь все загруженные файлы с расширением .tar. Это удобно, так как файлы артефактов необходимо упаковать в TAR-архив, чтобы сохранить разрешения для UNIX-файлов. При включении параметра \"StoreAsTar\" в задаче PublishBuildArtifacts артефакты будут автоматически сохранены как TAR-файлы.",
   "loc.messages.DownloadArtifacts": "Скачивается артефакт %s из: %s",
@@ -67,5 +69,7 @@
   "loc.messages.TarExtractionNotSupportedInWindows": "Извлечение из TAR-архива не поддерживается в Windows",
   "loc.messages.NoTarsFound": "TAR-архивы для извлечения не найдены",
   "loc.messages.CleaningDestinationFolder": "Очистка конечной папки: %s",
-  "loc.messages.NoFolderToClean": "Указанная папка очистки не найдена. Нет элементов для очистки"
+  "loc.messages.NoFolderToClean": "Указанная папка очистки не найдена. Нет элементов для очистки",
+  "loc.messages.PreferRedirect": "Prefer downloading files through redirect to the content stitcher: %s",
+  "loc.messages.FollowingDownloadRedirectFailed": "Could not download the files by following a redirect: %s. Falling back to consuming streamed content from Azure DevOps."
 }

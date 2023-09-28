@@ -11,6 +11,7 @@
   "loc.input.label.serverUrl": "伺服器 URL",
   "loc.input.label.username": "使用者名稱",
   "loc.input.label.password": "密碼",
+  "loc.input.label.implicitFTPS": "Use implicit FTPS",
   "loc.input.label.rootFolder": "根資料夾",
   "loc.input.help.rootFolder": "要上傳之檔案所在的來源資料夾。",
   "loc.input.label.filePatterns": "檔案模式",
