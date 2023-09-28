@@ -546,12 +546,12 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
         }
     });
 
-    if (!argv.task || argv.task.startsWith('Common')) {
-        var commonBuildPath = path.join(buildTasksPath, 'Common');
-        var commonLibPattern = path.join(commonBuildPath, '*', 'Tests', suiteType + '.js');
-        if (argv.task.startsWith('Common/')) {
-            var commonModuleName = argv.task.split('/')[1];
-            var commonModuleBuildPath = path.join(buildTasksPath, 'Common', commonModuleName);
+    if (!argv.task || (argv.task && argv.task.startsWith('Common'))) {
+        let commonBuildPath = path.join(buildTasksPath, 'Common');
+        let commonLibPattern = path.join(commonBuildPath, '*', 'Tests', suiteType + '.js');
+        if (argv.task && argv.task.startsWith('Common/')) {
+            const commonModuleName = argv.task.split('/')[1];
+            const commonModuleBuildPath = path.join(buildTasksPath, 'Common', commonModuleName);
             if (fs.existsSync(commonModuleBuildPath)){
                 commonLibPattern = path.join(commonModuleBuildPath, 'Tests', suiteType + '.js');
             } else {
