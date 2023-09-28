@@ -36,7 +36,7 @@ export class azureclitask {
             var failOnStdErr: boolean = tl.getBoolInput("failOnStandardError", false);
             tl.mkdirP(cwd);
             tl.cd(cwd);
-            Utility.throwIfError(tl.execSync("az", "--version"));
+            Utility.throwIfError(tl.execSync("az", "version"));
             // set az cli config dir
             this.setConfigDirectory();
             this.setAzureCloudBasedOnServiceEndpoint();
