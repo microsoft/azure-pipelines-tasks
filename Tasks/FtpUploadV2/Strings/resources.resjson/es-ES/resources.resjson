@@ -11,6 +11,7 @@
   "loc.input.label.serverUrl": "Dirección URL del servidor",
   "loc.input.label.username": "Nombre de usuario",
   "loc.input.label.password": "Contraseña",
+  "loc.input.label.implicitFTPS": "Use implicit FTPS",
   "loc.input.label.rootFolder": "Carpeta raíz",
   "loc.input.help.rootFolder": "Carpeta de origen de donde se cargan los archivos.",
   "loc.input.label.filePatterns": "Patrones de archivo",

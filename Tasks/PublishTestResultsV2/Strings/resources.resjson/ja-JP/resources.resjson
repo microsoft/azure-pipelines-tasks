@@ -15,6 +15,8 @@
   "loc.input.help.mergeTestResults": "結果ファイルごとにテストの実行が作成されます。結果を 1 つのテストの実行にマージする場合、このオプションを有効にします。最適化してパフォーマンスを向上させるため、結果ファイルが 100 個を超えたら、このオプションに関係なく、結果は 1 つの実行にマージされます。",
   "loc.input.label.failTaskOnFailedTests": "テスト エラーがある場合に失敗する",
   "loc.input.help.failTaskOnFailedTests": "テストが失敗した場合にタスクを失敗させます。結果ファイルでテスト エラーが検出された場合にタスクを中止するには、このオプションをオンにします。",
+  "loc.input.label.failTaskOnMissingResultsFile": "Fail if no result files are found",
+  "loc.input.help.failTaskOnMissingResultsFile": "Fail the task if no result files are found.",
   "loc.input.label.testRunTitle": "テストの実行のタイトル",
   "loc.input.help.testRunTitle": "テスト実行の名前を指定します。",
   "loc.input.label.platform": "ビルド プラットフォーム",
