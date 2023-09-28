@@ -32,5 +32,6 @@
   "loc.messages.SetKeyPartitionListCommandFailed": "設定私密金鑰的 partition_id ACL 時發生錯誤。請驗證 [金鑰鏈密碼] 正確，或改用 [臨時金鑰鏈]。",
   "loc.messages.InstallRequiresMac": "必須有 macOS 代理程式才能安裝 Apple Certificate。Apple 不支援在 Linux 或 Windows 上安裝 Apple Certificate。",
   "loc.messages.CertNotValidYetError": "憑證 \"%s\" (指紋: %s) 於 %s 後才會生效",
-  "loc.messages.CertExpiredError": "憑證 \"%s\" (指紋: %s) 於 %s 過期"
+  "loc.messages.CertExpiredError": "憑證 \"%s\" (指紋: %s) 於 %s 過期",
+  "loc.messages.OpenSSLError": "Error parsing certificate. This might be caused by an unsupported algorithm. If you're using old certificate with a new OpenSSL version try to set -legacy flag in opensslPkcsArgs input."
 }

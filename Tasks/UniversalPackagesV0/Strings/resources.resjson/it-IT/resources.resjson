@@ -59,6 +59,7 @@
   "loc.messages.PackagesPublishedSuccessfully": "I pacchetti sono stati pubblicati",
   "loc.messages.PackagesFailedToPublish": "La pubblicazione dei pacchetti non è riuscita",
   "loc.messages.UnknownFeedType": "Tipo di feed '%s' sconosciuto",
+  "loc.messages.Error_NoVersionOptionSpecifiedForPublish": "Invalid versionOption/versionPublishSelector provided. Must be set to 'major', 'minor', 'patch', or 'custom'",
   "loc.messages.Error_NoSourceSpecifiedForPublish": "Non è stata specificata alcuna origine esterna per la pubblicazione",
   "loc.messages.Error_NoSourceSpecifiedForDownload": "Non è stata specificata alcuna origine esterna per il download",
   "loc.messages.Error_UnexpectedErrorArtifactTool": "Si è verificato un errore imprevisto durante il tentativo di eseguire il push del pacchetto. Codice di uscita: %s. Errore:%s",

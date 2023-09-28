@@ -26,6 +26,7 @@
   "loc.messages.StartingDownloadOfPackage": "Début du téléchargement du package %s vers l'emplacement %s",
   "loc.messages.ExtractingPackage": "Extraction du package %s dans le répertoire %s",
   "loc.messages.PackageTypeNotSupported": "Seuls les types de package NuGet, Python, Universal, Npm et Maven peuvent être téléchargés à l'aide de cette tâche.",
+  "loc.messages.SkippingFileWithNoContent": "Skipping file %s as no supported content could be found",
   "loc.messages.ExtractionFailed": "Échec de l'extraction du package avec l'erreur %s",
   "loc.messages.RetryingOperation": "Échec de l'opération. Attente de %sms avant une nouvelle tentative. Nouvelles tentatives restantes : %s",
   "loc.messages.RedirectUrlError": "Impossible d'obtenir l'URL de redirection. Erreur : %.",

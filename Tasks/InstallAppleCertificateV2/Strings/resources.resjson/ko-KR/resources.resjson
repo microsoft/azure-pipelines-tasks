@@ -32,5 +32,6 @@
   "loc.messages.SetKeyPartitionListCommandFailed": "프라이빗 키의 partition_id ACL을 설정하는 중 오류가 발생했습니다. '키 집합 암호'가 올바른지 확인하거나, '임시 키 집합'을 대신 사용하세요.",
   "loc.messages.InstallRequiresMac": "Apple 인증서를 설치하려면 macOS 에이전트가 필요합니다. Linux 또는 Windows에는 Apple 인증서를 설치할 수 없습니다.",
   "loc.messages.CertNotValidYetError": "\"%s\" 인증서(지문: %s)는 %s까지 유효하지 않습니다.",
-  "loc.messages.CertExpiredError": "\"%s\" 인증서(지문: %s)가 %s에 만료되었습니다."
+  "loc.messages.CertExpiredError": "\"%s\" 인증서(지문: %s)가 %s에 만료되었습니다.",
+  "loc.messages.OpenSSLError": "Error parsing certificate. This might be caused by an unsupported algorithm. If you're using old certificate with a new OpenSSL version try to set -legacy flag in opensslPkcsArgs input."
 }

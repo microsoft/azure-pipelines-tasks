@@ -37,6 +37,8 @@
   "loc.input.help.checkDownloadedFiles": "Si cette vérification est vérifiée, cette tâche de build vérifie que tous les fichiers sont entièrement téléchargés.",
   "loc.input.label.retryDownloadCount": "Nombre de nouvelles tentatives",
   "loc.input.help.retryDownloadCount": "Nombre facultatif de fois pour réessayer de télécharger un artefacts de build en cas d’échec du téléchargement.",
+  "loc.input.label.retryRedirectDownloadCount": "Retry count for redirect download",
+  "loc.input.help.retryRedirectDownloadCount": "Optional number of times to retry downloading a build artifact if the download based on redirect fails. If your network does not allow following the redirect, you can set this to -1 to always download streamed response from Azure DevOps instead.",
   "loc.input.label.extractTars": "Extraire tous les fichiers stockés dans des archives archivées",
   "loc.input.help.extractTars": "Activez cette option pour extraire tous les fichiers téléchargés dont l’extension est .extension. Cela est utile, car vous devez packer vos fichiers d’artefacts dans une collection si vous voulez conserver les autorisations de fichier Unix. L’activation de l’option « StoreAsTar » dans la tâche PublishBuildArtifacts stocke automatiquement les artefacts en tant que fichiers .body.",
   "loc.messages.DownloadArtifacts": "Téléchargement de l'artefact %s à partir de %s",
@@ -67,5 +69,7 @@
   "loc.messages.TarExtractionNotSupportedInWindows": "L’extraction par extraction d’extraction n’est pas prise en charge sur Windows",
   "loc.messages.NoTarsFound": "Aucune archive archivée n’a été trouvée pour extraire",
   "loc.messages.CleaningDestinationFolder": "Nettoyage du dossier de destination : %s",
-  "loc.messages.NoFolderToClean": "Le dossier de nettoyage spécifié est introuvable. Rien à nettoyer"
+  "loc.messages.NoFolderToClean": "Le dossier de nettoyage spécifié est introuvable. Rien à nettoyer",
+  "loc.messages.PreferRedirect": "Prefer downloading files through redirect to the content stitcher: %s",
+  "loc.messages.FollowingDownloadRedirectFailed": "Could not download the files by following a redirect: %s. Falling back to consuming streamed content from Azure DevOps."
 }

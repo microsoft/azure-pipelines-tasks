@@ -26,6 +26,7 @@
   "loc.messages.StartingDownloadOfPackage": "パッケージ %s を場所 %s にダウンロードする処理を開始しています",
   "loc.messages.ExtractingPackage": "パッケージ %s をディレクトリ %s に抽出しています",
   "loc.messages.PackageTypeNotSupported": "このタスクを使用すると、Nuget、Python、Universal、Npm、および Maven のパッケージの種類のみをダウンロードできます。",
+  "loc.messages.SkippingFileWithNoContent": "Skipping file %s as no supported content could be found",
   "loc.messages.ExtractionFailed": "次のエラーが発生したため、パッケージを抽出できませんでした: %s",
   "loc.messages.RetryingOperation": "操作に失敗しました。再試行する前に %s ミリ秒待機します。残り試行回数: %s",
   "loc.messages.RedirectUrlError": "エラー % により、リダイレクト URL を取得できません。",

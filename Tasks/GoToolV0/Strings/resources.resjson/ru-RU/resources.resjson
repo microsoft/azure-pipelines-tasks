@@ -10,6 +10,8 @@
   "loc.input.help.goPath": "Пользовательское значение переменной среды GOPATH.",
   "loc.input.label.goBin": "GOBIN",
   "loc.input.help.goBin": "Пользовательское значение переменной среды GOBIN.",
+  "loc.input.label.goSource": "Go source",
+  "loc.input.help.goSource": "Go distribution to install",
   "loc.messages.FailedToDownload": "Не удалось скачать версию Go %s. Проверьте правильность версии и устраните другие ошибки. Ошибка: %s",
   "loc.messages.TempDirNotSet": "Переменная среды Agent.TempDirectory должна была быть задана."
 }

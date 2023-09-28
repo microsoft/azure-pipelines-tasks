@@ -32,5 +32,6 @@
   "loc.messages.SetKeyPartitionListCommandFailed": "秘密キーへの partition_id ACL の設定でエラーが発生しました。`Keychain password` が正しいことを確認するか、代わりに `Temporary Keychain` を使用します。",
   "loc.messages.InstallRequiresMac": "Apple の証明書のインストールには、macOS エージェントが必要です。Apple は、Linux または Windows での Apple の証明書のインストールをサポートしていません。",
   "loc.messages.CertNotValidYetError": "証明書 \"%s\" (フィンガープリント: %s) は %s まで有効ではありません",
-  "loc.messages.CertExpiredError": "証明書 \"%s\" (フィンガープリント: %s) の有効期限が %s に切れました"
+  "loc.messages.CertExpiredError": "証明書 \"%s\" (フィンガープリント: %s) の有効期限が %s に切れました",
+  "loc.messages.OpenSSLError": "Error parsing certificate. This might be caused by an unsupported algorithm. If you're using old certificate with a new OpenSSL version try to set -legacy flag in opensslPkcsArgs input."
 }
