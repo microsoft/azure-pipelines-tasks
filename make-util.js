@@ -11,12 +11,13 @@ var shell = require('shelljs');
 var syncRequest = require('sync-request');
 
 // global paths
-var downloadPath = path.join(__dirname, '_download');
+var repoPath = __dirname;
+var downloadPath = path.join(repoPath, '_download');
 
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['4.0.2', '4.0.8'];
+var allowedTypescriptVersions = ['4.0.2', '5.1.6'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -331,6 +332,9 @@ exports.ensureTool = ensureTool;
 
 var installNode = function (nodeVersion) {
     switch (nodeVersion || '') {
+        case '20':
+            nodeVersion = 'v20.3.1';
+            break;
         case '16':
             nodeVersion = 'v16.17.1';
             break;
@@ -338,7 +342,7 @@ var installNode = function (nodeVersion) {
             nodeVersion = 'v14.10.1';
             break;
         case '10':
-            nodeVersion = 'v10.21.0';
+            nodeVersion = 'v10.24.1';
             break;
         case '6':
         case '':
@@ -348,7 +352,7 @@ var installNode = function (nodeVersion) {
             nodeVersion = 'v5.10.1';
             break;
         default:
-            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14, 16`);
+            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14, 16, 20`);
     }
 
     if (nodeVersion === run('node -v')) {
@@ -1782,7 +1786,8 @@ exports.renameCodeCoverageOutput = renameCodeCoverageOutput;
 
 /**
  * Returns path to BuldConfigGenerator, build it if needed.  Fail on compilation failure
- * @returns Path to the executed file
+ * @param {String} baseConfigToolPath base build config tool path
+ * @returns {String} Path to the executed file
  */
 var getBuildConfigGenerator = function (baseConfigToolPath) {
     var programPath = "";
@@ -1886,5 +1891,67 @@ var generateTasks = function(baseConfigToolPath, taskList, configsString, makeOp
     return newMakeOptions;
 }
 exports.generateTasks = generateTasks;
+
+
+/**
+ * Wrapper for buildTask function which compares diff between source and generated tasks
+ * @param {Function} originalFunction - Original buildTask function
+ * @param {string} basicGenTaskPath - path to generated folder
+ * @param {boolean} callGenTaskDuringBuild - if false, the sync step will be skipped
+ * @returns {Function} - wrapped buildTask function which compares diff between source and generated tasks
+ * and copy files from generated to source if needed
+ */
+function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTaskDuringBuild = false) {
+    const runtimeChangedFiles = ["package.json", "package-lock.json", "npm-shrinkwrap.json"];
+
+    if (!originalFunction || originalFunction instanceof Function === false) throw Error('originalFunction is not defined');
+    // If the task is building on the ci, we don't want to sync files
+    if (callGenTaskDuringBuild === false) return originalFunction;
+
+    return function(taskName, ...args) {
+        originalFunction.apply(this, [taskName, ...args]);
+
+        const genTaskPath = path.join(basicGenTaskPath, taskName);
+
+        // if it's not a generated task, we don't need to sync files
+        if (!fs.existsSync(genTaskPath)) return;
+
+        const [ baseTaskName, config ] = taskName.split("_");
+        const copyCandidates = shell.find(genTaskPath)
+            .filter(function (item) { 
+                // ignore node_modules
+                if (item.indexOf("node_modules") !== -1) return false
+                // ignore everything except package.json, package-lock.json, npm-shrinkwrap.json
+                if (!runtimeChangedFiles.some((pattern) => item.indexOf(pattern) !== -1)) return false;
+                
+                return path.normalize(item) != root;
+            });
+
+
+        copyCandidates.forEach((candidatePath) => {
+            const relativePath = path.relative(genTaskPath, candidatePath);
+            let dest = path.join(__dirname, 'Tasks', baseTaskName, relativePath);
+
+            if (config) {  
+                dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
+            }
+            
+            // if the destination path doesn't exist in Task/_buildConfigs, 
+            // we assume that the file was added by the generator from the source and will be handles while we build default task version
+            if (!fs.existsSync(dest) && config) return
+            
+            const folderPath = path.dirname(dest);
+            if (!fs.existsSync(folderPath)) {
+                console.log(`Creating folder ${folderPath}`);
+                shell.mkdir('-p', folderPath);
+            }
+
+            console.log(`Copying ${candidatePath} to ${dest}`);
+            fs.copyFileSync(candidatePath, dest);
+        });
+    }
+}
+
+exports.syncGeneratedFilesWrapper = syncGeneratedFilesWrapper;
 
 //------------------------------------------------------------------------------

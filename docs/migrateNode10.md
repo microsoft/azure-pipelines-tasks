@@ -7,7 +7,7 @@
 
 # Upgrading Tasks to Node 10
 
-1. Upgrade `typescript` to `4.0.8` version and fix type errors. Add the following snippet to the `package.json`:
+1. Upgrade `typescript` to `4.0.2` version and fix type errors. Add the following snippet to the `package.json`:
 
 ```json
   "devDependencies": {

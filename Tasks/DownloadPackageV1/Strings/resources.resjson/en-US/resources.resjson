@@ -26,6 +26,7 @@
   "loc.messages.StartingDownloadOfPackage": "Starting download of package %s to location %s",
   "loc.messages.ExtractingPackage": "Extracting package %s to directory %s",
   "loc.messages.PackageTypeNotSupported": "Only Nuget, Python, Universal, Npm, and Maven packages types can be downloaded using this task.",
+  "loc.messages.SkippingFileWithNoContent": "Skipping file %s as no supported content could be found",
   "loc.messages.ExtractionFailed": "Failed to extract package with error %s",
   "loc.messages.RetryingOperation": "Operation failed, waiting %sms before retrying, retries remaining: %s",
   "loc.messages.RedirectUrlError": "Unable to get redirect URL with error %.",

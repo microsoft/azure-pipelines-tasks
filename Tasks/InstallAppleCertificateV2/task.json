@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 225,
+        "Minor": 229,
         "Patch": 0
     },
     "releaseNotes": "Fixes codesign hangs on a self hosted agent. A Keychain password is now required to use `Default Keychain` or `Custom Keychain`. Microsoft hosted builds should use `Temporary Keychain`.",
@@ -177,6 +177,7 @@
         "SetKeyPartitionListCommandFailed": "Error setting the partition_id ACL for the private key. Verify that the `Keychain password` is correct, or use a `Temporary Keychain` instead.",
         "InstallRequiresMac": "Install Apple Certificate requires a macOS agent. Installing Apple Certificates on Linux or Windows is not supported by Apple.",
         "CertNotValidYetError": "Certificate \"%s\" (fingerprint: %s) isn't valid until %s",
-        "CertExpiredError": "Certificate \"%s\" (fingerprint: %s) expired on %s"
+        "CertExpiredError": "Certificate \"%s\" (fingerprint: %s) expired on %s",
+        "OpenSSLError": "Error parsing certificate. This might be caused by an unsupported algorithm. If you're using old certificate with a new OpenSSL version try to set -legacy flag in opensslPkcsArgs input."
     }
 }

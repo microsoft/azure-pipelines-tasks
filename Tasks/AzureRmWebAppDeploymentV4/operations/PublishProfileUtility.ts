@@ -107,11 +107,7 @@ export class PublishProfileUtility {
                errStream: errObj,
 			   outStream: process.stdout,
 			   failOnStdErr: true,
-#if NODE16
-               windowsVerbatimArguments: false // windowsVerbatimArguments should be false, otherwise see https://github.com/microsoft/azure-pipelines-tasks/issues/17634
-#else
                windowsVerbatimArguments: true
-#endif
              });
         } catch (error) {
             cmdError = error;

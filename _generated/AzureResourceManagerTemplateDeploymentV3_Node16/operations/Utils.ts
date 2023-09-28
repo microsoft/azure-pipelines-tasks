@@ -10,7 +10,7 @@ import { TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
 import { DeploymentParameters } from "./DeploymentParameters";
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
-import { loginAzureRM } from 'azure-pipelines-tasks-artifacts-common/azCliUtils';
+import { setAzureCloudBasedOnServiceEndpoint, loginAzureRM } from 'azure-pipelines-tasks-artifacts-common/azCliUtils';
 
 var cpExec = util.promisify(require('child_process').exec);
 var hm = require("typed-rest-client/HttpClient");
@@ -431,6 +431,7 @@ class Utils {
             let azcliversion = await this.getAzureCliVersion()
             if(parseFloat(azcliversion)){
                 if(this.isBicepAvailable(azcliversion)){
+                    setAzureCloudBasedOnServiceEndpoint(taskParameters.connectedService);
                     await loginAzureRM(taskParameters.connectedService);
                     await this.execBicepBuild(filePath)
                     filePath = filePath.replace('.bicep', '.json')

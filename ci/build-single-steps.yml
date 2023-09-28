@@ -18,7 +18,7 @@ steps:
 - task: NodeTool@0
   displayName: Use node 10
   inputs:
-    versionSpec: 10.x
+    versionSpec: 10.24.1
 
 # npm install
 - script: npm install
@@ -43,9 +43,9 @@ steps:
 - script: node make.js clean
   displayName: Clean tasks
 
-# Build
+# Build Tasks
 - script: node make.js serverBuild --task "$(task_pattern)"
-  displayName: Build
+  displayName: Build Tasks
 
 # Check diff for task sources
 - script: node ./ci/verify-source-changes.js "$(task_pattern)"
