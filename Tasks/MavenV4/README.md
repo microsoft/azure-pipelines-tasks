@@ -1,4 +1,4 @@
-# Build your Java code using Maven in Azure Pipelines 
+# Build your Java code using Maven in Azure Pipelines  
 
 ### Parameters for Maven build task are explained below
 
