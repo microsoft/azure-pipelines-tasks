@@ -253,7 +253,6 @@
         "GulpV1",
         "JavaToolInstallerV0",
         "NodeTaskRunnerInstallerV0",
-        "NodeToolV0",
         "PowerShellV2",
         "PublishBuildArtifactsV1",
         "SshV0",
