@@ -44,12 +44,11 @@
   "loc.messages.JS_InvalidFilePath": "ファイル パス '%s' が無効です。.ps1 ファイルへのパスが必要です。",
   "loc.messages.JS_Stderr": "PowerShell が標準エラー ストリームに 1 行以上を書き込みました。",
   "loc.messages.JS_InvalidTargetType": "無効なターゲット型 '%s' です。値は 'filepath' または 'inline' のどちらかである必要があります",
-  "loc.messages.JS_SanitizerOutput": "サニタイザーが入力引数を変更しました。サニタイザーからの出力: '%s'",
   "loc.messages.PS_ExitCode": "PowerShell がコード '{0}' で終了しました。",
   "loc.messages.PS_FormattedCommand": "フォーマット後のコマンド: {0}",
   "loc.messages.PS_InvalidActionPreference": "{0} の無効なアクション設定: '{1}'。値は次のいずれかである必要があります: {2}",
   "loc.messages.PS_InvalidFilePath": "ファイル パス '{0}' が無効です。.ps1 ファイルへのパスが必要です。",
   "loc.messages.PS_UnableToDetermineExitCode": "予期しない例外が発生しました。PowerShell からの終了コードを判別できません。",
   "loc.messages.PS_InvalidTargetType": "無効なターゲット型 '{0}' です。値は 'filepath' または 'inline' のどちらかである必要があります",
-  "loc.messages.PS_SanitizerOutput": "サニタイザーが入力引数を変更しました。サニタイザーからの出力: {0}"
+  "loc.messages.ScriptArgsSanitized": "シェルによって正しく実行されない可能性のある引数の文字が検出されました。バックティック (`) を使用して特殊文字をエスケープしてください。詳細についてはこちら: https://aka.ms/ado/75787"
 }
