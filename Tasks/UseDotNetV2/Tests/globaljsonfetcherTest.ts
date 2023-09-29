@@ -52,7 +52,7 @@ mockery.registerMock('fs', {
             return Buffer.from(JSON.stringify(globalJson));
         }
         if (path == validSubDirGlobalJson) {
-            var globalJson = new GlobalJson(subDirVersionNumber);
+            var globalJson = new GlobalJson(subDirVersionNumber, true);
             return Buffer.from(JSON.stringify(globalJson));
         }
         if (path == pathToEmptyGlobalJson) {
@@ -67,6 +67,10 @@ mockery.registerMock('./versionfetcher', {
         return {
             getVersionInfo: function (versionSpec: string, vsVersionSpec: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
                 return Promise<VersionInfo>((resolve, reject) => {
+                    if (/pre/.test(versionSpec) && !includePreviewVersions) {
+                        reject("Unable to find version");
+                    }
+
                     resolve(new VersionInfo({ version: versionSpec, files: null, "runtime-version": versionSpec, "vs-version": vsVersionSpec }, packageType));
                 });
             }
