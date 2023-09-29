@@ -7,56 +7,26 @@ import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 
 let osPlat: string = os.platform();
 let osArch: string = os.arch();
-let defaultSource: string = 'https://storage.googleapis.com/golang/'
-let microsoftSource: string = 'https://aka.ms/golang/release/latest/'
+
 async function run() {
     try {
         let version = tl.getInput('version', true).trim();
-        let goSourceInput = tl.getInput('goSource', false)
-        tl.debug("goSourceInput:"+goSourceInput);
-        if(goSourceInput == "downloadFromDefaultSource")
-        {
-            goSourceInput = defaultSource;
-            tl.debug("goSourceInput:"+goSourceInput);
-        }
-        else if(goSourceInput == "downloadFromMicrosoftSource")
-        {
-            goSourceInput = microsoftSource;
-            tl.debug("goSourceInput:"+goSourceInput);
-        }
-        if (!goSourceInput) {
-            goSourceInput = defaultSource
-        } else {
-            goSourceInput = goSourceInput.trim()
-        }
-        // Is there a safe way to allow fully custom URLs? How would we create the cache key?
-        if (goSourceInput != defaultSource && goSourceInput != microsoftSource) {
-            throw new Error('Only google and Microsoft sources are allowed')
-        }
-        await getGo(goSourceInput, version);
-        telemetry.emitTelemetry('TaskHub', 'GoToolV0', { version, goSourceInput });
+        await getGo(version);
+        telemetry.emitTelemetry('TaskHub', 'GoToolV0', { version });
     }
     catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
     }
 }
 
-async function getGo(source: string, version: string) {
+async function getGo(version: string) {
     // check cache
-    let toolPath: string = undefined;
-    let toolName: string
-    if (source === defaultSource) {
-        toolName = 'go'
-    } else if (source === microsoftSource) {
-        toolName = 'microsoftgo'
-    } 
-    if (toolName) {
-        // no caching of unknown sources
-        toolPath = toolLib.findLocalTool(toolName, fixVersion(version));
-    }
+    let toolPath: string;
+    toolPath = toolLib.findLocalTool('go', fixVersion(version));
+
     if (!toolPath) {
         // download, extract, cache
-        toolPath = await acquireGo(source, version, toolName);
+        toolPath = await acquireGo(version);
         tl.debug("Go tool is cached under " + toolPath);
     }
 
@@ -70,12 +40,12 @@ async function getGo(source: string, version: string) {
 }
 
 
-async function acquireGo(source:string, version: string, toolName: string): Promise<string> {
+async function acquireGo(version: string): Promise<string> {
     //
     // Download - a tool installer intimately knows how to get the tool (and construct urls)
     //
     let fileName: string = getFileName(version);
-    let downloadUrl: string = getDownloadUrl(source, fileName);
+    let downloadUrl: string = getDownloadUrl(fileName);
     let downloadPath: string = null;
     try {
         downloadPath = await toolLib.downloadTool(downloadUrl);
@@ -123,8 +93,8 @@ function getFileName(version: string): string {
     return filename;
 }
 
-function getDownloadUrl(source: string, filename: string): string {
-    return util.format("%s%s", source, filename);
+function getDownloadUrl(filename: string): string {
+    return util.format("https://storage.googleapis.com/golang/%s", filename);
 }
 
 function setGoEnvironmentVariables(goRoot: string) {
