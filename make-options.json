@@ -254,7 +254,6 @@
         "JavaToolInstallerV0",
         "NodeTaskRunnerInstallerV0",
         "PublishBuildArtifactsV1",
-        "SshV0",
         "UseDotNetV2",
         "UseNodeV1"
     ]
