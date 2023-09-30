@@ -213,3 +213,6 @@ LoadTest.code-workspace
 .idea/
 .nyc_output/
 _dotnetsdk/
+
+# BuildConfigGen files
+FilesOverriddenForConfigGoHereREADME.txt
