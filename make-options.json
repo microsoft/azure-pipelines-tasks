@@ -253,8 +253,6 @@
         "GulpV1",
         "JavaToolInstallerV0",
         "NodeTaskRunnerInstallerV0",
-        "PublishBuildArtifactsV1",
-        "UseDotNetV2",
-        "UseNodeV1"
+        "PublishBuildArtifactsV1"
     ]
 }
