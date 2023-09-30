@@ -166,6 +166,10 @@
     "Node10": {
       "target": "index.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "index.js",
+      "argumentFormat": ""
     }
   }
 }

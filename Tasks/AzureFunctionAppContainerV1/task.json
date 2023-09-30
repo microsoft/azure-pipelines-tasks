@@ -159,6 +159,10 @@
   "execution": {
     "Node10": {
       "target": "azurefunctiononcontainerdeployment.js"
+    },
+    "Node16": {
+      "target": "azurefunctiononcontainerdeployment.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

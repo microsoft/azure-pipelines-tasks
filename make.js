@@ -454,7 +454,8 @@ function buildTask(taskName, taskListLength, nodeVersion) {
     var buildTasksNodeModules = path.join(buildTasksPath, taskName, 'node_modules');
     var duplicateTaskLibPaths = [
         'azure-pipelines-tasks-java-common', 'azure-pipelines-tasks-codecoverage-tools', 'azure-pipelines-tasks-codeanalysis-common',
-        'azure-pipelines-tool-lib', 'azure-pipelines-tasks-utility-common', 'azure-pipelines-tasks-packaging-common', 'artifact-engine'
+        'azure-pipelines-tool-lib', 'azure-pipelines-tasks-utility-common', 'azure-pipelines-tasks-packaging-common', 'artifact-engine',
+        'azure-pipelines-tasks-azure-arm-rest'
     ];
     for (var duplicateTaskPath of duplicateTaskLibPaths) {
         const buildTasksDuplicateNodeModules = path.join(buildTasksNodeModules, duplicateTaskPath, 'node_modules', 'azure-pipelines-task-lib');
@@ -1035,7 +1036,7 @@ CLI.gentask = function() {
             const fileNames = ['package.json', 'package-lock.json', 'npm-shrinkwrap.json'];
             const buildConfigsPath = path.join(tasksPath, taskName, '_buildConfigs', configsString);
             if (fs.existsSync(buildConfigsPath)) {
-                for (fileName in fileNames) {
+                for (const fileName of fileNames) {
                     const filePath = path.join(taskPath, fileName);
                     if (fs.existsSync(filePath)) {
                         console.log(`Copying ${fileName} from ${taskPath} to ${buildConfigsPath} folder.`);

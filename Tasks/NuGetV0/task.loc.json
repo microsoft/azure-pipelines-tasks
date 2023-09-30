@@ -43,6 +43,10 @@
     "Node10": {
       "target": "nuget.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "nuget.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

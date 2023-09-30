@@ -1,34 +1,20 @@
 {
-  "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
-  "name": "AzureFileCopy",
-  "friendlyName": "Azure file copy",
-  "description": "Copy files to Azure Blob Storage or virtual machines",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-file-copy",
-  "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
-  "category": "Deploy",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "author": "Microsoft Corporation",
-  "version": {
-    "Major": 4,
-    "Minor": 228,
-    "Patch": 3
-  },
-  "demands": [
-    "azureps"
-  ],
-  "releaseNotes": "What's new in Version 4.0: <br/>&nbsp;&nbsp; Support AzCopy.exe version 10.8.0",
-  "minimumAgentVersion": "1.103.0",
-  "inputs": [
-    {
-      "name": "SourcePath",
-      "type": "filePath",
-      "label": "Source",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Absolute path of the source folder, or file on the local machine, or a UNC share. Expression should return a single folder or a file. Wild card symbol (*) is supported anywhere in the file path or file name."
+    "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
+    "name": "AzureFileCopy",
+    "friendlyName": "Azure file copy",
+    "description": "Copy files to Azure Blob Storage or virtual machines",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-file-copy",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 4,
+        "Minor": 228,
+        "Patch": 3
     },
     {
       "name": "ConnectedServiceNameARM",

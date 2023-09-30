@@ -44,12 +44,11 @@
   "loc.messages.JS_InvalidFilePath": "檔案路徑 '%s' 無效。需要到達 .ps1 檔案的路徑。",
   "loc.messages.JS_Stderr": "PowerShell 已將一或多行寫入標準錯誤資料流。",
   "loc.messages.JS_InvalidTargetType": "無效的目標型別 '%s'。值必須是下列其中一個: 'filepath' 或 'inline'",
-  "loc.messages.JS_SanitizerOutput": "清理程式已變更輸入引數。從清理程式輸出: '%s'",
   "loc.messages.PS_ExitCode": "PowerShell 已結束，代碼為 '{0}'。",
   "loc.messages.PS_FormattedCommand": "經過格式化的命令: {0}",
   "loc.messages.PS_InvalidActionPreference": "{0} 的動作喜好設定無效: ‘{1}’。值必須是以下其中之一: {2}",
   "loc.messages.PS_InvalidFilePath": "檔案路徑 '{0}' 無效。需要到達 .ps1 檔案的路徑。",
   "loc.messages.PS_UnableToDetermineExitCode": "未預期的例外狀況。無法從 PowerShell 判斷結束代碼。",
   "loc.messages.PS_InvalidTargetType": "無效的目標型別 '{0}'。值必須是下列其中一個: 'filepath' 或 'inline'",
-  "loc.messages.PS_SanitizerOutput": "清理程式已變更輸入引數。從清理程式輸出: '{0}'"
+  "loc.messages.ScriptArgsSanitized": "偵測到引數中可能無法由殼層正確執行的字元。請使用反單引號 (') 逸出特殊字元。如需詳細資訊，請參閱: https://aka.ms/ado/75787"
 }

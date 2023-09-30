@@ -190,6 +190,10 @@
   "execution": {
     "Node10": {
       "target": "azuremysqldeploy.js"
+    },
+    "Node16": {
+      "target": "azuremysqldeploy.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

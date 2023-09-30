@@ -15,7 +15,7 @@
     "Minor": 228,
     "Patch": 3
   },
-  "minimumAgentVersion": "2.144.0",
+  "minimumAgentVersion": "2.206.1",
   "groups": [
     {
       "name": "prepare",
@@ -486,10 +486,6 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
-      "target": "appcentertest.js",
-      "argumentFormat": ""
-    },
     "Node16": {
       "target": "appcentertest.js",
       "argumentFormat": ""

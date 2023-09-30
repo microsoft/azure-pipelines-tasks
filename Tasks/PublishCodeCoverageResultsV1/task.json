@@ -80,6 +80,10 @@
     "Node10": {
       "target": "publishcodecoverageresults.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "publishcodecoverageresults.js",
+      "argumentFormat": ""
     }
   },
   "restrictions": {

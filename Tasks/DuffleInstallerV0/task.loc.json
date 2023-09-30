@@ -39,6 +39,10 @@
   "execution": {
     "Node10": {
       "target": "src//duffle.js"
+    },
+    "Node16": {
+      "target": "src//duffle.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

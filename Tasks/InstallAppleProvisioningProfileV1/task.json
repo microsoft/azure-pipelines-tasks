@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 220,
+        "Minor": 229,
         "Patch": 0
     },
     "runsOn": [
@@ -89,7 +89,7 @@
         "Node10": {
             "target": "installprovprofile.js",
             "argumentFormat": ""
-        }, 
+        },
         "Node16": {
             "target": "installprovprofile.js",
             "argumentFormat": ""
@@ -99,7 +99,7 @@
         "Node10": {
             "target": "postinstallprovprofile.js",
             "argumentFormat": ""
-        }, 
+        },
         "Node16": {
             "target": "postinstallprovprofile.js",
             "argumentFormat": ""

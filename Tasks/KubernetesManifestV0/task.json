@@ -351,6 +351,10 @@
   "execution": {
     "Node10": {
       "target": "src//run.js"
+    },
+    "Node16": {
+      "target": "src//run.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
