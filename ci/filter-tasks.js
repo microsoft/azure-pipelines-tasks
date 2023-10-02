@@ -157,7 +157,11 @@ async function getTasksToBuildForPR (prId, forDowngradingCheck) {
 
     if(forDowngradingCheck)
     {
-        diffExtra = " -- .  :^**/_buildConfigs/**";
+        if (os.platform() == 'win32') {
+            diffExtra = " -- .  :^^**/_buildConfigs/**";
+        } else {
+            diffExtra = " -- .  :^**/_buildConfigs/**";
+        }
     }
 
     run('git --no-pager diff --name-only ' + baseCommit + ' ' + sourceBranch + diffExtra).split('\n').forEach(filePath => {
