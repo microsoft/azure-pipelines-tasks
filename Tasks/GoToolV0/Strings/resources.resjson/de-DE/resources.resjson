@@ -10,8 +10,6 @@
   "loc.input.help.goPath": "Ein benutzerdefinierter Wert für die GOPATH-Umgebungsvariable.",
   "loc.input.label.goBin": "GOBIN",
   "loc.input.help.goBin": "Ein benutzerdefinierter Wert für die GOBIN-Umgebungsvariable.",
-  "loc.input.label.goSource": "Go source",
-  "loc.input.help.goSource": "Go distribution to install",
   "loc.messages.FailedToDownload": "Fehler beim Herunterladen der Go-Version %s. Überprüfen Sie, ob die Version gültig ist, und beheben Sie eventuelle andere Probleme. Fehler: %s",
   "loc.messages.TempDirNotSet": "Es wurde erwartet, dass die Umgebungsvariable \"Agent.TempDirectory\" festgelegt ist."
 }

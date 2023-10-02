@@ -10,8 +10,6 @@
   "loc.input.help.goPath": "GOPATH 环境变量的自定义值。",
   "loc.input.label.goBin": "GOBIN",
   "loc.input.help.goBin": "GOBIN 环境变量的自定义值。",
-  "loc.input.label.goSource": "Go source",
-  "loc.input.help.goSource": "Go distribution to install",
   "loc.messages.FailedToDownload": "无法下载 Go 版本 %s。请验证该版本是否有效并解决发生的任何其他问题。错误: %s",
   "loc.messages.TempDirNotSet": "应设置 \"Agent.TempDirectory\" 环境变量。"
 }
