@@ -1,6 +1,7 @@
 const util = require('./ci-util');
 const fs = require('fs');
 const path = require('path');
+var crypto = require('crypto');
 
 const fileToJson = util.fileToJson;
 const buildTasksPath = util.buildTasksPath;
@@ -115,4 +116,17 @@ function findNonUniqueTaskLib() {
     console.log('No duplicates found.');
     return null;
 }
-findNonUniqueTaskLib();
+
+function analyzePowershellTasks() {
+    let output = '';
+    try {
+        const pwshScriptPath = path.join(__dirname, 'check-powershell-syntax.ps1');
+        output = util.run(`powershell -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted ${pwshScriptPath} ${buildTasksPath}`, true);
+    } catch (e) {
+        console.log(`##vso[task.logissue type=error;sourcepath=ci/check-tasks.js;linenumber=123;]Please check the tasks, seems like they have invalid PowerShell syntax.`)
+        process.exit(1);
+    }
+}
+
+// findNonUniqueTaskLib();
+analyzePowershellTasks();
