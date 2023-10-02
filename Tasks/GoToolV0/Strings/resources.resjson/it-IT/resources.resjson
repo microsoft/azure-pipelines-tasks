@@ -10,8 +10,6 @@
   "loc.input.help.goPath": "Valore personalizzato della variabile di ambiente GOPATH.",
   "loc.input.label.goBin": "GOBIN",
   "loc.input.help.goBin": "Valore personalizzato della variabile di ambiente GOBIN.",
-  "loc.input.label.goSource": "Go source",
-  "loc.input.help.goSource": "Go distribution to install",
   "loc.messages.FailedToDownload": "Non è stato possibile scaricare la versione %s di Go. Verificare che la versione sia valida e risolvere eventuali altri problemi. Errore: %s",
   "loc.messages.TempDirNotSet": "La variabile di ambiente 'Agent.TempDirectory' deve essere impostata."
 }

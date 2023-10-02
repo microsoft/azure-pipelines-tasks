@@ -10,8 +10,6 @@
   "loc.input.help.goPath": "GOPATH 環境変数のカスタム値です。",
   "loc.input.label.goBin": "GOBIN",
   "loc.input.help.goBin": "GOBIN 環境変数のカスタム値です。",
-  "loc.input.label.goSource": "Go source",
-  "loc.input.help.goSource": "Go distribution to install",
   "loc.messages.FailedToDownload": "バージョン %s の Go をダウンロードできませんでした。このバージョンが有効であることを確認し、その他の問題を解決します。エラー: %s",
   "loc.messages.TempDirNotSet": "'Agent.TempDirectory' 環境変数を設定することが必要です。"
 }
