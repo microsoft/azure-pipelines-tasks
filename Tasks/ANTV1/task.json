@@ -20,16 +20,26 @@
         "Minor": 229,
         "Patch": 0
     },
-    {
-      "name": "codeCoverage",
-      "displayName": "Code Coverage",
-      "isExpanded": true
-    },
-    {
-      "name": "advanced",
-      "displayName": "Advanced",
-      "isExpanded": false
-    }
+    "demands": [
+      "ant"
+    ],
+    "minimumAgentVersion": "1.89.0",
+    "groups": [
+      {
+          "name": "junitTestResults",
+          "displayName": "JUnit Test Results",
+          "isExpanded": true
+      },
+      {
+        "name": "codeCoverage",
+        "displayName": "Code Coverage",
+        "isExpanded": true
+      },
+      {
+        "name": "advanced",
+        "displayName": "Advanced",
+        "isExpanded": false
+      }
   ],
   "instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "inputs": [
