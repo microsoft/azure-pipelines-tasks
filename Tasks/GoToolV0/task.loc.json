@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 229,
-    "Patch": 0
+    "Patch": 1
   },
   "satisfies": [
     "GO"
@@ -33,7 +33,7 @@
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
-      "defaultValue": "1.19",
+      "defaultValue": "1.10",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.version"
     },
@@ -50,18 +50,6 @@
       "label": "ms-resource:loc.input.label.goBin",
       "helpMarkDown": "ms-resource:loc.input.help.goBin",
       "groupName": "advanced"
-    },
-    {
-      "name": "goSource",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.goSource",
-      "required": false,
-      "defaultValue": "downloadFromDefaultSource",
-      "options": {
-        "downloadFromDefaultSource": "Go Tools",
-        "downloadFromMicrosoftSource": "MS Go Tools"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.goSource"
     }
   ],
   "execution": {
