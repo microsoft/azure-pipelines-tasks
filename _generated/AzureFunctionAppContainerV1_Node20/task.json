@@ -160,6 +160,10 @@
     "Node10": {
       "target": "azurefunctiononcontainerdeployment.js"
     },
+    "Node16": {
+      "target": "azurefunctiononcontainerdeployment.js",
+      "argumentFormat": ""
+    },
     "Node20": {
       "target": "azurefunctiononcontainerdeployment.js",
       "argumentFormat": ""
@@ -323,7 +327,6 @@
   },
   "_buildConfigMapping": {
     "Default": "1.228.4",
-    "Node16-225": "1.228.2",
     "Node20-225": "1.228.3"
   }
 }

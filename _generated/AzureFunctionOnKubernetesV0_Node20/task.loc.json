@@ -106,6 +106,10 @@
     "Node10": {
       "target": "src//run.js"
     },
+    "Node16": {
+      "target": "src//run.js",
+      "argumentFormat": ""
+    },
     "Node20": {
       "target": "src//run.js",
       "argumentFormat": ""
@@ -124,7 +128,6 @@
   },
   "_buildConfigMapping": {
     "Default": "0.228.4",
-    "Node16-225": "0.228.2",
     "Node20-225": "0.228.3"
   }
 }

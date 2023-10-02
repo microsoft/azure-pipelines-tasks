@@ -6,7 +6,7 @@ $AzureFileCopyRemoteJob = {
         [string]$additionalArguments,
         [switch]$CleanTargetBeforeCopy,
         [switch]$EnableDetailedLogging,
-        [bool]$useSanitizerActivate = $false
+        [switch]$useSanitizerActivate
     )
 
     function Write-DetailLogs
@@ -99,9 +99,10 @@ $AzureFileCopyRemoteJob = {
         }
 
         if ($useSanitizerActivate) {
+            # Splitting arguments on space, but not on space inside quotes
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
             Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $sanitizedArguments"
-            & azcopy copy $targetPath $containerURL/*$containerSasToken $sanitizedArguments
+            & azcopy copy "$containerURL/*$containerSasToken" "$targetPath" $sanitizedArguments
         } else {
             Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $additionalArguments"
             $azCopyCommand = "& azcopy copy `"$containerURL/*$containerSasToken`" `"$targetPath`" $additionalArguments"

@@ -426,6 +426,10 @@
   "execution": {
     "Node10": {
       "target": "src//run.js"
+    },
+    "Node16": {
+      "target": "src//run.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -463,7 +467,6 @@
   },
   "_buildConfigMapping": {
     "Default": "1.228.4",
-    "Node16-225": "1.228.2",
     "Node20-225": "1.228.3"
   }
 }

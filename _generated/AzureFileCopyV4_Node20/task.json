@@ -16,20 +16,7 @@
     "Minor": 228,
     "Patch": 2
   },
-  "demands": [
-    "azureps"
-  ],
-  "releaseNotes": "What's new in Version 4.0: <br/>&nbsp;&nbsp; Support AzCopy.exe version 10.8.0",
-  "minimumAgentVersion": "1.103.0",
   "inputs": [
-    {
-      "name": "SourcePath",
-      "type": "filePath",
-      "label": "Source",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Absolute path of the source folder, or file on the local machine, or a UNC share. Expression should return a single folder or a file. Wild card symbol (*) is supported anywhere in the file path or file name."
-    },
     {
       "name": "ConnectedServiceNameARM",
       "aliases": [

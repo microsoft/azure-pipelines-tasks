@@ -288,6 +288,10 @@
     "Node10": {
       "target": "azureappservicemanage.js"
     },
+    "Node16": {
+      "target": "azureappservicemanage.js",
+      "argumentFormat": ""
+    },
     "Node20": {
       "target": "azureappservicemanage.js",
       "argumentFormat": ""
@@ -439,7 +443,6 @@
   },
   "_buildConfigMapping": {
     "Default": "0.228.4",
-    "Node16-225": "0.228.2",
     "Node20-225": "0.228.3"
   }
 }

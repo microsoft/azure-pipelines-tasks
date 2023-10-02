@@ -512,16 +512,28 @@
   "prejobexecution": {
     "Node10": {
       "target": "src//downloadsecurefiles.js"
+    },
+    "Node16": {
+      "target": "src//downloadsecurefiles.js",
+      "argumentFormat": ""
     }
   },
   "execution": {
     "Node10": {
       "target": "src//helm.js"
+    },
+    "Node16": {
+      "target": "src//helm.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
     "Node10": {
       "target": "src//deletesecurefiles.js"
+    },
+    "Node16": {
+      "target": "src//deletesecurefiles.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -550,7 +562,6 @@
   },
   "_buildConfigMapping": {
     "Default": "0.228.4",
-    "Node16-225": "0.228.2",
     "Node20-225": "0.228.3"
   }
 }

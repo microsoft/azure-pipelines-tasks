@@ -1,25 +1,26 @@
 {
-    "id": "AC4EE482-65DA-4485-A532-7B085873E532",
-    "name": "Maven",
-    "friendlyName": "Maven",
-    "description": "Build, test, and deploy with Apache Maven",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/maven",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613723) or [see the Maven documentation](http://maven.apache.org/guides/index.html)",
-    "category": "Build",
-    "visibility": [
-        "Build",
-        "Release"
-    ],
-    "runsOn": [
-        "Agent",
-        "DeploymentGroup"
-    ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 4,
-        "Minor": 229,
-        "Patch": 0
-    },
+  "id": "AC4EE482-65DA-4485-A532-7B085873E532",
+  "name": "Maven",
+  "friendlyName": "Maven",
+  "description": "Build, test, and deploy with Apache Maven",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/maven",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613723) or [see the Maven documentation](http://maven.apache.org/guides/index.html)",
+  "category": "Build",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 4,
+    "Minor": 229,
+    "Patch": 1
+  },
+  "groups": [
     {
       "name": "codeCoverage",
       "displayName": "Code Coverage",

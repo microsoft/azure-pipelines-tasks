@@ -35,6 +35,10 @@
     "Node10": {
       "target": "src//kubectltoolinstaller.js"
     },
+    "Node16": {
+      "target": "src//kubectltoolinstaller.js",
+      "argumentFormat": ""
+    },
     "Node20": {
       "target": "src//kubectltoolinstaller.js",
       "argumentFormat": ""
@@ -46,7 +50,6 @@
   },
   "_buildConfigMapping": {
     "Default": "0.228.5",
-    "Node16-225": "0.228.3",
     "Node20-225": "0.228.4"
   }
 }

@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 228,
-    "Patch": 3
+    "Patch": 6
   },
   "demands": [],
   "groups": [
@@ -177,6 +177,10 @@
     "Node10": {
       "target": "src//run.js"
     },
+    "Node16": {
+      "target": "src//run.js",
+      "argumentFormat": ""
+    },
     "Node20": {
       "target": "src//run.js",
       "argumentFormat": ""
@@ -196,8 +200,8 @@
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   },
   "_buildConfigMapping": {
-    "Default": "1.228.4",
-    "Node16-225": "1.228.2",
-    "Node20-225": "1.228.3"
+    "Default": "1.228.7",
+    "Node16-225": "1.228.5",
+    "Node20-225": "1.228.6"
   }
 }

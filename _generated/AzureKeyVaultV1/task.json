@@ -76,11 +76,19 @@
   "prejobexecution": {
     "Node10": {
       "target": "runprejob.js"
+    },
+    "Node16": {
+      "target": "runprejob.js",
+      "argumentFormat": ""
     }
   },
   "execution": {
     "Node10": {
       "target": "run.js"
+    },
+    "Node16": {
+      "target": "run.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -122,7 +130,6 @@
   },
   "_buildConfigMapping": {
     "Default": "1.228.5",
-    "Node16-225": "1.228.3",
     "Node20-225": "1.228.4"
   }
 }

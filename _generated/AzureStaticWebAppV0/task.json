@@ -166,11 +166,14 @@
     "Node10": {
       "target": "index.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "index.js",
+      "argumentFormat": ""
     }
   },
   "_buildConfigMapping": {
     "Default": "0.228.5",
-    "Node16-225": "0.228.3",
     "Node20-225": "0.228.4"
   }
 }

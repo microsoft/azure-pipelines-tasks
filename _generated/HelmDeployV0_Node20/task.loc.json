@@ -513,6 +513,10 @@
     "Node10": {
       "target": "src//downloadsecurefiles.js"
     },
+    "Node16": {
+      "target": "src//downloadsecurefiles.js",
+      "argumentFormat": ""
+    },
     "Node20": {
       "target": "src//downloadsecurefiles.js",
       "argumentFormat": ""
@@ -522,6 +526,10 @@
     "Node10": {
       "target": "src//helm.js"
     },
+    "Node16": {
+      "target": "src//helm.js",
+      "argumentFormat": ""
+    },
     "Node20": {
       "target": "src//helm.js",
       "argumentFormat": ""
@@ -530,6 +538,10 @@
   "postjobexecution": {
     "Node10": {
       "target": "src//deletesecurefiles.js"
+    },
+    "Node16": {
+      "target": "src//deletesecurefiles.js",
+      "argumentFormat": ""
     },
     "Node20": {
       "target": "src//deletesecurefiles.js",
@@ -562,7 +574,6 @@
   },
   "_buildConfigMapping": {
     "Default": "0.228.4",
-    "Node16-225": "0.228.2",
     "Node20-225": "0.228.3"
   }
 }

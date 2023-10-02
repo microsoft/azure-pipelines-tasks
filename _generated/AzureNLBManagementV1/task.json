@@ -84,6 +84,10 @@
   "execution": {
     "Node10": {
       "target": "nlbtask.js"
+    },
+    "Node16": {
+      "target": "nlbtask.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -102,7 +106,6 @@
   },
   "_buildConfigMapping": {
     "Default": "1.228.5",
-    "Node16-225": "1.228.3",
     "Node20-225": "1.228.4"
   }
 }
