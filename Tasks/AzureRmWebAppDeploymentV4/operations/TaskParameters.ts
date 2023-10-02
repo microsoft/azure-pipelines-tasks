@@ -58,13 +58,6 @@ export class TaskParametersUtility {
 
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
-
-        try {
-            var additionalArgsTelemetry = this._getAdditionalArgumentsTelemetry(taskParameters.AdditionalArguments, taskParameters.DeploymentType);
-            console.log("##vso[telemetry.publish area=AdditionalArgumentsVerification;feature=AzureRmWebAppDeployment]" + JSON.stringify(additionalArgsTelemetry));
-        } catch (error) {
-            // Ignore errors in telemetry
-        };
         
         if(!taskParameters.isContainerWebApp){            
             taskParameters.Package = new Package(tl.getPathInput('Package', true));
@@ -127,6 +120,13 @@ export class TaskParametersUtility {
         if(taskParameters.isLinuxApp && taskParameters.ScriptType) {
             this.UpdateLinuxAppTypeScriptParameters(taskParameters);
         }
+
+        try {
+            var additionalArgsTelemetry = this._getAdditionalArgumentsTelemetry(taskParameters.AdditionalArguments, taskParameters.DeploymentType);
+            console.log("##vso[telemetry.publish area=AdditionalArgumentsVerification;feature=AzureRmWebAppDeployment]" + JSON.stringify(additionalArgsTelemetry));
+        } catch (error) {
+            // Ignore errors in telemetry
+        };
 
         return taskParameters;
     }
