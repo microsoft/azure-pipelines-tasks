@@ -157,7 +157,7 @@ async function getTasksToBuildForPR (prId, forDowngradingCheck) {
 
     if(forDowngradingCheck)
     {
-        diffExtra = " -- .  ':^**/_buildConfigs/**'";
+        diffExtra = " -- .  :^**/_buildConfigs/**";
     }
 
     run('git --no-pager diff --name-only ' + baseCommit + ' ' + sourceBranch + diffExtra).split('\n').forEach(filePath => {
