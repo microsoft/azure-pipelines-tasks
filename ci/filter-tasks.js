@@ -157,7 +157,7 @@ async function getTasksToBuildForPR (prId, forDowngradingCheck) {
 
     if(forDowngradingCheck)
     {
-        diffExtra = " -- .  ':(exclude,glob)**/_buildConfigs/**'";
+        diffExtra = " -- .  ':^**/_buildConfigs/**'";
     }
 
     run('git --no-pager diff --name-only ' + baseCommit + ' ' + sourceBranch + diffExtra).split('\n').forEach(filePath => {
@@ -208,6 +208,7 @@ async function getTasksToBuildForPR (prId, forDowngradingCheck) {
 
 var setTaskVariables = function(tasks, tasksForDowngradingCheck) {
     console.log('tasks: ' + JSON.stringify(tasks));
+    console.log('tasksForDowngradingCheck: ' + JSON.stringify(tasksForDowngradingCheck));
     console.log('##vso[task.setVariable variable=task_pattern]@(' + tasks.join('|') + ')');
     console.log('##vso[task.setVariable variable=task_pattern_fordowngradingcheck]@(' + tasksForDowngradingCheck.join('|') + ')');
     console.log('##vso[task.setVariable variable=numTasks]' + tasks.length);
