@@ -161,9 +161,6 @@ export class TaskParametersUtility {
     }
 
     private static _getAdditionalArgumentsTelemetry(additionalArguments: string, deploymentType: DeploymentType): AdditionalArgumentsTelemetry {
-        const parsedArgs = this.parseAdditionalArguments(additionalArguments);
-        const escapedChars = new RegExp(/[\\\^\.\*\?\-\&\|\(\)\<\>\t\n\r\f]/);
-        const separator = ",";
         const telemetry = {
             deploymentMethod: deploymentType,
             doubleQuoteCount: 0,
@@ -172,6 +169,12 @@ export class TaskParametersUtility {
             spaceCharCount: 0,
             totalArgs: 0
         }
+
+        if (!additionalArguments) return telemetry;
+
+        const parsedArgs = this.parseAdditionalArguments(additionalArguments);
+        const escapedChars = new RegExp(/[\\\^\.\*\?\-\&\|\(\)\<\>\t\n\r\f]/);
+        const separator = ",";
 
         parsedArgs.forEach(function (arg) {
             let formattedArg = '';
