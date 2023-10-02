@@ -284,8 +284,6 @@
         "AzureContainerAppsV1",
         "AzureWebAppV1",
         "CondaAuthenticateV0",
-        "CondaEnvironmentV0",
-        "CondaEnvironmentV1",
         "ContainerBuildV0",
         "ContainerStructureTestV0",
         "DockerInstallerV0",
