@@ -9,7 +9,8 @@ Set-Item -Path env:AZP_75787_ENABLE_NEW_LOGIC -Value 'true'
 $inputArgsSuites = @(
     'test; whoami',
     'test && whoami',
-    'echo "$(rm ./somedir)"'
+    'echo "$(rm ./somedir)"',
+    'test | whoami'
 )
 
 $expectedMsg = Get-VstsLocString -Key 'PS_ScriptArgsSanitized'
