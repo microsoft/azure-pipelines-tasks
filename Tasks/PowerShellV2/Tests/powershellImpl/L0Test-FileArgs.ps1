@@ -27,7 +27,7 @@ $notThrowTestSuites = @(
     },
     @{
         Name      = 'Accepts allowed symbols'
-        Input     = 'a A 1 \ ` _ '' " - = / : . * , + ~ ? %'
+        Input     = "a A 1 \ ` _ ' `" - = / : . * , + ~ ? % `n"
         Variables = @('AZP_75787_ENABLE_NEW_LOGIC=true')
     }
 )

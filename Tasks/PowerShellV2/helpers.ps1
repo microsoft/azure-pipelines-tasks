@@ -32,8 +32,8 @@ function Sanitize-Arguments([string]$InputArgs) {
     # We're splitting by ``, removing all suspicious characters and then join
     $argsArr = $InputArgs -split $argsSplitSymbols;
 
-    ## '?<!`' - checking if before character no backtick. '^a-zA-Z0-9` _'"-=\/:\.*,+~?' - checking if character is allowed. Insead replacing to #removed#
-    $regex = '(?<!`)([^a-zA-Z0-9\\` _''"\-=\/:\.*,+~?%])'
+    ## '?<!`' - checking if before character no backtick. '^a-zA-Z0-9` _'"-=\/:\.*,+~?%\n' - checking if character is allowed. Insead replacing to #removed#
+    $regex = '(?<!`)([^a-zA-Z0-9\\` _''"\-=\/:\.*,+~?%\n])'
     for ($i = 0; $i -lt $argsArr.Length; $i++ ) {
         [string[]]$matches = (Select-String $regex -input $argsArr[$i] -AllMatches) | ForEach-Object { $_.Matches }
         if ($null -ne $matches ) {

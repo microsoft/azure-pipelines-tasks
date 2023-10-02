@@ -22,7 +22,7 @@ export const runValidateFileArgsTests = () => {
         ],
         [
             "Accepts allowed symbols",
-            "a A 1 \\ ` _ ' \" - = / : . * , + ~ ? %", ["AZP_75787_ENABLE_NEW_LOGIC=true"]
+            "a A 1 \\ ` _ ' \" - = / : . * , + ~ ? % \n", ["AZP_75787_ENABLE_NEW_LOGIC=true"]
         ]
     ];
 
