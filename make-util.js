@@ -1924,7 +1924,7 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTa
                 // ignore everything except package.json, package-lock.json, npm-shrinkwrap.json
                 if (!runtimeChangedFiles.some((pattern) => item.indexOf(pattern) !== -1)) return false;
                 
-                return path.normalize(item) != root;
+                return true;
             });
 
 
