@@ -57,14 +57,8 @@ var coverageTasksPath = path.join(buildPath, 'coverage');
 var baseConfigToolPath = path.join(__dirname, 'BuildConfigGen');
 var genTaskPath = path.join(__dirname, '_generated');
 var genTaskCommonPath = path.join(__dirname, '_generated', 'Common');
-var rootTsConfigPath = path.join(__dirname, 'tsconfig.json');
 
 var CLI = {};
-
-process.on('uncaughtException', err => {
-    util.log(err, 'err');
-    process.exit(1);
-})
 
 // node min version
 var minNodeVer = '6.10.3';
@@ -100,9 +94,8 @@ if (argv.task) {
             });
     }
 
-    // 'Common/' needs to allow to run tests for common modules separately.
-    if (!taskList.length && !argv.task.startsWith('Common/')) {
-        fail(`Unable to find any tasks matching pattern '${argv.task}'`);
+    if (!taskList.length) {
+        fail('Unable to find any tasks matching pattern ' + argv.task);
     }
 } else {
     // load the default list
@@ -520,18 +513,24 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
         }
 
         nodeVersions.forEach(function (nodeVersion) {
-            nodeVersion = String(nodeVersion);
-            banner('Run Mocha Suits for node ' + nodeVersion);
-            // setup the version of node to run the tests
-            util.installNode(nodeVersion);
+            try {
+                nodeVersion = String(nodeVersion);
+                banner('Run Mocha Suits for node ' + nodeVersion);
+                // setup the version of node to run the tests
+                util.installNode(nodeVersion);
 
-            if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
-                run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
-                util.renameCodeCoverageOutput(coverageTasksPath, taskName);
-                isReportWasFormed = true;
-            }
-            else {
-                run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+
+                if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
+                    run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+                    util.renameCodeCoverageOutput(coverageTasksPath, taskName);
+                    isReportWasFormed = true;
+                }
+                else {
+                    run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+                }
+            }  catch (e) {
+                console.error(e);
+                process.exit(1);
             }
         });
     }
@@ -546,28 +545,9 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
         }
     });
 
-    if (!argv.task || (argv.task && argv.task.startsWith('Common'))) {
-        let commonBuildPath = path.join(buildTasksPath, 'Common');
-        let commonLibPattern = path.join(commonBuildPath, '*', 'Tests', suiteType + '.js');
-        if (argv.task && argv.task.startsWith('Common/')) {
-            const commonModuleName = argv.task.split('/')[1];
-            const commonModuleBuildPath = path.join(buildTasksPath, 'Common', commonModuleName);
-            if (fs.existsSync(commonModuleBuildPath)){
-                commonLibPattern = path.join(commonModuleBuildPath, 'Tests', suiteType + '.js');
-            } else {
-                util.log(`Common module ${commonModuleName} does not exist. Skipping it.`);
-            }
-        }
-        banner('Pre-duilding L0.ts files');
-        cp('-f', rootTsConfigPath, commonBuildPath);
-        try {
-            run(`tsc -p "${commonBuildPath}"`);
-        }
-        catch (e) {
-            console.log('Error while prebuilding L0.ts common tests files. Skipping them temporarily.')
-        }
-
+    if (!argv.task) {
         banner('Running common library tests');
+        var commonLibPattern = path.join(buildTasksPath, 'Common', '*', 'Tests', suiteType + '.js');
         var specs = [];
         if (matchFind(commonLibPattern, buildTasksPath).length > 0) {
             specs.push(commonLibPattern);
@@ -1077,43 +1057,3 @@ if (typeof CLI[command] !== 'function') {
 }
 
 CLI[command](argv);
-
-function buildCommonModules() {
-    var commonsPath = path.join(tasksPath, 'Common');
-    var modOutDir = path.join(buildTasksCommonPath, modName);
-
-    var commonModules = fs.readdirSync(commonsPath);
-
-    rm('-Rf', modOutDir);
-    mkdir('-p', modOutDir);
-
-    for (const cmod of commonModules) {
-        const modPath = path.join(commonsPath, cmod);
-        cp('-Rf', path.join(modPath), modOutDir);
-
-        // create loc files
-        var modJsonPath = path.join(modPath, 'module.json');
-        if (test('-f', modJsonPath)) {
-            createResjson(fileToJson(modJsonPath), modPath);
-        }
-
-        if (cmod === 'coveragepublisher') {
-            buildNodeTask(modPath, modOutDir);
-        }
-
-
-        // copy default resources and any additional resources defined in the module's make.json
-        util.log();
-        util.log('> copying module resources');
-        const modMakePath = path.join(modPath, 'make.json');
-        const modMake = test('-f', modMakePath) ? fileToJson(modMakePath) : {};
-        copyTaskResources(modMake, modPath, modOutDir);
-
-        util.log('get externals');
-        if (modMake.hasOwnProperty('externals')) {
-            util.log('');
-            util.log('> getting module externals');
-            getExternals(modMake.externals, modOutDir);
-        }
-    }
-}

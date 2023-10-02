@@ -14,8 +14,6 @@ var syncRequest = require('sync-request');
 var repoPath = __dirname;
 var downloadPath = path.join(repoPath, '_download');
 
-const isNoColor = process.env['NO_COLOR'] ? process.env['NO_COLOR'].toLowerCase() == 'true' : false;
-
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
@@ -111,7 +109,8 @@ var rp = function (relPath) {
 exports.rp = rp;
 
 var fail = function (message) {
-    throw Error(message);
+    console.error('ERROR: ' + message);
+    process.exit(1);
 }
 exports.fail = fail;
 
@@ -129,22 +128,6 @@ var pathExists = function (checkPath) {
     return test('-d', checkPath) || test('-f', checkPath);
 }
 exports.pathExists = pathExists;
-
-function log(message, type) {
-    switch (type) {
-        case 'error':
-        case 'err':
-            if (!isNoColor) {
-                message = '\x1b[31m' + message + '\x1b[0m';
-            }
-            console.error(message);
-            break;
-
-        default:
-            console.log(message);
-    }
-}
-exports.log = log;
 
 /**
  * Given a module path, gets the info used for generating a pack file
@@ -314,10 +297,10 @@ var run = function (cl, inheritStreams, noHeader) {
     }
     catch (err) {
         if (!inheritStreams) {
-            log(err.output ? err.output.toString() : err.message, 'error');
+            console.error(err.output ? err.output.toString() : err.message);
         }
 
-        fail(err);
+        process.exit(1);
     }
 
     return (output || '').toString().trim();
