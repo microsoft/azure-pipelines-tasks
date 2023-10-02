@@ -13,21 +13,10 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 228,
+    "Minor": 229,
     "Patch": 3
   },
   "inputs": [
-    {
-      "name": "ConnectedServiceNameARM",
-      "aliases": [
-        "azureSubscription"
-      ],
-      "type": "connectedService:AzureRM",
-      "label": "Azure Subscription",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Azure Resource Manager subscription to target for copying the files."
-    },
     {
       "name": "Destination",
       "type": "pickList",
@@ -284,7 +273,7 @@
     "ServicePrincipalError": "There was an error with the service principal used for the deployment."
   },
   "_buildConfigMapping": {
-    "Default": "4.228.3",
-    "Node20-225": "4.228.2"
+    "Default": "4.229.3",
+    "Node20-225": "4.229.2"
   }
 }

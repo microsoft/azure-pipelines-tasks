@@ -1,21 +1,22 @@
 {
-    "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
-    "name": "AzureFileCopy",
-    "friendlyName": "Azure file copy",
-    "description": "Copy files to Azure Blob Storage or virtual machines",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-file-copy",
-    "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
-    "category": "Deploy",
-    "visibility": [
-        "Build",
-        "Release"
-    ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 5,
-        "Minor": 229,
-        "Patch": 0
-    },
+  "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
+  "name": "AzureFileCopy",
+  "friendlyName": "Azure file copy",
+  "description": "Copy files to Azure Blob Storage or virtual machines",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-file-copy",
+  "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 5,
+    "Minor": 229,
+    "Patch": 3
+  },
+  "inputs": [
     {
       "name": "ConnectedServiceNameARM",
       "aliases": [
