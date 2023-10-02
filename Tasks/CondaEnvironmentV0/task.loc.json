@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 228,
-    "Patch": 3
+    "Minor": 229,
+    "Patch": 0
   },
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
