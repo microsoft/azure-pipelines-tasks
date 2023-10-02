@@ -201,8 +201,7 @@
         "JS_InvalidErrorActionPreference": "Invalid ErrorActionPreference '%s'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
         "GlobalCliConfigAgentVersionWarning": "For agent version < 2.115.0, only global Azure CLI configuration can be used",
         "UnacceptedScriptLocationValue": "%s is not a valid value for task input 'Script Location' (scriptLocation in YAML). Value can either be'inlineScript' or 'scriptPath'"
-    }
-  ],
+    },
   "inputs": [
     {
       "name": "connectedServiceNameARM",
