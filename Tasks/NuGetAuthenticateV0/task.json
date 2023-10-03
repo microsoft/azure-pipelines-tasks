@@ -13,10 +13,11 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 227,
-    "Patch": 1
+    "Minor": 229,
+    "Patch": 2
   },
   "deprecated": true,
+  "removalDate": "2024-04-22",
   "minimumAgentVersion": "2.120.0",
   "instanceNameFormat": "NuGet Authenticate",
   "inputs": [

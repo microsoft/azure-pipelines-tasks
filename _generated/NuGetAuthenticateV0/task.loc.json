@@ -13,10 +13,11 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 227,
-    "Patch": 1
+    "Minor": 229,
+    "Patch": 2
   },
   "deprecated": true,
+  "removalDate": "2024-04-22",
   "minimumAgentVersion": "2.120.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
@@ -47,7 +48,7 @@
   },
   "messages": {},
   "_buildConfigMapping": {
-    "Default": "0.227.1",
-    "Node16-225": "0.227.0"
+    "Default": "0.229.2",
+    "Node16-225": "0.229.1"
   }
 }
