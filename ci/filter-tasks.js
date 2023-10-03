@@ -186,7 +186,7 @@ async function getTasksToBuildForPR (prId, forDowngradingCheck) {
         if(forDowngradingCheck && filePath.slice(0, 10) == "_generated") {
             var taskPath = filePath.slice(11);
             var taskName = taskPath.slice(0, taskPath.indexOf('/'));
-            if (!toBeBuilt.includes(taskName) && taskPath.toLowerCase().indexOf('_') > -1) {
+            if (!toBeBuilt.includes(taskName) && taskName.indexOf('_') > -1) {
                 toBeBuilt.push(taskName);
             }
         }
