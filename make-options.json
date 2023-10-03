@@ -251,7 +251,6 @@
         "GruntV0",
         "GulpV0",
         "GulpV1",
-        "JavaToolInstallerV0",
         "NodeTaskRunnerInstallerV0",
         "PublishBuildArtifactsV1"
     ]
