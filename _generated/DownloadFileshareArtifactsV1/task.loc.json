@@ -10,8 +10,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 228,
-    "Patch": 3
+    "Minor": 227,
+    "Patch": 0
   },
   "groups": [
     {
@@ -84,7 +84,7 @@
     "ArtifactNameDirectoryNotFound": "ms-resource:loc.messages.ArtifactNameDirectoryNotFound"
   },
   "_buildConfigMapping": {
-    "Default": "1.228.3",
-    "Node20-225": "1.228.2"
+    "Default": "1.227.0",
+    "Node20-225": "1.229.0"
   }
 }

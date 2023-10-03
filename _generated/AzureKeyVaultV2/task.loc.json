@@ -15,7 +15,7 @@
   "version": {
     "Major": 2,
     "Minor": 228,
-    "Patch": 5
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -130,7 +130,7 @@
     "InvalidKeyVaultName": "ms-resource:loc.messages.InvalidKeyVaultName"
   },
   "_buildConfigMapping": {
-    "Default": "2.228.5",
-    "Node20-225": "2.228.4"
+    "Default": "2.228.0",
+    "Node20-225": "2.229.0"
   }
 }

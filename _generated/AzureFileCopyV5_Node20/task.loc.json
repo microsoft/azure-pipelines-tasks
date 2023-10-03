@@ -16,20 +16,7 @@
     "Minor": 229,
     "Patch": 2
   },
-  "demands": [
-    "azureps"
-  ],
-  "releaseNotes": "ms-resource:loc.releaseNotes",
-  "minimumAgentVersion": "1.103.0",
   "inputs": [
-    {
-      "name": "SourcePath",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.SourcePath",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.SourcePath"
-    },
     {
       "name": "ConnectedServiceNameARM",
       "aliases": [

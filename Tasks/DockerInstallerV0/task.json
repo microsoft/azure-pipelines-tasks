@@ -7,57 +7,57 @@
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
   "category": "Tool",
   "visibility": [
-    "Build",
-    "Release"
+      "Build",
+      "Release"
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 228,
-    "Patch": 3
+      "Major": 0,
+      "Minor": 218,
+      "Patch": 0
   },
   "demands": [],
   "satisfies": [
-    "Docker"
+      "Docker"
   ],
   "minimumAgentVersion": "2.142.1",
   "inputs": [
-    {
-      "name": "dockerVersion",
-      "label": "Docker Version",
-      "type": "string",
-      "required": true,
-      "helpMarkDown": "Specify the version of Docker CLI to install",
-      "defaultValue": "17.09.0-ce"
-    },
-    {
-      "name": "releaseType",
-      "type": "pickList",
-      "label": "Release type",
-      "defaultValue": "stable",
-      "required": false,
-      "options": {
-        "stable": "stable",
-        "edge": "edge",
-        "test": "test",
-        "nightly": "nightly"
+      {
+          "name": "dockerVersion",
+          "label": "Docker Version",
+          "type": "string",
+          "required": true,
+          "helpMarkDown": "Specify the version of Docker CLI to install",
+          "defaultValue": "17.09.0-ce"
       },
-      "helpMarkDown": "Pick the release type to install. Nightly is not supported on Windows"
-    }
+      {
+          "name": "releaseType",
+          "type": "pickList",
+          "label": "Release type",
+          "defaultValue": "stable",
+          "required": false,
+          "options": {
+              "stable": "stable",
+              "edge": "edge",
+              "test": "test",
+              "nightly": "nightly"
+          },
+          "helpMarkDown": "Pick the release type to install. Nightly is not supported on Windows"
+      }
   ],
   "instanceNameFormat": "Install Docker $(dockerVersion)",
   "execution": {
-    "Node10": {
-      "target": "src//dockertoolinstaller.js"
-    },
-    "Node16": {
-      "target": "src//dockertoolinstaller.js"
-    }
+      "Node10": {
+          "target": "src//dockertoolinstaller.js"
+      },
+      "Node16": {
+          "target": "src//dockertoolinstaller.js"
+      }
   },
   "messages": {
-    "DownloadDockerFailedFromLocation": "Failed to download docker from location %s. Error %s",
-    "DockerNotFoundInFolder": "Docker executable not found in path %s",
-    "DockerDownloadFailed": "Failed to download Docker from location %s. Error %s",
-    "VerifyDockerInstallation": "Verifying docker installation..."
+      "DownloadDockerFailedFromLocation": "Failed to download docker from location %s. Error %s",
+      "DockerNotFoundInFolder": "Docker executable not found in path %s",
+      "DockerDownloadFailed": "Failed to download Docker from location %s. Error %s",
+      "VerifyDockerInstallation": "Verifying docker installation..."
   }
 }

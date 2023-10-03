@@ -16,8 +16,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 228,
-    "Patch": 4
+    "Minor": 229,
+    "Patch": 0
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -109,7 +109,7 @@
     "SettingTheNetworkInterface": "ms-resource:loc.messages.SettingTheNetworkInterface"
   },
   "_buildConfigMapping": {
-    "Default": "1.228.5",
-    "Node20-225": "1.228.4"
+    "Default": "1.228.0",
+    "Node20-225": "1.229.0"
   }
 }

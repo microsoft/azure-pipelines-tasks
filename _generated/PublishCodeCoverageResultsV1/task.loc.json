@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 228,
-    "Patch": 5
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -102,7 +102,7 @@
     "GeneratedHtmlReport": "ms-resource:loc.messages.GeneratedHtmlReport"
   },
   "_buildConfigMapping": {
-    "Default": "1.228.5",
-    "Node20-225": "1.228.4"
+    "Default": "1.228.0",
+    "Node20-225": "1.229.0"
   }
 }

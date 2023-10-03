@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 228,
-    "Patch": 3
+    "Minor": 229,
+    "Patch": 0
   },
   "demands": [],
   "releaseNotes": "Simplified the task by:<br/>&nbsp;- Providing an option to simply select or type a command.<br/>&nbsp;- Retaining the useful input fields and providing an option to pass the rest as an argument to the command.",
@@ -408,7 +408,7 @@
     "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.228.4",
-    "Node20-225": "1.228.3"
+    "Default": "1.225.1",
+    "Node20-225": "1.229.0"
   }
 }

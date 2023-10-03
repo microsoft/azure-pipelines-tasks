@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 228,
-    "Patch": 5
+    "Patch": 0
   },
   "demands": [],
   "satisfies": [
@@ -45,7 +45,7 @@
     "VerifyKubectlInstallation": "Verifying kubectl installation..."
   },
   "_buildConfigMapping": {
-    "Default": "0.228.5",
-    "Node20-225": "0.228.4"
+    "Default": "0.228.0",
+    "Node20-225": "0.229.0"
   }
 }

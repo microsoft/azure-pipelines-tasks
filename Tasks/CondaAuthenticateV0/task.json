@@ -8,26 +8,26 @@
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 228,
-    "Patch": 3
+      "Major": 0,
+      "Minor": 222,
+      "Patch": 0
   },
   "runsOn": [
-    "Agent",
-    "DeploymentGroup"
+      "Agent",
+      "DeploymentGroup"
   ],
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Conda Authenticate",
   "execution": {
-    "Node10": {
-      "target": "condaauthenticatemain.js"
-    },
-    "Node16": {
-      "target": "condaauthenticatemain.js"
-    }
+      "Node10": {
+          "target": "condaauthenticatemain.js"
+      },
+      "Node16": {
+          "target": "condaauthenticatemain.js"
+      }
   },
   "messages": {
-    "FailedToAddAuthentication": "Failed to add authentication.",
-    "AddingAuthChannel": "Adding auth for the token %s"
+      "FailedToAddAuthentication": "Failed to add authentication.",
+      "AddingAuthChannel": "Adding auth for the token %s"
   }
 }

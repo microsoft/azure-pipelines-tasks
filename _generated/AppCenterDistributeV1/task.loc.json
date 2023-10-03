@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 228,
-    "Patch": 3
+    "Minor": 226,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -202,7 +202,7 @@
     "FailedToFindFile": "ms-resource:loc.messages.FailedToFindFile"
   },
   "_buildConfigMapping": {
-    "Default": "1.228.3",
-    "Node20-225": "1.228.2"
+    "Default": "1.226.0",
+    "Node20-225": "1.229.0"
   }
 }

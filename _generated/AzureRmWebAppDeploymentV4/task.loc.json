@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 228,
-    "Patch": 3
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -654,7 +654,7 @@
     "RunFromZipPreventsFileInUseError": "ms-resource:loc.messages.RunFromZipPreventsFileInUseError"
   },
   "_buildConfigMapping": {
-    "Default": "4.228.3",
-    "Node20-225": "4.228.2"
+    "Default": "4.228.1",
+    "Node20-225": "4.229.0"
   }
 }

@@ -18,8 +18,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 228,
-    "Patch": 4
+    "Minor": 225,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Azure Container Apps Deploy",
@@ -222,7 +222,7 @@
     "UpdateContainerAppRegistryDetailsFailed": "Unable to update Azure Container App ACR details via 'az containerapp registry set' command."
   },
   "_buildConfigMapping": {
-    "Default": "1.228.4",
-    "Node20-225": "1.228.3"
+    "Default": "1.225.1",
+    "Node20-225": "1.229.0"
   }
 }

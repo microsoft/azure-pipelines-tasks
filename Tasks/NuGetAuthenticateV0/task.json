@@ -13,8 +13,8 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 228,
-    "Patch": 6
+    "Minor": 227,
+    "Patch": 1
   },
   "deprecated": true,
   "minimumAgentVersion": "2.120.0",

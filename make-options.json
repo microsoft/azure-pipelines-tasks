@@ -292,6 +292,8 @@
         "NuGetAuthenticateV0",
         "AzureFileCopyV2",
         "AzureFileCopyV3",
+        "AzureFileCopyV4",
+        "AzureFileCopyV5",
         "DockerComposeV0",
         "DownloadBuildArtifactsV0",
         "AzureVmssDeploymentV0",
@@ -312,8 +314,6 @@
         "DockerV1",
         "DotNetCoreCLIV2",
         "DotNetCoreInstallerV0",
-        "DotNetCoreInstallerV1",
-        "AzureFileCopyV4",
-        "AzureFileCopyV5"
+        "DotNetCoreInstallerV1"
     ]
 }

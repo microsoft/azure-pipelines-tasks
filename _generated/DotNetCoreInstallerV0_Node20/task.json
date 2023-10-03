@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 228,
-    "Patch": 2
+    "Minor": 229,
+    "Patch": 0
   },
   "satisfies": [
     "DotNetCore"
@@ -82,7 +82,7 @@
     "UpdateToNewerVersion": "Kindly upgrade to new major version of this task 'Use .NET Core (2.*)' for installing newer versions of .NET Core. '0.*' task version might not be able to download newer .NET core versions. To know more about 'Use Dot Net (2.*)', refer https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer?view=azure-devops."
   },
   "_buildConfigMapping": {
-    "Default": "0.228.3",
-    "Node20-225": "0.228.2"
+    "Default": "0.220.0",
+    "Node20-225": "0.229.0"
   }
 }
