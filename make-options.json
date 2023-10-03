@@ -253,6 +253,7 @@
         "GulpV0",
         "GulpV1",
         "NodeTaskRunnerInstallerV0",
-        "PublishBuildArtifactsV1"
+        "PublishBuildArtifactsV1",
+        "XamariniOSV2"
     ]
 }

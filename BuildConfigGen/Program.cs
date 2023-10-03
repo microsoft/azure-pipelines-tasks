@@ -179,10 +179,13 @@ namespace BuildConfigGen
 
             string versionMapFile = Path.Combine(gitRootPath, "_generated", @$"{task}.versionmap.txt");
 
-            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping, targetConfigs: targetConfigs, currentSprint.Value, versionMapFile);
+
+            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping, targetConfigs: targetConfigs, currentSprint.Value, versionMapFile, out HashSet<Config.ConfigRecord> versionsUpdated);
 
             foreach (var config in targetConfigs)
             {
+                bool versionUpdated = versionsUpdated.Contains(config);
+
                 string taskOutput;
                 if (config.isDefault)
                 {
@@ -204,23 +207,28 @@ namespace BuildConfigGen
                     EnsureBuildConfigFileOverrides(config, taskTargetPath);
                 }
 
-                CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
-
-                if (config.enableBuildConfigOverrides)
+                // only update task output if a new version was added or the config exists
+                if (versionUpdated || Directory.Exists(taskOutput))
                 {
-                    CopyConfigOverrides(taskTargetPath, taskOutput, config);
+                    CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
+
+                    if (config.enableBuildConfigOverrides)
+                    {
+                        CopyConfigOverrides(taskTargetPath, taskOutput, config);
+                    }
+
+                    // if some files aren't present in destination, stop as following code assumes they're present and we'll just get a FileNotFoundException
+                    // don't check content as preprocessor hasn't run
+                    ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: true);
+
+                    HandlePreprocessingInTarget(taskOutput, config);
+
+                    WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.json");
+                    WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.loc.json");
                 }
-
-                // if some files aren't present in destination, stop as following code assumes they're present and we'll just get a FileNotFoundException
-                // don't check content as preprocessor hasn't run
-                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: true);
-
-                HandlePreprocessingInTarget(taskOutput, config);
 
                 WriteInputTaskJson(taskTargetPath, configTaskVersionMapping, "task.json");
                 WriteInputTaskJson(taskTargetPath, configTaskVersionMapping, "task.loc.json");
-                WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.json");
-                WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.loc.json");
 
                 if (config.isNode)
                 {
@@ -529,7 +537,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string versionMapFile)
+        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string versionMapFile, out HashSet<Config.ConfigRecord> versionsUpdated)
         {
             Dictionary<string, TaskVersion> versionMap;
             TaskVersion maxVersion;
@@ -587,6 +595,8 @@ namespace BuildConfigGen
                 }
             }
 
+
+            versionsUpdated = new HashSet<Config.ConfigRecord>();
             TaskVersion baseVersion = maxVersion;
 
             bool baseVersionIsCurrentSprint = baseVersion.Minor == currentSprint;
@@ -631,6 +641,7 @@ namespace BuildConfigGen
                 {
                     configTaskVersionMapping.Add(Config.Default, baseVersion.CloneWithPatch(baseVersion.Patch + offset));
                     offset++;
+                    versionsUpdated.Add(Config.Default);
                 }
 
                 foreach (var config in targetConfigs)
@@ -646,6 +657,7 @@ namespace BuildConfigGen
                         while (configTaskVersionMapping.Values.Contains(targetVersion));
 
                         configTaskVersionMapping.Add(config, targetVersion);
+                        versionsUpdated.Add(config);
                     }
                 }
             }
