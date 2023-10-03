@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 228,
-    "Patch": 1
+    "Minor": 229,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -455,7 +455,7 @@
     "UsingAuthFeed": "ms-resource:loc.messages.UsingAuthFeed"
   },
   "_buildConfigMapping": {
-    "Default": "2.228.2",
-    "Node20-225": "2.228.1"
+    "Default": "2.229.1",
+    "Node20-225": "2.229.0"
   }
 }
