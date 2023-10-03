@@ -1,12 +1,9 @@
 /// <reference path="../../../../definitions/mocha.d.ts"/>
 /// <reference path="../../../../definitions/node.d.ts"/>
-/// <reference path="../../../../definitions/Q.d.ts"/>
 
-import Q = require('q');
-import assert = require('assert');
 import path = require('path');
 
-var psm = require('../../../Tests/lib/psRunner');
+var psm = require('../../../../Tests/lib/psRunner');
 var psr = null;
 
 describe('Security Suite', function () {
@@ -47,6 +44,18 @@ describe('Security Suite', function () {
     if (psm.testSupported()) {
         it('Sanitize-Arguments should not break existing Bash argument formats', (done) => {
             psr.run(path.join(__dirname, 'L0Get-SanitizedArgumentsArray.DoesNotBreakExistingBashFormats.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Protect-ScriptArguments should pass correctly', (done) => {
+            psr.run(path.join(__dirname, 'L0Protect-ScriptArguments.Passes.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Protect-ScriptArguments should throw', (done) => {
+            psr.run(path.join(__dirname, 'L0Protect-ScriptArguments.Throws.ps1'), done);
         });
     }
 });
