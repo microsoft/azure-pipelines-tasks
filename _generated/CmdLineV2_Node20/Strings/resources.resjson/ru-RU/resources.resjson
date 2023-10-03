@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Командная строка",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.description": "Запуск скрипта командной строки с помощью Bash в Linux и macOS и cmd.exe в Windows",
+  "loc.instanceNameFormat": "Скрипт командной строки",
+  "loc.releaseNotes": "Создавайте скрипты для обеспечения согласованности задач. Добавлена поддержка нескольких строк.",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.script": "Скрипт",
+  "loc.input.label.workingDirectory": "Рабочий каталог",
+  "loc.input.label.failOnStderr": "Сбой со стандартной ошибкой",
+  "loc.input.help.failOnStderr": "Если задано значение True, задача завершится сбоем при записи любых ошибок в поток StandardError.",
+  "loc.messages.GeneratingScript": "Формируется скрипт.",
+  "loc.messages.JS_ExitCode": "Завершение работы Bash с кодом \"%s\".",
+  "loc.messages.JS_Stderr": "Оболочка Bash записала одну или несколько строк в стандартный поток ошибок.",
+  "loc.messages.PS_ExitCode": "Программа Cmd.exe завершила работу с кодом \"{0}\".",
+  "loc.messages.PS_UnableToDetermineExitCode": "Непредвиденное исключение. Не удается определить код выхода из cmd.exe.",
+  "loc.messages.ScriptContents": "Содержимое скрипта:"
+}
