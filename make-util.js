@@ -1924,7 +1924,7 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTa
                 // ignore everything except package.json, package-lock.json, npm-shrinkwrap.json
                 if (!runtimeChangedFiles.some((pattern) => item.indexOf(pattern) !== -1)) return false;
                 
-                return path.normalize(item) != root;
+                return true;
             });
 
 
@@ -1935,10 +1935,6 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTa
             if (config) {  
                 dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
             }
-            
-            // if the destination path doesn't exist in Task/_buildConfigs, 
-            // we assume that the file was added by the generator from the source and will be handles while we build default task version
-            if (!fs.existsSync(dest) && config) return
             
             const folderPath = path.dirname(dest);
             if (!fs.existsSync(folderPath)) {

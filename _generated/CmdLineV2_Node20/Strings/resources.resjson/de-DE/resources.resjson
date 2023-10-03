@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Befehlszeile",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.description": "Hiermit wird ein Befehlszeilenskript unter Verwendung von Bash unter Linux und MacOS und \"cmd.exe\" unter Windows ausgeführt.",
+  "loc.instanceNameFormat": "Befehlszeilenskript",
+  "loc.releaseNotes": "Skripttaskkonsistenz. Es wurde Unterstützung für mehrere Zeilen hinzugefügt.",
+  "loc.group.displayName.advanced": "Erweitert",
+  "loc.input.label.script": "Skript",
+  "loc.input.label.workingDirectory": "Arbeitsverzeichnis",
+  "loc.input.label.failOnStderr": "Fehler aufgrund von Standardfehler.",
+  "loc.input.help.failOnStderr": "Wenn dies TRUE ist, tritt bei dieser Aufgabe ein Fehler auf, wenn Fehler in den StandardError-Stream geschrieben werden.",
+  "loc.messages.GeneratingScript": "Skript wird erstellt.",
+  "loc.messages.JS_ExitCode": "Bash wurde mit dem Code \"%s\" beendet.",
+  "loc.messages.JS_Stderr": "Bash hat mindestens eine Zeile in den Standardfehlerstream geschrieben.",
+  "loc.messages.PS_ExitCode": "\"Cmd.exe\" wurde mit dem Code \"{0}\" beendet.",
+  "loc.messages.PS_UnableToDetermineExitCode": "Unerwartete Ausnahme. Der Exitcode konnte aus \"cmd.exe\" nicht bestimmt werden.",
+  "loc.messages.ScriptContents": "Skriptinhalte:"
+}
