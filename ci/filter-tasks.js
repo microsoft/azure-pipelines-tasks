@@ -181,15 +181,6 @@ async function getTasksToBuildForPR (prId, forDowngradingCheck) {
                 }
             }
         }
-
-        // for downgrading check, include any changed generated tasks that have _ in the name (e.g. FtpUploadV1_Node20)
-        if(forDowngradingCheck && filePath.slice(0, 10) == "_generated") {
-            var taskPath = filePath.slice(11);
-            var taskName = taskPath.slice(0, taskPath.indexOf('/'));
-            if (!toBeBuilt.includes(taskName) && taskName.indexOf('_') > -1) {
-                toBeBuilt.push(taskName);
-            }
-        }
     });
     var changedTasks = getTasksDependentOnChangedCommonFiles(commonChanges);
     var changedTests = getTasksDependentOnChangedCommonFiles(commonTestChanges);
