@@ -252,6 +252,7 @@
         "GruntV0",
         "GulpV0",
         "GulpV1",
+        "MavenV3",
         "NodeTaskRunnerInstallerV0",
         "PublishBuildArtifactsV1",
         "FtpUploadV2",
