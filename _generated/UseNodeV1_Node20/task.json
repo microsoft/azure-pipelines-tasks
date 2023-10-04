@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 228,
-    "Patch": 0
+    "Minor": 229,
+    "Patch": 1
   },
   "satisfies": [
     "Node",
@@ -74,7 +74,7 @@
     "AgentTempDirNotSet": "Expected Agent.TempDirectory to be set."
   },
   "_buildConfigMapping": {
-    "Default": "1.228.1",
-    "Node20-225": "1.228.0"
+    "Default": "1.229.0",
+    "Node20-225": "1.229.1"
   }
 }

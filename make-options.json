@@ -254,6 +254,23 @@
         "GulpV1",
         "NodeTaskRunnerInstallerV0",
         "PublishBuildArtifactsV1",
-        "FtpUploadV2"
+        "FtpUploadV2",
+        "MSBuildV1",
+        "NodeToolV0",
+        "PowerShellV2",
+        "PythonScriptV0",
+        "ShellScriptV2",
+        "SshV0",
+        "UseNodeV1",
+        "UsePythonVersionV0",
+        "UseRubyVersionV0",
+        "XamarinAndroidV1",
+        "XamariniOSV2",
+        "XcodeV5",
+        "InstallAppleProvisioningProfileV1",
+        "InstallSSHKeyV0",
+        "JavaToolInstallerV0",
+        "JenkinsQueueJobV2",
+        "MavenV3"
     ]
 }

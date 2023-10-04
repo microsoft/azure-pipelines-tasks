@@ -2,7 +2,6 @@
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
-import { emit } from 'cluster';
 import { emitTelemetry } from '../xcodeutils';
 
 let taskPath = path.join(__dirname, '..', 'xcode.js');

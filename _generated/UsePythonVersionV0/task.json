@@ -14,8 +14,8 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 0,
-    "Minor": 228,
-    "Patch": 1
+    "Minor": 229,
+    "Patch": 0
   },
   "demands": [],
   "instanceNameFormat": "Use Python $(versionSpec)",
@@ -126,7 +126,7 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "0.228.1",
-    "Node20-225": "0.228.0"
+    "Default": "0.229.0",
+    "Node20-225": "0.229.1"
   }
 }

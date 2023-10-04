@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 228,
-    "Patch": 3
+    "Minor": 229,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -517,7 +517,7 @@
     "NoTestResults": "ms-resource:loc.messages.NoTestResults"
   },
   "_buildConfigMapping": {
-    "Default": "3.228.3",
-    "Node20-225": "3.228.2"
+    "Default": "3.229.0",
+    "Node20-225": "3.229.1"
   }
 }
