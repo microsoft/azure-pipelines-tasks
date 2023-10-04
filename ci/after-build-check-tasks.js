@@ -119,6 +119,11 @@ function findNonUniqueTaskLib() {
 
 function analyzePowershellTasks() {
     let output = '';
+    if (process.platform !== 'win32') {
+        console.log('The powershell check is only supported on Windows. Skipping...');
+        return;
+    }
+
     try {
         const pwshScriptPath = path.join(__dirname, 'check-powershell-syntax.ps1');
         output = util.run(`powershell -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted ${pwshScriptPath} ${buildTasksPath}`, true);
