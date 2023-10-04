@@ -1,0 +1,426 @@
+{
+  "id": "1E78DC1B-9132-4B18-9C75-0E7ECC634B74",
+  "name": "Xcode",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/xcode",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 5,
+    "Minor": 228,
+    "Patch": 1
+  },
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "demands": [
+    "xcode"
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "sign",
+      "displayName": "ms-resource:loc.group.displayName.sign",
+      "isExpanded": true
+    },
+    {
+      "name": "package",
+      "displayName": "ms-resource:loc.group.displayName.package",
+      "isExpanded": true
+    },
+    {
+      "name": "devices",
+      "displayName": "ms-resource:loc.group.displayName.devices",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "actions",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.actions",
+      "defaultValue": "build",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.actions"
+    },
+    {
+      "name": "configuration",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configuration",
+      "defaultValue": "$(Configuration)",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.configuration"
+    },
+    {
+      "name": "sdk",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sdk",
+      "defaultValue": "$(SDK)",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sdk"
+    },
+    {
+      "name": "xcWorkspacePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.xcWorkspacePath",
+      "defaultValue": "**/*.xcodeproj/project.xcworkspace",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcWorkspacePath"
+    },
+    {
+      "name": "scheme",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.scheme",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.scheme"
+    },
+    {
+      "name": "xcodeVersion",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.xcodeVersion",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcodeVersion",
+      "defaultValue": "default",
+      ".comment": "//If you update the options here, be sure to update the Xcode.json build template as well.",
+      "options": {
+        "8": "Xcode 8",
+        "9": "Xcode 9",
+        "10": "Xcode 10",
+        "11": "Xcode 11",
+        "12": "Xcode 12",
+        "13": "Xcode 13",
+        "default": "Default",
+        "specifyPath": "Specify path"
+      }
+    },
+    {
+      "name": "xcodeDeveloperDir",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.xcodeDeveloperDir",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcodeDeveloperDir",
+      "visibleRule": "xcodeVersion == specifyPath"
+    },
+    {
+      "name": "packageApp",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.packageApp",
+      "defaultValue": false,
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.packageApp",
+      "groupName": "package"
+    },
+    {
+      "name": "archivePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.archivePath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.archivePath",
+      "groupName": "package",
+      "visibleRule": "packageApp == true"
+    },
+    {
+      "name": "exportPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.exportPath",
+      "defaultValue": "output/$(SDK)/$(Configuration)",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.exportPath",
+      "groupName": "package",
+      "visibleRule": "packageApp == true"
+    },
+    {
+      "name": "exportOptions",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.exportOptions",
+      "defaultValue": "auto",
+      "required": false,
+      "groupName": "package",
+      "options": {
+        "auto": "Automatic",
+        "plist": "Plist",
+        "specify": "Specify"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.exportOptions",
+      "visibleRule": "packageApp == true"
+    },
+    {
+      "name": "exportMethod",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.exportMethod",
+      "defaultValue": "development",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.exportMethod",
+      "groupName": "package",
+      "visibleRule": "exportOptions == specify"
+    },
+    {
+      "name": "exportTeamId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.exportTeamId",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.exportTeamId",
+      "groupName": "package",
+      "visibleRule": "exportOptions == specify"
+    },
+    {
+      "name": "exportOptionsPlist",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.exportOptionsPlist",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.exportOptionsPlist",
+      "groupName": "package",
+      "visibleRule": "exportOptions == plist"
+    },
+    {
+      "name": "exportArgs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.exportArgs",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.exportArgs",
+      "groupName": "package",
+      "visibleRule": "packageApp == true"
+    },
+    {
+      "name": "signingOption",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.signingOption",
+      "required": false,
+      "groupName": "sign",
+      "defaultValue": "nosign",
+      "helpMarkDown": "ms-resource:loc.input.help.signingOption",
+      "options": {
+        "nosign": "Do not code sign",
+        "default": "Project defaults",
+        "manual": "Manual signing",
+        "auto": "Automatic signing"
+      }
+    },
+    {
+      "name": "signingIdentity",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.signingIdentity",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.signingIdentity",
+      "groupName": "sign",
+      "visibleRule": "signingOption = manual"
+    },
+    {
+      "name": "provisioningProfileUuid",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.provisioningProfileUuid",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.provisioningProfileUuid",
+      "groupName": "sign",
+      "visibleRule": "signingOption = manual"
+    },
+    {
+      "name": "provisioningProfileName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.provisioningProfileName",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.provisioningProfileName",
+      "groupName": "sign",
+      "visibleRule": "signingOption = manual"
+    },
+    {
+      "name": "teamId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.teamId",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.teamId",
+      "groupName": "sign",
+      "visibleRule": "signingOption = auto"
+    },
+    {
+      "name": "destinationPlatformOption",
+      "type": "picklist",
+      "label": "ms-resource:loc.input.label.destinationPlatformOption",
+      "defaultValue": "default",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.destinationPlatformOption",
+      "groupName": "devices",
+      "options": {
+        "default": "Default",
+        "iOS": "iOS and watchOS",
+        "tvOS": "tvOS",
+        "macOS": "macOS",
+        "custom": "Custom"
+      }
+    },
+    {
+      "name": "destinationPlatform",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.destinationPlatform",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.destinationPlatform",
+      "groupName": "devices",
+      "visibleRule": "destinationPlatformOption == custom"
+    },
+    {
+      "name": "destinationTypeOption",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.destinationTypeOption",
+      "defaultValue": "simulators",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.destinationTypeOption",
+      "groupName": "devices",
+      "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS",
+      "options": {
+        "simulators": "Simulator",
+        "devices": "Connected Device"
+      }
+    },
+    {
+      "name": "destinationSimulators",
+      "label": "ms-resource:loc.input.label.destinationSimulators",
+      "type": "string",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "devices",
+      "helpMarkDown": "ms-resource:loc.input.help.destinationSimulators",
+      "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS && destinationTypeOption == simulators"
+    },
+    {
+      "name": "destinationDevices",
+      "label": "ms-resource:loc.input.label.destinationDevices",
+      "type": "string",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "devices",
+      "helpMarkDown": "ms-resource:loc.input.help.destinationDevices",
+      "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS && destinationTypeOption == devices"
+    },
+    {
+      "name": "args",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.args",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.args",
+      "groupName": "advanced"
+    },
+    {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
+      "name": "useXcpretty",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useXcpretty",
+      "required": false,
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.useXcpretty",
+      "groupName": "advanced"
+    },
+    {
+      "name": "xcprettyArgs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.xcprettyArgs",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcprettyArgs",
+      "groupName": "advanced",
+      "visibleRule": "useXcpretty == true"
+    },
+    {
+      "name": "publishJUnitResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishJUnitResults",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.publishJUnitResults"
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle",
+      "visibleRule": "publishJUnitResults == true"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "xcode.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "xcode.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "xcode.js",
+      "argumentFormat": ""
+    }
+  },
+  "postjobexecution": {
+    "Node10": {
+      "target": "postxcode.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "postxcode.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "postxcode.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "SignIdNotFound": "ms-resource:loc.messages.SignIdNotFound",
+    "TempKeychainSetupFailed": "ms-resource:loc.messages.TempKeychainSetupFailed",
+    "ProvProfileDetailsNotFound": "ms-resource:loc.messages.ProvProfileDetailsNotFound",
+    "ProvProfileUUIDNotFound": "ms-resource:loc.messages.ProvProfileUUIDNotFound",
+    "MultipleWorkspacesFound": "ms-resource:loc.messages.MultipleWorkspacesFound",
+    "WorkspaceDoesNotExist": "ms-resource:loc.messages.WorkspaceDoesNotExist",
+    "UseXcprettyForTestPublishing": "ms-resource:loc.messages.UseXcprettyForTestPublishing",
+    "NoTestResultsFound": "ms-resource:loc.messages.NoTestResultsFound",
+    "XcodeSuccess": "ms-resource:loc.messages.XcodeSuccess",
+    "TempKeychainDeleteFailed": "ms-resource:loc.messages.TempKeychainDeleteFailed",
+    "ProvProfileDeleteFailed": "ms-resource:loc.messages.ProvProfileDeleteFailed",
+    "ExportMethodNotIdentified": "ms-resource:loc.messages.ExportMethodNotIdentified",
+    "ExportOptionsPlistInvalidFilePath": "ms-resource:loc.messages.ExportOptionsPlistInvalidFilePath",
+    "SchemeRequiredForArchive": "ms-resource:loc.messages.SchemeRequiredForArchive",
+    "WorkspaceOrProjectRequiredForArchive": "ms-resource:loc.messages.WorkspaceOrProjectRequiredForArchive",
+    "FailedToGenerateExportOptionsPlist": "ms-resource:loc.messages.FailedToGenerateExportOptionsPlist",
+    "LocateXcodeBasedOnVersion": "ms-resource:loc.messages.LocateXcodeBasedOnVersion",
+    "FailedToLocateSpecifiedXcode": "ms-resource:loc.messages.FailedToLocateSpecifiedXcode",
+    "CantDetermineProvisioningStyle": "ms-resource:loc.messages.CantDetermineProvisioningStyle",
+    "MultipleSchemesFound": "ms-resource:loc.messages.MultipleSchemesFound",
+    "NoSchemeFound": "ms-resource:loc.messages.NoSchemeFound",
+    "SchemeSelected": "ms-resource:loc.messages.SchemeSelected",
+    "FailedToFindScheme": "ms-resource:loc.messages.FailedToFindScheme",
+    "OutputDirectoryIgnored": "ms-resource:loc.messages.OutputDirectoryIgnored",
+    "NoDestinationPlatformWarning": "ms-resource:loc.messages.NoDestinationPlatformWarning",
+    "XcprettyNotInstalled": "ms-resource:loc.messages.XcprettyNotInstalled",
+    "XcodeRequiresMac": "ms-resource:loc.messages.XcodeRequiresMac",
+    "UsingDefaultSimulator": "ms-resource:loc.messages.UsingDefaultSimulator"
+  },
+  "_buildConfigMapping": {
+    "Default": "5.228.2",
+    "Node20-225": "5.228.1"
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "id": "91443475-df55-4874-944b-39253b558790",
+  "name": "SSH",
+  "friendlyName": "SSH",
+  "description": "Run shell commands or a script on a remote machine using SSH",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/ssh",
+  "helpMarkDown": "[Learn more about this task](http://go.microsoft.com/fwlink/?LinkId=821892)",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 228,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "Run shell $(runOptions) on remote machine",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "sshEndpoint",
+      "type": "connectedService:ssh",
+      "label": "SSH service connection",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "SSH service connection with connection details for the remote machine."
+    },
+    {
+      "name": "runOptions",
+      "type": "radio",
+      "label": "Run",
+      "required": true,
+      "defaultValue": "commands",
+      "options": {
+        "commands": "Commands",
+        "script": "Script File",
+        "inline": "Inline Script"
+      },
+      "helpMarkDown": "Choose to either run shell commands or a shell script on the remote machine."
+    },
+    {
+      "name": "commands",
+      "type": "multiLine",
+      "label": "Commands",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "runOptions = commands",
+      "helpMarkDown": "Specify the shell commands to run on the remote machine. Enter each command along with its arguments on a new line. To run multiple commands together, enter them on the same line separated by semi-colons (e.g. cd /home/user/myFolder;build).",
+      "properties": {
+        "resizable": "true",
+        "rows": "10"
+      }
+    },
+    {
+      "name": "scriptPath",
+      "type": "filePath",
+      "label": "Shell script path",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "runOptions = script",
+      "helpMarkDown": "Path to the shell script file to run on the remote machine."
+    },
+    {
+      "name": "inline",
+      "type": "multiLine",
+      "label": "Inline Script",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "runOptions = inline",
+      "helpMarkDown": "Write the shell script to run on the remote machine.",
+      "properties": {
+        "resizable": "true",
+        "rows": "10"
+      }
+    },
+    {
+      "name": "interpreterCommand",
+      "type": "string",
+      "label": "Interpreter command",
+      "defaultValue": "/bin/bash",
+      "required": false,
+      "visibleRule": "runOptions = inline",
+      "helpMarkDown": "Path to the command interpreter used to execute the script. Adds a shebang line to the beginning of the script. Relevant only for UNIX-like operating systems. Please use empty string for Windows-based remote hosts. [See more about shebang (#!)](https://homepages.cwi.nl/~aeb/std/shebang/unix-faq.txt)"
+    },
+    {
+      "name": "args",
+      "type": "string",
+      "label": "Arguments",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "runOptions = script",
+      "helpMarkDown": "Arguments to pass to the shell script."
+    },
+    {
+      "name": "failOnStdErr",
+      "type": "boolean",
+      "label": "Fail on STDERR",
+      "required": false,
+      "defaultValue": true,
+      "helpMarkDown": "If this option is selected, the build will fail when the remote commands or script write to STDERR.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "interactiveSession",
+      "type": "boolean",
+      "label": "Enable interactive session",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "If this option is selected, interactive session will be started - if there's a password request, it will be filled by user's password. It could be useful to run commands like 'sudo'",
+      "groupName": "advanced"
+    },
+    {
+      "name": "readyTimeout",
+      "type": "string",
+      "label": "SSH handshake timeout",
+      "defaultValue": "20000",
+      "required": true,
+      "groupName": "advanced",
+      "helpMarkDown": "How long (in milliseconds) to wait for the SSH handshake to complete.",
+      "validation": {
+        "expression": "isMatch(value, '(^\\d*$)','Multiline')",
+        "message": "Enter a valid value for timeout."
+      }
+    },
+    {
+      "name": "interactiveKeyboardAuthentication",
+      "type": "boolean",
+      "label": "Use interactive-keyboard authentication",
+      "defaultValue": false,
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Use this value if PasswordAuthentication is disabled on the target machine"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "ssh.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "ssh.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "ssh.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ConnectionFailed": "Failed to connect to remote machine. Verify the SSH service connection details. Error: %s.",
+    "FailedToWriteScript": "Failed to write the script to disk: %s",
+    "RemoteCmdExecutionErr": "Command failed with errors on remote machine.",
+    "RemoteCmdNonZeroExitCode": "Command %s exited with code %s.",
+    "RemoteCopyFailed": "Failed to copy script to remote machine. Error: %s.",
+    "RemoteScriptFileCleanUpFailed": "Failed to delete the script file copied to the remote machine. Error = %s.",
+    "SettingUpSshConnection": "Trying to establish an SSH connection to %s@%s:%s",
+    "SshConnectionSuccessful": "Successfully connected.",
+    "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
+    "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.228.1",
+    "Node20-225": "0.228.0"
+  }
+}
