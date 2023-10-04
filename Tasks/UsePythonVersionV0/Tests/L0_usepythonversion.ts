@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as path from 'path';
 
-import * as mockery from 'mockery';
+import * as libMocker from 'azure-pipelines-task-lib/lib-mocker';
 import * as sinon from 'sinon';
 import * as mockTask from 'azure-pipelines-task-lib/mock-task';
 
@@ -15,31 +15,31 @@ function reload(): typeof usePythonVersion {
 }
 
 before(function () {
-    mockery.enable({
+    libMocker.enable({
         useCleanCache: true,
         warnOnUnregistered: false
     });
 });
 
 after(function () {
-    mockery.disable();
+    libMocker.disable();
 });
 
 afterEach(function () {
-    mockery.deregisterAll();
-    mockery.resetCache();
+    libMocker.deregisterAll();
+    libMocker.resetCache();
 });
 
 it('sets PATH correctly on Linux', async function () {
-    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
+    libMocker.registerMock('azure-pipelines-task-lib/task', mockTask);
 
     const findLocalTool = sinon.stub().returns('findLocalTool');
-    mockery.registerMock('azure-pipelines-tool-lib/tool', {
+    libMocker.registerMock('azure-pipelines-tool-lib/tool', {
         findLocalTool
     });
 
     const prependPathSafe = sinon.spy();
-    mockery.registerMock('./toolutil', {
+    libMocker.registerMock('./toolutil', {
         prependPathSafe
     });
 
@@ -61,17 +61,17 @@ it('sets PATH correctly on Linux', async function () {
 });
 
 it('sets PATH correctly on Windows', async function () {
-    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
+    libMocker.registerMock('azure-pipelines-task-lib/task', mockTask);
 
     // Windows PATH logic will parse this path, so it has to be realistic
     const toolPath = path.join('/', 'Python', '3.6.4', 'x64');
     const findLocalTool = sinon.stub().returns(toolPath);
-    mockery.registerMock('azure-pipelines-tool-lib/tool', {
+    libMocker.registerMock('azure-pipelines-tool-lib/tool', {
         findLocalTool
     });
 
     const prependPathSafe = sinon.spy();
-    mockery.registerMock('./toolutil', {
+    libMocker.registerMock('./toolutil', {
         prependPathSafe
     });
 

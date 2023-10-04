@@ -35,5 +35,5 @@
   "loc.messages.SettingUpSshConnection": "Tentative d'établissement d'une connexion SSH à %s@%s:%s",
   "loc.messages.SshConnectionSuccessful": "Connexion réussie.",
   "loc.messages.UseDefaultPort": "Utilisation du port 22, qui représente la valeur par défaut pour SSH, car aucun port n'a été spécifié.",
-  "loc.messages.SanitizerOutput": "Sanitizer a modifié les arguments d’entrée. Sortie du désinfectant : '%s'"
+  "loc.messages.ScriptArgsSanitized": "Caractères détectés dans les arguments qui peuvent ne pas être exécutés correctement par le shell. Veuillez échapper les caractères spéciaux en utilisant une barre oblique inverse (\\). Plus d'informations sont disponibles ici: https://aka.ms/ado/75787"
 }

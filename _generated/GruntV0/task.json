@@ -1,0 +1,182 @@
+{
+  "id": "521D1E15-F5FB-4B73-A93B-B2FE88A9A286",
+  "name": "Grunt",
+  "friendlyName": "Grunt",
+  "description": "Run the Grunt JavaScript task runner",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/grunt",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=627413) or [see the Grunt documentation](https://gruntjs.com/getting-started)",
+  "category": "Build",
+  "visibility": [
+    "Build"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 229,
+    "Patch": 0
+  },
+  "demands": [
+    "node.js"
+  ],
+  "minimumAgentVersion": "1.91.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    },
+    {
+      "name": "junitTestResults",
+      "displayName": "JUnit Test Results",
+      "isExpanded": true
+    },
+    {
+      "name": "codeCoverage",
+      "displayName": "Code Coverage",
+      "isExpanded": true
+    }
+  ],
+  "instanceNameFormat": "grunt $(targets)",
+  "inputs": [
+    {
+      "name": "gruntFile",
+      "type": "filePath",
+      "label": "Grunt File Path",
+      "defaultValue": "gruntfile.js",
+      "required": true,
+      "helpMarkDown": "Relative path from repo root of the grunt file script file to run."
+    },
+    {
+      "name": "targets",
+      "type": "string",
+      "label": "Grunt Task(s)",
+      "defaultValue": "",
+      "helpMarkDown": "Optional.  Space delimited list of tasks to run.  If not specified, the default task will run.",
+      "required": false
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "Arguments",
+      "defaultValue": "",
+      "helpMarkDown": "Additional arguments passed to grunt.  --gruntfile is not needed since already added via gruntFile input above.",
+      "required": false
+    },
+    {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
+      "type": "filePath",
+      "label": "Working Directory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "gruntCli",
+      "type": "string",
+      "label": "grunt-cli location",
+      "defaultValue": "node_modules/grunt-cli/bin/grunt",
+      "required": true,
+      "helpMarkDown": "grunt-cli to run when agent can't find global installed grunt-cli  Defaults to the grunt-cli under node_modules folder of the working directory.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "publishJUnitResults",
+      "type": "boolean",
+      "label": "Publish to Azure Pipelines",
+      "defaultValue": "false",
+      "groupName": "junitTestResults",
+      "helpMarkDown": "Select this option to publish JUnit test results produced by the Grunt build to Azure Pipelines."
+    },
+    {
+      "name": "testResultsFiles",
+      "type": "filePath",
+      "label": "Test Results Files",
+      "defaultValue": "**/TEST-*.xml",
+      "required": true,
+      "groupName": "junitTestResults",
+      "helpMarkDown": "Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all XML files whose name starts with TEST-.",
+      "visibleRule": "publishJUnitResults = true"
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "Test Run Title",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "junitTestResults",
+      "helpMarkDown": "Provide a name for the test run.",
+      "visibleRule": "publishJUnitResults = true"
+    },
+    {
+      "name": "enableCodeCoverage",
+      "type": "boolean",
+      "label": "Enable Code Coverage",
+      "defaultValue": "false",
+      "groupName": "codeCoverage",
+      "helpMarkDown": "Select this option to enable Code Coverage using Istanbul."
+    },
+    {
+      "name": "testFramework",
+      "type": "pickList",
+      "label": "Test Framework",
+      "required": false,
+      "groupName": "codeCoverage",
+      "defaultValue": "Mocha",
+      "helpMarkDown": "Select your test framework.",
+      "options": {
+        "Mocha": "Mocha",
+        "Jasmine": "Jasmine"
+      },
+      "visibleRule": "enableCodeCoverage = true"
+    },
+    {
+      "name": "srcFiles",
+      "type": "string",
+      "label": "Source Files",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "Provide the path to your source files which you want to hookRequire()",
+      "visibleRule": "enableCodeCoverage = true"
+    },
+    {
+      "name": "testFiles",
+      "type": "string",
+      "label": "Test Script Files",
+      "defaultValue": "test/*.js",
+      "required": true,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "Provide the path to your test script files",
+      "visibleRule": "enableCodeCoverage = true"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "grunttask.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "grunttask.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "GruntCliNotInstalled": "Grunt-cli is not installed globally (or is not in the path of the user the agent is running as) and it is not in the local working folder: %s",
+    "GruntReturnCode": "Grunt exited with return code: %d",
+    "GruntFailed": "Grunt failed with error: %s",
+    "NpmFailed": "Npm failed with error: %s",
+    "IstanbulFailed": "Istanbul failed with error: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.229.0",
+    "Node20-225": "0.229.1"
+  }
+}
