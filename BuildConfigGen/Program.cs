@@ -207,8 +207,10 @@ namespace BuildConfigGen
                     EnsureBuildConfigFileOverrides(config, taskTargetPath);
                 }
 
+                var taskConfigExists = File.Exists(Path.Combine(taskOutput, "task.json"));
+
                 // only update task output if a new version was added or the config exists
-                if (versionUpdated || Directory.Exists(taskOutput))
+                if (versionUpdated || taskConfigExists)
                 {
                     CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
 
