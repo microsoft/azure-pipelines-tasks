@@ -252,8 +252,8 @@
         "GruntV0",
         "GulpV0",
         "GulpV1",
+        "MavenV3",
         "NodeTaskRunnerInstallerV0",
-        "PublishBuildArtifactsV1",
-        "XamariniOSV2"
+        "PublishBuildArtifactsV1"
     ]
 }
