@@ -279,6 +279,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.OpenSSLError" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error parsing certificate. This might be caused by an unsupported algorithm. If you're using old certificate with a new OpenSSL version try to set -legacy flag in opensslPkcsArgs input.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[인증서를 구문 분석하는 동안 오류가 발생했습니다. 이는 지원되지 않는 알고리즘으로 인해 발생할 수 있습니다. 새 OpenSSL 버전에서 이전 인증서를 사용하는 경우 opensslPkcsArgs 입력에서 -legacy 플래그를 설정해 보세요.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.P12PrivateKeyNameNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Failed to identify the private key name: %s]]></Val>
