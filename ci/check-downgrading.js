@@ -120,18 +120,21 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
 }
 
 function getTasksVersions(tasks, basepath) {
-  return tasks.map(x => {
+  return tasks.filter(x=>{
     var taskDir = getTaskDir(x);
 
     const taskJSONPath = join(basepath, taskDir , x, 'task.json');
 
     if (!existsSync(taskJSONPath)) {
-      logToPipeline('error', `Task.json of ${x} does not exist by path ${taskJSONPath}`);
-      process.exit(1);
+      return false;
     }
 
-    const taskJSONObject = JSON.parse(readFileSync(taskJSONPath, 'utf-8'));
+    return true;
+  }).map(x => {
+    var taskDir = getTaskDir(x);
 
+    const taskJSONPath = join(basepath, taskDir , x, 'task.json');
+    const taskJSONObject = JSON.parse(readFileSync(taskJSONPath, 'utf-8'));
     return {
       id: taskJSONObject.id,
       name: x,
@@ -230,12 +233,14 @@ function compareLocalTaskLoc(localTasks) {
 function getChangedTaskJsonFromMaster(names) {
   names.forEach(x => {
     mkdir('-p', join(tempMasterTasksPath, getTaskDir(x), x));
+    var tmp = `${tempMasterTasksPath.split(sep).join(posix.sep)}/${getTaskDir(x)}/${x}/task.json`;
     try
     {
-      run(`git show origin/master:${getTaskDir(x)}/${x}/task.json > ${tempMasterTasksPath.split(sep).join(posix.sep)}/${getTaskDir(x)}/${x}/task.json`);
+      run(`git show origin/master:${getTaskDir(x)}/${x}/task.json > ${tmp}`);
     }
     catch (e)
     {
+      rm(tmp);
       console.log(`main: failed to getTasksVersions for ${x}; assuming task or buildConfig not present in master; will skip version checks involving master`);
     }
   });
