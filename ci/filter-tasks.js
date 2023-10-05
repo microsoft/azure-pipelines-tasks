@@ -221,7 +221,7 @@ async function getTasksToBuildForPR (prId, forDowngradingCheck) {
 
     // Filter out fully removed tasks
     toBeBuilt = toBeBuilt.filter((taskName) => 
-        fs.existsSync(path.join(__dirname, '..', 'Tasks' , taskName)
+        fs.existsSync(path.join(__dirname, '..', 'Tasks' , taskName))
         || fs.existsSync(path.join(__dirname, '..', '_generated' , taskName)));
 
     return toBeBuilt;
