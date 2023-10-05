@@ -183,8 +183,7 @@ async function getTasksToBuildForPR (prId, forDowngradingCheck) {
         }
 
         // include tasks in _generated for check-downgrading.js
-        if(forDowngradingCheck)
-        {
+        if(forDowngradingCheck) {
             if (filePath.slice(0, 10) === '_generated') {
                 var taskPath = filePath.slice(11);
 
@@ -221,7 +220,9 @@ async function getTasksToBuildForPR (prId, forDowngradingCheck) {
     });
 
     // Filter out fully removed tasks
-    toBeBuilt = toBeBuilt.filter((taskName) => fs.existsSync(path.join(__dirname, '..', 'Tasks' , taskName)));
+    toBeBuilt = toBeBuilt.filter((taskName) => 
+        fs.existsSync(path.join(__dirname, '..', 'Tasks' , taskName)
+        || fs.existsSync(path.join(__dirname, '..', '_generated' , taskName)));
 
     return toBeBuilt;
 }
