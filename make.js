@@ -109,7 +109,7 @@ if (argv.task) {
 process.env['TASK_TEST_RUNNER'] = argv.runner || '';
 
 function getTaskList(taskList) {
-    let tasksToBuild = taskList;
+    let tasksToBuild = [];
 
     if (!fs.existsSync(genTaskPath)) return tasksToBuild;
 
