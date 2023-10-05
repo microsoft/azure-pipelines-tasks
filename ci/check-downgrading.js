@@ -227,7 +227,7 @@ function compareLocalTaskLoc(localTasks) {
   return messages;
 }
 
-function tryGetChangedTaskJsonFromMaster(names) {
+function getChangedTaskJsonFromMaster(names) {
   names.forEach(x => {
     mkdir('-p', join(tempMasterTasksPath, getTaskDir(x), x));
     try
@@ -236,13 +236,9 @@ function tryGetChangedTaskJsonFromMaster(names) {
     }
     catch (e)
     {
-      return false;
+      console.log(`main: failed to getTasksVersions for ${x}; assuming task or buildConfig not present in master; will skip version checks involving master`);
     }
-
-    return true;
   });
-
-
 }
 
 async function main({ task, sprint, week }) {
@@ -250,14 +246,8 @@ async function main({ task, sprint, week }) {
   const localTasks = getTasksVersions(changedTasksNames, join(__dirname, '..'));
   var masterTasks;
 
-  if(tryGetChangedTaskJsonFromMaster(changedTasksNames))
-  {
-    masterTasks =  getTasksVersions(changedTasksNames, tempMasterTasksPath);
-  } else {
-    console.log("main: failed to getTasksVersions; assuming task or buildConfig not present in master; will skip version checks against master");
-
-    masterTasks = [];
-  }
+  getChangedTaskJsonFromMaster(changedTasksNames);
+  masterTasks = getTasksVersions(changedTasksNames, tempMasterTasksPath);
 
   const feedTasks = await getFeedTasksVersions();
   const isReleaseTagExist = run(`git tag -l v${sprint}`).length !== 0;
