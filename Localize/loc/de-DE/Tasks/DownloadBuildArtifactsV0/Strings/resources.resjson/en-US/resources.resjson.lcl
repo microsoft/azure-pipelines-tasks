@@ -177,6 +177,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.retryRedirectDownloadCount" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Optional number of times to retry downloading a build artifact if the download based on redirect fails. If your network does not allow following the redirect, you can set this to -1 to always download streamed response from Azure DevOps instead.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Optionale Anzahl von Wiederholungsversuchen zum Herunterladen eines Buildartefakts, wenn der auf einer Umleitung basierende Download fehlschlägt. Wenn Ihr Netzwerk das Befolgen der Umleitung nicht zulässt, können Sie diese Option auf -1 festlegen, um stattdessen immer gestreamte Antworten von Azure DevOps herunterzuladen.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.specificBuildWithTriggering" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If checked, this build task will try to download artifacts from the triggering build. If there is no triggering build from the specified pipeline, it will download artifacts from the build specified in the options below.]]></Val>
@@ -339,6 +348,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.retryRedirectDownloadCount" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Retry count for redirect download]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Wiederholungsanzahl für Umleitungsdownload]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.specificBuildWithTriggering" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[When appropriate, download artifacts from the triggering build.]]></Val>
@@ -492,6 +510,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.FollowingDownloadRedirectFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not download the files by following a redirect: %s. Falling back to consuming streamed content from Azure DevOps.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Die Dateien konnten durch Befolgen einer Umleitung nicht heruntergeladen werden: %s. Stattdessen werden gestreamte Inhalte aus Azure DevOps verwendet.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.IntegrityCheckNotPassed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Artifact items integrity check failed]]></Val>
@@ -587,6 +614,15 @@
           <Val><![CDATA[Failed in %s with error: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Fehler in "%s": %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.PreferRedirect" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Prefer downloading files through redirect to the content stitcher: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Herunterladen von Dateien über Umleitung zum Inhaltshefter bevorzugen: %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
