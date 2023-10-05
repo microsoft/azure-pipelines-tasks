@@ -77,26 +77,26 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
     const masterTask = masterTasks.find(x => x.name.toLowerCase() === localTask.name.toLowerCase());
 
     if (masterTask === undefined) {
-      continue;
-    }
+      console.log("compareLocalWithMaster: masterTask not found, skipping master checks");
+    } else {
+      if (localTask.version.minor < sprint) {
+        const destinationVersion = parse(masterTask.version.version);
+        destinationVersion.minor = sprint;
 
-    if (localTask.version.minor < sprint) {
-      const destinationVersion = parse(masterTask.version.version);
-      destinationVersion.minor = sprint;
+        messages.push({
+          type: 'error',
+          payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${destinationVersion.format()} at least (${taskVersionBumpingDocUrl})`
+        });
+        continue;
+      }
 
-      messages.push({
-        type: 'error',
-        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${destinationVersion.format()} at least (${taskVersionBumpingDocUrl})`
-      });
-      continue;
-    }
-
-    if (localTask.version.minor === sprint && eq(localTask.version, masterTask.version)) {
-      messages.push({
-        type: 'error',
-        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${inc(masterTask.version, 'patch')} at least (${taskVersionBumpingDocUrl})`
-      });
-      continue;
+      if (localTask.version.minor === sprint && eq(localTask.version, masterTask.version)) {
+        messages.push({
+          type: 'error',
+          payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${inc(masterTask.version, 'patch')} at least (${taskVersionBumpingDocUrl})`
+        });
+        continue;
+      }
     }
 
     if (localTask.version.minor === sprint && isCourtesyWeek) {
@@ -227,18 +227,38 @@ function compareLocalTaskLoc(localTasks) {
   return messages;
 }
 
-function getChangedTaskJsonFromMaster(names) {
+function tryGetChangedTaskJsonFromMaster(names) {
   names.forEach(x => {
     mkdir('-p', join(tempMasterTasksPath, getTaskDir(x), x));
-    run(`git show origin/master:${getTaskDir(x)}/${x}/task.json > ${tempMasterTasksPath.split(sep).join(posix.sep)}/${getTaskDir(x)}/${x}/task.json`);
+    try
+    {
+      run(`git show origin/master:${getTaskDir(x)}/${x}/task.json > ${tempMasterTasksPath.split(sep).join(posix.sep)}/${getTaskDir(x)}/${x}/task.json`);
+    }
+    catch (e)
+    {
+      return false;
+    }
+
+    return true;
   });
+
+
 }
 
 async function main({ task, sprint, week }) {
   const changedTasksNames = resolveTaskList(task);
   const localTasks = getTasksVersions(changedTasksNames, join(__dirname, '..'));
-  getChangedTaskJsonFromMaster(changedTasksNames);
-  const masterTasks = getTasksVersions(changedTasksNames, tempMasterTasksPath);
+  var masterTasks;
+
+  if(tryGetChangedTaskJsonFromMaster(changedTasksNames))
+  {
+    masterTasks =  getTasksVersions(changedTasksNames, tempMasterTasksPath);
+  } else {
+    console.log("main: failed to getTasksVersions; assuming task or buildConfig not present in master; will skip version checks against master");
+
+    masterTasks = [];
+  }
+
   const feedTasks = await getFeedTasksVersions();
   const isReleaseTagExist = run(`git tag -l v${sprint}`).length !== 0;
   const isCourtesyWeek = week === 3;
