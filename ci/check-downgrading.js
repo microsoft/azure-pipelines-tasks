@@ -45,6 +45,10 @@ if (existsSync(join(tempMasterTasksPath, 'Tasks'))) {
   rm('-rf', join(tempMasterTasksPath, 'Tasks'));
 }
 
+if (existsSync(join(tempMasterTasksPath, '_generated'))) {
+  rm('-rf', join(tempMasterTasksPath, '_generated'));
+}
+
 function checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyWeek) {
   const messages = [];
 
@@ -117,7 +121,9 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
 
 function getTasksVersions(tasks, basepath) {
   return tasks.map(x => {
-    const taskJSONPath = join(basepath, 'Tasks' , x, 'task.json');
+    var taskDir = getTaskDir(x);
+
+    const taskJSONPath = join(basepath, taskDir , x, 'task.json');
 
     if (!existsSync(taskJSONPath)) {
       logToPipeline('error', `Task.json of ${x} does not exist by path ${taskJSONPath}`);
@@ -200,7 +206,7 @@ function compareLocalTaskLoc(localTasks) {
   const messages = [];
 
   for (const localTask of localTasks) {
-    const taskLocJSONPath = join(__dirname, '..', 'Tasks' , localTask.name, 'task.loc.json');
+    const taskLocJSONPath = join(__dirname, '..', getTaskDir(localTask.name), localTask.name, 'task.loc.json');
 
     if (!existsSync(taskLocJSONPath)) {
       logToPipeline('error', `Task.json of ${localTask.name} does not exist by path ${taskLocJSONPath}`);
@@ -223,8 +229,8 @@ function compareLocalTaskLoc(localTasks) {
 
 function getChangedTaskJsonFromMaster(names) {
   names.forEach(x => {
-    mkdir('-p', join(tempMasterTasksPath, 'Tasks', x));
-    run(`git show origin/master:Tasks/${x}/task.json > ${tempMasterTasksPath.split(sep).join(posix.sep)}/Tasks/${x}/task.json`);
+    mkdir('-p', join(tempMasterTasksPath, getTaskDir(x), x));
+    run(`git show origin/master:${getTaskDir(x)}/${x}/task.json > ${tempMasterTasksPath.split(sep).join(posix.sep)}/${getTaskDir(x)}/${x}/task.json`);
   });
 }
 
@@ -258,6 +264,10 @@ async function main({ task, sprint, week }) {
       process.exit(1);
     }
   }
+}
+
+function getTaskDir(x) {
+  return x.indexOf('_') > -1 ? '_generated' : 'Tasks';
 }
 
 main(argv);
