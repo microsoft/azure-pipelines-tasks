@@ -24,6 +24,7 @@ interface FtpOptions {
     cleanContents: boolean;
     preservePaths: boolean;
     trustSSL: boolean;
+    implicitFTPS: boolean;
     enableUtf8: boolean;
     customCmds: string[];
 }
@@ -206,14 +207,23 @@ function getFtpOptions(): FtpOptions {
         cleanContents: tl.getBoolInput("cleanContents", false),
         preservePaths: tl.getBoolInput("preservePaths", true),
         trustSSL: tl.getBoolInput("trustSSL", true),
+        implicitFTPS: tl.getBoolInput("implicitFTPS", false),
         enableUtf8: tl.getBoolInput("enableUtf8", false),
         customCmds: tl.getDelimitedInput("customCmds", "\n", false)
+
     };
 }
 
 function getAccessOption(options: FtpOptions): ftp.AccessOptions {
     const protocol = options.serverEndpointUrl.protocol;
-    const secure: boolean = protocol != undefined ? protocol.toLowerCase() === "ftps:" : false;
+    let secure: boolean | "implicit";
+    if (options.implicitFTPS) {
+        secure = "implicit";
+    }
+    else {
+       secure = !!protocol && protocol.toLowerCase() === "ftps:";
+    }
+
     const secureOptions: any = { rejectUnauthorized: !options.trustSSL };
 
     const hostName: string = options.serverEndpointUrl.hostname!;

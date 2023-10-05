@@ -120,7 +120,7 @@ function getTaskList(taskList) {
 
     taskList.forEach((taskName) => {
         generatedTaskFolders.forEach((generatedTaskName) => {
-            if (taskName !== generatedTaskName && generatedTaskName.startsWith(taskName)) {
+            if (generatedTaskName.startsWith(taskName)) {
                 tasksToBuild.push(generatedTaskName);
             }
         });
