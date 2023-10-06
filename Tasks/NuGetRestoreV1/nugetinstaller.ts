@@ -30,7 +30,7 @@ class RestoreOptions implements INuGetCommandOptions {
 }
 
 async function main(): Promise<void> {
-    tl.warning("This task will be deprecated soon. Please switch to using NuGetCommand@2's 'restore' option");
+    tl.warning("This task is being deprecated. All builds will break by 11-27-2023. Please switch to using NuGetCommand@2's 'restore' option as soon as possible.");
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
         tl.debug("getting the uris");
