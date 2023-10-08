@@ -72,7 +72,7 @@ namespace BuildConfigGen
             string[] configs = configsString.Split("|");
             string errorMessage;
 
-            Dictionary<string, Config.ConfigRecord> configdefs = new(Config.Configs.Where(x => !x.isDefault).Select(x => new KeyValuePair<string, Config.ConfigRecord>(x.name, x)));
+            Dictionary<string, Config.ConfigRecord> configdefs = new(Config.Configs.Select(x => new KeyValuePair<string, Config.ConfigRecord>(x.name, x)));
             HashSet<Config.ConfigRecord> targetConfigs = new HashSet<Config.ConfigRecord>();
             targetConfigs.Add(Config.Default);
             foreach (var config in configs)
@@ -88,7 +88,7 @@ namespace BuildConfigGen
                 }
                 else
                 {
-                    errorMessage = "Configs specified must be one of: " + string.Join(',', Config.Configs.Where(x => !x.isDefault).Select(x => x.name));
+                    errorMessage = "Configs specified must be one of: " + string.Join(',', Config.Configs.Select(x => x.name));
                     throw new Exception(errorMessage);
                 }
             }

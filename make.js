@@ -264,7 +264,6 @@ function getNodeVersion (taskName) {
 }
 
 function buildTask(taskName, taskListLength, nodeVersion) {
-    let isGeneratedTask = false;
     banner(`Building task ${taskName} using Node.js ${nodeVersion}`);
     const removeNodeModules = taskListLength > 1;
 
@@ -275,13 +274,11 @@ function buildTask(taskName, taskListLength, nodeVersion) {
     if (fs.existsSync(taskPath)) {
         // Need to add all tasks which starts with task name
         console.log('Found generated task: ' + taskName);
-        isGeneratedTask = true;
     } else {
         // taskPath = path.join(tasksPath, taskName);
         isGeneratedBaseTaskOnTheFly = true;
-        let generateDefault = true;
         console.log('Did not find generated task: ' + taskName + ', generating task on the fly...');
-        util.processGeneratedTasks(baseConfigToolPath, [taskName], fileToJson(makeOptionsPath), writeUpdatedsFromGenTasks, generateDefault);
+        util.processGeneratedTasks(baseConfigToolPath, [taskName], fileToJson(makeOptionsPath), writeUpdatedsFromGenTasks, true);
     }
 
     ensureExists(taskPath);
@@ -340,7 +337,7 @@ function buildTask(taskName, taskListLength, nodeVersion) {
                 banner('Building module ' + modPath, true);
 
                 // Ensure that Common folder exists for _generated tasks, otherwise copy it from Tasks folder
-                if (!fs.existsSync(genTaskCommonPath) && isGeneratedTask) {
+                if (!fs.existsSync(genTaskCommonPath)) {
                     cp('-Rf', path.resolve(tasksPath, "Common"), genTaskCommonPath);
                 }
 
