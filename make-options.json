@@ -254,6 +254,7 @@
         "GulpV1",
         "MavenV3",
         "NodeTaskRunnerInstallerV0",
-        "PublishBuildArtifactsV1"
+        "PublishBuildArtifactsV1",
+        "UseNodeV1"
     ]
 }
