@@ -109,7 +109,7 @@ if (argv.task) {
 process.env['TASK_TEST_RUNNER'] = argv.runner || '';
 
 function getTaskList(taskList) {
-    let tasksToBuild = [];
+    let tasksToBuild = taskList;
 
     if (!fs.existsSync(genTaskPath)) return tasksToBuild;
 
@@ -120,7 +120,7 @@ function getTaskList(taskList) {
 
     taskList.forEach((taskName) => {
         generatedTaskFolders.forEach((generatedTaskName) => {
-            if (generatedTaskName.startsWith(taskName)) {
+            if (taskName !== generatedTaskName && generatedTaskName.startsWith(taskName)) {
                 tasksToBuild.push(generatedTaskName);
             }
         });
@@ -268,6 +268,8 @@ function buildTask(taskName, taskListLength, nodeVersion) {
     banner(`Building task ${taskName} using Node.js ${nodeVersion}`);
     const removeNodeModules = taskListLength > 1;
 
+    let isGeneratedBaseTaskOnTheFly = false;
+
     // If we have the task in generated folder, prefer to build from there and add all generated tasks which starts with task name
     var taskPath = path.join(genTaskPath, taskName);
     if (fs.existsSync(taskPath)) {
@@ -275,7 +277,11 @@ function buildTask(taskName, taskListLength, nodeVersion) {
         console.log('Found generated task: ' + taskName);
         isGeneratedTask = true;
     } else {
-        taskPath = path.join(tasksPath, taskName);
+        // taskPath = path.join(tasksPath, taskName);
+        isGeneratedBaseTaskOnTheFly = true;
+        let generateDefault = true;
+        console.log('Did not find generated task: ' + taskName + ', generating task on the fly...');
+        util.processGeneratedTasks(baseConfigToolPath, [taskName], fileToJson(makeOptionsPath), writeUpdatedsFromGenTasks, generateDefault);
     }
 
     ensureExists(taskPath);
@@ -464,6 +470,11 @@ function buildTask(taskName, taskListLength, nodeVersion) {
             console.log(`\n> removing duplicated task-lib node modules in ${buildTasksDuplicateNodeModules}`);
             rm('-Rf', buildTasksDuplicateNodeModules);
         }
+    }
+
+    if (isGeneratedBaseTaskOnTheFly) {
+        console.log(`\n> removing generated task ${taskName} on the fly in ${taskPath}`);
+        rm('-Rf', taskPath);
     }
 }
 

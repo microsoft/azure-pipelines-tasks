@@ -44,7 +44,8 @@ namespace BuildConfigGen
         /// <param name="configs">List of configs to generate seperated by |</param>
         /// <param name="currentSprint">Overide current sprint; omit to get from whatsprintis.it</param>
         /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
-        static void Main(string task, string configs, int? currentSprint, bool writeUpdates = false)
+        /// <param name="generateDefault">Generate default task if true, else task generation is dependent on the requested versions</param>
+        static void Main(string task, string configs, int? currentSprint, bool writeUpdates = false, bool generateDefault = false)
         {
             // error handling strategy:
             // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
@@ -52,11 +53,11 @@ namespace BuildConfigGen
             // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
             foreach (var t in task.Split(',', '|'))
             {
-                Main3(t, configs, writeUpdates, currentSprint);
+                Main3(t, configs, writeUpdates, currentSprint, generateDefault);
             }
         }
 
-        private static void Main3(string task, string configsString, bool writeUpdates, int? currentSprint)
+        private static void Main3(string task, string configsString, bool writeUpdates, int? currentSprint, bool generateDefault = false)
         {
             if (string.IsNullOrEmpty(task))
             {
@@ -96,7 +97,7 @@ namespace BuildConfigGen
             {
                 ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
 
-                Main2(task, currentSprint, targetConfigs);
+                Main2(task, currentSprint, targetConfigs, generateDefault);
 
                 ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: false);
             }
@@ -140,7 +141,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void Main2(string task, int? currentSprint, HashSet<Config.ConfigRecord> targetConfigs)
+        private static void Main2(string task, int? currentSprint, HashSet<Config.ConfigRecord> targetConfigs, bool generateDefault)
         {
             if (!currentSprint.HasValue)
             {
@@ -180,7 +181,7 @@ namespace BuildConfigGen
             string versionMapFile = Path.Combine(gitRootPath, "_generated", @$"{task}.versionmap.txt");
 
 
-            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping, targetConfigs: targetConfigs, currentSprint.Value, versionMapFile, out HashSet<Config.ConfigRecord> versionsUpdated);
+            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping, targetConfigs: targetConfigs, currentSprint.Value, versionMapFile, out HashSet<Config.ConfigRecord> versionsUpdated, generateDefault);
 
             foreach (var config in targetConfigs)
             {
@@ -210,7 +211,7 @@ namespace BuildConfigGen
                 var taskConfigExists = File.Exists(Path.Combine(taskOutput, "task.json"));
 
                 // only update task output if a new version was added or the config exists
-                if (versionUpdated || taskConfigExists)
+                if (versionUpdated || (!generateDefault && taskConfigExists))
                 {
                     CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
 
@@ -539,7 +540,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string versionMapFile, out HashSet<Config.ConfigRecord> versionsUpdated)
+        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string versionMapFile, out HashSet<Config.ConfigRecord> versionsUpdated, bool generateDefault)
         {
             Dictionary<string, TaskVersion> versionMap;
             TaskVersion maxVersion;
@@ -599,6 +600,10 @@ namespace BuildConfigGen
 
 
             versionsUpdated = new HashSet<Config.ConfigRecord>();
+            if (generateDefault)
+            {
+                versionsUpdated.Add(Config.Default);
+            }
             TaskVersion baseVersion = maxVersion;
 
             bool baseVersionIsCurrentSprint = baseVersion.Minor == currentSprint;
@@ -659,7 +664,10 @@ namespace BuildConfigGen
                         while (configTaskVersionMapping.Values.Contains(targetVersion));
 
                         configTaskVersionMapping.Add(config, targetVersion);
-                        versionsUpdated.Add(config);
+                        if (!generateDefault)
+                        {
+                            versionsUpdated.Add(config);
+                        }
                     }
                 }
             }
