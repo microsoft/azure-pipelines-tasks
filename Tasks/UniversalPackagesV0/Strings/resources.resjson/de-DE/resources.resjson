@@ -59,7 +59,7 @@
   "loc.messages.PackagesPublishedSuccessfully": "Pakete wurden erfolgreich veröffentlicht.",
   "loc.messages.PackagesFailedToPublish": "Fehler beim Veröffentlichen der Pakete.",
   "loc.messages.UnknownFeedType": "Unbekannter Feedtyp \"%s\".",
-  "loc.messages.Error_NoVersionOptionSpecifiedForPublish": "Invalid versionOption/versionPublishSelector provided. Must be set to 'major', 'minor', 'patch', or 'custom'",
+  "loc.messages.Error_NoVersionOptionSpecifiedForPublish": "Ungültige Angabe für versionOption/versionPublishSelector. Muss auf \"Hauptversion\", \"Nebenversion\", \"Patch\" oder \"Benutzerdefiniert\" festgelegt werden.",
   "loc.messages.Error_NoSourceSpecifiedForPublish": "Für die Veröffentlichung wurde keine externe Quelle angegeben.",
   "loc.messages.Error_NoSourceSpecifiedForDownload": "Für den Download wurde keine externe Quelle angegeben.",
   "loc.messages.Error_UnexpectedErrorArtifactTool": "Unerwarteter Fehler beim Versuch, das Paket mithilfe von Push zu übertragen. Exitcode (%s) und Fehler (%s).",

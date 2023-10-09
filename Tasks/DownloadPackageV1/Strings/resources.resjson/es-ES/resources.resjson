@@ -26,7 +26,7 @@
   "loc.messages.StartingDownloadOfPackage": "Iniciando la descarga del paquete %s en la ubicación %s",
   "loc.messages.ExtractingPackage": "Extrayendo el paquete %s en el directorio %s.",
   "loc.messages.PackageTypeNotSupported": "Con esta tarea solo se pueden descargar los tipos de paquetes NuGet, Python, universal, npm y Maven.",
-  "loc.messages.SkippingFileWithNoContent": "Skipping file %s as no supported content could be found",
+  "loc.messages.SkippingFileWithNoContent": "Omitiendo el archivo %s porque no se encontró contenido admitido",
   "loc.messages.ExtractionFailed": "No se pudo extraer el paquete con el error %s.",
   "loc.messages.RetryingOperation": "Error de la operación. Se espera %s ms antes de reintentar. Reintentos restantes: %s",
   "loc.messages.RedirectUrlError": "No se puede obtener la URL de redireccionamiento con el error %.",
