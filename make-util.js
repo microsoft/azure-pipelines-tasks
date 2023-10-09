@@ -1857,43 +1857,6 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
 exports.processGeneratedTasks = processGeneratedTasks;
 
 /**
- * Function to generate new tasks
- * @param {String} baseConfigToolPath Path to generating program
- * @param {Array} taskList  Array with allowed tasks
- * @param {String} configsString String with generation configs 
- * @param {Object} makeOptions Object to put generated definitions
- */
-
-var generateTasks = function(baseConfigToolPath, taskList, configsString, makeOptions) {
-    const args = `--write-updates --configs "${configsString}"`;
-    const configsArr = configsString.split("|")
-    let newMakeOptions = makeOptions;
-
-    taskList.forEach(function (taskName) {
-        const programPath = getBuildConfigGenerator(baseConfigToolPath);
-        const buildArgs = args + ` --task ${taskName}`;
-
-        banner('Generating: ' + taskName);
-        run(`${programPath} ${buildArgs}` , true);
-
-        // insert to make-options.json
-        configsArr.forEach(function (config) {
-            if (!newMakeOptions[config]) {
-                newMakeOptions[config] = [];
-            }
-            
-            if (newMakeOptions[config].indexOf(taskName) === -1) {
-                newMakeOptions[config].push(taskName);
-            }
-        });
-    });
-
-    return newMakeOptions;
-}
-exports.generateTasks = generateTasks;
-
-
-/**
  * Wrapper for buildTask function which compares diff between source and generated tasks
  * @param {Function} originalFunction - Original buildTask function
  * @param {string} basicGenTaskPath - path to generated folder
@@ -1926,7 +1889,6 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTa
                 
                 return true;
             });
-
 
         copyCandidates.forEach((candidatePath) => {
             const relativePath = path.relative(genTaskPath, candidatePath);
