@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 141,
+    "Minor": 229,
     "Patch": 0
   },
   "groups": [],
@@ -17,6 +17,7 @@
   "minimumAgentVersion": "2.199.0",
   "preview": false,
   "deprecated": true,
+  "removalDate": "2024-04-22",
   "inputs": [
     {
       "name": "artifactName",
@@ -35,12 +36,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.targetPath"
     },
     {
-        "name": "properties",
-        "type": "string",
-        "label": "ms-resource:loc.input.label.customProperties",
-        "defaultValue": "",
-        "required": false,
-        "helpMarkDown": "ms-resource:loc.input.help.customProperties"
+      "name": "properties",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.properties",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.properties"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
