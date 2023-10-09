@@ -254,6 +254,20 @@
         "GulpV1",
         "MavenV3",
         "NodeTaskRunnerInstallerV0",
-        "PublishBuildArtifactsV1"
+        "PublishBuildArtifactsV1",
+        "FtpUploadV2",
+        "MSBuildV1",
+        "NodeToolV0",
+        "PowerShellV2",
+        "PythonScriptV0",
+        "ShellScriptV2",
+        "SshV0",
+        "UseNodeV1",
+        "XcodeV5",
+        "InstallAppleCertificateV2",
+        "InstallAppleProvisioningProfileV1",
+        "InstallSSHKeyV0",
+        "JavaToolInstallerV0",
+        "JenkinsQueueJobV2"
     ]
 }
