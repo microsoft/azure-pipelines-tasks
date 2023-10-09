@@ -14,9 +14,10 @@
   "version": {
     "Major": 1,
     "Minor": 229,
-    "Patch": 0
+    "Patch": 1
   },
   "deprecated": true,
+  "removalDate": "2024-04-22",
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
