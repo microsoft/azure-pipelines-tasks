@@ -37,8 +37,8 @@
   "loc.input.help.checkDownloadedFiles": "チェックを入れた場合、このビルドタスクはすべてのファイルが完全にダウンロードされていることを確認します。",
   "loc.input.label.retryDownloadCount": "再試行回数",
   "loc.input.help.retryDownloadCount": "ダウンロードが失敗した場合に、ビルド成果物のダウンロードを再試行する回数。",
-  "loc.input.label.retryRedirectDownloadCount": "Retry count for redirect download",
-  "loc.input.help.retryRedirectDownloadCount": "Optional number of times to retry downloading a build artifact if the download based on redirect fails. If your network does not allow following the redirect, you can set this to -1 to always download streamed response from Azure DevOps instead.",
+  "loc.input.label.retryRedirectDownloadCount": "リダイレクト ダウンロードの再試行回数",
+  "loc.input.help.retryRedirectDownloadCount": "リダイレクトに基づくダウンロードが失敗した場合にビルド成果物のダウンロードを再試行する回数 (オプション)。ネットワークでリダイレクトのフォローが許可されていない場合は、これを -1 に設定して、代わりにストリームされた応答を常に Azure DevOps からダウンロードできます。",
   "loc.input.label.extractTars": "Tar アーカイブ内に保存されているすべてのファイルを抽出します",
   "loc.input.help.extractTars": "このオプションを有効にすると、拡張子が .tar のダウンロード済みファイルをすべて抽出します。Unix ファイルのアクセス許可を保持するには、成果物ファイルを tar にパックする必要があるので、このオプションは便利です。PublishBuildArtifacts ティファクトタスクで 'StoreAsTar' オプションを有効にすると、成果物が .tar ファイルとして自動的に保存されます。",
   "loc.messages.DownloadArtifacts": "成果物 %s を %s からダウンロードしています",
@@ -70,6 +70,6 @@
   "loc.messages.NoTarsFound": "抽出する tar アーカイブが見つかりませんでした",
   "loc.messages.CleaningDestinationFolder": "コピー先フォルダー: %s をクリーンアップしています",
   "loc.messages.NoFolderToClean": "指定されたクリーンアップ対象フォルダーが見つかりませんでした。クリーンアップするものがありません",
-  "loc.messages.PreferRedirect": "Prefer downloading files through redirect to the content stitcher: %s",
-  "loc.messages.FollowingDownloadRedirectFailed": "Could not download the files by following a redirect: %s. Falling back to consuming streamed content from Azure DevOps."
+  "loc.messages.PreferRedirect": "コンテンツスティッチャーへのリダイレクトによるファイルのダウンロードを優先する: %s",
+  "loc.messages.FollowingDownloadRedirectFailed": "リダイレクトによってファイルをダウンロードできませんでした: %s。Azure DevOps からストリーミングされたコンテンツを使用しています。"
 }

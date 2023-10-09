@@ -33,5 +33,5 @@
   "loc.messages.InstallRequiresMac": "Für die Installation eines Apple-Zertifikats wird ein macOS-Agent benötigt. Das Installieren von Apple-Zertifikaten auf Linux oder Windows wird von Apple nicht unterstützt.",
   "loc.messages.CertNotValidYetError": "Das Zertifikat \"%s\" (Fingerabdruck: \"%s\") ist erst ab dem %s gültig.",
   "loc.messages.CertExpiredError": "Das Zertifikat \"%s\" (Fingerabdruck: \"%s\") ist am %s abgelaufen.",
-  "loc.messages.OpenSSLError": "Error parsing certificate. This might be caused by an unsupported algorithm. If you're using old certificate with a new OpenSSL version try to set -legacy flag in opensslPkcsArgs input."
+  "loc.messages.OpenSSLError": "Fehler beim Parsen des Zertifikats. Dies kann auf einen nicht unterstützten Algorithmus zurückzuführen sein. Wenn Sie ein altes Zertifikat mit einer neuen OpenSSL-Version verwenden, legen Sie das -legacy-Flag in der opensslPkcsArgs-Eingabe fest."
 }

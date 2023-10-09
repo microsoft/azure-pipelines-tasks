@@ -37,8 +37,8 @@
   "loc.input.help.checkDownloadedFiles": "Wenn diese Option aktiviert ist, wird durch diesen Buildvorgang geprüft, ob alle Dateien vollständig heruntergeladen wurden.",
   "loc.input.label.retryDownloadCount": "Anzahl der Wiederholungen",
   "loc.input.help.retryDownloadCount": "Optionale Anzahl von Wiederholungsversuchen zum Herunterladen eines Buildartefakts, wenn der Download nicht erfolgreich ist.",
-  "loc.input.label.retryRedirectDownloadCount": "Retry count for redirect download",
-  "loc.input.help.retryRedirectDownloadCount": "Optional number of times to retry downloading a build artifact if the download based on redirect fails. If your network does not allow following the redirect, you can set this to -1 to always download streamed response from Azure DevOps instead.",
+  "loc.input.label.retryRedirectDownloadCount": "Wiederholungsanzahl für Umleitungsdownload",
+  "loc.input.help.retryRedirectDownloadCount": "Optionale Anzahl von Wiederholungsversuchen zum Herunterladen eines Buildartefakts, wenn der auf einer Umleitung basierende Download fehlschlägt. Wenn Ihr Netzwerk das Befolgen der Umleitung nicht zulässt, können Sie diese Option auf -1 festlegen, um stattdessen immer gestreamte Antworten von Azure DevOps herunterzuladen.",
   "loc.input.label.extractTars": "Alle Dateien extrahieren, die in Tar-Archiven gespeichert sind",
   "loc.input.help.extractTars": "Aktivieren Sie diese Option, um alle heruntergeladenen Dateien mit der Erweiterung \".tar\" zu extrahieren. Dies ist hilfreich, da Sie Ihre Artefaktdateien in Tar packen müssen, wenn Sie die Zugriffsberechtigungen beibehalten möchten. Durch Aktivieren der Option \"StoreAsTar\" in der Aufgabe \"PublishBuildArtartefakte\" werden Artefakte automatisch als Tar-Dateien gespeichert.",
   "loc.messages.DownloadArtifacts": "Artefakt \"%s\" wird von %s heruntergeladen.",
@@ -70,6 +70,6 @@
   "loc.messages.NoTarsFound": "Es wurden keine Tar-Archive zum Extrahieren gefunden.",
   "loc.messages.CleaningDestinationFolder": "Der Zielordner wird bereinigt: %s",
   "loc.messages.NoFolderToClean": "Der angegebene Reinigungsordner wurde nicht gefunden. Keine zu bereinigenden Elemente",
-  "loc.messages.PreferRedirect": "Prefer downloading files through redirect to the content stitcher: %s",
-  "loc.messages.FollowingDownloadRedirectFailed": "Could not download the files by following a redirect: %s. Falling back to consuming streamed content from Azure DevOps."
+  "loc.messages.PreferRedirect": "Herunterladen von Dateien über Umleitung zum Inhaltshefter bevorzugen: %s",
+  "loc.messages.FollowingDownloadRedirectFailed": "Die Dateien konnten durch Befolgen einer Umleitung nicht heruntergeladen werden: %s. Stattdessen werden gestreamte Inhalte aus Azure DevOps verwendet."
 }

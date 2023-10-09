@@ -11,7 +11,7 @@
   "loc.input.label.serverUrl": "URL-адрес сервера",
   "loc.input.label.username": "Имя пользователя",
   "loc.input.label.password": "Пароль",
-  "loc.input.label.implicitFTPS": "Use implicit FTPS",
+  "loc.input.label.implicitFTPS": "Использовать неявный тип FTPS",
   "loc.input.label.rootFolder": "Корневая папка",
   "loc.input.help.rootFolder": "Исходная папка, из которой выполняется отправка файлов.",
   "loc.input.label.filePatterns": "Шаблоны файлов",

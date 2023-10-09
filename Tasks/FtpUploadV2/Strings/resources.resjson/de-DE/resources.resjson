@@ -11,7 +11,7 @@
   "loc.input.label.serverUrl": "Server-URL",
   "loc.input.label.username": "Benutzername",
   "loc.input.label.password": "Kennwort",
-  "loc.input.label.implicitFTPS": "Use implicit FTPS",
+  "loc.input.label.implicitFTPS": "Implizit FTPS verwenden",
   "loc.input.label.rootFolder": "Stammordner",
   "loc.input.help.rootFolder": "Der Quellordner, aus dem Dateien hochgeladen werden sollen.",
   "loc.input.label.filePatterns": "Dateimuster",

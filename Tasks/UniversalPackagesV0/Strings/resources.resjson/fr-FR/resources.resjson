@@ -59,7 +59,7 @@
   "loc.messages.PackagesPublishedSuccessfully": "Les packages ont été publiés correctement",
   "loc.messages.PackagesFailedToPublish": "Échec de la publication des packages",
   "loc.messages.UnknownFeedType": "Type de flux inconnu '%s'",
-  "loc.messages.Error_NoVersionOptionSpecifiedForPublish": "Invalid versionOption/versionPublishSelector provided. Must be set to 'major', 'minor', 'patch', or 'custom'",
+  "loc.messages.Error_NoVersionOptionSpecifiedForPublish": "VersionOption/versionPublishSelector non valide fourni. Doit être défini sur « major », « minor », « patch » ou « custom »",
   "loc.messages.Error_NoSourceSpecifiedForPublish": "Aucune source externe spécifiée pour la publication",
   "loc.messages.Error_NoSourceSpecifiedForDownload": "Aucune source externe spécifiée pour le téléchargement",
   "loc.messages.Error_UnexpectedErrorArtifactTool": "Une erreur inattendue s'est produite durant l'envoi (push) du package. Code de sortie (%s) et erreur (%s)",

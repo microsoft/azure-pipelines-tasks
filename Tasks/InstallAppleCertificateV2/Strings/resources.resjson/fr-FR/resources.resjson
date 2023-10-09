@@ -33,5 +33,5 @@
   "loc.messages.InstallRequiresMac": "L'installation du certificat Apple nécessite un agent macOS. L'installation de certificats Apple sur Linux ou Windows n'est pas prise en charge par Apple.",
   "loc.messages.CertNotValidYetError": "Le certificat \"%s\" (empreinte digitale : %s) est non valide avant %s",
   "loc.messages.CertExpiredError": "Le certificat \"%s\" (empreinte digitale : %s) est arrivé à expiration le %s",
-  "loc.messages.OpenSSLError": "Error parsing certificate. This might be caused by an unsupported algorithm. If you're using old certificate with a new OpenSSL version try to set -legacy flag in opensslPkcsArgs input."
+  "loc.messages.OpenSSLError": "Erreur lors de l’analyse du certificat. Cela peut être dû à un algorithme non pris en charge. Si vous utilisez un ancien certificat avec une nouvelle version OpenSSL, essayez de définir l’indicateur -hérité dans l’entrée opensslPkcsArgs."
 }

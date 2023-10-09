@@ -33,5 +33,5 @@
   "loc.messages.InstallRequiresMac": "Apple の証明書のインストールには、macOS エージェントが必要です。Apple は、Linux または Windows での Apple の証明書のインストールをサポートしていません。",
   "loc.messages.CertNotValidYetError": "証明書 \"%s\" (フィンガープリント: %s) は %s まで有効ではありません",
   "loc.messages.CertExpiredError": "証明書 \"%s\" (フィンガープリント: %s) の有効期限が %s に切れました",
-  "loc.messages.OpenSSLError": "Error parsing certificate. This might be caused by an unsupported algorithm. If you're using old certificate with a new OpenSSL version try to set -legacy flag in opensslPkcsArgs input."
+  "loc.messages.OpenSSLError": "証明書の解析中にエラーが発生しました。サポートされていないアルゴリズムが原因である可能性があります。新しい OpenSSL バージョンで古い証明書を使用している場合は、opensslPkcsArgs 入力で -legacy フラグを設定してみてください。"
 }

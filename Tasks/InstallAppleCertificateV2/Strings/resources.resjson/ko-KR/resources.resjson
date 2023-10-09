@@ -33,5 +33,5 @@
   "loc.messages.InstallRequiresMac": "Apple 인증서를 설치하려면 macOS 에이전트가 필요합니다. Linux 또는 Windows에는 Apple 인증서를 설치할 수 없습니다.",
   "loc.messages.CertNotValidYetError": "\"%s\" 인증서(지문: %s)는 %s까지 유효하지 않습니다.",
   "loc.messages.CertExpiredError": "\"%s\" 인증서(지문: %s)가 %s에 만료되었습니다.",
-  "loc.messages.OpenSSLError": "Error parsing certificate. This might be caused by an unsupported algorithm. If you're using old certificate with a new OpenSSL version try to set -legacy flag in opensslPkcsArgs input."
+  "loc.messages.OpenSSLError": "인증서를 구문 분석하는 동안 오류가 발생했습니다. 이는 지원되지 않는 알고리즘으로 인해 발생할 수 있습니다. 새 OpenSSL 버전에서 이전 인증서를 사용하는 경우 opensslPkcsArgs 입력에서 -legacy 플래그를 설정해 보세요."
 }

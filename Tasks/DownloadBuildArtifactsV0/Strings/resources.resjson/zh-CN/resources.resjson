@@ -37,8 +37,8 @@
   "loc.input.help.checkDownloadedFiles": "如果已选中，此内部版本任务将检查是否完全下载所有文件。",
   "loc.input.label.retryDownloadCount": "重试计数",
   "loc.input.help.retryDownloadCount": "下载失败时，重试下载内部版本项目可选次数。",
-  "loc.input.label.retryRedirectDownloadCount": "Retry count for redirect download",
-  "loc.input.help.retryRedirectDownloadCount": "Optional number of times to retry downloading a build artifact if the download based on redirect fails. If your network does not allow following the redirect, you can set this to -1 to always download streamed response from Azure DevOps instead.",
+  "loc.input.label.retryRedirectDownloadCount": "重定向下载的重试次数",
+  "loc.input.help.retryRedirectDownloadCount": "如果基于重定向的下载失败，则重试下载生成项目的次数可选。如果你的网络不允许使用重定向，则可以将此项设置为 -1，改为始终从 Azure DevOps 下载流式处理的响应。",
   "loc.input.label.extractTars": "提取存储在存档内的所有文件",
   "loc.input.help.extractTars": "启用此选项以提取所有具有 .tar 扩展名的下载文件。此操作很有帮助，因为如果要保留 Unix 文件权限，则需要将项目文件打包成存档中。在 PublishBuildArtifacts 任务中启用 `StoreAsTar` 选项，项目将自动存储为 .tar 文件。",
   "loc.messages.DownloadArtifacts": "正在从后列位置下载项目 %s: %s",
@@ -70,6 +70,6 @@
   "loc.messages.NoTarsFound": "没有找到要提取的任何存档",
   "loc.messages.CleaningDestinationFolder": "正在清理目标文件夹: %s",
   "loc.messages.NoFolderToClean": "未找到指定的清理文件夹。没有要清理的文件",
-  "loc.messages.PreferRedirect": "Prefer downloading files through redirect to the content stitcher: %s",
-  "loc.messages.FollowingDownloadRedirectFailed": "Could not download the files by following a redirect: %s. Falling back to consuming streamed content from Azure DevOps."
+  "loc.messages.PreferRedirect": "首选通过重定向到内容拼接器下载文件:%s",
+  "loc.messages.FollowingDownloadRedirectFailed": "无法按照重定向下载文件:%s。回退到从 Azure DevOps 使用流式传输的内容。"
 }

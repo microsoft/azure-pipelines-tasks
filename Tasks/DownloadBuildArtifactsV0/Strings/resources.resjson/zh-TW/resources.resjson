@@ -37,8 +37,8 @@
   "loc.input.help.checkDownloadedFiles": "如選取，此組建工作將會檢查是否已完整下載所有檔案。",
   "loc.input.label.retryDownloadCount": "重試次數",
   "loc.input.help.retryDownloadCount": "如果下載失敗，重試下載組建成品的可選次數。",
-  "loc.input.label.retryRedirectDownloadCount": "Retry count for redirect download",
-  "loc.input.help.retryRedirectDownloadCount": "Optional number of times to retry downloading a build artifact if the download based on redirect fails. If your network does not allow following the redirect, you can set this to -1 to always download streamed response from Azure DevOps instead.",
+  "loc.input.label.retryRedirectDownloadCount": "重新導向下載的重試計數",
+  "loc.input.help.retryRedirectDownloadCount": "(選擇性) 根據重新導向下載失敗時重試下載組建成品的次數。如果您的網路不允許追蹤重新導向，您可以將此設定為 -1，表示一律改從Azure DevOps下載串流回應。",
   "loc.input.label.extractTars": "解壓縮所有儲存在 tar 封存內的檔案",
   "loc.input.help.extractTars": "啟用此選項以解壓縮所有具有 tar 副檔名的下載檔案。這個功能很實用，因為若要保留 Unix 檔案權限，您必須將成品檔封裝到 tar 中。在 PublishBuildArtifacts 工作中啟用 `StoreAsTar` 選項，系統會自動將成品儲存為 tar 檔案。",
   "loc.messages.DownloadArtifacts": "正在從 %s 下載成品 %s",
@@ -70,6 +70,6 @@
   "loc.messages.NoTarsFound": "找不到要解壓縮的 tar 封存",
   "loc.messages.CleaningDestinationFolder": "正在清除目的地資料夾: %s",
   "loc.messages.NoFolderToClean": "找不到指定的清除資料夾。沒有可清除的項目",
-  "loc.messages.PreferRedirect": "Prefer downloading files through redirect to the content stitcher: %s",
-  "loc.messages.FollowingDownloadRedirectFailed": "Could not download the files by following a redirect: %s. Falling back to consuming streamed content from Azure DevOps."
+  "loc.messages.PreferRedirect": "偏好透過重新導向至內容拼接程式來下載檔案: %s",
+  "loc.messages.FollowingDownloadRedirectFailed": "無法透過追蹤重新導向來下載檔案: %s。正在改為使用來自 Azure DevOps 的串流內容。"
 }
