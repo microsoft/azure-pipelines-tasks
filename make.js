@@ -278,7 +278,7 @@ function buildTask(taskName, taskListLength, nodeVersion) {
         // taskPath = path.join(tasksPath, taskName);
         isGeneratedBaseTaskOnTheFly = true;
         console.log('Did not find generated task: ' + taskName + ', generating task on the fly...');
-        util.processGeneratedTasks(baseConfigToolPath, [taskName], fileToJson(makeOptionsPath), writeUpdatedsFromGenTasks, true);
+        util.processGeneratedTasks(baseConfigToolPath, [taskName], fileToJson(makeOptionsPath), true, true);
     }
 
     ensureExists(taskPath);
