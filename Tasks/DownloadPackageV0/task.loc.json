@@ -10,11 +10,12 @@
   "version": {
     "Major": 0,
     "Minor": 229,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
+  "removalDate": "2023-11-27",
   "inputs": [
     {
       "name": "feed",
