@@ -21,6 +21,7 @@ Register-Mock Invoke-VstsTool { }
 Register-Mock Expand-ModuleZip
 Register-Mock Invoke-RestMethod
 Register-Mock Save-Module
+Register-Mock ConvertTo-SecureString
 
 # Act.
 $actual = & $PSScriptRoot\..\AzurePowerShell.ps1

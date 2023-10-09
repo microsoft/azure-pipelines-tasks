@@ -48,7 +48,7 @@ if ($targetAzurePs -eq $latestVersion) {
 } elseif (-not($regex.IsMatch($targetAzurePs))) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
 }
-Write-Host "## Validating Inputs Complete" 
+Write-Host "## Validating Inputs Complete"
 
 . $PSScriptRoot\TryMakingModuleAvailable.ps1 -targetVersion "$targetAzurePs" -platform Windows
 
@@ -83,14 +83,18 @@ $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
 $endpoint = Get-VstsEndpoint -Name $serviceName -Require
 CleanUp-PSModulePathForHostedAgent
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
+$vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+$vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
 # troubleshoot link
 $troubleshoot = "https://aka.ms/azurepowershelltroubleshooting"
-try 
+try
 {
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    Initialize-AzModule -Endpoint $endpoint -azVersion $targetAzurePs
+    $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
+    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $serviceName `
+        -azVersion $targetAzurePs -encryptedToken $encryptedToken -isPSCore $input_pwsh
     Write-Host "## Az module initialization Complete"
     $success = $true
 }
@@ -280,7 +284,7 @@ try {
                 }
             }
     }
- 
+
 }
 finally {
     if ($__vstsAzPSInlineScriptPath -and (Test-Path -LiteralPath $__vstsAzPSInlineScriptPath) ) {

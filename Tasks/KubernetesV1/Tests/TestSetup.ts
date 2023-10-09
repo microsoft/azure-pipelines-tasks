@@ -78,7 +78,8 @@ process.env['ENDPOINT_URL_AzureRMSpn'] = 'https://management.azure.com/';
 process.env['ENDPOINT_DATA_AzureRMSpn_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID'] = 'https://management.azure.com/';
 process.env['AZURE_HTTP_USER_AGENT'] = 'TEST_AGENT';
 process.env['PATH'] = KubectlPath;
-process.env["AGENT_TEMPDIRECTORY"] = process.cwd()
+process.env["AGENT_TEMPDIRECTORY"] = process.cwd();
+process.env["USE_MSAL"] = "false";
 
 //mock responses for Azure Resource Manager connection type
 nock("https://login.windows.net", {

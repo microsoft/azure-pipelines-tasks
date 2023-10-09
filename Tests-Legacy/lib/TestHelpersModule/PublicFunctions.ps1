@@ -262,3 +262,34 @@ function Unregister-Mock {
         $script:mocks.Remove($Command)
     }
 }
+
+function Assert-Output {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [scriptblock]$ScriptBlock,
+
+        [Parameter(Mandatory = $true)]
+        [string]$ExpectedOutput,
+
+        [ValidateSet("Output", "Error", "Warning", "Verbose", "Debug")]
+        [string]$WriteType = $writeTypes.Output
+    )
+
+    Write-Verbose "Asserting script block should write to {$WriteType}: {$ExpectedOutput}"
+    
+    # Each of streams has an associated number in PowerShell (1 - Output, 2 - Error, 3 - Warning, 4 - Verbose, 5 - Debug)
+    $output = switch ($WriteType) {
+        "Output"  {& $ScriptBlock *>&1}
+        "Error"   {& $ScriptBlock 2>&1}
+        "Warning" {& $ScriptBlock 3>&1}
+        "Verbose" {& $ScriptBlock 4>&1}
+        "Debug"   {& $ScriptBlock 5>&1}
+    }
+
+    if ($output -notmatch $ExpectedOutput) {
+        throw "Actual output does not match expected output. Expected: $ExpectedOutput ; Actual: $output"
+    } else {
+        Write-Verbose "Success. Matched output. Expected: $ExpectedOutput ; Actual: $output"
+    }
+}

@@ -23,7 +23,6 @@
         "azure-pipelines-task-lib": "^4.0.1-preview",
         "ini": "^1.3.6",
         "azure-pipelines-tasks-packaging-common": "3.219.2",
-        "typed-rest-client": "^0.11.0",
         "azure-pipelines-tasks-utility-common": "^3.210.0"
     },
     "devDependencies": {

@@ -34,5 +34,6 @@
   "loc.messages.RemoteScriptFileCleanUpFailed": "リモート コンピューターにコピーされたスクリプト ファイルの削除に失敗しました。エラー = %s。",
   "loc.messages.SettingUpSshConnection": "%s@%s:%s への SSH 接続を確立しようとしています",
   "loc.messages.SshConnectionSuccessful": "正常に接続しました。",
-  "loc.messages.UseDefaultPort": "ポートが指定されなかったため、SSH で既定のポート 22 を使用しています。"
+  "loc.messages.UseDefaultPort": "ポートが指定されなかったため、SSH で既定のポート 22 を使用しています。",
+  "loc.messages.ScriptArgsSanitized": "シェルによって正しく実行されない可能性のある引数の文字が検出されました。円記号 (\\) を使用して特殊文字をエスケープしてください。詳細についてはこちら: https://aka.ms/ado/75787"
 }

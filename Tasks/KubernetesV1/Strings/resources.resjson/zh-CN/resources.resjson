@@ -104,5 +104,6 @@
   "loc.messages.UnableToFetchKubectlVersion": "无法提取 Kubectl 版本。请确保 Kubernetes 服务器已启动且正在运行。",
   "loc.messages.KubectlClientVersion": "Kubectl 客户端版本",
   "loc.messages.KubectlServerVersion": "Kubectl 服务器版本",
-  "loc.messages.KubectlServerVerisonNotFound": "找不到 kubectl 服务器版本"
+  "loc.messages.KubectlServerVerisonNotFound": "找不到 kubectl 服务器版本",
+  "loc.messages.KubeloginFailed": "Kubelogin 身份验证失败。异常: %s"
 }

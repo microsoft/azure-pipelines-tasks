@@ -4,7 +4,7 @@ import {VersionInfo} from 'azure-pipelines-tasks-packaging-common/pe-parser/Vers
 import * as nugetPackUtils from "azure-pipelines-tasks-packaging-common/PackUtilities"
 
 import * as pkgMock from 'azure-pipelines-tasks-packaging-common/Tests/MockHelper';
-import nMockHelper = require('azure-pipelines-tasks-packaging-common/Tests/NuGetMockHelper');
+import nMockHelper = require('azure-pipelines-tasks-packaging-common/Tests/nuget/NuGetMockHelper');
 
 export class NugetMockHelper {
     private defaultNugetVersion = '4.0.0';

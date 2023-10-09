@@ -26,7 +26,7 @@
         "@types/mocha": "^5.2.7",
         "@types/node": "^16.11.39",
         "@types/uuid": "^8.3.0",
-        "azure-pipelines-tasks-packaging-common": "^3.220.0",
+        "azure-pipelines-tasks-packaging-common": "^3.221.0",
         "azure-pipelines-tasks-utility-common": "^3.210.0"
     },
     "devDependencies": {

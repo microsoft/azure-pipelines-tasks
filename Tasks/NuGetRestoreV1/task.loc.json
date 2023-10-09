@@ -9,14 +9,15 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 220,
-    "Patch": 0
+    "Minor": 226,
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
     "DeploymentGroup"
   ],
   "minimumAgentVersion": "2.144.0",
+  "deprecated": true,
   "groups": [
     {
       "name": "advanced",
@@ -121,6 +122,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "nugetinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "nugetinstaller.js",
       "argumentFormat": ""
     }

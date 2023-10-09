@@ -3,6 +3,7 @@
   "name": "GitHubComment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
     "Build",
@@ -12,7 +13,7 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 198,
+    "Minor": 227,
     "Patch": 0
   },
   "demands": [],
@@ -65,6 +66,10 @@
   "execution": {
     "Node10": {
       "target": "main.js"
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -73,6 +78,5 @@
     "WriteFailed": "ms-resource:loc.messages.WriteFailed",
     "WriteSucceeded": "ms-resource:loc.messages.WriteSucceeded",
     "NoOp": "ms-resource:loc.messages.NoOp"
-  },
-  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+  }
 }

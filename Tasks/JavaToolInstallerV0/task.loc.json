@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 220,
-    "Patch": 1
+    "Minor": 229,
+    "Patch": 0
   },
   "satisfies": [
     "Java",
@@ -118,6 +118,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.jdkDestinationDirectory"
     },
     {
+      "name": "azureResourceGroupName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.azureResourceGroupName",
+      "required": false,
+      "visibleRule": "jdkSourceOption == AzureStorage",
+      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroupName"
+    },
+    {
       "name": "cleanDestinationDirectory",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.cleanDestinationDirectory",
@@ -177,6 +185,7 @@
     "DownloadFromAzureBlobStorage": "ms-resource:loc.messages.DownloadFromAzureBlobStorage",
     "SuccessFullyFetchedItemList": "ms-resource:loc.messages.SuccessFullyFetchedItemList",
     "StorageAccountDoesNotExist": "ms-resource:loc.messages.StorageAccountDoesNotExist",
+    "RequestedUrlTooLong": "ms-resource:loc.messages.RequestedUrlTooLong",
     "UnzipExtractFile": "ms-resource:loc.messages.UnzipExtractFile",
     "SevenZipExtractFile": "ms-resource:loc.messages.SevenZipExtractFile",
     "TarExtractFile": "ms-resource:loc.messages.TarExtractFile",

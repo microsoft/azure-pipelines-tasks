@@ -14,6 +14,7 @@ process.env['VSTS_TASKVARIABLE_APPLE_CERTIFICATE_KEYCHAIN'] = '/build/temp/ios_s
 process.env['HOME'] = '/users/test';
 
 tr.registerMock('fs', {
+    ...fs,
     readFileSync: fs.readFileSync,
     statSync: fs.statSync,
     writeFileSync: function (filePath, contents) {

@@ -3,6 +3,11 @@ parameters:
   type: string
 
 steps:
+# Use .NET SDK 6
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK 6.x'
+  inputs:
+    version: 6.x
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@2
   inputs:

@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 218,
+    "Minor": 229,
     "Patch": 0
   },
   "runsOn": [
@@ -427,6 +427,7 @@
     "PackagesPublishedSuccessfully": "ms-resource:loc.messages.PackagesPublishedSuccessfully",
     "PackagesFailedToPublish": "ms-resource:loc.messages.PackagesFailedToPublish",
     "UnknownFeedType": "ms-resource:loc.messages.UnknownFeedType",
+    "Error_NoVersionOptionSpecifiedForPublish": "ms-resource:loc.messages.Error_NoVersionOptionSpecifiedForPublish",
     "Error_NoSourceSpecifiedForPublish": "ms-resource:loc.messages.Error_NoSourceSpecifiedForPublish",
     "Error_NoSourceSpecifiedForDownload": "ms-resource:loc.messages.Error_NoSourceSpecifiedForDownload",
     "Error_UnexpectedErrorArtifactTool": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactTool",

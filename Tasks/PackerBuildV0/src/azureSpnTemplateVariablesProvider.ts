@@ -1,7 +1,7 @@
 "use strict";
 
-import azureGraph = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-graph');
-import msRestAzure = require("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common");
+import azureGraph = require('azure-pipelines-tasks-azure-arm-rest/azure-graph');
+import msRestAzure = require("azure-pipelines-tasks-azure-arm-rest/azure-arm-common");
 
 import * as tl from "azure-pipelines-task-lib/task";
 import * as constants from "./constants";

@@ -5,7 +5,8 @@ $AzureFileCopyRemoteJob = {
         [string]$containerSasToken,
         [string]$additionalArguments,
         [switch]$CleanTargetBeforeCopy,
-        [switch]$EnableDetailedLogging
+        [switch]$EnableDetailedLogging,
+        [switch]$useSanitizerActivate
     )
 
     function Write-DetailLogs
@@ -25,7 +26,7 @@ $AzureFileCopyRemoteJob = {
     {
         $useDefaultArguments = ($additionalArguments -eq "")
 
-        #argument to check whether azcopy.exe needs to be downloaded on VM or it is already present on VM
+        # Argument to check whether azcopy.exe needs to be downloaded on VM or it is already present on VM
         $shouldDownload = $false
 
         if($CleanTargetBeforeCopy)
@@ -97,10 +98,16 @@ $AzureFileCopyRemoteJob = {
             $additionalArguments = "--recursive --log-level=INFO"
         }
 
-        Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $additionalArguments"
-
-        $azCopyCommand = "& azcopy copy `"$containerURL/*$containerSasToken`" `"$targetPath`" $additionalArguments"
-        Invoke-Expression $azCopyCommand
+        if ($useSanitizerActivate) {
+            # Splitting arguments on space, but not on space inside quotes
+            $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
+            Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $sanitizedArguments"
+            & azcopy copy "$containerURL/*$containerSasToken" "$targetPath" $sanitizedArguments
+        } else {
+            Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $additionalArguments"
+            $azCopyCommand = "& azcopy copy `"$containerURL/*$containerSasToken`" `"$targetPath`" $additionalArguments"
+            Invoke-Expression $azCopyCommand
+        }
     }
     catch
     {

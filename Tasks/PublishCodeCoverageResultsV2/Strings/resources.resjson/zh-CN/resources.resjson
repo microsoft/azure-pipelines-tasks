@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "发布代码覆盖率结果",
-  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.friendlyName": "发布代码覆盖率结果 v2",
+  "loc.helpMarkDown": "[了解有关此任务的详细信息](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2?view=azure-pipelines)",
   "loc.description": "发布来自内部版本的任何代码覆盖率结果",
   "loc.instanceNameFormat": "发布代码覆盖率结果",
   "loc.input.label.summaryFileLocation": "摘要文件的路径",

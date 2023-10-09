@@ -3,7 +3,8 @@
         {
             "items": [
 				"node_modules/azure-pipelines-tasks-docker-common/node_modules/azure-pipelines-task-lib",
-				"node_modules/azure-pipelines-tasks-kubernetes-common/node_modules/azure-pipelines-task-lib"
+				"node_modules/azure-pipelines-tasks-kubernetes-common/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tool-lib/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }

@@ -36,6 +36,7 @@ process.env["RELEASE_RELEASENAME"] = "Release-1";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
 process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = shared.teamFoundationCollectionURI;
 process.env["SYSTEM_SERVERTYPE"] = "hosted";
+process.env['AGENT_TEMPDIRECTORY'] = '.';
 process.env["ENDPOINT_AUTH_dockerhubendpoint"] = "{\"parameters\":{\"username\":\"test\", \"password\":\"regpassword\", \"email\":\"test@microsoft.com\",\"registry\":\"https://index.docker.io/v1/\"},\"scheme\":\"UsernamePassword\"}";
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";

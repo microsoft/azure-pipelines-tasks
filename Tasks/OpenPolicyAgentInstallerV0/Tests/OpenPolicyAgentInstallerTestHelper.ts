@@ -58,11 +58,13 @@ export function registerMockedToolRunner(tr: TaskMockRunner): void {
 
 export function registerMockedFsLib(tr: TaskMockRunner): void {
     const fsAnswers = {
-        readFileSync: (v1, v2): string => '{}',
+        readFileSync: (v1, v2): string => {
+            return '{}'
+        },
         existsSync: (v1): boolean => true,
         chmodSync: (v1, v2): void => {}
       };
-    tr.registerMock('fs', fsAnswers);
+    tr.registerMock('fs', {...fs, ...fsAnswers});
 };
 
 export function registerMockedToolLib(tr: TaskMockRunner, options: IMockToolLibOptions = {}): void {

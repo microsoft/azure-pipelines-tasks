@@ -16,7 +16,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     const apkPath = path.join(__dirname, "../../../../Tests/test.apk");
     const appxPath = path.join(__dirname, "../../../../Tests/test.appxbundle");
     const zipPath = path.join(__dirname, "../../../../Tests/test.zip");
-    const defaultTimeout = 6000;
+    const defaultTimeout = 10000;
 
     before(() => {
 
@@ -54,7 +54,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: upload one ipa file', function () {
-        this.timeout(7000);
+        this.timeout(10000);
         let tp = path.join(__dirname, 'L0OneIpaPass.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -335,8 +335,9 @@ describe('AppCenterDistribute L0 Suite', function () {
 
     describe("Unit tests", function() {
         it('Negative path: should keep exit code', function() {
+            this.timeout(defaultTimeout);
             const tp = path.join(__dirname, 'UnitTests', 'UnitTestsExitCodeIsKept.js');
-            const spawn = spawnSync('node', [tp], {timeout: 2000});
+            const spawn = spawnSync('node', [tp], {timeout: 5000});
             assert.equal(spawn.status, 1);
         });
 

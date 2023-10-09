@@ -6,7 +6,7 @@
   "loc.input.label.action": "操作",
   "loc.input.help.action": "选择要执行的操作。",
   "loc.input.label.connectionType": "服务连接类型",
-  "loc.input.help.connectionType": "选择服务连接类型。",
+  "loc.input.help.connectionType": "选择 Kubernetes 服务连接类型。",
   "loc.input.label.kubernetesServiceEndpoint": "Kubernetes 服务连接",
   "loc.input.help.kubernetesServiceEndpoint": "选择 Kubernetes 服务连接。",
   "loc.input.label.azureSubscriptionEndpoint": "Azure 订阅",
@@ -15,6 +15,8 @@
   "loc.input.help.azureResourceGroup": "选择 Azure 资源组。",
   "loc.input.label.kubernetesCluster": "Kubernetes 群集",
   "loc.input.help.kubernetesCluster": "选择 Azure 托管的群集。",
+  "loc.input.label.useClusterAdmin": "使用群集管理员凭据",
+  "loc.input.help.useClusterAdmin": "使用群集管理员凭据而不是默认的群集用户凭据。",
   "loc.input.label.namespace": "命名空间",
   "loc.input.help.namespace": "使用 -namespace 标志设置命令的命名空间。如果未提供命名空间，则命令将在默认命名空间中运行。",
   "loc.input.label.strategy": "策略",
@@ -62,7 +64,7 @@
   "loc.input.label.patch": "修补程序",
   "loc.input.help.patch": "修补程序的内容",
   "loc.input.label.secretType": "机密类型",
-  "loc.input.help.secretType": "创建/更新泛型或 docker imagepullsecret。选择 dockerRegistry，用于创建/更新所选注册表的 imagepullsecret。imagePullSecret 是一种将包含容器注册表密码的机密传递到 Kubelet 的方法，可便于其代表 Pod 拉取专用映像。",
+  "loc.input.help.secretType": "创建/更新泛型或 docker imagepullsecret。选择 dockerRegistry，以创建/更新所选注册表的 imagepullsecret。imagePullSecret 是一种将包含容器注册表密码的机密传递到 Kubelet 的方法，因此可代表 Pod 拉取专用映像。",
   "loc.input.label.secretName": "机密名称",
   "loc.input.help.secretName": "机密名称。可以在 Kubernetes YAML 配置文件中使用此机密名称。",
   "loc.input.label.secretArguments": "参数",
@@ -100,5 +102,6 @@
   "loc.messages.InvalidBaselineAndCanaryReplicas": "副本计数值无效。",
   "loc.messages.InvalidTimeoutValue": "超时值无效。请输入有效数字。",
   "loc.messages.RolloutStatusTimedout": "推出状态检查失败。",
-  "loc.messages.EnvironmentLink": "有关详细信息，请转到 %s"
+  "loc.messages.EnvironmentLink": "有关详细信息，请转到 %s",
+  "loc.messages.KubeloginFailed": "Kubelogin 身份验证失败。异常: %s"
 }

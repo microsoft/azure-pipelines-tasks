@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 219,
+        "Minor": 227,
         "Patch": 0
     },
     "demands": [],
@@ -488,6 +488,7 @@
         "UnableToFetchKubectlVersion": "Could not fetch Kubectl version. Please make sure that the Kubernetes server is up and running.",
         "KubectlClientVersion": "Kubectl Client Version",
         "KubectlServerVersion": "Kubectl Server Version",
-        "KubectlServerVerisonNotFound": "Could not find kubectl server version"
+        "KubectlServerVerisonNotFound": "Could not find kubectl server version",
+        "KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
     }
 }

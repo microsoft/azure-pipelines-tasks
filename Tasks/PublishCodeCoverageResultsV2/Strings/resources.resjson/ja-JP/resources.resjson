@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "コード カバレッジ結果の公開",
-  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.friendlyName": "コード カバレッジ結果 v2 の公開",
+  "loc.helpMarkDown": "[このタスクの詳細](https://learn.microsoft.com/ja-jp/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2?view=azure-pipelines)",
   "loc.description": "ビルドからコード カバレッジの結果を公開します",
   "loc.instanceNameFormat": "コード カバレッジ結果の公開",
   "loc.input.label.summaryFileLocation": "概要ファイルへのパス",

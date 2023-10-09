@@ -71,6 +71,7 @@
   "loc.messages.RequestedURLforkuduphysicalpath": "kudu 物理路径的请求 URL: %s",
   "loc.messages.Physicalpathalreadyexists": "物理路径 \"%s\" 已存在",
   "loc.messages.KuduPhysicalpathCreatedSuccessfully": "Kudu 物理路径已成功创建: %s",
+  "loc.messages.KuduStackTraceURL": "若要进行进一步调试，请检查 Kudu 堆栈跟踪 URL: %s",
   "loc.messages.FailedtocreateKuduPhysicalPath": "未能创建 kudu 物理路径。错误: %s",
   "loc.messages.FailedtocheckphysicalPath": "未能检查 kudu 物理路径。错误代码: %s",
   "loc.messages.VirtualApplicationDoesNotExist": "不存在虚拟应用程序: %s",

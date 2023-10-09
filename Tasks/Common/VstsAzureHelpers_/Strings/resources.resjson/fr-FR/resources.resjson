@@ -2,6 +2,8 @@
   "loc.messages.AZ_AzureRMProfileModuleNotFound": "Module 'AzureRM.Profile' introuvable. Le module 'AzureRM' n'est peut-être pas complètement installé. L'exécution des commandes PowerShell suivantes à partir d'une session avec élévation de privilèges peut éventuellement résoudre le problème : Import-Module AzureRM ; Install-AzureRM",
   "loc.messages.AZ_CertificateAuthNotSupported": "L'authentification par certificat n'est pas prise en charge. Le module Azure PowerShell est introuvable.",
   "loc.messages.AZ_CredentialsError": "Une erreur s'est produite durant l'utilisation des informations d'identification Azure pour le déploiement.",
+  "loc.messages.AZ_CouldNotGenerateOidcToken": "Désolé… Nous n’avons pas pu générer une assertion de client pour la connexion fédérée.",
+  "loc.messages.AZ_FederatedTokenFailure": "Désolé… Nous n’avons pas pu récupérer le jeton fédéré pour la fédération des identités de charge de travail. {0}",
   "loc.messages.AZ_ModuleNotFound": "Les modules '{1}' sont introuvables avec la version '{0}'. Si le module a été installé récemment, réessayez l'opération après avoir redémarré l'agent de tâche Azure Pipelines.",
   "loc.messages.AZ_RequiresMinVersion0": "La version minimale nécessaire ({0}) pour le module Azure PowerShell n'est pas installée.",
   "loc.messages.AZ_ServicePrincipalError": "Erreur liée au principal du service utilisé pour le déploiement.",

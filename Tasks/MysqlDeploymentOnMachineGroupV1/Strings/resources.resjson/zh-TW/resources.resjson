@@ -13,7 +13,7 @@
   "loc.input.help.ServerName": "「MySQL 的資料庫」的伺服器名稱。範例: localhost。當您使用 MySQL Workbench 進行連線時，其會與為 'Parameters' 中 'Hostname' 使用的值相同",
   "loc.input.label.DatabaseName": "資料庫名稱",
   "loc.input.help.DatabaseName": "下列指令碼必須執行對象的資料庫名稱 (如已有資料庫); 若無，則指令碼本身可用以建立資料庫。",
-  "loc.input.label.SqlUsername": "Mysql 使用者名稱",
+  "loc.input.label.SqlUsername": "MySQL 使用者名稱",
   "loc.input.help.SqlUsername": "當您使用 MySQL Workbench 進行連線時，其會與為 'Parameters' 中 'Username' 使用的值相同",
   "loc.input.label.SqlPassword": "密碼",
   "loc.input.help.SqlPassword": "MySQL 資料庫的密碼。<br>其可以是管線中定義的變數。範例: $(password)。<br>此外，您可以將變數類型標示為 'secret' 加以保護。",

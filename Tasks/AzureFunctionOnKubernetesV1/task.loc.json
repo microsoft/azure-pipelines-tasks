@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 219,
+    "Minor": 228,
     "Patch": 0
   },
   "demands": [],
@@ -176,6 +176,10 @@
   "execution": {
     "Node10": {
       "target": "src//run.js"
+    },
+    "Node16": {
+      "target": "src//run.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -188,6 +192,7 @@
     "KubernetesClusterResourceGroup": "ms-resource:loc.messages.KubernetesClusterResourceGroup",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
     "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP",
-    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile",
+    "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   }
 }

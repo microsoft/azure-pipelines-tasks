@@ -4,9 +4,9 @@ import ma = require('azure-pipelines-task-lib/mock-answer');
 import * as path from 'path';
 import { AzureResourceFilterUtility } from '../operations/AzureResourceFilterUtility';
 import { KuduServiceUtility } from '../operations/KuduServiceUtility';
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
-import { ApplicationTokenCredentials } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint'; 
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
+import { ApplicationTokenCredentials } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-common';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint'; 
 import { setEndpointData, setAgentsData, mockTaskArgument, mockTaskInputParameters } from './utils';
 
 export class AzureRmWebAppDeploymentProviderTests {
@@ -18,13 +18,22 @@ export class AzureRmWebAppDeploymentProviderTests {
         setEndpointData();
         setAgentsData();
 
-        tr.registerMock('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-app-service-kudu', {
-            Kudu: function(A, B, C) {
-                return {
-                    updateDeployment : function(D) {
-                        return "MOCK_DEPLOYMENT_ID";
-                    }
-                }
+        const kudu =  {
+            updateDeployment : function(_) {
+                return "MOCK_DEPLOYMENT_ID";
+            }
+        };
+
+        const utility = {
+            getKuduService: function()
+            {
+                return Promise.resolve(kudu);
+            }
+        };
+
+        tr.registerMock('azure-pipelines-tasks-azure-arm-rest/azureAppServiceUtility', {
+            AzureAppServiceUtility: function(_) {
+                return utility;
             }
         });
 

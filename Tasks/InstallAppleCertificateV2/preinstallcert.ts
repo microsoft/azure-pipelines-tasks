@@ -1,6 +1,7 @@
 import path = require('path');
 import sign = require('azure-pipelines-tasks-ios-signing-common/ios-signing-common');
 import secureFilesCommon = require('azure-pipelines-tasks-securefiles-common/securefiles-common');
+import { OpenSSlError } from 'azure-pipelines-tasks-ios-signing-common/errors/OpenSSlError';
 import * as tl from 'azure-pipelines-task-lib/task';
 import os = require('os');
 
@@ -20,6 +21,7 @@ async function run() {
 
         // download decrypted contents
         secureFileId = tl.getInput('certSecureFile', true);
+        const opensslArgs = tl.getInput('opensslPkcsArgs', false);
         
         secureFileHelpers = new secureFilesCommon.SecureFileHelpers(retryCount);
         let certPath: string = await secureFileHelpers.downloadSecureFile(secureFileId);
@@ -27,7 +29,7 @@ async function run() {
         let certPwd: string = tl.getInput('certPwd');
 
         // get the P12 details - SHA1 hash, common name (CN) and expiration.
-        const p12Properties = await sign.getP12Properties(certPath, certPwd);
+        const p12Properties = await sign.getP12Properties(certPath, certPwd, opensslArgs);
         let commonName: string = p12Properties.commonName;
         const fingerprint: string = p12Properties.fingerprint,
             notBefore: Date = p12Properties.notBefore,
@@ -77,7 +79,7 @@ async function run() {
 
         const setUpPartitionIdACLForPrivateKey: boolean = tl.getBoolInput('setUpPartitionIdACLForPrivateKey', false);
         const useKeychainIfExists: boolean = true;
-        await sign.installCertInTemporaryKeychain(keychainPath, keychainPwd, certPath, certPwd, useKeychainIfExists, setUpPartitionIdACLForPrivateKey);
+        await sign.installCertInTemporaryKeychain(keychainPath, keychainPwd, certPath, certPwd, useKeychainIfExists, setUpPartitionIdACLForPrivateKey, opensslArgs);
 
         // set the keychain output variable.
         tl.setVariable('keychainPath', keychainPath);
@@ -87,6 +89,9 @@ async function run() {
         tl.setVariable('APPLE_CERTIFICATE_SIGNING_IDENTITY', commonName);
         tl.setVariable('APPLE_CERTIFICATE_KEYCHAIN', keychainPath);
     } catch (err) {
+        if (err instanceof OpenSSlError) {
+            tl.warning(tl.loc('OpenSSLError'));
+        }
         tl.setResult(tl.TaskResult.Failed, err);
     } finally {
         // delete certificate from temp location after installing

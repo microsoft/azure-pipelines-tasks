@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 220,
+    "Minor": 229,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -114,6 +114,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.setUpPartitionIdACLForPrivateKey",
       "groupName": "advanced"
+    },
+    {
+      "name": "opensslPkcsArgs",
+      "type": "string",
+      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.opensslPkcsArgs",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.opensslPkcsArgs",
+      "groupName": "advanced"
     }
   ],
   "outputVariables": [
@@ -168,6 +177,7 @@
     "SetKeyPartitionListCommandFailed": "ms-resource:loc.messages.SetKeyPartitionListCommandFailed",
     "InstallRequiresMac": "ms-resource:loc.messages.InstallRequiresMac",
     "CertNotValidYetError": "ms-resource:loc.messages.CertNotValidYetError",
-    "CertExpiredError": "ms-resource:loc.messages.CertExpiredError"
+    "CertExpiredError": "ms-resource:loc.messages.CertExpiredError",
+    "OpenSSLError": "ms-resource:loc.messages.OpenSSLError"
   }
 }

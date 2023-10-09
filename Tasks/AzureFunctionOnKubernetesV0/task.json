@@ -1,121 +1,125 @@
 {
-    "id": "FD1AA5B9-400C-4F4B-9C0B-069BA74E53C6",
-    "name": "AzureFunctionOnKubernetes",
-    "friendlyName": "Azure Function on Kubernetes",
-    "description": "Deploy Azure function to Kubernetes cluster.",
-    "helpUrl": "https://aka.ms/func-k8s",
-    "helpMarkDown": "[Learn more about this task](https://aka.ms/func-k8s) or [see Azure Functions on Kubernetes with KEDA](https://docs.microsoft.com/en-us/azure/azure-functions/functions-kubernetes-keda) or [check out sample-hello-world-azure-functions](https://github.com/kedacore/sample-hello-world-azure-functions)",
-    "category": "Deploy",
-    "preview": true,
-    "visibility": [
-        "Build",
-        "Release"
-    ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 0,
-        "Minor": 219,
-        "Patch": 0
+  "id": "FD1AA5B9-400C-4F4B-9C0B-069BA74E53C6",
+  "name": "AzureFunctionOnKubernetes",
+  "friendlyName": "Azure Function on Kubernetes",
+  "description": "Deploy Azure function to Kubernetes cluster.",
+  "helpUrl": "https://aka.ms/func-k8s",
+  "helpMarkDown": "[Learn more about this task](https://aka.ms/func-k8s) or [see Azure Functions on Kubernetes with KEDA](https://docs.microsoft.com/en-us/azure/azure-functions/functions-kubernetes-keda) or [check out sample-hello-world-azure-functions](https://github.com/kedacore/sample-hello-world-azure-functions)",
+  "category": "Deploy",
+  "preview": true,
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 228,
+    "Patch": 0
+  },
+  "demands": [],
+  "groups": [
+    {
+      "name": "serviceConnections",
+      "displayName": "Service Connections",
+      "isExpanded": true
     },
-    "demands": [],
-    "groups": [
-        {
-            "name": "serviceConnections",
-            "displayName": "Service Connections",
-            "isExpanded": true
-        },
-        {
-            "name": "commands",
-            "displayName": "Commands",
-            "isExpanded": true
-        }
-    ],
-    "inputs": [
-        {
-            "name": "dockerRegistryServiceConnection",
-            "type": "connectedService:dockerregistry",
-            "label": "Docker registry service connection",
-            "required": true,
-            "groupName": "serviceConnections",
-            "helpMarkDown": "Select a Docker registry service connection."
-        },
-        {
-            "name": "kubernetesServiceConnection",
-            "type": "connectedService:kubernetes",
-            "label": "Kubernetes service connection",
-            "required": true,
-            "groupName": "serviceConnections",
-            "helpMarkDown": "Select a Kubernetes service connection."
-        },
-        {
-            "name": "namespace",
-            "type": "string",
-            "label": "Kubernetes namespace",
-            "groupName": "commands",
-            "helpMarkDown": "Kubernetes namespace"
-        },
-        {
-            "name": "secretName",
-            "type": "string",
-            "label": "Secret Name",
-            "groupName": "commands",
-            "helpMarkDown": "Kubernetes secret containing function config data (for ex. AzureWebJobsStorage: <Azure storage connection string>)"
-        },
-        {
-            "name": "dockerHubNamespace",
-            "type": "string",
-            "label": "Docker Hub namespace",
-            "groupName": "commands",
-            "helpMarkDown": "Docker Hub namespace. Required for private Docker Hub repository."
-        },
-        {
-            "name": "appName",
-            "type": "string",
-            "required": true,
-            "label": "Application Name",
-            "groupName": "commands",
-            "helpMarkDown": "Application Name. The Kubernetes objects created use this name. This should follow Kubernetes naming conventions for resource names."
-        },
-        {
-            "name": "functionRootDirectory",
-            "type": "filePath",
-            "label": "Function root directory",
-            "required": false,
-            "groupName": "commands",
-            "helpMarkDown": "Function root directory. Should contain host.json. Docker build and push is performed from this directory."
-        },
-        {
-            "name": "waitForStability",
-            "type": "boolean",
-            "label": "Wait for stability",
-            "groupName": "commands",
-            "defaultValue": "true",
-            "helpMarkDown": "Wait for the Kubernetes objects to reach the desired state."
-        },
-        {
-            "name": "arguments",
-            "type": "string",
-            "label": "Arguments",
-            "groupName": "commands",
-            "helpMarkDown": "Pass arguments to command. Ex:<br>--no-docker --service-type NodePort"
-        }
-    ],
-    "dataSourceBindings": [],
-    "instanceNameFormat": "Func on K8s - deploy",
-    "execution": {
-        "Node10": {
-            "target": "src//run.js"
-        }
-    },
-    "messages": {
-        "AllContainersNotInReadyState": "All the containers are not in a ready state.",
-        "CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
-        "CouldNotDetermineServiceStatus": "Could not determine the service %s status due to the error: %s",
-        "FileContentSynced": "Synced the file content to the disk. The content is %s.",
-        "KubectlClientVersion": "Kubectl Client Version",
-        "KubectlServerVersion": "Kubectl Server Version",
-        "NoDataWrittenOnFile": "No data was written into the file %s",
-        "ServiceExternalIP": "service %s external IP is %s",
-        "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
+    {
+      "name": "commands",
+      "displayName": "Commands",
+      "isExpanded": true
     }
+  ],
+  "inputs": [
+    {
+      "name": "dockerRegistryServiceConnection",
+      "type": "connectedService:dockerregistry",
+      "label": "Docker registry service connection",
+      "required": true,
+      "groupName": "serviceConnections",
+      "helpMarkDown": "Select a Docker registry service connection."
+    },
+    {
+      "name": "kubernetesServiceConnection",
+      "type": "connectedService:kubernetes",
+      "label": "Kubernetes service connection",
+      "required": true,
+      "groupName": "serviceConnections",
+      "helpMarkDown": "Select a Kubernetes service connection."
+    },
+    {
+      "name": "namespace",
+      "type": "string",
+      "label": "Kubernetes namespace",
+      "groupName": "commands",
+      "helpMarkDown": "Kubernetes namespace"
+    },
+    {
+      "name": "secretName",
+      "type": "string",
+      "label": "Secret Name",
+      "groupName": "commands",
+      "helpMarkDown": "Kubernetes secret containing function config data (for ex. AzureWebJobsStorage: <Azure storage connection string>)"
+    },
+    {
+      "name": "dockerHubNamespace",
+      "type": "string",
+      "label": "Docker Hub namespace",
+      "groupName": "commands",
+      "helpMarkDown": "Docker Hub namespace. Required for private Docker Hub repository."
+    },
+    {
+      "name": "appName",
+      "type": "string",
+      "required": true,
+      "label": "Application Name",
+      "groupName": "commands",
+      "helpMarkDown": "Application Name. The Kubernetes objects created use this name. This should follow Kubernetes naming conventions for resource names."
+    },
+    {
+      "name": "functionRootDirectory",
+      "type": "filePath",
+      "label": "Function root directory",
+      "required": false,
+      "groupName": "commands",
+      "helpMarkDown": "Function root directory. Should contain host.json. Docker build and push is performed from this directory."
+    },
+    {
+      "name": "waitForStability",
+      "type": "boolean",
+      "label": "Wait for stability",
+      "groupName": "commands",
+      "defaultValue": "true",
+      "helpMarkDown": "Wait for the Kubernetes objects to reach the desired state."
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "Arguments",
+      "groupName": "commands",
+      "helpMarkDown": "Pass arguments to command. Ex:<br>--no-docker --service-type NodePort"
+    }
+  ],
+  "dataSourceBindings": [],
+  "instanceNameFormat": "Func on K8s - deploy",
+  "execution": {
+    "Node10": {
+      "target": "src//run.js"
+    },
+    "Node16": {
+      "target": "src//run.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "AllContainersNotInReadyState": "All the containers are not in a ready state.",
+    "CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
+    "CouldNotDetermineServiceStatus": "Could not determine the service %s status due to the error: %s",
+    "FileContentSynced": "Synced the file content to the disk. The content is %s.",
+    "KubectlClientVersion": "Kubectl Client Version",
+    "KubectlServerVersion": "Kubectl Server Version",
+    "NoDataWrittenOnFile": "No data was written into the file %s",
+    "ServiceExternalIP": "service %s external IP is %s",
+    "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
+  }
 }

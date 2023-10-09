@@ -34,5 +34,6 @@
   "loc.messages.RemoteScriptFileCleanUpFailed": "無法刪除複製到遠端電腦的指令碼檔。錯誤 = %s。",
   "loc.messages.SettingUpSshConnection": "正在嘗試對 %s@%s:%s 建立 SSH 連線",
   "loc.messages.SshConnectionSuccessful": "連線成功。",
-  "loc.messages.UseDefaultPort": "因為未指定任何連接埠，所以將使用 SSH 的預設連接埠 22。"
+  "loc.messages.UseDefaultPort": "因為未指定任何連接埠，所以將使用 SSH 的預設連接埠 22。",
+  "loc.messages.ScriptArgsSanitized": "偵測到引數中可能無法由殼層正確執行的字元。請使用反斜線 (\\) 逸出特殊字元。如需詳細資訊，請參閱: https://aka.ms/ado/75787"
 }

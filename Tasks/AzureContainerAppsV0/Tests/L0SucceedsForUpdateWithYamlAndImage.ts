@@ -42,8 +42,8 @@ tmr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 tmr.registerMock('./src/AzureAuthenticationHelper', {
     AzureAuthenticationHelper: function() {
         return {
-            loginAzureRM: function() {
-                console.log('[MOCK] loginAzureRM called');
+            loginAzure: function() {
+                console.log('[MOCK] loginAzure called');
                 return;
             },
             logoutAzure: function() {

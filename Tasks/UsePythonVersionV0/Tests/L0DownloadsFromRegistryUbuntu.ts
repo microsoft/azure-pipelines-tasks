@@ -88,6 +88,7 @@ taskRunner.registerMock('typed-rest-client', {
 
 const lsbPath = '/etc/lsb-release';
 taskRunner.registerMock('fs', {
+    ...fs,
     existsSync(filePath) {
         if (filePath !== lsbPath) {
             throw new Error(`Tried to check the wrong file for existance: ${filePath}`);

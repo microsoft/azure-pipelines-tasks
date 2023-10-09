@@ -49,5 +49,6 @@
   "loc.messages.PS_InvalidActionPreference": "Preferenza di azione non valida per {0}: '{1}'. Il valore deve essere uno dei seguenti: {2}",
   "loc.messages.PS_InvalidFilePath": "Il percorso file '{0}' non è valido. È necessario un percorso di un file con estensione ps1.",
   "loc.messages.PS_UnableToDetermineExitCode": "Eccezione imprevista. Non è possibile determinare il codice di uscita da PowerShell.",
-  "loc.messages.PS_InvalidTargetType": "Il tipo di destinazione '{0}' non è valido. Il valore deve essere uno dei seguenti: 'filepath' o 'inline'"
+  "loc.messages.PS_InvalidTargetType": "Il tipo di destinazione '{0}' non è valido. Il valore deve essere uno dei seguenti: 'filepath' o 'inline'",
+  "loc.messages.ScriptArgsSanitized": "Sono stati rilevati caratteri negli argomenti che potrebbero non essere eseguiti correttamente dalla shell. Eseguire l'escape dei caratteri speciali usando l’apice inverso (`). Ulteriori informazioni sono disponibili qui: https://aka.ms/ado/75787"
 }

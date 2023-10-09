@@ -1,0 +1,62 @@
+parameters:
+- name: task_name
+  type: string
+
+steps:
+- checkout: self
+  fetchDepth: 1
+
+- checkout: ConfigChange
+  fetchDepth: 1
+
+- task: NodeTool@0
+  displayName: Use node 10
+  inputs:
+    versionSpec: 10.x
+
+- script: |
+    cd azure-pipelines-tasks
+    npm install
+  displayName: npm install
+
+- task: DownloadBuildArtifacts@0
+  inputs:
+    artifactName: hotfix
+    downloadPath: hotfixArtifact
+  displayName: Download hotfix Artifact
+
+# returns currentSprint
+- template: set-current-sprint-variable.yml
+
+# returns branchName
+- template: generate-branch-name.yml
+  parameters:
+    postfix: hotfix
+    currentSprint: '$(currentSprint)'
+
+- powershell: |
+    $currentDate = Get-Date -Format "yyyyMMdd-HHmm"
+    $hotfixFolderPath = "tfs/m$(currentSprint)/tasksHotFix-$currentDate"
+    Write-Host $hotfixFolderPath
+    Copy-Item -Path hotfixArtifact/hotfix -Destination AzureDevOps.ConfigChange/$hotfixFolderPath -Recurse
+    Write-Host "##vso[task.setVariable variable=hotfixFolderPath]$hotfixFolderPath"
+  displayName: Move HotFix files
+
+- powershell: |
+    cd azure-pipelines-tasks/ci/courtesy-push
+    npm install
+    node push-hotfix-branch.js "$(hotfixFolderPath)"
+    node open-hotfix-pr.js
+  displayName: Open PR in ConfigChange
+  env:
+    TOKEN: $(Package.Token)
+    TASK_NAME: ${{ parameters.task_name }}
+    REPOSITORY: AzureDevOps.ConfigChange
+    BRANCH: '$(branchName)'
+
+- powershell: |
+    cd azure-pipelines-tasks/ci/courtesy-push
+    node create-hotfix-release.js $(hotfixFolderPath) "${{ parameters.task_name }}"
+  displayName: Create Release in AzureDevOps.ConfigChange
+  env:
+    TOKEN: $(Package.Token)

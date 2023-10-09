@@ -1,6 +1,8 @@
 [CmdletBinding()]
 param()
 
+. $PSScriptRoot\helpers.ps1
+
 function Get-ActionPreference {
     param (
         [Parameter(Mandatory)]
@@ -59,7 +61,7 @@ try {
 
         $input_arguments = Get-VstsInput -Name 'arguments'
     }
-    elseif("$input_targetType".ToUpperInvariant() -eq "INLINE") {
+    elseif ("$input_targetType".ToUpperInvariant() -eq "INLINE") {
         $input_script = Get-VstsInput -Name 'script'
     }
     else {
@@ -92,6 +94,24 @@ try {
     # and we rely on PowerShell piping back NormalView error records (required because PowerShell Core changed the default to ConciseView)
     $contents += "`$ErrorView = 'NormalView'"
     if ("$input_targetType".ToUpperInvariant() -eq 'FILEPATH') {
+
+        try {
+            Test-FileArgs $input_arguments
+        }
+        catch {
+            $message = $_.Exception.Message
+
+            if ($message -eq (Get-VstsLocString -Key 'ScriptArgsSanitized')) {
+                throw $message;
+            }
+
+            $telemetry = @{
+                'UnexpectedError' = $message
+                'ErrorStackTrace' = $_.Exception.StackTrace
+            }
+            Publish-Telemetry $telemetry
+        }
+
         $contents += ". '$("$input_filePath".Replace("'", "''"))' $input_arguments".Trim()
         Write-Host (Get-VstsLocString -Key 'PS_FormattedCommand' -ArgumentList ($contents[-1]))
     }
@@ -147,7 +167,8 @@ try {
     $executionOperator;
     if ($input_runScriptInSeparateScope) {
         $executionOperator = '&'; 
-    } else {
+    }
+    else {
         $executionOperator = '.';
     }
     Assert-VstsPath -LiteralPath $powershellPath -PathType 'Leaf'
@@ -224,6 +245,10 @@ try {
     if ($failed) {
         Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
     }
+}
+catch {
+    Write-VstsTaskError -Message $_.Exception.Message
+    Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
 }
 finally {
     Trace-VstsLeavingInvocation $MyInvocation

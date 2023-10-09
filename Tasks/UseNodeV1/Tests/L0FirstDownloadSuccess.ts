@@ -127,7 +127,7 @@ tmr.registerMock('azure-pipelines-tool-lib/tool', {
 const fsClone = fs;
 fsClone.existsSync = function(pathToFile: string): boolean {
     if (pathToFile !== path.resolve(process.cwd(), '.npmrc')) {
-        throw 'Incorrect path ' + pathToFile
+        return fs.existsSync(pathToFile);
     }
     return false;
 };

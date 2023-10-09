@@ -28,6 +28,9 @@ var aggregatePackageName = 'Mseng.MS.TF.Build.Tasks';
 var aggregateNuspecPath = path.join(packagePath, 'Mseng.MS.TF.Build.Tasks.nuspec');
 var publishLayoutPath = path.join(packagePath, 'publish-layout');
 var publishPushCmdPath = path.join(packagePath, 'publish-layout', 'push.cmd');
+var genTaskPath = path.join(__dirname, '..', '_generated');
+var makeOptionPath = path.join(__dirname, '..', 'make-options.json');
+
 exports.buildTasksPath = buildTasksPath;
 exports.packagePath = packagePath;
 exports.tasksLayoutPath = tasksLayoutPath;
@@ -47,6 +50,8 @@ exports.aggregatePackageName = aggregatePackageName;
 exports.aggregateNuspecPath = aggregateNuspecPath;
 exports.publishLayoutPath = publishLayoutPath;
 exports.publishPushCmdPath = publishPushCmdPath;
+exports.genTaskPath = genTaskPath;
+exports.makeOptionPath = makeOptionPath;
 
 //------------------------------------------------------------------------------
 // generic functions
@@ -154,7 +159,7 @@ var initializePackagePath = function () {
 }
 exports.initializePackagePath = initializePackagePath;
 
-var linkNonAggregateLayoutContent = function (sourceRoot, destRoot, metadataOnly) {
+var linkNonAggregateLayoutContent = function (sourceRoot, destRoot, metadataOnly, copyFiles) {
     assert(sourceRoot, 'sourceRoot');
     assert(destRoot, 'destRoot');
     var metadataFileNames = ['TASK.JSON', 'TASK.LOC.JSON', 'STRINGS', 'ICON.PNG'];
@@ -189,10 +194,12 @@ var linkNonAggregateLayoutContent = function (sourceRoot, destRoot, metadataOnly
             var itemSourcePath = path.join(taskSourcePath, itemName);
             var itemDestPath = path.join(taskDestPath, itemName);
             if (fs.statSync(itemSourcePath).isDirectory()) {
-                fs.symlinkSync(itemSourcePath, itemDestPath, 'junction');
+                if (copyFiles) shell.cp('-R', itemSourcePath, itemDestPath);
+                else fs.symlinkSync(itemSourcePath, itemDestPath, 'junction');
             }
             else {
-                fs.linkSync(itemSourcePath, itemDestPath);
+                if (copyFiles) shell.cp(itemSourcePath, itemDestPath);
+                else fs.linkSync(itemSourcePath, itemDestPath);
             }
         });
     });
@@ -377,7 +384,7 @@ var createIndividualTaskZipFiles = function (omitLayoutVersion) {
     console.log('> Linking content for nested zips layout');
     var nestedZipsLayoutPath = path.join(packagePath, 'nested-zips-layout');
     fs.mkdirSync(nestedZipsLayoutPath);
-    linkNonAggregateLayoutContent(buildTasksPath, nestedZipsLayoutPath, /*metadataOnly*/false);
+    linkNonAggregateLayoutContent(buildTasksPath, nestedZipsLayoutPath, /*metadataOnly*/false,  /*copyFiles*/false);
 
     // create the nested task zips (part of the tasks layout)
     console.log();
@@ -387,7 +394,7 @@ var createIndividualTaskZipFiles = function (omitLayoutVersion) {
     // link the task metadata into the tasks layout
     console.log();
     console.log('> Linking metadata content for tasks');
-    linkNonAggregateLayoutContent(buildTasksPath, tasksLayoutPath, /*metadataOnly*/true);
+    linkNonAggregateLayoutContent(buildTasksPath, tasksLayoutPath, /*metadataOnly*/true, /*copyFiles*/true);
 
     if (!omitLayoutVersion) {
         // mark the layout with a version number.
@@ -470,6 +477,14 @@ var resolveTaskList = function(taskPattern) {
             .map(function (item) {
                 return path.basename(item);
             });
+
+        // If base tasks was not found, try to find the task in the _generated tasks folder
+        if (taskList.length == 0) { 
+            taskList = matchFind(taskPattern, genTaskPath, { noRecurse: true, matchBase: true })
+                .map(function (item) {
+                    return path.basename(item);
+                });
+        }
         if (!taskList.length) {
             throw new Error(`Unable to find any tasks matching pattern ${taskPattern}`);
         }
@@ -480,3 +495,24 @@ var resolveTaskList = function(taskPattern) {
     return taskList;
 }
 exports.resolveTaskList = resolveTaskList;
+
+/**
+ * @param {string} type - log type
+ * @param {string} payload - log message
+ */
+function logToPipeline(type, payload) {
+    if (!payload) throw new Error('payload are required');
+
+    switch (type) {
+        case 'error':
+        case 'warning':
+            console.log(`##vso[task.logissue type=${type}]${payload}`);
+            break;
+        case 'debug':
+            console.log(`##vso[task.debug]${payload}`);
+            break;
+        default: 
+            console.log(payload);
+    }
+}
+exports.logToPipeline = logToPipeline;

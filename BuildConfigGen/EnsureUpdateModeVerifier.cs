@@ -251,5 +251,23 @@ namespace BuildConfigGen
             string targetFile = tempFile ?? sourceFile ?? filePath;
             return targetFile;
         }
+
+        internal void DeleteDirectoryRecursive(string path)
+        {
+            if(verifyOnly)
+            {
+                if(Directory.Exists(path))
+                {
+                    VerifyErrors.Add($"Expected directory {path} to not exist");
+                }
+            }
+            else
+            {
+                if(Directory.Exists(path))
+                {
+                    Directory.Delete(path, true);
+                }
+            }
+        }
     }
 }

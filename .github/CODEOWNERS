@@ -7,13 +7,13 @@ Tasks/AndroidSigningV3/    @microsoft/akvelon-build-task-team
 
 Tasks/ANTV1/   @microsoft/akvelon-build-task-team
 
-Tasks/AppCenterDistributeV1/   @thewulf7    @lucen-ms    @DergachevE    @vsebesta
+Tasks/AppCenterDistributeV1/   @imenkov    @lucen-ms    @DergachevE    @vsebesta
 
-Tasks/AppCenterDistributeV2/   @thewulf7    @lucen-ms    @DergachevE    @vsebesta
+Tasks/AppCenterDistributeV2/   @imenkov    @lucen-ms    @DergachevE    @vsebesta
 
-Tasks/AppCenterDistributeV3/   @thewulf7    @lucen-ms    @DergachevE    @vsebesta
+Tasks/AppCenterDistributeV3/   @imenkov    @lucen-ms    @DergachevE    @vsebesta
 
-Tasks/AppCenterTestV1/   @thewulf7    @lucen-ms    @DergachevE    @vsebesta
+Tasks/AppCenterTestV1/   @imenkov    @lucen-ms    @DergachevE    @vsebesta
 
 Tasks/ArchiveFilesV2/  @microsoft/akvelon-build-task-team
 
@@ -26,6 +26,8 @@ Tasks/AzureCLIV1/      @rvairavelu @manolerazvan
 Tasks/AzureCLIV2/      @rvairavelu @manolerazvan
 
 Tasks/AzureCloudPowerShellDeploymentV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
+
+Tasks/AzureCloudPowerShellDeploymentV2/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
 Tasks/AzureContainerAppsV0/    @cormacpayne    @daniv-msft
 
@@ -56,8 +58,6 @@ Tasks/AzureIoTEdgeV2/     @marianan   @tameraw    @pprovost
 Tasks/AzureKeyVaultV1/     @rvairavelu @manolerazvan
 
 Tasks/AzureKeyVaultV2/     @rvairavelu @manolerazvan
-
-Tasks/AzureMonitorAlertsV0/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
 Tasks/AzureMonitorV0/      @rvairavelu @manolerazvan
 
@@ -163,6 +163,8 @@ Tasks/Common/utility-common/       @nishubansal    @ds-ms
 
 Tasks/Common/webdeployment-common/   @vsebesta   @rvairavelu   @pipeline-environment-team
 
+Tasks/CondaAuthenticateV0/      @microsoft/azure-artifacts-packages
+
 Tasks/CondaEnvironmentV0/      @microsoft/akvelon-build-task-team
 
 Tasks/CondaEnvironmentV1/      @microsoft/akvelon-build-task-team
@@ -199,15 +201,15 @@ Tasks/DotNetCoreInstallerV0/   @rvairavelu @manolerazvan
 
 Tasks/DotNetCoreInstallerV1/   @rvairavelu @manolerazvan
 
-Tasks/DownloadBuildArtifactsV0/   @v-nmursapall @rvairavelu
+Tasks/DownloadBuildArtifactsV0/   @manolerazvan @rvairavelu
 
-Tasks/DownloadFileshareArtifactsV0/   @v-nmursapall @rvairavelu
+Tasks/DownloadFileshareArtifactsV1/   @manolerazvan @rvairavelu
 
-Tasks/DownloadGitHubNpmPackageV1/    @v-nmursapall @rvairavelu
+Tasks/DownloadGitHubNpmPackageV1/    @manolerazvan @rvairavelu
 
-Tasks/DownloadGitHubNugetPackageV1/    @v-nmursapall @rvairavelu
+Tasks/DownloadGitHubNugetPackageV1/    @manolerazvan @rvairavelu
 
-Tasks/DownloadGitHubReleaseV0/    @v-nmursapall @rvairavelu
+Tasks/DownloadGitHubReleaseV0/    @manolerazvan @rvairavelu
 
 Tasks/DownloadPackageV0/       @microsoft/azure-artifacts-packages
 
@@ -275,11 +277,13 @@ Tasks/InvokeRestApiV1/     @rvairavelu @manolerazvan
 
 Tasks/JavaToolInstallerV0/     @microsoft/akvelon-build-task-team
 
-Tasks/JenkinsDownloadArtifactsV1/    @v-nmursapall @rvairavelu
+Tasks/JenkinsDownloadArtifactsV1/    @manolerazvan @rvairavelu
 
 Tasks/JenkinsQueueJobV2/   @microsoft/akvelon-build-task-team
 
 Tasks/KubectlInstallerV0/  @rvairavelu @manolerazvan
+
+Tasks/KubeloginInstallerV0/  @YevheniiKholodkov @manolerazvan
 
 Tasks/KubernetesV0/    @rvairavelu @manolerazvan
 

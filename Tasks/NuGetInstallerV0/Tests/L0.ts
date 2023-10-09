@@ -20,11 +20,9 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    }).timeout(20000);;
+    }).timeout(20000);
 
     it('restore single solution with CredentialProvider', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, 'singleslnCredentialProvider.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -35,14 +33,12 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.stdout.indexOf('credProviderPath = ') >= 0, "should have found credential provider path");
         assert(tr.succeeded, 'should have succeeded');
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
-        assert.equal(tr.warningIssues.length, 0, "should have no warnings");
+        assert.equal(tr.warningIssues[0], 'This task will be deprecated soon', "should have deprecation warning");
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(20000);
     
     it('restore packages.config', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, 'pkgconfig.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -54,11 +50,9 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });   
+    }).timeout(20000);   
     
     it('restore single solution with noCache', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, 'singleslnNoCache.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -70,11 +64,9 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(20000);
 	
     it('restore single solution with extra args', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, 'singleslnExtraArgs.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -86,7 +78,7 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(20000);
     
     it('restore single solution with nuget config', (done: Mocha.Done) => {
         this.timeout(1000);
@@ -103,11 +95,9 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(20000);
 
     it('restore single solution, custom NuGet path, hosted', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, 'singleslnCustomPath.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -119,11 +109,9 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(20000);
 
     it('restore multiple solutions', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, 'multiplesln.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -136,11 +124,9 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.invokedToolCount == 2, 'should have run NuGet twice');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(20000);
     
     it('restore single solution mono', (done: Mocha.Done) => {
-        this.timeout(1000);
-
         let tp = path.join(__dirname, 'singleslnMono.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -151,5 +137,5 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(20000);
 });

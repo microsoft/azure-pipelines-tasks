@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 221,
-    "Patch": 0
+    "Minor": 229,
+    "Patch": 1
   },
   "demands": [
     "azureps"
@@ -306,7 +306,6 @@
     "AFC_AzCopyBlobUploadNonZeroExitCode": "ms-resource:loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode",
     "AFC_PreexecutionJob_UnableToGetStorageKey": "ms-resource:loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey",
     "AFC_UninstallWinRMCustomScriptExtension": "ms-resource:loc.messages.AFC_UninstallWinRMCustomScriptExtension",
-    "AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "ms-resource:loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   }
 }

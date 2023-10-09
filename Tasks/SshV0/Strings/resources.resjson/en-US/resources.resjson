@@ -34,5 +34,6 @@
   "loc.messages.RemoteScriptFileCleanUpFailed": "Failed to delete the script file copied to the remote machine. Error = %s.",
   "loc.messages.SettingUpSshConnection": "Trying to establish an SSH connection to %s@%s:%s",
   "loc.messages.SshConnectionSuccessful": "Successfully connected.",
-  "loc.messages.UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified."
+  "loc.messages.UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
 }

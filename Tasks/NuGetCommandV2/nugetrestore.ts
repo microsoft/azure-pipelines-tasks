@@ -14,6 +14,7 @@ import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import INuGetCommandOptions from "azure-pipelines-tasks-packaging-common/nuget/INuGetCommandOptions2";
 import { getProjectAndFeedIdFromInputParam } from "azure-pipelines-tasks-packaging-common/util";
 import { logError } from "azure-pipelines-tasks-packaging-common/util";
+import { getVersionFallback } from "azure-pipelines-tasks-packaging-common/nuget/ProductVersionHelper";
 
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
@@ -178,7 +179,7 @@ export async function run(nuGetPath: string): Promise<void> {
                     isNugetOrgBehaviorWarn = true;
                 }
 
-                const nuGetSource: auth.IPackageSource = nuGetVersion.productVersion.a < 3
+                const nuGetSource: auth.IPackageSource = getVersionFallback(nuGetVersion).a < 3
                                         ? auth.NuGetOrgV2PackageSource
                                         : auth.NuGetOrgV3PackageSource;
                 sources.push(nuGetSource);

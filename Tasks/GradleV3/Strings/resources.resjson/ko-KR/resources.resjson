@@ -93,5 +93,6 @@
   "loc.messages.InvalidBuildFile": "잘못되거나 지원되지 않는 빌드 파일입니다.",
   "loc.messages.FileNotFound": "파일 또는 폴더가 없음: %s",
   "loc.messages.FailedToAppendCC": "코드 검사 데이터를 추가할 수 없음: %s",
-  "loc.messages.NoTestResults": "%s과(와) 일치하는 테스트 결과 파일을 찾을 수 없으므로 JUnit 테스트 결과 게시를 건너뜁니다."
+  "loc.messages.NoTestResults": "%s과(와) 일치하는 테스트 결과 파일을 찾을 수 없으므로 JUnit 테스트 결과 게시를 건너뜁니다.",
+  "loc.messages.chmodGradlew": "gradlew 파일을 실행 가능하게 만들기 위해 'chmod' 메소드를 사용했습니다."
 }

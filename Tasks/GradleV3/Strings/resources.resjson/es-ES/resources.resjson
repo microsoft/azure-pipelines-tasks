@@ -93,5 +93,6 @@
   "loc.messages.InvalidBuildFile": "Archivo de compilación incompatible o no válido",
   "loc.messages.FileNotFound": "El archivo o la carpeta no existen: %s",
   "loc.messages.FailedToAppendCC": "No se pueden anexar los datos de cobertura de código: %s",
-  "loc.messages.NoTestResults": "No se han encontrado archivos de resultados de pruebas que coincidan con %s, por lo que se omite la publicación de los resultados de las pruebas JUnit."
+  "loc.messages.NoTestResults": "No se han encontrado archivos de resultados de pruebas que coincidan con %s, por lo que se omite la publicación de los resultados de las pruebas JUnit.",
+  "loc.messages.chmodGradlew": "Se usó el método \"chmod\" para el archivo gradlew para convertirlo en ejecutable."
 }

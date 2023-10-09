@@ -3,7 +3,7 @@
   "name": "AzureSpringCloud",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/azurespringcloud",
+  "helpUrl": "https://aka.ms/azurespringapps",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -18,7 +18,7 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 220,
+    "Minor": 227,
     "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
@@ -303,7 +303,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {
-      "target": "azurespringclouddeployment.js"
+      "target": "azurespringappsdeployment.js"
     }
   },
   "messages": {
@@ -327,8 +327,8 @@
     "UnableToRetrieveTestEndpointKeys": "ms-resource:loc.messages.UnableToRetrieveTestEndpointKeys",
     "NoDeploymentsExist": "ms-resource:loc.messages.NoDeploymentsExist",
     "UnableToGetDeploymentInformation": "ms-resource:loc.messages.UnableToGetDeploymentInformation",
-    "DuplicateAzureSpringCloudName": "ms-resource:loc.messages.DuplicateAzureSpringCloudName",
-    "InvalidAzureSpringCloudResourceId": "ms-resource:loc.messages.InvalidAzureSpringCloudResourceId",
+    "DuplicateAzureSpringAppsName": "ms-resource:loc.messages.DuplicateAzureSpringAppsName",
+    "InvalidAzureSpringAppsResourceId": "ms-resource:loc.messages.InvalidAzureSpringAppsResourceId",
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
     "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern"
   }

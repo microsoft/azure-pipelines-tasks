@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Pubblica risultati di code coverage",
-  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.friendlyName": "Pubblicare risultati code coverage v2",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2?view=azure-pipelines)",
   "loc.description": "Pubblica i risultati del code coverage restituiti da una compilazione",
   "loc.instanceNameFormat": "Pubblica risultati di code coverage",
   "loc.input.label.summaryFileLocation": "Percorso dei file di riepilogo",

@@ -9,12 +9,12 @@
     "author": "ms-vscs-rm",
     "version": {
         "Major": 1,
-        "Minor": 220,
+        "Minor": 227,
         "Patch": 0
     },
     "demands": [],
     "releaseNotes": "Adds support to download Maven, Python, Universal and Npm packages.",
-    "minimumAgentVersion": "2.115.0",
+    "minimumAgentVersion": "2.144.0",
     "groups": [
         {
             "name": "advancedOptions",
@@ -168,6 +168,10 @@
         "Node10": {
             "target": "main.js",
             "argumentFormat": ""
+        },
+        "Node16": {
+            "target": "main.js",
+            "argumentFormat": ""
         }
     },
     "messages": {
@@ -178,6 +182,7 @@
         "StartingDownloadOfPackage": "Starting download of package %s to location %s",
         "ExtractingPackage": "Extracting package %s to directory %s",
         "PackageTypeNotSupported": "Only Nuget, Python, Universal, Npm, and Maven packages types can be downloaded using this task.",
+        "SkippingFileWithNoContent": "Skipping file %s as no supported content could be found",
         "ExtractionFailed": "Failed to extract package with error %s",
         "RetryingOperation": "Operation failed, waiting %sms before retrying, retries remaining: %s",
         "RedirectUrlError": "Unable to get redirect URL with error %.",

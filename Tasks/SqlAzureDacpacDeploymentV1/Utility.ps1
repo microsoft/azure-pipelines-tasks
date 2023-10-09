@@ -39,12 +39,15 @@ function Create-AzureSqlDatabaseServerFirewallRule {
     param([String] [Parameter(Mandatory = $true)] $startIp,
         [String] [Parameter(Mandatory = $true)] $endIp,
         [String] [Parameter(Mandatory = $true)] $serverName,
-        [Object] [Parameter(Mandatory = $true)] $endpoint)
+        [Object] [Parameter(Mandatory = $true)] $endpoint,
+        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM,
+        [string] [Parameter(Mandatory = $false)] $vstsAccessToken)
 
     [HashTable]$FirewallSettings = @{}
     $firewallRuleName = [System.Guid]::NewGuid().ToString()
 
-    Add-AzureSqlDatabaseServerFirewallRule -endpoint $endpoint -startIPAddress $startIp -endIPAddress $endIp -serverName $serverName -firewallRuleName $firewallRuleName | Out-Null
+    Add-AzureSqlDatabaseServerFirewallRule -endpoint $endpoint -startIPAddress $startIp -endIPAddress $endIp -serverName $serverName `
+        -firewallRuleName $firewallRuleName -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $vstsAccessToken | Out-Null
 
     $FirewallSettings.IsConfigured = $true
     $FirewallSettings.RuleName = $firewallRuleName
@@ -57,10 +60,13 @@ function Delete-AzureSqlDatabaseServerFirewallRule {
         [String] [Parameter(Mandatory = $true)] $firewallRuleName,
         [String] $isFirewallConfigured,
         [String] [Parameter(Mandatory = $true)] $deleteFireWallRule,
-        [Object] [Parameter(Mandatory = $true)] $endpoint)
+        [Object] [Parameter(Mandatory = $true)] $endpoint,
+        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM,
+        [string] [Parameter(Mandatory = $false)] $vstsAccessToken)
 
     if ($deleteFireWallRule -eq "true" -and $isFirewallConfigured -eq "true") {
-        Remove-AzureSqlDatabaseServerFirewallRule -serverName $serverName -firewallRuleName $firewallRuleName -endpoint $endpoint
+        Remove-AzureSqlDatabaseServerFirewallRule -serverName $serverName -firewallRuleName $firewallRuleName -endpoint $endpoint `
+            -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
     }
 }
 

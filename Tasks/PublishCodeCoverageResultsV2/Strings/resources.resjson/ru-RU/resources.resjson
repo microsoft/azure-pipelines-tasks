@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Опубликовать результаты оценки объема протестированного кода",
-  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.friendlyName": "Публикация результатов объема протестированного кода версии 2",
+  "loc.helpMarkDown": "[Подробнее об этой задаче](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2?view=azure-pipelines)",
   "loc.description": "Публикация результатов для объема протестированного кода из сборки",
   "loc.instanceNameFormat": "Опубликовать результаты оценки объема протестированного кода",
   "loc.input.label.summaryFileLocation": "Путь к сводным файлам",

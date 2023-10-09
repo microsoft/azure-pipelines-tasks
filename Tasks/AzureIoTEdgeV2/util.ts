@@ -81,7 +81,7 @@ export default class Util {
 
     let cmds: Cmd[] = [];
     let edgeDevVersion = Constants.iotedgedevDefaultVersion;
-    let lockSimVersion = tl.getVariable(Constants.iotedgehubdevLockVersionKey); 
+    let lockSimVersion = tl.getVariable(Constants.iotedgehubdevLockVersionKey);
     // if no version is specified, iotedgedev installs default simulator version
 
     let lockVersion = tl.getVariable(Constants.iotedgedevLockVersionKey);

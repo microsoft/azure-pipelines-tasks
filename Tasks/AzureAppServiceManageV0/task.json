@@ -1,436 +1,440 @@
 {
-    "id": "f045e430-8704-11e6-968f-e717e6411619",
-    "name": "AzureAppServiceManage",
-    "friendlyName": "Azure App Service manage",
-    "description": "Start, stop, restart, slot swap, slot delete, install site extensions or enable continuous monitoring for an Azure App Service",
-    "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-app-service-manage",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=831573)",
-    "category": "Deploy",
-    "visibility": [
-        "Build",
-        "Release"
-    ],
-    "runsOn": [
-        "Agent",
-        "DeploymentGroup"
-    ],
-    "demands": [],
-    "version": {
-        "Major": 0,
-        "Minor": 220,
-        "Patch": 0
-    },
-    "minimumAgentVersion": "1.102.0",
-    "instanceNameFormat": "$(Action): $(WebAppName)",
-    "groups": [
-        {
-            "name": "AdvancedSettings",
-            "displayName": "Advanced Settings",
-            "isExpanded": false,
-            "visibleRule": "Action == Enable Continuous Monitoring"
-        }
-    ],
-    "inputs": [
-        {
-            "name": "ConnectedServiceName",
-            "aliases": [
-                "azureSubscription"
-            ],
-            "type": "connectedService:AzureRM",
-            "label": "Azure subscription",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Select the Azure Resource Manager subscription"
-        },
-        {
-            "name": "Action",
-            "type": "pickList",
-            "label": "Action",
-            "required": false,
-            "helpMarkDown": "Action to be performed on the App Service. You can Start, Stop, Restart, Slot swap, Install site extensions or enable Continuous Monitoring for an Azure App Service",
-            "defaultValue": "Swap Slots",
-            "options": {
-                "Swap Slots": "Swap Slots",
-                "Start Azure App Service": "Start App Service",
-                "Stop Azure App Service": "Stop App Service",
-                "Restart Azure App Service": "Restart App Service",
-                "Start Swap With Preview": "Start Swap with Preview",
-                "Complete Swap": "Complete Swap With Preview",
-                "Cancel Swap": "Cancel Swap With Preview",
-                "Delete Slot": "Delete Slot",
-                "Install Extensions": "Install Extensions",
-                "Enable Continuous Monitoring": "Enable Continuous Monitoring",
-                "Start all continuous webjobs": "Start All Continuous Webjobs",
-                "Stop all continuous webjobs": "Stop All Continuous Webjobs"
-            }
-        },
-        {
-            "name": "WebAppName",
-            "type": "pickList",
-            "label": "App Service name",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "Enter or select the name of an existing Azure App Service"
-        },
-        {
-            "name": "SpecifySlot",
-            "aliases": [
-                "SpecifySlotOrASE"
-            ],
-            "type": "boolean",
-            "label": "Specify Slot or App Service Environment",
-            "defaultValue": "false",
-            "required": false,
-            "visibleRule": "Action != Swap Slots && Action != Delete Slot && Action != Start Swap With Preview && Action != Complete Swap && Action != Cancel Swap"
-        },
-        {
-            "name": "ResourceGroupName",
-            "type": "pickList",
-            "label": "Resource group",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above",
-            "visibleRule": "Action = Swap Slots || Action = Delete Slot || SpecifySlot = true || Action = Start Swap With Preview || Action = Complete Swap || Action = Cancel Swap"
-        },
-        {
-            "name": "SourceSlot",
-            "type": "pickList",
-            "label": "Source Slot",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "The swap action directs destination slot's traffic to the source slot",
-            "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview  || Action = Complete Swap"
-        },
-        {
-            "name": "SwapWithProduction",
-            "type": "boolean",
-            "label": "Swap with Production",
-            "defaultValue": "true",
-            "required": false,
-            "helpMarkDown": "Select the option to swap the traffic of source slot with production. If this option is not selected, then you will have to provide source and target slot names.",
-            "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview  || Action = Complete Swap"
-        },
-        {
-            "name": "TargetSlot",
-            "type": "pickList",
-            "label": "Target Slot",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "The swap action directs destination slot's traffic to the source slot",
-            "visibleRule": "SwapWithProduction = false"
-        },
-        {
-            "name": "PreserveVnet",
-            "type": "boolean",
-            "label": "Preserve Vnet",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Preserve the Virtual network settings",
-            "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview || Action = Complete Swap"
-        },
-        {
-            "name": "Slot",
-            "type": "pickList",
-            "label": "Slot",
-            "defaultValue": "production",
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "required": true,
-            "visibleRule": "Action = Delete Slot || Action = Cancel Swap || SpecifySlot = true"
-        },
-        {
-            "name": "ExtensionsList",
-            "type": "pickList",
-            "label": "Install Extensions",
-            "defaultValue": "",
-            "properties": {
-                "EditableOptions": "True",
-                "MultiSelectFlatList": "True"
-            },
-            "required": "True",
-            "visibleRule": "Action = Install Extensions",
-            "helpMarkDown": "Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension and better manage your Azure App Service. The  App Service will be restarted to make sure latest changes take effect."
-        },
-        {
-            "name": "OutputVariable",
-            "type": "string",
-            "label": "Output variable",
-            "defaultValue": "",
-            "properties": {
-                "Disabled": "True"
-            },
-            "visibleRule": "Action = Install Extensions",
-            "helpMarkDown": "Provide the variable name for the local installation path for the selected extension.<br/>This field is now deprecated and would be removed. Use LocalPathsForInstalledExtensions variable from Output Variables section in subsequent tasks."
-        },
-        {
-            "name": "AppInsightsResourceGroupName",
-            "type": "pickList",
-            "label": "Resource Group name for Application Insights",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "visibleRule": "Action == Enable Continuous Monitoring",
-            "helpMarkDown": "Enter or Select resource group where your application insights resource is available"
-        },
-        {
-            "name": "ApplicationInsightsResourceName",
-            "type": "pickList",
-            "label": "Application Insights resource name",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True",
-                "EnableManage": "True",
-                "ManageLink": "https://ms.portal.azure.com/#create/Microsoft.AppInsights",
-                "ManageIcon": "Add",
-                "ManageButtonName": "New"
-            },
-            "visibleRule": "Action == Enable Continuous Monitoring",
-            "helpMarkDown": "Select Application Insights resource where continuous monitoring data will be recorded. <br/>If your application insights resource is not listed here and you want to create a new resource, click on [+New] button. Once the resource is created on Azure Portal, come back here and click on refresh button."
-        },
-        {
-            "name": "ApplicationInsightsWebTestName",
-            "type": "string",
-            "label": "Application Insights web test name",
-            "groupName": "AdvancedSettings",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Enter Application Insights Web Test name to be created or updated. <br/>If not provided, the default test name will be used."
-        }
-    ],
-    "outputVariables": [
-        {
-            "name": "LocalPathsForInstalledExtensions",
-            "description": "The local installation paths for the selected extensions for installation. <br/>Note: In case multiple extensions are selected for installation, the output is a comma separated list of local paths for each of the selected extension in the order they appear in the Install Extensions field."
-        }
-    ],
-    "dataSourceBindings": [
-        {
-            "target": "WebAppName",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureRMWebAppNames"
-        },
-        {
-            "target": "ResourceGroupName",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureRMWebAppResourceGroup",
-            "parameters": {
-                "WebAppName": "$(WebAppName)"
-            }
-        },
-        {
-            "target": "AppInsightsResourceGroupName",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureResourceGroups"
-        },
-        {
-            "target": "ApplicationInsightsResourceName",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureRMApplicationInsightsResources",
-            "parameters": {
-                "AppInsightsResourceGroupName": "$(AppInsightsResourceGroupName)"
-            }
-        },
-        {
-            "target": "Slot",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureRMWebAppSlotsId",
-            "parameters": {
-                "WebAppName": "$(WebAppName)",
-                "ResourceGroupName": "$(ResourceGroupName)"
-            },
-            "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
-        },
-        {
-            "target": "SourceSlot",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureRMWebAppSlotsId",
-            "parameters": {
-                "WebAppName": "$(WebAppName)",
-                "ResourceGroupName": "$(ResourceGroupName)"
-            },
-            "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
-        },
-        {
-            "target": "TargetSlot",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureRMWebAppSlotsId",
-            "parameters": {
-                "WebAppName": "$(WebAppName)",
-                "ResourceGroupName": "$(ResourceGroupName)"
-            },
-            "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
-        },
-        {
-            "target": "ExtensionsList",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureSiteExtensions",
-            "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{ #stringReplace '\".' '' title}}}\"}"
-        }
-    ],
-    "execution": {
-        "Node10": {
-            "target": "azureappservicemanage.js"
-        }
-    },
-    "messages": {
-        "ErrorNoSuchDeployingMethodExists": "Error : Deploy method MSDeploy does not exists for Azure Web App: %s",
-        "Successfullyupdatedslotswaphistory": "Successfully updated slot swap history at %s for Azure Web App : %s",
-        "Failedtoupdateslotswaphistory": "Failed to update slot swap history for Azure Web App : %s",
-        "WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update slot swap status : SCM (Source Control Manager) endpoint is not enabled for this Azure Web App",
-        "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update Kudu deployment log as unique deployment ID cannot be retrieved for this Azure Web App",
-        "FailedToSwapWebAppSlots": "Failed to swap slots for Azure Web App: %s. Error: %s",
-        "SlotSwapOperationNotCompleted": "Slot swap operation was not completed for Azure Web App: %s",
-        "Successfullyswappedslots": "Successfully swapped web app %s slots from %s to %s",
-        "SourceAndTargetSlotCannotBeSame": "Source and target slot cannot be same",
-        "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
-        "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
-        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve service connection details for Azure App Service: %s. Status Code: %s (%s)",
-        "StartingAppService": "Starting App Service : %s",
-        "AppServicestartedsuccessfully": "App Service '%s' started successfully",
-        "FailedtoStartAppService": "Failed to start App Service for '%s'. Response Code : %s",
-        "StoppingAppService": "Stopping App Service : %s",
-        "AppServicestoppedsuccessfully": "App Service '%s' stopped successfully",
-        "FailedtoStopAppService": "Failed to stop App Service for '%s'. Response Code : %s",
-        "RestartingAppService": "Restarting App Service : %s",
-        "AppServiceRestartedSuccessfully": "App Service '%s' restarted successfully",
-        "FailedtoRestartAppService": "Failed to restart App Service for '%s'. Response Code : %s",
-        "RestartAppServiceAccepted": "Restart request accepted by App Service : %s",
-        "InvalidAction": "Invalid Action selected !",
-        "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING: Cannot update deployment status. SCM endpoint is not enabled for this website.",
-        "WebAppDoesntExist": "Web app '%s' doesn't exist.",
-        "UnabletoretrieveWebAppID": "Unable to retrieve service connection details for Azure App Service:'%s'. Status Code: %s",
-        "StartingSwapSlot": "Requesting swap slot for Web App : %s",
-        "ExtensionInstallFailedError": "Failed to install extension: '%s'. Error: %s",
-        "ExtensionInstallFailedResponseError": "Failed to install extension '%s'. Status Code: %s",
-        "ExtensionInstallSuccess": "Successfully installed extension '%s' in Azure App Service.",
-        "ExtensionAlreadyAvaiable": "Extension '%s' already available in Azure App Service.",
-        "ExtensionListFailedError": "Failed to retrieve list of extensions installed in Azure App Service. Error %s.",
-        "ExtensionListFailedResponseError": "Failed to retrieve list of extensions installed in Azure App Service. Status Code: %s",
-        "FailedToFetchAppServiceState": "Failed to fetch App Service State for App Service: %s, Error Code: %s",
-        "UnableToFetchAuthorityURL": "Unable to fetch authority URL.",
-        "UnableToFetchActiveDirectory": "Unable to fetch Active Directory resource ID.",
-        "UnableToGetAppInsightsResource": "Unable to get Application Insights resource with name : %s",
-        "UnableToIdentifyResourceGroupNameForAppInsightsResource": "Unable to identify resource group name for Application Insights resource : %s",
-        "FailedToConfigureAlwaysOnProperty": "Failed to configure always on property.",
-        "SuccessfullyConfiguredAppInsights": "Successfully Configured Application Insights",
-        "UnableToConfigureWebTest": "Unable to configure web test for Application Insights resource : %s",
-        "UnableToConfigureInstrumentationKeyForAppService": "Unable to configure instrumentation key for app service: %s",
-        "UnableToReadResponseBody": "Unable to read response body. Error: %s",
-        "UnableToUpdateWebAppConfigDetails": "Unable to update WebApp config details. StatusCode: '%s'",
-        "ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
-        "UnableToFetchContinuousWebJobs": "Unable to fetch continuous web jobs",
-        "UnableToStartContinuousWebJob": "Unable to start continuous web job",
-        "UnableToStopContinuousWebJob": "Unable to stop continuous web job",
-        "AppNameCannotBeNull": "App name cannot be null or undefined and it must be of type string.",
-        "SlotNameCannotBeNull": "Slot name cannot be null or undefined and it must be of type string.",
-        "SourceSlotNameCannotBeNull": "Source slot name cannot be null or undefined and it must be of type string.",
-        "DestinationSlotNameCannotBeNull": "Destination slot name cannot be null or undefined and it must be of type string.",
-        "ResourceGroupNotFound": "Resource group for '%s' App Service not found.",
-        "ResourceTypeCannotBeNull": "Resource type cannot be null or undefined and it must be of type string.",
-        "StartedAppService": "App Service '%s' started successfully.",
-        "StartedAppServiceSlot": "App Service '%s-%s' started successfully.",
-        "FailedToStartAppService": "Failed to start App Service '%s'. Error: %s",
-        "FailedToStartAppServiceSlot": "Failed to start App Service '%s-%s'. Error: %s",
-        "StoppingAppServiceSlot": "Stopping App Service: %s-%s",
-        "StoppedAppService": "App Service '%s' stopped successfully.",
-        "StoppedAppServiceSlot": "App Service '%s-%s' stopped successfully.",
-        "FailedToStopAppService": "Failed to start App Service '%s'. Error: %s",
-        "FailedToStopAppServiceSlot": "Failed to start App Service '%s-%s'. Error: %s",
-        "RestartingAppServiceSlot": "Restarting App Service: %s-%s",
-        "RestartedAppService": "App Service '%s' restarted successfully.",
-        "RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
-        "FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
-        "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s",
-        "FailedToGetAppServiceDetails": "Failed to fetch App Service '%s' details. Error: %s",
-        "FailedToGetAppServiceDetailsSlot": "Failed to fetch App Service '%s-%s' details. Error: %s",
-        "AppServiceState": "App Service is in '%s' state.",
-        "InvalidMonitorAppState": "Invalid state '%s' provided for monitoring app state",
-        "FailedToGetAppServicePublishingProfile": "Failed to fetch App Service '%s' publishing profile. Error: %s",
-        "FailedToGetAppServicePublishingProfileSlot": "Failed to fetch App Service '%s-%s' publishing profile. Error: %s",
-        "FailedToSwapAppServiceSlotWithProduction": "Failed to swap App Service '%s' slots - 'production' and '%s'. Error: %s",
-        "FailedToSwapAppServiceSlotSlots": "Failed to swap App Service '%s' slots - '%s' and '%s'. Error: %s",
-        "SwappingAppServiceSlotWithProduction": "Swapping App Service '%s' slots - 'production' and '%s'",
-        "SwappingAppServiceSlotSlots": "Swapping App Service '%s' slots - '%s' and '%s'",
-        "SwappedAppServiceSlotWithProduction": "Swapped App Service '%s' slots - 'production' and '%s'",
-        "SwappedAppServiceSlotSlots": "Swapped App Service '%s' slots - '%s' and '%s'",
-        "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
-        "FailedToGetAppServicePublishingCredentialsSlot": "Failed to fetch App Service '%s-%s' publishing credentials. Error: %s",
-        "WarmingUpSlots": "Warming-up slots",
-        "DeploymentIDCannotBeNull": "Deployment ID cannot be null or empty.",
-        "DeploymentDataEntityCannotBeNull": "Deployment data entity cannot be null or undefined.",
-        "SiteExtensionInstalled": "Site extension '%s' installed.",
-        "FailedToInstallSiteExtension": "Failed to install site extension '%s'. Error: %s",
-        "JobNameCannotBeNull": "Job name cannot be null or empty.",
-        "SiteExtensionCannotBeNull": "Site extension name cannot be null or empty.",
-        "TestNameCannotBeNull": "Test name cannot be null or undefined and it must be of type string.",
-        "TestDefinitionCannotBeNull": "Test definition cannot be null or undefined.",
-        "AppInsightsPropertiesCannotBeNullOrEmpty": "Application Insights properties cannot be null or undefined.",
-        "SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRM service connection is invalid: %s",
-        "FailedToFetchAzureStackDependencyData": "Failed to fetch Azure stack dependency data. Status code: %s",
-        "FailedToGetApplicationInsightsResource": "Failed to get Application Insights '%s' Resource. Error: %s",
-        "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
-        "FailedToGetApplicationInsightsWebTestsForResourceGroup": "Failed to get Application Insights Web TestsFor Resource Group '%s'. Error: %s",
-        "FailedToCreateWebTests": "Failed to create Web Test. Error: %s",
-        "WebTestAlreadyConfigured": "Web Test already configured for URL: %s",
-        "FailedToGetAppServiceConfiguration": "Failed to get App service '%s' configuration. Error: %s",
-        "FailedToGetAppServiceConfigurationSlot": "Failed to get App service '%s-%s' configuration. Error: %s",
-        "FailedToUpdateAppServiceConfiguration": "Failed to update App service '%s' configuration. Error: %s",
-        "FailedToUpdateAppServiceConfigurationSlot": "Failed to update App service '%s-%s' configuration. Error: %s",
-        "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
-        "FailedToGetAppServiceApplicationSettingsSlot": "Failed to get App service '%s-%s' application settings. Error: %s",
-        "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
-        "FailedToUpdateAppServiceApplicationSettingsSlot": "Failed to update App service '%s-%s' application settings. Error: %s",
-        "KuduSCMDetailsAreEmpty": "KUDU SCM details are empty",
-        "FailedToGetContinuousWebJobs": "Failed to get continuous WebJobs. Error: %s",
-        "FailedToStartContinuousWebJob": "Failed to start continuous WebJob '%s'. Error: %s",
-        "FailedToStopContinuousWebJob": "Failed to stop continuous WebJob '%s'. Error: %s",
-        "FailedToGetSiteExtensions": "Failed to get site extensions. Error: %s",
-        "FailedToGetAllSiteExtensions": "Failed to get extension feed. Error: %s",
-        "ExtensionAlreadyInstalled": "Extension '%s' already installed.",
-        "InstallingSiteExtension": "Installing site Extension '%s'",
-        "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
-        "ContinousMonitoringEnabled": "Continuous Monitoring enabled for App Service '%s'.",
-        "EnablingContinousMonitoring": "Enabling continuous Monitoring for App Service '%s'.",
-        "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
-        "StartingContinousWebJobs": "Starting continuous WebJobs",
-        "StartedContinousWebJobs": "Started continuous WebJobs.",
-        "StoppingContinousWebJobs": "Stopping continuous WebJobs.",
-        "StoppedContinousWebJobs": "Stopped continuous WebJobs.",
-        "FailedToEnableContinuousMonitoring": "Failed to enable continuous monitoring. Error: %s",
-        "InvalidSlotSwapEntity": "Invalid Slot swap entity. Error: %s",
-        "FailedToUpdateDeploymentHistory": "Failed to update Deployment status. Error: %s",
-        "StartingWebJob": "Starting WebJob '%s'.",
-        "StartedWebJob": "WebJob '%s' started.",
-        "WebJobAlreadyInRunningState": "WebJob '%s' is already in running state.",
-        "StoppingWebJob": "Stopping WebJob '%s'.",
-        "StoppedWebJob": "WebJob '%s' stopped.",
-        "WebJobAlreadyInStoppedState": "WebJob '%s' is already in stopped state.",
-        "RestartingKuduService": "Restarting Kudu Service.",
-        "RestartedKuduService": "Kudu Service restarted.",
-        "FailedToRestartKuduService": "Failed to restart kudu Service. %s.",
-        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
-        "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
-        "ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your Web App gives you certificate validation errors, you're probably using a self-signed certificate. To resolve such errors, you must set a variable named `VSTS_ARM_REST_IGNORE_SSL_ERRORS` to the value `true` in the build or release pipeline.",
-        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
-        "SwapWithPreviewNotsupported": "Swap with preview isn't supported for Linux webapps and Container webapps.",
-        "InvalidActionForPublishProfileEndpoint": "Invalid Action selected to use with publish profile endpoint!. Supported actions are 'Start/Stop all continuous webjobs' & 'Install Extensions'"
+  "id": "f045e430-8704-11e6-968f-e717e6411619",
+  "name": "AzureAppServiceManage",
+  "friendlyName": "Azure App Service manage",
+  "description": "Start, stop, restart, slot swap, slot delete, install site extensions or enable continuous monitoring for an Azure App Service",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-app-service-manage",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=831573)",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [],
+  "version": {
+    "Major": 0,
+    "Minor": 228,
+    "Patch": 1
+  },
+  "minimumAgentVersion": "1.102.0",
+  "instanceNameFormat": "$(Action): $(WebAppName)",
+  "groups": [
+    {
+      "name": "AdvancedSettings",
+      "displayName": "Advanced Settings",
+      "isExpanded": false,
+      "visibleRule": "Action == Enable Continuous Monitoring"
     }
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure subscription",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Select the Azure Resource Manager subscription"
+    },
+    {
+      "name": "Action",
+      "type": "pickList",
+      "label": "Action",
+      "required": false,
+      "helpMarkDown": "Action to be performed on the App Service. You can Start, Stop, Restart, Slot swap, Install site extensions or enable Continuous Monitoring for an Azure App Service",
+      "defaultValue": "Swap Slots",
+      "options": {
+        "Swap Slots": "Swap Slots",
+        "Start Azure App Service": "Start App Service",
+        "Stop Azure App Service": "Stop App Service",
+        "Restart Azure App Service": "Restart App Service",
+        "Start Swap With Preview": "Start Swap with Preview",
+        "Complete Swap": "Complete Swap With Preview",
+        "Cancel Swap": "Cancel Swap With Preview",
+        "Delete Slot": "Delete Slot",
+        "Install Extensions": "Install Extensions",
+        "Enable Continuous Monitoring": "Enable Continuous Monitoring",
+        "Start all continuous webjobs": "Start All Continuous Webjobs",
+        "Stop all continuous webjobs": "Stop All Continuous Webjobs"
+      }
+    },
+    {
+      "name": "WebAppName",
+      "type": "pickList",
+      "label": "App Service name",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Enter or select the name of an existing Azure App Service"
+    },
+    {
+      "name": "SpecifySlot",
+      "aliases": [
+        "SpecifySlotOrASE"
+      ],
+      "type": "boolean",
+      "label": "Specify Slot or App Service Environment",
+      "defaultValue": "false",
+      "required": false,
+      "visibleRule": "Action != Swap Slots && Action != Delete Slot && Action != Start Swap With Preview && Action != Complete Swap && Action != Cancel Swap"
+    },
+    {
+      "name": "ResourceGroupName",
+      "type": "pickList",
+      "label": "Resource group",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above",
+      "visibleRule": "Action = Swap Slots || Action = Delete Slot || SpecifySlot = true || Action = Start Swap With Preview || Action = Complete Swap || Action = Cancel Swap"
+    },
+    {
+      "name": "SourceSlot",
+      "type": "pickList",
+      "label": "Source Slot",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "The swap action directs destination slot's traffic to the source slot",
+      "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview  || Action = Complete Swap"
+    },
+    {
+      "name": "SwapWithProduction",
+      "type": "boolean",
+      "label": "Swap with Production",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Select the option to swap the traffic of source slot with production. If this option is not selected, then you will have to provide source and target slot names.",
+      "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview  || Action = Complete Swap"
+    },
+    {
+      "name": "TargetSlot",
+      "type": "pickList",
+      "label": "Target Slot",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "The swap action directs destination slot's traffic to the source slot",
+      "visibleRule": "SwapWithProduction = false"
+    },
+    {
+      "name": "PreserveVnet",
+      "type": "boolean",
+      "label": "Preserve Vnet",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Preserve the Virtual network settings",
+      "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview || Action = Complete Swap"
+    },
+    {
+      "name": "Slot",
+      "type": "pickList",
+      "label": "Slot",
+      "defaultValue": "production",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "required": true,
+      "visibleRule": "Action = Delete Slot || Action = Cancel Swap || SpecifySlot = true"
+    },
+    {
+      "name": "ExtensionsList",
+      "type": "pickList",
+      "label": "Install Extensions",
+      "defaultValue": "",
+      "properties": {
+        "EditableOptions": "True",
+        "MultiSelectFlatList": "True"
+      },
+      "required": "True",
+      "visibleRule": "Action = Install Extensions",
+      "helpMarkDown": "Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension and better manage your Azure App Service. The  App Service will be restarted to make sure latest changes take effect."
+    },
+    {
+      "name": "OutputVariable",
+      "type": "string",
+      "label": "Output variable",
+      "defaultValue": "",
+      "properties": {
+        "Disabled": "True"
+      },
+      "visibleRule": "Action = Install Extensions",
+      "helpMarkDown": "Provide the variable name for the local installation path for the selected extension.<br/>This field is now deprecated and would be removed. Use LocalPathsForInstalledExtensions variable from Output Variables section in subsequent tasks."
+    },
+    {
+      "name": "AppInsightsResourceGroupName",
+      "type": "pickList",
+      "label": "Resource Group name for Application Insights",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "Action == Enable Continuous Monitoring",
+      "helpMarkDown": "Enter or Select resource group where your application insights resource is available"
+    },
+    {
+      "name": "ApplicationInsightsResourceName",
+      "type": "pickList",
+      "label": "Application Insights resource name",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True",
+        "EnableManage": "True",
+        "ManageLink": "https://ms.portal.azure.com/#create/Microsoft.AppInsights",
+        "ManageIcon": "Add",
+        "ManageButtonName": "New"
+      },
+      "visibleRule": "Action == Enable Continuous Monitoring",
+      "helpMarkDown": "Select Application Insights resource where continuous monitoring data will be recorded. <br/>If your application insights resource is not listed here and you want to create a new resource, click on [+New] button. Once the resource is created on Azure Portal, come back here and click on refresh button."
+    },
+    {
+      "name": "ApplicationInsightsWebTestName",
+      "type": "string",
+      "label": "Application Insights web test name",
+      "groupName": "AdvancedSettings",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Enter Application Insights Web Test name to be created or updated. <br/>If not provided, the default test name will be used."
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "LocalPathsForInstalledExtensions",
+      "description": "The local installation paths for the selected extensions for installation. <br/>Note: In case multiple extensions are selected for installation, the output is a comma separated list of local paths for each of the selected extension in the order they appear in the Install Extensions field."
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "WebAppName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppNames"
+    },
+    {
+      "target": "ResourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppResourceGroup",
+      "parameters": {
+        "WebAppName": "$(WebAppName)"
+      }
+    },
+    {
+      "target": "AppInsightsResourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureResourceGroups"
+    },
+    {
+      "target": "ApplicationInsightsResourceName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMApplicationInsightsResources",
+      "parameters": {
+        "AppInsightsResourceGroupName": "$(AppInsightsResourceGroupName)"
+      }
+    },
+    {
+      "target": "Slot",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppSlotsId",
+      "parameters": {
+        "WebAppName": "$(WebAppName)",
+        "ResourceGroupName": "$(ResourceGroupName)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+    },
+    {
+      "target": "SourceSlot",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppSlotsId",
+      "parameters": {
+        "WebAppName": "$(WebAppName)",
+        "ResourceGroupName": "$(ResourceGroupName)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+    },
+    {
+      "target": "TargetSlot",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppSlotsId",
+      "parameters": {
+        "WebAppName": "$(WebAppName)",
+        "ResourceGroupName": "$(ResourceGroupName)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+    },
+    {
+      "target": "ExtensionsList",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureSiteExtensions",
+      "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{ #stringReplace '\".' '' title}}}\"}"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "azureappservicemanage.js"
+    },
+    "Node16": {
+      "target": "azureappservicemanage.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ErrorNoSuchDeployingMethodExists": "Error : Deploy method MSDeploy does not exists for Azure Web App: %s",
+    "Successfullyupdatedslotswaphistory": "Successfully updated slot swap history at %s for Azure Web App : %s",
+    "Failedtoupdateslotswaphistory": "Failed to update slot swap history for Azure Web App : %s",
+    "WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update slot swap status : SCM (Source Control Manager) endpoint is not enabled for this Azure Web App",
+    "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update Kudu deployment log as unique deployment ID cannot be retrieved for this Azure Web App",
+    "FailedToSwapWebAppSlots": "Failed to swap slots for Azure Web App: %s. Error: %s",
+    "SlotSwapOperationNotCompleted": "Slot swap operation was not completed for Azure Web App: %s",
+    "Successfullyswappedslots": "Successfully swapped web app %s slots from %s to %s",
+    "SourceAndTargetSlotCannotBeSame": "Source and target slot cannot be same",
+    "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
+    "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
+    "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve service connection details for Azure App Service: %s. Status Code: %s (%s)",
+    "StartingAppService": "Starting App Service : %s",
+    "AppServicestartedsuccessfully": "App Service '%s' started successfully",
+    "FailedtoStartAppService": "Failed to start App Service for '%s'. Response Code : %s",
+    "StoppingAppService": "Stopping App Service : %s",
+    "AppServicestoppedsuccessfully": "App Service '%s' stopped successfully",
+    "FailedtoStopAppService": "Failed to stop App Service for '%s'. Response Code : %s",
+    "RestartingAppService": "Restarting App Service : %s",
+    "AppServiceRestartedSuccessfully": "App Service '%s' restarted successfully",
+    "FailedtoRestartAppService": "Failed to restart App Service for '%s'. Response Code : %s",
+    "RestartAppServiceAccepted": "Restart request accepted by App Service : %s",
+    "InvalidAction": "Invalid Action selected !",
+    "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING: Cannot update deployment status. SCM endpoint is not enabled for this website.",
+    "WebAppDoesntExist": "Web app '%s' doesn't exist.",
+    "UnabletoretrieveWebAppID": "Unable to retrieve service connection details for Azure App Service:'%s'. Status Code: %s",
+    "StartingSwapSlot": "Requesting swap slot for Web App : %s",
+    "ExtensionInstallFailedError": "Failed to install extension: '%s'. Error: %s",
+    "ExtensionInstallFailedResponseError": "Failed to install extension '%s'. Status Code: %s",
+    "ExtensionInstallSuccess": "Successfully installed extension '%s' in Azure App Service.",
+    "ExtensionAlreadyAvaiable": "Extension '%s' already available in Azure App Service.",
+    "ExtensionListFailedError": "Failed to retrieve list of extensions installed in Azure App Service. Error %s.",
+    "ExtensionListFailedResponseError": "Failed to retrieve list of extensions installed in Azure App Service. Status Code: %s",
+    "FailedToFetchAppServiceState": "Failed to fetch App Service State for App Service: %s, Error Code: %s",
+    "UnableToFetchAuthorityURL": "Unable to fetch authority URL.",
+    "UnableToFetchActiveDirectory": "Unable to fetch Active Directory resource ID.",
+    "UnableToGetAppInsightsResource": "Unable to get Application Insights resource with name : %s",
+    "UnableToIdentifyResourceGroupNameForAppInsightsResource": "Unable to identify resource group name for Application Insights resource : %s",
+    "FailedToConfigureAlwaysOnProperty": "Failed to configure always on property.",
+    "SuccessfullyConfiguredAppInsights": "Successfully Configured Application Insights",
+    "UnableToConfigureWebTest": "Unable to configure web test for Application Insights resource : %s",
+    "UnableToConfigureInstrumentationKeyForAppService": "Unable to configure instrumentation key for app service: %s",
+    "UnableToReadResponseBody": "Unable to read response body. Error: %s",
+    "UnableToUpdateWebAppConfigDetails": "Unable to update WebApp config details. StatusCode: '%s'",
+    "ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
+    "UnableToFetchContinuousWebJobs": "Unable to fetch continuous web jobs",
+    "UnableToStartContinuousWebJob": "Unable to start continuous web job",
+    "UnableToStopContinuousWebJob": "Unable to stop continuous web job",
+    "AppNameCannotBeNull": "App name cannot be null or undefined and it must be of type string.",
+    "SlotNameCannotBeNull": "Slot name cannot be null or undefined and it must be of type string.",
+    "SourceSlotNameCannotBeNull": "Source slot name cannot be null or undefined and it must be of type string.",
+    "DestinationSlotNameCannotBeNull": "Destination slot name cannot be null or undefined and it must be of type string.",
+    "ResourceGroupNotFound": "Resource group for '%s' App Service not found.",
+    "ResourceTypeCannotBeNull": "Resource type cannot be null or undefined and it must be of type string.",
+    "StartedAppService": "App Service '%s' started successfully.",
+    "StartedAppServiceSlot": "App Service '%s-%s' started successfully.",
+    "FailedToStartAppService": "Failed to start App Service '%s'. Error: %s",
+    "FailedToStartAppServiceSlot": "Failed to start App Service '%s-%s'. Error: %s",
+    "StoppingAppServiceSlot": "Stopping App Service: %s-%s",
+    "StoppedAppService": "App Service '%s' stopped successfully.",
+    "StoppedAppServiceSlot": "App Service '%s-%s' stopped successfully.",
+    "FailedToStopAppService": "Failed to start App Service '%s'. Error: %s",
+    "FailedToStopAppServiceSlot": "Failed to start App Service '%s-%s'. Error: %s",
+    "RestartingAppServiceSlot": "Restarting App Service: %s-%s",
+    "RestartedAppService": "App Service '%s' restarted successfully.",
+    "RestartedAppServiceSlot": "App Service '%s-%s' restarted successfully.",
+    "FailedToRestartAppService": "Failed to restart App Service '%s'. Error: %s",
+    "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s",
+    "FailedToGetAppServiceDetails": "Failed to fetch App Service '%s' details. Error: %s",
+    "FailedToGetAppServiceDetailsSlot": "Failed to fetch App Service '%s-%s' details. Error: %s",
+    "AppServiceState": "App Service is in '%s' state.",
+    "InvalidMonitorAppState": "Invalid state '%s' provided for monitoring app state",
+    "FailedToGetAppServicePublishingProfile": "Failed to fetch App Service '%s' publishing profile. Error: %s",
+    "FailedToGetAppServicePublishingProfileSlot": "Failed to fetch App Service '%s-%s' publishing profile. Error: %s",
+    "FailedToSwapAppServiceSlotWithProduction": "Failed to swap App Service '%s' slots - 'production' and '%s'. Error: %s",
+    "FailedToSwapAppServiceSlotSlots": "Failed to swap App Service '%s' slots - '%s' and '%s'. Error: %s",
+    "SwappingAppServiceSlotWithProduction": "Swapping App Service '%s' slots - 'production' and '%s'",
+    "SwappingAppServiceSlotSlots": "Swapping App Service '%s' slots - '%s' and '%s'",
+    "SwappedAppServiceSlotWithProduction": "Swapped App Service '%s' slots - 'production' and '%s'",
+    "SwappedAppServiceSlotSlots": "Swapped App Service '%s' slots - '%s' and '%s'",
+    "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
+    "FailedToGetAppServicePublishingCredentialsSlot": "Failed to fetch App Service '%s-%s' publishing credentials. Error: %s",
+    "WarmingUpSlots": "Warming-up slots",
+    "DeploymentIDCannotBeNull": "Deployment ID cannot be null or empty.",
+    "DeploymentDataEntityCannotBeNull": "Deployment data entity cannot be null or undefined.",
+    "SiteExtensionInstalled": "Site extension '%s' installed.",
+    "FailedToInstallSiteExtension": "Failed to install site extension '%s'. Error: %s",
+    "JobNameCannotBeNull": "Job name cannot be null or empty.",
+    "SiteExtensionCannotBeNull": "Site extension name cannot be null or empty.",
+    "TestNameCannotBeNull": "Test name cannot be null or undefined and it must be of type string.",
+    "TestDefinitionCannotBeNull": "Test definition cannot be null or undefined.",
+    "AppInsightsPropertiesCannotBeNullOrEmpty": "Application Insights properties cannot be null or undefined.",
+    "SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRM service connection is invalid: %s",
+    "FailedToFetchAzureStackDependencyData": "Failed to fetch Azure stack dependency data. Status code: %s",
+    "FailedToGetApplicationInsightsResource": "Failed to get Application Insights '%s' Resource. Error: %s",
+    "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
+    "FailedToGetApplicationInsightsWebTestsForResourceGroup": "Failed to get Application Insights Web TestsFor Resource Group '%s'. Error: %s",
+    "FailedToCreateWebTests": "Failed to create Web Test. Error: %s",
+    "WebTestAlreadyConfigured": "Web Test already configured for URL: %s",
+    "FailedToGetAppServiceConfiguration": "Failed to get App service '%s' configuration. Error: %s",
+    "FailedToGetAppServiceConfigurationSlot": "Failed to get App service '%s-%s' configuration. Error: %s",
+    "FailedToUpdateAppServiceConfiguration": "Failed to update App service '%s' configuration. Error: %s",
+    "FailedToUpdateAppServiceConfigurationSlot": "Failed to update App service '%s-%s' configuration. Error: %s",
+    "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
+    "FailedToGetAppServiceApplicationSettingsSlot": "Failed to get App service '%s-%s' application settings. Error: %s",
+    "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
+    "FailedToUpdateAppServiceApplicationSettingsSlot": "Failed to update App service '%s-%s' application settings. Error: %s",
+    "KuduSCMDetailsAreEmpty": "KUDU SCM details are empty",
+    "FailedToGetContinuousWebJobs": "Failed to get continuous WebJobs. Error: %s",
+    "FailedToStartContinuousWebJob": "Failed to start continuous WebJob '%s'. Error: %s",
+    "FailedToStopContinuousWebJob": "Failed to stop continuous WebJob '%s'. Error: %s",
+    "FailedToGetSiteExtensions": "Failed to get site extensions. Error: %s",
+    "FailedToGetAllSiteExtensions": "Failed to get extension feed. Error: %s",
+    "ExtensionAlreadyInstalled": "Extension '%s' already installed.",
+    "InstallingSiteExtension": "Installing site Extension '%s'",
+    "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
+    "ContinousMonitoringEnabled": "Continuous Monitoring enabled for App Service '%s'.",
+    "EnablingContinousMonitoring": "Enabling continuous Monitoring for App Service '%s'.",
+    "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
+    "StartingContinousWebJobs": "Starting continuous WebJobs",
+    "StartedContinousWebJobs": "Started continuous WebJobs.",
+    "StoppingContinousWebJobs": "Stopping continuous WebJobs.",
+    "StoppedContinousWebJobs": "Stopped continuous WebJobs.",
+    "FailedToEnableContinuousMonitoring": "Failed to enable continuous monitoring. Error: %s",
+    "InvalidSlotSwapEntity": "Invalid Slot swap entity. Error: %s",
+    "FailedToUpdateDeploymentHistory": "Failed to update Deployment status. Error: %s",
+    "StartingWebJob": "Starting WebJob '%s'.",
+    "StartedWebJob": "WebJob '%s' started.",
+    "WebJobAlreadyInRunningState": "WebJob '%s' is already in running state.",
+    "StoppingWebJob": "Stopping WebJob '%s'.",
+    "StoppedWebJob": "WebJob '%s' stopped.",
+    "WebJobAlreadyInStoppedState": "WebJob '%s' is already in stopped state.",
+    "RestartingKuduService": "Restarting Kudu Service.",
+    "RestartedKuduService": "Kudu Service restarted.",
+    "FailedToRestartKuduService": "Failed to restart kudu Service. %s.",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+    "ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your Web App gives you certificate validation errors, you're probably using a self-signed certificate. To resolve such errors, you must set a variable named `VSTS_ARM_REST_IGNORE_SSL_ERRORS` to the value `true` in the build or release pipeline.",
+    "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+    "SwapWithPreviewNotsupported": "Swap with preview isn't supported for Linux webapps and Container webapps.",
+    "InvalidActionForPublishProfileEndpoint": "Invalid Action selected to use with publish profile endpoint!. Supported actions are 'Start/Stop all continuous webjobs' & 'Install Extensions'"
+  }
 }

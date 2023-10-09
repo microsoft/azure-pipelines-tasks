@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 220,
-    "Patch": 0
+    "Minor": 229,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.115.0",
@@ -255,6 +255,7 @@
     "PS_InvalidActionPreference": "ms-resource:loc.messages.PS_InvalidActionPreference",
     "PS_InvalidFilePath": "ms-resource:loc.messages.PS_InvalidFilePath",
     "PS_UnableToDetermineExitCode": "ms-resource:loc.messages.PS_UnableToDetermineExitCode",
-    "PS_InvalidTargetType": "ms-resource:loc.messages.PS_InvalidTargetType"
+    "PS_InvalidTargetType": "ms-resource:loc.messages.PS_InvalidTargetType",
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   }
 }

@@ -1,4 +1,5 @@
 {
+  "loc.messages.AZ_CouldNotGenerateOidcToken": "フェデレーション ログインのクライアント アサーションを生成できませんでした。",
   "loc.messages.AZ_UnsupportedAuthScheme0": "'{0}' は Azure エンドポイントではサポートされていない認証スキームです。",
   "loc.messages.AZ_SpnAccessTokenFetchFailure": "テナント ID {0} のトークンをフェッチできません。",
   "loc.messages.AZ_UserAccessTokenFetchFailure": "指定のユーザーのトークンをフェッチできません。",

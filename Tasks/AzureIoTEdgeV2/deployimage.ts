@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from "os";
+import { loginAzureRM } from 'azure-pipelines-tasks-artifacts-common/azCliUtils';
 import util from "./util";
 import Constants from "./constant";
 import { TelemetryEvent } from './telemetry';
@@ -16,7 +17,7 @@ class azureclitask {
     return !!tl.which("az", false);
   }
 
-  static async runMain(deploymentJson, telemetryEvent: TelemetryEvent) {
+  static async runMain(deploymentJson, telemetryEvent: TelemetryEvent): Promise<void> {
     var toolExecutionError = null;
     try {
       let iothub: string = tl.getInput("iothubname", true);
@@ -41,9 +42,9 @@ class azureclitask {
       configId = util.normalizeDeploymentId(configId);
       console.log(tl.loc('NomralizedDeployementId', configId));
 
-      this.loginAzure();
+      await this.loginAzure();
 
-      tl.debug('OS release:' + os.release());      
+      tl.debug('OS release:' + os.release());
       let showIotExtensionCommand = ["extension", "show", "--name", "azure-iot"];
       let result = tl.execSync('az', showIotExtensionCommand, Constants.execSyncSilentOption);
       if (result.code !== 0) { // The extension is not installed
@@ -115,9 +116,9 @@ class azureclitask {
     let execOptions: IExecOptions = {
       errStream: outputStream as stream.Writable
     } as IExecOptions;
-    
+
     // check azcli version
-    let checkAzureIoTVersionExtensionCommand = ["--version"]; 
+    let checkAzureIoTVersionExtensionCommand = ["--version"];
     let viewAzVersionResult = tl.execSync('az', checkAzureIoTVersionExtensionCommand, execOptions);
     if(viewAzVersionResult.code !== 0)
     {
@@ -131,35 +132,21 @@ class azureclitask {
     }
   }
 
-  static loginAzure() {
+  static async loginAzure(): Promise<void> {
     var connectedService = tl.getInput("connectedServiceNameARM", true);
-    this.loginAzureRM(connectedService);
-  }
-
-  static loginAzureRM(connectedService) {
-    var servicePrincipalId = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-    var servicePrincipalKey = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
-    var tenantId = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
-    var subscriptionName = tl.getEndpointDataParameter(connectedService, "SubscriptionName", true);
-    var environment = tl.getEndpointDataParameter(connectedService, "environment", true);
     // Work around for build agent az command will exit with non-zero code since configuration files are missing.
     tl.debug(tl.execSync("az", "--version", Constants.execSyncSilentOption).stdout);
 
+    var environment = tl.getEndpointDataParameter(connectedService, "environment", true);
     // Set environment if it is not AzureCloud (global Azure)
     if (environment && environment !== 'AzureCloud') {
       let result = tl.execSync("az", ["cloud", "set", "--name", environment], Constants.execSyncSilentOption);
       tl.debug(JSON.stringify(result));
     }
 
-    //login using svn
-    let result = tl.execSync("az", ["login", "--service-principal", "-u", servicePrincipalId, "-p", servicePrincipalKey, "--tenant", tenantId], Constants.execSyncSilentOption);
-    tl.debug(JSON.stringify(result));
-    this.throwIfError(result);
+    await loginAzureRM(connectedService);
+
     this.isLoggedIn = true;
-    //set the subscription imported to the current subscription
-    result = tl.execSync("az", ["account", "set", "--subscription", subscriptionName], Constants.execSyncSilentOption);
-    tl.debug(JSON.stringify(result));
-    this.throwIfError(result);
   }
 
   static logoutAzure() {
@@ -169,12 +156,6 @@ class azureclitask {
     catch (err) {
       // task should not fail if logout doesn`t occur
       tl.warning(tl.loc("FailedToLogout"));
-    }
-  }
-
-  static throwIfError(resultOfToolExecution) {
-    if (resultOfToolExecution.stderr) {
-      throw resultOfToolExecution;
     }
   }
 }
@@ -253,7 +234,7 @@ class imagevalidationtask {
   }
 }
 
-export async function run(telemetryEvent: TelemetryEvent) {
+export async function run(telemetryEvent: TelemetryEvent): Promise<void> {
   let inBuildPipeline: boolean = util.checkSelfInBuildPipeline();
   console.log(tl.loc('DeployTaskRunningInBuild', inBuildPipeline));
   let deploymentFilePath: string = tl.getPathInput('deploymentFilePath', true);
@@ -273,7 +254,7 @@ export async function run(telemetryEvent: TelemetryEvent) {
   for (let path of findPaths) {
     console.log(tl.loc('CheckValidJson', path));
     try {
-      deploymentJson = JSON.parse(fs.readFileSync(path, Constants.UTF8));
+      deploymentJson = JSON.parse(fs.readFileSync(path, Constants.UTF8 as BufferEncoding));
     } catch (e) {
       console.log(tl.loc('Invalid'));
       continue;

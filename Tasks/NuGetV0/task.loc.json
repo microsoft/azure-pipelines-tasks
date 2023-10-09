@@ -10,7 +10,7 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "version": {
     "Major": 0,
-    "Minor": 219,
+    "Minor": 228,
     "Patch": 0
   },
   "runsOn": [
@@ -41,6 +41,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "nuget.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "nuget.js",
       "argumentFormat": ""
     }

@@ -7,7 +7,8 @@ $AzureFileCopyRemoteJob = {
         [string]$azCopyToolFileNamesString,
         [string]$azCopyToolFileContentsString,
         [switch]$CleanTargetBeforeCopy,
-        [switch]$EnableDetailedLogging
+        [switch]$EnableDetailedLogging,
+        [switch]$useSanitizerActivate
     )
 
     function Write-DetailLogs
@@ -118,10 +119,16 @@ $AzureFileCopyRemoteJob = {
             $additionalArguments = "/Z:`"$azCopyDestinationPath`" /V:`"$logFilePath`" /S /Y"
         }
 
-        Write-DetailLogs "##[command] & `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"*****`" $additionalArguments"
-
-        $azCopyCommand = "& `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"$containerSasToken`" $additionalArguments"
-        Invoke-Expression $azCopyCommand
+        if ($useSanitizerActivate) {
+            # Splitting arguments on space, but not on space inside quotes
+            $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
+            Write-DetailLogs "##[command] & `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"*****`" $sanitizedArguments"
+            & "$azCopyExeLocation" /Source:"$containerURL" /Dest:"$targetPath" /SourceSAS:"$containerSasToken" $sanitizedArguments
+        } else {
+            Write-DetailLogs "##[command] & `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"*****`" $additionalArguments"
+            $azCopyCommand = "& `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"$containerSasToken`" $additionalArguments"
+            Invoke-Expression $azCopyCommand
+        }
     }
     catch
     {

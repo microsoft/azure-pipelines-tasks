@@ -1,13 +1,9 @@
-import * as ParameterParser from 'azure-pipelines-tasks-azurermdeploycommon/operations/ParameterParserUtility'
-
-import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
-import { PackageType } from 'azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/packageUtility';
-
 import tl = require('azure-pipelines-task-lib/task');
-
-var webCommonUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/utility.js');
-var deployUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/utility.js');
-var zipUtility = require('azure-pipelines-tasks-azurermdeploycommon/webdeployment-common/ziputility.js');
+var webCommonUtility = require('azure-pipelines-tasks-webdeployment-common/utility');
+var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility');
+import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
+import * as ParameterParser from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility'
+import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 
 const initScriptAppSetting: string = "-INIT_SCRIPT";
 
@@ -18,14 +14,14 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
         let packageType = this.taskParams.Package.getPackageType();
         let deploymentMethodtelemetry = packageType === PackageType.war ? '{"deploymentMethod":"War Deploy"}' : '{"deploymentMethod":"Zip Deploy"}';
         console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureWebAppDeployment]" + deploymentMethodtelemetry);
-        
+
         tl.debug('Performing Linux built-in package deployment');
-        
+
         await this.kuduServiceUtility.warmpUp();
-        
+
         switch(packageType){
             case PackageType.folder:
-                let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
+                let tempPackagePath = webCommonUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
                 let archivedWebPackage = await zipUtility.archiveFolder(this.taskParams.Package.getPath(), "", tempPackagePath);
                 tl.debug("Compressed folder into zip " +  archivedWebPackage);
                 this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(archivedWebPackage);

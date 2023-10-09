@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 218,
+    "Minor": 227,
     "Patch": 0
   },
   "runsOn": [
@@ -39,6 +39,10 @@
   "execution": {
     "Node10": {
       "target": "cargoauthenticatemain.js"
+    },
+    "Node16": {
+      "target": "cargoauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

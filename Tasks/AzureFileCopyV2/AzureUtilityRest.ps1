@@ -20,7 +20,9 @@ function Get-AzureStorageKeyFromRDFE
 function Get-AzureStorageKeyFromARM
 {
     param([string]$storageAccountName,
-          [object]$serviceEndpoint)
+        [object]$serviceEndpoint,
+        [string][Parameter(Mandatory=$false)]$connectedServiceNameARM,
+        [string][Parameter(Mandatory=$false)]$vstsAccessToken)
 
     if (-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -28,8 +30,8 @@ function Get-AzureStorageKeyFromARM
         $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
 
         Write-Verbose "[Azure Call]Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceid"
-        
-        $storageKeyDetails = Get-AzRMStorageKeys $azureResourceGroupName $storageAccountName $serviceEndpoint
+
+        $storageKeyDetails = Get-AzRMStorageKeys $azureResourceGroupName $storageAccountName $serviceEndpoint $connectedServiceNameARM $vstsAccessToken
         $storageKey = $storageKeyDetails.Key1
         Write-Verbose "[Azure Call]Retrieved storage key successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
 
@@ -60,7 +62,9 @@ function Get-AzureBlobStorageEndpointFromRDFE
 function Get-AzureBlobStorageEndpointFromARM
 {
     param([string]$storageAccountName,
-          [object]$endpoint)
+        [object]$endpoint,
+        [string]$connectedServiceNameARM,
+        [string]$vstsAccessToken)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -68,13 +72,13 @@ function Get-AzureBlobStorageEndpointFromARM
         $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
 
         Write-Verbose "[Azure Call]Retrieving storage account endpoint for the storage account: $storageAccount in resource group: $azureResourceGroupName"
-        
-        $storageAccountInfo = Get-AzRMStorageAccount $azureResourceGroupName $storageAccountName $endpoint -ErrorAction Stop
+
+        $storageAccountInfo = Get-AzRMStorageAccount $azureResourceGroupName $storageAccountName $endpoint $connectedServiceNameARM $vstsAccessToken -ErrorAction Stop
         $storageAccountEnpoint = $storageAccountInfo.PrimaryEndpoints[0].blob
         Write-Verbose "[Azure Call]Retrieved storage account endpoint successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
 
         return $storageAccountEnpoint
-    }          
+    }
 }
 
 function Get-AzureStorageAccountTypeFromRDFE
@@ -96,7 +100,9 @@ function Get-AzureStorageAccountTypeFromRDFE
 function Get-AzureStorageAccountTypeFromARM
 {
     param([string]$storageAccountName,
-          [object]$endpoint)
+        [object]$endpoint,
+        [string]$connectedServiceNameARM,
+        [string]$vstsAccessToken)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -104,42 +110,46 @@ function Get-AzureStorageAccountTypeFromARM
         $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
 
         Write-Verbose "[Azure Call]Retrieving storage account type for the storage account: $storageAccount in resource group: $azureResourceGroupName"
-        $storageAccountInfo = Get-AzRMStorageAccount $azureResourceGroupName $storageAccountName $endpoint -ErrorAction Stop
+        $storageAccountInfo = Get-AzRMStorageAccount $azureResourceGroupName $storageAccountName $endpoint $connectedServiceNameARM $vstsAccessToken -ErrorAction Stop
         $storageAccountType = $storageAccountInfo.sku.tier
                     Write-Verbose "[Azure Call]Retrieved storage account type successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
 
         return $storageAccountType
-    }          
+    }
 }
 
 function Get-AzureMachineCustomScriptExtension
 {
    param([string]$resourceGroupName,
-          [string]$vmName,
-          [string]$name,
-          [object]$endpoint)
+        [string]$vmName,
+        [string]$name,
+        [object]$endpoint,
+        [string]$connectedServiceNameARM,
+        [string]$vstsAccessToken)
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName))
     {
         Write-Host (Get-VstsLocString -Key "AFC_GetCustomScriptExtension" -ArgumentList $name, $vmName)
-        $customScriptExtension = Get-AzRmVmCustomScriptExtension $resourceGroupName $vmName $name $endpoint  
+        $customScriptExtension = Get-AzRmVmCustomScriptExtension $resourceGroupName $vmName $name $endpoint $connectedServiceNameARM $vstsAccessToken
         Write-Host (Get-VstsLocString -Key "AFC_GetCustomScriptExtensionComplete" -ArgumentList $name, $vmName)
     }
-                
+
     return $customScriptExtension
 }
 
 function Remove-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
-          [string]$vmName,
-          [string]$name,
-          [object]$endpoint)
+        [string]$vmName,
+        [string]$name,
+        [object]$endpoint,
+        [string]$connectedServiceNameARM,
+        [string]$vstsAccessToken)
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))
     {
         Write-Host (Get-VstsLocString -Key "AFC_RemoveCustomScriptExtension" -ArgumentList $name, $vmName)
-        $response = Remove-AzRmVMCustomScriptExtension $resourceGroupName $vmName $name $endpoint        
+        $response = Remove-AzRmVMCustomScriptExtension $resourceGroupName $vmName $name $endpoint $connectedServiceNameARM $vstsAccessToken
         Write-Host (Get-VstsLocString -Key "AFC_RemoveCustomScriptExtensionComplete" -ArgumentList $name, $vmName)
     }
 

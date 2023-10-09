@@ -93,5 +93,6 @@
   "loc.messages.InvalidBuildFile": "組建檔案無效或不受支援",
   "loc.messages.FileNotFound": "檔案或資料夾不存在: %s",
   "loc.messages.FailedToAppendCC": "無法附加程式碼涵蓋範圍資料: %s",
-  "loc.messages.NoTestResults": "找不到任何符合 %s 的測試結果，因此跳過發行 JUnit 測試結果。"
+  "loc.messages.NoTestResults": "找不到任何符合 %s 的測試結果，因此跳過發行 JUnit 測試結果。",
+  "loc.messages.chmodGradlew": "使用 'chmod' 方法將 gradlew 檔案設為可執行檔。"
 }
