@@ -8,6 +8,7 @@
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870240)",
     "category": "Utility",
     "deprecated": true,
+    "removalDate": "2024-04-22",
     "visibility": [
         "Build",
         "Release"
@@ -18,7 +19,7 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 198,
+        "Minor": 229,
         "Patch": 0
     },
     "instanceNameFormat": "Query Azure Monitor alerts",
