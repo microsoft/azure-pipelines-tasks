@@ -36,7 +36,7 @@ var fileToJson = util.fileToJson;
 var createYamlSnippetFile = util.createYamlSnippetFile;
 var createMarkdownDocFile = util.createMarkdownDocFile;
 var getTaskNodeVersion = util.getTaskNodeVersion;
-var callGenTaskDuringBuild = false;
+var writeUpdatedsFromGenTasks = false;
 
 // global paths
 var buildPath = path.join(__dirname, '_build');
@@ -186,7 +186,7 @@ CLI.build = function(/** @type {{ task: string }} */ argv)
         fail('Please use serverBuild for CI builds for proper validation');
     }
 
-    callGenTaskDuringBuild = true;
+    writeUpdatedsFromGenTasks = true;
     CLI.serverBuild(argv);
 }
 
@@ -199,15 +199,15 @@ CLI.serverBuild = function(/** @type {{ task: string }} */ argv) {
         }
     });
 
-    const allTasks = getTaskList(taskList);
-
     // Need to validate generated tasks first
     const makeOptions = fileToJson(makeOptionsPath);
 
-    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, callGenTaskDuringBuild);
+    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks);
 
-    // Ensure we wrap build function after generator's changes to store only files that changes after the build 
-    const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTask, genTaskPath, callGenTaskDuringBuild);
+    const allTasks = getTaskList(taskList);
+
+    // Wrap build function  to store files that changes after the build 
+    const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTask, genTaskPath, writeUpdatedsFromGenTasks);
     const allTasksNode20 = allTasks.filter((taskName) => {
         return getNodeVersion(taskName) == 20;
     });
@@ -240,14 +240,14 @@ function getNodeVersion (taskName) {
     // We prefer tasks in _generated folder because they might contain node20 version
     // while the tasks in Tasks/ folder still could use only node16 handler 
     if (fs.existsSync(packageJsonPath)) {
-        console.log(`Found package.json for ${taskName} in _generated folder`);
+        console.log(`Found package.json for ${taskName} in _generated folder ${packageJsonPath}`);
     } else {
         packageJsonPath = path.join(tasksPath, taskName, "package.json");
         if (!fs.existsSync(packageJsonPath)) {
             console.error(`Unable to find package.json file for ${taskName} in _generated folder or Tasks folder, using default node 10.`);
             return 10;
         }
-        console.log(`Found package.json for ${taskName} in Tasks folder`)
+        console.log(`Found package.json for ${taskName} in Tasks folder ${packageJsonPath}`)
     }
 
     var packageJsonContents = fs.readFileSync(packageJsonPath, { encoding: 'utf-8' });
@@ -255,6 +255,7 @@ function getNodeVersion (taskName) {
     if (packageJson.dependencies && packageJson.dependencies["@types/node"]) {
         // Extracting major version from the node version
         const nodeVersion = packageJson.dependencies["@types/node"].replace('^', '');
+        console.log(`Node verion from @types/node in package.json is ${nodeVersion} returning ${nodeVersion.split('.')[0]}`);
         return nodeVersion.split('.')[0];
     } else {
         console.log("Node version not found in dependencies, using default node 10.");
@@ -1005,49 +1006,6 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
     rm('-Rf', tempWorkspaceDirectory);
 
     console.log('\n# Completed creating sprintly zip.');
-}
-
-CLI.gentask = function() {
-    const makeOptions = fileToJson(makeOptionsPath);
-    const validate = argv.validate;
-    const configsString = argv.configs;
-
-    if (validate) {
-        util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, false);
-        return;
-    }
-
-    if (!configsString) {
-        throw Error ('--configs is required');
-    }
-
-    const newMakeOptions = util.generateTasks(baseConfigToolPath, taskList, configsString, makeOptions);
-    taskList.forEach(function (taskName) {
-        const taskPath = path.join(genTaskPath, taskName + "_" + configsString);
-        if (fs.existsSync(taskPath)) {
-            cd(taskPath);
-            console.log(`Running \"npm update\" command in ${taskPath}`);
-            run(`npm update`);
-            console.log(`Running \"npm install\" command in ${taskPath}`);
-            run(`npm install`);
-            cd(__dirname);
-
-            // copy package.json, package-lock.json and npm-shrinkwrap.json files from generated tasks to the Tasks\taskname\_buildConfig\nodeversion folder.
-            const fileNames = ['package.json', 'package-lock.json', 'npm-shrinkwrap.json'];
-            const buildConfigsPath = path.join(tasksPath, taskName, '_buildConfigs', configsString);
-            if (fs.existsSync(buildConfigsPath)) {
-                for (const fileName of fileNames) {
-                    const filePath = path.join(taskPath, fileName);
-                    if (fs.existsSync(filePath)) {
-                        console.log(`Copying ${fileName} from ${taskPath} to ${buildConfigsPath} folder.`);
-                        cp(filePath, path.join(buildConfigsPath, fileName));
-                    }
-                }
-            }
-        }
-    });
-
-    fs.writeFileSync(makeOptionsPath, JSON.stringify(newMakeOptions, null, 4));
 }
 
 var command  = argv._[0];
