@@ -33,5 +33,5 @@
   "loc.messages.InstallRequiresMac": "安装 Apple 证书需要 macOS 代理。Apple 不支持在 Linux 或 Windows 上安装 Apple 证书。",
   "loc.messages.CertNotValidYetError": "证书“%s”(指纹: %s)在 %s之前无效",
   "loc.messages.CertExpiredError": "证书“%s”(指纹: %s)已在 %s过期",
-  "loc.messages.OpenSSLError": "Error parsing certificate. This might be caused by an unsupported algorithm. If you're using old certificate with a new OpenSSL version try to set -legacy flag in opensslPkcsArgs input."
+  "loc.messages.OpenSSLError": "分析证书时出错。这可能是由不支持的算法引起的。如果你将旧证书用于新的 OpenSSL 版本，请尝试在 opensslPkcsArgs 输入中设置 -legacy 标志。"
 }

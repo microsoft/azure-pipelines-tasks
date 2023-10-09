@@ -37,8 +37,8 @@
   "loc.input.help.checkDownloadedFiles": "Se questa opzione è selezionata, questa attività di compilazione controllerà che tutti i file siano completamente scaricati.",
   "loc.input.label.retryDownloadCount": "Numero di tentativi",
   "loc.input.help.retryDownloadCount": "Numero facoltativo di tentativi di download di un artefatto della compilazione se il download non riesce.",
-  "loc.input.label.retryRedirectDownloadCount": "Retry count for redirect download",
-  "loc.input.help.retryRedirectDownloadCount": "Optional number of times to retry downloading a build artifact if the download based on redirect fails. If your network does not allow following the redirect, you can set this to -1 to always download streamed response from Azure DevOps instead.",
+  "loc.input.label.retryRedirectDownloadCount": "Numero di tentativi per il download del reindirizzamento",
+  "loc.input.help.retryRedirectDownloadCount": "Numero facoltativo di tentativi di download di un artefatto di compilazione se il download basato sul reindirizzamento ha esito negativo. Se la rete non consente di seguire il reindirizzamento, è possibile impostare questa opzione su -1 per scaricare sempre la risposta in streaming da Azure DevOps.",
   "loc.input.label.extractTars": "Estrai tutti i file archiviati all'interno di archivi tar",
   "loc.input.help.extractTars": "Abilitare questa opzione per estrarre tutti i file scaricati con estensione .tar. Ciò è consigliabile perché è necessario comprimere gli artefatti con estensione .tar per mantenere le autorizzazioni file UNIX. Se si abilita l'opzione 'StoreAsTar' nell'attività PublishBuildArtifacts, gli artefatti verranno archiviati automaticamente come file tar.",
   "loc.messages.DownloadArtifacts": "Download dell'artefatto %s da %s",
@@ -70,6 +70,6 @@
   "loc.messages.NoTarsFound": "Non sono stati trovati archivi tar da estrarre",
   "loc.messages.CleaningDestinationFolder": "Pulizia della cartella di destinazione in corso: %s",
   "loc.messages.NoFolderToClean": "La cartella di pulizia specificata non è stata trovata. Nulla da pulire",
-  "loc.messages.PreferRedirect": "Prefer downloading files through redirect to the content stitcher: %s",
-  "loc.messages.FollowingDownloadRedirectFailed": "Could not download the files by following a redirect: %s. Falling back to consuming streamed content from Azure DevOps."
+  "loc.messages.PreferRedirect": "Preferisci il download dei file tramite reindirizzamento all'unità di unione del contenuto: %s",
+  "loc.messages.FollowingDownloadRedirectFailed": "Non è stato possibile scaricare i file seguendo un reindirizzamento: %s. Fallback all'utilizzo del contenuto trasmesso da Azure DevOps."
 }
