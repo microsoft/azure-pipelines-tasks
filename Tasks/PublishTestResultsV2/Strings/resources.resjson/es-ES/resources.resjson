@@ -15,6 +15,8 @@
   "loc.input.help.mergeTestResults": "Se crea una serie de pruebas para cada archivo de resultados. Active esta opción para fusionar los resultados en una sola serie de pruebas. Para optimizar el rendimiento, los resultados se fusionarán en una sola serie si hay más de 100 archivos de resultados, independientemente de esta opción.",
   "loc.input.label.failTaskOnFailedTests": "Interrumpir si hay errores en las pruebas",
   "loc.input.help.failTaskOnFailedTests": "Interrumpa la tarea si hay errores en las pruebas. Seleccione esta opción para interrumpir la tarea si se detectan errores de las pruebas en los archivos de resultados.",
+  "loc.input.label.failTaskOnMissingResultsFile": "Error si no se encuentra ningún archivo de resultados",
+  "loc.input.help.failTaskOnMissingResultsFile": "No se puede realizar la tarea si no se encuentra ningún archivo de resultados.",
   "loc.input.label.testRunTitle": "Título de la serie de pruebas",
   "loc.input.help.testRunTitle": "Proporcione un nombre para la serie de pruebas.",
   "loc.input.label.platform": "Plataforma de compilación",
