@@ -59,6 +59,7 @@
   "loc.messages.PackagesPublishedSuccessfully": "패키지가 게시되었습니다.",
   "loc.messages.PackagesFailedToPublish": "패키지를 게시하지 못했습니다.",
   "loc.messages.UnknownFeedType": "알 수 없는 피드 유형 '%s'",
+  "loc.messages.Error_NoVersionOptionSpecifiedForPublish": "잘못된 versionOption/versionPublishSelector가 제공되었습니다. 'major', 'minor', 'patch' 또는 'custom'으로 설정해야 합니다.",
   "loc.messages.Error_NoSourceSpecifiedForPublish": "게시할 외부 소스를 지정하지 않았습니다.",
   "loc.messages.Error_NoSourceSpecifiedForDownload": "다운로드할 외부 소스를 지정하지 않았습니다.",
   "loc.messages.Error_UnexpectedErrorArtifactTool": "패키지를 푸시하는 중 예기치 않은 오류가 발생했습니다. 종료 코드(%s) 및 오류(%s)",
