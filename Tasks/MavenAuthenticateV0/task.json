@@ -3,13 +3,13 @@
   "name": "MavenAuthenticate",
   "friendlyName": "Maven Authenticate",
   "description": "Provides credentials for Azure Artifacts feeds and external maven repositories",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=2099968",
-  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2099968)",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate",
+  "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate)",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 218,
+    "Minor": 229,
     "Patch": 1
   },
   "runsOn": ["Agent", "DeploymentGroup"],
