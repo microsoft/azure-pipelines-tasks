@@ -109,7 +109,7 @@ if (argv.task) {
 process.env['TASK_TEST_RUNNER'] = argv.runner || '';
 
 function getTaskList(taskList) {
-    let tasksToBuild = [];
+    let tasksToBuild = taskList;
 
     if (!fs.existsSync(genTaskPath)) return tasksToBuild;
 
@@ -120,7 +120,7 @@ function getTaskList(taskList) {
 
     taskList.forEach((taskName) => {
         generatedTaskFolders.forEach((generatedTaskName) => {
-            if (generatedTaskName.startsWith(taskName)) {
+            if (taskName !== generatedTaskName && generatedTaskName.startsWith(taskName)) {
                 tasksToBuild.push(generatedTaskName);
             }
         });
