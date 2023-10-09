@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "命令行",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.description": "在 Linux 和 macOS 上使用 Bash、在 Windows 上使用 cmd.exe 运行命令行脚本",
+  "loc.instanceNameFormat": "命令行脚本",
+  "loc.releaseNotes": "脚本任务一致性。添加了对多个行的支持。",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.script": "脚本",
+  "loc.input.label.workingDirectory": "工作目录",
+  "loc.input.label.failOnStderr": "因标准错误而失败",
+  "loc.input.help.failOnStderr": "如果为 true，则在向 StandardError 流写入任何错误时，此任务都会失败。",
+  "loc.messages.GeneratingScript": "正在生成脚本。",
+  "loc.messages.JS_ExitCode": "Bash 已退出，代码为“%s”。",
+  "loc.messages.JS_Stderr": "Bash 向标准错误流写入一个或多个行。",
+  "loc.messages.PS_ExitCode": "Cmd.exe 已退出，代码为“{0}”。",
+  "loc.messages.PS_UnableToDetermineExitCode": "出现意外异常。无法确定 cmd.exe 的退出代码。",
+  "loc.messages.ScriptContents": "脚本内容:"
+}
