@@ -1,0 +1,24 @@
+{
+  "name": "vsts-gulp-task",
+  "description": "Azure Pipelines gulp tasks",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "azure-pipelines-task-lib": "^5.0.0-preview.0",
+    "minimatch": "^3.0.4",
+    "@types/node": "^16.11.39",
+    "@types/mocha": "^5.2.7",
+    "@types/q": "^1.0.7"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
+  }
+}
