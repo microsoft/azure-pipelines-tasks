@@ -10,6 +10,14 @@ export enum DeploymentType {
     warDeploy
 }
 
+type AdditionalArgumentsTelemetry = {
+    deploymentMethod: DeploymentType;
+    doubleQuoteCount: number;
+    singleQuoteCount: number;
+    escapeCharCount: number;
+    spaceCharCount: number;
+    totalArgs: number;
+}
 export class TaskParametersUtility {
     public static getParameters(): TaskParameters {
         var taskParameters: TaskParameters = {
@@ -50,7 +58,7 @@ export class TaskParametersUtility {
 
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
-
+        
         if(!taskParameters.isContainerWebApp){            
             taskParameters.Package = new Package(tl.getPathInput('Package', true));
             tl.debug("intially web config parameters :" + taskParameters.WebConfigParameters);
@@ -113,6 +121,13 @@ export class TaskParametersUtility {
             this.UpdateLinuxAppTypeScriptParameters(taskParameters);
         }
 
+        try {
+            var additionalArgsTelemetry = this._getAdditionalArgumentsTelemetry(taskParameters.AdditionalArguments, taskParameters.DeploymentType);
+            console.log("##vso[telemetry.publish area=AdditionalArgumentsVerification;feature=AzureRmWebAppDeployment]" + JSON.stringify(additionalArgsTelemetry));
+        } catch (error) {
+            // Ignore errors in telemetry
+        };
+
         return taskParameters;
     }
 
@@ -143,6 +158,98 @@ export class TaskParametersUtility {
             case "runFromZip": return DeploymentType.runFromZip;
             case "warDeploy": return DeploymentType.warDeploy;
         }
+    }
+
+    private static _getAdditionalArgumentsTelemetry(additionalArguments: string, deploymentType: DeploymentType): AdditionalArgumentsTelemetry {
+        const telemetry = {
+            deploymentMethod: deploymentType,
+            doubleQuoteCount: 0,
+            singleQuoteCount: 0,
+            escapeCharCount: 0,
+            spaceCharCount: 0,
+            totalArgs: 0
+        }
+
+        if (!additionalArguments) return telemetry;
+
+        const parsedArgs = this.parseAdditionalArguments(additionalArguments);
+        const escapedChars = new RegExp(/[\\\^\.\*\?\-\&\|\(\)\<\>\t\n\r\f]/);
+        const separator = ",";
+
+        parsedArgs.forEach(function (arg) {
+            let formattedArg = '';
+            let equalsSignEncountered = false;
+            for (let i = 0; i < arg.length; i++) {
+                const char = arg.charAt(i);
+                if (char == separator && equalsSignEncountered) {
+                    equalsSignEncountered = false;
+                    if (formattedArg.startsWith('"') && formattedArg.endsWith('"')) telemetry.doubleQuoteCount++;
+                    if (formattedArg.startsWith("'") && formattedArg.endsWith("'")) telemetry.singleQuoteCount++;
+                    if (escapedChars.test(formattedArg)) telemetry.escapeCharCount++;
+                    if (/\s+/.test(formattedArg)) telemetry.spaceCharCount++;
+
+                    telemetry.totalArgs++;
+                    formattedArg = '';
+                    continue;
+                }
+                if (equalsSignEncountered) {
+                    formattedArg += char;
+                } 
+                if (char == '=') {
+                    equalsSignEncountered = true;
+                } 
+            };
+
+            if (formattedArg.length > 0) {
+                if (formattedArg.startsWith('"') && formattedArg.endsWith('"')) telemetry.doubleQuoteCount++;
+                if (formattedArg.startsWith("'") && formattedArg.endsWith("'")) telemetry.singleQuoteCount++;
+                if (escapedChars.test(formattedArg)) telemetry.escapeCharCount++;
+                if (/\s+/.test(formattedArg)) telemetry.spaceCharCount++;
+
+
+                telemetry.totalArgs++;;
+            }
+        });
+
+        return telemetry;
+    }
+
+    /**
+     * Parses additional arguments for the msdeploy command-line utility.
+     * @param {string} additionalArguments - The additional arguments to parse.
+     * @returns {string[]} An array of parsed arguments.
+     */
+    private static parseAdditionalArguments(additionalArguments: string): string[] {
+        var parsedArgs = [];
+        var isInsideQuotes = false;
+        for (let i = 0; i < additionalArguments.length; i++) {
+            var arg = '';
+            var qouteSymbol = '';
+            let char = additionalArguments.charAt(i);
+            // command parse start
+            if (char === '-') {
+                while (i < additionalArguments.length) {
+                    char = additionalArguments.charAt(i);
+                    const prevSym = additionalArguments.charAt(i - 1);
+                    // If we reach space and we are not inside quotes, then it is the end of the argument
+                    if (char === ' ' && !isInsideQuotes) break;
+                    // If we reach unescaped comma and we inside qoutes we assume that it is the end of quoted line
+                    if (isInsideQuotes && char === qouteSymbol &&  prevSym !== '\\') {
+                        isInsideQuotes = false;
+                        qouteSymbol = '';
+                    // If we reach unescaped comma and we are not inside qoutes we assume that it is the beggining of quoted line
+                    } else if (!isInsideQuotes && (char === '"' || char === "'") &&  prevSym !== '\\') {
+                        isInsideQuotes = !isInsideQuotes;
+                        qouteSymbol = char;
+                    }
+
+                    arg += char;
+                    i += 1;
+                }
+                parsedArgs.push(arg);
+            }
+        }
+        return parsedArgs;
     }
 }
 

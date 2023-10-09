@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 227,
+    "Minor": 228,
     "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -363,7 +363,7 @@
     "DeploymentTypeNotSupportedForLinuxConsumption": "ms-resource:loc.messages.DeploymentTypeNotSupportedForLinuxConsumption"
   },
   "_buildConfigMapping": {
-    "Default": "2.227.1",
-    "Node16-225": "2.227.0"
+    "Default": "2.228.1",
+    "Node16-225": "2.228.0"
   }
 }

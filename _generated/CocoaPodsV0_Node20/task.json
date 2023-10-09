@@ -1,0 +1,94 @@
+{
+  "id": "BFC05E0D-839C-42CD-89C7-0F9FBFCAB965",
+  "name": "CocoaPods",
+  "friendlyName": "CocoaPods",
+  "description": "Install CocoaPods dependencies for Swift and Objective-C Cocoa projects",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/cocoapods",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613745)",
+  "category": "Package",
+  "visibility": [
+    "Build"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "minimumAgentVersion": "2.182.1",
+  "version": {
+    "Major": 0,
+    "Minor": 229,
+    "Patch": 1
+  },
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": true
+    }
+  ],
+  "instanceNameFormat": "pod install",
+  "inputs": [
+    {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
+      "type": "filePath",
+      "label": "Working directory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Specify the working directory in which to execute this task. If left empty, the repository directory will be used."
+    },
+    {
+      "name": "forceRepoUpdate",
+      "type": "boolean",
+      "label": "Force repo update",
+      "defaultValue": false,
+      "required": true,
+      "helpMarkDown": "Selecting this option will force running 'pod repo update' before install.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "projectDirectory",
+      "type": "filePath",
+      "label": "Project directory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Optionally specify the path to the root of the project directory. If left empty, the project specified in the Podfile will be used. If no project is specified, then a search for an Xcode project will be made. If more than one Xcode project is found, an error will occur.",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "cocoapods.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "cocoapods.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "cocoapods.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
+  },
+  "messages": {
+    "PodReturnCode": "The 'pod' command exited with return code: %d",
+    "PodFailed": "The 'pod' command failed with error: %s",
+    "CocoaPodsNotFound": "The 'pod' command was not found. Please install CocoaPods on the agent machine (https://cocoapods.org/).",
+    "ProxyConfig": "Proxy configuration detected. Using proxy host: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.229.0",
+    "Node20-225": "0.229.1"
+  }
+}
