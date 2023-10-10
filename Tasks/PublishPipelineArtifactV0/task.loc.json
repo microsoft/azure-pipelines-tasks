@@ -9,15 +9,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 229,
+    "Minor": 230,
     "Patch": 0
   },
   "groups": [],
   "demands": [],
   "minimumAgentVersion": "2.199.0",
   "preview": false,
-  "deprecated": true,
-  "removalDate": "2024-04-22",
   "inputs": [
     {
       "name": "artifactName",
