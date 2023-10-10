@@ -6,7 +6,7 @@
     "description": "An Azure DevOps Task to build and deploy Azure Container Apps.",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureContainerAppsV1/README.md)",
-    "releaseNotes": "Released version 1.x.x of AzureContainerApps task for building and deploying Azure Container Apps.",
+    "releaseNotes": "Hide output from select 'az containerapp' command calls.",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -18,7 +18,7 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 225,
+        "Minor": 229,
         "Patch": 1
     },
     "minimumAgentVersion": "2.144.0",

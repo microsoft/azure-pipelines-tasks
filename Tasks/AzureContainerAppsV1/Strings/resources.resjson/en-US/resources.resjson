@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureContainerAppsV1/README.md)",
   "loc.description": "An Azure DevOps Task to build and deploy Azure Container Apps.",
   "loc.instanceNameFormat": "Azure Container Apps Deploy",
-  "loc.releaseNotes": "Released version 1.x.x of AzureContainerApps task for building and deploying Azure Container Apps.",
+  "loc.releaseNotes": "Hide output from select 'az containerapp' command calls.",
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Current working directory where the script is run.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
   "loc.input.label.appSourcePath": "Application source path",

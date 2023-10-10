@@ -32,7 +32,7 @@ export class ContainerAppHelper {
         optionalCmdArgs: string[]) {
             tl.debug(`Attempting to create Container App with name "${containerAppName}" in resource group "${resourceGroup}" based from image "${imageToDeploy}"`);
             try {
-                let command = `containerapp create -n ${containerAppName} -g ${resourceGroup} -i ${imageToDeploy} --environment ${environment}`;
+                let command = `containerapp create -n ${containerAppName} -g ${resourceGroup} -i ${imageToDeploy} --environment ${environment} --output none`;
                 optionalCmdArgs.forEach(function (val: string) {
                     command += ` ${val}`;
                 });
@@ -59,7 +59,7 @@ export class ContainerAppHelper {
         yamlConfigPath: string) {
             tl.debug(`Attempting to create Container App with name "${containerAppName}" in resource group "${resourceGroup}" from provided YAML "${yamlConfigPath}"`);
             try {
-                let command = `containerapp create -n ${containerAppName} -g ${resourceGroup} --yaml ${yamlConfigPath}`;
+                let command = `containerapp create -n ${containerAppName} -g ${resourceGroup} --yaml ${yamlConfigPath} --output none`;
 
                 new Utility().throwIfError(
                     tl.execSync('az', command),
@@ -85,7 +85,7 @@ export class ContainerAppHelper {
         optionalCmdArgs: string[]) {
             tl.debug(`Attempting to update Container App with name "${containerAppName}" in resource group "${resourceGroup}" based from image "${imageToDeploy}"`);
             try {
-                let command = `containerapp update -n ${containerAppName} -g ${resourceGroup} -i ${imageToDeploy}`;
+                let command = `containerapp update -n ${containerAppName} -g ${resourceGroup} -i ${imageToDeploy} --output none`;
                 optionalCmdArgs.forEach(function (val: string) {
                     command += ` ${val}`;
                 });
@@ -119,7 +119,7 @@ export class ContainerAppHelper {
             tl.debug(`Attempting to update Container App with name "${containerAppName}" in resource group "${resourceGroup}" based from image "${imageToDeploy}"`);
             const util = new Utility();
             try {
-                let command = `containerapp up -n ${containerAppName} -g ${resourceGroup} -i ${imageToDeploy}`;
+                let command = `containerapp up -n ${containerAppName} -g ${resourceGroup} -i ${imageToDeploy} --output none`;
                 optionalCmdArgs.forEach(function (val: string) {
                     command += ` ${val}`;
                 });
@@ -154,7 +154,7 @@ export class ContainerAppHelper {
         yamlConfigPath: string) {
             tl.debug(`Attempting to update Container App with name "${containerAppName}" in resource group "${resourceGroup}" from provided YAML "${yamlConfigPath}"`);
             try {
-                let command = `containerapp update -n ${containerAppName} -g ${resourceGroup} --yaml ${yamlConfigPath}`;
+                let command = `containerapp update -n ${containerAppName} -g ${resourceGroup} --yaml ${yamlConfigPath} --output none`;
 
                 new Utility().throwIfError(
                     tl.execSync('az', command),
@@ -175,7 +175,7 @@ export class ContainerAppHelper {
     public doesContainerAppExist(containerAppName: string, resourceGroup: string): boolean {
         tl.debug(`Attempting to determine if Container App with name "${containerAppName}" exists in resource group "${resourceGroup}"`);
         try {
-            const command = `containerapp show -n ${containerAppName} -g ${resourceGroup} -o none`;
+            const command = `containerapp show -n ${containerAppName} -g ${resourceGroup} --output none`;
             const result = tl.execSync('az', command);
             return result.code == 0;
         } catch (err) {
@@ -193,7 +193,7 @@ export class ContainerAppHelper {
     public doesContainerAppEnvironmentExist(containerAppEnvironment: string, resourceGroup: string): boolean {
         tl.debug(`Attempting to determine if Container App Environment with name "${containerAppEnvironment}" exists in resource group "${resourceGroup}"`);
         try {
-            const command = `containerapp env show -n ${containerAppEnvironment} -g ${resourceGroup} -o none`;
+            const command = `containerapp env show -n ${containerAppEnvironment} -g ${resourceGroup} --output none`;
             const result = tl.execSync('az', command);
             return result.code == 0;
         } catch (err) {
@@ -210,7 +210,7 @@ export class ContainerAppHelper {
     public doesResourceGroupExist(resourceGroup: string): boolean {
         tl.debug(`Attempting to determine if resource group "${resourceGroup}" exists`);
         try {
-            const command = `group show -n ${resourceGroup} -o none`;
+            const command = `group show -n ${resourceGroup} --output none`;
             const result = tl.execSync('az', command);
             return result.code == 0;
         } catch (err) {
