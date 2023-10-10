@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 229,
-    "Patch": 0
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -455,7 +455,7 @@
     "UsingAuthFeed": "ms-resource:loc.messages.UsingAuthFeed"
   },
   "_buildConfigMapping": {
-    "Default": "2.229.1",
-    "Node20-225": "2.229.0"
+    "Default": "2.229.3",
+    "Node20-225": "2.229.2"
   }
 }
