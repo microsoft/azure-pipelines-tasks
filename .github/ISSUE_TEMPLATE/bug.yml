@@ -80,7 +80,7 @@ body:
   - type: textarea
     id: extra-details
     attributes:
-      label: Aditional info
+      label: Additional info
       description: |
         Paste any additional information here
       render: shell
