@@ -13,7 +13,7 @@ import { WebApi } from 'azure-devops-node-api';
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function main(): Promise<void> {
-	tl.warning("This task is being deprecated. All builds will break by 11-27-2023. Please switch to using DownloadPackage@1 as soon as possible.");
+	tl.warning("This task is deprecated. Builds that use it will break on 11-27-2023. Please switch to using DownloadPackage@1 as soon as possible.");
 	var feed = getProjectAndFeedIdFromInputParam("feed");
 	if(feed.projectId) {
 		throw new Error(tl.loc("UnsupportedProjectScopedFeeds"));
