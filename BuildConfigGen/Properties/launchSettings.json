@@ -2,7 +2,7 @@
   "profiles": {
     "BuildConfigGen": {
       "commandName": "Project",
-      "commandLineArgs": "--write-updates --configs \"Node20\" --task DecryptFileV1"
+      "commandLineArgs": "--write-updates --configs \"Node20\" --task MavenV3"
     }
   }
 }
