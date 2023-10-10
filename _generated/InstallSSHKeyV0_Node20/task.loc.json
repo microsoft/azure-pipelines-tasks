@@ -1,0 +1,174 @@
+{
+  "id": "5c9af2eb-5fc5-42dc-9b91-dc234a8c4400",
+  "name": "InstallSSHKey",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/install-ssh-key",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 229,
+    "Patch": 4
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [],
+  "minimumAgentVersion": "2.182.1",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "hostName",
+      "aliases": [
+        "knownHostsEntry"
+      ],
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.hostName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.hostName"
+    },
+    {
+      "name": "sshPublicKey",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sshPublicKey",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sshPublicKey"
+    },
+    {
+      "name": "sshPassphrase",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sshPassphrase",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sshPassphrase"
+    },
+    {
+      "name": "sshKeySecureFile",
+      "type": "secureFile",
+      "label": "ms-resource:loc.input.label.sshKeySecureFile",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.sshKeySecureFile"
+    },
+    {
+      "name": "addEntryToConfig",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addEntryToConfig",
+      "defaultValue": false,
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.addEntryToConfig"
+    },
+    {
+      "name": "configHostAlias",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configHostAlias",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "addEntryToConfig = true",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.configHostAlias"
+    },
+    {
+      "name": "configHostname",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configHostname",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "addEntryToConfig = true",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.configHostname"
+    },
+    {
+      "name": "configUser",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configUser",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "addEntryToConfig = true",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.configUser"
+    },
+    {
+      "name": "configPort",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configPort",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "addEntryToConfig = true",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.configPort"
+    }
+  ],
+  "prejobexecution": {
+    "Node10": {
+      "target": "preinstallsshkey.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "preinstallsshkey.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "preinstallsshkey.js",
+      "argumentFormat": ""
+    }
+  },
+  "postjobexecution": {
+    "Node10": {
+      "target": "postinstallsshkey.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "postinstallsshkey.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "postinstallsshkey.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "SSH_AGENT_PID",
+        "SSH_AUTH_SOCK",
+        "INSTALL_SSH_KEY_CONFIG_LOCATION",
+        "INSTALL_SSH_KEY_KNOWN_HOSTS_LOCATION"
+      ]
+    }
+  },
+  "messages": {
+    "SSHKeyAlreadyInstalled": "ms-resource:loc.messages.SSHKeyAlreadyInstalled",
+    "SSHPublicKeyMalformed": "ms-resource:loc.messages.SSHPublicKeyMalformed",
+    "SSHKeyInstallFailed": "ms-resource:loc.messages.SSHKeyInstallFailed",
+    "CannotResetKnownHosts": "ms-resource:loc.messages.CannotResetKnownHosts",
+    "GeneratingPublicKey": "ms-resource:loc.messages.GeneratingPublicKey",
+    "CannotResetFile": "ms-resource:loc.messages.CannotResetFile",
+    "DeletePrivateKeyFile": "ms-resource:loc.messages.DeletePrivateKeyFile",
+    "InsertingIntoConfig": "ms-resource:loc.messages.InsertingIntoConfig"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.229.3",
+    "Node20-225": "0.229.4"
+  }
+}
