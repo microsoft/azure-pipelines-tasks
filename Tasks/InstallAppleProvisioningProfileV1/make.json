@@ -3,8 +3,7 @@
         {
             "items": [
                 "node_modules/azure-pipelines-tasks-ios-signing-common/node_modules/azure-pipelines-task-lib",
-                "node_modules/azure-pipelines-tasks-securefiles-common/node_modules/azure-pipelines-task-lib",
-                "node_modules/mockery"
+                "node_modules/azure-pipelines-tasks-securefiles-common/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }

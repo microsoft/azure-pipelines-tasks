@@ -1,0 +1,20 @@
+{
+  "externals": {
+    "archivePackages": [
+      {
+        "archiveName": "7zr.zip",
+        "url": "https://vstsagenttools.blob.core.windows.net/tools/7zr/1805_x86/7zr.zip",
+        "dest": "./"
+      }
+    ]
+  },
+  "rm": [
+    {
+      "items": [
+        "node_modules/azure-pipelines-tasks-utility-common/node_modules/azure-pipelines-task-lib",
+        "node_modules/azure-pipelines-tool-lib/node_modules/azure-pipelines-task-lib"
+      ],
+      "options": "-Rf"
+    }
+  ]
+}

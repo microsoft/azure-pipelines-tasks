@@ -3,12 +3,13 @@
   "name": "DownloadPipelineArtifact",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-pipeline-artifact",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 198,
+    "Minor": 229,
     "Patch": 0
   },
   "groups": [],
@@ -16,6 +17,7 @@
   "minimumAgentVersion": "2.155.1",
   "preview": false,
   "deprecated": true,
+  "removalDate": "2024-04-22",
   "inputs": [
     {
       "name": "buildType",
