@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 225,
-    "Patch": 0
+    "Minor": 229,
+    "Patch": 3
   },
   "satisfies": [
     "Node",

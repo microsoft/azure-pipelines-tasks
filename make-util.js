@@ -1857,103 +1857,55 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
 exports.processGeneratedTasks = processGeneratedTasks;
 
 /**
- * Function to generate new tasks
- * @param {String} baseConfigToolPath Path to generating program
- * @param {Array} taskList  Array with allowed tasks
- * @param {String} configsString String with generation configs 
- * @param {Object} makeOptions Object to put generated definitions
- */
-
-var generateTasks = function(baseConfigToolPath, taskList, configsString, makeOptions) {
-    const args = `--write-updates --configs "${configsString}"`;
-    const configsArr = configsString.split("|")
-    let newMakeOptions = makeOptions;
-
-    taskList.forEach(function (taskName) {
-        const programPath = getBuildConfigGenerator(baseConfigToolPath);
-        const buildArgs = args + ` --task ${taskName}`;
-
-        banner('Generating: ' + taskName);
-        run(`${programPath} ${buildArgs}` , true);
-
-        // insert to make-options.json
-        configsArr.forEach(function (config) {
-            if (!newMakeOptions[config]) {
-                newMakeOptions[config] = [];
-            }
-            
-            if (newMakeOptions[config].indexOf(taskName) === -1) {
-                newMakeOptions[config].push(taskName);
-            }
-        });
-    });
-
-    return newMakeOptions;
-}
-exports.generateTasks = generateTasks;
-
-/**
  * Wrapper for buildTask function which compares diff between source and generated tasks
  * @param {Function} originalFunction - Original buildTask function
- * @param {string} genTaskPath - path to generated folder
+ * @param {string} basicGenTaskPath - path to generated folder
  * @param {boolean} callGenTaskDuringBuild - if false, the sync step will be skipped
  * @returns {Function} - wrapped buildTask function which compares diff between source and generated tasks
  * and copy files from generated to source if needed
  */
-function syncGeneratedFilesWrapper(originalFunction, genTaskPath, callGenTaskDuringBuild = false) {
-    const allowedFilesToCopy = ["package.json", "package-lock.json", "npm-shrinkwrap.json"];
-    const genTaskBasePath = path.basename(genTaskPath);
+function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTaskDuringBuild = false) {
+    const runtimeChangedFiles = ["package.json", "package-lock.json", "npm-shrinkwrap.json"];
 
     if (!originalFunction || originalFunction instanceof Function === false) throw Error('originalFunction is not defined');
     // If the task is building on the ci, we don't want to sync files
     if (callGenTaskDuringBuild === false) return originalFunction;
 
-    console.log(
-        "Syncing generated files with source task...\n" +
-        "----------------------------------------------\n" +
-        "Getting list of uncommitted changes");
-    const initialDiffOutput = run(`git -C "${repoPath}" diff --name-only`)
-    console.log(
-        "uncommitted changes:\n" + 
-        `${initialDiffOutput}\n` +
-        "----------------------------------------------");
-
     return function(taskName, ...args) {
-        // git diff --name-only return "/"" as separator
         originalFunction.apply(this, [taskName, ...args]);
 
-        const genTaskPath = `${genTaskBasePath}/${taskName}/`;
+        const genTaskPath = path.join(basicGenTaskPath, taskName);
+
         // if it's not a generated task, we don't need to sync files
         if (!fs.existsSync(genTaskPath)) return;
 
-        const changedPaths = [];
-        const afterTaskBuildDiff = run(`git diff --name-only`);
+        const [ baseTaskName, config ] = taskName.split("_");
+        const copyCandidates = shell.find(genTaskPath)
+            .filter(function (item) { 
+                // ignore node_modules
+                if (item.indexOf("node_modules") !== -1) return false
+                // ignore everything except package.json, package-lock.json, npm-shrinkwrap.json
+                if (!runtimeChangedFiles.some((pattern) => item.indexOf(pattern) !== -1)) return false;
+                
+                return true;
+            });
 
-        afterTaskBuildDiff.split("\n").forEach((line) => {
-            // We skip files that are not in the generated task folder or are already in the initial diff   
-            if (!line.includes(genTaskPath) || initialDiffOutput.includes(line)) return;
-            changedPaths.push(line);
-        });
+        copyCandidates.forEach((candidatePath) => {
+            const relativePath = path.relative(genTaskPath, candidatePath);
+            let dest = path.join(__dirname, 'Tasks', baseTaskName, relativePath);
 
-        if (changedPaths.length === 0) return;
-
-        console.log(
-            "The following generated files where updated in source task after build and added to staged, please commit them to the repo:\n" +
-            `${changedPaths}\n` +
-            "----------------------------------------------\n" +
-            "The following files were copied to source task:");
-
-        changedPaths.forEach((filePath) => {
-            const fileName = path.basename(filePath);
-            if (allowedFilesToCopy.indexOf(fileName) === -1) return;
-            const [baseTaskName, config] = taskName.split("_");
-            let dest = path.join(__dirname, 'Tasks', baseTaskName, fileName);
-            if (config) {
-                dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, fileName);
+            if (config) {  
+                dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
+            }
+            
+            const folderPath = path.dirname(dest);
+            if (!fs.existsSync(folderPath)) {
+                console.log(`Creating folder ${folderPath}`);
+                shell.mkdir('-p', folderPath);
             }
 
-            fs.copyFileSync(filePath, dest);
-            console.log(`from ${filePath} to ${dest}`);
+            console.log(`Copying ${candidatePath} to ${dest}`);
+            fs.copyFileSync(candidatePath, dest);
         });
     }
 }
