@@ -9,12 +9,13 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 0,
-    "Minor": 225,
-    "Patch": 1
+    "Minor": 229,
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
+  "removalDate": "2023-11-27",
   "inputs": [
     {
       "name": "feed",
