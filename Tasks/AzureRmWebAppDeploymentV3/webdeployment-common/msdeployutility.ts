@@ -128,7 +128,14 @@ export async function getMSDeployFullPath() {
     }
     catch(error) {
         tl.debug(error);
-        return path.join(__dirname, "M229", "MSDeploy3.6", "msdeploy.exe"); 
+
+        let subfolder = "default";
+
+        if ((tl.getVariable("USE_MSDEPLOY_TOKEN_AUTH") || "").toLowerCase() === "true") {
+            subfolder = "M229";
+        }
+
+        return path.join(__dirname, "msdeploy", subfolder , "MSDeploy3.6", "msdeploy.exe");
     }
 }
 
@@ -177,21 +184,24 @@ function getMSDeployInstallPath(registryKey: string): Q.Promise<string> {
             defer.reject(tl.loc("UnabletofindthelocationofMSDeployfromregistryonmachineError", err));
         }
 
-        const versionItem = items.find(item => item.name === "Version");
-        if (!versionItem) {
-            defer.reject("Missing MSDeploy Version registry key");
-        }
+        if ((tl.getVariable("USE_MSDEPLOY_TOKEN_AUTH") || "").toLowerCase() === "true") {
 
-        const version = versionItem.value;
-        tl.debug(`Installed MSDeploy Version: ${version}`);
+            const versionItem = items.find(item => item.name === "Version");
+            if (!versionItem) {
+                defer.reject("Missing MSDeploy Version registry key");
+            }
 
-        const parts = version.split('.').map(Number);
-        if (parts.length < 3) {
-            defer.reject(tl.loc("IncorrectNumberOfVersionParts", version));
-        }
+            const version = versionItem.value;
+            tl.debug(`Installed MSDeploy Version: ${version}`);
 
-        if (parts[0] < 9 || parts[2] < 7225) {
-            defer.reject(tl.loc("UnsupportedMSDeployVersion", version));
+            const parts = version.split('.').map(Number);
+            if (parts.length < 3) {
+                defer.reject(tl.loc("IncorrectNumberOfVersionParts", version));
+            }
+
+            if (parts[0] < 9 || parts[2] < 7225) {
+                defer.reject(tl.loc("UnsupportedMSDeployVersion", version));
+            }
         }
 
         const installPathItem = items.find(item => item.name === "InstallPath");

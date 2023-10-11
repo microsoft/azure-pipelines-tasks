@@ -2,7 +2,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 import Q = require('q');
-import { WebDeployArguments, WebDeployResult, getMSDeployFullPath } from './msdeployutility';
+import { WebDeployArguments, WebDeployResult, getMSDeployFullPath, getMSDeployCmdArgs } from './msdeployutility';
 
 var msDeployUtility = require('./msdeployutility.js');
 var utility = require('./utility.js');
@@ -39,7 +39,7 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     }
     var isParamFilePresentInPackage = isFolderBasedDeployment ? false : await utility.isMSDeployPackage(webDeployPkg);
 
-    var msDeployCmdArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
+    var msDeployCmdArgs = getMSDeployCmdArgs(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
         excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFileName, additionalArguments, isParamFilePresentInPackage, isFolderBasedDeployment,
         useWebDeploy, authType);
 

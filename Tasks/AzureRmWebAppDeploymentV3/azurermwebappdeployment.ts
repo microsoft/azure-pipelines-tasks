@@ -110,14 +110,20 @@ async function main() {
                     {
                         tl.debug("Using Basic authentication.")                        
                     }
-                    else
+                    else if ((tl.getVariable("USE_MSDEPLOY_TOKEN_AUTH") || "").toLowerCase() === "true")
                     {
-                        tl.debug("Basic authentication is disabled.");
+                        tl.debug("Basic authentication is disabled, using token based authentication.");
                         authType = "Bearer";
                         const token = await appService._client.getCredentials().getToken();
                         tl.setSecret(token);
                         msDeployPublishingProfile.userPWD = token;
-                    }               
+                        msDeployPublishingProfile.userName = "user"; // arbitrary but not empty
+                    } 
+                    else
+                    {
+                        //deployment would fail in this case
+                        throw new Error(tl.loc("BasicAuthNotSupported"));
+                    }
 
                     await DeployUsingMSDeploy(webPackage, taskParams.WebAppName, msDeployPublishingProfile, taskParams.RemoveAdditionalFilesFlag,
                     taskParams.ExcludeFilesFromAppDataFlag, taskParams.TakeAppOfflineFlag, taskParams.VirtualApplication, taskParams.SetParametersFile,

@@ -4,12 +4,12 @@
             {
                 "archiveName": "MSDeploy.zip",
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/M229/MSDeploy.zip",
-                "dest": "./"
+                "dest": "./webdeployment-common/msdeploy/M229"
             },
             {
                 "archiveName": "MSDeploy.zip",
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/M229/MSDeploy.zip",
-                "dest": "./webdeployment-common/M229"
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/MSDeploy.zip",
+                "dest": "./webdeployment-common/msdeploy/default"
             },
             {
                 "archiveName": "ctt.zip",
