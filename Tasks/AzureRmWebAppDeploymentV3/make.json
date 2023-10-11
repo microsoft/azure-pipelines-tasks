@@ -3,13 +3,13 @@
         "archivePackages": [
             {
                 "archiveName": "MSDeploy.zip",
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/MSDeploy.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/M229/MSDeploy.zip",
                 "dest": "./"
             },
             {
                 "archiveName": "MSDeploy.zip",
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/MSDeploy.zip",
-                "dest": "./webdeployment-common/"
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/M229/MSDeploy.zip",
+                "dest": "./webdeployment-common/M229"
             },
             {
                 "archiveName": "ctt.zip",

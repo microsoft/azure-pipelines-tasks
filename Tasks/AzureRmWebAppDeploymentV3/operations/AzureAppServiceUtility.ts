@@ -89,6 +89,11 @@ export class AzureAppServiceUtility {
         return await utility.getKuduService();
     }
 
+    public async isSitePublishingCredentialsEnabled(): Promise<boolean> {
+        const utility = new AzureAppServiceUtilityCommon(this._appService);
+        return await utility.isSitePublishingCredentialsEnabled();
+    }
+
     public async getPhysicalPath(virtualApplication: string): Promise<string> {
 
         if(!virtualApplication) {

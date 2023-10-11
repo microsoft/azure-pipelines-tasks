@@ -7,7 +7,7 @@ import * as ParameterParser from './parameterparser'
 import { TaskParameters, TaskParametersUtility } from './operations/TaskParameters';
 
 import { AzureAppService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service';
-import { AzureAppServiceUtility } from './operations/AzureAppServiceUtility';
+import { AzureAppServiceUtility } from './operations/AzureAppServiceUtility'
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
 import { AzureResourceFilterUtility } from './operations/AzureResourceFilterUtility';
@@ -17,17 +17,17 @@ import { FileTransformsUtility } from './operations/FileTransformsUtility';
 import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
 import { KuduServiceUtility } from './operations/KuduServiceUtility';
 import { addReleaseAnnotation } from './operations/ReleaseAnnotationUtility';
+import { DeployUsingMSDeploy } from './webdeployment-common/deployusingmsdeploy';
 
 var packageUtility = require('./webdeployment-common/packageUtility.js');
 
 var deployUtility = require('./webdeployment-common/utility.js');
-var msDeploy = require('./webdeployment-common/deployusingmsdeploy.js');
 
 async function main() {
     let zipDeploymentID: string;
     let isDeploymentSuccess: boolean = true;
     let kuduServiceUtility: KuduServiceUtility;
-
+    let appService: AzureAppService;
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         var taskParams: TaskParameters = TaskParametersUtility.getParameters();
@@ -44,8 +44,8 @@ async function main() {
         }
 
         tl.debug(`Resource Group: ${taskParams.ResourceGroupName}`);
-        var appService: AzureAppService = new AzureAppService(azureEndpoint, taskParams.ResourceGroupName, taskParams.WebAppName, taskParams.SlotName, taskParams.WebAppKind);
-        let appServiceUtility: AzureAppServiceUtility = new AzureAppServiceUtility(appService);
+        appService = new AzureAppService(azureEndpoint, taskParams.ResourceGroupName, taskParams.WebAppName, taskParams.SlotName, taskParams.WebAppKind);
+        const appServiceUtility = new AzureAppServiceUtility(appService);
 
         await appServiceUtility.pingApplication();
         let kuduService: Kudu = await appServiceUtility.getKuduService();
@@ -97,13 +97,31 @@ async function main() {
                 }
 
                 var msDeployPublishingProfile = await appServiceUtility.getWebDeployPublishingProfile();
+              
+
                 if (webPackage.toString().toLowerCase().endsWith('.war')) {
                     await DeployWar(webPackage, taskParams, msDeployPublishingProfile, kuduService, appServiceUtility);
                 }
                 else {
-                    await msDeploy.DeployUsingMSDeploy(webPackage, taskParams.WebAppName, msDeployPublishingProfile, taskParams.RemoveAdditionalFilesFlag,
+
+                    let authType = "Basic";
+
+                    if (await appServiceUtility.isSitePublishingCredentialsEnabled())
+                    {
+                        tl.debug("Using Basic authentication.")                        
+                    }
+                    else
+                    {
+                        tl.debug("Basic authentication is disabled.");
+                        authType = "Bearer";
+                        const token = await appService._client.getCredentials().getToken();
+                        tl.setSecret(token);
+                        msDeployPublishingProfile.userPWD = token;
+                    }               
+
+                    await DeployUsingMSDeploy(webPackage, taskParams.WebAppName, msDeployPublishingProfile, taskParams.RemoveAdditionalFilesFlag,
                     taskParams.ExcludeFilesFromAppDataFlag, taskParams.TakeAppOfflineFlag, taskParams.VirtualApplication, taskParams.SetParametersFile,
-                    taskParams.AdditionalArguments, isFolderBasedDeployment, taskParams.UseWebDeploy);
+                    taskParams.AdditionalArguments, isFolderBasedDeployment, taskParams.UseWebDeploy, authType);
                 }
             }
             else {

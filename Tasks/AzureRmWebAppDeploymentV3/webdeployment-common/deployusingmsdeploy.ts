@@ -2,7 +2,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 import Q = require('q');
-import { WebDeployArguments, WebDeployResult } from './msdeployutility';
+import { WebDeployArguments, WebDeployResult, getMSDeployFullPath } from './msdeployutility';
 
 var msDeployUtility = require('./msdeployutility.js');
 var utility = require('./utility.js');
@@ -24,9 +24,9 @@ const DEFAULT_RETRY_COUNT = 3;
  *
  */
 export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
-        excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isFolderBasedDeployment, useWebDeploy) {
+        excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isFolderBasedDeployment, useWebDeploy, authType: string = "Basic") {
 
-    var msDeployPath = await msDeployUtility.getMSDeployFullPath();
+    var msDeployPath = await getMSDeployFullPath();
     var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
     var pathVar = process.env.PATH;
     process.env.PATH = msDeployDirectory + ";" + process.env.PATH ;
@@ -41,7 +41,7 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
 
     var msDeployCmdArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
         excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFileName, additionalArguments, isParamFilePresentInPackage, isFolderBasedDeployment,
-        useWebDeploy);
+        useWebDeploy, authType);
 
     var retryCountParam = tl.getVariable("appservice.msdeployretrycount");
     var retryCount = (retryCountParam && !(isNaN(Number(retryCountParam)))) ? Number(retryCountParam): DEFAULT_RETRY_COUNT; 
@@ -174,13 +174,16 @@ async function executeMSDeploy(msDeployCmdArgs) {
         for(var i = 0 ; i < msDeployCmdArgs.length ; i++ ) {
             tl.debug("arg#" + i + ": " + msDeployCmdArgs[i]);
         }
-#if NODE16
-        // shell should be true, otherwise see https://github.com/microsoft/azure-pipelines-tasks/issues/17634
-        // workaround https://github.com/nodejs/node/issues/7367#issuecomment-229728704
-        await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj, windowsVerbatimArguments: true, shell: true});
-#else
-        await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj, windowsVerbatimArguments: true});
-#endif
+
+        if (process.versions.node.split('.')[0] === '16') {
+            // shell should be true, otherwise see https://github.com/microsoft/azure-pipelines-tasks/issues/17634
+            // workaround https://github.com/nodejs/node/issues/7367#issuecomment-229728704
+            await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj, windowsVerbatimArguments: true, shell: true});
+        }
+        else {
+            await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj, windowsVerbatimArguments: true});
+        }
+        
         deferred.resolve("Azure App service successfully deployed");
     } catch (error) {
         msDeployError = error;

@@ -29,7 +29,7 @@ const ERROR_FILE_NAME = "error.txt";
 export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, publishingProfile,
                              removeAdditionalFilesFlag: boolean, excludeFilesFromAppDataFlag: boolean, takeAppOfflineFlag: boolean,
                              virtualApplication: string, setParametersFile: string, additionalArguments: string, isParamFilePresentInPacakge: boolean,
-                             isFolderBasedDeployment: boolean, useWebDeploy: boolean) : string {
+                             isFolderBasedDeployment: boolean, useWebDeploy: boolean, authType: string = "Basic") : string {
 
     var msDeployCmdArgs: string = " -verb:sync";
 
@@ -65,7 +65,7 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
 
     if(publishingProfile != null) {
         msDeployCmdArgs += ",ComputerName=\"'https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "'\",";
-        msDeployCmdArgs += "UserName=\"'" + publishingProfile.userName + "'\",Password=\"'" + publishingProfile.userPWD + "'\",AuthType=\"'Basic'\"";
+        msDeployCmdArgs += "UserName=\"'" + publishingProfile.userName + "'\",Password=\"'" + publishingProfile.userPWD + "'\",AuthType=\"'" + authType + "'\"";
     }
     
     if(isParamFilePresentInPacakge) {
@@ -128,7 +128,7 @@ export async function getMSDeployFullPath() {
     }
     catch(error) {
         tl.debug(error);
-        return path.join(__dirname, "MSDeploy3.6", "msdeploy.exe"); 
+        return path.join(__dirname, "M229", "MSDeploy3.6", "msdeploy.exe"); 
     }
 }
 
@@ -170,13 +170,36 @@ function getMSDeployInstallPath(registryKey: string): Q.Promise<string> {
     var regKey = new winreg({
       hive: winreg.HKLM,
       key:  registryKey
-    })
+    });
 
-    regKey.get("InstallPath", function(err,item) {
-        if(err) {
+    regKey.values(function(err, items: {name: string, value: string}[]) {
+        if (err) {
             defer.reject(tl.loc("UnabletofindthelocationofMSDeployfromregistryonmachineError", err));
         }
-        defer.resolve(item.value);
+
+        const versionItem = items.find(item => item.name === "Version");
+        if (!versionItem) {
+            defer.reject("Missing MSDeploy Version registry key");
+        }
+
+        const version = versionItem.value;
+        tl.debug(`Installed MSDeploy Version: ${version}`);
+
+        const parts = version.split('.').map(Number);
+        if (parts.length < 3) {
+            defer.reject(tl.loc("IncorrectNumberOfVersionParts", version));
+        }
+
+        if (parts[0] < 9 || parts[2] < 7225) {
+            defer.reject(tl.loc("UnsupportedMSDeployVersion", version));
+        }
+
+        const installPathItem = items.find(item => item.name === "InstallPath");
+        if (!installPathItem) {
+            defer.reject("Missing MSDeploy InstallPath registry key");
+        }
+
+        defer.resolve(installPathItem.value);
     });
 
     return defer.promise;
