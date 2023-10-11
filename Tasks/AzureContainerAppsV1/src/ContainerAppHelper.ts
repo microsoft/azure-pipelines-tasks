@@ -119,7 +119,7 @@ export class ContainerAppHelper {
             tl.debug(`Attempting to update Container App with name "${containerAppName}" in resource group "${resourceGroup}" based from image "${imageToDeploy}"`);
             const util = new Utility();
             try {
-                let command = `containerapp up -n ${containerAppName} -g ${resourceGroup} -i ${imageToDeploy} --output none`;
+                let command = `containerapp up -n ${containerAppName} -g ${resourceGroup} -i ${imageToDeploy}`;
                 optionalCmdArgs.forEach(function (val: string) {
                     command += ` ${val}`;
                 });
