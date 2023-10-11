@@ -34,8 +34,8 @@ function Sanitize-Arguments([string]$InputArgs) {
 
     ## PowerShell Regex is case insensitive by default, so we don't need to specify a-zA-Z.
     ## ('?<!`') - checking if before character no backtick.
-    ## ([^a-z0-9` _'"-=\/:\.*,+~?%\n#]) - checking if character is allowed. Insead replacing to #removed#
-    $regex = '(?<!`)([^a-z0-9\\` _''"\-=\/:\.*,+~?%\n#])(?!true|false)'
+    ## ([^\w` _'"-=\/:\.*,+~?%\n#]) - checking if character is allowed. Insead replacing to #removed#
+    $regex = '(?<!`)([^\w\\` _''"\-=\/:\.*,+~?%\n#])(?!true|false)'
     for ($i = 0; $i -lt $argsArr.Length; $i++ ) {
         [string[]]$matches = (Select-String $regex -input $argsArr[$i] -AllMatches) | ForEach-Object { $_.Matches }
         if ($null -ne $matches ) {
