@@ -230,7 +230,8 @@
         "AzureFileCopyV3",
         "DockerComposeV0",
         "IISWebAppDeploymentOnMachineGroupV0",
-        "AzureRmWebAppDeploymentV3"
+        "AzureRmWebAppDeploymentV3",
+        "AzureRmWebAppDeploymentV4"
     ],
     "Node20": [
         "AndroidSigningV2",

@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 229,
-    "Patch": 1
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -497,6 +497,10 @@
   "execution": {
     "Node10": {
       "target": "azurermwebappdeployment.js"
+    },
+    "Node16": {
+      "target": "azurermwebappdeployment.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -652,5 +656,9 @@
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "RunFromZipPreventsFileInUseError": "ms-resource:loc.messages.RunFromZipPreventsFileInUseError"
+  },
+  "_buildConfigMapping": {
+    "Default": "4.229.1",
+    "Node16-225": "4.229.2"
   }
 }
