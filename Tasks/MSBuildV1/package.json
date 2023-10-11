@@ -10,10 +10,6 @@
   "bugs": {
     "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
   },
-  "scripts": {
-    "build": "node ../../make.js build --task MSBuildV1",
-    "test": "node ../../make.js test --task MSBuildV1"
-  },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^9.1.1",
