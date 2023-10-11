@@ -31,10 +31,16 @@ namespace BuildConfigGen
             public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
             public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: false, nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: true, shouldUpdateTypescript: false, writeNpmrc: false);
             public static readonly ConfigRecord Node16_225 = new ConfigRecord(name: nameof(Node16_225), constMappingKey: "Node16-225", isDefault: false, isNode: true, isWif: false, nodePackageVersion: "^16.11.39", nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, overriddenDirectoryName: "Node16", writeNpmrc: false);
-            public static readonly ConfigRecord Node20 = new ConfigRecord(name: nameof(Node20), constMappingKey: "Node20-225", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true);
+            public static readonly ConfigRecord Node20 = new ConfigRecord(name: nameof(Node20), constMappingKey: "Node20-225", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_228 = new ConfigRecord(name: nameof(Node20_228), constMappingKey: "Node20-228", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_1 = new ConfigRecord(name: nameof(Node20_229_1), constMappingKey: "Node20_229_1", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_2 = new ConfigRecord(name: nameof(Node20_229_2), constMappingKey: "Node20_229_2", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_3 = new ConfigRecord(name: nameof(Node20_229_3), constMappingKey: "Node20_229_3", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_4 = new ConfigRecord(name: nameof(Node20_229_4), constMappingKey: "Node20_229_4", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_5 = new ConfigRecord(name: nameof(Node20_229_5), constMappingKey: "Node20_229_5", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
             public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
 
-            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, WorkloadIdentityFederation };
+            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, WorkloadIdentityFederation };
         }
 
         // ensureUpdateModeVerifier wraps all writes.  if writeUpdate=false, it tracks writes that would have occured
@@ -179,10 +185,13 @@ namespace BuildConfigGen
 
             string versionMapFile = Path.Combine(gitRootPath, "_generated", @$"{task}.versionmap.txt");
 
-            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping, targetConfigs: targetConfigs, currentSprint.Value, versionMapFile);
+
+            UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping, targetConfigs: targetConfigs, currentSprint.Value, versionMapFile, out HashSet<Config.ConfigRecord> versionsUpdated);
 
             foreach (var config in targetConfigs)
             {
+                bool versionUpdated = versionsUpdated.Contains(config);
+
                 string taskOutput;
                 if (config.isDefault)
                 {
@@ -204,23 +213,30 @@ namespace BuildConfigGen
                     EnsureBuildConfigFileOverrides(config, taskTargetPath);
                 }
 
-                CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
+                var taskConfigExists = File.Exists(Path.Combine(taskOutput, "task.json"));
 
-                if (config.enableBuildConfigOverrides)
+                // only update task output if a new version was added or the config exists
+                if (versionUpdated || taskConfigExists)
                 {
-                    CopyConfigOverrides(taskTargetPath, taskOutput, config);
+                    CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
+
+                    if (config.enableBuildConfigOverrides)
+                    {
+                        CopyConfigOverrides(taskTargetPath, taskOutput, config);
+                    }
+
+                    // if some files aren't present in destination, stop as following code assumes they're present and we'll just get a FileNotFoundException
+                    // don't check content as preprocessor hasn't run
+                    ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: true);
+
+                    HandlePreprocessingInTarget(taskOutput, config);
+
+                    WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.json");
+                    WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.loc.json");
                 }
-
-                // if some files aren't present in destination, stop as following code assumes they're present and we'll just get a FileNotFoundException
-                // don't check content as preprocessor hasn't run
-                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: true);
-
-                HandlePreprocessingInTarget(taskOutput, config);
 
                 WriteInputTaskJson(taskTargetPath, configTaskVersionMapping, "task.json");
                 WriteInputTaskJson(taskTargetPath, configTaskVersionMapping, "task.loc.json");
-                WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.json");
-                WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.loc.json");
 
                 if (config.isNode)
                 {
@@ -529,7 +545,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string versionMapFile)
+        private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string versionMapFile, out HashSet<Config.ConfigRecord> versionsUpdated)
         {
             Dictionary<string, TaskVersion> versionMap;
             TaskVersion maxVersion;
@@ -587,6 +603,8 @@ namespace BuildConfigGen
                 }
             }
 
+
+            versionsUpdated = new HashSet<Config.ConfigRecord>();
             TaskVersion baseVersion = maxVersion;
 
             bool baseVersionIsCurrentSprint = baseVersion.Minor == currentSprint;
@@ -631,6 +649,7 @@ namespace BuildConfigGen
                 {
                     configTaskVersionMapping.Add(Config.Default, baseVersion.CloneWithPatch(baseVersion.Patch + offset));
                     offset++;
+                    versionsUpdated.Add(Config.Default);
                 }
 
                 foreach (var config in targetConfigs)
@@ -646,6 +665,7 @@ namespace BuildConfigGen
                         while (configTaskVersionMapping.Values.Contains(targetVersion));
 
                         configTaskVersionMapping.Add(config, targetVersion);
+                        versionsUpdated.Add(config);
                     }
                 }
             }

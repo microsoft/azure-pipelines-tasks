@@ -9,7 +9,7 @@
     "author": "Lawrence Gripper",
     "version": {
         "Major": 0,
-        "Minor": 198,
+        "Minor": 229,
         "Patch": 0
     },
     "demands": [
@@ -17,6 +17,7 @@
     ],
     "minimumAgentVersion": "1.83.0",
     "deprecated": true,
+    "removalDate": "2024-04-22",
     "groups": [
         {
             "name": "versioning",
