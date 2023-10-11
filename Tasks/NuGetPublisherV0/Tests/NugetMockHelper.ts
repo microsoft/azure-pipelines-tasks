@@ -3,7 +3,11 @@ import VersionInfoVersion from 'azure-pipelines-tasks-packaging-common/pe-parser
 import {VersionInfo} from 'azure-pipelines-tasks-packaging-common/pe-parser/VersionResource'
 
 import * as pkgMock from 'azure-pipelines-tasks-packaging-common/Tests/MockHelper';
+#if NODE20
+import nMockHelper = require('azure-pipelines-tasks-packaging-common/Tests/nuget/NuGetMockHelper');
+#else
 import nMockHelper = require('azure-pipelines-tasks-packaging-common/Tests/NuGetMockHelper');
+#endif
 
 export class NugetMockHelper {
     private defaultNugetVersion = '3.3.0';
