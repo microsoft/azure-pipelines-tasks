@@ -269,5 +269,13 @@
         "InstallSSHKeyV0",
         "JavaToolInstallerV0",
         "JenkinsQueueJobV2"
-    ]
+    ],
+    "Node20_228": [
+        "MavenV2"
+    ],
+    "Node20_229_1": [],
+    "Node20_229_2": [],
+    "Node20_229_3": [],
+    "Node20_229_4": [],
+    "Node20_229_5": []
 }
