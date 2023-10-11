@@ -4,24 +4,44 @@ param()
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\..\helpers.ps1
 
-$throwTestSuites = @(
+$passTestSuites = @(
     @{
-        Name      = 'If dangerous symbols are present, and FF is on'
-        Input     = 'test; whoami'
+        Name      = 'Handles empty line'
+        Input     = ''
+        Variables = @()
+    },
+    @{
+        Name      = 'If no dangerous symbol in present, and FF is on'
+        Input     = 'test 1'
         Variables = @('AZP_75787_ENABLE_NEW_LOGIC=true')
     },
     @{
-        Name      = 'If inside args line is env variable with dangerous symbols'
-        Input     = 'test $env:VAR1 test'
-        Variables = @('VAR1=12;3', 'AZP_75787_ENABLE_NEW_LOGIC=true')
+        Name      = 'If dangerous symbols are present, and FF is off'
+        Input     = 'test; test'
+        Variables = @('AZP_75787_ENABLE_NEW_LOGIC=false')
     },
     @{
-        Name      = 'If inside args line not correct env syntax'
-        Input     = 'test $venv:VAR1 test'
-        Variables = @('VAR1=123', 'AZP_75787_ENABLE_NEW_LOGIC=true')
+        Name      = 'If inside the args line is env variable with no dangerous symbols'
+        Input     = 'test $env:VAR1 test'
+        Variables = @('VAR1=1', 'AZP_75787_ENABLE_NEW_LOGIC=true')
+    },
+    @{
+        Name      = 'Accepts allowed symbols'
+        Input     = "a A 1 \ ` _ ' `" - = / : . * , + ~ ? % `n"
+        Variables = @('AZP_75787_ENABLE_NEW_LOGIC=true')
+    },
+    @{
+        Name      = 'Paths check'
+        Input     = 'my/path 0'
+        Variables = @('AZP_75787_ENABLE_NEW_LOGIC=true')
+    },
+    @{
+        Name      = 'Accepts $true and $false'
+        Input     = '$TrUe $true $fAlsE $false'
+        Variables = @('AZP_75787_ENABLE_NEW_LOGIC=true')
     }
 )
-foreach ($test in $throwTestSuites) {
+foreach ($test in $passTestSuites) {
     $test.Variables | ForEach-Object {
         $name, $value = $_.Split('=')
         if ($value) {
@@ -33,10 +53,7 @@ foreach ($test in $throwTestSuites) {
     }
 
     try {
-        $msg = Get-VstsLocString -Key 'ScriptArgsSanitized'
-        Assert-Throws {
-            Test-FileArgs $test.Input
-        } -MessagePattern $msg
+        Test-FileArgs $test.Input
     }
     catch {
         throw "Error occured in '$($test.Name)' suite: $($_.Exception.Message)"
@@ -48,3 +65,4 @@ foreach ($test in $throwTestSuites) {
         }
     }
 }
+
