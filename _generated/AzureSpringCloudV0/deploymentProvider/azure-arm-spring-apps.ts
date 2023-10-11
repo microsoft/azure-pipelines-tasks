@@ -7,6 +7,7 @@ import { ToError } from 'azure-pipelines-tasks-azure-arm-rest/AzureServiceClient
 import { uploadFileToSasUrl } from './azure-storage';
 import https = require('https');
 import { parse } from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
+import { request } from 'http';
 
 export const SourceType = {
     JAR: "Jar",
@@ -76,6 +77,26 @@ export class AzureSpringApps {
             httpRequest.body = body;
         tl.debug(`Sending ${method} request to ${url}`);
         return this._client.beginRequest(httpRequest);
+    }
+
+    /**
+     * send request using webClient.sendRequest
+     * @param method 
+     * @param url 
+     * @param body 
+     * @param headers 
+     * @returns webClient.WebResponse
+     */
+    protected sendRequestV2(method: string, url: string, body?: any, headers?: any): Promise<webClient.WebResponse> {
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = method;
+        httpRequest.uri = url;
+        if (body)
+            httpRequest.body = body;
+        if (headers)
+            httpRequest.headers = headers;
+        tl.debug(`Sending ${method} request to ${url}`);
+        return webClient.sendRequest(httpRequest);
     }
 
     /**
@@ -322,6 +343,30 @@ export class AzureSpringApps {
         }
     }
 
+    protected async getDeploymentInfo(appName: String, deploymentName: String): Promise<Object> {
+        tl.debug(`Query deployment ${deploymentName} for app ${appName}`)
+        const requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments/{deploymentName}`, {
+            '{appName}': appName,
+            '{deploymentName}': deploymentName
+        }, null, API_VERSION);
+
+        try {
+            const response = await this.sendRequest('GET', requestUri);
+            if (response.statusCode == 404) {
+                tl.debug(`404 when querying deployment ${deploymentName} for app ${appName}`);
+                throw Error(tl.loc('NoDeploymentsExist'));
+            } if (response.statusCode != 200) {
+                tl.error(`${tl.loc('UnableToGetDeploymentInformation')} ${tl.loc('StatusCode')}: ${response.statusCode}`);
+                throw ToError(response);
+            } else {
+                tl.debug('Found deployment ${deploymentName} for app ${appName}.');
+                return response.body;
+            }
+        } catch (error) {
+            throw (error);
+        }
+    }
+
     /**
      * Returns the currently inactive deployment, or `undefined` if none exists.
      * @param appName 
@@ -477,6 +522,7 @@ export class AzureSpringApps {
             var response = await this.sendRequest(method, requestUri, JSON.stringify(deploymentUpdateRequestBody));
         } catch (error) {
             tl.debug('Error when sending app update request');
+            await this.printLatestAppInstanceLog(appName, deploymentName);
             throw (error);
         }
         console.log(JSON.stringify(response.body, null, 2));
@@ -496,6 +542,7 @@ export class AzureSpringApps {
                     await this.awaitOperationCompletion(operationStatusUrl);
                 } catch (error) {
                     tl.debug('Error in awaiting operation completion');
+                    await this.printLatestAppInstanceLog(appName, deploymentName);
                     throw error;
                 } finally {
                     //A build log is available on the deployment when uploading a folder. Let's display it.
@@ -650,4 +697,51 @@ export class AzureSpringApps {
             throw (error);
         }
     }
+
+    private async printLatestAppInstanceLog(appName: string, deploymentName: string) {
+        console.info('Some error occured during deployment. Printing latest app instance log:');
+        const logStream = await this.logStreamConstructor();
+        const deploymentResource = await this.getDeploymentInfo(appName, deploymentName);
+        const instances = deploymentResource["properties"]["instances"];
+        let startTime = instances[0].startTime;
+        let instanceName = instances[0].name;
+
+        // print the newly created instance log
+        for (const tempInstance of instances) {
+            if (tempInstance.startTime > startTime) {
+                startTime = tempInstance.startTime;
+                instanceName = tempInstance.name;
+            }
+        }
+        let streamingUrl = `https://${logStream["baseUrl"]}/api/logstream/apps/${appName}/instances/${instanceName}?follow=true`;
+        const credentials = Buffer.from(`primary:${logStream["primaryKey"]}`).toString('base64');
+        const headers = { 
+            "Authorization" : `Basic ${credentials}` 
+        };
+        await this.sendRequestV2('GET', streamingUrl, null, headers).then(response => {
+            console.info(response.body);
+        });
+    }
+
+    public async logStreamConstructor() {
+        tl.debug("Constructing log stream");
+        let ret = {};
+        let requestUri = this._client.getRequestUri(`${this._resourceId}/listTestKeys`, {}, null, API_VERSION);
+        try {
+            var response: webClient.WebResponse = await this.sendRequest('POST', requestUri);
+            if (!response.body.enabled) {
+                tl.warning(tl.loc('PrivateTestEndpointNotEnabled but log stream needs it'));
+                return null;
+            } else {
+                tl.debug('log stream constructed.');
+                ret["primaryKey"] = response.body.primaryKey;
+            }
+        } catch (error) {
+            tl.error(tl.loc('UnableToRetrieveTestEndpointKeys'));
+            throw (error);
+        }
+        const serviceResponse = await this.getServiceInfo();
+        ret["baseUrl"] = serviceResponse["properties"]["fqdn"];
+        return ret;
+    } 
 }

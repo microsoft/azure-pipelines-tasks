@@ -1,6 +1,6 @@
 {
-  "id": "5679292e-de0e-473a-948e-4874d2d8ef97",
-  "name": "AzureSpringCloud",
+  "id": "5679292e-de0e-473a-948e-4874d2d8ef98",
+  "name": "AzureSpringCloudTest",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://aka.ms/azurespringapps",
@@ -18,8 +18,8 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 227,
-    "Patch": 1
+    "Minor": 229,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -333,7 +333,7 @@
     "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern"
   },
   "_buildConfigMapping": {
-    "Default": "0.227.1",
-    "Node16-225": "0.227.0"
+    "Default": "0.229.0",
+    "Node16-225": "0.229.1"
   }
 }
