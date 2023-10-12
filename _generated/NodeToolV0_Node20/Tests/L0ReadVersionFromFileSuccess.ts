@@ -74,6 +74,15 @@ tmr.registerMock('azure-pipelines-tool-lib/tool', {
             throw new Error('Incorrect URL');
         }
     },
+    downloadToolWithRetries(url) {
+        if (url === `https://nodejs.org/dist/v11.3.0/node-v11.3.0-win-${os.arch()}.7z` ||
+            url === `https://nodejs.org/dist/v11.3.0/node-v11.3.0-${os.platform()}-${os.arch()}.tar.gz`) {
+            return 'location';
+        }
+        else {
+            throw new Error('Incorrect URL');
+        }
+    },
     extract7z(downloadPath, extPath, _7zPath) {
         return 'extPath';
     },
