@@ -13,7 +13,7 @@
   "preview": false,
   "version": {
     "Major": 2,
-    "Minor": 226,
+    "Minor": 229,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -240,7 +240,7 @@
     "Win32Error0FromMethod1": "ms-resource:loc.messages.Win32Error0FromMethod1"
   },
   "_buildConfigMapping": {
-    "Default": "2.226.1",
-    "Node16-225": "2.226.0"
+    "Default": "2.229.1",
+    "Node16-225": "2.229.0"
   }
 }
