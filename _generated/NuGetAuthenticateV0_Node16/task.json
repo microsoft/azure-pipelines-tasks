@@ -4,8 +4,8 @@
   "friendlyName": "NuGet authenticate",
   "description": "This version of the task is deprecated, use NuGetAuthenticateV1 instead. Configure NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Requires NuGet >= 4.8.5385, dotnet >= 2.1.400, or MSBuild >= 15.8.166.59604.",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://aka.ms/NuGetAuthenticateTask",
-  "helpMarkDown": "[Learn more about this task](https://aka.ms/NuGetAuthenticateTask)",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget-authenticate",
+  "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget-authenticate)",
   "category": "Package",
   "runsOn": [
     "Agent",
@@ -13,10 +13,11 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 227,
-    "Patch": 0
+    "Minor": 229,
+    "Patch": 1
   },
   "deprecated": true,
+  "removalDate": "2024-04-22",
   "minimumAgentVersion": "2.120.0",
   "instanceNameFormat": "NuGet Authenticate",
   "inputs": [
@@ -51,7 +52,7 @@
   },
   "messages": {},
   "_buildConfigMapping": {
-    "Default": "0.227.1",
-    "Node16-225": "0.227.0"
+    "Default": "0.229.2",
+    "Node16-225": "0.229.1"
   }
 }

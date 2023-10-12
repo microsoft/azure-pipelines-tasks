@@ -33,5 +33,5 @@ for ($i = 0; $i -lt $argumentsFormats.Length; $i++) {
     [string[]]$splitArguments = Split-Arguments -arguments $argumentsFormats[$i]
 
     # Assert
-    Assert-AreEqual $splitArguments $expectedOutputs[$i]
+    Assert-AreEqual -Expected $splitArguments -Actual $expectedOutputs[$i]
 }
