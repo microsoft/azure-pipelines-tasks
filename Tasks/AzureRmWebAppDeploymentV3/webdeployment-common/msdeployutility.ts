@@ -86,7 +86,7 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
         }
     }
 
-    additionalArguments = additionalArguments ? additionalArguments : ' ';
+    additionalArguments = additionalArguments ? escapeQuotes(additionalArguments) : ' ';
     msDeployCmdArgs += ' ' + additionalArguments;
 
     if(!(removeAdditionalFilesFlag && useWebDeploy)) {
@@ -106,6 +106,105 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     return msDeployCmdArgs;
 }
 
+
+/**
+ * Escapes quotes in a string to ensure proper command-line parsing.
+ * @param {string} additionalArguments - The string to format.
+ * @returns {string} The formatted string with escaped quotes.
+ */
+function escapeQuotes(additionalArguments: string): string {
+    const parsedArgs = parseAdditionalArguments(additionalArguments);
+    const separator = ",";
+
+    const formattedArgs = parsedArgs.map(function (arg) {
+        let formattedArg = '';
+        let equalsSignEncountered = false;
+        for (let i = 0; i < arg.length; i++) {
+            const char = arg.charAt(i);
+            if (char == separator && equalsSignEncountered) {
+                equalsSignEncountered = false;
+                arg = arg.replace(formattedArg, escapeArg(formattedArg));
+                formattedArg = '';
+                continue;
+            }
+            if (equalsSignEncountered) {
+                formattedArg += char;
+            } 
+            if (char == '=') {
+                equalsSignEncountered = true;
+            } 
+        };
+
+        if (formattedArg.length > 0) {
+            arg = arg.replace(formattedArg, escapeArg(formattedArg));
+        }
+
+        return arg;
+    });
+
+    return formattedArgs.join(' ');
+}
+exports.escapeQuotes = escapeQuotes;
+
+/**
+ * Escapes special characters in a string to ensure proper command-line parsing.
+ * @param {string} arg - The string to format.
+ * @returns {string} The formatted string with escaped characters.
+ */
+function escapeArg(arg: string): string {
+    var escapedChars = new RegExp(/[\\\^\.\*\?\-\&\|\(\)\<\>\t\n\r\f]/);
+    // If the argument starts with dowble quote and ends with double quote, the replace it with escaped double quotes
+    if (arg.startsWith('"') && arg.endsWith('"')) {
+        return '"\\' + arg.slice(0, arg.length - 1) + '\\""';
+    }
+    // If the argument starts with single quote and ends with single quote, then replace it with escaped double qoutes
+    if (arg.startsWith("'") && arg.endsWith("'")) {
+        return '"\\"' + arg.slice(1, arg.length - 1) + '\\""';
+    }
+
+    if (escapedChars.test(arg)) {
+        return '"\\"' + arg + '\\""';
+    }
+    return arg;
+}
+
+/**
+ * Parses additional arguments for the msdeploy command-line utility.
+ * @param {string} additionalArguments - The additional arguments to parse.
+ * @returns {string[]} An array of parsed arguments.
+ */
+function parseAdditionalArguments(additionalArguments: string): string[] {
+    var parsedArgs = [];
+    var isInsideQuotes = false;
+    for (let i = 0; i < additionalArguments.length; i++) {
+        var arg = '';
+        var qouteSymbol = '';
+        let char = additionalArguments.charAt(i);
+        // command parse start
+        if (char === '-') {
+            while (i < additionalArguments.length) {
+                char = additionalArguments.charAt(i);
+                const prevSym = additionalArguments.charAt(i - 1);
+                // If we reach space and we are not inside quotes, then it is the end of the argument
+                if (char === ' ' && !isInsideQuotes) break;
+                // If we reach unescaped comma and we inside qoutes we assume that it is the end of quoted line
+                if (isInsideQuotes && char === qouteSymbol &&  prevSym !== '\\') {
+                    isInsideQuotes = false;
+                    qouteSymbol = '';
+                // If we reach unescaped comma and we are not inside qoutes we assume that it is the beggining of quoted line
+                } else if (!isInsideQuotes && (char === '"' || char === "'") &&  prevSym !== '\\') {
+                    isInsideQuotes = !isInsideQuotes;
+                    qouteSymbol = char;
+                }
+
+                arg += char;
+                i += 1;
+            }
+            parsedArgs.push(arg);
+        }
+    }
+    return parsedArgs;
+}
 
 export async function getWebDeployArgumentsString(webDeployArguments: WebDeployArguments, publishingProfile: any) {
     return getMSDeployCmdArgs(webDeployArguments.package.getPath(), webDeployArguments.appName, publishingProfile, webDeployArguments.removeAdditionalFilesFlag,
