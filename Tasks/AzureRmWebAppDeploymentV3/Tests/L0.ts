@@ -67,7 +67,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let expectedFileAsBuffer = fs.readFileSync(expectedFilePath);
         let transformedFileEncodeType = fileEncoding.detectFileEncoding(transformedFilePath, transformedFileAsBuffer)[0];
         let transformedFileAsString = transformedFileAsBuffer.toString(transformedFileEncodeType);
-        transformedFileAsString = transformedFileAsString.replace( /[\n]+/gm, "\r\n" );
+        transformedFileAsString = transformedFileAsString.replace( /(?<!\r)[\n]+/gm, "\r\n" );
         transformedFileAsBuffer = Buffer.from(transformedFileAsString, transformedFileEncodeType);
         var resultFile = ltx.parse(transformedFileAsBuffer);
         var expectFile = ltx.parse(expectedFileAsBuffer);
@@ -78,7 +78,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         expectedFileAsBuffer = fs.readFileSync(expectedFilePath);
         transformedFileEncodeType = fileEncoding.detectFileEncoding(transformedFilePath, transformedFileAsBuffer)[0];
         transformedFileAsString = transformedFileAsBuffer.toString(transformedFileEncodeType);
-        transformedFileAsString = transformedFileAsString.replace( /[\n]+/gm, "\r\n" );
+        transformedFileAsString = transformedFileAsString.replace( /(?<!\r)[\n]+/gm, "\r\n" );
         transformedFileAsBuffer = Buffer.from(transformedFileAsString, transformedFileEncodeType);
         var resultFile = ltx.parse(transformedFileAsBuffer);
         var expectFile = ltx.parse(expectedFileAsBuffer);
