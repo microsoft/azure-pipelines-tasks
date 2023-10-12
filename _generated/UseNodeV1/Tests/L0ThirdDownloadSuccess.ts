@@ -79,6 +79,29 @@ tmr.registerMock('azure-pipelines-tool-lib/tool', {
             throw new Error('Incorrect URL');
         }
     },
+    downloadToolWithRetries(url) {
+        let err = new Error();
+        err['httpStatusCode'] = '404';
+        if (url === `https://nodejs.org/dist/v0.12.18/node-v0.12.18-win-${os.arch()}.7z` ||
+            url === `https://nodejs.org/dist/v0.12.18/node-v0.12.18-${os.platform()}-${os.arch()}.tar.gz`) {
+            throw err;
+        }
+        else if (url === `https://nodejs.org/dist/v0.12.18/win-${os.arch()}/node.exe`) {
+            throw err;
+        }
+        else if (url === `https://nodejs.org/dist/v0.12.18/win-${os.arch()}/node.lib`) {
+            throw err;
+        }
+        else if (url === `https://nodejs.org/dist/v0.12.18/node.exe`) {
+            return 'exe_loc';
+        }
+        else if (url === `https://nodejs.org/dist/v0.12.18/node.lib`) {
+            return 'exe_lib';
+        }
+        else {
+            throw new Error('Incorrect URL');
+        }
+    },
     extract7z(downloadPath, extPath, _7zPath) {
         return 'extPath';
     },
