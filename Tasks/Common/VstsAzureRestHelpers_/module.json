@@ -1,4 +1,5 @@
 {
+    "type": "ps",
     "messages": {
         "AZ_CouldNotGenerateOidcToken": "Could not generate a client assertion for federated login.",
         "AZ_UnsupportedAuthScheme0": "Unsupported authentication scheme '{0}' for Azure endpoint.",
