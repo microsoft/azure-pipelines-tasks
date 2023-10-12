@@ -1,0 +1,94 @@
+{
+  "id": "D4B964F9-EA90-41BB-9526-29589628AD90",
+  "name": "MavenAuthenticate",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 229,
+    "Patch": 6
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "artifactsFeeds",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.artifactsFeeds",
+      "defaultValue": "",
+      "helpMarkdown": "Select one or multiple feeds to authenticate.",
+      "properties": {
+        "EditableOptions": "true",
+        "MultiSelectFlatList": "true"
+      }
+    },
+    {
+      "name": "mavenServiceConnections",
+      "label": "ms-resource:loc.input.label.mavenServiceConnections",
+      "helpMarkDown": "ms-resource:loc.input.help.mavenServiceConnections",
+      "type": "connectedService:externalmavenrepository",
+      "properties": {
+        "MultiSelectFlatList": "true"
+      }
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "artifactsFeeds",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "mavenauth.js"
+    },
+    "Node16": {
+      "target": "mavenauth.js"
+    },
+    "Node20": {
+      "target": "mavenauth.js",
+      "argumentFormat": ""
+    }
+  },
+  "postjobexecution": {
+    "Node10": {
+      "target": "cleanup.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "cleanup.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "cleanup.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Warning_FeedEntryAlreadyExists": "ms-resource:loc.messages.Warning_FeedEntryAlreadyExists",
+    "Warning_NoEndpointsToAuth": "ms-resource:loc.messages.Warning_NoEndpointsToAuth",
+    "Info_GeneratingExternalRepositories": "ms-resource:loc.messages.Info_GeneratingExternalRepositories",
+    "Info_GeneratingInternalFeeds": "ms-resource:loc.messages.Info_GeneratingInternalFeeds",
+    "Info_M2FolderDoesntExist": "ms-resource:loc.messages.Info_M2FolderDoesntExist",
+    "Info_SettingsXmlRead": "ms-resource:loc.messages.Info_SettingsXmlRead",
+    "Info_CreatingSettingsXml": "ms-resource:loc.messages.Info_CreatingSettingsXml",
+    "Info_WritingToSettingsXml": "ms-resource:loc.messages.Info_WritingToSettingsXml",
+    "Error_InvalidServiceConnection": "ms-resource:loc.messages.Error_InvalidServiceConnection",
+    "Error_FailedCleanupM2": "ms-resource:loc.messages.Error_FailedCleanupM2"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.229.5",
+    "Node20_229_1": "0.229.6"
+  }
+}
