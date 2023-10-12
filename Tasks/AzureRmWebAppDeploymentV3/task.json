@@ -766,9 +766,5 @@
     "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
     "JarNotSupported": "Jar deployment is not supported in this version. Change the task version to '4.*' which is in preview mode",
     "CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
-  },
-  "_buildConfigMapping": {
-    "Default": "3.228.4",
-    "Node16-225": "3.228.3"
   }
 }

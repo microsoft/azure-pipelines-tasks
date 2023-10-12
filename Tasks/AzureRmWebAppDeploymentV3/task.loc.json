@@ -766,9 +766,5 @@
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "JarNotSupported": "ms-resource:loc.messages.JarNotSupported",
     "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM"
-  },
-  "_buildConfigMapping": {
-    "Default": "3.228.4",
-    "Node16-225": "3.228.3"
   }
 }
