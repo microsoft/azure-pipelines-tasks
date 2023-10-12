@@ -1,9 +1,10 @@
 import tl = require('azure-pipelines-task-lib/task');
 import { TaskParameters } from './TaskParameters';
-import { parse } from '../webdeployment-common/ParameterParserUtility';
-var deployUtility = require('../webdeployment-common/utility.js');
-var fileTransformationsUtility = require('../webdeployment-common/fileTransformationsUtility.js');
-var generateWebConfigUtil = require('../webdeployment-common/webconfigutil.js');
+import { parse } from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
+
+import { generateTemporaryFolderForDeployment, isMSDeployPackage, archiveFolderForDeployment } from 'azure-pipelines-tasks-webdeployment-common/utility';
+import { fileTransformations } from 'azure-pipelines-tasks-webdeployment-common/fileTransformationsUtility';
+import { addWebConfigFile } from 'azure-pipelines-tasks-webdeployment-common/webconfigutil';
 
 export class FileTransformsUtility {
 
@@ -13,19 +14,19 @@ export class FileTransformsUtility {
         var applyFileTransformFlag = taskParams.JSONFiles.length != 0 || taskParams.XmlTransformation || taskParams.XmlVariableSubstitution;
         if (applyFileTransformFlag || taskParams.GenerateWebConfig) {
             var isFolderBasedDeployment: boolean = tl.stats(webPackage).isDirectory();
-            var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, webPackage);
+            var folderPath = await generateTemporaryFolderForDeployment(isFolderBasedDeployment, webPackage, undefined);
             if (taskParams.GenerateWebConfig) {
                 tl.debug('parsing web.config parameters');
                 var webConfigParameters = parse(taskParams.WebConfigParameters);
-                generateWebConfigUtil.addWebConfigFile(folderPath, webConfigParameters, this.rootDirectoryPath);
+                addWebConfigFile(folderPath, webConfigParameters, this.rootDirectoryPath);
             }
 
             if (applyFileTransformFlag) {
-                var isMSBuildPackage = !isFolderBasedDeployment && (await deployUtility.isMSDeployPackage(webPackage));
-                fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, taskParams.JSONFiles, taskParams.XmlTransformation, taskParams.XmlVariableSubstitution, folderPath, isMSBuildPackage);
+                var isMSBuildPackage = !isFolderBasedDeployment && (await isMSDeployPackage(webPackage));
+                fileTransformations(isFolderBasedDeployment, taskParams.JSONFiles, taskParams.XmlTransformation, taskParams.XmlVariableSubstitution, folderPath, isMSBuildPackage);
             }
 
-            var output = await deployUtility.archiveFolderForDeployment(isFolderBasedDeployment, folderPath);
+            var output = await archiveFolderForDeployment(isFolderBasedDeployment, folderPath);
             webPackage = output.webDeployPkg;
         }
         else {

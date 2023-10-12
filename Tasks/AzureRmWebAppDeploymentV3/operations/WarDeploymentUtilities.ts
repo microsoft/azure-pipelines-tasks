@@ -6,7 +6,7 @@ import { AzureAppServiceUtility } from './AzureAppServiceUtility';
 import { TaskParameters } from './TaskParameters';
 import { sleepFor } from 'azure-pipelines-tasks-azure-arm-rest/webClient';
 
-var msDeploy = require('../webdeployment-common/deployusingmsdeploy.js');
+import { DeployUsingMSDeploy } from 'azure-pipelines-tasks-webdeployment-common/deployusingmsdeploy';
 
 export async function DeployWar(webPackage, taskParams: TaskParameters, msDeployPublishingProfile, kuduService: Kudu, appServiceUtility: AzureAppServiceUtility): Promise<void> {
     // get list of files before deploying to the web app.
@@ -31,7 +31,7 @@ export async function DeployWar(webPackage, taskParams: TaskParameters, msDeploy
 
     var retryCount = 3;
     while (retryCount > 0) {
-        await msDeploy.DeployUsingMSDeploy(webPackage, taskParams.WebAppName, msDeployPublishingProfile, taskParams.RemoveAdditionalFilesFlag,
+        await DeployUsingMSDeploy(webPackage, taskParams.WebAppName, msDeployPublishingProfile, taskParams.RemoveAdditionalFilesFlag,
             taskParams.ExcludeFilesFromAppDataFlag, taskParams.TakeAppOfflineFlag, taskParams.VirtualApplication, taskParams.SetParametersFile,
             taskParams.AdditionalArguments, false, taskParams.UseWebDeploy);
 
