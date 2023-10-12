@@ -175,7 +175,7 @@ async function executeMSDeploy(msDeployCmdArgs) {
             tl.debug("arg#" + i + ": " + msDeployCmdArgs[i]);
         }
 
-        if (process.versions.node.split('.')[0] === '16') {
+        if (tl.getNodeMajorVersion() === 16) {
             // shell should be true, otherwise see https://github.com/microsoft/azure-pipelines-tasks/issues/17634
             // workaround https://github.com/nodejs/node/issues/7367#issuecomment-229728704
             await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj, windowsVerbatimArguments: true, shell: true});
