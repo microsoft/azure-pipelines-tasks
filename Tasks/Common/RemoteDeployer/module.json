@@ -1,5 +1,6 @@
 {
-    "type": "ps",
+    "$schema" : "../module.schema.json",
+    "moduleType": "ps",
     "messages": {
         "RemoteDeployer_ConnectedMachines" : "PSSession created for Machines:'{0}'",
         "RemoteDeployer_NotConnectedMachines" : "PSSession could not be created for Machine:'{0}:{1}'",

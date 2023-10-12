@@ -1,5 +1,6 @@
 {
-    "type": "ps",
+    "$schema" : "../module.schema.json",
+    "moduleType": "ps",
     "messages": {
         "ActionTimedOut": "Exceeded max retries. Timing out.",
         "RetryAfterMessage": "Retrying after {0} second(s)...",

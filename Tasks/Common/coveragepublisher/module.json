@@ -1,5 +1,6 @@
 {
-    "type": "node",
+    "$schema" : "../module.schema.json",
+    "moduleType": "ps",
     "compile": true,
     "messages": {
         "InstallDotNetCoreForPublishing": "Please install dotnet core to run this task.",

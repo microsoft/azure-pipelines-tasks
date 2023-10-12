@@ -1,5 +1,6 @@
 {
-    "type": "ps",
+    "$schema" : "../module.schema.json",
+    "moduleType": "ps",
     "messages": {
         "AadAuthority": "AAD Authority: {0}",
         "CertNotPresentInLocalStoreWarningMsg": "The certificate with thumbprint {0} is not present in the local certificate store. This can potentially cause errors. If the release/build fails, please re-try it or ensure that multiple agents are not running builds/releases using the same service endpoint simultaneously on the same machine.",
