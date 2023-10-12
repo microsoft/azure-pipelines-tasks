@@ -5,10 +5,8 @@ import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service
 import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azure-arm-rest/constants';
 import webClient = require('azure-pipelines-tasks-azure-arm-rest/webClient');
 import { TaskParameters } from './TaskParameters';
-
-import { generateTemporaryFolderOrZipPath } from 'azure-pipelines-tasks-webdeployment-common/utility';
-import { archiveFolder } from 'azure-pipelines-tasks-webdeployment-common/ziputility';
-
+var deployUtility = require('../webdeployment-common/utility.js');
+var zipUtility = require('../webdeployment-common/ziputility.js');
 const physicalRootPath: string = '/site/wwwroot';
 const deploymentFolder: string = 'site/deployments';
 const manifestFileName: string = 'manifest';
@@ -113,8 +111,8 @@ export class KuduServiceUtility {
             }
 
             if(tl.stats(packagePath).isDirectory()) {
-                let tempPackagePath = generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
-                packagePath = await archiveFolder(packagePath, "", tempPackagePath);
+                let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
+                packagePath = await zipUtility.archiveFolder(packagePath, "", tempPackagePath);
                 tl.debug("Compressed folder " + packagePath + " into zip : " +  packagePath);
             }
             else if(packagePath.toLowerCase().endsWith('.war')) {
@@ -140,8 +138,8 @@ export class KuduServiceUtility {
             await this._preZipDeployOperation();
 
             if(tl.stats(packagePath).isDirectory()) {
-                let tempPackagePath = generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
-                packagePath = await archiveFolder(packagePath, "", tempPackagePath);
+                let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
+                packagePath = await zipUtility.archiveFolder(packagePath, "", tempPackagePath);
                 tl.debug("Compressed folder " + packagePath + " into zip : " +  packagePath);
             }
 

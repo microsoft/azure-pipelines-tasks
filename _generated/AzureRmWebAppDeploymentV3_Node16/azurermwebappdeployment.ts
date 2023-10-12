@@ -1,5 +1,6 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
+import fs = require('fs');
 
 import * as ParameterParser from './parameterparser'
 
@@ -17,9 +18,10 @@ import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service
 import { KuduServiceUtility } from './operations/KuduServiceUtility';
 import { addReleaseAnnotation } from './operations/ReleaseAnnotationUtility';
 
-import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
-import { isInputPkgIsFolder, canUseWebDeploy } from 'azure-pipelines-tasks-webdeployment-common/utility';
-import { DeployUsingMSDeploy } from 'azure-pipelines-tasks-webdeployment-common/deployusingmsdeploy';
+var packageUtility = require('./webdeployment-common/packageUtility.js');
+
+var deployUtility = require('./webdeployment-common/utility.js');
+var msDeploy = require('./webdeployment-common/deployusingmsdeploy.js');
 
 async function main() {
     let zipDeploymentID: string;
@@ -55,7 +57,7 @@ async function main() {
         if(taskParams.isLinuxApp) {
             switch(taskParams.ImageSource) {
                 case 'Builtin': {
-                    var webPackage = PackageUtility.getPackagePath(taskParams.Package);
+                    var webPackage = packageUtility.PackageUtility.getPackagePath(taskParams.Package);
                     tl.debug('Performing Linux built-in package deployment');
                     zipDeploymentID = await kuduServiceUtility.zipDeploy(webPackage, taskParams.TakeAppOfflineFlag, { slotName: appService.getSlot() });
                     await appServiceUtility.updateStartupCommandAndRuntimeStack(taskParams.RuntimeStack, taskParams.StartupCommand);
@@ -73,8 +75,8 @@ async function main() {
             }
         }
         else {
-            var webPackage = PackageUtility.getPackagePath(taskParams.Package);
-            var isFolderBasedDeployment = isInputPkgIsFolder(webPackage);
+            var webPackage = packageUtility.PackageUtility.getPackagePath(taskParams.Package);
+            var isFolderBasedDeployment = deployUtility.isInputPkgIsFolder(webPackage);
             var physicalPath: string = '/site/wwwroot';
             if(taskParams.VirtualApplication) {
                 physicalPath = await appServiceUtility.getPhysicalPath(taskParams.VirtualApplication);
@@ -84,7 +86,7 @@ async function main() {
 
             webPackage = await FileTransformsUtility.applyTransformations(webPackage, taskParams);
 
-            if(canUseWebDeploy(taskParams.UseWebDeploy)) {
+            if(deployUtility.canUseWebDeploy(taskParams.UseWebDeploy)) {
                 tl.debug("Performing the deployment of webapp.");
                 if(!tl.osType().match(/^Win/)){
                     throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
@@ -99,7 +101,7 @@ async function main() {
                     await DeployWar(webPackage, taskParams, msDeployPublishingProfile, kuduService, appServiceUtility);
                 }
                 else {
-                    await DeployUsingMSDeploy(webPackage, taskParams.WebAppName, msDeployPublishingProfile, taskParams.RemoveAdditionalFilesFlag,
+                    await msDeploy.DeployUsingMSDeploy(webPackage, taskParams.WebAppName, msDeployPublishingProfile, taskParams.RemoveAdditionalFilesFlag,
                     taskParams.ExcludeFilesFromAppDataFlag, taskParams.TakeAppOfflineFlag, taskParams.VirtualApplication, taskParams.SetParametersFile,
                     taskParams.AdditionalArguments, isFolderBasedDeployment, taskParams.UseWebDeploy);
                 }
