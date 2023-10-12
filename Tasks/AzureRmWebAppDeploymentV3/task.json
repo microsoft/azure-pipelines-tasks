@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 228,
-    "Patch": 4
+    "Minor": 230,
+    "Patch": 0
   },
   "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
   "minimumAgentVersion": "2.104.1",
@@ -624,6 +624,10 @@
   "execution": {
     "Node10": {
       "target": "azurermwebappdeployment.js"
+    },
+    "Node16": {
+      "target": "azurermwebappdeployment.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -762,5 +766,9 @@
     "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
     "JarNotSupported": "Jar deployment is not supported in this version. Change the task version to '4.*' which is in preview mode",
     "CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "3.228.4",
+    "Node16-225": "3.228.3"
   }
 }
