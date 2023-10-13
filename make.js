@@ -6,8 +6,10 @@ var fs = require('fs');
 var os = require('os');
 var path = require('path');
 var semver = require('semver');
-var util = require('./make-util');
 var admzip = require('adm-zip');
+
+var util = require('./make-util');
+var actions = require('./make-actions');
 
 // util functions
 var cd = util.cd;
@@ -57,6 +59,7 @@ var coverageTasksPath = path.join(buildPath, 'coverage');
 var baseConfigToolPath = path.join(__dirname, 'BuildConfigGen');
 var genTaskPath = path.join(__dirname, '_generated');
 var genTaskCommonPath = path.join(__dirname, '_generated', 'Common');
+var commonModulesPath = path.join(tasksPath, 'Common');
 
 var CLI = {};
 
@@ -100,6 +103,20 @@ if (argv.task) {
 } else {
     // load the default list
     taskList = fileToJson(makeOptionsPath).tasks;
+}
+
+var commonModules;
+if (argv.common) {
+    commonModules = matchFind(argv.common, commonModulesPath, { noRecurse: true, matchBase: true })
+        .map(function (item) {
+            return path.basename(item);
+        });
+
+    if (!commonModules.length) {
+        fail(`Unable to find any common module matching pattern '${argv.common}`);
+    }
+
+    console.log('Target common modules : ' + commonModules);
 }
 
 // set the runner options. should either be empty or a comma delimited list of test runners.
@@ -198,6 +215,16 @@ CLI.serverBuild = function(/** @type {{ task: string }} */ argv) {
             fail('Expected 5.6.0 or higher. To fix, run: npm install -g npm');
         }
     });
+
+    if (argv.common) {
+        for (const module of commonModules){
+            actions.buildCommonModule(module, argv.force);
+        }
+
+        if(!argv.task){
+            return;
+        }
+    }
 
     // Need to validate generated tasks first
     const makeOptions = fileToJson(makeOptionsPath);
@@ -519,7 +546,6 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
                 banner('Run Mocha Suits for node ' + nodeVersion);
                 // setup the version of node to run the tests
                 util.installNode(nodeVersion);
-
 
                 if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
                     run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
