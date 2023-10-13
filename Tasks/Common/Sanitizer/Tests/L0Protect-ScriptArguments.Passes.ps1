@@ -24,11 +24,12 @@ $inputArgsSuites = @(
     "--Parameter Value",                        # Used by cmdlets or scripts for cross-platform compatibility
     "--Parameter=Value",                        # Used by cross-platform tools
     "parameter value.txt"                       # Argument with dot in the middle
-    'a A 1 \ ` _ '' " - = / : . * , + ~ ? %',    # Just each allowed symbol
+    'a A z Z 1 9 \ ` _ '' " - = / : . * , + ~ ? % #',      # Just each allowed symbol
     '',
     'test 1',
     'test `; whoami `&`& echo test',
-    "line 1 `n line 2"
+    "line 1 `n line 2",
+    '$TrUe $true $fAlsE $false'
 )
 
 foreach ($inputArgs in $inputArgsSuites) {
