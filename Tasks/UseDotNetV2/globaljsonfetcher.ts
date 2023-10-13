@@ -21,11 +21,11 @@ export class globalJsonFetcher {
      */
     public async GetVersions(): Promise<VersionInfo[]> {
         var versionInformation: VersionInfo[] = new Array<VersionInfo>();
-        var versionStrings = this.getVersionStrings();
-        for (let index = 0; index < versionStrings.length; index++) {
-            const version = versionStrings[index];
-            if (version != null) {
-                var versionInfo = await this.versionFetcher.getVersionInfo(version, null, "sdk", false);
+        var sdks = this.getSdks();
+        for (let index = 0; index < sdks.length; index++) {
+            const sdk = sdks[index];
+            if (sdk != null) {
+                var versionInfo = await this.versionFetcher.getVersionInfo(sdk.version, null, "sdk", sdk.allowPrerelease);
                 versionInformation.push(versionInfo);
             }
         }
@@ -33,7 +33,7 @@ export class globalJsonFetcher {
         return Array.from(new Set(versionInformation)); // this remove all not unique values.
     }
 
-    private getVersionStrings(): Array<string | null> {
+    private getSdks(): Array<sdk | null> {
         let filePathsToGlobalJson = tl.findMatch(this.workingDirectory, "**/global.json");
         if (filePathsToGlobalJson == null || filePathsToGlobalJson.length == 0) {
             throw tl.loc("FailedToFindGlobalJson", this.workingDirectory);
@@ -43,7 +43,7 @@ export class globalJsonFetcher {
             var content = this.readGlobalJson(path);
             if (content != null) {
                 tl.loc("GlobalJsonSdkVersion", content.sdk.version, path);
-                return content.sdk.version;
+                return content.sdk;
             }
 
             return null;
@@ -62,7 +62,7 @@ export class globalJsonFetcher {
                 return null;
             }
 
-            globalJson = (JSON.parse(fileContent.toString())) as { sdk: { version: string } };
+            globalJson = (JSON.parse(fileContent.toString())) as { sdk: { version: string, allowPrerelease: boolean } };
         } catch (error) {
             // we throw if the global.json is invalid
             throw tl.loc("FailedToReadGlobalJson", path, error); // We don't throw if a global.json is invalid.
@@ -79,10 +79,15 @@ export class globalJsonFetcher {
 }
 
 export class GlobalJson {
-    constructor(version: string | null = null) {
+    constructor(version: string | null = null, allowPrerelease: boolean | null = null) {
         if (version != null) {
             this.sdk = new sdk();
             this.sdk.version = version;
+            if (allowPrerelease !== null) {
+                this.sdk.allowPrerelease = allowPrerelease;
+            } else {
+                this.sdk.allowPrerelease = false;
+            }
         }
     }
     public sdk: sdk;
@@ -90,4 +95,5 @@ export class GlobalJson {
 
 class sdk {
     public version: string;
+    public allowPrerelease: boolean;
 }
