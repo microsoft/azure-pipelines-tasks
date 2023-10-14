@@ -104,5 +104,6 @@
   "loc.messages.UnableToFetchKubectlVersion": "Die Kubectl-Version konnte nicht abgerufen werden. Stellen Sie sicher, dass der Kubernetes-Server betriebsbereit ist.",
   "loc.messages.KubectlClientVersion": "Kubectl-Clientversion",
   "loc.messages.KubectlServerVersion": "Kubectl-Serverversion",
-  "loc.messages.KubectlServerVerisonNotFound": "Die Kubectl-Serverversion wurde nicht gefunden."
+  "loc.messages.KubectlServerVerisonNotFound": "Die Kubectl-Serverversion wurde nicht gefunden.",
+  "loc.messages.KubeloginFailed": "Fehler bei der Kubelogin-Authentifizierung. Ausnahme: %s"
 }

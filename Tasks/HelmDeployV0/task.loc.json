@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 218,
+    "Minor": 228,
     "Patch": 0
   },
   "demands": [],
@@ -512,16 +512,28 @@
   "prejobexecution": {
     "Node10": {
       "target": "src//downloadsecurefiles.js"
+    },
+    "Node16": {
+      "target": "src//downloadsecurefiles.js",
+      "argumentFormat": ""
     }
   },
   "execution": {
     "Node10": {
       "target": "src//helm.js"
+    },
+    "Node16": {
+      "target": "src//helm.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
     "Node10": {
       "target": "src//deletesecurefiles.js"
+    },
+    "Node16": {
+      "target": "src//deletesecurefiles.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -545,6 +557,7 @@
     "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "SaveSupportedInHelmsV3Only": "ms-resource:loc.messages.SaveSupportedInHelmsV3Only",
-    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded"
+    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
+    "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   }
 }

@@ -18,8 +18,8 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 220,
-        "Patch": 0
+        "Minor": 225,
+        "Patch": 1
     },
     "preview": true,
     "minimumAgentVersion": "2.144.0",
@@ -212,6 +212,7 @@
         "ErrorMessageFormat": "Error: %s",
         "ExistingContainerAppEnvironmentMessage": "Discovered existing Container App Environment, '%s', to use with the Container App.",
         "FoundAppSourceDockerfileMessage": "Found existing Dockerfile in provided application source at path '%s'; image will be built from this Dockerfile.",
+        "LoginFailed": "Azure login failed",
         "MissingAcrNameMessage": "The acrName argument must also be provided if the appSourcePath argument is provided.",
         "MissingRequiredArgumentMessage": "One of the following arguments must be provided: appSourcePath, imageToDeploy, yamlConfigPath",
         "PackCliInstallFailed": "Unable to install pack CLI.",

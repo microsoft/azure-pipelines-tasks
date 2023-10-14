@@ -40,11 +40,19 @@
                 "dest": "./NuGet/5.8.0/"
             },
             {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGet/5.9.3/NuGet.zip",
+                "dest": "./NuGet/5.9.3/"
+            },
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGet/6.4.0/NuGet.zip",
+                "dest": "./NuGet/6.4.0/"
+            },
+            {
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/CredentialProvider.TeamBuild/15.105.25712.0/CredentialProvider.TeamBuild.zip",
                 "dest": "./CredentialProvider/"
             },
             {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/0.1.28/c.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/1.0.9/c.zip",
                 "dest": "./CredentialProviderV2/"
             }
         ]

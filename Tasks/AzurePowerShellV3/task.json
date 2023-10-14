@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 220,
-        "Patch": 0
+        "Minor": 225,
+        "Patch": 1
     },
     "releaseNotes": "Added support for Fail on standard error and ErrorActionPreference",
     "demands": [

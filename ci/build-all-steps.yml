@@ -15,14 +15,17 @@ steps:
     displayName: Start collect diagnostics
     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
 
-# Use node 8, npm 5
+# Use node 10, npm 6
 - task: NodeTool@0
-  displayName: Use node 8
+  displayName: Use node 10
   inputs:
-    versionSpec: 8.x
+    versionSpec: 10.24.1
 
-- script: npm i -g npm@6.9.0 --force
-  displayName: Use npm version 6.9.0
+# Use .NET SDK 7
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK 7.x'
+  inputs:
+    version: 7.x
 
 # npm install
 - script: npm install
@@ -37,6 +40,14 @@ steps:
 - script: node ./ci/verifyMinAgentDemands/index.js
   displayName: Verify min agent demands
 
+- powershell: |
+    $currentSprintData = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json)
+    $currentSprint = [int]$currentSprintData.sprint
+    $currentSprintWeek = [int]$currentSprintData.week
+    echo "##vso[task.setvariable variable=currentSprint;]$currentSprint"
+    echo "##vso[task.setvariable variable=currentSprintWeek;]$currentSprintWeek"
+  displayName: Fetch current sprint
+
 # Filter out unchanged tasks
 - script: node ./ci/filter-tasks.js
   displayName: Filter out unchanged tasks
@@ -44,14 +55,52 @@ steps:
     PACKAGE_ENDPOINT: $(Package.Endpoint)
     PACKAGE_TOKEN: $(Package.Token)
 
-# Build
-- script: node make.js build --task "$(task_pattern)"
-  displayName: Build
-  condition: ne(variables['numTasks'], 0)
-
-- script: node ./ci/check-tasks.js
+- script: node ./ci/before-build-check-tasks.js
   displayName: Check that tasks has no duplicated libs
-  condition: and(succeeded(), eq(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
+  condition: |
+    and(
+      succeeded(),
+      eq(variables['build.reason'], 'PullRequest'),
+      ne(variables['numTasks'], 0)
+    )
+
+- script: node ./ci/check-downgrading.js --task "$(task_pattern_fordowngradingcheck)" --sprint $(currentSprint) --week $(currentSprintWeek)
+  displayName: Check for downgrading tasks
+  condition: |
+      and(
+        succeeded(),
+        ne(variables['numTasks'], 0),
+        ne(variables['COURTESY_PUSH'], 'true'),
+        eq(variables['build.reason'], 'PullRequest'),
+        eq(variables['System.PullRequest.TargetBranch'], 'master')
+      )
+  env:
+    PACKAGE_TOKEN: $(Package.Token)
+
+# Build BuildConfigGen
+- task: DotNetCoreCLI@2
+  displayName: Build BuildConfigGen
+  inputs:
+    command: build
+    projects: './BuildConfigGen/BuildConfigGen.csproj'
+
+# Clean
+- script: node make.js clean
+  displayName: Clean tasks
+
+# Build Tasks
+- script: node make.js serverBuild --task "$(task_pattern)"
+  displayName: Build Tasks
+  condition: and(succeeded(), ne(variables['numTasks'], 0))
+
+- script: node ./ci/after-build-check-tasks.js
+  displayName: Check that tasks has no duplicated libs
+  condition: |
+    and(
+      succeeded(),
+      eq(variables['build.reason'], 'PullRequest'),
+      ne(variables['numTasks'], 0)
+    )
 
 # Check diff for task sources
 - script: node ./ci/verify-source-changes.js "$(task_pattern)"
@@ -59,18 +108,23 @@ steps:
   condition: |
     and(
       succeeded(),
-      ne(variables['Build.SourceBranch'], 'refs/heads/master'),     
+      ne(variables['Build.SourceBranch'], 'refs/heads/master'),
       ne(variables['COURTESY_PUSH'], 'true'),
       ne(variables['numTasks'], 0)
     )
-  
+
 # Only on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
 
   # Stage tasks individually into the package directory
   - script: node ./ci/stage-package.js false individually
     displayName: Stage tasks individually into the package directory
-    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
+    condition: |
+      and(
+        succeeded(),
+        ne(variables['build.reason'], 'PullRequest'),
+        ne(variables['numTasks'], 0)
+      )
 
   # Sign all task zips as nuget packages
   - template: sign-all-tasks.yml
@@ -80,12 +134,22 @@ steps:
   # Stage all the tasks into a single zip for upload
   - script: node ./ci/stage-package.js false
     displayName: Stage all the tasks into a single zip for upload
-    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
+    condition: |
+      and(
+        succeeded(),
+        ne(variables['build.reason'], 'PullRequest'),
+        ne(variables['numTasks'], 0)
+      )
 
   # Publish artifact
   - task: PublishBuildArtifacts@1
     displayName: Publish package artifact
-    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
+    condition: |
+      and(
+        succeeded(),
+        ne(variables['build.reason'], 'PullRequest'),
+        ne(variables['numTasks'], 0)
+      )
     inputs:
       pathToPublish: _package/tasks.zip
       artifactName: package
@@ -94,10 +158,17 @@ steps:
 # Test
 - script: node make.js test
   displayName: Run tests
-  condition: ne(variables['numTasks'], 0)
+  condition: and(succeeded(), ne(variables['numTasks'], 0))
 - script: node make.js testLegacy --task "$(task_pattern)"
   displayName: Legacy tests with node 6
-  condition: ne(variables['numTasks'], 0)
+  condition: and(succeeded(), ne(variables['numTasks'], 0))
+
+# Publish code coverage result
+- task: PublishCodeCoverageResults@1
+  displayName: Publish Code Coverage Results
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: $(System.DefaultWorkingDirectory)/_build/coverage/*coverage.xml
 
 # Only when building on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
@@ -105,12 +176,16 @@ steps:
   # Stop collect diagnostics
   - powershell: ./ci/stop-collect-diagnostics.ps1
     displayName: Stop collect diagnostics
-    condition: and(always(), eq(variables.collect_diagnostics, 'true'), ne(variables['numTasks'], 0))
+    condition: |
+      and(
+        always(),
+        eq(variables.collect_diagnostics, 'true'),
+        ne(variables['numTasks'], 0)
+      )
 
   - powershell: |
       # Build the release branch name
-      $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"="application/json"} | ConvertFrom-Json).sprint
-      $releaseBranch = "releases/m" + $currentSprint
+      $releaseBranch = "releases/m" + $(currentSprint) + "." + $(currentDate)
 
       # add config entry to avoid errors while pulling
       git config --global user.email "$(username)@microsoft.com"
@@ -133,3 +208,23 @@ steps:
         eq(variables['Build.SourceBranch'], 'refs/heads/master')
       )
     displayName: Push release branch
+
+  - powershell: |
+      # Build the release branch name
+      $releaseBranch = "releases/m" + $(currentSprint) + "." + $(currentDate)
+
+      if ($(currentSprintWeek) -eq 3) {
+        cd $(System.DefaultWorkingDirectory)/ci/ci-release-notes
+        npm install
+        node release-notes.js --token $(GitHubPAT) --version $(currentSprint) --releaseBranch $releaseBranch
+      } else {
+        echo "Skipping since release notes generating on week 3"
+      }
+    condition: |
+      and(
+        succeeded(),
+        in(variables['build.reason'], 'Schedule', 'Manual'),
+        eq(variables['COURTESY_PUSH'], 'true'),
+        eq(variables['Build.SourceBranch'], 'refs/heads/master')
+      )
+    displayName: Create Release

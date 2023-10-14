@@ -238,7 +238,7 @@ describe('XamariniOS L0 Suite', function () {
     })     
     
     it('fails when configuration is missing', function (done: Mocha.Done) {
-        this.timeout(1000);
+        this.timeout(5000);
 
         const tp = path.join(__dirname, 'L0MissingConfig.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -254,7 +254,7 @@ describe('XamariniOS L0 Suite', function () {
     })
          
     it('fails when msbuildLocation not provided and msbuild is not found', function (done: Mocha.Done) {
-        this.timeout(1000);
+        this.timeout(5000);
 
         const tp = path.join(__dirname, 'L0ToolsNotFound.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -270,7 +270,7 @@ describe('XamariniOS L0 Suite', function () {
     });
     
     it('fails when msbuildLocation is provided but is incorrect', function (done: Mocha.Done) {
-        this.timeout(1000);
+        this.timeout(5000);
 
         const tp = path.join(__dirname, 'L0MSBuildNotFound.js');
         const tr = new ttm.MockTestRunner(tp);
@@ -287,7 +287,7 @@ describe('XamariniOS L0 Suite', function () {
     
     // fails when nuget not found
     it('fails when nuget not found', function (done: Mocha.Done) {
-        this.timeout(1000);
+        this.timeout(5000);
 
         const tp = path.join(__dirname, 'L0NuGetNotFound.js');
         const tr = new ttm.MockTestRunner(tp);

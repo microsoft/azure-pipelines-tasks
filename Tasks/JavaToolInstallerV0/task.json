@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 221,
-        "Patch": 0
+        "Minor": 229,
+        "Patch": 3
     },
     "satisfies": [
         "Java",
@@ -118,6 +118,14 @@
             "helpMarkDown": "On Linux and Windows, this is used as the destination directory for JDK installation. On macOS, this directory is used as a temporary folder for extracting of .dmg's since macOS doesn't support installing of JDK to specific directory."
         },
         {
+            "name": "azureResourceGroupName",
+            "type": "string",
+            "label": "Resource Group name",
+            "required": false,
+            "visibleRule": "jdkSourceOption == AzureStorage",
+            "helpMarkDown": "Resource Group name of the storage account."
+        },
+        {
             "name": "cleanDestinationDirectory",
             "type": "boolean",
             "label": "Clean destination directory",
@@ -177,6 +185,7 @@
         "DownloadFromAzureBlobStorage": "Downloading artifacts from Azure blob storage, Container Name: %s",
         "SuccessFullyFetchedItemList": "Successfully fetched list of items",
         "StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
+        "RequestedUrlTooLong": "Requested URL is too long, this usually happen when you have a lot of Resource Groups in the subscription, try to set azureResourceGroupName input.",
         "UnzipExtractFile": "Extracting file: %s",
         "SevenZipExtractFile": "Extracting file: %s",
         "TarExtractFile": "Extracting file: %s",

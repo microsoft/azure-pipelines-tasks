@@ -15,6 +15,8 @@
   "loc.input.help.azureResourceGroup": "Select an Azure resource group.",
   "loc.input.label.kubernetesCluster": "Kubernetes cluster",
   "loc.input.help.kubernetesCluster": "Select an Azure managed cluster.",
+  "loc.input.label.useClusterAdmin": "Use cluster admin credentials",
+  "loc.input.help.useClusterAdmin": "Use cluster administrator credentials instead of default cluster user credentials.",
   "loc.input.label.namespace": "Namespace",
   "loc.input.help.namespace": "Sets the namespace for the commands by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace.",
   "loc.input.label.strategy": "Strategy",
@@ -100,5 +102,6 @@
   "loc.messages.InvalidBaselineAndCanaryReplicas": "Invalid value for replica count.",
   "loc.messages.InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number.",
   "loc.messages.RolloutStatusTimedout": "Rollout status check failed.",
-  "loc.messages.EnvironmentLink": "For more information, go to %s"
+  "loc.messages.EnvironmentLink": "For more information, go to %s",
+  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
 }

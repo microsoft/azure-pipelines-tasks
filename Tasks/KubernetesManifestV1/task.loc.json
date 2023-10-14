@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 219,
+    "Minor": 228,
     "Patch": 0
   },
   "demands": [],
@@ -96,6 +96,14 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "useClusterAdmin",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useClusterAdmin",
+      "defaultValue": "false",
+      "visibleRule": "connectionType = azureResourceManager",
+      "helpMarkDown": "ms-resource:loc.input.help.useClusterAdmin"
     },
     {
       "name": "namespace",
@@ -418,6 +426,10 @@
   "execution": {
     "Node10": {
       "target": "src//run.js"
+    },
+    "Node16": {
+      "target": "src//run.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -450,6 +462,7 @@
     "InvalidBaselineAndCanaryReplicas": "ms-resource:loc.messages.InvalidBaselineAndCanaryReplicas",
     "InvalidTimeoutValue": "ms-resource:loc.messages.InvalidTimeoutValue",
     "RolloutStatusTimedout": "ms-resource:loc.messages.RolloutStatusTimedout",
-    "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink"
+    "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink",
+    "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   }
 }

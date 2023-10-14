@@ -19,6 +19,10 @@
         {
             "module": "../Common/RemoteDeployer",
             "type": "ps"
+        },
+        {
+            "module": "../Common/Sanitizer",
+            "type": "ps"
         }
     ],
     "externals": {

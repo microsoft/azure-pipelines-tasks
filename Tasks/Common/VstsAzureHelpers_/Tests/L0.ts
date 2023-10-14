@@ -63,7 +63,7 @@ describe('Common-VstsAzureHelpers_ Suite', function () {
         it('(Initialize-Azure) throws when service name is null', (done) => {
             psr.run(path.join(__dirname, 'Initialize-Azure.ThrowsWhenServiceNameIsNull.ps1'), done);
         })
-        it('(Initialize-AzureSubscription) manged service identity should pass ', (done) => {
+        it('(Initialize-AzureSubscription) managed service identity should pass ', (done) => {
             psr.run(path.join(__dirname, 'Initialize-AzureSubscription.ManagedServiceIdentity.ps1'), done);
         })
         it('(Initialize-AzureSubscription) passes values when cert auth', (done) => {
@@ -96,6 +96,9 @@ describe('Common-VstsAzureHelpers_ Suite', function () {
         it('(Initialize-AzureSubscription) throws when SP auth and classic 0.9.9', (done) => {
             psr.run(path.join(__dirname, 'Initialize-AzureSubscription.ThrowsWhenSPAuthAndClassic099.ps1'), done);
         })
+        it('(Initialize-AzureSubscription) workload identity federation should pass', (done) => {
+            psr.run(path.join(__dirname, 'Initialize-AzureSubscription.WorkloadIdentityFederation.ps1'), done);
+        });
         it('(Initialize-AzureSubscription) throws when unsupported auth', (done) => {
             psr.run(path.join(__dirname, 'Initialize-AzureSubscription.ThrowsWhenUnsupportedAuth.ps1'), done);
         })

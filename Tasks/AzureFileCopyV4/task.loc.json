@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 221,
+    "Minor": 229,
     "Patch": 0
   },
   "demands": [
@@ -287,7 +287,6 @@
     "AFC_AzCopyBlobUploadNonZeroExitCode": "ms-resource:loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode",
     "AFC_PreexecutionJob_UnableToGetStorageKey": "ms-resource:loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey",
     "AFC_UninstallWinRMCustomScriptExtension": "ms-resource:loc.messages.AFC_UninstallWinRMCustomScriptExtension",
-    "AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "ms-resource:loc.messages.AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "UnsupportedAuthScheme": "ms-resource:loc.messages.UnsupportedAuthScheme",
     "ServicePrincipalError": "ms-resource:loc.messages.ServicePrincipalError"

@@ -113,27 +113,6 @@ export class NugetMockHelper {
         var mtt = require('azure-pipelines-task-lib/mock-toolrunner');
         this.tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtt);
     }
-
-    public RegisterLocationServiceMocks() {
-        this.tmr.registerMock('vso-node-api/WebApi', {
-            getBearerHandler: function(token){
-                return {};
-            }, 
-            WebApi: function(url, handler){
-                return {
-                    getCoreApi: function() {
-                        return { 
-                            vsoClient: {
-                                getVersioningData: function (ApiVersion, PackagingAreaName, PackageAreaId, Obj) { 
-                                    return { requestUrl:"foobar" }
-                                }
-                            }
-                        };
-                    }
-                };
-            }
-        })
-    }
     
     public setAnswers(a) {
         a.osType["osType"] = "Windows_NT";

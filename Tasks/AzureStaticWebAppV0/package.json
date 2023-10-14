@@ -9,10 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^10.17.0",
-    "azure-pipelines-task-lib": "^2.11.3",
-    "azure-pipelines-tasks-docker-common": "2.198.1",
-    "vso-task-lib": "^0.5.5"
+    "@types/node": "^16.11.39",
+    "azure-pipelines-task-lib": "^4.3.1",
+    "azure-pipelines-tasks-docker-common": "2.198.1"
   },
   "devDependencies": {
     "typescript": "4.0.2"

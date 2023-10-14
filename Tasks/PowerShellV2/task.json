@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 220,
-        "Patch": 0
+        "Minor": 229,
+        "Patch": 4
     },
     "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
     "minimumAgentVersion": "2.115.0",
@@ -255,6 +255,7 @@
         "PS_InvalidActionPreference": "Invalid action preference for {0}: '{1}'. The value must be one of: {2}",
         "PS_InvalidFilePath": "Invalid file path '{0}'. A path to a .ps1 file is required.",
         "PS_UnableToDetermineExitCode": "Unexpected exception. Unable to determine the exit code from powershell.",
-        "PS_InvalidTargetType": "Invalid target type '{0}'. The value must be one of: 'filepath' or 'inline'"
+        "PS_InvalidTargetType": "Invalid target type '{0}'. The value must be one of: 'filepath' or 'inline'",
+        "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backtick (`). More information is available here: https://aka.ms/ado/75787"
     }
 }

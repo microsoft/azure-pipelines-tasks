@@ -2,6 +2,8 @@
   "loc.messages.AZ_AzureRMProfileModuleNotFound": "Das Modul \"AzureRM.Profile\" wurde nicht gefunden. Das Modul \"AzureRM\" ist ggf. nicht vollständig installiert. Das Ausführen der folgenden PowerShell-Befehle aus einer Sitzung mit erhöhten Rechten behebt dieses Problem möglicherweise: \"Import-Module AzureRM\", \"Install-AzureRM\".",
   "loc.messages.AZ_CertificateAuthNotSupported": "Zertifikatbasierte Authentifizierung wird nicht unterstützt. Das Azure PowerShell-Modul wurde nicht gefunden.",
   "loc.messages.AZ_CredentialsError": "Fehler mit den für die Bereitstellung verwendeten Azure-Anmeldeinformationen.",
+  "loc.messages.AZ_CouldNotGenerateOidcToken": "Für die Verbundanmeldung konnte keine Clientassertion generiert werden.",
+  "loc.messages.AZ_FederatedTokenFailure": "Das Verbundtoken für den Workloadidentitätsverbund konnte nicht abgerufen werden. {0}",
   "loc.messages.AZ_ModuleNotFound": "Die Module \"{1}\" der Version {0} wurden nicht gefunden. Wenn das Modul vor kurzem installiert wurde, wiederholen Sie den Vorgang nach einem Neustart des Azure Pipelines-Task-Agents.",
   "loc.messages.AZ_RequiresMinVersion0": "Die erforderliche Mindestversion ({0}) des Azure PowerShell-Moduls ist nicht installiert.",
   "loc.messages.AZ_ServicePrincipalError": "Fehler im für die Bereitstellung verwendeten Dienstprinzipal.",

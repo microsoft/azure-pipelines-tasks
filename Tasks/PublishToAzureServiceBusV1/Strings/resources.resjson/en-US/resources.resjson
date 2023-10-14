@@ -18,6 +18,6 @@
   "loc.input.help.signatureKey": "Key where you want signature to be in Message Properties. If left Empty, default is 'signature' in message properties",
   "loc.input.label.waitForCompletion": "Wait for task completion",
   "loc.input.help.waitForCompletion": "If this is true, this task will wait for TaskCompleted event for the specified task timeout.",
-  "loc.input.label.useDataContractSerializer": "Use .NET data contract serailizer",
+  "loc.input.label.useDataContractSerializer": "Use .NET data contract serializer",
   "loc.input.help.useDataContractSerializer": "For more details go to task documentation"
 }

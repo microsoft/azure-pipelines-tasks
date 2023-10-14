@@ -30,7 +30,8 @@ export class SingleFilePackage extends Package {
                     )
                         .then(downloadUrl => {
                             var urls = new Map<string, PackageFileResult>();
-                            urls[packageName.replace(/\//g, '_') + this.extension] = new PackageFileResult(downloadUrl, true);
+                            const fileName = packageName.replace(/\//g, '_') + this.extension;
+                            urls[fileName] = new PackageFileResult(fileName, downloadUrl, true);
                             return resolve(urls);
                         })
                         .catch(error => {

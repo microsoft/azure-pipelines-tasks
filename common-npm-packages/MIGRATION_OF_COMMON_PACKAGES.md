@@ -1,6 +1,6 @@
 # Package migration
 
-Common npm packages will be migrated to a new [repository](https://github.com/microsoft/azure-pipelines-tasks-common-packages)
+Common npm packages have been migrated to a new [repository](https://github.com/microsoft/azure-pipelines-tasks-common-packages)
 
 New ci pipeline is created in PipelineTools project: [microsoft.azure-pipelines-tasks-common-packages](https://dev.azure.com/mseng/PipelineTools/_build?definitionId=14116)
 
@@ -21,11 +21,7 @@ List of already migrated packages:
 13. [x] az-blobstorage-provider-v2
 14. [x] azure-arm-rest
 15. [x] docker-common-v2
-
-
-TODO:
-
-1.  [ ] azure-arm-rest-v2
+16. [x] azure-arm-rest-v2
 
 # Getting rid of -v2, -v3 folders
 
@@ -60,3 +56,4 @@ Missed versions were re-published to the original packages.
 | azure-arm-rest             | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17562) |                                                                     |
 | az-blobstorage-provider-v2 | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17447) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17540) |
 | docker-common-v2           | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17748) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17746) |
+| azure-arm-rest-v2          | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/18656) | [PR1](https://github.com/microsoft/azure-pipelines-tasks/pull/18629), [PR2](https://github.com/microsoft/azure-pipelines-tasks/pull/18630), [PR3](https://github.com/microsoft/azure-pipelines-tasks/pull/18632), [PR4](https://github.com/microsoft/azure-pipelines-tasks/pull/18636), [PR5](https://github.com/microsoft/azure-pipelines-tasks/pull/18637), [PR6](https://github.com/microsoft/azure-pipelines-tasks/pull/18639) |

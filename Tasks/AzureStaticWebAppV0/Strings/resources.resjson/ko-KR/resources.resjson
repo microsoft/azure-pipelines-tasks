@@ -34,5 +34,7 @@
   "loc.input.label.deployment_environment": "배포 환경",
   "loc.input.help.deployment_environment": "배포할 환경입니다. 프로덕션 환경은 비워 둡니다. 프로덕션 분기보다 우선합니다.",
   "loc.input.label.production_branch": "프로덕션 분기",
-  "loc.input.help.production_branch": "프로덕션 분기입니다. 프로덕션 분기가 지정되고 배포 환경이 비어 있으면 기타 분기의 배포는 미리 보기 환경이 됩니다."
+  "loc.input.help.production_branch": "프로덕션 분기입니다. 프로덕션 분기가 지정되고 배포 환경이 비어 있으면 기타 분기의 배포는 미리 보기 환경이 됩니다.",
+  "loc.input.label.data_api_location": "데이터 API 위치",
+  "loc.input.help.data_api_location": "작업 디렉터리를 기준으로 하는 데이터 API 원본 파일의 디렉터리 위치"
 }

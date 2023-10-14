@@ -6,21 +6,31 @@ function Initialize-AzModule {
     param(
         [Parameter(Mandatory=$true)]
         $Endpoint,
-        [string] $azVersion)
+        [Parameter(Mandatory=$false)]
+        [string] $connectedServiceNameARM,
+        [Parameter(Mandatory=$false)]
+        [string] $azVersion,
+        [Parameter(Mandatory = $false)]
+        [bool] $isPSCore,
+        [Parameter(Mandatory=$false)]
+        [Security.SecureString]$encryptedToken)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
-        Import-AzModule -azVersion $azVersion
 
-        Write-Verbose "Initializing Az Module."
-        Initialize-AzSubscription -Endpoint $Endpoint
+        Write-Verbose "Importing Az Module."
+        $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
+
+        Write-Verbose "Initializing Az Subscription."
+        Initialize-AzSubscription -Endpoint $Endpoint -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $encryptedToken `
+            -azAccountsModuleVersion $azAccountsVersion -isPSCore $isPSCore
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
 
-function Import-AzModule {
+function Import-AzAccountsModule {
     [CmdletBinding()]
     param([string] $azVersion)
 
@@ -30,24 +40,24 @@ function Import-AzModule {
         $moduleName = "Az.Accounts"
         # Attempt to resolve the module.
         Write-Verbose "Attempting to find the module '$moduleName' from the module path."
-        
-        if($azVersion -eq ""){
+
+        if ($azVersion -eq "") {
             $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
         }
-        else{
+        else {
             $modules = Get-Module -Name $moduleName -ListAvailable
             foreach ($moduleVal in $modules) {
                 # $moduleVal.Path will have value like C:\Program Files\WindowsPowerShell\Modules\Az.Accounts\1.2.1\Az.Accounts.psd1
                 $azModulePath = Split-Path (Split-Path (Split-Path $moduleVal.Path -Parent) -Parent) -Parent
                 $azModulePath = $azModulePath + "\Az\*"
                 $azModuleVersion = split-path -path $azModulePath -Leaf -Resolve
-                if($azModuleVersion -eq $azVersion) {
+                if ($azModuleVersion -eq $azVersion) {
                     $module = $moduleVal
                     break
-                }   
+                }
             }
         }
-      
+
         if (!$module) {
             Write-Verbose "No module found with name: $moduleName"
             throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, "Az.Accounts")
@@ -57,49 +67,54 @@ function Import-AzModule {
         Write-Host "##[command]Import-Module -Name $($module.Path) -Global"
         $module = Import-Module -Name $module.Path -Global -PassThru -Force
         Write-Verbose "Imported module version: $($module.Version)"
-     } finally {
+        return $module.Version
+    } finally {
         Trace-VstsLeavingInvocation $MyInvocation
-     }
+    }
 }
 
 function Initialize-AzSubscription {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)]
-        $Endpoint)
+        $Endpoint,
+        [Parameter(Mandatory=$false)]
+        [string] $connectedServiceNameARM,
+        [Parameter(Mandatory=$false)]
+        [Security.SecureString] $vstsAccessToken,
+        [Parameter(Mandatory=$false)]
+        [Version] $azAccountsModuleVersion,
+        [Parameter(Mandatory=$false)]
+        [bool] $isPSCore)
 
     #Set UserAgent for Azure Calls
     Set-UserAgent
-    
-    # Clear context
-    Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
-    $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
-    Write-Host "##[command]Clear-AzContext -Scope Process"
-    $null = Clear-AzContext -Scope Process
 
     $environmentName = "AzureCloud"
-    if($Endpoint.Data.Environment) {
+    if ($Endpoint.Data.Environment) {
         $environmentName = $Endpoint.Data.Environment
-        if($environmentName -eq "AzureStack")
-        {
+        if($environmentName -eq "AzureStack") {
             Add-AzureStackAzEnvironment -endpoint $Endpoint -name "AzureStack"
         }
     }
-    
-    $scopeLevel = "Subscription"
 
-    $processScope = @{ Scope = "Process" }
-    
-    If ($Endpoint.PSObject.Properties['Data'])
+    $scopeLevel = "Subscription"
+    If (($Endpoint.PSObject.Properties['Data']) -and ($Endpoint.Data.PSObject.Properties['scopeLevel']))
     {
-        If ($Endpoint.Data.PSObject.Properties['scopeLevel'])
-        {
-            $scopeLevel = $Endpoint.Data.scopeLevel
-        }
+        $scopeLevel = $Endpoint.Data.scopeLevel
     }
 
     if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal') {
         try {
+            Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
+            $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+            Write-Host "##[command]Clear-AzContext -Scope Process"
+            $null = Clear-AzContext -Scope Process
+            if (Get-Command 'Clear-AzConfig' -errorAction SilentlyContinue) {
+                Write-Host "##[command]Clear-AzConfig -DefaultSubscriptionForLogin"
+                $null = Clear-AzConfig -DefaultSubscriptionForLogin
+            }
+
             if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
                 $servicePrincipalCertificate = Add-CertificateForAz -Endpoint $Endpoint
 
@@ -110,6 +125,8 @@ function Initialize-AzSubscription {
                     ApplicationId=$Endpoint.Auth.Parameters.ServicePrincipalId;
                     Environment=$environmentName;
                     ServicePrincipal=$true;
+                    Scope='Process';
+                    WarningAction='SilentlyContinue';
                 }
             }
             else {
@@ -123,35 +140,67 @@ function Initialize-AzSubscription {
                     Credential=$psCredential;
                     Environment=$environmentName;
                     ServicePrincipal=$true;
-                } 
+                    Scope='Process';
+                    WarningAction='SilentlyContinue';
+                }
             }
 
-        } 
+        }
         catch {
             # Provide an additional, custom, credentials-related error message.
             Write-VstsTaskError -Message $_.Exception.Message
             Assert-TlsError -exception $_.Exception
             throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ServicePrincipalError), $_.Exception))
         }
-            
-        if($scopeLevel -eq "Subscription")
-        {
+
+        if ($scopeLevel -eq "Subscription") {
             Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
         }
-
     } elseif ($Endpoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
+        Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
+        $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+        Write-Host "##[command]Clear-AzContext -Scope Process"
+        $null = Clear-AzContext -Scope Process
 
         Retry-Command -Command 'Connect-AzAccount' -Verbose -Args `
         @{
             Environment=$environmentName;
             Identity=$true;
+            Scope='Process';
         }
-        if($scopeLevel -ne "ManagementGroup") {
+
+        if ($scopeLevel -ne "ManagementGroup") {
             Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
-        }     
+        }
+    } elseif ($Endpoint.Auth.Scheme -eq 'WorkloadIdentityFederation') {
+        $clientAssertionJwt = Get-VstsFederatedToken -serviceConnectionId $connectedServiceNameARM -vstsAccessToken $vstsAccessToken `
+            -azAccountsModuleVersion $azAccountsModuleVersion -isPSCore $isPSCore
+
+        Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
+        $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+        Write-Host "##[command]Clear-AzContext -Scope Process"
+        $null = Clear-AzContext -Scope Process
+
+        Retry-Command -Command 'Connect-AzAccount' -Verbose -Args `
+        @{
+            ServicePrincipal=$true;
+            Tenant=$Endpoint.Auth.Parameters.TenantId;
+            ApplicationId=$Endpoint.Auth.Parameters.ServicePrincipalId;
+            FederatedToken=$clientAssertionJwt;
+            Environment=$environmentName;
+            Scope='Process';
+        }
+
+        if ($scopeLevel -ne "ManagementGroup") {
+            Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+        }
     } else {
+        Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
+        $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+        Write-Host "##[command]Clear-AzContext -Scope Process"
+        $null = Clear-AzContext -Scope Process
         throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
-    } 
+    }
 }
 
 function Add-AzureStackAzEnvironment {
@@ -165,9 +214,9 @@ function Add-AzureStackAzEnvironment {
     $azureEnvironmentParams = Get-AzureStackEnvironment -endpoint $Endpoint -name $Name
 
     $armEnv = Get-AzEnvironment -Name $name
-    if($armEnv -ne $null) {
+    if ($null -ne $armEnv) {
         Write-Verbose "Updating Az environment $name" -Verbose
-        Remove-AzEnvironment -Name $name | Out-Null       
+        Remove-AzEnvironment -Name $name | Out-Null
     }
     else {
         Write-Verbose "Adding Az environment $name" -Verbose
@@ -204,7 +253,7 @@ function Retry-Command {
         [Parameter(Mandatory=$false)][int]$retries=5,
         [Parameter(Mandatory=$false)][int]$secondsDelay=5
     )
-    
+
     $retryCount = 0
     $completed = $false
 

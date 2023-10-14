@@ -1,9 +1,9 @@
-import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-common');
+import msRestAzure = require('azure-pipelines-tasks-azure-arm-rest/azure-arm-common');
 import tl = require("azure-pipelines-task-lib/task");
 import util = require("util");
 
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
 
 export class KeyVaultTaskParameters {
 

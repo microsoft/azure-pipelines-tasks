@@ -10,7 +10,7 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "version": {
     "Major": 0,
-    "Minor": 219,
+    "Minor": 229,
     "Patch": 0
   },
   "runsOn": [
@@ -19,6 +19,7 @@
   ],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
+  "removalDate": "2024-04-22",
   "groups": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
@@ -41,6 +42,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "nuget.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "nuget.js",
       "argumentFormat": ""
     }

@@ -7,6 +7,8 @@ import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as utils from "./utils/utilities";
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
+import { Kubelogin } from 'azure-pipelines-tasks-kubernetes-common/kubelogin';
+
 export default class ClusterConnection {
     private kubectlPath: string;
     private kubeconfigFile: string;
@@ -60,15 +62,25 @@ export default class ClusterConnection {
             kubeconfig = await this.getKubeConfig(connectionType);
         }
 
-        return this.initialize().then(() => {
-            if (kubeconfig)
-            {
-                this.kubeconfigFile = path.join(this.userDir, "config");
-                fs.writeFileSync(this.kubeconfigFile, kubeconfig);
-            }
+        return await this.initialize().then(async () => {
+          if (kubeconfig) {
+            this.kubeconfigFile = path.join(this.userDir, 'config');
+            fs.writeFileSync(this.kubeconfigFile, kubeconfig);
+          }
 
-            process.env["KUBECONFIG"] = this.kubeconfigFile;
-         });
+          process.env['KUBECONFIG'] = this.kubeconfigFile;
+
+          const kubelogin = new Kubelogin(this.userDir);
+          if (kubelogin.isAvailable()) {
+            tl.debug('Kubelogin is installed. Converting kubeconfig.');
+            const serviceConnection: string = tl.getInput('azureSubscriptionEndpoint', false);
+            try {
+                await kubelogin.login(serviceConnection);
+            } catch (err) {
+                tl.debug(tl.loc('KubeloginFailed', err));
+            }
+        }
+        });
     }
 
     // close kubernetes connection

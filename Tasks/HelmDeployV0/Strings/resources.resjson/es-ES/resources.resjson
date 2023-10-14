@@ -104,5 +104,6 @@
   "loc.messages.KubernetesServiceConnectionNotFound": "No se encontraron los detalles de la conexión de servicio de Kubernetes.",
   "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado.",
   "loc.messages.SaveSupportedInHelmsV3Only": "Guardar un gráfico en Azure Container Registry solo se admite en Helms V3.",
-  "loc.messages.OutputVariableDataSizeExceeded": "La variable de salida no establecida como salida del comando de Helm superó la longitud máxima admitida. Longitud de salida: %s. Longitud máxima admitida: %s"
+  "loc.messages.OutputVariableDataSizeExceeded": "La variable de salida no establecida como salida del comando de Helm superó la longitud máxima admitida. Longitud de salida: %s. Longitud máxima admitida: %s",
+  "loc.messages.KubeloginFailed": "Error de autenticación de Kubelogin. Excepción: %s"
 }

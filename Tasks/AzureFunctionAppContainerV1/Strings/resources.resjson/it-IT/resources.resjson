@@ -71,6 +71,7 @@
   "loc.messages.RequestedURLforkuduphysicalpath": "È stato richiesto l'URL per il percorso fisico di Kudu: %s",
   "loc.messages.Physicalpathalreadyexists": "Il percorso fisico '%s' esiste già",
   "loc.messages.KuduPhysicalpathCreatedSuccessfully": "Il percorso fisico di Kudu è stato creato: %s",
+  "loc.messages.KuduStackTraceURL": "Per approfondire il debug, vedere l'URL di analisi dello stack di Kudu: %s",
   "loc.messages.FailedtocreateKuduPhysicalPath": "Non è stato possibile creare il percorso fisico di Kudu. Errore: %s",
   "loc.messages.FailedtocheckphysicalPath": "Non è stato possibile verificare il percorso fisico di Kudu. Codice errore: %s",
   "loc.messages.VirtualApplicationDoesNotExist": "L'applicazione virtuale non esiste: %s",

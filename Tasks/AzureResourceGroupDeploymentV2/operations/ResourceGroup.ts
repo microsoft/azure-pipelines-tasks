@@ -5,7 +5,7 @@ import util = require("util");
 
 import env = require("./Environment");
 import deployAzureRG = require("../models/DeployAzureRG");
-import armResource = require("azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-resource");
+import armResource = require("azure-pipelines-tasks-azure-arm-rest/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
 import dgExtensionHelper = require("./DeploymentGroupExtensionHelper");
 import { PowerShellParameters, NameValuePair } from "./ParameterParser";
@@ -13,8 +13,8 @@ import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
-import { sleepFor } from 'azure-pipelines-tasks-azure-arm-rest-v2/webClient';
-import azureGraph = require("azure-pipelines-tasks-azure-arm-rest-v2/azure-graph");
+import { sleepFor } from 'azure-pipelines-tasks-azure-arm-rest/webClient';
+import azureGraph = require("azure-pipelines-tasks-azure-arm-rest/azure-graph");
 
 var hm = require("typed-rest-client/HttpClient");
 var uuid = require("uuid");
@@ -563,7 +563,7 @@ export class ResourceGroup {
                                     setVariablesInObject(`${path}.${key}`, obj[key]);
                                 }
                                 else {
-                                    console.log(`##vso[task.setvariable variable=${path}.${key};]` + JSON.stringify(obj[key]));
+                                    console.log(`##vso[task.setvariable variable=${path}.${key};]` + (this.taskParameters.useWithoutJSON ? obj[key] : JSON.stringify(obj[key])));
                                     console.log(tl.loc("AddedOutputVariable", `${path}.${key}`));
                                 }
                             }

@@ -34,5 +34,7 @@
   "loc.input.label.deployment_environment": "部署环境",
   "loc.input.help.deployment_environment": "要部署到的环境。为生产环境留空。优先于生产分支",
   "loc.input.label.production_branch": "生产分支",
-  "loc.input.help.production_branch": "生产分支。已指定且部署环境为空时，来自其他分支的部署将是预览版环境"
+  "loc.input.help.production_branch": "生产分支。已指定且部署环境为空时，来自其他分支的部署将是预览版环境",
+  "loc.input.label.data_api_location": "数据 API 位置",
+  "loc.input.help.data_api_location": "相对于工作目录的数据 API 源文件的目录位置"
 }

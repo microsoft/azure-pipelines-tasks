@@ -5,7 +5,8 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<WarningsAsErrors>Nullable</WarningsAsErrors>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
+    <RollForward>LatestMinor</RollForward>
   </PropertyGroup>
 
   <ItemGroup>

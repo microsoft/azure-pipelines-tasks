@@ -20,11 +20,11 @@ if ($scriptType -eq "FilePath") {
         throw (Get-VstsLocString -Key InvalidScriptPath0 -ArgumentList $scriptPath)
     }
 }
-    
+
 if ($scriptArguments -match '[\r\n]') {
     throw (Get-VstsLocString -Key InvalidScriptArguments0 -ArgumentList $scriptArguments)
 }
-    
+
 # string constants
 $otherVersion = "OtherVersion"
 $latestVersion = "LatestVersion"
@@ -110,10 +110,18 @@ $troubleshoot = "https://aka.ms/azurepowershelltroubleshooting"
 try {
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    Initialize-Azure -azurePsVersion $targetAzurePs -strict
+    if (($authScheme -eq 'WorkloadIdentityFederation') -and (Get-Module Az.Accounts -ListAvailable)) {
+        $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+        $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
+        $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
+        Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $serviceName -encryptedToken $encryptedToken
+    }
+    else {
+        Initialize-Azure -azurePsVersion $targetAzurePs -strict
+    }
     Write-Host "## Initializing Azure Complete"
     $success = $true
-} 
+}
 finally {
     if (!$success) {
         Write-VstsTaskError "Initialize Azure failed: For troubleshooting, refer: $troubleshoot"

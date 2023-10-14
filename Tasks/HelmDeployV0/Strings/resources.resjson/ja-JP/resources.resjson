@@ -104,5 +104,6 @@
   "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes サービス接続の詳細が見つかりませんでした。",
   "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことを確認してください。",
   "loc.messages.SaveSupportedInHelmsV3Only": "Azure Container Registry への chart の保存は、Helm V3 でのみサポートされています。",
-  "loc.messages.OutputVariableDataSizeExceeded": "Helm コマンドの出力がサポートされている最大長を超えたため、出力変数が設定されませんでした。出力の長さ: %s、サポートされている最大長: %s"
+  "loc.messages.OutputVariableDataSizeExceeded": "Helm コマンドの出力がサポートされている最大長を超えたため、出力変数が設定されませんでした。出力の長さ: %s、サポートされている最大長: %s",
+  "loc.messages.KubeloginFailed": "Kubelogin 認証に失敗しました。例外: %s"
 }

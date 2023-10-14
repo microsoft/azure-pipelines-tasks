@@ -8,6 +8,7 @@ import peParser = require("azure-pipelines-tasks-packaging-common/pe-parser/inde
 import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import {IExecSyncResult} from "azure-pipelines-task-lib/toolrunner";
+import { getVersionFallback } from "azure-pipelines-tasks-packaging-common/nuget/ProductVersionHelper";
 
 class NuGetExecutionOptions {
     constructor(
@@ -36,7 +37,8 @@ export async function run(nuGetPath: string): Promise<void> {
     const args: string = tl.getInput("arguments", false);
 
     const version = await peParser.getFileVersionInfoAsync(nuGetPath);
-    if(version.productVersion.a < 3 || (version.productVersion.a <= 3 && version.productVersion.b < 5))
+    const parsedVersion = getVersionFallback(version);
+    if(parsedVersion.a < 3 || (parsedVersion.a <= 3 && parsedVersion.b < 5))
     {
         tl.setResult(tl.TaskResult.Failed, tl.loc("Info_NuGetSupportedAfter3_5", version.strings.ProductVersion));
         return;

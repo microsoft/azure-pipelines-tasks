@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 211,
+    "Minor": 229,
     "Patch": 0
   },
   "demands": [],
@@ -57,6 +57,14 @@
       }
     },
     {
+      "name": "MaxArtifactSize",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.MaxArtifactSize",
+      "defaultValue": 0,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.MaxArtifactSize"
+    },
+    {
       "name": "TargetPath",
       "type": "string",
       "label": "ms-resource:loc.input.label.TargetPath",
@@ -84,16 +92,6 @@
       "visibleRule": "ArtifactType = FilePath && Parallel = true"
     },
     {
-      "name": "FileCopyOptions",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.FileCopyOptions",
-      "defaultValue": "",
-      "groupName": "advanced",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.FileCopyOptions",
-      "visibleRule": "ArtifactType = FilePath"
-    },
-    {
       "name": "StoreAsTar",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.StoreAsTar",
@@ -119,6 +117,7 @@
     "ErrorHostTypeNotSupported": "ms-resource:loc.messages.ErrorHostTypeNotSupported",
     "PublishBuildArtifactsFailed": "ms-resource:loc.messages.PublishBuildArtifactsFailed",
     "UnexpectedParallelCount": "ms-resource:loc.messages.UnexpectedParallelCount",
-    "TarExtractionNotSupportedInWindows": "ms-resource:loc.messages.TarExtractionNotSupportedInWindows"
+    "TarExtractionNotSupportedInWindows": "ms-resource:loc.messages.TarExtractionNotSupportedInWindows",
+    "ArtifactSizeExceeded": "ms-resource:loc.messages.ArtifactSizeExceeded"
   }
 }

@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 214,
+        "Minor": 229,
         "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
@@ -121,6 +121,7 @@
         "JS_ScriptContents": "Script contents:",
         "JS_Stderr": "Bash wrote one or more lines to the standard error stream.",
         "JS_TranslatePathFailed": "Unable to translate the path '%s' to the Linux file system.",
-        "JS_BashEnvAlreadyDefined": "The BASH_ENV environment variable has already been set to a '%s', the task will override it with '%s'"
+        "JS_BashEnvAlreadyDefined": "The BASH_ENV environment variable has already been set to a '%s', the task will override it with '%s'",
+        "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
     }
 }

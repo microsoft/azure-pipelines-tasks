@@ -104,5 +104,6 @@
   "loc.messages.KubernetesServiceConnectionNotFound": "找不到 Kubernetes 服务连接详细信息。",
   "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。",
   "loc.messages.SaveSupportedInHelmsV3Only": "只有 Helms V3 中支持将图表保存到 Azure 容器注册表。",
-  "loc.messages.OutputVariableDataSizeExceeded": "未设置为 Helm 命令输出的输出变量超出了支持的最大长度。输出长度: %s，支持的最大长度: %s"
+  "loc.messages.OutputVariableDataSizeExceeded": "未设置为 Helm 命令输出的输出变量超出了支持的最大长度。输出长度: %s，支持的最大长度: %s",
+  "loc.messages.KubeloginFailed": "Kubelogin 身份验证失败。异常: %s"
 }

@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 221,
+        "Minor": 229,
         "Patch": 0
     },
     "demands": [
@@ -73,7 +73,7 @@
             "label": "Container Name",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Name of the Container for uploading the files. If a container with the given name does not exist in the specified storage account, it will automatically be created. <br> If you need to create a virtual directory inside the container, use the blob prefix input below. <br> Example: If your target location is <i>https://myaccount.blob.core.windows.net/mycontainer/vd1/vd2/</i>, then specify <i>mycontainer</i> as container name and <i>vd1/vd2</i> as blob prefix.",
+            "helpMarkDown": "Name of the Container for uploading the files. If a container with the given name does not exist in the specified storage account, it will automatically be created. <br> If you need to create a virtual directory inside the container, use the blob prefix input below. <br> Example: If your target location is <i>https://myaccount.blob.core.windows.net/mycontainer/vd1/vd2/</i>, then specify <i>mycontainer</i> as container name and <i>vd1/vd2/</i> as blob prefix.",
             "visibleRule": "Destination = AzureBlob"
         },
         {
@@ -82,7 +82,7 @@
             "label": "Blob Prefix",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Useful for filtering files, for example, append build number to all the blobs to download files from that build only. Example: If you specify blob prefix as <i>myvd1</i>, a virtual directory with this name will be created inside the container. The source files will be copied to <i>https://myaccount.blob.core.windows.net/mycontainer/myvd1/</i>.",
+            "helpMarkDown": "Useful for filtering files, for example, append build number to all the blobs to download files from that build only. Example: If you specify blob prefix as <i>myvd1/</i>, a virtual directory with this name will be created inside the container. Blob prefix with a trailing '/' will be considered a virtual directory. Otherwise, it will be treated as a file, unless the item being copied is itself a folder. The source files will be copied to <i>https://myaccount.blob.core.windows.net/mycontainer/myvd1/</i>.",
             "visibleRule": "Destination = AzureBlob"
         },
         {
@@ -287,7 +287,6 @@
         "AFC_AzCopyBlobUploadNonZeroExitCode": "AzCopy.exe exited with non-zero exit code while uploading files to blob storage.",
         "AFC_PreexecutionJob_UnableToGetStorageKey": "Unable to fetch storage account key. Error: '{0}'",
         "AFC_UninstallWinRMCustomScriptExtension": "Uninstall WinRM custom script manually and retry deployment.",
-        "AFC_AdditionalArgumentsMustNotIncludeForbiddenCharacters": "Additional arguments can't include separator characters '&', ';' and '|'. Please verify input. To learn more about argument validation, please check https://aka.ms/azdo-task-argument-validation",
         "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
         "UnsupportedAuthScheme": "Unsupported authentication scheme '{0}' for endpoint.",
         "ServicePrincipalError": "There was an error with the service principal used for the deployment."

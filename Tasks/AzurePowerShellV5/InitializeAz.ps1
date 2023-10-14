@@ -3,9 +3,10 @@ param
 (
     [String] [Parameter(Mandatory = $true)]
     $endpoint,
-
     [String] [Parameter(Mandatory = $false)]
-    $targetAzurePs
+    $targetAzurePs,
+    [String] [Parameter(Mandatory = $false)]
+    $clientAssertionJwt
 )
 
 $endpointObject =  ConvertFrom-Json  $endpoint
@@ -15,7 +16,7 @@ $environmentName = $endpointObject.environment
 . "$PSScriptRoot/Utility.ps1"
 Update-PSModulePathForHostedAgentLinux -targetAzurePs $targetAzurePs
 
-if($targetAzurePs -eq ""){
+if ($targetAzurePs -eq "") {
     $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
 }
 else{
@@ -25,13 +26,13 @@ else{
         $azModulePath = Split-Path (Split-Path (Split-Path $moduleVal.Path -Parent) -Parent) -Parent
         $azModulePath = $azModulePath + "/Az/*"
         $azModuleVersion = split-path -path $azModulePath -Leaf -Resolve
-        if($azModuleVersion -eq $targetAzurePs) {
+        if ($azModuleVersion -eq $targetAzurePs) {
             $module = $moduleVal
             break
-        }   
+        }
     }
 }
-      
+
 if (!$module) {
     # Will handle localization later
     Write-Verbose "No module found with name: $moduleName"
@@ -46,10 +47,10 @@ $module = Import-Module -Name $module.Path -Global -PassThru -Force
 Write-Host "##[command]Clear-AzContext -Scope Process"
 $null = Clear-AzContext -Scope Process
 Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
-$null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue 
+$null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
 
 $scopeLevel = "Subscription"
-if($endpointObject.scopeLevel) {
+if ($endpointObject.scopeLevel) {
     $scopeLevel = $endpointObject.scopeLevel
 }
 $processScope = @{ Scope = "Process" }
@@ -65,11 +66,12 @@ function Format-Splat {
         if ($value -is [bool]) { "-$($key):" } else { "-$key" }
         $value
     }
-    
+
     "$parameters" # String join the array.
 }
 
 if ($endpointObject.scheme -eq 'ServicePrincipal') {
+    Write-Verbose "Using ServicePrincipal authentication scheme"
     try {
         if ($endpointObject.authenticationType -ieq 'SPNKey') {
             $psCredential = New-Object System.Management.Automation.PSCredential(
@@ -82,7 +84,7 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
         }
         else {
             # Provide an additional, custom, credentials-related error message. Will handle localization later
-            throw ("Only SPN credential auth scheme is supported for non windows agent.") 
+            throw ("Only SPNKey auth type is supported for ServicePrincipal auth scheme using non windows agent.")
         }
     }
     catch {
@@ -91,8 +93,7 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
         throw (New-Object System.Exception("There was an error with the service principal used for the deployment.", $_.Exception))
     }
 
-    if($scopeLevel -eq "Subscription")
-    {
+    if ($scopeLevel -eq "Subscription") {
         $SubscriptionId = $endpointObject.subscriptionId
         $TenantId = $endpointObject.tenantId
         $additional = @{ TenantId = $TenantId }
@@ -101,7 +102,21 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
         $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
     }
 }
+elseif ($endpointObject.scheme -eq 'WorkloadIdentityFederation') {
+    Write-Verbose "Using WorkloadIdentityFederation authentication scheme"
+
+    $logStr = "##[command] Connect-AzAccount -ServicePrincipal -Tenant $($endpointObject.tenantId) -ApplicationId $($endpointObject.servicePrincipalClientID)"
+    $logStr += " -FederatedToken ***** -Environment $environmentName -Scope Process"
+    Write-Host $logStr
+    Connect-AzAccount -ServicePrincipal -Tenant $endpointObject.tenantId -ApplicationId $endpointObject.servicePrincipalClientID `
+        -FederatedToken $clientAssertionJwt -Environment $environmentName -Scope 'Process'
+
+    if ($scopeLevel -ne "ManagementGroup") {
+        Write-Host "##[command] Set-AzContext -SubscriptionId $($endpointObject.subscriptionID) -TenantId $($endpointObject.tenantId)"
+        Set-AzContext -SubscriptionId $endpointObject.subscriptionID -TenantId $endpointObject.tenantId
+    }
+}
 else {
     #  Provide an additional, custom, credentials-related error message. Will handle localization later
-    throw ("Only SPN credential auth scheme is supported for non windows agent.")
+    throw ("Only SPN credential and WorkloadIdentityFederation auth schemes are supported for non windows agent.")
 }

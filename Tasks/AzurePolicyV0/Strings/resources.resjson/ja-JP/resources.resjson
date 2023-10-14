@@ -3,10 +3,13 @@
   "loc.helpMarkDown": "",
   "loc.description": "Azure Policy のセキュリティとコンプライアンスの評価",
   "loc.instanceNameFormat": "ポリシー コンプライアンスの確認",
+  "loc.group.displayName.advancedOptions": "詳細",
   "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
   "loc.input.help.ConnectedServiceName": "ポリシーを適用する Azure Resource Manager のサブスクリプションを選択します。",
   "loc.input.label.ResourceGroupName": "リソース グループ",
   "loc.input.help.ResourceGroupName": "リソース グループの名前を指定します。",
   "loc.input.label.Resources": "リソース名",
-  "loc.input.help.Resources": "ポリシー コンプライアンスを確認する Azure リソースの名前を選択します。"
+  "loc.input.help.Resources": "ポリシー コンプライアンスを確認する Azure リソースの名前を選択します。",
+  "loc.input.label.RetryDuration": "再試行時間",
+  "loc.input.help.RetryDuration": "以前の応答コードが \"Accepted\" であった場合に、Azure API の呼び出しを再試行するまで待機するタスクの期間を定義します。最小期間は 2 分です。"
 }

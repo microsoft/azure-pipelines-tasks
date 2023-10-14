@@ -104,5 +104,6 @@
   "loc.messages.UnableToFetchKubectlVersion": "kubectl バージョンをフェッチできませんでした。Kubernetes サーバーが稼働していることをご確認ください。",
   "loc.messages.KubectlClientVersion": "kubectl クライアント バージョン",
   "loc.messages.KubectlServerVersion": "kubectl サーバー バージョン",
-  "loc.messages.KubectlServerVerisonNotFound": "kubectl サーバーのバージョンが見つかりませんでした"
+  "loc.messages.KubectlServerVerisonNotFound": "kubectl サーバーのバージョンが見つかりませんでした",
+  "loc.messages.KubeloginFailed": "Kubelogin 認証に失敗しました。例外: %s"
 }

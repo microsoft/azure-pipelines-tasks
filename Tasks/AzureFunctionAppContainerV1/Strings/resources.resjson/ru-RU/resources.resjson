@@ -71,6 +71,7 @@
   "loc.messages.RequestedURLforkuduphysicalpath": "Запрошенный URL-адрес для физического пути Kudu: %s",
   "loc.messages.Physicalpathalreadyexists": "Физический путь \"%s\" уже существует.",
   "loc.messages.KuduPhysicalpathCreatedSuccessfully": "Физический путь Kudu успешно создан: %s",
+  "loc.messages.KuduStackTraceURL": "Для дальнейшей отладки проверьте URL-адрес трассировки стека Kudu: %s",
   "loc.messages.FailedtocreateKuduPhysicalPath": "Не удалось создать физический путь Kudu. Ошибка: %s",
   "loc.messages.FailedtocheckphysicalPath": "Не удалось проверить физический путь Kudu. Код ошибки: %s",
   "loc.messages.VirtualApplicationDoesNotExist": "Виртуальное приложение не существует: %s",

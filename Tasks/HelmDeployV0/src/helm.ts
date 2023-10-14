@@ -6,12 +6,13 @@ import path = require('path');
 import * as commonCommandOptions from "./commoncommandoption";
 import * as helmutil from "./utils"
 
-import { AKSCluster, AKSClusterAccessProfile, AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azureModels';
+import { AKSCluster, AKSClusterAccessProfile, AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
 import { WebRequest, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
 import { extractManifestsFromHelmOutput, getDeploymentMetadata, getManifestFileUrlsFromHelmOutput, getPublishDeploymentRequestUrl, isDeploymentEntity } from 'azure-pipelines-tasks-kubernetes-common/image-metadata-helper';
 
-import { AzureAksService } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-aks-service';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest-v2/azure-arm-endpoint';
+import { AzureAksService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-aks-service';
+import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
+import { Kubelogin } from 'azure-pipelines-tasks-kubernetes-common/kubelogin';
 import helmcli from "./helmcli";
 import kubernetescli from "./kubernetescli"
 
@@ -21,7 +22,7 @@ import { fail } from 'assert';
 const environmentVariableMaximumSize = 32766;
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
-tl.setResourcePath(path.join(__dirname, '../node_modules/azure-pipelines-tasks-azure-arm-rest-v2/module.json'));
+tl.setResourcePath(path.join(__dirname, '../node_modules/azure-pipelines-tasks-azure-arm-rest/module.json'));
 
 function getKubeConfigFilePath(): string {
     var userdir = helmutil.getTaskTempDir();
@@ -78,17 +79,37 @@ function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnS
 
 async function run() {
     var command = tl.getInput("command", true).toLowerCase();
+    var connectionType = tl.getInput("connectionType", true);
     var isKubConfigRequired = isKubConfigSetupRequired(command);
     var kubectlCli: kubernetescli;
-    if (isKubConfigRequired) {
-        var kubeconfigfilePath = command === "logout" ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
+    var externalAuth = connectionType === "None" && (command === "install" || command === "upgrade");
+    if (externalAuth && !tl.getVariable("KUBECONFIG")) {
+        const kubeConfigPath = path.join(process.env.HOME, '.kube', 'config');
+        if (fs.existsSync(kubeConfigPath)) {
+            tl.setVariable("KUBECONFIG", kubeConfigPath);
+        } else {
+            tl.error("KUBECONFIG kube configuration file path must be set when connectionType is none and command is install or upgrade.");
+        }
+    }
+    if (isKubConfigRequired || externalAuth) {
+        var kubeconfigfilePath = (command === "logout" || externalAuth) ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
         kubectlCli = new kubernetescli(kubeconfigfilePath);
         kubectlCli.login();
+    }
+  
+    const kubelogin = new Kubelogin(helmutil.getTaskTempDir());
+    if (kubelogin.isAvailable() && !externalAuth) {
+        tl.debug('Kubelogin is installed. Converting kubeconfig.');
+        const serviceConnection: string = tl.getInput('azureSubscriptionEndpoint', false);
+        try {
+            await kubelogin.login(serviceConnection);
+        } catch (err) {
+            tl.debug(tl.loc('KubeloginFailed', err));
+        }
     }
 
     var helmCli: helmcli = new helmcli();
     helmCli.login();
-    var connectionType = tl.getInput("connectionType", true);
     var telemetry = {
         connectionType: connectionType,
         command: command,
@@ -202,7 +223,7 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
             }
         }
         catch (e) {
-            tl.warning("Capturing deployment metadata failed with error: " + e);
+            tl.error("Capturing deployment metadata failed with error: " + e);
         }
     }
 }

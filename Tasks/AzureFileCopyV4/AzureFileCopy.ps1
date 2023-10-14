@@ -67,10 +67,14 @@ $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 . "$PSScriptRoot\Utility.ps1"
 CleanUp-PSModulePathForHostedAgent
 
-if (Get-Module Az.Accounts -ListAvailable){
-    Initialize-AzModule -Endpoint $endpoint
+$vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+$vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
+
+if (Get-Module Az.Accounts -ListAvailable) {
+    $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
+    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
 }
-else{
+else {
     Initialize-AzureRMModule -Endpoint $endpoint
 }
 
@@ -85,6 +89,21 @@ $enableDetailedLogging = ($env:system_debug -eq "true")
 
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
+
+# Sanitizer
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+$useSanitizerCall = Get-SanitizerCallStatus
+$useSanitizerActivate = Get-SanitizerActivateStatus
+
+if ($useSanitizerCall) {
+    $sanitizedArgumentsForBlobCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForBlobCopy -TaskName "AzureFileCopyV4"
+    $sanitizedArgumentsForVMCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForVMCopy -TaskName "AzureFileCopyV4"
+}
+
+if ($useSanitizerActivate) {
+    $additionalArgumentsForBlobCopy = $sanitizedArgumentsForBlobCopy -join " "
+    $additionalArgumentsForVMCopy = $sanitizedArgumentsForVMCopy -join " "
+}
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
 try {
@@ -101,13 +120,13 @@ try {
         Write-Host "##vso[telemetry.publish area=TaskEndpointId;feature=AzureFileCopy]$telemetryJsonContent"
 
         # Getting storage key for the storage account
-        $storageKey = Get-StorageKey -storageAccountName $storageAccount -endpoint $endpoint
+        $storageKey = Get-StorageKey -storageAccountName $storageAccount -endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $vstsAccessToken
 
         # creating storage context to be used while creating container, sas token, deleting container
         $storageContext = Create-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
-        
+
         # Geting Azure Storage Account type
-        $storageAccountType = Get-StorageAccountType -storageAccountName $storageAccount -endpoint $endpoint
+        $storageAccountType = Get-StorageAccountType $storageAccount $endpoint $connectedServiceName $vstsEndpoint
         Write-Verbose "Obtained Storage Account type: $storageAccountType"
         if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.Contains('Premium'))
         {
@@ -127,14 +146,14 @@ try {
             $containerPresent = Get-AzureContainer -containerName $containerName -storageContext $storageContext
 
             #creating container if the containerName provided does not exist
-            if($containerPresent -eq $null)
+            if($null -eq $containerPresent)
             {
                 Write-Verbose "Creating container if the containerName provided does not exist"
                 Create-AzureContainer -containerName $containerName -storageContext $storageContext
             }
         }
 
-        
+
         # Getting Azure Blob Storage Endpoint
         $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -endpoint $endpoint
 
@@ -176,8 +195,13 @@ try {
     }
 
     Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArgumentsForBlobCopy
-    Validate-AdditionalArguments $additionalArguments
 
+    $containerSasToken = ""
+    if ($useSanitizerActivate) {
+        Write-Verbose "Feature flag sanitizer is active (for sas token)"
+        $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInMinutes $sasTokenTimeOutInMinutes
+    }
+    
     # Uploading files to container
     Upload-FilesToAzureContainer -sourcePath $sourcePath `
                                 -endPoint $endpoint `
@@ -188,7 +212,9 @@ try {
                                 -azCopyLocation $azCopyLocation `
                                 -additionalArguments $additionalArgumentsForBlobCopy `
                                 -destinationType $destination `
-                                -useDefaultArguments $useDefaultArgumentsForBlobCopy
+                                -useDefaultArguments $useDefaultArgumentsForBlobCopy `
+                                -containerSasToken $containerSasToken `
+                                -useSanitizerActivate $useSanitizerActivate
     
     # Complete the task if destination is azure blob
     if ($destination -eq "AzureBlob")
@@ -213,11 +239,12 @@ try {
         # Normalize admin username
         if($vmsAdminUserName -and (-not $vmsAdminUserName.StartsWith(".\")) -and ($vmsAdminUserName.IndexOf("\") -eq -1) -and ($vmsAdminUserName.IndexOf("@") -eq -1))
         {
-            $vmsAdminUserName = ".\" + $vmsAdminUserName 
+            $vmsAdminUserName = ".\" + $vmsAdminUserName
         }
         # getting azure vms properties(name, fqdn, winrmhttps port)
         $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName `
-        -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites -connectedServiceName $connectedServiceName
+            -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites `
+            -connectedServiceName $connectedServiceName -vstsAccessToken $vstsAccessToken
 
         $azureVMsCredentials = Get-AzureVMsCredentials -vmsAdminUserName $vmsAdminUserName -vmsAdminPassword $vmsAdminPassword
 
@@ -243,7 +270,8 @@ try {
                                                 -additionalArguments $additionalArgumentsForVMCopy `
                                                 -azCopyToolLocation $azCopyLocation `
                                                 -fileCopyJobScript $AzureFileCopyRemoteJob `
-                                                -enableDetailedLogging $enableDetailedLogging
+                                                -enableDetailedLogging $enableDetailedLogging `
+                                                -useSanitizerActivate $useSanitizerActivate
 
         Write-Output (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName)
     }
