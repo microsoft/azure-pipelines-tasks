@@ -220,7 +220,6 @@
         "UseDotNetV2",
         "AzureVmssDeploymentV0",
         "AzureFunctionAppV1",
-        "AzureFunctionAppV2",
         "PublishSymbolsV2",
         "AzureSpringCloudV0",
         "AzureWebAppContainerV1",
