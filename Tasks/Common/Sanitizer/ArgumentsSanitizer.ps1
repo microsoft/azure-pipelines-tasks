@@ -58,9 +58,11 @@ function Get-SanitizedArguments([string]$inputArgs) {
     $argsSplitSymbols = '``';
     [string[][]]$matchesChunks = @()
 
-    # regex rule for removing symbols and telemetry.
-    # '?<!`' - checking if before character no backtick. '([allowedchars])' - checking if character is allowed. Otherwise, replace to $removedSymbolSign
-    $regex = '(?<!`)([^a-zA-Z0-9\\` _''"\-=\/:\.*,+~?%\n])';
+    ## PowerShell Regex is case insensitive by default, so we don't need to specify a-zA-Z.
+    ## ('?<!`') - checking if before character no backtick.
+    ## ([^\w` _'"-=\/:\.*,+~?%\n#]) - checking if character is allowed. Insead replacing to #removed#
+    ## (?!true|false) - checking if after characters sequence no $true or $false.
+    $regex = '(?<!`)([^\w\\` _''"\-=\/:\.*,+~?%\n#])(?!true|false)'
 
     # We're splitting by ``, removing all suspicious characters and then join
     $argsArr = $inputArgs -split $argsSplitSymbols;
