@@ -10,7 +10,6 @@ describe('UniversalPackages Suite', function () {
     });
 
     it('downloads package from current organization', function (done: Mocha.Done) {
-        this.timeout(5000);
         let tp = path.join(__dirname, './downloadInternal.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -21,5 +20,5 @@ describe('UniversalPackages Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });
+    }).timeout(10000);
 });

@@ -1,0 +1,166 @@
+{
+  "id": "5c9af2eb-5fc5-42dc-9b91-dc234a8c4400",
+  "name": "InstallSSHKey",
+  "friendlyName": "Install SSH key",
+  "description": "Install an SSH key prior to a build or deployment",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/install-ssh-key",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=875267)",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 229,
+    "Patch": 3
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [],
+  "minimumAgentVersion": "2.182.1",
+  "instanceNameFormat": "Install an SSH key",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "hostName",
+      "aliases": [
+        "knownHostsEntry"
+      ],
+      "type": "multiLine",
+      "label": "Known Hosts Entry",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The entry for this SSH key for the known_hosts file. Supports several hosts."
+    },
+    {
+      "name": "sshPublicKey",
+      "type": "string",
+      "label": "SSH Public Key",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "The contents of the public SSH key. If not specified it will be generated out of private key."
+    },
+    {
+      "name": "sshPassphrase",
+      "type": "string",
+      "label": "SSH Passphrase",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "The passphrase for the SSH key, if any."
+    },
+    {
+      "name": "sshKeySecureFile",
+      "type": "secureFile",
+      "label": "SSH Key",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Select the SSH key that was uploaded to `Secure Files` to install on the agent."
+    },
+    {
+      "name": "addEntryToConfig",
+      "type": "boolean",
+      "label": "Add entry to SSH config",
+      "defaultValue": false,
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Add entry related to the key installed to the SSH config file. The key file will be available for all subsequent tasks."
+    },
+    {
+      "name": "configHostAlias",
+      "type": "string",
+      "label": "Alias",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "addEntryToConfig = true",
+      "groupName": "advanced",
+      "helpMarkDown": "Name of SSH config entry"
+    },
+    {
+      "name": "configHostname",
+      "type": "string",
+      "label": "Host name",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "addEntryToConfig = true",
+      "groupName": "advanced",
+      "helpMarkDown": "Host name property of SSH config entry"
+    },
+    {
+      "name": "configUser",
+      "type": "string",
+      "label": "User",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "addEntryToConfig = true",
+      "groupName": "advanced",
+      "helpMarkDown": "Username property of SSH config entry"
+    },
+    {
+      "name": "configPort",
+      "type": "string",
+      "label": "Port",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "addEntryToConfig = true",
+      "groupName": "advanced",
+      "helpMarkDown": "Port of SSH config entry"
+    }
+  ],
+  "prejobexecution": {
+    "Node10": {
+      "target": "preinstallsshkey.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "preinstallsshkey.js",
+      "argumentFormat": ""
+    }
+  },
+  "postjobexecution": {
+    "Node10": {
+      "target": "postinstallsshkey.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "postinstallsshkey.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "SSH_AGENT_PID",
+        "SSH_AUTH_SOCK",
+        "INSTALL_SSH_KEY_CONFIG_LOCATION",
+        "INSTALL_SSH_KEY_KNOWN_HOSTS_LOCATION"
+      ]
+    }
+  },
+  "messages": {
+    "SSHKeyAlreadyInstalled": "The SSH key is already installed.",
+    "SSHPublicKeyMalformed": "Could not get the base64 portion of the public SSH key.",
+    "SSHKeyInstallFailed": "Failed to install the SSH key.",
+    "CannotResetKnownHosts": "Cannot reset the known_hosts file to its original values.",
+    "GeneratingPublicKey": "Generating public key out of private one.",
+    "CannotResetFile": "Cannot reset the %s file to its original values.",
+    "DeletePrivateKeyFile": "Deleting private key file.",
+    "InsertingIntoConfig": "Inserting entry into config file:"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.229.3",
+    "Node20-225": "0.229.4"
+  }
+}

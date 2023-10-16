@@ -4,7 +4,7 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://aka.ms/NuGetAuthenticateTask",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget-authenticate",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "runsOn": [
@@ -13,10 +13,11 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 226,
-    "Patch": 0
+    "Minor": 229,
+    "Patch": 1
   },
   "deprecated": true,
+  "removalDate": "2024-04-22",
   "minimumAgentVersion": "2.120.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
@@ -51,7 +52,7 @@
   },
   "messages": {},
   "_buildConfigMapping": {
-    "Default": "0.226.1",
-    "Node16-225": "0.226.0"
+    "Default": "0.229.2",
+    "Node16-225": "0.229.1"
   }
 }

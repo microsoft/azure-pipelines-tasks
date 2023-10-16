@@ -20,6 +20,9 @@ Register-Mock Get-VstsInput { return $validApplicationPath } -ParametersEvaluato
 Register-Mock Get-VstsInput { return $false } -ParametersEvaluator{ $Name -eq  "CleanTargetBeforeCopy" }
 Register-Mock Get-VstsInput { return $true } -ParametersEvaluator{ $Name -eq  "CopyFilesInParallel" }
 
+Register-Mock Get-SanitizerCallStatus { return $false }
+Register-Mock Get-SanitizerActivateStatus { return $false }
+
 Register-Mock Receive-Job { }  -ParametersEvaluator { $Id -eq 1 }
 Register-Mock Receive-Job { throw "Copy to one or more machines failed." }  -ParametersEvaluator { $Id -eq 2 }
 
