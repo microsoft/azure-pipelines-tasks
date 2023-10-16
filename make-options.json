@@ -222,7 +222,6 @@
         "AzureFunctionAppV1",
         "AzureFunctionAppV2",
         "PublishSymbolsV2",
-        "AzureSpringCloudV0",
         "AzureWebAppContainerV1",
         "AzureResourceManagerTemplateDeploymentV3",
         "NuGetAuthenticateV0",
