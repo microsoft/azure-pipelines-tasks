@@ -18,7 +18,7 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 198,
+        "Minor": 230,
         "Patch": 0
     },
     "instanceNameFormat": "Query Azure Monitor alerts",
