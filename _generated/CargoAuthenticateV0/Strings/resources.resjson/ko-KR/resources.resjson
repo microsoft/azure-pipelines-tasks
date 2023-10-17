@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "화물 인증(작업 실행기용)",
+  "loc.helpMarkDown": "",
+  "loc.description": "화물 상자 배포를 설치하는 데 사용되는 화물 클라이언트에 대한 인증 작업",
+  "loc.instanceNameFormat": "화물 인증 $(configFile)",
+  "loc.input.label.configFile": "인증할 config.toml 파일",
+  "loc.input.help.configFile": "사용할 레지스트리를 지정하는 config.toml 파일의 경로입니다. 폴더가 아니라 파일을 선택합니다(예: \"/.cargo/config.toml\".).",
+  "loc.input.label.cargoServiceConnections": "이 조직/컬렉션 외부 레지스트리에 대한 자격 증명",
+  "loc.input.help.cargoServiceConnections": "외부 레지스트리에 사용할 자격 증명으로, 프로젝트의 config.toml에 있습니다. 이 조직/컬렉션에 있는 레지스트리의 경우 이 필드를 비워 둡니다. 빌드의 자격 증명이 자동으로 사용됩니다.",
+  "loc.messages.FailedToAddAuthentication": "인증을 추가하지 못했습니다.",
+  "loc.messages.ConfigTomlNotToml": "인증하도록 선택한 파일(%s)이 유효한 .toml 파일이 아닙니다.",
+  "loc.messages.ConfigTomlDoesNotExist": "%s에서 선택한 config.toml 파일이 현재 없습니다.",
+  "loc.messages.ConfigTomlMissingRegistry": "선택한 config.toml 파일에는 레지스트리 테이블이 있어야 합니다.",
+  "loc.messages.AuthenticatingThisConfigToml": "%s에서 이 config.toml 파일에 나열된 레지스트리에 대한 인증을 추가하는 중",
+  "loc.messages.AddingAuthRegistry": "레지스트리에 대한 인증 추가하는 중: %s(토큰 이름: %s)",
+  "loc.messages.AddingAuthExternalRegistry": "외부 레지스트리에 대한 인증 추가하는 중: %s(토큰 이름: %s)"
+}
