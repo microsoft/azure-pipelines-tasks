@@ -18,7 +18,7 @@
   "preview": false,
   "version": {
     "Major": 0,
-    "Minor": 228,
+    "Minor": 230,
     "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
@@ -304,6 +304,10 @@
   "execution": {
     "Node10": {
       "target": "azurespringappsdeployment.js"
+    },
+    "Node16": {
+      "target": "azurespringappsdeployment.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
