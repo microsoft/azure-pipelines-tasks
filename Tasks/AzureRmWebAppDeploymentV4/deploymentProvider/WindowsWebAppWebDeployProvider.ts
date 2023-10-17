@@ -27,24 +27,21 @@ export class WindowsWebAppWebDeployProvider extends AzureRmWebAppDeploymentProvi
         var deleteApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting)
         await this.appServiceUtility.updateAndMonitorAppSettings(null, deleteApplicationSetting);
         
-        if(deployUtility.canUseWebDeploy(this.taskParams.UseWebDeploy)) {
-            let deploymentMethodtelemetry = '{"deploymentMethod":"Web Deploy"}';
+        if (deployUtility.canUseWebDeploy(this.taskParams.UseWebDeploy)) {
+            const webDeployUtility = new WebDeployUtility(this.appServiceUtility);
+            const deploymentMethodtelemetry = '{"deploymentMethod":"Web Deploy"}';
             console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureWebAppDeployment]" + deploymentMethodtelemetry);
 
             tl.debug("Performing the deployment of webapp.");
             
-            if(!tl.osType().match(/^Win/)) {
+            if (tl.getPlatform() !== tl.Platform.Windows) {
                 throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
             }
-    
-            var msDeployPublishingProfile = await this.appServiceUtility.getWebDeployPublishingProfile();
-            await WebDeployUtility.publishUsingWebDeploy(this.taskParams,
-                WebDeployUtility.constructWebDeployArguments(this.taskParams, msDeployPublishingProfile), this.appServiceUtility
-            );
-            
+
+            await webDeployUtility.publishUsingWebDeploy(this.taskParams);            
         }
         else {
-            let deploymentMethodtelemetry = '{"deploymentMethod":"Zip API"}';
+            const deploymentMethodtelemetry = '{"deploymentMethod":"Zip API"}';
             console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureWebAppDeployment]" + deploymentMethodtelemetry);
 
             tl.debug("Initiated deployment via kudu service for webapp package : ");

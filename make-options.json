@@ -217,20 +217,11 @@
         "Tests"
     ],
     "Node16_225": [
-        "UseDotNetV2",
-        "AzureVmssDeploymentV0",
-        "AzureFunctionAppV1",
-        "AzureFunctionAppV2",
         "PublishSymbolsV2",
-        "AzureSpringCloudV0",
-        "AzureWebAppContainerV1",
-        "AzureResourceManagerTemplateDeploymentV3",
         "NuGetAuthenticateV0",
         "AzureFileCopyV2",
         "AzureFileCopyV3",
-        "DockerComposeV0",
-        "IISWebAppDeploymentOnMachineGroupV0",
-        "AzureRmWebAppDeploymentV3"
+        "IISWebAppDeploymentOnMachineGroupV0"
     ],
     "Node20": [
         "AndroidSigningV2",
