@@ -20,6 +20,7 @@ import { addReleaseAnnotation } from './operations/ReleaseAnnotationUtility';
 import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { isInputPkgIsFolder, canUseWebDeploy } from 'azure-pipelines-tasks-webdeployment-common/utility';
 import { DeployUsingMSDeploy } from 'azure-pipelines-tasks-webdeployment-common/deployusingmsdeploy';
+import { shouldUseMSDeployTokenAuth} from 'azure-pipelines-tasks-webdeployment-common/msdeployutility';
 
 async function main() {
     let zipDeploymentID: string;
@@ -86,7 +87,7 @@ async function main() {
 
             if(canUseWebDeploy(taskParams.UseWebDeploy)) {
                 tl.debug("Performing the deployment of webapp.");
-                if(!tl.osType().match(/^Win/)){
+                if(tl.getPlatform() !== tl.Platform.Windows){
                     throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
                 }
 
@@ -95,13 +96,32 @@ async function main() {
                 }
 
                 var msDeployPublishingProfile = await appServiceUtility.getWebDeployPublishingProfile();
+                let authType = "Basic";
+
+                if (await appServiceUtility.isSitePublishingCredentialsEnabled())
+                {
+                    tl.debug("Using Basic authentication.")                        
+                }
+                else if (shouldUseMSDeployTokenAuth())
+                {
+                    tl.debug("Basic authentication is disabled, using token based authentication.");
+                    authType = "Bearer";
+                    msDeployPublishingProfile.userPWD = await appServiceUtility.getAuthToken();
+                    msDeployPublishingProfile.userName = "user"; // arbitrary but not empty
+                } 
+                else
+                {
+                    //deployment would fail in this case
+                    throw new Error(tl.loc("BasicAuthNotSupported"));
+                }
+
                 if (webPackage.toString().toLowerCase().endsWith('.war')) {
-                    await DeployWar(webPackage, taskParams, msDeployPublishingProfile, kuduService, appServiceUtility);
+                    await DeployWar(webPackage, taskParams, msDeployPublishingProfile, kuduService, appServiceUtility, authType);
                 }
                 else {
                     await DeployUsingMSDeploy(webPackage, taskParams.WebAppName, msDeployPublishingProfile, taskParams.RemoveAdditionalFilesFlag,
                     taskParams.ExcludeFilesFromAppDataFlag, taskParams.TakeAppOfflineFlag, taskParams.VirtualApplication, taskParams.SetParametersFile,
-                    taskParams.AdditionalArguments, isFolderBasedDeployment, taskParams.UseWebDeploy);
+                    taskParams.AdditionalArguments, isFolderBasedDeployment, taskParams.UseWebDeploy, authType);
                 }
             }
             else {

@@ -67,7 +67,17 @@ mockery.registerMock('./versionfetcher', {
         return {
             getVersionInfo: function (versionSpec: string, vsVersionSpec: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
                 return Promise<VersionInfo>((resolve, reject) => {
-                    resolve(new VersionInfo({ version: versionSpec, files: null, "runtime-version": versionSpec, "vs-version": vsVersionSpec }, packageType));
+                    resolve(new VersionInfo({ 
+                        version: versionSpec, 
+                        files: [{
+                            name: 'testfile.json',
+                            hash: 'testhash',
+                            url: 'testurl',
+                            rid: 'testrid'
+                        }],
+                        "runtime-version": versionSpec,
+                        "vs-version": vsVersionSpec 
+                    }, packageType));
                 });
             }
         }
