@@ -59,6 +59,7 @@
   "loc.messages.PackagesPublishedSuccessfully": "已成功發行套件",
   "loc.messages.PackagesFailedToPublish": "無法發行套件",
   "loc.messages.UnknownFeedType": "未知的摘要類型 '%s'",
+  "loc.messages.Error_NoVersionOptionSpecifiedForPublish": "提供的 versionOption/versionPublishSelector 無效。必須設定為 'major'、'minor'、'patch' 或 'custom'",
   "loc.messages.Error_NoSourceSpecifiedForPublish": "未指定發佈的外部來源",
   "loc.messages.Error_NoSourceSpecifiedForDownload": "未指定下載的外部來源",
   "loc.messages.Error_UnexpectedErrorArtifactTool": "嘗試推送套件時發生未預期的錯誤。結束代碼(%s) 與錯誤(%s)",

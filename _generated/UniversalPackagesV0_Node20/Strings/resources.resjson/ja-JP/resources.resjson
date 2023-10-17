@@ -59,6 +59,7 @@
   "loc.messages.PackagesPublishedSuccessfully": "パッケージが正常に発行されました",
   "loc.messages.PackagesFailedToPublish": "パッケージを発行できませんでした",
   "loc.messages.UnknownFeedType": "フィードの種類 '%s' が不明です",
+  "loc.messages.Error_NoVersionOptionSpecifiedForPublish": "無効な versionOption/versionPublishSelector が指定されました。'major'、'minor'、'patch'、または 'custom' に設定する必要があります",
   "loc.messages.Error_NoSourceSpecifiedForPublish": "公開する外部ソースが指定されていませんでした",
   "loc.messages.Error_NoSourceSpecifiedForDownload": "ダウンロードする外部ソースが指定されていませんでした",
   "loc.messages.Error_UnexpectedErrorArtifactTool": "パッケージをプッシュしようとして予期しないエラーが発生しました。終了コード (%s) とエラー (%s)",
