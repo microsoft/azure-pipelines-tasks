@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Universal packages",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/UniversalPackagesTask)",
+  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/universal-packages)",
   "loc.description": "Download or publish Universal Packages",
   "loc.instanceNameFormat": "Universal $(command)",
   "loc.group.displayName.packageDownloadDetails": "Feed & package details",
@@ -59,6 +59,7 @@
   "loc.messages.PackagesPublishedSuccessfully": "Packages were published successfully",
   "loc.messages.PackagesFailedToPublish": "Packages failed to publish",
   "loc.messages.UnknownFeedType": "Unknown feed type '%s'",
+  "loc.messages.Error_NoVersionOptionSpecifiedForPublish": "Invalid versionOption/versionPublishSelector provided. Must be set to 'major', 'minor', 'patch', or 'custom'",
   "loc.messages.Error_NoSourceSpecifiedForPublish": "No external source was specified for publish",
   "loc.messages.Error_NoSourceSpecifiedForDownload": "No external source was specified for download",
   "loc.messages.Error_UnexpectedErrorArtifactTool": "An unexpected error occurred while trying to push the package. Exit code(%s) and error(%s)",

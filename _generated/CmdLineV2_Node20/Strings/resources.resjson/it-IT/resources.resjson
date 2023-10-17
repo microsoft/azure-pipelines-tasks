@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Riga di comando",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.description": "Consente di eseguire uno script da riga di comando usando Bash in Linux in macOS e cmd.exe in Windows",
+  "loc.instanceNameFormat": "Script da riga di comando",
+  "loc.releaseNotes": "Coerenza delle attività per gli script. Aggiunta del supporto per più righe.",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.script": "Script",
+  "loc.input.label.workingDirectory": "Directory di lavoro",
+  "loc.input.label.failOnStderr": "Interrompi in caso di errore standard",
+  "loc.input.help.failOnStderr": "Se è impostato su true, questa attività non riuscirà nel caso in cui vengano scritti errori nel flusso StandardError.",
+  "loc.messages.GeneratingScript": "Generazione dello script.",
+  "loc.messages.JS_ExitCode": "Bash terminato con codice '%s'.",
+  "loc.messages.JS_Stderr": "Bash ha scritto una o più righe nel flusso di errore standard.",
+  "loc.messages.PS_ExitCode": "Cmd.exe terminato con codice '{0}'.",
+  "loc.messages.PS_UnableToDetermineExitCode": "Eccezione imprevista. Non è possibile determinare il codice di uscita da cmd.exe.",
+  "loc.messages.ScriptContents": "Contenuto dello script:"
+}

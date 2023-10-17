@@ -8,12 +8,14 @@ Another [migration progress](../../common-npm-packages/MIGRATION_OF_COMMON_PACKA
 
 # NPM Packages
 
-1. [ ] AzureRmDeploy-common
-2. [ ] coveragepublisher
-3. [ ] packaging-common
+1. [x] AzureRmDeploy-common
+2. [ ] coveragepublisher 
+    > This has been replaced in most of the tasks except PublishCodeCoverageResultsV2 task.
+    https://github.com/microsoft/azure-pipelines-tasks/pull/13487
+3. [x] packaging-common
 4. [X] utility-common
 5. [X] utility-common-v2
-6. [ ] webdeployment-common-v2
+6. [x] webdeployment-common-v2
 
 # PowerShell Script Modules
 
@@ -36,3 +38,6 @@ In addition to that, central repository usage will help us to maintain versionin
 | ----------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | utility-common-v2       | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17730) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/16997) |
 | utility-common          | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17737) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17729) |
+| AzureRmDeploy-common    | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/18889) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/14200) |
+| packaging-common        | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/18889) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/17058) |
+| webdeployment-common-v2 | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/18889) | [PR](https://github.com/microsoft/azure-pipelines-tasks/pull/14163) |

@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 213,
-    "Patch": 0
+    "Minor": 229,
+    "Patch": 3
   },
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -109,7 +109,7 @@
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
-  }
+    }
   },
   "messages": {
     "NotAFile": "ms-resource:loc.messages.NotAFile",

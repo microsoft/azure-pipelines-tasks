@@ -28,7 +28,6 @@ import * as nuGetGetter from 'azure-pipelines-tasks-packaging-common/nuget/NuGet
         nuget.arg('-set');
         nuget.arg('http_proxy=' + proxyConfig.proxyUrl);
         nuget.exec({} as trm.IExecOptions);
-
          // Set proxy username
         nuget = tl.tool(nugetPath);
         nuget.arg('config');
