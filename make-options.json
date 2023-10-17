@@ -217,7 +217,6 @@
         "Tests"
     ],
     "Node16_225": [
-        "UseDotNetV2",
         "AzureVmssDeploymentV0",
         "PublishSymbolsV2",
         "NuGetAuthenticateV0",
