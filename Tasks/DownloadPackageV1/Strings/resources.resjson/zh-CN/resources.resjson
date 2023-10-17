@@ -26,6 +26,7 @@
   "loc.messages.StartingDownloadOfPackage": "开始将包 %s 下载到位置 %s",
   "loc.messages.ExtractingPackage": "将包 %s 提取至目录 %s",
   "loc.messages.PackageTypeNotSupported": "使用此任务只能下载 Nuget、Python、Universal、Npm 和 Maven 包类型。",
+  "loc.messages.SkippingFileWithNoContent": "正在跳过文件 %s，因为找不到支持的内容",
   "loc.messages.ExtractionFailed": "未能提取包，出现错误: %s",
   "loc.messages.RetryingOperation": "操作失败，请在重试之前等待 %sms，剩余重试次数: %s",
   "loc.messages.RedirectUrlError": "无法获取重定向 URL，出现错误 %。",

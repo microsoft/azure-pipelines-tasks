@@ -59,6 +59,7 @@
   "loc.messages.PackagesPublishedSuccessfully": "Los paquetes se publicaron correctamente.",
   "loc.messages.PackagesFailedToPublish": "Error al publicar los paquetes.",
   "loc.messages.UnknownFeedType": "Tipo de fuente '%s' desconocido.",
+  "loc.messages.Error_NoVersionOptionSpecifiedForPublish": "VersionOption/versionPublishSelector proporcionado no válido. Debe establecerse en \"principal\", \"secundaria\", \"revisión\" o \"personalizada\".",
   "loc.messages.Error_NoSourceSpecifiedForPublish": "No se ha especificado ningún origen externo para la publicación.",
   "loc.messages.Error_NoSourceSpecifiedForDownload": "No se ha especificado ningún origen externo para la descarga.",
   "loc.messages.Error_UnexpectedErrorArtifactTool": "Error inesperado al intentar insertar el paquete. Código de salida: (%s). Error: (%s)",
