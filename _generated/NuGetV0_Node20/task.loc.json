@@ -10,8 +10,8 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "version": {
     "Major": 0,
-    "Minor": 229,
-    "Patch": 4
+    "Minor": 230,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -85,7 +85,7 @@
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
   },
   "_buildConfigMapping": {
-    "Default": "0.229.3",
-    "Node20_229_1": "0.229.4"
+    "Default": "0.230.0",
+    "Node20_229_1": "0.230.1"
   }
 }

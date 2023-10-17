@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 229,
-    "Patch": 6
+    "Minor": 230,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -174,7 +174,7 @@
     "Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
   },
   "_buildConfigMapping": {
-    "Default": "1.229.5",
-    "Node20_229_1": "1.229.6"
+    "Default": "1.230.0",
+    "Node20_229_1": "1.230.1"
   }
 }

@@ -9,8 +9,8 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 0,
-    "Minor": 229,
-    "Patch": 6
+    "Minor": 230,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -119,7 +119,7 @@
     "UnsupportedProjectScopedFeeds": "Project-scoped feeds are not supported by this version of the \"Download Package\" task. Please use version 1 or higher."
   },
   "_buildConfigMapping": {
-    "Default": "0.229.5",
-    "Node20_229_1": "0.229.6"
+    "Default": "0.230.0",
+    "Node20_229_1": "0.230.1"
   }
 }

@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 229,
-    "Patch": 4
+    "Minor": 230,
+    "Patch": 1
   },
   "preview": false,
   "satisfies": [
@@ -92,7 +92,7 @@
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
   },
   "_buildConfigMapping": {
-    "Default": "1.229.3",
-    "Node20_229_1": "1.229.4"
+    "Default": "1.230.0",
+    "Node20_229_1": "1.230.1"
   }
 }
