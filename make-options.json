@@ -219,7 +219,6 @@
     "Node16_225": [
         "UseDotNetV2",
         "AzureVmssDeploymentV0",
-        "AzureFunctionAppV1",
         "PublishSymbolsV2",
         "NuGetAuthenticateV0",
         "AzureFileCopyV2",
