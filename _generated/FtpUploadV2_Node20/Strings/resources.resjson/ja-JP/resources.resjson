@@ -11,6 +11,7 @@
   "loc.input.label.serverUrl": "サーバーの URL",
   "loc.input.label.username": "ユーザー名",
   "loc.input.label.password": "パスワード",
+  "loc.input.label.implicitFTPS": "暗黙的な FTPS を使用する",
   "loc.input.label.rootFolder": "ルート フォルダー",
   "loc.input.help.rootFolder": "ファイルのアップロード元のソース フォルダー。",
   "loc.input.label.filePatterns": "ファイル パターン",
