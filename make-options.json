@@ -222,12 +222,9 @@
         "AzureFunctionAppV1",
         "AzureFunctionAppV2",
         "PublishSymbolsV2",
-        "AzureWebAppContainerV1",
-        "AzureResourceManagerTemplateDeploymentV3",
         "NuGetAuthenticateV0",
         "AzureFileCopyV2",
         "AzureFileCopyV3",
-        "DockerComposeV0",
         "IISWebAppDeploymentOnMachineGroupV0"
     ],
     "Node20": [
