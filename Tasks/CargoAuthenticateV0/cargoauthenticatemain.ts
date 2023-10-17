@@ -66,7 +66,8 @@ async function main(): Promise<void> {
 
                     const tokenAuthInfo = serviceConnection as TokenServiceConnection;
                     tl.debug(`Detected token credentials for '${serviceConnection.packageSource.uri}'`);
-                    tl.setVariable("CARGO_REGISTRY_TOKEN", tokenAuthInfo.token)
+                    tl.setVariable("CARGO_REGISTRY_TOKEN", tokenAuthInfo.token);
+                    tl.setVariable("CARGO_REGISTRY_CREDENTIAL_PROVIDER", "cargo:token");
                     break;
                 default:
                     throw Error(tl.loc('Error_InvalidServiceConnection', serviceConnection.packageSource.uri));
@@ -75,7 +76,9 @@ async function main(): Promise<void> {
 
         for (let registry of Object.keys(result.registries)) {
             const registryUrl = url.parse(result.registries[registry].index);
-            let tokenName = `CARGO_REGISTRIES_${registry.toLocaleUpperCase().replace(/-/g, "_")}_TOKEN`;
+            const registryConfigName = registry.toLocaleUpperCase().replace(/-/g, "_");
+            const tokenName = `CARGO_REGISTRIES_${registryConfigName}_TOKEN`;
+            const credProviderName = `CARGO_REGISTRIES_${registryConfigName}_CREDENTIAL_PROVIDER`;
             if (registryUrl && registryUrl.host && collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0) {
                 let currentRegistry : string;
                 for (let serviceConnection of externalServiceConnections) {
@@ -85,12 +88,14 @@ async function main(): Promise<void> {
                         tl.debug(`Detected username/password or PAT credentials for '${serviceConnection.packageSource.uri}'`);
                         tl.debug(tl.loc('AddingAuthExternalRegistry', registry, tokenName));
                         tl.setVariable(tokenName, `Basic ${base64.encode(utf8.encode(`${usernamePasswordAuthInfo.username}:${usernamePasswordAuthInfo.password}`))}`);
+                        tl.setVariable(credProviderName, "cargo:token");
                     }      
                 }
                 // Default to internal registry if no token has been set yet
                 if (!currentRegistry) {
                     tl.debug(tl.loc('AddingAuthRegistry', registry, tokenName));
                     tl.setVariable(tokenName, localAccesstoken);
+                    tl.setVariable(credProviderName, "cargo:token");
                 }  
             }   
         } 

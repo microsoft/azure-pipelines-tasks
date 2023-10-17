@@ -35,7 +35,7 @@ parameters:
 
 variables:
   currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
-  
+
 jobs:
 
 - ${{ if parameters.build_single_task }}:
@@ -77,10 +77,17 @@ jobs:
     dependsOn:
     - publish
     condition: |
-      and(succeeded(), eq(variables['COURTESY_PUSH'], 'true'), or(
-        eq(variables['build.reason'], 'Schedule'),
-        and(eq(variables['build.reason'], 'Manual'), eq(variables['FORCE_COURTESY_PUSH'], 'true'))
-      ))
+      and(
+        succeeded(),
+        eq(variables['COURTESY_PUSH'], 'true'),
+        or(
+          eq(variables['build.reason'], 'Schedule'),
+          and(
+            eq(variables['build.reason'], 'Manual'),
+            eq(variables['FORCE_COURTESY_PUSH'], 'true')
+          )
+        )
+      )
     pool:
       vmImage: windows-2022
     steps:
