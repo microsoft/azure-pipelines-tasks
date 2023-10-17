@@ -26,6 +26,7 @@
   "loc.messages.StartingDownloadOfPackage": "Avvio del download del pacchetto %s nel percorso %s",
   "loc.messages.ExtractingPackage": "Estrazione del pacchetto %s nella directory %s",
   "loc.messages.PackageTypeNotSupported": "Con questa attività è possibile scaricare solo i tipi di pacchetto NuGet, Python, Universal, npm e Maven.",
+  "loc.messages.SkippingFileWithNoContent": "Il file %s verrà ignorato perché non è stato trovato alcun contenuto supportato",
   "loc.messages.ExtractionFailed": "Non è stato possibile estrarre il pacchetto. Errore: %s",
   "loc.messages.RetryingOperation": "L'operazione non è riuscita. Si attenderanno %s ms prima di effettuare un nuovo tentativo. Tentativi rimanenti: %s",
   "loc.messages.RedirectUrlError": "Non è possibile recuperare l'URL di reindirizzamento. Errore: %.",

@@ -11,6 +11,7 @@
   "loc.input.label.serverUrl": "服务器 URL",
   "loc.input.label.username": "用户名",
   "loc.input.label.password": "密码",
+  "loc.input.label.implicitFTPS": "使用隐式 FTPS",
   "loc.input.label.rootFolder": "根文件夹",
   "loc.input.help.rootFolder": "要上传其中文件的源文件夹。",
   "loc.input.label.filePatterns": "文件模式",

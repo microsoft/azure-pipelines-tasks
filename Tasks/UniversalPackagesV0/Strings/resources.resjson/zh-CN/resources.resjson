@@ -59,6 +59,7 @@
   "loc.messages.PackagesPublishedSuccessfully": "已成功发布包",
   "loc.messages.PackagesFailedToPublish": "包发布失败",
   "loc.messages.UnknownFeedType": "未知的源类型“%s”",
+  "loc.messages.Error_NoVersionOptionSpecifiedForPublish": "提供的 versionOption/versionPublishSelector 无效。必须设置为“major”、“minor”、“patch”或“custom”",
   "loc.messages.Error_NoSourceSpecifiedForPublish": "未指定用于发布的外部源",
   "loc.messages.Error_NoSourceSpecifiedForDownload": "未指定用于下载的外部源",
   "loc.messages.Error_UnexpectedErrorArtifactTool": "尝试推送包时出现意外错误。退出代码(%s)和错误(%s)",

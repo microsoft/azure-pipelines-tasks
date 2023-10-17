@@ -59,6 +59,7 @@
   "loc.messages.PackagesPublishedSuccessfully": "Пакеты успешно опубликованы",
   "loc.messages.PackagesFailedToPublish": "Не удалось опубликовать пакеты",
   "loc.messages.UnknownFeedType": "Неизвестный тип канала (\"%s\")",
+  "loc.messages.Error_NoVersionOptionSpecifiedForPublish": "Указан недопустимый параметр versionOption/versionPublishSelector. Должно быть настроено значение \"major\", \"minor\", \"patch\" или \"custom\"",
   "loc.messages.Error_NoSourceSpecifiedForPublish": "Не указан внешний источник для публикации",
   "loc.messages.Error_NoSourceSpecifiedForDownload": "Не указан внешний источник для скачивания",
   "loc.messages.Error_UnexpectedErrorArtifactTool": "Непредвиденная ошибка при попытке отправить пакет. Код завершения (%s) и ошибка (%s)",

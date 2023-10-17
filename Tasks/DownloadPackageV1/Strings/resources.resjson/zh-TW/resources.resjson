@@ -26,6 +26,7 @@
   "loc.messages.StartingDownloadOfPackage": "開始將套件 %s 下載到位置 %s",
   "loc.messages.ExtractingPackage": "正在將套件 %s 解壓縮到目錄 %s",
   "loc.messages.PackageTypeNotSupported": "只有 Nuget、Python、Universal、Npm 和 Maven 套件類型可以使用這項工作下載。",
+  "loc.messages.SkippingFileWithNoContent": "正在略過檔案 %s，因為找不到支援的內容",
   "loc.messages.ExtractionFailed": "無法解壓縮套件，錯誤為 %s",
   "loc.messages.RetryingOperation": "作業失敗，請等候 %sms 後再重試，重試機會剩餘 %s 次",
   "loc.messages.RedirectUrlError": "無法取得重新導向 URL。錯誤: %。",
