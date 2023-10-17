@@ -26,6 +26,7 @@
   "loc.messages.StartingDownloadOfPackage": "Начинается скачивание пакета %s в расположение %s",
   "loc.messages.ExtractingPackage": "Извлечение пакета %s в каталог %s",
   "loc.messages.PackageTypeNotSupported": "С помощью этой задачи можно скачать только пакеты типа Nuget, Python, Universal, Npm и Maven ",
+  "loc.messages.SkippingFileWithNoContent": "Пропуск файла %s, так как не удалось найти поддерживаемое содержимое",
   "loc.messages.ExtractionFailed": "Не удалось распаковать пакет. Ошибка: %s",
   "loc.messages.RetryingOperation": "Сбой операции, ожидание %s мс перед повторной попыткой, осталось повторных попыток: %s",
   "loc.messages.RedirectUrlError": "Не удалось получить URL-адрес перенаправления с ошибкой %.",

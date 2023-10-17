@@ -26,6 +26,7 @@
   "loc.messages.StartingDownloadOfPackage": "Der Download des Pakets \"%s\" an den Speicherort \"%s\" wird gestartet.",
   "loc.messages.ExtractingPackage": "Das Paket \"%s\" wird in das Verzeichnis \"%s\" extrahiert.",
   "loc.messages.PackageTypeNotSupported": "Mithilfe dieser Aufgabe können nur Nuget-, Python-, Universal-, NPM- und Maven-Pakettypen heruntergeladen werden.",
+  "loc.messages.SkippingFileWithNoContent": "Die Datei \"%s\" wird übersprungen, weil kein unterstützter Inhalt gefunden wurde.",
   "loc.messages.ExtractionFailed": "Fehler beim Extrahieren des Pakets: %s.",
   "loc.messages.RetryingOperation": "Fehler bei Vorgang. Es wird in %s ms ein neuer Versuch durchgeführt. Verbleibende Wiederholungsversuche: %s",
   "loc.messages.RedirectUrlError": "Die Umleitungs-URL kann nicht abgerufen werden. Fehler: %.",
