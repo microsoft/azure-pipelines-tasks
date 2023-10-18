@@ -265,8 +265,7 @@
         "UseRubyVersionV0",
         "XamarinAndroidV1",
         "CondaEnvironmentV0",
-        "CondaEnvironmentV1",
-        "GradleV2"
+        "CondaEnvironmentV1"
     ],
     "Node20_228": [
         "MavenV2"
