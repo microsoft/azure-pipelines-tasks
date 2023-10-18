@@ -180,7 +180,7 @@ export function validateFileArgs(inputArguments: string): void {
             expandedArgs,
             {
                 argsSplitSymbols: '``',
-                saniziteRegExp: new RegExp('(?<!`)([^a-zA-Z0-9\\\\` _\'"\\-=\\/:\\.*,+~?%])', 'g')
+                saniziteRegExp: new RegExp('(?<!`)([^\\w\\\\` _\'"\\-=\\/:\\.*,+~?%\\n#])(?!true|false)', 'ig')
             }
         );
         if (sanitizedArgs !== inputArguments) {
