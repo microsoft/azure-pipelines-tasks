@@ -18,7 +18,7 @@ export const runValidateFileArgsTests = () => {
             "test $VAR1 test", ["VAR1=1", "AZP_75787_ENABLE_NEW_LOGIC=true"]
         ], [
             "Accepts allowed symbols",
-            "a A 1 \\ _ ' \" - = / : . * + %", ["AZP_75787_ENABLE_NEW_LOGIC=true"]
+            "a A 1 \\ _ ' \" - = / : . , * + % \n # ^", ["AZP_75787_ENABLE_NEW_LOGIC=true"]
         ]
     ];
 
