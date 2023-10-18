@@ -259,7 +259,13 @@
         "InstallAppleProvisioningProfileV1",
         "InstallSSHKeyV0",
         "JavaToolInstallerV0",
-        "JenkinsQueueJobV2"
+        "JenkinsQueueJobV2",
+        "MavenV4",
+        "UsePythonVersionV0",
+        "UseRubyVersionV0",
+        "XamarinAndroidV1",
+        "CondaEnvironmentV0",
+        "CondaEnvironmentV1"
     ],
     "Node20_228": [
         "MavenV2"
