@@ -127,6 +127,17 @@ export class AzureAppServiceUtility {
 
     }
 
+    public async isSitePublishingCredentialsEnabled(): Promise<boolean> {
+        const utility = new AzureAppServiceUtilityCommon(this._appService);
+        return await utility.isSitePublishingCredentialsEnabled();
+    }
+
+    public async getAuthToken(): Promise<string> {
+        const token = await this._appService._client.getCredentials().getToken();
+        tl.setSecret(token);
+        return token;
+    }
+
     public async getPhysicalPath(virtualApplication: string): Promise<string> {
 
         if(!virtualApplication) {
