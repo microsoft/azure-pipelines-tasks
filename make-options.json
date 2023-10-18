@@ -217,8 +217,6 @@
         "Tests"
     ],
     "Node16_225": [
-        "UseDotNetV2",
-        "AzureVmssDeploymentV0",
         "PublishSymbolsV2",
         "NuGetAuthenticateV0",
         "AzureFileCopyV2",
@@ -266,7 +264,29 @@
     "Node20_228": [
         "MavenV2"
     ],
-    "Node20_229_1": [],
+    "Node20_229_1": [
+        "CargoAuthenticateV0",
+        "CondaAuthenticateV0",
+        "DownloadPackageV0",
+        "DownloadPackageV1",
+        "MavenAuthenticateV0",
+        "NpmV0",
+        "NpmV1",
+        "NpmAuthenticateV0",
+        "NuGetV0",
+        "NuGetCommandV2",
+        "NuGetAuthenticateV1",
+        "NuGetInstallerV0",
+        "NuGetPublisherV0",
+        "NuGetRestoreV1",
+        "NuGetToolInstallerV0",
+        "NuGetToolInstallerV1",
+        "PipAuthenticateV0",
+        "PipAuthenticateV1",
+        "TwineAuthenticateV0",
+        "TwineAuthenticateV1",
+        "UniversalPackagesV0"
+    ],
     "Node20_229_2": [],
     "Node20_229_3": [],
     "Node20_229_4": [],
