@@ -11,6 +11,7 @@
   "loc.input.label.serverUrl": "URL du serveur",
   "loc.input.label.username": "Nom d'utilisateur",
   "loc.input.label.password": "Mot de passe",
+  "loc.input.label.implicitFTPS": "Utiliser le protocole FTPS implicite",
   "loc.input.label.rootFolder": "Dossier racine",
   "loc.input.help.rootFolder": "Dossier source du chargement des fichiers.",
   "loc.input.label.filePatterns": "Modèles de fichiers",

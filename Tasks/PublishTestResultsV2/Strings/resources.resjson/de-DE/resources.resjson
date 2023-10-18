@@ -15,6 +15,8 @@
   "loc.input.help.mergeTestResults": "Für jede Ergebnisdatei wird ein Testlauf erstellt. Aktivieren Sie diese Option, um die Ergebnisse in einem einzigen Testlauf zusammenzuführen. Zur Leistungsoptimierung werden die Ergebnisse unabhängig von dieser Option in einem einzigen Lauf zusammengeführt, wenn mehr als 100 Ergebnisdateien vorliegen.",
   "loc.input.label.failTaskOnFailedTests": "Bei Testfehlern als fehlerhaft markieren",
   "loc.input.help.failTaskOnFailedTests": "Aufgabe bei Testfehlern als fehlerhaft markieren. Aktivieren Sie diese Option, um die Aufgabe als fehlerhaft zu markieren, wenn in den Ergebnisdateien Fehler ermittelt werden.",
+  "loc.input.label.failTaskOnMissingResultsFile": "Fehler, wenn keine Ergebnisdateien gefunden werden",
+  "loc.input.help.failTaskOnMissingResultsFile": "Die Aufgabe schlägt fehl, wenn keine Ergebnisdateien gefunden werden.",
   "loc.input.label.testRunTitle": "Testlauftitel",
   "loc.input.help.testRunTitle": "Geben Sie einen Namen für den Testlauf an.",
   "loc.input.label.platform": "Buildplattform",
