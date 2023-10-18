@@ -25,8 +25,12 @@ export function testPowerShellImpl() {
             psr.run(path.join(__dirname, 'L0Expand-EnvVariables.ps1'), done);
         })
 
-        it('Run of L0Test-FileArgs tests suite.', (done) => {
-            psr.run(path.join(__dirname, 'L0Test-FileArgs.ps1'), done);
+        it('Run of L0Test-FileArgs.Passes tests suite.', (done) => {
+            psr.run(path.join(__dirname, 'L0Test-FileArgs.Passes.ps1'), done);
+        })
+
+        it('Run of L0Test-FileArgs.Fails tests suite.', (done) => {
+            psr.run(path.join(__dirname, 'L0Test-FileArgs.Fails.ps1'), done);
         })
     }
 }
