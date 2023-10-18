@@ -652,5 +652,9 @@
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "RunFromZipPreventsFileInUseError": "ms-resource:loc.messages.RunFromZipPreventsFileInUseError"
+  },
+  "_buildConfigMapping": {
+    "Default": "4.230.1",
+    "Node16-225": "4.230.2"
   }
 }
