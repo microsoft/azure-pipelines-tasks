@@ -22,7 +22,17 @@ export const runValidateFileArgsTests = () => {
         ],
         [
             "Accepts allowed symbols",
-            "a A 1 \\ ` _ ' \" - = / : . * , + ~ ? %", ["AZP_75787_ENABLE_NEW_LOGIC=true"]
+            "a A z Z 1 \\ ` _ ' \" - = / : . * , + ~ ? % \n #", ["AZP_75787_ENABLE_NEW_LOGIC=true"]
+        ],
+        [
+            "Paths check",
+            "D:\\my\\path d/my/path",
+            ["AZP_75787_ENABLE_NEW_LOGIC=true"]
+        ],
+        [
+            "Accepts $true and $false",
+            "$TrUe $true $fAlsE $false",
+            ["AZP_75787_ENABLE_NEW_LOGIC=true"]
         ]
     ];
 
