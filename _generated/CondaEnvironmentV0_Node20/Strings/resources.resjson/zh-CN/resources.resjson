@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Conda 环境",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?linkid=873466)",
+  "loc.description": "创建并激活 Conda 环境",
+  "loc.instanceNameFormat": "Conda 环境 $(environmentName)",
+  "loc.group.displayName.advanced": "高级",
+  "loc.input.label.environmentName": "环境名称",
+  "loc.input.help.environmentName": "要创建和激活的 Conda 环境的名称。",
+  "loc.input.label.packageSpecs": "包规范",
+  "loc.input.help.packageSpecs": "要在创建环境时安装的包的空格分隔列表。",
+  "loc.input.label.updateConda": "更新到最新版本 Conda",
+  "loc.input.help.updateConda": "将 Conda 更新到最新版本。这适用于在 \"PATH\" 中或在 \"CONDA\" 环境变量指定的路径中找到的 Conda 安装。",
+  "loc.input.label.createOptions": "环境创建选项",
+  "loc.input.help.createOptions": "要传递给 \"conda create\" 命令的其他选项的空格分隔列表。",
+  "loc.input.label.cleanEnvironment": "清理环境",
+  "loc.input.help.cleanEnvironment": "删除环境并重新创建它(如果已存在)。如果未选中，该任务将重新激活现有环境。",
+  "loc.messages.CleanEnvironment": "找到现有环境 %s 且已设置任务的 \"Clean environment\" 参数。正在删除...",
+  "loc.messages.CreateFailed": "未能创建 Conda 环境 %s: %s",
+  "loc.messages.CondaNotFound": "在系统上找不到 \"conda\" 可执行文件。请联系管理员安装 Miniconda 或 Anaconda。然后将 \"conda\" 可执行文件添加到 \"PATH\" 或将 \"CONDA\" 环境变量设置为安装的根目录。",
+  "loc.messages.ReactivateExistingEnvironment": "找到现有环境 %s 且未设置任务的 \"Clean environment\" 参数。正在重新激活...",
+  "loc.messages.PlatformNotRecognized": "无法识别的平台"
+}

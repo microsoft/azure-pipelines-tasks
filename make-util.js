@@ -331,28 +331,22 @@ var ensureTool = function (name, versionArgs, validate) {
 exports.ensureTool = ensureTool;
 
 var installNode = function (nodeVersion) {
-    switch (nodeVersion || '') {
-        case '20':
-            nodeVersion = 'v20.3.1';
-            break;
-        case '16':
-            nodeVersion = 'v16.17.1';
-            break;
-        case '14':
-            nodeVersion = 'v14.10.1';
-            break;
-        case '10':
-            nodeVersion = 'v10.24.1';
-            break;
-        case '6':
-        case '':
-            nodeVersion = 'v6.10.3';
-            break;
-        case '5':
-            nodeVersion = 'v5.10.1';
-            break;
-        default:
-            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14, 16, 20`);
+    const versions = {
+        20: 'v20.3.1',
+        16: 'v16.17.1',
+        14: 'v14.10.1',
+        10: 'v10.24.1',
+        6: 'v6.10.3',
+        5: 'v5.10.1',
+    };
+
+    if (!nodeVersion) {
+        nodeVersion = versions[6];
+    } else {
+        if (!versions[nodeVersion]) {
+            fail(`Unexpected node version '${nodeVersion}'. Supported versions: ${Object.keys(versions).join(', ')}`);
+        };
+        nodeVersion = versions[nodeVersion];
     }
 
     if (nodeVersion === run('node -v')) {
@@ -1857,43 +1851,6 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
 exports.processGeneratedTasks = processGeneratedTasks;
 
 /**
- * Function to generate new tasks
- * @param {String} baseConfigToolPath Path to generating program
- * @param {Array} taskList  Array with allowed tasks
- * @param {String} configsString String with generation configs 
- * @param {Object} makeOptions Object to put generated definitions
- */
-
-var generateTasks = function(baseConfigToolPath, taskList, configsString, makeOptions) {
-    const args = `--write-updates --configs "${configsString}"`;
-    const configsArr = configsString.split("|")
-    let newMakeOptions = makeOptions;
-
-    taskList.forEach(function (taskName) {
-        const programPath = getBuildConfigGenerator(baseConfigToolPath);
-        const buildArgs = args + ` --task ${taskName}`;
-
-        banner('Generating: ' + taskName);
-        run(`${programPath} ${buildArgs}` , true);
-
-        // insert to make-options.json
-        configsArr.forEach(function (config) {
-            if (!newMakeOptions[config]) {
-                newMakeOptions[config] = [];
-            }
-            
-            if (newMakeOptions[config].indexOf(taskName) === -1) {
-                newMakeOptions[config].push(taskName);
-            }
-        });
-    });
-
-    return newMakeOptions;
-}
-exports.generateTasks = generateTasks;
-
-
-/**
  * Wrapper for buildTask function which compares diff between source and generated tasks
  * @param {Function} originalFunction - Original buildTask function
  * @param {string} basicGenTaskPath - path to generated folder
@@ -1926,7 +1883,6 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTa
                 
                 return true;
             });
-
 
         copyCandidates.forEach((candidatePath) => {
             const relativePath = path.relative(genTaskPath, candidatePath);

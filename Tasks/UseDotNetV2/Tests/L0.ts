@@ -529,7 +529,7 @@ describe('UseDotNet', function () {
         tr.run();
         runValidations(() => {
             assert(tr.succeeded == true, ("Should passed."));
-            assert(tr.stdout.indexOf("FailedToReadGlobalJson") > -1, "should throw an error that no file was found.");
+            assert(tr.stdout.indexOf("GlobalJsonIsEmpty") > -1, "should throw an error that no file was found.");
         }, tr, done);
     })
 });

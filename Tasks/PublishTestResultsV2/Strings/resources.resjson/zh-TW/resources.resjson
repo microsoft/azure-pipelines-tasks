@@ -15,6 +15,8 @@
   "loc.input.help.mergeTestResults": "為每個結果檔案建立一個測試回合。請檢查此選項，以將結果合併成單一測試回合。若結果檔案超過 100 個，為盡可能達到最佳效能，則不論此選項設定為何，都會將結果合併成單一回合。",
   "loc.input.label.failTaskOnFailedTests": "如果有測試失敗，即失敗",
   "loc.input.help.failTaskOnFailedTests": "如果沒有任何測試失敗，就使工作失敗。請於在結果檔案中偵測到測試失敗時，選取此選項來讓工作失敗。",
+  "loc.input.label.failTaskOnMissingResultsFile": "找不到結果檔案時失敗",
+  "loc.input.help.failTaskOnMissingResultsFile": "如果找不到結果檔案，則工作失敗。",
   "loc.input.label.testRunTitle": "測試回合標題",
   "loc.input.help.testRunTitle": "提供測試回合的名稱。",
   "loc.input.label.platform": "組建平台",

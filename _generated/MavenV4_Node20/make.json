@@ -1,0 +1,22 @@
+{
+    "rm": [
+        {
+            "items": [
+                "node_modules/azure-pipelines-tasks-codeanalysis-common/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-codeanalysis-common/node_modules/azure-pipeline-tool-lib",
+                "node_modules/azure-pipelines-tasks-codecoverage-tools/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-codecoverage-tools/node_modules/azure-pipeline-tool-lib",
+                "node_modules/azure-pipelines-tasks-java-common/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-java-common/node_modules/azure-pipeline-tool-lib",
+                "node_modules/azure-pipelines-tasks-packaging-common/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-packaging-common/node_modules/azure-pipeline-tool-lib",
+                "node_modules/azure-pipelines-tool-lib/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-codecoverage-tools/node_modules/mockery",
+                "node_modules/azure-pipelines-tasks-java-common/node_modules/mockery",
+                "node_modules/@types/mockery",
+                "node_modules/mockery"
+            ],
+            "options": "-Rf"
+        }
+    ]
+}
