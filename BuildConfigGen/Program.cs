@@ -570,7 +570,7 @@ namespace BuildConfigGen
 
                 if (inputVersion <= maxVersion && !defaultVersionMatchesSourceVersion)
                 {
-                    throw new Exception($"inputVersion={inputVersion} version specified in task taskTarget={taskTarget} must not be less or equal to maxversion maxVersion={maxVersion} specified in versionMapFile{versionMapFile}, or must match defaultVersion={defaultVersion} in {versionMapFile}");
+                    throw new Exception($"inputVersion={inputVersion} version specified in task taskTarget={taskTarget} must not be less or equal to maxversion maxVersion={maxVersion} specified in versionMapFile {versionMapFile}, or must match defaultVersion={defaultVersion} in {versionMapFile}");
                 }
             }
 
