@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 229,
+    "Minor": 230,
     "Patch": 0
   },
   "runsOn": [
@@ -18,7 +18,7 @@
   ],
   "minimumAgentVersion": "2.115.0",
   "deprecated": true,
-  "removalDate": "2024-04-22",
+  "removalDate": "2023-11-27",
   "groups": [
     {
       "name": "advanced",

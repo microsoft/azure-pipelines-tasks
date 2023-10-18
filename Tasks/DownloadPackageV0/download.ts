@@ -13,7 +13,7 @@ import { WebApi } from 'azure-devops-node-api';
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function main(): Promise<void> {
-	tl.warning("This task will be deprecated soon. Please switch to using DownloadPackage@1");
+	tl.warning("This task is deprecated. Builds that use it will break on 11-27-2023. Please switch to using DownloadPackage@1 as soon as possible.");
 	var feed = getProjectAndFeedIdFromInputParam("feed");
 	if(feed.projectId) {
 		throw new Error(tl.loc("UnsupportedProjectScopedFeeds"));
@@ -59,8 +59,12 @@ export async function downloadPackage(feedConnection: WebApi, pkgsConnection: We
 	var packagesClient = pkgsConnection.vsoClient;
 	
 	var packageUrl = await getNuGetPackageUrl(feedsClient, feedId, packageId);
-	
+
+#if NODE20
+	await new Promise<void>((resolve, reject) => {
+#else
 	await new Promise((resolve, reject) => {
+#endif
 		feedsClient.restClient.client.get(packageUrl).then(async response => {
 			if (response.message.statusCode != 200) {
 				return reject(tl.loc("FailedToGetPackageMetadata", response.message.statusMessage));

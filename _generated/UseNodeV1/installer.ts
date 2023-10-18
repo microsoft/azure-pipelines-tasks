@@ -162,7 +162,7 @@ async function acquireNode(version: string, installedArch: string): Promise<stri
     let downloadPath: string;
 
     try {
-        downloadPath = await toolLib.downloadTool(downloadUrl);
+        downloadPath = await toolLib.downloadToolWithRetries(downloadUrl);
     } catch (err) {
         if (isWin32 && err['httpStatusCode'] == 404) {
             return await acquireNodeFromFallbackLocation(version);
@@ -220,8 +220,8 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
         exeUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.exe`;
         libUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.lib`;
 
-        await toolLib.downloadTool(exeUrl, path.join(tempDir, 'node.exe'));
-        await toolLib.downloadTool(libUrl, path.join(tempDir, 'node.lib'));
+        await toolLib.downloadToolWithRetries(exeUrl, path.join(tempDir, 'node.exe'));
+        await toolLib.downloadToolWithRetries(libUrl, path.join(tempDir, 'node.lib'));
     }
     catch (err) {
         if (err['httpStatusCode'] && 
@@ -229,8 +229,8 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
             exeUrl = `https://nodejs.org/dist/v${version}/node.exe`;
             libUrl = `https://nodejs.org/dist/v${version}/node.lib`;
 
-            await toolLib.downloadTool(exeUrl, path.join(tempDir, 'node.exe'));
-            await toolLib.downloadTool(libUrl, path.join(tempDir, 'node.lib'));
+            await toolLib.downloadToolWithRetries(exeUrl, path.join(tempDir, 'node.exe'));
+            await toolLib.downloadToolWithRetries(libUrl, path.join(tempDir, 'node.lib'));
         }
         else {
             throw err;

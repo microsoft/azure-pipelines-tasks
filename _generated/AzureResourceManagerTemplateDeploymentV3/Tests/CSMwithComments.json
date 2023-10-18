@@ -1,5 +1,0 @@
-{
-    // This json file has comments
-    "var": "value ending with escaped character\\\"\\\\"
-    /*some Comment After the escaped Character */
-}
