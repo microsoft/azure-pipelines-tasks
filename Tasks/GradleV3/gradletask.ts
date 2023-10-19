@@ -8,6 +8,7 @@ import { CheckstyleTool } from 'azure-pipelines-tasks-codeanalysis-common/Common
 import { FindbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/FindbugsTool';
 import { SpotbugsTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/SpotbugsTool';
 import { IAnalysisTool } from 'azure-pipelines-tasks-codeanalysis-common/Common/IAnalysisTool';
+import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 import { getExecOptions, setJavaHome, setGradleOpts, getGradleVersion } from './Modules/environment';
 import { configureWrapperScript, isMultiModuleProject } from './Modules/project-configuration';
@@ -94,6 +95,8 @@ async function run() {
                     gradle5xOrHigher: gradle5xOrHigher,
                     gradleVersion: gradleVersion
                 };
+
+                emitTelemetry('TaskHub', 'GradleV3', { codeCoverageSettings: codeCoverageSettings });
 
                 await enableCodeCoverageAsync(codeCoverageSettings);
             }

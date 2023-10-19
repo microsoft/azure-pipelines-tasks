@@ -1,7 +1,6 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as javaCommon from 'azure-pipelines-tasks-java-common/java-common';
 import { IExecOptions, ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
-import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
 
 // Setting the access token env var to both VSTS and AZURE_ARTIFACTS for
 // backwards compatibility with repos that already use the older env var.
@@ -107,7 +106,6 @@ export function getGradleVersion(wrapperScript: string): string {
     }
 
     tl.debug(`Gradle version: ${gradleVersion}`);
-    emitTelemetry('TaskHub', 'GradleV3', { gradleVersion: gradleVersion });
 
     return gradleVersion;
 }

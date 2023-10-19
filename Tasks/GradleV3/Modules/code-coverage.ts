@@ -23,7 +23,7 @@ export function enableCodeCoverageAsync(settings: ICodeCoverageSettings): Q.Prom
     buildProperties['reportdirectory'] = settings.reportDirectoryName;
     buildProperties['ismultimodule'] = String(settings.isMultiModule);
     buildProperties['gradle5xOrHigher'] = String(settings.gradle5xOrHigher);
-    buildProperties['gradleMajorVersion'] = String(settings.gradleVersion);
+    buildProperties['gradleVersion'] = settings.gradleVersion;
 
     const codeCoverageEnabler: ICodeCoverageEnabler = new CodeCoverageEnablerFactory().getTool('gradle', settings.codeCoverageTool.toLowerCase());
     return codeCoverageEnabler.enableCodeCoverage(buildProperties);
