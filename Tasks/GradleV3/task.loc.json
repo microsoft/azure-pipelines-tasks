@@ -1,6 +1,6 @@
 {
-  "id": "8d8eebd8-2b94-4c97-85af-839254666666",
-  "name": "GradleMZTestUseJacocoV2",
+  "id": "8D8EEBD8-2B94-4C97-85AF-839254CC6DA4",
+  "name": "Gradle",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/gradle",
