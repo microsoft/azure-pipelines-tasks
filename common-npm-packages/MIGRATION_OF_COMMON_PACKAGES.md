@@ -1,6 +1,6 @@
 # Package migration
 
-Common npm packages will be migrated to a new [repository](https://github.com/microsoft/azure-pipelines-tasks-common-packages)
+Common npm packages have been migrated to a new [repository](https://github.com/microsoft/azure-pipelines-tasks-common-packages)
 
 New ci pipeline is created in PipelineTools project: [microsoft.azure-pipelines-tasks-common-packages](https://dev.azure.com/mseng/PipelineTools/_build?definitionId=14116)
 

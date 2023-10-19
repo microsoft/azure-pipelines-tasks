@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 225,
-    "Patch": 1
+    "Minor": 227,
+    "Patch": 0
   },
   "preview": false,
   "showEnvironmentVariables": true,
@@ -250,6 +250,10 @@
   "execution": {
     "Node10": {
       "target": "index.js"
+    },
+    "Node16": {
+      "target": "index.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

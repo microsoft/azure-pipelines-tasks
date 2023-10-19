@@ -107,7 +107,7 @@ export class PublishProfileUtility {
                errStream: errObj,
 			   outStream: process.stdout,
 			   failOnStdErr: true,
-               windowsVerbatimArguments: true,
+               windowsVerbatimArguments: true
              });
         } catch (error) {
             cmdError = error;

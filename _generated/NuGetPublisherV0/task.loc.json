@@ -9,8 +9,8 @@
   "author": "Lawrence Gripper",
   "version": {
     "Major": 0,
-    "Minor": 225,
-    "Patch": 1
+    "Minor": 230,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -21,6 +21,7 @@
   ],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
+  "removalDate": "2024-04-22",
   "groups": [
     {
       "name": "advanced",
@@ -128,6 +129,10 @@
     "Node10": {
       "target": "nugetpublisher.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "nugetpublisher.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -171,7 +176,7 @@
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
   },
   "_buildConfigMapping": {
-    "Default": "0.225.1",
-    "Node16-219": "0.225.0"
+    "Default": "0.230.0",
+    "Node20_229_1": "0.230.1"
   }
 }
