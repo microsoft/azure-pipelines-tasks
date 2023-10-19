@@ -120,12 +120,20 @@ it('fails if `conda` is not found', async function () {
         updateConda: false
     };
 
+#if NODE20
+    let error: any | undefined;
+#endif
     try {
         await uut.condaEnvironment(parameters, Platform.Windows);
 
         throw new Error('should not have succeeded');
     } catch (e) {
+#if NODE20
+        error = e;
+        assert.strictEqual(error.message, 'loc_mock_CondaNotFound');
+#else
         assert.strictEqual(e.message, 'loc_mock_CondaNotFound');
+#endif
         assert(findConda.calledOnceWithExactly(Platform.Windows));
         assert(prependCondaToPath.notCalled);
         assert(createEnvironment.notCalled);

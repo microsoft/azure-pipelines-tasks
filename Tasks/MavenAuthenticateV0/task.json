@@ -9,10 +9,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 229,
-    "Patch": 1
+    "Minor": 230,
+    "Patch": 0
   },
-  "runsOn": ["Agent", "DeploymentGroup"],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Maven Authenticate",
   "inputs": [
