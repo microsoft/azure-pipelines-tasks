@@ -17,10 +17,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 198,
+    "Minor": 229,
     "Patch": 0
   },
   "deprecated": true,
+  "removalDate": "2024-04-22",
   "demands": [
     "Chef",
     "KnifeReporting",

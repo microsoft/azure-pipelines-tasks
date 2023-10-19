@@ -6,7 +6,7 @@ param (
     [object]$credential,
     [string]$cleanTargetBeforeCopy,
     [string]$additionalArguments,
-    [bool]$useSanitizerActivate = $false
+    [string]$useSanitizerActivate
     )
 
     $sourcePath = $sourcePath.Trim().TrimEnd('\', '/')
@@ -216,9 +216,10 @@ param (
 
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp
         
-        if ($useSanitizerActivate) {
+        if ($useSanitizerActivate -eq "true") {
+            # Splitting arguments on space, but not on space inside quotes
             $sanitizedArguments = [regex]::Split($robocopyParameters, ' (?=(?:[^"]|"[^"]*")*$)')
-            & robocopy $sourceDirectory $destinationNetworkPath $filesToCopy $sanitizedArguments
+            & robocopy "$sourceDirectory" "$destinationNetworkPath" "$filesToCopy" $sanitizedArguments
         } else {
             $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
             Invoke-Expression $command

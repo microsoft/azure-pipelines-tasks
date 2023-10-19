@@ -75,10 +75,10 @@ async function downloadFuncToolsInternal(version: string): Promise<string> {
     }
 
     const funcPath = path.join(cachedToolpath, funcToolName + getExecutableExtension());
-    fs.chmodSync(funcPath, '777');
+    fs.chmodSync(funcPath, '755');
     const gozipPath = path.join(cachedToolpath, 'gozip' + getExecutableExtension());
     if (fs.existsSync(gozipPath)) {
-        fs.chmodSync(gozipPath, '777');
+        fs.chmodSync(gozipPath, '755');
     }
     
     return funcPath;

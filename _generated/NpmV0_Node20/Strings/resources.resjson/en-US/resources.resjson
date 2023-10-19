@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "npm",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.description": "Run an npm command. Use NpmAuthenticate@0 task for latest capabilities.",
+  "loc.instanceNameFormat": "npm $(command)",
+  "loc.input.label.cwd": "working folder",
+  "loc.input.help.cwd": "Working directory where the npm command is run. Defaults to the root of the repo.",
+  "loc.input.label.command": "npm command",
+  "loc.input.label.arguments": "arguments",
+  "loc.input.help.arguments": "Additional arguments passed to npm.",
+  "loc.messages.InvalidCommand": "Only one command should be used for npm. Use 'Arguments' input for additional arguments.",
+  "loc.messages.NpmReturnCode": "npm exited with return code: %d",
+  "loc.messages.NpmFailed": "npm failed with error: %s",
+  "loc.messages.NpmConfigFailed": "Failed to log the npm config information. Error : %s",
+  "loc.messages.NpmAuthFailed": "Failed to get the required authentication tokens for npm. Error: %s",
+  "loc.messages.BuildCredentialsWarn": "Could not determine credentials to use for npm"
+}

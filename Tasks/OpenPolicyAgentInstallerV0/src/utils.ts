@@ -83,11 +83,11 @@ export async function downloadOpa(version: string): Promise<string> {
     if (!cachedToolpath || !fs.existsSync(opaPath)) {
         const opaPathTmp = path.join(getTempDirectory(), opaToolName + getExecutableExtension());
         taskLib.cp(opaDownloadPath, opaPathTmp, '-f');
-        fs.chmodSync(opaPathTmp, '777');
+        fs.chmodSync(opaPathTmp, '755');
         return opaPathTmp;
     }
 
-    fs.chmodSync(opaPath, '777');
+    fs.chmodSync(opaPath, '755');
     return opaPath;
 }
 

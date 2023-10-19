@@ -36,7 +36,7 @@ var fileToJson = util.fileToJson;
 var createYamlSnippetFile = util.createYamlSnippetFile;
 var createMarkdownDocFile = util.createMarkdownDocFile;
 var getTaskNodeVersion = util.getTaskNodeVersion;
-var callGenTaskDuringBuild = false;
+var writeUpdatedsFromGenTasks = false;
 
 // global paths
 var buildPath = path.join(__dirname, '_build');
@@ -186,7 +186,7 @@ CLI.build = function(/** @type {{ task: string }} */ argv)
         fail('Please use serverBuild for CI builds for proper validation');
     }
 
-    callGenTaskDuringBuild = true;
+    writeUpdatedsFromGenTasks = true;
     CLI.serverBuild(argv);
 }
 
@@ -199,15 +199,15 @@ CLI.serverBuild = function(/** @type {{ task: string }} */ argv) {
         }
     });
 
-    const allTasks = getTaskList(taskList);
-
     // Need to validate generated tasks first
     const makeOptions = fileToJson(makeOptionsPath);
 
-    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, callGenTaskDuringBuild);
+    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks);
 
-    // Ensure we wrap build function after generator's changes to store only files that changes after the build 
-    const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTask, genTaskPath, callGenTaskDuringBuild);
+    const allTasks = getTaskList(taskList);
+
+    // Wrap build function  to store files that changes after the build 
+    const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTask, genTaskPath, writeUpdatedsFromGenTasks);
     const allTasksNode20 = allTasks.filter((taskName) => {
         return getNodeVersion(taskName) == 20;
     });
@@ -236,35 +236,31 @@ CLI.serverBuild = function(/** @type {{ task: string }} */ argv) {
 }
 
 function getNodeVersion (taskName) {
-    var taskJsonPath = path.join(genTaskPath, taskName, "task.json");
+    var packageJsonPath = path.join(genTaskPath, taskName, "package.json");
     // We prefer tasks in _generated folder because they might contain node20 version
     // while the tasks in Tasks/ folder still could use only node16 handler 
-    if (fs.existsSync(taskJsonPath)) {
-        console.log(`Found task.json for ${taskName} in _generated folder`);
+    if (fs.existsSync(packageJsonPath)) {
+        console.log(`Found package.json for ${taskName} in _generated folder ${packageJsonPath}`);
     } else {
-        taskJsonPath = path.join(tasksPath, taskName, "task.json");
-        if (!fs.existsSync(taskJsonPath)) {
-            console.error('Unable to find task.json file in _generated folder or Tasks folder.');
+        packageJsonPath = path.join(tasksPath, taskName, "package.json");
+        if (!fs.existsSync(packageJsonPath)) {
+            console.error(`Unable to find package.json file for ${taskName} in _generated folder or Tasks folder, using default node 10.`);
             return 10;
         }
-        console.log(`Found task.json for ${taskName} in Tasks folder`)
+        console.log(`Found package.json for ${taskName} in Tasks folder ${packageJsonPath}`)
     }
 
-    var taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
-    var taskJson = JSON.parse(taskJsonContents);
-    var execution = taskJson['execution'] || taskJson['prejobexecution'];
-    var nodeVersion = 10;
-    for (var key of Object.keys(execution)) {
-        const executor = key.toLocaleLowerCase();
-        if (!executor.startsWith('node')) {
-            console.error(`Invalid task.json file, unable to parse node version from ${taskJsonPath}.`);
-        }
-        const version = parseInt(executor.replace('node', ''));
-        if (version > nodeVersion) {
-            nodeVersion = version;
-        }
+    var packageJsonContents = fs.readFileSync(packageJsonPath, { encoding: 'utf-8' });
+    var packageJson = JSON.parse(packageJsonContents);
+    if (packageJson.dependencies && packageJson.dependencies["@types/node"]) {
+        // Extracting major version from the node version
+        const nodeVersion = packageJson.dependencies["@types/node"].replace('^', '');
+        console.log(`Node verion from @types/node in package.json is ${nodeVersion} returning ${nodeVersion.split('.')[0]}`);
+        return nodeVersion.split('.')[0];
+    } else {
+        console.log("Node version not found in dependencies, using default node 10.");
+        return 10;
     }
-    return nodeVersion;
 }
 
 function buildTask(taskName, taskListLength, nodeVersion) {
@@ -452,6 +448,21 @@ function buildTask(taskName, taskListLength, nodeVersion) {
         if (fs.existsSync(taskTestsNodeModulesPath)) {
             console.log('\n> removing task tests node modules');
             rm('-Rf', taskTestsNodeModulesPath);
+        }
+    }
+
+    // remove duplicated task libs node modules from build tasks.
+    var buildTasksNodeModules = path.join(buildTasksPath, taskName, 'node_modules');
+    var duplicateTaskLibPaths = [
+        'azure-pipelines-tasks-java-common', 'azure-pipelines-tasks-codecoverage-tools', 'azure-pipelines-tasks-codeanalysis-common',
+        'azure-pipelines-tool-lib', 'azure-pipelines-tasks-utility-common', 'azure-pipelines-tasks-packaging-common', 'artifact-engine',
+        'azure-pipelines-tasks-azure-arm-rest'
+    ];
+    for (var duplicateTaskPath of duplicateTaskLibPaths) {
+        const buildTasksDuplicateNodeModules = path.join(buildTasksNodeModules, duplicateTaskPath, 'node_modules', 'azure-pipelines-task-lib');
+        if (fs.existsSync(buildTasksDuplicateNodeModules)) {
+            console.log(`\n> removing duplicated task-lib node modules in ${buildTasksDuplicateNodeModules}`);
+            rm('-Rf', buildTasksDuplicateNodeModules);
         }
     }
 }
@@ -995,35 +1006,6 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
     rm('-Rf', tempWorkspaceDirectory);
 
     console.log('\n# Completed creating sprintly zip.');
-}
-
-CLI.gentask = function() {
-    const makeOptions = fileToJson(makeOptionsPath);
-    const validate = argv.validate;
-    const configsString = argv.configs;
-
-    if (validate) {
-        util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, false);
-        return;
-    }
-
-    if (!configsString) {
-        throw Error ('--configs is required');
-    }
-
-    const newMakeOptions = util.generateTasks(baseConfigToolPath, taskList, configsString, makeOptions);
-    taskList.forEach(function (taskName) {
-        const taskPath = path.join(genTaskPath, taskName + "_" + configsString);
-        if (fs.existsSync(taskPath)) {
-            cd(taskPath);
-            console.log(`Running \"npm update\" command in ${taskPath}`);
-            run(`npm update`);
-            console.log(`Running \"npm install\" command in ${taskPath}`);
-            run(`npm install`);
-            cd(__dirname);
-        }
-    });
-    fs.writeFileSync(makeOptionsPath, JSON.stringify(newMakeOptions, null, 4));
 }
 
 var command  = argv._[0];

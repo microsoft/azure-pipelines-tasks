@@ -937,7 +937,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
     $azCopyToolFileContentsString = $azCopyToolFileContents -join ";"
 
     # script block arguments
-    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments' -azCopyToolFileNamesString '$azCopyToolFileNamesString' -azCopyToolFileContentsString '$azCopyToolFileContentsString' -useSanitizerActivate $useSanitizerActivate"
+    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments' -azCopyToolFileNamesString '$azCopyToolFileNamesString' -azCopyToolFileContentsString '$azCopyToolFileContentsString'"
     if($cleanTargetBeforeCopy)
     {
         $scriptBlockArgs += " -CleanTargetBeforeCopy"
@@ -945,6 +945,10 @@ function Copy-FilesToAzureVMsFromStorageContainer
     if($enableDetailedLogging)
     {
         $scriptBlockArgs += " -EnableDetailedLogging"
+    }
+    if($useSanitizerActivate)
+    {
+        $scriptBlockArgs += " -useSanitizerActivate"
     }
 
     $remoteScriptJobArguments = @{
