@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Universal Packages",
-  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://aka.ms/UniversalPackagesTask)",
+  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/universal-packages)",
   "loc.description": "Descarga o publica paquetes universales.",
   "loc.instanceNameFormat": "Universal $(command)",
   "loc.group.displayName.packageDownloadDetails": "Detalles del paquete de fuente",

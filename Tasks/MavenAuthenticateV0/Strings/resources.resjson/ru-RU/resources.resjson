@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Проверка подлинности Maven",
-  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?linkid=2099968)",
+  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate)",
   "loc.description": "Предоставляет учетные данные для веб-каналов Azure Artifacts и внешних репозиториев Maven",
   "loc.instanceNameFormat": "Проверка подлинности Maven",
   "loc.input.label.artifactsFeeds": "Веб-каналы",

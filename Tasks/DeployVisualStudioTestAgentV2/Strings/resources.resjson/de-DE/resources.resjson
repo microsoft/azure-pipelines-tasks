@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio Test Agent-Bereitstellung",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=838890)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=838890)",
   "loc.description": "Veraltet: Verwenden Sie stattdessen die Aufgabe \"Visual Studio Test\", um Unit- und Funktionstests auszuführen.",
   "loc.instanceNameFormat": "TestAgent auf $(testMachineGroup) bereitstellen",
   "loc.releaseNotes": "<ul><li>Unterstützung für Visual Studio Test Agent 2017: Das Bereitstellen und Ausführen von Tests ist jetzt mit mehreren Versionen von Visual Studio Test Agent möglich. Die Versionen 2015 und 2017 werden unterstützt.</li><li>Vom Testhub erstellte Computergruppen werden nicht mehr unterstützt. Sie können weiterhin eine Liste von Computern oder Azure-Ressourcengruppen verwenden.</li></ul>",

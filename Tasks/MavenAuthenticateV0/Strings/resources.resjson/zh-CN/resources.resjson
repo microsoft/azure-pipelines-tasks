@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Maven 身份验证",
-  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?linkid=2099968)",
+  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate)",
   "loc.description": "为 Azure Artifacts 源和外部 maven 存储库提供凭据",
   "loc.instanceNameFormat": "Maven 身份验证",
   "loc.input.label.artifactsFeeds": "源",

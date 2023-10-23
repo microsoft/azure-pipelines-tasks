@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Развертывание агента тестирования Visual Studio",
-  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?LinkId=838890)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkId=838890)",
   "loc.description": "Не рекомендуется: вместо этого используйте задачу \"Тестирование Visual Studio\" для выполнения модульных и функциональных тестов",
   "loc.instanceNameFormat": "Развернуть агент тестирования в $(testMachineGroup)",
   "loc.releaseNotes": "<ul><li>Поддержка агента тестирования Visual Studio 2017: теперь вы можете развертывать и выполнять тесты с использованием нескольких версий агента тестирования Visual Studio. Поддерживаются версии 2015 и 2017. </li><li>Группы компьютеров, созданные из центра тестирования, больше не поддерживаются. Список компьютеров и группы ресурсов Azure по-прежнему поддерживаются. </li></ul>",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Authentification Maven",
-  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?linkid=2099968)",
+  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate)",
   "loc.description": "Fournit des informations d'identification pour les flux Azure Artifacts et les dépôts Maven externes",
   "loc.instanceNameFormat": "Authentification Maven",
   "loc.input.label.artifactsFeeds": "Flux",

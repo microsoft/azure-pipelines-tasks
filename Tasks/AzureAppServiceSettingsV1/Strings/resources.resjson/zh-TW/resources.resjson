@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure App Service 設定",
-  "loc.helpMarkDown": "[深入了解此工作](https://aka.ms/AA5wsgy)",
+  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-app-service-settings)",
   "loc.description": "為適用於 Linux 或 Windows 的 Azure Web 應用程式更新/新增應用程式設定",
   "loc.instanceNameFormat": "Azure App Service 設定: $(appName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "應用程式和組態設定",

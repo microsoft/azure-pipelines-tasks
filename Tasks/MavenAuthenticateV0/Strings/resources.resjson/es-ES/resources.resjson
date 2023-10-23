@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Autenticación de Maven",
-  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=2099968)",
+  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate)",
   "loc.description": "Proporciona credenciales para las fuentes de Azure Artifacts y los repositorios de Maven externos.",
   "loc.instanceNameFormat": "Autenticación de Maven",
   "loc.input.label.artifactsFeeds": "Fuentes",

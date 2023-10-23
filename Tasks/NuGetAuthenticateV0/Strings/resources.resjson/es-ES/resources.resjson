@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Autenticación de NuGet",
-  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://aka.ms/NuGetAuthenticateTask)",
+  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget-authenticate)",
   "loc.description": "Esta versión de la tarea está en desuso. Use NuGetAuthenticateV1 en su lugar. Configure las herramientas de NuGet para autenticarse con Azure Artifacts y otros repositorios de NuGet. Requiere NuGet >= 4.8.5385, dotnet >= 2.1.400 o MSBuild >= 15.8.166.59604.",
   "loc.instanceNameFormat": "Autenticación de NuGet",
   "loc.input.label.nuGetServiceConnections": "Credenciales de conexión de servicio para fuentes fuera de esta organización",

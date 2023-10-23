@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Maven 驗證",
-  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?linkid=2099968)",
+  "loc.helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate)",
   "loc.description": "提供 Azure Artifacts 摘要及外部 maven 存放庫的認證",
   "loc.instanceNameFormat": "Maven 驗證",
   "loc.input.label.artifactsFeeds": "摘要",
