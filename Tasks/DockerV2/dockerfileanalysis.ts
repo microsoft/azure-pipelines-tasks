@@ -1,25 +1,13 @@
 'use strict';
 
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as fs from 'fs'
-import { DockerfileParser, Keyword, Dockerfile } from 'dockerfile-ast'
+import { Dockerfile, DockerfileParser, Keyword } from 'dockerfile-ast';
+import * as fs from 'fs';
 
 const DisableDockerDetector = 'DisableDockerDetector';
 const dockerfileAnalysisReport = 'DOCKERFILE_ANALYSIS_REPORT';
-const EnableSscDockerfileAnalysisInDockerTask = 'ENABLE_SSC_DOCKERFILE_ANALISYS_IN_DOCKER_TASK';
-
-const AllowedRegistries = [
-    // Public
-    '.azurecr.io',
-    'mcr.microsoft.com',
-    // Used by ACR team for testing
-    '.azurecr-test.io',
-    // Government Clouds
-    '.azurecr.eaglex.ic.gov',
-    '.azurecr.microsoft.scloud',
-    '.azurecr.us',
-    '.azurecr.cn',
-];
+const enableDockerfileAnalysis = 'ENABLE_DOCKERFILE_ANALISYS';
+const dockerfileAllowedRegistries = "DOCKERFILE_ALLOWED_REGISTRIES"
 
 /**
  * Analyzes a Dockerfile content to identify untrusted image references.
@@ -85,9 +73,8 @@ export function dockerfileAnalysis(dockerfilePath: string, args: string) {
 }
 
 export function dockerfileAnalysisCore(dockerfileContent: string, args: string): [string, number][] {
-    // check if the analysis is enabled
-    if (tl.getVariable(EnableSscDockerfileAnalysisInDockerTask)?.toLowerCase() !== 'true') {
-        tl.debug('Skip dockerfile analysis because ENABLE_SSC_DOCKERFILE_ANALISYS_IN_DOCKER_TASK is not set to true')
+    if (tl.getVariable(enableDockerfileAnalysis)?.toLowerCase() !== 'true') {
+        tl.debug('Skip dockerfile analysis because ENABLE_DOCKERFILE_ANALISYS is not set to true')
         return [];
     }
 
@@ -96,25 +83,32 @@ export function dockerfileAnalysisCore(dockerfileContent: string, args: string):
         return [];
     }
 
+    const allowedRegistriesStr = tl.getVariable(dockerfileAllowedRegistries)
+    if (!allowedRegistriesStr) {
+        tl.debug('Skip dockerfile analysis because DOCKERFILE_ALLOWED_REGISTRIES is not set')
+        return [];
+    }
+    const allowedRegistries = allowedRegistriesStr.split(',').map((s) => s.trim());
+    const allowDockerHub = allowedRegistries.includes('docker.io');
     const buildArgs = parseBuildArgs(args);
-    const [imagesInfo, namedStages] = parseDockerfile(dockerfileContent, buildArgs);
+    const [imagesInfo, stages] = parseDockerfile(dockerfileContent, buildArgs);
 
     let unallowedImagesInfo = new Array<[string, number]>();
     for (const [imageRef, line] of imagesInfo) {
         let isAllowedRegistry = false;
         const refParts = imageRef.split('/', 2);
         if (refParts.length === 1) {
-            if (namedStages.includes(refParts[0])) {
-                // case 1: FROM previous stages
+            // FROM image
+            if (stages.includes(refParts[0]) || allowDockerHub) {
+                // case 1: image from previous stages or from docker hub
                 isAllowedRegistry = true;
             }
-            // case 2: FROM image
-            // assume it is from docker hub
+            // case 2: docker.io is not allowed
         } else {
             // case 3: FROM registry/image
             // need to check whether the registry is allowed
             const registry = refParts[0];
-            for (const allowedRegistry of AllowedRegistries) {
+            for (const allowedRegistry of allowedRegistries) {
                 if (registry.endsWith(allowedRegistry)) {
                     isAllowedRegistry = true;
                     break;

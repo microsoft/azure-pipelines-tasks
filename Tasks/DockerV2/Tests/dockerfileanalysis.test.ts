@@ -1,12 +1,15 @@
-import * as assert from 'assert'
-import { dockerfileAnalysisCore } from '../dockerfileanalysis'
+import * as assert from 'assert';
 import * as tl from 'azure-pipelines-task-lib/task';
+import { dockerfileAnalysisCore } from '../dockerfileanalysis';
 
-const EnableSscDockerfileAnalysisInDockerTask = 'ENABLE_SSC_DOCKERFILE_ANALISYS_IN_DOCKER_TASK';
+const enableDockerfileAnalysis = 'ENABLE_DOCKERFILE_ANALISYS';
+const dockerfileAllowedRegistries = "DOCKERFILE_ALLOWED_REGISTRIES"
+
 
 describe('DockerfileAnalysis', () => {
     beforeEach(() => {
-        tl.setVariable(EnableSscDockerfileAnalysisInDockerTask, 'true');
+        tl.setVariable(enableDockerfileAnalysis, 'true');
+        tl.setVariable(dockerfileAllowedRegistries, '.azurecr.io, mcr.microsoft.com');
     })
 
     describe('build arguments parsing', () => {

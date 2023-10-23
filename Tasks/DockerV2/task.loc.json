@@ -163,6 +163,7 @@
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
     "CouldNotFindDockerConfig": "ms-resource:loc.messages.CouldNotFindDockerConfig",
+    "DiscoveredUnapprovedRegistry": "ms-resource:loc.messages.DiscoveredUnapprovedRegistry",
     "MSIFetchError": "ms-resource:loc.messages.MSIFetchError",
     "DockerHostVariableWarning": "ms-resource:loc.messages.DockerHostVariableWarning",
     "DeletingDockerConfigDirectory": "ms-resource:loc.messages.DeletingDockerConfigDirectory",
