@@ -6,7 +6,7 @@ import * as fileUtils from "azure-pipelines-tasks-docker-common/fileutils";
 import * as pipelineUtils from "azure-pipelines-tasks-docker-common/pipelineutils";
 import * as containerImageUtils from "azure-pipelines-tasks-docker-common/containerimageutils";
 import * as utils from "./utils";
-import { dockerfileAnalysis } from "./dockerfileanalysis";
+import { dockerfileAnalysis, enableDockerfileAnalysis, disableDockerDetector } from "./dockerfileanalysis";
 
 export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean): any {
     // find dockerfile path
@@ -67,11 +67,22 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     }
 
     try {
+        if (tl.getVariable(enableDockerfileAnalysis)?.toLowerCase() !== 'true') {
+            tl.debug('Skip dockerfile analysis because ENABLE_DOCKERFILE_ANALISYS is not set to true')
+            return [];
+        }
+
+        if (tl.getVariable(disableDockerDetector)?.toLowerCase() === 'true') {
+            tl.debug('Skip dockerfile analysis because DisableDockerDetector is set to true')
+            return [];
+        }
+
         // dockerfile anaylsis
         dockerfileAnalysis(dockerFile, commandArguments)
     }
     catch (error) {
-        tl.error(error);
+        // should not block the build
+        tl.warning(error);
     }
 
     let output = "";

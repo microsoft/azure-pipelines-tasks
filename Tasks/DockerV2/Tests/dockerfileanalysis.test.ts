@@ -2,13 +2,11 @@ import * as assert from 'assert';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { dockerfileAnalysisCore } from '../dockerfileanalysis';
 
-const enableDockerfileAnalysis = 'ENABLE_DOCKERFILE_ANALISYS';
 const dockerfileAllowedRegistries = "DOCKERFILE_ALLOWED_REGISTRIES"
 
 
 describe('DockerfileAnalysis', () => {
     beforeEach(() => {
-        tl.setVariable(enableDockerfileAnalysis, 'true');
         tl.setVariable(dockerfileAllowedRegistries, '.azurecr.io, mcr.microsoft.com');
     })
 
@@ -128,6 +126,11 @@ describe('DockerfileAnalysis', () => {
         it('FROM a.azurecr.io/ubuntu as base; FROM ubuntu', () => {
             const unallowedImagesInfo = dockerfileAnalysisCore('FROM a.azurecr.io/ubuntu as base\nFROM ubuntu', '');
             assert.strictEqual(unallowedImagesInfo.length, 1);
+        })
+
+        it('FROM a.azurecr.io/ubuntu as base; FROM mcr.microsoft.com/alpine', () => {
+            const unallowedImagesInfo = dockerfileAnalysisCore('FROM a.azurecr.io/ubuntu as base\nFROM ubuntumcr.microsoft.com/alpine', '');
+            assert.strictEqual(unallowedImagesInfo.length, 0);
         })
     })
 

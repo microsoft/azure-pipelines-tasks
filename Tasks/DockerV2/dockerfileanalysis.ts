@@ -4,9 +4,9 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import { Dockerfile, DockerfileParser, Keyword } from 'dockerfile-ast';
 import * as fs from 'fs';
 
-const DisableDockerDetector = 'DisableDockerDetector';
+export const enableDockerfileAnalysis = 'ENABLE_DOCKERFILE_ANALISYS';
+export const disableDockerDetector = 'DisableDockerDetector';
 const dockerfileAnalysisReport = 'DOCKERFILE_ANALYSIS_REPORT';
-const enableDockerfileAnalysis = 'ENABLE_DOCKERFILE_ANALISYS';
 const dockerfileAllowedRegistries = "DOCKERFILE_ALLOWED_REGISTRIES"
 
 /**
@@ -73,17 +73,7 @@ export function dockerfileAnalysis(dockerfilePath: string, args: string) {
 }
 
 export function dockerfileAnalysisCore(dockerfileContent: string, args: string): [string, number][] {
-    if (tl.getVariable(enableDockerfileAnalysis)?.toLowerCase() !== 'true') {
-        tl.debug('Skip dockerfile analysis because ENABLE_DOCKERFILE_ANALISYS is not set to true')
-        return [];
-    }
-
-    if (tl.getVariable(DisableDockerDetector)?.toLowerCase() === 'true') {
-        tl.debug('Skip dockerfile analysis because DisableDockerDetector is set to true')
-        return [];
-    }
-
-    const allowedRegistriesStr = tl.getVariable(dockerfileAllowedRegistries)
+   const allowedRegistriesStr = tl.getVariable(dockerfileAllowedRegistries)
     if (!allowedRegistriesStr) {
         tl.debug('Skip dockerfile analysis because DOCKERFILE_ALLOWED_REGISTRIES is not set')
         return [];
@@ -284,6 +274,11 @@ function parseDockerfile(content: string, buildArgs: Map<string, string>): [[str
 
 /**
  * Checks if the skip comment is somewhere in the Dockerfile
+ * 
+ * Example dockerfile:
+ *   # DisableDockerDetector "My Reason Here"
+ *   FROM docker.io/...
+ * 
  * @param dockerfile the Dockerfile currently being scanned
  * @returns the skip reason if the skip comment is found, undefined otherwise 
  */
@@ -293,7 +288,7 @@ function getSkipReason(dockerfile: Dockerfile): string | undefined {
         .find(
             (comment) =>
                 // Matches # DisableDockerDetector "reason"
-                comment.getContent().startsWith(DisableDockerDetector) &&
+                comment.getContent().startsWith(disableDockerDetector) &&
                 comment.getContent().match(/".*"/),
         )
         ?.getContent()
