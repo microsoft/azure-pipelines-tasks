@@ -1,0 +1,105 @@
+{
+  "id": "5e3feff0-c5ae-11e8-a7d0-4bd3b8229800",
+  "name": "PipAuthenticate",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/pip-authenticate",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "version": {
+    "Major": 1,
+    "Minor": 230,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "feedAuthentication",
+      "displayName": "ms-resource:loc.group.displayName.feedAuthentication",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "artifactFeeds",
+      "aliases": [
+        "artifactFeeds"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.artifactFeeds",
+      "helpMarkDown": "ms-resource:loc.input.help.artifactFeeds",
+      "defaultValue": "",
+      "required": "false",
+      "groupName": "feedAuthentication",
+      "properties": {
+        "EditableOptions": "True",
+        "MultiSelectFlatList": "True"
+      }
+    },
+    {
+      "name": "pythonDownloadServiceConnections",
+      "aliases": [
+        "pythonDownloadServiceConnections"
+      ],
+      "type": "connectedService:externalPythonDownloadFeed",
+      "label": "ms-resource:loc.input.label.pythonDownloadServiceConnections",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pythonDownloadServiceConnections",
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "True"
+      },
+      "groupName": "feedAuthentication"
+    },
+    {
+      "name": "onlyAddExtraIndex",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.onlyAddExtraIndex",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.onlyAddExtraIndex",
+      "groupName": "feedAuthentication"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "artifactFeeds",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{#if projectName}}{{{projectName}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "pipauthenticatemain.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "pipauthenticatemain.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Info_AddingInternalFeeds": "ms-resource:loc.messages.Info_AddingInternalFeeds",
+    "Info_AddingExternalFeeds": "ms-resource:loc.messages.Info_AddingExternalFeeds",
+    "Info_SuccessAddingAuth": "ms-resource:loc.messages.Info_SuccessAddingAuth",
+    "Info_AddingPasswordAuthEntry": "ms-resource:loc.messages.Info_AddingPasswordAuthEntry",
+    "Info_AddingTokenAuthEntry": "ms-resource:loc.messages.Info_AddingTokenAuthEntry",
+    "Error_FailedToParseFeedUrlAndAuth": "ms-resource:loc.messages.Error_FailedToParseFeedUrlAndAuth",
+    "FailedToGetPackagingUri": "ms-resource:loc.messages.FailedToGetPackagingUri",
+    "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
+    "Warn_TooManyFeedEntries": "ms-resource:loc.messages.Warn_TooManyFeedEntries",
+    "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.230.0",
+    "Node20_229_1": "1.230.1"
+  }
+}

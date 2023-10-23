@@ -1,0 +1,18 @@
+{
+    "rm": [       
+        {
+            "items": [
+                "node_modules/azure-pipelines-tasks-packaging-common/node_modules/azure-pipelines-task-lib"
+            ],
+            "options": "-Rf"
+        }
+    ],
+    "externals": {
+        "archivePackages": [
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/CredentialProvider.TeamBuild/15.105.25712.0/CredentialProvider.TeamBuild.zip",
+                "dest": "./CredentialProvider/"
+            }
+        ]
+    }
+}

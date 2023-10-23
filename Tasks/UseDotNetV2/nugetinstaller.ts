@@ -27,31 +27,19 @@ import * as nuGetGetter from 'azure-pipelines-tasks-packaging-common/nuget/NuGet
         nuget.arg('config');
         nuget.arg('-set');
         nuget.arg('http_proxy=' + proxyConfig.proxyUrl);
-#if NODE16
         nuget.execSync({} as trm.IExecOptions);
-#else
-        nuget.exec({} as trm.IExecOptions);
-#endif
          // Set proxy username
         nuget = tl.tool(nugetPath);
         nuget.arg('config');
         nuget.arg('-set');
         nuget.arg('http_proxy.user=' + proxyConfig.proxyUsername);
-#if NODE16
         nuget.execSync({} as trm.IExecOptions);
-#else
-        nuget.exec({} as trm.IExecOptions);
-#endif
 
          // Set proxy password
         nuget = tl.tool(nugetPath);
         nuget.arg('config');
         nuget.arg('-set');
         nuget.arg('http_proxy.password=' + proxyConfig.proxyPassword);
-#if NODE16
         nuget.execSync({} as trm.IExecOptions);
-#else
-        nuget.exec({} as trm.IExecOptions);
-#endif
     }
 }
