@@ -1,7 +1,8 @@
 'use strict';
 
 import * as tl from 'azure-pipelines-task-lib/task';
-import { DockerfileParser, Keyword, Arg } from 'dockerfile-ast'
+import * as fs from 'fs'
+import { DockerfileParser, Keyword, Arg, Property } from 'dockerfile-ast'
 
 const AllowedRegistries = [
     // Public
@@ -41,7 +42,12 @@ const AllowedRegistries = [
  * @throws Error if there's an invalid instruction format, a missing build argument,
  *               or other parsing errors.
  */
-export function dockerfileAnalysis(dockerfileContent: string, args: string): string[] {
+export function dockerfileAnalysis(dockerfilePath: string, args: string): string[] {
+    const dockerfileContent = fs.readFileSync(dockerfilePath, 'utf-8');
+    return dockerfileAnalysisCore(dockerfileContent, args);
+}
+
+export function dockerfileAnalysisCore(dockerfileContent: string, args: string): string[] {
     const buildArgs = parseBuildArgs(args);
     const [imageRefs, namedStages] = parseDockerfile(dockerfileContent, buildArgs);
 
@@ -75,7 +81,7 @@ export function dockerfileAnalysis(dockerfileContent: string, args: string): str
 
     if (invalidImageRefs.length > 0) {
         tl.setVariable('DOCKERFILE_INVALID_IMAGE_REFS', invalidImageRefs.join(','), false, true);
-        tl.setResult(tl.TaskResult.SucceededWithIssues, `Invalid image references: ${invalidImageRefs.join(',')}`);
+        tl.setResult(tl.TaskResult.SucceededWithIssues, `Invalid image references: ${invalidImageRefs.join(', ')}`);
     }
     return invalidImageRefs;
 }
@@ -95,7 +101,6 @@ export function dockerfileAnalysis(dockerfileContent: string, args: string): str
  * @returns A map containing key-value pairs extracted from the input string.
  * @throws Error if the input string has invalid build arguments format or if the key name is invalid.
  */
-
 function parseBuildArgs(args: string): Map<string, string> {
     const BUILD_ARG = '--build-arg';
 
@@ -181,11 +186,19 @@ function parseDockerfile(content: string, buildArgs: Map<string, string>): [stri
             // ARG is the only instruction that can be used before FROM
             break;
         }
-        const argInstruction = instructions[i] as Arg;
-        for (const property of argInstruction.getProperties()) {
-            console.log(`property: ${property.getName()}=${property.getValue()}`)
-            const key = property.getName();
-            let value = property.getValue() ?? '';
+
+        for (const arg of instructions[i].getArguments()) {
+            let key, value: string
+            const argStr = arg.getValue();
+            const equalPosition = argStr.indexOf('=');
+            if (equalPosition < 0) {
+                // no default value: ARG IMAGE
+                key = argStr;
+            } else {
+                // has default value: ARG IMAGE=ubuntu
+                key = argStr.substring(0, equalPosition);
+                value = argStr.substring(equalPosition + 1);
+            }
             if (buildArgs.has(key)) {
                 value = buildArgs.get(key);
             }
@@ -194,7 +207,7 @@ function parseDockerfile(content: string, buildArgs: Map<string, string>): [stri
     }
 
     let imageRefs = new Array<string>();
-    let namedStages = new Array<string>();
+    let stages = new Array<string>();
     // parse FROM instructions
     const froms = dockerfile.getFROMs();
     for (const from of froms) {
@@ -203,7 +216,7 @@ function parseDockerfile(content: string, buildArgs: Map<string, string>): [stri
         // save stage
         const stage = from.getBuildStage();
         if (stage) {
-            namedStages.push(stage);
+            stages.push(stage);
         }
     }
 
@@ -216,7 +229,7 @@ function parseDockerfile(content: string, buildArgs: Map<string, string>): [stri
         }
     } 
 
-    return [imageRefs, namedStages];
+    return [imageRefs, stages];
 }
 
 /**
@@ -270,7 +283,7 @@ function fillPlaceholders(s: string, argsMap: Map<string, string>): string {
         if (argsMap.has(key)) {
             result += argsMap.get(key);
         } else {
-            throw new Error(`Unknown argument${key}`);
+            throw new Error(`Unknown argument: ${key}`);
         }
     }
 

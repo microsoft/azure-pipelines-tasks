@@ -6,6 +6,7 @@ import * as fileUtils from "azure-pipelines-tasks-docker-common/fileutils";
 import * as pipelineUtils from "azure-pipelines-tasks-docker-common/pipelineutils";
 import * as containerImageUtils from "azure-pipelines-tasks-docker-common/containerimageutils";
 import * as utils from "./utils";
+import { dockerfileAnalysis } from "./dockerfileanalysis";
 
 export function run(connection: ContainerConnection, outputUpdate: (data: string) => any, isBuildAndPushCommand?: boolean): any {
     // find dockerfile path
@@ -63,6 +64,14 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
     }
     else {
         tl.debug(tl.loc('NotAddingAnyTagsToBuild'));
+    }
+
+    try {
+        // dockerfile anaylsis
+        dockerfileAnalysis(dockerFile, commandArguments)
+    }
+    catch (error) {
+        tl.error(error);
     }
 
     let output = "";
