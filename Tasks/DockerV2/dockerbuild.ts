@@ -66,19 +66,12 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
         tl.debug(tl.loc('NotAddingAnyTagsToBuild'));
     }
 
+    // dockerfile analysis
     try {
-        if (tl.getVariable(enableDockerfileAnalysis)?.toLowerCase() !== 'true') {
-            tl.debug('Skip dockerfile analysis because ENABLE_DOCKERFILE_ANALISYS is not set to true')
-            return [];
+        if (tl.getVariable(enableDockerfileAnalysis)?.toLowerCase() == 'true' &&
+            tl.getVariable(disableDockerDetector)?.toLowerCase() !== 'true') {
+            dockerfileAnalysis(dockerFile, commandArguments)
         }
-
-        if (tl.getVariable(disableDockerDetector)?.toLowerCase() === 'true') {
-            tl.debug('Skip dockerfile analysis because DisableDockerDetector is set to true')
-            return [];
-        }
-
-        // dockerfile anaylsis
-        dockerfileAnalysis(dockerFile, commandArguments)
     }
     catch (error) {
         // should not block the build
