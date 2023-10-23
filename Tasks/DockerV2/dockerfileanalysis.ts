@@ -2,7 +2,11 @@
 
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as fs from 'fs'
-import { DockerfileParser, Keyword, Arg, Property } from 'dockerfile-ast'
+import { DockerfileParser, Keyword, Dockerfile } from 'dockerfile-ast'
+
+const DisableDockerDetector = 'DisableDockerDetector';
+const dockerfileAnalysisReport = 'DOCKERFILE_ANALYSIS_REPORT';
+const EnableSscDockerfileAnalysisInDockerTask = 'ENABLE_SSC_DOCKERFILE_ANALISYS_IN_DOCKER_TASK';
 
 const AllowedRegistries = [
     // Public
@@ -42,23 +46,67 @@ const AllowedRegistries = [
  * @throws Error if there's an invalid instruction format, a missing build argument,
  *               or other parsing errors.
  */
-export function dockerfileAnalysis(dockerfilePath: string, args: string): string[] {
+export function dockerfileAnalysis(dockerfilePath: string, args: string) {
     const dockerfileContent = fs.readFileSync(dockerfilePath, 'utf-8');
-    return dockerfileAnalysisCore(dockerfileContent, args);
+    const unallowedImagesInfo = dockerfileAnalysisCore(dockerfileContent, args);
+    if (unallowedImagesInfo.length > 0) {
+        // get the report from DOCKERFILE_ANALYSIS_REPORT variable. 
+        // The report variable may be set by previous tasks.
+        //
+        // JSON format:
+        // {
+        //   "<dockerfilePath>": [ 
+        //       {
+        //           "imageRef": "<imageRef>",
+        //           "line": <line>
+        //       }
+        //   ]
+        // }
+        let existReport = tl.getVariable(dockerfileAnalysisReport);
+        let report = existReport ? JSON.parse(existReport) : {};
+        if (!report[dockerfilePath]) {
+            report[dockerfilePath] = [];
+        }
+
+        for (const [imageRef, line] of unallowedImagesInfo) {
+            // write to report
+            report[dockerfilePath].push({
+                'imageRef': imageRef,
+                'line': line
+            })
+            // log warning
+            tl.warning(`Discovered a reference to an image from an unapproved registry that violates the security policies and standards for containers within Microsoft. Reference to image ${imageRef} on line ${line} of ${dockerfilePath}. For more details, visit https://aka.ms/cssc/3pimages`)
+        }
+
+        // update report variable
+        tl.setVariable(dockerfileAnalysisReport, JSON.stringify(report), false, true);
+        tl.setResult(tl.TaskResult.SucceededWithIssues, `Unapproved registry found in Dockerfile: ${dockerfilePath}`);
+    }
 }
 
-export function dockerfileAnalysisCore(dockerfileContent: string, args: string): string[] {
-    const buildArgs = parseBuildArgs(args);
-    const [imageRefs, namedStages] = parseDockerfile(dockerfileContent, buildArgs);
+export function dockerfileAnalysisCore(dockerfileContent: string, args: string): [string, number][] {
+    // check if the analysis is enabled
+    if (tl.getVariable(EnableSscDockerfileAnalysisInDockerTask)?.toLowerCase() !== 'true') {
+        tl.debug('Skip dockerfile analysis because ENABLE_SSC_DOCKERFILE_ANALISYS_IN_DOCKER_TASK is not set to true')
+        return [];
+    }
 
-    let invalidImageRefs = new Array<string>();
-    for (let imageRef of imageRefs) {
-        let validRegistry = false;
+    if (tl.getVariable(DisableDockerDetector)?.toLowerCase() === 'true') {
+        tl.debug('Skip dockerfile analysis because DisableDockerDetector is set to true')
+        return [];
+    }
+
+    const buildArgs = parseBuildArgs(args);
+    const [imagesInfo, namedStages] = parseDockerfile(dockerfileContent, buildArgs);
+
+    let unallowedImagesInfo = new Array<[string, number]>();
+    for (const [imageRef, line] of imagesInfo) {
+        let isAllowedRegistry = false;
         const refParts = imageRef.split('/', 2);
         if (refParts.length === 1) {
             if (namedStages.includes(refParts[0])) {
                 // case 1: FROM previous stages
-                validRegistry = true;
+                isAllowedRegistry = true;
             }
             // case 2: FROM image
             // assume it is from docker hub
@@ -68,22 +116,18 @@ export function dockerfileAnalysisCore(dockerfileContent: string, args: string):
             const registry = refParts[0];
             for (const allowedRegistry of AllowedRegistries) {
                 if (registry.endsWith(allowedRegistry)) {
-                    validRegistry = true;
+                    isAllowedRegistry = true;
                     break;
                 }
             }
         }
 
-        if (!validRegistry) {
-            invalidImageRefs.push(imageRef);
+        if (!isAllowedRegistry) {
+            unallowedImagesInfo.push([imageRef, line]);
         }
     }
 
-    if (invalidImageRefs.length > 0) {
-        tl.setVariable('DOCKERFILE_INVALID_IMAGE_REFS', invalidImageRefs.join(','), false, true);
-        tl.setResult(tl.TaskResult.SucceededWithIssues, `Invalid image references: ${invalidImageRefs.join(', ')}`);
-    }
-    return invalidImageRefs;
+    return unallowedImagesInfo;
 }
 
 /**
@@ -172,8 +216,16 @@ function parseBuildArg(args: string, startIndex: number): { key: string; value: 
  * 
  * @throws Error if there's an invalid instruction format or a missing build argument.
  */
-function parseDockerfile(content: string, buildArgs: Map<string, string>): [string[], string[]] {
+function parseDockerfile(content: string, buildArgs: Map<string, string>): [[string, number][], string[]] {
     const dockerfile = DockerfileParser.parse(content);
+
+    // check whether need to disable the detector
+    const skipReason = getSkipReason(dockerfile);
+    if (skipReason) {
+        console.log(`Skip dockerfile analysis because ${skipReason}`);
+        return [[], []];
+    }
+
     const instructions = dockerfile.getInstructions();
     let argsMap = new Map<string, string>();
     // parse ARG instructions before FROM to prepare the arguments map
@@ -206,12 +258,14 @@ function parseDockerfile(content: string, buildArgs: Map<string, string>): [stri
         }
     }
 
-    let imageRefs = new Array<string>();
-    let stages = new Array<string>();
+    let imagesInfo = new Array<[string, number]>(); // [imageRef, line]
+    let stages = new Array<string>(); // stage names
     // parse FROM instructions
     const froms = dockerfile.getFROMs();
     for (const from of froms) {
-        imageRefs.push(fillPlaceholders(from.getImage(), argsMap));
+        const line = from.getRange().start.line;
+        const imageRef = fillPlaceholders(from.getImage(), argsMap);
+        imagesInfo.push([imageRef, line]);
 
         // save stage
         const stage = from.getBuildStage();
@@ -225,11 +279,31 @@ function parseDockerfile(content: string, buildArgs: Map<string, string>): [stri
     for (const copy of copys) {
         const copyFrom = copy.getFromFlag();
         if (copyFrom) {
-            imageRefs.push(copyFrom.getValue());
+            const line = copyFrom.getRange().start.line;
+            const imageRef = copyFrom.getValue();
+            imagesInfo.push([imageRef, line]);
         }
-    } 
+    }
 
-    return [imageRefs, stages];
+    return [imagesInfo, stages];
+}
+
+/**
+ * Checks if the skip comment is somewhere in the Dockerfile
+ * @param dockerfile the Dockerfile currently being scanned
+ * @returns the skip reason if the skip comment is found, undefined otherwise 
+ */
+function getSkipReason(dockerfile: Dockerfile): string | undefined {
+    return dockerfile
+        .getComments()
+        .find(
+            (comment) =>
+                // Matches # DisableDockerDetector "reason"
+                comment.getContent().startsWith(DisableDockerDetector) &&
+                comment.getContent().match(/".*"/),
+        )
+        ?.getContent()
+        .match(/"(.*)"/)?.[1];
 }
 
 /**
@@ -242,7 +316,7 @@ function parseDockerfile(content: string, buildArgs: Map<string, string>): [stri
  * @throws Error if the placeholder format is invalid or if a key is not found in the provided map.
  */
 function fillPlaceholders(s: string, argsMap: Map<string, string>): string {
-    if (!s){
+    if (!s) {
         return s;
     }
 
