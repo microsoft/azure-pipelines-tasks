@@ -156,6 +156,9 @@
   },
   "messages": {
     "AddingNewAuthToExistingConfig": "ms-resource:loc.messages.AddingNewAuthToExistingConfig",
+    "AllowedRegistriesNotSet": "ms-resource:loc.messages.AllowedRegistriesNotSet",
+    "ArgumentNotDefined": "ms-resource:loc.messages.ArgumentNotDefined",
+    "ArgumentKeyNameIsEmpty": "ms-resource:loc.messages.ArgumentKeyNameIsEmpty",
     "ConnectingToDockerHost": "ms-resource:loc.messages.ConnectingToDockerHost",
     "CommandNotRecognized": "ms-resource:loc.messages.CommandNotRecognized",
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
@@ -174,6 +177,9 @@
     "FoundDockerConfigStoredInTempPath": "ms-resource:loc.messages.FoundDockerConfigStoredInTempPath",
     "FoundLoginsForOtherRegistries": "ms-resource:loc.messages.FoundLoginsForOtherRegistries",
     "IgnoringArgumentsInput": "ms-resource:loc.messages.IgnoringArgumentsInput",
+    "InvalidBuildArgument": "ms-resource:loc.messages.InvalidBuildArgument",
+    "InvalidArgumentValue": "ms-resource:loc.messages.InvalidArgumentValue",
+    "InvalidArgumentKeyName": "ms-resource:loc.messages.InvalidArgumentKeyName",
     "LoggingOutFromRegistry": "ms-resource:loc.messages.LoggingOutFromRegistry",
     "LoggingOutWithNoRegistrySpecified": "ms-resource:loc.messages.LoggingOutWithNoRegistrySpecified",
     "NoAuthInfoFoundInDockerConfig": "ms-resource:loc.messages.NoAuthInfoFoundInDockerConfig",
@@ -186,6 +192,7 @@
     "PathIsNotInTempDirectory": "ms-resource:loc.messages.PathIsNotInTempDirectory",
     "RegistryAuthNotPresentInConfig": "ms-resource:loc.messages.RegistryAuthNotPresentInConfig",
     "RestoringOldLoginAuth": "ms-resource:loc.messages.RestoringOldLoginAuth",
+    "SkipReason": "ms-resource:loc.messages.SkipReason",
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
   }
 }

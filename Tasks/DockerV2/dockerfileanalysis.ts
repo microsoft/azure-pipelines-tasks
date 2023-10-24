@@ -26,11 +26,9 @@ const dockerfileAllowedRegistries = "DOCKERFILE_ALLOWED_REGISTRIES"
  * FROM $BASE_IMAGE:latest
  * ```
  * args: "--build-arg BASE_IMAGE=ubuntu"
- * Output: ["ubuntu:latest"]
  * 
  * @param dockerfileContent - The content of the Dockerfile as a string.
  * @param args - The build arguments as a string in the format "--build-arg KEY=VALUE".
- * @returns An array of invalid image references found in the Dockerfile.
  * @throws Error if there's an invalid instruction format, a missing build argument,
  *               or other parsing errors.
  */
@@ -63,7 +61,7 @@ export function dockerfileAnalysis(dockerfilePath: string, args: string) {
                 'line': line
             })
             // log warning
-            tl.warning(`Discovered a reference to an image from an unapproved registry that violates the security policies and standards for containers within Microsoft. Reference to image ${imageRef} on line ${line} of ${dockerfilePath}. For more details, visit https://aka.ms/cssc/3pimages`)
+            tl.warning(tl.loc('DiscoveredUnapprovedRegistry', imageRef, line, dockerfilePath))
         }
 
         // update report variable
@@ -75,7 +73,7 @@ export function dockerfileAnalysis(dockerfilePath: string, args: string) {
 export function dockerfileAnalysisCore(dockerfileContent: string, args: string): [string, number][] {
    const allowedRegistriesStr = tl.getVariable(dockerfileAllowedRegistries)
     if (!allowedRegistriesStr) {
-        tl.debug('Skip dockerfile analysis because DOCKERFILE_ALLOWED_REGISTRIES is not set')
+        tl.warning(tl.loc('AllowedRegistriesNotSet'))
         return [];
     }
     const allowedRegistries = allowedRegistriesStr.split(',').map((s) => s.trim());
@@ -160,7 +158,7 @@ function parseBuildArg(args: string, startIndex: number): { key: string; value: 
 
     const equalPosition = args.indexOf('=', startIndex);
     if (equalPosition < 0) {
-        throw new Error('Invalid build arguments');
+        throw new Error(tl.loc('InvalidBuildArgument'));
     }
 
     const key = args.substring(startIndex, equalPosition);
@@ -206,7 +204,7 @@ function parseDockerfile(content: string, buildArgs: Map<string, string>): [[str
     // check whether need to disable the detector
     const skipReason = getSkipReason(dockerfile);
     if (skipReason) {
-        console.log(`Skip dockerfile analysis because ${skipReason}`);
+        console.log(tl.loc('SkipReason', skipReason));
         return [[], []];
     }
 
@@ -221,6 +219,10 @@ function parseDockerfile(content: string, buildArgs: Map<string, string>): [[str
         if (command.toUpperCase() !== Keyword.ARG) {
             // ARG is the only instruction that can be used before FROM
             break;
+        }
+
+        if (instructions[i].getArguments().length === 0) {
+            throw new Error(tl.loc('ArgumentKeyNameIsEmpty'));
         }
 
         for (const arg of instructions[i].getArguments()) {
@@ -238,6 +240,7 @@ function parseDockerfile(content: string, buildArgs: Map<string, string>): [[str
             if (buildArgs.has(key)) {
                 value = buildArgs.get(key);
             }
+            validateKeyName(key);
             argsMap.set(key, fillPlaceholders(value, argsMap));
         }
     }
@@ -320,21 +323,21 @@ function fillPlaceholders(s: string, argsMap: Map<string, string>): string {
 
         result += s.substring(currentIndex, dollarPosition);
         if (dollarPosition + 1 >= s.length) {
-            throw new Error('Invalid argument value');
+            throw new Error(tl.loc('InvalidArgumentValue', s));
         }
         let key = '';
         if (s[dollarPosition + 1] === '{') {
             // ${key}
             let curlyBraceEnd = s.indexOf('}', dollarPosition + 2);
             if (curlyBraceEnd < 0) {
-                throw new Error('Invalid argument value');
+                throw new Error(tl.loc('InvalidArgumentValue', s));
             }
             key = s.substring(dollarPosition + 2, curlyBraceEnd);
             currentIndex = curlyBraceEnd + 1;
         } else {
             // $Key
             let keyNameEnd = dollarPosition + 1;
-            // skip all letters and numbers and _
+            // skip all letters, numbers and _
             while (keyNameEnd < s.length && s[keyNameEnd].match(/[a-zA-Z0-9_]/)) {
                 keyNameEnd++;
             }
@@ -346,7 +349,7 @@ function fillPlaceholders(s: string, argsMap: Map<string, string>): string {
         if (argsMap.has(key)) {
             result += argsMap.get(key);
         } else {
-            throw new Error(`Unknown argument: ${key}`);
+            throw new Error(tl.loc('ArgumentNotDefined', key));
         }
     }
 
@@ -355,10 +358,10 @@ function fillPlaceholders(s: string, argsMap: Map<string, string>): string {
 
 function validateKeyName(key: string) {
     if (key.length === 0) {
-        throw new Error('argument name is empty');
+        throw new Error(tl.loc('ArgumentKeyNameIsEmpty'));
     }
     // only contains letters, numbers, and underscores, and starts with a letter
     if (!key.match(/^[a-zA-Z][a-zA-Z0-9_]*$/)) {
-        throw new Error(`argument contains invalid character: "${key}"`);
+        throw new Error(tl.loc('InvalidArgumentKeyName', key));
     }
 }

@@ -4,7 +4,6 @@ import { dockerfileAnalysisCore } from '../dockerfileanalysis';
 
 const dockerfileAllowedRegistries = "DOCKERFILE_ALLOWED_REGISTRIES"
 
-
 describe('DockerfileAnalysis', () => {
     beforeEach(() => {
         tl.setVariable(dockerfileAllowedRegistries, '.azurecr.io, mcr.microsoft.com');
@@ -148,6 +147,52 @@ describe('DockerfileAnalysis', () => {
         it('COPY --from=base /file /file', () => {
             const unallowedImagesInfo = dockerfileAnalysisCore('FROM a.azurecr.io/ubuntu AS base\nCOPY --from=base /file /file', '')
             assert.strictEqual(unallowedImagesInfo.length, 0)
+        })
+    })
+
+    describe('Invalid cases', () => {
+        it('Allowed registries are not set', () => {
+            tl.setVariable(dockerfileAllowedRegistries, '');
+            const unallowedImagesInfo = dockerfileAnalysisCore('FROM ubuntu', '');
+            assert.strictEqual(unallowedImagesInfo.length, 0);
+        })
+
+        it('build argument without `=`', () => {
+            assert.throws(() => dockerfileAnalysisCore('ARG IMAGE\nFROM $IMAGE', '--build-arg IMAGE'));
+        })
+
+        it('dockerfile with skip comment', () => {
+            let unallowedImagesInfo = dockerfileAnalysisCore('FROM ubuntu', '');
+            assert.strictEqual(unallowedImagesInfo.length, 1);
+
+            unallowedImagesInfo = dockerfileAnalysisCore('# DisableDockerDetector "My Reason Here"\nFROM ubuntu', '');
+            assert.strictEqual(unallowedImagesInfo.length, 0);
+        })
+
+        it('dockerfile with invalid placeholder format', ()=>{
+            assert.throws(() => dockerfileAnalysisCore('ARG IMAGE\nFROM $', ''));
+            assert.throws(() => dockerfileAnalysisCore('ARG IMAGE\nFROM ${', ''));
+            assert.throws(() => dockerfileAnalysisCore('ARG IMAGE\nFROM $}', ''));
+        })
+
+        it('Argument not defined', () => {
+            assert.throws(() => dockerfileAnalysisCore('FROM $IMAGE', ''));
+        })
+
+        it('argument key is empty', () => {
+            assert.throws(() => dockerfileAnalysisCore('ARG \n', ''));
+            assert.throws(() => dockerfileAnalysisCore('ARG IMAGE', '--build-arg '));
+            assert.throws(() => dockerfileAnalysisCore('ARG IMAGE', '--build-arg =ubuntu'));
+        })
+
+        it('argument key is invalid', () => {
+            assert.throws(() => dockerfileAnalysisCore('ARG IMA-GE', ''))
+            assert.throws(() => dockerfileAnalysisCore('ARG IMAGE&', ''))
+            assert.throws(() => dockerfileAnalysisCore('ARG *IMAGE', ''))
+        })
+
+        it('argument key not defined', () => {
+            assert.throws(() => dockerfileAnalysisCore('FROM $IMAGE', ''))
         })
     })
 })

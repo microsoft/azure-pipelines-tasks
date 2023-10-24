@@ -68,7 +68,7 @@ export function run(connection: ContainerConnection, outputUpdate: (data: string
 
     // dockerfile analysis
     try {
-        if (tl.getVariable(enableDockerfileAnalysis)?.toLowerCase() == 'true' &&
+        if (tl.getVariable(enableDockerfileAnalysis)?.toLowerCase() === 'true' &&
             tl.getVariable(disableDockerDetector)?.toLowerCase() !== 'true') {
             dockerfileAnalysis(dockerFile, commandArguments)
         }
