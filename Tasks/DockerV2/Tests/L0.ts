@@ -5,6 +5,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common/dockercommandutils";
 import * as pipelineutils from "azure-pipelines-tasks-docker-common/pipelineutils";
 import * as shared from "./TestShared";
+import './dockerfileanalysis.test'
 
 describe("DockerV2 Suite", function () {
     this.timeout(30000);
@@ -45,10 +46,6 @@ describe("DockerV2 Suite", function () {
         delete process.env['RELEASE_DEFINITIONNAME'];
         delete process.env['RELEASE_RELEASEWEBURL'];
     });
-
-    describe("dockerfile analysis test", function () {
-        require("./dockerfileanalysis.test");
-    })
 
     // Docker build tests begin
     it('Runs successfully for docker build', (done: Mocha.Done) => {
