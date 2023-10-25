@@ -38,10 +38,13 @@
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[[Learn more about this task]5D;(https://aka.ms/AA5wsgy)]]></Val>
+          <Val><![CDATA[[Learn more about this task]5D;(https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-app-service-settings)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[Obtener más información acerca de esta tarea]5D;(https://aka.ms/AA5wsgy)]]></Val>
+            <Val><![CDATA[[Más información acerca de esta tarea]5D;(https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-app-service-settings)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[[Learn more about this task]5D;(https://aka.ms/AA5wsgy)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
