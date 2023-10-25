@@ -56,10 +56,13 @@
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[[More information]5D;(https://go.microsoft.com/fwlink/?LinkId=838890)]]></Val>
+          <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?LinkId=838890)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[詳細]5D;(https://go.microsoft.com/fwlink/?LinkId=838890)]]></Val>
+            <Val><![CDATA[[このタスクの詳細]5D;(https://go.microsoft.com/fwlink/?LinkId=838890)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[[More information]5D;(https://go.microsoft.com/fwlink/?LinkId=838890)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
