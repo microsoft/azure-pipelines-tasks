@@ -219,7 +219,6 @@
     "Node16_225": [
         "PublishSymbolsV2",
         "NuGetAuthenticateV0",
-        "AzureFileCopyV2",
         "AzureFileCopyV3",
         "AzureRmWebAppDeploymentV4",
         "IISWebAppDeploymentOnMachineGroupV0"
