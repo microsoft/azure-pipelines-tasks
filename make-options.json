@@ -217,7 +217,6 @@
         "Tests"
     ],
     "Node16_225": [
-        "PublishSymbolsV2",
         "NuGetAuthenticateV0",
         "AzureFileCopyV2",
         "AzureFileCopyV3",
