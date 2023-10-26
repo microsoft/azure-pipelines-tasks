@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 230,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

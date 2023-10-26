@@ -10,7 +10,7 @@
   "dependencies": {
     "@types/node": "^16.18.11",
     "azure-pipelines-task-lib": "^5.0.0-preview.0",
-    "azure-pipelines-tool-lib": "^2.0.0-preview"
+    "azure-pipelines-tool-lib": "^2.0.7"
   },
   "devDependencies": {
     "typescript": "4.0.2"
