@@ -20,7 +20,7 @@ import { addReleaseAnnotation } from './operations/ReleaseAnnotationUtility';
 import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 import { isInputPkgIsFolder, canUseWebDeploy } from 'azure-pipelines-tasks-webdeployment-common/utility';
 import { DeployUsingMSDeploy } from 'azure-pipelines-tasks-webdeployment-common/deployusingmsdeploy';
-import { shouldUseMSDeployTokenAuth} from 'azure-pipelines-tasks-webdeployment-common/msdeployutility';
+import { shouldUseMSDeployTokenAuth, installedMSDeployVersionSupportsTokenAuth} from 'azure-pipelines-tasks-webdeployment-common/msdeployutility';
 
 async function main() {
     let zipDeploymentID: string;
@@ -98,21 +98,22 @@ async function main() {
                 var msDeployPublishingProfile = await appServiceUtility.getWebDeployPublishingProfile();
                 let authType = "Basic";
 
-                if (await appServiceUtility.isSitePublishingCredentialsEnabled())
-                {
+                if (await appServiceUtility.isSitePublishingCredentialsEnabled()) {
                     tl.debug("Using Basic authentication.")                        
                 }
-                else if (shouldUseMSDeployTokenAuth())
-                {
+                else if (!shouldUseMSDeployTokenAuth()) {
+                    //deployment would fail in this case
+                    throw new Error(tl.loc("BasicAuthNotSupported"));
+                }
+                else if (await installedMSDeployVersionSupportsTokenAuth() === false) {
+                    //deployment would fail in this case
+                    throw new Error(tl.loc("MSDeployNotSupportTokenAuth"));
+                }
+                else {
                     tl.debug("Basic authentication is disabled, using token based authentication.");
                     authType = "Bearer";
                     msDeployPublishingProfile.userPWD = await appServiceUtility.getAuthToken();
                     msDeployPublishingProfile.userName = "user"; // arbitrary but not empty
-                } 
-                else
-                {
-                    //deployment would fail in this case
-                    throw new Error(tl.loc("BasicAuthNotSupported"));
                 }
 
                 if (webPackage.toString().toLowerCase().endsWith('.war')) {
