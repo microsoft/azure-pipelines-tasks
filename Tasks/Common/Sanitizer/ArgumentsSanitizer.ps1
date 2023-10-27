@@ -1,3 +1,5 @@
+. $PSScriptRoot\Expand-EnvVariables.ps1
+
 $featureFlags = @{
     activate  = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
     audit     = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC_LOG)
@@ -31,22 +33,28 @@ function Get-SanitizerActivateStatus {
 function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
     $script:taskName = $taskName
 
-    $sanitizedArguments = Get-SanitizedArguments -InputArgs $inputArgs
+    $expandedArgs, $expandTelemetry = Expand-EnvVariables $inputArgs;
 
-    if ($sanitizedArguments -eq $inputArgs) {
+    $sanitizedArgs = Get-SanitizedArguments -InputArgs $expandedArgs
+
+    if ($sanitizedArgs -eq $inputArgs) {
         Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsNotSanitized');
-    } else {
-        $message = (Get-VstsLocString -Key 'PS_ScriptArgsSanitized');
+    }
+    else {
+        if ($sanitizedArgs -ne $expandedArgs) {
+            $message = (Get-VstsLocString -Key 'PS_ScriptArgsSanitized');
 
-        if ($featureFlags.activate) {
-            Write-Error $message
-            throw $message
-        } elseif ($featureFlags.audit) {
-            Write-Warning $message
+            if ($featureFlags.activate) {
+                Write-Error $message
+                throw $message
+            }
+            elseif ($featureFlags.audit) {
+                Write-Warning $message
+            }
         }
     }
 
-    $arrayOfArguments = Split-Arguments -Arguments $sanitizedArguments
+    $arrayOfArguments = Split-Arguments -Arguments $sanitizedArgs
     return $arrayOfArguments
 }
 
