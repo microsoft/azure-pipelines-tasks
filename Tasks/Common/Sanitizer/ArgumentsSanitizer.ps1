@@ -35,12 +35,20 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
 
     $expandedArgs, $expandTelemetry = Expand-EnvVariables $inputArgs;
 
-    $sanitizedArgs = Get-SanitizedArguments -InputArgs $expandedArgs
+    $sanitizedArgs, $sanitizeTelemetry = Get-SanitizedArguments -InputArgs $expandedArgs
 
     if ($sanitizedArgs -eq $inputArgs) {
         Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsNotSanitized');
     }
     else {
+        if ($featureFlags.telemetry) {
+            $telemetry = $expandTelemetry;
+            if ($null -ne $sanitizeTelemetry) {
+                $telemetry += $sanitizeTelemetry;
+            }
+            Publish-Telemetry $telemetry;
+        }
+
         if ($sanitizedArgs -ne $expandedArgs) {
             $message = (Get-VstsLocString -Key 'PS_ScriptArgsSanitized');
 
@@ -85,17 +93,16 @@ function Get-SanitizedArguments([string]$inputArgs) {
 
     $resultArgs = $argsArr -join $argsSplitSymbols;
 
-    if ($resultArgs -like "*$removedSymbolSign*" -and $featureFlags.telemetry) {
+    $telemetry = $null
+    if ( $resultArgs -ne $inputArgs) {
         $argMatches = $matchesChunks | ForEach-Object { $_ } | Where-Object { $_ -ne $null }
         $telemetry = @{
             removedSymbols      = Join-Matches -Matches $argMatches
             removedSymbolsCount = $argMatches.Count
         }
-
-        Publish-Telemetry $telemetry
     }
 
-    return $resultArgs;
+    return $($resultArgs, $telemetry);
 }
 
 function Publish-Telemetry($telemetry) {
