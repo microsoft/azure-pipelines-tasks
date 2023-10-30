@@ -85,6 +85,7 @@ Tasks/AzureRmWebAppDeploymentV3/   @vsebesta   @rvairavelu   @pipeline-environme
 
 Tasks/AzureRmWebAppDeploymentV4/   @vsebesta   @rvairavelu   @pipeline-environment-team
 
+# DRI rotation: Azure Spring Apps/AzDMSS-Support
 Tasks/AzureSpringCloudV0    @microsoft/azure-spring-apps @ruoyuwang @menxiao
 
 Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @mkarmark @joslinmicrosoft
