@@ -13,10 +13,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 224,
-    "Patch": 0
+    "Minor": 230,
+    "Patch": 2
   },
   "deprecated": true,
+  "removalDate": "2024-04-22",
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [

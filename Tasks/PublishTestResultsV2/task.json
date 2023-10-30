@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 228,
+        "Minor": 230,
         "Patch": 0
     },
     "demands": [],
@@ -81,14 +81,14 @@
             "required": false,
             "helpMarkDown": "Fail the task if there are any test failures. Check this option to fail the task if test failures are detected in the result files."
         },
-	{
-	    "name": "failTaskOnMissingResultsFile",
-	    "type": "boolean",
-	    "label": "ms-resource:loc.input.label.failTaskOnMissingResultsFile",
-	    "defaultValue": false,
-	    "required": false,
-	    "helpMarkDown": "ms-resource:loc.input.help.failTaskOnMissingResultsFile"
-	},
+        {
+            "name": "failTaskOnMissingResultsFile",
+            "type": "boolean",
+            "label": "Fail if no result files are found",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Fail the task if no result files are found."
+        },
         {
             "name": "testRunTitle",
             "type": "string",

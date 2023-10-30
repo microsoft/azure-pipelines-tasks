@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Ambiente Conda",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?linkid=873466)",
+  "loc.description": "Consente di creare e attivare un ambiente Conda",
+  "loc.instanceNameFormat": "Ambiente Conda $(environmentName)",
+  "loc.group.displayName.advanced": "Avanzate",
+  "loc.input.label.environmentName": "Nome dell'ambiente",
+  "loc.input.help.environmentName": "Nome dell'ambiente Conda da creare e attivare.",
+  "loc.input.label.packageSpecs": "Specifiche del pacchetto",
+  "loc.input.help.packageSpecs": "Elenco di pacchetti delimitati da spazi da installare durante la creazione dell'ambiente.",
+  "loc.input.label.updateConda": "Aggiorna alla versione più recente di Conda",
+  "loc.input.help.updateConda": "Consente di aggiornare Conda all'ultima versione. Si applica all'installazione di Conda trovata in `PATH` o nel percorso specificato dalla variabile di ambiente `CONDA`.",
+  "loc.input.label.createOptions": "Opzioni di creazione dell'ambiente",
+  "loc.input.help.createOptions": "Elenco di altre opzioni delimitate da spazi da passare al comando `conda create`.",
+  "loc.input.label.cleanEnvironment": "Pulisci l'ambiente",
+  "loc.input.help.cleanEnvironment": "Consente di eliminare l'ambiente e di ricrearlo se esiste già. Se l'opzione non è selezionata, l'attività riattiverà un ambiente esistente.",
+  "loc.messages.CleanEnvironment": "È stato trovato l'ambiente esistente %s e il parametro \"Pulisci l'ambiente\" dell'attività è impostato. Verrà eliminato...",
+  "loc.messages.CreateFailed": "Non è stato possibile creare l'ambiente Conda %s: %s",
+  "loc.messages.CondaNotFound": "L'eseguibile `conda` non è stato trovato nel sistema. Chiedere all'amministratore di installare Miniconda o Anaconda, quindi aggiungere l'eseguibile `conda` a `PATH` oppure impostare la variabile di ambiente `CONDA` sulla radice dell'installazione.",
+  "loc.messages.ReactivateExistingEnvironment": "È stato trovato l'ambiente esistente %s e il parametro \"Pulisci l'ambiente\" dell'attività non è impostato. Verrà riattivato...",
+  "loc.messages.PlatformNotRecognized": "Piattaforma non riconosciuta"
+}
