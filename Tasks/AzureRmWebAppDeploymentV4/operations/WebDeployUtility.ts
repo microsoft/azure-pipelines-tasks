@@ -1,11 +1,11 @@
 import tl = require('azure-pipelines-task-lib/task');
 
-import { TaskParameters } from './TaskParameters';
-import { WebDeployArguments, WebDeployResult } from 'azure-pipelines-tasks-webdeployment-common/msdeployutility';
+import { WebDeployArguments, WebDeployResult, shouldUseMSDeployTokenAuth, installedMSDeployVersionSupportsTokenAuth } from 'azure-pipelines-tasks-webdeployment-common/msdeployutility';
 import {  executeWebDeploy } from 'azure-pipelines-tasks-webdeployment-common/deployusingmsdeploy';
 import { copySetParamFileIfItExists } from 'azure-pipelines-tasks-webdeployment-common/utility';
+
+import { TaskParameters } from './TaskParameters';
 import { AzureAppServiceUtility } from './AzureAppServiceUtility';
-import { shouldUseMSDeployTokenAuth } from 'azure-pipelines-tasks-webdeployment-common/msdeployutility'
 
 const DEFAULT_RETRY_COUNT = 3;
 
@@ -61,14 +61,17 @@ export class WebDeployUtility {
             webDeployArguments.userName = publishProfile.userName;
             webDeployArguments.password = publishProfile.userPWD;
         }
-        else if (shouldUseMSDeployTokenAuth()) {
+        else if (!shouldUseMSDeployTokenAuth()) {
+            throw new Error(tl.loc("BasicAuthNotSupported"));
+        }
+        else if (await installedMSDeployVersionSupportsTokenAuth() === false) {
+            throw new Error(tl.loc("MSDeployNotSupportTokenAuth"));
+        }
+        else {
             tl.debug("Basic authentication is disabled, using token based authentication.");
             webDeployArguments.authType = "Bearer";
             webDeployArguments.password = await this._azureAppServiceUtility.getAuthToken();
             webDeployArguments.userName = "user"; // arbitrary but not empty
-        }
-        else {
-            throw new Error(tl.loc("BasicAuthNotSupported"));
         } 
 
         webDeployArguments.publishUrl = publishProfile.publishUrl;
