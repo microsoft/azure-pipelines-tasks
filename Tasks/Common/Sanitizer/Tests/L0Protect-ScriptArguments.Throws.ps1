@@ -10,22 +10,18 @@ $testSuites = @(
     @{
         Name      = 'If dangerous symbols are present, and FF is on'
         Input     = 'test; whoami'
-        Variables = @()
     },
     @{
         Name      = 'Test with &'
         Input     = 'test && whoami'
-        Variables = @()
     },
     @{
-        Name = 'Test with $(...)'
-        Input = 'echo "$(rm ./somedir)"'
-        Variables = @()
+        Name      = 'Test with $(...)'
+        Input     = 'echo "$(rm ./somedir)"'
     },
     @{
         Name      = 'Test with |'
         Input     = 'test | whoami'
-        Variables = @()
     },
     @{
         Name      = 'If inside args line is env variable with dangerous symbols'
@@ -42,6 +38,9 @@ $testSuites = @(
 $expectedMsg = Get-VstsLocString -Key 'PS_ScriptArgsSanitized'
 
 foreach ($test in $testSuites) {
+    if ($null -eq $test.Variables) {
+        $test.Variables = @()
+    }
     $test.Variables | ForEach-Object {
         $name, $value = $_.Split('=')
         if ($value) {
