@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet 認証",
-  "loc.helpMarkDown": "[このタスクの詳細を表示](https://aka.ms/NuGetAuthenticateTask)",
+  "loc.helpMarkDown": "[このタスクに関する詳細](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/nuget-authenticate)",
   "loc.description": "このバージョンのタスクは非推奨です。代わりに NuGetAuthenticateV1 を使用してください。Azure Artifacts およびその他の NuGet リポジトリで認証するように NuGet ツールを構成します。NuGet 4.8.5385 以降、dotnet 2.1.400 以降、または MSBuild 15.8.166.59604 以降が必要です。",
   "loc.instanceNameFormat": "NuGet 認証",
   "loc.input.label.nuGetServiceConnections": "この組織外のフィードへのサービス接続の資格情報",

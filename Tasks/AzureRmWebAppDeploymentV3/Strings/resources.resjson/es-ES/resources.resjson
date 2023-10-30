@@ -223,5 +223,6 @@
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "Para usar un certificado en App Service, debe haberlo firmado una entidad de certificación de confianza. Si la aplicación web genera errores de validación del certificado, es posible que esté usando un certificado autofirmado. Para resolverlo, debe pasar -allowUntrusted en argumentos adicionales de la opción de implementación web.",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "No se pudo actualizar el recurso de Application Insights \"%s\". Error: %s",
   "loc.messages.JarNotSupported": "La implementación de jar no se admite en esta versión. Cambie la versión de la tarea a \"4.*\", que se encuentra en modo de versión preliminar",
-  "loc.messages.CorrelationIdForARM": "Identificador de correlación de la respuesta de llamada API de ARM: %s"
+  "loc.messages.CorrelationIdForARM": "Identificador de correlación de la respuesta de llamada API de ARM: %s",
+  "loc.messages.MSDeployNotSupportTokenAuth": "App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy ."
 }

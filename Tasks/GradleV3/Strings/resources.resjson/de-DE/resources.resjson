@@ -94,5 +94,6 @@
   "loc.messages.FileNotFound": "Datei oder Ordner nicht vorhanden: %s",
   "loc.messages.FailedToAppendCC": "Codedeckungsdaten können nicht angefügt werden: %s",
   "loc.messages.NoTestResults": "Es wurden keine Testergebnisdateien gefunden, die mit %s übereinstimmen. Das Veröffentlichen von JUnit-Testergebnissen wird daher übersprungen.",
-  "loc.messages.chmodGradlew": "Die Methode \"chmod\" wurde für die gradlew-Datei verwendet, um sie eine ausführbare Datei zu machen."
+  "loc.messages.chmodGradlew": "Die Methode \"chmod\" wurde für die gradlew-Datei verwendet, um sie eine ausführbare Datei zu machen.",
+  "loc.messages.UnableToExtractGradleVersion": "Unable to extract Gradle version from gradle output."
 }

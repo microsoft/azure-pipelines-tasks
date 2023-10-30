@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Spring Apps",
-  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://aka.ms/azurespringapps)",
+  "loc.helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/en-gb/azure/devops/pipelines/tasks/reference/azure-spring-cloud-v0?view=azure-pipelines)",
   "loc.description": "Stellen Sie Anwendungen in Azure Spring Apps bereit, und verwalten Sie Bereitstellungen.",
   "loc.instanceNameFormat": "Azure Spring Apps $(Aktion): $(AppName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Anwendungs- und Konfigurationseinstellungen",

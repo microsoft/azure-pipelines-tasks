@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Configuración de Azure App Service",
-  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://aka.ms/AA5wsgy)",
+  "loc.helpMarkDown": "[Más información acerca de esta tarea](https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-app-service-settings)",
   "loc.description": "Actualiza o agrega la configuración de aplicación de una instancia de Azure Web Apps para Linux o Windows.",
   "loc.instanceNameFormat": "Configuración de Azure App Service: $(appName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Configuración y opciones de la aplicación",
