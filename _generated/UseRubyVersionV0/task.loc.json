@@ -1,0 +1,79 @@
+{
+  "id": "630C472C-CDE7-4CD8-BA13-E00CA5FF180B",
+  "name": "UseRubyVersion",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/use-ruby-version",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 230,
+    "Patch": 2
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.182.1",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "versionSpec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionSpec",
+      "required": true,
+      "defaultValue": ">= 2.4",
+      "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
+    },
+    {
+      "name": "addToPath",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addToPath",
+      "required": false,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.addToPath"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "rubyLocation",
+      "description": "The resolved folder of the Ruby distribution."
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ListAvailableVersions": "ms-resource:loc.messages.ListAvailableVersions",
+    "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized",
+    "ToolNotFoundMicrosoftHosted": "ms-resource:loc.messages.ToolNotFoundMicrosoftHosted",
+    "ToolNotFoundSelfHosted": "ms-resource:loc.messages.ToolNotFoundSelfHosted",
+    "VersionNotFound": "ms-resource:loc.messages.VersionNotFound",
+    "ExactVersionNotRecommended": "ms-resource:loc.messages.ExactVersionNotRecommended"
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "rubyLocation",
+        "PATH"
+      ]
+    }
+  },
+  "_buildConfigMapping": {
+    "Default": "0.230.2",
+    "Node20-225": "0.230.3"
+  }
+}

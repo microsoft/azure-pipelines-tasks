@@ -37,6 +37,8 @@
   "loc.input.help.checkDownloadedFiles": "Si se activa, esta tarea de compilación comprobará que todos los archivos están completamente descargados.",
   "loc.input.label.retryDownloadCount": "Número de reintentos",
   "loc.input.help.retryDownloadCount": "Número opcional de veces para reintentar la descarga de un artefacto de compilación si la descarga falla.",
+  "loc.input.label.retryRedirectDownloadCount": "Número de reintentos para la descarga de redireccionamiento",
+  "loc.input.help.retryRedirectDownloadCount": "Número opcional de veces que se reintentará la descarga de un artefacto de compilación si se produce un error en la descarga basada en la redirección. Si la red no permite seguir la redirección, puede establecer esta opción en -1 para descargar siempre la respuesta por secuencias desde Azure DevOps en su lugar.",
   "loc.input.label.extractTars": "Extraer todos los archivos almacenados en archivos tar",
   "loc.input.help.extractTars": "Habilite esta opción para extraer todos los archivos descargados que tengan la extensión. tar. Esto es útil porque necesita empaquetar los archivos de artefacto en tar si quiere conservar los permisos de archivo de Unix. Al habilitar la opción \"StoreAsTar\" en la tarea PublishBuildArtifacts los artefactos se almacenarán como archivos .tar automáticamente.",
   "loc.messages.DownloadArtifacts": "Descargando el artefacto %s desde: %s",
@@ -67,5 +69,7 @@
   "loc.messages.TarExtractionNotSupportedInWindows": "La extracción de tar no es compatible con Windows",
   "loc.messages.NoTarsFound": "No se encontraron archivos tar para extraer",
   "loc.messages.CleaningDestinationFolder": "Limpiando carpeta de destino: %s",
-  "loc.messages.NoFolderToClean": "No se ha encontrado la carpeta de limpieza especificada. No hay nada que limpiar"
+  "loc.messages.NoFolderToClean": "No se ha encontrado la carpeta de limpieza especificada. No hay nada que limpiar",
+  "loc.messages.PreferRedirect": "Preferir la descarga de archivos a través de la redirección al enlazador de contenido: %s",
+  "loc.messages.FollowingDownloadRedirectFailed": "No se pudieron descargar los archivos siguiendo un redireccionamiento: %s. Revirtiendo al consumo de contenido transmitido desde Azure DevOps."
 }

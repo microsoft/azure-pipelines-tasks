@@ -1,0 +1,235 @@
+{
+  "id": "C0E0B74F-0931-47C7-AC27-7C5A19456A36",
+  "name": "JavaToolInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/java-tool-installer",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 230,
+    "Patch": 2
+  },
+  "satisfies": [
+    "Java",
+    "JDK"
+  ],
+  "demands": [],
+  "groups": [
+    {
+      "name": "JavaInAzureGroup",
+      "displayName": "ms-resource:loc.group.displayName.JavaInAzureGroup",
+      "isExpanded": true
+    }
+  ],
+  "minimumAgentVersion": "2.182.1",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "versionSpec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionSpec",
+      "defaultValue": "8",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
+    },
+    {
+      "name": "jdkArchitectureOption",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.jdkArchitectureOption",
+      "options": {
+        "x64": "X64",
+        "x86": "X86"
+      },
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.jdkArchitectureOption"
+    },
+    {
+      "name": "jdkSourceOption",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.jdkSourceOption",
+      "required": true,
+      "options": {
+        "AzureStorage": "Azure Storage",
+        "LocalDirectory": "Local Directory",
+        "PreInstalled": "Pre-installed"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.jdkSourceOption"
+    },
+    {
+      "name": "jdkFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.jdkFile",
+      "required": true,
+      "visibleRule": "jdkSourceOption == LocalDirectory",
+      "helpMarkDown": "ms-resource:loc.input.help.jdkFile"
+    },
+    {
+      "name": "azureResourceManagerEndpoint",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureResourceManagerEndpoint",
+      "required": true,
+      "visibleRule": "jdkSourceOption == AzureStorage",
+      "helpMarkDown": "ms-resource:loc.input.help.azureResourceManagerEndpoint"
+    },
+    {
+      "name": "azureStorageAccountName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.azureStorageAccountName",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "jdkSourceOption == AzureStorage",
+      "helpMarkDown": "ms-resource:loc.input.help.azureStorageAccountName"
+    },
+    {
+      "name": "azureContainerName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.azureContainerName",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "required": true,
+      "visibleRule": "jdkSourceOption == AzureStorage",
+      "helpMarkDown": "ms-resource:loc.input.help.azureContainerName"
+    },
+    {
+      "name": "azureCommonVirtualFile",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.azureCommonVirtualFile",
+      "required": true,
+      "visibleRule": "jdkSourceOption == AzureStorage",
+      "helpMarkDown": "ms-resource:loc.input.help.azureCommonVirtualFile"
+    },
+    {
+      "name": "jdkDestinationDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.jdkDestinationDirectory",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "jdkSourceOption != PreInstalled",
+      "helpMarkDown": "ms-resource:loc.input.help.jdkDestinationDirectory"
+    },
+    {
+      "name": "azureResourceGroupName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.azureResourceGroupName",
+      "required": false,
+      "visibleRule": "jdkSourceOption == AzureStorage",
+      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroupName"
+    },
+    {
+      "name": "cleanDestinationDirectory",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.cleanDestinationDirectory",
+      "required": true,
+      "defaultValue": "true",
+      "visibleRule": "jdkSourceOption != PreInstalled",
+      "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationDirectory"
+    },
+    {
+      "name": "createExtractDirectory",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.createExtractDirectory",
+      "required": false,
+      "defaultValue": true,
+      "visibleRule": "jdkSourceOption != PreInstalled",
+      "helpMarkDown": "ms-resource:loc.input.help.createExtractDirectory"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "endpointId": "$(azureResourceManagerEndpoint)",
+      "target": "azureStorageAccountName",
+      "dataSourceName": "AzureStorageAccountRMandClassic"
+    },
+    {
+      "target": "azureContainerName",
+      "endpointId": "$(azureResourceManagerEndpoint)",
+      "dataSourceName": "AzureStorageContainer",
+      "resultTemplate": "{ \"Value\" : \"{{ Name }}\", \"DisplayValue\" : \"{{ Name }}\" }",
+      "parameters": {
+        "storageAccount": "$(azureStorageAccountName)"
+      }
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "javatoolinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "javatoolinstaller.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "PATH",
+        "JAVA_HOME*"
+      ]
+    }
+  },
+  "messages": {
+    "DownloadFromAzureBlobStorage": "ms-resource:loc.messages.DownloadFromAzureBlobStorage",
+    "SuccessFullyFetchedItemList": "ms-resource:loc.messages.SuccessFullyFetchedItemList",
+    "StorageAccountDoesNotExist": "ms-resource:loc.messages.StorageAccountDoesNotExist",
+    "RequestedUrlTooLong": "ms-resource:loc.messages.RequestedUrlTooLong",
+    "UnzipExtractFile": "ms-resource:loc.messages.UnzipExtractFile",
+    "SevenZipExtractFile": "ms-resource:loc.messages.SevenZipExtractFile",
+    "TarExtractFile": "ms-resource:loc.messages.TarExtractFile",
+    "ExtractFileFailedMsg": "ms-resource:loc.messages.ExtractFileFailedMsg",
+    "ExtractNonExistFile": "ms-resource:loc.messages.ExtractNonExistFile",
+    "ExtractDirFailed": "ms-resource:loc.messages.ExtractDirFailed",
+    "CreateTempDir": "ms-resource:loc.messages.CreateTempDir",
+    "TempDir": "ms-resource:loc.messages.TempDir",
+    "DecompressedTempTar": "ms-resource:loc.messages.DecompressedTempTar",
+    "RemoveTempDir": "ms-resource:loc.messages.RemoveTempDir",
+    "ExtractFailedCannotCreate": "ms-resource:loc.messages.ExtractFailedCannotCreate",
+    "CleanDestDir": "ms-resource:loc.messages.CleanDestDir",
+    "CreateDestDir": "ms-resource:loc.messages.CreateDestDir",
+    "RetrievingJdkFromAzure": "ms-resource:loc.messages.RetrievingJdkFromAzure",
+    "RetrievingJdkFromLocalPath": "ms-resource:loc.messages.RetrievingJdkFromLocalPath",
+    "SucceedMsg": "ms-resource:loc.messages.SucceedMsg",
+    "SetJavaHome": "ms-resource:loc.messages.SetJavaHome",
+    "SetExtendedJavaHome": "ms-resource:loc.messages.SetExtendedJavaHome",
+    "UnsupportedFileExtension": "ms-resource:loc.messages.UnsupportedFileExtension",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM",
+    "JavaNotPreinstalled": "ms-resource:loc.messages.JavaNotPreinstalled",
+    "UsePreinstalledJava": "ms-resource:loc.messages.UsePreinstalledJava",
+    "WrongArchiveStructure": "ms-resource:loc.messages.WrongArchiveStructure",
+    "WrongArchiveFile": "ms-resource:loc.messages.WrongArchiveFile",
+    "ShareAccessError": "ms-resource:loc.messages.ShareAccessError",
+    "UnsupportedDMGStructure": "ms-resource:loc.messages.UnsupportedDMGStructure",
+    "NoPKGFile": "ms-resource:loc.messages.NoPKGFile",
+    "SeveralPKGFiles": "ms-resource:loc.messages.SeveralPKGFiles",
+    "InstallJDK": "ms-resource:loc.messages.InstallJDK",
+    "AttachDiskImage": "ms-resource:loc.messages.AttachDiskImage",
+    "DetachDiskImage": "ms-resource:loc.messages.DetachDiskImage",
+    "PkgPathDoesNotExist": "ms-resource:loc.messages.PkgPathDoesNotExist",
+    "PreInstalledJavaUpgraded": "ms-resource:loc.messages.PreInstalledJavaUpgraded",
+    "JavaSuccessfullyInstalled": "ms-resource:loc.messages.JavaSuccessfullyInstalled",
+    "ArchiveWasExtractedEarlier": "ms-resource:loc.messages.ArchiveWasExtractedEarlier",
+    "ExtractingArchiveToPath": "ms-resource:loc.messages.ExtractingArchiveToPath",
+    "ErrorCleaningFolder": "ms-resource:loc.messages.ErrorCleaningFolder"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.230.2",
+    "Node20-225": "0.230.3"
+  }
+}

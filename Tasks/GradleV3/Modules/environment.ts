@@ -1,6 +1,6 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as javaCommon from 'azure-pipelines-tasks-java-common/java-common';
-import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
+import { IExecOptions, ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 
 // Setting the access token env var to both VSTS and AZURE_ARTIFACTS for
 // backwards compatibility with repos that already use the older env var.
@@ -87,4 +87,31 @@ export function setGradleOpts(gradleOptions: string): void {
         process.env['GRADLE_OPTS'] = gradleOptions;
         tl.debug(`GRADLE_OPTS is now set to ${gradleOptions}`);
     }
+}
+
+/**
+ * Determine Gradle version by running ./gradlew --version
+ * @param {string} wrapperScript - Relative path from the repository root to the Gradle Wrapper script.
+ * @returns {string} Gradle version
+ */
+export function getGradleVersion(wrapperScript: string): string {
+    const gradleVersionRunner: ToolRunner = tl.tool(wrapperScript);
+    gradleVersionRunner.arg('--version');
+
+    const gradleOutput: string = gradleVersionRunner.execSync().stdout;
+    const gradleVersion: string = extractGradleVersion(gradleOutput);
+
+    if (gradleVersion === 'unknown'){
+        tl.warning(tl.loc('UnableToExtractGradleVersion'));
+    }
+
+    tl.debug(`Gradle version: ${gradleVersion}`);
+
+    return gradleVersion;
+}
+
+export function extractGradleVersion(str: string): string {
+    const regex = /^Gradle (?<version>\d+\.\d+(?:\.\d+)?.*$)/m;
+    const match = str.match(regex);
+    return match?.groups?.version || 'unknown';
 }
