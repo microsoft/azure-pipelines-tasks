@@ -221,8 +221,7 @@
         "NuGetAuthenticateV0",
         "AzureFileCopyV2",
         "AzureFileCopyV3",
-        "AzureRmWebAppDeploymentV4",
-        "IISWebAppDeploymentOnMachineGroupV0"
+        "AzureRmWebAppDeploymentV4"
     ],
     "Node20": [
         "AndroidSigningV2",
