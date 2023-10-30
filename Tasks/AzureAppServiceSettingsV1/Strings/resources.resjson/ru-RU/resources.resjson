@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Параметры Службы приложений Azure",
-  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://aka.ms/AA5wsgy)",
+  "loc.helpMarkDown": "[Подробнее об этой задаче](https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-app-service-settings)",
   "loc.description": "Изменение или добавление параметров веб-приложения Azure для Linux или Windows",
   "loc.instanceNameFormat": "Параметры Службы приложений Azure: $(appName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Параметры приложения и конфигурации",

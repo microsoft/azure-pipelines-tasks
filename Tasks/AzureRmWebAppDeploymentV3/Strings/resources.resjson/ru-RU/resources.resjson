@@ -223,5 +223,6 @@
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "Чтобы использовать сертификат в службе приложений, сертификат должен быть подписан доверенным центром сертификации. Если в веб-приложении появляются ошибки проверки сертификата, возможно, вы используете самозаверяющий сертификат и для устранения этих ошибок необходимо передать -allowUntrusted в дополнительных аргументах параметра веб-развертывания.",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Не удалось обновить ресурс Application Insights \"%s\". Ошибка: %s",
   "loc.messages.JarNotSupported": "Развертывание JAR не поддерживается в этой версии. Измените версию задачи на \"4.*\", которая является предварительной",
-  "loc.messages.CorrelationIdForARM": "Идентификатор корреляции из ответа на вызов API ARM: %s"
+  "loc.messages.CorrelationIdForARM": "Идентификатор корреляции из ответа на вызов API ARM: %s",
+  "loc.messages.MSDeployNotSupportTokenAuth": "App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy ."
 }

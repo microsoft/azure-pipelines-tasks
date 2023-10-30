@@ -225,5 +225,6 @@
   "loc.messages.FailedToGetResourceID": "リソースの種類 '%s'、リソース名 '%s' のリソース ID を取得できませんでした。エラー: %s",
   "loc.messages.JarPathNotPresent": "Java jar パスが存在しません",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Application Insights '%s' リソースを更新できませんでした。エラー: %s",
-  "loc.messages.RunFromZipPreventsFileInUseError": "Web 配置から Run From Package に移動します。これは、FILE_IN_USE エラーを回避するのに役立ちます。Run From Package では、msBuild パッケージの種類はサポートされていません。この配置方法を使用するには、パッケージ形式を変更してください。"
+  "loc.messages.RunFromZipPreventsFileInUseError": "Web 配置から Run From Package に移動します。これは、FILE_IN_USE エラーを回避するのに役立ちます。Run From Package では、msBuild パッケージの種類はサポートされていません。この配置方法を使用するには、パッケージ形式を変更してください。",
+  "loc.messages.MSDeployNotSupportTokenAuth": "App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy ."
 }

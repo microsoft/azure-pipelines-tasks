@@ -223,5 +223,6 @@
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "若要在 App Service 中使用憑證，該憑證必須經過信任的憑證授權單位所簽署。若您的 Web 應用程式顯示憑證驗證錯誤，可能是您使用了自我簽署憑證。若要解決這些錯誤，您必須在 Web 部署選項的其他引數中傳遞 -allowUntrusted。",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "無法更新 Application Insights '%s' 資源。錯誤: %s",
   "loc.messages.JarNotSupported": "此版本不支援 jar 部署。請將工作版本變更為處於預覽模式的 '4.*'",
-  "loc.messages.CorrelationIdForARM": "來自 ARM api 呼叫回應的相互關聯識別碼: %s"
+  "loc.messages.CorrelationIdForARM": "來自 ARM api 呼叫回應的相互關聯識別碼: %s",
+  "loc.messages.MSDeployNotSupportTokenAuth": "App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy ."
 }

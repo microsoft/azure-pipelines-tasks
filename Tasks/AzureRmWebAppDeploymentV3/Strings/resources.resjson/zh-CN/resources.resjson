@@ -223,5 +223,6 @@
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "要在应用服务中使用某个证书，该证书必须由受信任的证书颁发机构签名。如果 Web 应用显示证书验证错误，则使用的可能是自签名证书，要解决验证问题，需要在 Web 部署选项的其他参数中传递 -allowUntrusted。",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "未能更新 Application Insights“%s”资源。错误: %s",
   "loc.messages.JarNotSupported": "此版本不支持 Jar 部署。将任务版本更改为处于预览模式的 \"4.*\"",
-  "loc.messages.CorrelationIdForARM": "来自 ARM API 调用响应的相关 ID: %s"
+  "loc.messages.CorrelationIdForARM": "来自 ARM API 调用响应的相关 ID: %s",
+  "loc.messages.MSDeployNotSupportTokenAuth": "App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy ."
 }
