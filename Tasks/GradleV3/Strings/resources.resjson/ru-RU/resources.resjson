@@ -94,5 +94,6 @@
   "loc.messages.FileNotFound": "Файл или папка не существует: %s",
   "loc.messages.FailedToAppendCC": "Не удалось добавить данные об объеме протестированного кода: %s",
   "loc.messages.NoTestResults": "Не найдены файлы результатов теста, соответствующие \"%s\". Публикация результатов теста JUnit пропускается.",
-  "loc.messages.chmodGradlew": "Использован метод \"chmod\" для файла gradlew, чтобы сделать его исполняемым."
+  "loc.messages.chmodGradlew": "Использован метод \"chmod\" для файла gradlew, чтобы сделать его исполняемым.",
+  "loc.messages.UnableToExtractGradleVersion": "Unable to extract Gradle version from gradle output."
 }
