@@ -225,5 +225,6 @@
   "loc.messages.FailedToGetResourceID": "리소스 종류 '%s' 및 리소스 이름 '%s'의 리소스 ID를 가져오지 못했습니다. 오류: %s",
   "loc.messages.JarPathNotPresent": "Java jar 경로가 없습니다.",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Application Insights '%s' 리소스를 업데이트하지 못했습니다. 오류: %s",
-  "loc.messages.RunFromZipPreventsFileInUseError": "'웹 배포'에서 FILE_IN_USE 오류 방지에 도움이 되는 '패키지에서 실행'으로 전환하세요. '패키지에서 실행'은 msBuild 패키지 형식을 지원하지 않습니다. 이 배포 방법을 사용하려면 패키지 형식을 변경하세요."
+  "loc.messages.RunFromZipPreventsFileInUseError": "'웹 배포'에서 FILE_IN_USE 오류 방지에 도움이 되는 '패키지에서 실행'으로 전환하세요. '패키지에서 실행'은 msBuild 패키지 형식을 지원하지 않습니다. 이 배포 방법을 사용하려면 패키지 형식을 변경하세요.",
+  "loc.messages.MSDeployNotSupportTokenAuth": "App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy ."
 }

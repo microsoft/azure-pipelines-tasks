@@ -225,5 +225,6 @@
   "loc.messages.FailedToGetResourceID": "未能获取资源类型“%s”和资源名称“%s”的资源 ID。错误: %s",
   "loc.messages.JarPathNotPresent": "Java jar 路径不存在",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "未能更新 Application Insights“%s”资源。错误: %s",
-  "loc.messages.RunFromZipPreventsFileInUseError": "从 Web 部署移动到 RunFrom 包，这有助于避免 FILE_IN_USE 错误。请注意，“从包运行”不支持 msBuild 包类型。请更改包格式以使用此部署方法。"
+  "loc.messages.RunFromZipPreventsFileInUseError": "从 Web 部署移动到 RunFrom 包，这有助于避免 FILE_IN_USE 错误。请注意，“从包运行”不支持 msBuild 包类型。请更改包格式以使用此部署方法。",
+  "loc.messages.MSDeployNotSupportTokenAuth": "App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy ."
 }

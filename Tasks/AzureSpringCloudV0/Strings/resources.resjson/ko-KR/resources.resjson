@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Spring Apps",
-  "loc.helpMarkDown": "[이 작업에 관한 자세한 정보](https://aka.ms/azurespringapps)",
+  "loc.helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/en-gb/azure/devops/pipelines/tasks/reference/azure-spring-cloud-v0?view=azure-pipelines)",
   "loc.description": "애플리케이션을 Azure Spring Apps로 배포하고 배포를 관리합니다.",
   "loc.instanceNameFormat": "Azure Spring Apps $(Action): $(AppName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "애플리케이션 및 구성 설정",

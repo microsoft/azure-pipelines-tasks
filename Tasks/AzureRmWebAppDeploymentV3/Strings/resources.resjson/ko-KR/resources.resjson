@@ -223,5 +223,6 @@
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "App Service에서 인증서를 사용하려면 신뢰할 수 있는 인증 기관에서 인증서에 서명해야 합니다. 웹앱에서 인증서 유효성 검사 오류가 발생하는 경우 자체 서명된 인증서를 사용하는 것 같으며, 오류를 해결하려면 웹 배포 옵션의 추가 인수에 -allowUntrusted를 전달해야 합니다.",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Application Insights '%s' 리소스를 업데이트하지 못했습니다. 오류: %s",
   "loc.messages.JarNotSupported": "Jar 배포는 이 버전에서 지원되지 않습니다. 작업 버전을 미리 보기 모드인 '4.*'로 변경하세요.",
-  "loc.messages.CorrelationIdForARM": "ARM API 호출 응답의 상관 관계 ID: %s"
+  "loc.messages.CorrelationIdForARM": "ARM API 호출 응답의 상관 관계 ID: %s",
+  "loc.messages.MSDeployNotSupportTokenAuth": "App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy ."
 }

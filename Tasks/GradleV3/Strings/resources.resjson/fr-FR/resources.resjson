@@ -94,5 +94,6 @@
   "loc.messages.FileNotFound": "Le fichier ou le dossier n'existe pas : %s",
   "loc.messages.FailedToAppendCC": "Impossible d'ajouter les données de couverture du code : %s",
   "loc.messages.NoTestResults": "Les fichiers de résultats des tests correspondant à %s sont introuvables. La publication des résultats des tests JUnit est ignorée.",
-  "loc.messages.chmodGradlew": "Méthode 'chmod' utilisée pour le fichier gradlew afin de le rendre exécutable."
+  "loc.messages.chmodGradlew": "Méthode 'chmod' utilisée pour le fichier gradlew afin de le rendre exécutable.",
+  "loc.messages.UnableToExtractGradleVersion": "Unable to extract Gradle version from gradle output."
 }
