@@ -217,7 +217,6 @@
         "Tests"
     ],
     "Node16_225": [
-        "AzureFileCopyV2",
         "AzureRmWebAppDeploymentV4"
     ],
     "Node20": [
