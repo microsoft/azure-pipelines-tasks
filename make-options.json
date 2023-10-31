@@ -290,9 +290,8 @@
         "UniversalPackagesV0"
     ],
     "Node20_229_2": [
-        "AzureSpringCloudV0",
-        "VsTestPlatformToolInstallerV1",
-        "AzurePowerShellV4"
+        "AzurePowerShellV4",
+        "AzurePowerShellV5"
     ],
     "Node20_229_3": [],
     "Node20_229_4": [],
