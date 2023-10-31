@@ -335,5 +335,9 @@
     "InvalidAzureSpringAppsResourceId": "Invalid Azure Spring Apps resource identifier: %s",
     "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s. Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
     "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern: %s. Please restrain the search pattern."
+  },
+  "_buildConfigMapping": {
+    "Default": "0.231.0",
+    "Node20_229_2": "0.231.1"
   }
 }

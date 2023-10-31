@@ -1,10 +1,10 @@
 {
   "id": "5679292e-de0e-473a-948e-4874d2d8ef97",
   "name": "AzureSpringCloud",
-  "friendlyName": "Azure Spring Apps",
-  "description": "Deploy applications to Azure Spring Apps and manage deployments.",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
   "helpUrl": "https://learn.microsoft.com/en-gb/azure/devops/pipelines/tasks/reference/azure-spring-cloud-v0?view=azure-pipelines",
-  "helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/en-gb/azure/devops/pipelines/tasks/reference/azure-spring-cloud-v0?view=azure-pipelines)",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -19,13 +19,13 @@
   "version": {
     "Major": 0,
     "Minor": 231,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
     {
       "name": "ApplicationAndConfigurationSettings",
-      "displayName": "Application and Configuration Settings",
+      "displayName": "ms-resource:loc.group.displayName.ApplicationAndConfigurationSettings",
       "isExpanded": false
     }
   ],
@@ -36,17 +36,17 @@
         "azureSubscription"
       ],
       "type": "connectedService:AzureRM",
-      "label": "Azure subscription",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
       "name": "Action",
       "type": "pickList",
-      "label": "Action",
+      "label": "ms-resource:loc.input.label.Action",
       "required": true,
-      "helpMarkDown": "Action to be performed on Azure Spring Apps.",
+      "helpMarkDown": "ms-resource:loc.input.help.Action",
       "defaultValue": "Deploy",
       "options": {
         "Deploy": "Deploy",
@@ -57,29 +57,29 @@
     {
       "name": "AzureSpringCloud",
       "type": "pickList",
-      "label": "Azure Spring Apps Name",
+      "label": "ms-resource:loc.input.label.AzureSpringCloud",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "Select the Azure Spring Apps service to which to deploy."
+      "helpMarkDown": "ms-resource:loc.input.help.AzureSpringCloud"
     },
     {
       "name": "AppName",
       "type": "pickList",
-      "label": "App",
+      "label": "ms-resource:loc.input.label.AppName",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "Select the Azure Spring Apps app to deploy."
+      "helpMarkDown": "ms-resource:loc.input.help.AppName"
     },
     {
       "name": "DeploymentType",
       "type": "pickList",
-      "label": "Deployment Type",
+      "label": "ms-resource:loc.input.label.DeploymentType",
       "required": false,
-      "helpMarkDown": "To deploy with source code or Java package, choose \"Artifacts\"; To deploy with container image, choose \"Custom Container\"",
+      "helpMarkDown": "ms-resource:loc.input.help.DeploymentType",
       "defaultValue": "Artifacts",
       "visibleRule": "Action = Deploy",
       "options": {
@@ -90,105 +90,105 @@
     {
       "name": "UseStagingDeployment",
       "type": "boolean",
-      "label": "Use Staging Deployment",
+      "label": "ms-resource:loc.input.label.UseStagingDeployment",
       "required": "true",
       "defaultValue": "true",
       "visibleRule": "Action = Deploy || Action = Set Production",
-      "helpMarkDown": "Automatically select the deployment that's set as Staging at the time the task runs."
+      "helpMarkDown": "ms-resource:loc.input.help.UseStagingDeployment"
     },
     {
       "name": "CreateNewDeployment",
       "type": "boolean",
-      "label": "Create a new staging deployment if one does not exist.",
+      "label": "ms-resource:loc.input.label.CreateNewDeployment",
       "required": "false",
       "defaultValue": "false",
       "visibleRule": "Action = Deploy && UseStagingDeployment = false",
-      "helpMarkDown": "Whether to target the deployment that's set as Staging at the time of execution. If unchecked, the 'Deployment Name' setting must be set."
+      "helpMarkDown": "ms-resource:loc.input.help.CreateNewDeployment"
     },
     {
       "name": "DeploymentName",
       "type": "pickList",
-      "label": "Deployment",
+      "label": "ms-resource:loc.input.label.DeploymentName",
       "required": false,
       "properties": {
         "EditableOptions": "True"
       },
       "visibleRule": "UseStagingDeployment = false && Action != Delete Staging Deployment",
-      "helpMarkDown": "The deployment to which this task will apply. Lowercase letters and numbers only; must start with a letter."
+      "helpMarkDown": "ms-resource:loc.input.help.DeploymentName"
     },
     {
       "name": "Package",
       "type": "filePath",
-      "label": "Package or folder",
+      "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.jar",
       "required": false,
       "visibleRule": "Action = Deploy && DeploymentType = Artifacts",
-      "helpMarkDown": "File path to the package or a folder containing the Spring Apps app contents.<br />Variables ( [Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.jar."
+      "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
       "name": "Builder",
       "type": "pickList",
-      "label": "Builder",
+      "label": "ms-resource:loc.input.label.Builder",
       "defaultValue": "",
       "visibleRule": "Action = Deploy && DeploymentType = Artifacts",
       "required": false,
       "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "Select a builder of VMware Tanzu® Build Service™, this can be used in enterprise tier. <br/> For detailed description, please check [Use Tanzu Build Service](https://docs.microsoft.com/en-us/azure/spring-apps/how-to-enterprise-build-service?tabs=azure-portal)."
+      "helpMarkDown": "ms-resource:loc.input.help.Builder"
     },
     {
       "name": "RegistryServer",
       "type": "string",
-      "label": "Registry Server",
+      "label": "ms-resource:loc.input.label.RegistryServer",
       "defaultValue": "docker.io",
       "required": false,
       "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
-      "helpMarkDown": "The registry of the container image.  Default: docker.io."
+      "helpMarkDown": "ms-resource:loc.input.help.RegistryServer"
     },
     {
       "name": "RegistryUsername",
       "type": "string",
-      "label": "Registry Username",
+      "label": "ms-resource:loc.input.label.RegistryUsername",
       "required": false,
       "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
-      "helpMarkDown": "The username of the container registry."
+      "helpMarkDown": "ms-resource:loc.input.help.RegistryUsername"
     },
     {
       "name": "RegistryPassword",
       "type": "string",
-      "label": "Registry Password",
+      "label": "ms-resource:loc.input.label.RegistryPassword",
       "required": false,
       "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
-      "helpMarkDown": "The password of the container registry."
+      "helpMarkDown": "ms-resource:loc.input.help.RegistryPassword"
     },
     {
       "name": "ImageName",
       "type": "string",
-      "label": "Image Name and Tag",
+      "label": "ms-resource:loc.input.label.ImageName",
       "defaultValue": "hello-world:v1",
       "required": false,
       "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
-      "helpMarkDown": "The container image tag."
+      "helpMarkDown": "ms-resource:loc.input.help.ImageName"
     },
     {
       "name": "ImageCommand",
       "type": "string",
-      "label": "Image Command",
+      "label": "ms-resource:loc.input.label.ImageCommand",
       "required": false,
       "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
-      "helpMarkDown": "The command of the container image."
+      "helpMarkDown": "ms-resource:loc.input.help.ImageCommand"
     },
     {
       "name": "ImageArgs",
       "type": "string",
-      "label": "Image Arguments",
+      "label": "ms-resource:loc.input.label.ImageArgs",
       "required": false,
       "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
-      "helpMarkDown": "The arguments of the container image."
+      "helpMarkDown": "ms-resource:loc.input.help.ImageArgs"
     },
     {
       "name": "ImageLanguageFramework",
       "type": "pickList",
-      "label": "Language Framework",
+      "label": "ms-resource:loc.input.label.ImageLanguageFramework",
       "required": false,
       "visibleRule": "Action = Deploy && DeploymentType = CustomContainer",
       "helpMarkDown": "",
@@ -200,12 +200,12 @@
     {
       "name": "EnvironmentVariables",
       "type": "multiLine",
-      "label": "Environment Variables",
+      "label": "ms-resource:loc.input.label.EnvironmentVariables",
       "defaultValue": "",
       "visibleRule": "Action = Deploy",
       "required": false,
       "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "Edit the app's environment variables.",
+      "helpMarkDown": "ms-resource:loc.input.help.EnvironmentVariables",
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       }
@@ -213,21 +213,21 @@
     {
       "name": "JvmOptions",
       "type": "multiLine",
-      "label": "JVM Options",
+      "label": "ms-resource:loc.input.label.JvmOptions",
       "defaultValue": "",
       "required": false,
       "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "Edit the app's JVM options. A String containing JVM Options. Example: `-Xms1024m -Xmx2048m`",
+      "helpMarkDown": "ms-resource:loc.input.help.JvmOptions",
       "visibleRule": "Action = Deploy && DeploymentType = Artifacts"
     },
     {
       "name": "RuntimeVersion",
       "type": "pickList",
-      "label": "Runtime Version",
+      "label": "ms-resource:loc.input.label.RuntimeVersion",
       "groupName": "ApplicationAndConfigurationSettings",
       "defaultValue": "Java_11",
       "required": false,
-      "helpMarkDown": "The runtime on which the app will run.",
+      "helpMarkDown": "ms-resource:loc.input.help.RuntimeVersion",
       "options": {
         "Java_8": "Java 8",
         "Java_11": "Java 11",
@@ -238,16 +238,16 @@
     {
       "name": "DotNetCoreMainEntryPath",
       "type": "string",
-      "label": "Main Entry Path",
+      "label": "ms-resource:loc.input.label.DotNetCoreMainEntryPath",
       "groupName": "ApplicationAndConfigurationSettings",
-      "helpMarkDown": "The path to the .NET executable relative to zip root.",
+      "helpMarkDown": "ms-resource:loc.input.help.DotNetCoreMainEntryPath",
       "required": false,
       "visibleRule": "RuntimeVersion = NetCore_31"
     },
     {
       "name": "Version",
       "type": "string",
-      "label": "Version",
+      "label": "ms-resource:loc.input.label.Version",
       "groupName": "ApplicationAndConfigurationSettings",
       "defaultValue": "",
       "required": false,
@@ -300,7 +300,7 @@
       "resultSelector": "jsonpath:$.value[*]"
     }
   ],
-  "instanceNameFormat": "Azure Spring Apps $(Action): $(AppName)",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {
       "target": "azurespringappsdeployment.js"
@@ -308,32 +308,40 @@
     "Node16": {
       "target": "azurespringappsdeployment.js",
       "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "azurespringappsdeployment.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
-    "CompressingSourceDirectory": "Compressing source directory %s to %s",
-    "DeploymentLog": "Deployment Log",
-    "StatusCode": "Status Code",
-    "StartingUploadOf": "Starting upload of %s",
-    "CompletedUploadOf": "Upload of %s completed.",
-    "ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
-    "UnableToGetDeploymentUrl": "Unable to get deployment URL for Azure Spring Apps '%s', Error: '%s'",
-    "DeploymentDoesntExist": "Deployment with name '%s' does not exist. Unable to proceed.",
-    "StagingDeploymentWithNameDoesntExist": "Staging deployment with name %s does not exist. Unable to proceed.",
-    "NoStagingDeploymentFound": "No staging deployment found.",
-    "TwoDeploymentsAlreadyExistCannotCreate": "Deployment with name '%s' does not exist and cannot be created, as two deployments already exist.",
-    "UnsupportedSourceType": "Unsupported source type for %s",
-    "UnknownOrUnsupportedAction": "Unknown or unsupported action: %s",
-    "OperationTimedOut": "Operation timed out.",
-    "OperationFailed": "Operation failed: %s %s",
-    "UnableToDeleteDeployment": "Unable to delete deployment.",
-    "PrivateTestEndpointNotEnabled": "Private test endpoint is not enabled.",
-    "UnableToRetrieveTestEndpointKeys": "Unable to retrieve test endpoint keys",
-    "NoDeploymentsExist": "No deployments exist.",
-    "UnableToGetDeploymentInformation": "Unable to get deployment information.",
-    "DuplicateAzureSpringAppsName": "Illegal state: multiple Azure Spring Apps instances with same name.",
-    "InvalidAzureSpringAppsResourceId": "Invalid Azure Spring Apps resource identifier: %s",
-    "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s. Check if the package mentioned in the task is published as an artifact in the build or a previous stage and downloaded in the current job.",
-    "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern: %s. Please restrain the search pattern."
+    "CompressingSourceDirectory": "ms-resource:loc.messages.CompressingSourceDirectory",
+    "DeploymentLog": "ms-resource:loc.messages.DeploymentLog",
+    "StatusCode": "ms-resource:loc.messages.StatusCode",
+    "StartingUploadOf": "ms-resource:loc.messages.StartingUploadOf",
+    "CompletedUploadOf": "ms-resource:loc.messages.CompletedUploadOf",
+    "ResourceDoesntExist": "ms-resource:loc.messages.ResourceDoesntExist",
+    "UnableToGetDeploymentUrl": "ms-resource:loc.messages.UnableToGetDeploymentUrl",
+    "DeploymentDoesntExist": "ms-resource:loc.messages.DeploymentDoesntExist",
+    "StagingDeploymentWithNameDoesntExist": "ms-resource:loc.messages.StagingDeploymentWithNameDoesntExist",
+    "NoStagingDeploymentFound": "ms-resource:loc.messages.NoStagingDeploymentFound",
+    "TwoDeploymentsAlreadyExistCannotCreate": "ms-resource:loc.messages.TwoDeploymentsAlreadyExistCannotCreate",
+    "UnsupportedSourceType": "ms-resource:loc.messages.UnsupportedSourceType",
+    "UnknownOrUnsupportedAction": "ms-resource:loc.messages.UnknownOrUnsupportedAction",
+    "OperationTimedOut": "ms-resource:loc.messages.OperationTimedOut",
+    "OperationFailed": "ms-resource:loc.messages.OperationFailed",
+    "UnableToDeleteDeployment": "ms-resource:loc.messages.UnableToDeleteDeployment",
+    "PrivateTestEndpointNotEnabled": "ms-resource:loc.messages.PrivateTestEndpointNotEnabled",
+    "UnableToRetrieveTestEndpointKeys": "ms-resource:loc.messages.UnableToRetrieveTestEndpointKeys",
+    "NoDeploymentsExist": "ms-resource:loc.messages.NoDeploymentsExist",
+    "UnableToGetDeploymentInformation": "ms-resource:loc.messages.UnableToGetDeploymentInformation",
+    "DuplicateAzureSpringAppsName": "ms-resource:loc.messages.DuplicateAzureSpringAppsName",
+    "InvalidAzureSpringAppsResourceId": "ms-resource:loc.messages.InvalidAzureSpringAppsResourceId",
+    "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
+    "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.231.0",
+    "Node20_229_2": "0.231.1"
   }
 }
