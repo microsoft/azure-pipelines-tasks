@@ -9,9 +9,19 @@ export function getFinalComposeFileName(): string {
     return ".docker-compose." + Date.now() + ".yml"
 }
 
+#if NODE16
 export function writeFileSync(filename: string, data: any, options?: { encoding?: BufferEncoding; mode?: number; flag?: string; }): void {
     fs.writeFileSync(filename, data, options);
 }
+#elseif NODE20
+export function writeFileSync(filename: string, data: any, options?: { encoding?: BufferEncoding; mode?: number; flag?: string; }): void {
+    fs.writeFileSync(filename, data, options);
+}
+#else
+export function writeFileSync(filename: string, data: any, options?: { encoding?: string; mode?: number; flag?: string; }): void {
+    fs.writeFileSync(filename, data, options);
+}
+#endif
 
 function getTaskOutputDir(command: string): string {
     let tempDirectory = tl.getVariable('agent.tempDirectory') || os.tmpdir();

@@ -35,8 +35,11 @@ export abstract class ScriptType {
         this._scriptArguments = scriptArguments;
     }
 
+#if NODE20
+    public abstract getTool(): Promise<any>;
+#else
     public abstract async getTool(): Promise<any>;
-
+#endif
     public async cleanUp(): Promise<void> {
         if(this._scriptLocation.toLowerCase() === 'inlinescript') {
             await Utility.deleteFile(this._scriptPath);
