@@ -85,13 +85,7 @@ export default class DockerComposeConnection extends ContainerConnection {
         command.on("stderr", data => {
             output += data;
         });
-#if NODE16
         await this.execCommand(command, options);
-#elseif NODE20
-        await this.execCommand(command, options);
-#else
-        await this.execCommand(command as unknown as tr.ToolRunner, options);
-#endif
         return output || '\n';
     }
 

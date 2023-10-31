@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 230,
-    "Patch": 1
+    "Patch": 3
   },
   "satisfies": [
     "DotNetCore"
@@ -199,7 +199,7 @@
     "DepricatedVersionNetCore": "ms-resource:loc.messages.DepricatedVersionNetCore"
   },
   "_buildConfigMapping": {
-    "Default": "2.230.0",
-    "Node20_229_2": "2.230.1"
+    "Default": "2.230.2",
+    "Node20_229_2": "2.230.3"
   }
 }
