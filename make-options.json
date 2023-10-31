@@ -342,7 +342,6 @@
         "KubectlInstallerV0",
         "KubernetesV1",
         "KubernetesManifestV0",
-        "KubernetesManifestV1",
         "MysqlDeploymentOnMachineGroupV1",
         "UseDotNetV2"
     ],
