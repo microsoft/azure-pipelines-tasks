@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 230,
-    "Patch": 2
+    "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -153,10 +153,6 @@
     },
     "Node16": {
       "target": "azurewebappsettings.js"
-    },
-    "Node20": {
-      "target": "azurewebappsettings.js",
-      "argumentFormat": ""
     }
   },
   "messages": {

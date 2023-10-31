@@ -182,5 +182,9 @@
     "AppSettingInvalidJSON": "ms-resource:loc.messages.AppSettingInvalidJSON",
     "ConfigSettingInvalidJSON": "ms-resource:loc.messages.ConfigSettingInvalidJSON",
     "ConnectionStringInvalidJSON": "ms-resource:loc.messages.ConnectionStringInvalidJSON"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.230.1",
+    "Node20_229_2": "1.230.2"
   }
 }
