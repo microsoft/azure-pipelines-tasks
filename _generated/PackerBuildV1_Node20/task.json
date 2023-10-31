@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 231,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -302,6 +302,10 @@
     "Node16": {
       "target": "./src//main.js",
       "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "./src//main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -350,5 +354,9 @@
     "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
     "CreateManagedImageNotSupportedForVHDSource": "Creating managed image from a source VHD is not supported. You must set 'Base image source' input value to 'Gallery'.",
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+  },
+  "_buildConfigMapping": {
+    "Default": "1.231.0",
+    "Node20_229_2": "1.231.1"
   }
 }
