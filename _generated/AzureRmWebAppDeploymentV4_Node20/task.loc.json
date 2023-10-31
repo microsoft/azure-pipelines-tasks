@@ -1,0 +1,666 @@
+{
+  "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
+  "name": "AzureRmWebAppDeployment",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/azureappservicetroubleshooting",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 4,
+    "Minor": 230,
+    "Patch": 7
+  },
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "minimumAgentVersion": "2.104.1",
+  "groups": [
+    {
+      "name": "FileTransformsAndVariableSubstitution",
+      "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
+      "isExpanded": false,
+      "visibleRule": "WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != webAppLinux && webAppKind != functionAppLinux && Package NotEndsWith .war"
+    },
+    {
+      "name": "AdditionalDeploymentOptions",
+      "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
+      "isExpanded": false,
+      "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppkind != functionAppContainer && webAppKind != functionAppLinux && WebAppKind != \"\" && Package NotEndsWith .war && Package NotEndsWith .jar"
+    },
+    {
+      "name": "PostDeploymentAction",
+      "displayName": "ms-resource:loc.group.displayName.PostDeploymentAction",
+      "isExpanded": false,
+      "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\" && WebAppKind != webAppContainer && WebAppkind != functionAppContainer"
+    },
+    {
+      "name": "ApplicationAndConfigurationSettings",
+      "displayName": "ms-resource:loc.group.displayName.ApplicationAndConfigurationSettings",
+      "isExpanded": false,
+      "visibleRule": "ConnectionType = AzureRM"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "ConnectionType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ConnectionType",
+      "defaultValue": "AzureRM",
+      "options": {
+        "AzureRM": "Azure Resource Manager",
+        "PublishProfile": "Publish Profile"
+      },
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectionType"
+    },
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "visibleRule": "ConnectionType = AzureRM"
+    },
+    {
+      "name": "PublishProfilePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.PublishProfilePath",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.pubxml",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.PublishProfilePath",
+      "visibleRule": "ConnectionType = PublishProfile"
+    },
+    {
+      "name": "PublishProfilePassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.PublishProfilePassword",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.PublishProfilePassword",
+      "visibleRule": "ConnectionType = PublishProfile"
+    },
+    {
+      "name": "WebAppKind",
+      "aliases": [
+        "appType"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.WebAppKind",
+      "defaultValue": "webApp",
+      "required": true,
+      "options": {
+        "webApp": "Web App on Windows",
+        "webAppLinux": "Web App on Linux",
+        "webAppContainer": "Web App for Containers (Linux)",
+        "webAppHyperVContainer": "Web App for Containers (Windows)",
+        "functionApp": "Function App on Windows (Not Recommended, Use Azure Functions Task)",
+        "functionAppLinux": "Function App on Linux (Not Recommended, Use Azure Functions Task)",
+        "functionAppContainer": "Function App for Containers (Linux) (Not Recommended, Use Azure Functions for container Task)",
+        "apiApp": "API App",
+        "mobileApp": "Mobile App"
+      },
+      "properties": {
+        "EditableOptions": "true"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.WebAppKind",
+      "visibleRule": "ConnectionType = AzureRM"
+    },
+    {
+      "name": "WebAppName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.WebAppName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.WebAppName",
+      "visibleRule": "ConnectionType = AzureRM"
+    },
+    {
+      "name": "DeployToSlotOrASEFlag",
+      "aliases": [
+        "deployToSlotOrASE"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.DeployToSlotOrASEFlag",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotOrASEFlag",
+      "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\""
+    },
+    {
+      "name": "ResourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ResourceGroupName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
+      "visibleRule": "DeployToSlotOrASEFlag = true"
+    },
+    {
+      "name": "SlotName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.SlotName",
+      "defaultValue": "production",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.SlotName",
+      "visibleRule": "DeployToSlotOrASEFlag = true"
+    },
+    {
+      "name": "DockerNamespace",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DockerNamespace",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppkind = webAppHyperVContainer",
+      "helpMarkDown": "ms-resource:loc.input.help.DockerNamespace"
+    },
+    {
+      "name": "DockerRepository",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DockerRepository",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppkind = webAppHyperVContainer",
+      "helpMarkDown": "ms-resource:loc.input.help.DockerRepository"
+    },
+    {
+      "name": "DockerImageTag",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DockerImageTag",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppkind = webAppHyperVContainer",
+      "helpMarkDown": "ms-resource:loc.input.help.DockerImageTag"
+    },
+    {
+      "name": "VirtualApplication",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.VirtualApplication",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != functionApp && webAppKind != functionAppLinux && WebAppKind != \"\"",
+      "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication"
+    },
+    {
+      "name": "Package",
+      "aliases": [
+        "packageForLinux"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.Package",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
+      "required": true,
+      "visibleRule": "ConnectionType = PublishProfile || WebAppKind = webApp || WebAppKind = apiApp || WebAppKind = functionApp || WebAppKind = mobileApp || WebAppKind = webAppLinux || webAppKind = functionAppLinux",
+      "helpMarkDown": "ms-resource:loc.input.help.Package"
+    },
+    {
+      "name": "RuntimeStack",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.RuntimeStack",
+      "defaultValue": "",
+      "required": false,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.RuntimeStack",
+      "visibleRule": "WebAppKind = webAppLinux"
+    },
+    {
+      "name": "RuntimeStackFunction",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.RuntimeStackFunction",
+      "defaultValue": "",
+      "required": false,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "options": {
+        "DOTNET|2.2": "DOTNET|2.2 (functionapp v2)",
+        "DOTNET|3.1": "DOTNET|3.1 (functionapp v3)",
+        "JAVA|8": "JAVA|8 (functionapp v2/v3)",
+        "JAVA|11": "JAVA|11  (functionapp v3)",
+        "NODE|8": "NODE|8 (functionapp v2)",
+        "NODE|10": "NODE|10 (functionapp v2/v3)",
+        "NODE|12": "NODE|12 (functionapp v3)",
+        "NODE|14": "NODE|14 (functionapp v3)",
+        "PYTHON|3.6": "PYTHON|3.6 (functionapp v2/v3)",
+        "PYTHON|3.7": "PYTHON|3.7 (functionapp v2/v3)",
+        "PYTHON|3.8": "PYTHON|3.8 (functionapp v3)"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.RuntimeStackFunction",
+      "visibleRule": "WebAppKind = functionAppLinux"
+    },
+    {
+      "name": "StartupCommand",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.StartupCommand",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppKind = functionAppLinux || WebAppkind = webAppHyperVContainer",
+      "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
+    },
+    {
+      "name": "ScriptType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ScriptType",
+      "defaultValue": "",
+      "options": {
+        "": "Select deployment script type (inline or file)",
+        "Inline Script": "Inline Script",
+        "File Path": "Script File Path"
+      },
+      "groupName": "PostDeploymentAction",
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptType"
+    },
+    {
+      "name": "InlineScript",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.InlineScript",
+      "defaultValue": ":: You can provide your deployment commands here. One command per line.",
+      "groupName": "PostDeploymentAction",
+      "required": true,
+      "visibleRule": "ScriptType == Inline Script",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "500"
+      }
+    },
+    {
+      "name": "ScriptPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.ScriptPath",
+      "required": true,
+      "groupName": "PostDeploymentAction",
+      "visibleRule": "ScriptType == File Path"
+    },
+    {
+      "name": "WebConfigParameters",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.WebConfigParameters",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.WebConfigParameters",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.webconfig-parameters-grid"
+      }
+    },
+    {
+      "name": "AppSettings",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.AppSettings",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "ApplicationAndConfigurationSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.AppSettings",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      }
+    },
+    {
+      "name": "ConfigurationSettings",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.ConfigurationSettings",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "ApplicationAndConfigurationSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.ConfigurationSettings",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      }
+    },
+    {
+      "name": "UseWebDeploy",
+      "aliases": [
+        "enableCustomDeployment"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.UseWebDeploy",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "AdditionalDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.UseWebDeploy"
+    },
+    {
+      "name": "DeploymentType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.DeploymentType",
+      "defaultValue": "webDeploy",
+      "required": true,
+      "groupName": "AdditionalDeploymentOptions",
+      "options": {
+        "webDeploy": "Web Deploy",
+        "zipDeploy": "Zip Deploy",
+        "runFromZip": "Run From Package"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.DeploymentType",
+      "visibleRule": "UseWebDeploy == true"
+    },
+    {
+      "name": "TakeAppOfflineFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "UseWebDeploy == true && DeploymentType != runFromZip",
+      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
+    },
+    {
+      "name": "SetParametersFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SetParametersFile",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "UseWebDeploy == true && DeploymentType == webDeploy",
+      "helpMarkDown": "ms-resource:loc.input.help.SetParametersFile"
+    },
+    {
+      "name": "RemoveAdditionalFilesFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RemoveAdditionalFilesFlag",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "UseWebDeploy == true && DeploymentType == webDeploy",
+      "helpMarkDown": "ms-resource:loc.input.help.RemoveAdditionalFilesFlag"
+    },
+    {
+      "name": "ExcludeFilesFromAppDataFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ExcludeFilesFromAppDataFlag",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "UseWebDeploy == true && DeploymentType == webDeploy",
+      "helpMarkDown": "ms-resource:loc.input.help.ExcludeFilesFromAppDataFlag"
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdditionalArguments",
+      "required": false,
+      "defaultValue": "-retryAttempts:6 -retryInterval:10000",
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "UseWebDeploy == true && DeploymentType == webDeploy",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+    },
+    {
+      "name": "RenameFilesFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RenameFilesFlag",
+      "defaultValue": "true",
+      "required": false,
+      "visibleRule": "UseWebDeploy == true && DeploymentType == webDeploy",
+      "groupName": "AdditionalDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.RenameFilesFlag"
+    },
+    {
+      "name": "XmlTransformation",
+      "aliases": [
+        "enableXmlTransform"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.XmlTransformation",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.XmlTransformation"
+    },
+    {
+      "name": "XmlVariableSubstitution",
+      "aliases": [
+        "enableXmlVariableSubstitution"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.XmlVariableSubstitution",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.XmlVariableSubstitution"
+    },
+    {
+      "name": "JSONFiles",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.JSONFiles",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.JSONFiles"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "AppServiceApplicationUrl",
+      "description": "Application URL of the selected App Service."
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "WebAppName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppNamesByAppType",
+      "parameters": {
+        "WebAppKind": "$(WebAppKind)"
+      }
+    },
+    {
+      "target": "ResourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppResourceGroup",
+      "parameters": {
+        "WebAppName": "$(WebAppName)"
+      }
+    },
+    {
+      "target": "SlotName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppSlotsId",
+      "parameters": {
+        "WebAppName": "$(WebAppName)",
+        "ResourceGroupName": "$(ResourceGroupName)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+    },
+    {
+      "target": "RuntimeStack",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppRuntimeStacksByOsType",
+      "parameters": {
+        "osTypeSelected": "Linux"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}} ({{{ runtimeVersion }}})\"}"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "azurermwebappdeployment.js"
+    },
+    "Node20": {
+      "target": "azurermwebappdeployment.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Invalidwebapppackageorfolderpathprovided": "ms-resource:loc.messages.Invalidwebapppackageorfolderpathprovided",
+    "SetParamFilenotfound0": "ms-resource:loc.messages.SetParamFilenotfound0",
+    "XDTTransformationsappliedsuccessfully": "ms-resource:loc.messages.XDTTransformationsappliedsuccessfully",
+    "GotconnectiondetailsforazureRMWebApp0": "ms-resource:loc.messages.GotconnectiondetailsforazureRMWebApp0",
+    "ErrorNoSuchDeployingMethodExists": "ms-resource:loc.messages.ErrorNoSuchDeployingMethodExists",
+    "UnabletoretrieveconnectiondetailsforazureRMWebApp": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp",
+    "UnabletoretrieveResourceID": "ms-resource:loc.messages.UnabletoretrieveResourceID",
+    "Successfullyupdateddeploymenthistory": "ms-resource:loc.messages.Successfullyupdateddeploymenthistory",
+    "Failedtoupdatedeploymenthistory": "ms-resource:loc.messages.Failedtoupdatedeploymenthistory",
+    "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
+    "Unabletoretrievewebconfigdetails": "ms-resource:loc.messages.Unabletoretrievewebconfigdetails",
+    "Unabletoretrievewebappsettings": "ms-resource:loc.messages.Unabletoretrievewebappsettings",
+    "Unabletoupdatewebappsettings": "ms-resource:loc.messages.Unabletoupdatewebappsettings",
+    "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "ms-resource:loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved",
+    "PackageDeploymentSuccess": "ms-resource:loc.messages.PackageDeploymentSuccess",
+    "PackageDeploymentFailed": "ms-resource:loc.messages.PackageDeploymentFailed",
+    "Runningcommand": "ms-resource:loc.messages.Runningcommand",
+    "Deployingwebapplicationatvirtualpathandphysicalpath": "ms-resource:loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath",
+    "Successfullydeployedpackageusingkuduserviceat": "ms-resource:loc.messages.Successfullydeployedpackageusingkuduserviceat",
+    "Failedtodeploywebapppackageusingkuduservice": "ms-resource:loc.messages.Failedtodeploywebapppackageusingkuduservice",
+    "Unabletodeploywebappresponsecode": "ms-resource:loc.messages.Unabletodeploywebappresponsecode",
+    "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "ms-resource:loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform",
+    "UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "ms-resource:loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove",
+    "UnabletofindthelocationofMSDeployfromregistryonmachineError": "ms-resource:loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError",
+    "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
+    "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern",
+    "Trytodeploywebappagainwithappofflineoptionselected": "ms-resource:loc.messages.Trytodeploywebappagainwithappofflineoptionselected",
+    "Trytodeploywebappagainwithrenamefileoptionselected": "ms-resource:loc.messages.Trytodeploywebappagainwithrenamefileoptionselected",
+    "NOJSONfilematchedwithspecificpattern": "ms-resource:loc.messages.NOJSONfilematchedwithspecificpattern",
+    "Configfiledoesntexists": "ms-resource:loc.messages.Configfiledoesntexists",
+    "Failedtowritetoconfigfilewitherror": "ms-resource:loc.messages.Failedtowritetoconfigfilewitherror",
+    "AppOfflineModeenabled": "ms-resource:loc.messages.AppOfflineModeenabled",
+    "Failedtoenableappofflinemode": "ms-resource:loc.messages.Failedtoenableappofflinemode",
+    "AppOflineModedisabled": "ms-resource:loc.messages.AppOflineModedisabled",
+    "FailedtodisableAppOfflineMode": "ms-resource:loc.messages.FailedtodisableAppOfflineMode",
+    "CannotPerformXdtTransformationOnNonWindowsPlatform": "ms-resource:loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform",
+    "XdtTransformationErrorWhileTransforming": "ms-resource:loc.messages.XdtTransformationErrorWhileTransforming",
+    "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "ms-resource:loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent",
+    "Publishusingzipdeploynotsupportedformsbuildpackage": "ms-resource:loc.messages.Publishusingzipdeploynotsupportedformsbuildpackage",
+    "Publishusingzipdeploynotsupportedforvirtualapplication": "ms-resource:loc.messages.Publishusingzipdeploynotsupportedforvirtualapplication",
+    "Publishusingzipdeploydoesnotsupportwarfile": "ms-resource:loc.messages.Publishusingzipdeploydoesnotsupportwarfile",
+    "Publishusingrunfromzipwithpostdeploymentscript": "ms-resource:loc.messages.Publishusingrunfromzipwithpostdeploymentscript",
+    "ResourceDoesntExist": "ms-resource:loc.messages.ResourceDoesntExist",
+    "EncodeNotSupported": "ms-resource:loc.messages.EncodeNotSupported",
+    "UnknownFileEncodeError": "ms-resource:loc.messages.UnknownFileEncodeError",
+    "ShortFileBufferError": "ms-resource:loc.messages.ShortFileBufferError",
+    "FailedToUpdateAzureRMWebAppConfigDetails": "ms-resource:loc.messages.FailedToUpdateAzureRMWebAppConfigDetails",
+    "SuccessfullyUpdatedAzureRMWebAppConfigDetails": "ms-resource:loc.messages.SuccessfullyUpdatedAzureRMWebAppConfigDetails",
+    "RequestedURLforkuduphysicalpath": "ms-resource:loc.messages.RequestedURLforkuduphysicalpath",
+    "Physicalpathalreadyexists": "ms-resource:loc.messages.Physicalpathalreadyexists",
+    "KuduPhysicalpathCreatedSuccessfully": "ms-resource:loc.messages.KuduPhysicalpathCreatedSuccessfully",
+    "FailedtocreateKuduPhysicalPath": "ms-resource:loc.messages.FailedtocreateKuduPhysicalPath",
+    "FailedtocheckphysicalPath": "ms-resource:loc.messages.FailedtocheckphysicalPath",
+    "VirtualApplicationDoesNotExist": "ms-resource:loc.messages.VirtualApplicationDoesNotExist",
+    "JSONParseError": "ms-resource:loc.messages.JSONParseError",
+    "JSONvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.JSONvariablesubstitutionappliedsuccessfully",
+    "XMLvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.XMLvariablesubstitutionappliedsuccessfully",
+    "failedtoUploadFileToKudu": "ms-resource:loc.messages.failedtoUploadFileToKudu",
+    "failedtoUploadFileToKuduError": "ms-resource:loc.messages.failedtoUploadFileToKuduError",
+    "ExecuteScriptOnKudu": "ms-resource:loc.messages.ExecuteScriptOnKudu",
+    "FailedToRunScriptOnKuduError": "ms-resource:loc.messages.FailedToRunScriptOnKuduError",
+    "FailedToRunScriptOnKudu": "ms-resource:loc.messages.FailedToRunScriptOnKudu",
+    "ScriptExecutionOnKuduSuccess": "ms-resource:loc.messages.ScriptExecutionOnKuduSuccess",
+    "ScriptExecutionOnKuduFailed": "ms-resource:loc.messages.ScriptExecutionOnKuduFailed",
+    "FailedtoDeleteFileFromKudu": "ms-resource:loc.messages.FailedtoDeleteFileFromKudu",
+    "FailedtoDeleteFileFromKuduError": "ms-resource:loc.messages.FailedtoDeleteFileFromKuduError",
+    "ScriptFileNotFound": "ms-resource:loc.messages.ScriptFileNotFound",
+    "InvalidScriptFile": "ms-resource:loc.messages.InvalidScriptFile",
+    "RetryForTimeoutIssue": "ms-resource:loc.messages.RetryForTimeoutIssue",
+    "stdoutFromScript": "ms-resource:loc.messages.stdoutFromScript",
+    "stderrFromScript": "ms-resource:loc.messages.stderrFromScript",
+    "WebConfigAlreadyExists": "ms-resource:loc.messages.WebConfigAlreadyExists",
+    "SuccessfullyGeneratedWebConfig": "ms-resource:loc.messages.SuccessfullyGeneratedWebConfig",
+    "FailedToGenerateWebConfig": "ms-resource:loc.messages.FailedToGenerateWebConfig",
+    "FailedToGetKuduFileContent": "ms-resource:loc.messages.FailedToGetKuduFileContent",
+    "FailedToGetKuduFileContentError": "ms-resource:loc.messages.FailedToGetKuduFileContentError",
+    "ScriptStatusTimeout": "ms-resource:loc.messages.ScriptStatusTimeout",
+    "PollingForFileTimeOut": "ms-resource:loc.messages.PollingForFileTimeOut",
+    "InvalidPollOption": "ms-resource:loc.messages.InvalidPollOption",
+    "MissingAppTypeWebConfigParameters": "ms-resource:loc.messages.MissingAppTypeWebConfigParameters",
+    "AutoDetectDjangoSettingsFailed": "ms-resource:loc.messages.AutoDetectDjangoSettingsFailed",
+    "FailedToApplyTransformation": "ms-resource:loc.messages.FailedToApplyTransformation",
+    "FailedToApplyTransformationReason1": "ms-resource:loc.messages.FailedToApplyTransformationReason1",
+    "FailedToApplyTransformationReason2": "ms-resource:loc.messages.FailedToApplyTransformationReason2",
+    "AutoParameterizationMessage": "ms-resource:loc.messages.AutoParameterizationMessage",
+    "UnsupportedAppType": "ms-resource:loc.messages.UnsupportedAppType",
+    "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
+    "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory",
+    "SuccessfullyUpdatedRuntimeStackAndStartupCommand": "ms-resource:loc.messages.SuccessfullyUpdatedRuntimeStackAndStartupCommand",
+    "FailedToUpdateRuntimeStackAndStartupCommand": "ms-resource:loc.messages.FailedToUpdateRuntimeStackAndStartupCommand",
+    "SuccessfullyUpdatedWebAppSettings": "ms-resource:loc.messages.SuccessfullyUpdatedWebAppSettings",
+    "FailedToUpdateAppSettingsInConfigDetails": "ms-resource:loc.messages.FailedToUpdateAppSettingsInConfigDetails",
+    "UnableToGetAzureRMWebAppMetadata": "ms-resource:loc.messages.UnableToGetAzureRMWebAppMetadata",
+    "UnableToUpdateAzureRMWebAppMetadata": "ms-resource:loc.messages.UnableToUpdateAzureRMWebAppMetadata",
+    "Unabletoretrieveazureregistrycredentials": "ms-resource:loc.messages.Unabletoretrieveazureregistrycredentials",
+    "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
+    "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails",
+    "AddingReleaseAnnotation": "ms-resource:loc.messages.AddingReleaseAnnotation",
+    "SuccessfullyAddedReleaseAnnotation": "ms-resource:loc.messages.SuccessfullyAddedReleaseAnnotation",
+    "FailedAddingReleaseAnnotation": "ms-resource:loc.messages.FailedAddingReleaseAnnotation",
+    "RenameLockedFilesEnabled": "ms-resource:loc.messages.RenameLockedFilesEnabled",
+    "FailedToEnableRenameLockedFiles": "ms-resource:loc.messages.FailedToEnableRenameLockedFiles",
+    "WebJobsInProgressIssue": "ms-resource:loc.messages.WebJobsInProgressIssue",
+    "FailedToFetchKuduAppSettings": "ms-resource:loc.messages.FailedToFetchKuduAppSettings",
+    "FailedToCreatePath": "ms-resource:loc.messages.FailedToCreatePath",
+    "FailedToDeleteFile": "ms-resource:loc.messages.FailedToDeleteFile",
+    "FailedToDeleteFolder": "ms-resource:loc.messages.FailedToDeleteFolder",
+    "FailedToUploadFile": "ms-resource:loc.messages.FailedToUploadFile",
+    "FailedToGetFileContent": "ms-resource:loc.messages.FailedToGetFileContent",
+    "FailedToListPath": "ms-resource:loc.messages.FailedToListPath",
+    "RetryToDeploy": "ms-resource:loc.messages.RetryToDeploy",
+    "FailedToGetAppServiceDetails": "ms-resource:loc.messages.FailedToGetAppServiceDetails",
+    "FailedToGetAppServicePublishingProfile": "ms-resource:loc.messages.FailedToGetAppServicePublishingProfile",
+    "FailedToUpdateAppServiceMetadata": "ms-resource:loc.messages.FailedToUpdateAppServiceMetadata",
+    "FailedToGetAppServiceMetadata": "ms-resource:loc.messages.FailedToGetAppServiceMetadata",
+    "FailedToPatchAppServiceConfiguration": "ms-resource:loc.messages.FailedToPatchAppServiceConfiguration",
+    "FailedToUpdateAppServiceConfiguration": "ms-resource:loc.messages.FailedToUpdateAppServiceConfiguration",
+    "FailedToGetAppServiceConfiguration": "ms-resource:loc.messages.FailedToGetAppServiceConfiguration",
+    "FailedToGetAppServicePublishingCredentials": "ms-resource:loc.messages.FailedToGetAppServicePublishingCredentials",
+    "FailedToGetAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToGetAppServiceApplicationSettings",
+    "FailedToUpdateAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettings",
+    "UpdatingAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatingAppServiceConfigurationSettings",
+    "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
+    "UpdatingAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatingAppServiceApplicationSettings",
+    "AppServiceApplicationSettingsAlreadyPresent": "ms-resource:loc.messages.AppServiceApplicationSettingsAlreadyPresent",
+    "AppServiceConnectionStringsAlreadyPresent": "ms-resource:loc.messages.AppServiceConnectionStringsAlreadyPresent",
+    "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
+    "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
+    "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",
+    "PackageDeploymentInitiated": "ms-resource:loc.messages.PackageDeploymentInitiated",
+    "WarPackageDeploymentInitiated": "ms-resource:loc.messages.WarPackageDeploymentInitiated",
+    "FailedToGetDeploymentLogs": "ms-resource:loc.messages.FailedToGetDeploymentLogs",
+    "GoExeNameNotPresent": "ms-resource:loc.messages.GoExeNameNotPresent",
+    "WarDeploymentRetry": "ms-resource:loc.messages.WarDeploymentRetry",
+    "Updatemachinetoenablesecuretlsprotocol": "ms-resource:loc.messages.Updatemachinetoenablesecuretlsprotocol",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "XmlParsingFailed": "ms-resource:loc.messages.XmlParsingFailed",
+    "PropertyDoesntExistPublishProfile": "ms-resource:loc.messages.PropertyDoesntExistPublishProfile",
+    "InvalidConnectionType": "ms-resource:loc.messages.InvalidConnectionType",
+    "InvalidImageSourceType": "ms-resource:loc.messages.InvalidImageSourceType",
+    "InvalidPublishProfile": "ms-resource:loc.messages.InvalidPublishProfile",
+    "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
+    "ZipDeployLogsURL": "ms-resource:loc.messages.ZipDeployLogsURL",
+    "DeployLogsURL": "ms-resource:loc.messages.DeployLogsURL",
+    "AppServiceApplicationURL": "ms-resource:loc.messages.AppServiceApplicationURL",
+    "ASE_WebDeploySSLIssueRecommendation": "ms-resource:loc.messages.ASE_WebDeploySSLIssueRecommendation",
+    "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID",
+    "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
+    "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
+    "RunFromZipPreventsFileInUseError": "ms-resource:loc.messages.RunFromZipPreventsFileInUseError",
+    "MSDeployNotSupportTokenAuth": "ms-resource:loc.messages.MSDeployNotSupportTokenAuth"
+  },
+  "_buildConfigMapping": {
+    "Default": "4.230.5",
+    "Node16-225": "4.230.6",
+    "Node20_229_2": "4.230.7"
+  }
+}

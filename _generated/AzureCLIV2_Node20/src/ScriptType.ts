@@ -36,6 +36,7 @@ export abstract class ScriptType {
     }
 
     public abstract getTool(): Promise<any>;
+
     public async cleanUp(): Promise<void> {
         if(this._scriptLocation.toLowerCase() === 'inlinescript') {
             await Utility.deleteFile(this._scriptPath);
