@@ -1,0 +1,156 @@
+{
+  "id": "9fac244b-8d7c-4d8e-a003-2097daa3270f",
+  "name": "DownloadGitHubNugetPackage",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=azure-devops",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent"
+  ],
+  "demands": [],
+  "version": {
+    "Major": 1,
+    "Minor": 230,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "restoreAuth",
+      "displayName": "ms-resource:loc.group.displayName.restoreAuth",
+      "isExpanded": true,
+      "visibleRule": "command = restore"
+    },
+    {
+      "name": "restoreAdvanced",
+      "displayName": "ms-resource:loc.group.displayName.restoreAdvanced",
+      "isExpanded": false,
+      "visibleRule": "command = restore"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "packageName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packageName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.packageName"
+    },
+    {
+      "name": "version",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.version",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.version"
+    },
+    {
+      "name": "externalEndpoints",
+      "aliases": [
+        "externalFeedCredentials"
+      ],
+      "type": "connectedService:github:PersonalAccessToken,Token",
+      "label": "ms-resource:loc.input.label.externalEndpoints",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.externalEndpoints",
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      },
+      "groupName": "restoreAuth",
+      "visibleRule": "selectOrConfig = config"
+    },
+    {
+      "name": "packagesDirectory",
+      "aliases": [
+        "restoreDirectory"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packagesDirectory",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.packagesDirectory",
+      "required": "false",
+      "groupName": "restoreAdvanced"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "dotnetrestore.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "dotnetrestore.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "dotnetrestore.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "BuildIdentityPermissionsHint": "ms-resource:loc.messages.BuildIdentityPermissionsHint",
+    "CouldNotSetCodePaging": "ms-resource:loc.messages.CouldNotSetCodePaging",
+    "Error_AutomaticallyVersionReleases": "ms-resource:loc.messages.Error_AutomaticallyVersionReleases",
+    "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized",
+    "Error_InvalidPackageName": "ms-resource:loc.messages.Error_InvalidPackageName",
+    "Error_NoSourceSpecifiedForPush": "ms-resource:loc.messages.Error_NoSourceSpecifiedForPush",
+    "Error_NoValueFoundForEnvVar": "ms-resource:loc.messages.Error_NoValueFoundForEnvVar",
+    "Error_NoVersionFoundInBuildNumber": "ms-resource:loc.messages.Error_NoVersionFoundInBuildNumber",
+    "Error_PackageFailure": "ms-resource:loc.messages.Error_PackageFailure",
+    "Error_PushNotARegularFile": "ms-resource:loc.messages.Error_PushNotARegularFile",
+    "Info_AttemptingToPackFile": "ms-resource:loc.messages.Info_AttemptingToPackFile",
+    "Info_NoPackagesMatchedTheSearchPattern": "ms-resource:loc.messages.Info_NoPackagesMatchedTheSearchPattern",
+    "Info_NoFilesMatchedTheSearchPattern": "ms-resource:loc.messages.Info_NoFilesMatchedTheSearchPattern",
+    "PackageFailedToInstall": "ms-resource:loc.messages.PackageFailedToInstall",
+    "PackagesFailedToPublish": "ms-resource:loc.messages.PackagesFailedToPublish",
+    "PackagesInstalledSuccessfully": "ms-resource:loc.messages.PackagesInstalledSuccessfully",
+    "PackagesPublishedSuccessfully": "ms-resource:loc.messages.PackagesPublishedSuccessfully",
+    "UnknownFeedType": "ms-resource:loc.messages.UnknownFeedType",
+    "Warning_AutomaticallyVersionReferencedProjects": "ms-resource:loc.messages.Warning_AutomaticallyVersionReferencedProjects",
+    "Warning_MoreThanOneVersionInBuildNumber": "ms-resource:loc.messages.Warning_MoreThanOneVersionInBuildNumber",
+    "dotnetCommandFailed": "ms-resource:loc.messages.dotnetCommandFailed",
+    "noProjectFilesFound": "ms-resource:loc.messages.noProjectFilesFound",
+    "noPublishFolderFoundToZip": "ms-resource:loc.messages.noPublishFolderFoundToZip",
+    "noWebProjectFound": "ms-resource:loc.messages.noWebProjectFound",
+    "zipFailed": "ms-resource:loc.messages.zipFailed",
+    "Error_ApiKeyNotSupported": "ms-resource:loc.messages.Error_ApiKeyNotSupported",
+    "Error_ExpectedConfigurationElement": "ms-resource:loc.messages.Error_ExpectedConfigurationElement",
+    "Error_NoMatchingFilesFoundForPattern": "ms-resource:loc.messages.Error_NoMatchingFilesFoundForPattern",
+    "Error_NoUrlWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoUrlWasFoundWhichMatches",
+    "Error_NoVersionWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoVersionWasFoundWhichMatches",
+    "Error_NuGetToolInstallerFailer": "ms-resource:loc.messages.Error_NuGetToolInstallerFailer",
+    "Info_AvailableVersions": "ms-resource:loc.messages.Info_AvailableVersions",
+    "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "ms-resource:loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery",
+    "Info_MatchingUrlWasFoundSettingAuth": "ms-resource:loc.messages.Info_MatchingUrlWasFoundSettingAuth",
+    "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
+    "Info_SavingTempConfig": "ms-resource:loc.messages.Info_SavingTempConfig",
+    "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
+    "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
+    "NGCommon_AddingSources": "ms-resource:loc.messages.NGCommon_AddingSources",
+    "NGCommon_AreaNotFoundInSps": "ms-resource:loc.messages.NGCommon_AreaNotFoundInSps",
+    "NGCommon_DetectedNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_DetectedNuGetExtensionsPath",
+    "NGCommon_DetectedNuGetVersion": "ms-resource:loc.messages.NGCommon_DetectedNuGetVersion",
+    "NGCommon_IgnoringNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_IgnoringNuGetExtensionsPath",
+    "NGCommon_NoSourcesFoundInConfig": "ms-resource:loc.messages.NGCommon_NoSourcesFoundInConfig",
+    "NGCommon_NuGetConfigIsInvalid": "ms-resource:loc.messages.NGCommon_NuGetConfigIsInvalid",
+    "NGCommon_NuGetConfigIsPackagesConfig": "ms-resource:loc.messages.NGCommon_NuGetConfigIsPackagesConfig",
+    "NGCommon_RemovingSources": "ms-resource:loc.messages.NGCommon_RemovingSources",
+    "NGCommon_SpsNotFound": "ms-resource:loc.messages.NGCommon_SpsNotFound",
+    "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion",
+    "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
+    "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
+    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion",
+    "NetCore3Update": "ms-resource:loc.messages.NetCore3Update"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.227.0",
+    "Node20_229_2": "1.230.0"
+  }
+}
