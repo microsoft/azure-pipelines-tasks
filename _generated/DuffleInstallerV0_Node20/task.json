@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 230,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "groups": [],
@@ -55,6 +55,6 @@
   },
   "_buildConfigMapping": {
     "Default": "0.230.0",
-    "Node20_229_2": "0.230.1"
+    "Node20_229_3": "0.230.2"
   }
 }

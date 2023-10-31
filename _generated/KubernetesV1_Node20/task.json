@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 230,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
@@ -497,6 +497,6 @@
   },
   "_buildConfigMapping": {
     "Default": "1.227.0",
-    "Node20_229_2": "1.230.0"
+    "Node20_229_3": "1.230.1"
   }
 }

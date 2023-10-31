@@ -316,7 +316,9 @@
         "DockerV1",
         "DockerComposeV0",
         "DockerInstallerV0",
-        "DotNetCoreCLIV2",
+        "DotNetCoreCLIV2"
+    ],
+    "Node20_229_3": [
         "DotNetCoreInstallerV0",
         "DotNetCoreInstallerV1",
         "DownloadBuildArtifactsV0",
@@ -345,7 +347,6 @@
         "PublishPipelineMetadataV0",
         "UseDotNetV2"
     ],
-    "Node20_229_3": [],
     "Node20_229_4": [],
     "Node20_229_5": []
 }
