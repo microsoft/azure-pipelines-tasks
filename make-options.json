@@ -344,7 +344,6 @@
         "KubernetesManifestV0",
         "KubernetesManifestV1",
         "MysqlDeploymentOnMachineGroupV1",
-        "PublishPipelineMetadataV0",
         "UseDotNetV2"
     ],
     "Node20_229_4": [],
