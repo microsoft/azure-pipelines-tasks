@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Maven-Authentifizierung",
-  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=2099968)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate)",
   "loc.description": "Hiermit werden Anmeldeinformationen für Azure Artifacts-Feeds und externe Maven-Repositorys angegeben.",
   "loc.instanceNameFormat": "Maven-Authentifizierung",
   "loc.input.label.artifactsFeeds": "Feeds",
