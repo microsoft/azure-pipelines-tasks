@@ -289,7 +289,9 @@
         "TwineAuthenticateV1",
         "UniversalPackagesV0"
     ],
-    "Node20_229_2": [],
+    "Node20_229_2": [
+        "GradleV2"
+    ],
     "Node20_229_3": [],
     "Node20_229_4": [],
     "Node20_229_5": []
