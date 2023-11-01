@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 231,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "preview": "false",
@@ -349,6 +349,10 @@
     "Node16": {
       "target": "src//kubernetes.js",
       "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "src//kubernetes.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -373,5 +377,9 @@
     "ConfigurationFileNotFound": "No configuration file matching %s was found.",
     "OutputVariableDataSizeExceeded": "Output variable not set as kubectl command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
     "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.231.0",
+    "Node20_229_2": "0.231.1"
   }
 }
