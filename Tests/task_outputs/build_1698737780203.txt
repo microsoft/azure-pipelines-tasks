@@ -1,1 +1,0 @@
-successfully build test/test image with latest tag

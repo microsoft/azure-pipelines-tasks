@@ -1,1 +1,0 @@
-successfully built image and tagged testuser/imagewithannotations:11.
