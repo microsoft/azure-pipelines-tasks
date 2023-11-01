@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Maven の認証",
-  "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?linkid=2099968)",
+  "loc.helpMarkDown": "[このタスクに関する詳細](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate)",
   "loc.description": "Azure Artifacts フィードと外部 Maven リポジトリ用の資格情報を提供します",
   "loc.instanceNameFormat": "Maven の認証",
   "loc.input.label.artifactsFeeds": "フィード",
