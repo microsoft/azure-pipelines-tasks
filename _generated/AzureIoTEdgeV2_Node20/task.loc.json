@@ -1,0 +1,306 @@
+{
+  "id": "80F3F6A0-82A6-4A22-BA7A-E5B8C541B9B8",
+  "name": "AzureIoTEdge",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/azure-iot-edge",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 230,
+    "Patch": 0
+  },
+  "preview": false,
+  "showEnvironmentVariables": true,
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced_push",
+      "displayName": "ms-resource:loc.group.displayName.advanced_push",
+      "isExpanded": false,
+      "visibleRule": "action = Push module images"
+    },
+    {
+      "name": "advanced_deploy",
+      "displayName": "ms-resource:loc.group.displayName.advanced_deploy",
+      "isExpanded": false,
+      "visibleRule": "action = Deploy to IoT Edge devices"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.action",
+      "defaultValue": "Build module images",
+      "required": true,
+      "options": {
+        "Build module images": "Build module images",
+        "Push module images": "Push module images",
+        "Generate deployment manifest": "Generate deployment manifest",
+        "Deploy to IoT Edge devices": "Deploy to IoT Edge devices"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.action"
+    },
+    {
+      "name": "deploymentFilePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.deploymentFilePath",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/config/deployment.json",
+      "required": true,
+      "visibleRule": "action == Deploy to IoT Edge devices",
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentFilePath"
+    },
+    {
+      "name": "connectedServiceNameARM",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.connectedServiceNameARM",
+      "required": true,
+      "visibleRule": "action == Deploy to IoT Edge devices",
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM"
+    },
+    {
+      "name": "iothubname",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.iothubname",
+      "required": true,
+      "visibleRule": "action == Deploy to IoT Edge devices",
+      "helpMarkDown": "ms-resource:loc.input.help.iothubname"
+    },
+    {
+      "name": "deploymentid",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.deploymentid",
+      "required": true,
+      "defaultValue": "$(System.TeamProject)-devops-deployment",
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentid",
+      "groupName": "advanced_deploy"
+    },
+    {
+      "name": "priority",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.priority",
+      "required": true,
+      "defaultValue": "0",
+      "helpMarkDown": "ms-resource:loc.input.help.priority",
+      "groupName": "advanced_deploy"
+    },
+    {
+      "name": "deviceOption",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.deviceOption",
+      "required": true,
+      "options": {
+        "Single Device": "Single Device",
+        "Multiple Devices": "Multiple Devices"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.deviceOption",
+      "visibleRule": "action == Deploy to IoT Edge devices"
+    },
+    {
+      "name": "deviceId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.deviceId",
+      "required": true,
+      "visibleRule": "deviceOption == Single Device",
+      "helpMarkDown": "ms-resource:loc.input.help.deviceId"
+    },
+    {
+      "name": "targetcondition",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.targetcondition",
+      "required": true,
+      "visibleRule": "deviceOption == Multiple Devices",
+      "helpMarkDown": "ms-resource:loc.input.help.targetcondition"
+    },
+    {
+      "name": "containerregistrytype",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.containerregistrytype",
+      "defaultValue": "Azure Container Registry",
+      "required": true,
+      "visibleRule": "action = Push module images",
+      "options": {
+        "Azure Container Registry": "Azure Container Registry",
+        "Generic Container Registry": "Generic Container Registry"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.containerregistrytype"
+    },
+    {
+      "name": "dockerRegistryEndpoint",
+      "aliases": [
+        "dockerRegistryConnection"
+      ],
+      "type": "connectedService:dockerregistry",
+      "required": true,
+      "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
+      "visibleRule": "containerregistrytype = Generic Container Registry"
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "visibleRule": "containerregistrytype = Azure Container Registry"
+    },
+    {
+      "name": "azureContainerRegistry",
+      "label": "ms-resource:loc.input.label.azureContainerRegistry",
+      "type": "pickList",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.azureContainerRegistry",
+      "visibleRule": "containerregistrytype = Azure Container Registry",
+      "defaultValue": ""
+    },
+    {
+      "name": "templateFilePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.templateFilePath",
+      "defaultValue": "deployment.template.json",
+      "visibleRule": "action = Build module images || action = Push module images || action = Generate deployment manifest",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.templateFilePath"
+    },
+    {
+      "name": "defaultPlatform",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.defaultPlatform",
+      "defaultValue": "amd64",
+      "required": true,
+      "visibleRule": "action = Build module images || action = Push module images || action = Generate deployment manifest",
+      "options": {
+        "amd64": "amd64",
+        "windows-amd64": "windows-amd64",
+        "arm32v7": "arm32v7",
+        "arm64v8": "arm64v8"
+      },
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.defaultPlatform"
+    },
+    {
+      "name": "fillRegistryCredential",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.fillRegistryCredential",
+      "defaultValue": "true",
+      "required": true,
+      "visibleRule": "action = Push module images",
+      "options": {
+        "true": "true",
+        "false": "false"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.fillRegistryCredential"
+    },
+    {
+      "name": "deploymentManifestOutputPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.deploymentManifestOutputPath",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/config/deployment.json",
+      "visibleRule": "action == Generate deployment manifest",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentManifestOutputPath"
+    },
+    {
+      "name": "validateGeneratedDeploymentManifest",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.validateGeneratedDeploymentManifest",
+      "defaultValue": "false",
+      "required": true,
+      "visibleRule": "action = Generate deployment manifest",
+      "options": {
+        "true": "true",
+        "false": "false"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.validateGeneratedDeploymentManifest"
+    },
+    {
+      "name": "bypassModules",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.bypassModules",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.bypassModules",
+      "groupName": "advanced_push"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "azureContainerRegistry",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "dataSourceName": "AzureRMContainerRegistries",
+      "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\"}\", \"DisplayValue\":\"{{{name}}}\"}"
+    },
+    {
+      "target": "iothubname",
+      "endpointId": "$(connectedServiceNameARM)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.Devices/IotHubs?api-version=2018-04-01",
+      "resultSelector": "jsonpath:$.value[*].name"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "index.js"
+    },
+    "Node16": {
+      "target": "index.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "index.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "BuildingModules": "ms-resource:loc.messages.BuildingModules",
+    "BuildingModulesFinished": "ms-resource:loc.messages.BuildingModulesFinished",
+    "PushingModules": "ms-resource:loc.messages.PushingModules",
+    "PushingModulesFinished": "ms-resource:loc.messages.PushingModulesFinished",
+    "StartDeploy": "ms-resource:loc.messages.StartDeploy",
+    "FinishDeploy": "ms-resource:loc.messages.FinishDeploy",
+    "DeploymentFilePath": "ms-resource:loc.messages.DeploymentFilePath",
+    "ExpandingRegistryCredentials": "ms-resource:loc.messages.ExpandingRegistryCredentials",
+    "ReplaceCredential": "ms-resource:loc.messages.ReplaceCredential",
+    "DeployTaskRunningInBuild": "ms-resource:loc.messages.DeployTaskRunningInBuild",
+    "CheckValidJson": "ms-resource:loc.messages.CheckValidJson",
+    "Invalid": "ms-resource:loc.messages.Invalid",
+    "Valid": "ms-resource:loc.messages.Valid",
+    "NomralizedDeployementId": "ms-resource:loc.messages.NomralizedDeployementId",
+    "DependencyAlreadyInstalled": "ms-resource:loc.messages.DependencyAlreadyInstalled",
+    "DependencyInstallSuccess": "ms-resource:loc.messages.DependencyInstallSuccess",
+    "DependencyInstallFail": "ms-resource:loc.messages.DependencyInstallFail",
+    "TemplateFileInvalid": "ms-resource:loc.messages.TemplateFileInvalid",
+    "InvalidContainerRegistry": "ms-resource:loc.messages.InvalidContainerRegistry",
+    "DeploymentFileNotFound": "ms-resource:loc.messages.DeploymentFileNotFound",
+    "ValidDeploymentFileNotFound": "ms-resource:loc.messages.ValidDeploymentFileNotFound",
+    "AzureSdkNotFound": "ms-resource:loc.messages.AzureSdkNotFound",
+    "RootPathNotExist": "ms-resource:loc.messages.RootPathNotExist",
+    "SkipModuleImageValidation": "ms-resource:loc.messages.SkipModuleImageValidation",
+    "InvalidRegistryCredentialWarning": "ms-resource:loc.messages.InvalidRegistryCredentialWarning",
+    "CheckModuleImageExistenceError": "ms-resource:loc.messages.CheckModuleImageExistenceError",
+    "StartGenerateDeploymentManifest": "ms-resource:loc.messages.StartGenerateDeploymentManifest",
+    "FinishGenerateDeploymentManifest": "ms-resource:loc.messages.FinishGenerateDeploymentManifest",
+    "LoginRegistrySucess": "ms-resource:loc.messages.LoginRegistrySucess",
+    "SkipSettingEnvironmentVariableForSecret": "ms-resource:loc.messages.SkipSettingEnvironmentVariableForSecret"
+  },
+  "OutputVariables": [
+    {
+      "name": "DEPLOYMENT_FILE_PATH",
+      "description": "This is the path of generated deployment file.",
+      "visibleRule": "action = Build module images"
+    }
+  ],
+  "_buildConfigMapping": {
+    "Default": "2.227.0",
+    "Node20_229_4": "2.230.0"
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "id": "0B0F01ED-7DDE-43FF-9CBB-E48954DAF9B1",
+  "name": "PublishTestResults",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Test",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 230,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.144.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "testRunner",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testRunner",
+      "defaultValue": "JUnit",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.testRunner",
+      "options": {
+        "JUnit": "JUnit",
+        "NUnit": "NUnit",
+        "VSTest": "VSTest",
+        "XUnit": "XUnit"
+      }
+    },
+    {
+      "name": "testResultsFiles",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.testResultsFiles",
+      "defaultValue": "**/TEST-*.xml",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles"
+    },
+    {
+      "name": "mergeTestResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.mergeTestResults",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.mergeTestResults"
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle"
+    },
+    {
+      "name": "platform",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.platform",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.platform"
+    },
+    {
+      "name": "configuration",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configuration",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.configuration"
+    },
+    {
+      "name": "publishRunAttachments",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishRunAttachments",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.publishRunAttachments",
+      "groupName": "advanced"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\PublishTestResults.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)",
+      "platforms": [
+        "windows"
+      ]
+    },
+    "Node10": {
+      "target": "publishtestresults.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "publishtestresults.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "publishtestresults.js",
+      "argumentFormat": ""
+    }
+  },
+  "_buildConfigMapping": {
+    "Default": "1.216.0",
+    "Node20_229_4": "1.230.0"
+  }
+}

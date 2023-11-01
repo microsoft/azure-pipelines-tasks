@@ -1,0 +1,69 @@
+{
+  "id": "DEEAFED4-0B18-4F58-968D-86655B4D2CE9",
+  "name": "ReviewApp",
+  "friendlyName": "Review App",
+  "description": "Use this task under deploy phase provider to create a resource dynamically",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "category": "Utility",
+  "preview": true,
+  "visibility": [
+    "Build"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 230,
+    "Patch": 0
+  },
+  "releaseNotes": "Use this task under deploy phase provider to create a resource dynamically",
+  "inputs": [
+    {
+      "name": "resourceName",
+      "type": "string",
+      "label": "Resource name",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "Name of an existing resource in the environment which will be used for resource type information"
+    },
+    {
+      "name": "baseEnvironmentName",
+      "type": "string",
+      "label": "Environment name",
+      "required": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "reviewResourceName",
+      "type": "string",
+      "label": "Review Resource Name",
+      "required": false,
+      "defaultValue": ""
+    }
+  ],
+  "instanceNameFormat": "Dynamic Resource created using - $(resourceName)",
+  "execution": {
+    "Node10": {
+      "target": "run.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "run.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "run.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "CreatedDynamicResource": "A dynamic resource is created using %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.214.0",
+    "Node20_229_4": "0.230.0"
+  }
+}
