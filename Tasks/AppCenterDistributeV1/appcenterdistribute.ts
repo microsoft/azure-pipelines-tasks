@@ -147,11 +147,7 @@ async function uploadRelease(releaseUploadParams: UploadInfo, file: string) {
     const urlEncodedToken = releaseUploadParams.url_encoded_token;
     const uploadDomain = releaseUploadParams.upload_domain;
     tl.debug("-- Uploading release...");
-#if NODE20
-    return new Promise<void>((resolve, reject) => {
-#else
     return new Promise((resolve, reject) => {
-#endif
         const uploadSettings: IInitializeSettings = {
             assetId: assetId,
             urlEncodedToken: urlEncodedToken,

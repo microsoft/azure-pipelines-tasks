@@ -71,12 +71,18 @@ dlldata.c
 *.tlh
 *.tmp
 *.tmp_proj
+*.log
 *.vspscc
 *.vssscc
 .builds
 *.pidb
 *.svclog
 *.scc
+
+!Tasks\PublishTestResultsV1\Tests\data\*.log
+!Tasks\PublishTestResultsV1\Tests\data\rec\*.log
+!_generated\PublishTestResultsV1_Node20\Tests\data\*.log
+!_generated\PublishTestResultsV1_Node20\Tests\data\rec\*.log
 
 # Chutzpah Test files
 _Chutzpah*

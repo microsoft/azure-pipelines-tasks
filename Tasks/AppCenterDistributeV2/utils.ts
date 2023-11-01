@@ -115,14 +115,10 @@ export function createZipStream(symbolsPaths: string[], symbolsRoot: string): No
 }
 
 export async function createZipFile(zipStream: NodeJS.ReadableStream, filename: string) {
-#if NODE20
-    return new Promise<string>((resolve, reject) => {
-#else
     return new Promise((resolve, reject) => {
-#endif
         zipStream.pipe(fs.createWriteStream(filename))
             .on('finish', function () {
-                resolve(filename);
+                resolve();
             })
             .on('error', function (err) {
 
