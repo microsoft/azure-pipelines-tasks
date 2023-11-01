@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param()
 
-. $PSScriptRoot\helpers.ps1
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
 
 function Get-ActionPreference {
     param (
@@ -96,7 +96,7 @@ try {
     if ("$input_targetType".ToUpperInvariant() -eq 'FILEPATH') {
 
         try {
-            Test-FileArgs $input_arguments
+            Protect-ScriptArguments $input_arguments
         }
         catch {
             $message = $_.Exception.Message
