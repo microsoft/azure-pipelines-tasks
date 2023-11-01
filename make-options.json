@@ -359,7 +359,6 @@
         "KubeloginInstallerV0",
         "OpenPolicyAgentInstallerV0",
         "PublishCodeCoverageResultsV1",
-        "PublishCodeCoverageResultsV2",
         "PublishSymbolsV2",
         "PublishTestResultsV1",
         "PublishTestResultsV2",
