@@ -14,7 +14,7 @@
   "version": {
     "Major": 3,
     "Minor": 231,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.206.1",
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -230,6 +230,10 @@
     "Node16": {
       "target": "appcenterdistribute.js",
       "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "appcenterdistribute.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -244,5 +248,9 @@
     "FoundMultipleFiles": "ms-resource:loc.messages.FoundMultipleFiles",
     "FailedToCreateFile": "ms-resource:loc.messages.FailedToCreateFile",
     "FailedToFindFile": "ms-resource:loc.messages.FailedToFindFile"
+  },
+  "_buildConfigMapping": {
+    "Default": "3.231.0",
+    "Node20_229_2": "3.231.1"
   }
 }
