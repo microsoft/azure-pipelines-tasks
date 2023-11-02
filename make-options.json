@@ -290,7 +290,8 @@
         "UniversalPackagesV0"
     ],
     "Node20_229_2": [
-        "AzureResourceGroupDeploymentV2"
+        "AzureResourceGroupDeploymentV2",
+        "AppCenterDistributeV3"
     ],
     "Node20_229_3": [],
     "Node20_229_4": [],
