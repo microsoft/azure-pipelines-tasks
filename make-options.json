@@ -290,7 +290,8 @@
         "UniversalPackagesV0"
     ],
     "Node20_229_2": [
-        "AzureSpringCloudV0"
+        "AzureSpringCloudV0",
+        "AppCenterDistributeV3"
     ],
     "Node20_229_3": [],
     "Node20_229_4": [],
