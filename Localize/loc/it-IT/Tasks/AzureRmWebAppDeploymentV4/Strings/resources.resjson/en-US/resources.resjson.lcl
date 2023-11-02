@@ -1350,6 +1350,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.MSDeployNotSupportTokenAuth" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy .]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Servizio app è configurato per non usare l'autenticazione di base. Richiede Distribuzione Web msdeploy.exe versione 7.1.7225 o successiva. È necessaria una versione di Visual Studio che includa una versione aggiornata di msdeploy.exe. Per altre informazioni, visitare https://aka.ms/azdo-webapp-msdeploy.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[MSDeploy generated packages are only supported for Windows platform.]]></Val>

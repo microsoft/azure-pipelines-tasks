@@ -1350,6 +1350,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.MSDeployNotSupportTokenAuth" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy .]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[已將 App Service 設為不使用基本驗證。這需要 Web Deploy msdeploy.exe 版本 7.1.7225 或更新版本。您需要包含 msdeploy.exe 已更新版本的 Visual Studio 版本。如需詳細資訊，請前往 https://aka.ms/azdo-webapp-msdeploy。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[MSDeploy generated packages are only supported for Windows platform.]]></Val>
