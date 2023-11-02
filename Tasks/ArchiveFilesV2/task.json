@@ -115,6 +115,15 @@
             "groupName": "archive"
         },
         {
+            "name": "excludeFiles",
+            "type": "multiLine",
+            "label": "Filepaths that should be excluded from archiving",
+            "required": false,
+            "defaultValue": false,
+            "helpMarkDown": "Optionally specify files that you want to exclude from the archiving process. This is a multiline input - separate individual file paths with a new line.",
+            "groupName": "archive"
+        },
+        {
             "name": "verbose",
             "type": "boolean",
             "label": "Force verbose output",

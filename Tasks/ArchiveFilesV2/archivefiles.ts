@@ -12,6 +12,7 @@ var includeRootFolder: boolean = tl.getBoolInput('includeRootFolder', true);
 var archiveType: string = tl.getInput('archiveType', true);
 var archiveFile: string = path.normalize(tl.getPathInput('archiveFile', true, false).trim());
 var replaceExistingArchive: boolean = tl.getBoolInput('replaceExistingArchive', true);
+var excludeFiles: string = tl.getInput('excludeFiles', false);
 var verbose: boolean = tl.getBoolInput('verbose', false);
 var quiet: boolean = tl.getBoolInput('quiet', false);
 
