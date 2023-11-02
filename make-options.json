@@ -291,7 +291,8 @@
     ],
     "Node20_229_2": [
         "AzurePowerShellV4",
-        "AzurePowerShellV5"
+        "AzurePowerShellV5",
+        "AppCenterDistributeV3"
     ],
     "Node20_229_3": [],
     "Node20_229_4": [],
