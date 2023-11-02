@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 231,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.172.0",
   "demands": [],
@@ -152,6 +152,10 @@
     },
     "Node16": {
       "target": "docker.js"
+    },
+    "Node20": {
+      "target": "docker.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -186,5 +190,9 @@
     "RegistryAuthNotPresentInConfig": "ms-resource:loc.messages.RegistryAuthNotPresentInConfig",
     "RestoringOldLoginAuth": "ms-resource:loc.messages.RestoringOldLoginAuth",
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.231.0",
+    "Node20_229_2": "2.231.1"
   }
 }
