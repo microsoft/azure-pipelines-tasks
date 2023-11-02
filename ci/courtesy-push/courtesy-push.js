@@ -32,6 +32,17 @@ function formatDeps(depArr) {
     return newDepsDict;
 }
 
+function findLastIndex(array, predicate) {
+    let l = array.length;
+
+    while (l--) {
+        if (predicate(array[l], l, array)) {
+            return l;
+        }
+    }
+    return -1;
+}
+
 /* Function updating existing deps version and also add new deps with postfix 
  * Example: If we have dependency with name 
  * Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2
@@ -81,12 +92,12 @@ function updateUnifiedDeps(pathToUnifiedDeps, pathToNewUnifiedDeps, outputPath) 
             // Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2-Node16(packageName) should include 
             // Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2(basePackageName)
             const depToBeInserted = newDepsArr.find(dep => dep.includes(packageName));
-            const pushingIndex = updatedDeps.findIndex(basePackage => {
+            const pushingIndex = findLastIndex(updatedDeps, basePackage => {
                 if (!basePackage) return false;
 
                 const depDetails = basePackage.split('"');
                 const name = depDetails[1];
-                return name && name.startsWith(msPrefix) && packageName.includes(name)
+                return name && name.startsWith(msPrefix) && packageName.includes(name.split("_")[0])
             });
 
             if (pushingIndex !== -1) {
