@@ -290,7 +290,8 @@
         "UniversalPackagesV0"
     ],
     "Node20_229_2": [
-        "KubernetesV0"
+        "KubernetesV0",
+        "AppCenterDistributeV3"
     ],
     "Node20_229_3": [],
     "Node20_229_4": [],
