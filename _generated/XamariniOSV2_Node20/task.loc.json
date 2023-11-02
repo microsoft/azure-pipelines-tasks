@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 231,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -152,6 +152,10 @@
     "Node16": {
       "target": "xamarinios.js",
       "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "xamarinios.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -167,5 +171,9 @@
     "MultipleSolutionsFound": "ms-resource:loc.messages.MultipleSolutionsFound",
     "SolutionDoesNotExist": "ms-resource:loc.messages.SolutionDoesNotExist",
     "BuildRequiresMac": "ms-resource:loc.messages.BuildRequiresMac"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.231.0",
+    "Node20_229_2": "2.231.1"
   }
 }
