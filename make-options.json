@@ -261,7 +261,9 @@
         "UseRubyVersionV0",
         "XamarinAndroidV1",
         "CondaEnvironmentV0",
-        "CondaEnvironmentV1"
+        "CondaEnvironmentV1",
+        "VSBuildV1",
+        "OpenPolicyAgentInstallerV0"
     ],
     "Node20_228": [
         "MavenV2"
@@ -338,14 +340,12 @@
         "HelmInstallerV1",
         "IISWebAppDeploymentOnMachineGroupV0",
         "JenkinsDownloadArtifactsV1",
-        "KubectlInstallerV0",
         "KubeloginInstallerV0",
+        "KubectlInstallerV0",
         "KubernetesV1",
         "KubernetesManifestV0",
-        "OpenPolicyAgentInstallerV0",
         "MysqlDeploymentOnMachineGroupV1",
-        "UseDotNetV2",
-        "VSBuildV1"
+        "UseDotNetV2"
     ],
     "Node20_229_4": [],
     "Node20_229_5": [],

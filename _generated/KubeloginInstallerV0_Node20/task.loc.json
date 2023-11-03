@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 230,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "satisfies": [
@@ -64,6 +64,6 @@
   },
   "_buildConfigMapping": {
     "Default": "0.226.0",
-    "Node20_229_3": "0.230.0"
+    "Node20_229_3": "0.230.2"
   }
 }
