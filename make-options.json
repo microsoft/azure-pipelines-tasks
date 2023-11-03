@@ -305,6 +305,7 @@
         "AzureFunctionOnKubernetesV1",
         "AzureKeyVaultV1",
         "AzureKeyVaultV2",
+        "AzureResourceGroupDeploymentV2",
         "AzureMysqlDeploymentV1",
         "AzureNLBManagementV1",
         "AzureRmWebAppDeploymentV3",
