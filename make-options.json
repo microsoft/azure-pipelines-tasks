@@ -314,9 +314,12 @@
         "ContainerBuildV0",
         "DockerV0",
         "DockerV1",
+        "DockerV2",
         "DockerComposeV0",
         "DockerInstallerV0",
         "DotNetCoreCLIV2",
+        "GradleV2",
+        "GradleV3",
         "KubernetesV0"
     ],
     "Node20_229_3": [
@@ -347,7 +350,12 @@
         "MysqlDeploymentOnMachineGroupV1",
         "UseDotNetV2"
     ],
-    "Node20_229_4": [],
+    "Node20_229_4": [
+        "ContainerStructureTestV0",
+        "PublishCodeCoverageResultsV1",
+        "VsTestV2",
+        "VsTestV3"
+    ],
     "Node20_229_5": [],
     "Node20_229_6": [],
     "Node20_229_7": [],
