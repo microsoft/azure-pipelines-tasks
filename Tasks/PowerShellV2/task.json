@@ -6,29 +6,15 @@
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/powershell",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613736)",
   "category": "Utility",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "runsOn": [
-    "Agent",
-    "DeploymentGroup"
-  ],
+  "visibility": ["Build", "Release"],
+  "runsOn": ["Agent", "DeploymentGroup"],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 230,
-    "Patch": 2
+    "Minor": 231,
+    "Patch": 0
   },
-  "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
-  "minimumAgentVersion": "2.115.0",
-  "showEnvironmentVariables": true,
   "groups": [
-    {
-      "name": "preferenceVariables",
-      "displayName": "Preference Variables",
-      "isExpanded": false
-    },
     {
       "name": "advanced",
       "displayName": "Advanced",
@@ -229,9 +215,7 @@
   "execution": {
     "PowerShell3": {
       "target": "powershell.ps1",
-      "platforms": [
-        "windows"
-      ]
+      "platforms": ["windows"]
     },
     "Node10": {
       "target": "powershell.js",
