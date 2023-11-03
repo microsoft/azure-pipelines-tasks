@@ -28,11 +28,11 @@
     "@types/node": "^20.3.1",
     "@types/q": "^1.0.7",
     "agent-base": "^6.0.2",
-    "azp-tasks-az-blobstorage-provider": "^2.219.1",
-    "azure-pipelines-task-lib": "^4.0.0-preview",
+    "azure-pipelines-task-lib": "^5.0.0-preview.0",
+    "azp-tasks-az-blobstorage-provider": "^3.229.0",
     "azure-pipelines-tasks-azure-arm-rest": "3.223.6",
-    "azure-pipelines-tasks-utility-common": "^3.0.3",
-    "azure-pipelines-tool-lib": "^2.0.0-preview"
+    "azure-pipelines-tasks-utility-common": "^3.230.0",
+    "azure-pipelines-tool-lib": "^2.0.7"
   },
   "devDependencies": {
     "typescript": "5.1.6"

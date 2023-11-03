@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 230,
-    "Patch": 1
+    "Patch": 8
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -651,10 +651,12 @@
     "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID",
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
-    "RunFromZipPreventsFileInUseError": "ms-resource:loc.messages.RunFromZipPreventsFileInUseError"
+    "RunFromZipPreventsFileInUseError": "ms-resource:loc.messages.RunFromZipPreventsFileInUseError",
+    "MSDeployNotSupportTokenAuth": "ms-resource:loc.messages.MSDeployNotSupportTokenAuth"
   },
   "_buildConfigMapping": {
-    "Default": "4.230.1",
-    "Node16-225": "4.230.2"
+    "Default": "4.230.8",
+    "Node16-225": "4.230.9",
+    "Node20_229_2": "4.230.10"
   }
 }
