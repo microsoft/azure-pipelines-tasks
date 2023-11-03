@@ -20,10 +20,10 @@
     "@types/node": "^20.3.1",
     "@types/mocha": "^5.2.7",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-task-lib": "^4.0.0-preview",
-    "azure-pipelines-tool-lib": "^2.0.0-preview",
+    "azure-pipelines-task-lib": "^5.0.0-preview.0",
+    "azure-pipelines-tool-lib": "^2.0.7",
     "azure-pipelines-tasks-ios-signing-common": "2.0.4",
-    "azure-pipelines-tasks-utility-common": "^3.0.3"
+    "azure-pipelines-tasks-utility-common": "^3.230.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"

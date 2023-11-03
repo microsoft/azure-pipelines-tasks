@@ -261,7 +261,8 @@
         "UseRubyVersionV0",
         "XamarinAndroidV1",
         "CondaEnvironmentV0",
-        "CondaEnvironmentV1"
+        "CondaEnvironmentV1",
+        "OpenPolicyAgentInstallerV0"
     ],
     "Node20_228": [
         "MavenV2"
@@ -290,10 +291,72 @@
         "UniversalPackagesV0"
     ],
     "Node20_229_2": [
-        "XamariniOSV2",
-        "AppCenterDistributeV3"
+        "AppCenterDistributeV3",
+        "AzureAppServiceManageV0",
+        "AzureAppServiceSettingsV1",
+        "AzureCLIV1",
+        "AzureCLIV2",
+        "AzureFileCopyV2",
+        "AzureFileCopyV3",
+        "AzureFileCopyV4",
+        "AzureFileCopyV5",
+        "AzureFunctionAppContainerV1",
+        "AzureFunctionOnKubernetesV0",
+        "AzureFunctionOnKubernetesV1",
+        "AzureKeyVaultV1",
+        "AzureKeyVaultV2",
+        "AzureMysqlDeploymentV1",
+        "AzureNLBManagementV1",
+        "AzureRmWebAppDeploymentV3",
+        "AzureRmWebAppDeploymentV4",
+        "AzureWebAppV1",
+        "AzureWebAppContainerV1",
+        "ContainerBuildV0",
+        "DockerV0",
+        "DockerV1",
+        "DockerComposeV0",
+        "DockerInstallerV0",
+        "DotNetCoreCLIV2",
+        "XamariniOSV2"
     ],
-    "Node20_229_3": [],
+    "Node20_229_3": [
+        "DotNetCoreInstallerV0",
+        "DotNetCoreInstallerV1",
+        "DownloadBuildArtifactsV0",
+        "DownloadFileshareArtifactsV1",
+        "DownloadGitHubNpmPackageV1",
+        "DownloadGitHubNugetPackageV1",
+        "DownloadGitHubReleaseV0",
+        "DuffleInstallerV0",
+        "FileTransformV1",
+        "FileTransformV2",
+        "FuncToolsInstallerV0",
+        "GitHubReleaseV0",
+        "GitHubReleaseV1",
+        "GoV0",
+        "GoToolV0",
+        "HelmDeployV0",
+        "HelmInstallerV0",
+        "HelmInstallerV1",
+        "IISWebAppDeploymentOnMachineGroupV0",
+        "JenkinsDownloadArtifactsV1",
+        "KubeloginInstallerV0",
+        "KubectlInstallerV0",
+        "KubernetesV1",
+        "KubernetesManifestV0",
+        "MysqlDeploymentOnMachineGroupV1",
+        "UseDotNetV2"
+    ],
     "Node20_229_4": [],
-    "Node20_229_5": []
+    "Node20_229_5": [],
+    "Node20_229_6": [],
+    "Node20_229_7": [],
+    "Node20_229_8": [
+        "AzureStaticWebAppV0"
+    ],
+    "Node20_229_9": [],
+    "Node20_229_10": [
+        "AzureContainerAppsV0",
+        "AzureContainerAppsV1"
+    ]
 }
