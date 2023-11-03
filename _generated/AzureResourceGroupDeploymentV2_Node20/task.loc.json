@@ -1,0 +1,512 @@
+{
+  "id": "94A74903-F93F-4075-884F-DC11F34058B4",
+  "name": "AzureResourceGroupDeployment",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 231,
+    "Patch": 1
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.119.1",
+  "groups": [
+    {
+      "name": "AzureDetails",
+      "displayName": "ms-resource:loc.group.displayName.AzureDetails",
+      "isExpanded": true
+    },
+    {
+      "name": "Template",
+      "displayName": "ms-resource:loc.group.displayName.Template",
+      "isExpanded": true,
+      "visibleRule": "action = Create Or Update Resource Group"
+    },
+    {
+      "name": "AdvancedDeploymentOptions",
+      "displayName": "ms-resource:loc.group.displayName.AdvancedDeploymentOptions",
+      "isExpanded": true,
+      "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
+    },
+    {
+      "name": "Advanced",
+      "displayName": "ms-resource:loc.group.displayName.Advanced",
+      "isExpanded": true,
+      "visibleRule": "action = Create Or Update Resource Group"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.action",
+      "defaultValue": "Create Or Update Resource Group",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.action",
+      "options": {
+        "Create Or Update Resource Group": "Create or update resource group",
+        "Select Resource Group": "Configure virtual machine deployment options",
+        "Start": "Start virtual machines",
+        "Stop": "Stop virtual machines",
+        "StopWithDeallocate": "Stop and deallocate virtual machines",
+        "Restart": "Restart virtual machines",
+        "Delete": "Delete virtual machines",
+        "DeleteRG": "Delete resource group"
+      }
+    },
+    {
+      "name": "resourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.resourceGroupName",
+      "required": true,
+      "groupName": "AzureDetails",
+      "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "location",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.location",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.location",
+      "groupName": "AzureDetails",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "action = Create Or Update Resource Group"
+    },
+    {
+      "name": "templateLocation",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.templateLocation",
+      "required": true,
+      "defaultValue": "Linked artifact",
+      "groupName": "Template",
+      "options": {
+        "Linked artifact": "Linked artifact",
+        "URL of the file": "URL of the file"
+      }
+    },
+    {
+      "name": "csmFileLink",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.csmFileLink",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "Template",
+      "helpMarkDown": "ms-resource:loc.input.help.csmFileLink",
+      "visibleRule": "templateLocation = URL of the file"
+    },
+    {
+      "name": "csmParametersFileLink",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.csmParametersFileLink",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Template",
+      "helpMarkDown": "ms-resource:loc.input.help.csmParametersFileLink",
+      "visibleRule": " templateLocation = URL of the file"
+    },
+    {
+      "name": "csmFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.csmFile",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "Template",
+      "visibleRule": " templateLocation = Linked artifact",
+      "helpMarkDown": "ms-resource:loc.input.help.csmFile"
+    },
+    {
+      "name": "csmParametersFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.csmParametersFile",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Template",
+      "helpMarkDown": "ms-resource:loc.input.help.csmParametersFile",
+      "visibleRule": " templateLocation = Linked artifact"
+    },
+    {
+      "name": "overrideParameters",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.overrideParameters",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Template",
+      "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.azurerg-parameters-grid"
+      }
+    },
+    {
+      "name": "deploymentMode",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.deploymentMode",
+      "defaultValue": "Incremental",
+      "required": true,
+      "groupName": "Template",
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentMode",
+      "options": {
+        "Incremental": "Incremental",
+        "Complete": "Complete",
+        "Validation": "Validation only"
+      }
+    },
+    {
+      "name": "enableDeploymentPrerequisites",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.enableDeploymentPrerequisites",
+      "defaultValue": "None",
+      "groupName": "AdvancedDeploymentOptions",
+      "options": {
+        "None": "None",
+        "ConfigureVMwithWinRM": "Configure with WinRM agent",
+        "ConfigureVMWithDGAgent": "Configure with Deployment Group agent"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisites"
+    },
+    {
+      "name": "deploymentGroupEndpoint",
+      "aliases": [
+        "teamServicesConnection"
+      ],
+      "type": "connectedService:ExternalTfs",
+      "label": "ms-resource:loc.input.label.deploymentGroupEndpoint",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentGroupEndpoint",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "project",
+      "aliases": [
+        "teamProject"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.project",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.project",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "deploymentGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.deploymentGroupName",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentGroupName",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "copyAzureVMTags",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.copyAzureVMTags",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.copyAzureVMTags"
+    },
+    {
+      "name": "runAgentServiceAsUser",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runAgentServiceAsUser",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runAgentServiceAsUser"
+    },
+    {
+      "name": "userName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.userName",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && runAgentServiceAsUser = true",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.userName"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.password",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && runAgentServiceAsUser = true",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.password"
+    },
+    {
+      "name": "outputVariable",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.outputVariable",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMwithWinRM || enableDeploymentPrerequisites = None",
+      "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
+    },
+    {
+      "name": "deploymentName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.deploymentName",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "Advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentName"
+    },
+    {
+      "name": "deploymentOutputs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.deploymentOutputs",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "Advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentOutputs"
+    },
+    {
+      "name": "addSpnToEnvironment",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addSpnToEnvironment",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.addSpnToEnvironment",
+      "groupName": "Advanced"
+    },
+    {
+      "name": "useWithoutJSON",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useWithoutJSON",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.useWithoutJSON",
+      "groupName": "Advanced"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "resourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureResourceGroups"
+    },
+    {
+      "target": "location",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureLocations"
+    },
+    {
+      "target": "project",
+      "endpointId": "$(deploymentGroupEndpoint)",
+      "dataSourceName": "Projects",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "target": "deploymentGroupName",
+      "endpointId": "$(deploymentGroupEndpoint)",
+      "dataSourceName": "DeploymentGroups",
+      "parameters": {
+        "project": "$(project)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "main.js"
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "main.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "CheckResourceGroupExistence": "ms-resource:loc.messages.CheckResourceGroupExistence",
+    "ResourceGroupStatusFetchFailed": "ms-resource:loc.messages.ResourceGroupStatusFetchFailed",
+    "ResourceGroupStatus": "ms-resource:loc.messages.ResourceGroupStatus",
+    "ResourceGroupCreationFailed": "ms-resource:loc.messages.ResourceGroupCreationFailed",
+    "CreatingNewRG": "ms-resource:loc.messages.CreatingNewRG",
+    "CreatedRG": "ms-resource:loc.messages.CreatedRG",
+    "CreatingTemplateDeployment": "ms-resource:loc.messages.CreatingTemplateDeployment",
+    "TemplateParsingFailed": "ms-resource:loc.messages.TemplateParsingFailed",
+    "FileFetchFailed": "ms-resource:loc.messages.FileFetchFailed",
+    "ParametersFileParsingFailed": "ms-resource:loc.messages.ParametersFileParsingFailed",
+    "StartingDeployment": "ms-resource:loc.messages.StartingDeployment",
+    "CreateTemplateDeploymentSucceeded": "ms-resource:loc.messages.CreateTemplateDeploymentSucceeded",
+    "CreateTemplateDeploymentFailed": "ms-resource:loc.messages.CreateTemplateDeploymentFailed",
+    "ErrorsInYourDeployment": "ms-resource:loc.messages.ErrorsInYourDeployment",
+    "Details": "ms-resource:loc.messages.Details",
+    "ErrorType": "ms-resource:loc.messages.ErrorType",
+    "PolicyDefinitionName": "ms-resource:loc.messages.PolicyDefinitionName",
+    "PolicyAssignmentName": "ms-resource:loc.messages.PolicyAssignmentName",
+    "StartingValidation": "ms-resource:loc.messages.StartingValidation",
+    "ValidDeployment": "ms-resource:loc.messages.ValidDeployment",
+    "CreateTemplateDeploymentValidationFailed": "ms-resource:loc.messages.CreateTemplateDeploymentValidationFailed",
+    "TemplateValidationHadErrors": "ms-resource:loc.messages.TemplateValidationHadErrors",
+    "DeletingResourceGroup": "ms-resource:loc.messages.DeletingResourceGroup",
+    "CouldNotDeletedResourceGroup": "ms-resource:loc.messages.CouldNotDeletedResourceGroup",
+    "DeletedResourceGroup": "ms-resource:loc.messages.DeletedResourceGroup",
+    "VM_ListFetchFailed": "ms-resource:loc.messages.VM_ListFetchFailed",
+    "NoVMsFound": "ms-resource:loc.messages.NoVMsFound",
+    "VM_Start": "ms-resource:loc.messages.VM_Start",
+    "VM_Restart": "ms-resource:loc.messages.VM_Restart",
+    "VM_Stop": "ms-resource:loc.messages.VM_Stop",
+    "VM_Deallocate": "ms-resource:loc.messages.VM_Deallocate",
+    "VM_Delete": "ms-resource:loc.messages.VM_Delete",
+    "SucceededOnVMOperation": "ms-resource:loc.messages.SucceededOnVMOperation",
+    "FailureOnVMOperation": "ms-resource:loc.messages.FailureOnVMOperation",
+    "VirtualMachineNameAndError": "ms-resource:loc.messages.VirtualMachineNameAndError",
+    "RegisteringEnvironmentVariable": "ms-resource:loc.messages.RegisteringEnvironmentVariable",
+    "FailedToFetchNetworkInterfaces": "ms-resource:loc.messages.FailedToFetchNetworkInterfaces",
+    "FailedToFetchLoadBalancers": "ms-resource:loc.messages.FailedToFetchLoadBalancers",
+    "FailedToFetchPublicAddresses": "ms-resource:loc.messages.FailedToFetchPublicAddresses",
+    "AddedToOutputVariable": "ms-resource:loc.messages.AddedToOutputVariable",
+    "InvalidAction": "ms-resource:loc.messages.InvalidAction",
+    "TaskNotFound": "ms-resource:loc.messages.TaskNotFound",
+    "ARGD_ConstructorFailed": "ms-resource:loc.messages.ARGD_ConstructorFailed",
+    "RuleExistsAlready": "ms-resource:loc.messages.RuleExistsAlready",
+    "AddExtension": "ms-resource:loc.messages.AddExtension",
+    "DeleteExtension": "ms-resource:loc.messages.DeleteExtension",
+    "FailedToAddExtension": "ms-resource:loc.messages.FailedToAddExtension",
+    "AddingSecurityRuleNSG": "ms-resource:loc.messages.AddingSecurityRuleNSG",
+    "AddedSecurityRuleNSG": "ms-resource:loc.messages.AddedSecurityRuleNSG",
+    "FailedAddingNSGRule3Times": "ms-resource:loc.messages.FailedAddingNSGRule3Times",
+    "FailedToDeleteExtension": "ms-resource:loc.messages.FailedToDeleteExtension",
+    "CredentialsCannotBeNull": "ms-resource:loc.messages.CredentialsCannotBeNull",
+    "SubscriptionIdCannotBeNull": "ms-resource:loc.messages.SubscriptionIdCannotBeNull",
+    "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
+    "ResourceGroupCannotBeNull": "ms-resource:loc.messages.ResourceGroupCannotBeNull",
+    "ResourceGroupExceededLength": "ms-resource:loc.messages.ResourceGroupExceededLength",
+    "ResourceGroupDeceededLength": "ms-resource:loc.messages.ResourceGroupDeceededLength",
+    "ResourceGroupDoesntMatchPattern": "ms-resource:loc.messages.ResourceGroupDoesntMatchPattern",
+    "ParametersCannotBeNull": "ms-resource:loc.messages.ParametersCannotBeNull",
+    "DeploymentNameCannotBeNull": "ms-resource:loc.messages.DeploymentNameCannotBeNull",
+    "VMNameCannotBeNull": "ms-resource:loc.messages.VMNameCannotBeNull",
+    "InvalidValue": "ms-resource:loc.messages.InvalidValue",
+    "VmExtensionNameCannotBeNull": "ms-resource:loc.messages.VmExtensionNameCannotBeNull",
+    "ExpandShouldBeOfTypeString": "ms-resource:loc.messages.ExpandShouldBeOfTypeString",
+    "ExtensionParametersCannotBeNull": "ms-resource:loc.messages.ExtensionParametersCannotBeNull",
+    "ClientIdCannotBeEmpty": "ms-resource:loc.messages.ClientIdCannotBeEmpty",
+    "DomainCannotBeEmpty": "ms-resource:loc.messages.DomainCannotBeEmpty",
+    "SecretCannotBeEmpty": "ms-resource:loc.messages.SecretCannotBeEmpty",
+    "armUrlCannotBeEmpty": "ms-resource:loc.messages.armUrlCannotBeEmpty",
+    "authorityUrlCannotBeEmpty": "ms-resource:loc.messages.authorityUrlCannotBeEmpty",
+    "LoadBalancerNameCannotBeNull": "ms-resource:loc.messages.LoadBalancerNameCannotBeNull",
+    "NetworkInterfaceNameCannotBeNull": "ms-resource:loc.messages.NetworkInterfaceNameCannotBeNull",
+    "NetworkSecurityGroupNameCannotBeNull": "ms-resource:loc.messages.NetworkSecurityGroupNameCannotBeNull",
+    "SecurityRuleNameCannotBeNull": "ms-resource:loc.messages.SecurityRuleNameCannotBeNull",
+    "SecurityRuleParametersCannotBeNull": "ms-resource:loc.messages.SecurityRuleParametersCannotBeNull",
+    "OutputVariableShouldNotBeEmpty": "ms-resource:loc.messages.OutputVariableShouldNotBeEmpty",
+    "ARG_SetExtensionFailedForVm": "ms-resource:loc.messages.ARG_SetExtensionFailedForVm",
+    "InvalidResponseLongRunningOperation": "ms-resource:loc.messages.InvalidResponseLongRunningOperation",
+    "AddingInboundNatRule": "ms-resource:loc.messages.AddingInboundNatRule",
+    "InboundNatRuleAdditionFailed": "ms-resource:loc.messages.InboundNatRuleAdditionFailed",
+    "InboundNatRulesToNICFailed": "ms-resource:loc.messages.InboundNatRulesToNICFailed",
+    "AddedTargetInboundNatRuleLB": "ms-resource:loc.messages.AddedTargetInboundNatRuleLB",
+    "FailedToFetchInstanceViewVM": "ms-resource:loc.messages.FailedToFetchInstanceViewVM",
+    "CreationOfExtensionFailed": "ms-resource:loc.messages.CreationOfExtensionFailed",
+    "AddedExtension": "ms-resource:loc.messages.AddedExtension",
+    "AddingExtensionSucceeded": "ms-resource:loc.messages.AddingExtensionSucceeded",
+    "DeletionSucceeded": "ms-resource:loc.messages.DeletionSucceeded",
+    "AdditionFailed": "ms-resource:loc.messages.AdditionFailed",
+    "DeletionFailed": "ms-resource:loc.messages.DeletionFailed",
+    "DeleteAgentManually": "ms-resource:loc.messages.DeleteAgentManually",
+    "DGAgentAddedOnAllVMs": "ms-resource:loc.messages.DGAgentAddedOnAllVMs",
+    "DGAgentDeletedFromAllVMs": "ms-resource:loc.messages.DGAgentDeletedFromAllVMs",
+    "DGAgentHandlerMajorVersion": "ms-resource:loc.messages.DGAgentHandlerMajorVersion",
+    "VMStartFailed": "ms-resource:loc.messages.VMStartFailed",
+    "VMStarted": "ms-resource:loc.messages.VMStarted",
+    "VMTransitioningSkipExtensionAddition": "ms-resource:loc.messages.VMTransitioningSkipExtensionAddition",
+    "VMDetailsFetchFailed": "ms-resource:loc.messages.VMDetailsFetchFailed",
+    "VMDetailsFetchSucceeded": "ms-resource:loc.messages.VMDetailsFetchSucceeded",
+    "AddingDGAgentOnVMs": "ms-resource:loc.messages.AddingDGAgentOnVMs",
+    "DeletingDGAgentOnVMs": "ms-resource:loc.messages.DeletingDGAgentOnVMs",
+    "AddingExtensionFailed": "ms-resource:loc.messages.AddingExtensionFailed",
+    "TimeoutWhileWaiting": "ms-resource:loc.messages.TimeoutWhileWaiting",
+    "InvalidTemplateLocation": "ms-resource:loc.messages.InvalidTemplateLocation",
+    "EncodingNotSupported": "ms-resource:loc.messages.EncodingNotSupported",
+    "CouldNotDetectEncoding": "ms-resource:loc.messages.CouldNotDetectEncoding",
+    "DetectedFileEncoding": "ms-resource:loc.messages.DetectedFileEncoding",
+    "HostUrlCannotBeEmpty": "ms-resource:loc.messages.HostUrlCannotBeEmpty",
+    "PatTokenCannotBeEmpty": "ms-resource:loc.messages.PatTokenCannotBeEmpty",
+    "OnlyTokenAuthAllowed": "ms-resource:loc.messages.OnlyTokenAuthAllowed",
+    "DeploymentGroupEndpointUrlCannotBeEmpty": "ms-resource:loc.messages.DeploymentGroupEndpointUrlCannotBeEmpty",
+    "DeploymentGroupEndpointPatTokenCannotBeEmpty": "ms-resource:loc.messages.DeploymentGroupEndpointPatTokenCannotBeEmpty",
+    "ErrorWhileParsingParameter": "ms-resource:loc.messages.ErrorWhileParsingParameter",
+    "TemplateFilePatternMatchingMoreThanOneFile": "ms-resource:loc.messages.TemplateFilePatternMatchingMoreThanOneFile",
+    "TemplateParameterFilePatternMatchingMoreThanOneFile": "ms-resource:loc.messages.TemplateParameterFilePatternMatchingMoreThanOneFile",
+    "TemplateFilePatternMatchingNoFile": "ms-resource:loc.messages.TemplateFilePatternMatchingNoFile",
+    "TemplateParameterFilePatternMatchingNoFile": "ms-resource:loc.messages.TemplateParameterFilePatternMatchingNoFile",
+    "ParametersPatternMatchesADirectoryInsteadOfAFile": "ms-resource:loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile",
+    "CsmFilePatternMatchesADirectoryInsteadOfAFile": "ms-resource:loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile",
+    "ResourceNameCannotBeNull": "ms-resource:loc.messages.ResourceNameCannotBeNull",
+    "ProvisioningStatusOfExtensionIsNotSucceeded": "ms-resource:loc.messages.ProvisioningStatusOfExtensionIsNotSucceeded",
+    "ListingOfExtensionsFailed": "ms-resource:loc.messages.ListingOfExtensionsFailed",
+    "ExtensionNotFound": "ms-resource:loc.messages.ExtensionNotFound",
+    "AddedOutputVariable": "ms-resource:loc.messages.AddedOutputVariable",
+    "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
+    "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory",
+    "SpecifiedAzureRmEndpointIsInvalid": "ms-resource:loc.messages.SpecifiedAzureRmEndpointIsInvalid",
+    "FailedToFetchAzureStackDependencyData": "ms-resource:loc.messages.FailedToFetchAzureStackDependencyData",
+    "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "UserNameCannotBeNull": "ms-resource:loc.messages.UserNameCannotBeNull",
+    "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
+    "MoreInformationOnAzurePortal": "ms-resource:loc.messages.MoreInformationOnAzurePortal",
+    "ResponseNotValid": "ms-resource:loc.messages.ResponseNotValid",
+    "LogDeploymentName": "ms-resource:loc.messages.LogDeploymentName",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "DeploymentGroupConfigurationNotSucceeded": "ms-resource:loc.messages.DeploymentGroupConfigurationNotSucceeded",
+    "ServicePrincipalRoleAssignmentDetails": "ms-resource:loc.messages.ServicePrincipalRoleAssignmentDetails",
+    "ServicePrincipalFetchFailed": "ms-resource:loc.messages.ServicePrincipalFetchFailed",
+    "FindMoreDeploymentDetailsAzurePortal": "ms-resource:loc.messages.FindMoreDeploymentDetailsAzurePortal",
+    "TemplateValidationFailure": "ms-resource:loc.messages.TemplateValidationFailure",
+    "ManagedServiceIdentityDetails": "ms-resource:loc.messages.ManagedServiceIdentityDetails",
+    "DeploymentGroupConfigurationFailedOnVM": "ms-resource:loc.messages.DeploymentGroupConfigurationFailedOnVM",
+    "TroubleshootingGuide": "ms-resource:loc.messages.TroubleshootingGuide"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.231.0",
+    "Node20_229_2": "2.231.1"
+  }
+}
