@@ -261,7 +261,8 @@
         "UseRubyVersionV0",
         "XamarinAndroidV1",
         "CondaEnvironmentV0",
-        "CondaEnvironmentV1"
+        "CondaEnvironmentV1",
+        "OpenPolicyAgentInstallerV0"
     ],
     "Node20_228": [
         "MavenV2"
@@ -303,18 +304,27 @@
         "AzureFunctionOnKubernetesV1",
         "AzureKeyVaultV1",
         "AzureKeyVaultV2",
+        "AzureResourceGroupDeploymentV2",
+        "AzureResourceManagerTemplateDeploymentV3",
         "AzureMysqlDeploymentV1",
         "AzureNLBManagementV1",
         "AzureRmWebAppDeploymentV3",
         "AzureRmWebAppDeploymentV4",
+        "AzurePowerShellV4",
+        "AzurePowerShellV5",
         "AzureWebAppV1",
         "AzureWebAppContainerV1",
         "ContainerBuildV0",
         "DockerV0",
         "DockerV1",
+        "DockerV2",
         "DockerComposeV0",
         "DockerInstallerV0",
-        "DotNetCoreCLIV2"
+        "DotNetCoreCLIV2",
+        "GradleV2",
+        "GradleV3",
+        "KubernetesV0",
+        "XamariniOSV2"
     ],
     "Node20_229_3": [
         "DotNetCoreInstallerV0",
@@ -337,22 +347,38 @@
         "HelmInstallerV1",
         "IISWebAppDeploymentOnMachineGroupV0",
         "JenkinsDownloadArtifactsV1",
+        "KubeloginInstallerV0",
         "KubectlInstallerV0",
         "KubernetesV1",
         "KubernetesManifestV0",
         "MysqlDeploymentOnMachineGroupV1",
         "UseDotNetV2"
     ],
-    "Node20_229_4": [],
+    "Node20_229_4": [
+        "ContainerStructureTestV0",
+        "PublishCodeCoverageResultsV1",
+        "VsTestV2",
+        "VsTestV3"
+    ],
     "Node20_229_5": [],
-    "Node20_229_6": [],
+    "Node20_229_6": [
+        "AzureVmssDeploymentV0"
+    ],
     "Node20_229_7": [
         "AppCenterDistributeV1",
         "AppCenterDistributeV2",
         "AppCenterDistributeV3",
         "AppCenterTestV1"
     ],
-    "Node20_229_8": [],
-    "Node20_229_9": [],
-    "Node20_229_10": []
+    "Node20_229_8": [
+        "AzureStaticWebAppV0"
+    ],
+    "Node20_229_9": [
+        "AzureFunctionAppV1",
+        "AzureFunctionAppV2"
+    ],
+    "Node20_229_10": [
+        "AzureContainerAppsV0",
+        "AzureContainerAppsV1"
+    ]
 }

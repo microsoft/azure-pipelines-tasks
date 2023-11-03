@@ -1,0 +1,114 @@
+{
+  "id": "39bc2c9b-55b7-4835-89cd-6cc699ef7220",
+  "name": "ContainerStructureTest",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/containerstructuretest",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Test",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 230,
+    "Patch": 1
+  },
+  "preview": true,
+  "demands": [],
+  "minimumAgentVersion": "2.144.0",
+  "groups": [
+    {
+      "name": "containerRepository",
+      "displayName": "ms-resource:loc.group.displayName.containerRepository",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "dockerRegistryServiceConnection",
+      "type": "connectedService:dockerregistry",
+      "label": "ms-resource:loc.input.label.dockerRegistryServiceConnection",
+      "groupName": "containerRepository",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryServiceConnection"
+    },
+    {
+      "name": "repository",
+      "label": "ms-resource:loc.input.label.repository",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.repository",
+      "defaultValue": "",
+      "groupName": "containerRepository",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "tag",
+      "type": "string",
+      "defaultValue": "$(Build.BuildId)",
+      "label": "ms-resource:loc.input.label.tag",
+      "groupName": "containerRepository",
+      "helpMarkDown": "ms-resource:loc.input.help.tag"
+    },
+    {
+      "name": "configFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.configFile",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.configFile"
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle"
+    },
+    {
+      "name": "failTaskOnFailedTests",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failTaskOnFailedTests",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failTaskOnFailedTests"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "containerstructuretest.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "containerstructuretest.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "containerstructuretest.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "NoMatchingFilesFound": "ms-resource:loc.messages.NoMatchingFilesFound",
+    "ErrorTestResultsPublisher": "ms-resource:loc.messages.ErrorTestResultsPublisher",
+    "ErrorFailTaskOnFailedTests": "ms-resource:loc.messages.ErrorFailTaskOnFailedTests",
+    "FileNotFoundException": "ms-resource:loc.messages.FileNotFoundException",
+    "DownloadException": "ms-resource:loc.messages.DownloadException",
+    "ErrorInExecutingCommand": "ms-resource:loc.messages.ErrorInExecutingCommand",
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile",
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
+    "ConnectingToDockerHost": "ms-resource:loc.messages.ConnectingToDockerHost",
+    "DockerHostVariableWarning": "ms-resource:loc.messages.DockerHostVariableWarning",
+    "NotSupportedOS": "ms-resource:loc.messages.NotSupportedOS"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.230.0",
+    "Node20_229_4": "0.230.1"
+  }
+}
