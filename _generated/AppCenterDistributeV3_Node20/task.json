@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 231,
-    "Patch": 1
+    "Minor": 230,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.206.1",
   "releaseNotes": "Added support for forwarding Android mapping to App Center Diagnostics. Added missing descriptions.",
@@ -251,6 +251,6 @@
   },
   "_buildConfigMapping": {
     "Default": "3.231.0",
-    "Node20_229_2": "3.231.1"
+    "Node20_229_7": "3.230.0"
   }
 }
