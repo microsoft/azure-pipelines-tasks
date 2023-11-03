@@ -318,7 +318,8 @@
         "DockerInstallerV0",
         "DotNetCoreCLIV2",
         "GradleV2",
-        "GradleV3"
+        "GradleV3",
+        "KubernetesV0"
     ],
     "Node20_229_3": [
         "DotNetCoreInstallerV0",
