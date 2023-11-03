@@ -316,7 +316,8 @@
         "DockerV1",
         "DockerComposeV0",
         "DockerInstallerV0",
-        "DotNetCoreCLIV2"
+        "DotNetCoreCLIV2",
+        "KubernetesV0"
     ],
     "Node20_229_3": [
         "DotNetCoreInstallerV0",
