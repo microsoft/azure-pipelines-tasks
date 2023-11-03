@@ -350,7 +350,9 @@
     "Node20_229_5": [],
     "Node20_229_6": [],
     "Node20_229_7": [],
-    "Node20_229_8": [],
+    "Node20_229_8": [
+        "AzureStaticWebAppV0"
+    ],
     "Node20_229_9": [],
     "Node20_229_10": [
         "AzureContainerAppsV0",
