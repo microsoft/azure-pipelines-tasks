@@ -1,9 +1,9 @@
 {
   "id": "72A1931B-EFFB-4D2E-8FD8-F8472A07CB62",
   "name": "AzurePowerShell",
-  "friendlyName": "ms-resource:loc.friendlyName",
-  "description": "ms-resource:loc.description",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "friendlyName": "Azure PowerShell",
+  "description": "Run a PowerShell script within an Azure environment",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
   "helpUrl": "https://aka.ms/azurepowershelltroubleshooting",
   "category": "Deploy",
   "visibility": [
@@ -18,18 +18,18 @@
   "version": {
     "Major": 4,
     "Minor": 231,
-    "Patch": 0
+    "Patch": 1
   },
-  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "releaseNotes": "Added support for Az Module and cross platform agents.",
   "groups": [
     {
       "name": "AzurePowerShellVersionOptions",
-      "displayName": "ms-resource:loc.group.displayName.AzurePowerShellVersionOptions",
+      "displayName": "Azure PowerShell version options",
       "isExpanded": true
     },
     {
       "name": "advanced",
-      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "displayName": "Advanced",
       "isExpanded": false
     }
   ],
@@ -41,10 +41,10 @@
         "azureSubscription"
       ],
       "type": "connectedService:AzureRM",
-      "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
+      "label": "Azure Subscription",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM",
+      "helpMarkDown": "Azure Resource Manager subscription to configure before running PowerShell",
       "properties": {
         "EndpointFilterRule": "ScopeLevel != AzureMLWorkspace"
       }
@@ -52,9 +52,9 @@
     {
       "name": "ScriptType",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.ScriptType",
+      "label": "Script Type",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.ScriptType",
+      "helpMarkDown": "Type of the script: File Path or Inline Script",
       "defaultValue": "FilePath",
       "options": {
         "FilePath": "Script File Path",
@@ -64,19 +64,19 @@
     {
       "name": "ScriptPath",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.ScriptPath",
+      "label": "Script Path",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.ScriptPath",
+      "helpMarkDown": "Path of the script. Should be fully qualified path or relative to the default working directory.",
       "visibleRule": "ScriptType = FilePath"
     },
     {
       "name": "Inline",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.Inline",
+      "label": "Inline Script",
       "required": false,
       "defaultValue": "# You can write your azure powershell scripts inline here. \n# You can also pass predefined and custom variables to this script using arguments",
-      "helpMarkDown": "ms-resource:loc.input.help.Inline",
+      "helpMarkDown": "Enter the script to execute.",
       "visibleRule": "ScriptType = InlineScript",
       "properties": {
         "resizable": "true",
@@ -87,19 +87,19 @@
     {
       "name": "ScriptArguments",
       "type": "string",
-      "label": "ms-resource:loc.input.label.ScriptArguments",
+      "label": "Script Arguments",
       "defaultValue": "",
       "visibleRule": "ScriptType = FilePath",
       "required": false,
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
+      "helpMarkDown": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters."
     },
     {
       "name": "errorActionPreference",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.errorActionPreference",
+      "label": "ErrorActionPreference",
       "required": false,
       "defaultValue": "stop",
       "options": {
@@ -107,23 +107,23 @@
         "continue": "Continue",
         "silentlyContinue": "SilentlyContinue"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.errorActionPreference"
+      "helpMarkDown": "Select the value of the ErrorActionPreference variable for executing the script."
     },
     {
       "name": "FailOnStandardError",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.FailOnStandardError",
+      "label": "Fail on Standard Error",
       "required": false,
       "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.FailOnStandardError"
+      "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream."
     },
     {
       "name": "RestrictContextToCurrentTask",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.RestrictContextToCurrentTask",
+      "label": "Restrict scope of context to current task",
       "required": false,
       "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.RestrictContextToCurrentTask"
+      "helpMarkDown": "If this is true, this task will restrict the scope of context to current task only and the context will not be available to other tasks in the pipeline when using private agent."
     },
     {
       "name": "TargetAzurePs",
@@ -131,7 +131,7 @@
         "azurePowerShellVersion"
       ],
       "type": "radio",
-      "label": "ms-resource:loc.input.label.TargetAzurePs",
+      "label": "Azure PowerShell Version",
       "defaultValue": "OtherVersion",
       "required": false,
       "options": {
@@ -139,7 +139,7 @@
         "OtherVersion": "Specify other version"
       },
       "groupName": "AzurePowerShellVersionOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.TargetAzurePs"
+      "helpMarkDown": "In case of hosted agents, the supported Azure PowerShell Version is: 1.0.0, 1.6.0, 2.3.2, 2.6.0, 3.1.0 (Hosted VS2017 Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\""
     },
     {
       "name": "CustomTargetAzurePs",
@@ -147,43 +147,43 @@
         "preferredAzurePowerShellVersion"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.CustomTargetAzurePs",
+      "label": "Preferred Azure PowerShell Version",
       "defaultValue": "",
       "required": true,
       "visibleRule": "TargetAzurePs = OtherVersion",
       "groupName": "AzurePowerShellVersionOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.CustomTargetAzurePs"
+      "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Az module version: 1.0.0, 1.6.0, 2.3.2, 2.6.0, 3.1.0"
     },
     {
       "name": "pwsh",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.pwsh",
+      "label": "Use PowerShell Core",
       "required": false,
       "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.pwsh",
+      "helpMarkDown": "If this is true, then on Windows the task will use pwsh.exe from your PATH instead of powershell.exe.",
       "groupName": "advanced"
     },
     {
       "name": "validateScriptSignature",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.validateScriptSignature",
+      "label": "Validate script signature",
       "required": false,
       "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.validateScriptSignature",
+      "helpMarkDown": "If this is true, then the task will first check to make sure specified script is signed and valid before executing it.",
       "groupName": "advanced",
       "visibleRule": "ScriptType = FilePath"
     },
     {
       "name": "workingDirectory",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.workingDirectory",
+      "label": "Working Directory",
       "required": false,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
+      "helpMarkDown": "Working directory where the script is run.",
       "groupName": "advanced"
     }
   ],
-  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
   "execution": {
     "PowerShell3": {
       "target": "azurepowershell.ps1",
@@ -198,16 +198,24 @@
     "Node16": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "azurepowershell.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
-    "GeneratingScript": "ms-resource:loc.messages.GeneratingScript",
-    "JS_FormattedCommand": "ms-resource:loc.messages.JS_FormattedCommand",
-    "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
-    "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0",
-    "InvalidAzurePsVersion": "ms-resource:loc.messages.InvalidAzurePsVersion",
-    "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
-    "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "GeneratingScript": "Generating script.",
+    "JS_FormattedCommand": "Formatted command: %s",
+    "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
+    "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",
+    "InvalidAzurePsVersion": "The Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1",
+    "JS_ExitCode": "PowerShell exited with code '%s'.",
+    "JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
+    "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+  },
+  "_buildConfigMapping": {
+    "Default": "4.231.0",
+    "Node20_229_2": "4.231.1"
   }
 }

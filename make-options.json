@@ -311,6 +311,8 @@
         "AzureNLBManagementV1",
         "AzureRmWebAppDeploymentV3",
         "AzureRmWebAppDeploymentV4",
+        "AzurePowerShellV4",
+        "AzurePowerShellV5",
         "AzureWebAppV1",
         "AzureWebAppContainerV1",
         "ContainerBuildV0",

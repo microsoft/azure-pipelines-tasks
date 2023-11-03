@@ -16,9 +16,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 4,
+    "Major": 5,
     "Minor": 231,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -118,14 +118,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.FailOnStandardError"
     },
     {
-      "name": "RestrictContextToCurrentTask",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.RestrictContextToCurrentTask",
-      "required": false,
-      "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.RestrictContextToCurrentTask"
-    },
-    {
       "name": "TargetAzurePs",
       "aliases": [
         "azurePowerShellVersion"
@@ -198,6 +190,10 @@
     "Node16": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "azurepowershell.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -208,6 +204,11 @@
     "InvalidAzurePsVersion": "ms-resource:loc.messages.InvalidAzurePsVersion",
     "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
     "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "PS_ExitCode": "ms-resource:loc.messages.PS_ExitCode"
+  },
+  "_buildConfigMapping": {
+    "Default": "5.231.0",
+    "Node20_229_2": "5.231.1"
   }
 }
