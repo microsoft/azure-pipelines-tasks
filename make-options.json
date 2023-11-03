@@ -361,7 +361,9 @@
         "VsTestV3"
     ],
     "Node20_229_5": [],
-    "Node20_229_6": [],
+    "Node20_229_6": [
+        "AzureVmssDeploymentV0"
+    ],
     "Node20_229_7": [],
     "Node20_229_8": [
         "AzureStaticWebAppV0"
