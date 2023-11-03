@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Установка Azure Functions Core Tools",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://aka.ms/func-tools-installer)",
+  "loc.description": "Установка Azure Functions Core Tools",
+  "loc.instanceNameFormat": "Установка инструментов функций — $(version)",
+  "loc.input.label.version": "Версия",
+  "loc.input.help.version": "Укажите версию средств Azure Functions Core Tools для установки. Пример:<br><br>2.7.1575<br>v2.7.1575<br>latest",
+  "loc.messages.ErrorFetchingLatestVersion": "Произошла ошибка при получении сведений о последней версии из %s. Ошибка: %s. Скачивается стабильная версия по умолчанию: %s.",
+  "loc.messages.FindingLatestFuncToolsVersion": "Идет поиск последней версии инструментов функций...",
+  "loc.messages.FuncDownloadFailed": "Не удалось скачать инструменты функций из расположения %s. Ошибка: %s.",
+  "loc.messages.LatestFuncToolsVersion": "Последняя версия — %s",
+  "loc.messages.NotAValidSemverVersion": "Версия указана в неправильном формате. Пример: 2.7.1575, v2.7.1575, latest",
+  "loc.messages.SuccessfullyDownloaded": "Инструменты функций %s успешно скачаны. Путь скачивания: %s.",
+  "loc.messages.VerifyingFuncToolsInstallation": "Проверка установки инструментов функций...",
+  "loc.messages.VersionAlreadyInstalled": "Версия %s инструментов функций уже установлена. Путь установки: %s."
+}
