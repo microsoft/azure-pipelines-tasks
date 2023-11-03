@@ -339,10 +339,13 @@
         "IISWebAppDeploymentOnMachineGroupV0",
         "JenkinsDownloadArtifactsV1",
         "KubectlInstallerV0",
+        "KubeloginInstallerV0",
         "KubernetesV1",
         "KubernetesManifestV0",
+        "OpenPolicyAgentInstallerV0",
         "MysqlDeploymentOnMachineGroupV1",
-        "UseDotNetV2"
+        "UseDotNetV2",
+        "VSBuildV1"
     ],
     "Node20_229_4": [],
     "Node20_229_5": [],
