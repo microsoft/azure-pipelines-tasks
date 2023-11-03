@@ -16,7 +16,7 @@
   "version": {
     "Major": 2,
     "Minor": 230,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "releaseNotes": "Added support for multiple destinations.",
@@ -209,7 +209,7 @@
     "FailedToFindFile": "Failed to find %s at %s."
   },
   "_buildConfigMapping": {
-    "Default": "2.229.0",
-    "Node20_229_7": "2.230.0"
+    "Default": "2.230.0",
+    "Node20_229_7": "2.230.1"
   }
 }
