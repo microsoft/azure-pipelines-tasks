@@ -9,9 +9,9 @@
     "@types/q": "^1.0.7",
     "@types/ssh2": "1.11.6",
     "@types/ssh2-sftp-client": "^5.2.0",
-    "azure-pipelines-task-lib": "^4.4.0",
-    "azure-pipelines-tasks-utility-common": "^3.225.1",
-    "ssh2": "^1.10.0",
+    "azure-pipelines-task-lib": "^5.0.0-preview.0",
+    "azure-pipelines-tasks-utility-common": "^3.230.0",
+    "ssh2": "^1.14.0",
     "ssh2-sftp-client": "^8.1.0",
     "uuid": "^3.2.1"
   },
