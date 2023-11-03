@@ -15,7 +15,7 @@
   "version": {
     "Major": 3,
     "Minor": 231,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -269,6 +269,10 @@
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -332,5 +336,9 @@
     "MSILoginFailed": "ms-resource:loc.messages.MSILoginFailed",
     "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
     "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription"
+  },
+  "_buildConfigMapping": {
+    "Default": "3.231.0",
+    "Node20_229_2": "3.231.1"
   }
 }
