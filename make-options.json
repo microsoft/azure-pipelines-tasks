@@ -305,6 +305,8 @@
         "AzureFunctionOnKubernetesV1",
         "AzureKeyVaultV1",
         "AzureKeyVaultV2",
+        "AzureResourceGroupDeploymentV2",
+        "AzureResourceManagerTemplateDeploymentV3",
         "AzureMysqlDeploymentV1",
         "AzureNLBManagementV1",
         "AzureRmWebAppDeploymentV3",
@@ -316,9 +318,12 @@
         "ContainerBuildV0",
         "DockerV0",
         "DockerV1",
+        "DockerV2",
         "DockerComposeV0",
         "DockerInstallerV0",
         "DotNetCoreCLIV2",
+        "GradleV2",
+        "GradleV3",
         "KubernetesV0"
     ],
     "Node20_229_3": [
@@ -349,14 +354,22 @@
         "MysqlDeploymentOnMachineGroupV1",
         "UseDotNetV2"
     ],
-    "Node20_229_4": [],
+    "Node20_229_4": [
+        "ContainerStructureTestV0",
+        "PublishCodeCoverageResultsV1",
+        "VsTestV2",
+        "VsTestV3"
+    ],
     "Node20_229_5": [],
     "Node20_229_6": [],
     "Node20_229_7": [],
     "Node20_229_8": [
         "AzureStaticWebAppV0"
     ],
-    "Node20_229_9": [],
+    "Node20_229_9": [
+        "AzureFunctionAppV1",
+        "AzureFunctionAppV2"
+    ],
     "Node20_229_10": [
         "AzureContainerAppsV0",
         "AzureContainerAppsV1"
