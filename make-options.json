@@ -347,7 +347,6 @@
     "Node20_229_4": [
         "ContainerStructureTestV0",
         "PublishCodeCoverageResultsV1",
-        "RunDistributedTestsV1",
         "VsTestV2",
         "VsTestV3"
     ],
