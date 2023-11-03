@@ -349,6 +349,9 @@
     "Node20_229_6": [],
     "Node20_229_7": [],
     "Node20_229_8": [],
-    "Node20_229_9": [],
+    "Node20_229_9": [
+        "AzureFunctionAppV1",
+        "AzureFunctionAppV2"
+    ],
     "Node20_229_10": []
 }
