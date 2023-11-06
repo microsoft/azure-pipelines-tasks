@@ -14,7 +14,7 @@
     "version": {
         "Major": 5,
         "Minor": 230,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [
         "azureps"
@@ -235,6 +235,15 @@
         }
     ],
     "instanceNameFormat": "$(Destination) File Copy",
+    "prejobexecution": {
+        "Node10": {
+          "target": "PreJobExecutionAzureFileCopy.js"
+        },
+        "Node16": {
+          "target": "PreJobExecutionAzureFileCopy.js",
+          "argumentFormat": ""
+        }
+    },
     "execution": {
         "PowerShell3": {
             "target": "AzureFileCopy.ps1"

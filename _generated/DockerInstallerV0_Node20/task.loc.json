@@ -1,0 +1,71 @@
+{
+  "id": "8e038650-f7bf-11e8-8a6c-8fff434b4eff",
+  "name": "DockerInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/azpipes-docker-installer-tsg",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 230,
+    "Patch": 0
+  },
+  "demands": [],
+  "satisfies": [
+    "Docker"
+  ],
+  "minimumAgentVersion": "2.142.1",
+  "inputs": [
+    {
+      "name": "dockerVersion",
+      "label": "ms-resource:loc.input.label.dockerVersion",
+      "type": "string",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.dockerVersion",
+      "defaultValue": "17.09.0-ce"
+    },
+    {
+      "name": "releaseType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.releaseType",
+      "defaultValue": "stable",
+      "required": false,
+      "options": {
+        "stable": "stable",
+        "edge": "edge",
+        "test": "test",
+        "nightly": "nightly"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.releaseType"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "src//dockertoolinstaller.js"
+    },
+    "Node16": {
+      "target": "src//dockertoolinstaller.js"
+    },
+    "Node20": {
+      "target": "src//dockertoolinstaller.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "DownloadDockerFailedFromLocation": "ms-resource:loc.messages.DownloadDockerFailedFromLocation",
+    "DockerNotFoundInFolder": "ms-resource:loc.messages.DockerNotFoundInFolder",
+    "DockerDownloadFailed": "ms-resource:loc.messages.DockerDownloadFailed",
+    "VerifyDockerInstallation": "ms-resource:loc.messages.VerifyDockerInstallation"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.218.0",
+    "Node20_229_2": "0.230.0"
+  }
+}
