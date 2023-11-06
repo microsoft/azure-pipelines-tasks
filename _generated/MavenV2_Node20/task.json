@@ -455,7 +455,7 @@
     "UsingAuthFeed": "Using Artifacts feed: "
   },
   "_buildConfigMapping": {
-    "Default": "2.229.1",
+    "Default": "2.231.0",
     "Node20-228": "2.229.2"
   }
 }

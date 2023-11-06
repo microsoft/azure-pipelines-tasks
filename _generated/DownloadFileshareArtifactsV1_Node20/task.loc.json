@@ -1,0 +1,94 @@
+{
+  "id": "E3CF3806-AD30-4EC4-8F1E-8ECD98771AA0",
+  "name": "DownloadFileshareArtifacts",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-fileshare-artifacts",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "minimumAgentVersion": "2.144.0",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 230,
+    "Patch": 1
+  },
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": true
+    }
+  ],
+  "demands": [],
+  "inputs": [
+    {
+      "name": "filesharePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.filesharePath",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.filesharePath"
+    },
+    {
+      "name": "artifactName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.artifactName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.artifactName"
+    },
+    {
+      "name": "itemPattern",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.itemPattern",
+      "defaultValue": "**",
+      "required": false,
+      "properties": {
+        "rows": "3",
+        "resizable": "true"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
+    },
+    {
+      "name": "downloadPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.downloadPath",
+      "defaultValue": "$(System.ArtifactsDirectory)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.downloadPath"
+    },
+    {
+      "name": "parallelizationLimit",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.parallelizationLimit",
+      "defaultValue": "8",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.parallelizationLimit"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "main.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "DownloadArtifacts": "ms-resource:loc.messages.DownloadArtifacts",
+    "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded",
+    "ArtifactNameDirectoryNotFound": "ms-resource:loc.messages.ArtifactNameDirectoryNotFound"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.227.0",
+    "Node20_229_3": "1.230.1"
+  }
+}
