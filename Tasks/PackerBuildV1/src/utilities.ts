@@ -30,7 +30,7 @@ export async function download(url: string, downloadPath: string): Promise<void>
             res.on("error", err => reject(err));
             res.on("end", () => {
                 tl.debug("File download completed");
-                resolve();
+                resolve(null);
             });
         });
 
