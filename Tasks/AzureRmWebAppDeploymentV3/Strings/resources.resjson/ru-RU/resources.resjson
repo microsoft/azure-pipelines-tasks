@@ -224,5 +224,5 @@
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Не удалось обновить ресурс Application Insights \"%s\". Ошибка: %s",
   "loc.messages.JarNotSupported": "Развертывание JAR не поддерживается в этой версии. Измените версию задачи на \"4.*\", которая является предварительной",
   "loc.messages.CorrelationIdForARM": "Идентификатор корреляции из ответа на вызов API ARM: %s",
-  "loc.messages.MSDeployNotSupportTokenAuth": "App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy ."
+  "loc.messages.MSDeployNotSupportTokenAuth": "Служба приложений настроена не использовать обычную проверку подлинности. Для этого требуется веб-развертывание msdeploy.exe версии 7.1.7225 или более поздней. Требуется версия Visual Studio, которая включает обновленную версию msdeploy.exe. Дополнительные сведения см. на странице https://aka.ms/azdo-webapp-msdeploy."
 }

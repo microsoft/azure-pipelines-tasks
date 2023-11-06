@@ -224,5 +224,5 @@
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Échec de la mise à jour de la ressource Application Insights '%s'. Erreur : %s",
   "loc.messages.JarNotSupported": "Le déploiement de jar n'est pas pris en charge dans cette version. Remplacez la version de la tâche par la version '4.*', qui est en préversion",
   "loc.messages.CorrelationIdForARM": "ID de corrélation de la réponse à l'appel d'API ARM : %s",
-  "loc.messages.MSDeployNotSupportTokenAuth": "App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy ."
+  "loc.messages.MSDeployNotSupportTokenAuth": "App Service est configuré pour ne pas utiliser l’authentification de base. Cette opération nécessite Web Deploy msdeploy.exe version 7.1.7225 ou ultérieure. Vous avez besoin d’une version de Visual Studio qui inclut une version mise à jour de msdeploy.exe. Pour plus d’informations, visitez https://aka.ms/azdo-webapp-msdeploy."
 }
