@@ -21,5 +21,5 @@ foreach ($argument in $powershellArgumentsFormats) {
     $sanitizedArguments = Get-SanitizedArguments -InputArgs $argument
 
     # Assert
-    Assert-AreEqual $sanitizedArguments $argument
+    Assert-AreEqual -Actual $sanitizedArguments -Expected $argument
 }

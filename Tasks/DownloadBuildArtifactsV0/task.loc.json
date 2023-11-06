@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 226,
-    "Patch": 1
+    "Minor": 230,
+    "Patch": 2
   },
   "groups": [
     {
@@ -205,6 +205,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.retryDownloadCount"
     },
     {
+      "name": "retryRedirectDownloadCount",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.retryRedirectDownloadCount",
+      "defaultValue": "0",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.retryRedirectDownloadCount"
+    },
+    {
       "name": "extractTars",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.extractTars",
@@ -266,6 +275,10 @@
     "Node10": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -297,7 +310,9 @@
     "TarExtractionNotSupportedInWindows": "ms-resource:loc.messages.TarExtractionNotSupportedInWindows",
     "NoTarsFound": "ms-resource:loc.messages.NoTarsFound",
     "CleaningDestinationFolder": "ms-resource:loc.messages.CleaningDestinationFolder",
-    "NoFolderToClean": "ms-resource:loc.messages.NoFolderToClean"
+    "NoFolderToClean": "ms-resource:loc.messages.NoFolderToClean",
+    "PreferRedirect": "ms-resource:loc.messages.PreferRedirect",
+    "FollowingDownloadRedirectFailed": "ms-resource:loc.messages.FollowingDownloadRedirectFailed"
   },
   "outputVariables": [
     {

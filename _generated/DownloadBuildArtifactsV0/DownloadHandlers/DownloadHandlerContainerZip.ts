@@ -106,7 +106,6 @@ export class DownloadHandlerContainerZip extends DownloadHandler {
                     }
 
                     resolve();
-
                 }).catch((error) => {
                     reject(error);
                 });

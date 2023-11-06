@@ -37,6 +37,8 @@
   "loc.input.help.checkDownloadedFiles": "If checked, this build task will check that all files are fully downloaded.",
   "loc.input.label.retryDownloadCount": "Retry count",
   "loc.input.help.retryDownloadCount": "Optional number of times to retry downloading a build artifact if the download fails.",
+  "loc.input.label.retryRedirectDownloadCount": "Retry count for redirect download",
+  "loc.input.help.retryRedirectDownloadCount": "Optional number of times to retry downloading a build artifact if the download based on redirect fails. If your network does not allow following the redirect, you can set this to -1 to always download streamed response from Azure DevOps instead.",
   "loc.input.label.extractTars": "Extract all files that are stored inside tar archives",
   "loc.input.help.extractTars": "Enable this option to extract all downloaded files that have .tar extension. This is helpful because you need to pack your artifact files into tar if you want to preserve Unix file permissions. Enabling `StoreAsTar` option in PublishBuildArtifacts task will store artifacts as .tar files automatically.",
   "loc.messages.DownloadArtifacts": "Downloading artifact %s from: %s",
@@ -67,5 +69,7 @@
   "loc.messages.TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows",
   "loc.messages.NoTarsFound": "No tar archives were found to extract",
   "loc.messages.CleaningDestinationFolder": "Cleaning destination folder: %s",
-  "loc.messages.NoFolderToClean": "Specified cleaning folder was not found. Nothing to clean"
+  "loc.messages.NoFolderToClean": "Specified cleaning folder was not found. Nothing to clean",
+  "loc.messages.PreferRedirect": "Prefer downloading files through redirect to the content stitcher: %s",
+  "loc.messages.FollowingDownloadRedirectFailed": "Could not download the files by following a redirect: %s. Falling back to consuming streamed content from Azure DevOps."
 }

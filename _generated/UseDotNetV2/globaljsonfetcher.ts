@@ -56,7 +56,8 @@ export class globalJsonFetcher {
         tl.loc("GlobalJsonFound", path);
         try {
             let fileContent = fileSystem.readFileSync(path);
-            if (!fileContent) {
+            // Since here is a buffer, we need to check length property to determine if it is empty. 
+            if (!fileContent.length) {
             // do not throw if globa.json is empty, task need not install any version in such case.
                 tl.loc("GlobalJsonIsEmpty", path);
                 return null;

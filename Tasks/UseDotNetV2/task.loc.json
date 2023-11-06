@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 228,
-    "Patch": 1
+    "Minor": 230,
+    "Patch": 2
   },
   "satisfies": [
     "DotNetCore"
@@ -110,6 +110,10 @@
   "execution": {
     "Node10": {
       "target": "usedotnet.js"
+    },
+    "Node16": {
+      "target": "usedotnet.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

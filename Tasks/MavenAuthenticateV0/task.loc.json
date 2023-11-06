@@ -3,14 +3,14 @@
   "name": "MavenAuthenticate",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=2099968",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 218,
-    "Patch": 1
+    "Minor": 230,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",

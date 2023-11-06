@@ -10,8 +10,8 @@
   "helpMarkDown": "",
   "version": {
     "Major": 0,
-    "Minor": 226,
-    "Patch": 1
+    "Minor": 230,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -19,6 +19,7 @@
   ],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
+  "removalDate": "2024-04-22",
   "groups": [],
   "instanceNameFormat": "NuGet $(command)",
   "inputs": [
@@ -41,6 +42,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "nuget.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "nuget.js",
       "argumentFormat": ""
     }
@@ -76,7 +81,7 @@
     "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
   },
   "_buildConfigMapping": {
-    "Default": "0.226.1",
-    "Node16-225": "0.226.0"
+    "Default": "0.230.0",
+    "Node20_229_1": "0.230.1"
   }
 }
