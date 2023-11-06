@@ -1,0 +1,414 @@
+{
+  "id": "E28912F1-0114-4464-802A-A3A35437FD16",
+  "name": "Docker",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/docker",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 230,
+    "Patch": 0
+  },
+  "demands": [],
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "groups": [
+    {
+      "name": "containerRegistry",
+      "displayName": "ms-resource:loc.group.displayName.containerRegistry",
+      "isExpanded": true,
+      "visibleRule": "command != logout"
+    },
+    {
+      "name": "commands",
+      "displayName": "ms-resource:loc.group.displayName.commands",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false,
+      "visibleRule": "command != login && command != logout"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "containerregistrytype",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.containerregistrytype",
+      "defaultValue": "Azure Container Registry",
+      "required": true,
+      "options": {
+        "Azure Container Registry": "Azure Container Registry",
+        "Container Registry": "Container Registry"
+      },
+      "groupName": "containerRegistry",
+      "helpMarkDown": "ms-resource:loc.input.help.containerregistrytype"
+    },
+    {
+      "name": "addBaseImageData",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addBaseImageData",
+      "groupName": "commands",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.addBaseImageData"
+    },
+    {
+      "name": "dockerRegistryEndpoint",
+      "type": "connectedService:dockerregistry",
+      "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
+      "groupName": "containerRegistry",
+      "visibleRule": "containerregistrytype = Container Registry"
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "groupName": "containerRegistry",
+      "visibleRule": "containerregistrytype = Azure Container Registry"
+    },
+    {
+      "name": "azureContainerRegistry",
+      "label": "ms-resource:loc.input.label.azureContainerRegistry",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.azureContainerRegistry",
+      "visibleRule": "containerregistrytype = Azure Container Registry",
+      "defaultValue": "",
+      "groupName": "containerRegistry",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "command",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.command",
+      "defaultValue": "Build an image",
+      "required": true,
+      "options": {
+        "Build an image": "build",
+        "Tag image": "tag",
+        "Push an image": "push",
+        "Run an image": "run",
+        "login": "login",
+        "logout": "logout"
+      },
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.command"
+    },
+    {
+      "name": "dockerFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.dockerFile",
+      "defaultValue": "**/Dockerfile",
+      "required": true,
+      "visibleRule": "command = Build an image || command = build",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerFile"
+    },
+    {
+      "name": "arguments",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "2"
+      },
+      "visibleRule": "command != login && command != logout",
+      "label": "ms-resource:loc.input.label.arguments",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    },
+    {
+      "name": "pushMultipleImages",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.pushMultipleImages",
+      "defaultValue": "false",
+      "visibleRule": "command = Push an image || command = push",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.pushMultipleImages"
+    },
+    {
+      "name": "tagMultipleImages",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.tagMultipleImages",
+      "defaultValue": "false",
+      "visibleRule": "command = Tag image || command = tag",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.tagMultipleImages"
+    },
+    {
+      "name": "imageName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.imageName",
+      "defaultValue": "$(Build.Repository.Name):$(Build.BuildId)",
+      "required": true,
+      "visibleRule": "command = Build an image || command = build || command = Run an image || command = run || pushMultipleImages = false || tagMultipleImages = false",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.imageName"
+    },
+    {
+      "name": "imageNamesPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.imageNamesPath",
+      "required": true,
+      "visibleRule": "tagMultipleImages = true || pushMultipleImages = true",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.imageNamesPath"
+    },
+    {
+      "name": "qualifyImageName",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.qualifyImageName",
+      "defaultValue": "true",
+      "visibleRule": "command = Build an image || command = build || command = Tag image || command = tag || command = Push an image || command = push || command = Run an image || command = run",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.qualifyImageName"
+    },
+    {
+      "name": "qualifySourceImageName",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.qualifySourceImageName",
+      "defaultValue": "false",
+      "visibleRule": "command = Tag image || command = tag",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.qualifySourceImageName"
+    },
+    {
+      "name": "includeSourceTags",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.includeSourceTags",
+      "defaultValue": "false",
+      "visibleRule": "command = Build an image || command = build || command = Tag image || command = tag  || command = Push an image || command = push",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.includeSourceTags"
+    },
+    {
+      "name": "includeLatestTag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.includeLatestTag",
+      "defaultValue": "false",
+      "visibleRule": "command = Build an image || command = build",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.includeLatestTag"
+    },
+    {
+      "name": "addDefaultLabels",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addDefaultLabels",
+      "defaultValue": "true",
+      "visibleRule": "addDefaultLabels = false",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.addDefaultLabels"
+    },
+    {
+      "name": "useDefaultContext",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useDefaultContext",
+      "defaultValue": "true",
+      "visibleRule": "command = Build an image || command = build",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.useDefaultContext"
+    },
+    {
+      "name": "buildContext",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.buildContext",
+      "visibleRule": "useDefaultContext = false",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.buildContext"
+    },
+    {
+      "name": "imageDigestFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.imageDigestFile",
+      "visibleRule": "command = Push an image || command = push",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.imageDigestFile"
+    },
+    {
+      "name": "containerName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.containerName",
+      "visibleRule": "command = Run an image || command = run",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.containerName"
+    },
+    {
+      "name": "ports",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "2"
+      },
+      "label": "ms-resource:loc.input.label.ports",
+      "visibleRule": "command = Run an image || command = run",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.ports"
+    },
+    {
+      "name": "volumes",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "2"
+      },
+      "label": "ms-resource:loc.input.label.volumes",
+      "visibleRule": "command = Run an image || command = run",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.volumes"
+    },
+    {
+      "name": "envVars",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "2"
+      },
+      "label": "ms-resource:loc.input.label.envVars",
+      "visibleRule": "command = Run an image || command = run",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.envVars"
+    },
+    {
+      "name": "workingDirectory",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.workingDirectory",
+      "visibleRule": "command = Run an image || command = run",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory"
+    },
+    {
+      "name": "entrypointOverride",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.entrypointOverride",
+      "visibleRule": "command = Run an image || command = run",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.entrypointOverride"
+    },
+    {
+      "name": "containerCommand",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.containerCommand",
+      "visibleRule": "command = Run an image || command = run",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.containerCommand"
+    },
+    {
+      "name": "runInBackground",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runInBackground",
+      "defaultValue": "true",
+      "visibleRule": "command = Run an image || command = run",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.runInBackground"
+    },
+    {
+      "name": "restartPolicy",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.restartPolicy",
+      "defaultValue": "no",
+      "required": true,
+      "options": {
+        "no": "No",
+        "onFailure": "On failure",
+        "always": "Always",
+        "unlessStopped": "Unless stopped"
+      },
+      "visibleRule": "runInBackground = true",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.restartPolicy"
+    },
+    {
+      "name": "maxRestartRetries",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.maxRestartRetries",
+      "visibleRule": "runInBackground = true && restartPolicy = onFailure",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.maxRestartRetries"
+    },
+    {
+      "name": "dockerHostEndpoint",
+      "type": "connectedService:dockerhost",
+      "label": "ms-resource:loc.input.label.dockerHostEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerHostEndpoint",
+      "groupName": "advanced"
+    },
+    {
+      "name": "enforceDockerNamingConvention",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enforceDockerNamingConvention",
+      "required": false,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.enforceDockerNamingConvention",
+      "groupName": "advanced"
+    },
+    {
+      "name": "memoryLimit",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.memoryLimit",
+      "helpMarkDown": "ms-resource:loc.input.help.memoryLimit",
+      "groupName": "advanced"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "azureContainerRegistry",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "dataSourceName": "AzureRMContainerRegistries",
+      "resultTemplate": "{\"Value\":\"{{{properties.loginServer}}}\",\"DisplayValue\":\"{{{name}}}\"}"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "DockerOutput",
+      "description": "Stores the output of the docker command"
+    },
+    {
+      "name": "DockerOutputPath",
+      "description": "The path of the file which contains the output of the build command."
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "showEnvironmentVariables": true,
+  "execution": {
+    "Node10": {
+      "target": "container.js"
+    },
+    "Node16": {
+      "target": "container.js"
+    },
+    "Node20": {
+      "target": "container.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ConnectingToDockerHost": "ms-resource:loc.messages.ConnectingToDockerHost",
+    "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
+    "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
+    "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
+    "DockerHostVariableWarning": "ms-resource:loc.messages.DockerHostVariableWarning",
+    "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile",
+    "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
+    "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
+    "DockerRegistryNotFound": "ms-resource:loc.messages.DockerRegistryNotFound",
+    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.225.1",
+    "Node20_229_2": "1.230.0"
+  }
+}
