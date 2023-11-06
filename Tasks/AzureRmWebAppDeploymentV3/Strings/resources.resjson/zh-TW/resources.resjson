@@ -224,5 +224,5 @@
   "loc.messages.FailedToUpdateApplicationInsightsResource": "無法更新 Application Insights '%s' 資源。錯誤: %s",
   "loc.messages.JarNotSupported": "此版本不支援 jar 部署。請將工作版本變更為處於預覽模式的 '4.*'",
   "loc.messages.CorrelationIdForARM": "來自 ARM api 呼叫回應的相互關聯識別碼: %s",
-  "loc.messages.MSDeployNotSupportTokenAuth": "App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy ."
+  "loc.messages.MSDeployNotSupportTokenAuth": "已將 App Service 設為不使用基本驗證。這需要 Web Deploy msdeploy.exe 版本 7.1.7225 或更新版本。您需要包含 msdeploy.exe 已更新版本的 Visual Studio 版本。如需詳細資訊，請前往 https://aka.ms/azdo-webapp-msdeploy。"
 }
