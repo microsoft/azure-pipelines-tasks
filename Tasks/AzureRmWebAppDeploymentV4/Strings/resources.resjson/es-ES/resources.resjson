@@ -226,5 +226,5 @@
   "loc.messages.JarPathNotPresent": "La ruta de acceso de jar de Java no está presente.",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "No se pudo actualizar el recurso de Application Insights \"%s\". Error: %s",
   "loc.messages.RunFromZipPreventsFileInUseError": "Cambie de Web Deploy a la ejecución desde el paquete, que ayuda a evitar el error FILE_IN_USE. Tenga en cuenta que la ejecución desde el paquete no admite el tipo de paquete msBuild. Cambie el formato del paquete para usar este método de implementación.",
-  "loc.messages.MSDeployNotSupportTokenAuth": "App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy ."
+  "loc.messages.MSDeployNotSupportTokenAuth": "App Service está configurado para no usar la autenticación básica. Esto requiere la versión 7.1.7225 o una posterior de Web Deploy, msdeploy.exe. Necesita una versión de Visual Studio que incluya una versión actualizada de msdeploy.exe. Para obtener más información, visite https://aka.ms/azdo-webapp-msdeploy."
 }

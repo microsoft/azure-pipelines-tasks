@@ -1,107 +1,107 @@
 {
-  "id": "e94f1750-a6a8-11e6-be69-bdf37a7b15d8",
-  "name": "AzureNLBManagement",
-  "friendlyName": "Azure Network Load Balancer",
-  "description": "Connect or disconnect an Azure virtual machine's network interface to a Load Balancer's back end address pool",
-  "author": "Microsoft Corporation",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-nlb-management",
-  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=837723)",
-  "category": "Utility",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "runsOn": [
-    "DeploymentGroup"
-  ],
-  "version": {
-    "Major": 1,
-    "Minor": 228,
-    "Patch": 0
-  },
-  "minimumAgentVersion": "1.95.0",
-  "instanceNameFormat": "Azure Network Load Balancer: $(LoadBalancer) - $(Action)",
-  "inputs": [
-    {
-      "name": "ConnectedServiceName",
-      "aliases": [
-        "azureSubscription"
-      ],
-      "type": "connectedService:AzureRM",
-      "label": "Azure Subscription",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+    "id": "e94f1750-a6a8-11e6-be69-bdf37a7b15d8",
+    "name": "AzureNLBManagement",
+    "friendlyName": "Azure Network Load Balancer",
+    "description": "Connect or disconnect an Azure virtual machine's network interface to a Load Balancer's back end address pool",
+    "author": "Microsoft Corporation",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/azure-nlb-management",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=837723)",
+    "category": "Utility",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "DeploymentGroup"
+    ],
+    "version": {
+        "Major": 1,
+        "Minor": 231,
+        "Patch": 0
     },
-    {
-      "name": "ResourceGroupName",
-      "type": "pickList",
-      "label": "Resource Group",
-      "required": true,
-      "helpMarkDown": "Select the resource group name.",
-      "properties": {
-        "EditableOptions": "True"
-      }
+    "minimumAgentVersion": "1.95.0",
+    "instanceNameFormat": "Azure Network Load Balancer: $(LoadBalancer) - $(Action)",
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "aliases": [
+                "azureSubscription"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure Subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+        },
+        {
+            "name": "ResourceGroupName",
+            "type": "pickList",
+            "label": "Resource Group",
+            "required": true,
+            "helpMarkDown": "Select the resource group name.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "LoadBalancer",
+            "type": "pickList",
+            "label": "Load Balancer Name",
+            "required": true,
+            "helpMarkDown": "Select or enter the load balancer.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "Action",
+            "type": "pickList",
+            "label": "Action",
+            "defaultValue": "",
+            "required": true,
+            "options": {
+                "Disconnect": "Disconnect Primary Network Interface",
+                "Connect": "Connect Primary Network Interface"
+            },
+            "helpMarkDown": "Disconnect:  Removes the virtual machine’s primary network interface from the load balancer’s backend pool. So that it stops receiving network traffic.\n\nConnect: Adds the virtual machine’s primary network interface to load balancer backend pool. So that it starts receiving network traffic based on the load balancing rules for the load balancer resource."
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "ResourceGroupName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureResourceGroups"
+        },
+        {
+            "target": "LoadBalancer",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMLoadBalancers",
+            "parameters": {
+                "ResourceGroupName": "$(ResourceGroupName)"
+            }
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "nlbtask.js"
+        },
+        "Node16": {
+            "target": "nlbtask.js",
+            "argumentFormat": ""
+        }
     },
-    {
-      "name": "LoadBalancer",
-      "type": "pickList",
-      "label": "Load Balancer Name",
-      "required": true,
-      "helpMarkDown": "Select or enter the load balancer.",
-      "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
-      "name": "Action",
-      "type": "pickList",
-      "label": "Action",
-      "defaultValue": "",
-      "required": true,
-      "options": {
-        "Disconnect": "Disconnect Primary Network Interface",
-        "Connect": "Connect Primary Network Interface"
-      },
-      "helpMarkDown": "Disconnect:  Removes the virtual machine’s primary network interface from the load balancer’s backend pool. So that it stops receiving network traffic.\n\nConnect: Adds the virtual machine’s primary network interface to load balancer backend pool. So that it starts receiving network traffic based on the load balancing rules for the load balancer resource."
+    "messages": {
+        "CouldNotFetchNicDetails": "Could not fetch primary network interface configuration for the Azure Virtual Machine : %s",
+        "ConnectingVMtoLB": "Connecting the Azure Virtual Machine to the Load Balancer - %s's backend pool.",
+        "DisconnectingVMfromLB": "Disconnecting the Azure Virtual Machine from the Load Balancer - %s's backend pool.",
+        "setNICStatusSuccess": "Network interface %s set successfully",
+        "MaxRetriesExceededForSettingNetworkInterface": "Maximum retries exceeded for setting the Network Interface : %s",
+        "ActionCompletedSuccefully": "The Action - %s completed successfully for the virtual machine %s and load balancer %s",
+        "CouldNotFetchAcessToken": "Could not fetch access token.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "CouldNotFetchNetworkInterfacesInRg": "Could not fetch Network Interfaces in the resource group %s.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "CouldNotFetchLoadBalancer": "Could not fetch Load Balancer %s.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "CouldNotFetchNetworkInterface": "Could not fetch Network Interface %s.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "FailedSettingNetworkInterface": "Failed setting the Network Interface %s.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "SettingTheNetworkInterface": "Setting the network interface %s"
     }
-  ],
-  "dataSourceBindings": [
-    {
-      "target": "ResourceGroupName",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureResourceGroups"
-    },
-    {
-      "target": "LoadBalancer",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureRMLoadBalancers",
-      "parameters": {
-        "ResourceGroupName": "$(ResourceGroupName)"
-      }
-    }
-  ],
-  "execution": {
-    "Node10": {
-      "target": "nlbtask.js"
-    },
-    "Node16": {
-      "target": "nlbtask.js",
-      "argumentFormat": ""
-    }
-  },
-  "messages": {
-    "CouldNotFetchNicDetails": "Could not fetch primary network interface configuration for the Azure Virtual Machine : %s",
-    "ConnectingVMtoLB": "Connecting the Azure Virtual Machine to the Load Balancer - %s's backend pool.",
-    "DisconnectingVMfromLB": "Disconnecting the Azure Virtual Machine from the Load Balancer - %s's backend pool.",
-    "setNICStatusSuccess": "Network interface %s set successfully",
-    "MaxRetriesExceededForSettingNetworkInterface": "Maximum retries exceeded for setting the Network Interface : %s",
-    "ActionCompletedSuccefully": "The Action - %s completed successfully for the virtual machine %s and load balancer %s",
-    "CouldNotFetchAcessToken": "Could not fetch access token.\nStatus Code : %s\nStatus Message : %s\n%s",
-    "CouldNotFetchNetworkInterfacesInRg": "Could not fetch Network Interfaces in the resource group %s.\nStatus Code : %s\nStatus Message : %s\n%s",
-    "CouldNotFetchLoadBalancer": "Could not fetch Load Balancer %s.\nStatus Code : %s\nStatus Message : %s\n%s",
-    "CouldNotFetchNetworkInterface": "Could not fetch Network Interface %s.\nStatus Code : %s\nStatus Message : %s\n%s",
-    "FailedSettingNetworkInterface": "Failed setting the Network Interface %s.\nStatus Code : %s\nStatus Message : %s\n%s",
-    "SettingTheNetworkInterface": "Setting the network interface %s"
-  }
 }

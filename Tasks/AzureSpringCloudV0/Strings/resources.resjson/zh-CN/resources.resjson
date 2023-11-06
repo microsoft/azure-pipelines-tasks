@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Spring Apps",
-  "loc.helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/en-gb/azure/devops/pipelines/tasks/reference/azure-spring-cloud-v0?view=azure-pipelines)",
+  "loc.helpMarkDown": "[了解有关此任务的详细信息](https://learn.microsoft.com/en-gb/azure/devops/pipelines/tasks/reference/azure-spring-cloud-v0?view=azure-pipelines)",
   "loc.description": "部署应用程序到 Azure Spring Apps 并管理部署。",
   "loc.instanceNameFormat": "Azure Spring Apps $(Action): $(AppName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "应用程序和配置设置",

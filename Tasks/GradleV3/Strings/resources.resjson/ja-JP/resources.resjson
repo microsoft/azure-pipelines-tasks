@@ -95,5 +95,5 @@
   "loc.messages.FailedToAppendCC": "コード カバレッジ データを追加できません: %s",
   "loc.messages.NoTestResults": "%s と一致するテスト結果ファイルが見つからないため、JUnit テスト結果の発行をスキップします。",
   "loc.messages.chmodGradlew": "gradlew ファイルを実行可能にするために 'chmod' メソッドを使用しました。",
-  "loc.messages.UnableToExtractGradleVersion": "Unable to extract Gradle version from gradle output."
+  "loc.messages.UnableToExtractGradleVersion": "Gradle の出力から Gradle のバージョンを抽出できません。"
 }

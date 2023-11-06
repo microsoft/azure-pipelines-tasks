@@ -226,5 +226,5 @@
   "loc.messages.JarPathNotPresent": "沒有 Java 的 jar 路徑",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "無法更新 Application Insights '%s' 資源。錯誤: %s",
   "loc.messages.RunFromZipPreventsFileInUseError": "從 Web Deploy 移至 RunFrom Package 可協助避免 FILE_IN_USE 錯誤。請注意，Run From Package 不支援 msBuild 套件類型。請變更您的套件格式以使用此部署方法。",
-  "loc.messages.MSDeployNotSupportTokenAuth": "App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy ."
+  "loc.messages.MSDeployNotSupportTokenAuth": "已將 App Service 設為不使用基本驗證。這需要 Web Deploy msdeploy.exe 版本 7.1.7225 或更新版本。您需要包含 msdeploy.exe 已更新版本的 Visual Studio 版本。如需詳細資訊，請前往 https://aka.ms/azdo-webapp-msdeploy。"
 }
