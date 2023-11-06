@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 230,
-    "Patch": 1
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -88,7 +88,7 @@
     "Error_FailedCleanupM2": "Failed to delete credentials from the user settings.xml file: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.230.0",
-    "Node20_229_1": "0.230.1"
+    "Default": "0.230.2",
+    "Node20_229_1": "0.230.3"
   }
 }
