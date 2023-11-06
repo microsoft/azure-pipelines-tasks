@@ -1,0 +1,55 @@
+{
+  "id": "8413C881-4959-43D5-8840-B4EA0FFC5CFD",
+  "name": "KubectlInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/azpipes-kubectl-installer-tsg",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 230,
+    "Patch": 1
+  },
+  "demands": [],
+  "satisfies": [
+    "Kubectl"
+  ],
+  "groups": [],
+  "inputs": [
+    {
+      "name": "kubectlVersion",
+      "label": "ms-resource:loc.input.label.kubectlVersion",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.kubectlVersion",
+      "defaultValue": "latest"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "src//kubectltoolinstaller.js"
+    },
+    "Node16": {
+      "target": "src//kubectltoolinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "src//kubectltoolinstaller.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
+    "VerifyKubectlInstallation": "ms-resource:loc.messages.VerifyKubectlInstallation"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.228.0",
+    "Node20_229_3": "0.230.1"
+  }
+}
