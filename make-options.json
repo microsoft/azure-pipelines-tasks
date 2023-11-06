@@ -356,12 +356,15 @@
         "UseDotNetV2"
     ],
     "Node20_229_4": [
+        "VsTestPlatformToolInstallerV1",
         "ContainerStructureTestV0",
         "PublishCodeCoverageResultsV1",
         "VsTestV2",
         "VsTestV3"
     ],
-    "Node20_229_5": [],
+    "Node20_229_5": [
+        "AzureSpringCloudV0"
+    ],
     "Node20_229_6": [
         "AzureVmssDeploymentV0",
         "PackerBuildV0",
