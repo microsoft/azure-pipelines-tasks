@@ -362,7 +362,9 @@
         "VsTestV2",
         "VsTestV3"
     ],
-    "Node20_229_5": [],
+    "Node20_229_5": [
+        "AzureSpringCloudV0"
+    ],
     "Node20_229_6": [
         "AzureVmssDeploymentV0"
     ],
