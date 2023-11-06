@@ -8,9 +8,7 @@ import { computeChecksum } from './crypto';
 export async function installFromURL(downloadURL: string, expectedChecksum: string, extractPath: string): Promise<void> {
     // Download notation
     const fileName = path.basename(downloadURL);
-    console.log('start');
     const downloadPath = await toolLib.downloadTool(downloadURL, fileName);
-    console.log('end');
 
     // Validate checksum
     const checksum = await computeChecksum(downloadPath);
