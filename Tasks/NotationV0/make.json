@@ -1,5 +1,5 @@
 {
-	"rm": [
+    "rm": [
         {
             "items": [
                 "node_modules/azure-pipelines-tasks-utility-common/node_modules/azure-pipelines-task-lib",
@@ -10,7 +10,7 @@
         }
     ],
     "cp": [
-            {
+        {
             "source": [
                 "data"
             ],
