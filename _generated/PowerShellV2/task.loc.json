@@ -20,15 +20,7 @@
     "Minor": 231,
     "Patch": 0
   },
-  "releaseNotes": "ms-resource:loc.releaseNotes",
-  "minimumAgentVersion": "2.115.0",
-  "showEnvironmentVariables": true,
   "groups": [
-    {
-      "name": "preferenceVariables",
-      "displayName": "ms-resource:loc.group.displayName.preferenceVariables",
-      "isExpanded": false
-    },
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
