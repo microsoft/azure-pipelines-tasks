@@ -356,6 +356,7 @@
         "UseDotNetV2"
     ],
     "Node20_229_4": [
+        "VsTestPlatformToolInstallerV1",
         "ContainerStructureTestV0",
         "PublishCodeCoverageResultsV1",
         "VsTestV2",

@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 231,
-    "Patch": 0
+    "Patch": 1
   },
   "satisfies": [
     "VsTest"
@@ -113,6 +113,10 @@
     "Node16": {
       "target": "vstestplatformtoolinstaller.js",
       "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "vstestplatformtoolinstaller.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -138,5 +142,9 @@
     "DownloadFailed": "ms-resource:loc.messages.DownloadFailed",
     "ExpectedTempToBeSet": "ms-resource:loc.messages.ExpectedTempToBeSet",
     "ParsedVersion": "ms-resource:loc.messages.ParsedVersion"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.231.0",
+    "Node20_229_4": "1.231.1"
   }
 }
