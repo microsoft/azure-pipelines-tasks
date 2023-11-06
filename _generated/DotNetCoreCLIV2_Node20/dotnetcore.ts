@@ -140,13 +140,17 @@ export class dotNetExe {
         const dotnetPath = tl.which('dotnet', true);
         console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
         const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
-        const resultsDirectory = tl.getVariable('Agent.TempDirectory');
+        var resultsDirectory = tl.getVariable('Agent.TempDirectory');
         if (enablePublishTestResults && enablePublishTestResults === true) {
-            this.arguments = ` --logger trx --results-directory "${resultsDirectory}" `.concat(this.arguments);
-        }
+            const containsResultDirectoryArgument: boolean = this.arguments.includes('--results-directory');
+            if (!containsResultDirectoryArgument)
+                this.arguments = ` --logger trx --results-directory "${resultsDirectory}" `.concat(this.arguments);
+            else {
+                this.arguments = ` --logger trx `.concat(this.arguments);
+                resultsDirectory = this.getResultsDirectoryArgument();
+            }
 
-        // Remove old trx files
-        if (enablePublishTestResults && enablePublishTestResults === true) {
+            // Remove old trx files
             this.removeOldTestResultFiles(resultsDirectory);
         }
 
@@ -340,6 +344,72 @@ export class dotNetExe {
             else if (isOutputOption) {
                 this.outputArgument = token;
                 isOutputOption = false;
+            }
+
+            token = nextArg();
+        }
+    }
+
+    private getResultsDirectoryArgument(): string {
+        if (!this.arguments || !this.arguments.trim()) {
+            return;
+        }
+
+        var argString = this.arguments.trim();
+        var isResultsDirectoryOption = false;
+        var inQuotes = false;
+        var escaped = false;
+        var arg = '';
+        var i = 0;
+        var append = function (c) {
+            // we only escape double quotes.
+            if (escaped && c !== '"') {
+                arg += '\\';
+            }
+            arg += c;
+            escaped = false;
+        };
+        var nextArg = function () {
+            arg = '';
+            for (; i < argString.length; i++) {
+                var c = argString.charAt(i);
+                if (c === '"') {
+                    if (!escaped) {
+                        inQuotes = !inQuotes;
+                    }
+                    else {
+                        append(c);
+                    }
+                    continue;
+                }
+                if (c === "\\" && inQuotes && !escaped) {
+                    escaped = true;
+                    continue;
+                }
+                if (c === ' ' && !inQuotes) {
+                    if (arg.length > 0) {
+                        return arg.trim();
+                    }
+                    continue;
+                }
+                append(c);
+            }
+
+            if (arg.length > 0) {
+                return arg.trim();
+            }
+
+            return null;
+        }
+
+        var token = nextArg();
+        while (token) {
+            var tokenUpper = token.toUpperCase();
+            if (tokenUpper === "--RESULTS-DIRECTORY") {
+                isResultsDirectoryOption = true;
+            }
+            else if (isResultsDirectoryOption) {
+                return token;
             }
 
             token = nextArg();
