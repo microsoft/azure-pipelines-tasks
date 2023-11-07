@@ -60,7 +60,7 @@
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
-      "defaultValue": "1.0.0",
+      "defaultValue": "1.0.1",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.version",
       "visibleRule": "command = install && isCustomVersion = false",

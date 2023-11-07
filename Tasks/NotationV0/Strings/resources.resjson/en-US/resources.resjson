@@ -24,7 +24,7 @@
   "loc.input.help.allowReferrersAPI": "Use the Referrers API to sign signatures, if not supported (returns 404), fallback to the Referrers tag schema.",
   "loc.input.label.plugin": "Plugin",
   "loc.input.label.akvPluginVersion": "Plugin Version",
-  "loc.input.help.akvPluginVersion": "The version of the Azure Key Vualt plugin to be install. please visit the [release page](https://github.com/Azure/notation-azure-kv/releases) for the available versions.",
+  "loc.input.help.akvPluginVersion": "The version of the Azure Key Vault plugin to be installed. please visit the [release page](https://github.com/Azure/notation-azure-kv/releases) for the available versions.",
   "loc.input.label.azurekvServiceConection": "Azure Key Vault service connection",
   "loc.input.help.azurekvServiceConection": "Select the Azure subscription for the key vault if prefer to use service connection for authentication.",
   "loc.input.label.keyid": "Key ID",
