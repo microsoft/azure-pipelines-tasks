@@ -1,0 +1,321 @@
+{
+  "id": "845fd4f4-642d-4694-8514-047948a5a556",
+  "name": "PackerBuild",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/packer-build",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 231,
+    "Patch": 1
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.0.0",
+  "groups": [
+    {
+      "name": "AzureDetails",
+      "displayName": "ms-resource:loc.group.displayName.AzureDetails",
+      "isExpanded": true,
+      "visibleRule": "templateType = builtin"
+    },
+    {
+      "name": "DeploymentInputs",
+      "displayName": "ms-resource:loc.group.displayName.DeploymentInputs",
+      "isExpanded": true,
+      "visibleRule": "templateType = builtin"
+    },
+    {
+      "name": "Advanced",
+      "displayName": "ms-resource:loc.group.displayName.Advanced",
+      "isExpanded": false,
+      "visibleRule": "templateType = builtin"
+    },
+    {
+      "name": "Output",
+      "displayName": "ms-resource:loc.group.displayName.Output",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "templateType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.templateType",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.templateType",
+      "options": {
+        "builtin": "Auto generated",
+        "custom": "User provided"
+      },
+      "defaultValue": "builtin"
+    },
+    {
+      "name": "customTemplateLocation",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.customTemplateLocation",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.customTemplateLocation",
+      "visibleRule": "templateType = custom"
+    },
+    {
+      "name": "customTemplateParameters",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.customTemplateParameters",
+      "required": false,
+      "defaultValue": "{}",
+      "visibleRule": "templateType = custom",
+      "helpMarkDown": "ms-resource:loc.input.help.customTemplateParameters",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
+      }
+    },
+    {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "groupName": "AzureDetails"
+    },
+    {
+      "name": "location",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.location",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.location",
+      "groupName": "AzureDetails"
+    },
+    {
+      "name": "storageAccountName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.storageAccountName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.storageAccountName",
+      "groupName": "AzureDetails"
+    },
+    {
+      "name": "azureResourceGroup",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.azureResourceGroup",
+      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup",
+      "required": true,
+      "groupName": "AzureDetails"
+    },
+    {
+      "name": "baseImageSource",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.baseImageSource",
+      "required": true,
+      "defaultValue": "default",
+      "helpMarkDown": "ms-resource:loc.input.help.baseImageSource",
+      "options": {
+        "default": "Gallery",
+        "customVhd": "Custom"
+      },
+      "groupName": "DeploymentInputs"
+    },
+    {
+      "name": "baseImage",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.baseImage",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.baseImage",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "options": {
+        "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows": "Windows 2012-R2-Datacenter",
+        "MicrosoftWindowsServer:WindowsServer:2016-Datacenter:windows": "Windows 2016-Datacenter",
+        "MicrosoftWindowsServer:WindowsServer:2012-Datacenter:windows": "Windows 2012-Datacenter",
+        "MicrosoftWindowsServer:WindowsServer:2008-R2-SP1:windows": "Windows 2008-R2-SP1",
+        "Canonical:UbuntuServer:14.04.4-LTS:linux": "Ubuntu 14.04.4-LTS",
+        "Canonical:UbuntuServer:16.04-LTS:linux": "Ubuntu 16.04-LTS",
+        "RedHat:RHEL:7.2:linux": "RHEL 7.2",
+        "RedHat:RHEL:6.8:linux": "RHEL 6.8",
+        "OpenLogic:CentOS:7.2:linux": "CentOS 7.2",
+        "OpenLogic:CentOS:6.8:linux": "CentOS 6.8",
+        "credativ:Debian:8:linux": "Debian 8",
+        "credativ:Debian:7:linux": "Debian 7",
+        "SUSE:openSUSE-Leap:42.2:linux": "openSUSE-Leap 42.2",
+        "SUSE:SLES:12-SP2:linux": "SLES 12-SP2",
+        "SUSE:SLES:11-SP4:linux": "SLES 11-SP4"
+      },
+      "defaultValue": "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows",
+      "visibleRule": "baseImageSource = default",
+      "groupName": "DeploymentInputs"
+    },
+    {
+      "name": "customImageUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customImageUrl",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.customImageUrl",
+      "visibleRule": "baseImageSource = customVhd",
+      "groupName": "DeploymentInputs"
+    },
+    {
+      "name": "customImageOSType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.customImageOSType",
+      "required": true,
+      "defaultValue": "windows",
+      "options": {
+        "windows": "Windows",
+        "linux": "Linux"
+      },
+      "visibleRule": "baseImageSource = customVhd",
+      "groupName": "DeploymentInputs"
+    },
+    {
+      "name": "packagePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.packagePath",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.packagePath",
+      "groupName": "DeploymentInputs"
+    },
+    {
+      "name": "deployScriptPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.deployScriptPath",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.deployScriptPath",
+      "groupName": "DeploymentInputs"
+    },
+    {
+      "name": "deployScriptArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.deployScriptArguments",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.deployScriptArguments",
+      "groupName": "DeploymentInputs"
+    },
+    {
+      "name": "additionalBuilderParameters",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.additionalBuilderParameters",
+      "required": false,
+      "defaultValue": "{}",
+      "groupName": "Advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.additionalBuilderParameters",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
+      }
+    },
+    {
+      "name": "skipTempFileCleanupDuringVMDeprovision",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipTempFileCleanupDuringVMDeprovision",
+      "defaultValue": true,
+      "groupName": "Advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.skipTempFileCleanupDuringVMDeprovision"
+    },
+    {
+      "name": "imageUri",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.imageUri",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.imageUri",
+      "groupName": "Output"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "location",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureLocations2",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+    },
+    {
+      "target": "storageAccountName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMStorageAccountByLocation",
+      "parameters": {
+        "location": "$(location)"
+      }
+    },
+    {
+      "target": "azureResourceGroup",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMStorageAccountIdByName",
+      "parameters": {
+        "storageAccountName": "$(storageAccountName)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource resourceGroups}}}\",\"DisplayValue\":\"{{{ #extractResource resourceGroups}}}\"}"
+    }
+  ],
+  "sourceDefinitions": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "src//main.js"
+    },
+    "Node16": {
+      "target": "src//main.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "src//main.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "OSTypeNotSupported": "ms-resource:loc.messages.OSTypeNotSupported",
+    "CopyTemplateToTempFailed": "ms-resource:loc.messages.CopyTemplateToTempFailed",
+    "TaskNotFound": "ms-resource:loc.messages.TaskNotFound",
+    "OriginalTemplateLocation": "ms-resource:loc.messages.OriginalTemplateLocation",
+    "CopyingTemplate": "ms-resource:loc.messages.CopyingTemplate",
+    "TempTemplateLocation": "ms-resource:loc.messages.TempTemplateLocation",
+    "CopySourceNotExists": "ms-resource:loc.messages.CopySourceNotExists",
+    "CreatingDestinationDir": "ms-resource:loc.messages.CreatingDestinationDir",
+    "CreatedDestinationDir": "ms-resource:loc.messages.CreatedDestinationDir",
+    "ExecutingPackerFix": "ms-resource:loc.messages.ExecutingPackerFix",
+    "ExecutingPackerValidate": "ms-resource:loc.messages.ExecutingPackerValidate",
+    "ExecutingPackerBuild": "ms-resource:loc.messages.ExecutingPackerBuild",
+    "PackerBuildCompleted": "ms-resource:loc.messages.PackerBuildCompleted",
+    "ImageURIOutputVariableNotFound": "ms-resource:loc.messages.ImageURIOutputVariableNotFound",
+    "BuiltInTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.BuiltInTemplateNotFoundErrorMessagePathName",
+    "CustomTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.CustomTemplateNotFoundErrorMessagePathName",
+    "CouldNotDeleteTemporaryTemplateDirectory": "ms-resource:loc.messages.CouldNotDeleteTemporaryTemplateDirectory",
+    "TaskParametersConstructorFailed": "ms-resource:loc.messages.TaskParametersConstructorFailed",
+    "PackerFixFailed": "ms-resource:loc.messages.PackerFixFailed",
+    "PackerValidateFailed": "ms-resource:loc.messages.PackerValidateFailed",
+    "ResolvedPathNotFound": "ms-resource:loc.messages.ResolvedPathNotFound",
+    "ResolvedDeployPackgePath": "ms-resource:loc.messages.ResolvedDeployPackgePath",
+    "ResolvedDeployScriptPath": "ms-resource:loc.messages.ResolvedDeployScriptPath",
+    "OSNotSupportedForRunningPacker": "ms-resource:loc.messages.OSNotSupportedForRunningPacker",
+    "DownloadingPackerRequired": "ms-resource:loc.messages.DownloadingPackerRequired",
+    "DownloadingPackerCompleted": "ms-resource:loc.messages.DownloadingPackerCompleted",
+    "ExtractingPackerCompleted": "ms-resource:loc.messages.ExtractingPackerCompleted",
+    "CreatedStagingDirectory": "ms-resource:loc.messages.CreatedStagingDirectory",
+    "CouldNotDeleteStagingDirectory": "ms-resource:loc.messages.CouldNotDeleteStagingDirectory",
+    "InstalledPackerVersion": "ms-resource:loc.messages.InstalledPackerVersion",
+    "PackerToolBusy": "ms-resource:loc.messages.PackerToolBusy",
+    "ResolvingDeployPackageInput": "ms-resource:loc.messages.ResolvingDeployPackageInput",
+    "ResolvingDeployScriptInput": "ms-resource:loc.messages.ResolvingDeployScriptInput",
+    "ParsingAdditionalBuilderParameters": "ms-resource:loc.messages.ParsingAdditionalBuilderParameters",
+    "ParsingTemplateFileContentFailed": "ms-resource:loc.messages.ParsingTemplateFileContentFailed",
+    "ParsingCustomTemplateParameters": "ms-resource:loc.messages.ParsingCustomTemplateParameters",
+    "FetchingSPNDetailsRemotely": "ms-resource:loc.messages.FetchingSPNDetailsRemotely",
+    "FetchedSPNDetailsRemotely": "ms-resource:loc.messages.FetchedSPNDetailsRemotely",
+    "FailedToFetchSPNDetailsRemotely": "ms-resource:loc.messages.FailedToFetchSPNDetailsRemotely",
+    "GetArtifactItemsNotSupported": "ms-resource:loc.messages.GetArtifactItemsNotSupported",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.231.0",
+    "Node20_229_6": "0.231.1"
+  }
+}
