@@ -3,6 +3,8 @@ param()
 
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
 
+. $PSScriptRoot\helpers.ps1
+
 function Get-ActionPreference {
     param (
         [Parameter(Mandatory)]
