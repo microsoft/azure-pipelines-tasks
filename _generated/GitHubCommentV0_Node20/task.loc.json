@@ -1,0 +1,90 @@
+{
+  "id": "DEEA6198-ADF8-4B16-9939-7ADDF85708B2",
+  "name": "GitHubComment",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "preview": true,
+  "version": {
+    "Major": 0,
+    "Minor": 231,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.0.0",
+  "inputs": [
+    {
+      "name": "gitHubConnection",
+      "type": "connectedService:github:OAuth,PersonalAccessToken,InstallationToken,Token",
+      "label": "ms-resource:loc.input.label.gitHubConnection",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.gitHubConnection"
+    },
+    {
+      "name": "repositoryName",
+      "type": "githubRepositoryPicker",
+      "label": "ms-resource:loc.input.label.repositoryName",
+      "defaultValue": "$(Build.Repository.Name)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.repositoryName",
+      "properties": {
+        "DisableManageLink": "True",
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.id",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.id"
+    },
+    {
+      "name": "comment",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.comment",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.comment"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "repositoryName",
+      "endpointId": "$(gitHubConnection)",
+      "dataSourceName": "UserRepositories",
+      "resultTemplate": "{ \"Value\" : \"{{full_name}}\", \"DisplayValue\" : \"{{full_name}}\" }"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "main.js"
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "main.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "InvalidEndpointAuthScheme": "ms-resource:loc.messages.InvalidEndpointAuthScheme",
+    "InvalidGithubEndpoint": "ms-resource:loc.messages.InvalidGithubEndpoint",
+    "WriteFailed": "ms-resource:loc.messages.WriteFailed",
+    "WriteSucceeded": "ms-resource:loc.messages.WriteSucceeded",
+    "NoOp": "ms-resource:loc.messages.NoOp"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.227.0",
+    "Node20_229_12": "0.231.0"
+  }
+}
