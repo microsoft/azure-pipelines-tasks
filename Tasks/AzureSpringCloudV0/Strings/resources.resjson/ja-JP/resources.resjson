@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Spring Apps",
-  "loc.helpMarkDown": "[このタスクの詳細情報](https://aka.ms/azurespringapps)",
+  "loc.helpMarkDown": "[このタスクの詳細情報](https://learn.microsoft.com/en-gb/azure/devops/pipelines/tasks/reference/azure-spring-cloud-v0?view=azure-pipelines)",
   "loc.description": "アプリケーションを Azure Spring Apps にデプロイして、デプロイを管理します。",
   "loc.instanceNameFormat": "Azure Spring Apps $(Action): $(AppName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "アプリケーションと構成の設定",
