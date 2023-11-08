@@ -315,7 +315,7 @@ Tasks/NodeTaskRunnerInstallerV0/    @microsoft/akvelon-build-task-team
 Tasks/NodeToolV0/ @microsoft/akvelon-build-task-team
 
 # DRI rotation: Azure Container Registry / Triage
-Tasks/NotationV0/ @azure/azure-container-registry
+Tasks/NotationV0/ @microsoft/azure-containerregistry-contributors
 
 Tasks/NpmV0/      @microsoft/azure-artifacts-packages
 
