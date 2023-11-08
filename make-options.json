@@ -310,7 +310,6 @@
         "AzureMysqlDeploymentV1",
         "AzureNLBManagementV1",
         "AzureRmWebAppDeploymentV3",
-        "AzureRmWebAppDeploymentV4",
         "AzurePowerShellV4",
         "AzurePowerShellV5",
         "AzureWebAppV1",
@@ -356,14 +355,19 @@
         "UseDotNetV2"
     ],
     "Node20_229_4": [
+        "VsTestPlatformToolInstallerV1",
         "ContainerStructureTestV0",
         "PublishCodeCoverageResultsV1",
         "VsTestV2",
         "VsTestV3"
     ],
-    "Node20_229_5": [],
+    "Node20_229_5": [
+        "AzureSpringCloudV0"
+    ],
     "Node20_229_6": [
-        "AzureVmssDeploymentV0"
+        "AzureVmssDeploymentV0",
+        "PackerBuildV0",
+        "PackerBuildV1"
     ],
     "Node20_229_7": [],
     "Node20_229_8": [
