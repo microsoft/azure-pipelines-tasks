@@ -28,7 +28,7 @@ export async function getVaultCredentials(): Promise<{ [key: string]: string }> 
 
             if (authType == "spnCertificate") {
                 taskLib.debug('certificate based endpoint');
-                let certificateContent = taskLib.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
+                let certificateContent = taskLib.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false) ?? '';
                 let tempDir = taskLib.getVariable('Agent.TempDirectory') || taskLib.getVariable('system.DefaultWorkingDirectory');
                 if (!tempDir) {
                     throw new Error(taskLib.loc('TempDirectoryOrWorkingDirectoryNotSet'));

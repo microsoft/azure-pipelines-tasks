@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
-  "id": "a7d56ba6-35a6-453d-8192-8b602bf234bd",
+  "id": "c7d56ba6-35a6-453d-8192-8b602bf234bd",
   "name": "Notation",
   "friendlyName": "Notation",
   "description": "Azure Pipepine Task for setting up Notation CLI, sign and verify with Notation",

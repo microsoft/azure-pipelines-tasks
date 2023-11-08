@@ -1,12 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
-  "id": "a7d56ba6-35a6-453d-8192-8b602bf234bd",
+  "id": "c7d56ba6-35a6-453d-8192-8b602bf234bd",
   "name": "Notation",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "author": "Notation Developers",
+  "minimumAgentVersion": "2.144.0",
   "version": {
     "Major": 0,
     "Minor": 231,
@@ -203,10 +204,12 @@
   ],
   "execution": {
     "Node10": {
-      "target": "src/index.js"
+      "target": "src/index.js",
+      "argumentFormat": ""
     },
     "Node16": {
-      "target": "src/index.js"
+      "target": "src/index.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
