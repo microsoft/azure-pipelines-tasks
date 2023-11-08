@@ -203,14 +203,6 @@
     }
   ],
   "execution": {
-    "Node10": {
-      "target": "src/index.js",
-      "argumentFormat": ""
-    },
-    "Node16": {
-      "target": "src/index.js",
-      "argumentFormat": ""
-    },
     "Node20": {
       "target": "src/index.js",
       "argumentFormat": ""

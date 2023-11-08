@@ -16,6 +16,6 @@
     "azure-pipelines-tool-lib": "2.0.7"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "5.1.6"
   }
 }
