@@ -31,10 +31,14 @@ tmr.setAnswers({
         },
     },
     "exist": {
-        "truststore/x509": true
+        "truststore/x509": true,
+        "truststore\\x509": true
     },
     "rmRF": {
         "/user/config/notation/truststore": {
+            "success": true
+        },
+        "\\user\\config\\notation\\truststore": {
             "success": true
         }
     },
