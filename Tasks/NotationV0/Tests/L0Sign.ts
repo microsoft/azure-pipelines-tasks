@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as tmrm from 'azure-pipelines-task-lib/mock-run';
+import os = require('os');
 
 let taskPath = path.join(__dirname, '..', 'src', 'index.js');
 let tmr = new tmrm.TaskMockRunner(taskPath);
@@ -37,6 +38,16 @@ tmr.registerMock('./crypto', {
         return Promise.resolve('f8a75d9234db90069d9eb5660e5374820edf36d710bd063f4ef81e7063d3810b');
     }
 })
+
+os.platform = () => {
+    return 'linux' as NodeJS.Platform;
+}
+
+os.arch = () => {
+    return 'x64';
+}
+
+tmr.registerMock('os', os);
 
 process.env['AGENT_TEMPDIRECTORY'] = '.';
 tmr.setInput('command', 'sign');

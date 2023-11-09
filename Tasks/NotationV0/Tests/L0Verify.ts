@@ -48,8 +48,13 @@ tmr.setInput('trustpolicy', './policy.json')
 tmr.setInput('truststore', './truststore')
 
 os.platform = () => {
-    return 'linux';
+    return 'linux' as NodeJS.Platform;
 }
+
+os.arch = () => {
+    return 'x64';
+}
+
 tmr.registerMock('os', os);
 
 tmr.run();
