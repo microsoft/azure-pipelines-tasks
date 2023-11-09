@@ -2,7 +2,7 @@
 param()
 
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\helpers.ps1
+. $PSScriptRoot\..\Expand-EnvVariables.ps1
 
 $testSuites = @(
     @{

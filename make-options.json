@@ -310,7 +310,6 @@
         "AzureMysqlDeploymentV1",
         "AzureNLBManagementV1",
         "AzureRmWebAppDeploymentV3",
-        "AzureRmWebAppDeploymentV4",
         "AzurePowerShellV4",
         "AzurePowerShellV5",
         "AzureWebAppV1",
