@@ -54,11 +54,9 @@ tmr.setInput('truststore', './truststore')
 os.platform = () => {
     return 'linux' as NodeJS.Platform;
 }
-
 os.arch = () => {
     return 'x64';
 }
-
 tmr.registerMock('os', os);
 
 tmr.run();

@@ -42,11 +42,9 @@ tmr.registerMock('./crypto', {
 os.platform = () => {
     return 'linux' as NodeJS.Platform;
 }
-
 os.arch = () => {
     return 'x64';
 }
-
 tmr.registerMock('os', os);
 
 process.env['AGENT_TEMPDIRECTORY'] = '.';
