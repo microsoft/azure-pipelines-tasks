@@ -1,8 +1,8 @@
+import * as taskLib from 'azure-pipelines-task-lib/task';
+import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
-import * as taskLib from 'azure-pipelines-task-lib/task';
-import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import { computeChecksum } from './crypto';
 
 export async function installFromURL(downloadURL: string, expectedChecksum: string, extractPath: string): Promise<void> {

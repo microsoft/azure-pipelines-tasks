@@ -1,10 +1,10 @@
-import * as path from 'path';
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import { IExecOptions, ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
+import * as path from 'path';
 import { NOTATION, NOTATION_BINARY, TRUST_STORE, X509 } from './lib/constants';
-import { getArtifactReferences } from './lib/variables';
 import { getConfigHome } from './lib/fs';
 import { notationRunner } from './lib/runner';
+import { getArtifactReferences } from './lib/variables';
 
 export async function verify(): Promise<void> {
     const artifactRefs = getArtifactReferences();

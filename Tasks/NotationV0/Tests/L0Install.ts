@@ -1,5 +1,5 @@
-import * as path from 'path';
 import * as tmrm from 'azure-pipelines-task-lib/mock-run';
+import * as path from 'path';
 import os = require('os');
 
 let taskPath = path.join(__dirname, '..', 'src', 'index.js');

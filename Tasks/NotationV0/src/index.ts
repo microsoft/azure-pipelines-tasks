@@ -1,9 +1,8 @@
-import * as path from 'path';
 import * as taskLib from 'azure-pipelines-task-lib/task';
-import { FAILED, STATUS, SUCCEEDED, WARNING } from './lib/constants';
-import { NOTATION_BINARY } from './lib/constants';
+import * as path from 'path';
 import { install } from './install';
-import { sign } from './sign'
+import { FAILED, NOTATION_BINARY, STATUS, SUCCEEDED, WARNING } from './lib/constants';
+import { sign } from './sign';
 import { verify } from './verify';
 
 taskLib.setResourcePath(path.join(__dirname, '..', 'task.json'));

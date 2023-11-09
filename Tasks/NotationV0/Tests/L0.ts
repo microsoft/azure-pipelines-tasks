@@ -1,5 +1,5 @@
-import * as path from 'path';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import * as path from 'path';
 import assert = require('assert');
 
 describe('NotationV0 Suite', function () {

@@ -1,6 +1,6 @@
-import { Writable } from 'stream';
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import { IExecOptions, ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
+import { Writable } from 'stream';
 import { NOTATION, STATUS, WARNING } from './constants';
 
 // notationRunner runs the notation command for each artifact.

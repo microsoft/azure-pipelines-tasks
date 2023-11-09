@@ -1,6 +1,6 @@
+import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as os from 'os';
 import * as path from 'path';
-import * as taskLib from 'azure-pipelines-task-lib/task';
 
 export function getConfigHome(): string {
     const platform = os.platform();
