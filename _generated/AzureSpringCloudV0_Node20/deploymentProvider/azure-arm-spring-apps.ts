@@ -509,8 +509,17 @@ export class AzureSpringApps {
      */
     private async applyDeploymentModifications(appName: string, deploymentName: string, deploymentUpdateRequestBody, createDeployment: boolean) {
         console.log(`${createDeployment ? 'Creating' : 'Updating'} ${appName}, deployment ${deploymentName}...`);
-
-        let method = createDeployment ? 'PUT' : 'PATCH';
+        let isCustomContainer = false;
+        let deploymentResource = {};
+        if (!createDeployment) {
+            deploymentResource = await this.getDeploymentInfo(appName, deploymentName);
+            isCustomContainer = deploymentResource["properties"]["source"]["type"] == SourceType.CUSTOM_CONTAINER || deploymentUpdateRequestBody["properties"]["source"]["type"] == SourceType.CUSTOM_CONTAINER;
+        }
+        let method = (createDeployment || isCustomContainer) ? 'PUT' : 'PATCH';
+        if (isCustomContainer) {
+            const deploymentSettings = {...deploymentResource["properties"]["deploymentSettings"], ...deploymentUpdateRequestBody["properties"]["deploymentSettings"]};
+            deploymentUpdateRequestBody["properties"]["deploymentSettings"] = deploymentSettings;
+        }
         let requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments/{deploymentName}`, {
             '{appName}': appName,
             '{deploymentName}': deploymentName
