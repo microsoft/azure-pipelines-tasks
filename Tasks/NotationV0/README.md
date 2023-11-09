@@ -1,6 +1,6 @@
 # Notation for Azure DevOps Task
 
-Install Notation CLI, sign or verify container registry artifact.
+Install Notation CLI, sign or verify container registry artifact. The Notation ADO task invokes Notation CLI to run the signing and verification operations.
 
 ## Usage
 - [Notation sign on ADO pipeline](./docs/sign-images-pipeline.md)
