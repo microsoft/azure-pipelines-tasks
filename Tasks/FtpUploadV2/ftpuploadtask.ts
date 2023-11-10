@@ -156,7 +156,7 @@ function findFiles(ftpOptions: FtpOptions): string[] {
     }
     catch (err) {
 #if NODE20
-        err = error;
+        error = err;
         tl.error(error);
 #else
         tl.error(err);

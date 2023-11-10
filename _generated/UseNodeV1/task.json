@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 230,
-    "Patch": 0
+    "Minor": 231,
+    "Patch": 2
   },
   "satisfies": [
     "Node",
@@ -50,6 +50,24 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "Installs the x86 version of Node regardless of the CPU architecture of the agent."
+    },
+    {
+      "name": "retryCountOnDownloadFails",
+      "type": "string",
+      "label": "Set retry count when nodes downloads failed",
+      "defaultValue": "5",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Use this option when the task failed to download node binaries from the mirror. The task will retry to download the binaries for the specified times."
+    },
+    {
+      "name": "delayBetweenRetries",
+      "type": "string",
+      "label": "Set delay between retries",
+      "defaultValue": "1000",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Use this option to set the delay between retries in milliseconds. The default value is 1000 milliseconds."
     }
   ],
   "execution": {
@@ -70,7 +88,7 @@
     "AgentTempDirNotSet": "Expected Agent.TempDirectory to be set."
   },
   "_buildConfigMapping": {
-    "Default": "1.230.0",
-    "Node20-225": "1.230.1"
+    "Default": "1.231.2",
+    "Node20-225": "1.231.3"
   }
 }

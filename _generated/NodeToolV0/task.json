@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 230,
-    "Patch": 0
+    "Minor": 231,
+    "Patch": 2
   },
   "satisfies": [
     "Node",
@@ -82,6 +82,24 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "Use an alternative installation mirror when sourcing the Node.js binaries."
+    },
+    {
+      "name": "retryCountOnDownloadFails",
+      "type": "string",
+      "label": "Set retry count when nodes downloads failed",
+      "defaultValue": "5",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Use this option when the task failed to download node binaries from the mirror. The task will retry to download the binaries for the specified times."
+    },
+    {
+      "name": "delayBetweenRetries",
+      "type": "string",
+      "label": "Set delay between retries",
+      "defaultValue": "1000",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Use this option to set the delay between retries in milliseconds. The default value is 1000 milliseconds."
     }
   ],
   "execution": {
@@ -112,7 +130,7 @@
     "AgentTempDirNotSet": "Expected Agent.TempDirectory to be set."
   },
   "_buildConfigMapping": {
-    "Default": "0.230.0",
-    "Node20-225": "0.230.1"
+    "Default": "0.231.2",
+    "Node20-225": "0.231.3"
   }
 }
