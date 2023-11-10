@@ -144,7 +144,7 @@
       "target": "preinstallcert.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "preinstallcert.js",
       "argumentFormat": ""
     }
@@ -158,7 +158,7 @@
       "target": "postinstallcert.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "postinstallcert.js",
       "argumentFormat": ""
     }

@@ -125,7 +125,7 @@
       "target": "preinstallsshkey.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "preinstallsshkey.js",
       "argumentFormat": ""
     }
@@ -139,7 +139,7 @@
       "target": "postinstallsshkey.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "postinstallsshkey.js",
       "argumentFormat": ""
     }

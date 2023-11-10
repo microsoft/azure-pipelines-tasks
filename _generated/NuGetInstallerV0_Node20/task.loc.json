@@ -121,7 +121,7 @@
       "target": "nugetinstaller.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "nugetinstaller.js",
       "argumentFormat": ""
     }

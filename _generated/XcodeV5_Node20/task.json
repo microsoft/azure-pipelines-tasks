@@ -370,7 +370,7 @@
       "target": "xcode.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "xcode.js",
       "argumentFormat": ""
     }
@@ -384,7 +384,7 @@
       "target": "postxcode.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "postxcode.js",
       "argumentFormat": ""
     }

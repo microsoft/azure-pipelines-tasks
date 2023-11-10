@@ -56,7 +56,7 @@
     "Node16": {
       "target": "mavenauth.js"
     },
-    "Node20": {
+    "Node20_1": {
       "target": "mavenauth.js",
       "argumentFormat": ""
     }
@@ -70,7 +70,7 @@
       "target": "cleanup.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "cleanup.js",
       "argumentFormat": ""
     }

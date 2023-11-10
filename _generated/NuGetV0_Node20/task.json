@@ -49,7 +49,7 @@
       "target": "nuget.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "nuget.js",
       "argumentFormat": ""
     }

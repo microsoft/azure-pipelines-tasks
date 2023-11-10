@@ -84,7 +84,7 @@
       "target": "preinstallprovprofile.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "preinstallprovprofile.js",
       "argumentFormat": ""
     }
@@ -98,7 +98,7 @@
       "target": "installprovprofile.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "installprovprofile.js",
       "argumentFormat": ""
     }
@@ -112,7 +112,7 @@
       "target": "postinstallprovprofile.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "postinstallprovprofile.js",
       "argumentFormat": ""
     }

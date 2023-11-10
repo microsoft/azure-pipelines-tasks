@@ -241,7 +241,7 @@
       "target": "powershell.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "powershell.js",
       "argumentFormat": ""
     }

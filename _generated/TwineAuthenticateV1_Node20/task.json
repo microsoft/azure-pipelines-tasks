@@ -79,7 +79,7 @@
       "target": "twineauthenticatemain.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "twineauthenticatemain.js",
       "argumentFormat": ""
     }
@@ -110,7 +110,7 @@
       "target": "authcleanup.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "authcleanup.js",
       "argumentFormat": ""
     }

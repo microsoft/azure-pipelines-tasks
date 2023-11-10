@@ -147,7 +147,7 @@
       "target": "preandroidsigning.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "preandroidsigning.js",
       "argumentFormat": ""
     }
@@ -161,7 +161,7 @@
       "target": "androidsigning.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "androidsigning.js",
       "argumentFormat": ""
     }
@@ -175,7 +175,7 @@
       "target": "postandroidsigning.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "postandroidsigning.js",
       "argumentFormat": ""
     }

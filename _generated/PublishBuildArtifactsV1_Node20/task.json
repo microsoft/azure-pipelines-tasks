@@ -111,7 +111,7 @@
       "target": "publishbuildartifacts.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "publishbuildartifacts.js",
       "argumentFormat": ""
     }

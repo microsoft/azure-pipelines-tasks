@@ -25,7 +25,7 @@
     "Node16": {
       "target": "condaauthenticatemain.js"
     },
-    "Node20": {
+    "Node20_1": {
       "target": "condaauthenticatemain.js",
       "argumentFormat": ""
     }
