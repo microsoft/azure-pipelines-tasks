@@ -1,12 +1,12 @@
-name: 🐞 Bug
-description: Something doesn't work as expected.
-title: "[BUG]: "
-labels: ["bug"]
+name: 😱 Regression
+description: This used to work, but a change in the service/tasks broke it. (Please make sure you know the last known working version)
+title: "[REGRESSION]: "
+labels: ["regression", "bug"]
 body:
   - type: markdown
     attributes:
       value: |
-        Use this form if you would like to report a bug related to one of the tasks. [List of the tasks](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks)
+        Use this form if you would like to report a regression related to one of the tasks. [List of the tasks](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks)
 
   - type: checkboxes
     id: new-issue-checklist
@@ -26,17 +26,23 @@ body:
       placeholder: E.g. AzurePowerShell
 
   - type: input
-    id: task-version
+    id: breaking-task-version
     attributes:
-      label: Task version
+      label: Breaking task version
+      placeholder: x.x.x
+
+  - type: input
+    id: working-task-version
+    attributes:
+      label: Last working task version
       placeholder: x.x.x
 
   - type: textarea
     id: what-happened
     attributes:
-      label: Issue Description
+      label: Regression Description
       description: Tell us what you see, and what did you expect to happen?
-      value: "A bug happened!"
+      value: "A regression happened!"
     validations:
       required: true
 

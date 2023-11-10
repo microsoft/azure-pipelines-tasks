@@ -1,7 +1,7 @@
-name: Help needed
+name: ❓ Ask a Question
 description: Raise a question
 title: "[Question]: "
-labels: ["helpwanted"]
+labels: ["help wanted"]
 body:
   - type: markdown
     attributes:
