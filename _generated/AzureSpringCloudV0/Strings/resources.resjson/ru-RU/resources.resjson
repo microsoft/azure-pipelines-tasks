@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Приложения Azure Spring",
-  "loc.helpMarkDown": "[Подробнее об этой задаче](https://aka.ms/azurespringapps)",
+  "loc.helpMarkDown": "[Подробнее об этой задаче](https://learn.microsoft.com/en-gb/azure/devops/pipelines/tasks/reference/azure-spring-cloud-v0?view=azure-pipelines)",
   "loc.description": "Развертывание приложений в Приложениях Azure Spring и управление развертываниями.",
   "loc.instanceNameFormat": "Приложения Azure Spring $(Action): $(AppName)",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Параметры приложения и конфигурации",
