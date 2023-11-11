@@ -129,12 +129,12 @@ export class azureclitask {
             tl.setSecret(federatedToken);
             const args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
 
-            //login using OpenID Connect federation
+            tl.group('Login using OpenID Connect federation')
             Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
-
-             this.servicePrincipalId = servicePrincipalId;
-             this.federatedToken = federatedToken;
-             this.tenantId = tenantId;
+            tl.endgroup();
+            this.servicePrincipalId = servicePrincipalId;
+            this.federatedToken = federatedToken;
+            this.tenantId = tenantId;
         }
         else if (authScheme.toLowerCase() == "serviceprincipal") {
             let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
@@ -160,12 +160,14 @@ export class azureclitask {
 
             let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
             tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
-            //login using svn
+            tl.group('Login using SPN')
             Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
+            tl.endgroup();
         }
         else if(authScheme.toLowerCase() == "managedserviceidentity") {
-            //login using msi
+            tl.group('Login using MSI');
             Utility.throwIfError(tl.execSync("az", "login --identity"), tl.loc("MSILoginFailed"));
+            tl.endgroup();
         }
         else {
             throw tl.loc('AuthSchemeNotSupported', authScheme);
@@ -175,6 +177,7 @@ export class azureclitask {
         if (!!subscriptionID) {
             //set the subscription imported to the current subscription
             Utility.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
+            tl.execSync("az", "account show");
         }
     }
 
