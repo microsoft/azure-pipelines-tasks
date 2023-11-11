@@ -129,9 +129,9 @@ export class azureclitask {
             tl.setSecret(federatedToken);
             const args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
 
-            tl.group('Login using OpenID Connect federation')
+            console.log('##[group]Login using OpenID Connect federation')
             Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
-            tl.endgroup();
+            console.log('##[endgroup]');
             this.servicePrincipalId = servicePrincipalId;
             this.federatedToken = federatedToken;
             this.tenantId = tenantId;
@@ -160,14 +160,14 @@ export class azureclitask {
 
             let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
             tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
-            tl.group('Login using SPN')
+            console.log('##[group]Login using SPN')
             Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
-            tl.endgroup();
+            console.log('##[endgroup]');
         }
         else if (authScheme.toLowerCase() == "managedserviceidentity") {
-            tl.group('Login using MSI');
+            console.log('##[group]Login using MSI');
             Utility.throwIfError(tl.execSync("az", "login --identity"), tl.loc("MSILoginFailed"));
-            tl.endgroup();
+            console.log('##[endgroup]');
         }
         else {
             throw tl.loc('AuthSchemeNotSupported', authScheme);
