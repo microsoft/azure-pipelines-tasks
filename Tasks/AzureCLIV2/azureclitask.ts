@@ -14,7 +14,7 @@ export class azureclitask {
     public static async runMain(): Promise<void> {
         var toolExecutionError = null;
         var exitCode: number = 0;
-        try{
+        try {
             var scriptType: ScriptType = ScriptTypeFactory.getSriptType();
             var tool: any = await scriptType.getTool();
             var cwd: string = tl.getPathInput("cwd", true, false);
@@ -49,8 +49,8 @@ export class azureclitask {
                     failOnStdErr: false,
                     ignoreReturnCode: true,
                     env: {
-                    ...process.env,
-                    ...{ servicePrincipalId: this.servicePrincipalId, servicePrincipalKey: this.servicePrincipalKey, tenantId: this.tenantId }
+                        ...process.env,
+                        ...{ servicePrincipalId: this.servicePrincipalId, servicePrincipalKey: this.servicePrincipalKey, tenantId: this.tenantId }
                     }
                 });
             } else if (!!addSpnToEnvironment && authorizationScheme == 'workloadidentityfederation') {
@@ -58,15 +58,15 @@ export class azureclitask {
                     failOnStdErr: false,
                     ignoreReturnCode: true,
                     env: {
-                    ...process.env,
-                    ...{ servicePrincipalId: this.servicePrincipalId, idToken: this.federatedToken, tenantId: this.tenantId }
+                        ...process.env,
+                        ...{ servicePrincipalId: this.servicePrincipalId, idToken: this.federatedToken, tenantId: this.tenantId }
                     }
                 });
             } else {
                 exitCode = await tool.exec({
                     failOnStdErr: false,
                     ignoreReturnCode: true
-                 });
+                });
             }
 
             if (failOnStdErr && aggregatedErrorLines.length > 0) {
@@ -92,11 +92,11 @@ export class azureclitask {
             }
 
             //set the task result to either succeeded or failed based on error was thrown or not
-            if(toolExecutionError === FAIL_ON_STDERR) {
+            if (toolExecutionError === FAIL_ON_STDERR) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedStdErr"));
             } else if (toolExecutionError) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailed", toolExecutionError));
-            } else if (exitCode != 0){
+            } else if (exitCode != 0) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedWithExitCode", exitCode));
             }
             else {
@@ -117,7 +117,7 @@ export class azureclitask {
     private static federatedToken: string = null;
     private static tenantId: string = null;
 
-    private static async loginAzureRM(connectedService: string):Promise<void> {
+    private static async loginAzureRM(connectedService: string): Promise<void> {
         var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
 
@@ -164,7 +164,7 @@ export class azureclitask {
             Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
             tl.endgroup();
         }
-        else if(authScheme.toLowerCase() == "managedserviceidentity") {
+        else if (authScheme.toLowerCase() == "managedserviceidentity") {
             tl.group('Login using MSI');
             Utility.throwIfError(tl.execSync("az", "login --identity"), tl.loc("MSILoginFailed"));
             tl.endgroup();
@@ -214,7 +214,7 @@ export class azureclitask {
         }
     }
 
-    private static async getIdToken(connectedService: string) : Promise<string> {
+    private static async getIdToken(connectedService: string): Promise<string> {
         const jobId = tl.getVariable("System.JobId");
         const planId = tl.getVariable("System.PlanId");
         const projectId = tl.getVariable("System.TeamProjectId");
