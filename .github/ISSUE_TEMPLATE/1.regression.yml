@@ -112,6 +112,12 @@ body:
         Please copy and paste full task logs.
       value: |
         <details>
+          <summary>UNSUCCESSFUL RUN</summary>
+          <pre> [REPLACE THIS WITH YOUR INFORMATION] </pre>
+        </details>
+
+        <details>
+          <summary>SUCCESSFUL RUN</summary>
           <pre> [REPLACE THIS WITH YOUR INFORMATION] </pre>
         </details>
 
