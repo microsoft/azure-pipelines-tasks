@@ -53,8 +53,8 @@ export class DownloadHandlerContainer extends DownloadHandler {
             const requestOptions: any = {
                 allowRedirects: true, 
                 maxRedirects: 1,
-                requestCompressionForDownloads: true,
-                ignoreSslError: true // enable this for local debugging
+                requestCompressionForDownloads: true
+                // ignoreSslError: true // enable this for local debugging
             }
 
             return new WebProvider(itemsUrl, this.config.templatePath, variables, this.config.handler, requestOptions);
