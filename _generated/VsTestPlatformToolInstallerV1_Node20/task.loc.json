@@ -1,0 +1,150 @@
+{
+  "id": "2C65196A-54FD-4A02-9BE8-D9D1837B7111",
+  "name": "VisualStudioTestPlatformInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/vstest-platform-tool-installer",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.144.0",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 231,
+    "Patch": 1
+  },
+  "satisfies": [
+    "VsTest"
+  ],
+  "demands": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "packageSettings",
+      "displayName": "ms-resource:loc.group.displayName.packageSettings",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "packageFeedSelector",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.packageFeedSelector",
+      "defaultValue": "nugetOrg",
+      "required": true,
+      "groupName": "packageSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.packageFeedSelector",
+      "options": {
+        "nugetOrg": "Official Nuget",
+        "customFeed": "Custom Feed",
+        "netShare": "Network path"
+      }
+    },
+    {
+      "name": "versionSelector",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.versionSelector",
+      "defaultValue": "latestPreRelease",
+      "required": true,
+      "groupName": "packageSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.versionSelector",
+      "options": {
+        "latestPreRelease": "Latest (Includes Pre-Release)",
+        "latestStable": "Latest Stable",
+        "specificVersion": "Specific Version"
+      },
+      "visibleRule": "packageFeedSelector = nugetOrg || packageFeedSelector = customFeed"
+    },
+    {
+      "name": "testPlatformVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testPlatformVersion",
+      "required": true,
+      "groupName": "packageSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.testPlatformVersion",
+      "visibleRule": "versionSelector = specificVersion"
+    },
+    {
+      "name": "customFeed",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customFeed",
+      "required": true,
+      "groupName": "packageSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.customFeed",
+      "visibleRule": "packageFeedSelector = customFeed"
+    },
+    {
+      "name": "username",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.username",
+      "required": false,
+      "groupName": "packageSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.username",
+      "visibleRule": "packageFeedSelector = customFeed"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.password",
+      "required": false,
+      "groupName": "packageSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.password",
+      "visibleRule": "packageFeedSelector = customFeed"
+    },
+    {
+      "name": "netShare",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.netShare",
+      "required": true,
+      "groupName": "packageSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.netShare",
+      "visibleRule": "packageFeedSelector = netShare"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "vstestplatformtoolinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "vstestplatformtoolinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node20": {
+      "target": "vstestplatformtoolinstaller.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "StartingInstaller": "ms-resource:loc.messages.StartingInstaller",
+    "ProvideExplicitVersion": "ms-resource:loc.messages.ProvideExplicitVersion",
+    "NoPackageFoundInCache": "ms-resource:loc.messages.NoPackageFoundInCache",
+    "OnlyWindowsOsSupported": "ms-resource:loc.messages.OnlyWindowsOsSupported",
+    "RequiredVersionNotListed": "ms-resource:loc.messages.RequiredVersionNotListed",
+    "FailedToListAvailablePackagesFromNuget": "ms-resource:loc.messages.FailedToListAvailablePackagesFromNuget",
+    "FailedToAcquireTestPlatform": "ms-resource:loc.messages.FailedToAcquireTestPlatform",
+    "InstallationSuccessful": "ms-resource:loc.messages.InstallationSuccessful",
+    "TestPlatformDownloadFailed": "ms-resource:loc.messages.TestPlatformDownloadFailed",
+    "LookingForLatestStableVersion": "ms-resource:loc.messages.LookingForLatestStableVersion",
+    "LookingForLatestPreReleaseVersion": "ms-resource:loc.messages.LookingForLatestPreReleaseVersion",
+    "AgentWorkDirectoryPathTooLong": "ms-resource:loc.messages.AgentWorkDirectoryPathTooLong",
+    "ListPackagesFailed": "ms-resource:loc.messages.ListPackagesFailed",
+    "NugetErrorCode": "ms-resource:loc.messages.NugetErrorCode",
+    "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage",
+    "SpecifiedFileDoesNotExist": "ms-resource:loc.messages.SpecifiedFileDoesNotExist",
+    "UnexpectedFileName": "ms-resource:loc.messages.UnexpectedFileName",
+    "ConfigFileWriteFailed": "ms-resource:loc.messages.ConfigFileWriteFailed",
+    "LatestStableCached": "ms-resource:loc.messages.LatestStableCached",
+    "DownloadFailed": "ms-resource:loc.messages.DownloadFailed",
+    "ExpectedTempToBeSet": "ms-resource:loc.messages.ExpectedTempToBeSet",
+    "ParsedVersion": "ms-resource:loc.messages.ParsedVersion"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.231.0",
+    "Node20_229_4": "1.231.1"
+  }
+}

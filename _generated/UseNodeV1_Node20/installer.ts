@@ -37,7 +37,7 @@ interface INodeVersion {
 //              toolPath = cacheDir
 //      PATH = cacheDir + PATH
 //
-export async function getNode(versionSpec: string, checkLatest: boolean) {
+export async function getNode(versionSpec: string, checkLatest: boolean, retryCountOnDownloadFails: number, delayBetweenRetries: number) {
     let installedArch = osArch;
 
     if (toolLib.isExplicitVersion(versionSpec)) {
@@ -82,7 +82,7 @@ export async function getNode(versionSpec: string, checkLatest: boolean) {
 
         if (!toolPath) {
             // download, extract, cache
-            toolPath = await acquireNode(version, installedArch);
+            toolPath = await acquireNode(version, installedArch, retryCountOnDownloadFails, delayBetweenRetries);
         }
     }
 
@@ -143,7 +143,7 @@ async function queryLatestMatch(versionSpec: string, installedArch: string): Pro
     return nodeVersions.find(v => v.semanticVersion === latestVersion).version;
 }
 
-async function acquireNode(version: string, installedArch: string): Promise<string> {
+async function acquireNode(version: string, installedArch: string, retryCountOnDownloadFails: number, delayBetweenRetries: number): Promise<string> {
     //
     // Download - a tool installer intimately knows how to get the tool (and construct urls)
     //
@@ -162,10 +162,12 @@ async function acquireNode(version: string, installedArch: string): Promise<stri
     let downloadPath: string;
 
     try {
-        downloadPath = await toolLib.downloadToolWithRetries(downloadUrl);
+        console.log("Aquiring Node called")
+        console.log("Retry count on download fails: " + retryCountOnDownloadFails + " Retry delay: " + delayBetweenRetries + "ms")
+        downloadPath = await toolLib.downloadToolWithRetries(downloadUrl, null, null, null, retryCountOnDownloadFails, delayBetweenRetries);
     } catch (err) {
         if (isWin32 && err['httpStatusCode'] == 404) {
-            return await acquireNodeFromFallbackLocation(version);
+            return await acquireNodeFromFallbackLocation(version, retryCountOnDownloadFails, delayBetweenRetries);
         }
 
         throw err;
@@ -208,7 +210,7 @@ async function acquireNode(version: string, installedArch: string): Promise<stri
 // This method attempts to download and cache the resources from these alternative locations.
 // Note also that the files are normally zipped but in this case they are just an exe
 // and lib file in a folder, not zipped.
-async function acquireNodeFromFallbackLocation(version: string): Promise<string> {
+async function acquireNodeFromFallbackLocation(version: string, retryCountOnDownloadFails: number, delayBetweenRetries: number): Promise<string> {
     // Create temporary folder to download in to
     const tempDownloadFolder: string = 'temp_' + Math.floor(Math.random() * 2e9);
     const tempDir: string = path.join(taskLib.getVariable('agent.tempDirectory'), tempDownloadFolder);
@@ -216,12 +218,14 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
 
     let exeUrl: string;
     let libUrl: string;
+    console.log("Aquiring Node from callback called")
+    console.log("Retry count on download fails: " + retryCountOnDownloadFails + " Retry delay: " + delayBetweenRetries + "ms")
     try {
         exeUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.exe`;
         libUrl = `https://nodejs.org/dist/v${version}/win-${osArch}/node.lib`;
 
-        await toolLib.downloadToolWithRetries(exeUrl, path.join(tempDir, 'node.exe'));
-        await toolLib.downloadToolWithRetries(libUrl, path.join(tempDir, 'node.lib'));
+        await toolLib.downloadToolWithRetries(exeUrl, path.join(tempDir, 'node.exe'), null, null, retryCountOnDownloadFails, delayBetweenRetries);
+        await toolLib.downloadToolWithRetries(libUrl, path.join(tempDir, 'node.lib'), null, null, retryCountOnDownloadFails, delayBetweenRetries);
     }
     catch (err) {
         if (err['httpStatusCode'] && 
@@ -229,8 +233,8 @@ async function acquireNodeFromFallbackLocation(version: string): Promise<string>
             exeUrl = `https://nodejs.org/dist/v${version}/node.exe`;
             libUrl = `https://nodejs.org/dist/v${version}/node.lib`;
 
-            await toolLib.downloadToolWithRetries(exeUrl, path.join(tempDir, 'node.exe'));
-            await toolLib.downloadToolWithRetries(libUrl, path.join(tempDir, 'node.lib'));
+            await toolLib.downloadToolWithRetries(exeUrl, path.join(tempDir, 'node.exe'), null, null, retryCountOnDownloadFails, delayBetweenRetries);
+            await toolLib.downloadToolWithRetries(libUrl, path.join(tempDir, 'node.lib'), null, null, retryCountOnDownloadFails, delayBetweenRetries);
         }
         else {
             throw err;

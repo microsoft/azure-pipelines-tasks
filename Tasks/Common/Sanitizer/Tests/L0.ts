@@ -58,4 +58,10 @@ describe('Security Suite', function () {
             psr.run(path.join(__dirname, 'L0Protect-ScriptArguments.Throws.ps1'), done);
         });
     }
+
+    if (psm.testSupported()) {
+        it('L0Expand-EnvVariables tests', (done) => {
+            psr.run(path.join(__dirname, 'L0Expand-EnvVariables.ps1'), done);
+        });
+    }
 });
