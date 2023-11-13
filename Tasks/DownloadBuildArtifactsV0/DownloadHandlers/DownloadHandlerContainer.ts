@@ -49,11 +49,14 @@ export class DownloadHandlerContainer extends DownloadHandler {
         const preferRedirect = this.config.preferRedirect;
         if (preferRedirect) {
             console.log(tl.loc('PreferRedirect', preferRedirect))
+
             const requestOptions: any = {
                 allowRedirects: true, 
-                maxRedirects: 1
-                // ignoreSslError: true // enable this for local debugging
+                maxRedirects: 1,
+                requestCompressionForDownloads: true,
+                ignoreSslError: true // enable this for local debugging
             }
+
             return new WebProvider(itemsUrl, this.config.templatePath, variables, this.config.handler, requestOptions);
         }
      
