@@ -519,6 +519,7 @@ export class AzureSpringApps {
         if (isCustomContainer) {
             const deploymentSettings = {...deploymentResource["properties"]["deploymentSettings"], ...deploymentUpdateRequestBody["properties"]["deploymentSettings"]};
             deploymentUpdateRequestBody["properties"]["deploymentSettings"] = deploymentSettings;
+            deploymentUpdateRequestBody["sku"] = deploymentResource["sku"];
         }
         let requestUri = this._client.getRequestUri(`${this._resourceId}/apps/{appName}/deployments/{deploymentName}`, {
             '{appName}': appName,
