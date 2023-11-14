@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 231,
-    "Patch": 1
+    "Patch": 3
   },
   "satisfies": [
     "Node",
@@ -50,6 +50,24 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.force32bit"
+    },
+    {
+      "name": "retryCountOnDownloadFails",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.retryCountOnDownloadFails",
+      "defaultValue": "5",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.retryCountOnDownloadFails"
+    },
+    {
+      "name": "delayBetweenRetries",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.delayBetweenRetries",
+      "defaultValue": "1000",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.delayBetweenRetries"
     }
   ],
   "execution": {
@@ -74,7 +92,7 @@
     "AgentTempDirNotSet": "ms-resource:loc.messages.AgentTempDirNotSet"
   },
   "_buildConfigMapping": {
-    "Default": "1.231.0",
-    "Node20-225": "1.231.1"
+    "Default": "1.231.2",
+    "Node20-225": "1.231.3"
   }
 }

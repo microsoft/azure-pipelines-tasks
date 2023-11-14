@@ -1,12 +1,12 @@
-name: Bug
-description: Report a bug 
-title: "[BUG]: "
-labels: ["bug"]
+name: ❓ Ask a Question
+description: Raise a question
+title: "[Question]: "
+labels: ["help wanted"]
 body:
   - type: markdown
     attributes:
       value: |
-        Use this form if you'd like to report bug related to one of the 
+        Use this form if you are looking for help
         tasks. [List of the tasks](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks)
   - type: input
     id: task-name
@@ -51,36 +51,12 @@ body:
       placeholder: Windows 11, Ubuntu 20.04...
     validations:
       required: true
-  - type: markdown
-    attributes:
-      value: |
-        ## Logs 
   - type: textarea
-    id: task-logs
+    id: question
     attributes:
-      label: Task log
+      label: Question
       description: |
-        Please copy and paste any relevant log output.
+        Please write your question here 
       render: shell
     validations:
       required: true
-  - type: textarea
-    id: error-logs
-    attributes:
-      label: Relevant log output
-      description: |
-        Insert error from the logs here for a quick overview
-      render: shell
-    validations:
-      required: true
-  - type: markdown
-    attributes:
-      value: |
-        Checkout how to troubleshoot failures and collect debug logs: https://docs.microsoft.com/en-us/vsts/build-release/actions/troubleshooting
-  - type: textarea
-    id: extra-details
-    attributes:
-      label: Aditional info
-      description: |
-        Paste any additional information here
-      render: shell
