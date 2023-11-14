@@ -54,6 +54,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.delayBetweenRetries" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Use this option to set the delay between retries in milliseconds. The default value is 1000 milliseconds.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Utilizzare questa opzione per impostare il ritardo tra i tentativi in millisecondi. Il valore predefinito è 1000 millisecondi.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.force32bit" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Installs the x86 version of Node regardless of the CPU architecture of the agent.]]></Val>
@@ -68,6 +77,15 @@
           <Val><![CDATA[Use an alternative installation mirror when sourcing the Node.js binaries.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Usare un mirror di installazione alternativo per l'acquisizione dei file binari di Node.js.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.retryCountOnDownloadFails" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Use this option when the task failed to download node binaries from the mirror. The task will retry to download the binaries for the specified times.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Utilizzare questa opzione quando l'attività non è riuscita a scaricare i file binari del nodo dal mirror. L'attività proverà a scaricare i file binari per gli orari specificati.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -99,6 +117,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.delayBetweenRetries" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set delay between retries]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Impostare il ritardo tra i tentativi]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.force32bit" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Use 32 bit version on x64 agents]]></Val>
@@ -113,6 +140,15 @@
           <Val><![CDATA[Set source for Node.js binaries]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Imposta origine per file binari Node.js]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.retryCountOnDownloadFails" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set retry count when nodes downloads failed]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Impostare il numero di tentativi quando il download dei nodi non riesce]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
