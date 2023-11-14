@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 1
   },
   "groups": [
@@ -169,7 +169,7 @@
     "JenkinsJobQueueUriInvalid": "The URI of the job queue returned by Jenkins could not be reached (%s).  Verify the 'Jenkins URL' is configured correctly on your Jenkins server under `Manage Jenkins`, `Configure System`.  Error details: %s"
   },
   "_buildConfigMapping": {
-    "Default": "2.230.0",
-    "Node20-225": "2.230.1"
+    "Default": "2.231.0",
+    "Node20-225": "2.231.1"
   }
 }

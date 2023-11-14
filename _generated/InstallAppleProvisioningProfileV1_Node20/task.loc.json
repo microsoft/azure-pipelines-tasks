@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 229,
-    "Patch": 4
+    "Minor": 231,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -135,7 +135,7 @@
     "InvalidMobileProvisionFileExtension": "ms-resource:loc.messages.InvalidMobileProvisionFileExtension"
   },
   "_buildConfigMapping": {
-    "Default": "1.229.3",
-    "Node20-225": "1.229.4"
+    "Default": "1.231.0",
+    "Node20-225": "1.231.1"
   }
 }

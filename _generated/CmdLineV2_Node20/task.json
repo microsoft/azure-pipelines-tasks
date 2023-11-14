@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 229,
+    "Minor": 231,
     "Patch": 1
   },
   "releaseNotes": "Script task consistency. Added support for multiple lines.",
@@ -91,7 +91,7 @@
     "ScriptContents": "Script contents:"
   },
   "_buildConfigMapping": {
-    "Default": "2.229.0",
-    "Node20-225": "2.229.1"
+    "Default": "2.231.0",
+    "Node20-225": "2.231.1"
   }
 }

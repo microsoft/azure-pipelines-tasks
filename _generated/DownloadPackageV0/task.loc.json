@@ -9,7 +9,7 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 0,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 0
   },
   "demands": [],
@@ -115,7 +115,7 @@
     "UnsupportedProjectScopedFeeds": "ms-resource:loc.messages.UnsupportedProjectScopedFeeds"
   },
   "_buildConfigMapping": {
-    "Default": "0.230.0",
-    "Node20_229_1": "0.230.1"
+    "Default": "0.231.0",
+    "Node20_229_1": "0.231.1"
   }
 }

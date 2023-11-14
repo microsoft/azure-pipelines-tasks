@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 1
   },
   "runsOn": [
@@ -59,7 +59,7 @@
     "AddingAuthExternalRegistry": "ms-resource:loc.messages.AddingAuthExternalRegistry"
   },
   "_buildConfigMapping": {
-    "Default": "0.230.0",
-    "Node20_229_1": "0.230.1"
+    "Default": "0.231.0",
+    "Node20_229_1": "0.231.1"
   }
 }

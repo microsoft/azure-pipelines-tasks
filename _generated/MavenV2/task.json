@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 231,
-    "Patch": 1
+    "Patch": 3
   },
   "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
   "demands": [
@@ -451,7 +451,7 @@
     "UsingAuthFeed": "Using Artifacts feed: "
   },
   "_buildConfigMapping": {
-    "Default": "2.231.1",
-    "Node20-228": "2.231.2"
+    "Default": "2.231.3",
+    "Node20-228": "2.231.4"
   }
 }
