@@ -10,7 +10,7 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "version": {
     "Major": 0,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 1
   },
   "runsOn": [
@@ -49,7 +49,7 @@
       "target": "nuget.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "nuget.js",
       "argumentFormat": ""
     }
@@ -85,7 +85,7 @@
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
   },
   "_buildConfigMapping": {
-    "Default": "0.230.0",
-    "Node20_229_1": "0.230.1"
+    "Default": "0.231.0",
+    "Node20_229_1": "0.231.1"
   }
 }
