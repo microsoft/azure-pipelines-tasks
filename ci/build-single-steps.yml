@@ -39,6 +39,13 @@ steps:
     Write-Host "##vso[task.setVariable variable=task_pattern]$taskPattern"
   displayName: Set task_pattern
 
+
+# Use .NET SDK 7
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK 7.x'
+  inputs:
+    version: 7.x
+
 # Clean
 - script: node make.js clean
   displayName: Clean tasks
