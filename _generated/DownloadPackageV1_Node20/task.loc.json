@@ -9,7 +9,7 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 1
   },
   "demands": [],
@@ -173,7 +173,7 @@
       "target": "main.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     }
@@ -199,7 +199,7 @@
     "Info_ResolvedLatestVersion": "ms-resource:loc.messages.Info_ResolvedLatestVersion"
   },
   "_buildConfigMapping": {
-    "Default": "1.230.0",
-    "Node20_229_1": "1.230.1"
+    "Default": "1.231.0",
+    "Node20_229_1": "1.231.1"
   }
 }
