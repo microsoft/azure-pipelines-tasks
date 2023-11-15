@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 229,
+    "Minor": 231,
     "Patch": 1
   },
   "demands": [
@@ -147,7 +147,7 @@
       "target": "preandroidsigning.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "preandroidsigning.js",
       "argumentFormat": ""
     }
@@ -161,7 +161,7 @@
       "target": "androidsigning.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "androidsigning.js",
       "argumentFormat": ""
     }
@@ -175,7 +175,7 @@
       "target": "postandroidsigning.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "postandroidsigning.js",
       "argumentFormat": ""
     }
@@ -197,7 +197,7 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "2.229.0",
-    "Node20-225": "2.229.1"
+    "Default": "2.231.0",
+    "Node20-225": "2.231.1"
   }
 }
