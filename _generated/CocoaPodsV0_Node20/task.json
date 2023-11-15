@@ -17,7 +17,7 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 0,
-    "Minor": 229,
+    "Minor": 231,
     "Patch": 1
   },
   "groups": [
@@ -68,7 +68,7 @@
       "target": "cocoapods.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "cocoapods.js",
       "argumentFormat": ""
     }
@@ -88,7 +88,7 @@
     "ProxyConfig": "Proxy configuration detected. Using proxy host: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.229.0",
-    "Node20-225": "0.229.1"
+    "Default": "0.231.0",
+    "Node20-225": "0.231.1"
   }
 }
