@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 230,
-    "Patch": 4
+    "Minor": 231,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -416,7 +416,7 @@
       "target": "universalmain.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "universalmain.js",
       "argumentFormat": ""
     }
@@ -463,7 +463,7 @@
     "Error_ProcessorArchitectureNotSupported": "ms-resource:loc.messages.Error_ProcessorArchitectureNotSupported"
   },
   "_buildConfigMapping": {
-    "Default": "0.230.3",
-    "Node20_229_1": "0.230.4"
+    "Default": "0.231.0",
+    "Node20_229_1": "0.231.1"
   }
 }
