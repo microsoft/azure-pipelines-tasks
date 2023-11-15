@@ -1,0 +1,211 @@
+﻿<?xml version="1.0"?>
+<!DOCTYPE _locDefinition SYSTEM "locXML.dtd">
+<_locDefinition>
+	<!-- To Do: uncomment following line to set elements as none-localizable by default -->
+	<!-- <_locDefault _loc="locNone"/> -->
+	<!-- To Do: uncomment following line to set all attributes to localizable by default -->
+	<!-- <_locDefaultAttr _loc="locData"/> -->
+
+	<!-- To Do: uncomment following line to set tag test to none-localizable 
+		and its attributes size and type to localizable -->
+	<!-- <_locTag _loc="locNone" _locAttrData="size,type">test</_locTag> -->
+
+	<!-- To Do: uncomment following line to set tag bold to fully-localizable  -->
+	<!-- <_locTag _loc="locFull">bold</_locTag> -->
+
+<!-- LocalTestRun.TestRunConfig  -->
+	<_locTag _loc="locNone" _locAttrData="name">TestRunConfiguration</_locTag>
+
+
+<!-- for vsts_vset_templates_ -->
+
+	<!-- for GenericTest.GenericTest -->
+	<_locTag _loc="locData" _locAttrData="filename">Command</_locTag>
+	<_locTag _loc="locData" _locAttrData="path">SummaryXmlFile</_locTag>
+	
+	<!-- for TestRunConfig.vstemplate -->
+	<_locTag _loc="locNone">DefaultName</_locTag>
+	<_locTag _loc="locNone">ProjectItem</_locTag>
+	<_locTag _loc="locNone">ShowByDefault</_locTag>
+	<_locTag _loc="locNone">SortOrder</_locTag>
+	<_locTag _loc="locNone">TemplateID</_locTag>
+	<_locTag _loc="locNone">TemplateGroupID</_locTag>
+
+<!-- for vsts_eDT_core_-->
+
+	<_locTag _loc="locNone" _locAttrData="FriendlyName">Rules</_locTag>
+
+<!-- for vsts_ocracoke_core_ -->
+
+	<_locTag _loc="locData" _locAttrData="Name">Counter</_locTag>
+	<_locTag _loc="locData" _locAttrData="Name">CounterCategory</_locTag>
+	<_locTag _loc="locData" _locAttrData="Name">CounterSet</_locTag>
+	<_locTag _loc="locData" _locAttrData="CounterName">DefaultCounter</_locTag>
+
+<!-- for vsts_tf_methodology_ -->
+
+	<_locTag _loc="locNone" _locAttrData="name,completionMessage,completionDescription">task</_locTag>
+	<_locTag _loc="locNone" _locAttrData="ProjectName">Mapping</_locTag>
+	<_locTag _loc="locNone" _locAttrData="name,value">FIELD</_locTag>
+	<_locTag _loc="locNone" _locAttrData="name">Query</_locTag>
+	<_locTag _loc="locNone" _locAttrData="value">LISTITEM</_locTag>
+	<_locTag _loc="locNone" _locAttrData="value">STATE</_locTag>
+	<_locTag _loc="locNone" _locAttrData="value">DEFAULTREASON</_locTag>
+	<_locTag _loc="locNone" _locAttrData="value">REASON</_locTag>
+	<_locTag _loc="locNone" _locAttrData="from,to">TRANSITION</_locTag>
+	<_locTag _loc="locNone" _locAttrData="Label">Control</_locTag>
+	<_locTag _loc="locNone" _locAttrData="Label">Tab</_locTag>
+	<_locTag _loc="locNone" _locAttrData="name,description,completionMessage,failureMessage">group</_locTag>
+	<_locTag _loc="locNone" _locAttrData="Label">Group</_locTag>
+	<_locTag _loc="locNone" _locAttrData="name">report</_locTag>
+	<_locTag _loc="locNone" _locAttrData="language">site</_locTag>
+	<_locTag _loc="locNone" _locAttrData="name">WORKITEMTYPE</_locTag>
+	<_locTag _loc="locNone" _locAttrData="value">DEFAULT</_locTag>
+	<_locTag _loc="locNone" _locAttrData="type">WI</_locTag>
+	<_locTag _loc="locFull">CommandText</_locTag>
+	<_locTag _loc="locFull">GroupExpression</_locTag>
+	<_locTag _loc="locFull">xsl:when</_locTag>
+	<_locTag _loc="locFull">Statement</_locTag>
+	<_locTag _loc="locFull">SortExpression</_locTag>
+	<_locTag _loc="locFull">FilterValue</_locTag>
+	<_locTag _loc="locFull">DataValue</_locTag>
+
+	<_locTag _loc="locNone">AllowBlank</_locTag>
+	<_locTag _loc="locNone">BackgroundColor</_locTag>
+	<_locTag _loc="locNone">Bottom</_locTag>
+	<_locTag _loc="locNone">BottomMargin</_locTag>
+	<_locTag _loc="locNone">CanGrow</_locTag>
+	<_locTag _loc="locNone">Color</_locTag>
+	<_locTag _loc="locNone">CommandType</_locTag>
+	<_locTag _loc="locNone">DataField</_locTag>
+	<_locTag _loc="locNone">DataSetName</_locTag>
+	<_locTag _loc="locNone">DataSourceName</_locTag>
+	<_locTag _loc="locNone">DataSourceReference</_locTag>
+	<_locTag _loc="locNone">DataType</_locTag>
+	<_locTag _loc="locNone">Default</_locTag>
+	<_locTag _loc="locNone">DimensionName</_locTag>
+	<_locTag _loc="locNone">Direction</_locTag>
+	<_locTag _loc="locNone">FontWeight</_locTag>
+	<_locTag _loc="locNone">From</_locTag>
+	<_locTag _loc="locNone">Height</_locTag>
+	<_locTag _loc="locNone">HierarchyName</_locTag>
+	<_locTag _loc="locNone">HierarchyUniqueName</_locTag>
+	<_locTag _loc="locNone">ItemCaption</_locTag>
+	<_locTag _loc="locNone">LabelField</_locTag>
+	<_locTag _loc="locNone">LeftMargin</_locTag>
+	<_locTag _loc="locNone">LevelName</_locTag>
+	<_locTag _loc="locNone">Nullable</_locTag>
+	<_locTag _loc="locNone">Operator</_locTag>
+	<_locTag _loc="locNone">PaddingBottom</_locTag>
+	<_locTag _loc="locNone">PaddingLeft</_locTag>
+	<_locTag _loc="locNone">PaddingRight</_locTag>
+	<_locTag _loc="locNone">PaddingTop</_locTag>
+	<_locTag _loc="locNone">rd:DataSourceID</_locTag>
+	<_locTag _loc="locNone">rd:DefaultName</_locTag>
+	<_locTag _loc="locNone">rd:DrawGrid</_locTag>
+	<_locTag _loc="locNone">rd:ReportID</_locTag>
+	<_locTag _loc="locNone">rd:SnapToGrid</_locTag>
+	<_locTag _loc="locNone">rd:TypeName</_locTag>
+	<_locTag _loc="locNone">rd:UseGenericDesigner</_locTag>
+	<_locTag _loc="locNone">RepeatOnNewPage</_locTag>
+	<_locTag _loc="locNone">RightMargin</_locTag>
+	<_locTag _loc="locNone">TextAlign</_locTag>
+	<_locTag _loc="locNone">Top</_locTag>
+	<_locTag _loc="locNone">TopMargin</_locTag>
+	<_locTag _loc="locNone">Type</_locTag>
+	<_locTag _loc="locNone">UniqueName</_locTag>
+	<_locTag _loc="locNone">ValueField</_locTag>
+	<_locTag _loc="locNone">Width</_locTag>
+	<_locTag _loc="locNone">ZIndex</_locTag>
+	<_locTag _loc="locNone">Format</_locTag>
+	<_locTag _loc="locNone">Hidden</_locTag>
+	<_locTag _loc="locNone">ToggleItem</_locTag>
+	<_locTag _loc="locNone">Author</_locTag>
+	<_locTag _loc="locNone">BackgroundGradientEndColor</_locTag>
+	<_locTag _loc="locNone">BackgroundGradientType</_locTag>
+	<_locTag _loc="locNone">FontStyle</_locTag>
+	<_locTag _loc="locNone">Left</_locTag>
+	<_locTag _loc="locNone">MajorTickMarks</_locTag>
+	<_locTag _loc="locNone">Margin</_locTag>
+	<_locTag _loc="locNone">Min</_locTag>
+	<_locTag _loc="locNone">Palette</_locTag>
+	<_locTag _loc="locNone">PlotType</_locTag>
+	<_locTag _loc="locNone">PointWidth</_locTag>
+	<_locTag _loc="locNone">Position</_locTag>
+	<_locTag _loc="locNone">Rotation</_locTag>
+	<_locTag _loc="locNone">Scalar</_locTag>
+	<_locTag _loc="locNone">Shading</_locTag>
+	<_locTag _loc="locNone">ShowGridLines</_locTag>
+	<_locTag _loc="locNone">Size</_locTag>
+	<_locTag _loc="locNone">Subtype</_locTag>
+	<_locTag _loc="locNone">Visible</_locTag>
+	<_locTag _loc="locNone">WallThickness</_locTag>
+	<_locTag _loc="locNone">Inclination</_locTag>
+	<_locTag _loc="locNone">Max</_locTag>
+	<_locTag _loc="locNone">BackgroundRepeat</_locTag>
+	<_locTag _loc="locNone">ColumnSpacing</_locTag>
+	<_locTag _loc="locNone">FormattedValue</_locTag>
+	<_locTag _loc="locNone">ImageData</_locTag>
+	<_locTag _loc="locNone">MeasureName</_locTag>
+	<_locTag _loc="locNone">MIMEType</_locTag>
+	<_locTag _loc="locNone">Source</_locTag>
+	<_locTag _loc="locNone" _locAttrData="label">checkin_note</_locTag>
+	<_locTag _loc="locNone" _locAttrData="name,description">documentLibrary</_locTag>
+	<_locTag _loc="locNone" _locAttrData="documentLibrary">folder</_locTag>
+	<_locTag _loc="locNone" _locAttrData="queryId,documentLibrary">file</_locTag>
+	<_locTag _loc="locNone">mstns:ContentLink</_locTag>
+	<_locTag _loc="locNone">mstns:CrossLink</_locTag>
+	<_locTag _loc="locNone">mstns:isRequired</_locTag>
+	<_locTag _loc="locNone">mstns:MenuBulletImage</_locTag>
+	<_locTag _loc="locNone">mstns:MenuIconImage</_locTag>
+	<_locTag _loc="locNone">mstns:MenuImage</_locTag>
+	<_locTag _loc="locNone">mstns:MenuItemTransform</_locTag>
+	<_locTag _loc="locNone">mstns:MenuItemX1</_locTag>
+	<_locTag _loc="locNone">mstns:MenuItemX2</_locTag>
+	<_locTag _loc="locNone">mstns:MenuItemY1</_locTag>
+	<_locTag _loc="locNone">mstns:MenuItemY2</_locTag>
+	<_locTag _loc="locNone">mstns:Reference</_locTag>
+	<_locTag _loc="locNone">mstns:mstns:RoleTransform</_locTag>
+	<_locTag _loc="locNone">mstns:mstns:Sequence</_locTag>
+	<_locTag _loc="locNone">mstns:Transform</_locTag>
+	<_locTag _loc="locNone">mstns:Xform</_locTag>
+	<_locTag _loc="locNone" _locAttrData="Name">TestCase</_locTag>
+<!-- 	<_locTag _loc="locNone" _locAttrData="id">h1</_locTag> -->
+	<_locTag _loc="locNone" _locAttrData="select">xsl:param</_locTag>
+	<_locTag _loc="locNone" _locAttrData="lang">html</_locTag>
+	<_locTag _loc="locNone" _locAttrData="alt">img</_locTag>
+	<_locTag _loc="locNone" _locAttrData="Name">Node</_locTag>
+	<_locTag _loc="locFull">h1</_locTag>
+	<_locTag _loc="locNone">xsl:apply-templates</_locTag>
+	<_locTag _loc="locNone">FixCategories</_locTag>
+	<_locTag _loc="locNone">MessageLevel</_locTag>
+	<_locTag _loc="locNone">xsl:template</_locTag>
+	<_locTag _loc="locNone">xsl:if</_locTag>
+	<_locTag _loc="locNone">BackColor</_locTag>
+	<_locTag _loc="locNone">DefaultValue</_locTag>
+	<_locTag _loc="locNone">FilterExpression</_locTag>
+	<_locTag _loc="locNone">FontDecoration</_locTag>
+	<_locTag _loc="locNone">ForeColor</_locTag>
+	<_locTag _loc="locNone">FormatString</_locTag>
+	<_locTag _loc="locNone">Key</_locTag>
+	<_locTag _loc="locNone">MemberUniqueName</_locTag>
+	<_locTag _loc="locNone">MultiValue</_locTag>
+	<_locTag _loc="locNone">MultipleValues</_locTag>
+	<_locTag _loc="locNone">Parametrized</_locTag>
+	<_locTag _loc="locNone">InteractiveHeight</_locTag>
+	<_locTag _loc="locNone">InteractiveWidth</_locTag>
+	<_locTag _loc="locNone">TextDecoration</_locTag>
+	<_locTag _loc="locNone">LevelUniqueName</_locTag>
+	<_locTag _loc="locNone">PropertyName</_locTag>
+	<_locTag _loc="locNone">ColSpan</_locTag>
+	<_locTag _loc="locNone">PrintOnFirstPage</_locTag>
+	<_locTag _loc="locNone">PrintOnLastPage</_locTag>
+	<_locTag _loc="locNone">Sizing</_locTag>
+	<_locTag _loc="locNone">FixedHeader</_locTag>
+	<_locTag _loc="locNone">Hyperlink</_locTag>
+	<_locTag _loc="locNone">CaseSensitivity</_locTag>
+	<_locTag _loc="locNone">CanShrink</_locTag>
+	<_locTag _loc="locNone">Layout</_locTag>
+	
+</_locDefinition>
+
