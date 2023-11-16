@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 1
   },
   "runsOn": [
@@ -480,7 +480,7 @@
       "target": "nugetcommandmain.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "nugetcommandmain.js",
       "argumentFormat": ""
     }
@@ -549,7 +549,7 @@
     "Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
   },
   "_buildConfigMapping": {
-    "Default": "2.230.0",
-    "Node20_229_1": "2.230.1"
+    "Default": "2.231.0",
+    "Node20_229_1": "2.231.1"
   }
 }

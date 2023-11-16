@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 229,
+    "Minor": 231,
     "Patch": 1
   },
   "demands": [],
@@ -141,7 +141,7 @@
       "target": "copyfilesoverssh.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "copyfilesoverssh.js",
       "argumentFormat": ""
     }
@@ -179,7 +179,7 @@
     "PathNotExists": "%s doesn't exist on the remote machine"
   },
   "_buildConfigMapping": {
-    "Default": "0.229.0",
-    "Node20-225": "0.229.1"
+    "Default": "0.231.0",
+    "Node20-225": "0.231.1"
   }
 }
