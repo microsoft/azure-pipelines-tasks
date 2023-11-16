@@ -345,7 +345,6 @@
         "HelmDeployV0",
         "HelmInstallerV0",
         "HelmInstallerV1",
-        "IISWebAppDeploymentOnMachineGroupV0",
         "JenkinsDownloadArtifactsV1",
         "KubeloginInstallerV0",
         "KubectlInstallerV0",
