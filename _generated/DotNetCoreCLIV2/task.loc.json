@@ -580,5 +580,9 @@
     "DeprecatedDotnet2_2_And_3_0": "ms-resource:loc.messages.DeprecatedDotnet2_2_And_3_0",
     "Warning_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Warning_IncludeNuGetOrgEnabled",
     "Error_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Error_IncludeNuGetOrgEnabled"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.231.0",
+    "Node20_229_2": "2.231.1"
   }
 }
