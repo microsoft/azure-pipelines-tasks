@@ -154,7 +154,7 @@
     "Node16": {
       "target": "azurewebappsettings.js"
     },
-    "Node20": {
+    "Node20_1": {
       "target": "azurewebappsettings.js",
       "argumentFormat": ""
     }

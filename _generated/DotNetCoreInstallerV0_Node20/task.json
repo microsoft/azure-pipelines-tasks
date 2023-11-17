@@ -51,7 +51,7 @@
       "target": "dotnetcoreinstaller.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "dotnetcoreinstaller.js",
       "argumentFormat": ""
     }
