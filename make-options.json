@@ -217,7 +217,8 @@
         "Tests"
     ],
     "Node16_225": [
-        "AzureRmWebAppDeploymentV4"
+        "AzureRmWebAppDeploymentV4",
+        "IISWebAppDeploymentOnMachineGroupV0"
     ],
     "Node20": [
         "AndroidSigningV2",
