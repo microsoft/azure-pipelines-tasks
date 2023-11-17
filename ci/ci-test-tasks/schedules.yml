@@ -34,11 +34,15 @@ jobs:
   pool:
     vmImage: ubuntu-latest
   steps:
-  - bash: |
-      npm i axios
-    displayName: npm i axios
+  - task: NodeTool@0
+    displayName: Use Node 20.x
+    inputs:
+      versionSpec: 20.x
+
   - bash: |
       echo $(tasks)
-      node ./ci/ci-test-tasks/test-and-verify-v2.js $(ADOToken) $(ADOUrl) $(System.TeamProject) $(tasks)
+      cd ./ci/ci-test-tasks/test-and-verify-v2
+      npm i --omit=dev
+      node index.js $(ADOToken) $(ADOUrl) $(System.TeamProject) $(tasks)
     displayName: Run test pipelines and verify results
     failOnStderr: true

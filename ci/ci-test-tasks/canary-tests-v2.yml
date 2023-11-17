@@ -28,13 +28,17 @@ jobs:
       - name: tasks
         value: $[dependencies.detect_changes.outputs['detect.TASKS']]
   pool:
-    vmImage: ubuntu-20.04
+    vmImage: ubuntu-latest
   steps:
-  - script: |
-      npm i axios
-    displayName: npm i axios
+  - task: NodeTool@0
+    displayName: Use Node 20.x
+    inputs:
+      versionSpec: 20.x
+
   - script: |
       echo $(tasks)
-      node ./ci/ci-test-tasks/test-and-verify-v2.js $(ADOToken) $(ADOUrl) $(System.TeamProject) $(tasks)
+      cd ./ci/ci-test-tasks/test-and-verify-v2
+      npm i --omit=dev
+      node index.js $(ADOToken) $(ADOUrl) $(System.TeamProject) $(tasks)
     displayName: 'Run test pipelines and verify results'
     failOnStderr: true

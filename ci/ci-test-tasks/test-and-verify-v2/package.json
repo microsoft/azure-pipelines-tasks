@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "axios": "^1.6.2"
+  },
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.2",
+    "@types/axios": "^0.14.0",
+    "@types/node": "^20.9.1",
+    "typescript": "^5.2.2"
+  }
+}
