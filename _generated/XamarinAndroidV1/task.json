@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 231,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [
     "MSBuild",
@@ -244,10 +244,6 @@
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "xamarinandroid.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "xamarinandroid.js",
       "argumentFormat": ""
     }
