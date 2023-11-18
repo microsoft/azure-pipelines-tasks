@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 230,
-    "Patch": 2
+    "Minor": 231,
+    "Patch": 1
   },
   "preview": true,
   "demands": [],
@@ -56,7 +56,7 @@
     "VersionAlreadyInstalled": "ms-resource:loc.messages.VersionAlreadyInstalled"
   },
   "_buildConfigMapping": {
-    "Default": "0.230.0",
-    "Node20_229_3": "0.230.2"
+    "Default": "0.231.0",
+    "Node20_229_3": "0.231.1"
   }
 }

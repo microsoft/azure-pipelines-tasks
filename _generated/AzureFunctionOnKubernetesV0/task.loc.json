@@ -1,0 +1,129 @@
+{
+  "id": "FD1AA5B9-400C-4F4B-9C0B-069BA74E53C6",
+  "name": "AzureFunctionOnKubernetes",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/func-k8s",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "preview": true,
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 231,
+    "Patch": 0
+  },
+  "demands": [],
+  "groups": [
+    {
+      "name": "serviceConnections",
+      "displayName": "ms-resource:loc.group.displayName.serviceConnections",
+      "isExpanded": true
+    },
+    {
+      "name": "commands",
+      "displayName": "ms-resource:loc.group.displayName.commands",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "dockerRegistryServiceConnection",
+      "type": "connectedService:dockerregistry",
+      "label": "ms-resource:loc.input.label.dockerRegistryServiceConnection",
+      "required": true,
+      "groupName": "serviceConnections",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryServiceConnection"
+    },
+    {
+      "name": "kubernetesServiceConnection",
+      "type": "connectedService:kubernetes",
+      "label": "ms-resource:loc.input.label.kubernetesServiceConnection",
+      "required": true,
+      "groupName": "serviceConnections",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceConnection"
+    },
+    {
+      "name": "namespace",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.namespace",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.namespace"
+    },
+    {
+      "name": "secretName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.secretName",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.secretName"
+    },
+    {
+      "name": "dockerHubNamespace",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.dockerHubNamespace",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerHubNamespace"
+    },
+    {
+      "name": "appName",
+      "type": "string",
+      "required": true,
+      "label": "ms-resource:loc.input.label.appName",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.appName"
+    },
+    {
+      "name": "functionRootDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.functionRootDirectory",
+      "required": false,
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.functionRootDirectory"
+    },
+    {
+      "name": "waitForStability",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.waitForStability",
+      "groupName": "commands",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.waitForStability"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    }
+  ],
+  "dataSourceBindings": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "src//run.js"
+    },
+    "Node16": {
+      "target": "src//run.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "AllContainersNotInReadyState": "ms-resource:loc.messages.AllContainersNotInReadyState",
+    "CouldNotDeterminePodStatus": "ms-resource:loc.messages.CouldNotDeterminePodStatus",
+    "CouldNotDetermineServiceStatus": "ms-resource:loc.messages.CouldNotDetermineServiceStatus",
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
+    "KubectlClientVersion": "ms-resource:loc.messages.KubectlClientVersion",
+    "KubectlServerVersion": "ms-resource:loc.messages.KubectlServerVersion",
+    "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
+    "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP",
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.231.0",
+    "Node20_229_2": "0.231.1"
+  }
+}

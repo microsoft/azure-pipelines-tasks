@@ -14,7 +14,7 @@
   "version": {
     "Major": 3,
     "Minor": 231,
-    "Patch": 1
+    "Patch": 3
   },
   "minimumAgentVersion": "2.206.1",
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -250,7 +250,7 @@
     "FailedToFindFile": "ms-resource:loc.messages.FailedToFindFile"
   },
   "_buildConfigMapping": {
-    "Default": "3.231.0",
-    "Node20_229_2": "3.231.1"
+    "Default": "3.231.2",
+    "Node20_229_2": "3.231.3"
   }
 }

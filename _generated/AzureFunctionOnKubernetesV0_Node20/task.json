@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 230,
-    "Patch": 0
+    "Minor": 231,
+    "Patch": 1
   },
   "demands": [],
   "groups": [
@@ -127,7 +127,7 @@
     "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.228.0",
-    "Node20_229_2": "0.230.0"
+    "Default": "0.231.0",
+    "Node20_229_2": "0.231.1"
   }
 }

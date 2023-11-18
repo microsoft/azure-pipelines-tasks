@@ -1,0 +1,175 @@
+{
+  "id": "0F077E3A-AF59-496D-81BC-AD971B7464E0",
+  "name": "XamariniOS",
+  "friendlyName": "Xamarin.iOS",
+  "description": "Build an iOS app with Xamarin on macOS",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/xamarin-ios",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613729) or [see the Xamarin iOS documentation](https://docs.microsoft.com/xamarin/ios/)",
+  "category": "Build",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 231,
+    "Patch": 2
+  },
+  "releaseNotes": "iOS signing set up has been removed from the task. Use `Secure Files` with supporting tasks `Install Apple Certificate` and `Install Apple Provisioning Profile` to setup signing. Updated options to work better with `Visual Studio for Mac`.",
+  "demands": [
+    "Xamarin.iOS"
+  ],
+  "groups": [
+    {
+      "name": "sign",
+      "displayName": "Signing & Provisioning",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "solution",
+      "aliases": [
+        "solutionFile"
+      ],
+      "type": "filePath",
+      "label": "Solution",
+      "defaultValue": "**/*.sln",
+      "required": true,
+      "helpMarkDown": "Relative path from the repository root of the Xamarin.iOS solution to build. May contain wildcards."
+    },
+    {
+      "name": "configuration",
+      "type": "string",
+      "label": "Configuration",
+      "defaultValue": "Release",
+      "required": true,
+      "helpMarkDown": "Standard configurations are Ad-Hoc, AppStore, Debug, Release."
+    },
+    {
+      "name": "clean",
+      "type": "boolean",
+      "label": "Clean",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Run a clean build (/t:clean) prior to the build."
+    },
+    {
+      "name": "packageApp",
+      "type": "boolean",
+      "label": "Create app package",
+      "defaultValue": true,
+      "required": true,
+      "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build."
+    },
+    {
+      "name": "forSimulator",
+      "aliases": [
+        "buildForSimulator"
+      ],
+      "type": "boolean",
+      "label": "Build for iOS Simulator",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Optionally build for the iOS Simulator instead of physical iOS devices."
+    },
+    {
+      "name": "runNugetRestore",
+      "type": "boolean",
+      "label": "Run NuGet restore",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "Optionally run `nuget restore` on the Xamarin iOS solution to install all referenced packages before build. The 'nuget' tool in the PATH of the build agent machine will be used. To use a different version of NuGet or set additional arguments, use the [NuGet Tool Installer](https://go.microsoft.com/fwlink/?linkid=852538) task.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "args",
+      "type": "string",
+      "label": "Arguments",
+      "required": false,
+      "helpMarkDown": "Additional command line arguments that should be used to build.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
+      "type": "filePath",
+      "label": "Working directory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Working directory in which builds will run. When empty, the root of the repository is used.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "buildToolLocation",
+      "aliases": [
+        "mdtoolFile",
+        "mdtoolLocation"
+      ],
+      "type": "string",
+      "label": "Build tool path",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Optionally supply the full path to MSBuild (the Visual Studio for Mac build tool). When empty, the default MSBuild path is used.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "iosSigningIdentity",
+      "aliases": [
+        "signingIdentity"
+      ],
+      "type": "string",
+      "label": "Signing identity",
+      "required": false,
+      "helpMarkDown": "Optionally override the signing identity that will be used to sign the build. If nothing is entered, the setting in the project will be used.",
+      "groupName": "sign"
+    },
+    {
+      "name": "provProfileUuid",
+      "aliases": [
+        "signingProvisioningProfileID"
+      ],
+      "type": "string",
+      "label": "Provisioning profile UUID",
+      "required": false,
+      "helpMarkDown": "Optional UUID of an installed provisioning profile to be used for this build.",
+      "groupName": "sign"
+    }
+  ],
+  "instanceNameFormat": "Build Xamarin.iOS solution $(solution)",
+  "execution": {
+    "Node10": {
+      "target": "xamarinios.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "xamarinios.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "SignIdNotFound": "Failed to find iOS signing identity. Verify the signing and provisioning information provided.",
+    "ProvProfileUUIDNotFound": "Failed to find provisioning profile UUID for provisioning profile: %s",
+    "XamariniOSSucceeded": "Xamarin.iOS task execution completed with no errors.",
+    "XamariniOSFailed": "Xamarin.iOS task failed with error %s. For guidance on setting up the build pipeline, see https://go.microsoft.com/fwlink/?LinkId=760847.",
+    "MSB_Build0": "Build {0}",
+    "MSB_DetectedNuGetExtensionsLoaderPath0": "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to '{0}'.",
+    "MSB_SolutionNotFoundUsingSearchPattern0": "Solution not found using search pattern '{0}'.",
+    "MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Tool Installer task to your build pipeline.",
+    "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent.",
+    "MultipleSolutionsFound": "Multiple solution file matches were found. The first match will be used: %s",
+    "SolutionDoesNotExist": "The solution file was specified, but it does not exist: %s",
+    "BuildRequiresMac": "Xamarin iOS builds require a macOS agent. Apple does not support iOS builds on a Linux or Windows agent."
+  },
+  "_buildConfigMapping": {
+    "Default": "2.231.2",
+    "Node20_229_2": "2.231.3"
+  }
+}

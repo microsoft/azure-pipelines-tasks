@@ -17,7 +17,7 @@
   ],
   "version": {
     "Major": 2,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 1
   },
   "preview": "true",
@@ -114,7 +114,7 @@
     "FileTranformationNotEnabled": "File Tranformation is not enabled. Please provide one of the following : XML Tranformation rules or JSON/XML target files for variable substitution."
   },
   "_buildConfigMapping": {
-    "Default": "2.222.0",
-    "Node20_229_3": "2.230.1"
+    "Default": "2.231.0",
+    "Node20_229_3": "2.231.1"
   }
 }

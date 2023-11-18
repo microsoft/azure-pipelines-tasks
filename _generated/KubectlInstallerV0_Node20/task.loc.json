@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 1
   },
   "demands": [],
@@ -49,7 +49,7 @@
     "VerifyKubectlInstallation": "ms-resource:loc.messages.VerifyKubectlInstallation"
   },
   "_buildConfigMapping": {
-    "Default": "0.228.0",
-    "Node20_229_3": "0.230.1"
+    "Default": "0.231.0",
+    "Node20_229_3": "0.231.1"
   }
 }

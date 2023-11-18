@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 231,
-    "Patch": 1
+    "Patch": 3
   },
   "releaseNotes": "iOS signing set up has been removed from the task. Use `Secure Files` with supporting tasks `Install Apple Certificate` and `Install Apple Provisioning Profile` to setup signing. Updated options to work better with `Visual Studio for Mac`.",
   "demands": [
@@ -173,7 +173,7 @@
     "BuildRequiresMac": "Xamarin iOS builds require a macOS agent. Apple does not support iOS builds on a Linux or Windows agent."
   },
   "_buildConfigMapping": {
-    "Default": "2.231.0",
-    "Node20_229_2": "2.231.1"
+    "Default": "2.231.2",
+    "Node20_229_2": "2.231.3"
   }
 }

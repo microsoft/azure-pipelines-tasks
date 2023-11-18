@@ -1,0 +1,198 @@
+{
+  "id": "1B467810-6725-4B6D-ACCD-886174C09BBA",
+  "name": "IISWebAppDeploymentOnMachineGroup",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/iis-web-app-deployment-on-machine-group",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 231,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.104.1",
+  "groups": [
+    {
+      "name": "FileTransformsAndVariableSubstitution",
+      "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
+      "isExpanded": false
+    },
+    {
+      "name": "advanceDeploymentOptions",
+      "displayName": "ms-resource:loc.group.displayName.advanceDeploymentOptions",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "WebSiteName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.WebSiteName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.WebSiteName"
+    },
+    {
+      "name": "VirtualApplication",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.VirtualApplication",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication"
+    },
+    {
+      "name": "Package",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.Package",
+      "defaultValue": "$(System.DefaultWorkingDirectory)\\**\\*.zip",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Package"
+    },
+    {
+      "name": "SetParametersFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SetParametersFile",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advanceDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.SetParametersFile"
+    },
+    {
+      "name": "RemoveAdditionalFilesFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RemoveAdditionalFilesFlag",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanceDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.RemoveAdditionalFilesFlag"
+    },
+    {
+      "name": "ExcludeFilesFromAppDataFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ExcludeFilesFromAppDataFlag",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanceDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.ExcludeFilesFromAppDataFlag"
+    },
+    {
+      "name": "TakeAppOfflineFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanceDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdditionalArguments",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "advanceDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+    },
+    {
+      "name": "XmlTransformation",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.XmlTransformation",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.XmlTransformation"
+    },
+    {
+      "name": "XmlVariableSubstitution",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.XmlVariableSubstitution",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.XmlVariableSubstitution"
+    },
+    {
+      "name": "JSONFiles",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.JSONFiles",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.JSONFiles"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "deployiiswebapp.js"
+    },
+    "Node16": {
+      "target": "deployiiswebapp.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "SetParamFilenotfound0": "ms-resource:loc.messages.SetParamFilenotfound0",
+    "XDTTransformationsappliedsuccessfully": "ms-resource:loc.messages.XDTTransformationsappliedsuccessfully",
+    "CannotPerformXdtTransformationOnNonWindowsPlatform": "ms-resource:loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform",
+    "XMLvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.XMLvariablesubstitutionappliedsuccessfully",
+    "JSONvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.JSONvariablesubstitutionappliedsuccessfully",
+    "Successfullyupdateddeploymenthistory": "ms-resource:loc.messages.Successfullyupdateddeploymenthistory",
+    "Failedtoupdatedeploymenthistory": "ms-resource:loc.messages.Failedtoupdatedeploymenthistory",
+    "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
+    "ErrorFetchingDeploymentPublishProfileStatusCode0": "ms-resource:loc.messages.ErrorFetchingDeploymentPublishProfileStatusCode0",
+    "ErrorOccurredStatusCode0": "ms-resource:loc.messages.ErrorOccurredStatusCode0",
+    "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "ms-resource:loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved",
+    "WebappsuccessfullypublishedatUrl0": "ms-resource:loc.messages.WebappsuccessfullypublishedatUrl0",
+    "Failedtodeploywebsite": "ms-resource:loc.messages.Failedtodeploywebsite",
+    "Runningcommand": "ms-resource:loc.messages.Runningcommand",
+    "ConstructedmsDeploycommandlinearguments": "ms-resource:loc.messages.ConstructedmsDeploycommandlinearguments",
+    "CannotfindMSDeployexe": "ms-resource:loc.messages.CannotfindMSDeployexe",
+    "Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "ms-resource:loc.messages.Runningmsdeploycommandtocheckifpackagecontainsparamfile0",
+    "Paramscontentofwebpackage0": "ms-resource:loc.messages.Paramscontentofwebpackage0",
+    "Isparameterfilepresentinwebpackage0": "ms-resource:loc.messages.Isparameterfilepresentinwebpackage0",
+    "Requestingconfigdetails": "ms-resource:loc.messages.Requestingconfigdetails",
+    "Deployingwebapplicationatvirtualpathandphysicalpath": "ms-resource:loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath",
+    "Successfullydeployedpackageusingkuduserviceat": "ms-resource:loc.messages.Successfullydeployedpackageusingkuduserviceat",
+    "Failedtodeploywebapppackageusingkuduservice": "ms-resource:loc.messages.Failedtodeploywebapppackageusingkuduservice",
+    "Unabletodeploywebappresponsecode": "ms-resource:loc.messages.Unabletodeploywebappresponsecode",
+    "Unabletopackagecontentoffolder": "ms-resource:loc.messages.Unabletopackagecontentoffolder",
+    "Compressedfolderintozip": "ms-resource:loc.messages.Compressedfolderintozip",
+    "Webappfolderisbeingarchivedtobytescompressed": "ms-resource:loc.messages.Webappfolderisbeingarchivedtobytescompressed",
+    "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "ms-resource:loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform",
+    "UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "ms-resource:loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove",
+    "UnabletofindthelocationofMSDeployfromregistryonmachineError": "ms-resource:loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError",
+    "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
+    "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern",
+    "Trytodeploywebappagainwithappofflineoptionselected": "ms-resource:loc.messages.Trytodeploywebappagainwithappofflineoptionselected",
+    "Configfiledoesntexists": "ms-resource:loc.messages.Configfiledoesntexists",
+    "Failedtowritetoconfigfilewitherror": "ms-resource:loc.messages.Failedtowritetoconfigfilewitherror",
+    "NOJSONfilematchedwithspecificpattern": "ms-resource:loc.messages.NOJSONfilematchedwithspecificpattern",
+    "JSONParseError": "ms-resource:loc.messages.JSONParseError",
+    "XdtTransformationErrorWhileTransforming": "ms-resource:loc.messages.XdtTransformationErrorWhileTransforming",
+    "EncodeNotSupported": "ms-resource:loc.messages.EncodeNotSupported",
+    "UnknownFileEncodeError": "ms-resource:loc.messages.UnknownFileEncodeError",
+    "ShortFileBufferError": "ms-resource:loc.messages.ShortFileBufferError",
+    "FailedToApplyTransformation": "ms-resource:loc.messages.FailedToApplyTransformation",
+    "FailedToApplyTransformationReason1": "ms-resource:loc.messages.FailedToApplyTransformationReason1",
+    "FailedToApplyTransformationReason2": "ms-resource:loc.messages.FailedToApplyTransformationReason2",
+    "AutoParameterizationMessage": "ms-resource:loc.messages.AutoParameterizationMessage",
+    "PackageDeploymentFailed": "ms-resource:loc.messages.PackageDeploymentFailed",
+    "Updatemachinetoenablesecuretlsprotocol": "ms-resource:loc.messages.Updatemachinetoenablesecuretlsprotocol",
+    "RetryToDeploy": "ms-resource:loc.messages.RetryToDeploy"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.231.0",
+    "Node20_229_3": "0.231.1"
+  }
+}

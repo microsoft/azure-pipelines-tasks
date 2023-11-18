@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 1
   },
   "runsOn": [
@@ -113,7 +113,7 @@
     "NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region."
   },
   "_buildConfigMapping": {
-    "Default": "1.215.0",
-    "Node20_229_3": "1.230.1"
+    "Default": "1.231.0",
+    "Node20_229_3": "1.231.1"
   }
 }

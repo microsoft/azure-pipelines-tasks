@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 1
   },
   "satisfies": [
@@ -71,7 +71,7 @@
     "TempDirNotSet": "The 'Agent.TempDirectory' environment variable was expected to be set."
   },
   "_buildConfigMapping": {
-    "Default": "0.229.1",
-    "Node20_229_3": "0.230.1"
+    "Default": "0.231.0",
+    "Node20_229_3": "0.231.1"
   }
 }

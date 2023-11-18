@@ -1,0 +1,84 @@
+{
+  "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
+  "name": "DotNetCoreInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 231,
+    "Patch": 0
+  },
+  "satisfies": [
+    "DotNetCore"
+  ],
+  "demands": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "packageType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.packageType",
+      "defaultValue": "sdk",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.packageType",
+      "options": {
+        "runtime": "Runtime",
+        "sdk": "SDK (contains runtime)"
+      }
+    },
+    {
+      "name": "version",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.version",
+      "defaultValue": "1.0.4",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.version"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "dotnetcoreinstaller.js"
+    },
+    "Node16": {
+      "target": "dotnetcoreinstaller.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ToolFailed": "ms-resource:loc.messages.ToolFailed",
+    "ImplicitVersionNotSupported": "ms-resource:loc.messages.ImplicitVersionNotSupported",
+    "getMachinePlatformFailed": "ms-resource:loc.messages.getMachinePlatformFailed",
+    "getDownloadUrlsFailed": "ms-resource:loc.messages.getDownloadUrlsFailed",
+    "UsingCachedTool": "ms-resource:loc.messages.UsingCachedTool",
+    "CheckingToolCache": "ms-resource:loc.messages.CheckingToolCache",
+    "InstallingAfresh": "ms-resource:loc.messages.InstallingAfresh",
+    "GettingDownloadUrl": "ms-resource:loc.messages.GettingDownloadUrl",
+    "CouldNotDetectPlatform": "ms-resource:loc.messages.CouldNotDetectPlatform",
+    "NullDownloadUrls": "ms-resource:loc.messages.NullDownloadUrls",
+    "DownloadingUrl": "ms-resource:loc.messages.DownloadingUrl",
+    "ExtractingPackage": "ms-resource:loc.messages.ExtractingPackage",
+    "CachingTool": "ms-resource:loc.messages.CachingTool",
+    "SuccessfullyInstalled": "ms-resource:loc.messages.SuccessfullyInstalled",
+    "ToolToInstall": "ms-resource:loc.messages.ToolToInstall",
+    "PrimaryPlatform": "ms-resource:loc.messages.PrimaryPlatform",
+    "LegacyPlatform": "ms-resource:loc.messages.LegacyPlatform",
+    "WarningVersionNotFound": "ms-resource:loc.messages.WarningVersionNotFound",
+    "CouldNotDownload": "ms-resource:loc.messages.CouldNotDownload",
+    "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage",
+    "PrependGlobalToolPath": "ms-resource:loc.messages.PrependGlobalToolPath",
+    "VersionsFileMalformed": "ms-resource:loc.messages.VersionsFileMalformed",
+    "UpdateToNewerVersion": "ms-resource:loc.messages.UpdateToNewerVersion"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.231.0",
+    "Node20_229_3": "0.231.1"
+  }
+}
