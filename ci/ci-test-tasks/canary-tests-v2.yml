@@ -38,7 +38,8 @@ jobs:
   - script: |
       echo $(tasks)
       cd ./ci/ci-test-tasks/test-and-verify-v2
-      npm i --omit=dev
+      npm i
+      npm run build
       node index.js $(ADOToken) $(ADOUrl) $(System.TeamProject) $(tasks)
     displayName: 'Run test pipelines and verify results'
     failOnStderr: true
