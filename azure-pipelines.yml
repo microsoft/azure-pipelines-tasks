@@ -61,48 +61,51 @@ jobs:
         os: Windows_NT
 
   # Publish
-  - job: publish
-    displayName: Publish
-    dependsOn:
-    - build_all_windows
-    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
-    pool:
-      vmImage: windows-2022
-    steps:
-    - template: ci/publish-steps.yml
+  # - job: publish
+  #   displayName: Publish
+  #   dependsOn:
+  #   - build_all_windows
+  #   condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
+  #   pool:
+  #     vmImage: windows-2022
+  #   steps:
+  #   - template: ci/publish-steps.yml
 
   # Courtesy Push
-  - job: courtesy_push
-    displayName: Courtesy Push
-    dependsOn:
-    - publish
-    condition: |
-      and(
-        succeeded(),
-        eq(variables['COURTESY_PUSH'], 'true'),
-        or(
-          eq(variables['build.reason'], 'Schedule'),
-          and(
-            eq(variables['build.reason'], 'Manual'),
-            eq(variables['FORCE_COURTESY_PUSH'], 'true')
-          )
-        )
-      )
-    pool:
-      vmImage: windows-2022
-    steps:
-    - checkout: AzureDevOps
-      fetchDepth: 1
-      persistCredentials: true
-    - checkout: self
-    - template: ci/courtesy-push.yml
+  # - job: courtesy_push
+  #   displayName: Courtesy Push
+  #   dependsOn:
+  #   - publish
+  #   condition: |
+  #     and(
+  #       succeeded(),
+  #       eq(variables['COURTESY_PUSH'], 'true'),
+  #       or(
+  #         eq(variables['build.reason'], 'Schedule'),
+  #         and(
+  #           eq(variables['build.reason'], 'Manual'),
+  #           eq(variables['FORCE_COURTESY_PUSH'], 'true')
+  #         )
+  #       )
+  #     )
+  #   pool:
+  #     vmImage: windows-2022
+  #   steps:
+  #   - checkout: AzureDevOps
+  #     fetchDepth: 1
+  #     persistCredentials: true
+  #   - checkout: self
+  #   - template: ci/courtesy-push.yml
 
   - job: build_all_tasks_for_deployments
     displayName: Build all tasks for deployments (Windows)
     dependsOn:
-    - courtesy_push
+    # - courtesy_push
+    - build_all_windows
     condition: succeeded()
     timeoutInMinutes: 180
+    variables:
+      task_pattern: $[dependencies.build_all_windows.outputs['getTaskPattern.task_pattern']]
     pool:
       name: 1ES-Shared-Hosted-Pool_Windows-Server-2022
     steps:
