@@ -51,6 +51,7 @@ steps:
 # Filter out unchanged tasks
 - script: node ./ci/filter-tasks.js
   displayName: Filter out unchanged tasks
+  name: getTaskPattern
   env:
     PACKAGE_ENDPOINT: $(Package.Endpoint)
     PACKAGE_TOKEN: $(Package.Token)
@@ -89,7 +90,7 @@ steps:
   displayName: Clean tasks
 
 # Build Tasks
-- script: node make.js serverBuild --task "$(task_pattern)"
+- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)"
   displayName: Build Tasks
   condition: and(succeeded(), ne(variables['numTasks'], 0))
 
@@ -103,7 +104,7 @@ steps:
     )
 
 # Check diff for task sources
-- script: node ./ci/verify-source-changes.js "$(task_pattern)"
+- script: node ./ci/verify-source-changes.js "$(getTaskPattern.task_pattern)"
   displayName: Verify task source changes
   condition: |
     and(
@@ -159,7 +160,7 @@ steps:
 - script: node make.js test
   displayName: Run tests
   condition: and(succeeded(), ne(variables['numTasks'], 0))
-- script: node make.js testLegacy --task "$(task_pattern)"
+- script: node make.js testLegacy --task "$(getTaskPattern.task_pattern)"
   displayName: Legacy tests with node 6
   condition: and(succeeded(), ne(variables['numTasks'], 0))
 
