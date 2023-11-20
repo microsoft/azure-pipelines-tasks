@@ -1,354 +1,354 @@
 {
-  "id": "845fd4f4-642d-4694-8514-047948a5a556",
-  "name": "PackerBuild",
-  "friendlyName": "Build machine image",
-  "description": "Build a machine image using Packer, which may be used for Azure Virtual machine scale set deployment",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/packer-build",
-  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=845329) or [see the Packer documentation](https://www.packer.io/docs/index.html)",
-  "category": "Deploy",
-  "releaseNotes": "This task now supports managed disk images.",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "author": "Microsoft Corporation",
-  "version": {
-    "Major": 1,
-    "Minor": 231,
-    "Patch": 0
-  },
-  "demands": [],
-  "minimumAgentVersion": "2.0.0",
-  "groups": [
-    {
-      "name": "AzureDetails",
-      "displayName": "Azure Details",
-      "isExpanded": true,
-      "visibleRule": "templateType = builtin"
+    "id": "845fd4f4-642d-4694-8514-047948a5a556",
+    "name": "PackerBuild",
+    "friendlyName": "Build machine image",
+    "description": "Build a machine image using Packer, which may be used for Azure Virtual machine scale set deployment",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/packer-build",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=845329) or [see the Packer documentation](https://www.packer.io/docs/index.html)",
+    "category": "Deploy",
+    "releaseNotes": "This task now supports managed disk images.",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 231,
+        "Patch": 1
     },
-    {
-      "name": "DeploymentInputs",
-      "displayName": "Deployment Inputs",
-      "isExpanded": true,
-      "visibleRule": "templateType = builtin"
+    "demands": [],
+    "minimumAgentVersion": "2.0.0",
+    "groups": [
+        {
+            "name": "AzureDetails",
+            "displayName": "Azure Details",
+            "isExpanded": true,
+            "visibleRule": "templateType = builtin"
+        },
+        {
+            "name": "DeploymentInputs",
+            "displayName": "Deployment Inputs",
+            "isExpanded": true,
+            "visibleRule": "templateType = builtin"
+        },
+        {
+            "name": "Advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        },
+        {
+            "name": "Output",
+            "displayName": "Output",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+        {
+            "name": "templateType",
+            "type": "pickList",
+            "label": "Packer template",
+            "required": true,
+            "helpMarkDown": "Select whether you want the task to auto generate Packer template or use custom template provided by you.",
+            "options": {
+                "builtin": "Auto generated",
+                "custom": "User provided"
+            },
+            "defaultValue": "builtin"
+        },
+        {
+            "name": "customTemplateLocation",
+            "type": "filePath",
+            "label": "Packer template location",
+            "required": true,
+            "helpMarkDown": "Path to a custom user-provided template.",
+            "visibleRule": "templateType = custom"
+        },
+        {
+            "name": "customTemplateParameters",
+            "type": "multiLine",
+            "label": "Template parameters",
+            "required": false,
+            "defaultValue": "{}",
+            "visibleRule": "templateType = custom",
+            "helpMarkDown": "Specify parameters which will be passed to Packer for building custom template. This should map to \"variables\" section in your custom template. E.g. if the template has a variable named \"drop-location\", then add a parameter here with name \"drop-location\" and a value which you want to use. You can link the value to a release variable as well. To view/edit the additional parameters in a grid, click on \"…\" next to text box.",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
+            }
+        },
+        {
+            "name": "ConnectedServiceName",
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "required": true,
+            "helpMarkDown": "Select the Azure Resource Manager subscription for baking and storing the machine image.",
+            "groupName": "AzureDetails"
+        },
+        {
+            "name": "isManagedImage",
+            "type": "boolean",
+            "label": "Managed VM disk image",
+            "required": true,
+            "helpMarkDown": "Check if generated image should be a managed image.",
+            "defaultValue": true,
+            "groupName": "AzureDetails"
+        },
+        {
+            "name": "managedImageName",
+            "type": "string",
+            "label": "Managed VM Disk Image Name ",
+            "required": true,
+            "helpMarkDown": "The Name of the Managed disk image for Auto Generated Templates.",
+            "visibleRule": "isManagedImage = true",
+            "groupName": "AzureDetails"
+        },
+        {
+            "name": "location",
+            "type": "pickList",
+            "label": "Storage location",
+            "required": true,
+            "helpMarkDown": "Location for storing the built machine image. This location will also be used to create a temporary VM for the purpose of building image.",
+            "groupName": "AzureDetails"
+        },
+        {
+            "name": "storageAccountName",
+            "type": "pickList",
+            "label": "Storage account",
+            "required": true,
+            "helpMarkDown": "Storage account for storing the built machine image. This storage account must be pre-existing in the location selected.",
+            "groupName": "AzureDetails"
+        },
+        {
+            "name": "azureResourceGroup",
+            "type": "pickList",
+            "label": "Resource group",
+            "helpMarkDown": "Azure Resource group that contains the selected storage account.",
+            "required": true,
+            "groupName": "AzureDetails"
+        },
+        {
+            "name": "baseImageSource",
+            "type": "pickList",
+            "label": "Base image source",
+            "required": true,
+            "defaultValue": "default",
+            "helpMarkDown": "Select the source of base image. You can either choose from a curated gallery of OS images or provide URL of your custom VHD image. <br/>Please note that if you have selected option to create a Managed image by checking 'Managed VM disk image' option, then you should only choose 'Gallery' option here. 'Custom' source is not supported to create a managed image.",
+            "options": {
+                "default": "Gallery",
+                "customVhd": "Custom"
+            },
+            "groupName": "DeploymentInputs"
+        },
+        {
+            "name": "baseImage",
+            "type": "pickList",
+            "label": "Base image",
+            "required": true,
+            "helpMarkDown": "Choose from curated list of OS images. This will be used for installing pre-requisite(s) and application(s) before capturing machine image.",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "options": {
+                "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows": "Windows 2012-R2-Datacenter",
+                "MicrosoftWindowsServer:WindowsServer:2016-Datacenter:windows": "Windows 2016-Datacenter",
+                "MicrosoftWindowsServer:WindowsServer:2012-Datacenter:windows": "Windows 2012-Datacenter",
+                "MicrosoftWindowsServer:WindowsServer:2008-R2-SP1:windows": "Windows 2008-R2-SP1",
+                "Canonical:UbuntuServer:14.04.4-LTS:linux": "Ubuntu 14.04.4-LTS",
+                "Canonical:UbuntuServer:16.04-LTS:linux": "Ubuntu 16.04-LTS",
+                "Canonical:UbuntuServer:18.04-LTS:linux": "Ubuntu 18.04-LTS",
+                "RedHat:RHEL:7.2:linux": "RHEL 7.2",
+                "RedHat:RHEL:6.8:linux": "RHEL 6.8",
+                "OpenLogic:CentOS:7.2:linux": "CentOS 7.2",
+                "OpenLogic:CentOS:6.8:linux": "CentOS 6.8",
+                "credativ:Debian:8:linux": "Debian 8",
+                "credativ:Debian:7:linux": "Debian 7",
+                "SUSE:openSUSE-Leap:42.2:linux": "openSUSE-Leap 42.2",
+                "SUSE:SLES:12-SP2:linux": "SLES 12-SP2",
+                "SUSE:SLES:11-SP4:linux": "SLES 11-SP4"
+            },
+            "defaultValue": "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows",
+            "visibleRule": "baseImageSource = default",
+            "groupName": "DeploymentInputs"
+        },
+        {
+            "name": "customImageUrl",
+            "type": "string",
+            "label": "Base image URL",
+            "required": true,
+            "helpMarkDown": "Specify URL of base image. This will be used for installing pre-requisite(s) and application(s) before capturing machine image.",
+            "visibleRule": "baseImageSource = customVhd",
+            "groupName": "DeploymentInputs"
+        },
+        {
+            "name": "customImageOSType",
+            "type": "pickList",
+            "label": "Base image OS",
+            "required": true,
+            "defaultValue": "windows",
+            "options": {
+                "windows": "Windows",
+                "linux": "Linux"
+            },
+            "visibleRule": "baseImageSource = customVhd",
+            "groupName": "DeploymentInputs"
+        },
+        {
+            "name": "packagePath",
+            "type": "filePath",
+            "label": "Deployment Package",
+            "required": true,
+            "helpMarkDown": "Specify the path for deployment package directory relative to $(System.DefaultWorkingDirectory). Supports minimatch pattern. Example path: FrontendWebApp/**/GalleryApp <br/> Please note that this package will be copied to temporary virtual machine which Packer creates. If the package contains large number of files and/or the files are very large in size, the upload can take quite long time (possibly running into few hours). To optimize the upload time, please see if size of the package can be meaningfully reduced. Another alternative is to use an intermediary Azure storage account. Upload the package to a storage account prior to running this task. And for this task, use a package containing a script which will download the required package from the storage account.",
+            "groupName": "DeploymentInputs"
+        },
+        {
+            "name": "deployScriptPath",
+            "type": "string",
+            "label": "Deployment script",
+            "required": true,
+            "helpMarkDown": "Specify the relative path to powershell script(for Windows) or shell script(for Linux) which deploys the package. This script should be contained in the package path selected above. Supports minimatch pattern. Example path: deploy/**/scripts/windows/deploy.ps1",
+            "groupName": "DeploymentInputs"
+        },
+        {
+            "name": "deployScriptArguments",
+            "type": "string",
+            "label": "Deployment script arguments",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Specify the arguments to be passed to deployment script.",
+            "groupName": "DeploymentInputs"
+        },
+        {
+            "name": "additionalBuilderParameters",
+            "type": "multiLine",
+            "label": "Additional Builder parameters",
+            "required": false,
+            "defaultValue": "{\"vm_size\":\"Standard_D3_v2\"}",
+            "groupName": "Advanced",
+            "visibleRule": "templateType = builtin",
+            "helpMarkDown": "In auto generated Packer template mode the task creates a Packer template with an Azure builder. This builder is used to generate a machine image. You can add keys to the Azure builder to customize the generated Packer template. For example setting ssh_tty=true in case you are using a CentOS base image and you need to have a tty to run sudo.<br/>To view/edit the additional parameters in a grid, click on “…” next to text box.",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
+            }
+        },
+        {
+            "name": "skipTempFileCleanupDuringVMDeprovision",
+            "type": "boolean",
+            "label": "Skip temporary file cleanup during deprovision",
+            "defaultValue": true,
+            "groupName": "Advanced",
+            "visibleRule": "templateType = builtin",
+            "helpMarkDown": "During deprovisioning of VM, skip clean-up of temporary files uploaded to VM. Refer [here](https://www.packer.io/docs/builders/azure.html#skip_clean)"
+        },
+        {
+            "name": "packerVersion",
+            "type": "string",
+            "label": "Packer Version",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "Advanced",
+            "visibleRule": "templateType = custom",
+            "helpMarkDown": "Specify the version of Packer to install. This will work only with custom templates."
+        },
+        {
+            "name": "imageUri",
+            "type": "string",
+            "label": "Image URL or Name",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Provide a name for the output variable which will store generated machine image VHD url for un-managed VM image or image name for managed VM image.",
+            "groupName": "Output"
+        },
+        {
+            "name": "imageId",
+            "type": "string",
+            "label": "Azure Resource Id",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Provide a name for the output variable which will store the azure resource id for the newly created image.  This is for managed images only.",
+            "groupName": "Output"
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "location",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureLocations2",
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+        },
+        {
+            "target": "storageAccountName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMStorageAccountByLocation",
+            "parameters": {
+                "location": "$(location)"
+            }
+        },
+        {
+            "target": "azureResourceGroup",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMStorageAccountIdByName",
+            "parameters": {
+                "storageAccountName": "$(storageAccountName)"
+            },
+            "resultTemplate": "{\"Value\":\"{{{ #extractResource resourceGroups}}}\",\"DisplayValue\":\"{{{ #extractResource resourceGroups}}}\"}"
+        }
+    ],
+    "sourceDefinitions": [],
+    "instanceNameFormat": "Build immutable image",
+    "execution": {
+        "Node10": {
+            "target": "./src//main.js"
+        },
+        "Node16": {
+            "target": "./src//main.js",
+            "argumentFormat": ""
+        }
     },
-    {
-      "name": "Advanced",
-      "displayName": "Advanced",
-      "isExpanded": false
-    },
-    {
-      "name": "Output",
-      "displayName": "Output",
-      "isExpanded": true
+    "messages": {
+        "OSTypeNotSupported": "This OS type is not supported for image creation: %s. Please use either windows or linux.",
+        "CopyTemplateToTempFailed": "Could not copy built-in template from source %s to temp location %s",
+        "TaskNotFound": "Task.json file could not be found: %s",
+        "OriginalTemplateLocation": "Original template location: %s",
+        "CopyingTemplate": "Copying original template from %s to temporary location %s",
+        "TempTemplateLocation": "Copied template file to a temporary location: %s",
+        "CopySourceNotExists": "Source file path does not exist for copying: %s",
+        "CreatingDestinationDir": "Destination for copying does not exist. Creating: %s",
+        "CreatedDestinationDir": "Created destination directory for copying: %s",
+        "ExecutingPackerFix": "Running packer fix command",
+        "ExecutingPackerValidate": "Running packer validate command to ensure template is valid",
+        "ExecutingPackerBuild": "Running packer build command. Waiting for it to finish...",
+        "PackerBuildCompleted": "packer build completed.",
+        "ImageURIOutputVariableNotFound": "Could not get vhd image URI (unmanaged image) from packer execution. Output variable will not be set.",
+        "ImageIDOutputVariableNotFound": "Could not get managed image id from packer execution. Output variable will not be set. Note: This variable should not be used with un-managed VM images.",
+        "ManagedImageNameOutputVariableNotFound": "Could not get managed image name from packer execution. Output variable will not be set.",
+        "CustumTemplateOutputVariableNotFound": "Could not get managed image name or vhd image URI (unmanaged image) from packer execution. Output variable will not be set.",
+        "BuiltInTemplateNotFoundErrorMessagePathName": "Built-in template for OS type: %s ",
+        "CustomTemplateNotFoundErrorMessagePathName": "Custom template not found at location: %s",
+        "CouldNotDeleteTemporaryTemplateDirectory": "Could not delete temporary template directory %s. Please delete manually.",
+        "TaskParametersConstructorFailed": "Error happened while initializing task: %s.",
+        "PackerFixFailed": "Packer fix command failed with error : '%s'. This could happen if task does not support packer version.",
+        "PackerValidateFailed": "Packer validate command failed. This could happen if task does not support packer version.",
+        "ResolvedPathNotFound": "Not found any file matching pattern: %s under root folder: %s.",
+        "ResolvedDeployPackgePath": "Resolved deploy package path: %s.",
+        "ResolvedDeployScriptPath": "Resolved deploy script path: %s.",
+        "OSNotSupportedForRunningPacker": "OS is not supported for running packer.",
+        "InstallExplicitPackerVersion": "Packer version %s will be downloaded and installed for running task.",
+        "DownloadingPackerRequired": "Either packer is not installed or its version is less than %s. Version %s will be downloaded and installed for running task.",
+        "DownloadingPackerCompleted": "Packer installer downloaded successfully at path: %s.",
+        "ExtractingPackerCompleted": "Packer extracted successfully at path: %s.",
+        "CreatedStagingDirectory": "Created staging directory for keeping packer binary and templates: %s.",
+        "CouldNotDeleteStagingDirectory": "Could not delete staging directory %s. Please delete manually.",
+        "InstalledPackerVersion": "Current installed packer version is %s.",
+        "PackerToolBusy": "Packer tool seems to be busy. Retrying after 1 second...",
+        "ResolvingDeployPackageInput": "Resolving deploy package path.",
+        "ResolvingDeployScriptInput": "Resolving deploy script path.",
+        "ParsingAdditionalBuilderParameters": "Parsing additional builder parameters json.",
+        "ParsingTemplateFileContentFailed": "Unable to parse json content from template file %s with error: %s.",
+        "ParsingCustomTemplateParameters": "Parsing custom template parameters json.",
+        "GetArtifactItemsNotSupported": "Get artifact items not supported, invalid code path",
+        "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+        "CreateManagedImageNotSupportedForVHDSource": "Creating managed image from a source VHD is not supported. You must set 'Base image source' input value to 'Gallery'.",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
-  ],
-  "inputs": [
-    {
-      "name": "templateType",
-      "type": "pickList",
-      "label": "Packer template",
-      "required": true,
-      "helpMarkDown": "Select whether you want the task to auto generate Packer template or use custom template provided by you.",
-      "options": {
-        "builtin": "Auto generated",
-        "custom": "User provided"
-      },
-      "defaultValue": "builtin"
-    },
-    {
-      "name": "customTemplateLocation",
-      "type": "filePath",
-      "label": "Packer template location",
-      "required": true,
-      "helpMarkDown": "Path to a custom user-provided template.",
-      "visibleRule": "templateType = custom"
-    },
-    {
-      "name": "customTemplateParameters",
-      "type": "multiLine",
-      "label": "Template parameters",
-      "required": false,
-      "defaultValue": "{}",
-      "visibleRule": "templateType = custom",
-      "helpMarkDown": "Specify parameters which will be passed to Packer for building custom template. This should map to \"variables\" section in your custom template. E.g. if the template has a variable named \"drop-location\", then add a parameter here with name \"drop-location\" and a value which you want to use. You can link the value to a release variable as well. To view/edit the additional parameters in a grid, click on \"…\" next to text box.",
-      "properties": {
-        "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
-      }
-    },
-    {
-      "name": "ConnectedServiceName",
-      "type": "connectedService:AzureRM",
-      "label": "Azure subscription",
-      "required": true,
-      "helpMarkDown": "Select the Azure Resource Manager subscription for baking and storing the machine image.",
-      "groupName": "AzureDetails"
-    },
-    {
-      "name": "isManagedImage",
-      "type": "boolean",
-      "label": "Managed VM disk image",
-      "required": true,
-      "helpMarkDown": "Check if generated image should be a managed image.",
-      "defaultValue": true,
-      "groupName": "AzureDetails"
-    },
-    {
-      "name": "managedImageName",
-      "type": "string",
-      "label": "Managed VM Disk Image Name ",
-      "required": true,
-      "helpMarkDown": "The Name of the Managed disk image for Auto Generated Templates.",
-      "visibleRule": "isManagedImage = true",
-      "groupName": "AzureDetails"
-    },
-    {
-      "name": "location",
-      "type": "pickList",
-      "label": "Storage location",
-      "required": true,
-      "helpMarkDown": "Location for storing the built machine image. This location will also be used to create a temporary VM for the purpose of building image.",
-      "groupName": "AzureDetails"
-    },
-    {
-      "name": "storageAccountName",
-      "type": "pickList",
-      "label": "Storage account",
-      "required": true,
-      "helpMarkDown": "Storage account for storing the built machine image. This storage account must be pre-existing in the location selected.",
-      "groupName": "AzureDetails"
-    },
-    {
-      "name": "azureResourceGroup",
-      "type": "pickList",
-      "label": "Resource group",
-      "helpMarkDown": "Azure Resource group that contains the selected storage account.",
-      "required": true,
-      "groupName": "AzureDetails"
-    },
-    {
-      "name": "baseImageSource",
-      "type": "pickList",
-      "label": "Base image source",
-      "required": true,
-      "defaultValue": "default",
-      "helpMarkDown": "Select the source of base image. You can either choose from a curated gallery of OS images or provide URL of your custom VHD image. <br/>Please note that if you have selected option to create a Managed image by checking 'Managed VM disk image' option, then you should only choose 'Gallery' option here. 'Custom' source is not supported to create a managed image.",
-      "options": {
-        "default": "Gallery",
-        "customVhd": "Custom"
-      },
-      "groupName": "DeploymentInputs"
-    },
-    {
-      "name": "baseImage",
-      "type": "pickList",
-      "label": "Base image",
-      "required": true,
-      "helpMarkDown": "Choose from curated list of OS images. This will be used for installing pre-requisite(s) and application(s) before capturing machine image.",
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "options": {
-        "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows": "Windows 2012-R2-Datacenter",
-        "MicrosoftWindowsServer:WindowsServer:2016-Datacenter:windows": "Windows 2016-Datacenter",
-        "MicrosoftWindowsServer:WindowsServer:2012-Datacenter:windows": "Windows 2012-Datacenter",
-        "MicrosoftWindowsServer:WindowsServer:2008-R2-SP1:windows": "Windows 2008-R2-SP1",
-        "Canonical:UbuntuServer:14.04.4-LTS:linux": "Ubuntu 14.04.4-LTS",
-        "Canonical:UbuntuServer:16.04-LTS:linux": "Ubuntu 16.04-LTS",
-        "Canonical:UbuntuServer:18.04-LTS:linux": "Ubuntu 18.04-LTS",
-        "RedHat:RHEL:7.2:linux": "RHEL 7.2",
-        "RedHat:RHEL:6.8:linux": "RHEL 6.8",
-        "OpenLogic:CentOS:7.2:linux": "CentOS 7.2",
-        "OpenLogic:CentOS:6.8:linux": "CentOS 6.8",
-        "credativ:Debian:8:linux": "Debian 8",
-        "credativ:Debian:7:linux": "Debian 7",
-        "SUSE:openSUSE-Leap:42.2:linux": "openSUSE-Leap 42.2",
-        "SUSE:SLES:12-SP2:linux": "SLES 12-SP2",
-        "SUSE:SLES:11-SP4:linux": "SLES 11-SP4"
-      },
-      "defaultValue": "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows",
-      "visibleRule": "baseImageSource = default",
-      "groupName": "DeploymentInputs"
-    },
-    {
-      "name": "customImageUrl",
-      "type": "string",
-      "label": "Base image URL",
-      "required": true,
-      "helpMarkDown": "Specify URL of base image. This will be used for installing pre-requisite(s) and application(s) before capturing machine image.",
-      "visibleRule": "baseImageSource = customVhd",
-      "groupName": "DeploymentInputs"
-    },
-    {
-      "name": "customImageOSType",
-      "type": "pickList",
-      "label": "Base image OS",
-      "required": true,
-      "defaultValue": "windows",
-      "options": {
-        "windows": "Windows",
-        "linux": "Linux"
-      },
-      "visibleRule": "baseImageSource = customVhd",
-      "groupName": "DeploymentInputs"
-    },
-    {
-      "name": "packagePath",
-      "type": "filePath",
-      "label": "Deployment Package",
-      "required": true,
-      "helpMarkDown": "Specify the path for deployment package directory relative to $(System.DefaultWorkingDirectory). Supports minimatch pattern. Example path: FrontendWebApp/**/GalleryApp <br/> Please note that this package will be copied to temporary virtual machine which Packer creates. If the package contains large number of files and/or the files are very large in size, the upload can take quite long time (possibly running into few hours). To optimize the upload time, please see if size of the package can be meaningfully reduced. Another alternative is to use an intermediary Azure storage account. Upload the package to a storage account prior to running this task. And for this task, use a package containing a script which will download the required package from the storage account.",
-      "groupName": "DeploymentInputs"
-    },
-    {
-      "name": "deployScriptPath",
-      "type": "string",
-      "label": "Deployment script",
-      "required": true,
-      "helpMarkDown": "Specify the relative path to powershell script(for Windows) or shell script(for Linux) which deploys the package. This script should be contained in the package path selected above. Supports minimatch pattern. Example path: deploy/**/scripts/windows/deploy.ps1",
-      "groupName": "DeploymentInputs"
-    },
-    {
-      "name": "deployScriptArguments",
-      "type": "string",
-      "label": "Deployment script arguments",
-      "required": false,
-      "defaultValue": "",
-      "helpMarkDown": "Specify the arguments to be passed to deployment script.",
-      "groupName": "DeploymentInputs"
-    },
-    {
-      "name": "additionalBuilderParameters",
-      "type": "multiLine",
-      "label": "Additional Builder parameters",
-      "required": false,
-      "defaultValue": "{\"vm_size\":\"Standard_D3_v2\"}",
-      "groupName": "Advanced",
-      "visibleRule": "templateType = builtin",
-      "helpMarkDown": "In auto generated Packer template mode the task creates a Packer template with an Azure builder. This builder is used to generate a machine image. You can add keys to the Azure builder to customize the generated Packer template. For example setting ssh_tty=true in case you are using a CentOS base image and you need to have a tty to run sudo.<br/>To view/edit the additional parameters in a grid, click on “…” next to text box.",
-      "properties": {
-        "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
-      }
-    },
-    {
-      "name": "skipTempFileCleanupDuringVMDeprovision",
-      "type": "boolean",
-      "label": "Skip temporary file cleanup during deprovision",
-      "defaultValue": true,
-      "groupName": "Advanced",
-      "visibleRule": "templateType = builtin",
-      "helpMarkDown": "During deprovisioning of VM, skip clean-up of temporary files uploaded to VM. Refer [here](https://www.packer.io/docs/builders/azure.html#skip_clean)"
-    },
-    {
-      "name": "packerVersion",
-      "type": "string",
-      "label": "Packer Version",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "Advanced",
-      "visibleRule": "templateType = custom",
-      "helpMarkDown": "Specify the version of Packer to install. This will work only with custom templates."
-    },
-    {
-      "name": "imageUri",
-      "type": "string",
-      "label": "Image URL or Name",
-      "required": false,
-      "defaultValue": "",
-      "helpMarkDown": "Provide a name for the output variable which will store generated machine image VHD url for un-managed VM image or image name for managed VM image.",
-      "groupName": "Output"
-    },
-    {
-      "name": "imageId",
-      "type": "string",
-      "label": "Azure Resource Id",
-      "required": false,
-      "defaultValue": "",
-      "helpMarkDown": "Provide a name for the output variable which will store the azure resource id for the newly created image.  This is for managed images only.",
-      "groupName": "Output"
-    }
-  ],
-  "dataSourceBindings": [
-    {
-      "target": "location",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureLocations2",
-      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
-    },
-    {
-      "target": "storageAccountName",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureRMStorageAccountByLocation",
-      "parameters": {
-        "location": "$(location)"
-      }
-    },
-    {
-      "target": "azureResourceGroup",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureRMStorageAccountIdByName",
-      "parameters": {
-        "storageAccountName": "$(storageAccountName)"
-      },
-      "resultTemplate": "{\"Value\":\"{{{ #extractResource resourceGroups}}}\",\"DisplayValue\":\"{{{ #extractResource resourceGroups}}}\"}"
-    }
-  ],
-  "sourceDefinitions": [],
-  "instanceNameFormat": "Build immutable image",
-  "execution": {
-    "Node10": {
-      "target": "./src//main.js"
-    },
-    "Node16": {
-      "target": "./src//main.js",
-      "argumentFormat": ""
-    }
-  },
-  "messages": {
-    "OSTypeNotSupported": "This OS type is not supported for image creation: %s. Please use either windows or linux.",
-    "CopyTemplateToTempFailed": "Could not copy built-in template from source %s to temp location %s",
-    "TaskNotFound": "Task.json file could not be found: %s",
-    "OriginalTemplateLocation": "Original template location: %s",
-    "CopyingTemplate": "Copying original template from %s to temporary location %s",
-    "TempTemplateLocation": "Copied template file to a temporary location: %s",
-    "CopySourceNotExists": "Source file path does not exist for copying: %s",
-    "CreatingDestinationDir": "Destination for copying does not exist. Creating: %s",
-    "CreatedDestinationDir": "Created destination directory for copying: %s",
-    "ExecutingPackerFix": "Running packer fix command",
-    "ExecutingPackerValidate": "Running packer validate command to ensure template is valid",
-    "ExecutingPackerBuild": "Running packer build command. Waiting for it to finish...",
-    "PackerBuildCompleted": "packer build completed.",
-    "ImageURIOutputVariableNotFound": "Could not get vhd image URI (unmanaged image) from packer execution. Output variable will not be set.",
-    "ImageIDOutputVariableNotFound": "Could not get managed image id from packer execution. Output variable will not be set. Note: This variable should not be used with un-managed VM images.",
-    "ManagedImageNameOutputVariableNotFound": "Could not get managed image name from packer execution. Output variable will not be set.",
-    "CustumTemplateOutputVariableNotFound": "Could not get managed image name or vhd image URI (unmanaged image) from packer execution. Output variable will not be set.",
-    "BuiltInTemplateNotFoundErrorMessagePathName": "Built-in template for OS type: %s ",
-    "CustomTemplateNotFoundErrorMessagePathName": "Custom template not found at location: %s",
-    "CouldNotDeleteTemporaryTemplateDirectory": "Could not delete temporary template directory %s. Please delete manually.",
-    "TaskParametersConstructorFailed": "Error happened while initializing task: %s.",
-    "PackerFixFailed": "Packer fix command failed with error : '%s'. This could happen if task does not support packer version.",
-    "PackerValidateFailed": "Packer validate command failed. This could happen if task does not support packer version.",
-    "ResolvedPathNotFound": "Not found any file matching pattern: %s under root folder: %s.",
-    "ResolvedDeployPackgePath": "Resolved deploy package path: %s.",
-    "ResolvedDeployScriptPath": "Resolved deploy script path: %s.",
-    "OSNotSupportedForRunningPacker": "OS is not supported for running packer.",
-    "InstallExplicitPackerVersion": "Packer version %s will be downloaded and installed for running task.",
-    "DownloadingPackerRequired": "Either packer is not installed or its version is less than %s. Version %s will be downloaded and installed for running task.",
-    "DownloadingPackerCompleted": "Packer installer downloaded successfully at path: %s.",
-    "ExtractingPackerCompleted": "Packer extracted successfully at path: %s.",
-    "CreatedStagingDirectory": "Created staging directory for keeping packer binary and templates: %s.",
-    "CouldNotDeleteStagingDirectory": "Could not delete staging directory %s. Please delete manually.",
-    "InstalledPackerVersion": "Current installed packer version is %s.",
-    "PackerToolBusy": "Packer tool seems to be busy. Retrying after 1 second...",
-    "ResolvingDeployPackageInput": "Resolving deploy package path.",
-    "ResolvingDeployScriptInput": "Resolving deploy script path.",
-    "ParsingAdditionalBuilderParameters": "Parsing additional builder parameters json.",
-    "ParsingTemplateFileContentFailed": "Unable to parse json content from template file %s with error: %s.",
-    "ParsingCustomTemplateParameters": "Parsing custom template parameters json.",
-    "GetArtifactItemsNotSupported": "Get artifact items not supported, invalid code path",
-    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-    "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
-    "CreateManagedImageNotSupportedForVHDSource": "Creating managed image from a source VHD is not supported. You must set 'Base image source' input value to 'Gallery'.",
-    "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
-  }
 }
