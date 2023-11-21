@@ -21,7 +21,7 @@ steps:
   displayName: Clean tasks
 
 # Build tasks
-- script: node make.js serverBuild
+- script: node make.js serverBuild --task "$(task_pattern)"
   displayName: Build tasks
 
 # Stage tasks individually into the package directory
