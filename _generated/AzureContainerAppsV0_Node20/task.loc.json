@@ -18,7 +18,7 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 0
   },
   "preview": true,
@@ -228,6 +228,6 @@
   },
   "_buildConfigMapping": {
     "Default": "0.225.1",
-    "Node20_229_10": "0.230.0"
+    "Node20_229_10": "0.231.0"
   }
 }

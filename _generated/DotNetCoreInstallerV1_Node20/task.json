@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 230,
-    "Patch": 1
+    "Minor": 231,
+    "Patch": 0
   },
   "deprecated": true,
   "removalDate": "2024-04-22",
@@ -160,6 +160,6 @@
   },
   "_buildConfigMapping": {
     "Default": "1.229.0",
-    "Node20_229_3": "1.230.1"
+    "Node20_229_3": "1.231.0"
   }
 }

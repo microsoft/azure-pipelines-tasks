@@ -10,8 +10,8 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 230,
-    "Patch": 1
+    "Minor": 231,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Download GitHub Release",
@@ -117,6 +117,6 @@
   },
   "_buildConfigMapping": {
     "Default": "0.215.0",
-    "Node20_229_3": "0.230.1"
+    "Node20_229_3": "0.231.0"
   }
 }

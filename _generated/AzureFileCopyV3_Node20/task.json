@@ -14,7 +14,7 @@
   "version": {
     "Major": 3,
     "Minor": 231,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [
     "azureps"
@@ -318,6 +318,6 @@
   },
   "_buildConfigMapping": {
     "Default": "3.231.2",
-    "Node20_229_2": "3.231.3"
+    "Node20_229_2": "3.231.4"
   }
 }
