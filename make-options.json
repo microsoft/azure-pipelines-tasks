@@ -379,5 +379,11 @@
     "Node20_229_10": [
         "AzureContainerAppsV0",
         "AzureContainerAppsV1"
-    ]
+    ],
+    "Node20_229_11": [
+        "AzureIoTEdgeV2"
+    ],
+    "Node20_229_12": [],
+    "Node20_229_13": [],
+    "Node20_229_14": []
 }
