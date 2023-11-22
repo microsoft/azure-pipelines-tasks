@@ -388,6 +388,9 @@
         "GitHubCommentV0",
         "ReviewAppV0"
     ],
-    "Node20_229_13": [],
+    "Node20_229_13": [
+        "PublishTestResultsV1",
+        "PublishTestResultsV2"
+    ],
     "Node20_229_14": []
 }
