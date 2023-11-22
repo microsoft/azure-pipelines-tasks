@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 230,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -85,7 +85,7 @@
       "target": "publishcodecoverageresults.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "publishcodecoverageresults.js",
       "argumentFormat": ""
     }
@@ -107,6 +107,6 @@
   },
   "_buildConfigMapping": {
     "Default": "1.228.0",
-    "Node20_229_4": "1.230.0"
+    "Node20_229_4": "1.230.1"
   }
 }
