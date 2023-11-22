@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 231,
-    "Patch": 1
+    "Patch": 2
   },
   "minimumAgentVersion": "2.172.0",
   "demands": [],
@@ -153,7 +153,7 @@
     "Node16": {
       "target": "docker.js"
     },
-    "Node20": {
+    "Node20_1": {
       "target": "docker.js",
       "argumentFormat": ""
     }
@@ -193,6 +193,6 @@
   },
   "_buildConfigMapping": {
     "Default": "2.231.0",
-    "Node20_229_2": "2.231.1"
+    "Node20_229_2": "2.231.2"
   }
 }

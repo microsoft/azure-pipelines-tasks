@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 231,
-    "Patch": 0
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "inputs": [
@@ -63,7 +63,7 @@
     "CreatedDynamicResource": "ms-resource:loc.messages.CreatedDynamicResource"
   },
   "_buildConfigMapping": {
-    "Default": "0.214.0",
-    "Node20_229_12": "0.231.0"
+    "Default": "0.231.1",
+    "Node20_229_12": "0.231.2"
   }
 }

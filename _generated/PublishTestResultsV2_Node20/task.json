@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 231,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",
@@ -152,7 +152,7 @@
     "ErrorFailTaskOnFailedTests": "There are one or more test failures detected in result files. Detailed summary of published test results can be viewed in the Tests tab."
   },
   "_buildConfigMapping": {
-    "Default": "2.230.0",
-    "Node20_229_13": "2.231.0"
+    "Default": "2.231.1",
+    "Node20_229_13": "2.231.2"
   }
 }
