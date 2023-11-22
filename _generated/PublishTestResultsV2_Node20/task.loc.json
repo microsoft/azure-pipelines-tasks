@@ -141,7 +141,7 @@
       "target": "publishtestresults.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "publishtestresults.js",
       "argumentFormat": ""
     }
