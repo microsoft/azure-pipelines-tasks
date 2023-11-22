@@ -61,5 +61,21 @@
 
             return ret;
         }
+
+        internal static void NotNullOrThrow<T>(T value, string message)
+        {
+            if (value == null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        internal static void NullOrThrow<T>(T value, string message)
+        {
+            if(value != null)
+            {
+                throw new Exception(message);
+            }
+        }
     }
 }
