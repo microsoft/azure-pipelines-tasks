@@ -11,7 +11,7 @@ namespace BuildConfigGen
     {
         internal static Dictionary<string, AgentTask> ReadMakeOptions(string gitRootPath)
         {
-            var agentTasks = new Dictionary<string, AgentTask>();
+            Dictionary<string, AgentTask> agentTasks = new Dictionary<string, AgentTask>();
 
             var r = new Utf8JsonReader(File.ReadAllBytes(Path.Combine(gitRootPath, @"make-options.json")));
 
@@ -26,6 +26,7 @@ namespace BuildConfigGen
                     case JsonTokenType.PropertyName:
                         {
                             string? text = r.GetString();
+                            //Console.WriteLine(r.TokenType + " " + text);
 
                             if (text == "taskResources")
                             {
@@ -50,11 +51,12 @@ namespace BuildConfigGen
                             if (inConfig)
                             {
                                 string? text = r.GetString();
+                                //Console.WriteLine(r.TokenType + " " + text);
 
                                 AgentTask task;
                                 if (agentTasks.TryGetValue(text!, out task!))
                                 {
-                                    // do nothing
+
                                 }
                                 else
                                 {
@@ -72,8 +74,13 @@ namespace BuildConfigGen
 
                             break;
                         }
+                    default:
+                        //Console.WriteLine(r.TokenType);
+                        break;
                 }
             }
+
+            // startarray, endarray
 
             return agentTasks;
         }
