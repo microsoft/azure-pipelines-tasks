@@ -19,7 +19,7 @@
   "version": {
     "Major": 0,
     "Minor": 230,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": true,
   "minimumAgentVersion": "2.144.0",
@@ -178,7 +178,7 @@
     "Node16": {
       "target": "azurecontainerapps.js"
     },
-    "Node20": {
+    "Node20_1": {
       "target": "azurecontainerapps.js",
       "argumentFormat": ""
     }
@@ -228,6 +228,6 @@
   },
   "_buildConfigMapping": {
     "Default": "0.225.1",
-    "Node20_229_10": "0.230.0"
+    "Node20_229_10": "0.230.1"
   }
 }
