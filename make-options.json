@@ -137,6 +137,7 @@
         "MysqlDeploymentOnMachineGroupV1",
         "NodeTaskRunnerInstallerV0",
         "NodeToolV0",
+        "NotationV0",
         "NpmV0",
         "NpmV1",
         "NpmAuthenticateV0",
@@ -365,6 +366,7 @@
         "AzureSpringCloudV0"
     ],
     "Node20_229_6": [
+        "AzureVmssDeploymentV0",
         "PackerBuildV0",
         "PackerBuildV1"
     ],

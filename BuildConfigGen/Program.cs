@@ -58,15 +58,57 @@ namespace BuildConfigGen
         /// <param name="configs">List of configs to generate seperated by |</param>
         /// <param name="currentSprint">Overide current sprint; omit to get from whatsprintis.it</param>
         /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
-        static void Main(string task, string configs, int? currentSprint, bool writeUpdates = false)
+        /// <param name="allTasks"></param>
+        static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false)
         {
-            // error handling strategy:
-            // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
-            // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
-            // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
-            foreach (var t in task.Split(',', '|'))
+            if (allTasks)
             {
-                Main3(t, configs, writeUpdates, currentSprint);
+                NullOrThrow(task, "If allTasks specified, task must not be supplied");
+                NullOrThrow(configs, "If allTasks specified, configs must not be supplied");
+            }
+            else
+            {
+                NotNullOrThrow(task, "Task is required");
+                NotNullOrThrow(configs, "Configs is required");
+            }
+
+            if (allTasks)
+            {
+                string currentDir = Environment.CurrentDirectory;
+                string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+
+                var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
+                foreach (var t in tasks.Values)
+                {
+                    Main3(t.Name, string.Join('|', t.Configs), writeUpdates, currentSprint);
+                }
+            }
+            else 
+            { 
+                // error handling strategy:
+                // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
+                // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
+                // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
+                foreach (var t in task!.Split(',', '|'))
+                {
+                    Main3(t, configs!, writeUpdates, currentSprint);
+                }
+            }
+        }
+
+        private static void NullOrThrow<T>(T value, string message)
+        {
+            if(value != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        private static void NotNullOrThrow<T>(T value, string message)
+        {
+            if (value == null)
+            {
+                throw new Exception(message);
             }
         }
 
