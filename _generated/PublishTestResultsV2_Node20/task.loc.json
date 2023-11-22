@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 231,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -152,7 +152,7 @@
     "ErrorFailTaskOnFailedTests": "ms-resource:loc.messages.ErrorFailTaskOnFailedTests"
   },
   "_buildConfigMapping": {
-    "Default": "2.230.0",
-    "Node20_229_13": "2.231.0"
+    "Default": "2.231.1",
+    "Node20_229_13": "2.231.2"
   }
 }
