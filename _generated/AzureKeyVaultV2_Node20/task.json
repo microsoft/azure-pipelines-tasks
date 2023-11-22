@@ -81,7 +81,7 @@
       "target": "runprejob.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "runprejob.js",
       "argumentFormat": ""
     }
@@ -94,7 +94,7 @@
       "target": "run.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "run.js",
       "argumentFormat": ""
     }

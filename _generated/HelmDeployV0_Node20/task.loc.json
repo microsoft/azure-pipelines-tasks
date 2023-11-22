@@ -517,7 +517,7 @@
       "target": "src//downloadsecurefiles.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "src//downloadsecurefiles.js",
       "argumentFormat": ""
     }
@@ -530,7 +530,7 @@
       "target": "src//helm.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "src//helm.js",
       "argumentFormat": ""
     }
@@ -543,7 +543,7 @@
       "target": "src//deletesecurefiles.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "src//deletesecurefiles.js",
       "argumentFormat": ""
     }

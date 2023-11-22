@@ -53,7 +53,7 @@
     "Node16": {
       "target": "src//dockertoolinstaller.js"
     },
-    "Node20": {
+    "Node20_1": {
       "target": "src//dockertoolinstaller.js",
       "argumentFormat": ""
     }

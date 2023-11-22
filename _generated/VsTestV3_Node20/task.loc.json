@@ -553,7 +553,7 @@
     "Node16": {
       "target": "runvstest.js"
     },
-    "Node20": {
+    "Node20_1": {
       "target": "runvstest.js",
       "argumentFormat": ""
     }

@@ -39,7 +39,7 @@
     "Node16": {
       "target": "src//helmtoolinstaller.js"
     },
-    "Node20": {
+    "Node20_1": {
       "target": "src//helmtoolinstaller.js",
       "argumentFormat": ""
     }

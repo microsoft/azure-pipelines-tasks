@@ -212,7 +212,7 @@
       "target": "azurermwebappdeployment.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "azurermwebappdeployment.js",
       "argumentFormat": ""
     }

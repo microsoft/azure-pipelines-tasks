@@ -195,7 +195,7 @@
       "target": "azuremysqldeploy.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "azuremysqldeploy.js",
       "argumentFormat": ""
     }

@@ -456,7 +456,7 @@
     "Node16": {
       "target": "src//kubernetes.js"
     },
-    "Node20": {
+    "Node20_1": {
       "target": "src//kubernetes.js",
       "argumentFormat": ""
     }
