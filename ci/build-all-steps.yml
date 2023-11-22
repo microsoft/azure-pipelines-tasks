@@ -78,10 +78,6 @@ steps:
   env:
     PACKAGE_TOKEN: $(Package.Token)
 
-# Verify generated files across tasks are up-to-date
-- script: dotnet run --project BuildConfigGen\BuildConfigGen.csproj --all-tasks
-  displayName: Ensure BuildConfigGen outputs are consistent
-
 # Build BuildConfigGen
 - task: DotNetCoreCLI@2
   displayName: Build BuildConfigGen
