@@ -19,7 +19,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 231,
+    "Minor": 230,
     "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
@@ -164,7 +164,7 @@
     "GlobalCliConfigAgentVersionWarning": "For agent version < 2.115.0, only global Azure CLI configuration can be used"
   },
   "_buildConfigMapping": {
-    "Default": "1.231.0",
-    "Node20_229_2": "1.231.1"
+    "Default": "1.225.0",
+    "Node20_229_2": "1.230.1"
   }
 }

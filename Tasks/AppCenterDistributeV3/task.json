@@ -14,7 +14,7 @@
     "version": {
         "Major": 3,
         "Minor": 231,
-        "Patch": 2
+        "Patch": 0
     },
     "minimumAgentVersion": "2.206.1",
     "releaseNotes": "Added support for forwarding Android mapping to App Center Diagnostics. Added missing descriptions.",

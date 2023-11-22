@@ -17,7 +17,7 @@
   "version": {
     "Major": 3,
     "Minor": 231,
-    "Patch": 3
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [],
@@ -431,7 +431,7 @@
     "UnableToExtractGradleVersion": "ms-resource:loc.messages.UnableToExtractGradleVersion"
   },
   "_buildConfigMapping": {
-    "Default": "3.231.2",
-    "Node20_229_2": "3.231.3"
+    "Default": "3.231.0",
+    "Node20_229_2": "3.231.2"
   }
 }
