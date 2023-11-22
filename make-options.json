@@ -137,6 +137,7 @@
         "MysqlDeploymentOnMachineGroupV1",
         "NodeTaskRunnerInstallerV0",
         "NodeToolV0",
+        "NotationV0",
         "NpmV0",
         "NpmV1",
         "NpmAuthenticateV0",
