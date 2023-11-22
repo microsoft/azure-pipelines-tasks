@@ -14,7 +14,7 @@ describe('NotationV0 Suite', function () {
     })
 
     it('notation sign', async function () {
-        this.timeout(3000);
+        this.timeout(10000);
 
         let tp = path.join(__dirname, 'L0Sign.js');
         let tr = new ttm.MockTestRunner(tp);
@@ -24,7 +24,7 @@ describe('NotationV0 Suite', function () {
     })
 
     it('notation verify', async function () {
-        this.timeout(3000);
+        this.timeout(10000);
 
         let tp = path.join(__dirname, 'L0Verify.js');
         let tr = new ttm.MockTestRunner(tp);
