@@ -66,7 +66,7 @@ steps:
     )
 
 # Verify generated files across tasks are up-to-date
-- script: dotnet run --project BuildConfigGen\BuildConfigGen.csproj --all-tasks
+- script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --all-tasks
   displayName: Ensure BuildConfigGen outputs are consistent
 
 - script: node ./ci/check-downgrading.js --task "$(task_pattern_fordowngradingcheck)" --sprint $(currentSprint) --week $(currentSprintWeek)
