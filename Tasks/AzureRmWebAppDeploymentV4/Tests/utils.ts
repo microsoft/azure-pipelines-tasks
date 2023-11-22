@@ -1,4 +1,3 @@
-fdssf
 import ma = require('azure-pipelines-task-lib/mock-answer');
 
 export function extendObject(output, target) {
