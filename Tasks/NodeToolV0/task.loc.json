@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 231,
-    "Patch": 0
+    "Patch": 6
   },
   "satisfies": [
     "Node",
@@ -82,6 +82,24 @@
       "required": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.nodejsMirror"
+    },
+    {
+      "name": "retryCountOnDownloadFails",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.retryCountOnDownloadFails",
+      "defaultValue": "5",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.retryCountOnDownloadFails"
+    },
+    {
+      "name": "delayBetweenRetries",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.delayBetweenRetries",
+      "defaultValue": "1000",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.delayBetweenRetries"
     }
   ],
   "execution": {

@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 230,
-    "Patch": 2
+    "Minor": 231,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -80,7 +80,7 @@
     "Error_FailedCleanupM2": "ms-resource:loc.messages.Error_FailedCleanupM2"
   },
   "_buildConfigMapping": {
-    "Default": "0.230.2",
-    "Node20_229_1": "0.230.3"
+    "Default": "0.231.0",
+    "Node20_229_1": "0.231.1"
   }
 }
