@@ -63,13 +63,13 @@ namespace BuildConfigGen
         {
             if (allTasks)
             {
-                Helpers.NullOrThrow(task, "If allTasks specified, task must not be supplied");
-                Helpers.NullOrThrow(configs, "If allTasks specified, configs must not be supplied");
+                NullOrThrow(task, "If allTasks specified, task must not be supplied");
+                NullOrThrow(configs, "If allTasks specified, configs must not be supplied");
             }
             else
             {
-                Helpers.NotNullOrThrow(task, "Task is required");
-                Helpers.NotNullOrThrow(configs, "Configs is required");
+                NotNullOrThrow(task, "Task is required");
+                NotNullOrThrow(configs, "Configs is required");
             }
 
             if (allTasks)
@@ -80,7 +80,7 @@ namespace BuildConfigGen
                 var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
                 foreach (var t in tasks.Values)
                 {
-                    ProcessTasksConfigs(t.Name, string.Join('|', t.Configs), writeUpdates, currentSprint);
+                    Main3(t.Name, string.Join('|', t.Configs), writeUpdates, currentSprint);
                 }
             }
             else 
@@ -91,12 +91,28 @@ namespace BuildConfigGen
                 // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
                 foreach (var t in task!.Split(',', '|'))
                 {
-                    ProcessTasksConfigs(t, configs!, writeUpdates, currentSprint);
+                    Main3(t, configs!, writeUpdates, currentSprint);
                 }
             }
         }
 
-        private static void ProcessTasksConfigs(string task, string configsString, bool writeUpdates, int? currentSprint)
+        private static void NullOrThrow<T>(T value, string message)
+        {
+            if(value != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        private static void NotNullOrThrow<T>(T value, string message)
+        {
+            if (value == null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        private static void Main3(string task, string configsString, bool writeUpdates, int? currentSprint)
         {
             if (string.IsNullOrEmpty(task))
             {
