@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 0
   },
   "runsOn": [
@@ -170,7 +170,7 @@
     "Error_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Error_IncludeNuGetOrgEnabled"
   },
   "_buildConfigMapping": {
-    "Default": "1.230.0",
-    "Node20_229_1": "1.230.1"
+    "Default": "1.231.0",
+    "Node20_229_1": "1.231.1"
   }
 }

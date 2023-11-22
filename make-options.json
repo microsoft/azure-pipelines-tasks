@@ -310,7 +310,6 @@
         "AzureMysqlDeploymentV1",
         "AzureNLBManagementV1",
         "AzureRmWebAppDeploymentV3",
-        "AzureRmWebAppDeploymentV4",
         "AzurePowerShellV4",
         "AzurePowerShellV5",
         "AzureWebAppV1",
@@ -366,7 +365,6 @@
         "AzureSpringCloudV0"
     ],
     "Node20_229_6": [
-        "AzureVmssDeploymentV0",
         "PackerBuildV0",
         "PackerBuildV1"
     ],
@@ -382,9 +380,17 @@
         "AzureContainerAppsV0",
         "AzureContainerAppsV1"
     ],
-    "Node20_229_11": [],
-    "Node20_229_12": [],
-    "Node20_229_13": [],
+    "Node20_229_11": [
+        "AzureIoTEdgeV2"
+    ],
+    "Node20_229_12": [
+        "GitHubCommentV0",
+        "ReviewAppV0"
+    ],
+    "Node20_229_13": [
+        "PublishTestResultsV1",
+        "PublishTestResultsV2"
+    ],
     "Node20_229_14": [
         "PublishSymbolsV2"
     ]
