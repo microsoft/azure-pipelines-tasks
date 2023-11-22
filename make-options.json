@@ -365,6 +365,7 @@
         "AzureSpringCloudV0"
     ],
     "Node20_229_6": [
+        "AzureVmssDeploymentV0",
         "PackerBuildV0",
         "PackerBuildV1"
     ],
