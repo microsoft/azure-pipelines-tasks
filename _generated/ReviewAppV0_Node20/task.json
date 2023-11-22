@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 231,
-    "Patch": 0
+    "Patch": 2
   },
   "releaseNotes": "Use this task under deploy phase provider to create a resource dynamically",
   "inputs": [
@@ -63,7 +63,7 @@
     "CreatedDynamicResource": "A dynamic resource is created using %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.214.0",
-    "Node20_229_12": "0.231.0"
+    "Default": "0.231.1",
+    "Node20_229_12": "0.231.2"
   }
 }
