@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 1
   },
   "runsOn": [
@@ -43,7 +43,7 @@
     "Node16": {
       "target": "npmauth.js"
     },
-    "Node20": {
+    "Node20_1": {
       "target": "npmauth.js",
       "argumentFormat": ""
     }
@@ -57,7 +57,7 @@
       "target": "npmauthcleanup.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "npmauthcleanup.js",
       "argumentFormat": ""
     }
@@ -83,7 +83,7 @@
     "NpmrcDoesNotExist": "The .npmrc file you selected at %s does not currently exist."
   },
   "_buildConfigMapping": {
-    "Default": "0.230.0",
-    "Node20_229_1": "0.230.1"
+    "Default": "0.231.0",
+    "Node20_229_1": "0.231.1"
   }
 }
