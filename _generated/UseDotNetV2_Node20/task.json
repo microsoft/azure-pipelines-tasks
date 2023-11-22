@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 230,
-    "Patch": 4
+    "Minor": 231,
+    "Patch": 3
   },
   "satisfies": [
     "DotNetCore"
@@ -115,7 +115,7 @@
       "target": "usedotnet.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "usedotnet.js",
       "argumentFormat": ""
     }
@@ -199,7 +199,7 @@
     "DepricatedVersionNetCore": "NET Core version you specfied %s is out of support and will be removed from hosted agents soon. Please refer to https://aka.ms/dotnet-core-support for more information about the .NET support policy."
   },
   "_buildConfigMapping": {
-    "Default": "2.230.2",
-    "Node20_229_3": "2.230.4"
+    "Default": "2.231.2",
+    "Node20_229_3": "2.231.3"
   }
 }

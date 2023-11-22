@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 1
   },
   "runsOn": [
@@ -85,7 +85,7 @@
       "target": "pipauthenticatemain.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "pipauthenticatemain.js",
       "argumentFormat": ""
     }
@@ -103,7 +103,7 @@
     "Warning_SessionCreationFailed": "Could not create provenance session: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.230.0",
-    "Node20_229_1": "1.230.1"
+    "Default": "1.231.0",
+    "Node20_229_1": "1.231.1"
   }
 }

@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 2
   },
   "satisfies": [
@@ -195,7 +195,7 @@
     "DepricatedVersionNetCore": "ms-resource:loc.messages.DepricatedVersionNetCore"
   },
   "_buildConfigMapping": {
-    "Default": "2.230.2",
-    "Node20_229_3": "2.230.4"
+    "Default": "2.231.2",
+    "Node20_229_3": "2.231.3"
   }
 }

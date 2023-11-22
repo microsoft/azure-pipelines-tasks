@@ -16,7 +16,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 0
   },
   "minimumAgentVersion": "1.95.0",
@@ -89,7 +89,7 @@
       "target": "nlbtask.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "nlbtask.js",
       "argumentFormat": ""
     }
@@ -110,6 +110,6 @@
   },
   "_buildConfigMapping": {
     "Default": "1.228.0",
-    "Node20_229_2": "1.230.0"
+    "Node20_229_2": "1.231.0"
   }
 }
