@@ -215,4 +215,39 @@ if (process.platform.indexOf('darwin') < 0) {
         }, tr, done);
     });
 }
+    
+    it('Successfully creates a zip with excluded file', function (done: Mocha.Done) {
+        this.timeout(10000);
+        process.env['archiveType'] = 'zip';
+        process.env['archiveFile'] = 'myZip';
+        process.env['includeRootFolder'] = 'true';
+        expectedArchivePath = path.join(__dirname, 'test_output', 'myZip.zip');
+
+        let tp: string = path.join(__dirname, 'L0ExcludeFilesFromArchive.ts');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        runValidations(
+            () => {
+                assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
+                if (process.platform.indexOf('win32') >= 0) {
+                    assert(tr.stdout.indexOf('Add new data to archive: 3 folders, 2 files') > -1, 'Should have found 5 items to compress');
+                } else {
+                    assert(tr.stdout.indexOf('adding: test_folder/ (') > -1, 'Should have found 5 items to compress');
+                    assert(tr.stdout.indexOf('adding: test_folder/a/ (') > -1, 'Should have found 5 items to compress');
+                    assert(tr.stdout.indexOf('adding: test_folder/a/abc.txt (') > -1, 'Should have found 5 items to compress');
+                    assert(tr.stdout.indexOf('adding: test_folder/b/ (') > -1, 'Should have found 5 items to compress');
+                    assert(tr.stdout.indexOf('adding: test_folder/b/abc.txt (') > -1, 'Should have found 5 items to compress');
+                }
+                assert(
+                    fs.existsSync(expectedArchivePath),
+                    `Should have successfully created the archive at ${expectedArchivePath} without excluded 'def.txt' file, instead directory contents are ${fs.readdirSync(
+                        path.dirname(expectedArchivePath)
+                    )}`
+                );
+            },
+            tr,
+            done
+        );
+    });
 });
