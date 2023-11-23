@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 231,
-    "Patch": 4
+    "Patch": 5
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -172,6 +172,10 @@
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -224,5 +228,9 @@
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.231.4",
+    "Node20_229_6": "0.231.5"
   }
 }
