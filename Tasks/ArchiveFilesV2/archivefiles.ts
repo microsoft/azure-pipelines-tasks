@@ -47,6 +47,12 @@ function findFiles(): string[] {
         return [path.basename(rootFolderOrFile)];
     } else {
         var fullPaths: string[] = tl.ls('-A', [rootFolderOrFile]);
+
+        if (excludeFiles) {
+            var ignoredPaths = excludeFiles.split(/[\r\n]+/);
+            fullPaths = fullPaths.filter(path => ignoredPaths.includes(path))
+        }
+
         var baseNames: string[] = [];
         for (var i = 0; i < fullPaths.length; i++) {
             baseNames[i] = path.basename(fullPaths[i]);
