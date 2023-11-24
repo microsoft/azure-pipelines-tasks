@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 231,
-    "Patch": 1
+    "Patch": 2
   },
   "releaseNotes": "Added support for Az Module and cross platform agents.",
   "groups": [
@@ -199,7 +199,7 @@
       "target": "azurepowershell.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
     }
@@ -216,6 +216,6 @@
   },
   "_buildConfigMapping": {
     "Default": "4.231.0",
-    "Node20_229_2": "4.231.1"
+    "Node20_229_2": "4.231.2"
   }
 }
