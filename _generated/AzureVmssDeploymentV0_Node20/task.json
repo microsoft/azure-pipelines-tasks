@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 230,
-    "Patch": 3
+    "Minor": 231,
+    "Patch": 5
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -173,7 +173,7 @@
       "target": "main.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     }
@@ -230,7 +230,7 @@
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
   },
   "_buildConfigMapping": {
-    "Default": "0.230.2",
-    "Node20_229_6": "0.230.3"
+    "Default": "0.231.4",
+    "Node20_229_6": "0.231.5"
   }
 }
