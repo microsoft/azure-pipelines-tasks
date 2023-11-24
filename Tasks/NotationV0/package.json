@@ -1,0 +1,21 @@
+{
+  "name": "notation",
+  "version": "0.231.0",
+  "description": "Azure Pipepine Task for setting up Notation CLI, sign and verify with Notation",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^16.11.39",
+    "@types/mocha": "^5.2.7",
+    "azure-pipelines-task-lib": "4.6.1",
+    "azure-pipelines-tool-lib": "2.0.7"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
+  }
+}

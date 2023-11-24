@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 230,
-    "Patch": 0
+    "Minor": 231,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -164,7 +164,7 @@
       "target": "azurefunctiononcontainerdeployment.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "azurefunctiononcontainerdeployment.js",
       "argumentFormat": ""
     }
@@ -326,7 +326,7 @@
     "FailedToRestartAppServiceSlot": "Failed to restart App Service '%s-%s'. Error: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.228.0",
-    "Node20_229_2": "1.230.0"
+    "Default": "1.231.0",
+    "Node20_229_2": "1.231.1"
   }
 }

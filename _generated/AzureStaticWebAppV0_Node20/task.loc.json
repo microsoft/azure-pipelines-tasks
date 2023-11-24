@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 0
   },
   "preview": true,
@@ -171,13 +171,13 @@
       "target": "index.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "index.js",
       "argumentFormat": ""
     }
   },
   "_buildConfigMapping": {
     "Default": "0.228.0",
-    "Node20_229_8": "0.230.0"
+    "Node20_229_8": "0.231.0"
   }
 }
