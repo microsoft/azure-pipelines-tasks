@@ -137,6 +137,7 @@
         "MysqlDeploymentOnMachineGroupV1",
         "NodeTaskRunnerInstallerV0",
         "NodeToolV0",
+        "NotationV0",
         "NpmV0",
         "NpmV1",
         "NpmAuthenticateV0",
@@ -365,6 +366,7 @@
         "AzureSpringCloudV0"
     ],
     "Node20_229_6": [
+        "AzureVmssDeploymentV0",
         "PackerBuildV0",
         "PackerBuildV1"
     ],
@@ -379,5 +381,17 @@
     "Node20_229_10": [
         "AzureContainerAppsV0",
         "AzureContainerAppsV1"
-    ]
+    ],
+    "Node20_229_11": [
+        "AzureIoTEdgeV2"
+    ],
+    "Node20_229_12": [
+        "GitHubCommentV0",
+        "ReviewAppV0"
+    ],
+    "Node20_229_13": [
+        "PublishTestResultsV1",
+        "PublishTestResultsV2"
+    ],
+    "Node20_229_14": []
 }

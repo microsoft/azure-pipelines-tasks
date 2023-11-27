@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 231,
-    "Patch": 2
+    "Patch": 6
   },
   "satisfies": [
     "Java",

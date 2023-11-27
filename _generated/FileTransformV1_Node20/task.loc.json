@@ -17,7 +17,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 1
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -90,7 +90,7 @@
       "target": "filetransform.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "filetransform.js",
       "argumentFormat": ""
     }
@@ -120,7 +120,7 @@
     "SkippedUpdatingFile": "ms-resource:loc.messages.SkippedUpdatingFile"
   },
   "_buildConfigMapping": {
-    "Default": "1.220.0",
-    "Node20_229_3": "1.230.1"
+    "Default": "1.231.0",
+    "Node20_229_3": "1.231.1"
   }
 }
