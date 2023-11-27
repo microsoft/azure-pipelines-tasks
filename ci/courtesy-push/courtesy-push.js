@@ -50,7 +50,7 @@ function getDeps(depArr) {
 }
 
 /**
- * The function removed all generated configs such as Node16/Node20 from the list of dependencies
+ * The function removes all generated configs such as Node16/Node20 from the list of dependencies
  * @param {Array} depsArray - array of parsed dependencies from UnifiedDependencies.xml
  * @param {Object} depsForUpdate - dictionary of dependencies from getDeps method
  * @param {Object} updatedDeps - structure to track added/removed dependencies
