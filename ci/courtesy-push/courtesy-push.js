@@ -86,7 +86,7 @@ function removeConfigsForTasks(depsArray, depsForUpdate, updatedDeps) {
 }
 
 /**
- * The function update tasks dependencies with configs such as Node16/Node20
+ * The function updates task dependencies with configs such as Node16/Node20
  * @param {Array} depsArray - array of parsed dependencies from UnifiedDependencies.xml
  * @param {Object} depsForUpdate - dictionary of dependencies from getDeps method
  * @param {Object} updatedDeps - structure to track added/removed dependencies
