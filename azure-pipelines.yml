@@ -101,8 +101,11 @@ jobs:
     displayName: Build all tasks for deployments (Windows)
     dependsOn:
     - courtesy_push
+    - build_all_windows
     condition: succeeded()
     timeoutInMinutes: 180
+    variables:
+      task_pattern: $[dependencies.build_all_windows.outputs['getTaskPattern.task_pattern']]
     pool:
       name: 1ES-Shared-Hosted-Pool_Windows-Server-2022
     steps:

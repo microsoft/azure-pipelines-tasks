@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 0
   },
   "demands": [],
@@ -53,7 +53,7 @@
     "Node16": {
       "target": "src//dockertoolinstaller.js"
     },
-    "Node20": {
+    "Node20_1": {
       "target": "src//dockertoolinstaller.js",
       "argumentFormat": ""
     }
@@ -66,6 +66,6 @@
   },
   "_buildConfigMapping": {
     "Default": "0.218.0",
-    "Node20_229_2": "0.230.0"
+    "Node20_229_2": "0.231.0"
   }
 }
