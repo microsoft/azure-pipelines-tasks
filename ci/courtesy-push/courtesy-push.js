@@ -9,7 +9,7 @@ const msPrefix = 'Mseng.MS.TF.DistributedTask.Tasks.';
 
 function formDirectoryString(nugetTaskName) {
     const taskName = nugetTaskName.replace(msPrefix, '');
-  
+
     return `  <Directory Path="[ServicingDir]Tasks\\Individual\\${taskName}\\">
     <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.${taskName}/content/*" />
   </Directory>`;
@@ -42,7 +42,7 @@ function getDeps(depArr) {
 
             deps[name].name = name;
             deps[name].version = version;
-            deps[name].depStr = newDep; 
+            deps[name].depStr = newDep;
         }
     });
 
@@ -113,12 +113,12 @@ function updateConfigsForTasks(depsArray, depsForUpdate, updatedDeps) {
 
         if (depsForUpdate[name].configs) {
             depsForUpdate[name].configs.
-                sort((a,b) => a.name > b.name).
-                forEach(config => {
+                sort((a, b) => a.name > b.name)
+                .forEach(config => {
                     updatedDepsObj.added.push(config.name);
                     newDepsArr.splice(index, 0, config.depStr);
                     index++;
-            });
+                });
         }
     }
 
