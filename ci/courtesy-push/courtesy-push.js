@@ -127,8 +127,8 @@ function updateConfigsForTasks(depsArray, depsForUpdate, updatedDeps) {
 
 /**
  * The main function for unified dependencies update
- * The function will parse unified dependencies file and update it with new dependencies/remove unused
- * Since the generated tasks could be used and build only with default version, if unified_deps.xml doesn't contain
+ * The function parses unified dependencies file and updates it with new dependencies/remove unused
+ * Since the generated tasks can only be used and build with default version, if unified_deps.xml doesn't contain
  * the default version, the specific config (e.g. Node16) will be removed from the list of dependencies
 * @param {String} pathToUnifiedDeps - path to UnifiedDependencies.xml
 * @param {String} pathToNewUnifiedDeps - path to unified_deps.xml which contains dependencies updated on current week  
