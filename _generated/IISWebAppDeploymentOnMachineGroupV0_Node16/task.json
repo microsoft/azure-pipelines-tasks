@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
+    "Minor": 232,
     "Patch": 1
   },
   "demands": [],
@@ -192,7 +192,7 @@
     "RetryToDeploy": "Retrying to deploy the package."
   },
   "_buildConfigMapping": {
-    "Default": "0.231.0",
-    "Node16-225": "0.231.1"
+    "Default": "0.232.0",
+    "Node16-225": "0.232.1"
   }
 }
