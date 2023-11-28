@@ -6,10 +6,11 @@ var fail = util.fail;
 
 var writeUpdatedsFromGenTasks = false;
 
-//
-// ex: node make.js build
-// ex: node make.js build --task ShellScript
-//
+/**
+ * ex: node make.js build
+ * ex: node make.js build --task ShellScript
+ * @param {*} argv 
+ */
 function build(/** @type {{ task: string }} */ argv) {
     if (process.env.TF_BUILD) {
         fail('Please use serverBuild for CI builds for proper validation');

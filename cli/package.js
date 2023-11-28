@@ -4,10 +4,11 @@ var util = require('../make-util');
 var banner = util.banner;
 
 var consts = require('./consts');
-//
-// node make.js package
-// This will take the built tasks and create the files we need to publish them.
-//
+
+/**
+ * node make.js package
+ * This will take the built tasks and create the files we need to publish them.
+ */
 function _package() {
     banner('Starting package process...')
 

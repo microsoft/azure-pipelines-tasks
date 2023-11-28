@@ -27,7 +27,10 @@ function verifyAllAgentPluginTasksAreInSkipList(argv) {
     }
 }
 
-// used to bump the patch version in task.json files
+/**
+ * Used to bump the patch version in task.json files
+ * @param {*} argv
+ */
 function bump(argv) {
     verifyAllAgentPluginTasksAreInSkipList(argv.taskList);
 

@@ -19,10 +19,12 @@ var fileToJson = util.fileToJson;
 
 var consts = require('./consts');
 
-//
-// node make.js testLegacy
-// node make.js testLegacy --suite L0/XCode
-//
+/**
+ * node make.js testLegacy
+ * node make.js testLegacy --suite L0/XCode
+ * @param {*} argv
+ * @returns
+ */
 function testLegacy(/** @type {{ suite: string; node: string; task: string }} */ argv) {
     ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('mocha', '--version', '6.2.3');

@@ -3,6 +3,10 @@ var path = require('path');
 
 var tasksPath = path.join(__dirname, 'Tasks');
 
+/**
+ * @deprecated
+ * @param {*} argv
+ */
 function getCommonDeps(argv) {
     var first = true;
     var totalReferencesToCommonPackages = 0;

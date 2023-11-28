@@ -13,11 +13,13 @@ var test = util.test;
 
 var consts = require('./consts');
 
-//
-// Generate documentation (currently only YAML snippets)
-// ex: node make.js gendocs
-// ex: node make.js gendocs --task ShellScript
-//
+/**
+ * Generate documentation (currently only YAML snippets)
+ * ex: node make.js gendocs
+ * ex: node make.js gendocs --task ShellScript
+ * @deprecated
+ * @param {*} argv
+ */
 function gendocs(argv) {
     rm('-Rf', consts.gendocsPath);
     mkdir('-p', consts.gendocsPath);

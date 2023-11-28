@@ -12,7 +12,11 @@ var run = util.run;
 
 var consts = require('./consts');
 
-// used by CI that does official publish
+/**
+ * Used by CI that does official publish
+ * @param {*} argv
+ * @returns
+ */
 function publish(/** @type {{ server: string; task: string }} */ argv) {
     var server = argv.server;
     assert(server, 'server');

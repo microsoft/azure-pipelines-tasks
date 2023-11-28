@@ -6,22 +6,26 @@ var util = require('../make-util');
 var run = util.run;
 var rm = util.rm;
 
-// Generate sprintly zip
-// This methods generate a zip file that contains the tip of all task major versions for the last sprint
-// Use:
-//   node make.js gensprintlyzip --sprint=m153 --outputdir=E:\testing\ --depxmlpath=C:\Users\stfrance\Desktop\tempdeps.xml
-//
-// Result:
-//   azure-pipelines.firstpartytasks.m153.zip
-//
-// The generated zip can be uploaded to an account using tfx cli and it will install all of the tasks contained in the zip.
-// The zip should be uploaded to the azure-pipelines-tasks repository
-//
-// Process:
-//
-//  We create a workspace folder to do all of our work in. This is creaverifyAllAgentPluginTasksAreInSkipListed in the output directory. output-dir/workspace-GUID
-//  Inside here, we first create a package file based on the packages we want to download.
-//  Then nuget restore, then get zips, then create zip.
+/**
+ * Generate sprintly zip
+ * This methods generate a zip file that contains the tip of all task major versions for the last sprint
+ * Use:
+ *   node make.js gensprintlyzip --sprint=m153 --outputdir=E:\testing\ --depxmlpath=C:\Users\stfrance\Desktop\tempdeps.xml
+ *
+ * Result:
+ *   azure-pipelines.firstpartytasks.m153.zip
+ *
+ * The generated zip can be uploaded to an account using tfx cli and it will install all of the tasks contained in the zip.
+ * The zip should be uploaded to the azure-pipelines-tasks repository
+ *
+ * Process:
+ *
+ *  We create a workspace folder to do all of our work in. This is creaverifyAllAgentPluginTasksAreInSkipListed in the output directory. output-dir/workspace-GUID
+ *  Inside here, we first create a package file based on the packages we want to download.
+ *  Then nuget restore, then get zips, then create zip.
+ * @deprecated
+ * @param {*} argv
+ */
 function gensprintlyzip(/** @type {{ sprint: string; outputdir: string; depxmlpath: string }} */ argv) {
     var sprint = argv.sprint;
     var outputDirectory = argv.outputdir;

@@ -16,12 +16,13 @@ var matchFind = util.matchFind;
 
 var consts = require('./consts');
 
-//
-// will run tests for the scope of tasks being built
-// npm test
-// node make.js test
-// node make.js test --task ShellScript --suite L0
-//
+/**
+ * Will run tests for the scope of tasks being built
+ * npm test
+ * node make.js test
+ * node make.js test --task ShellScript --suite L0
+ * @param {*} argv
+ */
 function test(/** @type {{ suite: string; node: string; task: string }} */ argv) {
     var minIstanbulVersion = '10';
     ensureTool('tsc', '--version', 'Version 4.0.2');
