@@ -19,7 +19,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);
@@ -35,7 +35,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.stdout.indexOf('credProviderPath = ') >= 0, "should have found credential provider path");
         assert.equal(tr.warningIssues.length, 1, "should have only 1 warning");
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         assert(tr.failed, 'should have failed');
         done();
@@ -51,7 +51,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);   
@@ -66,7 +66,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);
@@ -82,7 +82,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdOutContained("adding package source uri: mockFeedUri"), "should have added content to temp config");
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);
@@ -98,7 +98,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);
@@ -112,7 +112,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.ran('/usr/bin/mono c:\\from\\tool\\installer\\nuget.exe restore ~/myagent/_work/1/s/single.sln -NonInteractive'), 'it should have run NuGet with mono');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);
@@ -126,7 +126,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet with a vsts source');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);
@@ -140,7 +140,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet with nuget.org source');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);
@@ -154,7 +154,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\packages.config -NonInteractive -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet with multiple sources');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);
@@ -170,7 +170,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdOutContained("adding package source uri: mockFeedUri"), "should have added content to temp config");
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);

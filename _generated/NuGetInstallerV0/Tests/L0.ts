@@ -19,8 +19,7 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues[1], '', "Error should be about deprecation");
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);
@@ -36,7 +35,7 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.stdout.indexOf('credProviderPath = ') >= 0, "should have found credential provider path");
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);
@@ -51,7 +50,7 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);   
@@ -66,7 +65,7 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);
@@ -81,7 +80,7 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);
@@ -99,7 +98,7 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);
@@ -114,7 +113,7 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);
@@ -130,7 +129,7 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.invokedToolCount == 2, 'should have run NuGet twice');
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);
@@ -144,7 +143,7 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
         assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
         done();
     }).timeout(20000);
