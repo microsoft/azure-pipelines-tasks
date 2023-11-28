@@ -30,7 +30,7 @@ class RestoreOptions implements INuGetCommandOptions {
 }
 
 async function main(): Promise<void> {
-    tl.warning("This task is deprecated. Builds that use it will break on 11-27-2023. Please switch to using NuGetCommand@2's 'restore' option as soon as possible.");
+    tl.warning("This task is deprecated. Functionality will stop on 01-16-2024. Please switch to using NuGetCommand@2's 'restore' option as soon as possible.");
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
         tl.debug("getting the uris");
@@ -235,6 +235,7 @@ async function main(): Promise<void> {
         isNugetOrgBehaviorWarn 
         ? tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Warning_IncludeNuGetOrgEnabled"))
         : tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesInstalledSuccessfully"));
+        throw new Error(tl.loc("DeprecatedTask"));
     } catch (err) {
         tl.error(err);
 

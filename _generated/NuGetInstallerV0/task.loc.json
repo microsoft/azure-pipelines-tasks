@@ -145,7 +145,8 @@
     "NGCommon_RemovingSources": "ms-resource:loc.messages.NGCommon_RemovingSources",
     "NGCommon_AddingSources": "ms-resource:loc.messages.NGCommon_AddingSources",
     "NGCommon_NoSourcesFoundInConfig": "ms-resource:loc.messages.NGCommon_NoSourcesFoundInConfig",
-    "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion"
+    "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion",
+    "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
   },
   "_buildConfigMapping": {
     "Default": "0.231.0",
