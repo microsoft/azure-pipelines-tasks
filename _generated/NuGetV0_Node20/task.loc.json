@@ -10,7 +10,7 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "version": {
     "Major": 0,
-    "Minor": 231,
+    "Minor": 232,
     "Patch": 1
   },
   "runsOn": [
@@ -19,7 +19,6 @@
   ],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
-  "removalDate": "2024-04-22",
   "groups": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
@@ -85,7 +84,7 @@
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
   },
   "_buildConfigMapping": {
-    "Default": "0.231.0",
-    "Node20_229_1": "0.231.1"
+    "Default": "0.232.0",
+    "Node20_229_1": "0.232.1"
   }
 }

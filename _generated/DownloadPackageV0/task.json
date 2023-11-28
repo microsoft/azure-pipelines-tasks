@@ -9,13 +9,12 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 0,
-    "Minor": 231,
+    "Minor": 232,
     "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
-  "removalDate": "2023-11-27",
   "inputs": [
     {
       "name": "feed",
@@ -115,7 +114,7 @@
     "UnsupportedProjectScopedFeeds": "Project-scoped feeds are not supported by this version of the \"Download Package\" task. Please use version 1 or higher."
   },
   "_buildConfigMapping": {
-    "Default": "0.231.0",
-    "Node20_229_1": "0.231.1"
+    "Default": "0.232.0",
+    "Node20_229_1": "0.232.1"
   }
 }
