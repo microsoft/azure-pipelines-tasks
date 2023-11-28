@@ -46,6 +46,7 @@ steps:
     git commit -m "Courtesy bump of tasks"
     git push origin $releaseBranch --force
     Write-Host "Creating Pull Request"
+    cd ..\azure-pipelines-tasks\ci\courtesy-push
     node open-courtesy-push-pull-request.js $releaseBranch
 
     # Sleep 30 seconds to let PR be created
