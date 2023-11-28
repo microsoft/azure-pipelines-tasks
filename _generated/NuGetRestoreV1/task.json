@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 231,
+    "Minor": 232,
     "Patch": 0
   },
   "runsOn": [
@@ -171,7 +171,7 @@
     "DeprecatedTask": "This task is now deprecated. The task completed successfully, but builds are breaking. Functionality will stop on 01-16-2024. Please switch to using NuGetCommand@2's 'restore' option as soon as possible."
   },
   "_buildConfigMapping": {
-    "Default": "1.231.0",
-    "Node20_229_1": "1.231.1"
+    "Default": "1.232.0",
+    "Node20_229_1": "1.232.1"
   }
 }

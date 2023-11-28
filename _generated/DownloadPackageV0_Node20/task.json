@@ -9,7 +9,7 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 0,
-    "Minor": 231,
+    "Minor": 232,
     "Patch": 1
   },
   "demands": [],
@@ -120,7 +120,7 @@
     "DeprecatedTask": "This task is now deprecated. The task completed successfully, but builds are breaking. Functionality will stop on 11-27-2023. Please switch to using DownloadPackage@1 as soon as possible."
   },
   "_buildConfigMapping": {
-    "Default": "0.231.0",
-    "Node20_229_1": "0.231.1"
+    "Default": "0.232.0",
+    "Node20_229_1": "0.232.1"
   }
 }
