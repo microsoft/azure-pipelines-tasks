@@ -7,10 +7,11 @@ var mkdir = util.mkdir;
 var consts = require('./consts');
 
 function ensureBuildTasksAndRemoveTestPath() {
-  if (!fs.existsSync(consts.buildTasksPath)) {
-      mkdir('-p', consts.buildTasksPath);
-  }
-  rm('-Rf', consts.testPath);
+    if (!fs.existsSync(consts.buildTasksPath)) {
+        mkdir('-p', consts.buildTasksPath);
+    }
+
+    rm('-Rf', consts.testPath);
 }
 
 function clean() {
@@ -19,6 +20,6 @@ function clean() {
 }
 
 module.exports = {
-  clean: clean,
-  ensureBuildTasksAndRemoveTestPath: ensureBuildTasksAndRemoveTestPath
+    clean: clean,
+    ensureBuildTasksAndRemoveTestPath: ensureBuildTasksAndRemoveTestPath
 };
