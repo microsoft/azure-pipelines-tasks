@@ -1,7 +1,6 @@
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import * as tl from "azure-pipelines-task-lib/task";
 
 describe('NuGetRestore Suite', function () {
     before(() => {
@@ -20,7 +19,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
         assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
+        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);
 
@@ -36,7 +35,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdout.indexOf('credProviderPath = ') >= 0, "should have found credential provider path");
         assert.equal(tr.warningIssues.length, 1, "should have only 1 warning");
         assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
+        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
         assert(tr.failed, 'should have failed');
         done();
     }).timeout(20000);
@@ -52,7 +51,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
         assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
+        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);   
     
@@ -67,7 +66,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
         assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
+        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);
     
@@ -83,7 +82,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
         assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
+        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);
 
@@ -99,7 +98,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
         assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
+        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);
     
@@ -113,7 +112,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
         assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
+        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);
 
@@ -127,7 +126,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
         assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
+        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);
 
@@ -141,7 +140,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
         assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
+        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);
 
@@ -155,7 +154,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
         assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
+        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);
 
@@ -171,7 +170,7 @@ describe('NuGetRestore Suite', function () {
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.failed, 'should have failed');
         assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], tl.loc("DeprecatedTask"), "Error should be about deprecation");
+        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);
 });
