@@ -29,6 +29,7 @@ function verifyAllAgentPluginTasksAreInSkipList(argv) {
 
 /**
  * Used to bump the patch version in task.json files
+ * @deprecated
  * @param {*} argv
  */
 function bump(argv) {

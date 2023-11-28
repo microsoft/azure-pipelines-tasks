@@ -24,9 +24,9 @@ var rm = util.rm;
  *  Inside here, we first create a package file based on the packages we want to download.
  *  Then nuget restore, then get zips, then create zip.
  * @deprecated
- * @param {*} argv
+ * @param {{ sprint: string; outputdir: string; depxmlpath: string }} argv
  */
-function gensprintlyzip(/** @type {{ sprint: string; outputdir: string; depxmlpath: string }} */ argv) {
+function gensprintlyzip(argv) {
     var sprint = argv.sprint;
     var outputDirectory = argv.outputdir;
     var dependenciesXmlFilePath = argv.depxmlpath;
