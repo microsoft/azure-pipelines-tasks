@@ -174,12 +174,12 @@ var buildNodeTask = function (taskPath, outDir) {
             fail('The package.json should not contain dev dependencies other than typescript. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
         }
 
-        run('npm install');
+        run('npm ci');
     }
 
     if (test('-f', rp(path.join('Tests', 'package.json')))) {
         cd(rp('Tests'));
-        run('npm install');
+        run('npm ci');
         cd(taskPath);
     }
 
