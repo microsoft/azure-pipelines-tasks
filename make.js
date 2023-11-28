@@ -67,14 +67,19 @@ process.env['TASK_TEST_RUNNER'] = argv.runner || '';
 
 var command = argv._[0];
 
-var CLI = {};
-
-fs.readdirSync(path.join(__dirname, 'cli')).forEach(function (file) {
-    if (path.extname(file) === '.js') {
-        var name = path.basename(file, '.js');
-        CLI[name] = require('./cli/' + file);
-    }
-});
+var CLI = {
+    build: require('./cli/build'),
+    bump: require('./cli/bump'),
+    clean: require('./cli/clean').clean,
+    gendocs: require('./cli/gendocs'),
+    gensprintlyzip: require('./cli/gensprintlyzip'),
+    getcommondeps: require('./cli/getcommondeps'),
+    package: require('./cli/package'),
+    publish: require('./cli/publish'),
+    serverBuild: require('./cli/serverBuild').serverBuild,
+    test: require('./cli/test'),
+    testLegacy: require('./cli/testLegacy'),
+};
 
 if (typeof CLI[command] !== 'function') {
   fail('Invalid CLI command: "' + command + '"\r\nValid commands:' + Object.keys(CLI));

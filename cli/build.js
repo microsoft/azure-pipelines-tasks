@@ -1,8 +1,10 @@
-var serverBuild = require('./serverBuild');
 // eslint-disable-next-line no-unused-vars
-var writeUpdatedsFromGenTasks = false;
+var serverBuild = require('./serverBuild');
+
 var util = require('../make-util');
 var fail = util.fail;
+
+var writeUpdatedsFromGenTasks = false;
 
 //
 // ex: node make.js build
@@ -14,7 +16,7 @@ function build(/** @type {{ task: string }} */ argv) {
     }
 
     writeUpdatedsFromGenTasks = true;
-    serverBuild({
+    serverBuild.serverBuild({
         ...argv,
         writeUpdatedsFromGenTasks
     });
