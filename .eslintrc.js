@@ -10,5 +10,9 @@ module.exports = {
     },
     "rules": {
         "no-undef": "error"
-    }
+    },
+    "files": [
+        "cli/*.js",
+        "make.js"
+    ],
 }
