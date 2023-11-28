@@ -12,7 +12,8 @@
     "gensprintly": "node make.js gensprintlyzip",
     "test": "node make.js test",
     "testLegacy": "node make.js testLegacy",
-    "package": "node make.js package"
+    "package": "node make.js package",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -33,7 +34,7 @@
   "devDependencies": {
     "adm-zip": "0.4.13",
     "azure-devops-node-api": "^10.2.2",
-    "eslint": "^8.54.0",
+    "eslint": "^7.32.0",
     "js-yaml": "^3.13.1",
     "minimatch": "3.0.2",
     "minimist": "^1.2.6",
