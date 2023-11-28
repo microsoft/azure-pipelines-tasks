@@ -9,10 +9,7 @@ module.exports = {
         "sourceType": "module"
     },
     "rules": {
-        "no-undef": "error"
-    },
-    "files": [
-        "cli/*.js",
-        "make.js"
-    ],
+        "no-undef": "error",
+        "no-unused-vars": "error"
+    }
 }
