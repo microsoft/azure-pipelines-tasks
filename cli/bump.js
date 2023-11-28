@@ -5,20 +5,18 @@ var util = require('../make-util');
 
 var fail = util.fail;
 
-var tasksPath = path.join(__dirname, 'Tasks');
-
-var agentPluginTaskNames = ['Cache', 'CacheBeta', 'DownloadPipelineArtifact', 'PublishPipelineArtifact'];
+var consts = require('./consts');
 
 function verifyAllAgentPluginTasksAreInSkipList(argv) {
     var missingTaskNames = [];
 
     argv.taskList.forEach(function (taskName) {
         // load files
-        var taskJsonPath = path.join(tasksPath, taskName, 'task.json');
+        var taskJsonPath = path.join(consts.tasksPath, taskName, 'task.json');
         var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
 
         if (taskJson.execution && taskJson.execution.AgentPlugin) {
-            if (agentPluginTaskNames.indexOf(taskJson.name) === -1 && missingTaskNames.indexOf(taskJson.name) === -1) {
+            if (consts.agentPluginTaskNames.indexOf(taskJson.name) === -1 && missingTaskNames.indexOf(taskJson.name) === -1) {
                 missingTaskNames.push(taskJson.name);
             }
         }
@@ -35,14 +33,14 @@ function bump(argv) {
 
   argv.taskList.forEach(function (taskName) {
       // load files
-      var taskJsonPath = path.join(tasksPath, taskName, 'task.json');
+      var taskJsonPath = path.join(consts.tasksPath, taskName, 'task.json');
       var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
 
-      var taskLocJsonPath = path.join(tasksPath, taskName, 'task.loc.json');
+      var taskLocJsonPath = path.join(consts.tasksPath, taskName, 'task.loc.json');
       var taskLocJson = JSON.parse(fs.readFileSync(taskLocJsonPath));
 
       // skip agent plugin tasks
-      if(agentPluginTaskNames.indexOf(taskJson.name) > -1) {
+      if (consts.agentPluginTaskNames.indexOf(taskJson.name) > -1) {
           return;
       }
 

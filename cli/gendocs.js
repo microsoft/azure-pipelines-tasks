@@ -9,10 +9,9 @@ var createYamlSnippetFile = util.createYamlSnippetFile;
 var fileToJson = util.fileToJson;
 var banner = util.banner;
 var createMarkdownDocFile = util.createMarkdownDocFile;
-
-var gendocsPath = path.join(__dirname, '_gendocs');
-var tasksPath = path.join(__dirname, 'Tasks');
 var test = util.test;
+
+var consts = require('./consts');
 
 //
 // Generate documentation (currently only YAML snippets)
@@ -20,13 +19,13 @@ var test = util.test;
 // ex: node make.js gendocs --task ShellScript
 //
 function gendocs(argv) {
-    rm('-Rf', gendocsPath);
-    mkdir('-p', gendocsPath);
+    rm('-Rf', consts.gendocsPath);
+    mkdir('-p', consts.gendocsPath);
     console.log();
     console.log('> generating docs');
 
     argv.taskList.forEach(function(taskName) {
-        var taskPath = path.join(tasksPath, taskName);
+        var taskPath = path.join(consts.tasksPath, taskName);
         ensureExists(taskPath);
 
         // load the task.json
@@ -37,11 +36,11 @@ function gendocs(argv) {
 
             // create YAML snippet Markdown
             var yamlOutputFilename = taskName + '.md';
-            createYamlSnippetFile(taskDef, gendocsPath, yamlOutputFilename);
+            createYamlSnippetFile(taskDef, consts.gendocsPath, yamlOutputFilename);
 
             // create Markdown documentation file
             var mdDocOutputFilename = taskName + '.md';
-            createMarkdownDocFile(taskDef, taskJsonPath, gendocsPath, mdDocOutputFilename);
+            createMarkdownDocFile(taskDef, taskJsonPath, consts.gendocsPath, mdDocOutputFilename);
         }
     });
 

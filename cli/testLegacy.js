@@ -17,13 +17,7 @@ var fail = util.fail;
 var test = util.test;
 var fileToJson = util.fileToJson;
 
-var buildTasksPath = path.join(__dirname, '_build', 'Tasks');
-var testsLegacyPath = path.join(__dirname, 'Tests-Legacy');
-var legacyTestTasksPath = path.join(__dirname, '_test', 'Tasks');
-var buildTasksCommonPath = path.join(__dirname, '_build', 'Tasks', 'Common');
-var testTestsLegacyPath = path.join(__dirname, '_test', 'Tests-Legacy');
-var testPath = path.join(__dirname, '_test');
-var tasksPath = path.join(__dirname, 'Tasks');
+var consts = require('./consts');
 
 //
 // node make.js testLegacy
@@ -39,27 +33,27 @@ function testLegacy(/** @type {{ suite: string; node: string; task: string }} */
 
     // clean
     console.log('removing _test');
-    rm('-Rf', testPath);
+    rm('-Rf', consts.testPath);
 
     // copy the L0 source files for each task; copy the layout for each task
     console.log();
     console.log('> copying tasks');
     argv.taskList.forEach(function (taskName) {
-        var testCopySource = path.join(testsLegacyPath, 'L0', taskName);
+        var testCopySource = path.join(consts.testsLegacyPath, 'L0', taskName);
         // copy the L0 source files if exist
         if (test('-e', testCopySource)) {
             console.log('copying ' + taskName);
-            var testCopyDest = path.join(testTestsLegacyPath, 'L0', taskName);
+            var testCopyDest = path.join(consts.testTestsLegacyPath, 'L0', taskName);
             matchCopy('*', testCopySource, testCopyDest, { noRecurse: true, matchBase: true });
 
             // copy the task layout
-            var taskCopySource = path.join(buildTasksPath, taskName);
-            var taskCopyDest = path.join(legacyTestTasksPath, taskName);
+            var taskCopySource = path.join(consts.buildTasksPath, taskName);
+            var taskCopyDest = path.join(consts.legacyTestTasksPath, taskName);
             matchCopy('*', taskCopySource, taskCopyDest, { noRecurse: true, matchBase: true });
         }
 
         // copy each common-module L0 source files if exist
-        var taskMakePath = path.join(tasksPath, taskName, 'make.json');
+        var taskMakePath = path.join(consts.tasksPath, taskName, 'make.json');
         var taskMake = test('-f', taskMakePath) ? fileToJson(taskMakePath) : {};
         if (taskMake.hasOwnProperty('common')) {
             var common = taskMake['common'];
@@ -67,13 +61,13 @@ function testLegacy(/** @type {{ suite: string; node: string; task: string }} */
                 // copy the common-module L0 source files if exist and not already copied
                 var modName = path.basename(mod['module']);
                 console.log('copying ' + modName);
-                var modTestCopySource = path.join(testsLegacyPath, 'L0', `Common-${modName}`);
-                var modTestCopyDest = path.join(testTestsLegacyPath, 'L0', `Common-${modName}`);
+                var modTestCopySource = path.join(consts.testsLegacyPath, 'L0', `Common-${modName}`);
+                var modTestCopyDest = path.join(consts.testTestsLegacyPath, 'L0', `Common-${modName}`);
                 if (test('-e', modTestCopySource) && !test('-e', modTestCopyDest)) {
                     matchCopy('*', modTestCopySource, modTestCopyDest, { noRecurse: true, matchBase: true });
                 }
-                var modCopySource = path.join(buildTasksCommonPath, modName);
-                var modCopyDest = path.join(legacyTestTasksPath, 'Common', modName);
+                var modCopySource = path.join(consts.buildTasksCommonPath, modName);
+                var modCopyDest = path.join(consts.legacyTestTasksPath, 'Common', modName);
                 if (test('-e', modCopySource) && !test('-e', modCopyDest)) {
                     // copy the common module layout
                     matchCopy('*', modCopySource, modCopyDest, { noRecurse: true, matchBase: true });
@@ -83,7 +77,7 @@ function testLegacy(/** @type {{ suite: string; node: string; task: string }} */
     });
 
     // short-circuit if no tests
-    if (!test('-e', testTestsLegacyPath)) {
+    if (!test('-e', consts.testTestsLegacyPath)) {
         banner('no legacy tests found', true);
         return;
     }
@@ -91,24 +85,24 @@ function testLegacy(/** @type {{ suite: string; node: string; task: string }} */
     // copy the legacy test infra
     console.log();
     console.log('> copying legacy test infra');
-    matchCopy('@(definitions|lib|tsconfig.json)', testsLegacyPath, testTestsLegacyPath, { noRecurse: true, matchBase: true });
+    matchCopy('@(definitions|lib|tsconfig.json)', consts.testsLegacyPath, consts.testTestsLegacyPath, { noRecurse: true, matchBase: true });
 
     // copy the lib tests when running all legacy tests
     if (!argv.task) {
-        matchCopy('*', path.join(testsLegacyPath, 'L0', 'lib'), path.join(testTestsLegacyPath, 'L0', 'lib'), { noRecurse: true, matchBase: true });
+        matchCopy('*', path.join(consts.testsLegacyPath, 'L0', 'lib'), path.join(consts.testTestsLegacyPath, 'L0', 'lib'), { noRecurse: true, matchBase: true });
     }
 
     // compile legacy L0 and lib
-    cd(testTestsLegacyPath);
-    run('tsc --rootDir ' + testTestsLegacyPath);
+    cd(consts.testTestsLegacyPath);
+    run('tsc --rootDir ' + consts.testTestsLegacyPath);
 
     // create a test temp dir - used by the task runner to copy each task to an isolated dir
-    var tempDir = path.join(testTestsLegacyPath, 'Temp');
+    var tempDir = path.join(consts.testTestsLegacyPath, 'Temp');
     process.env['TASK_TEST_TEMP'] = tempDir;
     mkdir('-p', tempDir);
 
     // suite paths
-    var testsSpec = matchFind(path.join('**', '_suite.js'), path.join(testTestsLegacyPath, 'L0'));
+    var testsSpec = matchFind(path.join('**', '_suite.js'), path.join(consts.testTestsLegacyPath, 'L0'));
     if (!testsSpec.length) {
         fail(`Unable to find tests using the pattern: ${path.join('**', '_suite.js')}`);
     }
@@ -122,7 +116,7 @@ function testLegacy(/** @type {{ suite: string; node: string; task: string }} */
     // creates a wrapper suite with an "after" hook. in the after hook, the state
     // of the runnable context is analyzed to determine whether any tests failed.
     // if any tests failed, log a ##vso command to fail the build.
-    var testsSpecPath = testsSpecPath = path.join(testTestsLegacyPath, 'testsSpec.js');
+    var testsSpecPath = testsSpecPath = path.join(consts.testTestsLegacyPath, 'testsSpec.js');
     var contents = 'var __suite_to_run;' + os.EOL;
     contents += 'describe(\'Legacy L0\', function (__outer_done) {' + os.EOL;
     contents += '    after(function (done) {' + os.EOL;

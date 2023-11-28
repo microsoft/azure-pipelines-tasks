@@ -14,11 +14,7 @@ var banner = util.banner;
 var getTaskNodeVersion = util.getTaskNodeVersion;
 var matchFind = util.matchFind;
 
-var buildPath = path.join(__dirname, '_build');
-var buildTestsPath = path.join(__dirname, '_build', 'Tests');
-var testsPath = path.join(__dirname, 'Tests');
-var buildTasksPath = path.join(__dirname, '_build', 'Tasks');
-var coverageTasksPath = path.join(buildPath, 'coverage');
+var consts = require('./consts');
 
 //
 // will run tests for the scope of tasks being built
@@ -32,24 +28,24 @@ function test(/** @type {{ suite: string; node: string; task: string }} */ argv)
     ensureTool('mocha', '--version', '6.2.3');
 
     // build the general tests and ps test infra
-    rm('-Rf', buildTestsPath);
-    mkdir('-p', path.join(buildTestsPath));
-    cd(testsPath);
-    run(`tsc --rootDir ${testsPath} --outDir ${buildTestsPath}`);
+    rm('-Rf', consts.buildTestsPath);
+    mkdir('-p', path.join(consts.buildTestsPath));
+    cd(consts.testsPath);
+    run(`tsc --rootDir ${consts.testsPath} --outDir ${consts.buildTestsPath}`);
     console.log();
     console.log('> copying ps test lib resources');
-    mkdir('-p', path.join(buildTestsPath, 'lib'));
-    matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(testsPath, 'lib'), path.join(buildTestsPath, 'lib'));
+    mkdir('-p', path.join(consts.buildTestsPath, 'lib'));
+    matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(consts.testsPath, 'lib'), path.join(consts.buildTestsPath, 'lib'));
 
     var suiteType = argv.suite || 'L0';
     function runTaskTests(taskName) {
         banner('Testing: ' + taskName);
         // find the tests
-        var nodeVersions = argv.node ? new Array(argv.node) : [Math.max(...getTaskNodeVersion(buildTasksPath, taskName))];
-        var pattern1 = path.join(buildTasksPath, taskName, 'Tests', suiteType + '.js');
-        var pattern2 = path.join(buildTasksPath, 'Common', taskName, 'Tests', suiteType + '.js');
+        var nodeVersions = argv.node ? new Array(argv.node) : [Math.max(...getTaskNodeVersion(consts.buildTasksPath, taskName))];
+        var pattern1 = path.join(consts.buildTasksPath, taskName, 'Tests', suiteType + '.js');
+        var pattern2 = path.join(consts.buildTasksPath, 'Common', taskName, 'Tests', suiteType + '.js');
         var taskPath = path.join('**', '_build', 'Tasks', taskName, "**", "*.js").replace(/\\/g, '/');
-        var isNodeTask = util.isNodeTask(buildTasksPath, taskName);
+        var isNodeTask = util.isNodeTask(consts.buildTasksPath, taskName);
 
         var isReportWasFormed = false;
         var testsSpec = [];
@@ -75,8 +71,8 @@ function test(/** @type {{ suite: string; node: string; task: string }} */ argv)
 
 
                 if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
-                    run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
-                    util.renameCodeCoverageOutput(coverageTasksPath, taskName);
+                    run('nyc --all -n ' + taskPath + ' --report-dir ' + consts.coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+                    util.renameCodeCoverageOutput(consts.coverageTasksPath, taskName);
                     isReportWasFormed = true;
                 }
                 else {
@@ -93,7 +89,7 @@ function test(/** @type {{ suite: string; node: string; task: string }} */ argv)
     const allTasks = serverBuild.getTaskList(argv.taskList);
 
     allTasks.forEach(function(taskName) {
-        var taskPath = path.join(buildTasksPath, taskName);
+        var taskPath = path.join(consts.buildTasksPath, taskName);
         if (fs.existsSync(taskPath)) {
             runTaskTests(taskName);
         }
@@ -103,9 +99,9 @@ function test(/** @type {{ suite: string; node: string; task: string }} */ argv)
 
     if (!argv.task) {
         banner('Running common library tests');
-        var commonLibPattern = path.join(buildTasksPath, 'Common', '*', 'Tests', suiteType + '.js');
+        var commonLibPattern = path.join(consts.buildTasksPath, 'Common', '*', 'Tests', suiteType + '.js');
         specs = [];
-        if (matchFind(commonLibPattern, buildTasksPath).length > 0) {
+        if (matchFind(commonLibPattern, consts.buildTasksPath).length > 0) {
             specs.push(commonLibPattern);
         }
         if (specs.length > 0) {
@@ -119,8 +115,8 @@ function test(/** @type {{ suite: string; node: string; task: string }} */ argv)
 
     // Run common tests
     banner('Running common tests');
-    var commonPattern = path.join(buildTestsPath, suiteType + '.js');
-    specs = matchFind(commonPattern, buildTestsPath, { noRecurse: true });
+    var commonPattern = path.join(consts.buildTestsPath, suiteType + '.js');
+    specs = matchFind(commonPattern, consts.buildTestsPath, { noRecurse: true });
     if (specs.length > 0) {
         // setup the version of node to run the tests
         util.installNode(argv.node);
@@ -133,11 +129,11 @@ function test(/** @type {{ suite: string; node: string; task: string }} */ argv)
         // Installing node version 10 to run code coverage report, since common library tests run under node 6,
         // which is incompatible with nyc
         util.installNode(minIstanbulVersion);
-        util.rm(path.join(coverageTasksPath, '*coverage-summary.json'));
-        util.run(`nyc merge ${coverageTasksPath} ${path.join(coverageTasksPath, 'mergedcoverage.json')}`, true);
-        util.rm(path.join(coverageTasksPath, '*-coverage.json'));
-        util.run(`nyc report -t ${coverageTasksPath} --report-dir ${coverageTasksPath} --reporter=cobertura`, true);
-        util.rm(path.join(coverageTasksPath, 'mergedcoverage.json'));
+        util.rm(path.join(consts.coverageTasksPath, '*coverage-summary.json'));
+        util.run(`nyc merge ${consts.coverageTasksPath} ${path.join(consts.coverageTasksPath, 'mergedcoverage.json')}`, true);
+        util.rm(path.join(consts.coverageTasksPath, '*-coverage.json'));
+        util.run(`nyc report -t ${consts.coverageTasksPath} --report-dir ${consts.coverageTasksPath} --reporter=cobertura`, true);
+        util.rm(path.join(consts.coverageTasksPath, 'mergedcoverage.json'));
     } catch (e) {
         console.log('Error while generating coverage report')
     }

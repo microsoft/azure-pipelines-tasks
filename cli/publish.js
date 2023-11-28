@@ -10,7 +10,7 @@ var ensureTool = util.ensureTool;
 var test = util.test;
 var run = util.run;
 
-var packagePath = path.join(__dirname, '_package');
+var consts = require('./consts');
 
 // used by CI that does official publish
 function publish(/** @type {{ server: string; task: string }} */ argv) {
@@ -38,13 +38,13 @@ function publish(/** @type {{ server: string; task: string }} */ argv) {
         console.log(`##vso[task.logissue type=warning]Skipping publish for non-aggregated tasks zip. HEAD is not the tip of a release branch.`);
     } else {
         // store the non-aggregated tasks zip
-        var nonAggregatedZipPath = path.join(packagePath, 'non-aggregated-tasks.zip');
+        var nonAggregatedZipPath = path.join(consts.packagePath, 'non-aggregated-tasks.zip');
         util.storeNonAggregatedZip(nonAggregatedZipPath, release, commit);
     }
 
     // resolve the nupkg path
     var nupkgFile;
-    var nupkgDir = path.join(packagePath, 'pack-target');
+    var nupkgDir = path.join(consts.packagePath, 'pack-target');
     if (!test('-d', nupkgDir)) {
         fail('nupkg directory does not exist');
     }

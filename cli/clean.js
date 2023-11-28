@@ -1,23 +1,20 @@
-var path = require('path');
 var fs = require('fs');
 
 var util = require('../make-util');
 var rm = util.rm;
 var mkdir = util.mkdir;
 
-var buildPath = path.join(__dirname, '_build');
-var buildTasksPath = path.join(__dirname, '_build', 'Tasks');
-var testPath = path.join(__dirname, '_test');
+var consts = require('./consts');
 
 function ensureBuildTasksAndRemoveTestPath() {
-  if (!fs.existsSync(buildTasksPath)) {
-      mkdir('-p', buildTasksPath);
+  if (!fs.existsSync(consts.buildTasksPath)) {
+      mkdir('-p', consts.buildTasksPath);
   }
-  rm('-Rf', testPath);
+  rm('-Rf', consts.testPath);
 }
 
 function clean() {
-    rm('-Rf', buildPath);
+    rm('-Rf', consts.buildPath);
     ensureBuildTasksAndRemoveTestPath();
 }
 

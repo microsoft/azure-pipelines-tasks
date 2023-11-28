@@ -25,13 +25,7 @@ var matchCopy = util.matchCopy;
 var getExternals = util.getExternals;
 var createResjson = util.createResjson;
 
-var buildTasksPath = path.join(__dirname, '_build', 'Tasks');
-var makeOptionsPath = path.join(__dirname, 'make-options.json');
-var baseConfigToolPath = path.join(__dirname, 'BuildConfigGen');
-var genTaskPath = path.join(__dirname, '_generated');
-var tasksPath = path.join(__dirname, 'Tasks');
-var genTaskCommonPath = path.join(__dirname, '_generated', 'Common');
-var buildTasksCommonPath = path.join(__dirname, '_build', 'Tasks', 'Common');
+var consts = require('./consts');
 
 var supportedNodeTargets = ["Node", "Node10"/*, "Node14"*/];
 
@@ -45,13 +39,13 @@ function buildTask(taskName, taskListLength, nodeVersion) {
     const removeNodeModules = taskListLength > 1;
 
     // If we have the task in generated folder, prefer to build from there and add all generated tasks which starts with task name
-    var taskPath = path.join(genTaskPath, taskName);
+    var taskPath = path.join(consts.genTaskPath, taskName);
     if (fs.existsSync(taskPath)) {
         // Need to add all tasks which starts with task name
         console.log('Found generated task: ' + taskName);
         isGeneratedTask = true;
     } else {
-        taskPath = path.join(tasksPath, taskName);
+        taskPath = path.join(consts.tasksPath, taskName);
     }
 
     ensureExists(taskPath);
@@ -65,7 +59,7 @@ function buildTask(taskName, taskListLength, nodeVersion) {
         validateTask(taskDef);
 
         // fixup the outDir (required for relative pathing in legacy L0 tests)
-        outDir = path.join(buildTasksPath, taskName);
+        outDir = path.join(consts.buildTasksPath, taskName);
 
         if(fs.existsSync(outDir))
         {
@@ -80,7 +74,7 @@ function buildTask(taskName, taskListLength, nodeVersion) {
         // determine the type of task
         shouldBuildNode = shouldBuildNode || supportedNodeTargets.some(node => taskDef.execution.hasOwnProperty(node));
     } else {
-        outDir = path.join(buildTasksPath, path.basename(taskPath));
+        outDir = path.join(consts.buildTasksPath, path.basename(taskPath));
     }
 
     mkdir('-p', outDir);
@@ -104,14 +98,14 @@ function buildTask(taskName, taskListLength, nodeVersion) {
         common.forEach(function(mod) {
             var modPath = path.join(taskPath, mod['module']);
             var modName = path.basename(modPath);
-            var modOutDir = path.join(buildTasksCommonPath, modName);
+            var modOutDir = path.join(consts.buildTasksCommonPath, modName);
 
             if (!test('-d', modOutDir)) {
                 banner('Building module ' + modPath, true);
 
                 // Ensure that Common folder exists for _generated tasks, otherwise copy it from Tasks folder
-                if (!fs.existsSync(genTaskCommonPath) && isGeneratedTask) {
-                    cp('-Rf', path.resolve(tasksPath, "Common"), genTaskCommonPath);
+                if (!fs.existsSync(consts.genTaskCommonPath) && isGeneratedTask) {
+                    cp('-Rf', path.resolve(consts.tasksPath, "Common"), consts.genTaskCommonPath);
                 }
 
                 mkdir('-p', modOutDir);
@@ -228,7 +222,7 @@ function buildTask(taskName, taskListLength, nodeVersion) {
     }
 
     // remove duplicated task libs node modules from build tasks.
-    var buildTasksNodeModules = path.join(buildTasksPath, taskName, 'node_modules');
+    var buildTasksNodeModules = path.join(consts.buildTasksPath, taskName, 'node_modules');
     var duplicateTaskLibPaths = [
         'azure-pipelines-tasks-java-common', 'azure-pipelines-tasks-codecoverage-tools', 'azure-pipelines-tasks-codeanalysis-common',
         'azure-pipelines-tool-lib', 'azure-pipelines-tasks-utility-common', 'azure-pipelines-tasks-packaging-common', 'artifact-engine',
@@ -246,11 +240,11 @@ function buildTask(taskName, taskListLength, nodeVersion) {
 function getTaskList(taskList) {
     let tasksToBuild = taskList;
 
-    if (!fs.existsSync(genTaskPath)) return tasksToBuild;
+    if (!fs.existsSync(consts.genTaskPath)) return tasksToBuild;
 
-    const generatedTaskFolders = fs.readdirSync(genTaskPath)
+    const generatedTaskFolders = fs.readdirSync(consts.genTaskPath)
         .filter((taskName) => {
-            return fs.statSync(path.join(genTaskPath, taskName)).isDirectory();
+            return fs.statSync(path.join(consts.genTaskPath, taskName)).isDirectory();
         });
 
     taskList.forEach((taskName) => {
@@ -265,13 +259,13 @@ function getTaskList(taskList) {
 }
 
 function getNodeVersion (taskName) {
-    var packageJsonPath = path.join(genTaskPath, taskName, "package.json");
+    var packageJsonPath = path.join(consts.genTaskPath, taskName, "package.json");
     // We prefer tasks in _generated folder because they might contain node20 version
     // while the tasks in Tasks/ folder still could use only node16 handler 
     if (fs.existsSync(packageJsonPath)) {
         console.log(`Found package.json for ${taskName} in _generated folder ${packageJsonPath}`);
     } else {
-        packageJsonPath = path.join(tasksPath, taskName, "package.json");
+        packageJsonPath = path.join(consts.tasksPath, taskName, "package.json");
         if (!fs.existsSync(packageJsonPath)) {
             console.error(`Unable to find package.json file for ${taskName} in _generated folder or Tasks folder, using default node 10.`);
             return 10;
@@ -302,14 +296,14 @@ function serverBuild(/** @type {{ task: string }} */ argv) {
     });
 
     // Need to validate generated tasks first
-    const makeOptions = fileToJson(makeOptionsPath);
+    const makeOptions = fileToJson(consts.makeOptionsPath);
 
-    util.processGeneratedTasks(baseConfigToolPath, argv.taskList, makeOptions, argv.writeUpdatedsFromGenTasks);
+    util.processGeneratedTasks(consts.baseConfigToolPath, argv.taskList, makeOptions, argv.writeUpdatedsFromGenTasks);
 
     const allTasks = getTaskList(argv.taskList);
 
     // Wrap build function  to store files that changes after the build 
-    const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTask, genTaskPath, argv.writeUpdatedsFromGenTasks);
+    const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTask, consts.genTaskPath, argv.writeUpdatedsFromGenTasks);
     const allTasksNode20 = allTasks.filter((taskName) => {
         return getNodeVersion(taskName) == 20;
     });
@@ -330,8 +324,8 @@ function serverBuild(/** @type {{ task: string }} */ argv) {
     }
 
     // Remove Commons from _generated folder as it is not required
-    if (fs.existsSync(genTaskCommonPath)) {
-        rm('-Rf', genTaskCommonPath);
+    if (fs.existsSync(consts.genTaskCommonPath)) {
+        rm('-Rf', consts.genTaskCommonPath);
     }
 
     banner('Build successful', true);
