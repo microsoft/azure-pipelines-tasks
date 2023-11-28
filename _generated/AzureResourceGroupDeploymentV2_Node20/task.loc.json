@@ -15,7 +15,7 @@
   "version": {
     "Major": 2,
     "Minor": 231,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -353,7 +353,7 @@
       "target": "main.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     }
@@ -507,6 +507,6 @@
   },
   "_buildConfigMapping": {
     "Default": "2.231.0",
-    "Node20_229_2": "2.231.1"
+    "Node20_229_2": "2.231.2"
   }
 }
