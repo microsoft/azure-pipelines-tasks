@@ -7,60 +7,47 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('WebSiteName', 'mytestwebsite');
 tr.setInput('Package', 'webAppPkg.zip');
-tr.setInput('SetParametersFile', 'parameterFilePresent.xml');
 
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
 
-let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
+// provide answers for task mock
+let a: any = <any>{
     "which": {
         "msdeploy": "msdeploy"
     },
     "stats": {
     	"webAppPkg.zip": {
     		"isFile": true
-    	},
-        "parameterFilePresent.xml": {
-            "isFile" : true
-        },
-        "parameterFileUser.xml": {
-            "isFile" : true
-        }
-    },
-    "checkPath": {
-        "webAppPkg.zip": true,
-        "msdeploy" : true
+    	}
     },
     "osType": {
         "osType": "Windows"
     },
-	 "rmRF": {
-        "DefaultWorkingDirectory\\tempSetParameters.xml": {
-            "success": true
-        }
+    "checkPath": {
+        "msdeploy": true
     },
     "exec": {
-        "msdeploy -verb:sync -source:package='webAppPkg.zip' -dest:auto -setParam:name='IIS Web Application Name',value='mytestwebsite' -setParamFile=tempSetParameters.xml  -enableRule:DoNotDeleteRule": {
-            "code" : 0,
-            "stdout": "Executed Successfully"
+    	"msdeploy -verb:sync -source:package='webAppPkg.zip' -dest:auto -setParam:name='IIS Web Application Name',value='mytestwebsite' -enableRule:DoNotDeleteRule": {
+            "code": 1,
+            "stdout": "Failed to execute command"
         },
         "msdeploy -verb:getParameters -source:package=\'webAppPkg.zip\'": {
-            "code" : 0,
+            "code": 0,
             "stdout": "Executed Successfully"
         }
     },
     "exist": {
     	"webAppPkg.zip": true,
-        "DefaultWorkingDirectory\\tempSetParameters.xml": true        
+        "DefaultWorkingDirectory\\error.txt": true
     },
-    "glob": {
-        "webAppPkg.zip": ["webAppPkg.zip"]
+    "rmRF": {
+        "DefaultWorkingDirectory\\error.txt": true
     }
 };
 
 import mockTask = require('azure-pipelines-task-lib/mock-task');
 var msDeployUtility = require('azure-pipelines-tasks-webdeployment-common/msdeployutility.js');
-
-tr.registerMock('azure-pipelines-tasks-webdeployment-common/ziputility.js', {
+tr.registerMock('./ziputility', {
     getArchivedEntries: function(webDeployPkg) {
         return {
             "entries": [
@@ -72,23 +59,29 @@ tr.registerMock('azure-pipelines-tasks-webdeployment-common/ziputility.js', {
 });
 
 tr.registerMock('./msdeployutility.js', {
+    shouldRetryMSDeploy: msDeployUtility.shouldRetryMSDeploy,
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
         var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
         return msDeployFullPath;
-    }
+    },
+	redirectMSDeployErrorToConsole : msDeployUtility.redirectMSDeployErrorToConsole
 });
 
 var fs = require('fs');
 tr.registerMock('fs', {
     ...fs,
     createWriteStream: function (filePath, options) {
+        var retryFunction;
         return { 
             "isWriteStreamObj": true,
-            "on": (event) => {
-                console.log("event: " + event + " has been triggered");
-            },
-            "end" : () => { return true; }
+            "on": (name, functionOnFinish) => { retryFunction = functionOnFinish;},
+            "end" : () => { 
+                if(retryFunction != null) {
+                    retryFunction(); 
+                }  
+                return true; 
+            }
         };
     },
     ReadStream: fs.ReadStream,
