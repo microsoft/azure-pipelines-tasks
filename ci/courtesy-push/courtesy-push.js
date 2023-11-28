@@ -33,11 +33,19 @@ function formDirectoryTag(nugetTaskName) {
 }
 
 /**
+ * @typedef {Object} Dependencies
+ * @property {string} name
+ * @property {string} version
+ * @property {string} depStr
+ */
+
+/**
  * The function to form a dictionary of dependencies
  * @param {Array} depArr - array of dependencies
- * @returns {Object} - dictionary of dependencies
+ * @returns {Dependencies} - dictionary of dependencies
  */
 function getDeps(depArr) {
+    /** @type {Record<key, Dependencies>} deps */
     const deps = {};
     const getDependantConfigs = (arrKeys, packageName) => arrKeys.filter(key => key.includes(packageName) && key !== packageName);
 
@@ -52,9 +60,12 @@ function getDeps(depArr) {
         console.log(name + ' ' + version);
 
         if (!deps[name]) deps[name] = {};
-        deps[name].name = name;
-        deps[name].version = version;
-        deps[name].depStr = newDep;
+
+        const dep = deps[name];
+
+        dep.name = name;
+        dep.version = version;
+        dep.depStr = newDep;
     }
 
     const keys = Object.keys(deps);
