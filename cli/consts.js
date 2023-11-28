@@ -1,15 +1,16 @@
 var path = require('path');
 
-var buildPath = path.join(__dirname, '_build');
-var testPath = path.join(__dirname, '_test');
-var tasksPath = path.join(__dirname, 'Tasks');
-var gendocsPath = path.join(__dirname, '_gendocs');
-var packagePath = path.join(__dirname, '_package');
-var makeOptionsPath = path.join(__dirname, 'make-options.json');
-var baseConfigToolPath = path.join(__dirname, 'BuildConfigGen');
-var genTaskPath = path.join(__dirname, '_generated');
-var testsPath = path.join(__dirname, 'Tests');
-var testsLegacyPath = path.join(__dirname, 'Tests-Legacy');
+var base = path.join(__dirname, '..');
+var buildPath = path.join(base, '_build');
+var testPath = path.join(base, '_test');
+var tasksPath = path.join(base, 'Tasks');
+var gendocsPath = path.join(base, '_gendocs');
+var packagePath = path.join(base, '_package');
+var makeOptionsPath = path.join(base, 'make-options.json');
+var baseConfigToolPath = path.join(base, 'BuildConfigGen');
+var genTaskPath = path.join(base, '_generated');
+var testsPath = path.join(base, 'Tests');
+var testsLegacyPath = path.join(base, 'Tests-Legacy');
 
 var genTaskCommonPath = path.join(genTaskPath, 'Common');
 
