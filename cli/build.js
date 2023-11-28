@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 var serverBuild = require('./serverBuild');
 
 var util = require('../make-util');
