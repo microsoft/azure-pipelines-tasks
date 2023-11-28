@@ -293,7 +293,6 @@
         "UniversalPackagesV0"
     ],
     "Node20_229_2": [
-        "AppCenterDistributeV3",
         "AzureAppServiceManageV0",
         "AzureAppServiceSettingsV1",
         "AzureCLIV1",
@@ -370,7 +369,12 @@
         "PackerBuildV0",
         "PackerBuildV1"
     ],
-    "Node20_229_7": [],
+    "Node20_229_7": [
+        "AppCenterDistributeV1",
+        "AppCenterDistributeV2",
+        "AppCenterDistributeV3",
+        "AppCenterTestV1"
+    ],
     "Node20_229_8": [
         "AzureStaticWebAppV0"
     ],
