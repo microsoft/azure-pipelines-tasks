@@ -5,14 +5,18 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'deployiiswebapp.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput('WebSiteName','mytestwebsite');
-tr.setInput('VirtualApplication', 'mytestapp');
+tr.setInput('WebSiteName', 'mytestwebsite');
 tr.setInput('Package', 'webAppPkg.zip');
+tr.setInput('RemoveAdditionalFilesFlag', 'true');
+tr.setInput('ExcludeFilesFromAppDataFlag', 'true');
+tr.setInput('TakeAppOfflineFlag', 'false');
+tr.setInput('VirtualApplication', 'mytestapp');
+tr.setInput('AdditionalArguments', 'additionalArguments');
+tr.setInput('WebAppUri', 'someuri');
 
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
 
 // provide answers for task mock
-
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {
         "msdeploy": "msdeploy"
@@ -22,11 +26,14 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     		"isFile": true
     	}
     },
+    "osType": {
+        "osType": "Windows"
+    },
     "checkPath": {
         "msdeploy": true
     },
     "exec": {
-        "msdeploy -verb:sync -source:package='webAppPkg.zip' -dest:auto -setParam:name='IIS Web Application Name',value='mytestwebsite/mytestapp' -enableRule:DoNotDeleteRule":{
+        "msdeploy -verb:sync -source:package='webAppPkg.zip' -dest:auto -setParam:name='IIS Web Application Name',value='mytestwebsite/mytestapp' -skip:Directory=App_Data additionalArguments": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
@@ -34,15 +41,19 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "Executed Successfully"
         }
-    },	
+    },
     "exist": {
     	"webAppPkg.zip": true
+    },
+	
+    "glob": {
+        "webAppPkg.zip": ["webAppPkg.zip"],
     }
-};
+}
 
 import mockTask = require('azure-pipelines-task-lib/mock-task');
 var msDeployUtility = require('azure-pipelines-tasks-webdeployment-common/msdeployutility.js');
-tr.registerMock('azure-pipelines-tasks-webdeployment-common/ziputility.js', {
+tr.registerMock('./ziputility', {
     getArchivedEntries: function(webDeployPkg) {
         return {
             "entries": [
@@ -52,6 +63,7 @@ tr.registerMock('azure-pipelines-tasks-webdeployment-common/ziputility.js', {
         };
     }
 });
+
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {

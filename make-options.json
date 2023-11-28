@@ -218,7 +218,8 @@
         "Tests"
     ],
     "Node16_225": [
-        "AzureRmWebAppDeploymentV4"
+        "AzureRmWebAppDeploymentV4",
+        "IISWebAppDeploymentOnMachineGroupV0"
     ],
     "Node20": [
         "AndroidSigningV2",
@@ -345,7 +346,6 @@
         "HelmDeployV0",
         "HelmInstallerV0",
         "HelmInstallerV1",
-        "IISWebAppDeploymentOnMachineGroupV0",
         "JenkinsDownloadArtifactsV1",
         "KubeloginInstallerV0",
         "KubectlInstallerV0",
