@@ -48,7 +48,7 @@ import * as nuGetGetter from 'azure-pipelines-tasks-packaging-common/nuget/NuGet
                 nuget.arg('config');
                 nuget.arg('-set');
                 nuget.arg('no_proxy=' + proxyConfig.proxyBypassHosts.join(','));
-                nuget.exec({} as trm.IExecOptions); 
+                nuget.execSync({} as trm.IExecOptions);
             }
     }
 }
