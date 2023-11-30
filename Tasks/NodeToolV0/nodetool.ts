@@ -87,7 +87,7 @@ async function getNode(versionSpec: string, checkLatest: boolean, nodejsMirror: 
                 version = await queryLatestMatch(versionSpec, 'x64', nodejsMirror);
                 installedArch = 'x64';
             }
-            
+
             if (!version) {
                 throw new Error(taskLib.loc('NodeVersionNotFound', versionSpec, osPlat, installedArch));
             }
@@ -131,7 +131,12 @@ async function queryLatestMatch(versionSpec: string, installedArch: string, node
     let dataUrl = nodejsMirror + "/index.json";
     let rest: restm.RestClient = new restm.RestClient('vsts-node-tool');
     let nodeVersions: INodeVersion[] = (await rest.get<INodeVersion[]>(dataUrl)).result;
-    nodeVersions.forEach((nodeVersion:INodeVersion) => {
+    if (nodeVersions == null) {
+        // this will be handled by the caller and an error will be thrown
+        return null;
+    }
+
+    nodeVersions.forEach((nodeVersion: INodeVersion) => {
         // ensure this version supports your os and platform
         if (nodeVersion.files.indexOf(dataFileName) >= 0) {
             // versions in the file are prefixed with 'v', which is not valid SemVer
@@ -149,7 +154,7 @@ async function queryLatestMatch(versionSpec: string, installedArch: string, node
     return nodeVersions.find(v => v.semanticVersion === latestVersion).version;
 }
 
-async function acquireNode(version: string, installedArch: string, nodejsMirror: string, retryCountOnDownloadFails: number, delayBetweenRetries: number):  Promise<string> {
+async function acquireNode(version: string, installedArch: string, nodejsMirror: string, retryCountOnDownloadFails: number, delayBetweenRetries: number): Promise<string> {
     //
     // Download - a tool installer intimately knows how to get the tool (and construct urls)
     //
@@ -230,14 +235,13 @@ async function acquireNodeFromFallbackLocation(version: string, nodejsMirror: st
     try {
         exeUrl = `${nodejsMirror}/v${version}/win-${osArch}/node.exe`;
         libUrl = `${nodejsMirror}/v${version}/win-${osArch}/node.lib`;
-        
+
         await toolLib.downloadToolWithRetries(exeUrl, path.join(tempDir, "node.exe"), null, null, retryCountOnDownloadFails, delayBetweenRetries);
         await toolLib.downloadToolWithRetries(libUrl, path.join(tempDir, "node.lib"), null, null, retryCountOnDownloadFails, delayBetweenRetries);
     }
     catch (err) {
-        if (err['httpStatusCode'] && 
-            err['httpStatusCode'] == 404)
-        {
+        if (err['httpStatusCode'] &&
+            err['httpStatusCode'] == 404) {
             exeUrl = `${nodejsMirror}/v${version}/node.exe`;
             libUrl = `${nodejsMirror}/v${version}/node.lib`;
 
@@ -254,9 +258,9 @@ async function acquireNodeFromFallbackLocation(version: string, nodejsMirror: st
 // Check is the system are darwin arm and rosetta is installed
 function isDarwinArm(osPlat: string, installedArch: string): boolean {
     if (osPlat === 'darwin' && installedArch === 'arm64') {
-         // Check that Rosetta is installed and returns some pid
-         const execResult = taskLib.execSync('pgrep', 'oahd');
-         return execResult.code === 0 && !!execResult.stdout;
+        // Check that Rosetta is installed and returns some pid
+        const execResult = taskLib.execSync('pgrep', 'oahd');
+        return execResult.code === 0 && !!execResult.stdout;
     }
     return false;
 }
