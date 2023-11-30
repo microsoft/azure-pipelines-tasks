@@ -146,6 +146,6 @@
     "NGCommon_AddingSources": "Setting credentials in NuGet.config",
     "NGCommon_NoSourcesFoundInConfig": "No package sources were found in the NuGet.config file at %s",
     "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
-    "DeprecatedTask": "This task is now deprecated. The task completed successfully, but builds are breaking. Functionality will stop on 01-16-2024. Please switch to using NuGetCommand@2's 'restore' option as soon as possible."
+    "DeprecatedTask": "This task is deprecated. After 01-16-2024 all functionality will stop. Please switch to using NuGetCommand@2's 'restore' or 'custom' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
   }
 }

@@ -13,7 +13,7 @@ import { WebApi } from 'azure-devops-node-api';
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function main(): Promise<void> {
-	tl.warning("This task is deprecated. Functionality will stop on 01-16-2024. Please switch to using DownloadPackage@1 as soon as possible.");
+	tl.warning(tl.loc("DeprecatedTask"));
 	var feed = getProjectAndFeedIdFromInputParam("feed");
 	if(feed.projectId) {
 		throw new Error(tl.loc("UnsupportedProjectScopedFeeds"));
@@ -43,7 +43,7 @@ async function main(): Promise<void> {
 		throw reason;
 	}), retryLimit);
 
-	//throw new Error(tl.loc("DeprecatedTask"));
+	throw new Error(tl.loc("DeprecatedTask"));
 }
 
 function getAuthToken() {

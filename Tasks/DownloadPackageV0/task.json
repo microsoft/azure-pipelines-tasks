@@ -113,6 +113,6 @@
     "OperationFailed": "Failed in %s with error: %s",
     "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
     "UnsupportedProjectScopedFeeds": "Project-scoped feeds are not supported by this version of the \"Download Package\" task. Please use version 1 or higher.",
-    "DeprecatedTask": "This task is now deprecated. The task completed successfully, but builds are breaking. Functionality will stop on 11-27-2023. Please switch to using DownloadPackage@1 as soon as possible."
+    "DeprecatedTask": "This task is deprecated. After 01-16-2024 all functionality will stop. Please switch to using DownloadPackage@1 https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/download-package-v1"
   }
 }
