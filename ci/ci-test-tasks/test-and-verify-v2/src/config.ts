@@ -1,11 +1,11 @@
 class Config {
-    public AuthToken: string;
-    public AdoUrl: string;
-    public ProjectName: string;
-    public TaskArg: string;
-    public ApiUrl: string;
+    public readonly AuthToken: string;
+    public readonly AdoUrl: string;
+    public readonly ProjectName: string;
+    public readonly TaskArg: string;
+    public readonly ApiUrl: string;
     // TODO: Replace axios usage to node-api. Need to add support of Pipelines API.
-    public AxiosAuth: { auth: { username: string, password: string } };
+    public readonly AxiosAuth: { auth: { username: string, password: string } };
 
     constructor(argv: string[]) {
         this.AuthToken = argv[2];
