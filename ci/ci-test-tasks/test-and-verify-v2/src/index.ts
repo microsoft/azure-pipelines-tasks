@@ -3,33 +3,13 @@ import axios from 'axios';
 
 import { PipelineBuild } from './interfaces';
 import { getBuildConfigs, pipelineVariable } from './helpers';
-
-// Static constants
-const API_VERSION = 'api-version=7.0';
-
-// Args
-const AuthToken = process.argv[2];
-const AdoUrl = process.argv[3];
-const ProjectName = process.argv[4];
-const TaskArg = process.argv[5];
-
-// Dynamic constants
-const ApiUrl = `${AdoUrl}/${ProjectName}/_apis`;
-
-const auth = {
-  auth: {
-    username: 'Basic',
-    password: AuthToken
-  }
-};
+import { configInstance } from './config';
+import { API_VERSION } from './constants';
+import { fetchBuildStatus, retryFailedJobsInBuild } from './helpers.Build';
+import { fetchPipelines } from './helpers.Pipeline';
 
 async function main() {
-  if (!TaskArg) {
-    console.error('Task list is not provided');
-    return;
-  }
-
-  const tasks = TaskArg.split(',');
+  const tasks = configInstance.TaskArg.split(',');
 
   const runningTestBuilds: Promise<string>[] = [];
   for (const task of tasks) {
@@ -70,23 +50,6 @@ async function runTaskPipelines(taskName: string): Promise<Promise<string>[]> {
   return [];
 }
 
-async function fetchPipelines(): Promise<PipelineBuild[]> {
-  try {
-    const res = await axios
-      .get(`${ApiUrl}/pipelines?${API_VERSION}`, auth);
-
-    return res.data.value;
-  } catch (err: any) {
-    err.stack = `Error fetching pipelines: ${err.stack}`;
-    console.error(err.stack);
-    if (err.response?.data) {
-      console.error(err.response.data);
-    }
-
-    throw err;
-  }
-}
-
 async function startTestPipeline(pipeline: PipelineBuild, config = ''): Promise<PipelineBuild> {
   console.log(`Run ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`);
 
@@ -98,7 +61,7 @@ async function startTestPipeline(pipeline: PipelineBuild, config = ''): Promise<
   try {
     const res = await axios
       .post(
-        `${ApiUrl}/pipelines/${pipeline.id}/runs?${API_VERSION}`,
+        `${configInstance.ApiUrl}/pipelines/${pipeline.id}/runs?${API_VERSION}`,
         {
           variables: {
             ...pipelineVariable('CANARY_TEST_TASKNAME', pipeline.name),
@@ -107,7 +70,7 @@ async function startTestPipeline(pipeline: PipelineBuild, config = ''): Promise<
             ...pipelineVariable('CANARY_TEST_NODE_VERSION', nodeVersion)
           },
         },
-        auth
+        configInstance.AxiosAuth
       );
 
     return res.data;
@@ -172,66 +135,6 @@ async function completeBuild(
     },
     intervalInSeconds * 1000
   );
-}
-
-async function fetchBuildStatus(pipelineBuild: PipelineBuild): Promise<PipelineBuild> {
-  const intervalInSeconds = 20;
-  const maxRetries = 10;
-
-  let retryCount = 0;
-
-  const getBuildPromise = new Promise<PipelineBuild>((resolve, reject) => {
-    const interval = setInterval(
-      async () => {
-        try {
-          const res = await axios.get(pipelineBuild.url, auth);
-
-          clearInterval(interval);
-          resolve(res.data);
-        }
-        catch (err: any) {
-          if (['ETIMEDOUT', 'ECONNRESET'].includes(err.code) || err.response?.status >= 500) {
-            if (retryCount < maxRetries) {
-              retryCount++;
-              console.log(`Error verifying state of the [${pipelineBuild.name} ${pipelineBuild.id}] build, retry request. Retry count: ${retryCount}. Error message: ${err.message}`);
-
-              return;
-            } else {
-              console.error(`Error verifying state of the [${pipelineBuild.name} ${pipelineBuild.id}], maximum retries reached. Cancel retries. Error message: ${err.message}`);
-            }
-          }
-
-          clearInterval(interval);
-
-          err.stack = `Error verifying build status. Stack: ${err.stack}`;
-          console.error(err.stack);
-          if (err.response?.data) {
-            console.error(`Error response data: ${err.response.data}`);
-          }
-
-          reject(err);
-        }
-      },
-      intervalInSeconds * 1000
-    );
-  });
-
-  return getBuildPromise;
-}
-
-async function retryFailedJobsInBuild(pipelineBuild: PipelineBuild): Promise<void> {
-  try {
-    await axios.patch(`${ApiUrl}/build/builds/${pipelineBuild.id}?retry=true&${API_VERSION}`, auth)
-  }
-  catch (err: any) {
-    err.stack = `Error retrying failed jobs in build: ${err.stack}`;
-    console.error(err.stack);
-    if (err.response?.data) {
-      console.error(err.response.data);
-    }
-
-    throw err;
-  }
 }
 
 process.on('uncaughtException', err => {
