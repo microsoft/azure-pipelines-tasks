@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 229,
-    "Patch": 4
+    "Minor": 231,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -125,7 +125,7 @@
       "target": "preinstallsshkey.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "preinstallsshkey.js",
       "argumentFormat": ""
     }
@@ -139,7 +139,7 @@
       "target": "postinstallsshkey.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "postinstallsshkey.js",
       "argumentFormat": ""
     }
@@ -168,7 +168,7 @@
     "InsertingIntoConfig": "Inserting entry into config file:"
   },
   "_buildConfigMapping": {
-    "Default": "0.229.3",
-    "Node20-225": "0.229.4"
+    "Default": "0.231.0",
+    "Node20-225": "0.231.1"
   }
 }

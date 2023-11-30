@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 231,
-    "Patch": 0
+    "Patch": 4
   },
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -87,7 +87,7 @@
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized"
   },
   "_buildConfigMapping": {
-    "Default": "0.231.0",
-    "Node20-225": "0.231.1"
+    "Default": "0.231.4",
+    "Node20-225": "0.231.5"
   }
 }

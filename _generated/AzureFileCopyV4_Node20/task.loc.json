@@ -14,7 +14,7 @@
   "version": {
     "Major": 4,
     "Minor": 231,
-    "Patch": 1
+    "Patch": 4
   },
   "demands": [
     "azureps"
@@ -244,7 +244,7 @@
       "target": "PreJobExecutionAzureFileCopy.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "PreJobExecutionAzureFileCopy.js",
       "argumentFormat": ""
     }
@@ -305,7 +305,7 @@
     "ServicePrincipalError": "ms-resource:loc.messages.ServicePrincipalError"
   },
   "_buildConfigMapping": {
-    "Default": "4.231.0",
-    "Node20_229_2": "4.231.1"
+    "Default": "4.231.2",
+    "Node20_229_2": "4.231.4"
   }
 }

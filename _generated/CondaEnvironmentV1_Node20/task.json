@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 3
   },
   "deprecated": true,
@@ -91,7 +91,7 @@
       "target": "main.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     }
@@ -107,7 +107,7 @@
     "PrependPath": "Prepending PATH environment variable with directory: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.230.2",
-    "Node20-225": "1.230.3"
+    "Default": "1.231.2",
+    "Node20-225": "1.231.3"
   }
 }
