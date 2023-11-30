@@ -131,7 +131,7 @@ async function queryLatestMatch(versionSpec: string, installedArch: string, node
     let dataUrl = nodejsMirror + "/index.json";
     let rest: restm.RestClient = new restm.RestClient('vsts-node-tool');
     let nodeVersions: INodeVersion[] = (await rest.get<INodeVersion[]>(dataUrl)).result;
-    if (nodeVersions == null) {
+    if (!nodeVersions) {
         // this will be handled by the caller and an error will be thrown
         return null;
     }
