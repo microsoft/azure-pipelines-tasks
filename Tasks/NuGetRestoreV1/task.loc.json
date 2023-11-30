@@ -18,7 +18,7 @@
   ],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
-  "removalDate": "2023-11-27",
+  "removalDate": "2024-01-16",
   "groups": [
     {
       "name": "advanced",
