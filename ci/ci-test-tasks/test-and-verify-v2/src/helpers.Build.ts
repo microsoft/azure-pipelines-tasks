@@ -51,7 +51,7 @@ export async function fetchBuildStatus(pipelineBuild: PipelineBuild): Promise<Pi
 
 export async function retryFailedJobsInBuild(pipelineBuild: PipelineBuild): Promise<void> {
     try {
-        await axios.patch(`${configInstance.ApiUrl}/build/builds/${pipelineBuild.id}?retry=true&${API_VERSION}`, configInstance.AxiosAuth)
+        await axios.patch(`${configInstance.ApiUrl}/build/builds/${pipelineBuild.id}?retry=true&${API_VERSION}`, null, configInstance.AxiosAuth)
     }
     catch (err: any) {
         err.stack = `Error retrying failed jobs in build: ${err.stack}`;
