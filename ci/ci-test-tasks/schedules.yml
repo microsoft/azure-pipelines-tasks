@@ -39,11 +39,14 @@ jobs:
     inputs:
       versionSpec: 20.x
 
-  - bash: |
-      echo $(tasks)
+  - script: |
       cd ./ci/ci-test-tasks/test-and-verify-v2
       npm i
       npm run build
-      node index.js $(ADOToken) $(ADOUrl) $(System.TeamProject) $(tasks)
+    displayName: 'Build test pipelines runner'
+
+  - bash: |
+      echo "Tasks to test: $(tasks)"
+      node ./ci/ci-test-tasks/test-and-verify-v2 $(ADOToken) $(ADOUrl) $(System.TeamProject) $(tasks)
     displayName: Run test pipelines and verify results
     failOnStderr: true
