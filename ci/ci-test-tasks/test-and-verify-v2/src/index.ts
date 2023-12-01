@@ -13,7 +13,7 @@ async function main() {
 
   const runningTestBuilds: Promise<string>[] = [];
   for (const task of tasks) {
-    console.log(`starting tests for ${task}`);
+    console.log(`starting tests for ${task} task`);
     runningTestBuilds.push(...await runTaskPipelines(task));
   }
 
@@ -35,7 +35,7 @@ async function runTaskPipelines(taskName: string): Promise<Promise<string>[]> {
 
     const runningBuilds: Promise<string>[] = [];
     for (const config of configs) {
-      console.log(`Running tests for ${taskName} with config ${config} for pipeline ${pipeline.name}`)
+      console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`)
       const pipelineBuild = await startTestPipeline(pipeline, config);
 
       const buildPromise = new Promise<string>((resolve, reject) => completeBuild(taskName, pipelineBuild, resolve, reject))
@@ -95,15 +95,13 @@ async function completeBuild(
   const buildTimeoutInSeconds = 300 * 60;
   const intervalInSeconds = 20;
 
-  const stringifiedBuild = `build (id: [" ${pipelineBuild.id} "], url: [" ${pipelineBuild._links.web.href} "], pipeline: [" ${pipelineName} "])`;
-  console.log(`Verifying state of the ${stringifiedBuild}`);
+  const stringifiedBuild = `build (id: [ ${pipelineBuild.id} ], url: [ ${pipelineBuild._links.web.href} ], pipeline: [ ${pipelineName} ])`;
 
   let retryCount = 0;
   let intervalAmount = 0;
 
   const interval = setInterval(
     async () => {
-      console.log(`Fetching status of the "${pipelineBuild.id}" pipeline build.`)
       const buildStatus = await fetchBuildStatus(pipelineBuild);
       console.log(`State of the ${stringifiedBuild}: "${buildStatus.state}"`);
 
@@ -123,7 +121,7 @@ async function completeBuild(
         const result = `The ${stringifiedBuild} completed with result "${buildStatus.result}"`;
         resolve(result);
       } else if (retryCount < maxRetries) {
-        // Retry failed jobs in pipeline build
+        console.log(`Retrying failed jobs in ${stringifiedBuild}. Retry count: ${++retryCount} out of ${maxRetries}`);
         await retryFailedJobsInBuild(pipelineBuild);
       }
       else {

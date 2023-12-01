@@ -23,11 +23,11 @@ export async function fetchBuildStatus(pipelineBuild: PipelineBuild): Promise<Pi
                     if (['ETIMEDOUT', 'ECONNRESET'].includes(err.code) || err.response?.status >= 500) {
                         if (retryCount < maxRetries) {
                             retryCount++;
-                            console.log(`Error verifying state of the [${pipelineBuild.name} ${pipelineBuild.id}] build, retry request. Retry count: ${retryCount}. Error message: ${err.message}`);
+                            console.log(`Error verifying state of the [${pipelineBuild.name} ${pipelineBuild.id}] build, retry request. Retry count: ${retryCount} out of ${maxRetries}. Error message: ${err.message}`);
 
                             return;
                         } else {
-                            console.error(`Error verifying state of the [${pipelineBuild.name} ${pipelineBuild.id}], maximum retries reached. Cancel retries. Error message: ${err.message}`);
+                            console.error(`Error verifying state of the [${pipelineBuild.name} ${pipelineBuild.id}], retries limit reached. Cancel retries. Error message: ${err.message}`);
                         }
                     }
 
@@ -50,9 +50,12 @@ export async function fetchBuildStatus(pipelineBuild: PipelineBuild): Promise<Pi
 }
 
 export async function retryFailedJobsInBuild(pipelineBuild: PipelineBuild): Promise<void> {
+    const buildLogData = `(Name: ${pipelineBuild.name}, Id: ${pipelineBuild.id})`;
+
     try {
         await axios.patch(
-            `${configInstance.ApiUrl}/build/builds/${pipelineBuild.id}?retry=true&${API_VERSION}`, undefined,
+            `${configInstance.ApiUrl}/build/builds/${pipelineBuild.id}?retry=true&${API_VERSION}`,
+            undefined,
             {
                 ...configInstance.AxiosAuth,
                 headers: { 'Content-Type': 'application/json' }
@@ -60,7 +63,7 @@ export async function retryFailedJobsInBuild(pipelineBuild: PipelineBuild): Prom
         )
     }
     catch (err: any) {
-        err.stack = `Error retrying failed jobs in build: ${err.stack}`;
+        err.stack = `Error retrying failed jobs in build ${buildLogData}. Error: ${err.stack}`;
         console.error(err.stack);
         if (err.response?.data) {
             console.error(err.response.data);
