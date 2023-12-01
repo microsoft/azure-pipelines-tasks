@@ -4,7 +4,7 @@ export interface PipelineBuild {
     id: number;
     name: string;
     result?: string,
-    state: "completed" | "inProgress" | "notStarted";
+    state: "completed" | "inProgress" | "notStarted" | "canceling";
 }
 
 interface Links {
