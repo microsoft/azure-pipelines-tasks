@@ -1,16 +1,18 @@
 import fs from 'fs';
 import path from 'path';
 
-const repoRoot = path.join(__dirname, '..', '..', '..', '..');
+const RepoRoot = path.join(__dirname, '..', '..', '..', '..');
 
 export function getBuildConfigs(task: string): string[] {
+    const generatedTasksPath = path.join(RepoRoot, '_generated');
+
     console.log(`checking buildconfig for ${task}`);
     try {
-        const items = fs.readdirSync(path.join(repoRoot, '_generated'));
+        const items = fs.readdirSync(generatedTasksPath);
         const tasksToTest: string[] = [];
 
         for (const item of items) {
-            const itemPath = path.join('_generated', item);
+            const itemPath = path.join(generatedTasksPath, item);
             const stats = fs.statSync(itemPath);
 
             if (stats.isDirectory() && item.startsWith(task)) {
