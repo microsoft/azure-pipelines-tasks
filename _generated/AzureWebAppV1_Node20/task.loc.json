@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 230,
-    "Patch": 2
+    "Minor": 231,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -234,7 +234,7 @@
     "Node10": {
       "target": "azurermwebappdeployment.js"
     },
-    "Node20": {
+    "Node20_1": {
       "target": "azurermwebappdeployment.js",
       "argumentFormat": ""
     }
@@ -393,6 +393,6 @@
   },
   "_buildConfigMapping": {
     "Default": "1.230.1",
-    "Node20_229_2": "1.230.2"
+    "Node20_229_2": "1.231.0"
   }
 }
