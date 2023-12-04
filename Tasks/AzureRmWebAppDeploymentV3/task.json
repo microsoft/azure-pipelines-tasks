@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 230,
-    "Patch": 2
+    "Patch": 4
   },
   "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
   "minimumAgentVersion": "2.104.1",
@@ -765,6 +765,7 @@
     "ASE_WebDeploySSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to pass -allowUntrusted in additional arguments of web deploy option.",
     "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
     "JarNotSupported": "Jar deployment is not supported in this version. Change the task version to '4.*' which is in preview mode",
-    "CorrelationIdForARM": "Correlation ID from ARM api call response : %s"
+    "CorrelationIdForARM": "Correlation ID from ARM api call response : %s",
+    "MSDeployNotSupportTokenAuth": "App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy ."
   }
 }

@@ -1,0 +1,130 @@
+name: 🐞 Bug
+description: Something doesn't work as expected.
+title: "[BUG]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form if you would like to report a bug related to one of the tasks. [List of the tasks](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks)
+
+  - type: checkboxes
+    id: new-issue-checklist
+    attributes:
+      label: New issue checklist
+      description: |
+        Please make sure you've completed the following tasks before submitting your issue. Thanks!
+      options:
+        - label: I searched for [existing GitHub issues](https://github.com/microsoft/azure-pipelines-tasks/issues)
+        - label: I read [pipeline troubleshooting guide](https://docs.microsoft.com/vsts/build-release/actions/troubleshooting)
+        - label: I checked [how to collect logs](https://learn.microsoft.com/azure/devops/pipelines/troubleshooting/review-logs?view=azure-devops)
+
+  - type: input
+    id: task-name
+    attributes:
+      label: Task name
+      placeholder: E.g. AzurePowerShell
+
+  - type: input
+    id: task-version
+    attributes:
+      label: Task version
+      placeholder: x.x.x
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Issue Description
+      description: Tell us what you see, and what did you expect to happen?
+      value: "A bug happened!"
+    validations:
+      required: true
+
+  #################### Environment details ####################
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Environment
+
+  - type: checkboxes
+    id: environment-type
+    attributes:
+      label: Environment type (Please select at least one enviroment where you face this issue)
+      options:
+        - label: Self-Hosted
+        - label: Microsoft Hosted
+        - label: VMSS Pool
+        - label: Container
+
+  - type: dropdown
+    id: azure-devops-type
+    attributes:
+      label: Azure DevOps Server type
+      options:
+        - dev.azure.com (formerly visualstudio.com)
+        - Azure DevOps Server (Please specify exact version in the textbox below)
+    validations:
+      required: true
+
+  - type: input
+    id: azure-devops-server-datails
+    attributes:
+      label: Azure DevOps Server Version (if applicable)
+      placeholder: Azure DevOps Server 2019.1
+
+  - type: input
+    id: operation-system
+    attributes:
+      label: Operation system
+      placeholder: Windows 11, Ubuntu 20.04...
+    validations:
+      required: true
+
+  #################### Logs ####################
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Logs 
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: |
+        Please copy and paste any relevant log output that contains the error message.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: full-task-logs
+    attributes:
+      label: Full task logs with system.debug enabled
+      description: |
+        Please copy and paste full task logs.
+      value: |
+        <details>
+          <pre> [REPLACE THIS WITH YOUR INFORMATION] </pre>
+        </details>
+
+  #################### Repro steps ####################
+
+  - type: textarea
+    id: repro-steps
+    attributes:
+      label: Repro steps
+      description: |
+        Please provide repro steps or link to the code in a public GitHub repository that reproduces the issue, or a minimal Yaml definition to reproduce the problem if possible.
+      placeholder: |
+        # for example: https://github.com/some-public-repo
+        # OR
+        trigger:
+        - master
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+        - script: echo Hello, world!
+          displayName: 'Your step'
+      render: yml

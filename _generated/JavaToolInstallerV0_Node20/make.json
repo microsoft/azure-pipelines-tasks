@@ -2,7 +2,7 @@
     "externals": {
         "archivePackages": [
             {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/7zip/4/7zip.zip",
                 "dest": "./FileExtractor/"
             }
         ]
@@ -13,9 +13,15 @@
                 "node_modules/azure-pipelines-tasks-utility-common/node_modules/azure-pipelines-task-lib",
                 "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/azure-pipelines-task-lib",
                 "node_modules/azp-tasks-az-blobstorage-provider/node_modules/azure-pipelines-task-lib",
-                "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/vsts-task-lib",
                 "node_modules/azure-pipelines-tool-lib/node_modules/azure-pipelines-task-lib",
-                "node_modules/artifact-engine/node_modules/azure-pipelines-task-lib"
+                "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/mockery",
+                "node_modules/azp-tasks-az-blobstorage-provider/node_modules/mockery",
+                "node_modules/artifact-engine/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tool-lib/node_modules/mockery",
+                "node_modules/artifact-engine/node_modules/@types/mockery",
+                "node_modules/https-proxy-agent/node_modules/agent-base",
+                "node_modules/artifact-engine/node_modules/mockery",
+                "node_modules/mockery"
             ],
             "options": "-Rf"
         }

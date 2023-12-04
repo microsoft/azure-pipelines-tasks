@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 229,
-    "Patch": 1
+    "Minor": 231,
+    "Patch": 3
   },
   "preview": true,
   "demands": [],
@@ -48,7 +48,7 @@
       "target": "index.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "index.js",
       "argumentFormat": ""
     }
@@ -62,7 +62,7 @@
     "RunnerAlreadyInstalled": "%s version of node runner already installed on the agent. Skipping installation."
   },
   "_buildConfigMapping": {
-    "Default": "0.229.0",
-    "Node20-225": "0.229.1"
+    "Default": "0.231.2",
+    "Node20-225": "0.231.3"
   }
 }
