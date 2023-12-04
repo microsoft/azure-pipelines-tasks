@@ -214,12 +214,13 @@ describe('AzureRmWebAppDeployment Suite', function() {
         try {
             tr.run();
             assert(tr.stdOutContained('SCM_COMMAND_IDLE_TIMEOUT variable PRESENT'), 'Should have printed: SCM_COMMAND_IDLE_TIMEOUT variable PRESENT');
+            assert(tr.stdOutContained('msbuild package PRESENT'), 'Should have printed: msbuild package PRESENT');
             done();
         }
         catch(error) {
             console.log(tr.stdout);
             console.log(tr.stderr);
-            done();
+            done(error);
         }
     });
 
