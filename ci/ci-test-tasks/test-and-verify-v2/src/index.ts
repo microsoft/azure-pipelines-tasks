@@ -26,7 +26,7 @@ async function main() {
 
 // Running test pipelines for task by build configs
 async function runTaskPipelines(taskName: string): Promise<Promise<string>[]> {
-  const pipelines = await fetchPipelines();
+  const pipelines = await fetchPipelines()();
   const pipeline = pipelines.find(pipeline => pipeline.name === taskName);
 
   if (pipeline) {
