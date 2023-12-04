@@ -10,7 +10,7 @@ $arguments = "start notepad.exe | echo 'hello' ; calc.exe"
 
 # Act
 
-$sanitizedArguments = Get-SanitizedArguments -InputArgs $arguments
+$sanitizedArguments, $null = Get-SanitizedArguments -InputArgs $arguments
 
 # Assert
 

@@ -13,8 +13,8 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 229,
-    "Patch": 2
+    "Minor": 230,
+    "Patch": 1
   },
   "deprecated": true,
   "removalDate": "2024-04-22",
@@ -42,6 +42,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "main.js",
       "argumentFormat": ""
     }

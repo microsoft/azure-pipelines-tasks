@@ -100,11 +100,11 @@ function IsAzureRmConnection {
     param([Parameter(Mandatory = $true)] $connectionType)
 
     Write-Verbose "Connection type used is $connectionType"
-    if (($connectionType -eq $spnConnection) -or ($connectionType -eq $MsiConnection)) {
-        return $true
-    }
-    else {
-        return $false
+    switch ($connectionType) {
+        $spnConnection { $true }
+        $MsiConnection { $true }
+        $wifConnection { $true }
+        Default { $false }
     }
 }
 

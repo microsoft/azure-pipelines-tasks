@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 229,
-    "Patch": 4
+    "Minor": 231,
+    "Patch": 5
   },
   "releaseNotes": "This version of the task is compatible with Xcode 8 - 13. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.",
   "demands": [
@@ -370,7 +370,7 @@
       "target": "xcode.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "xcode.js",
       "argumentFormat": ""
     }
@@ -384,7 +384,7 @@
       "target": "postxcode.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "postxcode.js",
       "argumentFormat": ""
     }
@@ -420,7 +420,7 @@
     "UsingDefaultSimulator": "Using default simulator: %s."
   },
   "_buildConfigMapping": {
-    "Default": "5.229.3",
-    "Node20-225": "5.229.4"
+    "Default": "5.231.4",
+    "Node20-225": "5.231.5"
   }
 }
