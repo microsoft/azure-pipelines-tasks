@@ -12,10 +12,6 @@ setEndpointData();
 
 export class TaskParametersTests {
     public static async ValidateLinuxAppTaskParameters() {
-        if (!fs.existsSync(tempDir)) {
-            fs.mkdirSync(tempDir);
-        }
-
         let tp = path.join(__dirname, 'TaskParametersLinuxAppL0Tests.js');
         let tr : tmrm.TaskMockRunner = new tmrm.TaskMockRunner(tp);
         const zipFilePath = await TaskParametersTests.createSampleZipFile(tempDir);
@@ -40,22 +36,6 @@ export class TaskParametersTests {
         
         tr.setAnswers(answers);
         tr.run();
-
-        TaskParametersTests.removeDirRecursive(tempDir);
-    }
-
-    public static removeDirRecursive(dirPath: string) {
-        if (fs.existsSync(dirPath)) {
-            fs.readdirSync(dirPath).forEach((entry) => {
-                const entryPath = path.join(dirPath, entry);
-                if (fs.lstatSync(entryPath).isDirectory()) {
-                    TaskParametersTests.removeDirRecursive(entryPath);
-                } else {
-                    fs.unlinkSync(entryPath);
-                }
-            });
-            fs.rmdirSync(dirPath);
-        }
     }
 
     public static async createSampleZipFile(tempDir: string): Promise<string> {
