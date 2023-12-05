@@ -44,7 +44,7 @@ class WarningStream extends Writable {
         this.buffer = lines.pop() || '';
         // extract warnings related to security from logs
         for (const line of lines) {
-            if (line.startsWith('Warning: Always sign the artifact using the digest')) {
+            if (line.startsWith('Warning: Always sign the artifact using digest')) {
                 taskLib.warning(line);
                 taskLib.setTaskVariable(STATUS, WARNING);
             } else {
