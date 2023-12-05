@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 231,
+    "Minor": 232,
     "Patch": 1
   },
   "releaseNotes": "What's new in version 4.*<br />Supports Zip Deploy, Run From Package, War Deploy [Details here](https://aka.ms/appServiceDeploymentMethods)<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Package is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
@@ -27,19 +27,19 @@
       "name": "FileTransformsAndVariableSubstitution",
       "displayName": "File Transforms & Variable Substitution Options",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != webAppLinux && webAppKind != functionAppLinux && Package NotEndsWith .war"
+      "visibleRule": "WebAppKind != webAppContainer && WebAppKind != webAppHyperVContainer && WebAppkind != functionAppContainer && WebAppKind != webAppLinux && webAppKind != functionAppLinux && Package NotEndsWith .war"
     },
     {
       "name": "AdditionalDeploymentOptions",
       "displayName": "Additional Deployment Options",
       "isExpanded": false,
-      "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppkind != functionAppContainer && webAppKind != functionAppLinux && WebAppKind != \"\" && Package NotEndsWith .war && Package NotEndsWith .jar"
+      "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != webAppHyperVContainer && WebAppkind != functionAppContainer && webAppKind != functionAppLinux && WebAppKind != \"\" && Package NotEndsWith .war && Package NotEndsWith .jar"
     },
     {
       "name": "PostDeploymentAction",
       "displayName": "Post Deployment Action",
       "isExpanded": false,
-      "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\" && WebAppKind != webAppContainer && WebAppkind != functionAppContainer"
+      "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\" && WebAppKind != webAppContainer && WebAppKind != webAppHyperVContainer && WebAppkind != functionAppContainer"
     },
     {
       "name": "ApplicationAndConfigurationSettings",
@@ -170,7 +170,7 @@
       "label": "Registry or Namespace",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppkind = webAppHyperVContainer",
+      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppKind = webAppHyperVContainer",
       "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
     },
     {
@@ -179,7 +179,7 @@
       "label": "Image",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppkind = webAppHyperVContainer",
+      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppKind = webAppHyperVContainer",
       "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
     },
     {
@@ -188,7 +188,7 @@
       "label": "Tag",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppkind = webAppHyperVContainer",
+      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppKind = webAppHyperVContainer",
       "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'."
     },
     {
@@ -197,7 +197,7 @@
       "label": "Virtual application",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != functionApp && webAppKind != functionAppLinux && WebAppKind != \"\"",
+      "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != webAppHyperVContainer && WebAppkind != functionAppContainer && WebAppKind != functionApp && webAppKind != functionAppLinux && WebAppKind != \"\"",
       "helpMarkDown": "Specify the name of the Virtual application that has been configured in the Azure portal. The option is not required for deployments to the App Service root."
     },
     {
@@ -255,7 +255,7 @@
       "label": "Startup command ",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppKind = functionAppLinux || WebAppkind = webAppHyperVContainer",
+      "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer || WebAppkind = functionAppContainer || WebAppKind = functionAppLinux || WebAppKind = webAppHyperVContainer",
       "helpMarkDown": "Enter the start up command. For ex.<br/>dotnet exec filename.dll<br/>dotnet filename.dll"
     },
     {
@@ -659,7 +659,7 @@
     "MSDeployNotSupportTokenAuth": "App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy ."
   },
   "_buildConfigMapping": {
-    "Default": "4.231.0",
-    "Node16-225": "4.231.1"
+    "Default": "4.232.0",
+    "Node16-225": "4.232.1"
   }
 }
