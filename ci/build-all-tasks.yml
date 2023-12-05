@@ -26,12 +26,12 @@ steps:
 # Build tasks
 - script: node make.js serverBuild --task "$(task_pattern)"
   displayName: Build tasks using pattern
-  condition: and(succeeded(), eq(parameters.deploy_all_tasks, 'false'))
+  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', false))
 
 # Build all tasks
 - script: node make.js serverBuild
   displayName: Build all tasks
-  condition: and(succeeded(), eq(parameters.deploy_all_tasks, 'true'))
+  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', true))
 
 # Stage tasks individually into the package directory
 - script: node ./ci/stage-package.js true individually
