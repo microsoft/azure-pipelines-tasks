@@ -9,7 +9,8 @@ let uuid = require('uuid');
 
 export class TestResultsPublisher {
     constructor(matchingTestResultsFiles: string[], mergeResults: string, failTaskOnFailedTests: string, platform: string, config: string,
-        testRunTitle: string, publishRunAttachments: string, testRunner: string, testRunSystem: string) {
+        testRunTitle: string, publishRunAttachments: string, testRunner: string, testRunSystem: string
+        ,failTaskOnFailureToPublishResults: string) {
 
         this.matchingTestResultsFiles = matchingTestResultsFiles.slice(0);
         this.mergeResults = mergeResults;
@@ -20,6 +21,7 @@ export class TestResultsPublisher {
         this.publishRunAttachments = publishRunAttachments;
         this.testRunner = testRunner;
         this.testRunSystem = testRunSystem;
+        this.failTaskOnFailureToPublishResults = failTaskOnFailureToPublishResults;
     }
 
     public async publishResultsThroughExe(): Promise<number> {
@@ -120,7 +122,7 @@ export class TestResultsPublisher {
         envVars = this.addToProcessEnvVars(envVars, 'jobattempt', tl.getVariable('System.JobAttempt'));
         envVars = this.addToProcessEnvVars(envVars, 'jobidentifier', tl.getVariable('System.JobIdentifier'));
         envVars = this.addToProcessEnvVars(envVars, 'agenttempdirectory', tl.getVariable('Agent.TempDirectory'));
-
+        envVars = this.addToProcessEnvVars(envVars, 'failtaskonfailuretopublishresults', this.failTaskOnFailureToPublishResults);
         // Setting proxy details
         envVars = this.addToProcessEnvVars(envVars, "proxyurl", tl.getVariable('agent.proxyurl'));
         envVars = this.addToProcessEnvVars(envVars, "proxyusername", tl.getVariable('agent.proxyusername'));
@@ -151,4 +153,5 @@ export class TestResultsPublisher {
     private publishRunAttachments: string;
     private testRunner: string;
     private testRunSystem: string;
+    private failTaskOnFailureToPublishResults: string;
 }
