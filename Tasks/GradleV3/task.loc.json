@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 225,
+    "Minor": 231,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -423,6 +423,7 @@
     "FileNotFound": "ms-resource:loc.messages.FileNotFound",
     "FailedToAppendCC": "ms-resource:loc.messages.FailedToAppendCC",
     "NoTestResults": "ms-resource:loc.messages.NoTestResults",
-    "chmodGradlew": "ms-resource:loc.messages.chmodGradlew"
+    "chmodGradlew": "ms-resource:loc.messages.chmodGradlew",
+    "UnableToExtractGradleVersion": "ms-resource:loc.messages.UnableToExtractGradleVersion"
   }
 }

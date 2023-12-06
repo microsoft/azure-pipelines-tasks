@@ -13,10 +13,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 229,
+    "Minor": 232,
     "Patch": 0
   },
   "deprecated": true,
+  "removalDate": "2024-01-31",
   "demands": [],
   "instanceNameFormat": "Conda environment $(environmentName)",
   "inputs": [

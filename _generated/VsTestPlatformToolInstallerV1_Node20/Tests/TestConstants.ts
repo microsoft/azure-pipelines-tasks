@@ -1,0 +1,13 @@
+export const downloadPath = 'downloadPath';
+export const expectedTestPlatformVersion = 'expectedTestPlatformVersion';
+export const findLocalToolFirstCallReturnValue = 'findLocalToolFirstCallReturnValue';
+export const findLocalToolSecondCallReturnValue = 'findLocalToolSecondCallReturnValue';
+export const listPackagesReturnCode = 'listPackagesReturnCode';
+export const downloadPackageReturnCode = 'downloadPackageReturnCode';
+export const writeNugetConfigReturnCode = 'writeNugetConfigReturnCode';
+export const secondCacheLookup = 'secondCacheLookup';
+export const listPackagesOutput = 'listPackagesOutput';
+export const latestPreRelease = 'latestPreRelease';
+export const packageSource = 'packageSource';
+export const configFile = 'configFile';
+export const feedId = 'feedId';

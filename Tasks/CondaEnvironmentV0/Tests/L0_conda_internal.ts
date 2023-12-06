@@ -157,11 +157,19 @@ it('creates Conda environment', async function () {
             }
         });
 
+#if NODE20
+        let error: any | undefined;
+#endif
         try {
             await uut.createEnvironment(path.join('envsDir', 'env'));
             throw new Error('should not have succeeded');
         } catch (e) {
+#if NODE20
+            error = e;
+            assert.strictEqual(error.message, `loc_mock_CreateFailed ${path.join('envsDir', 'env')} Error: conda failed with return code: 1`);
+#else
             assert.strictEqual(e.message, `loc_mock_CreateFailed ${path.join('envsDir', 'env')} Error: conda failed with return code: 1`);
+#endif
         }
     }
 });

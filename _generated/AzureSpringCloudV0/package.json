@@ -23,18 +23,20 @@
     "@azure/storage-blob": "^12.14.0",
     "@azure/storage-file-share": "12.3.0",
     "@types/mocha": "8.2.1",
-    "@types/node": "^10.17.0",
+    "@types/node": "^16.11.39",
     "@types/q": "1.0.7",
     "@xmldom/xmldom": "^0.8.7",
     "JSONPath": "^0.11.2",
     "azure-pipelines-tasks-azure-arm-rest": "^3.226.0",
     "azure-pipelines-tasks-webdeployment-common": "^4.222.0",
+    "azure-pipelines-task-lib": "4.4.0",
     "moment": "^2.29.4",
     "nock": "9.0.11",
     "q": "1.4.1",
     "tar": "^6.1.11",
     "uuid": "3.1.0",
-    "xml2js": "^0.5.0"
+    "xml2js": "^0.5.0",
+    "agent-base": "6.0.2"
   },
   "devDependencies": {
     "typescript": "4.0.2"

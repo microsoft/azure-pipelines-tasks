@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Conda 身份验证 (适用于任务运行程序)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Conda 客户端的身份验证任务",
+  "loc.instanceNameFormat": "Conda 身份验证",
+  "loc.messages.FailedToAddAuthentication": "添加身份验证失败。",
+  "loc.messages.AddingAuthChannel": "为令牌 %s 添加身份验证"
+}

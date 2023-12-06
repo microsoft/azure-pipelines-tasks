@@ -82,7 +82,7 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
 
       messages.push({
         type: 'error',
-        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${destinationVersion.format()} at least (${taskVersionBumpingDocUrl})`
+        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${destinationVersion.format()} at least since local minor version is less than the sprint version(${taskVersionBumpingDocUrl})`
       });
       continue;
     }
@@ -90,7 +90,7 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
     if (localTask.version.minor === sprint && eq(localTask.version, masterTask.version)) {
       messages.push({
         type: 'error',
-        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${inc(masterTask.version, 'patch')} at least (${taskVersionBumpingDocUrl})`
+        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${inc(masterTask.version, 'patch')} at least since local version is equal to the master version (${taskVersionBumpingDocUrl})`
       });
       continue;
     }

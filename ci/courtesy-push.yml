@@ -4,6 +4,11 @@ steps:
     versionSpec: 6.0.0
   displayName: Install nuget
 
+- powershell: |
+    cd azure-pipelines-tasks/ci/courtesy-push
+    npm install
+  displayName: npm install
+
 - task: DownloadBuildArtifacts@0
   inputs:
     artifactName: IndividualNugetPackages
@@ -42,7 +47,6 @@ steps:
     git push origin $releaseBranch --force
     Write-Host "Creating Pull Request"
     cd ..\azure-pipelines-tasks\ci\courtesy-push
-    npm install
     node open-courtesy-push-pull-request.js $releaseBranch
 
     # Sleep 30 seconds to let PR be created
