@@ -85,7 +85,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
 };
 
 
-import mockTask = require('azure-pipelines-task-lib/mock-task');
 tr.registerMock('webdeployment-common/ziputility.js', {
     getArchivedEntries: function(webDeployPkg) {
         return {

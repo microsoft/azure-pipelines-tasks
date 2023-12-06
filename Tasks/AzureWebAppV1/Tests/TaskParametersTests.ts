@@ -14,19 +14,20 @@ export class TaskParametersTests {
     public static async ValidateLinuxAppTaskParameters() {
         let tp = path.join(__dirname, 'TaskParametersLinuxAppL0Tests.js');
         let tr : tmrm.TaskMockRunner = new tmrm.TaskMockRunner(tp);
-        const zipFilePath = await TaskParametersTests.createSampleZipFile(tempDir);
+        const zipFilePath = await TaskParametersTests.createSampleZipFileWithMaliciousEntry(tempDir);
 
-        tr.setInput("ConnectionType", "AzureRM");
-        tr.setInput('ConnectedServiceName', 'AzureRMSpn');
-        tr.setInput('WebAppName', 'mytestapp');
-        tr.setInput('Package', zipFilePath);
+        tr.setInput('azureSubscription', 'AzureRMSpn');
+        tr.setInput('resourceGroupName', 'AzureRMSpnRG');
+        tr.setInput('appName', 'mytestapp');
+        tr.setInput('package', zipFilePath);
         tr.setInput('UseWebDeploy', 'false');
         tr.setInput('ImageSource', "Builtin Image");
-        tr.setInput('WebAppKind', "webAppLinux");
+        tr.setInput('appType', "webAppLinux");
         tr.setInput('RuntimeStack', "dummy|version");
         tr.setInput('BuiltinLinuxPackage', zipFilePath);
         tr.setInput('ScriptType', 'Inline Script');
         tr.setInput('InlineScript','npm install --production');
+
         setAgentsData()
 
         const answers = mockTaskArgument();
@@ -38,7 +39,7 @@ export class TaskParametersTests {
         tr.run();
     }
 
-    public static async createSampleZipFile(tempDir: string): Promise<string> {
+    public static async createSampleZipFileWithMaliciousEntry(tempDir: string): Promise<string> {
         const zip = new JSZip();
         zip.file("index.html", "index");
         zip.file("parameters.xml", "parameters");
