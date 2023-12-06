@@ -1,0 +1,71 @@
+{
+  "id": "FE47E961-9FA8-4106-8639-368C022D43AD",
+  "name": "Npm",
+  "friendlyName": "npm",
+  "description": "Run an npm command. Use NpmAuthenticate@0 task for latest capabilities.",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613746)",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 231,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [
+    "npm"
+  ],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "npm $(command)",
+  "inputs": [
+    {
+      "name": "cwd",
+      "type": "filePath",
+      "label": "working folder",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Working directory where the npm command is run. Defaults to the root of the repo."
+    },
+    {
+      "name": "command",
+      "type": "string",
+      "label": "npm command",
+      "defaultValue": "install",
+      "required": true
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "arguments",
+      "defaultValue": "",
+      "helpMarkDown": "Additional arguments passed to npm.",
+      "required": false
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "npmtask.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "npmtask.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "InvalidCommand": "Only one command should be used for npm. Use 'Arguments' input for additional arguments.",
+    "NpmReturnCode": "npm exited with return code: %d",
+    "NpmFailed": "npm failed with error: %s",
+    "NpmConfigFailed": "Failed to log the npm config information. Error : %s",
+    "NpmAuthFailed": "Failed to get the required authentication tokens for npm. Error: %s",
+    "BuildCredentialsWarn": "Could not determine credentials to use for npm"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.231.0",
+    "Node20_229_1": "0.231.1"
+  }
+}

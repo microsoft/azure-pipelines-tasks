@@ -1,0 +1,387 @@
+{
+  "id": "86c37a92-59a7-444b-93c7-220fcf91e29c",
+  "name": "JenkinsDownloadArtifacts",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/jenkins-download-artifacts",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft",
+  "demands": [],
+  "version": {
+    "Major": 1,
+    "Minor": 231,
+    "Patch": 1
+  },
+  "groups": [
+    {
+      "name": "propagatedArtifactsGroup",
+      "displayName": "ms-resource:loc.group.displayName.propagatedArtifactsGroup",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "serverEndpoint",
+      "aliases": [
+        "jenkinsServerConnection"
+      ],
+      "type": "connectedService:Jenkins",
+      "label": "ms-resource:loc.input.label.serverEndpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serverEndpoint"
+    },
+    {
+      "name": "jobName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.jobName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.jobName",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "jenkinsJobType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.jenkinsJobType",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.jenkinsJobType",
+      "visibleRule": "jobName = invalidjobName",
+      "properties": {
+        "EditableOptions": "false",
+        "PopulateDefaultValue": "true"
+      }
+    },
+    {
+      "name": "saveTo",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.saveTo",
+      "defaultValue": "jenkinsArtifacts",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.saveTo"
+    },
+    {
+      "name": "jenkinsBuild",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.jenkinsBuild",
+      "defaultValue": "LastSuccessfulBuild",
+      "required": true,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.jenkinsBuild",
+      "options": {
+        "LastSuccessfulBuild": "Last Successful Build",
+        "BuildNumber": "Build Number"
+      }
+    },
+    {
+      "name": "jenkinsBuildNumber",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.jenkinsBuildNumber",
+      "defaultValue": "1",
+      "required": true,
+      "groupName": "advanced",
+      "visibleRule": "jenkinsBuild == BuildNumber",
+      "helpMarkDown": "ms-resource:loc.input.help.jenkinsBuildNumber",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "itemPattern",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.itemPattern",
+      "defaultValue": "**",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.itemPattern",
+      "properties": {
+        "rows": "3",
+        "resizable": "true"
+      }
+    },
+    {
+      "name": "downloadCommitsAndWorkItems",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.downloadCommitsAndWorkItems",
+      "defaultValue": false,
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.downloadCommitsAndWorkItems"
+    },
+    {
+      "name": "startJenkinsBuildNumber",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.startJenkinsBuildNumber",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "downloadCommitsAndWorkItems == true && jenkinsBuild == BuildNumber",
+      "groupName": "advanced",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.startJenkinsBuildNumber"
+    },
+    {
+      "name": "artifactDetailsFileNameSuffix",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.artifactDetailsFileNameSuffix",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "downloadCommitsAndWorkItems == invalid",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.artifactDetailsFileNameSuffix"
+    },
+    {
+      "name": "propagatedArtifacts",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.propagatedArtifacts",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "propagatedArtifactsGroup",
+      "helpMarkDown": "ms-resource:loc.input.help.propagatedArtifacts"
+    },
+    {
+      "name": "artifactProvider",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.artifactProvider",
+      "defaultValue": "azureStorage",
+      "required": true,
+      "options": {
+        "azureStorage": "Azure Storage"
+      },
+      "properties": {
+        "EditableOptions": "false",
+        "PopulateDefaultValue": "true"
+      },
+      "groupName": "propagatedArtifactsGroup",
+      "visibleRule": "propagatedArtifacts == notValid",
+      "helpMarkDown": "ms-resource:loc.input.help.artifactProvider"
+    },
+    {
+      "name": "ConnectedServiceNameARM",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
+      "required": true,
+      "groupName": "propagatedArtifactsGroup",
+      "visibleRule": "propagatedArtifacts == true",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM"
+    },
+    {
+      "name": "storageAccountName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.storageAccountName",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "groupName": "propagatedArtifactsGroup",
+      "visibleRule": "propagatedArtifacts == true",
+      "helpMarkDown": "ms-resource:loc.input.help.storageAccountName"
+    },
+    {
+      "name": "containerName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.containerName",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "required": true,
+      "groupName": "propagatedArtifactsGroup",
+      "visibleRule": "propagatedArtifacts == true",
+      "helpMarkDown": "ms-resource:loc.input.help.containerName"
+    },
+    {
+      "name": "commonVirtualPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.commonVirtualPath",
+      "required": false,
+      "groupName": "propagatedArtifactsGroup",
+      "visibleRule": "propagatedArtifacts == true",
+      "helpMarkDown": "ms-resource:loc.input.help.commonVirtualPath"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "endpointId": "$(serverEndpoint)",
+      "target": "jobName",
+      "dataSourceName": "Jobs",
+      "resultTemplate": "{{#addField jobs 'parentPath' 'name' '/'}}{{#recursiveSelect jobs}}{{#notEquals _class 'com.cloudbees.hudson.plugins.folder.Folder'}}{{#notEquals _class 'org.jenkinsci.plugins.workflow.job.WorkflowJob'}}{ \"Value\" : \"{{#if parentPath}}{{parentPath}}/{{/if}}{{name}}\", \"DisplayValue\" : \"{{#if parentPath}}{{parentPath}}/{{/if}}{{{displayName}}}\" }{{/notEquals}}{{/notEquals}}{{/recursiveSelect}}{{/addField}}"
+    },
+    {
+      "endpointId": "$(serverEndpoint)",
+      "target": "jenkinsJobType",
+      "dataSourceName": "JenkinsJobType",
+      "parameters": {
+        "definition": "$(jobName)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{#if _class}}{{_class}}{{else}}none{{/if}}\", \"DisplayValue\" : \"{{#if _class}}{{{_class}}}{{else}}none{{/if}}\" }"
+    },
+    {
+      "endpointId": "$(serverEndpoint)",
+      "target": "jenkinsBuildNumber",
+      "dataSourceName": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}MultibranchPipelineBuilds{{else}}Builds{{/equals}}",
+      "parameters": {
+        "definition": "$(jobName)",
+        "jenkinsJobType": "$(jenkinsJobType)"
+      },
+      "resultTemplate": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}[ {{#jobs}}{{#builds}} '{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" }',{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
+    },
+    {
+      "endpointId": "$(serverEndpoint)",
+      "target": "startJenkinsBuildNumber",
+      "dataSourceName": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}MultibranchPipelineBuilds{{else}}Builds{{/equals}}",
+      "parameters": {
+        "definition": "$(jobName)",
+        "jenkinsJobType": "$(jenkinsJobType)"
+      },
+      "resultTemplate": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}[ {{#jobs}}{{#builds}} '{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" }',{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
+    },
+    {
+      "endpointId": "$(ConnectedServiceNameARM)",
+      "target": "storageAccountName",
+      "dataSourceName": "AzureStorageAccountRMandClassic"
+    },
+    {
+      "target": "containerName",
+      "endpointId": "$(ConnectedServiceNameARM)",
+      "dataSourceName": "AzureStorageContainer",
+      "resultTemplate": "{ \"Value\" : \"{{ Name }}\", \"DisplayValue\" : \"{{ Name }}\" }",
+      "parameters": {
+        "storageAccount": "$(storageAccountName)"
+      }
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "jenkinsdownloadartifacts.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "jenkinsdownloadartifacts.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "jenkinsdownloadartifacts.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "GetArtifactsFromLastSuccessfulBuild": "ms-resource:loc.messages.GetArtifactsFromLastSuccessfulBuild",
+    "GetArtifactsFromBuildNumber": "ms-resource:loc.messages.GetArtifactsFromBuildNumber",
+    "CouldNotGetLastSuccessfulBuildNumber": "ms-resource:loc.messages.CouldNotGetLastSuccessfulBuildNumber",
+    "ServerCallFailed": "ms-resource:loc.messages.ServerCallFailed",
+    "ServerCallErrorCode": "ms-resource:loc.messages.ServerCallErrorCode",
+    "ArtifactSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactSuccessfullyDownloaded",
+    "ArtifactDownloadUrl": "ms-resource:loc.messages.ArtifactDownloadUrl",
+    "DownloadingCommitsAndWorkItems": "ms-resource:loc.messages.DownloadingCommitsAndWorkItems",
+    "ArtifactProviderNotSupported": "ms-resource:loc.messages.ArtifactProviderNotSupported",
+    "DownloadFromAzureBlobStorage": "ms-resource:loc.messages.DownloadFromAzureBlobStorage",
+    "JenkinsDownloadingChangeFromCurrentBuild": "ms-resource:loc.messages.JenkinsDownloadingChangeFromCurrentBuild",
+    "DownloadingJenkinsChangeBetween": "ms-resource:loc.messages.DownloadingJenkinsChangeBetween",
+    "GettingCommitsFromSingleBuild": "ms-resource:loc.messages.GettingCommitsFromSingleBuild",
+    "DownloadingContentFromJenkinsServer": "ms-resource:loc.messages.DownloadingContentFromJenkinsServer",
+    "WritingCommitsTo": "ms-resource:loc.messages.WritingCommitsTo",
+    "UploadingAttachment": "ms-resource:loc.messages.UploadingAttachment",
+    "SuccessfullyUploadedCommitsAttachment": "ms-resource:loc.messages.SuccessfullyUploadedCommitsAttachment",
+    "GetCommitMessages": "ms-resource:loc.messages.GetCommitMessages",
+    "GetCommitMessagesFailed": "ms-resource:loc.messages.GetCommitMessagesFailed",
+    "CouldNotWriteToFile": "ms-resource:loc.messages.CouldNotWriteToFile",
+    "DownloadingWorkItemsFromSingleBuild": "ms-resource:loc.messages.DownloadingWorkItemsFromSingleBuild",
+    "WritingWorkItemsTo": "ms-resource:loc.messages.WritingWorkItemsTo",
+    "SuccessfullyUploadedWorkItemsAttachment": "ms-resource:loc.messages.SuccessfullyUploadedWorkItemsAttachment",
+    "FindBuildIndex": "ms-resource:loc.messages.FindBuildIndex",
+    "FoundBuildIndex": "ms-resource:loc.messages.FoundBuildIndex",
+    "JenkinsArtifactDetailsParsingError": "ms-resource:loc.messages.JenkinsArtifactDetailsParsingError",
+    "SuccessfullyDownloadedCommitsAndWorkItems": "ms-resource:loc.messages.SuccessfullyDownloadedCommitsAndWorkItems",
+    "CommitsAndWorkItemsDownloadFailed": "ms-resource:loc.messages.CommitsAndWorkItemsDownloadFailed",
+    "CannotFindBuilds": "ms-resource:loc.messages.CannotFindBuilds",
+    "CannotParseCommits": "ms-resource:loc.messages.CannotParseCommits",
+    "JenkinsNoCommitsToFetch": "ms-resource:loc.messages.JenkinsNoCommitsToFetch",
+    "InvalidJenkinsBuildNumber": "ms-resource:loc.messages.InvalidJenkinsBuildNumber",
+    "InvalidJenkinsStartBuildNumber": "ms-resource:loc.messages.InvalidJenkinsStartBuildNumber",
+    "InvalidBuildId": "ms-resource:loc.messages.InvalidBuildId",
+    "InvalidMultiBranchPipelineName": "ms-resource:loc.messages.InvalidMultiBranchPipelineName",
+    "FoundJenkinsJobDetails": "ms-resource:loc.messages.FoundJenkinsJobDetails",
+    "ClientIdCannotBeEmpty": "ms-resource:loc.messages.ClientIdCannotBeEmpty",
+    "DomainCannotBeEmpty": "ms-resource:loc.messages.DomainCannotBeEmpty",
+    "SecretCannotBeEmpty": "ms-resource:loc.messages.SecretCannotBeEmpty",
+    "armUrlCannotBeEmpty": "ms-resource:loc.messages.armUrlCannotBeEmpty",
+    "authorityUrlCannotBeEmpty": "ms-resource:loc.messages.authorityUrlCannotBeEmpty",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
+    "VMNameCannotBeNull": "ms-resource:loc.messages.VMNameCannotBeNull",
+    "InvalidValue": "ms-resource:loc.messages.InvalidValue",
+    "VmExtensionNameCannotBeNull": "ms-resource:loc.messages.VmExtensionNameCannotBeNull",
+    "ExpandShouldBeOfTypeString": "ms-resource:loc.messages.ExpandShouldBeOfTypeString",
+    "ExtensionParametersCannotBeNull": "ms-resource:loc.messages.ExtensionParametersCannotBeNull",
+    "LoadBalancerNameCannotBeNull": "ms-resource:loc.messages.LoadBalancerNameCannotBeNull",
+    "ParametersCannotBeNull": "ms-resource:loc.messages.ParametersCannotBeNull",
+    "NetworkInterfaceNameCannotBeNull": "ms-resource:loc.messages.NetworkInterfaceNameCannotBeNull",
+    "NetworkSecurityGroupNameCannotBeNull": "ms-resource:loc.messages.NetworkSecurityGroupNameCannotBeNull",
+    "SecurityRuleNameCannotBeNull": "ms-resource:loc.messages.SecurityRuleNameCannotBeNull",
+    "SecurityRuleParametersCannotBeNull": "ms-resource:loc.messages.SecurityRuleParametersCannotBeNull",
+    "DeploymentNameCannotBeNull": "ms-resource:loc.messages.DeploymentNameCannotBeNull",
+    "CredentialsCannotBeNull": "ms-resource:loc.messages.CredentialsCannotBeNull",
+    "SubscriptionIdCannotBeNull": "ms-resource:loc.messages.SubscriptionIdCannotBeNull",
+    "InvalidResponseLongRunningOperation": "ms-resource:loc.messages.InvalidResponseLongRunningOperation",
+    "TimeoutWhileWaiting": "ms-resource:loc.messages.TimeoutWhileWaiting",
+    "ResourceGroupCannotBeNull": "ms-resource:loc.messages.ResourceGroupCannotBeNull",
+    "ResourceGroupExceededLength": "ms-resource:loc.messages.ResourceGroupExceededLength",
+    "ResourceGroupDeceededLength": "ms-resource:loc.messages.ResourceGroupDeceededLength",
+    "ResourceGroupDoesntMatchPattern": "ms-resource:loc.messages.ResourceGroupDoesntMatchPattern",
+    "VMSSNameCannotBeNull": "ms-resource:loc.messages.VMSSNameCannotBeNull",
+    "GetVMSSFailed": "ms-resource:loc.messages.GetVMSSFailed",
+    "VMSSDoesNotHaveCustomImage": "ms-resource:loc.messages.VMSSDoesNotHaveCustomImage",
+    "VMSSImageUrlCannotBeNull": "ms-resource:loc.messages.VMSSImageUrlCannotBeNull",
+    "VMSSImageAlreadyUptoDate": "ms-resource:loc.messages.VMSSImageAlreadyUptoDate",
+    "NewVMSSImageUrl": "ms-resource:loc.messages.NewVMSSImageUrl",
+    "VMSSUpdateImage": "ms-resource:loc.messages.VMSSUpdateImage",
+    "ResourceNameCannotBeNull": "ms-resource:loc.messages.ResourceNameCannotBeNull",
+    "activeDirectoryResourceIdUrlCannotBeEmpty": "ms-resource:loc.messages.activeDirectoryResourceIdUrlCannotBeEmpty",
+    "StorageAccountCannotBeNull": "ms-resource:loc.messages.StorageAccountCannotBeNull",
+    "CreatedBlobForItem": "ms-resource:loc.messages.CreatedBlobForItem",
+    "CreatedContainer": "ms-resource:loc.messages.CreatedContainer",
+    "ErrorInReadStream": "ms-resource:loc.messages.ErrorInReadStream",
+    "ErrorInWriteStream": "ms-resource:loc.messages.ErrorInWriteStream",
+    "FailedToCreateBlob": "ms-resource:loc.messages.FailedToCreateBlob",
+    "FailedToCreateContainer": "ms-resource:loc.messages.FailedToCreateContainer",
+    "FailedToListItemInsideContainer": "ms-resource:loc.messages.FailedToListItemInsideContainer",
+    "SuccessFullyFetchedItemList": "ms-resource:loc.messages.SuccessFullyFetchedItemList",
+    "UnableToFetchItem": "ms-resource:loc.messages.UnableToFetchItem",
+    "UploadingItem": "ms-resource:loc.messages.UploadingItem",
+    "FoundJobType": "ms-resource:loc.messages.FoundJobType",
+    "CannotFindJobType": "ms-resource:loc.messages.CannotFindJobType",
+    "InvalidJobName": "ms-resource:loc.messages.InvalidJobName",
+    "ContinuationTokenExistsFetchingRemainingFiles": "ms-resource:loc.messages.ContinuationTokenExistsFetchingRemainingFiles",
+    "GetArtifactItemsNotSupported": "ms-resource:loc.messages.GetArtifactItemsNotSupported",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "NoAssociatedArtifacts": "ms-resource:loc.messages.NoAssociatedArtifacts",
+    "OperationFailed": "ms-resource:loc.messages.OperationFailed",
+    "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+  },
+  "minimumAgentVersion": "2.144.0",
+  "_buildConfigMapping": {
+    "Default": "1.231.0",
+    "Node20_229_3": "1.231.1"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "vsts-tasks-mysql-deploy-on-machine-group",
+  "version": "1.0.0",
+  "description": "MySQL Deployment",
+  "main": "mysqldeploy.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "nock": "9.0.11"
+  }
+}

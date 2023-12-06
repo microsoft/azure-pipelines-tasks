@@ -4,12 +4,12 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/universal-packages",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 229,
+    "Minor": 231,
     "Patch": 0
   },
   "runsOn": [

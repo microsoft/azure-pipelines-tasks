@@ -1,3 +1,5 @@
+. $PSScriptRoot\Expand-EnvVariables.ps1
+
 $featureFlags = @{
     activate  = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
     audit     = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC_LOG)
@@ -31,22 +33,36 @@ function Get-SanitizerActivateStatus {
 function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
     $script:taskName = $taskName
 
-    $sanitizedArguments = Get-SanitizedArguments -InputArgs $inputArgs
+    $expandedArgs, $expandTelemetry = Expand-EnvVariables $inputArgs;
 
-    if ($sanitizedArguments -eq $inputArgs) {
+    $sanitizedArgs, $sanitizeTelemetry = Get-SanitizedArguments -InputArgs $expandedArgs
+
+    if ($sanitizedArgs -eq $inputArgs) {
         Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsNotSanitized');
-    } else {
-        $message = (Get-VstsLocString -Key 'PS_ScriptArgsSanitized');
+    }
+    else {
+        if ($featureFlags.telemetry) {
+            $telemetry = $expandTelemetry;
+            if ($null -ne $sanitizeTelemetry) {
+                $telemetry += $sanitizeTelemetry;
+            }
+            Publish-Telemetry $telemetry;
+        }
 
-        if ($featureFlags.activate) {
-            Write-Error $message
-            throw $message
-        } elseif ($featureFlags.audit) {
-            Write-Warning $message
+        if ($sanitizedArgs -ne $expandedArgs) {
+            $message = (Get-VstsLocString -Key 'PS_ScriptArgsSanitized');
+
+            if ($featureFlags.activate) {
+                Write-Error $message
+                throw $message
+            }
+            elseif ($featureFlags.audit) {
+                Write-Warning $message
+            }
         }
     }
 
-    $arrayOfArguments = Split-Arguments -Arguments $sanitizedArguments
+    $arrayOfArguments = Split-Arguments -Arguments $sanitizedArgs
     return $arrayOfArguments
 }
 
@@ -58,9 +74,11 @@ function Get-SanitizedArguments([string]$inputArgs) {
     $argsSplitSymbols = '``';
     [string[][]]$matchesChunks = @()
 
-    # regex rule for removing symbols and telemetry.
-    # '?<!`' - checking if before character no backtick. '([allowedchars])' - checking if character is allowed. Otherwise, replace to $removedSymbolSign
-    $regex = '(?<!`)([^a-zA-Z0-9\\` _''"\-=\/:\.*,+~?%\n])';
+    ## PowerShell Regex is case insensitive by default, so we don't need to specify a-zA-Z.
+    ## ('?<!`') - checking if before character no backtick.
+    ## ([^\w` _'"-=\/:\.*,+~?%\n#]) - checking if character is allowed. Insead replacing to #removed#
+    ## (?!true|false) - checking if after characters sequence no $true or $false.
+    $regex = '(?<!`)([^\w\\` _''"\-=\/:\.*,+~?%\n#])(?!true|false)'
 
     # We're splitting by ``, removing all suspicious characters and then join
     $argsArr = $inputArgs -split $argsSplitSymbols;
@@ -75,17 +93,16 @@ function Get-SanitizedArguments([string]$inputArgs) {
 
     $resultArgs = $argsArr -join $argsSplitSymbols;
 
-    if ($resultArgs -like "*$removedSymbolSign*" -and $featureFlags.telemetry) {
+    $telemetry = $null
+    if ( $resultArgs -ne $inputArgs) {
         $argMatches = $matchesChunks | ForEach-Object { $_ } | Where-Object { $_ -ne $null }
         $telemetry = @{
             removedSymbols      = Join-Matches -Matches $argMatches
             removedSymbolsCount = $argMatches.Count
         }
-
-        Publish-Telemetry $telemetry
     }
 
-    return $resultArgs;
+    return $($resultArgs, $telemetry);
 }
 
 function Publish-Telemetry($telemetry) {

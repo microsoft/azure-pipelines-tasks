@@ -1,0 +1,77 @@
+{
+  "id": "334727F4-9495-4F9D-A391-FC621D671474",
+  "name": "GoTool",
+  "friendlyName": "Go tool installer",
+  "description": "Find in cache or download a specific version of Go and add it to the PATH",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/go-tool",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=867581) or [see the Go documentation](https://golang.org/doc/)",
+  "category": "Tool",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 231,
+    "Patch": 0
+  },
+  "satisfies": [
+    "GO"
+  ],
+  "demands": [],
+  "instanceNameFormat": "Use Go $(version)",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "version",
+      "type": "string",
+      "label": "Version",
+      "defaultValue": "1.10",
+      "required": true,
+      "helpMarkDown": "The Go version to download (if necessary) and use. Example: 1.9.3"
+    },
+    {
+      "name": "goPath",
+      "type": "string",
+      "label": "GOPATH",
+      "helpMarkDown": "A custom value for the GOPATH environment variable.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "goBin",
+      "type": "string",
+      "label": "GOBIN",
+      "helpMarkDown": "A custom value for the GOBIN environment variable.",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "gotool.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "gotool.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "gotool.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "FailedToDownload": "Failed to download Go version %s. Verify that the version is valid and resolve any other issues. Error: %s",
+    "TempDirNotSet": "The 'Agent.TempDirectory' environment variable was expected to be set."
+  },
+  "_buildConfigMapping": {
+    "Default": "0.229.1",
+    "Node20_229_3": "0.231.0"
+  }
+}
