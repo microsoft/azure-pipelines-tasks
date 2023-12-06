@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 232,
-    "Patch": 0
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -21,6 +21,7 @@
   ],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
+  "removalDate": "2024-01-31",
   "groups": [
     {
       "name": "advanced",
@@ -175,7 +176,7 @@
     "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
   },
   "_buildConfigMapping": {
-    "Default": "0.232.0",
-    "Node20_229_1": "0.232.1"
+    "Default": "0.232.2",
+    "Node20_229_1": "0.232.3"
   }
 }

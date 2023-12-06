@@ -14,9 +14,10 @@
   "version": {
     "Major": 0,
     "Minor": 232,
-    "Patch": 0
+    "Patch": 1
   },
   "deprecated": true,
+  "removalDate": "2024-01-31",
   "minimumAgentVersion": "2.120.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [

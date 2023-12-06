@@ -11,7 +11,7 @@
   "version": {
     "Major": 0,
     "Minor": 232,
-    "Patch": 1
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -19,6 +19,7 @@
   ],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
+  "removalDate": "2024-01-31",
   "groups": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
@@ -84,7 +85,7 @@
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
   },
   "_buildConfigMapping": {
-    "Default": "0.232.0",
-    "Node20_229_1": "0.232.1"
+    "Default": "0.232.2",
+    "Node20_229_1": "0.232.3"
   }
 }
