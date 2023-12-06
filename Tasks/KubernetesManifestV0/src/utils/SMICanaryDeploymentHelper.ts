@@ -101,7 +101,7 @@ function createCanaryService(kubectl: Kubectl, filePaths: string[]) {
                         if (trafficJObject && trafficJObject.spec && trafficJObject.spec.backends) {
                             trafficJObject.spec.backends.forEach((s) => {
                                 if (s.service === canaryDeploymentHelper.getCanaryResourceName(name) && s.weight === "1000m") {
-                                    tl.debug('Update traffic objcet not required');
+                                    tl.debug('Update traffic object not required');
                                     updateTrafficObject = false;
                                 }
                             })
