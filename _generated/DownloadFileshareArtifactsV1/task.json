@@ -10,7 +10,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 231,
+    "Minor": 232,
     "Patch": 0
   },
   "groups": [
@@ -84,7 +84,7 @@
     "ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.231.0",
-    "Node20_229_3": "1.231.1"
+    "Default": "1.232.0",
+    "Node20_229_3": "1.232.1"
   }
 }

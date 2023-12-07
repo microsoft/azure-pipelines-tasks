@@ -1,0 +1,31 @@
+{
+  "name": "vsts-tasks-appcenterdistribute",
+  "version": "1.0.0",
+  "description": "Visual Studio App Center Distribute Task",
+  "main": "appcenterdistribute.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks",
+  "dependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^20.3.1",
+    "appcenter-file-upload-client-node": "1.0.0",
+    "azure-pipelines-task-lib": "^4.0.0-preview",
+    "@azure/storage-blob": "^12.10.0",
+    "jszip": "^3.10.0",
+    "typed-rest-client": "^1.8.9"
+  },
+  "devDependencies": {
+    "typescript": "5.1.6"
+  }
+}
