@@ -30,14 +30,14 @@ jobs:
       parameters:
         task_name: ${{ parameters.task_name }}
 
-  - ${{ if parameters.push_to_feed }}:
-    # Create PR in AzureDevOps to update UnifiedDependencies.xml
-    - job: create_ado_pr
-      displayName: Update UnifiedDependencies.xml
-      dependsOn: build_single_task
-      pool:
-        vmImage: windows-2022
-      steps:
-      - template: build-single-ado-pr-steps.yml
-        parameters:
-          task_name: ${{ parameters.task_name }}
+- ${{ if parameters.push_to_feed }}:
+  # Create PR in AzureDevOps to update UnifiedDependencies.xml
+  - job: create_ado_pr
+    displayName: Update UnifiedDependencies.xml
+    dependsOn: build_single_task
+    pool:
+      vmImage: windows-2022
+    steps:
+    - template: build-single-ado-pr-steps.yml
+      parameters:
+        task_name: ${{ parameters.task_name }}
