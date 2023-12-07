@@ -2,14 +2,7 @@ import tl = require('azure-pipelines-task-lib');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import * as path from 'path';
-import { AzureResourceFilterUtility } from '../operations/AzureResourceFilterUtility';
-import { KuduServiceUtility } from '../operations/KuduServiceUtility';
-import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
-import { ApplicationTokenCredentials } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-common';
-import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint'; 
 import { setEndpointData, setAgentsData, mockTaskArgument } from './utils';
-import { PublishProfileUtility } from "../operations/PublishProfileUtility"
-import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 
 export class PublishProfileWebAppDeploymentProviderTests {
 
