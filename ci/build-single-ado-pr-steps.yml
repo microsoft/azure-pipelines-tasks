@@ -17,6 +17,8 @@ steps:
 - script: |
     cd azure-pipelines-tasks
     npm install
+    cd ci/courtesy-push
+    npm install
   displayName: npm install
 
 - task: DownloadBuildArtifacts@0
