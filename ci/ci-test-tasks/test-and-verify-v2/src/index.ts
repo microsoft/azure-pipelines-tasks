@@ -4,30 +4,43 @@ import axios from 'axios';
 import { PipelineBuild } from './interfaces';
 import { getBuildConfigs, pipelineVariable } from './helpers';
 import { configInstance } from './config';
-import { API_VERSION } from './constants';
+import { API_VERSION, DISABLED } from './constants';
 import { fetchBuildStatus, retryFailedJobsInBuild } from './helpers.Build';
 import { fetchPipelines } from './helpers.Pipeline';
 
 async function main() {
   const tasks = configInstance.TaskArg.split(',');
 
+  const disabledPipelines: string[] = [];
   const runningTestBuilds: Promise<string>[] = [];
   for (const task of tasks) {
     console.log(`starting tests for ${task} task`);
-    runningTestBuilds.push(...await runTaskPipelines(task));
+    const runResult = await runTaskPipelines(task);
+
+    if (runResult == DISABLED) {
+      disabledPipelines.push(task);
+    } else {
+      runningTestBuilds.push(...runResult);
+    }
   }
 
   Promise.all(runningTestBuilds).then(results => {
     console.log(results);
   }).catch(error => {
     console.error(error);
+  }).finally(() => {
+    console.log(`\nDisabled pipelines:\n${disabledPipelines.join('\n')}\n`);
   });
 }
 
 // Running test pipelines for task by build configs
-async function runTaskPipelines(taskName: string): Promise<Promise<string>[]> {
+async function runTaskPipelines(taskName: string): Promise<Promise<string>[] | typeof DISABLED> {
   const pipelines = await fetchPipelines()();
   const pipeline = pipelines.find(pipeline => pipeline.name === taskName);
+
+  console.log('>>>>>>>>>>>>>>>>>>>>>>');
+  console.log(JSON.stringify(pipeline));
+  console.log('<<<<<<<<<<<<<<<<<<<<<<');
 
   if (pipeline) {
     const configs = getBuildConfigs(taskName);
@@ -35,11 +48,15 @@ async function runTaskPipelines(taskName: string): Promise<Promise<string>[]> {
 
     const runningBuilds: Promise<string>[] = [];
     for (const config of configs) {
-      console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`)
-      const pipelineBuild = await startTestPipeline(pipeline, config);
+      console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`);
+      const startResult = await startTestPipeline(pipeline, config);
 
-      const buildPromise = new Promise<string>((resolve, reject) => completeBuild(taskName, pipelineBuild, resolve, reject))
-      runningBuilds.push(buildPromise);
+      if (startResult == DISABLED) {
+        return DISABLED;
+      } else {
+        const buildPromise = new Promise<string>((resolve, reject) => completeBuild(taskName, startResult, resolve, reject));
+        runningBuilds.push(buildPromise);
+      }
     }
 
     return runningBuilds;
@@ -50,7 +67,7 @@ async function runTaskPipelines(taskName: string): Promise<Promise<string>[]> {
   return [];
 }
 
-async function startTestPipeline(pipeline: PipelineBuild, config = ''): Promise<PipelineBuild> {
+async function startTestPipeline(pipeline: PipelineBuild, config = ''): Promise<PipelineBuild | typeof DISABLED> {
   console.log(`Run ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`);
 
   const { BUILD_SOURCEVERSION: branch, CANARY_TEST_NODE_VERSION: nodeVersion } = process.env;
@@ -75,10 +92,22 @@ async function startTestPipeline(pipeline: PipelineBuild, config = ''): Promise<
 
     return res.data;
   } catch (err: any) {
-    err.stack = `Error running ${pipeline.name} pipeline. Stack: ${err.stack}`;
-    console.error(err.stack);
-    if (err.response?.data) {
-      console.error(err.response.data);
+    const data = err.response?.data;
+
+    if (data) {
+      const message = `Build pipeline ${pipeline.name} is disabled for project ${configInstance.ProjectName}.`;
+
+      if (data.message == message) {
+        console.log(message);
+        return DISABLED;
+      }
+    }
+
+    console.error(`Error running ${pipeline.name} pipeline.`);
+    console.log(err.stack);
+
+    if (data) {
+      console.log(data);
     }
 
     throw err;
