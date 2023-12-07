@@ -29,7 +29,10 @@ async function main() {
   }).catch(error => {
     console.error(error);
   }).finally(() => {
-    console.log(`\nDisabled pipelines:\n${disabledPipelines.join('\n')}\n`);
+    console.log(`
+Disabled pipelines:
+${disabledPipelines.join('\n')}
+`);
   });
 }
 
@@ -38,25 +41,23 @@ async function runTaskPipelines(taskName: string): Promise<Promise<string>[] | t
   const pipelines = await fetchPipelines()();
   const pipeline = pipelines.find(pipeline => pipeline.name === taskName);
 
-  console.log('>>>>>>>>>>>>>>>>>>>>>>');
-  console.log(JSON.stringify(pipeline));
-  console.log('<<<<<<<<<<<<<<<<<<<<<<');
-
   if (pipeline) {
+    const definition = await axios.get(`${configInstance.ApiUrl}/build/definitions/${pipeline.id}`);
+    if (definition.data.queueStatus == DISABLED) {
+      console.log(`Build pipeline ${pipeline.name} is disabled for project ${configInstance.ProjectName}.`);
+      return DISABLED;
+    }
+  
     const configs = getBuildConfigs(taskName);
     console.log(`Detected buildconfigs ${JSON.stringify(configs)}`);
 
     const runningBuilds: Promise<string>[] = [];
     for (const config of configs) {
       console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`);
-      const startResult = await startTestPipeline(pipeline, config);
+      const pipelineBuild = await startTestPipeline(pipeline, config);
 
-      if (startResult == DISABLED) {
-        return DISABLED;
-      } else {
-        const buildPromise = new Promise<string>((resolve, reject) => completeBuild(taskName, startResult, resolve, reject));
-        runningBuilds.push(buildPromise);
-      }
+      const buildPromise = new Promise<string>((resolve, reject) => completeBuild(taskName, pipelineBuild, resolve, reject));
+      runningBuilds.push(buildPromise);
     }
 
     return runningBuilds;
@@ -67,7 +68,7 @@ async function runTaskPipelines(taskName: string): Promise<Promise<string>[] | t
   return [];
 }
 
-async function startTestPipeline(pipeline: PipelineBuild, config = ''): Promise<PipelineBuild | typeof DISABLED> {
+async function startTestPipeline(pipeline: PipelineBuild, config = ''): Promise<PipelineBuild> {
   console.log(`Run ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`);
 
   const { BUILD_SOURCEVERSION: branch, CANARY_TEST_NODE_VERSION: nodeVersion } = process.env;
@@ -92,22 +93,10 @@ async function startTestPipeline(pipeline: PipelineBuild, config = ''): Promise<
 
     return res.data;
   } catch (err: any) {
-    const data = err.response?.data;
-
-    if (data) {
-      const message = `Build pipeline ${pipeline.name} is disabled for project ${configInstance.ProjectName}.`;
-
-      if (data.message == message) {
-        console.log(message);
-        return DISABLED;
-      }
-    }
-
-    console.error(`Error running ${pipeline.name} pipeline.`);
-    console.log(err.stack);
-
-    if (data) {
-      console.log(data);
+    err.stack = `Error running ${pipeline.name} pipeline. Stack: ${err.stack}`;
+    console.error(err.stack);
+    if (err.response?.data) {
+      console.error(err.response.data);
     }
 
     throw err;
