@@ -1,6 +1,6 @@
 {
   "name": "notation",
-  "version": "0.231.0",
+  "version": "0.232.0",
   "description": "Azure Pipepine Task for setting up Notation CLI, sign and verify with Notation",
   "main": "src/index.js",
   "scripts": {
