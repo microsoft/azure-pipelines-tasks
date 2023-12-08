@@ -260,4 +260,8 @@ async function main({ task, sprint, week }) {
   }
 }
 
-main(argv);
+main(argv)
+  .catch(error => {
+    console.error(error);
+    process.exit(1);
+  });
