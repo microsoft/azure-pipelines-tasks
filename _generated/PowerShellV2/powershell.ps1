@@ -98,7 +98,7 @@ try {
     if ("$input_targetType".ToUpperInvariant() -eq 'FILEPATH') {
 
         try {
-            Protect-ScriptArguments -InputArgs $input_arguments -TaskName "PowerShellV2"
+            $null = Protect-ScriptArguments -InputArgs $input_arguments -TaskName "PowerShellV2"
         }
         catch {
             $message = $_.Exception.Message
