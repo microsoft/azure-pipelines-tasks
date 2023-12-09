@@ -74,7 +74,7 @@ steps:
   condition: |
       and(
         succeeded(),
-        ne(variables['numTasks'], 0),
+        ne(variables['numTasksForDowngradingCheck'], 0),
         ne(variables['COURTESY_PUSH'], 'true'),
         eq(variables['build.reason'], 'PullRequest'),
         eq(variables['System.PullRequest.TargetBranch'], 'master')

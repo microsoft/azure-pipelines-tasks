@@ -7,7 +7,7 @@
     "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport/).",
     "category": "Deploy",
     "deprecated": true,
-    "removalDate": "2024-04-22",
+    "removalDate": "2024-01-31",
     "visibility": [
         "Build",
         "Release"
@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 232,
-        "Patch": 0
+        "Patch": 2
     },
     "minimumAgentVersion": "2.144.0",
     "releaseNotes": "Fix bug where feature branches were being truncated.",
