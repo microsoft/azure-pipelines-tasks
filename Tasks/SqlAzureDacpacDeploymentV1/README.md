@@ -69,7 +69,7 @@ The parameters of the task are described in details, including examples, to show
 
 - **Connection String** : A connection string containing all the informations needed to connect the remote server.
 
-- **Service Principal** : Uses the Authenticaiton data from **Azure Subscription**. 
+- **Service Principal** : Uses the Authentication data from **Azure Subscription**. 
 
 **SQL DB Details**
 

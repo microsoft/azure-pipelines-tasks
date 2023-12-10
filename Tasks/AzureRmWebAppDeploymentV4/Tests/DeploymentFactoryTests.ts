@@ -1,6 +1,4 @@
-import tl = require('azure-pipelines-task-lib');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
-import ma = require('azure-pipelines-task-lib/mock-answer');
 import * as path from 'path';
 import { setAgentsData, mockTaskArgument, mockTaskInputParameters } from './utils';
 
