@@ -10,8 +10,8 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "version": {
     "Major": 0,
-    "Minor": 231,
-    "Patch": 0
+    "Minor": 232,
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -19,7 +19,7 @@
   ],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
-  "removalDate": "2024-04-22",
+  "removalDate": "2024-01-31",
   "groups": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [

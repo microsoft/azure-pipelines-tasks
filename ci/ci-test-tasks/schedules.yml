@@ -34,11 +34,19 @@ jobs:
   pool:
     vmImage: ubuntu-latest
   steps:
+  - task: NodeTool@0
+    displayName: Use Node 20.x
+    inputs:
+      versionSpec: 20.x
+
+  - script: |
+      cd ./ci/ci-test-tasks/test-and-verify-v2
+      npm i
+      npm run build
+    displayName: 'Build test pipelines runner'
+
   - bash: |
-      npm i axios
-    displayName: npm i axios
-  - bash: |
-      echo $(tasks)
-      node ./ci/ci-test-tasks/test-and-verify-v2.js $(ADOToken) $(ADOUrl) $(System.TeamProject) $(tasks)
+      echo "Tasks to test: $(tasks)"
+      node ./ci/ci-test-tasks/test-and-verify-v2 $(ADOToken) $(ADOUrl) $(System.TeamProject) $(tasks)
     displayName: Run test pipelines and verify results
     failOnStderr: true

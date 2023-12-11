@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
-    "Patch": 2
+    "Minor": 232,
+    "Patch": 0
   },
   "groups": [
     {
@@ -321,7 +321,7 @@
     }
   ],
   "_buildConfigMapping": {
-    "Default": "0.231.2",
-    "Node20_229_3": "0.231.3"
+    "Default": "0.232.0",
+    "Node20_229_3": "0.232.1"
   }
 }
