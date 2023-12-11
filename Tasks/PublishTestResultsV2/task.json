@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 232,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
   "releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",
@@ -84,10 +84,10 @@
     {
       "name": "failTaskOnFailureToPublishResults",
       "type": "boolean",
-      "label": "Fail if there is failure in publishing test results",
-      "defaultValue": "false",
+      "label": "ms-resource:loc.input.label.failTaskOnFailureToPublishResults",
+      "defaultValue": false,
       "required": false,
-      "helpMarkDown": "Fail if there is failure in publishing test results. Check this option to fail the task if publishing test results is failed partially."
+      "helpMarkDown": "ms-resource:loc.input.help.failTaskOnFailureToPublishResults"
     },
     {
       "name": "failTaskOnMissingResultsFile",
