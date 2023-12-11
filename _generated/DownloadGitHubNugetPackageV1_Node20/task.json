@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 230,
-    "Patch": 1
+    "Minor": 231,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "dotnet restore",
@@ -89,7 +89,7 @@
       "target": "dotnetrestore.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "dotnetrestore.js",
       "argumentFormat": ""
     }
@@ -151,6 +151,6 @@
   },
   "_buildConfigMapping": {
     "Default": "1.227.0",
-    "Node20_229_3": "1.230.1"
+    "Node20_229_3": "1.231.0"
   }
 }

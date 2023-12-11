@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 229,
-    "Patch": 0
+    "Minor": 232,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",
@@ -26,7 +26,7 @@
     }
   ],
   "deprecated": true,
-  "removalDate": "2024-04-22",
+  "removalDate": "2024-01-31",
   "inputs": [
     {
       "name": "app",

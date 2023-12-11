@@ -1,0 +1,509 @@
+{
+  "id": "AD5CD22A-BE4E-48BB-ADCE-181A32432DA5",
+  "name": "AppCenterTest",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/app-center-test",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Test",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 232,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "2.206.1",
+  "groups": [
+    {
+      "name": "prepare",
+      "displayName": "ms-resource:loc.group.displayName.prepare",
+      "isExpanded": true
+    },
+    {
+      "name": "run",
+      "displayName": "ms-resource:loc.group.displayName.run",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "app",
+      "aliases": [
+        "appFile"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.app",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.app"
+    },
+    {
+      "name": "artifactsDir",
+      "aliases": [
+        "artifactsDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.artifactsDir",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)/AppCenterTest",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.artifactsDir"
+    },
+    {
+      "name": "enablePrepare",
+      "aliases": [
+        "prepareTests"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enablePrepare",
+      "defaultValue": true,
+      "groupName": "prepare"
+    },
+    {
+      "name": "framework",
+      "aliases": [
+        "frameworkOption"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.framework",
+      "defaultValue": "appium",
+      "visibleRule": "enablePrepare = true",
+      "required": true,
+      "groupName": "prepare",
+      "options": {
+        "appium": "Appium",
+        "espresso": "Espresso",
+        "calabash": "Calabash",
+        "uitest": "Xamarin UI Test",
+        "xcuitest": "XCUITest"
+      }
+    },
+    {
+      "name": "appiumBuildDir",
+      "aliases": [
+        "appiumBuildDirectory"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.appiumBuildDir",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = appium",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.appiumBuildDir",
+      "groupName": "prepare"
+    },
+    {
+      "name": "espressoBuildDir",
+      "aliases": [
+        "espressoBuildDirectory"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.espressoBuildDir",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = espresso",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.espressoBuildDir",
+      "groupName": "prepare"
+    },
+    {
+      "name": "espressoTestApkPath",
+      "aliases": [
+        "espressoTestApkFile"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.espressoTestApkPath",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = espresso",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.espressoTestApkPath",
+      "groupName": "prepare"
+    },
+    {
+      "name": "calabashProjectDir",
+      "aliases": [
+        "calabashProjectDirectory"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.calabashProjectDir",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = calabash",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.calabashProjectDir",
+      "groupName": "prepare"
+    },
+    {
+      "name": "calabashConfigFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.calabashConfigFile",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = calabash",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.calabashConfigFile",
+      "groupName": "prepare"
+    },
+    {
+      "name": "calabashProfile",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.calabashProfile",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = calabash",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.calabashProfile",
+      "groupName": "prepare"
+    },
+    {
+      "name": "calabashSkipConfigCheck",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.calabashSkipConfigCheck",
+      "defaultValue": false,
+      "visibleRule": "enablePrepare = true && framework = calabash",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.calabashSkipConfigCheck",
+      "groupName": "prepare"
+    },
+    {
+      "name": "uitestBuildDir",
+      "aliases": [
+        "uiTestBuildDirectory"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.uitestBuildDir",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = uitest",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.uitestBuildDir",
+      "groupName": "prepare"
+    },
+    {
+      "name": "uitestStorePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.uitestStorePath",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = uitest",
+      "required": false,
+      "groupName": "prepare"
+    },
+    {
+      "name": "uitestStorePass",
+      "aliases": [
+        "uiTestStorePassword"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.uitestStorePass",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = uitest",
+      "required": false,
+      "groupName": "prepare"
+    },
+    {
+      "name": "uitestKeyAlias",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.uitestKeyAlias",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = uitest",
+      "required": false,
+      "groupName": "prepare"
+    },
+    {
+      "name": "uitestKeyPass",
+      "aliases": [
+        "uiTestKeyPassword"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.uitestKeyPass",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = uitest",
+      "required": false,
+      "groupName": "prepare"
+    },
+    {
+      "name": "uitestToolsDir",
+      "aliases": [
+        "uiTestToolsDirectory"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.uitestToolsDir",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = uitest",
+      "helpMarkDown": "ms-resource:loc.input.help.uitestToolsDir",
+      "required": false,
+      "groupName": "prepare"
+    },
+    {
+      "name": "signInfo",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.signInfo",
+      "defaultValue": "",
+      "visibleRule": "framework = calabash || framework = uitest",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.signInfo",
+      "groupName": "prepare"
+    },
+    {
+      "name": "xcuitestBuildDir",
+      "aliases": [
+        "xcUITestBuildDirectory"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.xcuitestBuildDir",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = xcuitest",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcuitestBuildDir",
+      "groupName": "prepare"
+    },
+    {
+      "name": "xcuitestTestIpaPath",
+      "aliases": [
+        "xcUITestIpaFile"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.xcuitestTestIpaPath",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = xcuitest",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcuitestTestIpaPath",
+      "groupName": "prepare"
+    },
+    {
+      "name": "prepareOpts",
+      "aliases": [
+        "prepareOptions"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.prepareOpts",
+      "required": false,
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true",
+      "helpMarkDown": "ms-resource:loc.input.help.prepareOpts",
+      "groupName": "prepare"
+    },
+    {
+      "name": "enableRun",
+      "aliases": [
+        "runTests"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enableRun",
+      "defaultValue": true,
+      "groupName": "run"
+    },
+    {
+      "name": "credsType",
+      "aliases": [
+        "credentialsOption"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.credsType",
+      "defaultValue": "serviceEndpoint",
+      "visibleRule": "enableRun = true",
+      "required": true,
+      "groupName": "run",
+      "helpMarkDown": "ms-resource:loc.input.help.credsType",
+      "options": {
+        "serviceEndpoint": "App Center service connection",
+        "inputs": "Credentials"
+      }
+    },
+    {
+      "name": "serverEndpoint",
+      "type": "connectedService:vsmobilecenter",
+      "label": "ms-resource:loc.input.label.serverEndpoint",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "run",
+      "helpMarkDown": "ms-resource:loc.input.help.serverEndpoint",
+      "visibleRule": "enableRun = true && credsType = serviceEndpoint"
+    },
+    {
+      "name": "username",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.username",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "run",
+      "helpMarkDown": "ms-resource:loc.input.help.username",
+      "visibleRule": "enableRun = true && credsType = inputs"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.password",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "run",
+      "helpMarkDown": "ms-resource:loc.input.help.password",
+      "visibleRule": "enableRun = true && credsType = inputs"
+    },
+    {
+      "name": "appSlug",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.appSlug",
+      "defaultValue": "",
+      "visibleRule": "enableRun = true",
+      "required": true,
+      "groupName": "run",
+      "helpMarkDown": "ms-resource:loc.input.help.appSlug"
+    },
+    {
+      "name": "devices",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.devices",
+      "visibleRule": "enableRun = true",
+      "required": true,
+      "groupName": "run",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.devices"
+    },
+    {
+      "name": "series",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.series",
+      "defaultValue": "master",
+      "visibleRule": "enableRun = true",
+      "required": false,
+      "groupName": "run",
+      "helpMarkDown": "ms-resource:loc.input.help.series"
+    },
+    {
+      "name": "dsymDir",
+      "aliases": [
+        "dsymDirectory"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.dsymDir",
+      "defaultValue": "",
+      "visibleRule": "enableRun = true",
+      "required": false,
+      "groupName": "run",
+      "helpMarkDown": "ms-resource:loc.input.help.dsymDir"
+    },
+    {
+      "name": "locale",
+      "aliases": [
+        "localeOption"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.locale",
+      "defaultValue": "en_US",
+      "visibleRule": "enableRun = true",
+      "required": true,
+      "groupName": "run",
+      "options": {
+        "da_DK": "Danish (Denmark)",
+        "nl_NL": "Dutch (Netherlands)",
+        "en_GB": "English (United Kingdom)",
+        "en_US": "English (United States)",
+        "fr_FR": "French (France)",
+        "de_DE": "German (Germany)",
+        "ja_JP": "Japanese (Japan)",
+        "ru_RU": "Russian (Russia)",
+        "es_MX": "Spanish (Mexico)",
+        "es_ES": "Spanish (Spain)",
+        "user": "Other"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.locale"
+    },
+    {
+      "name": "userDefinedLocale",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.userDefinedLocale",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "run",
+      "visibleRule": "enableRun = true && locale = user",
+      "helpMarkDown": "ms-resource:loc.input.help.userDefinedLocale"
+    },
+    {
+      "name": "loginOpts",
+      "aliases": [
+        "loginOptions"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.loginOpts",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "run",
+      "helpMarkDown": "ms-resource:loc.input.help.loginOpts",
+      "visibleRule": "enableRun = true && credsType = inputs"
+    },
+    {
+      "name": "runOpts",
+      "aliases": [
+        "runOptions"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.runOpts",
+      "required": false,
+      "defaultValue": "",
+      "visibleRule": "enableRun = true",
+      "groupName": "run",
+      "helpMarkDown": "ms-resource:loc.input.help.runOpts"
+    },
+    {
+      "name": "async",
+      "aliases": [
+        "skipWaitingForResults"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.async",
+      "defaultValue": false,
+      "visibleRule": "enableRun = true",
+      "required": false,
+      "groupName": "run",
+      "helpMarkDown": "ms-resource:loc.input.help.async"
+    },
+    {
+      "name": "cliLocationOverride",
+      "aliases": [
+        "cliFile"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cliLocationOverride",
+      "groupName": "advanced",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cliLocationOverride"
+    },
+    {
+      "name": "debug",
+      "aliases": [
+        "showDebugOutput"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.debug",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.debug"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node16": {
+      "target": "appcentertest.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "appcentertest.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Succeeded": "ms-resource:loc.messages.Succeeded",
+    "CannotDecodeEndpoint": "ms-resource:loc.messages.CannotDecodeEndpoint",
+    "CannotLocateAppCenterCLI": "ms-resource:loc.messages.CannotLocateAppCenterCLI",
+    "CannotFindAnyFile": "ms-resource:loc.messages.CannotFindAnyFile",
+    "FoundMultipleFiles": "ms-resource:loc.messages.FoundMultipleFiles"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.232.0",
+    "Node20_229_7": "1.232.0"
+  }
+}

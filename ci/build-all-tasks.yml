@@ -1,5 +1,8 @@
 # This YAML is intended for building ALL tasks and publish them as an artifact 
 # to be used later for Tasks Deployment train
+parameters:
+  - name: deploy_all_tasks
+    type: boolean
 
 steps:
 # Clean
@@ -21,8 +24,14 @@ steps:
   displayName: Clean tasks
 
 # Build tasks
+- script: node make.js serverBuild --task "$(task_pattern)"
+  displayName: Build tasks using pattern
+  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', false))
+
+# Build all tasks
 - script: node make.js serverBuild
-  displayName: Build tasks
+  displayName: Build all tasks
+  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', true))
 
 # Stage tasks individually into the package directory
 - script: node ./ci/stage-package.js true individually
