@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 231,
+    "Minor": 232,
     "Patch": 0
   },
   "runsOn": [
@@ -18,7 +18,7 @@
   ],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
-  "removalDate": "2023-11-27",
+  "removalDate": "2024-01-16",
   "groups": [
     {
       "name": "advanced",
@@ -170,7 +170,7 @@
     "Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
   },
   "_buildConfigMapping": {
-    "Default": "1.231.0",
-    "Node20_229_1": "1.231.1"
+    "Default": "1.232.0",
+    "Node20_229_1": "1.232.1"
   }
 }
