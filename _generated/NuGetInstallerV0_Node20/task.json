@@ -18,7 +18,7 @@
   ],
   "minimumAgentVersion": "2.115.0",
   "deprecated": true,
-  "removalDate": "2024-01-16",
+  "removalDate": "2023-12-11",
   "groups": [
     {
       "name": "advanced",
@@ -150,7 +150,7 @@
     "NGCommon_AddingSources": "Setting credentials in NuGet.config",
     "NGCommon_NoSourcesFoundInConfig": "No package sources were found in the NuGet.config file at %s",
     "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
-    "DeprecatedTask": "This task is deprecated. After 01-16-2024 all functionality will stop. Please switch to using NuGetCommand@2's 'restore' or 'custom' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
+    "DeprecatedTask": "This task is deprecated. Please switch to using NuGetCommand@2's 'restore' or 'custom' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
   },
   "_buildConfigMapping": {
     "Default": "0.232.0",

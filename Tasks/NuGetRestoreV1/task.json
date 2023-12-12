@@ -18,7 +18,7 @@
   ],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
-  "removalDate": "2024-01-16",
+  "removalDate": "2023-12-11",
   "groups": [
     {
       "name": "advanced",
@@ -168,6 +168,6 @@
     "UnsupportedProjectScopedFeeds": "Project-scoped feeds are not supported by this version of the \"NuGet Restore\" task. Please use the \"NuGet\" task version 2 or higher.",
     "Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
     "Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
-    "DeprecatedTask": "This task is deprecated. After 01-16-2024 all functionality will stop. Please switch to using NuGetCommand@2's 'restore' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
+    "DeprecatedTask": "This task is deprecated. Please switch to using NuGetCommand@2's 'restore' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
   }
 }

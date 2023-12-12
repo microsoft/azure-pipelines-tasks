@@ -188,7 +188,12 @@ async function main(): Promise<void> {
             credCleanup();
         }
 
-        throw new Error(tl.loc("DeprecatedTask"));
+        if (!tl.getVariable('PASS_DEPRECATED_TASK')) {
+            throw new Error(tl.loc("DeprecatedTask"));
+        }
+
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesInstalledSuccessfully"));
+
     } catch (err) {
         tl.error(err);
 

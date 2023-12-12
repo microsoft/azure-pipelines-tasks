@@ -231,8 +231,16 @@ async function main(): Promise<void> {
         } finally {
             credCleanup();
         }
+
+        if (!tl.getVariable('PASS_DEPRECATED_TASK')) {
+            throw new Error(tl.loc("DeprecatedTask"));
+        }
+            
+        isNugetOrgBehaviorWarn 
+        ? tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Warning_IncludeNuGetOrgEnabled"))
+        : tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesInstalledSuccessfully"));
         
-        throw new Error(tl.loc("DeprecatedTask"));
+
     } catch (err) {
         tl.error(err);
 

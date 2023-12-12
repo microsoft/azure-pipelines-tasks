@@ -43,7 +43,9 @@ async function main(): Promise<void> {
 		throw reason;
 	}), retryLimit);
 
-	throw new Error(tl.loc("DeprecatedTask"));
+	if(!tl.getVariable('PASS_DEPRECATED_TASK')) {
+	  throw new Error(tl.loc("DeprecatedTask"));
+	}
 }
 
 function getAuthToken() {
