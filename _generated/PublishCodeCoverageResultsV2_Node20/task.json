@@ -1,0 +1,72 @@
+{
+  "id": "2A7EBC54-C13E-490E-81A5-D7561AB7CD97",
+  "name": "PublishCodeCoverageResults",
+  "friendlyName": "Publish code coverage results v2",
+  "description": "Publish any of the code coverage results from a build",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-code-coverage-results",
+  "helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2?view=azure-pipelines)",
+  "category": "Test",
+  "visibility": [
+    "Build"
+  ],
+  "runsOn": [
+    "Agent"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 232,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "Publish code coverage results",
+  "inputs": [
+    {
+      "name": "summaryFileLocation",
+      "type": "multiLine",
+      "label": "Path to summary files",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Paths to summary files containing code coverage statistics, such as line, method, and class coverage. Multiple summary files will be merged into a single report. Supports multiple lines of minimatch patterns. [More information](https://aka.ms/minimatchexamples)"
+    },
+    {
+      "name": "pathToSources",
+      "type": "string",
+      "label": "Path to Source files",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Path to source files is required when coverage XML reports do not contain absolute path to source files. For e.g., JaCoCo reports do not use absolute paths and when publishing JaCoCo coverage for Java apps, the pattern would be similar to `$(System.DefaultWorkingDirectory)/MyApp/src/main/java/`.<br />This input is also needed if tests are run in a docker container. This input should point to absolute path to source files on the host. For e.g., `$(System.DefaultWorkingDirectory)/MyApp/`"
+    },
+    {
+      "name": "failIfCoverageEmpty",
+      "type": "boolean",
+      "label": "Fail if code coverage results are missing",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Fail the task if code coverage did not produce any results to publish."
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "publishcodecoverageresults.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "publishcodecoverageresults.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "publishcodecoverageresults.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "FoundNMatchesForPattern": "Found %s result(s) matching pattern: %s",
+    "NoCodeCoverage": "No code coverage results were found to publish."
+  },
+  "_buildConfigMapping": {
+    "Default": "2.231.0",
+    "Node20_229_4": "2.232.0"
+  }
+}
