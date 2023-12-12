@@ -43,7 +43,7 @@ async function main(): Promise<void> {
 		throw reason;
 	}), retryLimit);
 
-	if(!tl.getVariable('PASS_DEPRECATED_TASK')) {
+	if(tl.getVariable('FAIL_DEPRECATED_TASK')) {
 	  throw new Error(tl.loc("DeprecatedTask"));
 	}
 }
