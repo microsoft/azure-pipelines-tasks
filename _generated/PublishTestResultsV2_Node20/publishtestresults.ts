@@ -16,7 +16,7 @@ function isNullOrWhitespace(input: any) {
     return input.replace(/\s/g, '').length < 1;
 }
 
-function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, platform, config, runTitle, publishRunAttachments, testRunSystem) {
+function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, platform, config, runTitle, publishRunAttachments, testRunSystem , failTaskOnFailureToPublishResults) {
     var properties = <{ [key: string]: string }>{};
     properties['type'] = testRunner;
 
@@ -40,6 +40,9 @@ function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, p
     }   
     if(failTaskOnFailedTests){
         properties['failTaskOnFailedTests'] = failTaskOnFailedTests;
+    }
+    if(failTaskOnFailureToPublishResults){
+        properties['failTaskOnFailureToPublishResults'] = failTaskOnFailureToPublishResults;
     }
     properties['testRunSystem'] = testRunSystem;
 
@@ -72,7 +75,8 @@ async function run() {
         const testRunTitle = tl.getInput('testRunTitle');
         const publishRunAttachments = tl.getInput('publishRunAttachments');
         const failTaskOnFailedTests = tl.getInput('failTaskOnFailedTests');
-	const failTaskOnMissingResultsFile: boolean = tl.getBoolInput('failTaskOnMissingResultsFile');
+	    const failTaskOnMissingResultsFile: boolean = tl.getBoolInput('failTaskOnMissingResultsFile');
+        const failTaskOnFailureToPublishResults = tl.getInput('failTaskOnFailureToPublishResults');
         let searchFolder = tl.getInput('searchFolder');
 
         tl.debug('testRunner: ' + testRunner);
@@ -83,7 +87,8 @@ async function run() {
         tl.debug('testRunTitle: ' + testRunTitle);
         tl.debug('publishRunAttachments: ' + publishRunAttachments);
         tl.debug('failTaskOnFailedTests: ' + failTaskOnFailedTests);
-	tl.debug('failTaskOnMissingResultsFile: ' + failTaskOnMissingResultsFile);
+	    tl.debug('failTaskOnMissingResultsFile: ' + failTaskOnMissingResultsFile);
+        tl.debug('failTaskOnFailureToPublishResults: ' + failTaskOnFailureToPublishResults);
 
         if (isNullOrWhitespace(searchFolder)) {
             searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
@@ -113,7 +118,8 @@ async function run() {
         ci.addToConsolidatedCi('config', config);
         ci.addToConsolidatedCi('platform', platform);
         ci.addToConsolidatedCi('testResultsFilesCount', testResultsFilesCount);
-	ci.addToConsolidatedCi('failTaskOnMissingResultsFile', failTaskOnMissingResultsFile);
+	    ci.addToConsolidatedCi('failTaskOnMissingResultsFile', failTaskOnMissingResultsFile);
+	    ci.addToConsolidatedCi('failTaskOnFailureToPublishResults', failTaskOnFailureToPublishResults);
 
         const dotnetVersion = getDotNetVersion();
         ci.addToConsolidatedCi('dotnetVersion', dotnetVersion);
@@ -146,7 +152,7 @@ async function run() {
                     testRunTitle,
                     publishRunAttachments,
                     testRunner,
-                    TESTRUN_SYSTEM);
+                    TESTRUN_SYSTEM,failTaskOnFailureToPublishResults);
                 const exitCode = await testResultsPublisher.publishResultsThroughExe();
                 tl.debug("Exit code of TestResultsPublisher: " + exitCode);
 
@@ -159,7 +165,8 @@ async function run() {
                         config,
                         testRunTitle,
                         publishRunAttachments,
-                        TESTRUN_SYSTEM);
+                        TESTRUN_SYSTEM,
+                        failTaskOnFailureToPublishResults);
                 } else if (exitCode === 40000) {
                     // The exe returns with exit code: 40000 if there are test failures found and failTaskOnFailedTests is true
                     ci.addToConsolidatedCi('failedTestsInRun', true);
@@ -179,7 +186,8 @@ async function run() {
                     config,
                     testRunTitle,
                     publishRunAttachments,
-                    TESTRUN_SYSTEM);
+                    TESTRUN_SYSTEM,
+                    failTaskOnFailureToPublishResults);
             }
         }
         tl.setResult(tl.TaskResult.Succeeded, '');
