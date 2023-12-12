@@ -92,10 +92,10 @@
     {
       "name": "failTaskOnFailureToPublishResults",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.failTaskOnFailureToPublishResults",
+      "label": "Fail if there is failure in publishing test results",
       "defaultValue": false,
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.failTaskOnFailureToPublishResults"
+      "helpMarkDown": "Fail if there is failure in publishing test results. Check this option to fail the task if publishing test results is failed partially."
     },
     {
       "name": "testRunTitle",
