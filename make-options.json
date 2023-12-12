@@ -217,10 +217,6 @@
         "task.loc.json",
         "Tests"
     ],
-    "Node16_225": [
-        "AzureRmWebAppDeploymentV4",
-        "IISWebAppDeploymentOnMachineGroupV0"
-    ],
     "Node20": [
         "AndroidSigningV2",
         "AndroidSigningV3",
@@ -311,6 +307,7 @@
         "AzureMysqlDeploymentV1",
         "AzureNLBManagementV1",
         "AzureRmWebAppDeploymentV3",
+        "AzureRmWebAppDeploymentV4",
         "AzurePowerShellV4",
         "AzurePowerShellV5",
         "AzureWebAppV1",
@@ -346,6 +343,7 @@
         "HelmDeployV0",
         "HelmInstallerV0",
         "HelmInstallerV1",
+        "IISWebAppDeploymentOnMachineGroupV0",
         "JenkinsDownloadArtifactsV1",
         "KubeloginInstallerV0",
         "KubectlInstallerV0",
