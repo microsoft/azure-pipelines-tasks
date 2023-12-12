@@ -216,6 +216,7 @@ var setTaskVariables = function(tasks, tasksForDowngradingCheck) {
     console.log('##vso[task.setVariable variable=task_pattern;isOutput=true;]@(' + tasks.join('|') + ')');
     console.log('##vso[task.setVariable variable=task_pattern_fordowngradingcheck]@(' + tasksForDowngradingCheck.join('|') + ')');
     console.log('##vso[task.setVariable variable=numTasks]' + tasks.length);
+    console.log('##vso[task.setVariable variable=numTasksForDowngradingCheck]' + tasksForDowngradingCheck.length);
 }
 
 var buildReason = process.env['BUILD_REASON'].toLowerCase();

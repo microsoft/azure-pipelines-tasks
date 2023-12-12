@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
   },
+  "devDependencies": {
+    "jszip": "^3.10.1"
+  },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme"
 }

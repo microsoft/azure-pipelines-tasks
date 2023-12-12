@@ -1,9 +1,7 @@
 import tl = require('azure-pipelines-task-lib');
 import { DeploymentFactory } from '../deploymentProvider/DeploymentFactory';
-import { BuiltInLinuxWebAppDeploymentProvider } from '../deploymentProvider/BuiltInLinuxWebAppDeploymentProvider'
 import { IWebAppDeploymentProvider } from '../deploymentProvider/IWebAppDeploymentProvider';
 import { TaskParametersUtility, TaskParameters, DeploymentType } from '../operations/TaskParameters';
-import { stringify } from 'querystring';
 import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
 
 export class DeploymentFactoryL0Tests  {
