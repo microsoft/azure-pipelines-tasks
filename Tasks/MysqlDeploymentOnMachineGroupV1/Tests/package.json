@@ -16,7 +16,7 @@
     "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
-  "dependencies": {
-    "nock": "9.0.11"
+  "devDependencies": {
+    "nock": "^13.4.0"
   }
 }
