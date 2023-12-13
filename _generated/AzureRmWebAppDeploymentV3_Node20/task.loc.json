@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 233,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -773,7 +773,7 @@
     "MSDeployNotSupportTokenAuth": "ms-resource:loc.messages.MSDeployNotSupportTokenAuth"
   },
   "_buildConfigMapping": {
-    "Default": "3.233.1",
-    "Node20_229_2": "3.233.0"
+    "Default": "3.233.0",
+    "Node20_229_2": "3.233.1"
   }
 }
