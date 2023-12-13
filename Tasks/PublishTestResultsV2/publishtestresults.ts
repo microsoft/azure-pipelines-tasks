@@ -75,7 +75,7 @@ async function run() {
         const testRunTitle = tl.getInput('testRunTitle');
         const publishRunAttachments = tl.getInput('publishRunAttachments');
         const failTaskOnFailedTests = tl.getInput('failTaskOnFailedTests');
-	    const failTaskOnMissingResultsFile: boolean = tl.getBoolInput('failTaskOnMissingResultsFile');
+	const failTaskOnMissingResultsFile: boolean = tl.getBoolInput('failTaskOnMissingResultsFile');
         const failTaskOnFailureToPublishResults = tl.getInput('failTaskOnFailureToPublishResults');
         let searchFolder = tl.getInput('searchFolder');
 
@@ -87,7 +87,7 @@ async function run() {
         tl.debug('testRunTitle: ' + testRunTitle);
         tl.debug('publishRunAttachments: ' + publishRunAttachments);
         tl.debug('failTaskOnFailedTests: ' + failTaskOnFailedTests);
-	    tl.debug('failTaskOnMissingResultsFile: ' + failTaskOnMissingResultsFile);
+	tl.debug('failTaskOnMissingResultsFile: ' + failTaskOnMissingResultsFile);
         tl.debug('failTaskOnFailureToPublishResults: ' + failTaskOnFailureToPublishResults);
 
         if (isNullOrWhitespace(searchFolder)) {
@@ -118,8 +118,8 @@ async function run() {
         ci.addToConsolidatedCi('config', config);
         ci.addToConsolidatedCi('platform', platform);
         ci.addToConsolidatedCi('testResultsFilesCount', testResultsFilesCount);
-	    ci.addToConsolidatedCi('failTaskOnMissingResultsFile', failTaskOnMissingResultsFile);
-	    ci.addToConsolidatedCi('failTaskOnFailureToPublishResults', failTaskOnFailureToPublishResults);
+	ci.addToConsolidatedCi('failTaskOnMissingResultsFile', failTaskOnMissingResultsFile);
+	ci.addToConsolidatedCi('failTaskOnFailureToPublishResults', failTaskOnFailureToPublishResults);
 
         const dotnetVersion = getDotNetVersion();
         ci.addToConsolidatedCi('dotnetVersion', dotnetVersion);
@@ -152,7 +152,8 @@ async function run() {
                     testRunTitle,
                     publishRunAttachments,
                     testRunner,
-                    TESTRUN_SYSTEM,failTaskOnFailureToPublishResults);
+                    TESTRUN_SYSTEM,
+                    failTaskOnFailureToPublishResults);
                 const exitCode = await testResultsPublisher.publishResultsThroughExe();
                 tl.debug("Exit code of TestResultsPublisher: " + exitCode);
 

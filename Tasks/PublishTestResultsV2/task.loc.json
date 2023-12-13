@@ -82,20 +82,20 @@
       "helpMarkDown": "ms-resource:loc.input.help.failTaskOnFailedTests"
     },
     {
-      "name": "failTaskOnMissingResultsFile",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.failTaskOnMissingResultsFile",
-      "defaultValue": false,
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.failTaskOnMissingResultsFile"
-    },
-    {
       "name": "failTaskOnFailureToPublishResults",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.failTaskOnFailureToPublishResults",
       "defaultValue": false,
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failTaskOnFailureToPublishResults"
+    },
+    {
+      "name": "failTaskOnMissingResultsFile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failTaskOnMissingResultsFile",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failTaskOnMissingResultsFile"
     },
     {
       "name": "testRunTitle",
