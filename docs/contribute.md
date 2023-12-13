@@ -112,7 +112,7 @@ npm test
 node make.js test
 ```
 
-Run tests for the task that you are intersted in:
+Run tests for the task that you are interested in:
 ```bash
 node make.js test --task ShellScript --suite L0
 ```
