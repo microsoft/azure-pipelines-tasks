@@ -1,5 +1,0 @@
-{
-  "loc.friendlyName": "Publicar los metadatos de la canalización",
-  "loc.description": "Publica metadatos de canalización en el almacén de pruebas.",
-  "loc.instanceNameFormat": "Publicando metadatos para la canalización $(System.DefinitionName) en el almacén de pruebas."
-}
