@@ -9,13 +9,13 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 0,
-    "Minor": 231,
+    "Minor": 232,
     "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
-  "removalDate": "2023-11-27",
+  "removalDate": "2023-12-11",
   "inputs": [
     {
       "name": "feed",
@@ -116,10 +116,11 @@
     "RetryingOperation": "Error: in %s, so retrying => retries pending: %s",
     "OperationFailed": "Failed in %s with error: %s",
     "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
-    "UnsupportedProjectScopedFeeds": "Project-scoped feeds are not supported by this version of the \"Download Package\" task. Please use version 1 or higher."
+    "UnsupportedProjectScopedFeeds": "Project-scoped feeds are not supported by this version of the \"Download Package\" task. Please use version 1 or higher.",
+    "DeprecatedTask": "This task is deprecated. Please switch to using DownloadPackage@1 https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/download-package-v1"
   },
   "_buildConfigMapping": {
-    "Default": "0.231.0",
-    "Node20_229_1": "0.231.1"
+    "Default": "0.232.0",
+    "Node20_229_1": "0.232.1"
   }
 }
