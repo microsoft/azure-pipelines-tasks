@@ -49,6 +49,11 @@ export function expandBashEnvVariables(argsLine: string): [string, BashEnvTeleme
     }
 
     while (true) {
+#if NODE20
+        console.log('node 20 preprocessr testing')
+#else
+        console.log('default version')
+#endif
         const prefixIndex = result.indexOf(envPrefix, startIndex)
         if (prefixIndex < 0) {
             break;
