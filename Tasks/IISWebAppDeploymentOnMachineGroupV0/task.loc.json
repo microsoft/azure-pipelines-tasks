@@ -135,6 +135,10 @@
   "execution": {
     "Node10": {
       "target": "deployiiswebapp.js"
+    },
+    "Node16": {
+      "target": "deployiiswebapp.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

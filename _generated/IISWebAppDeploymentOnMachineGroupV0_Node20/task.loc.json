@@ -136,6 +136,10 @@
     "Node10": {
       "target": "deployiiswebapp.js"
     },
+    "Node16": {
+      "target": "deployiiswebapp.js",
+      "argumentFormat": ""
+    },
     "Node20_1": {
       "target": "deployiiswebapp.js",
       "argumentFormat": ""
