@@ -73,11 +73,6 @@ function setBashEnvVariable(valueToSet: string): void {
 }
 
 async function run() {
-#if NODE20
-console.log('test');
-#else
-console.log('test2');
-#endif
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
