@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 233,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -338,7 +338,7 @@
     "MultiContainerDeploymentWithoutTransformation": "Multi-container deployment to the webapp '%s' without transformation of Docker-Compose file because only Docker-Compose file was specified."
   },
   "_buildConfigMapping": {
-    "Default": "1.233.1",
-    "Node20_229_2": "1.233.0"
+    "Default": "1.233.0",
+    "Node20_229_2": "1.233.1"
   }
 }
