@@ -10,11 +10,13 @@ namespace BuildConfigGen
     internal partial class Preprocessor
     {
 
-        [GeneratedRegex("^(?<spacesBeforeHash>\\s*)#(?<command>\\w+)(?<spacesAfterHash>\\s+)(?<expression>.*)", RegexOptions.Singleline)]
-        private static partial Regex startPreprocess();
+        private static readonly Regex startPreprocessRegex =
+  new(pattern: "^(?<spacesBeforeHash>\\s*)#(?<command>\\w+)(?<spacesAfterHash>\\s+)(?<expression>.*)",
+      options: RegexOptions.Singleline);
 
-        [GeneratedRegex("^(?<spacesBeforeHash>\\s*)#(?<command>\\w+)", RegexOptions.Singleline)]
-        private static partial Regex elseAndEndIfPreprocess();
+        private static readonly Regex elseAndEndIfPreprocessRegex =
+    new(pattern: "^(?<spacesBeforeHash>\\s*)#(?<command>\\w+)",
+        options: RegexOptions.Singleline);
 
 
         internal static void Preprocess(string file, IEnumerable<string> lines, ISet<string> configreprocessorVariableName, string configName, out string processedOutput, out List<string> validationErrors, out bool madeChanges)
@@ -41,8 +43,8 @@ namespace BuildConfigGen
             foreach (var line in lines)
             {
                 lineNumber++;
-                Match elseAndEndIfPreprocessMatch = elseAndEndIfPreprocessMatch = elseAndEndIfPreprocess().Match(line);
-                var startPreprocessMatch = startPreprocess().Match(line);
+                Match elseAndEndIfPreprocessMatch = elseAndEndIfPreprocessMatch = elseAndEndIfPreprocessRegex.Match(line);
+                var startPreprocessMatch = startPreprocessRegex.Match(line);
 
                 string? command = null;
                 string? expression = null;

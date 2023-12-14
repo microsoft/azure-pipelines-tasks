@@ -21,12 +21,6 @@ steps:
   inputs:
     versionSpec: 10.24.1
 
-# Use .NET SDK 7
-- task: UseDotNet@2
-  displayName: 'Install .NET Core SDK 7.x'
-  inputs:
-    version: 7.x
-
 # npm install
 - script: npm install
   displayName: npm install
