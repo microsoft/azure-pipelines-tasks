@@ -463,7 +463,7 @@ class Utils {
     }
 
     private static async execBicepBuild(filePath): Promise<void> {
-        const result: IExecSyncResult = tl.execSync("az", `bicep build --file ${filePath}`);
+        const result: IExecSyncResult = tl.execSync("az", `bicep build --file "${filePath}"`);
         if(result && result.code !== 0){
             throw new Error(tl.loc("BicepBuildFailed", result.stderr));
         }
