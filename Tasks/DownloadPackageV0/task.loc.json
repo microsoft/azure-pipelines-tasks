@@ -9,13 +9,13 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 0,
-    "Minor": 231,
+    "Minor": 232,
     "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
-  "removalDate": "2023-11-27",
+  "removalDate": "2023-12-11",
   "inputs": [
     {
       "name": "feed",
@@ -112,6 +112,7 @@
     "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
     "OperationFailed": "ms-resource:loc.messages.OperationFailed",
     "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
-    "UnsupportedProjectScopedFeeds": "ms-resource:loc.messages.UnsupportedProjectScopedFeeds"
+    "UnsupportedProjectScopedFeeds": "ms-resource:loc.messages.UnsupportedProjectScopedFeeds",
+    "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
   }
 }
