@@ -7,7 +7,7 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "deprecated": true,
-  "removalDate": "2024-04-22",
+  "removalDate": "2024-01-31",
   "visibility": [
     "Build",
     "Release"
@@ -15,8 +15,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 229,
-    "Patch": 0
+    "Minor": 232,
+    "Patch": 2
   },
   "minimumAgentVersion": "2.144.0",
   "releaseNotes": "ms-resource:loc.releaseNotes",

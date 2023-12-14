@@ -13,6 +13,8 @@ tmr.setInput('selectOrConfig', 'select');
 tmr.setInput('feed', 'https://codesharing-su0.pkgs.visualstudio.com/_packaging/NuGetFeed/nuget/v3/index.json');
 tmr.setInput('includeNuGetOrg', 'True');
 
+process.env['FAIL_DEPRECATED_TASK'] = "true";
+
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},
     "checkPath": {
