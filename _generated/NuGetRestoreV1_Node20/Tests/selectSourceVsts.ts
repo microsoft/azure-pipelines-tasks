@@ -12,6 +12,8 @@ tmr.setInput('solution', 'packages.config');
 tmr.setInput('selectOrConfig', 'select');
 tmr.setInput('feed', 'testFeed');
 
+process.env['FAIL_DEPRECATED_TASK'] = "true";
+
 
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
