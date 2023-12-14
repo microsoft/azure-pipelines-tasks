@@ -49,7 +49,6 @@ export function expandBashEnvVariables(argsLine: string): [string, BashEnvTeleme
     }
 
     while (true) {
-        console.log('default version')
         const prefixIndex = result.indexOf(envPrefix, startIndex)
         if (prefixIndex < 0) {
             break;
