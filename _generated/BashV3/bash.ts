@@ -73,6 +73,7 @@ function setBashEnvVariable(valueToSet: string): void {
 }
 
 async function run() {
+console.log('test2');
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
