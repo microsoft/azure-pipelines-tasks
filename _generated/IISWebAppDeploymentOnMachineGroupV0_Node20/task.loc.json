@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 232,
-    "Patch": 1
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "2.104.1",
@@ -192,7 +192,7 @@
     "RetryToDeploy": "ms-resource:loc.messages.RetryToDeploy"
   },
   "_buildConfigMapping": {
-    "Default": "0.232.0",
-    "Node20_229_3": "0.232.1"
+    "Default": "0.232.2",
+    "Node20_229_3": "0.232.3"
   }
 }
