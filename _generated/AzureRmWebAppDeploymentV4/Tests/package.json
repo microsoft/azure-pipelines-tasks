@@ -18,6 +18,6 @@
     "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
     "devDependencies": {
         "jszip": "^3.10.1",
-        "nock": "9.0.11"
+        "nock": "^13.4.0"
     }
 }
