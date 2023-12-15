@@ -22,5 +22,6 @@
   "loc.messages.RetryingOperation": "Error: in %s, so retrying => retries pending: %s",
   "loc.messages.OperationFailed": "Failed in %s with error: %s",
   "loc.messages.Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
-  "loc.messages.UnsupportedProjectScopedFeeds": "Project-scoped feeds are not supported by this version of the \"Download Package\" task. Please use version 1 or higher."
+  "loc.messages.UnsupportedProjectScopedFeeds": "Project-scoped feeds are not supported by this version of the \"Download Package\" task. Please use version 1 or higher.",
+  "loc.messages.DeprecatedTask": "This task is deprecated. Please switch to using DownloadPackage@1 https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/download-package-v1"
 }
