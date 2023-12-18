@@ -1,6 +1,6 @@
 {
     "id": "2FF763A7-CE83-4E1F-BC89-0AE634776666",
-    "name": "PublishBuildArtifactsTEST-OPTIONS",
+    "name": "PublishBuildArtifactsTESTOPTIONS",
     "friendlyName": "Publish build artifacts TEST-OPTIONS",
     "description": "Publish build artifacts to Azure Pipelines or a Windows file share",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-build-artifacts",

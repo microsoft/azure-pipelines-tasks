@@ -1,6 +1,6 @@
 {
   "id": "2FF763A7-CE83-4E1F-BC89-0AE634776666",
-  "name": "PublishBuildArtifactsTEST-OPTIONS",
+  "name": "PublishBuildArtifactsTESTOPTIONS",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-build-artifacts",
