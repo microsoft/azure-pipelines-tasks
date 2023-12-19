@@ -903,8 +903,10 @@ function verifyAllAgentPluginTasksAreInSkipList() {
 // Merge all tasks in a build config to base tasks
 // e.g node make.js mergeBuildConfig --config Node20_225
 // This will 'merge' all tasks under build config Node20_225 into base tasks.
-// 1. Apply the generated changes to the base task.  
-// 2. Delete _generated/Task_[BuldConfig] folder, delete Tasks/taskname/_buildConfig/Node20_225_1 folder, and delete the section in make-option.json.  
+// 1. Copy generated task to base task, delete generated files in  _generated/Task_Node20 and Tasks/taskname/_buildConfig/Node20.
+// 2. Update versionmap.txt file.
+// 3. Remove _buildConfigMapping section in task.json and task-loc.json
+// 4. Update the buildConfig section in make-option.json.  
 CLI.mergeBuildConfig = function(/** @type {{ config: string }} */ argv) {
     var config = argv.config
     banner(`Merging all tasks under ${config} build config into base tasks...`);

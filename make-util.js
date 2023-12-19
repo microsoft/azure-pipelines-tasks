@@ -1880,7 +1880,7 @@ var mergeBuildConfigIntoBaseTasks = function(buildConfig) {
                 rm("-rf", path.join(baseTaskPath, '_buildConfigs', surfixBuildConfig));
                 rm("-rf", generatedTaskPath);
                 rm("-rf", path.join(__dirname, '_generated', taskName));
-                // Update versionmap
+                // Update versionmap.txt file
                 var versionmapFile = fs.readFileSync(versionmapFilePath, { encoding: 'utf-8' });
                 const lines = versionmapFile.split('\n');
                 var buildConfigVersion = null;
@@ -1917,6 +1917,7 @@ var mergeBuildConfigIntoBaseTasks = function(buildConfig) {
         fail(`Invalid configuration for ${buildConfig}.`);
     }
 
+    // Update make-options.json
     if (TasksfailedToMerge.length > 0) {
         console.log('The following tasks failed to merge into base tasks: ' + TasksfailedToMerge);
         makeOptions[buildConfig] = makeOptions[buildConfig].filter(item =>
