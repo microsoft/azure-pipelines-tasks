@@ -809,7 +809,7 @@ CLI.bump = function() {
         taskJson.version.Patch = taskJson.version.Patch + 1;
         taskLocJson.version.Patch = taskLocJson.version.Patch + 1;
 
-        fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 4));
+        fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 2));
         fs.writeFileSync(taskLocJsonPath, JSON.stringify(taskLocJson, null, 2));
 
         // Check that task.loc and task.loc.json versions match
@@ -898,6 +898,17 @@ function verifyAllAgentPluginTasksAreInSkipList() {
     if (missingTaskNames.length > 0) {
         fail('The following tasks must be added to agentPluginTaskNames: ' + JSON.stringify(missingTaskNames));
     }
+}
+
+// Merge all tasks in a build config to base tasks
+// e.g node make.js mergeBuildConfig --config Node20_225
+// This will 'merge' all tasks under build config Node20_225 into base tasks.
+// 1. Apply the generated changes to the base task.  
+// 2. Delete _generated/Task_[BuldConfig] folder, delete Tasks/taskname/_buildConfig/Node20_225_1 folder, and delete the section in make-option.json.  
+CLI.mergeBuildConfig = function(/** @type {{ config: string }} */ argv) {
+    var config = argv.config
+    banner(`Merging all tasks under ${config} build config into base tasks...`);
+    util.mergeBuildConfigIntoBaseTasks(config);
 }
 
 // Generate sprintly zip

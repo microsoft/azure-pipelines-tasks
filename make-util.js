@@ -174,12 +174,12 @@ var buildNodeTask = function (taskPath, outDir) {
             fail('The package.json should not contain dev dependencies other than typescript. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
         }
 
-        run('npm ci');
+        run('npm install');
     }
 
     if (test('-f', rp(path.join('Tests', 'package.json')))) {
         cd(rp('Tests'));
-        run('npm ci');
+        run('npm install');
         cd(taskPath);
     }
 
@@ -1849,6 +1849,85 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
     }
 }
 exports.processGeneratedTasks = processGeneratedTasks;
+
+/**
+ * Function to merge all tasks under a build config into base tasks.
+ * @param {String} buildConfig that selected to merge
+ */
+var mergeBuildConfigIntoBaseTasks = function(buildConfig) {
+    var makeOptionsPath = path.join(__dirname, 'make-options.json');
+    var makeOptions = fileToJson(makeOptionsPath);
+    if (!makeOptions) fail("makeOptions is not defined");
+    const AllTasksToMerge = makeOptions[buildConfig];
+    const TasksfailedToMerge = [];
+
+    const match = buildConfig.match(/^([a-zA-Z]+[0-9]+)_\d+(_\d+)?$/);
+    var surfixBuildConfig = match ? match[1] : buildConfig;
+
+    if (AllTasksToMerge && Array.isArray(AllTasksToMerge)) {
+        AllTasksToMerge.forEach(taskName => {
+            var generatedTaskPath = path.join(__dirname, '_generated', `${taskName}_${surfixBuildConfig}`);
+            var versionmapFilePath = path.join(__dirname, '_generated', `${taskName}.versionmap.txt`);
+            var baseTaskPath = path.join(__dirname, 'Tasks', taskName);
+
+            if (!fs.existsSync(generatedTaskPath) || !fs.statSync(generatedTaskPath).isDirectory() || !fs.existsSync(versionmapFilePath)) {
+                console.log(`Invalid generated task path ${generatedTaskPath} or invalid ${taskName}.versionmap.txt file ${versionmapFilePath}\n`);
+                TasksfailedToMerge.push(taskName);
+            } else {
+                console.log('Merging ' + taskName + " into base task...");
+                // Copy generated task to base task, delete generated files
+                cp('-rf', generatedTaskPath + "/*", baseTaskPath);
+                rm("-rf", path.join(baseTaskPath, '_buildConfigs', surfixBuildConfig));
+                rm("-rf", generatedTaskPath);
+                rm("-rf", path.join(__dirname, '_generated', taskName));
+                // Update versionmap
+                var versionmapFile = fs.readFileSync(versionmapFilePath, { encoding: 'utf-8' });
+                const lines = versionmapFile.split('\n');
+                var buildConfigVersion = null;
+                for (let i = lines.length - 1; i >= 0; i--) {
+                    const [name, version] = lines[i].split('|');
+                    if (name === buildConfig.replace("_", "-")) {
+                        buildConfigVersion = version;
+                        lines.splice(i, 1);
+                        i++;
+                    } else if (name === "Default" && buildConfigVersion != null) {
+                        lines[i] = `Default|${buildConfigVersion}`;
+                    }
+                }
+                const updatedContent = lines.join('\n');
+                fs.writeFileSync(versionmapFilePath, updatedContent, { encoding: 'utf-8' });
+
+                // Remove _buildConfigMapping section in task.json and task-loc.json
+                var taskJsonPath = path.join(baseTaskPath, 'task.json');
+                var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
+                var taskLocJsonPath = path.join(baseTaskPath, 'task.loc.json');
+                var taskLocJson = JSON.parse(fs.readFileSync(taskLocJsonPath));
+                if (taskJson && taskJson["_buildConfigMapping"]) {
+                    delete taskJson["_buildConfigMapping"];
+                }
+                if (taskLocJson && taskLocJson["_buildConfigMapping"]) {
+                    delete taskLocJson["_buildConfigMapping"];
+                }
+                fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 2));
+                fs.writeFileSync(taskLocJsonPath, JSON.stringify(taskLocJson, null, 2));
+                console.log(taskName + " was merged into base task.\n");
+            }
+        });
+    } else {
+        fail(`Invalid configuration for ${buildConfig}.`);
+    }
+
+    if (TasksfailedToMerge.length > 0) {
+        console.log('The following tasks failed to merge into base tasks: ' + TasksfailedToMerge);
+        makeOptions[buildConfig] = makeOptions[buildConfig].filter(item =>
+            TasksfailedToMerge.includes(item)
+        );
+    } else {
+        delete makeOptions[buildConfig];
+    }
+    fs.writeFileSync(makeOptionsPath, JSON.stringify(makeOptions, null, 4));
+}
+exports.mergeBuildConfigIntoBaseTasks = mergeBuildConfigIntoBaseTasks;
 
 /**
  * Wrapper for buildTask function which compares diff between source and generated tasks
