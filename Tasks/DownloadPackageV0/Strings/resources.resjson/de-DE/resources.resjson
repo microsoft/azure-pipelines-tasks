@@ -22,5 +22,6 @@
   "loc.messages.RetryingOperation": "Fehler in \"%s\", Vorgang wird wiederholt. Ausstehende Versuche: %s",
   "loc.messages.OperationFailed": "Fehler in \"%s\": %s",
   "loc.messages.Info_ResolvedToolFromCache": "Aus Toolcache aufgelöst: %s",
-  "loc.messages.UnsupportedProjectScopedFeeds": "Projektbezogene Feeds werden von dieser Version der Aufgabe \"Paket herunterladen\" nicht unterstützt. Verwenden Sie Version 1 oder höher."
+  "loc.messages.UnsupportedProjectScopedFeeds": "Projektbezogene Feeds werden von dieser Version der Aufgabe \"Paket herunterladen\" nicht unterstützt. Verwenden Sie Version 1 oder höher.",
+  "loc.messages.DeprecatedTask": "This task is deprecated. Please switch to using DownloadPackage@1 https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/download-package-v1"
 }
