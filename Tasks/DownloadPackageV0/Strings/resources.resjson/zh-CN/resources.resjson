@@ -22,5 +22,6 @@
   "loc.messages.RetryingOperation": "错误: 在 %s 中，正在重试 => 重试挂起: %s",
   "loc.messages.OperationFailed": "%s 中失败，出现错误: %s",
   "loc.messages.Info_ResolvedToolFromCache": "已从工具缓存 %s 中解析",
-  "loc.messages.UnsupportedProjectScopedFeeds": "此版本的“下载包”任务不支持项目范围的源。请使用版本 1 或更高版本。"
+  "loc.messages.UnsupportedProjectScopedFeeds": "此版本的“下载包”任务不支持项目范围的源。请使用版本 1 或更高版本。",
+  "loc.messages.DeprecatedTask": "This task is deprecated. Please switch to using DownloadPackage@1 https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/download-package-v1"
 }

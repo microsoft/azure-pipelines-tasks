@@ -17,7 +17,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 231,
+    "Minor": 232,
     "Patch": 1
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -120,7 +120,7 @@
     "SkippedUpdatingFile": "ms-resource:loc.messages.SkippedUpdatingFile"
   },
   "_buildConfigMapping": {
-    "Default": "1.231.0",
-    "Node20_229_3": "1.231.1"
+    "Default": "1.232.0",
+    "Node20_229_3": "1.232.1"
   }
 }

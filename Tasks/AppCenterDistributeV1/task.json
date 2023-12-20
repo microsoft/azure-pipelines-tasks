@@ -7,7 +7,7 @@
     "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport/).",
     "category": "Deploy",
     "deprecated": true,
-    "removalDate": "2024-04-22",
+    "removalDate": "2024-01-31",
     "visibility": [
         "Build",
         "Release"
@@ -15,7 +15,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 229,
+        "Minor": 233,
         "Patch": 0
     },
     "minimumAgentVersion": "2.144.0",

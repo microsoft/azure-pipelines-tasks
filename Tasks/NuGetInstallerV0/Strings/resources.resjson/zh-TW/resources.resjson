@@ -42,5 +42,6 @@
   "loc.messages.NGCommon_RemovingSources": "正在準備設定 NuGet.config 中的認證",
   "loc.messages.NGCommon_AddingSources": "正在設定 NuGet.config 中的認證",
   "loc.messages.NGCommon_NoSourcesFoundInConfig": "在位於 %s 的 NuGet.config 檔案中找不到套件來源",
-  "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "選取了不明的 NuGet 版本。"
+  "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "選取了不明的 NuGet 版本。",
+  "loc.messages.DeprecatedTask": "This task is deprecated. Please switch to using NuGetCommand@2's 'restore' or 'custom' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
 }

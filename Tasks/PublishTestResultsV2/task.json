@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 230,
+        "Minor": 233,
         "Patch": 0
     },
     "demands": [],
@@ -80,6 +80,14 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Fail the task if there are any test failures. Check this option to fail the task if test failures are detected in the result files."
+        },
+        {
+            "name": "failTaskOnFailureToPublishResults",
+            "type": "boolean",
+            "label": "Fail if there is failure in publishing test results",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Fail if there is failure in publishing test results. Check this option to fail the task if publishing test results is failed partially."
         },
         {
             "name": "failTaskOnMissingResultsFile",

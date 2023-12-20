@@ -15,6 +15,8 @@
   "loc.input.help.mergeTestResults": "Viene creata un'esecuzione dei test per ogni file di risultati. Selezionare questa opzione per unire i risultati in un'unica esecuzione dei test. Per ottimizzare l'operazione e garantire migliori prestazioni, i risultati verranno uniti in un'unica esecuzione se sono presenti più di 100 file di risultati, indipendentemente da questa opzione.",
   "loc.input.label.failTaskOnFailedTests": "Non eseguire in caso di errori di test",
   "loc.input.help.failTaskOnFailedTests": "Non esegue l'attività in caso di errori di test. Selezionare questa opzione per non eseguire l'attività se vengono rilevati errori di test nei file di risultati.",
+  "loc.input.label.failTaskOnFailureToPublishResults": "Fail if there is failure in publishing test results",
+  "loc.input.help.failTaskOnFailureToPublishResults": "Fail if there is failure in publishing test results. Check this option to fail the task if publishing test results is failed partially.",
   "loc.input.label.failTaskOnMissingResultsFile": "Esito negativo se non vengono trovati file di risultati",
   "loc.input.help.failTaskOnMissingResultsFile": "Se non vengono trovati file di risultati, l'attività ha esito negativo.",
   "loc.input.label.testRunTitle": "Titolo dell'esecuzione dei test",
