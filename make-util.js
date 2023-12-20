@@ -1867,26 +1867,35 @@ var mergeBuildConfigIntoBaseTasks = function(buildConfig) {
     if (AllTasksToMerge && Array.isArray(AllTasksToMerge)) {
         AllTasksToMerge.forEach(taskName => {
             var generatedTaskPath = path.join(__dirname, '_generated', `${taskName}_${surfixBuildConfig}`);
+            var generatedDefaultTaskPath = path.join(__dirname, '_generated', taskName)
             var versionmapFilePath = path.join(__dirname, '_generated', `${taskName}.versionmap.txt`);
             var baseTaskPath = path.join(__dirname, 'Tasks', taskName);
+            var buildConfigTaskPath = path.join(baseTaskPath, '_buildConfigs', surfixBuildConfig);
 
             if (!fs.existsSync(generatedTaskPath) || !fs.statSync(generatedTaskPath).isDirectory() || !fs.existsSync(versionmapFilePath)) {
                 console.log(`Invalid generated task path ${generatedTaskPath} or invalid ${taskName}.versionmap.txt file ${versionmapFilePath}\n`);
                 TasksfailedToMerge.push(taskName);
             } else {
-                console.log('Merging ' + taskName + " into base task...");
+                banner(`Merging ${generatedTaskPath} into base task...`);
+
                 // Copy generated task to base task, delete generated files
                 cp('-rf', generatedTaskPath + "/*", baseTaskPath);
-                rm("-rf", path.join(baseTaskPath, '_buildConfigs', surfixBuildConfig));
+                console.log(`Copied ${generatedTaskPath} to ${baseTaskPath}`);
+                rm("-rf", buildConfigTaskPath);
+                console.log(`Deleted ${buildConfigTaskPath} folder`);
                 rm("-rf", generatedTaskPath);
-                rm("-rf", path.join(__dirname, '_generated', taskName));
+                console.log(`Deleted ${generatedTaskPath} folder`);
+                rm("-rf", generatedDefaultTaskPath);
+                console.log(`Deleted ${generatedDefaultTaskPath} folder`);
+
                 // Update versionmap.txt file
                 var versionmapFile = fs.readFileSync(versionmapFilePath, { encoding: 'utf-8' });
                 const lines = versionmapFile.split('\n');
                 var buildConfigVersion = null;
                 for (let i = lines.length - 1; i >= 0; i--) {
+                    if (!lines[i]) continue;
                     const [name, version] = lines[i].split('|');
-                    if (name === buildConfig.replace("_", "-")) {
+                    if (name.startsWith(surfixBuildConfig)) {
                         buildConfigVersion = version;
                         lines.splice(i, 1);
                         i++;
@@ -1896,6 +1905,7 @@ var mergeBuildConfigIntoBaseTasks = function(buildConfig) {
                 }
                 const updatedContent = lines.join('\n');
                 fs.writeFileSync(versionmapFilePath, updatedContent, { encoding: 'utf-8' });
+                console.log(`Updated ${versionmapFilePath} file`);
 
                 // Remove _buildConfigMapping section in task.json and task-loc.json
                 var taskJsonPath = path.join(baseTaskPath, 'task.json');
@@ -1910,7 +1920,8 @@ var mergeBuildConfigIntoBaseTasks = function(buildConfig) {
                 }
                 fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 2));
                 fs.writeFileSync(taskLocJsonPath, JSON.stringify(taskLocJson, null, 2));
-                console.log(taskName + " was merged into base task.\n");
+                console.log(`Updated task.json and task-loc.json files under ${baseTaskPath}`);
+                console.log(`${generatedTaskPath} was merged into ${baseTaskPath}\n`);
             }
         });
     } else {
@@ -1927,6 +1938,7 @@ var mergeBuildConfigIntoBaseTasks = function(buildConfig) {
         delete makeOptions[buildConfig];
     }
     fs.writeFileSync(makeOptionsPath, JSON.stringify(makeOptions, null, 4));
+    console.log("Updated make-options.json file");
 }
 exports.mergeBuildConfigIntoBaseTasks = mergeBuildConfigIntoBaseTasks;
 
