@@ -42,5 +42,6 @@
   "loc.messages.NGCommon_RemovingSources": "NuGet.config での資格情報の設定準備",
   "loc.messages.NGCommon_AddingSources": "NuGet.config での資格証明の設定",
   "loc.messages.NGCommon_NoSourcesFoundInConfig": "%s の NuGet.config ファイルでパッケージ ソースが見つかりません",
-  "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "不明な NuGet バージョンが選ばれました。"
+  "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "不明な NuGet バージョンが選ばれました。",
+  "loc.messages.DeprecatedTask": "This task is deprecated. Please switch to using NuGetCommand@2's 'restore' or 'custom' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
 }

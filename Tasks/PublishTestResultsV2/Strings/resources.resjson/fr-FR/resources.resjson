@@ -15,6 +15,8 @@
   "loc.input.help.mergeTestResults": "Une série de tests est créée pour chaque fichier de résultats. Cochez cette option pour fusionner les résultats dans une seule série de tests. Pour optimiser le niveau de performance, les résultats sont fusionnés en une seule série de tests, s'il existe plus de 100 fichiers de résultats, indépendamment de cette option.",
   "loc.input.label.failTaskOnFailedTests": "Cesser toute exécution en cas d'échecs de tests",
   "loc.input.help.failTaskOnFailedTests": "Faire cesser la tâche en cas d'échecs liés à des tests. Cochez cette option pour faire cesser la tâche si des échecs de tests sont détectés dans les fichiers de résultats.",
+  "loc.input.label.failTaskOnFailureToPublishResults": "Fail if there is failure in publishing test results",
+  "loc.input.help.failTaskOnFailureToPublishResults": "Fail if there is failure in publishing test results. Check this option to fail the task if publishing test results is failed partially.",
   "loc.input.label.failTaskOnMissingResultsFile": "Échec si aucun fichier de résultats n’est trouvé",
   "loc.input.help.failTaskOnMissingResultsFile": "Échec de la tâche si aucun fichier de résultats n’est trouvé.",
   "loc.input.label.testRunTitle": "Titre de la série de tests",
