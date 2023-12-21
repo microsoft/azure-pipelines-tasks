@@ -99,5 +99,7 @@
   "loc.messages.LoginFailed": "Azure login failed: %s",
   "loc.messages.MSILoginFailed": "Azure login failed using Managed Service Identity: %s",
   "loc.messages.AuthSchemeNotSupported": "Auth Scheme %s is not supported",
-  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription: %s"
+  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription: %s",
+  "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\" failed. Error: %s",
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI version should be >= 2.47.0 to use .bicepparam file"
 }
