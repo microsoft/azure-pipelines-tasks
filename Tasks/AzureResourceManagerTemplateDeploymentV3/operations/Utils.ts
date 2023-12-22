@@ -447,11 +447,11 @@ class Utils {
         }
         
         if(filePathExtension === 'bicepparam'){
-            tl.debug("Detected .bicepparam extension on filePath");
+            var fileName: string = filePath.split(path.sep).pop().split('.')[0];
             let azcliversion = await this.getAzureCliVersion()
             if(parseFloat(azcliversion)){
                 if(this.isBicepParamAvailable(azcliversion)){
-                    await this.execBicepParamBuild(filePath)
+                    await this.execBicepParamBuild(filePath, fileName)
                     filePath = filePath.replace('.bicepparam', '.parameters.json')
                     this.cleanupFileList.push(filePath)
                 }else{
@@ -487,13 +487,15 @@ class Utils {
         }
     }
 
-    private static async execBicepParamBuild(filePath): Promise<void> {
-        tl.debug("Building bicepparam file");
-        const result: IExecSyncResult = tl.execSync("az", `bicep build-params --file ${filePath}`);
+    private static async execBicepParamBuild(filePath, fileName): Promise<void> {
+        var fileDir: string = filePath.replace(path.sep + fileName +'.bicepparam', '')
+        //Using --outfile to avoid overwriting primary bicep file in the case bicep and param file have the the same file name.
+        const result: IExecSyncResult = tl.execSync("az", `bicep build-params --file ${filePath} --outfile ${path.join(fileDir, fileName + ".parameters.json")}`);
         if(result && result.code !== 0){
             throw new Error(tl.loc("BicepParamBuildFailed", result.stderr));
         }
     }
+
 
     private static async logoutAzure() {
         const result: IExecSyncResult = tl.execSync("az", "account clear");
