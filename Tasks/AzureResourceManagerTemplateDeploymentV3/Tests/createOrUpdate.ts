@@ -33,12 +33,14 @@ process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_AUTHENTICATIONTYPE"] = "key";
 
 var CSMJson = path.join(__dirname, "CSM.json");
 var CSMBicep = path.join(__dirname, "CSMwithBicep.bicep");
+var CSMBicepParam = path.join(__dirname, "BicepParam.bicepparam");
 var CSMBicepWithWarning = path.join(__dirname, "CSMwithBicepWithWarning.bicep");
 var CSMBicepWithError = path.join(__dirname, "CSMwithBicepWithError.bicep");
 var CSMwithComments = path.join(__dirname, "CSMwithComments.json");
 var defaults = path.join(__dirname, "defaults.json");
 var faultyCSM = path.join(__dirname, "faultyCSM.json");
 var bicepbuildCmd = `az bicep build --file ${path.join(__dirname, "CSMwithBicep.bicep")}`;
+var bicepparambuildCmd = `az bicep build-params --file ${path.join(__dirname, "BicepParam.bicepparam")}`;
 var bicepbuildwithWarning = `az bicep build --file ${path.join(__dirname, "CSMwithBicepWithWarning.bicep")}`;
 var azloginCommand = `az login --service-principal -u "id" --password="key" --tenant "tenant" --allow-no-subscriptions`;
 var azaccountSet = `az account set --subscription "sId"`;
@@ -50,6 +52,7 @@ const successExec = {
     "stdout": "Executed Successfully"
 }
 exec[bicepbuildCmd] = successExec;
+exec[bicepparambuildCmd] = successExec;
 exec[bicepbuildwithWarning] = successExec;
 exec[azloginCommand] = successExec;
 exec[azaccountSet] = successExec;
@@ -66,6 +69,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "findMatch": {
         "CSM.json": [CSMJson],
         "CSMwithBicep.bicep": [CSMBicep],
+        "BicepParam.bicepparam": [CSMBicepParam],
         "CSMwithBicepWithWarning.bicep": [CSMBicepWithWarning],
         "CSMwithBicepWithError.bicep": [CSMBicepWithError],
         "CSMwithComments.json": [CSMwithComments],
@@ -88,6 +92,10 @@ fsClone.readFileSync = function(fileName: string): Buffer {
     if (fileName.indexOf("CSMwithBicep") >= 0) {
         const filePath = fileName.replace('.json', '.bicep');
         cpExec(`az bicep build --file ${filePath}`);
+    }
+    if (fileName.indexOf("BicepParam") >= 0) {
+        const filePath = fileName.replace('.parameters.json', '.bicepparam');
+        cpExec(`az bicep build-params --file ${filePath}`);
     }
     var buffer = fs.readFileSync(fileName);
     return buffer;
