@@ -225,6 +225,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.DeprecatedTask" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This task is deprecated. Please switch to using NuGetCommand@2's 'restore' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[このタスクは非推奨です。NuGetCommand@2 の 'restore' オプションの使用に切り替えてください https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_IncludeNuGetOrgEnabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.]]></Val>
