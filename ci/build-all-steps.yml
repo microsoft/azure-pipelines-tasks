@@ -31,6 +31,14 @@ steps:
 - script: npm install
   displayName: npm install
 
+- script: npm run lint
+  displayName: Linting
+  condition: |
+    and(
+      succeeded(),
+      eq(variables['build.reason'], 'PullRequest')
+    )
+
 # Verify min agent demands
 - script: |
     cd ci/verifyMinAgentDemands
