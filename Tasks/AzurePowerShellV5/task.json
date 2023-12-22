@@ -173,6 +173,15 @@
       "defaultValue": "",
       "helpMarkDown": "Working directory where the script is run.",
       "groupName": "advanced"
+    },
+    {
+      "name": "maxContextPopulation",
+      "type": "string",
+      "label": "Max Context Population",
+      "required": false,
+      "defaultValue": "25",
+      "helpMarkDown": "Max subscription number to populate contexts after login. Default is 25. To populate all subscriptions to contexts, set to -1.",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",

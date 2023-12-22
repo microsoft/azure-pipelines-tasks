@@ -1,17 +1,25 @@
 [CmdletBinding()]
-param
-(
-    [String] [Parameter(Mandatory = $true)]
-    $endpoint,
-    [String] [Parameter(Mandatory = $false)]
-    $targetAzurePs,
-    [String] [Parameter(Mandatory = $false)]
-    $clientAssertionJwt
+Param (
+    [Parameter(Mandatory)]
+    [string] $endpoint,
+
+    [Parameter()]
+    [string] $targetAzurePs,
+
+    [Parameter()]
+    [string] $clientAssertionJwt,
+
+    [Parameter()]
+    [string] $MaxContextPopulation
 )
 
 $endpointObject =  ConvertFrom-Json  $endpoint
 $moduleName = "Az.Accounts"
 $environmentName = $endpointObject.environment
+$maxContext = $MaxContextPopulation -as [int]
+if ((-not $maxContext) -or $maxContext -eq 0) {
+    $maxContext = 25
+}
 
 . "$PSScriptRoot/Utility.ps1"
 Update-PSModulePathForHostedAgentLinux -targetAzurePs $targetAzurePs
@@ -77,9 +85,10 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
             $psCredential = New-Object System.Management.Automation.PSCredential(
                     $endpointObject.servicePrincipalClientID,
                     (ConvertTo-SecureString $endpointObject.servicePrincipalKey -AsPlainText -Force))
-            Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($endpointObject.tenantId) -Credential $psCredential -Environment $environmentName @processScope"
+            Write-Host "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($endpointObject.tenantId) -Credential $psCredential -MaxContextPopulation $maxContext -Environment $environmentName @processScope"
             $null = Connect-AzAccount -ServicePrincipal -Tenant $endpointObject.tenantId `
             -Credential $psCredential `
+            -MaxContextPopulation $maxContext `
             -Environment $environmentName @processScope -WarningAction SilentlyContinue
         }
         else {
@@ -106,10 +115,10 @@ elseif ($endpointObject.scheme -eq 'WorkloadIdentityFederation') {
     Write-Verbose "Using WorkloadIdentityFederation authentication scheme"
 
     $logStr = "##[command] Connect-AzAccount -ServicePrincipal -Tenant $($endpointObject.tenantId) -ApplicationId $($endpointObject.servicePrincipalClientID)"
-    $logStr += " -FederatedToken ***** -Environment $environmentName -Scope Process"
+    $logStr += " -FederatedToken ***** -Environment $environmentName -Scope Process -MaxContextPopulation $maxContext"
     Write-Host $logStr
     Connect-AzAccount -ServicePrincipal -Tenant $endpointObject.tenantId -ApplicationId $endpointObject.servicePrincipalClientID `
-        -FederatedToken $clientAssertionJwt -Environment $environmentName -Scope 'Process'
+        -FederatedToken $clientAssertionJwt -Environment $environmentName -Scope 'Process' -MaxContextPopulation $maxContext
 
     if ($scopeLevel -ne "ManagementGroup") {
         Write-Host "##[command] Set-AzContext -SubscriptionId $($endpointObject.subscriptionID) -TenantId $($endpointObject.tenantId)"

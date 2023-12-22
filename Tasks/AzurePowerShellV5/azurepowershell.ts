@@ -36,6 +36,7 @@ async function run() {
         let serviceName = tl.getInput('ConnectedServiceNameARM',/*required*/true);
         let endpointObject= await new AzureRMEndpoint(serviceName).getEndpoint();
         let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
+        let maxContextPopulation: string = convertToNullIfUndefined(tl.getInput('maxContextPopulation', /*required*/ false));
         let isDebugEnabled = (process.env['SYSTEM_DEBUG'] || "").toLowerCase() === "true";
 
         // string constants
@@ -78,6 +79,9 @@ async function run() {
         let initAzCommand = `${azFilePath} -endpoint '${endpoint}'`
         if (targetAzurePs != "") {
             initAzCommand += ` -targetAzurePs  ${targetAzurePs}`;
+        }
+        if (maxContextPopulation != "") {
+            initAzCommand += ` -MaxContextPopulation '${maxContextPopulation}'`;
         }
         if (endpointObject.scheme === 'WorkloadIdentityFederation') {
             const oidc_token = await endpointObject.applicationTokenCredentials.getFederatedToken();
