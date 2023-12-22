@@ -428,7 +428,6 @@ class Utils {
     private static async getFilePathForLinkedArtifact(filePath: string, taskParameters: armDeployTaskParameters.TaskParameters): Promise<string> {
         var filePathExtension: string = filePath.split('.').pop();
         if(filePathExtension === 'bicep'){
-            tl.debug("Detected .bicep extension on filePath");
             let azcliversion = await this.getAzureCliVersion()
             if(parseFloat(azcliversion)){
                 if(this.isBicepAvailable(azcliversion)){

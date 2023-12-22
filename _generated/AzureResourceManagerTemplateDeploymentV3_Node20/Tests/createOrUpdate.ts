@@ -89,17 +89,13 @@ tr.registerMock('azure-pipelines-tasks-azure-arm-rest/azure-arm-resource', requi
 
 const fsClone = Object.assign({}, fs);
 fsClone.readFileSync = function(fileName: string): Buffer {
-    if (fileName.indexOf("CSMwithBicep.json") >= 0) {
+    if (fileName.indexOf("CSMwithBicep.json") >= 0 || fileName.indexOf("CSMwithBicepWithWarning.json") >= 0) {
         const filePath = fileName.replace('.json', '.bicep');
         cpExec(`az bicep build --file ${filePath}`);
     }
-    if (fileName.indexOf("CSMwithBicepWithWarning.json") >= 0) {
-        const filePath = fileName.replace('.json', '.bicep');
-        cpExec(`az bicep build --file ${filePath}`);
-    }
-    if (fileName.indexOf("CSMwithBicep.parameters.json") >= 0) {
+    else if (fileName.indexOf("CSMwithBicep.parameters.json") >= 0) {
         const filePath = fileName.replace('.parameters.json', '.bicepparam');
-        cpExec(`az bicep build-params --file ${filePath} --outfile ${path.join(__dirname, "CSMwithBicep.parameters.json")}`);
+        cpExec(`az bicep build-params --file ${filePath} --outfile ${fileName}`);
     }
     var buffer = fs.readFileSync(fileName);
     return buffer;

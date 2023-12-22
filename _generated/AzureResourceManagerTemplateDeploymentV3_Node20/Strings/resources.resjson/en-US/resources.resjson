@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/armtaskreadme)",
   "loc.description": "Deploy an Azure Resource Manager (ARM) template to all the deployment scopes",
   "loc.instanceNameFormat": "ARM Template deployment: $(deploymentScope) scope",
-  "loc.releaseNotes": "- Added support for deployment at all the deployment scopes.\n- Removed all the VM related actions.",
+  "loc.releaseNotes": "- Added support for bicepparam.",
   "loc.group.displayName.AzureDetails": "Azure Details",
   "loc.group.displayName.Template": "Template",
   "loc.group.displayName.Advanced": "Advanced",
