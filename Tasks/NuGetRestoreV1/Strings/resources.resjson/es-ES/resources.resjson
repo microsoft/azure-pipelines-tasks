@@ -56,5 +56,5 @@
   "loc.messages.UnsupportedProjectScopedFeeds": "Esta versión de la tarea \"Restaurar NuGet\" no admite las fuentes con ámbito de proyecto. Use la tarea \"NuGet\" de versión 2 o posterior.",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg está habilitado actualmente para esta tarea. Para resolver esta advertencia, edite la tarea de compilación y establezca \"includeNuGetOrg\" en \"false\" o anule la selección de \"Usar paquetes de NuGet.org\".",
   "loc.messages.Error_IncludeNuGetOrgEnabled": "Error al restaurar los paquetes. Edite la tarea de compilación y establezca \"includeNuGetOrg\" en \"false\" o anule la selección de \"Usar paquetes de NuGet.org\".",
-  "loc.messages.DeprecatedTask": "This task is deprecated. Please switch to using NuGetCommand@2's 'restore' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
+  "loc.messages.DeprecatedTask": "Esta tarea está en desuso. Cambie al uso de la opción \"restaurar\" de NuGetCommand@2 https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
 }

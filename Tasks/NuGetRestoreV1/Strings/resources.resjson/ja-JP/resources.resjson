@@ -56,5 +56,5 @@
   "loc.messages.UnsupportedProjectScopedFeeds": "プロジェクトを対象とするフィードは、このバージョンの \"NuGet の復元\" タスクではサポートされていません。バージョン 2 以降の \"NuGet\" タスクをご使用ください。",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg は現在、このタスクに対して有効になっています。この警告を解決するには、ビルド タスクを編集し、'includeNuGetOrg' を 'false' に設定するか、'NuGet.org からパッケージを使用する' の選択を解除します。",
   "loc.messages.Error_IncludeNuGetOrgEnabled": "パッケージを復元できませんでした。ビルド タスクを編集し、'includeNuGetOrg' を 'false' に設定するか、'NuGet.org からパッケージを使用する' の選択を解除します。",
-  "loc.messages.DeprecatedTask": "This task is deprecated. Please switch to using NuGetCommand@2's 'restore' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
+  "loc.messages.DeprecatedTask": "このタスクは非推奨です。NuGetCommand@2 の 'restore' オプションの使用に切り替えてください https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
 }
