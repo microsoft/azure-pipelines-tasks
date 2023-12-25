@@ -21,11 +21,11 @@ steps:
   inputs:
     versionSpec: 10.24.1
 
-# Use .NET SDK 7
+# Use .NET SDK 8
 - task: UseDotNet@2
-  displayName: 'Install .NET Core SDK 7.x'
+  displayName: 'Install .NET Core SDK 8.x'
   inputs:
-    version: 7.x
+    version: 8.x
 
 # npm install
 - script: npm install
@@ -51,6 +51,7 @@ steps:
 # Filter out unchanged tasks
 - script: node ./ci/filter-tasks.js
   displayName: Filter out unchanged tasks
+  name: getTaskPattern
   env:
     PACKAGE_ENDPOINT: $(Package.Endpoint)
     PACKAGE_TOKEN: $(Package.Token)
@@ -64,12 +65,16 @@ steps:
       ne(variables['numTasks'], 0)
     )
 
+# Verify generated files across tasks are up-to-date
+- script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --all-tasks
+  displayName: Ensure BuildConfigGen outputs are consistent
+
 - script: node ./ci/check-downgrading.js --task "$(task_pattern_fordowngradingcheck)" --sprint $(currentSprint) --week $(currentSprintWeek)
   displayName: Check for downgrading tasks
   condition: |
       and(
         succeeded(),
-        ne(variables['numTasks'], 0),
+        ne(variables['numTasksForDowngradingCheck'], 0),
         ne(variables['COURTESY_PUSH'], 'true'),
         eq(variables['build.reason'], 'PullRequest'),
         eq(variables['System.PullRequest.TargetBranch'], 'master')
@@ -89,7 +94,7 @@ steps:
   displayName: Clean tasks
 
 # Build Tasks
-- script: node make.js serverBuild --task "$(task_pattern)"
+- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)"
   displayName: Build Tasks
   condition: and(succeeded(), ne(variables['numTasks'], 0))
 
@@ -103,7 +108,7 @@ steps:
     )
 
 # Check diff for task sources
-- script: node ./ci/verify-source-changes.js "$(task_pattern)"
+- script: node ./ci/verify-source-changes.js "$(getTaskPattern.task_pattern)"
   displayName: Verify task source changes
   condition: |
     and(
@@ -159,7 +164,7 @@ steps:
 - script: node make.js test
   displayName: Run tests
   condition: and(succeeded(), ne(variables['numTasks'], 0))
-- script: node make.js testLegacy --task "$(task_pattern)"
+- script: node make.js testLegacy --task "$(getTaskPattern.task_pattern)"
   displayName: Legacy tests with node 6
   condition: and(succeeded(), ne(variables['numTasks'], 0))
 

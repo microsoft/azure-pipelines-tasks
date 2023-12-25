@@ -8,11 +8,20 @@ var KuduServiceTests = require("../node_modules/azure-pipelines-tasks-azure-arm-
 var ApplicationInsightsTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-appinsights-tests.js");
 var ResourcesTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-resource-tests.js");
 
-describe('AzureRmWebAppDeployment Suite', function() {
-    
-    this.timeout(60000);
+const tmpDir = path.join(__dirname, 'temp');
 
-     before((done) => {
+describe('AzureRmWebAppDeployment Suite', function() {
+    this.timeout(60000);
+    this.beforeAll(done => {
+        tl.mkdirP(tmpDir);
+        done();
+    });
+    this.afterAll(done => {
+        tl.rmRF(tmpDir);
+        done();
+    });
+
+    before((done) => {
         if(!tl.exist(path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/node_modules'))) {
             tl.cp(path.join( __dirname, 'node_modules'), path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest/Tests'), '-rf', true);
         }
@@ -214,12 +223,13 @@ describe('AzureRmWebAppDeployment Suite', function() {
         try {
             tr.run();
             assert(tr.stdOutContained('SCM_COMMAND_IDLE_TIMEOUT variable PRESENT'), 'Should have printed: SCM_COMMAND_IDLE_TIMEOUT variable PRESENT');
+            assert(tr.stdOutContained('msbuild package PRESENT'), 'Should have printed: msbuild package PRESENT');
             done();
         }
         catch(error) {
             console.log(tr.stdout);
             console.log(tr.stderr);
-            done();
+            done(error);
         }
     });
 

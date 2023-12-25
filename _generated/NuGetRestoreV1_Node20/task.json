@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 231,
+    "Minor": 232,
     "Patch": 1
   },
   "runsOn": [
@@ -18,7 +18,7 @@
   ],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
-  "removalDate": "2023-11-27",
+  "removalDate": "2023-12-11",
   "groups": [
     {
       "name": "advanced",
@@ -171,10 +171,11 @@
     "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task.",
     "UnsupportedProjectScopedFeeds": "Project-scoped feeds are not supported by this version of the \"NuGet Restore\" task. Please use the \"NuGet\" task version 2 or higher.",
     "Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
-    "Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'."
+    "Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
+    "DeprecatedTask": "This task is deprecated. Please switch to using NuGetCommand@2's 'restore' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
   },
   "_buildConfigMapping": {
-    "Default": "1.231.0",
-    "Node20_229_1": "1.231.1"
+    "Default": "1.232.0",
+    "Node20_229_1": "1.232.1"
   }
 }
