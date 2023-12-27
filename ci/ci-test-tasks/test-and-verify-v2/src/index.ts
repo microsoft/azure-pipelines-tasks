@@ -1,44 +1,77 @@
+import { BuildDefinitionReference, Build } from 'azure-devops-node-api/interfaces/BuildInterfaces';
 
-import axios from 'axios';
-
-import { PipelineBuild } from './interfaces';
-import { getBuildConfigs, pipelineVariable } from './helpers';
-import { configInstance } from './config';
-import { API_VERSION } from './constants';
+import { api } from './api';
 import { fetchBuildStatus, retryFailedJobsInBuild } from './helpers.Build';
 import { fetchPipelines } from './helpers.Pipeline';
+import { getBuildConfigs } from './helpers';
+
+interface BuildResult { succeeded: boolean; message: string }
+
+const DISABLED = 'disabled';
 
 async function main() {
-  const tasks = configInstance.TaskArg.split(',');
-
-  const runningTestBuilds: Promise<string>[] = [];
-  for (const task of tasks) {
+  const disabledPipelines: string[] = [];
+  const runningTestBuilds: Promise<BuildResult>[] = [];
+  for (const task of api.tasks) {
     console.log(`starting tests for ${task} task`);
-    runningTestBuilds.push(...await runTaskPipelines(task));
+    const runResult = await runTaskPipelines(task);
+
+    if (runResult === DISABLED) {
+      disabledPipelines.push(task);
+    } else {
+      runningTestBuilds.push(...runResult);
+    }
   }
 
+  let failed = false;
+
   Promise.all(runningTestBuilds).then(results => {
-    console.log(results);
+    console.log('\nResults:');
+
+    results.map(result => {
+      if (!result.succeeded) {
+        result.message = `##vso[task.issue type=error]${result.message}`;
+        failed = true;
+      }
+
+      console.log(result.message);
+    });
   }).catch(error => {
     console.error(error);
+  }).finally(() => {
+    if (disabledPipelines.length > 0) {
+      console.log('\nDisabled pipelines:');
+
+      disabledPipelines.map(disabledPipeline => console.log(
+        `##vso[task.issue type=warning]${disabledPipeline} is disabled`
+      ));
+    }
+
+    console.log('\n');
+    if (failed) console.log('##vso[task.complete result=Failed]');
   });
 }
 
 // Running test pipelines for task by build configs
-async function runTaskPipelines(taskName: string): Promise<Promise<string>[]> {
+async function runTaskPipelines(taskName: string): Promise<Promise<BuildResult>[] | typeof DISABLED> {
   const pipelines = await fetchPipelines()();
   const pipeline = pipelines.find(pipeline => pipeline.name === taskName);
 
   if (pipeline) {
+    if (pipeline.queueStatus === 2) { // disabled
+      console.log(`Pipeline "${pipeline.name}" is disabled.`);
+      return DISABLED;
+    }
+
     const configs = getBuildConfigs(taskName);
     console.log(`Detected buildconfigs ${JSON.stringify(configs)}`);
 
-    const runningBuilds: Promise<string>[] = [];
+    const runningBuilds: Promise<BuildResult>[] = [];
     for (const config of configs) {
       console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`)
       const pipelineBuild = await startTestPipeline(pipeline, config);
 
-      const buildPromise = new Promise<string>((resolve, reject) => completeBuild(taskName, pipelineBuild, resolve, reject))
+      const buildPromise = new Promise<BuildResult>(resolve => completeBuild(taskName, pipelineBuild, resolve))
       runningBuilds.push(buildPromise);
     }
 
@@ -50,7 +83,7 @@ async function runTaskPipelines(taskName: string): Promise<Promise<string>[]> {
   return [];
 }
 
-async function startTestPipeline(pipeline: PipelineBuild, config = ''): Promise<PipelineBuild> {
+async function startTestPipeline(pipeline: BuildDefinitionReference, config = ''): Promise<Build> {
   console.log(`Run ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`);
 
   const { BUILD_SOURCEVERSION: branch, CANARY_TEST_NODE_VERSION: nodeVersion } = process.env;
@@ -59,21 +92,12 @@ async function startTestPipeline(pipeline: PipelineBuild, config = ''): Promise<
   }
 
   try {
-    const res = await axios
-      .post(
-        `${configInstance.ApiUrl}/pipelines/${pipeline.id}/runs?${API_VERSION}`,
-        {
-          variables: {
-            ...pipelineVariable('CANARY_TEST_TASKNAME', pipeline.name),
-            ...pipelineVariable('CANARY_TEST_BRANCH', branch),
-            ...pipelineVariable('CANARY_TEST_CONFIG', config),
-            ...pipelineVariable('CANARY_TEST_NODE_VERSION', nodeVersion)
-          },
-        },
-        configInstance.AxiosAuth
-      );
-
-    return res.data;
+    return await api.queueBuild(pipeline.id!, {
+      CANARY_TEST_TASKNAME: pipeline.name,
+      CANARY_TEST_BRANCH: branch,
+      CANARY_TEST_CONFIG: config,
+      CANARY_TEST_NODE_VERSION: nodeVersion
+    });
   } catch (err: any) {
     err.stack = `Error running ${pipeline.name} pipeline. Stack: ${err.stack}`;
     console.error(err.stack);
@@ -87,11 +111,10 @@ async function startTestPipeline(pipeline: PipelineBuild, config = ''): Promise<
 
 async function completeBuild(
   pipelineName: string,
-  pipelineBuild: PipelineBuild,
-  resolve: (value: string) => void,
-  reject: (reason?: any) => void
+  pipelineBuild: Build,
+  resolve: (value: BuildResult) => void
 ): Promise<void> {
-  const maxRetries = 10;
+  const maxRetries = 3;
   const buildTimeoutInSeconds = 300 * 60;
   const intervalInSeconds = 20;
 
@@ -103,23 +126,22 @@ async function completeBuild(
   const interval = setInterval(
     async () => {
       const buildStatus = await fetchBuildStatus(pipelineBuild);
-      console.log(`State of the ${stringifiedBuild}: "${buildStatus.state}"`);
+      console.log(`State of the ${stringifiedBuild}: "${buildStatus.status}"`);
 
-      if (buildStatus.state !== 'completed') {
+      if (buildStatus.status !== 2) { // completed
         if (++intervalAmount * intervalInSeconds >= buildTimeoutInSeconds) {
           clearInterval(interval);
 
-          reject(new Error(`Timeout to complete the ${stringifiedBuild} exceeded`));
+          resolve({ succeeded: false, message: `Timeout to complete the ${stringifiedBuild} exceeded` });
         }
 
         return;
       }
 
-      if (buildStatus.result === 'succeeded') {
+      if (buildStatus.result === 2) { // succeeded
         clearInterval(interval);
 
-        const result = `The ${stringifiedBuild} completed with result "${buildStatus.result}"`;
-        resolve(result);
+        resolve({ succeeded: true, message: `The ${stringifiedBuild} completed with result "${buildStatus.result}"` });
       } else if (retryCount < maxRetries) {
         console.log(`Retrying failed jobs in ${stringifiedBuild}. Retry count: ${++retryCount} out of ${maxRetries}`);
         await retryFailedJobsInBuild(pipelineBuild);
@@ -127,8 +149,7 @@ async function completeBuild(
       else {
         clearInterval(interval);
 
-        const result = `The ${stringifiedBuild} completed with result "${buildStatus.result}"`;
-        reject(new Error(result));
+        resolve({ succeeded: false, message: `The ${stringifiedBuild} completed with result "${buildStatus.result}"` });
       }
     },
     intervalInSeconds * 1000
