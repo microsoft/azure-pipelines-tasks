@@ -5,9 +5,25 @@ import { fetchBuildStatus, retryFailedJobsInBuild } from './helpers.Build';
 import { fetchPipelines } from './helpers.Pipeline';
 import { getBuildConfigs } from './helpers';
 
-interface BuildResult { succeeded: boolean; message: string }
+interface BuildResult { result: string; message: string }
 
 const DISABLED = 'disabled';
+
+const buildResultCode = {
+  0: 'None',
+  2: 'Succeeded',
+  4: 'PartiallySucceeded',
+  8: 'Failed',
+  32: 'Canceled'
+};
+
+const buildResultEnum = {
+  None: 'None',
+  Succeeded: 'Succeeded',
+  PartiallySucceeded: 'PartiallySucceeded',
+  Failed: 'Failed',
+  Canceled: 'Canceled'
+};
 
 async function main() {
   const disabledPipelines: string[] = [];
@@ -23,18 +39,20 @@ async function main() {
     }
   }
 
-  let failed = false;
+  let failed: boolean = false;
 
-  Promise.all(runningTestBuilds).then(results => {
+  Promise.all(runningTestBuilds).then(buildResults => {
     console.log('\nResults:');
 
-    results.map(result => {
-      if (!result.succeeded) {
-        result.message = `##vso[task.issue type=error]${result.message}`;
+    buildResults.map(buildResult => {
+      if (buildResult.result === buildResultEnum.PartiallySucceeded) {
+        buildResult.message = `##vso[task.issue type=warning]${buildResult.message}`;
+      } else if (buildResult.result !== buildResultEnum.Succeeded) {
+        buildResult.message = `##vso[task.issue type=error]${buildResult.message}`;
         failed = true;
       }
 
-      console.log(result.message);
+      console.log(buildResult.message);
     });
   }).catch(error => {
     console.error(error);
@@ -68,10 +86,10 @@ async function runTaskPipelines(taskName: string): Promise<Promise<BuildResult>[
 
     const runningBuilds: Promise<BuildResult>[] = [];
     for (const config of configs) {
-      console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`)
+      console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`);
       const pipelineBuild = await startTestPipeline(pipeline, config);
 
-      const buildPromise = new Promise<BuildResult>(resolve => completeBuild(taskName, pipelineBuild, resolve))
+      const buildPromise = new Promise<BuildResult>(resolve => completeBuild(taskName, pipelineBuild, resolve));
       runningBuilds.push(buildPromise);
     }
 
@@ -132,26 +150,28 @@ async function completeBuild(
         if (++intervalAmount * intervalInSeconds >= buildTimeoutInSeconds) {
           clearInterval(interval);
 
-          resolve({ succeeded: false, message: `Timeout to complete the ${stringifiedBuild} exceeded` });
+          resolve({ result: 'Timeout', message: `Timeout to complete the ${stringifiedBuild} exceeded` });
         }
 
         return;
       }
 
-      if (buildStatus.result === 2) { // succeeded
-        clearInterval(interval);
+      const result = buildResultCode[buildStatus.result!];
 
-        resolve({ succeeded: true, message: `The ${stringifiedBuild} completed with result "${buildStatus.result}"` });
-      } else if (retryCount < maxRetries) {
+      if (
+        result !== buildResultEnum.Succeeded &&
+        result !== buildResultEnum.PartiallySucceeded &&
+        retryCount < maxRetries
+      ) {
         console.log(`Retrying failed jobs in ${stringifiedBuild}. Retry count: ${++retryCount} out of ${maxRetries}`);
         await retryFailedJobsInBuild(pipelineBuild);
-      }
-      else {
+      } else {
         clearInterval(interval);
 
-        resolve({ succeeded: false, message: `The ${stringifiedBuild} completed with result "${buildStatus.result}"` });
+        resolve({ result, message: `The ${stringifiedBuild} completed with result "${result}"` });
       }
     },
+
     intervalInSeconds * 1000
   );
 }
