@@ -1,0 +1,30 @@
+{
+  "CloneLanguageSets": [
+    {
+      "Name": "PowerBIClients_CloneLanguages",
+      "Languages": {
+        "en": "en-US",
+        "pt-BR": "pt;pt-BR",
+        "sr-Latn-RS": "sr-Latn",
+        "sr-Cyrl-RS": "sr-Cyrl"
+      }
+    },
+    {
+      "Name": "CSTEAPortalUI_CloneLanguages",
+      "Languages": {
+        "zh-Hans": "zh-Chs"
+      }
+    },
+    {
+      "Name": "ROBO_CloneLanguages",
+      "Languages": {
+        "de-DE": "de-AT;de-CH;de-DE;de-LU",
+        "en": "en-AU;en-CA;en-GB;en-HK;en-IE;en-IN;en-MY;en-NZ;en-SG",
+        "es-ES": "es-ES;es-MX",
+        "fr-FR": "fr-BE;fr-CA;fr-CH;fr-FR;fr-LU",
+        "nl-NL": "nl-BE;nl-NL",
+        "zh-TW": "zh-HK;zh-TW"
+      }
+    }
+  ]
+}

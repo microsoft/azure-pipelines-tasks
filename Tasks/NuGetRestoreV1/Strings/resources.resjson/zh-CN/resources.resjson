@@ -56,5 +56,5 @@
   "loc.messages.UnsupportedProjectScopedFeeds": "此版本的“NuGet 还原”任务不支持项目范围的源。请使用 \"NuGet\" 任务版本 2 或更高版本。",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "当前已为此任务启用 IncludeNugetOrg。若要解决此警告，请编辑生成任务并将 \"includeNuGetOrg\" 设置为 \"false\" 或取消选择“使用来自 NuGet.org 的包”。",
   "loc.messages.Error_IncludeNuGetOrgEnabled": "包无法还原。请编辑生成任务并将 \"includeNuGetOrg\" 设置为 \"false\"，或取消选择“使用来自 NuGet.org 的包”。",
-  "loc.messages.DeprecatedTask": "This task is deprecated. Please switch to using NuGetCommand@2's 'restore' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
+  "loc.messages.DeprecatedTask": "此任务已弃用。请切换到使用 NuGetCommand@2 的“还原”选项 https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
 }

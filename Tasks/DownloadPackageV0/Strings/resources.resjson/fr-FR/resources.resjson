@@ -23,5 +23,5 @@
   "loc.messages.OperationFailed": "Échec dans %s. Erreur : %s",
   "loc.messages.Info_ResolvedToolFromCache": "Résolu à partir du cache d'outils : %s",
   "loc.messages.UnsupportedProjectScopedFeeds": "Les flux dont l'étendue est un projet ne sont pas pris en charge par cette version de la tâche \"Télécharger un package\". Utilisez la version 1 ou une version ultérieure.",
-  "loc.messages.DeprecatedTask": "This task is deprecated. Please switch to using DownloadPackage@1 https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/download-package-v1"
+  "loc.messages.DeprecatedTask": "Cette tâche est déconseillée. Veuillez utiliser DownloadPackage@1 https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/download-package-v1"
 }
