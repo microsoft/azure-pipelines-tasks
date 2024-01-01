@@ -1,0 +1,150 @@
+{
+  "id": "2C65196A-54FD-4A02-9BE8-D9D1837B7111",
+  "name": "VisualStudioTestPlatformInstaller",
+  "friendlyName": "Visual Studio test platform installer",
+  "description": "Acquire the test platform from nuget.org or the tool cache. Satisfies the ‘vstest’ demand and can be used for running tests and collecting diagnostic data using the Visual Studio Test task.",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/vstest-platform-tool-installer",
+  "helpMarkDown": "[Test platform package on NuGet](https://www.nuget.org/packages/Microsoft.TestPlatform/)",
+  "category": "Tool",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.144.0",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 231,
+    "Patch": 2
+  },
+  "satisfies": [
+    "VsTest"
+  ],
+  "demands": [],
+  "instanceNameFormat": "Visual Studio Test Platform Installer",
+  "groups": [
+    {
+      "name": "packageSettings",
+      "displayName": "Package settings",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "packageFeedSelector",
+      "type": "pickList",
+      "label": "Package Feed",
+      "defaultValue": "nugetOrg",
+      "required": true,
+      "groupName": "packageSettings",
+      "helpMarkDown": "Specify the feed from which the Visual Studio Test Platform nuget packge should be fetched.",
+      "options": {
+        "nugetOrg": "Official Nuget",
+        "customFeed": "Custom Feed",
+        "netShare": "Network path"
+      }
+    },
+    {
+      "name": "versionSelector",
+      "type": "pickList",
+      "label": "Version",
+      "defaultValue": "latestPreRelease",
+      "required": true,
+      "groupName": "packageSettings",
+      "helpMarkDown": "Pick whether to install the latest version or a specific version of the Visual Studio Test Platform. <br>If you use the test platform installer to run Coded UI tests, ensure that the version you choose matches the major version of Visual Studio with which the test binaries were built. For e.g., if the Coded UI test project was built using Visual Studio 2017 (version 15.x), you must use test platform version 15.x.",
+      "options": {
+        "latestPreRelease": "Latest (Includes Pre-Release)",
+        "latestStable": "Latest Stable",
+        "specificVersion": "Specific Version"
+      },
+      "visibleRule": "packageFeedSelector = nugetOrg || packageFeedSelector = customFeed"
+    },
+    {
+      "name": "testPlatformVersion",
+      "type": "string",
+      "label": "Test Platform Version",
+      "required": true,
+      "groupName": "packageSettings",
+      "helpMarkDown": "Specify the version of Visual Studio Test Platform to install on the agent. Available versions can be viewed on <a href=\"https://www.nuget.org/packages/Microsoft.TestPlatform/\">nuget</a>.",
+      "visibleRule": "versionSelector = specificVersion"
+    },
+    {
+      "name": "customFeed",
+      "type": "string",
+      "label": "Package Source",
+      "required": true,
+      "groupName": "packageSettings",
+      "helpMarkDown": "Fetch the testplatform package from the specified package feed. Can be a public or a private feed.",
+      "visibleRule": "packageFeedSelector = customFeed"
+    },
+    {
+      "name": "username",
+      "type": "string",
+      "label": "User Name",
+      "required": false,
+      "groupName": "packageSettings",
+      "helpMarkDown": "User name for authenticating against the specified feed. If providing a PAT token as password, username is optional.",
+      "visibleRule": "packageFeedSelector = customFeed"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "label": "Password",
+      "required": false,
+      "groupName": "packageSettings",
+      "helpMarkDown": "Password or personal access token for authenticating against the specified feed.",
+      "visibleRule": "packageFeedSelector = customFeed"
+    },
+    {
+      "name": "netShare",
+      "type": "string",
+      "label": "UNC Path",
+      "required": true,
+      "groupName": "packageSettings",
+      "helpMarkDown": "Specify the full UNC path to the microsoft.testplatform nupkg file.",
+      "visibleRule": "packageFeedSelector = netShare"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "vstestplatformtoolinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "vstestplatformtoolinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "vstestplatformtoolinstaller.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "StartingInstaller": "Starting VsTest platform tools installer task.",
+    "ProvideExplicitVersion": "The version you provided (%s) is not an explicit version. Please provide a version number of the form majorVer.minorVer.patchVer.",
+    "NoPackageFoundInCache": "Failed to find any stable version of the test platform package in the cache.",
+    "OnlyWindowsOsSupported": "This task is supported only on Windows agents and cannot be used on other platforms.",
+    "RequiredVersionNotListed": "Required version of the Microsoft.Testplatform package was not listed in the nuget feed, looking for latest stable version cached.",
+    "FailedToListAvailablePackagesFromNuget": "Failed to fetch list of available packages from nuget, looking for latest stable version cached.",
+    "FailedToAcquireTestPlatform": "Failed to acquire the test platform. Please set system.debug to true and refer to the debug logs for additional information.",
+    "InstallationSuccessful": "VsTest will use the Test Platform package found in %s",
+    "TestPlatformDownloadFailed": "Failed to download version %s of the test platform with error %s.",
+    "LookingForLatestStableVersion": "Looking for the latest stable version of the Microsoft.Testplatform.",
+    "LookingForLatestPreReleaseVersion": "Looking for the latest pre-release version of the Microsoft.Testplatform.",
+    "AgentWorkDirectoryPathTooLong": "Please ensure that the agent work directory path is less than 50 characters to guarantee successful download of the test platform package.",
+    "ListPackagesFailed": "Listing packages failed. Nuget.exe returned %s.\nStandard Error:\n%sStandard Out:\n%s",
+    "NugetErrorCode": "Nuget.exe returned error code: %s",
+    "UpgradeAgentMessage": "Please upgrade your agent to the latest available in https://github.com/Microsoft/vsts-agent/releases.",
+    "SpecifiedFileDoesNotExist": "The path provided %s does not exist, is not a valid file or is not accessible. Please provide a valid path to the microsoft.testplatform nupkg file you want to install.",
+    "UnexpectedFileName": "Unable to extract version info from the file %s. Please do not rename the microsoft.testplatform nupkg file downloaded from nuget.org. If you have, then please redownload the file or rename it back to its original name.",
+    "ConfigFileWriteFailed": "Failed to write nuget.config file %s with error %s",
+    "LatestStableCached": "Looking for latest stable version cached.",
+    "DownloadFailed": "Download failed with error code: %s.",
+    "ExpectedTempToBeSet": "Expected Agent.TempDirectory to be set.",
+    "ParsedVersion": "Parsed the version of the Microsoft.Testplatform package to be %s from the file name. Please ensure that the file name is the same as when the .nupkg file is downloaded from the official nuget feed."
+  },
+  "_buildConfigMapping": {
+    "Default": "1.231.0",
+    "Node20_229_4": "1.231.2"
+  }
+}

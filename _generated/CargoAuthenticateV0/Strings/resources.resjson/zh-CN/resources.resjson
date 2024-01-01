@@ -1,0 +1,17 @@
+{
+  "loc.friendlyName": "Cargo 身份验证(适用于任务运行程序)",
+  "loc.helpMarkDown": "",
+  "loc.description": "用于安装 Cargo crates 分发版的 cargo 客户端的身份验证任务",
+  "loc.instanceNameFormat": "cargo 身份验证 $(configFile)",
+  "loc.input.label.configFile": "要进行身份验证的 config.toml 文件",
+  "loc.input.help.configFile": "指定要使用的注册表的 config.toml 文件的路径。选择文件，而不是文件夹，例如 \"/.cargo/config.toml\"。",
+  "loc.input.label.cargoServiceConnections": "用于此组织/集合外部的注册表的凭据",
+  "loc.input.help.cargoServiceConnections": "用于位于项目的 config.tom 中的外部注册表的凭据。对于此组织/集合中的注册表，请将其留空;将自动使用生成的凭据。",
+  "loc.messages.FailedToAddAuthentication": "添加身份验证失败。",
+  "loc.messages.ConfigTomlNotToml": "选择进行身份验证的文件(%s)不是一个有效的 .toml 文件。",
+  "loc.messages.ConfigTomlDoesNotExist": "在 %s 中选择的 config.toml 文件当前不存在。",
+  "loc.messages.ConfigTomlMissingRegistry": "所选的 config.toml 文件必须包含注册表",
+  "loc.messages.AuthenticatingThisConfigToml": "正在为位于 %s 的此 config.toml 文件中列出的注册表添加身份验证",
+  "loc.messages.AddingAuthRegistry": "正在为注册表 %s 添加身份验证，令牌名称为: %s",
+  "loc.messages.AddingAuthExternalRegistry": "正在为外部注册表 %s 添加身份验证，令牌名称为: %s"
+}

@@ -13,10 +13,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 198,
+    "Minor": 232,
     "Patch": 0
   },
   "deprecated": true,
+  "removalDate": "2024-01-31",
   "runsOn": [
     "Agent"
   ],

@@ -1,0 +1,87 @@
+{
+  "id": "2a6ca863-f2ce-4f4d-8bcb-15e64608ec4b",
+  "name": "DownloadSecureFile",
+  "friendlyName": "Download secure file",
+  "description": "Download a secure file to the agent machine",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=862069)",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 231,
+    "Patch": 1
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [],
+  "minimumAgentVersion": "2.182.1",
+  "instanceNameFormat": "Download secure file",
+  "inputs": [
+    {
+      "name": "secureFile",
+      "type": "secureFile",
+      "label": "Secure File",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The file name or GUID of the secure file to download to the agent machine. The file will be deleted after the pipeline runs."
+    },
+    {
+      "name": "retryCount",
+      "type": "string",
+      "label": "Retry Count",
+      "defaultValue": "8",
+      "required": "false",
+      "helpMarkDown": "Optional number of times to retry downloading a secure file if the download fails."
+    },
+    {
+      "name": "socketTimeout",
+      "type": "string",
+      "label": "Socket Timeout",
+      "defaultValue": "",
+      "required": "false",
+      "helpMarkDown": "Optional timeout for a socket associated with downloading secure file request in ms."
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "secureFilePath",
+      "description": "The location of the secure file that was downloaded."
+    }
+  ],
+  "prejobexecution": {
+    "Node10": {
+      "target": "predownloadsecurefile.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "predownloadsecurefile.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "predownloadsecurefile.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "secureFilePath"
+      ]
+    }
+  },
+  "messages": {},
+  "_buildConfigMapping": {
+    "Default": "1.231.0",
+    "Node20-225": "1.231.1"
+  }
+}
