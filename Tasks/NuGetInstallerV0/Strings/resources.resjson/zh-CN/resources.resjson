@@ -43,5 +43,5 @@
   "loc.messages.NGCommon_AddingSources": "设置 NuGet.config 中的凭据",
   "loc.messages.NGCommon_NoSourcesFoundInConfig": "没有在 %s 处找到 NuGet.config 文件中的包源",
   "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "选择了未知的 NuGet 版本。",
-  "loc.messages.DeprecatedTask": "This task is deprecated. Please switch to using NuGetCommand@2's 'restore' or 'custom' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
+  "loc.messages.DeprecatedTask": "此任务已弃用。请切换到使用 NuGetCommand@2 的“restore”或“custom”选项 https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
 }

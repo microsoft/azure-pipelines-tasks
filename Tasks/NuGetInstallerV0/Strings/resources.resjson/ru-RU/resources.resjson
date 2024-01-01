@@ -43,5 +43,5 @@
   "loc.messages.NGCommon_AddingSources": "Идет настройка учетных данных в NuGet.config",
   "loc.messages.NGCommon_NoSourcesFoundInConfig": "Не найдены источники пакетов в файле NuGet.config в \"%s\"",
   "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Выбрана неизвестная версия NuGet.",
-  "loc.messages.DeprecatedTask": "This task is deprecated. Please switch to using NuGetCommand@2's 'restore' or 'custom' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
+  "loc.messages.DeprecatedTask": "Эта задача является нерекомендуемой. Переключитесь на использование параметра \"restore\" или \"custom\" NuGetCommand@2: https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
 }
