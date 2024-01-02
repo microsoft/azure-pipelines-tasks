@@ -1,0 +1,112 @@
+{
+  "id": "2A7EBC54-C13E-490E-81A5-D7561AB7CD97",
+  "name": "PublishCodeCoverageResults",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-code-coverage-results",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Test",
+  "visibility": [
+    "Build"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 231,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.182.1",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "codeCoverageTool",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.codeCoverageTool",
+      "required": true,
+      "defaultValue": "JaCoCo",
+      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
+      "options": {
+        "Cobertura": "Cobertura",
+        "JaCoCo": "JaCoCo"
+      }
+    },
+    {
+      "name": "summaryFileLocation",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.summaryFileLocation",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.summaryFileLocation"
+    },
+    {
+      "name": "pathToSources",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.pathToSources",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pathToSources"
+    },
+    {
+      "name": "reportDirectory",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.reportDirectory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.reportDirectory"
+    },
+    {
+      "name": "additionalCodeCoverageFiles",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.additionalCodeCoverageFiles",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.additionalCodeCoverageFiles"
+    },
+    {
+      "name": "failIfCoverageEmpty",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failIfCoverageEmpty",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failIfCoverageEmpty"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "publishcodecoverageresults.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "publishcodecoverageresults.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "publishcodecoverageresults.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "settableVariables": {
+      "allowed": []
+    }
+  },
+  "messages": {
+    "FoundNMatchesForPattern": "ms-resource:loc.messages.FoundNMatchesForPattern",
+    "MultipleSummaryFilesFound": "ms-resource:loc.messages.MultipleSummaryFilesFound",
+    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
+    "InstallDotNetCoreForHtmlReport": "ms-resource:loc.messages.InstallDotNetCoreForHtmlReport",
+    "FailedToGenerateHtmlReport": "ms-resource:loc.messages.FailedToGenerateHtmlReport",
+    "IgnoringReportDirectory": "ms-resource:loc.messages.IgnoringReportDirectory",
+    "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage",
+    "GeneratedHtmlReport": "ms-resource:loc.messages.GeneratedHtmlReport"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.228.0",
+    "Node20_229_4": "1.231.0"
+  }
+}

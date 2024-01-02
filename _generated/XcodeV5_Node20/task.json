@@ -1,0 +1,426 @@
+{
+  "id": "1E78DC1B-9132-4B18-9C75-0E7ECC634B74",
+  "name": "Xcode",
+  "friendlyName": "Xcode",
+  "description": "Build, test, or archive an Xcode workspace on macOS. Optionally package an app.",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/xcode",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613730) or [see the Xcode documentation](https://developer.apple.com/xcode/)",
+  "category": "Build",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 5,
+    "Minor": 231,
+    "Patch": 5
+  },
+  "releaseNotes": "This version of the task is compatible with Xcode 8 - 13. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.",
+  "demands": [
+    "xcode"
+  ],
+  "instanceNameFormat": "Xcode $(actions)",
+  "groups": [
+    {
+      "name": "sign",
+      "displayName": "Signing & provisioning",
+      "isExpanded": true
+    },
+    {
+      "name": "package",
+      "displayName": "Package options",
+      "isExpanded": true
+    },
+    {
+      "name": "devices",
+      "displayName": "Devices & simulators",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "actions",
+      "type": "string",
+      "label": "Actions",
+      "defaultValue": "build",
+      "required": true,
+      "helpMarkDown": "Enter a space-delimited list of actions. Some valid options are `build`, `clean`, `test`, `analyze`, and `archive`. For example,`clean build` will run a clean build."
+    },
+    {
+      "name": "configuration",
+      "type": "string",
+      "label": "Configuration",
+      "defaultValue": "$(Configuration)",
+      "required": false,
+      "helpMarkDown": "Enter the Xcode project or workspace configuration to be built. The default value of this field is the variable `$(Configuration)`. When using a variable, make sure to specify a value (for example, `Release`) on the **Variables** tab."
+    },
+    {
+      "name": "sdk",
+      "type": "string",
+      "label": "SDK",
+      "defaultValue": "$(SDK)",
+      "required": false,
+      "helpMarkDown": "Specify an SDK to use when building the Xcode project or workspace. From the macOS Terminal application, run `xcodebuild -showsdks` to display the valid list of SDKs. The default value of this field is the variable `$(SDK)`. When using a variable, make sure to specify a value (for example, `iphonesimulator`) on the **Variables** tab."
+    },
+    {
+      "name": "xcWorkspacePath",
+      "type": "filePath",
+      "label": "Workspace or project path",
+      "defaultValue": "**/*.xcodeproj/project.xcworkspace",
+      "required": false,
+      "helpMarkDown": "(Optional) Enter a relative path from the root of the repository to the Xcode workspace or project. For example, `MyApp/MyApp.xcworkspace` or `MyApp/MyApp.xcodeproj`. Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077))."
+    },
+    {
+      "name": "scheme",
+      "type": "string",
+      "label": "Scheme",
+      "required": false,
+      "helpMarkDown": "(Optional) Enter a scheme name defined in Xcode. It must be a shared scheme, with its <strong>Shared</strong> checkbox enabled under <strong>Managed Schemes</strong> in Xcode. If you specify a <strong>Workspace or project path</strong> above without specifying a scheme, and the workspace has a single shared scheme, it will be automatically used."
+    },
+    {
+      "name": "xcodeVersion",
+      "type": "pickList",
+      "label": "Xcode version",
+      "required": false,
+      "helpMarkDown": "Specify the target version of Xcode. Select `Default` to use the default version of Xcode on the agent machine. Selecting a version number (e.g. `Xcode 9`) relies on environment variables being set on the agent machine for the version's location (e.g. `XCODE_9_DEVELOPER_DIR=/Applications/Xcode_9.0.0.app/Contents/Developer`). Select `Specify path` to provide a specific path to the Xcode developer directory.<br/>Note: XCode 12 is installed on macOS-10.15 (or higher)",
+      "defaultValue": "default",
+      ".comment": "//If you update the options here, be sure to update the Xcode.json build template as well.",
+      "options": {
+        "8": "Xcode 8",
+        "9": "Xcode 9",
+        "10": "Xcode 10",
+        "11": "Xcode 11",
+        "12": "Xcode 12",
+        "13": "Xcode 13",
+        "default": "Default",
+        "specifyPath": "Specify path"
+      }
+    },
+    {
+      "name": "xcodeDeveloperDir",
+      "type": "string",
+      "label": "Xcode developer path",
+      "required": false,
+      "helpMarkDown": "(Optional) Enter a path to a specific Xcode developer directory (e.g. `/Applications/Xcode_9.0.0.app/Contents/Developer`). This is useful when multiple versions of Xcode are installed on the agent machine.",
+      "visibleRule": "xcodeVersion == specifyPath"
+    },
+    {
+      "name": "packageApp",
+      "type": "boolean",
+      "label": "Create app package",
+      "defaultValue": false,
+      "required": true,
+      "helpMarkDown": "Indicate whether an IPA app package file should be generated as a part of the build.",
+      "groupName": "package"
+    },
+    {
+      "name": "archivePath",
+      "type": "filePath",
+      "label": "Archive path",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "(Optional) Specify a directory where created archives should be placed.",
+      "groupName": "package",
+      "visibleRule": "packageApp == true"
+    },
+    {
+      "name": "exportPath",
+      "type": "filePath",
+      "label": "Export path",
+      "defaultValue": "output/$(SDK)/$(Configuration)",
+      "required": false,
+      "helpMarkDown": "(Optional) Specify the destination for the product exported from the archive.",
+      "groupName": "package",
+      "visibleRule": "packageApp == true"
+    },
+    {
+      "name": "exportOptions",
+      "type": "pickList",
+      "label": "Export options",
+      "defaultValue": "auto",
+      "required": false,
+      "groupName": "package",
+      "options": {
+        "auto": "Automatic",
+        "plist": "Plist",
+        "specify": "Specify"
+      },
+      "helpMarkDown": "Select a way of providing options for exporting the archive. When the default value of `Automatic` is selected, the export method is automatically detected from the archive. Select `Plist` to specify a plist file containing export options. Select `Specify` to provide a specific **Export method** and **Team ID**.",
+      "visibleRule": "packageApp == true"
+    },
+    {
+      "name": "exportMethod",
+      "type": "string",
+      "label": "Export method",
+      "defaultValue": "development",
+      "required": true,
+      "helpMarkDown": "Enter the method that Xcode should use to export the archive. For example: `app-store`, `package`, `ad-hoc`, `enterprise`, or `development`.",
+      "groupName": "package",
+      "visibleRule": "exportOptions == specify"
+    },
+    {
+      "name": "exportTeamId",
+      "type": "string",
+      "label": "Team ID",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "(Optional) Enter the 10-character team ID from the Apple Developer Portal to use during export.",
+      "groupName": "package",
+      "visibleRule": "exportOptions == specify"
+    },
+    {
+      "name": "exportOptionsPlist",
+      "type": "filePath",
+      "label": "Export options plist",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Enter the path to the plist file that contains options to use during export.",
+      "groupName": "package",
+      "visibleRule": "exportOptions == plist"
+    },
+    {
+      "name": "exportArgs",
+      "type": "string",
+      "label": "Export arguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "(Optional) Enter additional command line arguments to be used during export.",
+      "groupName": "package",
+      "visibleRule": "packageApp == true"
+    },
+    {
+      "name": "signingOption",
+      "type": "pickList",
+      "label": "Signing style",
+      "required": false,
+      "groupName": "sign",
+      "defaultValue": "nosign",
+      "helpMarkDown": "Choose the method of signing the build. Select `Do not code sign` to disable signing. Select `Project defaults` to use only the project's signing configuration. Select `Manual signing` to force manual signing and optionally specify a signing identity and provisioning profile. Select `Automatic signing` to force automatic signing and optionally specify a development team ID. If your project requires signing, use the \"Install Apple...\" tasks to install certificates and provisioning profiles prior to the Xcode build.",
+      "options": {
+        "nosign": "Do not code sign",
+        "default": "Project defaults",
+        "manual": "Manual signing",
+        "auto": "Automatic signing"
+      }
+    },
+    {
+      "name": "signingIdentity",
+      "type": "string",
+      "label": "Signing identity",
+      "required": false,
+      "helpMarkDown": "(Optional) Enter a signing identity override with which to sign the build. This may require unlocking the default keychain on the agent machine. If no value is entered, the Xcode project's setting will be used.",
+      "groupName": "sign",
+      "visibleRule": "signingOption = manual"
+    },
+    {
+      "name": "provisioningProfileUuid",
+      "type": "string",
+      "label": "Provisioning profile UUID",
+      "required": false,
+      "helpMarkDown": "(Optional) Enter the UUID of an installed provisioning profile to be used for this build. Use separate build tasks with different schemes or targets to specify separate provisioning profiles by target in a single workspace (iOS, tvOS, watchOS).",
+      "groupName": "sign",
+      "visibleRule": "signingOption = manual"
+    },
+    {
+      "name": "provisioningProfileName",
+      "type": "string",
+      "label": "Provisioning profile name",
+      "required": false,
+      "helpMarkDown": "(Optional) Enter the name of an installed provisioning profile to be used for this build. If specified, this takes precedence over the provisioning profile UUID. Use separate build tasks with different schemes or targets to specify separate provisioning profiles by target in a single workspace (iOS, tvOS, watchOS).",
+      "groupName": "sign",
+      "visibleRule": "signingOption = manual"
+    },
+    {
+      "name": "teamId",
+      "type": "string",
+      "label": "Team ID",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "(Optional, unless you are a member of multiple development teams.) Specify the 10-character development team ID.",
+      "groupName": "sign",
+      "visibleRule": "signingOption = auto"
+    },
+    {
+      "name": "destinationPlatformOption",
+      "type": "picklist",
+      "label": "Destination platform",
+      "defaultValue": "default",
+      "required": false,
+      "helpMarkDown": "Select the destination device's platform to be used for UI testing when the generic build device isn't valid. Choose `Custom` to specify a platform not included in this list. When `Default` is selected, no simulators nor devices will be targeted.",
+      "groupName": "devices",
+      "options": {
+        "default": "Default",
+        "iOS": "iOS and watchOS",
+        "tvOS": "tvOS",
+        "macOS": "macOS",
+        "custom": "Custom"
+      }
+    },
+    {
+      "name": "destinationPlatform",
+      "type": "string",
+      "label": "Custom destination platform",
+      "required": false,
+      "helpMarkDown": "Enter a destination device's platform to be used for UI testing when the generic build device isn't valid.",
+      "groupName": "devices",
+      "visibleRule": "destinationPlatformOption == custom"
+    },
+    {
+      "name": "destinationTypeOption",
+      "type": "radio",
+      "label": "Destination type",
+      "defaultValue": "simulators",
+      "required": false,
+      "helpMarkDown": "Choose the destination type to be used for UI testing. Devices must be connected to the Mac performing the build via a cable or network connection. See <strong>Devices and Simulators</strong> in Xcode.",
+      "groupName": "devices",
+      "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS",
+      "options": {
+        "simulators": "Simulator",
+        "devices": "Connected Device"
+      }
+    },
+    {
+      "name": "destinationSimulators",
+      "label": "Simulator",
+      "type": "string",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "devices",
+      "helpMarkDown": "Enter an Xcode simulator name to be used for UI testing. For example, enter `iPhone X` (iOS and watchOS) or `Apple TV 4K` (tvOS). A target OS version is optional and can be specified in the format 'OS=<i>versionNumber</i>', such as `iPhone X,OS=11.1`. A list of simulators installed on the <strong>Hosted macOS</strong> agent can be [found here](https://go.microsoft.com/fwlink/?linkid=875290).",
+      "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS && destinationTypeOption == simulators"
+    },
+    {
+      "name": "destinationDevices",
+      "label": "Device",
+      "type": "string",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "devices",
+      "helpMarkDown": "Enter the name of the device to be used for UI testing, such as `Raisa's iPad`.",
+      "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS && destinationTypeOption == devices"
+    },
+    {
+      "name": "args",
+      "type": "string",
+      "label": "Arguments",
+      "required": false,
+      "helpMarkDown": "(Optional) Enter additional command line arguments with which to build. This is useful for specifying `-target` or `-project` arguments instead of specifying a workspace/project and scheme.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
+      "type": "filePath",
+      "label": "Working directory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "(Optional) Enter the working directory in which to run the build. If no value is entered, the root of the repository will be used.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "useXcpretty",
+      "type": "boolean",
+      "label": "Use xcpretty",
+      "required": false,
+      "defaultValue": true,
+      "helpMarkDown": "Specify whether to use xcpretty to format xcodebuild output. Enabling this requires xcpretty to be installed on the agent machine. If xcpretty is not installed, raw xcodebuild output is shown. xcpretty is preinstalled on Azure Pipelines hosted build agents. See [xcpretty](https://github.com/supermarin/xcpretty) on GitHub.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "xcprettyArgs",
+      "type": "string",
+      "label": "Xcpretty arguments",
+      "required": false,
+      "helpMarkDown": "Additional arguments to pass to xcpretty.",
+      "groupName": "advanced",
+      "visibleRule": "useXcpretty == true"
+    },
+    {
+      "name": "publishJUnitResults",
+      "type": "boolean",
+      "label": "Publish test results to Azure Pipelines",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Specify whether to publish JUnit test results to Azure Pipelines. This requires xcpretty to be enabled to generate JUnit test results."
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "Test run title",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Title of the test run when publishing JUnit test results to Azure Pipelines.",
+      "visibleRule": "publishJUnitResults == true"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "xcode.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "xcode.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "xcode.js",
+      "argumentFormat": ""
+    }
+  },
+  "postjobexecution": {
+    "Node10": {
+      "target": "postxcode.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "postxcode.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "postxcode.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "SignIdNotFound": "Failed to find the iOS signing identity. Verify that signing and provisioning information is provided.",
+    "TempKeychainSetupFailed": "Failed to add the temporary keychain to the keychains search path.",
+    "ProvProfileDetailsNotFound": "Failed to find details for the provisioning profile: %s",
+    "ProvProfileUUIDNotFound": "Failed to find the UUID for provisioning profile: %s",
+    "MultipleWorkspacesFound": "Multiple Xcode workspace matches were found. The first match will be used: %s",
+    "WorkspaceDoesNotExist": "The Xcode workspace was specified, but it does not exist or is not a directory: %s",
+    "UseXcprettyForTestPublishing": "Enable `Use xcpretty` to publish test results. For this build, no test results will be published.",
+    "NoTestResultsFound": "No test result files matching `%s` were found. Publishing JUnit test results will be skipped.",
+    "XcodeSuccess": "Xcode task execution completed with no errors.",
+    "TempKeychainDeleteFailed": "Failed to delete the temporary keychain created during the build: `%s`",
+    "ProvProfileDeleteFailed": "Failed to delete the provisioning profile `%s`.",
+    "ExportMethodNotIdentified": "Failed to automatically identify the export method to use from the archive file. This might cause errors during the build or produce an invalid package. If export fails, either enable signing (set `Signing Style` to `Project Defaults`), or configure export manually (set `Export options` to `Plist` or `Specify`).",
+    "ExportOptionsPlistInvalidFilePath": "The `Export options` plist file does not exist at `%s`. Provide the path to a valid plist file.",
+    "SchemeRequiredForArchive": "The scheme must be specified to generate the package with xcodebuild archive and export.",
+    "WorkspaceOrProjectRequiredForArchive": "The workspace or project path must be specified to generate the package with xcodebuild archive and export.",
+    "FailedToGenerateExportOptionsPlist": "Failed to automatically generate an `Export options` plist file to export an IPA. Please specify an `Export options` plist file in `Package options`.",
+    "LocateXcodeBasedOnVersion": "Locating the developer path for Xcode `%s`",
+    "FailedToLocateSpecifiedXcode": "Unable to resolve the developer path for Xcode `%s`. Set the `%s` environment variable on the agent machine, or set `Xcode version` to `Default` or `Specify path`.",
+    "CantDetermineProvisioningStyle": "The provisioning style was not found in a pbxProject file. Automatic signing will be used. If the project uses manual signing, auto-export may fail. As a workaround, `Export options` can be set to `Plist` or `Specify`.",
+    "MultipleSchemesFound": "The workspace contains multiple schemes. No scheme selected. Use `Scheme` to specify a target scheme.",
+    "NoSchemeFound": "No shared scheme found in the workspace. Use \"Manage Schemes\" in Xcode to share a scheme.",
+    "SchemeSelected": "The workspace contains a single shared scheme. '%s' will be used.",
+    "FailedToFindScheme": "Failed to find a scheme in the workspace. Use `Scheme` to specify a target scheme.",
+    "OutputDirectoryIgnored": "Output directory for build output (binaries) ignored. Specifying an output directory is incompatible with the '%s' action.",
+    "NoDestinationPlatformWarning": "UI tests must be run against a simulator or a connected device. In the Xcode task, set `Destination platform` to a value other than `Default`.",
+    "XcprettyNotInstalled": "xcpretty is not installed on the build server. xcodebuild raw output will be shown. Publishing test results will fail if xcpretty is not installed.",
+    "XcodeRequiresMac": "Using Xcode requires a macOS agent. Building with Xcode on Linux or Windows is not supported by Apple.",
+    "UsingDefaultSimulator": "Using default simulator: %s."
+  },
+  "_buildConfigMapping": {
+    "Default": "5.231.4",
+    "Node20-225": "5.231.5"
+  }
+}

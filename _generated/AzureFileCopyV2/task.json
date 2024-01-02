@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 228,
-    "Patch": 1
+    "Minor": 231,
+    "Patch": 2
   },
   "demands": [
     "azureps"
@@ -314,6 +314,10 @@
   "prejobexecution": {
     "Node10": {
       "target": "PreJobExecutionAzureFileCopy.js"
+    },
+    "Node16": {
+      "target": "PreJobExecutionAzureFileCopy.js",
+      "argumentFormat": ""
     }
   },
   "execution": {
@@ -370,7 +374,7 @@
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
   },
   "_buildConfigMapping": {
-    "Default": "2.228.1",
-    "Node16-225": "2.228.0"
+    "Default": "2.231.2",
+    "Node20_229_2": "2.231.4"
   }
 }

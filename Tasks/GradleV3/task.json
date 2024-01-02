@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 225,
+        "Minor": 231,
         "Patch": 0
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -423,6 +423,7 @@
         "FileNotFound": "File or folder doesn't exist: %s",
         "FailedToAppendCC": "Unable to append code coverage data: %s",
         "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
-        "chmodGradlew": "Used 'chmod' method for gradlew file to make it executable."
+        "chmodGradlew": "Used 'chmod' method for gradlew file to make it executable.",
+        "UnableToExtractGradleVersion": "Unable to extract Gradle version from gradle output."
     }
 }

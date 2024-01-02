@@ -220,7 +220,7 @@ export default class VirtualMachineScaleSet {
                 var vmssList: azureModel.VMSS[] = result;
                 if (vmssList.length == 0) {
                     console.log(tl.loc("NoVMSSFound", this.taskParameters.vmssName));
-                    return resolve();
+                    return resolve(null);
                 }
 
                 var resourceGroupName: string;

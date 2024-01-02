@@ -1,0 +1,502 @@
+{
+  "id": "CBC316A2-586F-4DEF-BE79-488A1F503564",
+  "name": "Kubernetes",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/azpipes-kubectl-tsg",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 231,
+    "Patch": 0
+  },
+  "demands": [],
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "groups": [
+    {
+      "name": "kubernetesCluster",
+      "displayName": "ms-resource:loc.group.displayName.kubernetesCluster",
+      "isExpanded": true,
+      "visibleRule": "command != logout"
+    },
+    {
+      "name": "commands",
+      "displayName": "ms-resource:loc.group.displayName.commands",
+      "isExpanded": true
+    },
+    {
+      "name": "secrets",
+      "displayName": "ms-resource:loc.group.displayName.secrets",
+      "isExpanded": false,
+      "visibleRule": "command != login && command != logout"
+    },
+    {
+      "name": "configMaps",
+      "displayName": "ms-resource:loc.group.displayName.configMaps",
+      "isExpanded": false,
+      "visibleRule": "command != login && command != logout"
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    },
+    {
+      "name": "output",
+      "displayName": "ms-resource:loc.group.displayName.output",
+      "isExpanded": false,
+      "visibleRule": "command != login && command != logout"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "connectionType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.connectionType",
+      "defaultValue": "Kubernetes Service Connection",
+      "required": true,
+      "options": {
+        "Azure Resource Manager": "Azure Resource Manager",
+        "Kubernetes Service Connection": "Kubernetes Service Connection",
+        "None": "None"
+      },
+      "groupName": "kubernetesCluster",
+      "helpMarkDown": "ms-resource:loc.input.help.connectionType"
+    },
+    {
+      "name": "kubernetesServiceEndpoint",
+      "type": "connectedService:kubernetes",
+      "label": "ms-resource:loc.input.label.kubernetesServiceEndpoint",
+      "visibleRule": "connectionType = Kubernetes Service Connection",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceEndpoint",
+      "groupName": "kubernetesCluster",
+      "required": true
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "groupName": "kubernetesCluster",
+      "required": true
+    },
+    {
+      "name": "azureResourceGroup",
+      "label": "ms-resource:loc.input.label.azureResourceGroup",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "kubernetesCluster",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "kubernetesCluster",
+      "label": "ms-resource:loc.input.label.kubernetesCluster",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesCluster",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "kubernetesCluster",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "useClusterAdmin",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useClusterAdmin",
+      "defaultValue": "false",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "groupName": "kubernetesCluster",
+      "helpMarkDown": "ms-resource:loc.input.help.useClusterAdmin"
+    },
+    {
+      "name": "namespace",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.namespace",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "kubernetesCluster",
+      "helpMarkDown": "ms-resource:loc.input.help.namespace"
+    },
+    {
+      "name": "command",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.command",
+      "defaultValue": "",
+      "required": false,
+      "options": {
+        "apply": "apply",
+        "create": "create",
+        "delete": "delete",
+        "exec": "exec",
+        "expose": "expose",
+        "get": "get",
+        "login": "login",
+        "logout": "logout",
+        "logs": "logs",
+        "run": "run",
+        "set": "set",
+        "top": "top"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.command",
+      "groupName": "commands",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "useConfigurationFile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useConfigurationFile",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.useConfigurationFile",
+      "groupName": "commands",
+      "visibleRule": "command != login && command != logout"
+    },
+    {
+      "name": "configurationType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.configurationType",
+      "defaultValue": "configuration",
+      "groupName": "commands",
+      "helpMarkDown": "ms-resource:loc.input.help.configurationType",
+      "options": {
+        "configuration": "File path",
+        "inline": "Inline configuration"
+      },
+      "visibleRule": "useConfigurationFile = true"
+    },
+    {
+      "name": "configuration",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.configuration",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.configuration",
+      "visibleRule": "configurationType = configuration",
+      "groupName": "commands"
+    },
+    {
+      "name": "inline",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000"
+      },
+      "required": true,
+      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.inline",
+      "helpMarkDown": "ms-resource:loc.input.help.inline",
+      "groupName": "commands",
+      "visibleRule": "configurationType = inline"
+    },
+    {
+      "name": "arguments",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "2",
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      },
+      "label": "ms-resource:loc.input.label.arguments",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments",
+      "groupName": "commands",
+      "visibleRule": "command != login && command != logout"
+    },
+    {
+      "name": "secretType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.secretType",
+      "defaultValue": "dockerRegistry",
+      "required": true,
+      "options": {
+        "dockerRegistry": "dockerRegistry",
+        "generic": "generic"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.secretType",
+      "groupName": "secrets"
+    },
+    {
+      "name": "secretArguments",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "2",
+        "editorExtension": "ms.vss-services-azure.kubernetes-parameters-grid"
+      },
+      "label": "ms-resource:loc.input.label.secretArguments",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.secretArguments",
+      "visibleRule": "secretType = generic",
+      "groupName": "secrets"
+    },
+    {
+      "name": "containerRegistryType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.containerRegistryType",
+      "defaultValue": "Azure Container Registry",
+      "required": true,
+      "options": {
+        "Azure Container Registry": "Azure Container Registry",
+        "Container Registry": "Container Registry"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.containerRegistryType",
+      "visibleRule": "secretType = dockerRegistry",
+      "groupName": "secrets"
+    },
+    {
+      "name": "dockerRegistryEndpoint",
+      "type": "connectedService:dockerregistry",
+      "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
+      "visibleRule": "secretType = dockerRegistry && containerRegistryType = Container Registry",
+      "groupName": "secrets"
+    },
+    {
+      "name": "azureSubscriptionEndpointForSecrets",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpointForSecrets",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpointForSecrets",
+      "visibleRule": "secretType = dockerRegistry && containerRegistryType = Azure Container Registry",
+      "defaultValue": "",
+      "groupName": "secrets"
+    },
+    {
+      "name": "azureContainerRegistry",
+      "label": "ms-resource:loc.input.label.azureContainerRegistry",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.azureContainerRegistry",
+      "visibleRule": "secretType = dockerRegistry && containerRegistryType = Azure Container Registry",
+      "defaultValue": "",
+      "groupName": "secrets"
+    },
+    {
+      "name": "secretName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.secretName",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.secretName",
+      "groupName": "secrets"
+    },
+    {
+      "name": "forceUpdate",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.forceUpdate",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.forceUpdate",
+      "groupName": "secrets"
+    },
+    {
+      "name": "configMapName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configMapName",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.configMapName",
+      "groupName": "configMaps"
+    },
+    {
+      "name": "forceUpdateConfigMap",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.forceUpdateConfigMap",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.forceUpdateConfigMap",
+      "groupName": "configMaps"
+    },
+    {
+      "name": "useConfigMapFile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useConfigMapFile",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.useConfigMapFile",
+      "groupName": "configMaps"
+    },
+    {
+      "name": "configMapFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.configMapFile",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.configMapFile",
+      "visibleRule": "useConfigMapFile = true",
+      "groupName": "configMaps"
+    },
+    {
+      "name": "configMapArguments",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "2",
+        "editorExtension": "ms.vss-services-azure.kubernetes-parameters-grid"
+      },
+      "label": "ms-resource:loc.input.label.configMapArguments",
+      "helpMarkDown": "ms-resource:loc.input.help.configMapArguments",
+      "visibleRule": "useConfigMapFile = false",
+      "groupName": "configMaps"
+    },
+    {
+      "name": "versionOrLocation",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.versionOrLocation",
+      "defaultValue": "version",
+      "required": false,
+      "options": {
+        "version": "Version",
+        "location": "Specify location"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.versionOrLocation",
+      "groupName": "advanced"
+    },
+    {
+      "name": "versionSpec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionSpec",
+      "defaultValue": "1.13.2",
+      "helpMarkDown": "ms-resource:loc.input.help.versionSpec",
+      "groupName": "advanced",
+      "visibleRule": "versionOrLocation = version"
+    },
+    {
+      "name": "checkLatest",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkLatest",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.checkLatest",
+      "required": false,
+      "groupName": "advanced",
+      "visibleRule": "versionOrLocation = version"
+    },
+    {
+      "name": "specifyLocation",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.specifyLocation",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.specifyLocation",
+      "required": true,
+      "groupName": "advanced",
+      "visibleRule": "versionOrLocation = location"
+    },
+    {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "$(System.DefaultWorkingDirectory)",
+      "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
+      "name": "outputFormat",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.outputFormat",
+      "defaultValue": "json",
+      "required": false,
+      "options": {
+        "json": "json",
+        "yaml": "yaml",
+        "none": "none"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.outputFormat",
+      "groupName": "advanced",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "azureContainerRegistry",
+      "endpointId": "$(azureSubscriptionEndpointForSecrets)",
+      "dataSourceName": "AzureRMContainerRegistries",
+      "resultTemplate": "{\"Value\":\"{{{properties.loginServer}}}\",\"DisplayValue\":\"{{{name}}}\"}"
+    },
+    {
+      "target": "kubernetesCluster",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{{{name}}}"
+    },
+    {
+      "target": "azureResourceGroup",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "outputVariables": [
+    {
+      "name": "KubectlOutput",
+      "description": "Stores the output of the kubectl command"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "src//kubernetes.js"
+    },
+    "Node16": {
+      "target": "src//kubernetes.js"
+    },
+    "Node20_1": {
+      "target": "src//kubernetes.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "CantDownloadAccessProfile": "ms-resource:loc.messages.CantDownloadAccessProfile",
+    "DownloadingClient": "ms-resource:loc.messages.DownloadingClient",
+    "KubernetesClusterResourceGroup": "ms-resource:loc.messages.KubernetesClusterResourceGroup",
+    "CreatingSecret": "ms-resource:loc.messages.CreatingSecret",
+    "DeleteSecret": "ms-resource:loc.messages.DeleteSecret",
+    "CreatingConfigMap": "ms-resource:loc.messages.CreatingConfigMap",
+    "DeleteConfigMap": "ms-resource:loc.messages.DeleteConfigMap",
+    "ConfigMapExists": "ms-resource:loc.messages.ConfigMapExists",
+    "GetConfigMap": "ms-resource:loc.messages.GetConfigMap",
+    "DockerRegistryConnectionNotSpecified": "ms-resource:loc.messages.DockerRegistryConnectionNotSpecified",
+    "FileNotFoundException": "ms-resource:loc.messages.FileNotFoundException",
+    "DownloadingKubeCtlFromUrl": "ms-resource:loc.messages.DownloadingKubeCtlFromUrl",
+    "DownloadPathForStableTxt": "ms-resource:loc.messages.DownloadPathForStableTxt",
+    "DownloadKubeCtlFailed": "ms-resource:loc.messages.DownloadKubeCtlFailed",
+    "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
+    "UsingLatestStableVersion": "ms-resource:loc.messages.UsingLatestStableVersion",
+    "NotAValidVersion": "ms-resource:loc.messages.NotAValidVersion",
+    "ConfigurationFileNotFound": "ms-resource:loc.messages.ConfigurationFileNotFound",
+    "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
+    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
+    "InvalidConfiguration": "ms-resource:loc.messages.InvalidConfiguration",
+    "CallToolRunnerExec": "ms-resource:loc.messages.CallToolRunnerExec",
+    "ReturningToolRunnerExecPromise": "ms-resource:loc.messages.ReturningToolRunnerExecPromise",
+    "ToolRunnerExecCallFailed": "ms-resource:loc.messages.ToolRunnerExecCallFailed",
+    "ToolRunnerExecCallSucceeded": "ms-resource:loc.messages.ToolRunnerExecCallSucceeded",
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "UnableToFetchKubectlVersion": "ms-resource:loc.messages.UnableToFetchKubectlVersion",
+    "KubectlClientVersion": "ms-resource:loc.messages.KubectlClientVersion",
+    "KubectlServerVersion": "ms-resource:loc.messages.KubectlServerVersion",
+    "KubectlServerVerisonNotFound": "ms-resource:loc.messages.KubectlServerVerisonNotFound",
+    "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.227.0",
+    "Node20_229_3": "1.231.0"
+  }
+}

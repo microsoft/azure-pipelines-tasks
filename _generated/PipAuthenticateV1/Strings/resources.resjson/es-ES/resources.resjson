@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "Autenticación PIP de Python",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/pip-authenticate) o [consultar la documentación de pip](https://pip.pypa.io/en/stable/reference/pip_install/)",
+  "loc.description": "Tarea de autenticación para el cliente de PIP que se usa para instalar distribuciones de Python.",
+  "loc.instanceNameFormat": "Autenticación PIP",
+  "loc.group.displayName.feedAuthentication": "Fuentes y autenticación",
+  "loc.input.label.artifactFeeds": "Mis fuentes (seleccionar a continuación)",
+  "loc.input.help.artifactFeeds": "Seleccionar las fuentes para autenticar presentes en esta organización",
+  "loc.input.label.pythonDownloadServiceConnections": "Fuentes de organizaciones externas",
+  "loc.input.help.pythonDownloadServiceConnections": "Seleccione los puntos de conexión para autenticarse fuera de esta organización.",
+  "loc.input.label.onlyAddExtraIndex": "No establecer la dirección URL de índice principal",
+  "loc.input.help.onlyAddExtraIndex": "Si se establece en true, no se establecerá ninguna fuente como dirección URL de índice principal. Todas las fuentes o los puntos de conexión que se hayan configurado se establecerán como direcciones URL de índice adicionales. El valor predeterminado es false.",
+  "loc.messages.Info_AddingInternalFeeds": "Agregando información de autenticación para las fuentes internas %s.",
+  "loc.messages.Info_AddingExternalFeeds": "Agregando información de autenticación para el punto de conexión externo %s.",
+  "loc.messages.Info_SuccessAddingAuth": "La autenticación para las fuentes internas %s y el punto de conexión externo %s se ha agregado correctamente.",
+  "loc.messages.Info_AddingPasswordAuthEntry": "Agregando la entrada de autenticación de contraseña del nombre de usuario para la fuente %s.",
+  "loc.messages.Info_AddingTokenAuthEntry": "Agregando la entrada de autenticación de token para la fuente %s.",
+  "loc.messages.Error_FailedToParseFeedUrlAndAuth": "No se pudo analizar la dirección URL de la fuente ni agregar la información de autenticación. %s",
+  "loc.messages.FailedToGetPackagingUri": "No se puede obtener el URI de empaquetado; se usa el URI de la colección predeterminado.",
+  "loc.messages.FailedToAddAuthentication": "No se pudo agregar la autenticación",
+  "loc.messages.Warn_TooManyFeedEntries": "Hay demasiadas entradas de fuente para la autenticación. Reduzca el número de repositorios de la tarea.",
+  "loc.messages.Warning_SessionCreationFailed": "No se pudo crear la sesión de proveniencia: %s"
+}

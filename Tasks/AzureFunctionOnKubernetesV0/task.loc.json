@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 226,
-    "Patch": 1
+    "Minor": 228,
+    "Patch": 0
   },
   "demands": [],
   "groups": [
@@ -105,6 +105,10 @@
   "execution": {
     "Node10": {
       "target": "src//run.js"
+    },
+    "Node16": {
+      "target": "src//run.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

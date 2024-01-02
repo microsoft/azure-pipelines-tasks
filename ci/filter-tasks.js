@@ -115,7 +115,7 @@ async function getPullRequestBranches (pullRequestId) {
     return { source: data.head.ref, target: data.base.ref };
 }
 
-async function getTasksToBuildForPR (prId) {
+async function getTasksToBuildForPR (prId, forDowngradingCheck) {
     // Takes in a git source branch, diffs it with master, and returns a list of tasks that could have been affected by the changes.
     let sourceBranch, targetBranch;
 
@@ -150,8 +150,21 @@ async function getTasksToBuildForPR (prId) {
         console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=125;]Unable to reach github, building all tasks', err);
         return makeOptions.tasks;
     }
+
     var baseCommit = run('git merge-base ' + sourceBranch + ' origin/' + targetBranch);
-    run('git --no-pager diff --name-only ' + baseCommit + ' ' + sourceBranch).split('\n').forEach(filePath => {
+    
+    var diffExtra = "";
+
+    if(forDowngradingCheck)
+    {
+        if (os.platform() == 'win32') {
+            diffExtra = " -- .  :^^**/_buildConfigs/**";
+        } else {
+            diffExtra = " -- .  :^**/_buildConfigs/**";
+        }
+    }
+
+    run('git --no-pager diff --name-only ' + baseCommit + ' ' + sourceBranch + diffExtra).split('\n').forEach(filePath => {
         if (filePath.slice(0, 5) == 'Tasks') {
             var taskPath = filePath.slice(6);
             if(taskPath.slice(0, 6) == 'Common') {
@@ -197,10 +210,13 @@ async function getTasksToBuildForPR (prId) {
     return toBeBuilt;
 }
 
-var setTaskVariables = function(tasks) {
+var setTaskVariables = function(tasks, tasksForDowngradingCheck) {
     console.log('tasks: ' + JSON.stringify(tasks));
-    console.log('##vso[task.setVariable variable=task_pattern]@(' + tasks.join('|') + ')');
+    console.log('tasksForDowngradingCheck: ' + JSON.stringify(tasksForDowngradingCheck));
+    console.log('##vso[task.setVariable variable=task_pattern;isOutput=true;]@(' + tasks.join('|') + ')');
+    console.log('##vso[task.setVariable variable=task_pattern_fordowngradingcheck]@(' + tasksForDowngradingCheck.join('|') + ')');
     console.log('##vso[task.setVariable variable=numTasks]' + tasks.length);
+    console.log('##vso[task.setVariable variable=numTasksForDowngradingCheck]' + tasksForDowngradingCheck.length);
 }
 
 var buildReason = process.env['BUILD_REASON'].toLowerCase();
@@ -211,7 +227,7 @@ async function filterTasks () {
         if (buildReason == 'individualci' || buildReason == 'batchedci' || buildReason == 'schedule' || forceCourtesyPush) {
             // If CI, we will compare any tasks that have updated versions.
             const tasks = await getTasksToBuildForCI();
-            setTaskVariables(tasks);
+            setTaskVariables(tasks, tasks);
         } else {
             const buildSourceBranch = process.env['BUILD_SOURCEBRANCH'];
             // If CI for PR, the `Build.SourceBranch` pipeline variable == `refs/pull/${prId}/merge`
@@ -220,16 +236,18 @@ async function filterTasks () {
 
             if (buildReason == 'pullrequest') {
                 // If PR, we will compare any tasks that could have been affected based on the diff.
-                const tasks = await getTasksToBuildForPR();
-                setTaskVariables(tasks);
+                const tasks = await getTasksToBuildForPR(null, false);
+                const tasksForDowngradingCheck = await getTasksToBuildForPR(null, true);
+                setTaskVariables(tasks, tasksForDowngradingCheck);
             } else if (buildReason == 'manual' && prIdMatch) {
                 // Manual rerun for PR.
                 const prId = prIdMatch[1];
-                const tasks = await getTasksToBuildForPR(prId);
-                setTaskVariables(tasks);
+                const tasks = await getTasksToBuildForPR(prId, false);
+                const tasksForDowngradingCheck = await getTasksToBuildForPR(prId, true);
+                setTaskVariables(tasks, tasksForDowngradingCheck);
             } else {
                 // If other, build everything.
-                setTaskVariables(makeOptions.tasks);
+                setTaskVariables(makeOptions.tasks, makeOptions.tasks);
             }
         }
     } catch (error) {

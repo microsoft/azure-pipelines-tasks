@@ -37,6 +37,8 @@
   "loc.input.help.checkDownloadedFiles": "선택한 경우, 이 빌드 작업은 모든 파일이 완전히 다운로드되었는지 확인합니다.",
   "loc.input.label.retryDownloadCount": "재시도 횟수",
   "loc.input.help.retryDownloadCount": "다운로드가 실패할 경우 빌드 아티팩트 다운로드를 재시도하는 선택적 횟수입니다.",
+  "loc.input.label.retryRedirectDownloadCount": "리디렉션 다운로드에 대한 재시도 횟수",
+  "loc.input.help.retryRedirectDownloadCount": "리디렉션에 따라 다운로드가 실패하는 경우 빌드 아티팩트 다운로드를 다시 시도할 횟수(선택 사항)입니다. 네트워크에서 리디렉션 팔로우를 허용하지 않는 경우 항상 Azure DevOps 스트리밍된 응답을 다운로드하도록 -1로 설정할 수 있습니다.",
   "loc.input.label.extractTars": "tar 보관함에 저장된 모든 파일 압축 풀기",
   "loc.input.help.extractTars": "이 옵션을 사용하여 확장명이 .tar인 다운로드된 모든 파일의 압축을 푸세요. 이 옵션은 Unix 파일 사용 권한을 유지하려는 경우 아티팩트 파일을 tar로 압축해야 하기 때문에 유용합니다. PublishBuildArtifacts 작업에서 `StoreAsTar` 옵션을 사용하면 아티팩트가 .tar 파일로 자동으로 저장됩니다.",
   "loc.messages.DownloadArtifacts": "%s 아티팩트를 %s에서 다운로드 중",
@@ -67,5 +69,7 @@
   "loc.messages.TarExtractionNotSupportedInWindows": "Windows에서는 tar 압축 풀기가 지원되지 않습니다",
   "loc.messages.NoTarsFound": "압축을 풀 tar 보관함이 없습니다",
   "loc.messages.CleaningDestinationFolder": "대상 폴더 정리 중: %s",
-  "loc.messages.NoFolderToClean": "지정한 정리 폴더를 찾을 수 없습니다. 정리할 항목 없음"
+  "loc.messages.NoFolderToClean": "지정한 정리 폴더를 찾을 수 없습니다. 정리할 항목 없음",
+  "loc.messages.PreferRedirect": "콘텐츠 스티처로 리디렉션을 통해 파일 다운로드 선호: %s",
+  "loc.messages.FollowingDownloadRedirectFailed": "리디렉션 %s을(를) 수행하여 파일을 다운로드할 수 없습니다. Azure DevOps의 스트리밍된 콘텐츠 사용으로 대체합니다."
 }

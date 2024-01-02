@@ -1,0 +1,90 @@
+{
+  "id": "BFC05E0D-839C-42CD-89C7-0F9FBFCAB965",
+  "name": "CocoaPods",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/cocoapods",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "visibility": [
+    "Build"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "minimumAgentVersion": "2.182.1",
+  "version": {
+    "Major": 0,
+    "Minor": 231,
+    "Patch": 0
+  },
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": true
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cwd"
+    },
+    {
+      "name": "forceRepoUpdate",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.forceRepoUpdate",
+      "defaultValue": false,
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.forceRepoUpdate",
+      "groupName": "advanced"
+    },
+    {
+      "name": "projectDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.projectDirectory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.projectDirectory",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "cocoapods.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "cocoapods.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
+  },
+  "messages": {
+    "PodReturnCode": "ms-resource:loc.messages.PodReturnCode",
+    "PodFailed": "ms-resource:loc.messages.PodFailed",
+    "CocoaPodsNotFound": "ms-resource:loc.messages.CocoaPodsNotFound",
+    "ProxyConfig": "ms-resource:loc.messages.ProxyConfig"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.231.0",
+    "Node20-225": "0.231.1"
+  }
+}

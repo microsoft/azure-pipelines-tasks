@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 226,
-    "Patch": 3
+    "Minor": 232,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -18,6 +18,7 @@
   ],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
+  "removalDate": "2023-12-11",
   "groups": [
     {
       "name": "advanced",
@@ -166,6 +167,7 @@
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion",
     "UnsupportedProjectScopedFeeds": "ms-resource:loc.messages.UnsupportedProjectScopedFeeds",
     "Warning_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Warning_IncludeNuGetOrgEnabled",
-    "Error_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Error_IncludeNuGetOrgEnabled"
+    "Error_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Error_IncludeNuGetOrgEnabled",
+    "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
   }
 }
