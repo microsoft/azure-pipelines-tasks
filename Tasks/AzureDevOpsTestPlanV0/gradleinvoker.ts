@@ -21,8 +21,8 @@ export async function executegradletests(testsToBeExecuted: string[]) {
         args.push('--tests=' + testcase);       
     }
 
-    const quotedArgs = args.map((arg) => (arg.includes(' ') ? `'${arg}'` : arg))
-    console.log('Running tests with gradle using command: ${[executable, ...quotedArgs].join()}');
+    //const quotedArgs = args.map((arg) => (arg.includes(' ') ? `'${arg}'` : arg))
+    //console.log('Running tests with gradle using command: ${[executable, ...quotedArgs].join()}');
     const { status, error } = await spawn(executable, args)
     if (error) {
         console.error(error)

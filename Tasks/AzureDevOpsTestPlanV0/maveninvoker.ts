@@ -36,8 +36,8 @@ export async function executemaventests(testsToBeExecuted: string[]) {
     }
 
 
-    const quotedArgs = args.map((arg) => (arg.includes(' ') ? `'${arg}'` : arg))
-    console.log('Running tests with maven using command: ${[executable, ...quotedArgs].join()}');
+    //const quotedArgs = args.map((arg) => (arg.includes(' ') ? `'${arg}'` : arg))
+    //console.log('Running tests with maven using command: ${[executable, ...quotedArgs].join()}');
         const { status, error } = await spawn(executable, args)
         if (error) {
             console.error(error)

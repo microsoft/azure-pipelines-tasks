@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 23
+    "Patch": 30
   },
   "preview": true,
   "demands": [],
@@ -77,9 +77,7 @@
       "options": {
         "Java-Maven": "Java-Maven",
         "Java-Gradle": "Java-Gradle",
-        "Java-Ant": "Java-Ant",
-        "Python": "Python",
-        "Other": "Other"
+        "Python": "Python"
       },
       "visibleRule": "testSelector = automatedTests"
     },

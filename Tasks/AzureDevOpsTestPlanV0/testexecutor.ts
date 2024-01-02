@@ -1,7 +1,5 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import { getListOfTests } from './testselector'
-import { getTestCommand } from './testinvoker'
 import * as semver from "semver"
 import { spawnSync } from 'child_process'
 import tl = require('azure-pipelines-task-lib/task');
