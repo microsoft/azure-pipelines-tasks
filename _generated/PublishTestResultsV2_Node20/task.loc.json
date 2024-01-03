@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 232,
+    "Minor": 233,
     "Patch": 1
   },
   "demands": [],
@@ -160,7 +160,7 @@
     "ErrorFailTaskOnFailedTests": "ms-resource:loc.messages.ErrorFailTaskOnFailedTests"
   },
   "_buildConfigMapping": {
-    "Default": "2.232.0",
-    "Node20_229_13": "2.232.1"
+    "Default": "2.233.0",
+    "Node20_229_13": "2.233.1"
   }
 }
