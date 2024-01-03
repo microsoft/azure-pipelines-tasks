@@ -56,5 +56,5 @@
   "loc.messages.UnsupportedProjectScopedFeeds": "Веб-каналы, областью действия которых является проект, не поддерживаются в этой версии задачи \"Восстановить NuGet\". Используйте задачу \"NuGet\" версии 2 или более позднюю.",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg сейчас включен для этой задачи. Чтобы устранить это предупреждение, измените задачу сборки и установите для \"includeNuGetOrg\" \"ЛОЖЬ\" или отключите \"Использовать пакеты из NuGet.org\".",
   "loc.messages.Error_IncludeNuGetOrgEnabled": "Не удалось восстановить пакеты. Отредактируете задачу сборки и установите для \"includeNuGetOrg\" \"ЛОЖЬ\" или отключите \"Использовать пакеты из NuGet.org\".",
-  "loc.messages.DeprecatedTask": "This task is deprecated. Please switch to using NuGetCommand@2's 'restore' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
+  "loc.messages.DeprecatedTask": "Эта задача является нерекомендуемой. Переключитесь на использование параметра \"restore\" NuGetCommand@2: https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
 }
