@@ -42,5 +42,6 @@
   "loc.messages.NGCommon_RemovingSources": "Préparation de la définition des informations d'identification dans NuGet.config",
   "loc.messages.NGCommon_AddingSources": "Définition des informations d'identification dans NuGet.config",
   "loc.messages.NGCommon_NoSourcesFoundInConfig": "Sources de package introuvables dans le fichier NuGet.config sur %s",
-  "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Version NuGet inconnue sélectionnée."
+  "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Version NuGet inconnue sélectionnée.",
+  "loc.messages.DeprecatedTask": "Cette tâche est déconseillée. Veuillez utiliser l'option « restauration » ou « personnalisée » de NuGetCommand@2 https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
 }

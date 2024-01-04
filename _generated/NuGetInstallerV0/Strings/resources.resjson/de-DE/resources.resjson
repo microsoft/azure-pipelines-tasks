@@ -42,5 +42,6 @@
   "loc.messages.NGCommon_RemovingSources": "Das Festlegen von Anmeldeinformationen in \"NuGet.config\" wird vorbereitet.",
   "loc.messages.NGCommon_AddingSources": "Anmeldeinformationen in der Datei \"NuGet.config\" werden festgelegt.",
   "loc.messages.NGCommon_NoSourcesFoundInConfig": "In der Datei \"NuGet.config\" unter \"%s\" wurden keine Paketquellen gefunden.",
-  "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Unbekannte NuGet-Version ausgewählt."
+  "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Unbekannte NuGet-Version ausgewählt.",
+  "loc.messages.DeprecatedTask": "Diese Aufgabe ist veraltet. Wechseln Sie zur Verwendung von \"Wiederherstellen\" oder \"Benutzerdefiniert\" von NuGetCommand@2 https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
 }
