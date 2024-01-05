@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Revisar aplicación",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkID=613735)",
+  "loc.description": "Use esta tarea del proveedor de la fase de implementación para crear un recurso de forma dinámica.",
+  "loc.instanceNameFormat": "Recurso dinámico creado con $(resourceName)",
+  "loc.releaseNotes": "Use esta tarea del proveedor de la fase de implementación para crear un recurso de forma dinámica.",
+  "loc.input.label.resourceName": "Nombre de recurso",
+  "loc.input.help.resourceName": "Nombre de un recurso existente en el entorno que se usará para la información de tipo de recurso",
+  "loc.input.label.baseEnvironmentName": "Nombre del entorno",
+  "loc.input.label.reviewResourceName": "Revisar nombre del recurso",
+  "loc.messages.CreatedDynamicResource": "Un recurso dinámico se crea con %s"
+}

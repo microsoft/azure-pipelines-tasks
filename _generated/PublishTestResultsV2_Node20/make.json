@@ -1,0 +1,10 @@
+{
+  "externals": {
+    "archivePackages": [
+      {
+        "url": "https://publishtestresult.blob.core.windows.net/publishtestresult/22540424/PublishTestResults.zip",
+        "dest": "./"
+      }
+    ]
+  }
+}

@@ -42,5 +42,6 @@
   "loc.messages.NGCommon_RemovingSources": "Preparing to set credentials in NuGet.config",
   "loc.messages.NGCommon_AddingSources": "Setting credentials in NuGet.config",
   "loc.messages.NGCommon_NoSourcesFoundInConfig": "No package sources were found in the NuGet.config file at %s",
-  "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected."
+  "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
+  "loc.messages.DeprecatedTask": "This task is deprecated. Please switch to using NuGetCommand@2's 'restore' or 'custom' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
 }

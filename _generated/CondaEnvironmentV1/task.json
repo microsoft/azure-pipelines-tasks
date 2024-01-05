@@ -13,11 +13,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 231,
+    "Minor": 232,
     "Patch": 0
   },
   "deprecated": true,
-  "removalDate": "2024-04-22",
+  "removalDate": "2024-01-31",
   "demands": [],
   "instanceNameFormat": "Conda environment $(environmentName)",
   "inputs": [
@@ -103,7 +103,7 @@
     "PrependPath": "Prepending PATH environment variable with directory: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.231.0",
-    "Node20-225": "1.231.1"
+    "Default": "1.232.0",
+    "Node20-225": "1.232.1"
   }
 }

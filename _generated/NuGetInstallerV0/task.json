@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
+    "Minor": 233,
     "Patch": 0
   },
   "runsOn": [
@@ -18,7 +18,7 @@
   ],
   "minimumAgentVersion": "2.115.0",
   "deprecated": true,
-  "removalDate": "2023-11-27",
+  "removalDate": "2023-12-11",
   "groups": [
     {
       "name": "advanced",
@@ -145,10 +145,11 @@
     "NGCommon_RemovingSources": "Preparing to set credentials in NuGet.config",
     "NGCommon_AddingSources": "Setting credentials in NuGet.config",
     "NGCommon_NoSourcesFoundInConfig": "No package sources were found in the NuGet.config file at %s",
-    "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected."
+    "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
+    "DeprecatedTask": "This task is deprecated. Please switch to using NuGetCommand@2's 'restore' or 'custom' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
   },
   "_buildConfigMapping": {
-    "Default": "0.231.0",
-    "Node20_229_1": "0.231.1"
+    "Default": "0.233.0",
+    "Node20_229_1": "0.233.1"
   }
 }
