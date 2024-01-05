@@ -585,7 +585,7 @@ function Add-AzureStackAzureRmEnvironment {
         GalleryEndpoint                          = $galleryEndpoint
         GraphEndpoint                            = $graphEndpoint
         GraphAudience                            = $graphAudience
-        StorageEndpoint                    = $StorageEndpointSuffix
+        StorageEndpoint                          = $StorageEndpointSuffix
         AzureKeyVaultDnsSuffix                   = $AzureKeyVaultDnsSuffix
         AzureKeyVaultServiceEndpointResourceId   = $AzureKeyVaultServiceEndpointResourceId
         EnableAdfsAuthentication                 = $aadAuthorityEndpoint.TrimEnd("/").EndsWith("/adfs", [System.StringComparison]::OrdinalIgnoreCase)
