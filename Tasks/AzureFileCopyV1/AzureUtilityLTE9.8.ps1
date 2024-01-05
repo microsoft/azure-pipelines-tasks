@@ -78,7 +78,7 @@ function Create-AzureStorageContext
     if(-not [string]::IsNullOrEmpty($storageAccountName) -and -not [string]::IsNullOrEmpty($storageAccountKey))
     {
         Write-Verbose "[Azure Call]Creating AzureStorageContext for storage account: $storageAccountName"
-        $storageContext = New-AzureStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey -ErrorAction Stop
+        $storageContext = New-AzStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey -ErrorAction Stop
         Write-Verbose "[Azure Call]Created AzureStorageContext for storage account: $storageAccountName"
 
         return $storageContext
@@ -180,11 +180,11 @@ function Create-AzureContainer
         Write-Verbose "[Azure Call]Creating container: $containerName in storage account: $storageAccountName"
         if ($isPremiumStorage)
         {
-            $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -ErrorAction Stop
+            $container = New-AzStorageContainer -Name $containerName -Context $storageContext -ErrorAction Stop
         }
         else
         {
-            $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -Permission Container -ErrorAction Stop
+            $container = New-AzStorageContainer -Name $containerName -Context $storageContext -Permission Container -ErrorAction Stop
         }
         Write-Verbose "[Azure Call]Created container: $containerName successfully in storage account: $storageAccountName"
     }
@@ -200,7 +200,7 @@ function Remove-AzureContainer
         $storageAccountName = $storageContext.StorageAccountName
 
         Write-Verbose "[Azure Call]Deleting container: $containerName in storage account: $storageAccountName"
-        Remove-AzureStorageContainer -Name $containerName -Context $storageContext -Force -ErrorAction SilentlyContinue
+        Remove-AzStorageContainer -Name $containerName -Context $storageContext -Force -ErrorAction SilentlyContinue
         Write-Verbose "[Azure Call]Deleted container: $containerName in storage account: $storageAccountName"
     }
 }
@@ -376,7 +376,7 @@ function Generate-AzureStorageContainerSASToken
         $storageAccountName = $storageContext.StorageAccountName
 
         Write-Verbose "[Azure Call]Generating SasToken for container: $containerName in storage: $storageAccountName with expiry time: $tokenTimeOutInHours hours"
-        $containerSasToken = New-AzureStorageContainerSASToken -Name $containerName -ExpiryTime (Get-Date).AddHours($tokenTimeOutInHours) -Context $storageContext -Permission rwdl
+        $containerSasToken = New-AzStorageContainerSASToken -Name $containerName -ExpiryTime (Get-Date).AddHours($tokenTimeOutInHours) -Context $storageContext -Permission rwdl
         Write-Verbose "[Azure Call]Generated SasToken: $containerSasToken successfully for container: $containerName in storage: $storageAccountName"
 
         return $containerSasToken
@@ -598,3 +598,4 @@ function Remove-NetworkSecurityRuleConfig
         Write-Verbose "[Azure Call]Removed the Rule $ruleName"
     }
 }
+

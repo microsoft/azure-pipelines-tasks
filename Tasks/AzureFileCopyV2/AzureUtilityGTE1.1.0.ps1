@@ -11,7 +11,7 @@ function Get-AzureRMVMsInResourceGroup
         try
         {
             Write-Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
-            $azureRMVMResources = Get-AzureRMVM -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+            $azureRMVMResources = Get-AzVM -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
             Write-Verbose "[Azure Call]Count of resource group:$resourceGroupName RM virtual machines type resource is $($azureRMVMResources.Count)"
 
             return $azureRMVMResources
@@ -41,7 +41,7 @@ function Set-AzureMachineCustomScriptExtension
     {
         Write-Host (Get-VstsLocString -Key "AFC_SetCustomScriptExtension" -ArgumentList $name, $vmName)
         Write-Verbose "Set-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -FileUri $fileUri  -Run $run -Argument $argument -Location $location -ErrorAction Stop -Verbose"
-        $result = Set-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -FileUri $fileUri  -Run $run -Argument $argument -Location $location -ErrorAction Stop -Verbose		
+        $result = Set-AzVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -FileUri $fileUri  -Run $run -Argument $argument -Location $location -ErrorAction Stop -Verbose		
         Write-Host (Get-VstsLocString -Key "AFC_SetCustomScriptExtensionComplete" -ArgumentList $name, $vmName)
         if($result.IsSuccessStatusCode -eq $true)
         {
@@ -55,3 +55,4 @@ function Set-AzureMachineCustomScriptExtension
 
     return $result
 }
+

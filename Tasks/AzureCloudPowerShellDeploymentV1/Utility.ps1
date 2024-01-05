@@ -57,12 +57,12 @@ function Get-AzureStoragePrimaryKey($storageAccount, [bool]$isArm)
 {
     if ($isArm)
     {
-        $storageAccountResource = Get-AzureRmResource | where-object { $_.Name -eq $storageAccount -and $_.ResourceType -eq "Microsoft.Storage/storageAccounts" }
+        $storageAccountResource = Get-AzResource | where-object { $_.Name -eq $storageAccount -and $_.ResourceType -eq "Microsoft.Storage/storageAccounts" }
         if (!$storageAccountResource)
         {
             Write-Error -Message "Could not find resource $storageAccount that has a type of Microsoft.Storage/storageAccounts"
         }
-        $storageAccountKeys = Get-AzureRmStorageAccountKey -ResourceGroupName $storageAccountResource.ResourceGroupName -Name $storageAccount
+        $storageAccountKeys = Get-AzStorageAccountKey -ResourceGroupName $storageAccountResource.ResourceGroupName -Name $storageAccount
         if(!$storageAccountKeys)
         {
             Write-Error -Message "Could not retrieve storage account keys from storage account resource $Storage"
@@ -185,7 +185,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                     {
                         try
                         {
-                            $storageContext = New-AzureStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey
+                            $storageContext = New-AzStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey
                             Write-Host "New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageContext $StorageContext -DiagnosticsConfigurationPath $fullExtPath"
                             $wadconfig = New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageContext $StorageContext -DiagnosticsConfigurationPath $fullExtPath 
                         }
