@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 233,
-    "Patch": 2
+    "Patch": 1
   },
   "demands": [],
   "releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",
@@ -146,10 +146,6 @@
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "publishtestresults.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "publishtestresults.js",
       "argumentFormat": ""
     }
