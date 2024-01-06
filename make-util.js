@@ -1890,7 +1890,8 @@ var mergeBuildConfigIntoBaseTasks = function(buildConfig) {
 
                 // Update versionmap.txt file
                 var versionmapFile = fs.readFileSync(versionmapFilePath, { encoding: 'utf-8' });
-                const lines = versionmapFile.split('\n');
+                const originalLineEnding = versionmapFile.includes('\r\n') ? '\r\n' : '\n';
+                const lines = versionmapFile.split(originalLineEnding);
                 var buildConfigVersion = null;
                 for (let i = lines.length - 1; i >= 0; i--) {
                     if (!lines[i]) continue;
@@ -1903,7 +1904,7 @@ var mergeBuildConfigIntoBaseTasks = function(buildConfig) {
                         lines[i] = `Default|${buildConfigVersion}`;
                     }
                 }
-                const updatedContent = lines.join('\n');
+                const updatedContent = lines.join(originalLineEnding);
                 fs.writeFileSync(versionmapFilePath, updatedContent, { encoding: 'utf-8' });
                 console.log(`Updated ${versionmapFilePath} file`);
 
