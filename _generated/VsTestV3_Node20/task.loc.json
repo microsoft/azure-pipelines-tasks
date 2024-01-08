@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 230,
+    "Minor": 231,
     "Patch": 0
   },
   "demands": [
@@ -553,7 +553,7 @@
     "Node16": {
       "target": "runvstest.js"
     },
-    "Node20": {
+    "Node20_1": {
       "target": "runvstest.js",
       "argumentFormat": ""
     }
@@ -663,6 +663,6 @@
   },
   "_buildConfigMapping": {
     "Default": "3.225.0",
-    "Node20_229_4": "3.230.0"
+    "Node20_229_4": "3.231.0"
   }
 }

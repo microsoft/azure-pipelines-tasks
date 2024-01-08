@@ -32,6 +32,10 @@ parameters:
   displayName: Create hotfix PRs and Release
   type: boolean
   default: false
+- name: deploy_all_tasks
+  displayName: Build all tasks for deployment
+  type: boolean
+  default: false
 
 variables:
   currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
@@ -101,12 +105,17 @@ jobs:
     displayName: Build all tasks for deployments (Windows)
     dependsOn:
     - courtesy_push
+    - build_all_windows
     condition: succeeded()
     timeoutInMinutes: 180
+    variables:
+      task_pattern: $[dependencies.build_all_windows.outputs['getTaskPattern.task_pattern']]
     pool:
       name: 1ES-Shared-Hosted-Pool_Windows-Server-2022
     steps:
     - template: ci/build-all-tasks.yml
+      parameters:
+        deploy_all_tasks: ${{ parameters.deploy_all_tasks }}
 
   # All tasks on Linux
   - job: build_all_linux
