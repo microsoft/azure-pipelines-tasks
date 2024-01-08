@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Publish code coverage results",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "Publish Cobertura or JaCoCo code coverage results from a build",
+  "loc.description": "[Deprecated] Publish Cobertura or JaCoCo code coverage results from a build",
   "loc.instanceNameFormat": "Publish code coverage from $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Code coverage tool",
   "loc.input.help.codeCoverageTool": "The tool with which code coverage results are generated.",
