@@ -97,7 +97,7 @@ PROCESS {
                             $message = $errorLines.ToString().Trim()
                             $null = $errorLines.Clear()
                             if ($message) {
-                                Write-VstsTaskError -Message $message
+                                Write-VstsTaskError -Message $message -CustomerIssue $true
                             }
                         }
 
@@ -111,7 +111,7 @@ PROCESS {
                 $message = $errorLines.ToString().Trim()
                 $null = $errorLines.Clear()
                 if ($message) {
-                    Write-VstsTaskError -Message $message
+                    Write-VstsTaskError -Message $message -CustomerIssue $true
                 }
             }
         }

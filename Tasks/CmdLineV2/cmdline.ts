@@ -78,7 +78,7 @@ async function run() {
         if (stderrFailure) {
             tl.error(tl.loc('JS_Stderr'));
             aggregatedStderr.forEach((err: string) => {
-                tl.error(err);
+                tl.error(err, true);
             });
             result = tl.TaskResult.Failed;
         }
