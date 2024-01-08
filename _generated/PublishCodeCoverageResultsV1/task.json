@@ -101,5 +101,9 @@
     "IgnoringReportDirectory": "Ignoring coverage report directory with Html content as we are auto-generating Html content",
     "UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
     "GeneratedHtmlReport": "Generated code coverage html report: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.234.0",
+    "Node20_229_4": "1.234.1"
   }
 }
