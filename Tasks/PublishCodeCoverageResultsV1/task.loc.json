@@ -2,6 +2,7 @@
   "id": "2A7EBC54-C13E-490E-81A5-D7561AB7CD97",
   "name": "PublishCodeCoverageResults",
   "friendlyName": "ms-resource:loc.friendlyName",
+  "deprecated": true,
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-code-coverage-results",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
