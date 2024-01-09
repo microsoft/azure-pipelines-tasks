@@ -12,6 +12,9 @@ const taskVersionBumpingDocUrl = "https://aka.ms/azp-tasks-version-bumping";
 
 const packageEndpoint = process.env['PACKAGE_VERSIONS_ENDPOINT'];
 
+// An example:
+// PACKAGE_TOKEN={token} PACKAGE_VERSIONS_ENDPOINT={package_versions_endpoint} SYSTEM_PULLREQUEST_SOURCEBRANCH=refs/head/{local_branch_name} SYSTEM_PULLREQUEST_TARGETBRANCH={target_branch_eg_master} node ./ci/check-downgrading.js --task "@({tasks_names})" --sprint {current_sprint_number}
+
 if (!packageEndpoint) {
   logToPipeline('error', 'Failed to get info from package endpoint because no endpoint was specified. Try setting the PACKAGE_VERSIONS_ENDPOINT environment variable.')
   process.exit(1);
@@ -228,8 +231,21 @@ function getChangedTaskJsonFromMaster(names) {
   });
 }
 
+function excludeNewTasks(names) {
+  return names.filter(x => {
+    try {
+      // If task.json doesn't exist in the main branch it means that it's a new task
+      run(`git cat-file -e origin/master:Tasks/${x}/task.json`);
+    } catch (error) {
+      return false;
+    }
+
+    return true;
+  });
+}
+
 async function main({ task, sprint, week }) {
-  const changedTasksNames = resolveTaskList(task);
+  const changedTasksNames = excludeNewTasks(resolveTaskList(task));
   const localTasks = getTasksVersions(changedTasksNames, join(__dirname, '..'));
   getChangedTaskJsonFromMaster(changedTasksNames);
   const masterTasks = getTasksVersions(changedTasksNames, tempMasterTasksPath);
