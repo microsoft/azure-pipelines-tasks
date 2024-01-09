@@ -22,5 +22,6 @@
   "loc.messages.RetryingOperation": "%s でエラーが発生したため、再試行します。=> 保留中の再試行回数: %s",
   "loc.messages.OperationFailed": "%s でエラー %s のために失敗しました",
   "loc.messages.Info_ResolvedToolFromCache": "ツール キャッシュから解決: %s",
-  "loc.messages.UnsupportedProjectScopedFeeds": "プロジェクトを対象とするフィードは、このバージョンの \"パッケージのダウンロード\" タスクではサポートされていません。バージョン 1 以降をご使用ください。"
+  "loc.messages.UnsupportedProjectScopedFeeds": "プロジェクトを対象とするフィードは、このバージョンの \"パッケージのダウンロード\" タスクではサポートされていません。バージョン 1 以降をご使用ください。",
+  "loc.messages.DeprecatedTask": "このタスクは非推奨です。DownloadPackage@1 の使用に切り替えてください https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/download-package-v1"
 }
