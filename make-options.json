@@ -352,7 +352,8 @@
         "KubernetesV1",
         "KubernetesManifestV0",
         "MysqlDeploymentOnMachineGroupV1",
-        "UseDotNetV2"
+        "UseDotNetV2",
+        "PublishPipelineMetadataV0"
     ],
     "Node20_229_4": [
         "VsTestPlatformToolInstallerV1",
