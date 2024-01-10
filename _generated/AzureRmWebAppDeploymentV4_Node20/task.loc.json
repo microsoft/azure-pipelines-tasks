@@ -663,7 +663,7 @@
     "MSDeployNotSupportTokenAuth": "ms-resource:loc.messages.MSDeployNotSupportTokenAuth"
   },
   "_buildConfigMapping": {
-    "Default": "4.233.0",
+    "Default": "4.233.2",
     "Node20_229_2": "4.233.1"
   }
 }

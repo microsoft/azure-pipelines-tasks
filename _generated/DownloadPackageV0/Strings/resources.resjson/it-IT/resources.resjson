@@ -22,5 +22,6 @@
   "loc.messages.RetryingOperation": "Errore in %s. Verranno eseguiti nuovi tentativi => Tentativi in sospeso: %s",
   "loc.messages.OperationFailed": "Operazione non riuscita in %s. Errore: %s",
   "loc.messages.Info_ResolvedToolFromCache": "Risoluzione dalla cache dello strumento: %s",
-  "loc.messages.UnsupportedProjectScopedFeeds": "I feed con ambito progetto non sono supportati da questa versione dell'attività \"Scarica pacchetto\". Usare la versione 1 o successiva."
+  "loc.messages.UnsupportedProjectScopedFeeds": "I feed con ambito progetto non sono supportati da questa versione dell'attività \"Scarica pacchetto\". Usare la versione 1 o successiva.",
+  "loc.messages.DeprecatedTask": "Questa attività è deprecata. Passa all'uso di DownloadPackage@1 https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/download-package-v1"
 }

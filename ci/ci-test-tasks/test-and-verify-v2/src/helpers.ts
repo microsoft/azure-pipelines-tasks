@@ -29,5 +29,3 @@ export function getBuildConfigs(task: string): string[] {
         return [task];
     }
 }
-
-export const pipelineVariable = (key: string, value: string) => ({ [key]: { value, isSecret: false } });
