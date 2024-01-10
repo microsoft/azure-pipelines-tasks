@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 234,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "groups": [],
@@ -430,6 +430,10 @@
     "Node16": {
       "target": "src//run.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "src//run.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -464,5 +468,9 @@
     "RolloutStatusTimedout": "ms-resource:loc.messages.RolloutStatusTimedout",
     "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink",
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.234.0",
+    "Node20_229_3": "1.234.1"
   }
 }
