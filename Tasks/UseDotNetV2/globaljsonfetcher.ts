@@ -1,6 +1,7 @@
 "use strict";
 import * as fileSystem from "fs";
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as JSON5 from 'json5';
 import { DotNetCoreVersionFetcher } from "./versionfetcher";
 import { VersionInfo } from "./models";
 
@@ -63,7 +64,7 @@ export class globalJsonFetcher {
                 return null;
             }
 
-            globalJson = (JSON.parse(fileContent.toString())) as { sdk: { version: string } };
+            globalJson = (JSON5.parse(fileContent.toString())) as { sdk: { version: string } };
         } catch (error) {
             // we throw if the global.json is invalid
             throw tl.loc("FailedToReadGlobalJson", path, error); // We don't throw if a global.json is invalid.

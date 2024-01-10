@@ -13,11 +13,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 230,
-    "Patch": 2
+    "Minor": 232,
+    "Patch": 0
   },
   "deprecated": true,
-  "removalDate": "2024-04-22",
+  "removalDate": "2024-01-31",
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
@@ -103,7 +103,7 @@
     "PrependPath": "ms-resource:loc.messages.PrependPath"
   },
   "_buildConfigMapping": {
-    "Default": "1.230.2",
-    "Node20-225": "1.230.3"
+    "Default": "1.232.0",
+    "Node20-225": "1.232.1"
   }
 }

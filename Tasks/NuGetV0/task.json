@@ -10,8 +10,8 @@
   "helpMarkDown": "",
   "version": {
     "Major": 0,
-    "Minor": 230,
-    "Patch": 0
+    "Minor": 232,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -19,7 +19,7 @@
   ],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
-  "removalDate": "2024-04-22",
+  "removalDate": "2024-01-31",
   "groups": [],
   "instanceNameFormat": "NuGet $(command)",
   "inputs": [

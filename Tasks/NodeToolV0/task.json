@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 231,
+        "Minor": 233,
         "Patch": 0
     },
     "satisfies": [
@@ -82,6 +82,24 @@
             "required": false,
             "groupName": "advanced",
             "helpMarkDown": "Use an alternative installation mirror when sourcing the Node.js binaries."
+        },
+        {
+            "name": "retryCountOnDownloadFails",
+            "type": "string",
+            "label": "Set retry count when nodes downloads failed",
+            "defaultValue": "5",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Use this option when the task failed to download node binaries from the mirror. The task will retry to download the binaries for the specified times."
+        },
+        {
+            "name": "delayBetweenRetries",
+            "type": "string",
+            "label": "Set delay between retries",
+            "defaultValue": "1000",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Use this option to set the delay between retries in milliseconds. The default value is 1000 milliseconds."
         }
     ],
     "execution": {

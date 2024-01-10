@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 230,
+    "Minor": 233,
     "Patch": 0
   },
   "runsOn": [
@@ -18,7 +18,7 @@
   ],
   "minimumAgentVersion": "2.115.0",
   "deprecated": true,
-  "removalDate": "2023-11-27",
+  "removalDate": "2023-12-11",
   "groups": [
     {
       "name": "advanced",
@@ -145,10 +145,11 @@
     "NGCommon_RemovingSources": "ms-resource:loc.messages.NGCommon_RemovingSources",
     "NGCommon_AddingSources": "ms-resource:loc.messages.NGCommon_AddingSources",
     "NGCommon_NoSourcesFoundInConfig": "ms-resource:loc.messages.NGCommon_NoSourcesFoundInConfig",
-    "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion"
+    "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion",
+    "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
   },
   "_buildConfigMapping": {
-    "Default": "0.230.0",
-    "Node20_229_1": "0.230.1"
+    "Default": "0.233.0",
+    "Node20_229_1": "0.233.1"
   }
 }

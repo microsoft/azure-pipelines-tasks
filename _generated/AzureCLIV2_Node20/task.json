@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 230,
-    "Patch": 1
+    "Minor": 231,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -182,7 +182,7 @@
       "target": "azureclitask.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "azureclitask.js",
       "argumentFormat": ""
     }
@@ -208,6 +208,6 @@
   },
   "_buildConfigMapping": {
     "Default": "2.230.0",
-    "Node20_229_2": "2.230.1"
+    "Node20_229_2": "2.231.0"
   }
 }

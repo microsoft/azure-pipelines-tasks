@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 230,
-    "Patch": 1
+    "Minor": 231,
+    "Patch": 0
   },
   "demands": [],
   "satisfies": [
@@ -86,7 +86,7 @@
     "Node16": {
       "target": "src//helmtoolinstaller.js"
     },
-    "Node20": {
+    "Node20_1": {
       "target": "src//helmtoolinstaller.js",
       "argumentFormat": ""
     }
@@ -102,6 +102,6 @@
   },
   "_buildConfigMapping": {
     "Default": "0.225.0",
-    "Node20_229_3": "0.230.1"
+    "Node20_229_3": "0.231.0"
   }
 }
