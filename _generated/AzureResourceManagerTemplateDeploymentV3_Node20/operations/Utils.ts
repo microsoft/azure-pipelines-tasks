@@ -433,11 +433,17 @@ class Utils {
                 if(this.isBicepAvailable(azcliversion, filePathExtension)){
                     setAzureCloudBasedOnServiceEndpoint(taskParameters.connectedService);
                     await loginAzureRM(taskParameters.connectedService);
-                    await this.execBicepBuild(filePath)                
+                    await this.execBicepBuild(filePath)
+                    if(filePathExtension === 'bicep'){
+                        filePath = filePath.replace('.bicep', '.json')      
+                    }
+                    else{
+                        filePath = filePath.replace('.bicepparam', '.parameters.json')      
+                    }        
                     await this.logoutAzure();
                 }else{
                     //Maintain backwards compatibility for runs that are not using bicep param and do not require higher version
-                    if(filePathExtension.endsWith('bicep')){
+                    if(filePathExtension === 'bicep'){
                         throw new Error(tl.loc("IncompatibleAzureCLIVersion"));
                     }
                     else{
