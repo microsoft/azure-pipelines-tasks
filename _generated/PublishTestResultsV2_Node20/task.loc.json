@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 231,
+    "Minor": 233,
     "Patch": 2
   },
   "demands": [],
@@ -80,6 +80,14 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failTaskOnFailedTests"
+    },
+    {
+      "name": "failTaskOnFailureToPublishResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failTaskOnFailureToPublishResults",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failTaskOnFailureToPublishResults"
     },
     {
       "name": "failTaskOnMissingResultsFile",
@@ -152,7 +160,7 @@
     "ErrorFailTaskOnFailedTests": "ms-resource:loc.messages.ErrorFailTaskOnFailedTests"
   },
   "_buildConfigMapping": {
-    "Default": "2.231.1",
-    "Node20_229_13": "2.231.2"
+    "Default": "2.233.1",
+    "Node20_229_13": "2.233.2"
   }
 }

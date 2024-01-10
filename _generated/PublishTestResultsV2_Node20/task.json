@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 231,
+    "Minor": 233,
     "Patch": 2
   },
   "demands": [],
@@ -80,6 +80,14 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "Fail the task if there are any test failures. Check this option to fail the task if test failures are detected in the result files."
+    },
+    {
+      "name": "failTaskOnFailureToPublishResults",
+      "type": "boolean",
+      "label": "Fail if there is failure in publishing test results",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "Fail if there is failure in publishing test results. Check this option to fail the task if publishing test results is failed partially."
     },
     {
       "name": "failTaskOnMissingResultsFile",
@@ -152,7 +160,7 @@
     "ErrorFailTaskOnFailedTests": "There are one or more test failures detected in result files. Detailed summary of published test results can be viewed in the Tests tab."
   },
   "_buildConfigMapping": {
-    "Default": "2.231.1",
-    "Node20_229_13": "2.231.2"
+    "Default": "2.233.1",
+    "Node20_229_13": "2.233.2"
   }
 }
