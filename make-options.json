@@ -222,7 +222,7 @@
         "AzureRmWebAppDeploymentV4",
         "IISWebAppDeploymentOnMachineGroupV0"
     ],
-  "Node20": [
+    "Node20": [
     "AndroidSigningV2",
     "AndroidSigningV3",
     "AzureDevOpsTestPlanV0",
@@ -267,7 +267,7 @@
     "CondaEnvironmentV0",
     "CondaEnvironmentV1",
     "OpenPolicyAgentInstallerV0"
-  ],
+    ],
     "Node20_228": [
         "MavenV2"
     ],
