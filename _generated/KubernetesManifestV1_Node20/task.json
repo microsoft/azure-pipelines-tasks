@@ -1,10 +1,10 @@
 {
   "id": "DEE316A2-586F-4DEF-BE79-488A1F503DFE",
   "name": "KubernetesManifest",
-  "friendlyName": "ms-resource:loc.friendlyName",
-  "description": "ms-resource:loc.description",
+  "friendlyName": "Deploy to Kubernetes",
+  "description": "Use Kubernetes manifest files to deploy to clusters or even bake the manifest files to be used for deployments using Helm charts",
   "helpUrl": "https://aka.ms/azpipes-k8s-manifest-tsg",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275) or [see the Kubernetes documentation](https://kubernetes.io/docs/home/)",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 234,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "groups": [],
@@ -22,7 +22,7 @@
     {
       "name": "action",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.action",
+      "label": "Action",
       "required": false,
       "defaultValue": "deploy",
       "options": {
@@ -35,18 +35,18 @@
         "scale": "scale",
         "reject": "reject"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.action"
+      "helpMarkDown": "Choose the action to be performed."
     },
     {
       "name": "connectionType",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.connectionType",
+      "label": "Service connection type",
       "defaultValue": "kubernetesServiceConnection",
       "options": {
         "azureResourceManager": "Azure Resource Manager",
         "kubernetesServiceConnection": "Kubernetes Service Connection"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.connectionType",
+      "helpMarkDown": "Select a Kubernetes service connection type.",
       "visibleRule": "action != bake",
       "required": true
     },
@@ -56,8 +56,8 @@
         "kubernetesServiceConnection"
       ],
       "type": "connectedService:kubernetes",
-      "label": "ms-resource:loc.input.label.kubernetesServiceEndpoint",
-      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceEndpoint",
+      "label": "Kubernetes service connection",
+      "helpMarkDown": "Select a Kubernetes service connection.",
       "visibleRule": "action != bake && connectionType = kubernetesServiceConnection",
       "required": true
     },
@@ -67,17 +67,17 @@
         "azureSubscriptionConnection"
       ],
       "type": "connectedService:AzureRM",
-      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
-      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "label": "Azure subscription",
+      "helpMarkDown": "Select the Azure Resource Manager subscription, which contains Azure Container Registry.Note: To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Add' or 'Manage' button.",
       "defaultValue": "",
       "visibleRule": "action != bake && connectionType = azureResourceManager",
       "required": true
     },
     {
       "name": "azureResourceGroup",
-      "label": "ms-resource:loc.input.label.azureResourceGroup",
+      "label": "Resource group",
       "type": "pickList",
-      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup",
+      "helpMarkDown": "Select an Azure resource group.",
       "defaultValue": "",
       "visibleRule": "action != bake && connectionType = azureResourceManager",
       "required": true,
@@ -87,9 +87,9 @@
     },
     {
       "name": "kubernetesCluster",
-      "label": "ms-resource:loc.input.label.kubernetesCluster",
+      "label": "Kubernetes cluster",
       "type": "pickList",
-      "helpMarkDown": "ms-resource:loc.input.help.kubernetesCluster",
+      "helpMarkDown": "Select an Azure managed cluster.",
       "defaultValue": "",
       "visibleRule": "action != bake && connectionType = azureResourceManager",
       "required": true,
@@ -100,51 +100,51 @@
     {
       "name": "useClusterAdmin",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.useClusterAdmin",
+      "label": "Use cluster admin credentials",
       "defaultValue": "false",
       "visibleRule": "connectionType = azureResourceManager",
-      "helpMarkDown": "ms-resource:loc.input.help.useClusterAdmin"
+      "helpMarkDown": "Use cluster administrator credentials instead of default cluster user credentials."
     },
     {
       "name": "namespace",
       "type": "string",
-      "label": "ms-resource:loc.input.label.namespace",
+      "label": "Namespace",
       "required": false,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.namespace"
+      "helpMarkDown": "Sets the namespace for the commands by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace."
     },
     {
       "name": "strategy",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.strategy",
+      "label": "Strategy",
       "required": false,
       "defaultValue": "none",
       "options": {
         "canary": "Canary",
         "none": "None"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.strategy",
+      "helpMarkDown": "Deployment strategy to be used",
       "visibleRule": "action = deploy || action = promote || action = reject"
     },
     {
       "name": "trafficSplitMethod",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.trafficSplitMethod",
+      "label": "Traffic split method",
       "required": false,
       "defaultValue": "pod",
       "options": {
         "pod": "Pod",
         "smi": "SMI"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.trafficSplitMethod",
+      "helpMarkDown": "Traffic split method to be used",
       "visibleRule": "strategy = canary"
     },
     {
       "name": "percentage",
       "type": "string",
-      "label": "ms-resource:loc.input.label.percentage",
+      "label": "Percentage",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.percentage",
+      "helpMarkDown": "Percentage of traffic redirect to canary deployment",
       "defaultValue": 0,
       "visibleRule": "strategy = Canary && action = deploy",
       "validation": {
@@ -155,9 +155,9 @@
     {
       "name": "baselineAndCanaryReplicas",
       "type": "string",
-      "label": "ms-resource:loc.input.label.baselineAndCanaryReplicas",
+      "label": "Baseline and canary replicas",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.baselineAndCanaryReplicas",
+      "helpMarkDown": "Baseline and canary replicas count",
       "defaultValue": 1,
       "visibleRule": "strategy = Canary && action = deploy && trafficSplitMethod = SMI",
       "validation": {
@@ -168,34 +168,34 @@
     {
       "name": "manifests",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.manifests",
+      "label": "Manifests",
       "required": true,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.manifests",
+      "helpMarkDown": "Manifests to deploy",
       "visibleRule": "action = deploy || action = promote || action = reject"
     },
     {
       "name": "containers",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.containers",
+      "label": "Containers",
       "required": false,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.containers",
+      "helpMarkDown": "Containers",
       "visibleRule": "action = deploy || action = promote || action = bake"
     },
     {
       "name": "imagePullSecrets",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.imagePullSecrets",
+      "label": "ImagePullSecrets",
       "required": false,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.imagePullSecrets",
+      "helpMarkDown": "ImagePullSecret to pull image from private registry",
       "visibleRule": "action = deploy || action = promote"
     },
     {
       "name": "renderType",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.renderType",
+      "label": "Render Engine",
       "required": false,
       "defaultValue": "helm",
       "visibleRule": "action = bake",
@@ -204,88 +204,88 @@
         "kompose": "Kompose",
         "kustomize": "Kustomize"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.renderType"
+      "helpMarkDown": "Tool to use for generating manifest files."
     },
     {
       "name": "dockerComposeFile",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.dockerComposeFile",
+      "label": "Path to docker compose file",
       "required": true,
       "defaultValue": "",
       "visibleRule": "action = bake && renderType = kompose",
-      "helpMarkDown": "ms-resource:loc.input.help.dockerComposeFile"
+      "helpMarkDown": "docker-compose file path"
     },
     {
       "name": "helmChart",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.helmChart",
+      "label": "Helm Chart",
       "required": true,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.helmChart",
+      "helpMarkDown": "Helm chart path to bake",
       "visibleRule": "action = bake && renderType = helm"
     },
     {
       "name": "releaseName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.releaseName",
+      "label": "Helm Release Name",
       "required": false,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.releaseName",
+      "helpMarkDown": "Helm release name to use",
       "visibleRule": "action = bake && renderType = helm"
     },
     {
       "name": "overrideFiles",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.overrideFiles",
+      "label": "Override Files",
       "required": false,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.overrideFiles",
+      "helpMarkDown": "Override files to set",
       "visibleRule": "action = bake && renderType = helm"
     },
     {
       "name": "overrides",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.overrides",
+      "label": "Overrides",
       "required": false,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.overrides",
+      "helpMarkDown": "Override values to set",
       "visibleRule": "action = bake && renderType = helm"
     },
     {
       "name": "kustomizationPath",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.kustomizationPath",
+      "label": "Kustomization Path",
       "required": false,
       "visibleRule": "action = bake && renderType = kustomize",
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.kustomizationPath"
+      "helpMarkDown": "The argument must be the path to the directory containing the file, or a git repository URL with a path suffix specifying same with respect to the repository root."
     },
     {
       "name": "resourceToPatch",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.resourceToPatch",
+      "label": "Resource to patch",
       "required": true,
       "defaultValue": "file",
       "options": {
         "file": "file",
         "name": "name"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.resourceToPatch",
+      "helpMarkDown": "to identify the resource",
       "visibleRule": "action = patch"
     },
     {
       "name": "resourceFileToPatch",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.resourceFileToPatch",
+      "label": "File path",
       "required": true,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.resourceFileToPatch",
+      "helpMarkDown": "Path to the file used for patch",
       "visibleRule": "action = patch && resourceToPatch = file"
     },
     {
       "name": "kind",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.kind",
+      "label": "Kind",
       "required": true,
       "defaultValue": "",
       "options": {
@@ -293,31 +293,31 @@
         "replicaset": "replicaset",
         "statefulset": "statefulset"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.kind",
+      "helpMarkDown": "Kind of K8s object; deployment, replicaSet etc.",
       "visibleRule": "action = scale || resourceToPatch = name"
     },
     {
       "name": "name",
       "type": "string",
-      "label": "ms-resource:loc.input.label.name",
+      "label": "Name",
       "required": true,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.name",
+      "helpMarkDown": "Name of the k8s object",
       "visibleRule": "action = scale || resourceToPatch = name"
     },
     {
       "name": "replicas",
       "type": "string",
-      "label": "ms-resource:loc.input.label.replicas",
+      "label": "Replica count",
       "required": true,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.replicas",
+      "helpMarkDown": "Number of replicas to scale to",
       "visibleRule": "action = scale"
     },
     {
       "name": "mergeStrategy",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.mergeStrategy",
+      "label": "Merge Strategy",
       "required": true,
       "defaultValue": "strategic",
       "options": {
@@ -325,29 +325,29 @@
         "merge": "merge",
         "strategic": "strategic"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.mergeStrategy",
+      "helpMarkDown": "The type of patch being provided; one of [json merge strategic]",
       "visibleRule": "action = patch"
     },
     {
       "name": "arguments",
       "type": "string",
-      "label": "ms-resource:loc.input.label.arguments",
+      "label": "Arguments",
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.arguments",
+      "helpMarkDown": "Arguments for `kubectl delete` command",
       "visibleRule": "action = delete"
     },
     {
       "name": "patch",
       "type": "string",
-      "label": "ms-resource:loc.input.label.patch",
+      "label": "Patch",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.patch",
+      "helpMarkDown": "Contents of patch",
       "visibleRule": "action = patch"
     },
     {
       "name": "secretType",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.secretType",
+      "label": "Type of secret",
       "defaultValue": "dockerRegistry",
       "required": true,
       "visibleRule": "action = createSecret",
@@ -355,16 +355,16 @@
         "dockerRegistry": "dockerRegistry",
         "generic": "generic"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.secretType"
+      "helpMarkDown": "Create/update a generic or docker imagepullsecret. Select dockerRegistry to create/update the imagepullsecret of the selected registry. An imagePullSecret is a way to pass a secret that contains a container registry password to the Kubelet so it can pull a private image on behalf of your Pod."
     },
     {
       "name": "secretName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.secretName",
+      "label": "Secret name",
       "required": false,
       "visibleRule": "action = createSecret",
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.secretName"
+      "helpMarkDown": "Name of the secret. You can use this secret name in the Kubernetes YAML configuration file."
     },
     {
       "name": "secretArguments",
@@ -374,25 +374,25 @@
         "rows": "2",
         "editorExtension": "ms.vss-services-azure.kubernetes-parameters-grid"
       },
-      "label": "ms-resource:loc.input.label.secretArguments",
+      "label": "Arguments",
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.secretArguments",
+      "helpMarkDown": "Specify keys and literal values to insert in secret.For example, --from-literal=key1=value1 --from-literal=key2=\"top secret\".",
       "visibleRule": "action = createSecret && secretType = generic"
     },
     {
       "name": "dockerRegistryEndpoint",
       "type": "connectedService:dockerregistry",
-      "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
-      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
+      "label": "Docker registry service connection",
+      "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
       "visibleRule": "action = createSecret && secretType = dockerRegistry"
     },
     {
       "name": "rolloutStatusTimeout",
       "type": "string",
-      "label": "ms-resource:loc.input.label.rolloutStatusTimeout",
+      "label": "Timeout for rollout status",
       "defaultValue": "0",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.rolloutStatusTimeout",
+      "helpMarkDown": "The length of time (in seconds) to wait before ending watch on rollout status",
       "visibleRule": "action = deploy || action = patch || action = scale || action = promote",
       "validation": {
         "expression": "isMatch(value, '(^\\d*$)','Multiline')",
@@ -416,7 +416,7 @@
       "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
     }
   ],
-  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "instanceNameFormat": "$(action)",
   "outputVariables": [
     {
       "name": "manifestsBundle",
@@ -430,39 +430,47 @@
     "Node16": {
       "target": "src//run.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "src//run.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
-    "DownloadPathForStableTxt": "ms-resource:loc.messages.DownloadPathForStableTxt",
-    "DownloadKubeCtlFailed": "ms-resource:loc.messages.DownloadKubeCtlFailed",
-    "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
-    "DockerComposeFilePathNotSupplied": "ms-resource:loc.messages.DockerComposeFilePathNotSupplied",
-    "UsingLatestStableVersion": "ms-resource:loc.messages.UsingLatestStableVersion",
-    "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
-    "ManifestFileNotFound": "ms-resource:loc.messages.ManifestFileNotFound",
-    "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
-    "UnknownRenderType": "ms-resource:loc.messages.UnknownRenderType",
-    "ResourceKindNotDefined": "ms-resource:loc.messages.ResourceKindNotDefined",
-    "NullInputObject": "ms-resource:loc.messages.NullInputObject",
-    "ArgumentsInputNotSupplied": "ms-resource:loc.messages.ArgumentsInputNotSupplied",
-    "NullInputObjectMetadata": "ms-resource:loc.messages.NullInputObjectMetadata",
-    "InvalidRejectActionDeploymentStrategy": "ms-resource:loc.messages.InvalidRejectActionDeploymentStrategy",
-    "InvalidPromotetActionDeploymentStrategy": "ms-resource:loc.messages.InvalidPromotetActionDeploymentStrategy",
-    "AllContainersNotInReadyState": "ms-resource:loc.messages.AllContainersNotInReadyState",
-    "CouldNotDeterminePodStatus": "ms-resource:loc.messages.CouldNotDeterminePodStatus",
-    "KubectlShouldBeUpgraded": "ms-resource:loc.messages.KubectlShouldBeUpgraded",
-    "KubernetesClusterResourceGroup": "ms-resource:loc.messages.KubernetesClusterResourceGroup",
-    "CouldNotDetermineServiceStatus": "ms-resource:loc.messages.CouldNotDetermineServiceStatus",
-    "waitForServiceIpAssignment": "ms-resource:loc.messages.waitForServiceIpAssignment",
-    "waitForServiceIpAssignmentTimedOut": "ms-resource:loc.messages.waitForServiceIpAssignmentTimedOut",
-    "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP",
-    "UnableToCreateTrafficSplitManifestFile": "ms-resource:loc.messages.UnableToCreateTrafficSplitManifestFile",
-    "StableSpecSelectorNotExist": "ms-resource:loc.messages.StableSpecSelectorNotExist",
-    "InvalidPercentage": "ms-resource:loc.messages.InvalidPercentage",
-    "InvalidBaselineAndCanaryReplicas": "ms-resource:loc.messages.InvalidBaselineAndCanaryReplicas",
-    "InvalidTimeoutValue": "ms-resource:loc.messages.InvalidTimeoutValue",
-    "RolloutStatusTimedout": "ms-resource:loc.messages.RolloutStatusTimedout",
-    "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink",
-    "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
+    "DownloadPathForStableTxt": "Download path for stable.txt: %s",
+    "DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
+    "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
+    "DockerComposeFilePathNotSupplied": "docker-compose file path not supplied",
+    "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
+    "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
+    "ManifestFileNotFound": "No manifest file(s) matching %s was found.",
+    "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
+    "UnknownRenderType": "Unknown render engine",
+    "ResourceKindNotDefined": "Resource kind is null",
+    "NullInputObject": "Input object is null.",
+    "ArgumentsInputNotSupplied": "Arguments are not supplied.",
+    "NullInputObjectMetadata": "Input object metadata is null.",
+    "InvalidRejectActionDeploymentStrategy": "Reject action works only with strategy: canary",
+    "InvalidPromotetActionDeploymentStrategy": "Promote action works only with strategy: canary",
+    "AllContainersNotInReadyState": "All the containers are not in a ready state.",
+    "CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
+    "KubectlShouldBeUpgraded": "kubectl client version equal to v1.14 or higher is required to use kustomize features.",
+    "KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",
+    "CouldNotDetermineServiceStatus": "Could not determine the service %s status due to the error: %s",
+    "waitForServiceIpAssignment": "Waiting for service %s external IP assignment",
+    "waitForServiceIpAssignmentTimedOut": "Wait for service %s external IP assignment timed out",
+    "ServiceExternalIP": "service %s external IP is %s",
+    "UnableToCreateTrafficSplitManifestFile": "Unable to create TrafficSplit manifest file. %s",
+    "StableSpecSelectorNotExist": "Resource %s not deployed using SMI canary deployment.",
+    "InvalidPercentage": "Invalid value for percentage.",
+    "InvalidBaselineAndCanaryReplicas": "Invalid value for replica count.",
+    "InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number.",
+    "RolloutStatusTimedout": "Rollout status check failed.",
+    "EnvironmentLink": "For more information, go to %s",
+    "KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.234.0",
+    "Node20_229_3": "1.234.1"
   }
 }
