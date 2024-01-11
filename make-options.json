@@ -16,6 +16,7 @@
         "AzureCloudPowerShellDeploymentV2",
         "AzureContainerAppsV0",
         "AzureContainerAppsV1",
+        "AzureDevOpsTestPlanV0",
         "AzureFileCopyV1",
         "AzureFileCopyV2",
         "AzureFileCopyV3",
@@ -224,6 +225,7 @@
     "Node20": [
         "AndroidSigningV2",
         "AndroidSigningV3",
+        "AzureDevOpsTestPlanV0",
         "ANTV1",
         "ArchiveFilesV2",
         "BashV3",

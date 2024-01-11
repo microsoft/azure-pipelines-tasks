@@ -33,6 +33,8 @@ Tasks/AzureContainerAppsV0/    @cormacpayne    @daniv-msft
 
 Tasks/AzureContainerAppsV1/    @cormacpayne    @daniv-msft
 
+Tasks/AzureDevOpsTestPlanV0/     @rasunkar  @microsoft\adoautotest
+
 Tasks/AzureFileCopyV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
 Tasks/AzureFileCopyV2/    @vsebesta   @rvairavelu   @pipeline-environment-team
