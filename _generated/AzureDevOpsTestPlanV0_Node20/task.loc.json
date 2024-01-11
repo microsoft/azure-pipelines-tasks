@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 234,
-    "Patch": 1
+    "Patch": 0
   },
   "preview": true,
   "demands": [],
@@ -143,19 +143,11 @@
     "Node16": {
       "target": "runTestPlan.js",
       "argumentFormat": ""
-    },
-    "Node20_1": {
-      "target": "runTestPlan.js",
-      "argumentFormat": ""
     }
   },
   "messages": {
     "testPlanInput": "ms-resource:loc.messages.testPlanInput",
     "testplanConfigInput": "ms-resource:loc.messages.testplanConfigInput",
     "testSuiteSelected": "ms-resource:loc.messages.testSuiteSelected"
-  },
-  "_buildConfigMapping": {
-    "Default": "2.234.0",
-    "Node20-225": "2.234.1"
   }
 }
