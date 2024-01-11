@@ -397,5 +397,7 @@
         "PublishTestResultsV1",
         "PublishTestResultsV2"
     ],
-    "Node20_229_14": []
+    "Node20_229_14": [
+        "PublishSymbolsV2"
+    ]
 }
