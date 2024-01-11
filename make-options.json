@@ -267,7 +267,8 @@
         "OpenPolicyAgentInstallerV0"
     ],
     "Node20_228": [
-        "MavenV2"
+        "MavenV2",
+        "PyPIPublisherV0"
     ],
     "Node20_229_1": [
         "CargoAuthenticateV0",

@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "license": "MIT",
   "devDependencies": {
-    "@types/mocha": "^5.2.0",
-    "azure-pipelines-task-lib": "2.9.3"
+    "@types/mocha": "^5.2.7",
+    "azure-pipelines-task-lib": "^5.0.1-preview.0"
   }
 }
