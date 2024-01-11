@@ -16,7 +16,7 @@
   "version": {
     "Major": 2,
     "Minor": 234,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -55,10 +55,18 @@
     "Node16": {
       "target": "publishcodecoverageresults.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "publishcodecoverageresults.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
     "FoundNMatchesForPattern": "ms-resource:loc.messages.FoundNMatchesForPattern",
     "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.234.0",
+    "Node20_229_4": "2.234.1"
   }
 }
