@@ -140,7 +140,7 @@ steps:
       publishLocation: container
 
   # Authenticate 
-  - task: NuGetAuthenticate@0
+  - task: NuGetAuthenticate@1
     displayName: Authenticate with nuget
 
   # Push to feed
