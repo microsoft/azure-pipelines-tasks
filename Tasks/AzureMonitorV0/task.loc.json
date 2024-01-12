@@ -9,6 +9,7 @@
   "category": "Utility",
   "deprecated": true,
   "removalDate": "2024-01-31",
+  "deprecationMessage": "The AzureMonitor@0 (Query Classic Azure Monitor alerts) task has been deprecated since July 8, 2020 and will soon be removed. Use the  AzureMonitor@1 task instead. See https://learn.microsoft.com/azure/azure-monitor/alerts/alerts-prepare-migration.",
   "visibility": [
     "Build",
     "Release"
@@ -19,7 +20,7 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 232,
+    "Minor": 234,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

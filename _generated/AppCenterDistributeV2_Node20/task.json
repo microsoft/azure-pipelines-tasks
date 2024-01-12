@@ -8,6 +8,7 @@
   "category": "Deploy",
   "deprecated": true,
   "removalDate": "2024-01-31",
+  "deprecationMessage": "The AppCenterDistribute@2 (App Center distribute)  task has been deprecated since November 14, 2022 and will soon be removed. Use the AppCenterDistribute@3 task instead.",
   "visibility": [
     "Build",
     "Release"
@@ -15,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 232,
-    "Patch": 3
+    "Minor": 234,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "releaseNotes": "Added support for multiple destinations.",
@@ -209,7 +210,7 @@
     "FailedToFindFile": "Failed to find %s at %s."
   },
   "_buildConfigMapping": {
-    "Default": "2.232.2",
-    "Node20_229_7": "2.232.3"
+    "Default": "2.234.0",
+    "Node20_229_7": "2.234.1"
   }
 }
