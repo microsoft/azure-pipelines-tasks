@@ -1,6 +1,10 @@
 ﻿# Dot source Utility functions.
 . $PSScriptRoot/Utility.ps1
 
+$featureFlags = @{
+    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
 function Initialize-AzureRMModule {
     [CmdletBinding()]
     param(
@@ -80,9 +84,23 @@ function Initialize-AzureRMSubscription {
     # Clear context
     if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal' -and (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue")) {
         Write-Host "##[command]Clear-AzureRmContext -Scope Process"
-        $null = Clear-AzContext -Scope Process
+        if ($featureFlags.retireAzureRM)
+        {
+            $null = Clear-AzContext -Scope Process
+        }
+        else
+        {
+            $null = Clear-AzureRmContext -Scope Process
+        }
         Write-Host "##[command]Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
-        $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+        if ($featureFlags.retireAzureRM)
+        {
+            $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+        }
+        else
+        {
+            $null = Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+        }
     }
 
     $environmentName = "AzureCloud"
@@ -121,32 +139,75 @@ function Initialize-AzureRMSubscription {
                         
                     if ($Endpoint.Auth.Parameters.AuthenticationType -eq "SPNCertificate") {
                         Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -EnvironmentName $environmentName"
-                        $null = Add-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName
+                        if ($featureFlags.retireAzureRM)
+                        {
+                            $null = Add-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName
+                        }
+                        else
+                        {
+                            $null = Add-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -EnvironmentName $environmentName
+                        }
                     }
                     else {
                         Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName"
-                        $null = Add-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+
+                        if ($featureFlags.retireAzureRM)
+                        {
+                            $null = Add-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                        }
+                        else
+                        {
+                            $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName
+                        }
                     }
                 }
                 else {
                     if ($Endpoint.Auth.Parameters.AuthenticationType -eq "SPNCertificate") {
                         Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName"
-                        $null = Add-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName
+                        if ($featureFlags.retireAzureRM)
+                        {
+                            $null = Add-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName
+                        }
+                        else
+                        {
+                            $null = Add-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName
+                        }
                     }
                     else {
                         Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
-                        $null = Add-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                        if ($featureFlags.retireAzureRM)
+                        {
+                            $null = Add-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                        }
+                        else
+                        {
+                            $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                        }
                     }
                 }
             }
             else {
                 if ($Endpoint.Auth.Parameters.AuthenticationType -eq "SPNCertificate") {
                     Write-Host "##[command]Connect-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName"
-                    $null = Connect-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName
+                    if ($featureFlags.retireAzureRM)
+                    {
+                        $null = Connect-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName
+                    }
+                    else
+                    {
+                        $null = Connect-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName
+                    }
                 }
                 else {
                     Write-Host "##[command]Connect-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
-                    $null = Connect-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                    if ($featureFlags.retireAzureRM)
+                    {
+                        $null = Connect-AzAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                    }
+                    else
+                    {
+                        $null = Connect-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                    }
                 }
             }
         } 
@@ -172,7 +233,14 @@ function Initialize-AzureRMSubscription {
         $access_token = Get-MsiAccessToken $Endpoint
         try {
             Write-Host "##[command]Add-AzureRmAccount  -AccessToken ****** -AccountId $accountId "
-            $null = Add-AzAccount -AccessToken $access_token -AccountId $accountId
+            if ($featureFlags.retireAzureRM)
+            {
+                $null = Add-AzAccount -AccessToken $access_token -AccountId $accountId
+            }
+            else
+            {
+                $null = Add-AzureRmAccount -AccessToken $access_token -AccountId $accountId
+            }
         } catch {
             # Provide an additional, custom, credentials-related error message.
             Write-VstsTaskError -Message $_.Exception.Message
@@ -196,7 +264,14 @@ function Set-CurrentAzureRMSubscriptionV2 {
     if ($TenantId) { $additional['TenantId'] = $TenantId }
 
     Write-Host "##[command] Set-AzureRmContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
-    $null = Set-AzContext -Subscription $SubscriptionId @additional
+    if ($featureFlags.retireAzureRM)
+    {
+        $null = Set-AzContext -Subscription $SubscriptionId @additional
+    }
+    else
+    {
+        $null = Set-AzureRmContext -SubscriptionId $SubscriptionId @additional
+    }
 }
 
 

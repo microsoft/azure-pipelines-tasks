@@ -1,4 +1,8 @@
-﻿function Get-SingleFile($files, $pattern)
+﻿$featureFlags = @{
+    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
+function Get-SingleFile($files, $pattern)
 {
     if ($files -is [system.array])
     {
@@ -57,12 +61,29 @@ function Get-AzureStoragePrimaryKey($storageAccount, [bool]$isArm)
 {
     if ($isArm)
     {
-        $storageAccountResource = Get-AzResource | where-object { $_.Name -eq $storageAccount -and $_.ResourceType -eq "Microsoft.Storage/storageAccounts" }
+        if ($featureFlags.retireAzureRM)
+        {
+            $storageAccountResource = Get-AzResource | where-object { $_.Name -eq $storageAccount -and $_.ResourceType -eq "Microsoft.Storage/storageAccounts" }
+        }
+        else
+        {
+            $storageAccountResource = Get-AzureRmResource | where-object { $_.Name -eq $storageAccount -and $_.ResourceType -eq "Microsoft.Storage/storageAccounts" }
+        }
+        
         if (!$storageAccountResource)
         {
             Write-Error -Message "Could not find resource $storageAccount that has a type of Microsoft.Storage/storageAccounts"
         }
-        $storageAccountKeys = Get-AzStorageAccountKey -ResourceGroupName $storageAccountResource.ResourceGroupName -Name $storageAccount
+
+        if ($featureFlags.retireAzureRM)
+        {
+            $storageAccountKeys = Get-AzStorageAccountKey -ResourceGroupName $storageAccountResource.ResourceGroupName -Name $storageAccount
+        }
+        else
+        {
+            $storageAccountKeys = Get-AzureRmStorageAccountKey -ResourceGroupName $storageAccountResource.ResourceGroupName -Name $storageAccount
+        }
+        
         if(!$storageAccountKeys)
         {
             Write-Error -Message "Could not retrieve storage account keys from storage account resource $Storage"
@@ -185,7 +206,14 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                     {
                         try
                         {
-                            $storageContext = New-AzStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey
+                            if ($featureFlags.retireAzureRM)
+                            {
+                                $storageContext = New-AzStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey
+                            }
+                            else
+                            {
+                                $storageContext = New-AzureStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey
+                            }
                             Write-Host "New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageContext $StorageContext -DiagnosticsConfigurationPath $fullExtPath"
                             $wadconfig = New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageContext $StorageContext -DiagnosticsConfigurationPath $fullExtPath 
                         }

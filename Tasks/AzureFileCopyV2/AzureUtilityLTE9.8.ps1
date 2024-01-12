@@ -1,5 +1,9 @@
 # This file implements IAzureUtility for Azure PowerShell version <= 0.9.8
 
+$featureFlags = @{
+    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
 function Get-AzureStorageKeyFromRDFE
 {
     param([string]$storageAccountName,
@@ -80,7 +84,14 @@ function Create-AzureStorageContext
     if(-not [string]::IsNullOrEmpty($storageAccountName) -and -not [string]::IsNullOrEmpty($storageAccountKey))
     {
         Write-Verbose "[Azure Call]Creating AzureStorageContext for storage account: $storageAccountName"
-        $storageContext = New-AzStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey -ErrorAction Stop
+        if ($featureFlags.retireAzureRM)
+        {
+            $storageContext = New-AzStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey -ErrorAction Stop
+        }
+        else
+        {
+            $storageContext = New-AzureStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey -ErrorAction Stop
+        }
         Write-Verbose "[Azure Call]Created AzureStorageContext for storage account: $storageAccountName"
 
         return $storageContext
@@ -182,11 +193,25 @@ function Create-AzureContainer
         Write-Verbose "[Azure Call]Creating container: $containerName in storage account: $storageAccountName"
         if ($isPremiumStorage)
         {
-            $container = New-AzStorageContainer -Name $containerName -Context $storageContext -ErrorAction Stop
+            if ($featureFlags.retireAzureRM)
+            {
+                $container = New-AzStorageContainer -Name $containerName -Context $storageContext -ErrorAction Stop
+            }
+            else
+            {
+                $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -ErrorAction Stop
+            }
         }
         else
         {
-            $container = New-AzStorageContainer -Name $containerName -Context $storageContext -Permission Container -ErrorAction Stop
+            if ($featureFlags.retireAzureRM)
+            {
+                $container = New-AzStorageContainer -Name $containerName -Context $storageContext -Permission Container -ErrorAction Stop
+            }
+            else
+            {
+                $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -Permission Container -ErrorAction Stop
+            }
         }
         Write-Verbose "[Azure Call]Created container: $containerName successfully in storage account: $storageAccountName"
     }
@@ -202,7 +227,14 @@ function Remove-AzureContainer
         $storageAccountName = $storageContext.StorageAccountName
 
         Write-Verbose "[Azure Call]Deleting container: $containerName in storage account: $storageAccountName"
-        Remove-AzStorageContainer -Name $containerName -Context $storageContext -Force -ErrorAction SilentlyContinue
+        if ($featureFlags.retireAzureRM)
+        {
+            Remove-AzStorageContainer -Name $containerName -Context $storageContext -Force -ErrorAction SilentlyContinue
+        }
+        else
+        {
+            Remove-AzureStorageContainer -Name $containerName -Context $storageContext -Force -ErrorAction SilentlyContinue
+        }
         Write-Verbose "[Azure Call]Deleted container: $containerName in storage account: $storageAccountName"
     }
 }
@@ -378,7 +410,14 @@ function Generate-AzureStorageContainerSASToken
         $storageAccountName = $storageContext.StorageAccountName
 
         Write-Verbose "[Azure Call]Generating SasToken for container: $containerName in storage: $storageAccountName with expiry time: $tokenTimeOutInHours hours"
-        $containerSasToken = New-AzStorageContainerSASToken -Name $containerName -ExpiryTime (Get-Date).AddHours($tokenTimeOutInHours) -Context $storageContext -Permission rwdl
+        if ($featureFlags.retireAzureRM)
+        {
+            $containerSasToken = New-AzStorageContainerSASToken -Name $containerName -ExpiryTime (Get-Date).AddHours($tokenTimeOutInHours) -Context $storageContext -Permission rwdl
+        }
+        else
+        {
+            $containerSasToken = New-AzureStorageContainerSASToken -Name $containerName -ExpiryTime (Get-Date).AddHours($tokenTimeOutInHours) -Context $storageContext -Permission rwdl
+        }
         Write-Verbose "[Azure Call]Generated SasToken: $containerSasToken successfully for container: $containerName in storage: $storageAccountName"
 
         return $containerSasToken
