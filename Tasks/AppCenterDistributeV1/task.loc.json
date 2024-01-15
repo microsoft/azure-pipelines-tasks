@@ -8,6 +8,7 @@
   "category": "Deploy",
   "deprecated": true,
   "removalDate": "2024-01-31",
+  "deprecationMessage": "The AppCenterDistribute@1 (App Center distribute) task has been deprecated since November 14, 2022 and will soon be removed. Use the AppCenterDistribute@3 task instead.",
   "visibility": [
     "Build",
     "Release"
@@ -189,6 +190,10 @@
     "Node16": {
       "target": "appcenterdistribute.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "appcenterdistribute.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -201,5 +206,9 @@
     "FoundMultipleFiles": "ms-resource:loc.messages.FoundMultipleFiles",
     "FailedToCreateFile": "ms-resource:loc.messages.FailedToCreateFile",
     "FailedToFindFile": "ms-resource:loc.messages.FailedToFindFile"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.234.0",
+    "Node20_229_7": "1.234.1"
   }
 }

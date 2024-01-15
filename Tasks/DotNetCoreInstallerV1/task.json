@@ -87,6 +87,10 @@
         },
         "Node16": {
             "target": "dotnetcoreinstaller.js"
+        },
+        "Node20_1": {
+          "target": "dotnetcoreinstaller.js",
+          "argumentFormat": ""
         }
     },
     "messages": {
@@ -154,5 +158,9 @@
         "VersionFilesDataIncorrect": "Version's files data is missing or has missing required fields.",
         "VersionInformationNotComplete": "Version: %s required information is not complete in releases.json file. Error: %s",
         "FailedWhileExtractingPacakge": "Failed while extracting downloaded package with error: %s"
+    },
+    "_buildConfigMapping": {
+      "Default": "1.234.0",
+      "Node20_229_3": "1.234.1"
     }
 }

@@ -104,7 +104,7 @@
     "PrependPath": "Prepending PATH environment variable with directory: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.222.1",
-    "Node16-219": "1.222.0"
+    "Default": "1.234.0",
+    "Node20-225": "1.234.1"
   }
 }
