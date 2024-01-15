@@ -230,11 +230,9 @@
         "CMakeV1",
         "CmdLineV2",
         "CocoaPodsV0",
-        "CopyFilesV2",
         "CopyFilesOverSSHV0",
         "CUrlUploaderV2",
         "DecryptFileV1",
-        "DeleteFilesV1",
         "DownloadSecureFileV1",
         "ExtractFilesV1",
         "FtpUploadV1",
@@ -267,7 +265,9 @@
         "OpenPolicyAgentInstallerV0"
     ],
     "Node20_228": [
-        "MavenV2"
+        "MavenV2",
+        "CopyFilesV2",
+        "DeleteFilesV1"
     ],
     "Node20_229_1": [
         "CargoAuthenticateV0",
@@ -351,8 +351,10 @@
         "KubectlInstallerV0",
         "KubernetesV1",
         "KubernetesManifestV0",
+        "KubernetesManifestV1",
         "MysqlDeploymentOnMachineGroupV1",
-        "UseDotNetV2"
+        "UseDotNetV2",
+        "PublishPipelineMetadataV0"
     ],
     "Node20_229_4": [
         "VsTestPlatformToolInstallerV1",
@@ -398,5 +400,7 @@
         "PublishTestResultsV1",
         "PublishTestResultsV2"
     ],
-    "Node20_229_14": []
+    "Node20_229_14": [
+        "PublishSymbolsV2"
+    ]
 }
