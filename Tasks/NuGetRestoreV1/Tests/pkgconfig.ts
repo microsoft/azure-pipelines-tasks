@@ -11,6 +11,8 @@ nmh.setNugetVersionInputDefault();
 tmr.setInput('solution', 'packages.config');
 tmr.setInput('selectOrConfig', 'config');
 
+process.env['FAIL_DEPRECATED_TASK'] = "true";
+
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},
     "checkPath": {

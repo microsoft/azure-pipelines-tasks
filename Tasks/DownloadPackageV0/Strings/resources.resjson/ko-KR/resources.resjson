@@ -22,5 +22,6 @@
   "loc.messages.RetryingOperation": "%s에서 오류가 발생하여 다시 시도 중 => 다시 시도 보류 중: %s",
   "loc.messages.OperationFailed": "%s에서 실패했습니다(오류: %s).",
   "loc.messages.Info_ResolvedToolFromCache": "도구 캐시 %s에서 확인됨",
-  "loc.messages.UnsupportedProjectScopedFeeds": "이 버전의 \"패키지 다운로드\" 작업에서는 프로젝트 범위의 피드가 지원되지 않습니다. 버전 1 이상을 사용하세요."
+  "loc.messages.UnsupportedProjectScopedFeeds": "이 버전의 \"패키지 다운로드\" 작업에서는 프로젝트 범위의 피드가 지원되지 않습니다. 버전 1 이상을 사용하세요.",
+  "loc.messages.DeprecatedTask": "이 작업은 사용되지 않습니다. DownloadPackage@1 https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/download-package-v1 사용으로 전환하세요."
 }

@@ -13,6 +13,8 @@ tmr.setInput('selectOrConfig', 'config');
 tmr.setInput('nugetConfigPath', 'c:\\agent\\home\\directory\\nuget.config');
 tmr.setInput('includeNuGetOrg', 'True');
 
+process.env['FAIL_DEPRECATED_TASK'] = "true";
+
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},
     "checkPath": {
