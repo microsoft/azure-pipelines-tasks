@@ -18,7 +18,7 @@
   },
   "deprecated": true,
   "removalDate": "2024-01-31",
-  "deprecationMessage": "The ApacheJMeterLoadTest@1 (Cloud-based Apache JMeter load test) task haas been deprecated since June 4, 2019 and will soon be removed. For cloud-based load testing, use the AzureLoadTest@1 task.",
+  "deprecationMessage": "The ApacheJMeterLoadTest@1 (Cloud-based Apache JMeter load test) task haas been deprecated since June 4, 2019 and will soon be retired. For cloud-based load testing, use the AzureLoadTest@1 task.",
   "demands": [
     "azureps"
   ],

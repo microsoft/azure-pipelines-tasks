@@ -18,7 +18,7 @@
   },
   "deprecated": true,
   "removalDate": "2024-01-31",
-  "deprecationMessage": "The CondaEnvironment@1 (Conda environment) task has been deprecated since February 13, 2019 and will soon be removed. Use the Conda CLI ('conda') directly from a bash/pwsh/script task.",
+  "deprecationMessage": "The CondaEnvironment@1 (Conda environment) task has been deprecated since February 13, 2019 and will soon be retired. Use the Conda CLI ('conda') directly from a bash/pwsh/script task.",
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
