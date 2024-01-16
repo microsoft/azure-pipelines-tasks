@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 234,
-    "Patch": 2
+    "Patch": 1
   },
   "preview": true,
   "demands": [],
@@ -132,7 +132,7 @@
     "automatedTestsTriggered": "ms-resource:loc.messages.automatedTestsTriggered"
   },
   "_buildConfigMapping": {
-    "Default": "0.234.1",
-    "Node20-225": "0.234.2"
+    "Default": "0.234.0",
+    "Node20-225": "0.234.1"
   }
 }

@@ -13,13 +13,8 @@
   "loc.input.help.testConfiguration": "Select Test Configuration.",
   "loc.input.label.testLanguageInput": "Select Test framework language",
   "loc.input.help.testLanguageInput": "Test Framework Language of automated tests in test plan",
-  "loc.input.label.testCase1:fqn": "Test case1 to be executed",
-  "loc.input.help.testCase1:fqn": "<ul><li><b>Test assembly: </b>Use this option to specify one or more test assemblies that contain your tests. You can optionally specify a filter criteria to select only specific tests.</li><li><b>Test plan: </b>Use this option to run tests from your test plan that have an automated test method associated with it.</li><li><b>Test run: </b>Use this option when you are setting up an environment to run tests from the Test hub. This option should not be used when running tests in a continuous integration / continuous deployment (CI/CD) pipeline.</li>",
-  "loc.input.label.testCase2:fqn": "Test case2 to be executed",
-  "loc.input.help.testCase2:fqn": "<ul><li><b>Test assembly: </b>Use this option to specify one or more test assemblies that contain your tests. You can optionally specify a filter criteria to select only specific tests.</li><li><b>Test plan: </b>Use this option to run tests from your test plan that have an automated test method associated with it.</li><li><b>Test run: </b>Use this option when you are setting up an environment to run tests from the Test hub. This option should not be used when running tests in a continuous integration / continuous deployment (CI/CD) pipeline.</li>",
-  "loc.input.label.testCase3:fqn": "Test case3 to be executed",
-  "loc.input.help.testCase3:fqn": "<ul><li><b>Test assembly: </b>Use this option to specify one or more test assemblies that contain your tests. You can optionally specify a filter criteria to select only specific tests.</li><li><b>Test plan: </b>Use this option to run tests from your test plan that have an automated test method associated with it.</li><li><b>Test run: </b>Use this option when you are setting up an environment to run tests from the Test hub. This option should not be used when running tests in a continuous integration / continuous deployment (CI/CD) pipeline.</li>",
   "loc.messages.testPlanInput": "Test plan Id : %s",
   "loc.messages.testplanConfigInput": "Test plan configuration Id : %s",
-  "loc.messages.testSuiteSelected": "Test suite Id selected: %s"
+  "loc.messages.testSuiteSelected": "Test suite Id selected: %s",
+  "loc.messages.automatedTestsTriggered": "Trigerring execution of Automated tests from test plan"
 }

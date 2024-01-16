@@ -6,19 +6,20 @@ import { TestCase } from 'azure-devops-node-api/interfaces/TestPlanInterfaces';
 
 export async function automatedTestsFlow() {
 
-    let testsToBeExecuted: string[] = [];
+    let ListOfTestsToBeExecuted: string[] = [];
 
     console.log(tl.loc('automatedTestsTriggered'));
     await getFQNsOfAutomatedTestCases()
         .then((testsToBeExecuted) => {
+            ListOfTestsToBeExecuted = testsToBeExecuted;
         })
         .catch((error) => {
             console.error("Promise rejected:", error);
         });
 
     await sleep(2000);
-    tl.debug("Invoking test execution for tests: " + testsToBeExecuted);
-    testInvoker(testsToBeExecuted);
+    tl.debug("Invoking test execution for tests: " + ListOfTestsToBeExecuted);
+    testInvoker(ListOfTestsToBeExecuted);
 }
 
 function sleep(ms) {
