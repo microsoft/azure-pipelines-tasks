@@ -5,7 +5,7 @@ import { automatedTestsFlow} from './automatedTests'
 export async function run() {
 
     const testSelectorInput = tl.getInput('testSelector');
-    console.log('Value of Test Selector :' + testSelectorInput);
+    console.log('Test Selector selected : ' + testSelectorInput);
 
     if (testSelectorInput === 'manualTests') {
         manualTestsFlow();

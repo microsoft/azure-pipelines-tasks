@@ -11,10 +11,9 @@ export function spawn(executable: string, args: string[]): Promise<SpawnResult> 
     console.log("-------------------------------------------")
     console.log('Test command executable: ' + executable);
     console.log('Test command args: ' + args);
-    // nosemgrep: javascript.lang.security.detect-child-process.detect-child-process
+
     const { status, error } = spawnSync(executable, args, { stdio: 'inherit' })
 
-    // Return an promise since we're likely to change from spawnSync to spawn (or something else async) at some point
     return Promise.resolve({ status, error })
 }
 

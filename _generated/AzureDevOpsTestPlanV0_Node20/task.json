@@ -12,9 +12,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 2,
+    "Major": 0,
     "Minor": 234,
-    "Patch": 1
+    "Patch": 2
   },
   "preview": true,
   "demands": [],
@@ -80,30 +80,6 @@
         "Python": "Python"
       },
       "visibleRule": "testSelector = automatedTests"
-    },
-    {
-      "name": "testCase1:fqn",
-      "type": "string",
-      "label": "Test case1 to be executed",
-      "helpMarkDown": "<ul><li><b>Test assembly: </b>Use this option to specify one or more test assemblies that contain your tests. You can optionally specify a filter criteria to select only specific tests.</li><li><b>Test plan: </b>Use this option to run tests from your test plan that have an automated test method associated with it.</li><li><b>Test run: </b>Use this option when you are setting up an environment to run tests from the Test hub. This option should not be used when running tests in a continuous integration / continuous deployment (CI/CD) pipeline.</li>",
-      "required": false,
-      "defaultValue": ""
-    },
-    {
-      "name": "testCase2:fqn",
-      "type": "string",
-      "label": "Test case2 to be executed",
-      "helpMarkDown": "<ul><li><b>Test assembly: </b>Use this option to specify one or more test assemblies that contain your tests. You can optionally specify a filter criteria to select only specific tests.</li><li><b>Test plan: </b>Use this option to run tests from your test plan that have an automated test method associated with it.</li><li><b>Test run: </b>Use this option when you are setting up an environment to run tests from the Test hub. This option should not be used when running tests in a continuous integration / continuous deployment (CI/CD) pipeline.</li>",
-      "required": false,
-      "defaultValue": ""
-    },
-    {
-      "name": "testCase3:fqn",
-      "type": "string",
-      "label": "Test case3 to be executed",
-      "helpMarkDown": "<ul><li><b>Test assembly: </b>Use this option to specify one or more test assemblies that contain your tests. You can optionally specify a filter criteria to select only specific tests.</li><li><b>Test plan: </b>Use this option to run tests from your test plan that have an automated test method associated with it.</li><li><b>Test run: </b>Use this option when you are setting up an environment to run tests from the Test hub. This option should not be used when running tests in a continuous integration / continuous deployment (CI/CD) pipeline.</li>",
-      "required": false,
-      "defaultValue": ""
     }
   ],
   "dataSourceBindings": [
@@ -152,10 +128,11 @@
   "messages": {
     "testPlanInput": "Test plan Id : %s",
     "testplanConfigInput": "Test plan configuration Id : %s",
-    "testSuiteSelected": "Test suite Id selected: %s"
+    "testSuiteSelected": "Test suite Id selected: %s",
+    "automatedTestsTriggered": "Trigerring execution of Automated tests from test plan"
   },
   "_buildConfigMapping": {
-    "Default": "2.234.0",
-    "Node20-225": "2.234.1"
+    "Default": "0.234.1",
+    "Node20-225": "0.234.2"
   }
 }

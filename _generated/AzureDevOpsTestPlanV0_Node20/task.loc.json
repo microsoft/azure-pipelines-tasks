@@ -12,9 +12,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 2,
+    "Major": 0,
     "Minor": 234,
-    "Patch": 1
+    "Patch": 2
   },
   "preview": true,
   "demands": [],
@@ -80,30 +80,6 @@
         "Python": "Python"
       },
       "visibleRule": "testSelector = automatedTests"
-    },
-    {
-      "name": "testCase1:fqn",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.testCase1:fqn",
-      "helpMarkDown": "ms-resource:loc.input.help.testCase1:fqn",
-      "required": false,
-      "defaultValue": ""
-    },
-    {
-      "name": "testCase2:fqn",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.testCase2:fqn",
-      "helpMarkDown": "ms-resource:loc.input.help.testCase2:fqn",
-      "required": false,
-      "defaultValue": ""
-    },
-    {
-      "name": "testCase3:fqn",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.testCase3:fqn",
-      "helpMarkDown": "ms-resource:loc.input.help.testCase3:fqn",
-      "required": false,
-      "defaultValue": ""
     }
   ],
   "dataSourceBindings": [
@@ -152,10 +128,11 @@
   "messages": {
     "testPlanInput": "ms-resource:loc.messages.testPlanInput",
     "testplanConfigInput": "ms-resource:loc.messages.testplanConfigInput",
-    "testSuiteSelected": "ms-resource:loc.messages.testSuiteSelected"
+    "testSuiteSelected": "ms-resource:loc.messages.testSuiteSelected",
+    "automatedTestsTriggered": "ms-resource:loc.messages.automatedTestsTriggered"
   },
   "_buildConfigMapping": {
-    "Default": "2.234.0",
-    "Node20-225": "2.234.1"
+    "Default": "0.234.1",
+    "Node20-225": "0.234.2"
   }
 }

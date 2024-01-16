@@ -1,10 +1,9 @@
 import * as tl from 'azure-pipelines-task-lib/task'
-import { executepythontests } from './pythonivoker'
-import { executemaventests } from './maveninvoker'
-import { executegradletests } from './gradleinvoker'
+import { executepythontests } from './Invokers/pythonivoker'
+import { executemaventests } from './Invokers/maveninvoker'
+import { executegradletests } from './Invokers/gradleinvoker'
 
-
-export function testExecutor(testsToBeExecuted: string[]) {
+export function testInvoker(testsToBeExecuted: string[]) {
 
     const testLanguage = tl.getInput('testLanguageInput');
 

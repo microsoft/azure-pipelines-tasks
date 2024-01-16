@@ -1,4 +1,4 @@
-import { spawn } from './testexecutor'
+import { spawn } from '../testexecutor'
 import tl = require('azure-pipelines-task-lib/task');
 
 function replaceLastDotWithHash(inputString) {
@@ -18,12 +18,10 @@ export async function executemaventests(testsToBeExecuted: string[]) {
     const args = []
     const testsToRun =[]
 
-    for (const tests of testsToBeExecuted) {
+    for (let tests of testsToBeExecuted) {
         const modifiedTest = replaceLastDotWithHash(tests);
         testsToRun.push(modifiedTest);
     }
-
-    console.log('testsToRun: ' + testsToRun);
 
     if (testsToRun.length > 0)
     {
@@ -35,6 +33,8 @@ export async function executemaventests(testsToBeExecuted: string[]) {
             args.push(newArgs);
     }
 
+    tl.debug("Executing java maven tests with executable : " + executable);
+    tl.debug("Executing java maven tests with args :" + args);
 
     //const quotedArgs = args.map((arg) => (arg.includes(' ') ? `'${arg}'` : arg))
     //console.log('Running tests with maven using command: ${[executable, ...quotedArgs].join()}');
