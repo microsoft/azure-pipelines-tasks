@@ -353,8 +353,10 @@
         "KubectlInstallerV0",
         "KubernetesV1",
         "KubernetesManifestV0",
+        "KubernetesManifestV1",
         "MysqlDeploymentOnMachineGroupV1",
-        "UseDotNetV2"
+        "UseDotNetV2",
+        "PublishPipelineMetadataV0"
     ],
     "Node20_229_4": [
         "VsTestPlatformToolInstallerV1",
@@ -399,5 +401,7 @@
         "PublishTestResultsV1",
         "PublishTestResultsV2"
     ],
-    "Node20_229_14": []
+    "Node20_229_14": [
+        "PublishSymbolsV2"
+    ]
 }
