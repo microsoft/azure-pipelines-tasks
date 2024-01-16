@@ -199,6 +199,7 @@
         "WindowsMachineFileCopyV2",
         "XamarinAndroidV1",
         "XamariniOSV2",
+        "XamarinTestCloudV1",
         "XcodeV5"
     ],
     "taskResources": [
