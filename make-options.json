@@ -200,6 +200,7 @@
         "WindowsMachineFileCopyV2",
         "XamarinAndroidV1",
         "XamariniOSV2",
+        "XamarinTestCloudV1",
         "XcodeV5"
     ],
     "taskResources": [
@@ -264,6 +265,8 @@
     ],
     "Node20_228": [
         "MavenV2",
+        "PyPIPublisherV0",
+        "XamarinTestCloudV1",
         "CopyFilesV2",
         "DeleteFilesV1"
     ],
