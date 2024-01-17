@@ -190,10 +190,6 @@
     "Node16": {
       "target": "appcenterdistribute.js",
       "argumentFormat": ""
-    },
-    "Node20_1": {
-      "target": "appcenterdistribute.js",
-      "argumentFormat": ""
     }
   },
   "messages": {
@@ -206,9 +202,5 @@
     "FoundMultipleFiles": "ms-resource:loc.messages.FoundMultipleFiles",
     "FailedToCreateFile": "ms-resource:loc.messages.FailedToCreateFile",
     "FailedToFindFile": "ms-resource:loc.messages.FailedToFindFile"
-  },
-  "_buildConfigMapping": {
-    "Default": "1.234.0",
-    "Node20_229_7": "1.234.1"
   }
 }

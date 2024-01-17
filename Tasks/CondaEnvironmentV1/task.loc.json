@@ -102,9 +102,5 @@
     "ParameterRequired": "ms-resource:loc.messages.ParameterRequired",
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized",
     "PrependPath": "ms-resource:loc.messages.PrependPath"
-  },
-  "_buildConfigMapping": {
-    "Default": "1.234.0",
-    "Node20-225": "1.234.1"
   }
 }

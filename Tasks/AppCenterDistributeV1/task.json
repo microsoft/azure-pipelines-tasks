@@ -190,10 +190,6 @@
         "Node16": {
             "target": "appcenterdistribute.js",
             "argumentFormat": ""
-        },
-        "Node20_1": {
-            "target": "appcenterdistribute.js",
-            "argumentFormat": ""
         }
     },
     "messages": {
@@ -206,9 +202,5 @@
         "FoundMultipleFiles": "Found multiple files matching %s.",
         "FailedToCreateFile": "Failed to create %s with error: %s.",
         "FailedToFindFile": "Failed to find %s at %s."
-    },
-    "_buildConfigMapping": {
-      "Default": "1.234.0",
-      "Node20_229_7": "1.234.1"
     }
 }
