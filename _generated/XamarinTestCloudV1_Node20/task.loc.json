@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 234,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",
@@ -194,6 +194,14 @@
       "platforms": [
         "windows"
       ]
+    },
+    "Node20_1": {
+      "target": "xamarintestcloud.js",
+      "argumentFormat": ""
     }
+  },
+  "_buildConfigMapping": {
+    "Default": "1.234.0",
+    "Node20-228": "1.234.1"
   }
 }
