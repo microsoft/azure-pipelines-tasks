@@ -2,7 +2,7 @@
   "id": "105e2492-460a-4da6-56d5-2fa9ab3f0074",
   "name": "AzureDevOpsTestPlan",
   "friendlyName": "Run tests in test plan",
-  "description": "Run manual and automated tests in test plan in any language",
+  "description": "Run manual and automated tests in test plan in Java and python language",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "category": "Test",
