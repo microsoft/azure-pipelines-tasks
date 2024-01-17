@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 234,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -60,6 +60,14 @@
     "Node16": {
       "target": "publisher.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "publisher.js",
+      "argumentFormat": ""
     }
+  },
+  "_buildConfigMapping": {
+    "Default": "0.234.0",
+    "Node20-228": "0.234.1"
   }
 }
