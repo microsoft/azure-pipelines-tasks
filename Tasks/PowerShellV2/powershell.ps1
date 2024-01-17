@@ -211,7 +211,7 @@ try {
                     $message = $errorLines.ToString().Trim()
                     $null = $errorLines.Clear()
                     if ($message) {
-                        Write-VstsTaskError -Message $message -CustomerIssue $true
+                        Write-VstsTaskError -Message $message -IssueSource $IssueSources.CustomerScript
                     }
                 }
 
@@ -225,7 +225,7 @@ try {
             $message = $errorLines.ToString().Trim()
             $null = $errorLines.Clear()
             if ($message) {
-                Write-VstsTaskError -Message $message -CustomerIssue $true
+                Write-VstsTaskError -Message $message -IssueSource $IssueSources.CustomerScript
             }
         }
     }
@@ -234,12 +234,12 @@ try {
     if (!(Test-Path -LiteralPath 'variable:\LASTEXITCODE')) {
         $failed = $true
         Write-Verbose "Unable to determine exit code"
-        Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_UnableToDetermineExitCode')
+        Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_UnableToDetermineExitCode') -IssueSource $IssueSources.TaskInternal
     }
     else {
         if ($LASTEXITCODE -ne 0) {
             $failed = $true
-            Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_ExitCode' -ArgumentList $LASTEXITCODE)
+            Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_ExitCode' -ArgumentList $LASTEXITCODE) -IssueSource $IssueSources.TaskInternal
         }
     }
 
@@ -249,7 +249,7 @@ try {
     }
 }
 catch {
-    Write-VstsTaskError -Message $_.Exception.Message
+    Write-VstsTaskError -Message $_.Exception.Message -IssueSource $IssueSources.TaskInternal
     Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
 }
 finally {

@@ -180,7 +180,7 @@ async function run() {
         if (stderrFailure) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('JS_Stderr'));
             aggregatedStderr.forEach((err: string) => {
-                tl.error(err, true);
+                tl.error(err, tl.IssueSource.CustomerScript);
             });
         }
     }
