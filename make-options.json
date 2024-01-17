@@ -262,6 +262,7 @@
     ],
     "Node20_228": [
         "MavenV2",
+        "XamarinTestCloudV1",
         "CopyFilesV2",
         "DeleteFilesV1"
     ],
