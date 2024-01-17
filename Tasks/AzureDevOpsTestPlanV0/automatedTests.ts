@@ -17,13 +17,8 @@ export async function automatedTestsFlow() {
             console.error("Promise rejected:", error);
         });
 
-    await sleep(2000);
     tl.debug("Invoking test execution for tests: " + ListOfTestsToBeExecuted);
     testInvoker(ListOfTestsToBeExecuted);
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export async function getFQNsOfAutomatedTestCases(): Promise<string[]>{

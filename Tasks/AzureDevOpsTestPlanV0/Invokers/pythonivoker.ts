@@ -3,6 +3,8 @@ import tl = require('azure-pipelines-task-lib/task');
 
 export async function executepythontests(testsToBeExecuted: string[]) {
 
+    //pytest command like "pytest -v <package.className.testName1> <package.className.testName2> --junitxml=junit.xml"
+
     const executable = 'pytest';
     let args: string[] = [];
 

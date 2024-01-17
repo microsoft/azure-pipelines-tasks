@@ -13,6 +13,8 @@ function removeParenthesesFromEnd(inputString) {
 }
 export async function executegradletests(testsToBeExecuted: string[]) {
 
+    //gradle command like "gradle test --tests=<package.className.testName> --tests=<package.className.testName>"
+
     const executable = 'gradle'
     const args = []
 

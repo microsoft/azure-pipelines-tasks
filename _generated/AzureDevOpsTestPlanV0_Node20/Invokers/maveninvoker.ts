@@ -14,6 +14,8 @@ function replaceLastDotWithHash(inputString) {
 }
 export async function executemaventests(testsToBeExecuted: string[]) {
 
+    //maven command like "mvn test -Dtest=<package.className#testName>,<package.className#testName1>"
+
     const executable = 'mvn'
     const args = []
     const testsToRun =[]
