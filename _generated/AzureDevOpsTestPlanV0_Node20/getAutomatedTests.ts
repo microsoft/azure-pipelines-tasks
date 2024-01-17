@@ -32,7 +32,7 @@ export async function getAutomatedTestData(testPlanId: number, testSuiteIds: num
 
         do {
             try {
-                let testCasesResponse = await APICall1(testPlanId, testSuiteId, testConfigurationId.toString(), token);
+                let testCasesResponse = await fetchTestPlanList(testPlanId, testSuiteId, testConfigurationId.toString(), token);
 
                 token = testCasesResponse.continuationToken;
 
@@ -82,7 +82,7 @@ export async function getAutomatedTestData(testPlanId: number, testSuiteIds: num
     return testPlanData;
 }
 
-export async function APICall1(testPlanId: number, testSuiteId: number, testConfigurationId: string, continuationToken: string): Promise<PagedList<TestCase>> {
+export async function fetchTestPlanList(testPlanId: number, testSuiteId: number, testConfigurationId: string, continuationToken: string): Promise<PagedList<TestCase>> {
 
     let url = tl.getEndpointUrl('SYSTEMVSSCONNECTION', false);
     let token = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
@@ -91,7 +91,7 @@ export async function APICall1(testPlanId: number, testSuiteId: number, testConf
     let vsts: apim.WebApi = new apim.WebApi(url, auth);
     let testPlanApi = await vsts.getTestPlanApi();
 
-    tl.debug("Fetching test case list for test plan:" + testPlanId + " test suite id:" + testSuiteId + " test configuration id:" + testConfigurationId + " continuation token:" + token);
+    tl.debug("Fetching test case list for test plan:" + testPlanId + " test suite id:" + testSuiteId + " test configuration id:" + testConfigurationId);
 
     return testPlanApi.getTestCaseList(
         projectId,
