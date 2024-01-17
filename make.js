@@ -420,10 +420,11 @@ function buildTask(taskName, taskListLength, nodeVersion) {
             lockFilePath = path.join(taskPath, 'npm-shrinkwrap.json');
         }
         var packageLock = fileToJson(lockFilePath);
-        Object.keys(packageLock.dependencies).forEach(function (dependencyName) {
+        var dependencies = packageLock.dependencies || packageLock.packages;
+        Object.keys(dependencies).forEach(function (dependencyName) {
             commonPacks.forEach(function (commonPack) {
-                if (dependencyName == commonPack.packageName) {
-                    delete packageLock.dependencies[dependencyName].integrity;
+                if (dependencyName == commonPack.packageName || dependencyName == `node_modules/${commonPack.packageName}`) {
+                    delete dependencies[dependencyName].integrity;
                 }
             });
         });
