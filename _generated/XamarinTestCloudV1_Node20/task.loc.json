@@ -1,0 +1,207 @@
+{
+  "id": "049918CB-1488-48EB-85E8-C318ECCAAA74",
+  "name": "XamarinTestCloud",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/xamarin-test-cloud",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Test",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 234,
+    "Patch": 1
+  },
+  "demands": [],
+  "minimumAgentVersion": "1.83.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": true
+    }
+  ],
+  "deprecated": true,
+  "removalDate": "2024-01-31",
+  "inputs": [
+    {
+      "name": "app",
+      "aliases": [
+        "appFile"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.app",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.app"
+    },
+    {
+      "name": "dsym",
+      "aliases": [
+        "dsymFile"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.dsym",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.dsym"
+    },
+    {
+      "name": "teamApiKey",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.teamApiKey",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.teamApiKey"
+    },
+    {
+      "name": "user",
+      "aliases": [
+        "email"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.user",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.user"
+    },
+    {
+      "name": "devices",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.devices",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.devices"
+    },
+    {
+      "name": "series",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.series",
+      "defaultValue": "master",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.series"
+    },
+    {
+      "name": "testDir",
+      "aliases": [
+        "testAssemblyDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.testDir",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.testDir"
+    },
+    {
+      "name": "parallelization",
+      "aliases": [
+        "parallelizationOption"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.parallelization",
+      "required": true,
+      "defaultValue": "none",
+      "groupName": "advanced",
+      "options": {
+        "none": "None",
+        "--fixture-chunk": "By test fixture",
+        "--test-chunk": "By test method"
+      }
+    },
+    {
+      "name": "locale",
+      "aliases": [
+        "localeOption"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.locale",
+      "defaultValue": "en_US",
+      "required": true,
+      "groupName": "advanced",
+      "options": {
+        "da_DK": "Danish (Denmark)",
+        "nl_NL": "Dutch (Netherlands)",
+        "en_GB": "English (United Kingdom)",
+        "en_US": "English (United States)",
+        "fr_FR": "French (France)",
+        "de_DE": "German (Germany)",
+        "ja_JP": "Japanese (Japan)",
+        "ru_RU": "Russian (Russia)",
+        "es_MX": "Spanish (Mexico)",
+        "es_ES": "Spanish (Spain)",
+        "user": "Other"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.locale"
+    },
+    {
+      "name": "userDefinedLocale",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.userDefinedLocale",
+      "groupName": "advanced",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "locale = user",
+      "helpMarkDown": "ms-resource:loc.input.help.userDefinedLocale"
+    },
+    {
+      "name": "testCloudLocation",
+      "aliases": [
+        "testCloudFile"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.testCloudLocation",
+      "groupName": "advanced",
+      "defaultValue": "**/packages/**/tools/test-cloud.exe",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.testCloudLocation"
+    },
+    {
+      "name": "optionalArgs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.optionalArgs",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.optionalArgs"
+    },
+    {
+      "name": "publishNUnitResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishNUnitResults",
+      "groupName": "advanced",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.publishNUnitResults"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "xamarintestcloud.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "xamarintestcloud.js",
+      "argumentFormat": ""
+    },
+    "PowerShell": {
+      "target": "$(currentDirectory)\\XamarinTestCloud.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)",
+      "platforms": [
+        "windows"
+      ]
+    },
+    "Node20_1": {
+      "target": "xamarintestcloud.js",
+      "argumentFormat": ""
+    }
+  },
+  "_buildConfigMapping": {
+    "Default": "1.234.0",
+    "Node20-228": "1.234.1"
+  }
+}

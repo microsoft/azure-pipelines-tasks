@@ -180,7 +180,11 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
+      "target": "xamarintestcloud.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "xamarintestcloud.js",
       "argumentFormat": ""
     },

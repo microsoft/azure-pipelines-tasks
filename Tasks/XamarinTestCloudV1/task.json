@@ -180,7 +180,11 @@
     ],
     "instanceNameFormat": "Test $(app) with Xamarin.UITest in Xamarin Test Cloud",
     "execution": {
-        "Node": {
+        "Node10": {
+            "target": "xamarintestcloud.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "xamarintestcloud.js",
             "argumentFormat": ""
         },
