@@ -8,8 +8,6 @@ export async function executepythontests(testsToBeExecuted: string[]) {
     const executable = 'pytest';
     let args: string[] = [];
 
-    args.push('-v')
-
     for (let testcase of testsToBeExecuted) {
         args.push(testcase);
     }
