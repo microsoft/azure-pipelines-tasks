@@ -14,7 +14,7 @@ export async function automatedTestsFlow() {
             ListOfTestsToBeExecuted = testsToBeExecuted;
         })
         .catch((error) => {
-            console.error("Promise rejected:", error);
+            console.error("Error while fetching FqnsOfAutomatedTestCases :", error);
         });
 
     tl.debug("Invoking test execution for tests: " + ListOfTestsToBeExecuted);
@@ -45,7 +45,7 @@ export async function getFQNsOfAutomatedTestCases(): Promise<string[]>{
                 fqnlist = testPlanData.listOfFQNOfTestCases;
         })
         .catch((error) => {
-            console.error("Promise rejected:", error);
+            console.error("Error while fetching Automated Test Cases Data :", error);
         });
 
     return fqnlist;
