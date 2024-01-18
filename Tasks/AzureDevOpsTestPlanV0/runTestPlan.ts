@@ -7,10 +7,11 @@ export async function run() {
     const testSelectorInput = tl.getInput('testSelector');
     console.log('Test Selector selected : ' + testSelectorInput);
 
-    if (testSelectorInput === 'manualTests') {
+    // trigger manual, automated or both tests based on user's input
+    if (testSelectorInput.includes('manualTests')) {
         manualTestsFlow();
     }
-    if (testSelectorInput === 'automatedTests') {
+    if (testSelectorInput.includes('automatedTests')) {
         automatedTestsFlow();
     }
 }

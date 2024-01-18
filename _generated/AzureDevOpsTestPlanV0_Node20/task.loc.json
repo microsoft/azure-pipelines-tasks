@@ -29,6 +29,9 @@
       "options": {
         "manualTests": "Manual tests",
         "automatedTests": "Automated tests"
+      },
+      "properties": {
+        "MultiSelectFlatList": "True"
       }
     },
     {
@@ -72,14 +75,15 @@
       "name": "testLanguageInput",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.testLanguageInput",
-      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.testLanguageInput",
       "options": {
         "Java-Maven": "Java-Maven",
         "Java-Gradle": "Java-Gradle",
         "Python": "Python"
       },
-      "visibleRule": "testSelector = automatedTests"
+      "properties": {
+        "MultiSelectFlatList": "True"
+      }
     }
   ],
   "dataSourceBindings": [
