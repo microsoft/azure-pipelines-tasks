@@ -18,7 +18,15 @@ export async function automatedTestsFlow() {
         });
 
     tl.debug("Invoking test execution for tests: " + ListOfTestsToBeExecuted);
-    testInvoker(ListOfTestsToBeExecuted);
+
+    if (ListOfTestsToBeExecuted !== null && ListOfTestsToBeExecuted !== undefined && ListOfTestsToBeExecuted.length > 0) {
+        testInvoker(ListOfTestsToBeExecuted);
+    }
+    else {
+        console.log("No automated tests found for given test plan inputs ");
+        tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnNoAutomatedTestsFound'));
+    }
+
 }
 
 export async function getFQNsOfAutomatedTestCases(): Promise<string[]>{
