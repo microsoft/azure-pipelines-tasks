@@ -4,7 +4,7 @@ import { TestPlanData, getAutomatedTestData } from './getAutomatedTests';
 import { TestCase } from 'azure-devops-node-api/interfaces/TestPlanInterfaces';
 
 
-export async function automatedTestsFlow() {
+export async function automatedTestsFlow(testSelectorInput: string) {
 
     let ListOfTestsToBeExecuted: string[] = [];
 
@@ -24,7 +24,12 @@ export async function automatedTestsFlow() {
     }
     else {
         console.log("No automated tests found for given test plan inputs ");
-        tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnNoAutomatedTestsFound'));
+        if (testSelectorInput === 'manualTests') {
+            tl.setResult(tl.TaskResult.Succeeded, "Successfully triggered manual test execution");
+        }
+        else {
+            tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnNoAutomatedTestsFound'));
+        }
     }
 
 }

@@ -12,7 +12,7 @@ export async function run() {
         manualTestsFlow();
     }
     if (testSelectorInput.includes('automatedTests')) {
-        automatedTestsFlow();
+        automatedTestsFlow(testSelectorInput);
     }
 }
 
