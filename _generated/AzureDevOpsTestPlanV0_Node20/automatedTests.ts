@@ -24,11 +24,11 @@ export async function automatedTestsFlow(testSelectorInput: string) {
     }
     else {
         console.log("No automated tests found for given test plan inputs ");
-        if (testSelectorInput === 'manualTests') {
-            tl.setResult(tl.TaskResult.Succeeded, "Successfully triggered manual test execution");
+        if (testSelectorInput === 'automatedTests') {
+            tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnNoAutomatedTestsFound'));
         }
         else {
-            tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnNoAutomatedTestsFound'));
+            tl.setResult(tl.TaskResult.Succeeded, "Successfully triggered manual test execution");
         }
     }
 
