@@ -33,8 +33,6 @@ Tasks/AzureContainerAppsV0/    @cormacpayne    @daniv-msft
 
 Tasks/AzureContainerAppsV1/    @cormacpayne    @daniv-msft
 
-Tasks/AzureDevOpsTestPlanV0/     @rasunkar  @microsoft\adoautotest
-
 Tasks/AzureFileCopyV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
 
 Tasks/AzureFileCopyV2/    @vsebesta   @rvairavelu   @pipeline-environment-team
@@ -91,6 +89,8 @@ Tasks/AzureRmWebAppDeploymentV4/   @vsebesta   @rvairavelu   @pipeline-environme
 Tasks/AzureSpringCloudV0    @microsoft/azure-spring-apps @ruoyuwang @menxiao
 
 Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @mkarmark @joslinmicrosoft
+
+Tasks/AzureTestPlanV0/     @rasunkar  @microsoft\adoautotest
 
 Tasks/AzureWebAppV1/  @vsebesta @rvairavelu @pipeline-environment-team
 

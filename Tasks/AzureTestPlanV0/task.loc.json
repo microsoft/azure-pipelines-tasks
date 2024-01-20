@@ -1,6 +1,6 @@
 {
-  "id": "105e2492-460a-4da6-56d5-2fa9ab3f0074",
-  "name": "AzureDevOpsTestPlan",
+  "id": "105e2492-460a-4da6-56d5-2fa9ab3f0174",
+  "name": "AzureTestPlan",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 234,
-    "Patch": 1
+    "Patch": 0
   },
   "preview": true,
   "demands": [],
@@ -123,10 +123,6 @@
     "Node16": {
       "target": "runTestPlan.js",
       "argumentFormat": ""
-    },
-    "Node20_1": {
-      "target": "runTestPlan.js",
-      "argumentFormat": ""
     }
   },
   "messages": {
@@ -134,9 +130,5 @@
     "testplanConfigInput": "ms-resource:loc.messages.testplanConfigInput",
     "testSuiteSelected": "ms-resource:loc.messages.testSuiteSelected",
     "automatedTestsTriggered": "ms-resource:loc.messages.automatedTestsTriggered"
-  },
-  "_buildConfigMapping": {
-    "Default": "0.234.0",
-    "Node20-225": "0.234.1"
   }
 }

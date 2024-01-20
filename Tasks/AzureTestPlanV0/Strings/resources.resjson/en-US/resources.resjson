@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Run tests in test plan",
+  "loc.friendlyName": "Azure Test Plan",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "Run manual and automated tests in test plan in Java and python language",
-  "loc.instanceNameFormat": "Azure DevOps Test Plan - $(testSelector)",
+  "loc.instanceNameFormat": "Azure Test Plan - $(testSelector)",
   "loc.input.label.testSelector": "Test cases to be executed",
   "loc.input.help.testSelector": "<ul><li><b>Manual tests: </b>Use this option to trigger manual tests from your test plan.</li><li><b>Automated tests: </b>Use this option to run tests from your test plan that have automated test method associated with it.</li>",
   "loc.input.label.testPlan": "Test plan",
@@ -16,6 +16,5 @@
   "loc.messages.testPlanInput": "Test plan Id : %s",
   "loc.messages.testplanConfigInput": "Test plan configuration Id : %s",
   "loc.messages.testSuiteSelected": "Test suite Id selected: %s",
-  "loc.messages.automatedTestsTriggered": "Trigerring execution of Automated tests from test plan",
-  "loc.messages.ErrorFailTaskOnNoAutomatedTestsFound": "No automated tests found for given test plan inputs"
+  "loc.messages.automatedTestsTriggered": "Trigerring execution of Automated tests from test plan"
 }

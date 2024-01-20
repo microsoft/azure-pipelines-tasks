@@ -1,7 +1,7 @@
 {
-  "id": "105e2492-460a-4da6-56d5-2fa9ab3f0074",
-  "name": "AzureDevOpsTestPlan",
-  "friendlyName": "Run tests in test plan",
+  "id": "105e2492-460a-4da6-56d5-2fa9ab3f0174",
+  "name": "AzureTestPlan",
+  "friendlyName": "Azure Test Plan",
   "description": "Run manual and automated tests in test plan in Java and python language",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
@@ -114,7 +114,7 @@
       "resultSelector": "jsonpath:$.value[*]"
     }
   ],
-  "instanceNameFormat": "Azure DevOps Test Plan - $(testSelector)",
+  "instanceNameFormat": "Azure Test Plan - $(testSelector)",
   "execution": {
     "Node10": {
       "target": "runTestPlan.js",
@@ -130,9 +130,5 @@
     "testplanConfigInput": "Test plan configuration Id : %s",
     "testSuiteSelected": "Test suite Id selected: %s",
     "automatedTestsTriggered": "Trigerring execution of Automated tests from test plan"
-  },
-  "_buildConfigMapping": {
-    "Default": "0.234.0",
-    "Node20-225": "0.234.1"
   }
 }
