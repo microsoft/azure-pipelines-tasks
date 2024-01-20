@@ -1,17 +1,7 @@
 import { spawn } from '../testexecutor'
 import tl = require('azure-pipelines-task-lib/task');
+import utils = require('../utils');
 
-function replaceLastDotWithHash(inputString) {
-    const lastDotIndex = inputString.lastIndexOf('.');
-
-    if (lastDotIndex !== -1) {
-        const stringWithHash = inputString.slice(0, lastDotIndex) + '#' + inputString.slice(lastDotIndex + 1);
-        return stringWithHash;
-    } else {
-        // If there is no dot in the string, return the original string
-        return inputString;
-    }
-}
 export async function executemaventests(testsToBeExecuted: string[]) {
 
     //maven command like "mvn test -Dtest=<package.className#testName>,<package.className#testName1>"
@@ -21,7 +11,7 @@ export async function executemaventests(testsToBeExecuted: string[]) {
     const testsToRun =[]
 
     for (let tests of testsToBeExecuted) {
-        const modifiedTest = replaceLastDotWithHash(tests);
+        const modifiedTest = utils.replaceLastDotWithHash(tests);
         testsToRun.push(modifiedTest);
     }
 

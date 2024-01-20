@@ -1,16 +1,6 @@
 import { spawn } from '../testexecutor'
 import tl = require('azure-pipelines-task-lib/task');
-
-function removeParenthesesFromEnd(inputString) {
-    // Check if the string ends with parentheses
-    if (inputString.endsWith('()')) {
-        // Remove the parentheses from the end
-        return inputString.slice(0, -2);
-    } else {
-        // If no parentheses at the end, return the original string
-        return inputString;
-    }
-}
+import utils = require('../utils');
 export async function executegradletests(testsToBeExecuted: string[]) {
 
     //gradle command like "gradle test --tests=<package.className.testName> --tests=<package.className.testName>"
@@ -23,7 +13,7 @@ export async function executegradletests(testsToBeExecuted: string[]) {
     for (let testcase of testsToBeExecuted) {
 
         // in some cases found that gradle is including () in test name
-        removeParenthesesFromEnd(testcase);
+        utils.removeParenthesesFromEnd(testcase);
         args.push('--tests=' + testcase);
     }
 
