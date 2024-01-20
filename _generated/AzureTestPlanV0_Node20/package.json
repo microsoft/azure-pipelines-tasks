@@ -1,5 +1,5 @@
 {
-  "name": "azuredevops-tasks-runTestPlan",
+  "name": "azure-tasks-runTestPlan",
   "version": "1.0.0",
   "description": "Azure Pipelines Run Automated Test execution Task",
   "main": "runTestPlan.js",
