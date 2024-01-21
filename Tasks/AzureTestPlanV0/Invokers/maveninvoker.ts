@@ -5,6 +5,7 @@ import constants = require('../constants');
 
 export async function executemaventests(testsToBeExecuted: string[]) {
 
+    //public doc link: https://maven.apache.org/surefire/maven-surefire-plugin/examples/single-test.html
     //maven command like "mvn test -Dtest=<package.className#testName>,<package.className#testName1>"
 
     const executable = constants.MVN_EXECUTABLE;

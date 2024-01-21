@@ -4,6 +4,7 @@ import utils = require('../utils');
 import constants = require('../constants');
 export async function executegradletests(testsToBeExecuted: string[]) {
 
+    //public doc link: https://docs.gradle.org/current/userguide/command_line_interface.html
     //gradle command like "gradle test --tests=<package.className.testName> --tests=<package.className.testName>"
 
     const executable = constants.GRADLE_EXECUTABLE;
