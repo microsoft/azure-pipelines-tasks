@@ -16,5 +16,6 @@
   "loc.messages.testPlanInput": "Test plan Id : %s",
   "loc.messages.testplanConfigInput": "Test plan configuration Id : %s",
   "loc.messages.testSuiteSelected": "Test suite Id selected: %s",
-  "loc.messages.automatedTestsTriggered": "Trigerring execution of Automated tests from test plan"
+  "loc.messages.automatedTestsTriggered": "Trigerring execution of Automated tests from test plan",
+  "loc.messages.ErrorFailTaskOnExecutingTests": "Error occured while executing test command"
 }

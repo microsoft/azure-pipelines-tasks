@@ -133,7 +133,8 @@
     "testPlanInput": "Test plan Id : %s",
     "testplanConfigInput": "Test plan configuration Id : %s",
     "testSuiteSelected": "Test suite Id selected: %s",
-    "automatedTestsTriggered": "Trigerring execution of Automated tests from test plan"
+    "automatedTestsTriggered": "Trigerring execution of Automated tests from test plan",
+    "ErrorFailTaskOnExecutingTests": "Error occured while executing test command"
   },
   "_buildConfigMapping": {
     "Default": "0.234.0",

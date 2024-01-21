@@ -129,6 +129,7 @@
     "testPlanInput": "ms-resource:loc.messages.testPlanInput",
     "testplanConfigInput": "ms-resource:loc.messages.testplanConfigInput",
     "testSuiteSelected": "ms-resource:loc.messages.testSuiteSelected",
-    "automatedTestsTriggered": "ms-resource:loc.messages.automatedTestsTriggered"
+    "automatedTestsTriggered": "ms-resource:loc.messages.automatedTestsTriggered",
+    "ErrorFailTaskOnExecutingTests": "ms-resource:loc.messages.ErrorFailTaskOnExecutingTests"
   }
 }

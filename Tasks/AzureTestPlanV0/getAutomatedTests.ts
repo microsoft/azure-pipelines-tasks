@@ -43,7 +43,7 @@ export async function getAutomatedTestData(testPlanId: number, testSuiteIds: num
                 }
 
             } catch (error) {
-                console.error("Error fetching test cases list:", error);
+                tl.error("Error fetching test cases list:" + error);
                 token = undefined;
             }
         } while (token !== undefined);

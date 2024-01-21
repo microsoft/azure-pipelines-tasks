@@ -1,11 +1,12 @@
 import { spawn } from '../testexecutor'
 import tl = require('azure-pipelines-task-lib/task');
 import utils = require('../utils');
+import constants = require('../constants');
 export async function executegradletests(testsToBeExecuted: string[]) {
 
     //gradle command like "gradle test --tests=<package.className.testName> --tests=<package.className.testName>"
 
-    const executable = 'gradle'
+    const executable = constants.GRADLE_EXECUTABLE;
     const args = []
 
     args.push('test');  
@@ -22,7 +23,8 @@ export async function executegradletests(testsToBeExecuted: string[]) {
 
     const { status, error } = await spawn(executable, args)
     if (error) {
-        console.error(error)
+        tl.error("Error executing pytest command" + error);
+        tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnExecutingTests'));
     }
 
     return { exitCode: status ?? 1 }

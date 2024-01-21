@@ -1,12 +1,13 @@
 import { spawn } from '../testexecutor'
 import tl = require('azure-pipelines-task-lib/task');
 import utils = require('../utils');
+import constants = require('../constants');
 
 export async function executemaventests(testsToBeExecuted: string[]) {
 
     //maven command like "mvn test -Dtest=<package.className#testName>,<package.className#testName1>"
 
-    const executable = 'mvn'
+    const executable = constants.MVN_EXECUTABLE;
     const args = []
     const testsToRun =[]
 
@@ -18,7 +19,7 @@ export async function executemaventests(testsToBeExecuted: string[]) {
     if (testsToRun.length > 0)
     {
         const testsList = testsToRun.join(',')
-        const dtest = '-Dtest=';
+        const dtest = constants.MAVEN_DTEST;
         const newArgs = dtest + testsList;
 
             args.push('test');
@@ -32,7 +33,8 @@ export async function executemaventests(testsToBeExecuted: string[]) {
     //console.log('Running tests with maven using command: ${[executable, ...quotedArgs].join()}');
         const { status, error } = await spawn(executable, args)
         if (error) {
-            console.error(error)
+            tl.error("Error executing mvn command" + error);
+            tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnExecutingTests'));
         }
 
         return { exitCode: status ?? 1 }
