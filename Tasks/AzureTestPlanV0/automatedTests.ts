@@ -15,6 +15,7 @@ export async function automatedTestsFlow(testSelectorInput: string) {
         })
         .catch((error) => {
             tl.error("Error while fetching FqnsOfAutomatedTestCases :" + error);
+            tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnAPIFailure'));
         });
 
     tl.debug("Invoking test execution for tests: " + ListOfTestsToBeExecuted);
@@ -59,6 +60,7 @@ export async function getFQNsOfAutomatedTestCases(): Promise<string[]>{
         })
         .catch((error) => {
             tl.error("Error while fetching Automated Test Cases Data :" + error);
+            tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnAPIFailure'));
         });
 
     return fqnlist;

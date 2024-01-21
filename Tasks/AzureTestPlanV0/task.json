@@ -130,6 +130,7 @@
     "testplanConfigInput": "Test plan configuration Id : %s",
     "testSuiteSelected": "Test suite Id selected: %s",
     "automatedTestsTriggered": "Trigerring execution of Automated tests from test plan",
-    "ErrorFailTaskOnExecutingTests":  "Error occured while executing test command"
+    "ErrorFailTaskOnExecutingTests": "Error occured while executing test command",
+    "ErrorFailTaskOnAPIFailure":  "Error occured while fetching automated tests from test plan inputs"
   }
 }
