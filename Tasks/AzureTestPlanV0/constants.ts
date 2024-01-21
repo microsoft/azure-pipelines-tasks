@@ -1,7 +1,5 @@
 // Constants
 export const MVN_EXECUTABLE: string = 'mvn';
 export const MAVEN_DTEST: string = '-Dtest=';
-
 export const GRADLE_EXECUTABLE: string = 'gradle';
-
 export const PYTEST_EXECUTABLE: string = 'pytest';

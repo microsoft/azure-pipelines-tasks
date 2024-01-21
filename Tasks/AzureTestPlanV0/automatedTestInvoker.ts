@@ -7,22 +7,22 @@ export async function testInvoker(testsToBeExecuted: string[]) {
 
     const testLanguage = tl.getInput('testLanguageInput');
 
-    if (testLanguage !== null && testLanguage !== undefined) {
-
-        if (testLanguage.includes("Java-Maven")) {
-            await executemaventests(testsToBeExecuted);
-        }
-        if (testLanguage.includes("Java-Gradle")) {
-            await executegradletests(testsToBeExecuted);
-        }
-        if (testLanguage.includes("Python")) {
-            await executepythontests(testsToBeExecuted);
-        }
-        else {
-            console.log('Language not yet supported for execution');
-        }
+    if (testLanguage === null || testLanguage === undefined) {
+        console.log("Please select the test framework language from the task dropdown list to execute automated tests");
+        return;
     }
+
+    if (testLanguage.includes("Java-Maven")) {
+        await executemaventests(testsToBeExecuted);
+    }
+    if (testLanguage.includes("Java-Gradle")) {
+        await executegradletests(testsToBeExecuted);
+    }
+    if (testLanguage.includes("Python")) {
+        await executepythontests(testsToBeExecuted);
+    }
+    // any new langugage supported in future to be added here
     else {
-        console.log("Please select Test framework language from task dropdown list to execute automated tests");
+        console.log('Language not yet supported for execution');
     }
 }
