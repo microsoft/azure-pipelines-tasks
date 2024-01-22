@@ -22,8 +22,7 @@ export async function executepythontests(testsToBeExecuted: string[]) {
     const { status, error } = await spawn(executable, args)
 
     if (error) {
-        tl.error("Error executing pytest command" + error);
-        tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnExecutingTests'));
+        tl.error("Error executing pytest command, " + error);
     }
 
     return { exitCode: status ?? 1 }

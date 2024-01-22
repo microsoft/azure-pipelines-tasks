@@ -34,8 +34,7 @@ export async function executemaventests(testsToBeExecuted: string[]) {
     //console.log('Running tests with maven using command: ${[executable, ...quotedArgs].join()}');
         const { status, error } = await spawn(executable, args)
         if (error) {
-            tl.error("Error executing mvn command" + error);
-            tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnExecutingTests'));
+            tl.error("Error executing mvn command, " + error);
         }
 
         return { exitCode: status ?? 1 }
