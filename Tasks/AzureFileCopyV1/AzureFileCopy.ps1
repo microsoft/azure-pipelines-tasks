@@ -3,6 +3,10 @@ param()
 
 Trace-VstsEnteringInvocation $MyInvocation
 
+$featureFlags = @{
+    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
 # Get inputs for the task
 $connectedServiceNameSelector = Get-VstsInput -Name ConnectedServiceNameSelector -Require
 $sourcePath = Get-VstsInput -Name SourcePath -Require
@@ -168,7 +172,15 @@ try {
         }
         if(-not [string]::IsNullOrEmpty($outputStorageContainerSASToken))
         {
-            $storageContainerSaSToken = New-AzureStorageContainerSASToken -Container $containerName -Context $storageContext -Permission r -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours)
+            if ($featureFlags.retireAzureRM)
+            {
+                $storageContainerSaSToken = New-AzStorageContainerSASToken -Name $containerName -Context $storageContext -Permission r -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours)
+            }
+            else
+            {
+                $storageContainerSaSToken = New-AzureStorageContainerSASToken -Container $containerName -Context $storageContext -Permission r -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours)
+            }
+
             Write-Host "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken"
         }
 
