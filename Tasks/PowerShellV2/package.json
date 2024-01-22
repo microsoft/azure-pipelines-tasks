@@ -16,7 +16,7 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^16.11.39",
-    "azure-pipelines-task-lib": "^4.8.1",
+    "azure-pipelines-task-lib": "^4.8.2",
     "azure-pipelines-tasks-utility-common": "^3.230.0",
     "uuid": "^3.0.1"
   },
