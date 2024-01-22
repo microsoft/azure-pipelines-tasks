@@ -1,5 +1,6 @@
 {
   "loc.friendlyName": "Опубликовать метаданные конвейера",
+  "loc.helpMarkDown": "Publish Pipeline Metadata to Evidence store.",
   "loc.description": "Публикация метаданных конвейера в хранилище свидетельств",
   "loc.instanceNameFormat": "Публикация метаданных для конвейера $(System.DefinitionName) в хранилище свидетельств"
 }
