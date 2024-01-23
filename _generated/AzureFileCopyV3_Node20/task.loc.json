@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 231,
-    "Patch": 4
+    "Minor": 234,
+    "Patch": 1
   },
   "demands": [
     "azureps"
@@ -317,7 +317,7 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   },
   "_buildConfigMapping": {
-    "Default": "3.231.2",
-    "Node20_229_2": "3.231.4"
+    "Default": "3.234.0",
+    "Node20_229_2": "3.234.1"
   }
 }
