@@ -21,19 +21,19 @@ export async function executemaventests(testsToBeExecuted: string[]) {
     {
         const testsList = testsToRun.join(',')
         const dtest = constants.MAVEN_DTEST;
-        const newArgs = dtest + testsList;
+        const combinedTestArgs = dtest + testsList;
 
-            args.push('test');
-            args.push(newArgs);
+        args.push('test');
+        args.push(combinedTestArgs);
     }
 
     tl.debug("Executing java maven tests with executable : " + executable);
     tl.debug("Executing java maven tests with args :" + args);
 
-        const { status, error } = await spawn(executable, args)
-        if (error) {
-            tl.error("Error executing mvn command, " + error);
-        }
+    const { status, error } = await spawn(executable, args)
+    if (error) {
+        tl.error("Error executing mvn command, " + error);
+    }
 
         return { exitCode: status ?? 1 }
     }
