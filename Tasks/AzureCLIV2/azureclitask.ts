@@ -14,7 +14,7 @@ export class azureclitask {
     public static async runMain(): Promise<void> {
         var toolExecutionError = null;
         var exitCode: number = 0;
-        try{
+        try {
             var scriptType: ScriptType = ScriptTypeFactory.getSriptType();
             var tool: any = await scriptType.getTool();
             var cwd: string = tl.getPathInput("cwd", true, false);
@@ -49,8 +49,8 @@ export class azureclitask {
                     failOnStdErr: false,
                     ignoreReturnCode: true,
                     env: {
-                    ...process.env,
-                    ...{ servicePrincipalId: this.servicePrincipalId, servicePrincipalKey: this.servicePrincipalKey, tenantId: this.tenantId }
+                        ...process.env,
+                        ...{ servicePrincipalId: this.servicePrincipalId, servicePrincipalKey: this.servicePrincipalKey, tenantId: this.tenantId }
                     }
                 });
             } else if (!!addSpnToEnvironment && authorizationScheme == 'workloadidentityfederation') {
@@ -58,15 +58,15 @@ export class azureclitask {
                     failOnStdErr: false,
                     ignoreReturnCode: true,
                     env: {
-                    ...process.env,
-                    ...{ servicePrincipalId: this.servicePrincipalId, idToken: this.federatedToken, tenantId: this.tenantId }
+                        ...process.env,
+                        ...{ servicePrincipalId: this.servicePrincipalId, idToken: this.federatedToken, tenantId: this.tenantId }
                     }
                 });
             } else {
                 exitCode = await tool.exec({
                     failOnStdErr: false,
                     ignoreReturnCode: true
-                 });
+                });
             }
 
             if (failOnStdErr && aggregatedErrorLines.length > 0) {
@@ -92,11 +92,11 @@ export class azureclitask {
             }
 
             //set the task result to either succeeded or failed based on error was thrown or not
-            if(toolExecutionError === FAIL_ON_STDERR) {
+            if (toolExecutionError === FAIL_ON_STDERR) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedStdErr"));
             } else if (toolExecutionError) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailed", toolExecutionError));
-            } else if (exitCode != 0){
+            } else if (exitCode != 0) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedWithExitCode", exitCode));
             }
             else {
@@ -117,7 +117,7 @@ export class azureclitask {
     private static federatedToken: string = null;
     private static tenantId: string = null;
 
-    private static async loginAzureRM(connectedService: string):Promise<void> {
+    private static async loginAzureRM(connectedService: string): Promise<void> {
         var authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
 
@@ -129,12 +129,12 @@ export class azureclitask {
             tl.setSecret(federatedToken);
             const args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
 
-            //login using OpenID Connect federation
+            console.log('##[group]Login using OpenID Connect federation')
             Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
-
-             this.servicePrincipalId = servicePrincipalId;
-             this.federatedToken = federatedToken;
-             this.tenantId = tenantId;
+            console.log('##[endgroup]');
+            this.servicePrincipalId = servicePrincipalId;
+            this.federatedToken = federatedToken;
+            this.tenantId = tenantId;
         }
         else if (authScheme.toLowerCase() == "serviceprincipal") {
             let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
@@ -160,12 +160,14 @@ export class azureclitask {
 
             let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
             tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
-            //login using svn
+            console.log('##[group]Login using SPN')
             Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --password="${escapedCliPassword}" --tenant "${tenantId}" --allow-no-subscriptions`), tl.loc("LoginFailed"));
+            console.log('##[endgroup]');
         }
-        else if(authScheme.toLowerCase() == "managedserviceidentity") {
-            //login using msi
+        else if (authScheme.toLowerCase() == "managedserviceidentity") {
+            console.log('##[group]Login using MSI');
             Utility.throwIfError(tl.execSync("az", "login --identity"), tl.loc("MSILoginFailed"));
+            console.log('##[endgroup]');
         }
         else {
             throw tl.loc('AuthSchemeNotSupported', authScheme);
@@ -175,6 +177,7 @@ export class azureclitask {
         if (!!subscriptionID) {
             //set the subscription imported to the current subscription
             Utility.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
+            tl.execSync("az", "account show");
         }
     }
 
@@ -211,7 +214,7 @@ export class azureclitask {
         }
     }
 
-    private static async getIdToken(connectedService: string) : Promise<string> {
+    private static async getIdToken(connectedService: string): Promise<string> {
         const jobId = tl.getVariable("System.JobId");
         const planId = tl.getVariable("System.PlanId");
         const projectId = tl.getVariable("System.TeamProjectId");

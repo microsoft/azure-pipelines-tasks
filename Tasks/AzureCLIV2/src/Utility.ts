@@ -45,7 +45,7 @@ export class Utility {
             filePath = path.join(tempDirectory, `azureclitaskscript${new Date().getTime()}_inlinescript.${fileExtensions[0]}`);
             await Utility.createFile(filePath, inlineScript);
         }
-        else{
+        else {
             if (!Utility.checkIfFileExists(filePath, fileExtensions)) {
                 throw new Error(tl.loc('JS_InvalidFilePath', filePath));
             }
