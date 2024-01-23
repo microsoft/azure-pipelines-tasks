@@ -90,6 +90,8 @@ Tasks/AzureSpringCloudV0    @microsoft/azure-spring-apps @ruoyuwang @menxiao
 
 Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @mkarmark @joslinmicrosoft
 
+Tasks/AzureTestPlanV0/     @rasunkar  @microsoft\adoautotest
+
 Tasks/AzureWebAppV1/  @vsebesta @rvairavelu @pipeline-environment-team
 
 Tasks/AzureWebAppContainerV1/   @vsebesta   @rvairavelu   @pipeline-environment-team
