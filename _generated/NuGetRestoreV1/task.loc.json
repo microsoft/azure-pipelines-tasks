@@ -169,9 +169,5 @@
     "Warning_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Warning_IncludeNuGetOrgEnabled",
     "Error_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Error_IncludeNuGetOrgEnabled",
     "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
-  },
-  "_buildConfigMapping": {
-    "Default": "1.232.0",
-    "Node20_229_1": "1.232.1"
   }
 }
