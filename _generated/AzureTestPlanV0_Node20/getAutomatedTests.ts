@@ -5,19 +5,19 @@ import { WorkItemDetails, TestCase } from 'azure-devops-node-api/interfaces/Test
 import { PagedList } from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
 import TestPlanInterfaces = require('azure-devops-node-api/interfaces/TestPlanInterfaces');
 import VSSInterfaces = require('azure-devops-node-api/interfaces/common/VSSInterfaces');
+import constants = require('./constants');
 
 
 export interface TestPlanData {
     testPointIds: number[];
     listOfFQNOfTestCases: string[];
 }
-
- const AutomatedTestName = "Microsoft.VSTS.TCM.AutomatedTestName";
- const AutomatedTestStorage = "Microsoft.VSTS.TCM.AutomatedTestStorage";
 export async function getAutomatedTestData(testPlanId: number, testSuiteIds: number[], testConfigurationId: number): Promise<TestPlanData> {
     
     const testPlanData: TestPlanData = { testPointIds: [], listOfFQNOfTestCases: [] };
     let token = null;
+    const AutomatedTestName = constants.AUTOMATED_TEST_NAME;
+    const AutomatedTestStorage = constants.AUTOMATED_TEST_STORAGE;
 
     if (testPlanId == 0 || testConfigurationId == 0) {
         return testPlanData;

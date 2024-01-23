@@ -5,24 +5,32 @@ import { executegradletests } from './Invokers/gradleinvoker'
 
 export async function testInvoker(testsToBeExecuted: string[]) {
 
-    const testLanguage = tl.getInput('testLanguageInput');
+    const testLanguageStrings = tl.getDelimitedInput('testLanguageInput', ',', true);
 
-    if (testLanguage === null || testLanguage === undefined) {
-        console.log("Please select the test framework language from the task dropdown list to execute automated tests");
-        return;
-    }
+    for (const testLanguage of testLanguageStrings) {
 
-    if (testLanguage.includes("Java-Maven")) {
-        await executemaventests(testsToBeExecuted);
+        if (testLanguage === null || testLanguage === undefined) {
+            console.log("Please select the test framework language from the task dropdown list to execute automated tests");
+            return;
+        }
+
+        switch (testLanguage) {
+            case 'Java-Maven':
+                await executemaventests(testsToBeExecuted);
+                break;
+
+            case 'Java-Gradle':
+                await executegradletests(testsToBeExecuted);
+                break;
+
+            case 'Python':
+                await executepythontests(testsToBeExecuted);
+                break;
+
+            default:
+                console.log('Invalid test Language Input selected.');
+        }
+
     }
-    if (testLanguage.includes("Java-Gradle")) {
-        await executegradletests(testsToBeExecuted);
-    }
-    if (testLanguage.includes("Python")) {
-        await executepythontests(testsToBeExecuted);
-    }
-    // any new langugage supported in future to be added here
-    else {
-        console.log('Language not yet supported for execution');
-    }
+ 
 }

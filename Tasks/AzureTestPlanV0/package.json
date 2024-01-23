@@ -1,7 +1,7 @@
 {
   "name": "azure-tasks-runTestPlan",
   "version": "1.0.0",
-  "description": "Azure Pipelines Run Automated Test execution Task",
+  "description": "Azure Pipelines Run Manual and Automated Test execution Task",
   "main": "runTestPlan.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

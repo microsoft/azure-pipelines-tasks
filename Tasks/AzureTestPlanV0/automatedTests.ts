@@ -6,22 +6,22 @@ import { TestCase } from 'azure-devops-node-api/interfaces/TestPlanInterfaces';
 
 export async function automatedTestsFlow(testSelectorInput: string) {
 
-    let ListOfTestsToBeExecuted: string[] = [];
+    let listOfTestsToBeExecuted: string[] = [];
 
     console.log(tl.loc('automatedTestsTriggered'));
     await getFQNsOfAutomatedTestCases()
         .then((testsToBeExecuted) => {
-            ListOfTestsToBeExecuted = testsToBeExecuted;
+            listOfTestsToBeExecuted = testsToBeExecuted;
         })
         .catch((error) => {
             tl.error("Error while fetching FqnsOfAutomatedTestCases :" + error);
             tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnAPIFailure'));
         });
 
-    tl.debug("Invoking test execution for tests: " + ListOfTestsToBeExecuted);
+    tl.debug("Invoking test execution for tests: " + listOfTestsToBeExecuted);
 
-    if (ListOfTestsToBeExecuted !== null && ListOfTestsToBeExecuted !== undefined && ListOfTestsToBeExecuted.length > 0) {
-        testInvoker(ListOfTestsToBeExecuted);
+    if (listOfTestsToBeExecuted !== null && listOfTestsToBeExecuted !== undefined && listOfTestsToBeExecuted.length > 0) {
+        testInvoker(listOfTestsToBeExecuted);
     }
     else {
         console.log("No automated tests found for given test plan inputs ");
