@@ -7,17 +7,56 @@ import TestPlanInterfaces = require('azure-devops-node-api/interfaces/TestPlanIn
 import VSSInterfaces = require('azure-devops-node-api/interfaces/common/VSSInterfaces');
 import constants = require('./constants');
 
-
 export interface TestPlanData {
-    testPointIds: number[];
+    automatedTestPointIds: number[];
     listOfFQNOfTestCases: string[];
+    manualTestPointIds: number[];
 }
-export async function getAutomatedTestData(testPlanId: number, testSuiteIds: number[], testConfigurationId: number): Promise<TestPlanData> {
+
+export async function getTestPlanData(): Promise<TestPlanData> {
+
+    const testPlanDataResponse: TestPlanData =
+    {
+        automatedTestPointIds: [],
+        listOfFQNOfTestCases: [],
+        manualTestPointIds: []
+    };
+
+    const testPlan = parseInt(tl.getInput('testPlan'));
+    const testPlanConfigId = parseInt(tl.getInput('testConfiguration'));
+    const testSuiteStrings = tl.getDelimitedInput('testSuite', ',', true);
+    const testSuites = new Array<number>();
+    testSuiteStrings.forEach(element => {
+        const testSuiteId = parseInt(element);
+        testSuites.push(testSuiteId);
+    })
+
+    console.log('Test Plan Id:' + testPlan);
+    console.log('Test Plan Configuration Id:' + testPlanConfigId);
+    console.log('Test Suite Ids:' + testSuites);
+
+    await getTestPlanDataPoints(testPlan, testSuites, testPlanConfigId)
+        .then((testPlanData) => {
+            testPlanDataResponse.automatedTestPointIds = testPlanData.automatedTestPointIds;
+            testPlanDataResponse.listOfFQNOfTestCases = testPlanData.listOfFQNOfTestCases;
+            testPlanDataResponse.manualTestPointIds = testPlanData.manualTestPointIds;
+        })
+        .catch((error) => {
+            tl.error("Error while fetching Test Plan Data :" + error);
+            tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFailTaskOnAPIFailure'));
+        });
+
+    return testPlanDataResponse;
+}
+
+export async function getTestPlanDataPoints(testPlanId: number, testSuiteIds: number[], testConfigurationId: number): Promise<TestPlanData> {
     
-    const testPlanData: TestPlanData = { testPointIds: [], listOfFQNOfTestCases: [] };
+    const testPlanData: TestPlanData = { automatedTestPointIds: [], listOfFQNOfTestCases: [], manualTestPointIds:[] };
     let token = null;
     const AutomatedTestName = constants.AUTOMATED_TEST_NAME;
     const AutomatedTestStorage = constants.AUTOMATED_TEST_STORAGE;
+    const AutomationStatus = constants.AUTOMATION_STATUS;
+    
 
     if (testPlanId == 0 || testConfigurationId == 0) {
         return testPlanData;
@@ -56,28 +95,43 @@ export async function getAutomatedTestData(testPlanId: number, testSuiteIds: num
         testCasesData.forEach(testCase => {
             let automatedTestName = '';
             let automatedTestStorage = '';
+            let isManualTest = false;
 
             for (const witField of testCase.workItem?.workItemFields || []) {
                 const parsedWitField = JSON.parse(JSON.stringify(witField)); // Deep copy for safety
 
-                if (parsedWitField[AutomatedTestName] !== undefined && parsedWitField[AutomatedTestName] !== null) {
+                if (parsedWitField[constants.AUTOMATED_TEST_NAME] !== undefined && parsedWitField[constants.AUTOMATED_TEST_NAME] !== null) {
                     automatedTestName = parsedWitField[AutomatedTestName].toString();
                     testPlanData.listOfFQNOfTestCases.push(automatedTestName);
                 }
 
-                if (parsedWitField[AutomatedTestStorage] !== undefined && parsedWitField[AutomatedTestStorage] !== null) {
+                if (parsedWitField[constants.AUTOMATED_TEST_STORAGE] !== undefined && parsedWitField[constants.AUTOMATED_TEST_STORAGE] !== null) {
                     automatedTestStorage = parsedWitField[AutomatedTestStorage].toString();
                 }
+
+                if (parsedWitField[constants.AUTOMATION_STATUS] !== undefined && parsedWitField[constants.AUTOMATION_STATUS] !== null && parsedWitField[constants.AUTOMATION_STATUS] === constants.NOT_AUTOMATED) {
+                    isManualTest = true;
+                }
+
             }
 
             if (automatedTestName !== '' && automatedTestStorage !== '') {
                 if (testCase.pointAssignments.length > 0) {
-                    testPlanData.testPointIds.push(testCase.pointAssignments[0].id);
+                    testPlanData.automatedTestPointIds.push(testCase.pointAssignments[0].id);
+                }
+            }
+
+            if (isManualTest === true) {
+                if (testCase.pointAssignments.length > 0) {
+                    testPlanData.manualTestPointIds.push(testCase.pointAssignments[0].id);
                 }
             }
         });
 
     }
+
+    console.log("Automated Test point ids :", testPlanData.automatedTestPointIds);
+    console.log("Manual Test point ids :", testPlanData.manualTestPointIds);
 
     return testPlanData;
 }
@@ -91,7 +145,7 @@ export async function fetchTestPlanList(testPlanId: number, testSuiteId: number,
     let vsts: apim.WebApi = new apim.WebApi(url, auth);
     let testPlanApi = await vsts.getTestPlanApi();
 
-    tl.debug("Fetching test case list for test plan:" + testPlanId + " test suite id:" + testSuiteId + " test configuration id:" + testConfigurationId);
+    tl.debug("Fetching test case list for test plan:" + testPlanId + " ,test suite id:" + testSuiteId + " ,test configuration id:" + testConfigurationId);
 
     return testPlanApi.getTestCaseList(
         projectId,
