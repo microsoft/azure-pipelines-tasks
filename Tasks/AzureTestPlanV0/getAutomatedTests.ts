@@ -46,7 +46,7 @@ export async function getAutomatedTestData(testPlanId: number, testSuiteIds: num
                 tl.error("Error fetching test cases list:" + error);
                 token = undefined;
             }
-        } while (token !== undefined);
+        } while ((token !== undefined) && (token !== null));
 
         if (testCasesData.length === 0) {
             console.log(`No test cases for test suite ${testSuiteId}`);
@@ -60,12 +60,12 @@ export async function getAutomatedTestData(testPlanId: number, testSuiteIds: num
             for (const witField of testCase.workItem?.workItemFields || []) {
                 const parsedWitField = JSON.parse(JSON.stringify(witField)); // Deep copy for safety
 
-                if (parsedWitField[AutomatedTestName] !== undefined) {
+                if (parsedWitField[AutomatedTestName] !== undefined && parsedWitField[AutomatedTestName] !== null) {
                     automatedTestName = parsedWitField[AutomatedTestName].toString();
                     testPlanData.listOfFQNOfTestCases.push(automatedTestName);
                 }
 
-                if (parsedWitField[AutomatedTestStorage] !== undefined) {
+                if (parsedWitField[AutomatedTestStorage] !== undefined && parsedWitField[AutomatedTestStorage] !== null) {
                     automatedTestStorage = parsedWitField[AutomatedTestStorage].toString();
                 }
             }
