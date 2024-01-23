@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 233,
+    "Minor": 234,
     "Patch": 0
   },
   "runsOn": [
@@ -19,6 +19,7 @@
   "minimumAgentVersion": "2.115.0",
   "deprecated": true,
   "removalDate": "2023-12-11",
+  "deprecationMessage": "The NuGetInstaller@0 (NuGet Installer) task has been deprecated and will soon be retired. Use the NuGetCommand@2 (with restore option) task instead.",
   "groups": [
     {
       "name": "advanced",
@@ -149,7 +150,7 @@
     "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
   },
   "_buildConfigMapping": {
-    "Default": "0.233.0",
-    "Node20_229_1": "0.233.1"
+    "Default": "0.234.0",
+    "Node20_229_1": "0.234.1"
   }
 }

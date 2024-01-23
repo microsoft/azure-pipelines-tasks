@@ -9,13 +9,14 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 0,
-    "Minor": 233,
+    "Minor": 234,
     "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
   "removalDate": "2023-12-11",
+  "deprecationMessage": "The DownloadPackage@0 (Download package) task has been deprecated and will soon be retired. Use the DownloadPackage@1 task instead.",
   "inputs": [
     {
       "name": "feed",
@@ -120,7 +121,7 @@
     "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
   },
   "_buildConfigMapping": {
-    "Default": "0.233.0",
-    "Node20_229_1": "0.233.1"
+    "Default": "0.234.0",
+    "Node20_229_1": "0.234.1"
   }
 }

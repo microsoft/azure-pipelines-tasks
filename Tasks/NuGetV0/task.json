@@ -10,8 +10,8 @@
   "helpMarkDown": "",
   "version": {
     "Major": 0,
-    "Minor": 232,
-    "Patch": 2
+    "Minor": 234,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -20,6 +20,7 @@
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
   "removalDate": "2024-01-31",
+  "deprecationMessage": "The NuGet@0 (NuGet command) task has been deprecated and will soon be retired. Use the NuGetCommand@2 task instead.",
   "groups": [],
   "instanceNameFormat": "NuGet $(command)",
   "inputs": [
