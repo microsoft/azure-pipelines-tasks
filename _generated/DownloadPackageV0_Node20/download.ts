@@ -234,5 +234,5 @@ export async function unzip(zipLocation: string, unzipLocation: string): Promise
 }
 
 main()
-	.then(() => tl.setResult(tl.TaskResult.Succeeded, ""))
+	.then(() => tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("DeprecatedTask")))
 	.catch((error) => tl.setResult(tl.TaskResult.Failed, error));

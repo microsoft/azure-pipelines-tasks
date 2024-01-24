@@ -1,20 +1,16 @@
-import axios from "axios";
-import { configInstance } from "./config";
-import { API_VERSION } from "./constants";
-import { PipelineBuild } from "./interfaces";
+import { BuildDefinitionReference } from 'azure-devops-node-api/interfaces/BuildInterfaces';
+import { api } from './api';
 
 // We're caching pipelines since we assume they will not change during the plan execution.
 export function fetchPipelines() {
-    let cachedPipelines: PipelineBuild[] = [];
+    let cachedPipelines: BuildDefinitionReference[] = [];
 
-    return async (): Promise<PipelineBuild[]> => {
+    return async (): Promise<BuildDefinitionReference[]> => {
         if (cachedPipelines.length > 0) {
             return new Promise((resolve) => resolve(cachedPipelines));
         }
         try {
-            const res = await axios
-                .get(`${configInstance.ApiUrl}/pipelines?${API_VERSION}`, configInstance.AxiosAuth);
-            cachedPipelines = res.data.value;
+            cachedPipelines = await api.getDefinitions();
 
             return cachedPipelines;
         } catch (err: any) {
