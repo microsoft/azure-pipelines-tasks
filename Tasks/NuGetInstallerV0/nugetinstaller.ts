@@ -194,7 +194,7 @@ async function main(): Promise<void> {
 	        throw new Error(tl.loc("DeprecatedTask"));
 	    }
 
-        tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesInstalledSuccessfully"));
+        tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("DeprecatedTask"));
 
     } catch (err) {
         tl.error(err);
