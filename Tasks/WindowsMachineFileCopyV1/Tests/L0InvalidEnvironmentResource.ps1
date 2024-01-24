@@ -14,6 +14,8 @@ Register-Mock Get-EnvironmentProperty {  }
 
 Register-Mock Get-EnvironmentResources { throw "No resources found" } -ParametersEvaluator{$EnvironmentName -eq $invalidEnvironmentWithNoResource}
 Register-Mock Register-Environment { return GetEnvironmentWithStandardProvider $invalidEnvironmentWithNoResource } -ParametersEvaluator{$EnvironmentName -eq $invalidEnvironmentWithNoResource}
+Register-Mock Get-SanitizerCallStatus { return $false }
+Register-Mock Get-SanitizerActivateStatus { return $false }
 
 Assert-Throws {
     & "$copyFilesToMachinesPath" -environmentName $invalidEnvironmentWithNoResource -machineNames $invalidInputMachineNames -sourcePath $validSourcePackage -targetPath $validApplicationPath -cleanTargetBeforeCopy $true -copyFilesInParallel $false

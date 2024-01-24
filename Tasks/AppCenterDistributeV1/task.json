@@ -7,6 +7,8 @@
     "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport/).",
     "category": "Deploy",
     "deprecated": true,
+    "removalDate": "2024-01-31",
+    "deprecationMessage": "The AppCenterDistribute@1 (App Center distribute) task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead.",
     "visibility": [
         "Build",
         "Release"
@@ -14,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 225,
+        "Minor": 234,
         "Patch": 0
     },
     "minimumAgentVersion": "2.144.0",

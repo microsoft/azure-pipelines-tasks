@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 226,
+        "Minor": 232,
         "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
@@ -250,13 +250,12 @@
         "JS_InvalidFilePath": "Invalid file path '%s'. A path to a .ps1 file is required.",
         "JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
         "JS_InvalidTargetType": "Invalid target type '%s'. The value must be one of: 'filepath' or 'inline'",
-        "JS_SanitizerOutput": "Sanitizer changed input arguments. Output from sanitizer: '%s'",
         "PS_ExitCode": "PowerShell exited with code '{0}'.",
         "PS_FormattedCommand": "Formatted command: {0}",
         "PS_InvalidActionPreference": "Invalid action preference for {0}: '{1}'. The value must be one of: {2}",
         "PS_InvalidFilePath": "Invalid file path '{0}'. A path to a .ps1 file is required.",
         "PS_UnableToDetermineExitCode": "Unexpected exception. Unable to determine the exit code from powershell.",
         "PS_InvalidTargetType": "Invalid target type '{0}'. The value must be one of: 'filepath' or 'inline'",
-        "PS_SanitizerOutput": "Sanitizer changed input arguments. Output from sanitizer: '{0}'"
+        "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backtick (`). More information is available here: https://aka.ms/ado/75787"
     }
 }

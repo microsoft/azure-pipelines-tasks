@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 225,
+    "Minor": 228,
     "Patch": 0
   },
   "preview": true,
@@ -164,6 +164,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "index.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "index.js",
       "argumentFormat": ""
     }

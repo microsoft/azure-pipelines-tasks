@@ -20,6 +20,8 @@ Register-Mock Get-ChildItem { return $assembly }
 Register-Mock Write-ResponseLogs { }
 Register-Mock Get-AzureStorageAccount { return $null }
 Register-Mock Write-Telemetry { }
+Register-Mock Get-SanitizerCallStatus { return $false }
+Register-Mock Get-SanitizerActivateStatus { return $false }
 
 # Test 1 "Should throw if failed on one vm"
 Assert-Throws {

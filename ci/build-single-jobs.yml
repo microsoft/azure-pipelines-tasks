@@ -24,7 +24,7 @@ jobs:
     displayName: Create HotFix PR
     dependsOn: build_single_task
     pool:
-      vmImage: windows-2022
+      name: 1ES-Shared-Hosted-Pool_Windows-Server-2022
     steps: 
     - template: build-single-cc-pr-steps.yml
       parameters:

@@ -15,6 +15,8 @@ const validSubDirGlobalJson = workingSubDir + "global.json";
 const subDirVersionNumber = "3.0.0-pre285754637";
 const pathToEmptyGlobalJsonDir = workingDir + "empty/";
 const pathToEmptyGlobalJson = pathToEmptyGlobalJsonDir + "global.json";
+const pathToGlobalJsonWithCommentsDir = workingDir + "comments/";
+const pathToGlobalJsonWithComments = pathToGlobalJsonWithCommentsDir + "global.json";
 
 //setup mocks
 mockery.enable({
@@ -38,6 +40,9 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
         if (path == pathToEmptyGlobalJsonDir) {
             return [pathToEmptyGlobalJson];
         }
+        if (path == pathToGlobalJsonWithCommentsDir) {
+            return [pathToGlobalJsonWithComments];
+        }
         return [];
     },
     loc: function (locString, ...param: string[]) { return tl.loc(locString, param); },
@@ -58,6 +63,17 @@ mockery.registerMock('fs', {
         if (path == pathToEmptyGlobalJson) {
             return Buffer.from("");
         }
+        if (path == pathToGlobalJsonWithComments) {
+            return Buffer.from(`{
+                /*
+                  This is a mult-line comment
+                */
+                "sdk": {
+                    // This is a single-line comment
+                    "version": "${rootVersionNumber}"
+                }
+            }`);
+        }
         return Buffer.from(null);
     }
 });
@@ -67,7 +83,17 @@ mockery.registerMock('./versionfetcher', {
         return {
             getVersionInfo: function (versionSpec: string, vsVersionSpec: string, packageType: string, includePreviewVersions: boolean): Promise<VersionInfo> {
                 return Promise<VersionInfo>((resolve, reject) => {
-                    resolve(new VersionInfo({ version: versionSpec, files: null, "runtime-version": versionSpec, "vs-version": vsVersionSpec }, packageType));
+                    resolve(new VersionInfo({ 
+                        version: versionSpec, 
+                        files: [{
+                            name: 'testfile.json',
+                            hash: 'testhash',
+                            url: 'testurl',
+                            rid: 'testrid'
+                        }],
+                        "runtime-version": versionSpec,
+                        "vs-version": vsVersionSpec 
+                    }, packageType));
                 });
             }
         }
@@ -122,5 +148,19 @@ if (process.env["__case__"] == "emptyGlobalJson") {
         }
     }, err => {
         throw "GetVersions shouldn't throw an error if global.json is empty.";
+    });
+}
+
+if (process.env["__case__"] == "globalJsonWithComments") {
+    let fetcher = new globalJsonFetcher(pathToGlobalJsonWithCommentsDir);
+    fetcher.GetVersions().then(versionInfos => {
+        if (versionInfos == null) {
+            throw "GetVersions shouldn't return null if the global.json has comments.";
+        }
+        if (versionInfos.length != 1) {
+            throw "GetVersions shouldn't return a arry with 0 elements if global.json has comments.";
+        }
+    }, err => {
+        throw "GetVersions shouldn't throw an error if global.json has comments.";
     });
 }

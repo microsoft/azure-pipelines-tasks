@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 226,
+    "Minor": 232,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -250,13 +250,12 @@
     "JS_InvalidFilePath": "ms-resource:loc.messages.JS_InvalidFilePath",
     "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
     "JS_InvalidTargetType": "ms-resource:loc.messages.JS_InvalidTargetType",
-    "JS_SanitizerOutput": "ms-resource:loc.messages.JS_SanitizerOutput",
     "PS_ExitCode": "ms-resource:loc.messages.PS_ExitCode",
     "PS_FormattedCommand": "ms-resource:loc.messages.PS_FormattedCommand",
     "PS_InvalidActionPreference": "ms-resource:loc.messages.PS_InvalidActionPreference",
     "PS_InvalidFilePath": "ms-resource:loc.messages.PS_InvalidFilePath",
     "PS_UnableToDetermineExitCode": "ms-resource:loc.messages.PS_UnableToDetermineExitCode",
     "PS_InvalidTargetType": "ms-resource:loc.messages.PS_InvalidTargetType",
-    "PS_SanitizerOutput": "ms-resource:loc.messages.PS_SanitizerOutput"
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   }
 }

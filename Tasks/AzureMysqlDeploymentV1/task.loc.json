@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 225,
-    "Patch": 1
+    "Minor": 233,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -190,6 +190,10 @@
   "execution": {
     "Node10": {
       "target": "azuremysqldeploy.js"
+    },
+    "Node16": {
+      "target": "azuremysqldeploy.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

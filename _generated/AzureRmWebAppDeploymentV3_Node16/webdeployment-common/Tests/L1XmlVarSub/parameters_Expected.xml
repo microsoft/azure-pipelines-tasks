@@ -1,7 +1,0 @@
-<parameters>
-  <parameter name="IIS Web Application Name" defaultValue="Default Web Site/WebApplication3_deploy" tags="IisApp">
-  </parameter>
-  <parameter name="DefaultConnection-Web.config Connection String" defaultValue="New_Connection_String From xml var subs">
-    <parameterEntry kind="XmlFile" scope="c:\\users\\vinca\.fareast\\documents\\visual\ studio\ 2015\\Projects\\WebApplication3\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
-  </parameter>
-</parameters>

@@ -210,9 +210,9 @@
       }
     },
     "azure-pipelines-tasks-azure-arm-rest": {
-      "version": "3.223.4",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-azure-arm-rest/-/azure-pipelines-tasks-azure-arm-rest-3.223.4.tgz",
-      "integrity": "sha512-3RPwQfTk38HYGOCTmG2+UVM2JClaUV76YVqYrR/AhShMMFkg1wQIbpQZ7PLUh0YPbyWqFhmdaZla0JTRL9MWkg==",
+      "version": "3.226.0",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-azure-arm-rest/-/azure-pipelines-tasks-azure-arm-rest-3.226.0.tgz",
+      "integrity": "sha512-yHibJejhY8GL+sN/zvrjLkcGzHE6QT9FX6LXNZkBd1dcn0MEBKdgGEM5I841Yaj7RxY+EhSfUJSpBCaJrlfkSQ==",
       "requires": {
         "@azure/msal-node": "1.14.5",
         "@types/jsonwebtoken": "^8.5.8",
@@ -227,7 +227,7 @@
         "node-fetch": "^2.6.7",
         "q": "1.5.1",
         "typed-rest-client": "1.8.4",
-        "xml2js": "0.4.13"
+        "xml2js": "0.6.2"
       },
       "dependencies": {
         "@types/node": {
@@ -1015,9 +1015,9 @@
       "integrity": "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="
     },
     "node-fetch": {
-      "version": "2.6.11",
-      "resolved": "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.11.tgz",
-      "integrity": "sha512-4I6pdBY1EthSqDmJkiNk3JIT8cswwR9nfeW/cPdUagJYEQG7R95WRH74wpz7ma8Gh/9dI9FP+OU+0E4FvtA55w==",
+      "version": "2.6.12",
+      "resolved": "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.12.tgz",
+      "integrity": "sha512-C/fGU2E8ToujUivIO0H+tpQ6HWo4eEmchoPIoXtxCrVghxdKq+QOHqEZW7tuP3KlV3bC8FRMO5nMCC7Zm1VP6g==",
       "requires": {
         "whatwg-url": "^5.0.0"
       }
@@ -1181,9 +1181,9 @@
       "integrity": "sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw=="
     },
     "semver": {
-      "version": "5.7.0",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-5.7.0.tgz",
-      "integrity": "sha512-Ya52jSX2u7QKghxeoFGpLwCtGlt7j0oY9DYb5apt9nPlJ42ID+ulTXESnt/qAQcoSERyZ5sl3LDIOw0nAn/5DA=="
+      "version": "5.7.2",
+      "resolved": "https://registry.npmjs.org/semver/-/semver-5.7.2.tgz",
+      "integrity": "sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g=="
     },
     "semver-compare": {
       "version": "1.0.0",
@@ -1302,9 +1302,9 @@
       "integrity": "sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw=="
     },
     "tslib": {
-      "version": "2.5.2",
-      "resolved": "https://registry.npmjs.org/tslib/-/tslib-2.5.2.tgz",
-      "integrity": "sha512-5svOrSA2w3iGFDs1HibEVBGbDrAY82bFQ3HZ3ixB+88nsbsWQoKqDRb5UBYAUPEzbBn6dAp5gRNXglySbx1MlA=="
+      "version": "2.6.1",
+      "resolved": "https://registry.npmjs.org/tslib/-/tslib-2.6.1.tgz",
+      "integrity": "sha512-t0hLfiEKfMUoqhG+U1oid7Pva4bbDPHYfJNiB7BiIjRkj1pyC++4N3huJfqY6aRH6VTB0rvtzQwjM4K6qpfOig=="
     },
     "tunnel": {
       "version": "0.0.6",
@@ -1367,18 +1367,18 @@
       "integrity": "sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8="
     },
     "xml2js": {
-      "version": "0.4.13",
-      "resolved": "https://registry.npmjs.org/xml2js/-/xml2js-0.4.13.tgz",
-      "integrity": "sha512-BoxD65qWA2p4znzbaati/Td19uFEc0X6ydj0bFphJO62RrNaGqOyW6ljLWPo3GKDbvW/6dnxAoRX01BsgEWsMA==",
+      "version": "0.6.2",
+      "resolved": "https://registry.npmjs.org/xml2js/-/xml2js-0.6.2.tgz",
+      "integrity": "sha512-T4rieHaC1EXcES0Kxxj4JWgaUQHDk+qwHcYOCFHfiwKz7tOVPLq7Hjq9dM1WCMhylqMEfP7hMcOIChvotiZegA==",
       "requires": {
         "sax": ">=0.6.0",
-        "xmlbuilder": ">=2.4.6"
+        "xmlbuilder": "~11.0.0"
       }
     },
     "xmlbuilder": {
-      "version": "15.1.1",
-      "resolved": "https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-15.1.1.tgz",
-      "integrity": "sha512-yMqGBqtXyeN1e3TGYvgNgDVZ3j84W4cwkOXQswghol6APgZWaff9lnbvN7MHYJOiXsvGPXtjTYJEiC9J2wv9Eg=="
+      "version": "11.0.1",
+      "resolved": "https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-11.0.1.tgz",
+      "integrity": "sha512-fDlsI/kFEx7gLvbecc0/ohLG50fugQp8ryHzMTuW9vSa1GJ0XYWKnhsUx7oie3G98+r56aTQIUB4kht42R3JvA=="
     }
   }
 }

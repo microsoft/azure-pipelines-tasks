@@ -21,7 +21,7 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 212,
+        "Minor": 231,
         "Patch": 0
     },
     "minimumAgentVersion": "1.91.0",
@@ -64,7 +64,7 @@
         "Node16": {
             "target": "cmaketask.js",
             "argumentFormat": ""
-          }
+        }
     },
     "messages": {
         "CMakeReturnCode": "CMake exited with return code: %d",

@@ -85,9 +85,12 @@ Tasks/AzureRmWebAppDeploymentV3/   @vsebesta   @rvairavelu   @pipeline-environme
 
 Tasks/AzureRmWebAppDeploymentV4/   @vsebesta   @rvairavelu   @pipeline-environment-team
 
-Tasks/AzureSpringCloudV0    @yevster
+# DRI rotation: Azure Spring Apps/AzDMSS-Support
+Tasks/AzureSpringCloudV0    @microsoft/azure-spring-apps @ruoyuwang @menxiao
 
 Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @mkarmark @joslinmicrosoft
+
+Tasks/AzureTestPlanV0/     @rasunkar  @microsoft\adoautotest
 
 Tasks/AzureWebAppV1/  @vsebesta @rvairavelu @pipeline-environment-team
 
@@ -312,6 +315,9 @@ Tasks/MysqlDeploymentOnMachineGroupV1/     @vsebesta   @rvairavelu   @pipeline-e
 Tasks/NodeTaskRunnerInstallerV0/    @microsoft/akvelon-build-task-team
 
 Tasks/NodeToolV0/ @microsoft/akvelon-build-task-team
+
+# DRI rotation: Azure Container Registry / Triage
+Tasks/NotationV0/ @Azure/azure-container-registry @JeyJeyGao @Two-Hearts @shizhMSFT
 
 Tasks/NpmV0/      @microsoft/azure-artifacts-packages
 

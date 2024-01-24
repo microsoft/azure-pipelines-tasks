@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 225,
+    "Minor": 232,
     "Patch": 0
   },
   "demands": [],
@@ -76,11 +76,19 @@
   "prejobexecution": {
     "Node10": {
       "target": "runprejob.js"
+    },
+    "Node16": {
+      "target": "runprejob.js",
+      "argumentFormat": ""
     }
   },
   "execution": {
     "Node10": {
       "target": "run.js"
+    },
+    "Node16": {
+      "target": "run.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

@@ -19,7 +19,13 @@ steps:
 - task: NodeTool@0
   displayName: Use node 10
   inputs:
-    versionSpec: 10.x
+    versionSpec: 10.24.1
+
+# Use .NET SDK 8
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK 8.x'
+  inputs:
+    version: 8.x
 
 # npm install
 - script: npm install
@@ -45,16 +51,30 @@ steps:
 # Filter out unchanged tasks
 - script: node ./ci/filter-tasks.js
   displayName: Filter out unchanged tasks
+  name: getTaskPattern
   env:
     PACKAGE_ENDPOINT: $(Package.Endpoint)
     PACKAGE_TOKEN: $(Package.Token)
 
-- script: node ./ci/check-downgrading.js --task "$(task_pattern)" --sprint $(currentSprint) --week $(currentSprintWeek)
+- script: node ./ci/before-build-check-tasks.js
+  displayName: Check that tasks has no duplicated libs
+  condition: |
+    and(
+      succeeded(),
+      eq(variables['build.reason'], 'PullRequest'),
+      ne(variables['numTasks'], 0)
+    )
+
+# Verify generated files across tasks are up-to-date
+- script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --all-tasks
+  displayName: Ensure BuildConfigGen outputs are consistent
+
+- script: node ./ci/check-downgrading.js --task "$(task_pattern_fordowngradingcheck)" --sprint $(currentSprint) --week $(currentSprintWeek)
   displayName: Check for downgrading tasks
   condition: |
       and(
         succeeded(),
-        ne(variables['numTasks'], 0),
+        ne(variables['numTasksForDowngradingCheck'], 0),
         ne(variables['COURTESY_PUSH'], 'true'),
         eq(variables['build.reason'], 'PullRequest'),
         eq(variables['System.PullRequest.TargetBranch'], 'master')
@@ -74,32 +94,42 @@ steps:
   displayName: Clean tasks
 
 # Build Tasks
-- script: node make.js serverBuild --task "$(task_pattern)"
+- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)"
   displayName: Build Tasks
   condition: and(succeeded(), ne(variables['numTasks'], 0))
 
-- script: node ./ci/check-tasks.js
+- script: node ./ci/after-build-check-tasks.js
   displayName: Check that tasks has no duplicated libs
-  condition: and(succeeded(), eq(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
+  condition: |
+    and(
+      succeeded(),
+      eq(variables['build.reason'], 'PullRequest'),
+      ne(variables['numTasks'], 0)
+    )
 
 # Check diff for task sources
-- script: node ./ci/verify-source-changes.js "$(task_pattern)"
+- script: node ./ci/verify-source-changes.js "$(getTaskPattern.task_pattern)"
   displayName: Verify task source changes
   condition: |
     and(
       succeeded(),
-      ne(variables['Build.SourceBranch'], 'refs/heads/master'),     
+      ne(variables['Build.SourceBranch'], 'refs/heads/master'),
       ne(variables['COURTESY_PUSH'], 'true'),
       ne(variables['numTasks'], 0)
     )
-  
+
 # Only on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
 
   # Stage tasks individually into the package directory
   - script: node ./ci/stage-package.js false individually
     displayName: Stage tasks individually into the package directory
-    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
+    condition: |
+      and(
+        succeeded(),
+        ne(variables['build.reason'], 'PullRequest'),
+        ne(variables['numTasks'], 0)
+      )
 
   # Sign all task zips as nuget packages
   - template: sign-all-tasks.yml
@@ -109,12 +139,22 @@ steps:
   # Stage all the tasks into a single zip for upload
   - script: node ./ci/stage-package.js false
     displayName: Stage all the tasks into a single zip for upload
-    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
+    condition: |
+      and(
+        succeeded(),
+        ne(variables['build.reason'], 'PullRequest'),
+        ne(variables['numTasks'], 0)
+      )
 
   # Publish artifact
   - task: PublishBuildArtifacts@1
     displayName: Publish package artifact
-    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables['numTasks'], 0))
+    condition: |
+      and(
+        succeeded(),
+        ne(variables['build.reason'], 'PullRequest'),
+        ne(variables['numTasks'], 0)
+      )
     inputs:
       pathToPublish: _package/tasks.zip
       artifactName: package
@@ -124,7 +164,7 @@ steps:
 - script: node make.js test
   displayName: Run tests
   condition: and(succeeded(), ne(variables['numTasks'], 0))
-- script: node make.js testLegacy --task "$(task_pattern)"
+- script: node make.js testLegacy --task "$(getTaskPattern.task_pattern)"
   displayName: Legacy tests with node 6
   condition: and(succeeded(), ne(variables['numTasks'], 0))
 
@@ -141,7 +181,12 @@ steps:
   # Stop collect diagnostics
   - powershell: ./ci/stop-collect-diagnostics.ps1
     displayName: Stop collect diagnostics
-    condition: and(always(), eq(variables.collect_diagnostics, 'true'), ne(variables['numTasks'], 0))
+    condition: |
+      and(
+        always(),
+        eq(variables.collect_diagnostics, 'true'),
+        ne(variables['numTasks'], 0)
+      )
 
   - powershell: |
       # Build the release branch name

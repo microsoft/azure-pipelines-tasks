@@ -1,0 +1,122 @@
+{
+  "id": "6392F95F-7E76-4A18-B3C7-7F078D2F7700",
+  "name": "PythonScript",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/python-script",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 231,
+    "Patch": 0
+  },
+  "demands": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "scriptSource",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.scriptSource",
+      "required": true,
+      "defaultValue": "filePath",
+      "helpMarkDown": "ms-resource:loc.input.help.scriptSource",
+      "options": {
+        "filePath": "File path",
+        "inline": "Inline"
+      }
+    },
+    {
+      "name": "scriptPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.scriptPath",
+      "visibleRule": "scriptSource = filePath",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.scriptPath"
+    },
+    {
+      "name": "script",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.script",
+      "visibleRule": "scriptSource = inline",
+      "required": true,
+      "defaultValue": "",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.script"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    },
+    {
+      "name": "pythonInterpreter",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.pythonInterpreter",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pythonInterpreter",
+      "groupName": "advanced"
+    },
+    {
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingDirectory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
+      "groupName": "advanced"
+    },
+    {
+      "name": "failOnStderr",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStderr",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "NotAFile": "ms-resource:loc.messages.NotAFile",
+    "ParameterRequired": "ms-resource:loc.messages.ParameterRequired"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.231.0",
+    "Node20-225": "0.231.1"
+  }
+}

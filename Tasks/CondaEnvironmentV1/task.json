@@ -13,10 +13,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 224,
+    "Minor": 234,
     "Patch": 0
   },
   "deprecated": true,
+  "removalDate": "2024-01-31",
+  "deprecationMessage": "The CondaEnvironment@1 (Conda environment) task has been deprecated since February 13, 2019 and will soon be retired. Use the Conda CLI ('conda') directly from a bash/pwsh/script task.",
   "demands": [],
   "instanceNameFormat": "Conda environment $(environmentName)",
   "inputs": [
@@ -100,9 +102,5 @@
     "ParameterRequired": "The `%s` parameter is required",
     "PlatformNotRecognized": "Platform not recognized",
     "PrependPath": "Prepending PATH environment variable with directory: %s"
-  },
-  "_buildConfigMapping": {
-    "Default": "1.222.1",
-    "Node16-219": "1.222.0"
   }
 }

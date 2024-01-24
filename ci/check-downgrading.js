@@ -5,15 +5,18 @@ const {
 } = require('fs');
 const { mkdir, rm } = require('shelljs');
 const { platform } = require('os');
-const { run, resolveTaskList } = require('./ci-util');
+const { run, resolveTaskList, logToPipeline } = require('./ci-util');
 const { eq, inc, parse, lte, neq } = require('semver');
 
 const taskVersionBumpingDocUrl = "https://aka.ms/azp-tasks-version-bumping";
 
 const packageEndpoint = process.env['PACKAGE_VERSIONS_ENDPOINT'];
 
+// An example:
+// PACKAGE_TOKEN={token} PACKAGE_VERSIONS_ENDPOINT={package_versions_endpoint} SYSTEM_PULLREQUEST_SOURCEBRANCH=refs/head/{local_branch_name} SYSTEM_PULLREQUEST_TARGETBRANCH={target_branch_eg_master} node ./ci/check-downgrading.js --task "@({tasks_names})" --sprint {current_sprint_number}
+
 if (!packageEndpoint) {
-  console.log('##vso[task.logissue type=error]Failed to get info from package endpoint because no endpoint was specified. Try setting the PACKAGE_VERSIONS_ENDPOINT environment variable.');
+  logToPipeline('error', 'Failed to get info from package endpoint because no endpoint was specified. Try setting the PACKAGE_VERSIONS_ENDPOINT environment variable.')
   process.exit(1);
 }
 
@@ -66,7 +69,7 @@ function checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyW
   return messages;
 }
 
-function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExist, isCourtesyWeek) {
+function compareLocalToMaster(localTasks, masterTasks, sprint) {
   const messages = [];
 
   for (const localTask of localTasks) {
@@ -82,7 +85,7 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
 
       messages.push({
         type: 'error',
-        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${destinationVersion.format()} at least (${taskVersionBumpingDocUrl})`
+        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${destinationVersion.format()} at least since local minor version is less than the sprint version(${taskVersionBumpingDocUrl})`
       });
       continue;
     }
@@ -90,7 +93,23 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
     if (localTask.version.minor === sprint && eq(localTask.version, masterTask.version)) {
       messages.push({
         type: 'error',
-        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${inc(masterTask.version, 'patch')} at least (${taskVersionBumpingDocUrl})`
+        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${inc(masterTask.version, 'patch')} at least since local version is equal to the master version (${taskVersionBumpingDocUrl})`
+      });
+      continue;
+    }
+  }
+
+  return messages;
+}
+
+function checkLocalVersions(localTasks, sprint, isReleaseTagExist, isCourtesyWeek) {
+  const messages = [];
+
+  for (const localTask of localTasks) {
+    if (localTask.version.minor < sprint) {
+      messages.push({
+        type: 'error',
+        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.minor} to v${sprint} at least since local minor version is less than the sprint version(${taskVersionBumpingDocUrl})`
       });
       continue;
     }
@@ -115,12 +134,12 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
   return messages;
 }
 
-function getTasksVersions(tasks, basepath) {
+function readVersionsFromTaskJsons(tasks, basepath) {
   return tasks.map(x => {
     const taskJSONPath = join(basepath, 'Tasks' , x, 'task.json');
 
     if (!existsSync(taskJSONPath)) {
-      console.log(`##vso[task.logissue type=error]Task.json of ${x} does not exist by path ${taskJSONPath}`);
+      logToPipeline('error', `Task.json of ${x} does not exist by path ${taskJSONPath}`);
       process.exit(1);
     }
 
@@ -142,16 +161,16 @@ async function clientWrapper(url) {
   try {
     return await client.get(url);
   } catch (error) {
-    console.log(`##vso[task.logissue type=error]Cannot access to ${url} due to error ${error}`);
+    logToPipeline('error', `Cannot access to ${url} due to error ${error}`);
     process.exit(1);
   }
 }
 
-async function getFeedTasksVersions() {
+async function getTaskVersionsFromFeed() {
   const { result, statusCode } = await clientWrapper(packageEndpoint);
 
   if (statusCode !== 200) {
-    console.log(`##vso[task.logissue type=error]Failed while fetching feed versions.\nStatus code: ${statusCode}\nResult: ${result}`);
+    logToPipeline('error', `Failed while fetching feed versions.\nStatus code: ${statusCode}\nResult: ${result}`);
     process.exit(1);
   }
 
@@ -165,7 +184,7 @@ async function getFeedTasksVersions() {
     }));
 }
 
-function compareLocalWithFeed(localTasks, feedTasks, sprint) {
+function compareLocalToFeed(localTasks, feedTasks, sprint) {
   const messages = [];
 
   for (const localTask of localTasks) {
@@ -203,7 +222,7 @@ function compareLocalTaskLoc(localTasks) {
     const taskLocJSONPath = join(__dirname, '..', 'Tasks' , localTask.name, 'task.loc.json');
 
     if (!existsSync(taskLocJSONPath)) {
-      console.log(`##vso[task.logissue type=error]Task.json of ${localTask.name} does not exist by path ${taskLocJSONPath}`);
+      logToPipeline('error', `Task.json of ${localTask.name} does not exist by path ${taskLocJSONPath}`);
       process.exit(1);
     }
 
@@ -221,26 +240,40 @@ function compareLocalTaskLoc(localTasks) {
   return messages;
 }
 
-function getChangedTaskJsonFromMaster(names) {
+function loadTaskJsonsFromMaster(names) {
   names.forEach(x => {
     mkdir('-p', join(tempMasterTasksPath, 'Tasks', x));
     run(`git show origin/master:Tasks/${x}/task.json > ${tempMasterTasksPath.split(sep).join(posix.sep)}/Tasks/${x}/task.json`);
   });
 }
 
+function doesTaskExistInMasterBranch(name) {
+  try {
+    // If task.json doesn't exist in the main branch it means that it's a new task
+    run(`git cat-file -e origin/master:Tasks/${name}/task.json`, true);
+  } catch (error) {
+    return false;
+  }
+
+  return true;
+}
+
 async function main({ task, sprint, week }) {
-  const changedTasksNames = resolveTaskList(task);
-  const localTasks = getTasksVersions(changedTasksNames, join(__dirname, '..'));
-  getChangedTaskJsonFromMaster(changedTasksNames);
-  const masterTasks = getTasksVersions(changedTasksNames, tempMasterTasksPath);
-  const feedTasks = await getFeedTasksVersions();
+  const taskList = resolveTaskList(task);
+
+  const localTasks = readVersionsFromTaskJsons(taskList, join(__dirname, '..'));
+  const masterTaskList = taskList.filter(x => doesTaskExistInMasterBranch(x));
+  loadTaskJsonsFromMaster(masterTaskList);
+  const masterTasks = readVersionsFromTaskJsons(masterTaskList, tempMasterTasksPath);
+  const feedTaskVersions = await getTaskVersionsFromFeed();
   const isReleaseTagExist = run(`git tag -l v${sprint}`).length !== 0;
   const isCourtesyWeek = week === 3;
 
   const messages = [
     ...checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyWeek),
-    ...compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExist, isCourtesyWeek),
-    ...compareLocalWithFeed(localTasks, feedTasks, sprint),
+    ...compareLocalToMaster(localTasks, masterTasks, sprint),
+    ...checkLocalVersions(localTasks, sprint, isReleaseTagExist, isCourtesyWeek),
+    ...compareLocalToFeed(localTasks, feedTaskVersions, sprint),
     ...compareLocalTaskLoc(localTasks)
   ];
 
@@ -248,7 +281,7 @@ async function main({ task, sprint, week }) {
     console.warn(`\nProblems with ${messages.length} task(s) should be resolved:\n`);
 
     for (const message of messages) {
-      console.log(`##vso[task.logissue type=${message.type}]${message.payload}`);
+      logToPipeline(message.type, message.payload);
     }
 
     console.log('\nor you might have an outdated branch, try to merge/rebase your branch from master');
@@ -260,4 +293,8 @@ async function main({ task, sprint, week }) {
   }
 }
 
-main(argv);
+main(argv)
+  .catch(error => {
+    console.error(error);
+    process.exit(1);
+  });

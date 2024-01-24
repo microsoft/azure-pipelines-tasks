@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 226,
-    "Patch": 1
+    "Minor": 234,
+    "Patch": 0
   },
   "demands": [
     "azureps"
@@ -236,6 +236,15 @@
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "prejobexecution": {
+    "Node10": {
+      "target": "PreJobExecutionAzureFileCopy.js"
+    },
+    "Node16": {
+      "target": "PreJobExecutionAzureFileCopy.js",
+      "argumentFormat": ""
+    }
+  },
   "execution": {
     "PowerShell3": {
       "target": "AzureFileCopy.ps1"

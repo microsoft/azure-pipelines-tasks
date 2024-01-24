@@ -9,6 +9,8 @@ $invalidInputStorageAccount = "invalidInputStorageAccount"
 $exceptionMessage = "Exception thrown"
 
 Register-Mock Write-Telemetry { }
+Register-Mock Get-SanitizerCallStatus { return $false }
+Register-Mock Get-SanitizerActivateStatus { return $false }
 
 # Test 1 "Should throw if destination blob is invalid"
 Register-Mock Copy-FilesToAzureBlob { throw $exceptionMessage } -ParametersEvaluator {$StorageAccountName -eq $invalidInputStorageAccount}

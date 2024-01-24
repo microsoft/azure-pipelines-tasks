@@ -10,7 +10,7 @@
   "helpMarkDown": "",
   "version": {
     "Major": 0,
-    "Minor": 222,
+    "Minor": 232,
     "Patch": 2
   },
   "runsOn": [
@@ -19,6 +19,7 @@
   ],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
+  "removalDate": "2024-01-31",
   "groups": [],
   "instanceNameFormat": "NuGet $(command)",
   "inputs": [
@@ -41,6 +42,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "nuget.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "nuget.js",
       "argumentFormat": ""
     }
