@@ -16,7 +16,7 @@
   "version": {
     "Major": 2,
     "Minor": 234,
-    "Patch": 2
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -67,6 +67,6 @@
   },
   "_buildConfigMapping": {
     "Default": "2.234.1",
-    "Node20_229_4": "2.234.2"
+    "Node20_229_4": "2.234.0"
   }
 }
