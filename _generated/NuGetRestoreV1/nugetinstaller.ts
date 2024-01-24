@@ -240,7 +240,7 @@ async function main(): Promise<void> {
             
         isNugetOrgBehaviorWarn 
         ? tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("Warning_IncludeNuGetOrgEnabled"))
-        : tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesInstalledSuccessfully"));
+        : tl.setResult(tl.TaskResult.SucceededWithIssues, tl.loc("DeprecatedTask"));
         
 
     } catch (err) {

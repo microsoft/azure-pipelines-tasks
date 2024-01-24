@@ -9,7 +9,7 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 0,
-    "Minor": 233,
+    "Minor": 234,
     "Patch": 1
   },
   "demands": [],
@@ -120,7 +120,7 @@
     "DeprecatedTask": "This task is deprecated. Please switch to using DownloadPackage@1 https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/download-package-v1"
   },
   "_buildConfigMapping": {
-    "Default": "0.233.0",
-    "Node20_229_1": "0.233.1"
+    "Default": "0.234.0",
+    "Node20_229_1": "0.234.1"
   }
 }
