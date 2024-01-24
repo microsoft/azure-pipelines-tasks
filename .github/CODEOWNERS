@@ -92,7 +92,7 @@ Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @mkarmark @joslinmi
 
 Tasks/AzureWebAppV1/   @rvairavelu @microsoft/pipeline-environment-team
 
-Tasks/AzureWebAppContainerV1/   @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzureWebAppContainerV1/   @rvairavelu   @microsoft/pipeline-environment-team
 
 Tasks/AzureVmssDeploymentV0/       @bishal-pdmsft
 
