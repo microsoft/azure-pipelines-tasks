@@ -22,9 +22,9 @@ async function run() {
             } else {
                 taskLib.warning(taskLib.loc('NoCodeCoverage'));
             }
+        } else {
+            await coveragePublisher.PublishCodeCoverage(resolvedSummaryFiles, pathToSources);
         }
-
-        await coveragePublisher.PublishCodeCoverage(resolvedSummaryFiles, pathToSources);
 
     } catch (err) {
         taskLib.setResult(taskLib.TaskResult.Failed, err);
