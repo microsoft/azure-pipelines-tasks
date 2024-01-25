@@ -61,7 +61,7 @@
       "name": "version",
       "type": "string",
       "label": "Version",
-      "defaultValue": "1.0.1",
+      "defaultValue": "1.1.0",
       "required": true,
       "helpMarkDown": "The version of Notation to install. Example: 1.0.0, 1, 1.0, 1.0.0",
       "visibleRule": "command = install && isCustomVersion = false",
