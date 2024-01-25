@@ -4,6 +4,7 @@
   "loc.description": "Distribute app builds to testers and users via Visual Studio App Center",
   "loc.instanceNameFormat": "Deploy $(app) to Visual Studio App Center",
   "loc.releaseNotes": "Fix bug where feature branches were being truncated.",
+  "loc.deprecationMessage": "The AppCenterDistribute@1 (App Center distribute) task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead.",
   "loc.group.displayName.symbols": "Symbols",
   "loc.input.label.serverEndpoint": "App Center service connection",
   "loc.input.help.serverEndpoint": "Select the service connection for Visual Studio App Center. To create one, click the Manage link and create a new service connection.",
