@@ -98,11 +98,19 @@ export class VersionInstaller {
         }
 
         var isInstalled: boolean = false;
-        if (this.packageType == utils.Constants.sdk) {
-            isInstalled = tl.exist(path.join(this.installationPath, utils.Constants.relativeSdkPath, version)) && tl.exist(path.join(this.installationPath, utils.Constants.relativeSdkPath, `${version}.complete`));
-        }
-        else {
-            isInstalled = tl.exist(path.join(this.installationPath, utils.Constants.relativeRuntimePath, version)) && tl.exist(path.join(this.installationPath, utils.Constants.relativeRuntimePath, `${version}.complete`));
+
+        const folderPath = path.join(this.installationPath, this.packageType == utils.Constants.sdk ? utils.Constants.relativeSdkPath : utils.Constants.relativeRuntimePath);
+        const versionFolderPath = path.join(folderPath, version);
+        
+        //this file is created by this task
+        const fileToCheck = path.join(folderPath, `${version}.complete`); 
+        
+        //this file should be present if SDK/runtime is installed on hosted agent
+        const alternativeFileToCheck = path.join(versionFolderPath, this.packageType == utils.Constants.sdk ? '.version' : 'LICENSE.txt'); 
+
+        if (tl.exist(versionFolderPath)) {
+            isInstalled = tl.exist(fileToCheck)
+                || tl.exist(alternativeFileToCheck); //workaround for hosted build agent where SDK is preinstalled but missing `${version}.complete`
         }
 
         isInstalled ? console.log(tl.loc("VersionFoundInCache", version)) : console.log(tl.loc("VersionNotFoundInCache", version));
