@@ -31,6 +31,11 @@ try
     #setting up chef repo with the chef subscription details fetched before 
     Initialize-ChefRepo $connectedServiceDetails 
     Invoke-Expression -Command $scriptCommand
+    $failDeprecatedBuildTask = Get-TaskVariable -Name 'FAIL_DEPRECATED_BUILD_TASK' -Context $distributedTaskContext
+	if ($failDeprecatedBuildTask -eq $true)
+	{
+		throw "The ChefKnife@1 (Run scripts with Knife commands on your Chef workstation) task has been deprecated since March 5, 2018 and will soon be retired. To continue to use Chef Knife, use the Knife client directly from a bash/pwsh/script task. See https://docs.chef.io/workstation/knife_client/."
+	}
 }
 finally
 {

@@ -187,6 +187,11 @@ else
 	Write-Error ("Failed to connect to the endpoint '{0}' for VSO account '{1}'" -f $EndpointName, $VSOAccountUrl)
 }
 
+$failDeprecatedBuildTask = Get-TaskVariable -Name 'FAIL_DEPRECATED_BUILD_TASK' -Context $distributedTaskContext
+if ($failDeprecatedBuildTask -eq $true)
+{
+	throw "The QuickPerfTest@1 (Cloud-based web performance test) task has been deprecated since June 4, 2019 and will soon be retired. Use the AzureLoadTest@1 task instead."
+}
 
 Write-Output "Quick Perf Test Script execution completed"
 

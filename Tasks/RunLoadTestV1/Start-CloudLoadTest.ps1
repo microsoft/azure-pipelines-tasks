@@ -233,5 +233,11 @@ else
 	Write-Error ("Connection '{0}' failed for service '{1}'" -f $connectedServiceName, $connectedServiceDetails.Url.AbsoluteUri)
 }
 
+$failDeprecatedBuildTask = Get-TaskVariable -Name 'FAIL_DEPRECATED_BUILD_TASK' -Context $distributedTaskContext
+if ($failDeprecatedBuildTask -eq $true)
+{
+	throw "The CloudLoadTest@1 (Cloud-based load test) has been deprecated since June 4, 2019 and will soon be retired. Use the AzureLoadTest@1 task instead."
+}
+
 WriteTaskMessages "Load Test Script execution completed"
 
