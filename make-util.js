@@ -747,6 +747,10 @@ var createResjson = function (task, taskPath) {
         resources['loc.releaseNotes'] = task.releaseNotes;
     }
 
+    if (task.hasOwnProperty('deprecationMessage')) {
+        resources['loc.deprecationMessage'] = task.deprecationMessage;
+    }
+
     if (task.hasOwnProperty('groups')) {
         task.groups.forEach(function (group) {
             if (group.hasOwnProperty('name')) {

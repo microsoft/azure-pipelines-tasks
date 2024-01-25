@@ -558,6 +558,12 @@ async function run() {
             await commitSymbols(effectiveApiServer, effectiveApiVersion, appSlug, symbolsUploadInfo.symbol_upload_id, apiToken, userAgent);
         }
 
+        let shouldFail = tl.getVariable('FAIL_DEPRECATED_BUILD_TASK');
+
+	    if (shouldFail != null && shouldFail.toLowerCase() === 'true') {
+	        throw new Error(tl.loc("deprecationMessage"));
+	    }
+
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("Succeeded"));
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, `${err}`);
