@@ -14,6 +14,12 @@ steps:
 - powershell: ./ci/start-collect-diagnostics.ps1
   displayName: Start collect diagnostics
 
+# Use .NET SDK 8
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK 8.x'
+  inputs:
+    version: 8.x
+
 # Use node 10, npm 6
 - task: NodeTool@0
   displayName: Use node 10
@@ -38,13 +44,6 @@ steps:
     $taskPattern =  "@(" + ($tasks.split(',').trim() -join ('|')) + ")"
     Write-Host "##vso[task.setVariable variable=task_pattern]$taskPattern"
   displayName: Set task_pattern
-
-
-# Use .NET SDK 7
-- task: UseDotNet@2
-  displayName: 'Install .NET Core SDK 7.x'
-  inputs:
-    version: 7.x
 
 # Clean
 - script: node make.js clean
@@ -141,7 +140,7 @@ steps:
       publishLocation: container
 
   # Authenticate 
-  - task: NuGetAuthenticate@0
+  - task: NuGetAuthenticate@1
     displayName: Authenticate with nuget
 
   # Push to feed

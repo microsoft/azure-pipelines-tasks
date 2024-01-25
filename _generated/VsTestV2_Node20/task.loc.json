@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 230,
-    "Patch": 0
+    "Minor": 234,
+    "Patch": 1
   },
   "demands": [
     "vstest"
@@ -553,7 +553,7 @@
     "Node16": {
       "target": "runvstest.js"
     },
-    "Node20": {
+    "Node20_1": {
       "target": "runvstest.js",
       "argumentFormat": ""
     }
@@ -662,7 +662,7 @@
     "minimumExpectedTests": "ms-resource:loc.messages.minimumExpectedTests"
   },
   "_buildConfigMapping": {
-    "Default": "2.229.0",
-    "Node20_229_4": "2.230.0"
+    "Default": "2.234.0",
+    "Node20_229_4": "2.234.1"
   }
 }
