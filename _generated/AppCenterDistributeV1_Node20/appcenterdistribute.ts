@@ -445,6 +445,12 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
+        let shouldFail = tl.getVariable('FAIL_DEPRECATED_BUILD_TASK');
+
+	    if (shouldFail != null && shouldFail.toLowerCase() === 'true') {
+	        throw new Error(tl.loc("DeprecatedTask"));
+	    }
+
         // Get build inputs
         let apiEndpointData = getEndpointDetails('serverEndpoint');
         let apiToken: string = apiEndpointData.authToken;
