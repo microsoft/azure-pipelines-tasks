@@ -78,9 +78,9 @@ export class Utility {
 
     public static throwIfError(resultOfToolExecution: IExecSyncResult, errormsg?: string): void {
         if (resultOfToolExecution.code != 0) {
-            tl.error("Error Code: [" + resultOfToolExecution.code + "]");
+            tl.error("Error Code: [" + resultOfToolExecution.code + "]", tl.IssueSource.TaskInternal);
             if (errormsg) {
-                tl.error("Error: " + errormsg);
+                tl.error("Error: " + errormsg, tl.IssueSource.TaskInternal);
             }
             throw resultOfToolExecution;
         }
