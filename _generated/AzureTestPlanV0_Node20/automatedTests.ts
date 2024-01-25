@@ -10,9 +10,8 @@ export async function automatedTestsFlow(testPlanInfo: TestPlanData, testSelecto
 
     console.log(tl.loc('automatedTestsTriggered'));
 
-    tl.debug("Invoking test execution for tests: " + listOfTestsToBeExecuted);
-
     if (listOfTestsToBeExecuted !== null && listOfTestsToBeExecuted !== undefined && listOfTestsToBeExecuted.length > 0) {
+        tl.debug("Invoking test execution for tests: " + listOfTestsToBeExecuted);
         testInvoker(listOfTestsToBeExecuted);
     }
     else {

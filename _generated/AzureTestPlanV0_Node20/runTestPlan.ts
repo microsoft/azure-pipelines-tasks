@@ -12,10 +12,10 @@ export async function run() {
 
     // trigger manual, automated or both tests based on user's input
     if (testSelectorInput.includes('manualTests')) {
-        manualTestsFlow(testPlanInfo);
+        await manualTestsFlow(testPlanInfo);
     }
     if (testSelectorInput.includes('automatedTests')) {
-        automatedTestsFlow(testPlanInfo, testSelectorInput);
+        await automatedTestsFlow(testPlanInfo, testSelectorInput);
     }
 }
 

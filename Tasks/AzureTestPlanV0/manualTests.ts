@@ -1,21 +1,13 @@
 import tl = require('azure-pipelines-task-lib/task');
-import apim = require('azure-devops-node-api');
-import { TestPoint } from 'azure-devops-node-api/interfaces/TestPlanInterfaces';
-import { PagedList } from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
-import TestPlanInterfaces = require('azure-devops-node-api/interfaces/TestPlanInterfaces');
-import VSSInterfaces = require('azure-devops-node-api/interfaces/common/VSSInterfaces');
-import constants = require('./constants');
-import { getTestPlanDataPoints, TestPlanData } from './testPlanData';
+import { TestPlanData, createManualTestRun, ManualTestRunData } from './testPlanData';
 
-export function manualTestsFlow(testPlanInfo: TestPlanData) {
+export async function manualTestsFlow(testPlanInfo: TestPlanData) {
 
-    console.log("To do:");
-    console.log("Manual trigger flow to be implemented");
+    let manualTestRun: ManualTestRunData = { testRunId: 0, runUrl: "" };
 
-    //await getTestPoints(testPlan, testSuites, testPlanConfigId);
+    manualTestRun = await createManualTestRun(testPlanInfo);
 
-    console.log('Hii: ');
+    console.log('Test run id created: ', manualTestRun.testRunId);
+    console.log('Test run url: ', manualTestRun.runUrl);
 
 }
-
-
