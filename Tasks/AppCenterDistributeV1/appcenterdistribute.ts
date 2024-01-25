@@ -445,12 +445,6 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        let shouldFail = tl.getVariable('FAIL_DEPRECATED_BUILD_TASK');
-
-	    if (shouldFail != null && shouldFail.toLowerCase() === 'true') {
-	        throw new Error(tl.loc("DeprecatedTask"));
-	    }
-
         // Get build inputs
         let apiEndpointData = getEndpointDetails('serverEndpoint');
         let apiToken: string = apiEndpointData.authToken;
@@ -563,6 +557,12 @@ async function run() {
             // Commit the symbols upload
             await commitSymbols(effectiveApiServer, effectiveApiVersion, appSlug, symbolsUploadInfo.symbol_upload_id, apiToken, userAgent);
         }
+
+        let shouldFail = tl.getVariable('FAIL_DEPRECATED_BUILD_TASK');
+
+	    if (shouldFail != null && shouldFail.toLowerCase() === 'true') {
+	        throw new Error(tl.loc("DeprecatedTask"));
+	    }
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("Succeeded"));
     } catch (err) {
