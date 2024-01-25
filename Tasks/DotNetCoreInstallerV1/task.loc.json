@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 234,
-    "Patch": 2
+    "Patch": 3
   },
   "deprecated": true,
   "removalDate": "2024-01-31",
@@ -87,6 +87,10 @@
     },
     "Node16": {
       "target": "dotnetcoreinstaller.js"
+    },
+    "Node20_1": {
+      "target": "dotnetcoreinstaller.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -153,6 +157,11 @@
     "FilesDataIsIncorrectInVersion": "ms-resource:loc.messages.FilesDataIsIncorrectInVersion",
     "VersionFilesDataIncorrect": "ms-resource:loc.messages.VersionFilesDataIncorrect",
     "VersionInformationNotComplete": "ms-resource:loc.messages.VersionInformationNotComplete",
-    "FailedWhileExtractingPacakge": "ms-resource:loc.messages.FailedWhileExtractingPacakge"
+    "FailedWhileExtractingPacakge": "ms-resource:loc.messages.FailedWhileExtractingPacakge",
+    "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.234.2",
+    "Node20_229_3": "1.234.3"
   }
 }

@@ -101,6 +101,11 @@
     "ReactivateExistingEnvironment": "ms-resource:loc.messages.ReactivateExistingEnvironment",
     "ParameterRequired": "ms-resource:loc.messages.ParameterRequired",
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized",
-    "PrependPath": "ms-resource:loc.messages.PrependPath"
+    "PrependPath": "ms-resource:loc.messages.PrependPath",
+    "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.234.2",
+    "Node20-225": "1.234.3"
   }
 }
