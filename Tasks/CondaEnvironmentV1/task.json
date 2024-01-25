@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 234,
-    "Patch": 0
+    "Patch": 2
   },
   "deprecated": true,
   "removalDate": "2024-01-31",
@@ -101,6 +101,7 @@
     "ReactivateExistingEnvironment": "Found existing environment %s and the task's \"Clean environment\" parameter is not set. Reactivating ...",
     "ParameterRequired": "The `%s` parameter is required",
     "PlatformNotRecognized": "Platform not recognized",
-    "PrependPath": "Prepending PATH environment variable with directory: %s"
+    "PrependPath": "Prepending PATH environment variable with directory: %s",
+    "DeprecatedTask": "The CondaEnvironment@1 (Conda environment) task has been deprecated since February 13, 2019 and will soon be retired. Use the Conda CLI ('conda') directly from a bash/pwsh/script task."
   }
 }
