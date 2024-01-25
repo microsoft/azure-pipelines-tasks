@@ -87,10 +87,6 @@
     },
     "Node16": {
       "target": "dotnetcoreinstaller.js"
-    },
-    "Node20_1": {
-      "target": "dotnetcoreinstaller.js",
-      "argumentFormat": ""
     }
   },
   "messages": {
@@ -159,9 +155,5 @@
     "VersionInformationNotComplete": "ms-resource:loc.messages.VersionInformationNotComplete",
     "FailedWhileExtractingPacakge": "ms-resource:loc.messages.FailedWhileExtractingPacakge",
     "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
-  },
-  "_buildConfigMapping": {
-    "Default": "1.234.2",
-    "Node20_229_3": "1.234.3"
   }
 }
