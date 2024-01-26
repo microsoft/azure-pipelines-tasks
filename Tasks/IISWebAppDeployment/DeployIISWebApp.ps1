@@ -154,4 +154,12 @@ if(-not [string]::IsNullOrEmpty($errorMessage))
     throw "$errorMessage $helpMessage"
 }
 
+$featureFlags = @{
+    failDeprecatedBuildTask  = [System.Convert]::ToBoolean($env:FAIL_DEPRECATED_BUILD_TASK)
+}
+if ($featureFlags.failDeprecatedBuildTask)
+{
+	throw "The IISWebAppDeployment@1 (IIS Web App deployment) task has been deprecated since October 5, 2018 and will soon be retired. Use the 'IIS Web App Deployment Using WinRM' extension instead: https://marketplace.visualstudio.com/items?itemName=ms-vscs-rm.iiswebapp."
+}
+
 Write-Output ( Get-LocalizedString -Key "Successfully deployed IIS Web Deploy Package : {0}" -ArgumentList $webDeployPackage)
