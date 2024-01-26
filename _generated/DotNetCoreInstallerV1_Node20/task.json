@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 234,
-    "Patch": 3
+    "Minor": 235,
+    "Patch": 1
   },
   "deprecated": true,
   "removalDate": "2024-01-31",
@@ -161,7 +161,7 @@
     "DeprecatedTask": "The DotNetCoreInstaller@1 (.NET Core SDK/runtime installer) task has been deprecated since August 22, 2019 and will soon be retired. Use the UseDotNet@2 task instead."
   },
   "_buildConfigMapping": {
-    "Default": "1.234.2",
-    "Node20_229_3": "1.234.3"
+    "Default": "1.235.0",
+    "Node20_229_3": "1.235.1"
   }
 }
