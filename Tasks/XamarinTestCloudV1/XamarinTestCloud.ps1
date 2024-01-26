@@ -193,4 +193,9 @@ if($testCloudResults)
     Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Xamarin Test Cloud Results;]$mdReportFile"
 }
 
+$failDeprecatedBuildTask = Get-TaskVariable -Name 'FAIL_DEPRECATED_BUILD_TASK' -Context $distributedTaskContext
+if ($failDeprecatedBuildTask -eq $true)
+{
+	throw "The XamarinTestCloud@1 (Xamarin Test Cloud) task has been deprecated since January 11, 2018 and will soon be retired. Use the AppCenterDistribute@3 task instead."
+}
 Write-Verbose "Leaving script XamarinTestCloud.ps1"

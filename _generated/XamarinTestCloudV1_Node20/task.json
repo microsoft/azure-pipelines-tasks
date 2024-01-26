@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 234,
-    "Patch": 3
+    "Patch": 5
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",
@@ -201,8 +201,11 @@
       "argumentFormat": ""
     }
   },
+  "messages": {
+    "DeprecatedTask": "The XamarinTestCloud@1 (Xamarin Test Cloud) task has been deprecated since January 11, 2018 and will soon be retired. Use the AppCenterDistribute@3 task instead."
+  },
   "_buildConfigMapping": {
-    "Default": "1.234.2",
-    "Node20-228": "1.234.3"
+    "Default": "1.234.4",
+    "Node20-228": "1.234.5"
   }
 }
