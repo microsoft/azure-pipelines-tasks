@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 234,
+    "Minor": 235,
     "Patch": 0
   },
   "demands": [],
@@ -336,7 +336,7 @@
     "IncompatibleAzureCLIVersionBicepParam": "Azure CLI version should be >= 2.47.0 to use .bicepparam file"
   },
   "_buildConfigMapping": {
-    "Default": "3.234.0",
-    "Node20_229_2": "3.234.1"
+    "Default": "3.235.0",
+    "Node20_229_2": "3.235.1"
   }
 }
