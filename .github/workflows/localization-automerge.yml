@@ -10,7 +10,8 @@ on:
 jobs:
   worker:
     runs-on: ubuntu-latest
-
+    permissions:
+      issues: write
     if: github.actor == 'csigs'
     steps:
       - uses: actions/github-script@v3
