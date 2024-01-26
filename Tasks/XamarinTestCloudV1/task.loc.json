@@ -199,9 +199,5 @@
   },
   "messages": {
     "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
-  },
-  "_buildConfigMapping": {
-    "Default": "1.234.4",
-    "Node20-228": "1.234.5"
   }
 }
