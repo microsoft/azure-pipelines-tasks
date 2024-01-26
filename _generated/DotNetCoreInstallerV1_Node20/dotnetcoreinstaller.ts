@@ -41,6 +41,12 @@ async function run() {
 
     // Set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
     tl.setVariable('DOTNET_ROOT', installationPath);
+
+    let shouldFail = tl.getVariable('FAIL_DEPRECATED_BUILD_TASK');
+
+	if (shouldFail != null && shouldFail.toLowerCase() === 'true') {
+	    throw new Error(tl.loc("DeprecatedTask"));
+	}
 }
 
 function addDotNetCoreToolPath() {
