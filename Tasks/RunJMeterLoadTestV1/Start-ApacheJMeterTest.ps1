@@ -184,8 +184,10 @@ else
 	("Connection '{0}' failed for service '{1}'" -f $connectedServiceName, $connectedServiceDetails.Url.AbsoluteUri) >> $summaryFile
 }
 
-$failDeprecatedBuildTask = Get-TaskVariable -Name 'FAIL_DEPRECATED_BUILD_TASK' -Context $distributedTaskContext
-if ($failDeprecatedBuildTask -eq $true)
+$featureFlags = @{
+	failDeprecatedBuildTask  = [System.Convert]::ToBoolean($env:FAIL_DEPRECATED_BUILD_TASK)
+}
+if ($featureFlags.failDeprecatedBuildTask)
 {
 	throw "The ApacheJMeterLoadTest@1 (Cloud-based Apache JMeter load test) task haas been deprecated since June 4, 2019 and will soon be retired. For cloud-based load testing, use the AzureLoadTest@1 task."
 }
