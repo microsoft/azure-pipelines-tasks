@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 234,
-    "Patch": 3
+    "Minor": 235,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",
@@ -201,8 +201,11 @@
       "argumentFormat": ""
     }
   },
+  "messages": {
+    "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
+  },
   "_buildConfigMapping": {
-    "Default": "1.234.2",
-    "Node20-228": "1.234.3"
+    "Default": "1.235.0",
+    "Node20-228": "1.235.1"
   }
 }
