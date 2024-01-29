@@ -39,5 +39,6 @@
   "loc.messages.CannotFindAnyFile": "Cannot find any file based on %s.",
   "loc.messages.FoundMultipleFiles": "Found multiple files matching %s.",
   "loc.messages.FailedToCreateFile": "Failed to create %s with error: %s.",
-  "loc.messages.FailedToFindFile": "Failed to find %s at %s."
+  "loc.messages.FailedToFindFile": "Failed to find %s at %s.",
+  "loc.messages.DeprecatedTask": "The AppCenterDistribute@2 (App Center distribute)  task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead."
 }
