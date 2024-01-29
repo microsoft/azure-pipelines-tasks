@@ -15,8 +15,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 234,
-    "Patch": 1
+    "Minor": 235,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -62,7 +62,7 @@
     "NoCodeCoverage": "No code coverage results were found to publish."
   },
   "_buildConfigMapping": {
-    "Default": "2.234.1",
-    "Node20_229_4": "2.234.0"
+    "Default": "2.235.0",
+    "Node20_229_4": "2.235.1"
   }
 }
