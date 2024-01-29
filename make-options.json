@@ -45,6 +45,7 @@
         "AzureRmWebAppDeploymentV4",
         "AzureSpringCloudV0",
         "AzureStaticWebAppV0",
+        "AzureTestPlanV0",
         "AzureWebAppV1",
         "AzureWebAppContainerV1",
         "AzureVmssDeploymentV0",
@@ -221,6 +222,7 @@
     "Node20": [
         "AndroidSigningV2",
         "AndroidSigningV3",
+        "AzureTestPlanV0",
         "ANTV1",
         "ArchiveFilesV2",
         "BashV3",
