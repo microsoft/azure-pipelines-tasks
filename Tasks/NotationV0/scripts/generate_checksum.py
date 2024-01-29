@@ -24,7 +24,6 @@ def build_url(name, version, filename):
         "notation-azure-kv": lambda :f'https://github.com/Azure/notation-azure-kv/releases/download/v{version}/{filename}'
     }[name]()
 
-
 def process_checksum(filepath):
     verionInfo = {}
     with open(filepath, 'r') as f:
