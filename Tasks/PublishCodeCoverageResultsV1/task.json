@@ -2,8 +2,7 @@
   "id": "2A7EBC54-C13E-490E-81A5-D7561AB7CD97",
   "name": "PublishCodeCoverageResults",
   "friendlyName": "Publish code coverage results",
-  "deprecated": true,
-  "description": "[Deprecated] Publish Cobertura or JaCoCo code coverage results from a build",
+  "description": "[DEPRECATION WARNING. Users are recommended to switch to version 2.234.0.] Publish Cobertura or JaCoCo code coverage results from a build",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-code-coverage-results",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
   "category": "Test",
@@ -17,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 234,
+    "Minor": 235,
     "Patch": 0
   },
   "demands": [],
@@ -100,6 +99,7 @@
     "FailedToGenerateHtmlReport": "Failed to generate Html report. Error: %s",
     "IgnoringReportDirectory": "Ignoring coverage report directory with Html content as we are auto-generating Html content",
     "UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
-    "GeneratedHtmlReport": "Generated code coverage html report: %s"
+    "GeneratedHtmlReport": "Generated code coverage html report: %s",
+    "V1TaskDeprecationNotice": "Version 1.234.0 for Publish Code Coverage Results task will be deprecated in 2024. Users are strongly recommended to switch to version 2.234.0"
   }
 }

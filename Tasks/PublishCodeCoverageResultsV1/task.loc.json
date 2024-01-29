@@ -2,7 +2,6 @@
   "id": "2A7EBC54-C13E-490E-81A5-D7561AB7CD97",
   "name": "PublishCodeCoverageResults",
   "friendlyName": "ms-resource:loc.friendlyName",
-  "deprecated": true,
   "description": "ms-resource:loc.description",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-code-coverage-results",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -17,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 234,
+    "Minor": 235,
     "Patch": 0
   },
   "demands": [],
@@ -100,6 +99,7 @@
     "FailedToGenerateHtmlReport": "ms-resource:loc.messages.FailedToGenerateHtmlReport",
     "IgnoringReportDirectory": "ms-resource:loc.messages.IgnoringReportDirectory",
     "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage",
-    "GeneratedHtmlReport": "ms-resource:loc.messages.GeneratedHtmlReport"
+    "GeneratedHtmlReport": "ms-resource:loc.messages.GeneratedHtmlReport",
+    "V1TaskDeprecationNotice": "ms-resource:loc.messages.V1TaskDeprecationNotice"
   }
 }

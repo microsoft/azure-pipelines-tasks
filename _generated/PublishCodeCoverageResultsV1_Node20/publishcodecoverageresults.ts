@@ -7,9 +7,6 @@ import * as os from 'os';
 // Main entry point of this task.
 async function run() {
     try {
-        //Warning for V1 deprecation
-        tl.warning(tl.loc('Versin 1.234.0 for Publish Code Coverage Results task has been deprecated in Jan 2024. It will be browned out and removed soon. Users are recommended to switch to version 2.234.0'));
-        
         // Initialize localization
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -32,6 +29,9 @@ async function run() {
             autogenerateHtmlReport = false;
             tempFolder = resolvePathToSingleItem(workingDirectory, reportDirectory, true);
         }
+
+        //Warning for V1 deprecation
+        tl.warning(tl.loc('V1TaskDeprecationNotice'));
 
         // Resolve the summary file path.
         // It may contain wildcards allowing the path to change between builds, such as for:

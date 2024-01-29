@@ -183,6 +183,9 @@ export class JobQueue {
             if (s === tl.loc('succeeded')) {
                 color = 'green';
             }
+            if (s === tl.loc('Version 1.234.0 for Publish Code Coverage Results task will be deprecated in 2024. It will be browned out and removed in the coming months. Users are recommended to switch to version 2.234.0')) {
+                color = 'blue';
+            }
 
             return `<font color='${color}'>${s}</font>`;
         };
