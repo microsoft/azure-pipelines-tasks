@@ -1,7 +1,6 @@
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
-import { IssueSource } from 'azure-pipelines-task-lib/task';
 
 let taskPath = path.join(__dirname, '..', 'powershell.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -70,9 +69,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             }
         }
     },
-    'IssueSource': IssueSource,
 };
 tmr.setAnswers(a);
+tmr.registerMockExport('IssueSource', { TaskInternal: "TaskInternal", CustomerScript: "CustomerScript" });
 
 // Mock fs
 const fs = require('fs');

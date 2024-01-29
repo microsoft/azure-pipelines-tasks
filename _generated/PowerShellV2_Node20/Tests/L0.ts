@@ -78,7 +78,7 @@ describe('PowerShell Suite', function () {
 
         runValidations(() => {
             assert(tr.failed, 'Powershell should have failed');
-            assert(tr.stdout.indexOf('##vso[task.issue type=error;source=TaskInternal;]myErrorTest') > 0, tr.stdout);
+            assert(tr.stdout.indexOf('##vso[task.issue type=error;source=CustomerScript;]myErrorTest') > 0, 'Powershell should have correctly written myErrorTest');
             assert(tr.stdout.length > 1000, 'Powershell stderr output is not truncated');
         }, tr, done);
     });
