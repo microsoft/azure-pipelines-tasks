@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Editore PyPI",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?linkid=875289)",
+  "loc.description": "Consente di creare e caricare un pacchetto sdist o wheel in un indice compatibile con PyPI usando Twine",
+  "loc.instanceNameFormat": "Crea pacchetto e pubblica in PyPI",
+  "loc.input.label.serviceEndpoint": "Connessione al servizio PyPI",
+  "loc.input.help.serviceEndpoint": "Connessione al servizio generica per il collegamento all'indice dei pacchetti.",
+  "loc.input.label.wd": "Directory del pacchetto Python",
+  "loc.input.help.wd": "Directory del pacchetto Python da creare e pubblicare, in cui è presente setup.py.",
+  "loc.input.label.wheel": "Pubblica anche un pacchetto wheel",
+  "loc.input.help.wheel": "Consente di scegliere se creare e pubblicare un pacchetto wheel universale (indipendente dalla piattaforma) in aggiunta a un pacchetto sdist. [Altre informazioni](https://packaging.python.org/tutorials/distributing-packages/#wheels)."
+}

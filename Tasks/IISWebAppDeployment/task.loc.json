@@ -13,13 +13,14 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 232,
+    "Minor": 235,
     "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
   "deprecated": true,
   "removalDate": "2024-01-31",
+  "deprecationMessage": "The IISWebAppDeployment@1 (IIS Web App deployment) task has been deprecated since October 5, 2018 and will soon be retired. Use the 'IIS Web App Deployment Using WinRM' extension instead: https://marketplace.visualstudio.com/items?itemName=ms-vscs-rm.iiswebapp.",
   "groups": [
     {
       "name": "deployment",
