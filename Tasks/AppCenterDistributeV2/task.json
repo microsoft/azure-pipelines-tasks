@@ -8,6 +8,7 @@
     "category": "Deploy",
     "deprecated": true,
     "removalDate": "2024-01-31",
+    "deprecationMessage": "The AppCenterDistribute@2 (App Center distribute)  task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead.",
     "visibility": [
         "Build",
         "Release"
@@ -15,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 232,
-        "Patch": 2
+        "Minor": 235,
+        "Patch": 0
     },
     "minimumAgentVersion": "2.144.0",
     "releaseNotes": "Added support for multiple destinations.",
@@ -202,6 +203,7 @@
         "CannotFindAnyFile": "Cannot find any file based on %s.",
         "FoundMultipleFiles": "Found multiple files matching %s.",
         "FailedToCreateFile": "Failed to create %s with error: %s.",
-        "FailedToFindFile": "Failed to find %s at %s."
+        "FailedToFindFile": "Failed to find %s at %s.",
+        "DeprecatedTask": "The AppCenterDistribute@2 (App Center distribute)  task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead."
     }
 }
