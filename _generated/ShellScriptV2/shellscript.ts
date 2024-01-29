@@ -32,7 +32,7 @@ async function run() {
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('BashReturnCode', code));
     }
     catch(err) {
-        tl.error(err.message);
+        tl.error(err.message, tl.IssueSource.TaskInternal);
         tl.setResult(tl.TaskResult.Failed, tl.loc('BashFailed', err.message));
     }    
 }
