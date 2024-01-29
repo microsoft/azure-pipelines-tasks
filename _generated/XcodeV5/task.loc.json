@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 231,
-    "Patch": 4
+    "Minor": 235,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -412,7 +412,7 @@
     "UsingDefaultSimulator": "ms-resource:loc.messages.UsingDefaultSimulator"
   },
   "_buildConfigMapping": {
-    "Default": "5.231.4",
-    "Node20-225": "5.231.5"
+    "Default": "5.235.0",
+    "Node20-225": "5.235.1"
   }
 }
