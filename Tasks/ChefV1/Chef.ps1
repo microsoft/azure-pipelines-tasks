@@ -186,6 +186,14 @@ try
 	Invoke-Knife @("upload environments/$environment.json")
 
 	Wait-ForChefNodeRunsToComplete $environment $totalWaitTimeForRunsInMinutes $pollIntervalForRunsInSeconds
+
+	$featureFlags = @{
+        failDeprecatedBuildTask  = [System.Convert]::ToBoolean($env:FAIL_DEPRECATED_BUILD_TASK)
+    }
+	if ($featureFlags.failDeprecatedBuildTask)
+	{
+		throw "The Chef@1 (Deploy to Chef environments by editing environment attributes) task has been deprecated since March 5, 2018 and will soon be retired. To continue to use Chef, use the Chef CLI directly from a bash/pwsh/script task. See https://github.com/chef/chef-cli."
+	}
 }
 finally
 {
