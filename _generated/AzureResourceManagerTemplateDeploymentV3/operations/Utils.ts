@@ -495,7 +495,7 @@ class Utils {
             } 
         }
 
-        this.cleanupFileList.push(filePath.replace('.' + filePathExtension, '.' + finalPathExtension))  
+        this.cleanupFileList.push(filePath.replace('.' + filePathExtension, finalPathExtension))  
     }
 
     private static async logoutAzure() {
