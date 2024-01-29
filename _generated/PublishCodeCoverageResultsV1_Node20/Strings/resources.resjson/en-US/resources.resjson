@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Publish code coverage results",
   "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "[DEPRECATION WARNING. Users are recommended to switch to version 2.234.0.] Publish Cobertura or JaCoCo code coverage results from a build",
+  "loc.description": "[DEPRECATION WARNING. Users are recommended to switch to version 2.235.0.] Publish Cobertura or JaCoCo code coverage results from a build",
   "loc.instanceNameFormat": "Publish code coverage from $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Code coverage tool",
   "loc.input.help.codeCoverageTool": "The tool with which code coverage results are generated.",
@@ -23,5 +23,5 @@
   "loc.messages.IgnoringReportDirectory": "Ignoring coverage report directory with Html content as we are auto-generating Html content",
   "loc.messages.UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
   "loc.messages.GeneratedHtmlReport": "Generated code coverage html report: %s",
-  "loc.messages.V1TaskDeprecationNotice": "Version 1.234.0 for Publish Code Coverage Results task will be deprecated in 2024. Users are strongly recommended to switch to version 2.234.0"
+  "loc.messages.V1TaskDeprecationNotice": "Version 1.234.0 for Publish Code Coverage Results task will be deprecated in 2024. Users are strongly recommended to switch to version 2.235.0"
 }
