@@ -35,7 +35,7 @@ function handlePasswordInput(data: string, stream: any, password: string, dataBu
 function handleError(data: any): void {
     tl.debug('stderr = ' + data);
     if (data && data.toString().trim() !== '') {
-        tl.error(data.toString('utf8'));
+        tl.error(data.toString('utf8'), tl.IssueSource.TaskInternal);
     }
 }
 
