@@ -1809,7 +1809,7 @@ exports.getBuildConfigGenerator = getBuildConfigGenerator;
  * @param {Object} makeOptions Object with all tasks
  * @param {Boolean} writeUpdates Write Updates (false to validateOnly)
  */
-var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates) {
+var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber) {
     if (!makeOptions) fail("makeOptions is not defined");
     const excludedMakeOptionKeys = ["tasks", "taskResources"];
     const validatingTasks = {};
@@ -1837,6 +1837,11 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
             "--task",
             taskName,
         ];
+
+        if (sprintNumber && parseInt(sprintNumber)) {
+            args.push("--current-sprint");
+            args.push(sprintNumber);
+        }
 
         var writeUpdateArg = "";
         if(writeUpdates)
