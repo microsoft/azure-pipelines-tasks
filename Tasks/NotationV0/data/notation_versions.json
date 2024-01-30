@@ -2,6 +2,35 @@
     {
         "darwin": {
             "amd64": {
+                "checksum": "a190962ca09a24d814916e26c8f98d01c1891fd0bae6192355675b8b16e38726",
+                "url": "https://github.com/notaryproject/notation/releases/download/v1.1.0/notation_1.1.0_darwin_amd64.tar.gz"
+            },
+            "arm64": {
+                "checksum": "295df24d247f4b276bd1ee04ae5f639b8feadebd68c01be1821c0b94cbd5cf75",
+                "url": "https://github.com/notaryproject/notation/releases/download/v1.1.0/notation_1.1.0_darwin_arm64.tar.gz"
+            }
+        },
+        "linux": {
+            "amd64": {
+                "checksum": "0e31e156edff6cc324405cda391d7144b0b99c265a7bdfa6644f457e530fe6d4",
+                "url": "https://github.com/notaryproject/notation/releases/download/v1.1.0/notation_1.1.0_linux_amd64.tar.gz"
+            },
+            "arm64": {
+                "checksum": "8c01a8f52356b15ce2c69be4cea193c56d092f913482d2e4a4d90ad6ec81fe64",
+                "url": "https://github.com/notaryproject/notation/releases/download/v1.1.0/notation_1.1.0_linux_arm64.tar.gz"
+            }
+        },
+        "version": "1.1.0",
+        "windows": {
+            "amd64": {
+                "checksum": "397b5ccc27d8f890f955f1e91f8fb21e4c23995ec8f5a42257e72a14728bd4d5",
+                "url": "https://github.com/notaryproject/notation/releases/download/v1.1.0/notation_1.1.0_windows_amd64.zip"
+            }
+        }
+    },
+    {
+        "darwin": {
+            "amd64": {
                 "checksum": "8bf5e64cd46729619c0b5c39234a73605da5bc1e422b5e0481cbee9e1e4e0cf1",
                 "url": "https://github.com/notaryproject/notation/releases/download/v1.0.1/notation_1.0.1_darwin_amd64.tar.gz"
             },
