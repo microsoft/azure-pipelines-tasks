@@ -1,41 +1,37 @@
 const { exec } = require('child_process');
 
-function runPytestCollectOnly() {
-  return new Promise((resolve, reject) => {
-    // Run pytest --collect-only command
-    exec('pytest --collect-only', (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
+function getPythonTests(callback) {
+  const command = 'pytest --collect-only';
 
-      // Process the stdout to extract test names
-      const testNames = parsePytestCollectOnlyOutput(stdout);
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error executing command: ${error.message}`);
+      return callback(error);
+    }
 
-      resolve(testNames);
-    });
+    if (stderr) {
+      console.error(`Command error: ${stderr}`);
+      return callback(new Error(stderr));
+    }
+
+    const tests = parseTestNames(stdout);
+    callback(null, tests);
   });
 }
 
-function parsePytestCollectOnlyOutput(output) {
-  // Implement your logic to parse the output and extract test names
-  // This may involve using regular expressions or other string manipulation
-  // Depending on the output format of pytest --collect-only
-  // For simplicity, let's assume the output contains lines starting with "collected" and includes the test names
-
+function parseTestNames(output) {
+  // Extracting test names from the pytest output
   const testNames = output
     .split('\n')
-    .filter(line => line.startsWith('collected'))
-    .map(line => line.split('::').join('::')); // Adjust the parsing logic based on the actual output format
+    .filter(line => line.trim().startsWith('<Function'));
 
-  return testNames;
+  return testNames.map(line => line.match(/"(.*?)"/)[1]);
 }
 
-// Run the function and handle the result
-runPytestCollectOnly()
-  .then(testNames => {
-    console.log('List of fully qualified test names:', testNames);
-  })
-  .catch(error => {
-    console.error('Error running pytest --collect-only:', error);
-  });
+// Example usage
+getPythonTests((error, tests) => {
+  if (!error) {
+    console.log('List of Python tests:');
+    console.log(tests);
+  }
+});
