@@ -189,11 +189,10 @@ export async function createManualTestRun(testPlanInfo: TestPlanData): Promise<M
     try {
         let testRunResponse = await createManualTestRunAsync(testRunRequestBody)
 
-        //manualTestRunResponse.testRunId = testRunResponse.id;
-        //manualTestRunResponse.runUrl = testRunResponse.webAccessUrl;
+        //to do: add test results to test run
 
-        manualTestRunResponse.testRunId = 5
-        manualTestRunResponse.runUrl = "hii url";
+        manualTestRunResponse.testRunId = testRunResponse.id;
+        manualTestRunResponse.runUrl = testRunResponse.webAccessUrl;
     }
 
     catch(error) {
