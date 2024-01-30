@@ -1,10 +1,10 @@
 {
   "id": "105e2492-460a-4da6-56d5-2fa9ab3f0174",
   "name": "AzureTestPlan",
-  "friendlyName": "ms-resource:loc.friendlyName",
-  "description": "ms-resource:loc.description",
+  "friendlyName": "Azure Test Plan",
+  "description": "Run manual and automated tests in test plan in Java and python language",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "category": "Test",
   "visibility": [
     "Build",
@@ -23,9 +23,9 @@
     {
       "name": "testSelector",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.testSelector",
+      "label": "Test cases to be executed",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.testSelector",
+      "helpMarkDown": "<ul><li><b>Manual tests: </b>Use this option to trigger manual tests from your test plan.</li><li><b>Automated tests: </b>Use this option to run tests from your test plan that have automated test method associated with it.</li>",
       "options": {
         "manualTests": "Manual tests",
         "automatedTests": "Automated tests"
@@ -37,10 +37,10 @@
     {
       "name": "testPlan",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.testPlan",
+      "label": "Test plan",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.testPlan",
+      "helpMarkDown": "Select a test plan containing test suites with test cases.",
       "properties": {
         "DisableManageLink": "True",
         "EditableOptions": "True"
@@ -49,9 +49,9 @@
     {
       "name": "testSuite",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.testSuite",
+      "label": "Test suite",
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.testSuite",
+      "helpMarkDown": "Select one or more test suites containing test cases.",
       "required": true,
       "properties": {
         "MultiSelect": "True",
@@ -62,10 +62,10 @@
     {
       "name": "testConfiguration",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.testConfiguration",
+      "label": "Test configuration",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.testConfiguration",
+      "helpMarkDown": "Select Test Configuration.",
       "properties": {
         "DisableManageLink": "True",
         "EditableOptions": "True"
@@ -74,8 +74,8 @@
     {
       "name": "testLanguageInput",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.testLanguageInput",
-      "helpMarkDown": "ms-resource:loc.input.help.testLanguageInput",
+      "label": "Select Test framework language",
+      "helpMarkDown": "Test Framework Language of automated tests in test plan",
       "options": {
         "Java-Maven": "Java-Maven",
         "Java-Gradle": "Java-Gradle",
@@ -114,7 +114,7 @@
       "resultSelector": "jsonpath:$.value[*]"
     }
   ],
-  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "instanceNameFormat": "Azure Test Plan - $(testSelector)",
   "execution": {
     "Node10": {
       "target": "runTestPlan.js",
@@ -126,12 +126,16 @@
     }
   },
   "messages": {
-    "testPlanInput": "ms-resource:loc.messages.testPlanInput",
-    "testplanConfigInput": "ms-resource:loc.messages.testplanConfigInput",
-    "testSuiteSelected": "ms-resource:loc.messages.testSuiteSelected",
-    "automatedTestsTriggered": "ms-resource:loc.messages.automatedTestsTriggered",
-    "ErrorFailTaskOnExecutingTests": "ms-resource:loc.messages.ErrorFailTaskOnExecutingTests",
-    "ErrorFailTaskOnAPIFailure": "ms-resource:loc.messages.ErrorFailTaskOnAPIFailure",
-    "ErrorFailTaskOnCreateRunFailure": "ms-resource:loc.messages.ErrorFailTaskOnCreateRunFailure"
+    "testPlanInput": "Test plan Id : %s",
+    "testplanConfigInput": "Test plan configuration Id : %s",
+    "testSuiteSelected": "Test suite Id selected: %s",
+    "automatedTestsTriggered": "Trigerring execution of Automated tests from test plan",
+    "ErrorFailTaskOnExecutingTests": "Error occured while executing test command",
+    "ErrorFailTaskOnAPIFailure": "Error occured while fetching automated tests from test plan inputs",
+    "ErrorFailTaskOnCreateRunFailure": "Error occured while creating manual test run from test plan inputs"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.235.0",
+    "Node20-225": "0.235.1"
   }
 }

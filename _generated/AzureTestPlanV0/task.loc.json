@@ -133,5 +133,9 @@
     "ErrorFailTaskOnExecutingTests": "ms-resource:loc.messages.ErrorFailTaskOnExecutingTests",
     "ErrorFailTaskOnAPIFailure": "ms-resource:loc.messages.ErrorFailTaskOnAPIFailure",
     "ErrorFailTaskOnCreateRunFailure": "ms-resource:loc.messages.ErrorFailTaskOnCreateRunFailure"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.235.0",
+    "Node20-225": "0.235.1"
   }
 }
