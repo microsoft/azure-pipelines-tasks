@@ -41,9 +41,9 @@ Tasks/AzureFileCopyV3/   @microsoft/release-management-task-team @manolerazvan #
 
 Tasks/AzureFileCopyV4/   @microsoft/release-management-task-team @manolerazvan # DRI-ReleaseManagement
 
-Tasks/AzureFunctionAppV1/   @finvamp1 @patelchandni    @microsoft/release-management-task-team 
+Tasks/AzureFunctionAppV1/   @finvamp1 @patelchandni    @microsoft/release-management-task-team # DRI-Antares Functions Deployment Loop
 
-Tasks/AzureFunctionAppV2/   @finvamp1 @patelchandni    @microsoft/release-management-task-team
+Tasks/AzureFunctionAppV2/   @finvamp1 @patelchandni    @microsoft/release-management-task-team # DRI-Antares Functions Deployment Loop
 
 Tasks/AzureFunctionAppContainerV1/   @microsoft/release-management-task-team @manolerazvan # DRI-ReleaseManagement
 
