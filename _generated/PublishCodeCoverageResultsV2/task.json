@@ -16,7 +16,7 @@
   "version": {
     "Major": 2,
     "Minor": 235,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -53,10 +53,6 @@
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "publishcodecoverageresults.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "publishcodecoverageresults.js",
       "argumentFormat": ""
     }
