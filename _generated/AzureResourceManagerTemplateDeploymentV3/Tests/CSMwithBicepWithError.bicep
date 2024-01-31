@@ -1,10 +1,12 @@
 param location string = 'eastasia'
 
-var storageAccountName = 'deepak2121'
+var storageAccountName_var = 'deepak2121'
 var storageAccountType = 'Premium_LRS'
 
+randomstring
+
 resource storageAccount 'Microsoft.Storage/storageAccounts@2021-01-01' = {
-  name: toLower(take(storageAccountName, 24))
+  name: toLower(take(storageAccountName_var, 24))
   location: location
   sku: {
     name: storageAccountType
