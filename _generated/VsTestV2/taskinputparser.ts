@@ -389,31 +389,38 @@ function getToolsInstallerConfiguration(): models.ToolsInstallerConfiguration {
         throw new Error(tl.loc('toolsInstallerPathNotSet'));
     }
 
-    // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (amd64)
-    var amd64ProfilerProxy = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\amd64\\Microsoft.IntelliTrace.ProfilerProxy.dll");
-    if (amd64ProfilerProxy && amd64ProfilerProxy.length !== 0) {
-        toolsInstallerConfiguration.x64ProfilerProxyDLLLocation = amd64ProfilerProxy[0];
-    } else {
-        // Look in x64 also for Microsoft.IntelliTrace.ProfilerProxy.dll (x64)
-        amd64ProfilerProxy = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\x64\\Microsoft.IntelliTrace.ProfilerProxy.dll");
-        if (amd64ProfilerProxy && amd64ProfilerProxy.length !== 0) {
-            toolsInstallerConfiguration.x64ProfilerProxyDLLLocation = amd64ProfilerProxy[0];
-        } else {
-            utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1043, false);
-            tl.warning(tl.loc('testImpactAndCCWontWork'));
+    var splitString = toolsInstallerConfiguration.vsTestConsolePathFromPackageLocation.split('\\');
+    var archUsed = splitString[splitString.length - 1];
+    var tpVer = parseInt(splitString[splitString.length - 2].split(".")[0],10);
+    var profilerProxyLocation;
+
+    if(tpVer < 17){
+        switch(archUsed){
+            case ("amd64"):
+                profilerProxyLocation = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\amd64\\Microsoft.IntelliTrace.ProfilerProxy.dll");
+                break;
+            case("x64"):
+                profilerProxyLocation = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\x64\\Microsoft.IntelliTrace.ProfilerProxy.dll");
+                break;
+            case("x86"):
+                profilerProxyLocation = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\x86\\Microsoft.IntelliTrace.ProfilerProxy.dll");
+                break;
+            default:
+                break;
         }
 
-        utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1042, false);
-        tl.warning(tl.loc('testImpactAndCCWontWork'));
-    }
-
-    // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (x86)
-    var x86ProfilerProxy = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\x86\\Microsoft.IntelliTrace.ProfilerProxy.dll");
-    if (x86ProfilerProxy && x86ProfilerProxy.length !== 0) {
-        toolsInstallerConfiguration.x86ProfilerProxyDLLLocation = x86ProfilerProxy[0];
-    } else {
-        utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1044, false);
-        tl.warning(tl.loc('testImpactAndCCWontWork'));
+        if(profilerProxyLocation && profilerProxyLocation.length !== 0){
+            if(archUsed == "x86"){
+                toolsInstallerConfiguration.x86ProfilerProxyDLLLocation = profilerProxyLocation[0];
+            }
+            else{
+                toolsInstallerConfiguration.x64ProfilerProxyDLLLocation = profilerProxyLocation[0];
+            }
+        }
+        else{
+            utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1044, false);
+            tl.warning(tl.loc('testImpactAndCCWontWork'));
+        }
     }
 
     return toolsInstallerConfiguration;
