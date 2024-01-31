@@ -6,7 +6,7 @@
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment",
   "helpMarkDown": "[Learn more about this task](https://aka.ms/armtaskreadme)",
   "category": "Deploy",
-  "releaseNotes": "- Added support for deployment at all the deployment scopes.\n- Removed all the VM related actions.",
+  "releaseNotes": "- Added support for bicepparam.",
   "visibility": [
     "Build",
     "Release"
@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 231,
+    "Minor": 235,
     "Patch": 0
   },
   "demands": [],
@@ -331,6 +331,8 @@
     "LoginFailed": "Azure login failed: %s",
     "MSILoginFailed": "Azure login failed using Managed Service Identity: %s",
     "AuthSchemeNotSupported": "Auth Scheme %s is not supported",
-    "ErrorInSettingUpSubscription": "Error in setting up subscription: %s"
+    "ErrorInSettingUpSubscription": "Error in setting up subscription: %s",
+    "BicepParamBuildFailed": "\"az bicep build-param\" failed. Error: %s",
+    "IncompatibleAzureCLIVersionBicepParam": "Azure CLI version should be >= 2.47.0 to use .bicepparam file"
   }
 }
