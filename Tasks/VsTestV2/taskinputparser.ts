@@ -394,6 +394,9 @@ function getToolsInstallerConfiguration(): models.ToolsInstallerConfiguration {
     var tpVer = parseInt(splitString[splitString.length - 2].split(".")[0],10);
     var profilerProxyLocation;
 
+    tl.debug("Architecture Used:" + archUsed);
+    tl.debug("TestPlatform Version Detected :" + tpVer);
+
     if(tpVer < 17){
         switch(archUsed){
             case ("amd64"):
