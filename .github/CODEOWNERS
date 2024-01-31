@@ -49,7 +49,7 @@ Tasks/AzureFunctionAppContainerV1/   @microsoft/release-management-task-team @ma
 
 Tasks/AzureFunctionOnKubernetesV0/     @microsoft/release-management-task-team @manolerazvan # DRI-ReleaseManagement
 
-Tasks/AzureFunctionOnKubernetesV1/     @microsoft/release-management-task-team @manolerazvan # DRI-ReleaseManagement
+Tasks/AzureFunctionOnKubernetesV1/     @microsoft/release-management-task-team @manolerazvan @vhavrysh # DRI-ReleaseManagement
 
 Tasks/AzureFunctionV1/     @microsoft/release-management-task-team @manolerazvan # DRI-ReleaseManagement
 
