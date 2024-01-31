@@ -124,7 +124,7 @@ try {
 }
 finally {
     if (!$success) {
-        Write-VstsTaskError "Initialize Azure failed: For troubleshooting, refer: $troubleshoot" -IssueSource $IssueSources.TaskInternal
+        Write-VstsTaskError "Initialize Azure failed: For troubleshooting, refer: $troubleshoot"
         Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
         Remove-EndpointSecrets
     }

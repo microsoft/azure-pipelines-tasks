@@ -71,7 +71,7 @@ export class azureclitask {
 
             if (failOnStdErr && aggregatedErrorLines.length > 0) {
                 let error = FAIL_ON_STDERR;
-                tl.error(aggregatedErrorLines.join("\n"), tl.IssueSource.CustomerScript);
+                tl.error(aggregatedErrorLines.join("\n"));
                 throw error;
             }
         }
@@ -207,7 +207,7 @@ export class azureclitask {
         }
         catch (err) {
             // task should not fail if logout doesn`t occur
-            tl.warning(tl.loc("FailedToLogout"), tl.IssueSource.TaskInternal);
+            tl.warning(tl.loc("FailedToLogout"));
         }
     }
 

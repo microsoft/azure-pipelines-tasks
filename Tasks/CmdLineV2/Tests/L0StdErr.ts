@@ -60,7 +60,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }
 };
 tmr.setAnswers(a);
-tmr.registerMockExport('IssueSource', { TaskInternal: "TaskInternal", CustomerScript: "CustomerScript" });
 
 // Mock fs
 const fs = require('fs');

@@ -30,7 +30,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }
 };
 tmr.setAnswers(a);
-tmr.registerMockExport('IssueSource', { TaskInternal: "TaskInternal", CustomerScript: "CustomerScript" });
 
 // if you need to, you can mock a specific module function called in task 
 // tmr.registerMock('./taskmod', {
