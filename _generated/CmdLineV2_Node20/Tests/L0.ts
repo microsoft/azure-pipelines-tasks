@@ -44,7 +44,7 @@ describe('Cmd Suite', function () {
 
         runValidations(() => {
             assert(tr.failed, 'Bash should have failed');
-            assert(tr.stdout.indexOf('##vso[task.issue type=error;source=CustomerScript;]myErrorTest') > 0, 'Bash should have correctly written myErrorTest');
+            assert(tr.stdout.indexOf('##vso[task.issue type=error;]myErrorTest') > 0, 'Bash should have correctly written myErrorTest');
             assert(tr.stdout.length > 1000, 'Bash stderr output is not truncated');
         }, tr, done);
     });

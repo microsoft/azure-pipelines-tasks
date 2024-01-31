@@ -17,7 +17,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 235,
+    "Minor": 232,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -582,7 +582,7 @@
     "Error_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Error_IncludeNuGetOrgEnabled"
   },
   "_buildConfigMapping": {
-    "Default": "2.235.0",
-    "Node20_229_2": "2.235.1"
+    "Default": "2.232.0",
+    "Node20_229_2": "2.232.1"
   }
 }

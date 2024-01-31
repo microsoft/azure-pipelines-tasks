@@ -159,7 +159,7 @@ try
                         $message = $errorLines.ToString().Trim()
                         $null = $errorLines.Clear()
                         if ($message) {
-                            Write-VstsTaskError -Message $message -IssueSource $IssueSources.CustomerScript
+                            Write-VstsTaskError -Message $message
                         }
                     }
 
@@ -173,14 +173,14 @@ try
             $message = $errorLines.ToString().Trim()
             $null = $errorLines.Clear()
             if ($message) {
-                Write-VstsTaskError -Message $message -IssueSource $IssueSources.CustomerScript
+                Write-VstsTaskError -Message $message
             }
         }
     }
 
     if ($LASTEXITCODE -ne 0) {
         $failed = $true
-        Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_ExitCode' -ArgumentList $LASTEXITCODE) -IssueSource $IssueSources.TaskInternal
+        Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_ExitCode' -ArgumentList $LASTEXITCODE)
     }
 
     # Fail if any errors.
