@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 235,
-        "Patch": 0
+        "Patch": 2
     },
     "minimumAgentVersion": "2.144.0",
     "releaseNotes": "Added support for multiple destinations.",
@@ -204,6 +204,6 @@
         "FoundMultipleFiles": "Found multiple files matching %s.",
         "FailedToCreateFile": "Failed to create %s with error: %s.",
         "FailedToFindFile": "Failed to find %s at %s.",
-        "DeprecatedTask": "The AppCenterDistribute@2 (App Center distribute)  task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead."
+        "DeprecatedTask": "The AppCenterDistribute@2 (App Center distribute)  task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
     }
 }
