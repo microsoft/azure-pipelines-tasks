@@ -192,7 +192,7 @@ $featureFlags = @{
 }
 if ($featureFlags.failDeprecatedBuildTask)
 {
-	throw "The QuickPerfTest@1 (Cloud-based web performance test) task has been deprecated since June 4, 2019 and will soon be retired. Use the AzureLoadTest@1 task instead."
+	throw "The QuickPerfTest@1 (Cloud-based web performance test) task has been deprecated since June 4, 2019 and will soon be retired. Use the AzureLoadTest@1 task instead. Please see https://aka.ms/azdo-deprecated-tasks for more information about deprecated tasks."
 }
 
 Write-Output "Quick Perf Test Script execution completed"

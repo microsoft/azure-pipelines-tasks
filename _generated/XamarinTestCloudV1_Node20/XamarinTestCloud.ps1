@@ -198,6 +198,6 @@ $featureFlags = @{
 }
 if ($featureFlags.failDeprecatedBuildTask)
 {
-	throw "The XamarinTestCloud@1 (Xamarin Test Cloud) task has been deprecated since January 11, 2018 and will soon be retired. Use the AppCenterDistribute@3 task instead."
+	throw "The XamarinTestCloud@1 (Xamarin Test Cloud) task has been deprecated since January 11, 2018 and will soon be retired. Use the AppCenterDistribute@3 task instead. Please see https://aka.ms/azdo-deprecated-tasks for more information about deprecated tasks."
 }
 Write-Verbose "Leaving script XamarinTestCloud.ps1"
