@@ -159,7 +159,7 @@ $featureFlags = @{
 }
 if ($featureFlags.failDeprecatedBuildTask)
 {
-	throw "The IISWebAppDeployment@1 (IIS Web App deployment) task has been deprecated since October 5, 2018 and will soon be retired. Use the 'IIS Web App Deployment Using WinRM' extension instead: https://marketplace.visualstudio.com/items?itemName=ms-vscs-rm.iiswebapp. Please see https://aka.ms/azdo-deprecated-tasks for more information about deprecated tasks."
+	throw "The IISWebAppDeployment@1 (IIS Web App deployment) task has been deprecated since October 5, 2018 and will soon be retired. Use the 'IIS Web App Deployment Using WinRM' extension instead: https://marketplace.visualstudio.com/items?itemName=ms-vscs-rm.iiswebapp. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
 }
 
 Write-Output ( Get-LocalizedString -Key "Successfully deployed IIS Web Deploy Package : {0}" -ArgumentList $webDeployPackage)

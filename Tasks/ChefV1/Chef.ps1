@@ -192,7 +192,7 @@ try
     }
 	if ($featureFlags.failDeprecatedBuildTask)
 	{
-		throw "The Chef@1 (Deploy to Chef environments by editing environment attributes) task has been deprecated since March 5, 2018 and will soon be retired. To continue to use Chef, use the Chef CLI directly from a bash/pwsh/script task. See https://github.com/chef/chef-cli. Please see https://aka.ms/azdo-deprecated-tasks for more information about deprecated tasks."
+		throw "The Chef@1 (Deploy to Chef environments by editing environment attributes) task has been deprecated since March 5, 2018 and will soon be retired. To continue to use Chef, use the Chef CLI directly from a bash/pwsh/script task. See https://github.com/chef/chef-cli. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
 	}
 }
 finally

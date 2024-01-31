@@ -208,7 +208,7 @@
     "FoundMultipleFiles": "Found multiple files matching %s.",
     "FailedToCreateFile": "Failed to create %s with error: %s.",
     "FailedToFindFile": "Failed to find %s at %s.",
-    "DeprecatedTask": "The AppCenterDistribute@2 (App Center distribute)  task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead. Please see https://aka.ms/azdo-deprecated-tasks for more information about deprecated tasks."
+    "DeprecatedTask": "The AppCenterDistribute@2 (App Center distribute)  task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
   },
   "_buildConfigMapping": {
     "Default": "2.235.2",

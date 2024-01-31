@@ -102,7 +102,7 @@
     "ParameterRequired": "The `%s` parameter is required",
     "PlatformNotRecognized": "Platform not recognized",
     "PrependPath": "Prepending PATH environment variable with directory: %s",
-    "DeprecatedTask": "The CondaEnvironment@1 (Conda environment) task has been deprecated since February 13, 2019 and will soon be retired. Use the Conda CLI ('conda') directly from a bash/pwsh/script task. Please see https://aka.ms/azdo-deprecated-tasks for more information about deprecated tasks."
+    "DeprecatedTask": "The CondaEnvironment@1 (Conda environment) task has been deprecated since February 13, 2019 and will soon be retired. Use the Conda CLI ('conda') directly from a bash/pwsh/script task. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
   },
   "_buildConfigMapping": {
     "Default": "1.235.2",

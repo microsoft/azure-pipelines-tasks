@@ -158,7 +158,7 @@
     "VersionFilesDataIncorrect": "Version's files data is missing or has missing required fields.",
     "VersionInformationNotComplete": "Version: %s required information is not complete in releases.json file. Error: %s",
     "FailedWhileExtractingPacakge": "Failed while extracting downloaded package with error: %s",
-    "DeprecatedTask": "The DotNetCoreInstaller@1 (.NET Core SDK/runtime installer) task has been deprecated since August 22, 2019 and will soon be retired. Use the UseDotNet@2 task instead. Please see https://aka.ms/azdo-deprecated-tasks for more information about deprecated tasks."
+    "DeprecatedTask": "The DotNetCoreInstaller@1 (.NET Core SDK/runtime installer) task has been deprecated since August 22, 2019 and will soon be retired. Use the UseDotNet@2 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
   },
   "_buildConfigMapping": {
     "Default": "1.235.2",
