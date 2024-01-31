@@ -60,5 +60,9 @@
   "messages": {
     "FoundNMatchesForPattern": "ms-resource:loc.messages.FoundNMatchesForPattern",
     "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.235.0",
+    "Node20_229_4": "2.235.1"
   }
 }
