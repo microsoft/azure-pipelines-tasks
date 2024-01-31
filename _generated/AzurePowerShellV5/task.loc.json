@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 226,
-    "Patch": 1
+    "Minor": 234,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -186,6 +186,10 @@
     "Node10": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "azurepowershell.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -200,7 +204,7 @@
     "PS_ExitCode": "ms-resource:loc.messages.PS_ExitCode"
   },
   "_buildConfigMapping": {
-    "Default": "5.226.1",
-    "Node16-225": "5.226.0"
+    "Default": "5.234.0",
+    "Node20_229_2": "5.234.1"
   }
 }

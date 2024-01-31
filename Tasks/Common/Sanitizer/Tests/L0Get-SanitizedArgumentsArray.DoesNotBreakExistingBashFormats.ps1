@@ -18,8 +18,8 @@ $bashArgumentsFormats = @(
 foreach ($argument in $bashArgumentsFormats) {
 
     # Act
-    $sanitizedArguments = Get-SanitizedArguments -InputArgs $argument
+    $sanitizedArguments, $null = Get-SanitizedArguments -InputArgs $argument
 
     # Assert
-    Assert-AreEqual $sanitizedArguments $argument
+    Assert-AreEqual -Actual $sanitizedArguments -Expected $argument
 }

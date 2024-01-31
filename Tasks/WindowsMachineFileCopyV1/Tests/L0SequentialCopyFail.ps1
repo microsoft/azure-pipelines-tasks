@@ -10,6 +10,8 @@ $invalidEnvironmentWithNoResource = "invalidEnvironmentWithNoResource"
 
 Register-Mock Get-EnvironmentProperty { return $validResources } -ParametersEvaluator {$EnvironmentName -eq $invalidEnvironmentNameForFailCopy}
 Register-Mock Get-EnvironmentResources { return $resourceFailForCopy } -ParametersEvaluator {$EnvironmentName -eq $invalidEnvironmentNameForFailCopy}
+Register-Mock Get-SanitizerCallStatus { return $false }
+Register-Mock Get-SanitizerActivateStatus { return $false }
 
 Unregister-Mock Invoke-Command
 Register-Mock Invoke-Command { throw "$FailedCopyError" }

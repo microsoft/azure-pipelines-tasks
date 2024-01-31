@@ -11,12 +11,13 @@ var shell = require('shelljs');
 var syncRequest = require('sync-request');
 
 // global paths
-var downloadPath = path.join(__dirname, '_download');
+var repoPath = __dirname;
+var downloadPath = path.join(repoPath, '_download');
 
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
-var allowedTypescriptVersions = ['4.0.2', '4.0.8'];
+var allowedTypescriptVersions = ['4.0.2', '5.1.6'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -330,25 +331,22 @@ var ensureTool = function (name, versionArgs, validate) {
 exports.ensureTool = ensureTool;
 
 var installNode = function (nodeVersion) {
-    switch (nodeVersion || '') {
-        case '16':
-            nodeVersion = 'v16.17.1';
-            break;
-        case '14':
-            nodeVersion = 'v14.10.1';
-            break;
-        case '10':
-            nodeVersion = 'v10.21.0';
-            break;
-        case '6':
-        case '':
-            nodeVersion = 'v6.10.3';
-            break;
-        case '5':
-            nodeVersion = 'v5.10.1';
-            break;
-        default:
-            fail(`Unexpected node version '${nodeVersion}'. Supported versions: 5, 6, 10, 14, 16`);
+    const versions = {
+        20: 'v20.3.1',
+        16: 'v16.17.1',
+        14: 'v14.10.1',
+        10: 'v10.24.1',
+        6: 'v6.10.3',
+        5: 'v5.10.1',
+    };
+
+    if (!nodeVersion) {
+        nodeVersion = versions[6];
+    } else {
+        if (!versions[nodeVersion]) {
+            fail(`Unexpected node version '${nodeVersion}'. Supported versions: ${Object.keys(versions).join(', ')}`);
+        };
+        nodeVersion = versions[nodeVersion];
     }
 
     if (nodeVersion === run('node -v')) {
@@ -1782,7 +1780,8 @@ exports.renameCodeCoverageOutput = renameCodeCoverageOutput;
 
 /**
  * Returns path to BuldConfigGenerator, build it if needed.  Fail on compilation failure
- * @returns Path to the executed file
+ * @param {String} baseConfigToolPath base build config tool path
+ * @returns {String} Path to the executed file
  */
 var getBuildConfigGenerator = function (baseConfigToolPath) {
     var programPath = "";
@@ -1852,39 +1851,151 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
 exports.processGeneratedTasks = processGeneratedTasks;
 
 /**
- * Function to generate new tasks
- * @param {String} baseConfigToolPath Path to generating program
- * @param {Array} taskList  Array with allowed tasks
- * @param {String} configsString String with generation configs 
- * @param {Object} makeOptions Object to put generated definitions
+ * Function to merge all tasks under a build config into base tasks.
+ * @param {String} buildConfig that selected to merge
  */
+var mergeBuildConfigIntoBaseTasks = function(buildConfig) {
+    var makeOptionsPath = path.join(__dirname, 'make-options.json');
+    var makeOptions = fileToJson(makeOptionsPath);
+    if (!makeOptions) fail("makeOptions is not defined");
+    const AllTasksToMerge = makeOptions[buildConfig];
+    const TasksfailedToMerge = [];
 
-var generateTasks = function(baseConfigToolPath, taskList, configsString, makeOptions) {
-    const args = `--write-updates --configs "${configsString}"`;
-    const configsArr = configsString.split("|")
-    let newMakeOptions = makeOptions;
+    const match = buildConfig.match(/^([a-zA-Z]+[0-9]+)_\d+(_\d+)?$/);
+    var surfixBuildConfig = match ? match[1] : buildConfig;
 
-    taskList.forEach(function (taskName) {
-        const programPath = getBuildConfigGenerator(baseConfigToolPath);
-        const buildArgs = args + ` --task ${taskName}`;
+    if (AllTasksToMerge && Array.isArray(AllTasksToMerge)) {
+        AllTasksToMerge.forEach(taskName => {
+            var generatedTaskPath = path.join(__dirname, '_generated', `${taskName}_${surfixBuildConfig}`);
+            var generatedDefaultTaskPath = path.join(__dirname, '_generated', taskName)
+            var versionmapFilePath = path.join(__dirname, '_generated', `${taskName}.versionmap.txt`);
+            var baseTaskPath = path.join(__dirname, 'Tasks', taskName);
+            var buildConfigTaskPath = path.join(baseTaskPath, '_buildConfigs', surfixBuildConfig);
 
-        banner('Generating: ' + taskName);
-        run(`${programPath} ${buildArgs}` , true);
+            if (!fs.existsSync(generatedTaskPath) || !fs.statSync(generatedTaskPath).isDirectory() || !fs.existsSync(versionmapFilePath)) {
+                console.log(`Invalid generated task path ${generatedTaskPath} or invalid ${taskName}.versionmap.txt file ${versionmapFilePath}\n`);
+                TasksfailedToMerge.push(taskName);
+            } else {
+                banner(`Merging ${generatedTaskPath} into base task...`);
 
-        // insert to make-options.json
-        configsArr.forEach(function (config) {
-            if (!newMakeOptions[config]) {
-                newMakeOptions[config] = [];
-            }
-            
-            if (newMakeOptions[config].indexOf(taskName) === -1) {
-                newMakeOptions[config].push(taskName);
+                // Copy generated task to base task, delete generated files
+                cp('-rf', generatedTaskPath + "/*", baseTaskPath);
+                console.log(`Copied ${generatedTaskPath} to ${baseTaskPath}`);
+                rm("-rf", buildConfigTaskPath);
+                console.log(`Deleted ${buildConfigTaskPath} folder`);
+                rm("-rf", generatedTaskPath);
+                console.log(`Deleted ${generatedTaskPath} folder`);
+                rm("-rf", generatedDefaultTaskPath);
+                console.log(`Deleted ${generatedDefaultTaskPath} folder`);
+
+                // Update versionmap.txt file
+                var versionmapFile = fs.readFileSync(versionmapFilePath, { encoding: 'utf-8' });
+                const lines = versionmapFile.split(/\r?\n/);
+                var buildConfigVersion = null;
+                for (let i = lines.length - 1; i >= 0; i--) {
+                    if (!lines[i]) continue;
+                    const [name, version] = lines[i].split('|');
+                    if (name.startsWith(surfixBuildConfig)) {
+                        buildConfigVersion = version;
+                        lines.splice(i, 1);
+                        i++;
+                    } else if (name === "Default" && buildConfigVersion != null) {
+                        lines[i] = `Default|${buildConfigVersion}`;
+                    }
+                }
+                const updatedContent = lines.join(os.EOL);
+                fs.writeFileSync(versionmapFilePath, updatedContent, { encoding: 'utf-8' });
+                console.log(`Updated ${versionmapFilePath} file`);
+
+                // Remove _buildConfigMapping section in task.json and task-loc.json
+                var taskJsonPath = path.join(baseTaskPath, 'task.json');
+                var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
+                var taskLocJsonPath = path.join(baseTaskPath, 'task.loc.json');
+                var taskLocJson = JSON.parse(fs.readFileSync(taskLocJsonPath));
+                if (taskJson && taskJson["_buildConfigMapping"]) {
+                    delete taskJson["_buildConfigMapping"];
+                }
+                if (taskLocJson && taskLocJson["_buildConfigMapping"]) {
+                    delete taskLocJson["_buildConfigMapping"];
+                }
+                fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 2));
+                fs.writeFileSync(taskLocJsonPath, JSON.stringify(taskLocJson, null, 2));
+                console.log(`Updated task.json and task-loc.json files under ${baseTaskPath}`);
+                console.log(`${generatedTaskPath} was merged into ${baseTaskPath}\n`);
             }
         });
-    });
+    } else {
+        fail(`Invalid configuration for ${buildConfig}.`);
+    }
 
-    return newMakeOptions;
+    // Update make-options.json
+    if (TasksfailedToMerge.length > 0) {
+        console.log('The following tasks failed to merge into base tasks: ' + TasksfailedToMerge);
+        makeOptions[buildConfig] = makeOptions[buildConfig].filter(item =>
+            TasksfailedToMerge.includes(item)
+        );
+    } else {
+        delete makeOptions[buildConfig];
+    }
+    fs.writeFileSync(makeOptionsPath, JSON.stringify(makeOptions, null, 4));
+    console.log("Updated make-options.json file");
 }
-exports.generateTasks = generateTasks;
+exports.mergeBuildConfigIntoBaseTasks = mergeBuildConfigIntoBaseTasks;
+
+/**
+ * Wrapper for buildTask function which compares diff between source and generated tasks
+ * @param {Function} originalFunction - Original buildTask function
+ * @param {string} basicGenTaskPath - path to generated folder
+ * @param {boolean} callGenTaskDuringBuild - if false, the sync step will be skipped
+ * @returns {Function} - wrapped buildTask function which compares diff between source and generated tasks
+ * and copy files from generated to source if needed
+ */
+function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTaskDuringBuild = false) {
+    const runtimeChangedFiles = ["package.json", "package-lock.json", "npm-shrinkwrap.json"];
+
+    if (!originalFunction || originalFunction instanceof Function === false) throw Error('originalFunction is not defined');
+    // If the task is building on the ci, we don't want to sync files
+    if (callGenTaskDuringBuild === false) return originalFunction;
+
+    return function(taskName, ...args) {
+        originalFunction.apply(this, [taskName, ...args]);
+
+        const genTaskPath = path.join(basicGenTaskPath, taskName);
+
+        // if it's not a generated task, we don't need to sync files
+        if (!fs.existsSync(genTaskPath)) return;
+
+        const [ baseTaskName, config ] = taskName.split("_");
+        const copyCandidates = shell.find(genTaskPath)
+            .filter(function (item) { 
+                // ignore node_modules
+                if (item.indexOf("node_modules") !== -1) return false
+                // ignore everything except package.json, package-lock.json, npm-shrinkwrap.json
+                if (!runtimeChangedFiles.some((pattern) => item.indexOf(pattern) !== -1)) return false;
+                
+                return true;
+            });
+
+        copyCandidates.forEach((candidatePath) => {
+            const relativePath = path.relative(genTaskPath, candidatePath);
+            let dest = path.join(__dirname, 'Tasks', baseTaskName, relativePath);
+
+            if (config) {  
+                dest = path.join(__dirname, 'Tasks', baseTaskName, '_buildConfigs', config, relativePath);
+            }
+            
+            const folderPath = path.dirname(dest);
+            if (!fs.existsSync(folderPath)) {
+                console.log(`Creating folder ${folderPath}`);
+                shell.mkdir('-p', folderPath);
+            }
+
+            console.log(`Copying ${candidatePath} to ${dest}`);
+            fs.copyFileSync(candidatePath, dest);
+        });
+    }
+}
+
+exports.syncGeneratedFilesWrapper = syncGeneratedFilesWrapper;
 
 //------------------------------------------------------------------------------

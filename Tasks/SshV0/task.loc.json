@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 226,
-    "Patch": 0
+    "Minor": 231,
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -166,6 +166,6 @@
     "SettingUpSshConnection": "ms-resource:loc.messages.SettingUpSshConnection",
     "SshConnectionSuccessful": "ms-resource:loc.messages.SshConnectionSuccessful",
     "UseDefaultPort": "ms-resource:loc.messages.UseDefaultPort",
-    "SanitizerOutput": "ms-resource:loc.messages.SanitizerOutput"
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   }
 }

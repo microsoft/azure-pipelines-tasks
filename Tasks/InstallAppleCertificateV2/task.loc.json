@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 225,
+    "Minor": 231,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -177,6 +177,7 @@
     "SetKeyPartitionListCommandFailed": "ms-resource:loc.messages.SetKeyPartitionListCommandFailed",
     "InstallRequiresMac": "ms-resource:loc.messages.InstallRequiresMac",
     "CertNotValidYetError": "ms-resource:loc.messages.CertNotValidYetError",
-    "CertExpiredError": "ms-resource:loc.messages.CertExpiredError"
+    "CertExpiredError": "ms-resource:loc.messages.CertExpiredError",
+    "OpenSSLError": "ms-resource:loc.messages.OpenSSLError"
   }
 }

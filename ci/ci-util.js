@@ -29,6 +29,7 @@ var aggregateNuspecPath = path.join(packagePath, 'Mseng.MS.TF.Build.Tasks.nuspec
 var publishLayoutPath = path.join(packagePath, 'publish-layout');
 var publishPushCmdPath = path.join(packagePath, 'publish-layout', 'push.cmd');
 var genTaskPath = path.join(__dirname, '..', '_generated');
+var makeOptionPath = path.join(__dirname, '..', 'make-options.json');
 
 exports.buildTasksPath = buildTasksPath;
 exports.packagePath = packagePath;
@@ -50,6 +51,7 @@ exports.aggregateNuspecPath = aggregateNuspecPath;
 exports.publishLayoutPath = publishLayoutPath;
 exports.publishPushCmdPath = publishPushCmdPath;
 exports.genTaskPath = genTaskPath;
+exports.makeOptionPath = makeOptionPath;
 
 //------------------------------------------------------------------------------
 // generic functions
@@ -493,3 +495,24 @@ var resolveTaskList = function(taskPattern) {
     return taskList;
 }
 exports.resolveTaskList = resolveTaskList;
+
+/**
+ * @param {string} type - log type
+ * @param {string} payload - log message
+ */
+function logToPipeline(type, payload) {
+    if (!payload) throw new Error('payload are required');
+
+    switch (type) {
+        case 'error':
+        case 'warning':
+            console.log(`##vso[task.logissue type=${type}]${payload}`);
+            break;
+        case 'debug':
+            console.log(`##vso[task.debug]${payload}`);
+            break;
+        default: 
+            console.log(payload);
+    }
+}
+exports.logToPipeline = logToPipeline;

@@ -9,8 +9,8 @@
   "author": "Lawrence Gripper",
   "version": {
     "Major": 0,
-    "Minor": 225,
-    "Patch": 1
+    "Minor": 232,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -21,6 +21,7 @@
   ],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
+  "removalDate": "2024-01-31",
   "groups": [
     {
       "name": "advanced",
@@ -128,6 +129,10 @@
     "Node10": {
       "target": "nugetpublisher.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "nugetpublisher.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -171,7 +176,7 @@
     "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
   },
   "_buildConfigMapping": {
-    "Default": "0.225.1",
-    "Node16-219": "0.225.0"
+    "Default": "0.232.2",
+    "Node20_229_1": "0.232.3"
   }
 }

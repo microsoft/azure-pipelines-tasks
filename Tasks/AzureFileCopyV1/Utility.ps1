@@ -278,13 +278,6 @@ function Upload-FilesToAzureContainer
         {
             $blobStorageURI = $blobStorageEndpoint+$containerName+"/"+$blobPrefix
         }
-
-        $useSanitizer = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_NEW_LOGIC)
-        Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $useSanitizer"
-
-        if ($useSanitizer) {
-            $additionalArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV1"
-        }
         
         Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments -BlobStorageURI $blobStorageURI
     }
@@ -1008,7 +1001,8 @@ function Copy-FilesSequentiallyToAzureVMs
           [string]$skipCACheckOption,
           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments,
-          [string][Parameter(Mandatory=$true)]$connectionType)
+          [string][Parameter(Mandatory=$true)]$connectionType,
+          [string][Parameter(Mandatory=$false)]$useSanitizerActivate)
 
     foreach ($resource in $azureVMResourcesProperties.Keys)
     {
@@ -1022,7 +1016,7 @@ function Copy-FilesSequentiallyToAzureVMs
         $deploymentUtilitiesLocation = Get-DeploymentModulePath
         $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList `
                             $deploymentutilitieslocation, $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $blobStorageEndpoint, $azCopyLocation, $targetPath, $azureVMsCredentials, `
-                            $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocol, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
+                            $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocol, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments, $useSanitizerActivate
 
         $status = $copyResponse.Status
 
@@ -1062,7 +1056,8 @@ function Copy-FilesParallellyToAzureVMs
           [string]$skipCACheckOption,
           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments,
-          [string][Parameter(Mandatory=$true)]$connectionType)
+          [string][Parameter(Mandatory=$true)]$connectionType,
+          [string][Parameter(Mandatory=$false)]$useSanitizerActivate)
 
     [hashtable]$Jobs = @{}
     $dtlsdkErrors = @()
@@ -1078,7 +1073,7 @@ function Copy-FilesParallellyToAzureVMs
 
         $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList `
                    $deploymentutilitieslocation, $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $blobStorageEndpoint, $azCopyLocation, $targetPath, $azureVmsCredentials, `
-                   $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocol, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
+                   $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocol, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments, $useSanitizerActivate
 
         $Jobs.Add($job.Id, $resourceProperties)
     }
@@ -1151,7 +1146,8 @@ function Copy-FilesToAzureVMsFromStorageContainer
           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$copyFilesInParallel,
-          [string][Parameter(Mandatory=$true)]$connectionType)
+          [string][Parameter(Mandatory=$true)]$connectionType,
+          [string][Parameter(Mandatory=$false)]$useSanitizerActivate)
 
     # copies files sequentially
     if ($copyFilesInParallel -eq "false" -or ( $azureVMResourcesProperties.Count -eq 1 ))
@@ -1162,7 +1158,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
                 -blobStorageEndpoint $blobStorageEndpoint -targetPath $targetPath -azCopyLocation $azCopyLocation `
                 -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $communicationProtocol -skipCACheckOption $skipCACheckOption `
-                -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -connectionType $connectionType
+                -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -connectionType $connectionType -useSanitizerActivate $useSanitizerActivate
     }
     # copies files parallelly
     else
@@ -1172,7 +1168,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
                 -blobStorageEndpoint $blobStorageEndpoint -targetPath $targetPath -azCopyLocation $azCopyLocation `
                 -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $communicationProtocol -skipCACheckOption $skipCACheckOption `
-                -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -connectionType $connectionType
+                -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -connectionType $connectionType -useSanitizerActivate $useSanitizerActivate
     }
 
     # if no error thrown, copy successfully succeeded

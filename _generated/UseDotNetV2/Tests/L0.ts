@@ -529,8 +529,16 @@ describe('UseDotNet', function () {
         tr.run();
         runValidations(() => {
             assert(tr.succeeded == true, ("Should passed."));
-            assert(tr.stdout.indexOf("FailedToReadGlobalJson") > -1, "should throw an error that no file was found.");
+            assert(tr.stdout.indexOf("GlobalJsonIsEmpty") > -1, "should throw an error that no file was found.");
         }, tr, done);
-    })
+    });
+    it("[globaljsonfetcher] run shouldn't fail if the global.json has comments.", (done) => {
+        process.env["__case__"] = "globalJsonWithComments";
+        let tr = new ttm.MockTestRunner(path.join(__dirname, "globaljsonfetcherTest.js"))
+        tr.run();
+        runValidations(() => {
+            assert(tr.succeeded == true, ("Should have passed."));
+            assert(tr.stdout.indexOf("GlobalJsonFound") > -1, "should found a global.json file");
+        }, tr, done);
+    });
 });
-

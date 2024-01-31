@@ -7,6 +7,8 @@
     "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport/).",
     "category": "Deploy",
     "deprecated": true,
+    "removalDate": "2024-01-31",
+    "deprecationMessage": "The AppCenterDistribute@1 (App Center distribute) task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead.",
     "visibility": [
         "Build",
         "Release"
@@ -14,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 226,
+        "Minor": 235,
         "Patch": 0
     },
     "minimumAgentVersion": "2.144.0",
@@ -199,6 +201,7 @@
         "CannotFindAnyFile": "Cannot find any file based on %s.",
         "FoundMultipleFiles": "Found multiple files matching %s.",
         "FailedToCreateFile": "Failed to create %s with error: %s.",
-        "FailedToFindFile": "Failed to find %s at %s."
+        "FailedToFindFile": "Failed to find %s at %s.",
+        "DeprecatedTask": "The AppCenterDistribute@1 (App Center distribute) task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead."
     }
 }

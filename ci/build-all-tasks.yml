@@ -1,16 +1,25 @@
 # This YAML is intended for building ALL tasks and publish them as an artifact 
 # to be used later for Tasks Deployment train
+parameters:
+  - name: deploy_all_tasks
+    type: boolean
 
 steps:
 # Clean
 - checkout: self
   clean: true
 
+# Use .NET SDK 8
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK 8.x'
+  inputs:
+    version: 8.x
+
 # Use node 10, npm 6
 - task: NodeTool@0
   displayName: Use node 10
   inputs:
-    versionSpec: 10.x
+    versionSpec: 10.24.1
 
 # npm install
 - script: npm install
@@ -20,9 +29,15 @@ steps:
 - script: node make.js clean
   displayName: Clean tasks
 
-# Build
+# Build tasks
+- script: node make.js serverBuild --task "$(task_pattern)"
+  displayName: Build tasks using pattern
+  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', false))
+
+# Build all tasks
 - script: node make.js serverBuild
-  displayName: Build tasks
+  displayName: Build all tasks
+  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', true))
 
 # Stage tasks individually into the package directory
 - script: node ./ci/stage-package.js true individually

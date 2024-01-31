@@ -51,7 +51,9 @@ export default class ClusterConnection {
             }
             
             this.kubeconfigFile = path.join(this.userDir, "config");
-            fs.writeFileSync(this.kubeconfigFile, kubeconfig);
+            if (kubeconfig != null){
+                fs.writeFileSync(this.kubeconfigFile, kubeconfig);   
+            }
          });
     }
 
