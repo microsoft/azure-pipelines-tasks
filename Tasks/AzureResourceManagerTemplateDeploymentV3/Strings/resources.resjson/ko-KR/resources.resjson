@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://aka.ms/armtaskreadme)",
   "loc.description": "ARM(Azure Resource Manager) 템플릿을 모든 배포 범위에 배포",
   "loc.instanceNameFormat": "ARM 템플릿 배포: $(deploymentScope) 범위",
-  "loc.releaseNotes": "- 모든 배포 범위에서 배포 지원이 추가되었습니다.\n - 모든 VM 관련 작업을 제거했습니다.",
+  "loc.releaseNotes": "- Added support for bicepparam.",
   "loc.group.displayName.AzureDetails": "Azure 세부 정보",
   "loc.group.displayName.Template": "템플릿",
   "loc.group.displayName.Advanced": "고급",
@@ -27,7 +27,7 @@
   "loc.input.label.csmFile": "템플릿",
   "loc.input.help.csmFile": "Azure Resource Manager 템플릿을 가리키는 경로 또는 패턴을 지정합니다. 템플릿에 대한 자세한 내용은 https://aka.ms/azuretemplates를 참조하세요. 즉시 시작하려면 https://aka.ms/sampletemplate 템플릿을 사용하세요. '연결된 아티팩트'는 Azure CLI 버전 > 2.20.0인 경우 Bicep 파일도 지원합니다.",
   "loc.input.label.csmParametersFile": "템플릿 매개 변수",
-  "loc.input.help.csmParametersFile": "Azure Resource Manager 템플릿의 매개 변수 파일을 가리키는 경로 또는 패턴을 지정합니다. '연결된 아티팩트'는 Azure CLI 버전 > 2.20.0인 경우 Bicep 파일도 지원합니다.",
+  "loc.input.help.csmParametersFile": "Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template. 'Linked artifact' also has support for Bicep Param files when the Azure CLI version > 2.47.0",
   "loc.input.label.overrideParameters": "템플릿 매개 변수 재정의",
   "loc.input.help.overrideParameters": "템플릿 매개 변수를 표 형태로 보려면 [매개 변수 재정의] 텍스트 상자 옆에 있는 \"...\"을 클릭합니다. 이 기능을 사용하려면 소스에서 CORS 규칙을 사용하도록 설정해야 합니다. 템플릿이 Azure Storage Blob에 있는 경우 [이 문서](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests)를 참조하여 CORS를 사용하도록 설정하세요. 또는 텍스트 상자에 재정의할 템플릿 매개 변수를 입력합니다. 예: <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).<br>사용 중인 매개 변수 값이 여러 단어로 이루어진 경우에는 변수를 사용해서 전달하더라도 따옴표로 묶으세요. 예: -name \"parameter value\" -name2 \"$(var)\"<br>개체 형식 매개 변수를 재정의하려면 묶은 JSON 개체를 사용합니다. 예: -options [\"option1\"] -map {\"key1\": \"value1\" }. ",
   "loc.input.label.deploymentMode": "배포 모드",
@@ -99,5 +99,7 @@
   "loc.messages.LoginFailed": "Azure 로그인 실패: %s",
   "loc.messages.MSILoginFailed": "관리 서비스 ID를 사용하여 Azure 로그인 실패: %s",
   "loc.messages.AuthSchemeNotSupported": "인증 체계 %s은(는) 지원되지 않습니다.",
-  "loc.messages.ErrorInSettingUpSubscription": "구독 설정 오류: %s"
+  "loc.messages.ErrorInSettingUpSubscription": "구독 설정 오류: %s",
+  "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\" failed. Error: %s",
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI version should be >= 2.47.0 to use .bicepparam file"
 }
