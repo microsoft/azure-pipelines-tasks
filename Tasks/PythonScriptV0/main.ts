@@ -5,7 +5,7 @@ import { pythonScript } from './pythonscript';
 (async () => {
 #if NODE20
     let error: any | undefined;
-#elseif ISSUESOURCEENABLED //Duplicatation since the build config also based on NODE 20 and the task generator doesn't support multiple parameters
+#elseif ISSUESOURCEENABLED
     let error: any | undefined;
 #endif
     try {
@@ -24,7 +24,7 @@ import { pythonScript } from './pythonscript';
 #if NODE20
         error = e;
         task.setResult(task.TaskResult.Failed, error.message);
-#elseif ISSUESOURCEENABLED 
+#elseif ISSUESOURCEENABLED
         error = e;
         task.setResult(task.TaskResult.Failed, error.message);
 #else
