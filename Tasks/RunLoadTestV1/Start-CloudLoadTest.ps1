@@ -238,7 +238,7 @@ $featureFlags = @{
 }
 if ($featureFlags.failDeprecatedBuildTask)
 {
-	throw "The CloudLoadTest@1 (Cloud-based load test) has been deprecated since June 4, 2019 and will soon be retired. Use the AzureLoadTest@1 task instead."
+	throw "The CloudLoadTest@1 (Cloud-based load test) has been deprecated since June 4, 2019 and will soon be retired. Use the AzureLoadTest@1 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
 }
 
 WriteTaskMessages "Load Test Script execution completed"
