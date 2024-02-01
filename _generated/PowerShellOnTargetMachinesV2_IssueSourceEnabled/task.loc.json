@@ -1,0 +1,169 @@
+{
+  "id": "3B5693D4-5777-4FEE-862A-BD2B7A374C68",
+  "name": "PowerShellOnTargetMachines",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/powershell-on-target-machines",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 235,
+    "Patch": 1
+  },
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "minimumAgentVersion": "1.104.0",
+  "groups": [
+    {
+      "name": "deployment",
+      "displayName": "ms-resource:loc.group.displayName.deployment",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "EnvironmentName",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.EnvironmentName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.EnvironmentName"
+    },
+    {
+      "name": "AdminUserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdminUserName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.AdminUserName"
+    },
+    {
+      "name": "AdminPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdminPassword",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.AdminPassword"
+    },
+    {
+      "name": "Protocol",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.Protocol",
+      "required": false,
+      "defaultValue": "",
+      "options": {
+        "Http": "HTTP",
+        "Https": "HTTPS"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.Protocol"
+    },
+    {
+      "name": "TestCertificate",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.TestCertificate",
+      "defaultValue": "true",
+      "visibleRule": "Protocol = Https",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.TestCertificate"
+    },
+    {
+      "name": "ScriptPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ScriptPath",
+      "defaultValue": "",
+      "groupName": "deployment",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptPath"
+    },
+    {
+      "name": "ScriptArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ScriptArguments",
+      "defaultValue": "",
+      "groupName": "deployment",
+      "required": false,
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
+    },
+    {
+      "name": "InitializationScriptPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.InitializationScriptPath",
+      "defaultValue": "",
+      "groupName": "deployment",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.InitializationScriptPath"
+    },
+    {
+      "name": "SessionVariables",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.SessionVariables",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "deployment",
+      "helpMarkDown": "ms-resource:loc.input.help.SessionVariables"
+    },
+    {
+      "name": "RunPowershellInParallel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RunPowershellInParallel",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.RunPowershellInParallel"
+    },
+    {
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceFilteringMethod"
+    },
+    {
+      "name": "MachineNames",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.MachineNames",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell3": {
+      "target": "PowerShellOnTargetMachines.ps1"
+    }
+  },
+  "messages": {
+    "PS_TM_NoMachineExistsUnderEnvironment0ForDeployment": "ms-resource:loc.messages.PS_TM_NoMachineExistsUnderEnvironment0ForDeployment",
+    "PS_TM_DeploymentStartedForMachine0": "ms-resource:loc.messages.PS_TM_DeploymentStartedForMachine0",
+    "PS_TM_DeploymentStatusForMachine01": "ms-resource:loc.messages.PS_TM_DeploymentStatusForMachine01",
+    "PS_TM_DeploymentFailedOnMachine0WithFollowingMessage1": "ms-resource:loc.messages.PS_TM_DeploymentFailedOnMachine0WithFollowingMessage1",
+    "PS_TM_ResourceDoesnotHaveWinRMServiceConfigured": "ms-resource:loc.messages.PS_TM_ResourceDoesnotHaveWinRMServiceConfigured",
+    "PS_TM_0PortWasNotProvidedForResource1": "ms-resource:loc.messages.PS_TM_0PortWasNotProvidedForResource1",
+    "PS_TM_DeploymentOnOneOrMoreMachinesFailed": "ms-resource:loc.messages.PS_TM_DeploymentOnOneOrMoreMachinesFailed"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.235.0",
+    "IssueSourceEnabled": "2.235.1"
+  }
+}

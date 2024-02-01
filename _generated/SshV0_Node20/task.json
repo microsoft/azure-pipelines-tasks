@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
-    "Patch": 3
+    "Minor": 235,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -173,7 +173,8 @@
     "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
   },
   "_buildConfigMapping": {
-    "Default": "0.231.2",
-    "Node20-225": "0.231.3"
+    "Default": "0.235.0",
+    "IssueSourceEnabled": "0.235.2",
+    "Node20-225": "0.235.1"
   }
 }

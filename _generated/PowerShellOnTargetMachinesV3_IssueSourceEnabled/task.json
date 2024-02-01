@@ -1,0 +1,238 @@
+{
+  "id": "3B5693D4-5777-4FEE-862A-BD2B7A374C68",
+  "name": "PowerShellOnTargetMachines",
+  "friendlyName": "PowerShell on target machines",
+  "description": "Execute PowerShell scripts on remote machines using PSSession and Invoke-Command for remoting",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/powershell-on-target-machines",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=873465)",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 3,
+    "Minor": 235,
+    "Patch": 1
+  },
+  "groups": [
+    {
+      "name": "ScriptOptions",
+      "displayName": "Script options",
+      "isExpanded": true
+    },
+    {
+      "name": "SessionOptions",
+      "displayName": "PSSession options",
+      "isExpanded": true
+    },
+    {
+      "name": "ErrorHandlingOptions",
+      "displayName": "Error handling options",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "releaseNotes": "Use PSSession and invoke-command to perform remoting on target machines.<br/><br/>* Added support for inline script execution.<br/><br/>* Default and Credssp authentication are supported.<br/><br/>* Added options for error handling: ErrorActionPreference, ignoreLASTEXITCODE and Fail on Standard Error.",
+  "minimumAgentVersion": "2.134.0",
+  "inputs": [
+    {
+      "name": "Machines",
+      "type": "multiLine",
+      "label": "Machines",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. <br>Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>Or provide build or release variables. Eg: $(variableName) <br>If you are using HTTPS, name/IP of machine should match the CN in the certificate."
+    },
+    {
+      "name": "UserName",
+      "type": "string",
+      "label": "Username",
+      "defaultValue": "",
+      "helpMarkDown": "Username for the target machines. The user should be a part of Administrators group or WinRM remote management users group. <br> Eg: Format: Domain\\Admin User, Admin User@Domain, .\\Admin User"
+    },
+    {
+      "name": "UserPassword",
+      "type": "string",
+      "label": "Password",
+      "defaultValue": "",
+      "helpMarkDown": "password for the target machines. <br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it."
+    },
+    {
+      "name": "ScriptType",
+      "type": "radio",
+      "label": "Script Type",
+      "defaultValue": "Inline",
+      "options": {
+        "FilePath": "File Path",
+        "Inline": "Inline"
+      },
+      "helpMarkDown": "The type of script to execute: Inline or File Path",
+      "groupName": "ScriptOptions"
+    },
+    {
+      "name": "ScriptPath",
+      "type": "string",
+      "label": "Script File Path",
+      "defaultValue": "",
+      "visibleRule": "ScriptType = FilePath",
+      "required": true,
+      "helpMarkDown": "Location of the PowerShell script on the target machines or on a UNC path like C:\\BudgetIT\\Web\\Deploy\\Website.ps1 which should be accessible from the target machine.",
+      "groupName": "ScriptOptions"
+    },
+    {
+      "name": "InlineScript",
+      "type": "multiLine",
+      "label": "Script",
+      "visibleRule": "ScriptType = Inline",
+      "required": true,
+      "defaultValue": "# Write your powershell commands here.\n\nWrite-Output \"Hello World\"",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000"
+      },
+      "helpMarkDown": "",
+      "groupName": "ScriptOptions"
+    },
+    {
+      "name": "ScriptArguments",
+      "type": "string",
+      "label": "Script Arguments",
+      "defaultValue": "",
+      "visibleRule": "ScriptType = FilePath",
+      "required": false,
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      },
+      "helpMarkDown": "Arguments for the PowerShell script. Can be ordinal parameters or named parameters like -testParam test",
+      "groupName": "ScriptOptions"
+    },
+    {
+      "name": "InitializationScript",
+      "type": "string",
+      "label": "Initialization script",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "ScriptType = FilePath",
+      "helpMarkDown": "Location of the data script for DSC on the target machines or on a UNC path like C:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1",
+      "groupName": "ScriptOptions"
+    },
+    {
+      "name": "SessionVariables",
+      "type": "multiLine",
+      "label": "Session Variables",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "ScriptType = FilePath",
+      "helpMarkDown": "Set common session variables for both the scripts. Variable assignments should be valid PowerShell statements.",
+      "groupName": "ScriptOptions"
+    },
+    {
+      "name": "CommunicationProtocol",
+      "type": "radio",
+      "label": "Protocol",
+      "defaultValue": "Https",
+      "options": {
+        "Http": "HTTP",
+        "Https": "HTTPS"
+      },
+      "helpMarkDown": "Select the protocol to use for the WinRM service connection with the machine(s). Default is HTTPS.",
+      "groupName": "SessionOptions"
+    },
+    {
+      "name": "AuthenticationMechanism",
+      "type": "pickList",
+      "label": "Authentication",
+      "options": {
+        "Default": "Default",
+        "Credssp": "CredSSP"
+      },
+      "defaultValue": "Default",
+      "helpMarkDown": "Select the authentication mechanism to be used for creating the pssession. For 'CredSSP' authentication, username and password fields are mandatory.",
+      "groupName": "SessionOptions"
+    },
+    {
+      "name": "NewPsSessionOptionArguments",
+      "type": "multiLine",
+      "label": "Session Option parameters",
+      "required": false,
+      "defaultValue": "-SkipCACheck -IdleTimeout 7200000 -OperationTimeout 0 -OutputBufferingMode Block",
+      "helpMarkDown": "Advanced options for remote session (New-PSSessionOption). For example, -SkipCACheck, -SkipCNCheck, -SkipRevocationCheck etc. For a complete list of all session options, see [this](https://aka.ms/Vsts_PS_TM_v3_NewPSSessionOptions)",
+      "groupName": "SessionOptions"
+    },
+    {
+      "name": "ErrorActionPreference",
+      "type": "pickList",
+      "label": "ErrorActionPreference",
+      "required": false,
+      "defaultValue": "stop",
+      "options": {
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "Prepends the line `$ErrorActionPreference = 'VALUE'` at the top of your script.",
+      "groupName": "ErrorHandlingOptions"
+    },
+    {
+      "name": "failOnStderr",
+      "type": "boolean",
+      "label": "Fail on Standard Error",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely on the exit code to determine failure.",
+      "groupName": "ErrorHandlingOptions"
+    },
+    {
+      "name": "ignoreLASTEXITCODE",
+      "type": "boolean",
+      "label": "Ignore $LASTEXITCODE",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "If this is false, the line `if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }` is executed at the end of your script. This will cause the last exit code from an external command to be propagated as the exit code of powershell. Otherwise the line is not executed to the end of your script.",
+      "groupName": "ErrorHandlingOptions"
+    },
+    {
+      "name": "WorkingDirectory",
+      "type": "string",
+      "label": "Working Directory",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "Working directory where the script is run.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "RunPowershellInParallel",
+      "type": "boolean",
+      "label": "Run PowerShell in Parallel",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Setting it to true will run the PowerShell scripts in parallel on the target machines.",
+      "groupName": "advanced"
+    }
+  ],
+  "instanceNameFormat": "Run PowerShell on Target Machines",
+  "execution": {
+    "PowerShell3": {
+      "target": "PowerShellOnTargetMachines.ps1"
+    }
+  },
+  "messages": {
+    "PS_TM_ParseSessionVariablesValueNotFound": "Parsing operation failed. ErrorMessage: 'value not found', Token: '{0}', CurrentKey: '{1}'",
+    "PS_TM_ParseSessionVariablesKeyNotFound": "Parsing operation failed. ErrorMessage: 'key not found', Token: '{0}', CurrentKey: '{1}'",
+    "PS_TM_InvalidSessionVariablesInputFormat": "Parsing operation failed. Check format of input",
+    "PS_TM_TaskFailed": "Task failed with error: '{0}'",
+    "PS_TM_SessionConfigurationNameCannotBeNull": "Session configuration name cannot be null",
+    "PS_TM_UnableToParseSessionVariables": "Unable to parse session variables input. Verify that it is a valid script. Error: '{0}'"
+  },
+  "_buildConfigMapping": {
+    "Default": "3.235.0",
+    "IssueSourceEnabled": "3.235.1"
+  }
+}

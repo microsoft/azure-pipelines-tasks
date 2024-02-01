@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
-    "Patch": 2
+    "Minor": 235,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -169,7 +169,8 @@
     "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   },
   "_buildConfigMapping": {
-    "Default": "0.231.2",
-    "Node20-225": "0.231.3"
+    "Default": "0.235.0",
+    "IssueSourceEnabled": "0.235.2",
+    "Node20-225": "0.235.1"
   }
 }

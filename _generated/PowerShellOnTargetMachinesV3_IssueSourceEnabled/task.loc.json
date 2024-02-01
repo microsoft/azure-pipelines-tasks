@@ -1,0 +1,238 @@
+{
+  "id": "3B5693D4-5777-4FEE-862A-BD2B7A374C68",
+  "name": "PowerShellOnTargetMachines",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/powershell-on-target-machines",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 3,
+    "Minor": 235,
+    "Patch": 1
+  },
+  "groups": [
+    {
+      "name": "ScriptOptions",
+      "displayName": "ms-resource:loc.group.displayName.ScriptOptions",
+      "isExpanded": true
+    },
+    {
+      "name": "SessionOptions",
+      "displayName": "ms-resource:loc.group.displayName.SessionOptions",
+      "isExpanded": true
+    },
+    {
+      "name": "ErrorHandlingOptions",
+      "displayName": "ms-resource:loc.group.displayName.ErrorHandlingOptions",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "minimumAgentVersion": "2.134.0",
+  "inputs": [
+    {
+      "name": "Machines",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.Machines",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Machines"
+    },
+    {
+      "name": "UserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.UserName",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.UserName"
+    },
+    {
+      "name": "UserPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.UserPassword",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.UserPassword"
+    },
+    {
+      "name": "ScriptType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ScriptType",
+      "defaultValue": "Inline",
+      "options": {
+        "FilePath": "File Path",
+        "Inline": "Inline"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptType",
+      "groupName": "ScriptOptions"
+    },
+    {
+      "name": "ScriptPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ScriptPath",
+      "defaultValue": "",
+      "visibleRule": "ScriptType = FilePath",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptPath",
+      "groupName": "ScriptOptions"
+    },
+    {
+      "name": "InlineScript",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.InlineScript",
+      "visibleRule": "ScriptType = Inline",
+      "required": true,
+      "defaultValue": "# Write your powershell commands here.\n\nWrite-Output \"Hello World\"",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000"
+      },
+      "helpMarkDown": "",
+      "groupName": "ScriptOptions"
+    },
+    {
+      "name": "ScriptArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ScriptArguments",
+      "defaultValue": "",
+      "visibleRule": "ScriptType = FilePath",
+      "required": false,
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments",
+      "groupName": "ScriptOptions"
+    },
+    {
+      "name": "InitializationScript",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.InitializationScript",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "ScriptType = FilePath",
+      "helpMarkDown": "ms-resource:loc.input.help.InitializationScript",
+      "groupName": "ScriptOptions"
+    },
+    {
+      "name": "SessionVariables",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.SessionVariables",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "ScriptType = FilePath",
+      "helpMarkDown": "ms-resource:loc.input.help.SessionVariables",
+      "groupName": "ScriptOptions"
+    },
+    {
+      "name": "CommunicationProtocol",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.CommunicationProtocol",
+      "defaultValue": "Https",
+      "options": {
+        "Http": "HTTP",
+        "Https": "HTTPS"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.CommunicationProtocol",
+      "groupName": "SessionOptions"
+    },
+    {
+      "name": "AuthenticationMechanism",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AuthenticationMechanism",
+      "options": {
+        "Default": "Default",
+        "Credssp": "CredSSP"
+      },
+      "defaultValue": "Default",
+      "helpMarkDown": "ms-resource:loc.input.help.AuthenticationMechanism",
+      "groupName": "SessionOptions"
+    },
+    {
+      "name": "NewPsSessionOptionArguments",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.NewPsSessionOptionArguments",
+      "required": false,
+      "defaultValue": "-SkipCACheck -IdleTimeout 7200000 -OperationTimeout 0 -OutputBufferingMode Block",
+      "helpMarkDown": "ms-resource:loc.input.help.NewPsSessionOptionArguments",
+      "groupName": "SessionOptions"
+    },
+    {
+      "name": "ErrorActionPreference",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ErrorActionPreference",
+      "required": false,
+      "defaultValue": "stop",
+      "options": {
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ErrorActionPreference",
+      "groupName": "ErrorHandlingOptions"
+    },
+    {
+      "name": "failOnStderr",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStderr",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
+      "groupName": "ErrorHandlingOptions"
+    },
+    {
+      "name": "ignoreLASTEXITCODE",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ignoreLASTEXITCODE",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.ignoreLASTEXITCODE",
+      "groupName": "ErrorHandlingOptions"
+    },
+    {
+      "name": "WorkingDirectory",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.WorkingDirectory",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.WorkingDirectory",
+      "groupName": "advanced"
+    },
+    {
+      "name": "RunPowershellInParallel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RunPowershellInParallel",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.RunPowershellInParallel",
+      "groupName": "advanced"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell3": {
+      "target": "PowerShellOnTargetMachines.ps1"
+    }
+  },
+  "messages": {
+    "PS_TM_ParseSessionVariablesValueNotFound": "ms-resource:loc.messages.PS_TM_ParseSessionVariablesValueNotFound",
+    "PS_TM_ParseSessionVariablesKeyNotFound": "ms-resource:loc.messages.PS_TM_ParseSessionVariablesKeyNotFound",
+    "PS_TM_InvalidSessionVariablesInputFormat": "ms-resource:loc.messages.PS_TM_InvalidSessionVariablesInputFormat",
+    "PS_TM_TaskFailed": "ms-resource:loc.messages.PS_TM_TaskFailed",
+    "PS_TM_SessionConfigurationNameCannotBeNull": "ms-resource:loc.messages.PS_TM_SessionConfigurationNameCannotBeNull",
+    "PS_TM_UnableToParseSessionVariables": "ms-resource:loc.messages.PS_TM_UnableToParseSessionVariables"
+  },
+  "_buildConfigMapping": {
+    "Default": "3.235.0",
+    "IssueSourceEnabled": "3.235.1"
+  }
+}

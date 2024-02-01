@@ -1,0 +1,30 @@
+{
+  "name": "vsts-tasks-azurecli",
+  "version": "1.0.0",
+  "description": "Azure Pipelines Azure CLI Task",
+  "main": "azureclitask.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^20.3.1",
+    "@types/q": "1.0.7",
+    "azure-devops-node-api": "^12.0.0",
+    "azure-pipelines-task-lib": "^4.8.2",
+    "azure-pipelines-tasks-artifacts-common": "^2.212.0"
+  },
+  "devDependencies": {
+    "typescript": "5.1.6"
+  }
+}

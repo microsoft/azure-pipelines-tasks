@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 231,
+    "Minor": 235,
     "Patch": 0
   },
   "demands": [
@@ -92,7 +92,8 @@
     "BashFailed": "ms-resource:loc.messages.BashFailed"
   },
   "_buildConfigMapping": {
-    "Default": "2.231.0",
-    "Node20-225": "2.231.1"
+    "Default": "2.235.0",
+    "IssueSourceEnabled": "2.235.2",
+    "Node20-225": "2.235.1"
   }
 }
