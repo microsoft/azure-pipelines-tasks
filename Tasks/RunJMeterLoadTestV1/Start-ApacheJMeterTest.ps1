@@ -189,7 +189,7 @@ $featureFlags = @{
 }
 if ($featureFlags.failDeprecatedBuildTask)
 {
-	throw "The ApacheJMeterLoadTest@1 (Cloud-based Apache JMeter load test) task haas been deprecated since June 4, 2019 and will soon be retired. For cloud-based load testing, use the AzureLoadTest@1 task."
+	throw "The ApacheJMeterLoadTest@1 (Cloud-based Apache JMeter load test) task haas been deprecated since June 4, 2019 and will soon be retired. For cloud-based load testing, use the AzureLoadTest@1 task. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
 }
 WriteTaskMessages "JMeter Test Script execution completed"
 
