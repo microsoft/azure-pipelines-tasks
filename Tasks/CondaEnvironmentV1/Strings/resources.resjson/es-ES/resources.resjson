@@ -24,5 +24,6 @@
   "loc.messages.ReactivateExistingEnvironment": "Se encontró el entorno existente %s y no se estableció el parámetro \"Limpiar entorno\" de la tarea. Reactivando...",
   "loc.messages.ParameterRequired": "El parámetro \"%s\" es obligatorio",
   "loc.messages.PlatformNotRecognized": "Plataforma no reconocida",
-  "loc.messages.PrependPath": "Anteponer la variable de entorno PATH con el directorio: %s"
+  "loc.messages.PrependPath": "Anteponer la variable de entorno PATH con el directorio: %s",
+  "loc.messages.DeprecatedTask": "The CondaEnvironment@1 (Conda environment) task has been deprecated since February 13, 2019 and will soon be retired. Use the Conda CLI ('conda') directly from a bash/pwsh/script task. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
 }

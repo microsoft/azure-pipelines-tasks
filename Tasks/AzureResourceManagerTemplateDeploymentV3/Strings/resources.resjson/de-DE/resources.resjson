@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://aka.ms/armtaskreadme)",
   "loc.description": "Azure Resource Manager-Vorlage (ARM) für alle Bereitstellungsbereiche bereitstellen",
   "loc.instanceNameFormat": "ARM-Vorlagenbereitstellung: Bereich \"$(deploymentScope)\"",
-  "loc.releaseNotes": "– Unterstützung für die Bereitstellung in allen Bereitstellungsbereichen hinzugefügt.\n– Alle VM-bezogenen Aktionen wurden entfernt.",
+  "loc.releaseNotes": "- Added support for bicepparam.",
   "loc.group.displayName.AzureDetails": "Azure-Details",
   "loc.group.displayName.Template": "Vorlage",
   "loc.group.displayName.Advanced": "Erweitert",
@@ -27,7 +27,7 @@
   "loc.input.label.csmFile": "Vorlage",
   "loc.input.help.csmFile": "Geben Sie den Pfad oder ein Muster an, das auf die Azure Resource Manager Vorlage zeigt. Weitere Informationen zu den Vorlagen finden Sie unter https://aka.ms/azuretemplates. Um sofort zu beginnen, verwenden Sie vorlagenbasierte https://aka.ms/sampletemplate. \"Verknüpftes Artefakt\" bietet auch Unterstützung für Bicep-Dateien, wenn die Azure CLI Version > 2.20.0",
   "loc.input.label.csmParametersFile": "Vorlagenparameter",
-  "loc.input.help.csmParametersFile": "Geben Sie den Pfad oder ein Muster an, das für die Parameterdatei für die Azure Resource Manager Vorlage zeigt. \"Verknüpftes Artefakt\" bietet auch Unterstützung für Bicep-Dateien, wenn die Azure CLI Version > 2.20.0",
+  "loc.input.help.csmParametersFile": "Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template. 'Linked artifact' also has support for Bicep Param files when the Azure CLI version > 2.47.0",
   "loc.input.label.overrideParameters": "Vorlagenparameter überschreiben",
   "loc.input.help.overrideParameters": "Wenn Sie die Vorlagenparameter in einem Raster anzeigen möchten, klicken Sie neben dem Textfeld \"Parameter außer Kraft setzen\" auf \"...\". Für dieses Feature müssen CORS-Regeln an der Quelle aktiviert sein. Wenn sich Vorlagen im Azure Storage Blob befinden, finden Sie [hier](https://docs.microsoft.com/de-de/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) Informationen zum Aktivieren von CORS. Sie können alternativ auch die zu überschreibenden Vorlagenparameter in das Textfeld eingeben. Beispiel: <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).<br>Wenn der verwendete Parameterwert mehrere Wörter umfasst, schließen Sie ihn in Anführungszeichen ein – selbst dann, wenn Sie der Wert mithilfe von Variablen übergeben wird. Beispiel: -name \"parameter value\" -name2 \"$(var)\"<br>Verwenden Sie zum Außerkraftsetzen von Objekttypparametern als Zeichenfolgen dargestellte JSON-Objekte. Beispiel: -options [\"option1\"] -map {\"key1\": \"value1\" }.",
   "loc.input.label.deploymentMode": "Bereitstellungsmodus",
@@ -99,5 +99,7 @@
   "loc.messages.LoginFailed": "Fehler bei der Azure-Anmeldung: %s",
   "loc.messages.MSILoginFailed": "Fehler bei der Azure-Anmeldung mit einer verwalteten Dienstidentität: %s",
   "loc.messages.AuthSchemeNotSupported": "Das Authentifizierungsschema „%s“ wird nicht unterstützt.",
-  "loc.messages.ErrorInSettingUpSubscription": "Fehler beim Einrichten des Abonnements: %s"
+  "loc.messages.ErrorInSettingUpSubscription": "Fehler beim Einrichten des Abonnements: %s",
+  "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\" failed. Error: %s",
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI version should be >= 2.47.0 to use .bicepparam file"
 }
