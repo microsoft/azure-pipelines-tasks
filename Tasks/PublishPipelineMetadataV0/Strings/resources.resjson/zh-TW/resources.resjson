@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "發行管線中繼資料",
-  "loc.helpMarkDown": "Publish Pipeline Metadata to Evidence store.",
+  "loc.helpMarkDown": "將管線中繼資料發行至證據存放區。",
   "loc.description": "將管線中繼資料發行至辨識項存放區",
   "loc.instanceNameFormat": "正在將管線 $(System.DefinitionName) 的中繼資料發行至辨識項存放區"
 }
