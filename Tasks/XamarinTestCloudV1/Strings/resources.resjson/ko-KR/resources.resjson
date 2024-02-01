@@ -28,5 +28,6 @@
   "loc.input.label.optionalArgs": "선택적 인수",
   "loc.input.help.optionalArgs": "추가 인수를 test-cloud.exe에 전달했습니다.",
   "loc.input.label.publishNUnitResults": "Azure Pipelines에 결과 게시",
-  "loc.input.help.publishNUnitResults": "선택하면, --nunit-xml 옵션이 test-cloud.exe에 전달됩니다. NUnit xml 파일의 결과가 Azure Pipelines에 게시됩니다."
+  "loc.input.help.publishNUnitResults": "선택하면, --nunit-xml 옵션이 test-cloud.exe에 전달됩니다. NUnit xml 파일의 결과가 Azure Pipelines에 게시됩니다.",
+  "loc.messages.DeprecatedTask": "The XamarinTestCloud@1 (Xamarin Test Cloud) task has been deprecated since January 11, 2018 and will soon be retired. Use the AppCenterDistribute@3 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
 }

@@ -39,5 +39,6 @@
   "loc.messages.CannotFindAnyFile": "%s을(를) 기반으로 하는 파일을 찾을 수 없습니다.",
   "loc.messages.FoundMultipleFiles": "%s과(와) 일치하는 파일을 여러 개 찾았습니다.",
   "loc.messages.FailedToCreateFile": "%s을(를) 만들지 못했습니다(오류: %s).",
-  "loc.messages.FailedToFindFile": "%s을(를) %s에서 찾지 못했습니다."
+  "loc.messages.FailedToFindFile": "%s을(를) %s에서 찾지 못했습니다.",
+  "loc.messages.DeprecatedTask": "The AppCenterDistribute@2 (App Center distribute)  task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
 }

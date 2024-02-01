@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "パイプライン メタデータの公開",
-  "loc.helpMarkDown": "Publish Pipeline Metadata to Evidence store.",
+  "loc.helpMarkDown": "パイプライン メタデータを証拠ストアに発行します。",
   "loc.description": "証拠ストアにパイプライン メタデータを公開します",
   "loc.instanceNameFormat": "パイプライン $(System.DefinitionName) のメタデータを証拠ストアに発行する"
 }

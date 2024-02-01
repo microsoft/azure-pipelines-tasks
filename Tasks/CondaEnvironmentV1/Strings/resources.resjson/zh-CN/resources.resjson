@@ -24,5 +24,6 @@
   "loc.messages.ReactivateExistingEnvironment": "找到现有环境 %s 且未设置任务的 \"Clean environment\" 参数。正在重新激活...",
   "loc.messages.ParameterRequired": "“%s”参数是必需的",
   "loc.messages.PlatformNotRecognized": "无法识别的平台",
-  "loc.messages.PrependPath": "在 PATH 环境变量前面添加目录: %s"
+  "loc.messages.PrependPath": "在 PATH 环境变量前面添加目录: %s",
+  "loc.messages.DeprecatedTask": "The CondaEnvironment@1 (Conda environment) task has been deprecated since February 13, 2019 and will soon be retired. Use the Conda CLI ('conda') directly from a bash/pwsh/script task. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
 }

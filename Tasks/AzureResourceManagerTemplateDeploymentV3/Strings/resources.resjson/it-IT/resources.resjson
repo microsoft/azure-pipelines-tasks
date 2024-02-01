@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Altre informazioni su questa attività](https://aka.ms/armtaskreadme)",
   "loc.description": "Distribuisce un modello di Azure Resource Manager in tutti gli ambiti di distribuzione",
   "loc.instanceNameFormat": "Distribuzione di modelli di Azure Resource Manager: ambito $(deploymentScope)",
-  "loc.releaseNotes": "- Aggiunta del supporto per la distribuzione in tutti gli ambiti di distribuzione.\n- Rimozione di tutte le azioni correlate alle macchine virtuali.",
+  "loc.releaseNotes": "- Added support for bicepparam.",
   "loc.group.displayName.AzureDetails": "Dettagli su Azure",
   "loc.group.displayName.Template": "Modello",
   "loc.group.displayName.Advanced": "Avanzate",
@@ -27,7 +27,7 @@
   "loc.input.label.csmFile": "Modello",
   "loc.input.help.csmFile": "Consente di specificare il percorso o un criterio che punta al modello di Azure Resource Manager. Per altre informazioni sui modelli, vedere https://aka.ms/azuretemplates. Per iniziare subito, usare il modello https://aka.ms/sampletemplate. 'Artefatto collegato' offre anche supporto per file Bicep quando la versione dell'interfaccia della riga di comando di Azure è > 2.20.0",
   "loc.input.label.csmParametersFile": "Parametri del modello",
-  "loc.input.help.csmParametersFile": "Specificare il percorso o un criterio che punta al file di parametri del modello di Azure Resource Manager. 'Artefatto collegato' offre anche supporto per file Bicep quando la versione dell'interfaccia della riga di comando di Azure è > 2.20.0",
+  "loc.input.help.csmParametersFile": "Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template. 'Linked artifact' also has support for Bicep Param files when the Azure CLI version > 2.47.0",
   "loc.input.label.overrideParameters": "Esegui override dei parametri del modello",
   "loc.input.help.overrideParameters": "Per visualizzare i parametri del modello in una griglia, fare clic su \"…\" accanto alla casella di testo Parametri di sostituzione. Con questa funzionalità è richiesta l'abilitazione delle regole CORS nell'origine. Se i modelli si trovano nel BLOB del servizio di archiviazione di Azure, vedere [qui](https://docs.microsoft.com/it-it/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) per abilitare CORS. In alternativa, digitare nella casella di testo i parametri del modello di cui eseguire l'override. Esempio: <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).<br>Se il valore del parametro usato include più parole, racchiuderle tra virgolette anche se verranno passate con le variabili. Ad esempio, -name \"valore parametro\" -name2 \"$(var)\"<br>Per eseguire l'override di parametri di tipo oggetto, usare oggetti JSON sotto forma di stringa. Ad esempio, -options [\"option1\"] -map {\"key1\": \"value1\" }. ",
   "loc.input.label.deploymentMode": "Modalità di distribuzione",
@@ -99,5 +99,7 @@
   "loc.messages.LoginFailed": "Accesso ad Azure non riuscito: %s",
   "loc.messages.MSILoginFailed": "Accesso ad Azure non riuscito con l'identità del servizio gestito: %s",
   "loc.messages.AuthSchemeNotSupported": "Lo schema di autenticazione %s non è supportato",
-  "loc.messages.ErrorInSettingUpSubscription": "Errore durante la configurazione della sottoscrizione: %s"
+  "loc.messages.ErrorInSettingUpSubscription": "Errore durante la configurazione della sottoscrizione: %s",
+  "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\" failed. Error: %s",
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI version should be >= 2.47.0 to use .bicepparam file"
 }

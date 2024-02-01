@@ -28,5 +28,6 @@
   "loc.input.label.optionalArgs": "選擇性引數",
   "loc.input.help.optionalArgs": "傳遞至 test-cloud.exe 的其他引數。",
   "loc.input.label.publishNUnitResults": "將結果發佈至 Azure Pipelines",
-  "loc.input.help.publishNUnitResults": "選取時，--nunit-xml 選項將傳遞到 test-cloud.exe。NUnit xml 檔案的結果將發佈至 Azure Pipelines。"
+  "loc.input.help.publishNUnitResults": "選取時，--nunit-xml 選項將傳遞到 test-cloud.exe。NUnit xml 檔案的結果將發佈至 Azure Pipelines。",
+  "loc.messages.DeprecatedTask": "The XamarinTestCloud@1 (Xamarin Test Cloud) task has been deprecated since January 11, 2018 and will soon be retired. Use the AppCenterDistribute@3 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
 }

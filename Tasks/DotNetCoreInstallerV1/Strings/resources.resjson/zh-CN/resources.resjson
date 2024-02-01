@@ -78,5 +78,6 @@
   "loc.messages.FilesDataIsIncorrectInVersion": "在发布 %s 中(针对版本 %s)，文件数据不正确(可能缺少必填字段，如 name、rid 和 url): %s",
   "loc.messages.VersionFilesDataIncorrect": "版本的文件数据缺失或缺少必填字段。",
   "loc.messages.VersionInformationNotComplete": "版本 %s 所需的信息在 releases.json 文件中不完整。错误: %s",
-  "loc.messages.FailedWhileExtractingPacakge": "提取下载的包时失败，出现错误: %s"
+  "loc.messages.FailedWhileExtractingPacakge": "提取下载的包时失败，出现错误: %s",
+  "loc.messages.DeprecatedTask": "The DotNetCoreInstaller@1 (.NET Core SDK/runtime installer) task has been deprecated since August 22, 2019 and will soon be retired. Use the UseDotNet@2 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
 }

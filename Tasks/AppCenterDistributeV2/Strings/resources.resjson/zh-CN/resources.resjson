@@ -39,5 +39,6 @@
   "loc.messages.CannotFindAnyFile": "找不到基于 %s 的任何文件。",
   "loc.messages.FoundMultipleFiles": "找到与 %s 匹配的多个文件。",
   "loc.messages.FailedToCreateFile": "未能创建 %s，出现错误: %s。",
-  "loc.messages.FailedToFindFile": "未能找到 %s，查找位置: %s。"
+  "loc.messages.FailedToFindFile": "未能找到 %s，查找位置: %s。",
+  "loc.messages.DeprecatedTask": "The AppCenterDistribute@2 (App Center distribute)  task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
 }

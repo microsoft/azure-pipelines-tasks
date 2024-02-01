@@ -38,5 +38,6 @@
   "loc.messages.CannotFindAnyFile": "Impossible de trouver un fichier basé sur %s.",
   "loc.messages.FoundMultipleFiles": "Plusieurs fichiers correspondant à %s ont été trouvés.",
   "loc.messages.FailedToCreateFile": "Impossible de créer %s avec l'erreur : %s.",
-  "loc.messages.FailedToFindFile": "%s est introuvable sur %s."
+  "loc.messages.FailedToFindFile": "%s est introuvable sur %s.",
+  "loc.messages.DeprecatedTask": "The AppCenterDistribute@1 (App Center distribute) task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
 }
