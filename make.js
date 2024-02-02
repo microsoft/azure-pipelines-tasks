@@ -202,7 +202,7 @@ CLI.serverBuild = function(/** @type {{ task: string }} */ argv) {
     // Need to validate generated tasks first
     const makeOptions = fileToJson(makeOptionsPath);
 
-    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks);
+    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint);
 
     const allTasks = getTaskList(taskList);
 
