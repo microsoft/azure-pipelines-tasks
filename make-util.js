@@ -1811,7 +1811,7 @@ exports.getBuildConfigGenerator = getBuildConfigGenerator;
  */
 var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber) {
     if (!makeOptions) fail("makeOptions is not defined");
-    if (sprintNumber && !parseInt(sprintNumber)) fail("Sprint is not a number");
+    if (sprintNumber && !Number.isInteger(sprintNumber)) fail("Sprint is not a number");
 
     const excludedMakeOptionKeys = ["tasks", "taskResources"];
     const validatingTasks = {};
