@@ -59,7 +59,8 @@ namespace BuildConfigGen
         /// <param name="currentSprint">Overide current sprint; omit to get from whatsprintis.it</param>
         /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
         /// <param name="allTasks"></param>
-        static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false)
+        /// <param name="getTaskVersionTable"></param>
+        static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false, bool getTaskVersionTable = false)
         {
             if (allTasks)
             {
@@ -70,6 +71,28 @@ namespace BuildConfigGen
             {
                 NotNullOrThrow(task, "Task is required");
                 NotNullOrThrow(configs, "Configs is required");
+            }
+
+            if (getTaskVersionTable)
+            {
+                string currentDir = Environment.CurrentDirectory;
+                string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+
+                var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
+
+                Console.WriteLine("config\ttask\tversion");
+
+                foreach (var t in tasks.Values)
+                {
+                    GetVersions(t.Name, string.Join('|', t.Configs), out var r);
+
+                    foreach (var z in r)
+                    {
+                        Console.WriteLine(string.Concat(z.config, "\t", z.task, "\t", z.version));
+                    }
+                }
+
+                return;
             }
 
             if (allTasks)
@@ -83,8 +106,8 @@ namespace BuildConfigGen
                     Main3(t.Name, string.Join('|', t.Configs), writeUpdates, currentSprint);
                 }
             }
-            else 
-            { 
+            else
+            {
                 // error handling strategy:
                 // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
                 // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
@@ -98,7 +121,7 @@ namespace BuildConfigGen
 
         private static void NullOrThrow<T>(T value, string message)
         {
-            if(value != null)
+            if (value != null)
             {
                 throw new Exception(message);
             }
@@ -109,6 +132,65 @@ namespace BuildConfigGen
             if (value == null)
             {
                 throw new Exception(message);
+            }
+        }
+
+        private static void GetVersions(string task, string configsString, out List<(string task, string config, string version)> versionList)
+        {
+            versionList = new List<(string task, string config, string version)>();
+
+            if (string.IsNullOrEmpty(task))
+            {
+                throw new Exception("task expected!");
+            }
+
+            if (string.IsNullOrEmpty(configsString))
+            {
+                throw new Exception("configs expected!");
+            }
+
+            string currentDir = Environment.CurrentDirectory;
+
+            string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+
+            string taskTargetPath = Path.Combine(gitRootPath, "Tasks", task);
+            if (!Directory.Exists(taskTargetPath))
+            {
+                throw new Exception($"expected {taskTargetPath} to exist!");
+            }
+
+            string generatedFolder = Path.Combine(gitRootPath, "_generated");
+            if (!Directory.Exists(generatedFolder))
+            {
+                throw new Exception("_generated does not exist");
+            }
+
+            string versionMapFile = Path.Combine(gitRootPath, "_generated", @$"{task}.versionmap.txt");
+
+            try
+            {
+                ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(false);
+
+                if (ReadVersionMap(versionMapFile, out var versionMap, out var maxVersionNullable))
+                {
+                    foreach (var version in versionMap)
+                    {
+                        versionList.Add((task, version.Key, version.Value));
+                    }
+                }
+                else
+                {
+                    throw new Exception($"versionMapFile {versionMapFile} does not exist");
+                }
+
+                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: false);
+            }
+            finally
+            {
+                if (ensureUpdateModeVerifier != null)
+                {
+                    ensureUpdateModeVerifier.CleanupTempFiles();
+                }
             }
         }
 
@@ -297,7 +379,6 @@ namespace BuildConfigGen
             // delay updating version map file until after buildconfigs generated
             WriteVersionMapFile(versionMapFile, configTaskVersionMapping, targetConfigs: targetConfigs);
         }
-
 
         private static void EnsureBuildConfigFileOverrides(Config.ConfigRecord config, string taskTargetPath)
         {
@@ -594,6 +675,7 @@ namespace BuildConfigGen
 ", false);
             }
         }
+
 
         private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string versionMapFile, out HashSet<Config.ConfigRecord> versionsUpdated)
         {
