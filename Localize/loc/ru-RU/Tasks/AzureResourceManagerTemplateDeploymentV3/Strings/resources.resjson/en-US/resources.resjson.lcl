@@ -113,12 +113,12 @@
       </Item>
       <Item ItemId=";loc.input.help.csmParametersFile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template. 'Linked artifact' also has support for Bicep files when the Azure CLI version > 2.20.0]]></Val>
+          <Val><![CDATA[Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template. 'Linked artifact' also has support for Bicep Param files when the Azure CLI version > 2.47.0]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Укажите путь или шаблон для файла параметров шаблона Azure Resource Manager. "Связанный артефакт" также поддерживает файлы Bicep, если версия Azure CLI > 2.20.0]]></Val>
+            <Val><![CDATA[Укажите путь или шаблон для файла параметров шаблона Azure Resource Manager. "Связанный артефакт" также поддерживает файлы параметров Bicep, если версия Azure CLI > 2.47.0.]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template.]]></Val>
+            <Val><![CDATA[Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template. 'Linked artifact' also has support for Bicep files when the Azure CLI version > 2.20.0]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />
@@ -441,6 +441,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.BicepParamBuildFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA["az bicep build-param" failed. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Сбой "az bicep build-param". Ошибка: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.CheckResourceGroupExistence" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Checking if the following resource group exists: %s.]]></Val>
@@ -653,6 +662,15 @@
           <Val><![CDATA[Azure CLI version should be >= 2.20.0]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Версия Azure CLI должна быть >= 2.20.0]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.IncompatibleAzureCLIVersionBicepParam" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Azure CLI version should be >= 2.47.0 to use .bicepparam file]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Версия Azure CLI должна быть >= 2.47.0, чтобы использовать файл .bicepparam.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -920,10 +938,13 @@
       </Item>
       <Item ItemId=";loc.releaseNotes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[- Added support for deployment at all the deployment scopes.]A;- Removed all the VM related actions.]]></Val>
+          <Val><![CDATA[- Added support for bicepparam.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[— Добавлена поддержка развертывания во всех областях развертывания.]A;— Удалены все действия, относящиеся к виртуальной машине.]]></Val>
+            <Val><![CDATA[- Добавлена поддержка bicepparam.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[- Added support for deployment at all the deployment scopes.]A;- Removed all the VM related actions.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

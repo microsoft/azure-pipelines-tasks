@@ -243,6 +243,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.DeprecatedTask" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The DotNetCoreInstaller@1 (.NET Core SDK/runtime installer) task has been deprecated since August 22, 2019 and will soon be retired. Use the UseDotNet@2 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[DotNetCoreInstaller@1(.NET Core SDK/런타임 설치 관리자) 작업은 2019년 8월 22일부터 더 이상 사용되지 않으며 곧 사용 중지됩니다. 대신 UseDotNet@2 작업을 사용합니다. 사용되지 않는 작업에 대해 자세히 알아보려면 https://aka.ms/azdo-deprecated-tasks에 방문하세요.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.DetectingPlatform" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Detecting OS platform to find correct download package for the OS.]]></Val>

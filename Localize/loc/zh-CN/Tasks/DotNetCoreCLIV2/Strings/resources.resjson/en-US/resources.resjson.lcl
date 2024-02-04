@@ -263,10 +263,13 @@
       </Item>
       <Item ItemId=";loc.input.help.projects" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The path to the csproj file(s) to use. You can use wildcards (e.g. **/*.csproj for all .csproj files in all subfolders). **This field follows glob pattern, and is run against root of the repository at all times irrespective of Working Directory.**]]></Val>
+          <Val><![CDATA[The path to the csproj or sln file(s) to use. You can use wildcards (e.g. **/*.csproj for all .csproj files in all subfolders). **This field follows glob pattern, and is run against root of the repository at all times irrespective of Working Directory.**]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[要使用的 csproj 文件的路径。可使用通配符(例如，对所有子文件夹中的所有 .csproj 文件使用 **/*.csproj)。**此字段遵循 glob 模式，且无论工作目录如何，都始终针对存储库的根目录运行。**]]></Val>
+            <Val><![CDATA[要使用的 csproj 或 sln 文件的路径。你可以使用通配符（例如，对所有子文件夹中的所有 .csproj 文件使用 **/*.csproj）。**此字段遵循 glob 模式，且无论工作目录如何，都始终针对存储库的根目录运行。**]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The path to the csproj file(s) to use. You can use wildcards (e.g. **/*.csproj for all .csproj files in all subfolders). **This field follows glob pattern, and is run against root of the repository at all times irrespective of Working Directory.**]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -596,10 +599,13 @@
       </Item>
       <Item ItemId=";loc.input.label.projects" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Path to project(s)]]></Val>
+          <Val><![CDATA[Path to project(s) or solution(s)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[项目路径]]></Val>
+            <Val><![CDATA[项目或解决方案的路径]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Path to project(s)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

@@ -113,12 +113,12 @@
       </Item>
       <Item ItemId=";loc.input.help.csmParametersFile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template. 'Linked artifact' also has support for Bicep files when the Azure CLI version > 2.20.0]]></Val>
+          <Val><![CDATA[Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template. 'Linked artifact' also has support for Bicep Param files when the Azure CLI version > 2.47.0]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Azure Resource Manager 템플릿의 매개 변수 파일을 가리키는 경로 또는 패턴을 지정합니다. '연결된 아티팩트'는 Azure CLI 버전 > 2.20.0인 경우 Bicep 파일도 지원합니다.]]></Val>
+            <Val><![CDATA[Azure Resource Manager 템플릿의 매개 변수 파일을 가리키는 경로 또는 패턴을 지정합니다. '연결된 아티팩트'는 Azure CLI 버전 > 2.47.0인 경우 Bicep Param 파일도 지원합니다.]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template.]]></Val>
+            <Val><![CDATA[Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template. 'Linked artifact' also has support for Bicep files when the Azure CLI version > 2.20.0]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />
@@ -441,6 +441,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.BicepParamBuildFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA["az bicep build-param" failed. Error: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA["az bicep build-param"이 실패했습니다. 오류: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.CheckResourceGroupExistence" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Checking if the following resource group exists: %s.]]></Val>
@@ -653,6 +662,15 @@
           <Val><![CDATA[Azure CLI version should be >= 2.20.0]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Azure CLI 버전은 >= 2.20.0이어야 합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.IncompatibleAzureCLIVersionBicepParam" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Azure CLI version should be >= 2.47.0 to use .bicepparam file]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[.bicepparam 파일을 사용하려면 Azure CLI 버전이 >= 2.47.0이어야 함]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -920,10 +938,13 @@
       </Item>
       <Item ItemId=";loc.releaseNotes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[- Added support for deployment at all the deployment scopes.]A;- Removed all the VM related actions.]]></Val>
+          <Val><![CDATA[- Added support for bicepparam.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[- 모든 배포 범위에서 배포 지원이 추가되었습니다.]A; - 모든 VM 관련 작업을 제거했습니다.]]></Val>
+            <Val><![CDATA[- bicepparam에 대한 지원이 추가되었습니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[- Added support for deployment at all the deployment scopes.]A;- Removed all the VM related actions.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
