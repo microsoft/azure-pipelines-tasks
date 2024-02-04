@@ -263,10 +263,13 @@
       </Item>
       <Item ItemId=";loc.input.help.projects" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The path to the csproj file(s) to use. You can use wildcards (e.g. **/*.csproj for all .csproj files in all subfolders). **This field follows glob pattern, and is run against root of the repository at all times irrespective of Working Directory.**]]></Val>
+          <Val><![CDATA[The path to the csproj or sln file(s) to use. You can use wildcards (e.g. **/*.csproj for all .csproj files in all subfolders). **This field follows glob pattern, and is run against root of the repository at all times irrespective of Working Directory.**]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Ruta de acceso a los archivos csproj que se van a usar. Puede usar caracteres comodín (por ejemplo, **/*.csproj para todos los archivos .csproj de todas las subcarpetas). **Este campo sigue patrones globales y se ejecuta siempre en la raíz del repositorio, independientemente del directorio de trabajo**.]]></Val>
+            <Val><![CDATA[Ruta de acceso a los archivos csproj o sln que se van a usar. Puede usar caracteres comodín (por ejemplo, **/*.csproj para todos los archivos .csproj de todas las subcarpetas). **Este campo sigue patrones globales y se ejecuta siempre en la raíz del repositorio, independientemente del directorio de trabajo**.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The path to the csproj file(s) to use. You can use wildcards (e.g. **/*.csproj for all .csproj files in all subfolders). **This field follows glob pattern, and is run against root of the repository at all times irrespective of Working Directory.**]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -596,10 +599,13 @@
       </Item>
       <Item ItemId=";loc.input.label.projects" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Path to project(s)]]></Val>
+          <Val><![CDATA[Path to project(s) or solution(s)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Ruta de acceso a los proyectos]]></Val>
+            <Val><![CDATA[Ruta de acceso a proyectos o soluciones]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Path to project(s)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

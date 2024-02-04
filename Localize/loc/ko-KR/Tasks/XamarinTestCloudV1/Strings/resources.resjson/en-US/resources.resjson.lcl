@@ -279,6 +279,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.DeprecatedTask" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The XamarinTestCloud@1 (Xamarin Test Cloud) task has been deprecated since January 11, 2018 and will soon be retired. Use the AppCenterDistribute@3 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[XamarinTestCloud@1(Xamarin Test Cloud) 작업은 2018년 1월 11일부터 더 이상 사용되지 않으며 곧 사용 중지됩니다. 대신 AppCenterDistribute@3 작업을 사용합니다. 사용되지 않는 작업에 대해 자세히 알아보려면 https://aka.ms/azdo-deprecated-tasks에 방문하세요.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
     </Item>
   </Item>
 </LCX>
