@@ -40,5 +40,5 @@
   "loc.messages.FoundMultipleFiles": "找到多個符合 %s 的檔案。",
   "loc.messages.FailedToCreateFile": "無法建立 %s，發生錯誤: %s。",
   "loc.messages.FailedToFindFile": "在下列位置上找不到 %s: %s。",
-  "loc.messages.DeprecatedTask": "The AppCenterDistribute@2 (App Center distribute)  task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
+  "loc.messages.DeprecatedTask": "AppCenterDistribute@2 (Visual Studio App Center 發佈) 工作自 2022 年 11 月 14 日起已被取代，且即將淘汰。請改用 AppCenterDistribute@3 工作。請瀏覽 https://aka.ms/azdo-deprecated-tasks 以深入了解已被取代的任務。"
 }
