@@ -2,6 +2,12 @@ $featureFlags = @{
     retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
 }
 
+if ($featureFlags.retireAzureRM -and $azModule -eq $null)
+{
+    Write-Host "Installing Az module..."
+    Install-Module -Name Az -Repository PSGallery -AllowClobber -Force
+}
+
 function Initialize-AzureSubscription {
     [CmdletBinding()]
     param(

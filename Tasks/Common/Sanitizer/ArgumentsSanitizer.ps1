@@ -6,6 +6,12 @@ $featureFlags = @{
     telemetry = [System.Convert]::ToBoolean($env:AZP_75787_ENABLE_COLLECT)
 }
 
+if ($featureFlags.retireAzureRM -and $azModule -eq $null)
+{
+    Write-Host "Installing Az module..."
+    Install-Module -Name Az -Repository PSGallery -AllowClobber -Force
+}
+
 Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC state: $($featureFlags.activate)"
 Write-Verbose "Feature flag AZP_75787_ENABLE_NEW_LOGIC_LOG state: $($featureFlags.audit)"
 Write-Verbose "Feature flag AZP_75787_ENABLE_COLLECT state: $($featureFlags.telemetry)"
