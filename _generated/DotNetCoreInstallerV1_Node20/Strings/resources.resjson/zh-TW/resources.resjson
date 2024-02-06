@@ -78,5 +78,6 @@
   "loc.messages.FilesDataIsIncorrectInVersion": "版本 (release) %s (位於版本 (version) %s) 中的檔案資料錯誤 (可能缺少名稱、rid 或 URL 等必要欄位): %s",
   "loc.messages.VersionFilesDataIncorrect": "版本的檔案資料遺失，或缺少必要欄位。",
   "loc.messages.VersionInformationNotComplete": "版本: releases.json 檔案中的 %s 必要資訊不完整。錯誤: %s",
-  "loc.messages.FailedWhileExtractingPacakge": "擷取已下載套件時失敗。錯誤: %s"
+  "loc.messages.FailedWhileExtractingPacakge": "擷取已下載套件時失敗。錯誤: %s",
+  "loc.messages.DeprecatedTask": "DotNetCoreInstaller@1 (.NET Core SDK/執行階段安裝程式) 工作自 2019 年 8 月 22 日起已被取代，且即將淘汰。請改用 UseDotNet@2 工作。請瀏覽 https://aka.ms/azdo-deprecated-tasks 以深入了解已被取代的任務。"
 }
