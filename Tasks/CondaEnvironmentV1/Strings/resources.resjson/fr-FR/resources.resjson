@@ -25,5 +25,5 @@
   "loc.messages.ParameterRequired": "Le paramètre '%s' est obligatoire",
   "loc.messages.PlatformNotRecognized": "Plateforme non reconnue",
   "loc.messages.PrependPath": "Ajout du répertoire %s au début de la variable d'environnement PATH",
-  "loc.messages.DeprecatedTask": "The CondaEnvironment@1 (Conda environment) task has been deprecated since February 13, 2019 and will soon be retired. Use the Conda CLI ('conda') directly from a bash/pwsh/script task. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
+  "loc.messages.DeprecatedTask": "La tâche CondaEnvironment@1 (environnement Conda) est déconseillée depuis le 13 février 2019 et sera bientôt mise hors service. Utilisez l’interface de ligne de commande Conda (« conda ») directement à partir d’une tâche bash/pwsh/script. Veuillez visiter https://aka.ms/azdo-deprecated-tasks pour en savoir plus sur les tâches déconseillées."
 }

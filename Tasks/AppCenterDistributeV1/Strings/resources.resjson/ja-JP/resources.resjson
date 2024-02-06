@@ -39,5 +39,5 @@
   "loc.messages.FoundMultipleFiles": "%s と一致しているファイルが複数見つかりました。",
   "loc.messages.FailedToCreateFile": "次のエラーで %s を作成できませんでした: %s。",
   "loc.messages.FailedToFindFile": "%s が %s で見つかりませんでした。",
-  "loc.messages.DeprecatedTask": "The AppCenterDistribute@1 (App Center distribute) task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
+  "loc.messages.DeprecatedTask": "AppCenterDistribute@1 (App Center 配布) タスクは、2022 年 11 月 14 日以降非推奨になっており、間もなく廃止されます。代わりに AppCenterDistribute@3 タスクを使用してください。非推奨のタスクの詳細については、https://aka.ms/azdo-deprecated-tasks を参照してください。"
 }

@@ -25,5 +25,5 @@
   "loc.messages.ParameterRequired": "Der Parameter \"%s\" ist erforderlich.",
   "loc.messages.PlatformNotRecognized": "Plattform nicht erkannt.",
   "loc.messages.PrependPath": "Der PATH-Umgebungsvariable wird das Verzeichnis \"%s\" vorangestellt.",
-  "loc.messages.DeprecatedTask": "The CondaEnvironment@1 (Conda environment) task has been deprecated since February 13, 2019 and will soon be retired. Use the Conda CLI ('conda') directly from a bash/pwsh/script task. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
+  "loc.messages.DeprecatedTask": "Die Aufgabe CondaEnvironment@1 (Conda-Umgebung) ist seit dem 13. Februar 2019 veraltet und wird in Kürze eingestellt. Verwenden Sie die Conda CLI ('conda') direkt aus einer bash/pwsh/script-Aufgabe. Besuchen Sie https://aka.ms/azdo-deprecated-tasks, um weitere Informationen zu veralteten Aufgaben zu erhalten."
 }
