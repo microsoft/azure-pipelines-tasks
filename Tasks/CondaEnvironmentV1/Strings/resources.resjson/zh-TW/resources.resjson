@@ -25,5 +25,5 @@
   "loc.messages.ParameterRequired": "'%s' 參數為必要",
   "loc.messages.PlatformNotRecognized": "無法辨識平台",
   "loc.messages.PrependPath": "在 PATH 環境變數前面加上目錄: %s",
-  "loc.messages.DeprecatedTask": "The CondaEnvironment@1 (Conda environment) task has been deprecated since February 13, 2019 and will soon be retired. Use the Conda CLI ('conda') directly from a bash/pwsh/script task. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
+  "loc.messages.DeprecatedTask": "自 2019 年 2 月 13 日起，CondaEnvironment@1 (Conda 環境) 工作已被取代，且即將淘汰。直接從 bash/pwsh/script 工作使用 Conda CLI ('conda')。請瀏覽 https://aka.ms/azdo-deprecated-tasks 以深入了解已被取代的任務。"
 }

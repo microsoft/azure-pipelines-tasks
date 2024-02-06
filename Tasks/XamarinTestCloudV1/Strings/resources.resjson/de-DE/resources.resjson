@@ -29,5 +29,5 @@
   "loc.input.help.optionalArgs": "Zusätzliche Argumente, die an test-cloud.exe übergeben werden.",
   "loc.input.label.publishNUnitResults": "Ergebnisse in Azure Pipelines veröffentlichen",
   "loc.input.help.publishNUnitResults": "Sofern ausgewählt, wird die Option \"--nunit-xml\" an \"test-cloud.exe\" übergeben. Ergebnisse aus der NUnit-XML-Datei werden in Azure Pipelines veröffentlicht.",
-  "loc.messages.DeprecatedTask": "The XamarinTestCloud@1 (Xamarin Test Cloud) task has been deprecated since January 11, 2018 and will soon be retired. Use the AppCenterDistribute@3 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
+  "loc.messages.DeprecatedTask": "Die Aufgabe XamarinTestCloud@1 (Xamarin Test Cloud) ist seit dem 11. Januar 2018 veraltet und wird in Kürze eingestellt. Verwenden Sie stattdessen die Aufgabe AppCenterDistribute@3. Besuchen Sie https://aka.ms/azdo-deprecated-tasks, um weitere Informationen zu veralteten Aufgaben zu erhalten."
 }

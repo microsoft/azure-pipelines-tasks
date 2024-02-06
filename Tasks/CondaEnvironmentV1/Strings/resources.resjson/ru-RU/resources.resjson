@@ -25,5 +25,5 @@
   "loc.messages.ParameterRequired": "Параметр \"%s\" является обязательным",
   "loc.messages.PlatformNotRecognized": "Платформа не распознана",
   "loc.messages.PrependPath": "Добавление в начало переменной среды PATH каталога: %s",
-  "loc.messages.DeprecatedTask": "The CondaEnvironment@1 (Conda environment) task has been deprecated since February 13, 2019 and will soon be retired. Use the Conda CLI ('conda') directly from a bash/pwsh/script task. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
+  "loc.messages.DeprecatedTask": "Задача CondaEnvironment@1 (среда Conda) устарела с 13 февраля 2019 г. и скоро будет прекращена. Используйте Conda CLI (\"conda\") непосредственно из задачи bash/pwsh/script. Посетите https://aka.ms/azdo-deprecated-tasks, чтобы получить дополнительные сведения об устаревших задачах."
 }

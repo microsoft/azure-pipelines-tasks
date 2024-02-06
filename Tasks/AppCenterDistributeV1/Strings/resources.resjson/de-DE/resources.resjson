@@ -39,5 +39,5 @@
   "loc.messages.FoundMultipleFiles": "Es wurden mehrere Dateien gefunden, die \"%s\" entsprechen.",
   "loc.messages.FailedToCreateFile": "Fehler beim Erstellen von \"%s\": %s.",
   "loc.messages.FailedToFindFile": "%s wurde unter %s nicht gefunden.",
-  "loc.messages.DeprecatedTask": "The AppCenterDistribute@1 (App Center distribute) task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
+  "loc.messages.DeprecatedTask": "Die Aufgabe AppCenterDistribute@1 (App Center verteilen) ist seit dem 14. November 2022 veraltet und wird in Kürze eingestellt. Verwenden Sie stattdessen die Aufgabe AppCenterDistribute@3. Besuchen Sie https://aka.ms/azdo-deprecated-tasks, um weitere Informationen zu veralteten Aufgaben zu erhalten."
 }

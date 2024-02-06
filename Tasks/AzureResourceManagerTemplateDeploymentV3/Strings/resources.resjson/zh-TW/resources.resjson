@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[深入了解此工作](https://aka.ms/armtaskreadme)",
   "loc.description": "將 Azure Resource Manager (ARM) 範本部署到所有部署範圍",
   "loc.instanceNameFormat": "ARM 範本部署: $(deploymentScope) 範圍",
-  "loc.releaseNotes": "- Added support for bicepparam.",
+  "loc.releaseNotes": "- 已新增對 bicepparam 的支援。",
   "loc.group.displayName.AzureDetails": "Azure 詳細資料",
   "loc.group.displayName.Template": "範本",
   "loc.group.displayName.Advanced": "進階",
@@ -27,7 +27,7 @@
   "loc.input.label.csmFile": "範本",
   "loc.input.help.csmFile": "請指定指向 Azure Resource Manager 範本的路徑或模式。如需範本的詳細資訊，請參閱 https://aka.ms/azuretemplates。若要立即啟動，請使用範本 https://aka.ms/sampletemplate。當 Azure CLI 版本大於 2.20.0 時，'連結的成品' 也支援 Bicep 檔案",
   "loc.input.label.csmParametersFile": "範本參數",
-  "loc.input.help.csmParametersFile": "Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template. 'Linked artifact' also has support for Bicep Param files when the Azure CLI version > 2.47.0",
+  "loc.input.help.csmParametersFile": "指定指向 Azure Resource Manager 範本之參數檔案的路徑或模式。當 Azure CLI 版本大於 2.47.0 時，「連結的成品」也支援 Bicep Param 檔案",
   "loc.input.label.overrideParameters": "覆寫範本參數",
   "loc.input.help.overrideParameters": "若要以網格模式檢視範本參數，請按一下 [Override Parameters] 文字方塊旁的 [...]。必須在來源啟用 CORS 規則才能使用此功能。若範本在 Azure 儲存體 Blob 中，請參閱[本篇](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests)來啟用 CORS，或是在文字方塊中鍵入要覆寫的範本參數。例如，<br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre)。<br>若您使用的參數有多個文字，請以引號括住文字，即使您使用變數來傳遞文字亦同。例如，-name \"參數值\" -name2 \"$(var)\"<br>若要覆寫物件類型參數，請使用已轉換為字串的 JSON 物件。例如，-options [\"option1\"] -map {\"key1\": \"value1\" }。 ",
   "loc.input.label.deploymentMode": "部署模式",
@@ -100,6 +100,6 @@
   "loc.messages.MSILoginFailed": "使用受管理的服務識別登入 Azure 失敗: %s",
   "loc.messages.AuthSchemeNotSupported": "不支援驗證結構描述 %s",
   "loc.messages.ErrorInSettingUpSubscription": "設定訂用帳戶時發生錯誤: %s",
-  "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\" failed. Error: %s",
-  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI version should be >= 2.47.0 to use .bicepparam file"
+  "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\" 已失敗。錯誤: %s",
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI 版本應 >= 2.47.0，才能使用 .bicepparam 檔案"
 }
