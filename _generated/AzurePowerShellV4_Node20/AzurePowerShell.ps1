@@ -100,7 +100,7 @@ try
 }
 finally {
     if (!$success) {
-        Write-VstsTaskError "Initializing Az module failed: For troubleshooting, refer: $troubleshoot"
+        Write-VstsTaskError "Initializing Az module failed: For troubleshooting, refer: $troubleshoot" -IssueSource $IssueSources.TaskInternal
     }
 }
 
@@ -185,7 +185,7 @@ try {
                             $message = $errorLines.ToString().Trim()
                             $null = $errorLines.Clear()
                             if ($message) {
-                                Write-VstsTaskError -Message $message
+                                Write-VstsTaskError -Message $message -IssueSource $IssueSources.CustomerScript
                             }
                         }
 
@@ -199,7 +199,7 @@ try {
                 $message = $errorLines.ToString().Trim()
                 $null = $errorLines.Clear()
                 if ($message) {
-                    Write-VstsTaskError -Message $message
+                    Write-VstsTaskError -Message $message -IssueSource $IssueSources.CustomerScript
                 }
             }
         }

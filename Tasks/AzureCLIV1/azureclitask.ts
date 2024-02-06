@@ -216,15 +216,15 @@ export class azureclitask {
         }
         catch (err) {
             // task should not fail if logout doesn`t occur
-            tl.warning(tl.loc("FailedToLogout"));
+            tl.warning(tl.loc("FailedToLogout"), tl.IssueSource.TaskInternal);
         }
     }
 
     private static throwIfError(resultOfToolExecution: IExecSyncResult, errormsg?: string): void {
         if (resultOfToolExecution.code != 0) {
-            tl.error("Error Code: [" + resultOfToolExecution.code + "]");
+            tl.error("Error Code: [" + resultOfToolExecution.code + "]", tl.IssueSource.TaskInternal);
             if (errormsg) {
-                tl.error("Error: " + errormsg);
+                tl.error("Error: " + errormsg, tl.IssueSource.TaskInternal);
             }
             throw resultOfToolExecution;
         }
@@ -280,7 +280,7 @@ export class azureclitask {
             return auth.parameters['AccessToken'];
         }
         else {
-            tl.warning('Could not determine credentials to use');
+            tl.warning('Could not determine credentials to use', tl.IssueSource.TaskInternal);
         }
     }
 }

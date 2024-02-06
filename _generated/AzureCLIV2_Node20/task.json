@@ -208,7 +208,6 @@
   },
   "_buildConfigMapping": {
     "Default": "2.235.0",
-    "IssueSourceEnabled": "2.235.2",
     "Node20_229_2": "2.235.1"
   }
 }

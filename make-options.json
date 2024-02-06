@@ -403,21 +403,5 @@
     ],
     "Node20_229_14": [
         "PublishSymbolsV2"
-    ],
-    "IssueSourceEnabled": [
-        "AzureCLIV1",
-        "AzureCLIV2",
-        "AzurePowerShellV2",
-        "AzurePowerShellV3",
-        "AzurePowerShellV4",
-        "AzurePowerShellV5",
-        "BashV3",
-        "CmdLineV2",
-        "PowerShellOnTargetMachinesV2",
-        "PowerShellOnTargetMachinesV3",
-        "PowerShellV2",
-        "PythonScriptV0",
-        "ShellScriptV2",
-        "SshV0"
     ]
 }
