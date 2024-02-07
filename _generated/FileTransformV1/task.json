@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 235,
-    "Patch": 0
+    "Patch": 2
   },
   "instanceNameFormat": "File Transform: $(Package)",
   "groups": [
@@ -116,7 +116,7 @@
     "SkippedUpdatingFile": "Skipped Updating file: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.235.0",
-    "Node20_229_3": "1.235.1"
+    "Default": "1.235.2",
+    "Node20_229_3": "1.235.3"
   }
 }
