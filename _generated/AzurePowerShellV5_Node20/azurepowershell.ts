@@ -11,6 +11,9 @@ function convertToNullIfUndefined<T>(arg: T): T|null {
     return arg ? arg : null;
 }
 
+let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
+let tempDirectory = tl.getVariable('agent.tempDirectory');
+tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
 async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -99,8 +102,6 @@ async function run() {
 
         // Write the script to disk.
         tl.assertAgent('2.115.0');
-        let tempDirectory = tl.getVariable('agent.tempDirectory');
-        tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         let filePath = path.join(tempDirectory, uuidV4() + '.ps1');
 
         await fs.writeFile(
@@ -159,6 +160,45 @@ async function run() {
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
+    }
+    finally {
+        let RemoveScriptContent: string[] = [];
+        let RemoveAzContextPath = path.join(path.resolve(__dirname), 'RemoveAzContext.ps1');
+        let removeScripts = `${RemoveAzContextPath} -ErrorAction continue`
+        tl.debug(`The removeScripts Argument is ${removeScripts}`);
+        RemoveScriptContent.push(removeScripts);
+        tl.debug(`The generated script is ${RemoveScriptContent.join(os.EOL)}`);
+        const removeScriptFilePath = path.join(tempDirectory, uuidV4() + '.ps1');
+        try {
+            await fs.writeFile(
+                removeScriptFilePath,
+                '\ufeff' + RemoveScriptContent.join(os.EOL), // Prepend the Unicode BOM character.
+                { encoding: 'utf8' }, // Since UTF8 encoding is specified, node will
+                                            // encode the BOM into its UTF8 binary sequence.
+                function (err) {
+                    if (err) throw err;
+                });
+            const powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
+                .arg('-NoLogo')
+                .arg('-NoProfile')
+                .arg('-NonInteractive')
+                .arg('-ExecutionPolicy')
+                .arg('Unrestricted')
+                .arg('-Command')
+                .arg(`. '${removeScriptFilePath.replace(/'/g, "''")}'`);
+
+            let options = <tr.IExecOptions>{
+                    cwd: input_workingDirectory,
+                    failOnStdErr: false,
+                    errStream: process.stdout, // Direct all output to STDOUT, otherwise the output may appear out
+                    outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.
+                    ignoreReturnCode: true
+                };
+            await powershell.exec(options);
+        }
+        catch (err) {
+            tl.debug("Az-clearContext not completed due to an error");
+        }
     }
 }
 
