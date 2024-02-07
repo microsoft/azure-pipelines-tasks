@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 235,
-        "Patch": 2
+        "Patch": 4
     },
     "minimumAgentVersion": "2.144.0",
     "releaseNotes": "Added support for multiple destinations.",
