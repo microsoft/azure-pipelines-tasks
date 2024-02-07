@@ -129,8 +129,6 @@ Tasks/Common/AzureRmDeploy-common/   @vincentdass    @microsoft/release-manageme
 
 Tasks/Common/Deployment/   @bishal-pdMSFT  @microsoft/release-management-task-team @manolerazvan  
 
-Tasks/Common/MSBuildHelpers/    @microsoft/akvelon-build-task-team
-
 Tasks/Common/PowershellHelpers/  @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/Common/RemoteDeployer/   @arjgupta
@@ -149,21 +147,13 @@ Tasks/Common/azure-arm-rest-v2/   @microsoft/release-management-task-team @manol
 
 Tasks/Common/azure-blobstorage-artifactProvider/   @omeshp   @hiyadav    @bishal-pdmsft
 
-Tasks/Common/codeanalysis-common/    @microsoft/akvelon-build-task-team
-
 Tasks/Common/coveragepublisher/     @rasunkar  @microsoft\adoautotest
 
 Tasks/Common/docker-common/      @microsoft/release-management-task-team @manolerazvan
 
-Tasks/Common/ios-signing-common/     @microsoft/akvelon-build-task-team   @hashtagchris
-
-Tasks/Common/java-common/        @microsoft/akvelon-build-task-team   @kelliejos
-
 Tasks/Common/kubernetes-common/      @nishubansal    @ds-ms
 
 Tasks/Common/packaging-common/     @microsoft/azure-artifacts-packages
-
-Tasks/Common/securefiles-common/   @microsoft/akvelon-build-task-team   @hashtagchris
 
 Tasks/Common/utility-common/       @nishubansal    @ds-ms
 
@@ -254,6 +244,8 @@ Tasks/GoV0/    @microsoft/release-management-task-team @manolerazvan
 Tasks/GoToolV0/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/GradleV2/    @microsoft/akvelon-build-task-team
+
+Tasks/GradleV3/    @microsoft/akvelon-build-task-team
 
 Tasks/GruntV0/     @microsoft/akvelon-build-task-team
 
