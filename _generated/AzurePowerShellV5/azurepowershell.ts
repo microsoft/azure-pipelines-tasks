@@ -165,9 +165,7 @@ async function run() {
         let RemoveScriptContent: string[] = [];
         let RemoveAzContextPath = path.join(path.resolve(__dirname), 'RemoveAzContext.ps1');
         let removeScripts = `${RemoveAzContextPath} -ErrorAction continue`
-        tl.debug(`The removeScripts Argument is ${removeScripts}`);
         RemoveScriptContent.push(removeScripts);
-        tl.debug(`The generated script is ${RemoveScriptContent.join(os.EOL)}`);
         const removeScriptFilePath = path.join(tempDirectory, uuidV4() + '.ps1');
         try {
             await fs.writeFile(
