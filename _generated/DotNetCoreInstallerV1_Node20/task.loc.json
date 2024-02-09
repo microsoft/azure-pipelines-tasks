@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 235,
-    "Patch": 3
+    "Patch": 5
   },
   "deprecated": true,
   "removalDate": "2024-01-31",
@@ -161,7 +161,7 @@
     "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
   },
   "_buildConfigMapping": {
-    "Default": "1.235.2",
-    "Node20_229_3": "1.235.3"
+    "Default": "1.235.4",
+    "Node20_229_3": "1.235.5"
   }
 }
