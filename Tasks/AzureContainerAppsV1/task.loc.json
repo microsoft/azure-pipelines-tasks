@@ -18,8 +18,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 225,
-    "Patch": 1
+    "Minor": 235,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -219,6 +219,7 @@
     "SetDefaultBuilderFailed": "ms-resource:loc.messages.SetDefaultBuilderFailed",
     "UpdateContainerAppFailed": "ms-resource:loc.messages.UpdateContainerAppFailed",
     "UpdateContainerAppFromYamlFailed": "ms-resource:loc.messages.UpdateContainerAppFromYamlFailed",
+    "UpdateContainerAppIngressFailed": "ms-resource:loc.messages.UpdateContainerAppIngressFailed",
     "UpdateContainerAppRegistryDetailsFailed": "ms-resource:loc.messages.UpdateContainerAppRegistryDetailsFailed"
   }
 }

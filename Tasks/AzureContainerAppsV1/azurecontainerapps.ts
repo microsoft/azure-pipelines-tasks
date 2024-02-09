@@ -88,6 +88,7 @@ export class azurecontainerapps {
     private static ingressEnabled: boolean;
 
     // ACR properties
+    private static adminCredentialsProvided: boolean;
     private static acrUsername: string;
     private static acrPassword: string;
 
@@ -105,7 +106,7 @@ export class azurecontainerapps {
     private static runtimeStack: string;
     private static ingress: string;
     private static targetPort: string;
-    private static shouldUseUpdateCommand: boolean;
+    private static noIngressUpdate: boolean;
 
     /**
      * Initializes the helpers used by this task.
@@ -418,13 +419,14 @@ export class azurecontainerapps {
 
         // If both ingress and target port were not provided for an existing Container App, or if ingress is to be disabled,
         // use the 'update' command, otherwise we should use the 'up' command that performs a PATCH operation on the ingress properties.
-        this.shouldUseUpdateCommand = this.containerAppExists &&
-                                      util.isNullOrEmpty(this.targetPort) &&
-                                      (util.isNullOrEmpty(this.ingress) || this.ingress == 'disabled');
+        this.noIngressUpdate = this.containerAppExists &&
+            util.isNullOrEmpty(this.targetPort) &&
+            (util.isNullOrEmpty(this.ingress) || this.ingress == 'disabled');
 
         // Pass the ACR credentials when creating a Container App or updating a Container App via the 'up' command
         if (!util.isNullOrEmpty(this.acrName) && !util.isNullOrEmpty(this.acrUsername) && !util.isNullOrEmpty(this.acrPassword) &&
-            (!this.containerAppExists || (this.containerAppExists && !this.shouldUseUpdateCommand))) {
+            (!this.containerAppExists || (this.containerAppExists && !this.noIngressUpdate))) {
+            this.adminCredentialsProvided = true;
             this.commandLineArgs.push(
                 `--registry-server ${this.acrName}.azurecr.io`,
                 `--registry-username ${this.acrUsername}`,
@@ -475,12 +477,13 @@ export class azurecontainerapps {
         }
 
         const environmentVariables: string = tl.getInput('environmentVariables', false);
+        const isCappUpdateCommandUsed: boolean = this.noIngressUpdate || (!this.noIngressUpdate && !this.adminCredentialsProvided);
 
         // Add user-specified environment variables
         if (!util.isNullOrEmpty(environmentVariables)) {
             // The --replace-env-vars flag is only used for the 'update' command,
             // otherwise --env-vars is used for 'create' and 'up'
-            if (this.shouldUseUpdateCommand) {
+            if (this.noIngressUpdate) {
                 this.commandLineArgs.push(`--replace-env-vars ${environmentVariables}`);
             } else {
                 this.commandLineArgs.push(`--env-vars ${environmentVariables}`);
@@ -511,7 +514,7 @@ export class azurecontainerapps {
             return;
         }
 
-        if (this.shouldUseUpdateCommand) {
+        if (this.noIngressUpdate) {
             // Update the ACR details on the existing Container App, if provided as an input
             if (!util.isNullOrEmpty(this.acrName) && !util.isNullOrEmpty(this.acrUsername) && !util.isNullOrEmpty(this.acrPassword)) {
                 this.appHelper.updateContainerAppRegistryDetails(this.containerAppName, this.resourceGroup, this.acrName, this.acrUsername, this.acrPassword);
@@ -519,9 +522,13 @@ export class azurecontainerapps {
 
             // Update the Container App using the 'update' command
             this.appHelper.updateContainerApp(this.containerAppName, this.resourceGroup, this.imageToDeploy, this.commandLineArgs);
-        } else {
-            // Update the Container App using the 'up' command
+        } else if (this.adminCredentialsProvided && !this.noIngressUpdate) {
+            // Update the Container App with `up` command when admin credentials are provided and ingress is manually provided.
             this.appHelper.updateContainerAppWithUp(this.containerAppName, this.resourceGroup, this.imageToDeploy, this.commandLineArgs, this.ingress, this.targetPort);
+        } else {
+            // Update the Container App using the 'containerapp update' and 'ingress update' commands
+            this.appHelper.updateContainerApp(this.containerAppName, this.resourceGroup, this.imageToDeploy, this.commandLineArgs);
+            this.appHelper.updateContainerAppIngress(this.containerAppName, this.resourceGroup, this.ingress, this.targetPort);
         }
 
         // Disable ingress on the existing Container App, if provided as an input
