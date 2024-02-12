@@ -15,7 +15,7 @@
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
         if ($PreferredModule -contains 'Az')
         {
-            $module = Import-Module -Name 'Az' -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+            $module = Import-Module -Name 'Az' | Sort-Object Version -Descending | Select-Object -First 1
     
             if (!$module) {
                 ThrowAzureModuleNotFoundException -azurePsVersion $azurePsVersion -modules 'Az'
