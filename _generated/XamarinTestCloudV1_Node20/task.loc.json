@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 235,
-    "Patch": 1
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",
@@ -205,7 +205,7 @@
     "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
   },
   "_buildConfigMapping": {
-    "Default": "1.235.0",
-    "Node20-228": "1.235.1"
+    "Default": "1.235.2",
+    "Node20-228": "1.235.3"
   }
 }

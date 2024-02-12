@@ -1804,13 +1804,16 @@ exports.getBuildConfigGenerator = getBuildConfigGenerator;
 
 /**
  * Function to validate or write generated tasks
- * @param {String} baseConfigToolPath Path to generating programm
+ * @param {String} baseConfigToolPath Path to generating program
  * @param {Array} taskList  Array with allowed tasks
  * @param {Object} makeOptions Object with all tasks
  * @param {Boolean} writeUpdates Write Updates (false to validateOnly)
+ * @param {Number} sprintNumber Sprint number option to pass in the BuildConfigGenerator tool
  */
-var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates) {
+var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber) {
     if (!makeOptions) fail("makeOptions is not defined");
+    if (sprintNumber && !Number.isInteger(sprintNumber)) fail("Sprint is not a number");
+
     const excludedMakeOptionKeys = ["tasks", "taskResources"];
     const validatingTasks = {};
     
@@ -1837,6 +1840,11 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
             "--task",
             taskName,
         ];
+
+        if (sprintNumber) {
+            args.push("--current-sprint");
+            args.push(sprintNumber);
+        }
 
         var writeUpdateArg = "";
         if(writeUpdates)
