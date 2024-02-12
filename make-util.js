@@ -838,8 +838,8 @@ var validateTask = function (task) {
         fail('name is a required alphanumeric string');
     }
 
-    if (!task.friendlyName || !check.isLength(task.friendlyName, 1, 40)) {
-        fail('friendlyName is a required string <= 40 chars');
+    if (!task.friendlyName || !check.isLength(task.friendlyName, 1, 100)) {
+        fail('friendlyName is a required string <= 100 chars');
     }
 
     if (!task.instanceNameFormat) {

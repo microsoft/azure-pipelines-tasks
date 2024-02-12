@@ -170,7 +170,7 @@ steps:
 
 # Publish code coverage result
 - task: PublishCodeCoverageResults@1
-  displayName: Publish Code Coverage Results
+  displayName: (DEPRECATION WARNING!) Publish Code Coverage Results
   inputs:
     codeCoverageTool: Cobertura
     summaryFileLocation: $(System.DefaultWorkingDirectory)/_build/coverage/*coverage.xml

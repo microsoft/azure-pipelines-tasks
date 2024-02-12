@@ -1,8 +1,8 @@
 {
   "id": "2A7EBC54-C13E-490E-81A5-D7561AB7CD97",
   "name": "PublishCodeCoverageResults",
-  "friendlyName": "Publish code coverage results",
-  "description": "[DEPRECATION WARNING. Users are recommended to switch to version 2.235.0.] Publish Cobertura or JaCoCo code coverage results from a build",
+  "friendlyName": "[DEPRECATED WARNING] Publish code coverage results",
+  "description": "[DEPRECATION WARNING! Users are recommended to switch to version 2*.] Publish Cobertura or JaCoCo code coverage results from a build",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-code-coverage-results",
   "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=626485)",
   "category": "Test",
@@ -100,10 +100,10 @@
     "IgnoringReportDirectory": "Ignoring coverage report directory with Html content as we are auto-generating Html content",
     "UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
     "GeneratedHtmlReport": "Generated code coverage html report: %s",
-    "V1TaskDeprecationNotice": "Version 1.234.0 for Publish Code Coverage Results task will be deprecated in 2024. Users are strongly recommended to switch to version 2.235.0"
+    "V1TaskDeprecationNotice": "Version 1.234.0 for Publish Code Coverage Results task will be deprecated in 2024. Users are strongly recommended to switch to version 2*. Find out more - https://devblogs.microsoft.com/devops/new-pccr-task/"
   },
   "_buildConfigMapping": {
-    "Default": "1.235.6",
-    "Node20_229_4": "1.235.7"
+    "Default": "1.235.0",
+    "Node20_229_4": "1.235.1"
   }
 }

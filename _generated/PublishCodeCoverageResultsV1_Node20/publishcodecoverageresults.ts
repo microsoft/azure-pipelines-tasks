@@ -10,6 +10,9 @@ async function run() {
         // Initialize localization
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
+        //Warning for V1 deprecation
+        tl.warning(tl.loc('V1TaskDeprecationNotice'));
+
         // Get input values
         const codeCoverageTool = tl.getInput('codeCoverageTool', true);
         const summaryFileLocation = tl.getInput('summaryFileLocation', true);
@@ -29,9 +32,6 @@ async function run() {
             autogenerateHtmlReport = false;
             tempFolder = resolvePathToSingleItem(workingDirectory, reportDirectory, true);
         }
-
-        //Warning for V1 deprecation
-        tl.warning(tl.loc('V1TaskDeprecationNotice'));
 
         // Resolve the summary file path.
         // It may contain wildcards allowing the path to change between builds, such as for:
