@@ -15,9 +15,11 @@
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
         if ($PreferredModule -contains 'Az')
         {
-            $module = Import-Module -Name 'Az' | Sort-Object Version -Descending | Select-Object -First 1
-    
-            if (!$module) {
+            Install-Module -Name 'Az' -Repository PSGallery -AllowClobber -Force
+
+            $module = Get-Module -Name 'Az' | Sort-Object Version -Descending | Select-Object -First 1
+            if (!$module)
+            {
                 ThrowAzureModuleNotFoundException -azurePsVersion $azurePsVersion -modules 'Az'
             }
     
@@ -30,7 +32,8 @@
             # Attempt to import Azure and AzureRM.
             $azure = (Import-FromModulePath -Classic:$true -azurePsVersion $azurePsVersion) -or (Import-FromSdkPath -Classic:$true -azurePsVersion $azurePsVersion)
             $azureRM = (Import-FromModulePath -Classic:$false -azurePsVersion $azurePsVersion) -or (Import-FromSdkPath -Classic:$false -azurePsVersion $azurePsVersion)
-            if (!$azure -and !$azureRM) {
+            if (!$azure -and !$azureRM)
+            {
                 ThrowAzureModuleNotFoundException -azurePsVersion $azurePsVersion -modules "Azure, AzureRM"
             }
         }
@@ -77,10 +80,13 @@
 
         # Validate the Classic version.
         $minimumVersion = [version]'0.8.10.1'
-        if ($script:azureModule -and $script:azureModule.Version -lt $minimumVersion) {
+        if ($script:azureModule -and $script:azureModule.Version -lt $minimumVersion)
+        {
             throw (Get-VstsLocString -Key AZ_RequiresMinVersion0 -ArgumentList $minimumVersion)
         }
-    } finally {
+    }
+    finally
+    {
         $WarningPreference = $oldWarningPreference
         Trace-VstsLeavingInvocation $MyInvocation
     }
