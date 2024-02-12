@@ -17,6 +17,7 @@ if ($featureFlags.retireAzureRM -and $azModule -eq $null)
 
     Write-Host "Installing Az module"
     Install-Module -Name Az -Repository PSGallery -AllowClobber -Force
+    Import-Module Az
 }
 
 function Get-AzureRMVMsInResourceGroup
