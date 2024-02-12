@@ -4,6 +4,19 @@ $featureFlags = @{
     retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
 }
 
+if ($featureFlags.retireAzureRM -and $azModule -eq $null)
+{
+    Write-Host "Searching AzureRM modules:"
+    $Modules = Get-Module -ListAvailable | Where {$_.Name -like 'AzureRM.*'}
+    Foreach ($Module in $Modules) {
+        Write-Host "- uninstalling module: ${Module}"
+        Uninstall-Module $Module
+    }
+
+    Write-Host "Installing Az module"
+    Install-Module -Name Az -Repository PSGallery -AllowClobber -Force
+}
+
 function Get-AzureStorageKeyFromRDFE
 {
     param([string]$storageAccountName,
