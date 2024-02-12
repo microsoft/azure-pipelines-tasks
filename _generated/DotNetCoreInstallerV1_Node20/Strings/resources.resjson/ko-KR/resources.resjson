@@ -78,5 +78,6 @@
   "loc.messages.FilesDataIsIncorrectInVersion": "%s 릴리스(%s 버전)의 파일 데이터가 잘못됨(이름, RID, URL 등의 필수 필드가 누락되었을 수 있음): %s",
   "loc.messages.VersionFilesDataIncorrect": "버전의 파일 데이터가 없거나 필수 필드가 누락되었습니다.",
   "loc.messages.VersionInformationNotComplete": "releases.json 파일에 있는 %s 버전의 필수 정보가 불완전합니다. 오류: %s",
-  "loc.messages.FailedWhileExtractingPacakge": "다운로드한 패키지를 추출하지 못했습니다. 오류: %s"
+  "loc.messages.FailedWhileExtractingPacakge": "다운로드한 패키지를 추출하지 못했습니다. 오류: %s",
+  "loc.messages.DeprecatedTask": "DotNetCoreInstaller@1(.NET Core SDK/런타임 설치 관리자) 작업은 2019년 8월 22일부터 더 이상 사용되지 않으며 곧 사용 중지됩니다. 대신 UseDotNet@2 작업을 사용합니다. 사용되지 않는 작업에 대해 자세히 알아보려면 https://aka.ms/azdo-deprecated-tasks에 방문하세요."
 }
