@@ -1,0 +1,5 @@
+{
+  "loc.friendlyName": "파이프라인 메타데이터 게시",
+  "loc.description": "파이프라인 메타데이터를 증거 저장소에 게시",
+  "loc.instanceNameFormat": "파이프라인 $(System.DefinitionName)에 대한 메타데이터를 증거 저장소에 게시하는 중"
+}
