@@ -15,9 +15,12 @@
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
         if ($PreferredModule -contains 'Az')
         {
+            Write-Verbose "Installing 'Az' module..."
             Install-Module -Name 'Az' -Repository PSGallery -AllowClobber -Force
 
-            $module = Get-Module -Name 'Az' | Sort-Object Version -Descending | Select-Object -First 1
+            Get-Module -Name Az -ListAvailable | Select-Object Name, Version | Format-Table
+
+            $module = Get-Module -Name Az -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
             if (!$module)
             {
                 ThrowAzureModuleNotFoundException -azurePsVersion $azurePsVersion -modules 'Az'
