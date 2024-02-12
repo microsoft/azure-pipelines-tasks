@@ -1,4 +1,8 @@
-﻿# Private module-scope variables.
+﻿$featureFlags = @{
+    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
+# Private module-scope variables.
 $script:azureModule = $null
 $script:azureRMProfileModule = $null
 
@@ -43,12 +47,22 @@ function Initialize-Azure {
 
         # Determine which modules are preferred.
         $preferredModules = @( )
-        if (($endpoint.Auth.Scheme -eq 'ServicePrincipal') -or ($endpoint.Auth.Scheme -eq 'ManagedServiceIdentity')) {
+
+        if ($featureFlags.retireAzureRM)
+        {
+            $preferredModules += 'Az'
+        }
+        elseif (($endpoint.Auth.Scheme -eq 'ServicePrincipal') -or ($endpoint.Auth.Scheme -eq 'ManagedServiceIdentity'))
+        {
             $preferredModules += 'AzureRM'
-        } elseif ($endpoint.Auth.Scheme -eq 'UserNamePassword' -and $strict -eq $false) {
+        }
+        elseif ($endpoint.Auth.Scheme -eq 'UserNamePassword' -and $strict -eq $false)
+        {
             $preferredModules += 'Azure'
             $preferredModules += 'AzureRM'
-        } else {
+        }
+        else
+        {
             $preferredModules += 'Azure'
         }
 

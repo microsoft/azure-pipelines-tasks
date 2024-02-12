@@ -82,23 +82,23 @@ function Initialize-AzureRMSubscription {
     Set-UserAgent
     
     # Clear context
-    if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal' -and (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue")) {
-        Write-Host "##[command]Clear-AzureRmContext -Scope Process"
-        if ($featureFlags.retireAzureRM)
-        {
+    if ($featureFlags.retireAzureRM)
+    {
+        if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal' -and (Get-Command -Name "Clear-AzContext" -ErrorAction "SilentlyContinue")) {
+            Write-Host "##[command]Clear-AzContext -Scope Process"
             $null = Clear-AzContext -Scope Process
-        }
-        else
-        {
-            $null = Clear-AzureRmContext -Scope Process
-        }
-        Write-Host "##[command]Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
-        if ($featureFlags.retireAzureRM)
-        {
+
+            Write-Host "##[command]Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
             $null = Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
         }
-        else
-        {
+    }
+    else
+    {
+        if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal' -and (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue")) {
+            Write-Host "##[command]Clear-AzureRmContext -Scope Process"
+            $null = Clear-AzureRmContext -Scope Process
+
+            Write-Host "##[command]Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
             $null = Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
         }
     }

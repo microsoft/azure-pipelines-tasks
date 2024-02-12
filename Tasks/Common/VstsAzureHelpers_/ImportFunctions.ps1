@@ -2,24 +2,40 @@
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Azure', 'AzureRM')]
+        [ValidateSet('Azure', 'AzureRM', 'Az')]
         [string[]] $PreferredModule,
         [string] $azurePsVersion,
-        [switch] $strict)
+        [switch] $strict
+    )
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         $oldWarningPreference = $WarningPreference
         $WarningPreference = "SilentlyContinue"
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
-        if ($PreferredModule -contains 'Azure' -and $PreferredModule -contains 'AzureRM') {
+        if ($PreferredModule -contains 'Az')
+        {
+            $module = Import-Module -Name 'Az' -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+    
+            if (!$module) {
+                ThrowAzureModuleNotFoundException -azurePsVersion $azurePsVersion -modules 'Az'
+            }
+    
+            Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
+            $module = Import-Module -Name $module.Path -Global -PassThru -Force
+            Write-Verbose "Imported module version: $($module.Version)"
+        }
+        elseif ($PreferredModule -contains 'Azure' -and $PreferredModule -contains 'AzureRM')
+        {
             # Attempt to import Azure and AzureRM.
             $azure = (Import-FromModulePath -Classic:$true -azurePsVersion $azurePsVersion) -or (Import-FromSdkPath -Classic:$true -azurePsVersion $azurePsVersion)
             $azureRM = (Import-FromModulePath -Classic:$false -azurePsVersion $azurePsVersion) -or (Import-FromSdkPath -Classic:$false -azurePsVersion $azurePsVersion)
             if (!$azure -and !$azureRM) {
                 ThrowAzureModuleNotFoundException -azurePsVersion $azurePsVersion -modules "Azure, AzureRM"
             }
-        } elseif ($PreferredModule -contains 'Azure') {
+        }
+        elseif ($PreferredModule -contains 'Azure')
+        {
             # Attempt to import Azure but fallback to AzureRM unless strict is specified.
             if (!(Import-FromModulePath -Classic:$true -azurePsVersion $azurePsVersion) -and
                 !(Import-FromSdkPath -Classic:$true -azurePsVersion $azurePsVersion))
@@ -37,7 +53,9 @@
                     }
                 }
             }
-        } else {
+        }
+        else
+        {
             # Attempt to import AzureRM but fallback to Azure unless strict is specified
             if (!(Import-FromModulePath -Classic:$false -azurePsVersion $azurePsVersion) -and
                 !(Import-FromSdkPath -Classic:$false -azurePsVersion $azurePsVersion))
@@ -234,9 +252,13 @@ function Import-AzureRmSubmodulesFromSdkPath {
 }
 
 function ThrowAzureModuleNotFoundException {
-    param([string] $azurePsVersion,
-          [string] $modules)
-    Discover-AvailableAzureModules
+    param(
+        [string] $azurePsVersion,
+        [string] $modules
+    )
+
+    DiscoverAvailableAzureModules
+
     if ($azurePsVersion) {
         throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion, $modules)
     } else {
@@ -244,10 +266,12 @@ function ThrowAzureModuleNotFoundException {
     }
 }
 
-function Discover-AvailableAzureModules {
+function DiscoverAvailableAzureModules {
     $env:PSModulePath = $env:SystemDrive + "\Modules;" + $env:PSModulePath
     Write-Host $(Get-VstsLocString -Key AZ_AvailableModules -ArgumentList "Azure")
-    Get-Module -Name Azure -ListAvailable | Select-Object Name,Version | ft
+    Get-Module -Name Azure -ListAvailable | Select-Object Name,Version | Format-Table
     Write-Host $(Get-VstsLocString -Key AZ_AvailableModules -ArgumentList "AzureRM")
-    Get-Module -Name AzureRM -ListAvailable | Select-Object Name,Version | ft
+    Get-Module -Name AzureRM -ListAvailable | Select-Object Name,Version | Format-Table
+    Write-Host $(Get-VstsLocString -Key AZ_AvailableModules -ArgumentList "Az")
+    Get-Module -Name Az -ListAvailable | Select-Object Name, Version | Format-Table
 }

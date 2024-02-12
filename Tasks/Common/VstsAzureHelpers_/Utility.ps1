@@ -596,6 +596,28 @@ function Add-AzureStackAzureRmEnvironment {
             AzureKeyVaultServiceEndpointResourceId   = $AzureKeyVaultServiceEndpointResourceId
             EnableAdfsAuthentication                 = $aadAuthorityEndpoint.TrimEnd("/").EndsWith("/adfs", [System.StringComparison]::OrdinalIgnoreCase)
         }
+        $armEnv = Get-AzEnvironment -Name $name
+
+        if($null -ne $armEnv) {
+            Write-Verbose "Updating Azure environment $name" -Verbose
+            if (CmdletHasMember -cmdlet Remove-AzEnvironment -memberName Force) {
+                Remove-AzEnvironment -Name $name -Force | Out-Null
+            }
+            else {
+                Remove-AzEnvironment -Name $name | Out-Null
+            }
+        }
+        else {
+            Write-Verbose "Adding Azure environment $name" -Verbose
+        }
+
+        try {
+            return Add-AzEnvironment @azureEnvironmentParams
+        }
+        catch {
+            Assert-TlsError -exception $_.Exception
+            throw
+        }
     }
     else
     {
@@ -612,30 +634,23 @@ function Add-AzureStackAzureRmEnvironment {
             AzureKeyVaultServiceEndpointResourceId   = $AzureKeyVaultServiceEndpointResourceId
             EnableAdfsAuthentication                 = $aadAuthorityEndpoint.TrimEnd("/").EndsWith("/adfs", [System.StringComparison]::OrdinalIgnoreCase)
         }
-    }
-
-    if ($featureFlags.retireAzureRM)
-    {
-        $armEnv = Get-AzEnvironment -Name $name
-    }
-    else
-    {
         $armEnv = Get-AzureRmEnvironment -Name $name
-    }
-    if($armEnv -ne $null) {
-        Write-Verbose "Updating AzureRm environment $name" -Verbose
 
-        if (CmdletHasMember -cmdlet Remove-AzureRmEnvironment -memberName Force) {
+        if($armEnv -ne $null) {
+            Write-Verbose "Updating AzureRm environment $name" -Verbose
+    
+            if (CmdletHasMember -cmdlet Remove-AzureRmEnvironment -memberName Force) {
+                Remove-AzureRmEnvironment -Name $name -Force | Out-Null
+            }
+        else {
+        else {
             if ($featureFlags.retireAzureRM)
             {
-                Remove-AzEnvironment -Name $name -Force | Out-Null
+                Remove-AzEnvironment -Name $name | Out-Null
             }
             else
             {
-                Remove-AzureRmEnvironment -Name $name -Force | Out-Null
-            }
-        }
-        else {
+            else {
             if ($featureFlags.retireAzureRM)
             {
                 Remove-AzEnvironment -Name $name | Out-Null
@@ -645,12 +660,19 @@ function Add-AzureStackAzureRmEnvironment {
                 Remove-AzureRmEnvironment -Name $name | Out-Null
             }
         }
-    }
-    else {
-        Write-Verbose "Adding AzureRm environment $name" -Verbose
-    }
+        else {
+            Write-Verbose "Adding AzureRm environment $name" -Verbose
+        }
 
     try {
+    try {
+        if ($featureFlags.retireAzureRM)
+        {
+            return Add-AzEnvironment @azureEnvironmentParams
+        }
+        else
+        {
+        try {
         if ($featureFlags.retireAzureRM)
         {
             return Add-AzEnvironment @azureEnvironmentParams
@@ -659,10 +681,10 @@ function Add-AzureStackAzureRmEnvironment {
         {
             return Add-AzureRmEnvironment @azureEnvironmentParams
         }
-    }
-    catch {
-        Assert-TlsError -exception $_.Exception
-        throw
+        catch {
+            Assert-TlsError -exception $_.Exception
+            throw
+        }
     }
 }
 
