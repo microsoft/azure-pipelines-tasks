@@ -15,20 +15,11 @@
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
         if ($PreferredModule -contains 'Az')
         {
-            Write-Verbose "Installing 'Az' module..."
-            Install-Module -Name 'Az' -Repository PSGallery -AllowClobber -Force
-
-            Get-Module -Name Az -ListAvailable | Select-Object Name, Version | Format-Table
-
-            $module = Get-Module -Name Az -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
-            if (!$module)
+            $az = (Import-AzFromModulePath) -or (Import-AzFromSdkPath)
+            if (!$az)
             {
-                ThrowAzureModuleNotFoundException -azurePsVersion $azurePsVersion -modules 'Az'
+                ThrowAzureModuleNotFoundException -azurePsVersion $azurePsVersion -modules "Az"
             }
-    
-            Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
-            $module = Import-Module -Name $module.Path -Global -PassThru -Force
-            Write-Verbose "Imported module version: $($module.Version)"
         }
         elseif ($PreferredModule -contains 'Azure' -and $PreferredModule -contains 'AzureRM')
         {
@@ -166,6 +157,32 @@ function Import-FromModulePath {
     }
 }
 
+function Import-AzFromModulePath {
+
+    Trace-VstsEnteringInvocation $MyInvocation
+    try
+    {
+        $name = "Az"
+ 
+        Write-Verbose "Attempting to find the module '$name' from the module path for latest available version"
+        $module = Get-Module -Name $name -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+        $sdkVersion = Get-SdkVersion
+        if ((!$module) -or ($sdkVersion -and ($module.Version -lt [version]$sdkVersion)))
+        {
+            return $false
+        }
+        
+        # Import the module.
+        Write-Host "##[command]Import-Module -Name $($module.Path) -Global"
+        $module = Import-Module -Name $module.Path -Global -PassThru -Force
+        Write-Verbose "Imported module version: $($module.Version)"
+
+        return $true
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
 function Import-FromSdkPath {
     [CmdletBinding()]
     param([switch] $Classic,
@@ -212,6 +229,41 @@ function Import-FromSdkPath {
     }
 }
 
+function Import-AzFromSdkPath {
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        $partialPath = 'Microsoft SDKs\Azure\PowerShell\Az\Az.psd1'
+
+        foreach ($programFiles in @(${env:ProgramFiles(x86)}, $env:ProgramFiles))
+        {
+            if (!$programFiles)
+            {
+                continue
+            }
+
+            $path = [System.IO.Path]::Combine($programFiles, $partialPath)
+            Write-Verbose "Checking if path exists: $path"
+            if (Test-Path -LiteralPath $path -PathType Leaf) {
+                # Import the module.
+                Write-Host "##[command]Import-Module -Name $path -Global"
+                $module = Import-Module -Name $path -Global -PassThru -Force
+                Write-Verbose "Imported module version: $($module.Version)"
+
+                # Store the imported module.
+                $script:azModule = $module
+
+                return $true
+            }
+        }
+
+        return $false
+    }
+    finally
+    {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
 function Get-SdkVersion {
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -227,8 +279,11 @@ function Get-SdkVersion {
 
 function Import-AzureRmSubmodulesFromSdkPath {
     [CmdletBinding()]
-    param([string] $path,
-          [string] $programFiles)
+    param(
+        [string] $path,
+        [string] $programFiles
+    )
+
     try {
         # Azure.Storage submodule needs to be imported first
         $azureStorageModulePath = [System.IO.Path]::Combine($programFiles, "Microsoft SDKs\Azure\PowerShell\Storage\Azure.Storage\Azure.Storage.psd1")
