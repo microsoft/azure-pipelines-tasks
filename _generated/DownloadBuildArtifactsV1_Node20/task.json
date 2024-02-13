@@ -265,7 +265,7 @@
   "instanceNameFormat": "Download Build Artifacts",
   "execution": {
     "AgentPluginWithFallback": {
-      "target": "Agent.Plugins.BuildArtifacts.DownloadBuildArtifactTaskV2_0_0, Agent.Plugins"
+      "target": "Agent.Plugins.BuildArtifacts.DownloadBuildArtifactTaskV1_0_1, Agent.Plugins"
     },
     "Node10": {
       "target": "main.js",

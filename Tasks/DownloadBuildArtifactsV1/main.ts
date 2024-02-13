@@ -68,6 +68,8 @@ function publishEvent(feature, properties: any): void {
 
 async function main(): Promise<void> {
     var promise = new Promise<void>(async (resolve, reject) => {
+        tl.debug(`Using fallback V0 code path.  Update agent to use V1 code path.  See AgentPluginWithFallback in task.json.`)
+
         var buildType: string = tl.getInput("buildType", true);
         var isCurrentBuild: boolean = buildType.toLowerCase() === 'current';
         var isSpecificBuildWithTriggering: boolean = tl.getBoolInput("specificBuildWithTriggering", false);
