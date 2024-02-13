@@ -64,22 +64,14 @@ function Import-AzAccountsModule {
 
         if (!$module) {
             Write-Verbose "No module found with name: $moduleName"
-
-            # Import the Az.Account module
             Import-Module -Name Az.Account -ErrorAction SilentlyContinue
-
-            # Check if the module is imported successfully
             $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
-            if (Get-Module -Name Az.Account -ListAvailable) {
-                Write-Verbose "Az.Account module imported successfully."
-            } else {
-                Write-Warning "Failed to import Az.Account module."
-                throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, "Az.Accounts")
-            }
         }
 
-        if (!$module) {
-            Write-Verbose "No module found with name: $moduleName"
+        if ($module) {
+            Write-Verbose "Az.Account module imported successfully."
+        } else {
+            Write-Warning "Failed to import Az.Account module."
             throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, "Az.Accounts")
         }
 
