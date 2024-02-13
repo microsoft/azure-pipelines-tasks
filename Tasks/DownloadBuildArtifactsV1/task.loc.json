@@ -264,6 +264,9 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
+    "AgentPluginWithFallback": {
+      "target": "Agent.Plugins.BuildArtifacts.DownloadBuildArtifactTaskV2_0_0, Agent.Plugins"
+    },
     "Node10": {
       "target": "main.js",
       "argumentFormat": ""

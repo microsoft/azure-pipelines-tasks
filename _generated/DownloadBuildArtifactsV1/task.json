@@ -314,5 +314,9 @@
       "name": "BuildNumber",
       "description": "Stores the build number of the build artifact source.<br />Please note that in fact it returns <b>BuildId</b> due to backward compatibility <p>[More Information](https://docs.microsoft.com/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services)</p>"
     }
-  ]
+  ],
+  "_buildConfigMapping": {
+    "Default": "1.235.0",
+    "Node20_229_3": "1.235.1"
+  }
 }

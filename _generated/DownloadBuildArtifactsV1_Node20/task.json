@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 235,
-    "Patch": 0
+    "Patch": 1
   },
   "groups": [
     {
@@ -274,6 +274,10 @@
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -314,5 +318,9 @@
       "name": "BuildNumber",
       "description": "Stores the build number of the build artifact source.<br />Please note that in fact it returns <b>BuildId</b> due to backward compatibility <p>[More Information](https://docs.microsoft.com/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services)</p>"
     }
-  ]
+  ],
+  "_buildConfigMapping": {
+    "Default": "1.235.0",
+    "Node20_229_3": "1.235.1"
+  }
 }
