@@ -18,7 +18,7 @@
   "homepage": "https://github.com/Microsoft.com/vsts-tasks#readme",
   "dependencies": {
     "ssh2": "^1.15.0",
-    "ssh2-sftp-client": "~9.0.4",
+    "ssh2-sftp-client": "^9.1.0",
     "minimatch": "^3.0.4",
     "azure-pipelines-task-lib": "^5.0.0-preview.0",
     "@types/mocha": "^5.2.7"
