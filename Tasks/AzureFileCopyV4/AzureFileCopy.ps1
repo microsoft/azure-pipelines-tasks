@@ -74,6 +74,12 @@ CleanUp-PSModulePathForHostedAgent
 $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
 $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
+if ($featureFlags.retireAzureRM) {
+    # Uninstall AzureRM
+    $azureRmModules = Get-Module -ListAvailable | Where {$_.Name -like 'AzureRM.*'}
+    Foreach ($Module in $azureRmModules) { Uninstall-Module $Module }
+}
+
 if (Get-Module Az.Accounts -ListAvailable) {
     $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
     Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
