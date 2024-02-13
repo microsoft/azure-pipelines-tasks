@@ -77,7 +77,8 @@ $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
 if ($featureFlags.retireAzureRM) {
     Write-Debug "Initializing Az Module"
-    Initialize-AzModule -Endpoint $endpoint
+    $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
+    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
 
     # After Initialize-AzModule all AzureRM modules should be uninstalled
     Write-Debug "Searching for AzureRM modules:"
