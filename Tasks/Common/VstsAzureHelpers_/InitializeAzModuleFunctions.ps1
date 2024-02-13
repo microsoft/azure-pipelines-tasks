@@ -1,3 +1,7 @@
+$featureFlags = @{
+    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
 # Dot source Utility functions.
 . $PSScriptRoot/Utility.ps1
 
@@ -67,6 +71,17 @@ function Import-AzAccountsModule {
         Write-Host "##[command]Import-Module -Name $($module.Path) -Global"
         $module = Import-Module -Name $module.Path -Global -PassThru -Force
         Write-Verbose "Imported module version: $($module.Version)"
+
+        if ($featureFlags.retireAzureRM) {
+            # Supress breaking changes warnings
+            Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az.Accounts
+            Write-Verbose "Supressing breaking changes warnings of 'Az.Accounts' module"
+
+            # Uninstalling AzureRm
+            Write-Verbose "Uninstalling AzureRM module"
+            Uninstall-AzureRm
+        }
+
         return $module.Version
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation

@@ -74,25 +74,6 @@ CleanUp-PSModulePathForHostedAgent
 $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
 $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
-if ($featureFlags.retireAzureRM) {
-    Write-Debug "Uninstalling AzureRM modules:"
-    $azureRmModules = Get-Module -ListAvailable | Where-Object { $_.Name -like 'AzureRM.*' }
-    if ($azureRmModules) {
-        Foreach ($Module in $azureRmModules) {
-            try {
-                Write-Debug "Uninstalling $($Module.Name)"
-                Uninstall-Module -Name $Module.Name -Force -ErrorAction Stop
-            }
-            catch {
-                Write-Debug "Error occurred while uninstalling $($Module.Name): $_"
-            }
-        }
-    }
-    else {
-        Write-Debug "No AzureRM modules found."
-    }
-}
-
 if (Get-Module Az.Accounts -ListAvailable) {
     $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
     Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
@@ -102,6 +83,19 @@ else {
         Initialize-AzModule -Endpoint $endpoint
     } else {
         Initialize-AzureRMModule -Endpoint $endpoint
+    }
+}
+
+if ($featureFlags.retireAzureRM) {
+    Write-Debug "Searching for AzureRM modules:"
+    $azureRmModules = Get-Module -ListAvailable | Where-Object { $_.Name -like 'AzureRM.*' }
+    if ($azureRmModules) {
+        Foreach ($Module in $azureRmModules) {
+            Write-Warning "Found AzureRM module '$($Module.Name)': $_"
+        }
+    }
+    else {
+        Write-Debug "No AzureRM modules found."
     }
 }
 
