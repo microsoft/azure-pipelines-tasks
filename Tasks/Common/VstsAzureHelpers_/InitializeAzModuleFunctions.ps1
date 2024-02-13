@@ -17,7 +17,8 @@ function Initialize-AzModule {
         [Parameter(Mandatory = $false)]
         [bool] $isPSCore,
         [Parameter(Mandatory=$false)]
-        [Security.SecureString]$encryptedToken)
+        [Security.SecureString]$encryptedToken
+    )
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -42,9 +43,9 @@ function Import-AzAccountsModule {
     try {
         # We are only looking for Az.Accounts module becasue all the command required for initialize the azure PS session is in Az.Accounts module.
         $moduleName = "Az.Accounts"
+        
         # Attempt to resolve the module.
         Write-Verbose "Attempting to find the module '$moduleName' from the module path."
-
         if ($azVersion -eq "") {
             $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
         }
@@ -62,23 +63,31 @@ function Import-AzAccountsModule {
             }
         }
 
-        if (!$module) {
-            Write-Verbose "No module found with name: $moduleName"
-            Import-Module -Name Az.Account -ErrorAction SilentlyContinue
-            $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
-        }
-
+        # module path 
         if ($module) {
-            Write-Verbose "Az.Account module imported successfully."
-        } else {
-            Write-Warning "Failed to import Az.Account module."
-            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, "Az.Accounts")
+            Write-Verbose "Module was resolved: $($moduleName)"
+            Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
+            $module = Import-Module -Name $module.Path -Global -PassThru -Force
+            Write-Verbose "Imported module version: $($module.Version)"
+        }
+        else {
+            Write-Verbose "No module found with name: $($moduleName), installing it."
+            if ($azVersion) {
+                Write-Host "##[command]Import-Module -Name $($module.Path)  -RequiredVersion $($azVersion) -Global -PassThru -Force"
+                $module = Install-Module -Name $moduleName -RequiredVersion $azVersion -Force -AllowClobber
+            }
+            else {
+                Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
+                $module = Install-Module -Name $moduleName -Force -AllowClobber
+            }
         }
 
-        # Import the module.
-        Write-Host "##[command]Import-Module -Name $($module.Path) -Global"
-        $module = Import-Module -Name $module.Path -Global -PassThru -Force
-        Write-Verbose "Imported module version: $($module.Version)"
+        if (!$module) {
+            Write-Warning "Failed to import $($moduleName) module."
+            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, "Az.Accounts")
+        } else {
+            Write-Verbose "$($moduleName) module imported successfully."
+        }
 
         if ($featureFlags.retireAzureRM) {
             # Supress breaking changes warnings
