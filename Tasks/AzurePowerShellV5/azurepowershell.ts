@@ -11,10 +11,10 @@ function convertToNullIfUndefined<T>(arg: T): T|null {
     return arg ? arg : null;
 }
 
-let tempDirectory = tl.getVariable('agent.tempDirectory');
 tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
 async function run() {
     let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
+    let tempDirectory = tl.getVariable('agent.tempDirectory');
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
