@@ -72,20 +72,9 @@ $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
 $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
 if ($featureFlags.retireAzureRM) {
-    Write-Debug "Initializing Az Module"
-    Initialize-AzModule -Endpoint $endpoint
-
-    # After Initialize-AzModule all AzureRM modules should be uninstalled
-    Write-Debug "Searching for AzureRM modules:"
-    $azureRmModules = Get-Module -ListAvailable | Where-Object { $_.Name -like 'AzureRM.*' }
-    if ($azureRmModules) {
-        Foreach ($Module in $azureRmModules) {
-            Write-Warning "Found AzureRM module '$($Module.Name)': $_"
-        }
-    }
-    else {
-        Write-Debug "No AzureRM modules found."
-    }
+    Write-Verbose "Initializing Az Module."
+    $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
+    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
 } else {
     if (Get-Module Az.Accounts -ListAvailable) {
         $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
@@ -93,13 +82,8 @@ if ($featureFlags.retireAzureRM) {
     }
     else {
         Write-Warning "Module Az.Accounts is unavailable"
-        if ($featureFlags.retireAzureRM) {
-            Write-Verbose "Initializing Az Module"
-            Initialize-AzModule -Endpoint $endpoint
-        } else {
-            Update-PSModulePathForHostedAgentWithLatestModule -Endpoint $endpoint
-            Initialize-AzureRMModule -Endpoint $endpoint
-        }
+        Update-PSModulePathForHostedAgentWithLatestModule -Endpoint $endpoint
+        Initialize-AzureRMModule -Endpoint $endpoint
     }
 }
 
