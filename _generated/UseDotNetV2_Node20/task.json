@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 234,
+    "Minor": 235,
     "Patch": 1
   },
   "satisfies": [
@@ -199,7 +199,7 @@
     "DepricatedVersionNetCore": "NET Core version you specfied %s is out of support and will be removed from hosted agents soon. Please refer to https://aka.ms/dotnet-core-support for more information about the .NET support policy."
   },
   "_buildConfigMapping": {
-    "Default": "2.234.0",
-    "Node20_229_3": "2.234.1"
+    "Default": "2.235.0",
+    "Node20_229_3": "2.235.1"
   }
 }
