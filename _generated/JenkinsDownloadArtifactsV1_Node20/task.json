@@ -1,0 +1,387 @@
+{
+  "id": "86c37a92-59a7-444b-93c7-220fcf91e29c",
+  "name": "JenkinsDownloadArtifacts",
+  "friendlyName": "Jenkins download artifacts",
+  "description": "Download artifacts produced by a Jenkins job",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/jenkins-download-artifacts",
+  "helpMarkDown": "Download artifacts produced by a [Jenkins](https://jenkins.io/) job.",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft",
+  "demands": [],
+  "version": {
+    "Major": 1,
+    "Minor": 235,
+    "Patch": 1
+  },
+  "groups": [
+    {
+      "name": "propagatedArtifactsGroup",
+      "displayName": "Propagated Artifacts",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "instanceNameFormat": "Download artifacts produced by $(jobName)",
+  "inputs": [
+    {
+      "name": "serverEndpoint",
+      "aliases": [
+        "jenkinsServerConnection"
+      ],
+      "type": "connectedService:Jenkins",
+      "label": "Jenkins service connection",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Select the service connection for your Jenkins instance. To create one, click the Manage link and create a new Jenkins service connection."
+    },
+    {
+      "name": "jobName",
+      "type": "pickList",
+      "label": "Job name",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The name of the Jenkins job to download artifacts from.  This must exactly match the job name on the Jenkins server.",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "jenkinsJobType",
+      "type": "pickList",
+      "label": "Jenkins job type",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Jenkins job type, detected automatically.",
+      "visibleRule": "jobName = invalidjobName",
+      "properties": {
+        "EditableOptions": "false",
+        "PopulateDefaultValue": "true"
+      }
+    },
+    {
+      "name": "saveTo",
+      "type": "filePath",
+      "label": "Save to",
+      "defaultValue": "jenkinsArtifacts",
+      "required": true,
+      "helpMarkDown": "Jenkins artifacts will be downloaded and saved to this directory.  This directory will be created if it does not exist."
+    },
+    {
+      "name": "jenkinsBuild",
+      "type": "radio",
+      "label": "Download artifacts produced by",
+      "defaultValue": "LastSuccessfulBuild",
+      "required": true,
+      "groupName": "advanced",
+      "helpMarkDown": "Download artifacts produced by the last successful build, or from a specific build instance.",
+      "options": {
+        "LastSuccessfulBuild": "Last Successful Build",
+        "BuildNumber": "Build Number"
+      }
+    },
+    {
+      "name": "jenkinsBuildNumber",
+      "type": "pickList",
+      "label": "Jenkins build number",
+      "defaultValue": "1",
+      "required": true,
+      "groupName": "advanced",
+      "visibleRule": "jenkinsBuild == BuildNumber",
+      "helpMarkDown": "Download artifacts produced by this build.",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "itemPattern",
+      "type": "multiLine",
+      "label": "Item Pattern",
+      "defaultValue": "**",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples) <p>The default pattern (\\*\\*) will download all files across all artifacts produced by the Jenkins job. To download all files within artifact drop use drop/**.</p>",
+      "properties": {
+        "rows": "3",
+        "resizable": "true"
+      }
+    },
+    {
+      "name": "downloadCommitsAndWorkItems",
+      "type": "boolean",
+      "label": "Download Commits and WorkItems",
+      "defaultValue": false,
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Enables downloading the commits and work item details associated with the Jenkins Job"
+    },
+    {
+      "name": "startJenkinsBuildNumber",
+      "type": "pickList",
+      "label": "Download commits and work items from",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "downloadCommitsAndWorkItems == true && jenkinsBuild == BuildNumber",
+      "groupName": "advanced",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Optional start build number for downloading commits and work items. If provided, all commits and work items between start build number and build number given as input to download artifacts will be downloaded."
+    },
+    {
+      "name": "artifactDetailsFileNameSuffix",
+      "type": "string",
+      "label": "Commit and WorkItem FileName",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "downloadCommitsAndWorkItems == invalid",
+      "groupName": "advanced",
+      "helpMarkDown": "Optional file name suffix for commits and work item attachments. Attachments will be created with commits_{suffix}.json and workitem_{suffix}.json. If this input is not provided, attachments will be created with the name commits.json and workitems.json"
+    },
+    {
+      "name": "propagatedArtifacts",
+      "type": "boolean",
+      "label": "Artifacts are propagated to Azure",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "propagatedArtifactsGroup",
+      "helpMarkDown": "Check this if Jenkins artifacts were propagated to Azure. To upload Jenkins artifacts to azure, refer to this [Jenkins plugin](https://wiki.jenkins.io/display/JENKINS/Windows+Azure+Storage+Plugin)"
+    },
+    {
+      "name": "artifactProvider",
+      "type": "pickList",
+      "label": "Artifact Provider",
+      "defaultValue": "azureStorage",
+      "required": true,
+      "options": {
+        "azureStorage": "Azure Storage"
+      },
+      "properties": {
+        "EditableOptions": "false",
+        "PopulateDefaultValue": "true"
+      },
+      "groupName": "propagatedArtifactsGroup",
+      "visibleRule": "propagatedArtifacts == notValid",
+      "helpMarkDown": "Choose the external storage provider used in Jenkins job to upload the artifacts."
+    },
+    {
+      "name": "ConnectedServiceNameARM",
+      "type": "connectedService:AzureRM",
+      "label": "Azure Subscription",
+      "required": true,
+      "groupName": "propagatedArtifactsGroup",
+      "visibleRule": "propagatedArtifacts == true",
+      "helpMarkDown": "Choose the Azure Resource Manager subscription for the artifacts."
+    },
+    {
+      "name": "storageAccountName",
+      "type": "pickList",
+      "label": "Storage Account Name",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "groupName": "propagatedArtifactsGroup",
+      "visibleRule": "propagatedArtifacts == true",
+      "helpMarkDown": "Azure Classic and Resource Manager stoarge accounts are listed. Select the Storage account name in which the artifacts are propagated."
+    },
+    {
+      "name": "containerName",
+      "type": "pickList",
+      "label": "Container Name",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "required": true,
+      "groupName": "propagatedArtifactsGroup",
+      "visibleRule": "propagatedArtifacts == true",
+      "helpMarkDown": "Name of the container in the storage account to which artifacts are uploaded."
+    },
+    {
+      "name": "commonVirtualPath",
+      "type": "string",
+      "label": "Common Virtual Path",
+      "required": false,
+      "groupName": "propagatedArtifactsGroup",
+      "visibleRule": "propagatedArtifacts == true",
+      "helpMarkDown": "Path to the artifacts inside the Azure storage container."
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "endpointId": "$(serverEndpoint)",
+      "target": "jobName",
+      "dataSourceName": "Jobs",
+      "resultTemplate": "{{#addField jobs 'parentPath' 'name' '/'}}{{#recursiveSelect jobs}}{{#notEquals _class 'com.cloudbees.hudson.plugins.folder.Folder'}}{{#notEquals _class 'org.jenkinsci.plugins.workflow.job.WorkflowJob'}}{ \"Value\" : \"{{#if parentPath}}{{parentPath}}/{{/if}}{{name}}\", \"DisplayValue\" : \"{{#if parentPath}}{{parentPath}}/{{/if}}{{{displayName}}}\" }{{/notEquals}}{{/notEquals}}{{/recursiveSelect}}{{/addField}}"
+    },
+    {
+      "endpointId": "$(serverEndpoint)",
+      "target": "jenkinsJobType",
+      "dataSourceName": "JenkinsJobType",
+      "parameters": {
+        "definition": "$(jobName)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{#if _class}}{{_class}}{{else}}none{{/if}}\", \"DisplayValue\" : \"{{#if _class}}{{{_class}}}{{else}}none{{/if}}\" }"
+    },
+    {
+      "endpointId": "$(serverEndpoint)",
+      "target": "jenkinsBuildNumber",
+      "dataSourceName": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}MultibranchPipelineBuilds{{else}}Builds{{/equals}}",
+      "parameters": {
+        "definition": "$(jobName)",
+        "jenkinsJobType": "$(jenkinsJobType)"
+      },
+      "resultTemplate": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}[ {{#jobs}}{{#builds}} '{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" }',{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
+    },
+    {
+      "endpointId": "$(serverEndpoint)",
+      "target": "startJenkinsBuildNumber",
+      "dataSourceName": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}MultibranchPipelineBuilds{{else}}Builds{{/equals}}",
+      "parameters": {
+        "definition": "$(jobName)",
+        "jenkinsJobType": "$(jenkinsJobType)"
+      },
+      "resultTemplate": "{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}[ {{#jobs}}{{#builds}} '{ \"Value\" : \"{{../name}}/{{id}}\", \"DisplayValue\" : \"{{{../name}}}/{{{displayName}}}\" }',{{/builds}}{{/jobs}}]{{else}}{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }{{/equals}}"
+    },
+    {
+      "endpointId": "$(ConnectedServiceNameARM)",
+      "target": "storageAccountName",
+      "dataSourceName": "AzureStorageAccountRMandClassic"
+    },
+    {
+      "target": "containerName",
+      "endpointId": "$(ConnectedServiceNameARM)",
+      "dataSourceName": "AzureStorageContainer",
+      "resultTemplate": "{ \"Value\" : \"{{ Name }}\", \"DisplayValue\" : \"{{ Name }}\" }",
+      "parameters": {
+        "storageAccount": "$(storageAccountName)"
+      }
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "jenkinsdownloadartifacts.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "jenkinsdownloadartifacts.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "jenkinsdownloadartifacts.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "GetArtifactsFromLastSuccessfulBuild": "Download artifacts from last successful build of %s",
+    "GetArtifactsFromBuildNumber": "Download artifacts from build number %d of %s",
+    "CouldNotGetLastSuccessfulBuildNumber": "Getting last successful build number failed with an error: %s",
+    "ServerCallFailed": "HTTP call to Jenkins server failed.",
+    "ServerCallErrorCode": "HTTP response code: %d",
+    "ArtifactSuccessfullyDownloaded": "Successfully downloaded artifact to %s",
+    "ArtifactDownloadUrl": "Downloading artifacts from: %s",
+    "DownloadingCommitsAndWorkItems": "Downloading commits and work items",
+    "ArtifactProviderNotSupported": "Downloading artifacts from %s is not supported",
+    "DownloadFromAzureBlobStorage": "Downloading artifacts from Azure Blob Storage, Container Name: %s",
+    "JenkinsDownloadingChangeFromCurrentBuild": "Cannot find start build. Commits and workitems will be downloaded from build: %s",
+    "DownloadingJenkinsChangeBetween": "Downloading commits and work items between builds %s to %s",
+    "GettingCommitsFromSingleBuild": "Downloading commits associated with the build %s",
+    "DownloadingContentFromJenkinsServer": "Downloading content from Jenkins server:%s with strict SSL:%s",
+    "WritingCommitsTo": "Writing commits to file %s",
+    "UploadingAttachment": "Uploading %s as attachment",
+    "SuccessfullyUploadedCommitsAttachment": "Successfully uploaded commits attachment",
+    "GetCommitMessages": "Getting commit messages from commits",
+    "GetCommitMessagesFailed": "Getting commits message failed with an error %s. \nCommits: %s",
+    "CouldNotWriteToFile": "Could not save content to file. Failed with an error %s",
+    "DownloadingWorkItemsFromSingleBuild": "Downloading work items associated with the build %s",
+    "WritingWorkItemsTo": "Writing work items to %s",
+    "SuccessfullyUploadedWorkItemsAttachment": "Successfully uploaded work item attachment",
+    "FindBuildIndex": "Trying to find the index for the build",
+    "FoundBuildIndex": "Found startIndex %s and endIndex %s",
+    "JenkinsArtifactDetailsParsingError": "Parsing ArtifactDetails failed with an error %s",
+    "SuccessfullyDownloadedCommitsAndWorkItems": "Commits and work items downloaded successfully",
+    "CommitsAndWorkItemsDownloadFailed": "Downloading commits and work items from Jenkins failed with an error: %s",
+    "CannotFindBuilds": "Cannot find builds",
+    "CannotParseCommits": "Cannot parse commit objects %s. Error: %s",
+    "JenkinsNoCommitsToFetch": "Start and end build Ids are same. Commits and work items will not be downloaded.",
+    "InvalidJenkinsBuildNumber": "Cannot parse the Jenkins Build number.",
+    "InvalidJenkinsStartBuildNumber": "The specified Jenkins start build number %s is not valid.",
+    "InvalidBuildId": "Received an invalid buildId %s",
+    "InvalidMultiBranchPipelineName": "Multibranch pipeline job's startBuild branch %s and endBuild branch %s are different. Commits and work items will not be downloaded.",
+    "FoundJenkinsJobDetails": "Found Jenkins job details jobName:%s, jobType:%s, buildId:%s, branchName:%s",
+    "ClientIdCannotBeEmpty": "ClientID is a required parameter.",
+    "DomainCannotBeEmpty": "Domain is a required parameter.",
+    "SecretCannotBeEmpty": "Secret is a required parameter.",
+    "armUrlCannotBeEmpty": "Azure RM management URL is a required parameter.",
+    "authorityUrlCannotBeEmpty": "Authority is a required parameter.",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for azure. Status code: %s, status message: %s",
+    "CallbackCannotBeNull": "A callback is required.",
+    "VMNameCannotBeNull": "vmName is required.",
+    "InvalidValue": "%s is not a valid value. The valid values are: %s",
+    "VmExtensionNameCannotBeNull": "vmExtensionName is required.",
+    "ExpandShouldBeOfTypeString": "expand must be of type string.",
+    "ExtensionParametersCannotBeNull": "extensionParameters is required.",
+    "LoadBalancerNameCannotBeNull": "'loadBalancerName is required.'",
+    "ParametersCannotBeNull": "parameters is required.",
+    "NetworkInterfaceNameCannotBeNull": "networkInterfaceName is required.",
+    "NetworkSecurityGroupNameCannotBeNull": "networkSecurityGroupName is required.",
+    "SecurityRuleNameCannotBeNull": "securityRuleName is required.",
+    "SecurityRuleParametersCannotBeNull": "securityRuleParameters is required.",
+    "DeploymentNameCannotBeNull": "deploymentName is required.",
+    "CredentialsCannotBeNull": "'credentials' is required.",
+    "SubscriptionIdCannotBeNull": "'subscriptionId' is required.",
+    "InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
+    "TimeoutWhileWaiting": "Timed out while waiting",
+    "ResourceGroupCannotBeNull": "resourceGroupName is required.",
+    "ResourceGroupExceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MaxLength\": 90",
+    "ResourceGroupDeceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MinLength\": 1",
+    "ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" should satisfy the constraint - \"Pattern\": /^[-\\w\\._\\(\\)]+$/",
+    "VMSSNameCannotBeNull": "VMSS name is required.",
+    "GetVMSSFailed": "Failed to get VMSS details with resource group %s and name %s. Error: %s",
+    "VMSSDoesNotHaveCustomImage": "VMSS %s can not be updated as it uses a platform image. Only a VMSS which is currently using a custom image can be updated.",
+    "VMSSImageUrlCannotBeNull": "Image URL is required.",
+    "VMSSImageAlreadyUptoDate": "Image is already up-to-date for %s. Skipping image update.",
+    "NewVMSSImageUrl": "URL for new VMSS image: %s.",
+    "VMSSUpdateImage": "Updating VMSS %s to use new image...",
+    "ResourceNameCannotBeNull": "Resource name is required.",
+    "activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource URL is required.",
+    "StorageAccountCannotBeNull": "storage accountName is required.",
+    "CreatedBlobForItem": "Created blob for item {0}. Blob uri: {1}",
+    "CreatedContainer": "Created container {0}.",
+    "ErrorInReadStream": "Error in Read stream: {0}",
+    "ErrorInWriteStream": "Error in write stream: {0}",
+    "FailedToCreateBlob": "Failed to create blob {0}. Error: {1}",
+    "FailedToCreateContainer": "Failed to create container {0}. Error: {1}",
+    "FailedToListItemInsideContainer": "Failed to list items inside container: {0}. Error: {1}",
+    "SuccessFullyFetchedItemList": "Successfully fetched list of items",
+    "UnableToFetchItem": "Unable to fetch item: {0}. Error: {1}",
+    "UploadingItem": "Uploading {0}.",
+    "FoundJobType": "Found job type %s",
+    "CannotFindJobType": "Could not detect job type",
+    "InvalidJobName": "Invalid job name %s",
+    "ContinuationTokenExistsFetchingRemainingFiles": "Continuation token exists, trying to fetch the list of remaining files.",
+    "GetArtifactItemsNotSupported": "Get artifact items not supported, invalid code path",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+    "NoAssociatedArtifacts": "No associated artifacts found",
+    "OperationFailed": "Failed in %s with error: %s",
+    "RetryingOperation": "Error: in %s, retrying the operation => retries pending: %s",
+    "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+  },
+  "minimumAgentVersion": "2.144.0",
+  "_buildConfigMapping": {
+    "Default": "1.235.0",
+    "Node20_229_3": "1.235.1"
+  }
+}

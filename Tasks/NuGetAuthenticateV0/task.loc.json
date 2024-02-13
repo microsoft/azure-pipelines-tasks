@@ -13,11 +13,11 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 229,
-    "Patch": 2
+    "Minor": 232,
+    "Patch": 1
   },
   "deprecated": true,
-  "removalDate": "2024-04-22",
+  "removalDate": "2024-01-31",
   "minimumAgentVersion": "2.120.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
@@ -42,6 +42,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "main.js",
       "argumentFormat": ""
     }

@@ -9,8 +9,11 @@
   "author": "Microsoft Corporation",
   "license": "MIT",
   "dependencies": {
-    "@types/node": "^6.0.101",
-    "@types/q": "^1.0.7",
-    "azure-pipelines-task-lib": "2.9.3"
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^16.11.39",
+    "azure-pipelines-task-lib": "^5.0.1-preview.0"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
   }
 }

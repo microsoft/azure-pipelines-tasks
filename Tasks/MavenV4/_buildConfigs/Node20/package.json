@@ -12,10 +12,10 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",
     "azure-pipelines-task-lib": "^5.0.0-preview.0",
-    "azure-pipelines-tasks-codeanalysis-common": "2.223.0",
-    "azure-pipelines-tasks-codecoverage-tools": "3.214.0",
+    "azure-pipelines-tasks-codeanalysis-common": "^2.226.0",
+    "azure-pipelines-tasks-codecoverage-tools": "3.234.0",
     "azure-pipelines-tasks-java-common": "2.198.1",
-    "azure-pipelines-tasks-packaging-common": "^3.200.1",
+    "azure-pipelines-tasks-packaging-common": "^3.230.0",
     "base-64": "^0.1.0",
     "fs-extra": "^0.30.0",
     "jsdom": "^16.7.0",
@@ -23,7 +23,7 @@
     "strip-bom": "^3.0.0",
     "utf8": "^2.1.0",
     "uuid": "^3.0.1",
-    "xml2js": "^0.4.16"
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "typescript": "5.1.6"

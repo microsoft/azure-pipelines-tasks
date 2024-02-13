@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 229,
+    "Minor": 235,
     "Patch": 1
   },
   "demands": [],
@@ -73,7 +73,7 @@
       "target": "deletefiles.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "deletefiles.js",
       "argumentFormat": ""
     }
@@ -92,7 +92,7 @@
     "NoFiles": "No files to delete."
   },
   "_buildConfigMapping": {
-    "Default": "1.229.0",
-    "Node20-225": "1.229.1"
+    "Default": "1.235.0",
+    "Node20-228": "1.235.1"
   }
 }

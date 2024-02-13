@@ -202,7 +202,7 @@ CLI.serverBuild = function(/** @type {{ task: string }} */ argv) {
     // Need to validate generated tasks first
     const makeOptions = fileToJson(makeOptionsPath);
 
-    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks);
+    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint);
 
     const allTasks = getTaskList(taskList);
 
@@ -420,10 +420,11 @@ function buildTask(taskName, taskListLength, nodeVersion) {
             lockFilePath = path.join(taskPath, 'npm-shrinkwrap.json');
         }
         var packageLock = fileToJson(lockFilePath);
-        Object.keys(packageLock.dependencies).forEach(function (dependencyName) {
+        var dependencies = packageLock.dependencies || packageLock.packages;
+        Object.keys(dependencies).forEach(function (dependencyName) {
             commonPacks.forEach(function (commonPack) {
-                if (dependencyName == commonPack.packageName) {
-                    delete packageLock.dependencies[dependencyName].integrity;
+                if (dependencyName == commonPack.packageName || dependencyName == `node_modules/${commonPack.packageName}`) {
+                    delete dependencies[dependencyName].integrity;
                 }
             });
         });
@@ -809,7 +810,7 @@ CLI.bump = function() {
         taskJson.version.Patch = taskJson.version.Patch + 1;
         taskLocJson.version.Patch = taskLocJson.version.Patch + 1;
 
-        fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 4));
+        fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 2));
         fs.writeFileSync(taskLocJsonPath, JSON.stringify(taskLocJson, null, 2));
 
         // Check that task.loc and task.loc.json versions match
@@ -898,6 +899,19 @@ function verifyAllAgentPluginTasksAreInSkipList() {
     if (missingTaskNames.length > 0) {
         fail('The following tasks must be added to agentPluginTaskNames: ' + JSON.stringify(missingTaskNames));
     }
+}
+
+// Merge all tasks in a build config to base tasks
+// e.g node make.js mergeBuildConfig --config Node20_225
+// This will 'merge' all tasks under build config Node20_225 into base tasks.
+// 1. Copy generated task to base task, delete generated files in  _generated/Task_Node20 and Tasks/taskname/_buildConfig/Node20.
+// 2. Update versionmap.txt file.
+// 3. Remove _buildConfigMapping section in task.json and task-loc.json
+// 4. Update the buildConfig section in make-option.json.  
+CLI.mergeBuildConfig = function(/** @type {{ config: string }} */ argv) {
+    var config = argv.config
+    banner(`Merging all tasks under ${config} build config into base tasks...`);
+    util.mergeBuildConfigIntoBaseTasks(config);
 }
 
 // Generate sprintly zip

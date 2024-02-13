@@ -1,0 +1,242 @@
+{
+  "id": "BD1BED02-F04E-11E7-8C3F-9A214CF093AE",
+  "name": "AzureMysqlDeployment",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-mysql-deployment",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 233,
+    "Patch": 1
+  },
+  "demands": [],
+  "minimumAgentVersion": "1.100.0",
+  "groups": [
+    {
+      "name": "target",
+      "displayName": "ms-resource:loc.group.displayName.target",
+      "isExpanded": true
+    },
+    {
+      "name": "taskDetails",
+      "displayName": "ms-resource:loc.group.displayName.taskDetails",
+      "isExpanded": true
+    },
+    {
+      "name": "firewall",
+      "displayName": "ms-resource:loc.group.displayName.firewall",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "ServerName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ServerName",
+      "required": true,
+      "defaultValue": "",
+      "groupName": "target",
+      "helpMarkDown": "ms-resource:loc.input.help.ServerName",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "DatabaseName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DatabaseName",
+      "required": false,
+      "groupName": "target",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.DatabaseName"
+    },
+    {
+      "name": "SqlUsername",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SqlUsername",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlUsername"
+    },
+    {
+      "name": "SqlPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SqlPassword",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"
+    },
+    {
+      "name": "TaskNameSelector",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.TaskNameSelector",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.TaskNameSelector",
+      "groupName": "taskDetails",
+      "defaultValue": "SqlTaskFile",
+      "options": {
+        "SqlTaskFile": "MySQL Script File",
+        "InlineSqlTask": "Inline MySQL Script"
+      }
+    },
+    {
+      "name": "SqlFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SqlFile",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlFile",
+      "visibleRule": "TaskNameSelector = SqlTaskFile"
+    },
+    {
+      "name": "SqlInline",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.SqlInline",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlInline",
+      "visibleRule": "TaskNameSelector = InlineSqlTask",
+      "properties": {
+        "resizable": "true",
+        "rows": "10"
+      }
+    },
+    {
+      "name": "SqlAdditionalArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SqlAdditionalArguments",
+      "required": false,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlAdditionalArguments"
+    },
+    {
+      "name": "IpDetectionMethod",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.IpDetectionMethod",
+      "required": true,
+      "groupName": "firewall",
+      "defaultValue": "AutoDetect",
+      "options": {
+        "AutoDetect": "AutoDetect",
+        "IPAddressRange": "IPAddressRange"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.IpDetectionMethod"
+    },
+    {
+      "name": "StartIpAddress",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.StartIpAddress",
+      "required": true,
+      "groupName": "firewall",
+      "defaultValue": "",
+      "visibleRule": "IpDetectionMethod = IPAddressRange",
+      "helpMarkDown": "ms-resource:loc.input.help.StartIpAddress"
+    },
+    {
+      "name": "EndIpAddress",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.EndIpAddress",
+      "required": true,
+      "groupName": "firewall",
+      "defaultValue": "",
+      "visibleRule": "IpDetectionMethod = IPAddressRange",
+      "helpMarkDown": "ms-resource:loc.input.help.EndIpAddress"
+    },
+    {
+      "name": "DeleteFirewallRule",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.DeleteFirewallRule",
+      "required": false,
+      "groupName": "firewall",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.DeleteFirewallRule"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "ServerName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureMysqlServers",
+      "resultTemplate": "{ \"Value\" : \"{{{properties.fullyQualifiedDomainName}}}\", \"DisplayValue\" : \"{{{properties.fullyQualifiedDomainName}}}\" }"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "azuremysqldeploy.js"
+    },
+    "Node16": {
+      "target": "azuremysqldeploy.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "azuremysqldeploy.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ARGD_ConstructorFailed": "ms-resource:loc.messages.ARGD_ConstructorFailed",
+    "FirewallRuleNameCannotBeEmpty": "ms-resource:loc.messages.FirewallRuleNameCannotBeEmpty",
+    "FirewallAddressRangeCannotBeEmpty": "ms-resource:loc.messages.FirewallAddressRangeCannotBeEmpty",
+    "StartIpAddressCannotBeEmpty": "ms-resource:loc.messages.StartIpAddressCannotBeEmpty",
+    "EndIpAddressCannotBeEmpty": "ms-resource:loc.messages.EndIpAddressCannotBeEmpty",
+    "MysqlServerNameCannotBeEmpty": "ms-resource:loc.messages.MysqlServerNameCannotBeEmpty",
+    "MysqlFullyQualifiedServerNameCannotBeEmpty": "ms-resource:loc.messages.MysqlFullyQualifiedServerNameCannotBeEmpty",
+    "ResourceGroupCannotBeEmpty": "ms-resource:loc.messages.ResourceGroupCannotBeEmpty",
+    "NotAbleToAddFirewallRule": "ms-resource:loc.messages.NotAbleToAddFirewallRule",
+    "NotAbleToDeleteFirewallRule": "ms-resource:loc.messages.NotAbleToDeleteFirewallRule",
+    "AgentIpAddressIsMissingInAddedFirewallRule": "ms-resource:loc.messages.AgentIpAddressIsMissingInAddedFirewallRule",
+    "NotAbleToGetAllServers": "ms-resource:loc.messages.NotAbleToGetAllServers",
+    "EmptyOrNullServerList": "ms-resource:loc.messages.EmptyOrNullServerList",
+    "UnableToFindResourceGroupDueToNullId": "ms-resource:loc.messages.UnableToFindResourceGroupDueToNullId",
+    "UnableToFindResourceGroupDueToInvalidId": "ms-resource:loc.messages.UnableToFindResourceGroupDueToInvalidId",
+    "NotAbleToGetInstalledLocationOfMysqlFromPath": "ms-resource:loc.messages.NotAbleToGetInstalledLocationOfMysqlFromPath",
+    "UnableToFindMysqlFromRegistryOnMachineError": "ms-resource:loc.messages.UnableToFindMysqlFromRegistryOnMachineError",
+    "UnableToFindMysqlFromRegistry": "ms-resource:loc.messages.UnableToFindMysqlFromRegistry",
+    "UnableToFindTheLocationOfMysqlFromRegistryOnMachineError": "ms-resource:loc.messages.UnableToFindTheLocationOfMysqlFromRegistryOnMachineError",
+    "AzureMysqlTaskParameterCannotBeEmpty": "ms-resource:loc.messages.AzureMysqlTaskParameterCannotBeEmpty",
+    "ToolPathCannotBeNull": "ms-resource:loc.messages.ToolPathCannotBeNull",
+    "SqlExecutionException": "ms-resource:loc.messages.SqlExecutionException",
+    "AzureEndpointCannotBeNull": "ms-resource:loc.messages.AzureEndpointCannotBeNull",
+    "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
+    "UnableToCreateDatabaseException": "ms-resource:loc.messages.UnableToCreateDatabaseException",
+    "WindowMysqlClientMissingError": "ms-resource:loc.messages.WindowMysqlClientMissingError",
+    "LinuxMysqlClientMissingError": "ms-resource:loc.messages.LinuxMysqlClientMissingError",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "NotAbleToCreateFirewallRule": "ms-resource:loc.messages.NotAbleToCreateFirewallRule",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.233.0",
+    "Node20_229_2": "1.233.1"
+  }
+}

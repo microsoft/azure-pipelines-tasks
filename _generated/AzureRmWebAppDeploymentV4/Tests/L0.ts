@@ -2,185 +2,37 @@ import * as path from "path";
 import * as assert from "assert";
 import * as ttm from "azure-pipelines-task-lib/mock-test";
 import tl = require('azure-pipelines-task-lib');
-var ltx = require('ltx');
-import fs = require('fs');
 
 var AppServiceTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-app-service.js");
 var KuduServiceTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-app-service-kudu-tests.js");
 var ApplicationInsightsTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-appinsights-tests.js");
 var ResourcesTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-resource-tests.js");
-var fileEncoding = require("../node_modules/azure-pipelines-tasks-webdeployment-common/fileencoding.js");
+
+const tmpDir = path.join(__dirname, 'temp');
 
 describe('AzureRmWebAppDeployment Suite', function() {
-    
     this.timeout(60000);
+    this.beforeAll(done => {
+        tl.mkdirP(tmpDir);
+        done();
+    });
+    this.afterAll(done => {
+        tl.rmRF(tmpDir);
+        done();
+    });
 
-     before((done) => {
+    before((done) => {
         if(!tl.exist(path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/node_modules'))) {
             tl.cp(path.join( __dirname, 'node_modules'), path.join(__dirname, '..', 'node_modules/azure-pipelines-tasks-azure-arm-rest/Tests'), '-rf', true);
         }
 
-        tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.config'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), '-f', false);
-        tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.Debug.config'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config'), '-f', false);
-        tl.cp(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters.xml'), path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml'), '-f', false);
-        tl.cp(path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XdtTransform', 'Web.config'), path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config'), '-f', false);
-        done();
-    });
-    after(function() {
-        try {
-            tl.rmRF(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml'));
-        }
-        catch(error) {
-            tl.debug(error);
-        }
+       done();
     });
 
     ApplicationInsightsTests.ApplicationInsightsTests();
     AppServiceTests.AzureAppServiceMockTests();
     KuduServiceTests.KuduServiceTests();
     ResourcesTests.ResourcesTests(); 
-    
-    if (tl.osType().match(/^Win/)) {
-        it('Runs successfully with XML Transformation (L1)', (done:MochaDone) => {
-            this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-
-            let tp = path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests","L1XdtTransform.js");
-            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            tr.run();
-
-            var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config')));
-            var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests", 'L1XdtTransform','Web_Expected.config')));
-            assert(ltx.equal(resultFile, expectFile) , 'Should Transform attributes on Web.config');
-            done();
-        });
-
-        it('Validate MSDeploy parameters', (done:MochaDone) => {
-            let tp = path.join(__dirname, "..", "node_modules","azure-pipelines-tasks-webdeployment-common","Tests","L0MSDeployUtility.js");
-            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            tr.run();
-
-            assert(tr.stdout.search('MSBUILD DEFAULT PARAMS PASSED') > 0, 'should have printed MSBUILD DEFAULT PARAMS PASSED');
-            assert(tr.stdout.search('ARGUMENTS WITH SET PARAMS PASSED') > 0, 'should have printed ARGUMENTS WITH SET PARAMS PASSED');
-            assert(tr.stdout.search('ARGUMENT WITH FOLDER PACKAGE PASSED') > 0, 'should have printed ARGUMENT WITH FOLDER PACKAGE PASSED');
-            assert(tr.stdout.search('ARGUMENT WITH EXCLUDE APP DATA PASSED') > 0, 'should have printed ARGUMENT WITH EXCLUDE APP DATA PASSED');
-            assert(tr.stdout.search('ARGUMENT WITH WAR PACKAGE PASSED') > 0, 'should have printed ARGUMENT WITH WAR PACKAGE PASSED');
-            assert(tr.stdout.search('ARGUMENT WITH OVERRIDE RETRY FLAG PASSED') > 0, 'should have printed ARGUMENT WITH OVERRIDE RETRY FLAG PASSED');
-            assert(tr.stdout.search('MSDEPLOY getWebDeployErrorCode passed') > 0, 'should have printed MSDEPLOY getWebDeployErrorCode passed');
-            done();
-        });
-    }
-
-    it('Validate operations.ParameterParserUtility.parse()', (done:MochaDone) => {
-        let tp = path.join(__dirname, 'L0ParameterParserUtility.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
-
-        assert(tr.stdout.search('PARAMETERPARSERUTILITY CASE 1 PASSED') >=0, 'should have printed PARAMETERPARSERUTILITY CASE 1 PASSED');
-        assert(tr.stdout.search('PARAMETERPARSERUTILITY CASE 2 WITH EMPTY VALUE PASSED') >= 0, 'should have printed PARAMETERPARSERUTILITY CASE 2 WITH EMPTY VALUE PASSED');
-        assert(tr.stdout.search('PARAMETERPARSERUTILITY CASE 3 WITH EXTRA SPACES PASSED') >= 0, 'should have printed PARAMETERPARSERUTILITY CASE 3 WITH EXTRA SPACES PASSED');
-        done();
-    });
-
-    it('Runs successfully with XML variable substitution', (done) => {
-        let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub.js');
-        let tr = new ttm.MockTestRunner(tp);
-        tr.run();
-        let transformedFilePath = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config');
-        let expectedFilePath = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Expected.config');
-        let transformedFileAsBuffer = fs.readFileSync(transformedFilePath);
-        let expectedFileAsBuffer = fs.readFileSync(expectedFilePath);
-        let transformedFileEncodeType = fileEncoding.detectFileEncoding(transformedFilePath, transformedFileAsBuffer)[0];
-        let transformedFileAsString = transformedFileAsBuffer.toString(transformedFileEncodeType);
-        transformedFileAsString = transformedFileAsString.replace( /[\n]+/gm, "\r\n" );
-        transformedFileAsBuffer = Buffer.from(transformedFileAsString, transformedFileEncodeType);
-        var resultFile = ltx.parse(transformedFileAsBuffer);
-        var expectFile = ltx.parse(expectedFileAsBuffer);
-        assert(ltx.equal(resultFile, expectFile), 'Should have substituted variables in Web.config file');
-        transformedFilePath = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config');
-        expectedFilePath = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Expected.Debug.config');
-        transformedFileAsBuffer = fs.readFileSync(transformedFilePath);
-        expectedFileAsBuffer = fs.readFileSync(expectedFilePath);
-        transformedFileEncodeType = fileEncoding.detectFileEncoding(transformedFilePath, transformedFileAsBuffer)[0];
-        transformedFileAsString = transformedFileAsBuffer.toString(transformedFileEncodeType);
-        transformedFileAsString = transformedFileAsString.replace( /[\n]+/gm, "\r\n" );
-        transformedFileAsBuffer = Buffer.from(transformedFileAsString, transformedFileEncodeType);
-        var resultFile = ltx.parse(transformedFileAsBuffer);
-        var expectFile = ltx.parse(expectedFileAsBuffer);
-        assert(ltx.equal(resultFile, expectFile), 'Should have substituted variables in Web.Debug.config file');
-        var resultParamFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml')));
-        var expectParamFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_Expected.xml')));
-        assert(ltx.equal(resultParamFile, expectParamFile), 'Should have substituted variables in parameters.xml file');
-        done();
-    });
-
-    it('Runs successfully with JSON variable substitution', (done:MochaDone) => {
-        let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1JsonVarSub.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
-
-        assert(tr.stdout.search('JSON - eliminating object variables validated') > 0, 'JSON - eliminating object variables validation error');
-        assert(tr.stdout.search('JSON - simple string change validated') > 0,'JSON -simple string change validation error' );
-        assert(tr.stdout.search('JSON - system variable elimination validated') > 0, 'JSON -system variable elimination validation error');
-        assert(tr.stdout.search('JSON - special variables validated') > 0, 'JSON - special variables validation error');
-        assert(tr.stdout.search('JSON - variables with dot character validated') > 0, 'JSON variables with dot character validation error');
-        assert(tr.stdout.search('JSON - substitute inbuilt JSON attributes validated') > 0, 'JSON inbuilt variable substitution validation error');
-        assert(tr.stdout.search('VALID JSON COMMENTS TESTS PASSED') > 0, 'VALID JSON COMMENTS TESTS PASSED');
-        assert(tr.stdout.search('INVALID JSON COMMENTS TESTS PASSED') > 0, 'INVALID JSON COMMENTS TESTS PASSED');
-        assert(tr.succeeded, 'task should have succeeded');
-        done();
-    });
-
-    it('Runs successfully with JSON variable substitution V2', (done:MochaDone) => {
-        let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1JsonVarSubV2.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
-
-        assert(tr.stdout.search('JSON - simple string change validated') > 0,'JSON -simple string change validation error' );
-        assert(tr.stdout.search('JSON - system variable elimination validated') > 0, 'JSON -system variable elimination validation error');
-        assert(tr.stdout.search('JSON - special variables validated') > 0, 'JSON - special variables validation error');
-        assert(tr.stdout.search('JSON - substitute inbuilt JSON attributes validated') > 0, 'JSON inbuilt variable substitution validation error');
-        assert(tr.stdout.search('JSON - Array Object validated') > 0, 'JSON - Array Object validation error');
-        assert(tr.stdout.search('JSON - Boolean validated') > 0, 'JSON - Boolean validation error');
-        assert(tr.stdout.search('(float)') > 0, 'JSON - Number(float) validation error');
-        assert(tr.stdout.search('(int)') > 0, 'JSON - Number(int) validation error');
-        assert(tr.stdout.search('JSON - Object validated') > 0, 'JSON - Object validation error');
-        assert(tr.stdout.search('VALID JSON COMMENTS TESTS PASSED') > 0, 'VALID JSON COMMENTS TESTS PASSED');
-        assert(tr.stdout.search('INVALID JSON COMMENTS TESTS PASSED') > 0, 'INVALID JSON COMMENTS TESTS PASSED');
-        assert(tr.succeeded, 'task should have succeeded');
-        done();
-    });
-
-    it('Validate File Encoding', (done:MochaDone) => {
-        let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L1ValidateFileEncoding.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
-
-        assert(tr.stdout.search('UTF-8 with BOM validated') >= 0, 'Should have validated UTF-8 with BOM');
-        assert(tr.stdout.search('UTF-16LE with BOM validated') >= 0, 'Should have validated UTF-16LE with BOM');
-        assert(tr.stdout.search('UTF-16BE with BOM validated') >= 0, 'Should have validated UTF-16BE with BOM');
-        assert(tr.stdout.search('UTF-32LE with BOM validated') >= 0, 'Should have validated UTF-32LE with BOM');
-        assert(tr.stdout.search('UTF-32BE with BOM validated') >= 0, 'Should have validated UTF-32BE with BOM');
-
-        assert(tr.stdout.search('UTF-8 without BOM validated') >= 0, 'Should have validated UTF-8 without BOM');
-        assert(tr.stdout.search('UTF-16LE without BOM validated') >= 0, 'Should have validated UTF-16LE without BOM');
-        assert(tr.stdout.search('UTF-16BE without BOM validated') >= 0, 'Should have validated UTF-16BE without BOM');
-        assert(tr.stdout.search('UTF-32LE without BOM validated') >= 0, 'Should have validated UTF-32LE without BOM');
-        assert(tr.stdout.search('UTF-32BE without BOM validated') >= 0, 'Should have validated UTF-32BE without BOM');
-
-        assert(tr.stdout.search('Short File Buffer Error') >= 0, 'Should have validated short Buffer');
-        assert(tr.stdout.search('Unknown encoding type') >= 0, 'Should throw for Unknown File Buffer');
-        done();
-    });
-
-    it('Validate azure-pipelines-tasks-webdeployment-common.utility.copyDirectory()', (done:MochaDone) => {
-        let tp = path.join(__dirname, "..", "node_modules", "azure-pipelines-tasks-webdeployment-common", "Tests", 'L0CopyDirectory.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
-
-        assert(tr.stdout.search('## Copy Files Successful ##') >=0, 'should have copied the files');
-        assert(tr.stdout.search('## mkdir Successful ##') >= 0, 'should have created dir including dest folder');
-        done();
-    });
 
     it('AzureRmWebAppDeploymentV4 DeploymentFactoryTests', (done: MochaDone) => {
         let tp = path.join(__dirname,'DeploymentFactoryTests.js');
@@ -371,12 +223,13 @@ describe('AzureRmWebAppDeployment Suite', function() {
         try {
             tr.run();
             assert(tr.stdOutContained('SCM_COMMAND_IDLE_TIMEOUT variable PRESENT'), 'Should have printed: SCM_COMMAND_IDLE_TIMEOUT variable PRESENT');
+            assert(tr.stdOutContained('msbuild package PRESENT'), 'Should have printed: msbuild package PRESENT');
             done();
         }
         catch(error) {
             console.log(tr.stdout);
             console.log(tr.stderr);
-            done();
+            done(error);
         }
     });
 

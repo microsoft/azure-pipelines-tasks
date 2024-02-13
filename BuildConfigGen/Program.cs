@@ -31,16 +31,24 @@ namespace BuildConfigGen
             public static readonly ConfigRecord Default = new ConfigRecord(name: nameof(Default), constMappingKey: "Default", isDefault: true, isNode: false, nodePackageVersion: "", isWif: false, nodeHandler: "", preprocessorVariableName: "DEFAULT", enableBuildConfigOverrides: false, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
             public static readonly ConfigRecord Node16 = new ConfigRecord(name: nameof(Node16), constMappingKey: "Node16-219", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: false, nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: true, shouldUpdateTypescript: false, writeNpmrc: false);
             public static readonly ConfigRecord Node16_225 = new ConfigRecord(name: nameof(Node16_225), constMappingKey: "Node16-225", isDefault: false, isNode: true, isWif: false, nodePackageVersion: "^16.11.39", nodeHandler: "Node16", preprocessorVariableName: "NODE16", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, overriddenDirectoryName: "Node16", writeNpmrc: false);
-            public static readonly ConfigRecord Node20 = new ConfigRecord(name: nameof(Node20), constMappingKey: "Node20-225", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
-            public static readonly ConfigRecord Node20_228 = new ConfigRecord(name: nameof(Node20_228), constMappingKey: "Node20-228", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
-            public static readonly ConfigRecord Node20_229_1 = new ConfigRecord(name: nameof(Node20_229_1), constMappingKey: "Node20_229_1", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
-            public static readonly ConfigRecord Node20_229_2 = new ConfigRecord(name: nameof(Node20_229_2), constMappingKey: "Node20_229_2", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
-            public static readonly ConfigRecord Node20_229_3 = new ConfigRecord(name: nameof(Node20_229_3), constMappingKey: "Node20_229_3", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
-            public static readonly ConfigRecord Node20_229_4 = new ConfigRecord(name: nameof(Node20_229_4), constMappingKey: "Node20_229_4", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
-            public static readonly ConfigRecord Node20_229_5 = new ConfigRecord(name: nameof(Node20_229_5), constMappingKey: "Node20_229_5", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20 = new ConfigRecord(name: nameof(Node20), constMappingKey: "Node20-225", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_228 = new ConfigRecord(name: nameof(Node20_228), constMappingKey: "Node20-228", isDefault: false, isNode: true, nodePackageVersion: "^20.11.0", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_1 = new ConfigRecord(name: nameof(Node20_229_1), constMappingKey: "Node20_229_1", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_2 = new ConfigRecord(name: nameof(Node20_229_2), constMappingKey: "Node20_229_2", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_3 = new ConfigRecord(name: nameof(Node20_229_3), constMappingKey: "Node20_229_3", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_4 = new ConfigRecord(name: nameof(Node20_229_4), constMappingKey: "Node20_229_4", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_5 = new ConfigRecord(name: nameof(Node20_229_5), constMappingKey: "Node20_229_5", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_6 = new ConfigRecord(name: nameof(Node20_229_6), constMappingKey: "Node20_229_6", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_7 = new ConfigRecord(name: nameof(Node20_229_7), constMappingKey: "Node20_229_7", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_8 = new ConfigRecord(name: nameof(Node20_229_8), constMappingKey: "Node20_229_8", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_9 = new ConfigRecord(name: nameof(Node20_229_9), constMappingKey: "Node20_229_9", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_10 = new ConfigRecord(name: nameof(Node20_229_10), constMappingKey: "Node20_229_10", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_11 = new ConfigRecord(name: nameof(Node20_229_11), constMappingKey: "Node20_229_11", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_12 = new ConfigRecord(name: nameof(Node20_229_12), constMappingKey: "Node20_229_12", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_13 = new ConfigRecord(name: nameof(Node20_229_13), constMappingKey: "Node20_229_13", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
+            public static readonly ConfigRecord Node20_229_14 = new ConfigRecord(name: nameof(Node20_229_14), constMappingKey: "Node20_229_14", isDefault: false, isNode: true, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, overriddenDirectoryName: "Node20", writeNpmrc: true);
             public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false);
-
-            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, WorkloadIdentityFederation };
+            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, Node20_229_6, Node20_229_7, Node20_229_8, Node20_229_9, Node20_229_10, Node20_229_11, Node20_229_12, Node20_229_13, Node20_229_14, WorkloadIdentityFederation };
         }
 
         // ensureUpdateModeVerifier wraps all writes.  if writeUpdate=false, it tracks writes that would have occured
@@ -50,15 +58,139 @@ namespace BuildConfigGen
         /// <param name="configs">List of configs to generate seperated by |</param>
         /// <param name="currentSprint">Overide current sprint; omit to get from whatsprintis.it</param>
         /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
-        static void Main(string task, string configs, int? currentSprint, bool writeUpdates = false)
+        /// <param name="allTasks"></param>
+        /// <param name="getTaskVersionTable"></param>
+        static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false, bool getTaskVersionTable = false)
         {
-            // error handling strategy:
-            // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
-            // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
-            // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
-            foreach (var t in task.Split(',', '|'))
+            if (allTasks)
             {
-                Main3(t, configs, writeUpdates, currentSprint);
+                NullOrThrow(task, "If allTasks specified, task must not be supplied");
+                NullOrThrow(configs, "If allTasks specified, configs must not be supplied");
+            }
+            else
+            {
+                NotNullOrThrow(task, "Task is required");
+                NotNullOrThrow(configs, "Configs is required");
+            }
+
+            if (getTaskVersionTable)
+            {
+                string currentDir = Environment.CurrentDirectory;
+                string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+
+                var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
+
+                Console.WriteLine("config\ttask\tversion");
+
+                foreach (var t in tasks.Values)
+                {
+                    GetVersions(t.Name, string.Join('|', t.Configs), out var r);
+
+                    foreach (var z in r)
+                    {
+                        Console.WriteLine(string.Concat(z.config, "\t", z.task, "\t", z.version));
+                    }
+                }
+
+                return;
+            }
+
+            if (allTasks)
+            {
+                string currentDir = Environment.CurrentDirectory;
+                string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+
+                var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
+                foreach (var t in tasks.Values)
+                {
+                    Main3(t.Name, string.Join('|', t.Configs), writeUpdates, currentSprint);
+                }
+            }
+            else
+            {
+                // error handling strategy:
+                // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
+                // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
+                // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
+                foreach (var t in task!.Split(',', '|'))
+                {
+                    Main3(t, configs!, writeUpdates, currentSprint);
+                }
+            }
+        }
+
+        private static void NullOrThrow<T>(T value, string message)
+        {
+            if (value != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        private static void NotNullOrThrow<T>(T value, string message)
+        {
+            if (value == null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        private static void GetVersions(string task, string configsString, out List<(string task, string config, string version)> versionList)
+        {
+            versionList = new List<(string task, string config, string version)>();
+
+            if (string.IsNullOrEmpty(task))
+            {
+                throw new Exception("task expected!");
+            }
+
+            if (string.IsNullOrEmpty(configsString))
+            {
+                throw new Exception("configs expected!");
+            }
+
+            string currentDir = Environment.CurrentDirectory;
+
+            string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+
+            string taskTargetPath = Path.Combine(gitRootPath, "Tasks", task);
+            if (!Directory.Exists(taskTargetPath))
+            {
+                throw new Exception($"expected {taskTargetPath} to exist!");
+            }
+
+            string generatedFolder = Path.Combine(gitRootPath, "_generated");
+            if (!Directory.Exists(generatedFolder))
+            {
+                throw new Exception("_generated does not exist");
+            }
+
+            string versionMapFile = Path.Combine(gitRootPath, "_generated", @$"{task}.versionmap.txt");
+
+            try
+            {
+                ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(false);
+
+                if (ReadVersionMap(versionMapFile, out var versionMap, out var maxVersionNullable))
+                {
+                    foreach (var version in versionMap)
+                    {
+                        versionList.Add((task, version.Key, version.Value));
+                    }
+                }
+                else
+                {
+                    throw new Exception($"versionMapFile {versionMapFile} does not exist");
+                }
+
+                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: false);
+            }
+            finally
+            {
+                if (ensureUpdateModeVerifier != null)
+                {
+                    ensureUpdateModeVerifier.CleanupTempFiles();
+                }
             }
         }
 
@@ -247,7 +379,6 @@ namespace BuildConfigGen
             // delay updating version map file until after buildconfigs generated
             WriteVersionMapFile(versionMapFile, configTaskVersionMapping, targetConfigs: targetConfigs);
         }
-
 
         private static void EnsureBuildConfigFileOverrides(Config.ConfigRecord config, string taskTargetPath)
         {
@@ -544,6 +675,7 @@ namespace BuildConfigGen
 ", false);
             }
         }
+
 
         private static void UpdateVersions(string gitRootPath, string task, string taskTarget, out Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping, HashSet<Config.ConfigRecord> targetConfigs, int currentSprint, string versionMapFile, out HashSet<Config.ConfigRecord> versionsUpdated)
         {

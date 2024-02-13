@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 230,
+    "Minor": 235,
     "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -476,7 +476,7 @@
       "target": "maventask.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "maventask.js",
       "argumentFormat": ""
     }
@@ -521,7 +521,7 @@
     "NoTestResults": "ms-resource:loc.messages.NoTestResults"
   },
   "_buildConfigMapping": {
-    "Default": "4.230.0",
-    "Node20-225": "4.230.1"
+    "Default": "4.235.0",
+    "Node20-225": "4.235.1"
   }
 }

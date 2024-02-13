@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 230,
+    "Minor": 234,
     "Patch": 0
   },
   "demands": [
@@ -253,6 +253,10 @@
   "prejobexecution": {
     "Node10": {
       "target": "PreJobExecutionAzureFileCopy.js"
+    },
+    "Node16": {
+      "target": "PreJobExecutionAzureFileCopy.js",
+      "argumentFormat": ""
     }
   },
   "execution": {

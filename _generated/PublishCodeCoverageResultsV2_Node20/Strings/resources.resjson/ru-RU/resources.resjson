@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Публикация результатов объема протестированного кода версии 2",
+  "loc.helpMarkDown": "[Подробнее об этой задаче](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2?view=azure-pipelines)",
+  "loc.description": "Публикация результатов для объема протестированного кода из сборки",
+  "loc.instanceNameFormat": "Опубликовать результаты оценки объема протестированного кода",
+  "loc.input.label.summaryFileLocation": "Путь к сводным файлам",
+  "loc.input.help.summaryFileLocation": "Пути к сводным файлам, содержащим статистику по объему протестированного кода, например охват строк, методов и классов. Несколько сводных файлов будут объединены в один отчет. Поддерживает несколько строк шаблонов minimatch. [Дополнительные сведения](https://aka.ms/minimatchexamples).",
+  "loc.input.label.pathToSources": "Путь к исходным файлам",
+  "loc.input.help.pathToSources": "Путь к исходным файлам обязателен, если XML-отчеты об объеме протестированного кода не содержат абсолютный путь к исходным файлам. Например, в отчетах JaCoCo не используются абсолютные пути, и при публикации объема протестированного кода JaCoCo для приложений Java этот шаблон будет похож на \"$(System.DefaultWorkingDirectory)/MyApp/src/main/java/\".<br />Эти входные данные также необходимы, если тесты выполняются в контейнере Docker. Эти входные данные должны указывать на абсолютный путь к исходным файлам на узле. Например, \"$(System.DefaultWorkingDirectory)/MyApp/\"",
+  "loc.input.label.failIfCoverageEmpty": "Сбой, если отсутствуют результаты для объема протестированного кода",
+  "loc.input.help.failIfCoverageEmpty": "Происходит сбой задачи, если объем протестированного кода не создает результаты для публикации.",
+  "loc.messages.FoundNMatchesForPattern": "Найдены результаты (%s), соответствующие шаблону: %s",
+  "loc.messages.NoCodeCoverage": "Результаты по объему протестированного кода для публикации не найдены."
+}

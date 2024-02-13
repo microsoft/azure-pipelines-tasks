@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 229,
-    "Patch": 4
+    "Minor": 233,
+    "Patch": 1
   },
   "satisfies": [
     "Java",
@@ -169,7 +169,7 @@
       "target": "javatoolinstaller.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "javatoolinstaller.js",
       "argumentFormat": ""
     }
@@ -233,7 +233,7 @@
     "ErrorCleaningFolder": "ms-resource:loc.messages.ErrorCleaningFolder"
   },
   "_buildConfigMapping": {
-    "Default": "0.229.3",
-    "Node20-225": "0.229.4"
+    "Default": "0.233.0",
+    "Node20-225": "0.233.1"
   }
 }

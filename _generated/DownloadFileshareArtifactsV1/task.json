@@ -1,0 +1,90 @@
+{
+  "id": "E3CF3806-AD30-4EC4-8F1E-8ECD98771AA0",
+  "name": "DownloadFileshareArtifacts",
+  "friendlyName": "Download artifacts from file share",
+  "description": "Download artifacts from a file share, like \\\\share\\drop",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-fileshare-artifacts",
+  "helpMarkDown": "",
+  "category": "Utility",
+  "minimumAgentVersion": "2.144.0",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 232,
+    "Patch": 0
+  },
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": true
+    }
+  ],
+  "demands": [],
+  "inputs": [
+    {
+      "name": "filesharePath",
+      "type": "string",
+      "label": "File share path",
+      "required": true,
+      "helpMarkDown": "File share path e.g \\\\server\\folder"
+    },
+    {
+      "name": "artifactName",
+      "type": "string",
+      "label": "Artifact name",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The name of the artifact to download e.g drop"
+    },
+    {
+      "name": "itemPattern",
+      "type": "multiLine",
+      "label": "Matching pattern",
+      "defaultValue": "**",
+      "required": false,
+      "properties": {
+        "rows": "3",
+        "resizable": "true"
+      },
+      "helpMarkDown": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples) <p>The default pattern (\\*\\*) will download all files within the artifact.</p>"
+    },
+    {
+      "name": "downloadPath",
+      "type": "string",
+      "label": "Download path",
+      "defaultValue": "$(System.ArtifactsDirectory)",
+      "required": true,
+      "helpMarkDown": "Path on the agent machine where the artifacts will be downloaded"
+    },
+    {
+      "name": "parallelizationLimit",
+      "type": "string",
+      "label": "Parallelization limit",
+      "defaultValue": "8",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "Number of files to download simultaneously"
+    }
+  ],
+  "instanceNameFormat": "Download artifacts from a file share",
+  "execution": {
+    "Node10": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "DownloadArtifacts": "Downloading artifact %s from: %s",
+    "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
+    "ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.232.0",
+    "Node20_229_3": "1.232.1"
+  }
+}

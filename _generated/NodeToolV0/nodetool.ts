@@ -17,9 +17,11 @@ async function run() {
         let versionSpecInput = taskLib.getInput('versionSpec', versionSource == 'spec');
         let versionFilePathInput = taskLib.getInput('versionFilePath', versionSource == 'fromFile');
         let nodejsMirror = taskLib.getInput('nodejsMirror', false);
+        const retryCountOnDownloadFails = taskLib.getInput('retryCountOnDownloadFails', false) || "5";
+        const delayBetweenRetries = taskLib.getInput('delayBetweenRetries', false) || "1000";
         let versionSpec = getNodeVersion(versionSource, versionSpecInput, versionFilePathInput);
         let checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
-        await getNode(versionSpec, checkLatest, nodejsMirror.replace(/\/$/, ''));
+        await getNode(versionSpec, checkLatest, nodejsMirror.replace(/\/$/, ''), parseInt(retryCountOnDownloadFails), parseInt(delayBetweenRetries));
         telemetry.emitTelemetry('TaskHub', 'NodeToolV0', { versionSource, versionSpec, checkLatest, force32bit });
     }
     catch (error) {
@@ -52,7 +54,7 @@ interface INodeVersion {
 //              toolPath = cacheDir
 //      PATH = cacheDir + PATH
 //
-async function getNode(versionSpec: string, checkLatest: boolean, nodejsMirror: string) {
+async function getNode(versionSpec: string, checkLatest: boolean, nodejsMirror: string, retryCountOnDownloadFails: number, delayBetweenRetries: number) {
     let installedArch = osArch;
     if (toolLib.isExplicitVersion(versionSpec)) {
         checkLatest = false; // check latest doesn't make sense when explicit version
@@ -85,7 +87,7 @@ async function getNode(versionSpec: string, checkLatest: boolean, nodejsMirror: 
                 version = await queryLatestMatch(versionSpec, 'x64', nodejsMirror);
                 installedArch = 'x64';
             }
-            
+
             if (!version) {
                 throw new Error(taskLib.loc('NodeVersionNotFound', versionSpec, osPlat, installedArch));
             }
@@ -96,7 +98,7 @@ async function getNode(versionSpec: string, checkLatest: boolean, nodejsMirror: 
 
         if (!toolPath) {
             // download, extract, cache
-            toolPath = await acquireNode(version, installedArch, nodejsMirror);
+            toolPath = await acquireNode(version, installedArch, nodejsMirror, retryCountOnDownloadFails, delayBetweenRetries);
         }
     }
 
@@ -129,7 +131,12 @@ async function queryLatestMatch(versionSpec: string, installedArch: string, node
     let dataUrl = nodejsMirror + "/index.json";
     let rest: restm.RestClient = new restm.RestClient('vsts-node-tool');
     let nodeVersions: INodeVersion[] = (await rest.get<INodeVersion[]>(dataUrl)).result;
-    nodeVersions.forEach((nodeVersion:INodeVersion) => {
+    if (!nodeVersions) {
+        // this will be handled by the caller and an error will be thrown
+        return null;
+    }
+
+    nodeVersions.forEach((nodeVersion: INodeVersion) => {
         // ensure this version supports your os and platform
         if (nodeVersion.files.indexOf(dataFileName) >= 0) {
             // versions in the file are prefixed with 'v', which is not valid SemVer
@@ -147,7 +154,7 @@ async function queryLatestMatch(versionSpec: string, installedArch: string, node
     return nodeVersions.find(v => v.semanticVersion === latestVersion).version;
 }
 
-async function acquireNode(version: string, installedArch: string, nodejsMirror: string): Promise<string> {
+async function acquireNode(version: string, installedArch: string, nodejsMirror: string, retryCountOnDownloadFails: number, delayBetweenRetries: number): Promise<string> {
     //
     // Download - a tool installer intimately knows how to get the tool (and construct urls)
     //
@@ -166,10 +173,12 @@ async function acquireNode(version: string, installedArch: string, nodejsMirror:
     let downloadPath: string;
 
     try {
-        downloadPath = await toolLib.downloadToolWithRetries(downloadUrl);
+        console.log("Aquiring Node called")
+        console.log("Retry count on download fails: " + retryCountOnDownloadFails + " Retry delay: " + delayBetweenRetries + "ms")
+        downloadPath = await toolLib.downloadToolWithRetries(downloadUrl, null, null, null, retryCountOnDownloadFails, delayBetweenRetries);
     } catch (err) {
         if (isWin32 && err['httpStatusCode'] == 404) {
-            return await acquireNodeFromFallbackLocation(version, nodejsMirror);
+            return await acquireNodeFromFallbackLocation(version, nodejsMirror, retryCountOnDownloadFails, delayBetweenRetries);
         }
 
         throw err;
@@ -213,29 +222,31 @@ async function acquireNode(version: string, installedArch: string, nodejsMirror:
 // This method attempts to download and cache the resources from these alternative locations.
 // Note also that the files are normally zipped but in this case they are just an exe
 // and lib file in a folder, not zipped.
-async function acquireNodeFromFallbackLocation(version: string, nodejsMirror: string): Promise<string> {
+async function acquireNodeFromFallbackLocation(version: string, nodejsMirror: string, retryCountOnDownloadFails: number, delayBetweenRetries: number): Promise<string> {
     // Create temporary folder to download in to
     let tempDownloadFolder: string = 'temp_' + Math.floor(Math.random() * 2000000000);
     let tempDir: string = path.join(taskLib.getVariable('agent.tempDirectory'), tempDownloadFolder);
     taskLib.mkdirP(tempDir);
     let exeUrl: string;
     let libUrl: string;
+    console.log("Aquiring Node from callback called")
+    console.log("Retry count on download fails: " + retryCountOnDownloadFails + " Retry delay: " + delayBetweenRetries + "ms")
+
     try {
         exeUrl = `${nodejsMirror}/v${version}/win-${osArch}/node.exe`;
         libUrl = `${nodejsMirror}/v${version}/win-${osArch}/node.lib`;
 
-        await toolLib.downloadToolWithRetries(exeUrl, path.join(tempDir, "node.exe"));
-        await toolLib.downloadToolWithRetries(libUrl, path.join(tempDir, "node.lib"));
+        await toolLib.downloadToolWithRetries(exeUrl, path.join(tempDir, "node.exe"), null, null, retryCountOnDownloadFails, delayBetweenRetries);
+        await toolLib.downloadToolWithRetries(libUrl, path.join(tempDir, "node.lib"), null, null, retryCountOnDownloadFails, delayBetweenRetries);
     }
     catch (err) {
-        if (err['httpStatusCode'] && 
-            err['httpStatusCode'] == 404)
-        {
+        if (err['httpStatusCode'] &&
+            err['httpStatusCode'] == 404) {
             exeUrl = `${nodejsMirror}/v${version}/node.exe`;
             libUrl = `${nodejsMirror}/v${version}/node.lib`;
 
-            await toolLib.downloadToolWithRetries(exeUrl, path.join(tempDir, "node.exe"));
-            await toolLib.downloadToolWithRetries(libUrl, path.join(tempDir, "node.lib"));
+            await toolLib.downloadToolWithRetries(exeUrl, path.join(tempDir, "node.exe"), null, null, retryCountOnDownloadFails, delayBetweenRetries);
+            await toolLib.downloadToolWithRetries(libUrl, path.join(tempDir, "node.lib"), null, null, retryCountOnDownloadFails, delayBetweenRetries);
         }
         else {
             throw err;
@@ -247,9 +258,9 @@ async function acquireNodeFromFallbackLocation(version: string, nodejsMirror: st
 // Check is the system are darwin arm and rosetta is installed
 function isDarwinArm(osPlat: string, installedArch: string): boolean {
     if (osPlat === 'darwin' && installedArch === 'arm64') {
-         // Check that Rosetta is installed and returns some pid
-         const execResult = taskLib.execSync('pgrep', 'oahd');
-         return execResult.code === 0 && !!execResult.stdout;
+        // Check that Rosetta is installed and returns some pid
+        const execResult = taskLib.execSync('pgrep', 'oahd');
+        return execResult.code === 0 && !!execResult.stdout;
     }
     return false;
 }

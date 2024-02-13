@@ -13,11 +13,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 229,
+    "Minor": 234,
     "Patch": 0
   },
   "deprecated": true,
-  "removalDate": "2024-04-22",
+  "removalDate": "2024-01-31",
+  "deprecationMessage": "The DeployVisualStudioTestAgent@2 (Visual Studio test agent deployment) task has been deprecated since January 10, 2018 and will soon be retired. Use the VSTest@3 task instead.",
   "runsOn": [
     "Agent"
   ],
