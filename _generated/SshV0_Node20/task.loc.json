@@ -147,11 +147,11 @@
     }
   ],
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "ssh.js",
       "argumentFormat": ""
     },
-    "Node16": {
+    "Node10": {
       "target": "ssh.js",
       "argumentFormat": ""
     },

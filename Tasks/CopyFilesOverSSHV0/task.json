@@ -133,11 +133,11 @@
         }
     ],
     "execution": {
-        "Node10": {
+        "Node16": {
             "target": "copyfilesoverssh.js",
             "argumentFormat": ""
         },
-        "Node16": {
+        "Node10": {
             "target": "copyfilesoverssh.js",
             "argumentFormat": ""
         }
