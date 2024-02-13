@@ -11,10 +11,10 @@ function convertToNullIfUndefined<T>(arg: T): T|null {
     return arg ? arg : null;
 }
 
-let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
 let tempDirectory = tl.getVariable('agent.tempDirectory');
 tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
 async function run() {
+    let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -38,7 +38,6 @@ async function run() {
         let customTargetAzurePs: string = convertToNullIfUndefined(tl.getInput('CustomTargetAzurePs', false));
         let serviceName = tl.getInput('ConnectedServiceNameARM',/*required*/true);
         let endpointObject= await new AzureRMEndpoint(serviceName).getEndpoint();
-        let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
         let isDebugEnabled = (process.env['SYSTEM_DEBUG'] || "").toLowerCase() === "true";
 
         // string constants
