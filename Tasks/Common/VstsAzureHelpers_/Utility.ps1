@@ -161,7 +161,6 @@ function Get-MsiAccessToken {
     while ($trialCount -le $retryLimit)
 }
 
-
 function Get-VstsFederatedToken {
     param(
         [Parameter(Mandatory=$true)]
@@ -581,82 +580,69 @@ function Add-AzureStackAzureRmEnvironment {
         $galleryEndpoint = $Endpoint.data.galleryUrl
     }
 
+    $azureEnvironmentParams = @{
+        Name                                     = $Name
+        ActiveDirectoryEndpoint                  = $activeDirectoryEndpoint
+        ActiveDirectoryServiceEndpointResourceId = $activeDirectoryServiceEndpointResourceId
+        ResourceManagerEndpoint                  = $ResourceManagerEndpoint
+        GalleryEndpoint                          = $galleryEndpoint
+        GraphEndpoint                            = $graphEndpoint
+        GraphAudience                            = $graphAudience
+        AzureKeyVaultDnsSuffix                   = $AzureKeyVaultDnsSuffix
+        AzureKeyVaultServiceEndpointResourceId   = $AzureKeyVaultServiceEndpointResourceId
+        EnableAdfsAuthentication                 = $aadAuthorityEndpoint.TrimEnd("/").EndsWith("/adfs", [System.StringComparison]::OrdinalIgnoreCase)
+    }
+    
     if ($featureFlags.retireAzureRM)
     {
-        $azureEnvironmentParams = @{
-            Name                                     = $Name
-            ActiveDirectoryEndpoint                  = $activeDirectoryEndpoint
-            ActiveDirectoryServiceEndpointResourceId = $activeDirectoryServiceEndpointResourceId
-            ResourceManagerEndpoint                  = $ResourceManagerEndpoint
-            GalleryEndpoint                          = $galleryEndpoint
-            GraphEndpoint                            = $graphEndpoint
-            GraphAudience                            = $graphAudience
-            StorageEndpoint                          = $StorageEndpointSuffix
-            AzureKeyVaultDnsSuffix                   = $AzureKeyVaultDnsSuffix
-            AzureKeyVaultServiceEndpointResourceId   = $AzureKeyVaultServiceEndpointResourceId
-            EnableAdfsAuthentication                 = $aadAuthorityEndpoint.TrimEnd("/").EndsWith("/adfs", [System.StringComparison]::OrdinalIgnoreCase)
-        }
+        $azureEnvironmentParams.StorageEndpoint = $StorageEndpointSuffix
     }
     else
     {
-        $azureEnvironmentParams = @{
-            Name                                     = $Name
-            ActiveDirectoryEndpoint                  = $activeDirectoryEndpoint
-            ActiveDirectoryServiceEndpointResourceId = $activeDirectoryServiceEndpointResourceId
-            ResourceManagerEndpoint                  = $ResourceManagerEndpoint
-            GalleryEndpoint                          = $galleryEndpoint
-            GraphEndpoint                            = $graphEndpoint
-            GraphAudience                            = $graphAudience
-            StorageEndpointSuffix                    = $StorageEndpointSuffix
-            AzureKeyVaultDnsSuffix                   = $AzureKeyVaultDnsSuffix
-            AzureKeyVaultServiceEndpointResourceId   = $AzureKeyVaultServiceEndpointResourceId
-            EnableAdfsAuthentication                 = $aadAuthorityEndpoint.TrimEnd("/").EndsWith("/adfs", [System.StringComparison]::OrdinalIgnoreCase)
-        }
+        $azureEnvironmentParams.StorageEndpointSuffix = $StorageEndpointSuffix
     }
 
     if ($featureFlags.retireAzureRM)
     {
         $armEnv = Get-AzEnvironment -Name $name
+
+        if($null -ne $armEnv) {
+            Write-Verbose "Updating Az environment $name" -Verbose
+    
+            if (CmdletHasMember -cmdlet Remove-AzEnvironment -memberName Force) {
+                Remove-AzEnvironment -Name $name -Force | Out-Null
+            }
+            else {
+                Remove-AzEnvironment -Name $name | Out-Null
+            }
+        }
+        else {
+            Write-Verbose "Adding Az environment $name" -Verbose
+        }
     }
     else
     {
         $armEnv = Get-AzureRmEnvironment -Name $name
-    }
-    if($armEnv -ne $null) {
-        Write-Verbose "Updating AzureRm environment $name" -Verbose
 
-        if (CmdletHasMember -cmdlet Remove-AzureRmEnvironment -memberName Force) {
-            if ($featureFlags.retireAzureRM)
-            {
-                Remove-AzEnvironment -Name $name -Force | Out-Null
-            }
-            else
-            {
+        if($null -ne $armEnv) {
+            Write-Verbose "Updating AzureRm environment $name" -Verbose
+    
+            if (CmdletHasMember -cmdlet Remove-AzureRmEnvironment -memberName Force) {
                 Remove-AzureRmEnvironment -Name $name -Force | Out-Null
             }
-        }
-        else {
-            if ($featureFlags.retireAzureRM)
-            {
-                Remove-AzEnvironment -Name $name | Out-Null
-            }
-            else
-            {
+            else {
                 Remove-AzureRmEnvironment -Name $name | Out-Null
             }
         }
-    }
-    else {
-        Write-Verbose "Adding AzureRm environment $name" -Verbose
+        else {
+            Write-Verbose "Adding AzureRm environment $name" -Verbose
+        }
     }
 
     try {
-        if ($featureFlags.retireAzureRM)
-        {
+        if ($featureFlags.retireAzureRM) {
             return Add-AzEnvironment @azureEnvironmentParams
-        }
-        else
-        {
+        } else {
             return Add-AzureRmEnvironment @azureEnvironmentParams
         }
     }
@@ -681,7 +667,11 @@ function Disconnect-AzureAndClearContext {
                 Disconnect-UsingAzModule -restrictContext $restrictContext
             }
             else {
-                Disconnect-UsingARMModule
+                if ($featureFlags.retireAzureRM) {
+                    Write-Error "Unable to get Az.Accounts module in Disconnect-AzureAndClearContext"
+                } else {
+                    Disconnect-UsingARMModule
+                }
             }
         }
     } catch {
@@ -718,48 +708,20 @@ function Disconnect-UsingARMModule {
 
     if ((Get-Command -Name "Disconnect-AzureRmAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Disconnect-AzureRmAccount -memberName Scope)) {
         Write-Host "##[command]Disconnect-AzureRmAccount -Scope Process -ErrorAction Stop"
-        if ($featureFlags.retireAzureRM)
-        {
-            $null = Disconnect-AzAccount -Scope Process -ErrorAction Stop
-        }
-        else
-        {
-            $null = Disconnect-AzureRmAccount -Scope Process -ErrorAction Stop
-        }
+        $null = Disconnect-AzureRmAccount -Scope Process -ErrorAction Stop
     }
     elseif ((Get-Command -Name "Remove-AzureRmAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Remove-AzureRmAccount -memberName Scope)) {
         Write-Host "##[command]Remove-AzureRmAccount -Scope Process -ErrorAction Stop"
-        if ($featureFlags.retireAzureRM)
-        {
-            $null = Remove-AzAccount -Scope Process -ErrorAction Stop
-        }
-        else
-        {
-            $null = Remove-AzureRmAccount -Scope Process -ErrorAction Stop
-        }
+        $null = Remove-AzureRmAccount -Scope Process -ErrorAction Stop
     }
     elseif ((Get-Command -Name "Logout-AzureRmAccount" -ErrorAction "SilentlyContinue") -and (CmdletHasMember -cmdlet Logout-AzureRmAccount -memberName Scope)) {
         Write-Host "##[command]Logout-AzureRmAccount -Scope Process -ErrorAction Stop"
-        if ($featureFlags.retireAzureRM)
-        {
-            $null = Disconnect-AzAccount -Scope Process -ErrorAction Stop
-        }
-        else
-        {
-            $null = Logout-AzureRmAccount -Scope Process -ErrorAction Stop
-        }
+        $null = Logout-AzureRmAccount -Scope Process -ErrorAction Stop
     }
 
     if (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue") {
         Write-Host "##[command]Clear-AzureRmContext -Scope Process -ErrorAction Stop"
-        if ($featureFlags.retireAzureRM)
-        {
-            $null = Clear-AzContext -Scope Process -ErrorAction Stop
-        }
-        else
-        {
-            $null = Clear-AzureRmContext -Scope Process -ErrorAction Stop
-        }
+        $null = Clear-AzureRmContext -Scope Process -ErrorAction Stop
     }
 }
 

@@ -234,9 +234,13 @@ function Import-AzureRmSubmodulesFromSdkPath {
 }
 
 function ThrowAzureModuleNotFoundException {
-    param([string] $azurePsVersion,
-          [string] $modules)
-    Discover-AvailableAzureModules
+    param(
+        [string] $azurePsVersion,
+        [string] $modules
+    )
+          
+    DiscoverAvailableAzureModules
+
     if ($azurePsVersion) {
         throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion, $modules)
     } else {
@@ -244,10 +248,15 @@ function ThrowAzureModuleNotFoundException {
     }
 }
 
-function Discover-AvailableAzureModules {
+function DiscoverAvailableAzureModules {
     $env:PSModulePath = $env:SystemDrive + "\Modules;" + $env:PSModulePath
+
     Write-Host $(Get-VstsLocString -Key AZ_AvailableModules -ArgumentList "Azure")
     Get-Module -Name Azure -ListAvailable | Select-Object Name,Version | ft
+
     Write-Host $(Get-VstsLocString -Key AZ_AvailableModules -ArgumentList "AzureRM")
     Get-Module -Name AzureRM -ListAvailable | Select-Object Name,Version | ft
+
+    Write-Host $(Get-VstsLocString -Key AZ_AvailableModules -ArgumentList "Az")
+    Get-Module -Name Az -ListAvailable | Select-Object Name,Version | ft
 }

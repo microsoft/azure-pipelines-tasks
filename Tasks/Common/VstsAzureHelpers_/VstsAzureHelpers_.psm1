@@ -1,4 +1,8 @@
-﻿# Private module-scope variables.
+﻿$featureFlags = @{
+    retireAzureRM = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
+# Private module-scope variables.
 $script:azureModule = $null
 $script:azureRMProfileModule = $null
 
@@ -17,9 +21,11 @@ Import-Module $PSScriptRoot/../TlsHelper_
 Add-Tls12InSession
 
 # Dot source the private functions.
-. $PSScriptRoot/InitializeFunctions.ps1
-. $PSScriptRoot/ImportFunctions.ps1
-. $PSScriptRoot/InitializeAzureRMFunctions.ps1
+if (!$featureFlags.retireAzureRM) {
+    . $PSScriptRoot/InitializeFunctions.ps1
+    . $PSScriptRoot/ImportFunctions.ps1
+    . $PSScriptRoot/InitializeAzureRMFunctions.ps1
+}
 . $PSScriptRoot/InitializeAzModuleFunctions.ps1
 . $PSScriptRoot/PsModuleUtility.ps1
 
@@ -27,7 +33,7 @@ Add-Tls12InSession
 function Initialize-Azure {
     [CmdletBinding()]
     param( [string] $azurePsVersion,
-           [switch] $strict )
+        [switch] $strict )
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         # Get the inputs.
@@ -41,26 +47,36 @@ function Initialize-Azure {
         $endpoint = Get-VstsEndpoint -Name $serviceName -Require
         $storageAccount = Get-VstsInput -Name StorageAccount
 
-        # Determine which modules are preferred.
-        $preferredModules = @( )
-        if (($endpoint.Auth.Scheme -eq 'ServicePrincipal') -or ($endpoint.Auth.Scheme -eq 'ManagedServiceIdentity')) {
-            $preferredModules += 'AzureRM'
-        } elseif ($endpoint.Auth.Scheme -eq 'UserNamePassword' -and $strict -eq $false) {
-            $preferredModules += 'Azure'
-            $preferredModules += 'AzureRM'
-        } else {
-            $preferredModules += 'Azure'
-        }
-
         # Import/initialize the Azure module.
         $currentWarningPreference = $WarningPreference
         $WarningPreference = "SilentlyContinue"
-        Import-AzureModule -PreferredModule $preferredModules -azurePsVersion $azurePsVersion -strict:$strict
+
+        if ($featureFlags.retireAzureRM) {
+            Initialize-AzModule -Endpoint $endpoint 
+        }
+        else {
+            # Determine which modules are preferred.
+            $preferredModules = @( )
+            if (($endpoint.Auth.Scheme -eq 'ServicePrincipal') -or ($endpoint.Auth.Scheme -eq 'ManagedServiceIdentity')) {
+                $preferredModules += 'AzureRM'
+            }
+            elseif ($endpoint.Auth.Scheme -eq 'UserNamePassword' -and $strict -eq $false) {
+                $preferredModules += 'Azure'
+                $preferredModules += 'AzureRM'
+            }
+            else {
+                $preferredModules += 'Azure'
+            }
+
+            Import-AzureModule -PreferredModule $preferredModules -azurePsVersion $azurePsVersion -strict:$strict
+        }
         Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $storageAccount
-    } finally {
+    }
+    finally {
         if (![string]::IsNullOrEmpty($currentWarningPreference)) {
             $WarningPreference = $currentWarningPreference
-        } else {
+        }
+        else {
             $WarningPreference = "Continue"
         }
         Trace-VstsLeavingInvocation $MyInvocation
@@ -75,4 +91,3 @@ Export-ModuleMember -Function Initialize-AzureRMModule
 Export-ModuleMember -Function Initialize-AzModule
 Export-ModuleMember -Function Disconnect-AzureAndClearContext
 Export-ModuleMember -Function Update-PSModulePathForHostedAgentWithLatestModule
-
