@@ -79,18 +79,6 @@ if ($featureFlags.retireAzureRM) {
     Write-Debug "Initializing Az Module"
     $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
     Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
-
-    # After Initialize-AzModule all AzureRM modules should be uninstalled
-    Write-Debug "Searching for AzureRM modules:"
-    $azureRmModules = Get-Module -ListAvailable | Where-Object { $_.Name -like 'AzureRM.*' }
-    if ($azureRmModules) {
-        Foreach ($Module in $azureRmModules) {
-            Write-Warning "Found AzureRM module '$($Module.Name)': $_"
-        }
-    }
-    else {
-        Write-Debug "No AzureRM modules found."
-    }
 } else {
     if (Get-Module Az.Accounts -ListAvailable) {
         $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
