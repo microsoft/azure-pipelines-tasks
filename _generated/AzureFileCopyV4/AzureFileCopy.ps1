@@ -1,6 +1,10 @@
 [CmdletBinding()]
 param()
 
+$featureFlags = @{
+    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
 Trace-VstsEnteringInvocation $MyInvocation
 
 # Get inputs for the task
@@ -75,7 +79,11 @@ if (Get-Module Az.Accounts -ListAvailable) {
     Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
 }
 else {
-    Initialize-AzureRMModule -Endpoint $endpoint
+    if ($featureFlags.retireAzureRM) {
+        Initialize-AzModule -Endpoint $endpoint
+    } else {
+        Initialize-AzureRMModule -Endpoint $endpoint
+    }
 }
 
 # Import the loc strings.
