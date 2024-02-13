@@ -97,6 +97,18 @@ function Import-AzAccountsModule {
             # Uninstalling AzureRm
             Write-Verbose "Uninstalling AzureRM module"
             Uninstall-AzureRm
+
+            # After Initialize-AzModule all AzureRM modules should be uninstalled
+            Write-Verbose "Checking if any of AzureRM modules are still available."
+            $azureRmModules = Get-Module -ListAvailable | Where-Object { $_.Name -like 'AzureRM.*' }
+            if ($azureRmModules) {
+                Foreach ($Module in $azureRmModules) {
+                    Write-Warning "Found AzureRM module '$($Module.Name)': $_"
+                }
+            }
+            else {
+                Write-Debug "No AzureRM modules found."
+            }
         }
 
         return $module.Version
