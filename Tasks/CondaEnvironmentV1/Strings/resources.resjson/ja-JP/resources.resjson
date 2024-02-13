@@ -24,5 +24,6 @@
   "loc.messages.ReactivateExistingEnvironment": "既存の環境 %s が見つかり、タスクの \"Clean environment\" パラメーターは未設定です。再アクティブ化しています...",
   "loc.messages.ParameterRequired": "%s' パラメーターは必須です",
   "loc.messages.PlatformNotRecognized": "プラットフォームが認識されません",
-  "loc.messages.PrependPath": "ディレクトリ %s を PATH 環境変数の前に追加しています"
+  "loc.messages.PrependPath": "ディレクトリ %s を PATH 環境変数の前に追加しています",
+  "loc.messages.DeprecatedTask": "CondaEnvironment@1 (Conda 環境) タスクは 2019 年 2 月 13 日以降非推奨になっており、間もなく廃止されます。bash/pwsh/script タスクから Conda CLI ('conda') を直接使用してください。非推奨のタスクの詳細については、https://aka.ms/azdo-deprecated-tasks を参照してください。"
 }

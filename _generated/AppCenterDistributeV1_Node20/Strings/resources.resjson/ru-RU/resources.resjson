@@ -38,5 +38,6 @@
   "loc.messages.CannotFindAnyFile": "Не удается найти файл на основе %s.",
   "loc.messages.FoundMultipleFiles": "Найдено несколько файлов, соответствующих %s.",
   "loc.messages.FailedToCreateFile": "Не удалось создать %s, ошибка: %s",
-  "loc.messages.FailedToFindFile": "Не удалось найти %s в %s."
+  "loc.messages.FailedToFindFile": "Не удалось найти %s в %s.",
+  "loc.messages.DeprecatedTask": "Задача AppCenterDistribute@1 (распространение Центра приложений) устарела с 14 ноября 2022 г. и скоро будет прекращена. Вместо этого используйте задачу AppCenterDistribute@3. Посетите https://aka.ms/azdo-deprecated-tasks, чтобы получить дополнительные сведения об устаревших задачах."
 }

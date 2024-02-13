@@ -208,34 +208,36 @@ export class Helper {
 
     public static setProfilerVariables(envVars: { [key: string]: string; }) : { [key: string]: string; } {
         const vsTestPackageLocation = tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable);
+        var splitString = vsTestPackageLocation.split('\\');
+        var tpVer = parseInt(splitString[splitString.length - 2].split(".")[0],10);
+        var profilerProxyLocation;
 
-        // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (amd64)
-        let amd64ProfilerProxy = tl.findMatch(vsTestPackageLocation, '**\\amd64\\Microsoft.IntelliTrace.ProfilerProxy.dll');
-        if (amd64ProfilerProxy && amd64ProfilerProxy.length !== 0) {
+        tl.debug("TestPlatform Version Detected :" + tpVer);
 
-            envVars.COR_PROFILER_PATH_64 = amd64ProfilerProxy[0];
-        } else {
-            // Look in x64 also for Microsoft.IntelliTrace.ProfilerProxy.dll (x64)
-            amd64ProfilerProxy = tl.findMatch(vsTestPackageLocation, '**\\x64\\Microsoft.IntelliTrace.ProfilerProxy.dll');
-            if (amd64ProfilerProxy && amd64ProfilerProxy.length !== 0) {
-
-                envVars.COR_PROFILER_PATH_64 = amd64ProfilerProxy[0];
+        if(tpVer < 17){
+            profilerProxyLocation = tl.findMatch(vsTestPackageLocation, '**\\amd64\\Microsoft.IntelliTrace.ProfilerProxy.dll');
+            if (profilerProxyLocation && profilerProxyLocation.length !== 0) {
+                envVars.COR_PROFILER_PATH_64 = profilerProxyLocation[0];
             } else {
-                Helper.publishEventToCi(constants.AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1043, false);
-                tl.warning(tl.loc('testImpactAndCCWontWork'));
+                profilerProxyLocation = tl.findMatch(vsTestPackageLocation, '**\\x64\\Microsoft.IntelliTrace.ProfilerProxy.dll');
+                if (profilerProxyLocation && profilerProxyLocation.length !== 0) {
+                    envVars.COR_PROFILER_PATH_64 = profilerProxyLocation[0];
+                }
+                else{
+                    Helper.publishEventToCi(constants.AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1042, false);
+                    tl.warning(tl.loc('testImpactAndCCWontWork'));
+                }
             }
 
-            Helper.publishEventToCi(constants.AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1042, false);
-            tl.warning(tl.loc('testImpactAndCCWontWork'));
-        }
+            profilerProxyLocation = tl.findMatch(vsTestPackageLocation, '**\\x86\\Microsoft.IntelliTrace.ProfilerProxy.dll');
 
-        // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (x86)
-        const x86ProfilerProxy = tl.findMatch(vsTestPackageLocation, '**\\x86\\Microsoft.IntelliTrace.ProfilerProxy.dll');
-        if (x86ProfilerProxy && x86ProfilerProxy.length !== 0) {
-                envVars.COR_PROFILER_PATH_32 = x86ProfilerProxy[0];
-        } else {
-            Helper.publishEventToCi(constants.AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1044, false);
-            tl.warning(tl.loc('testImpactAndCCWontWork'));
+            if(profilerProxyLocation && profilerProxyLocation.length !== 0){
+                envVars.COR_PROFILER_PATH_32 = profilerProxyLocation[0];
+            }
+            else{
+                Helper.publishEventToCi(constants.AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1042, false);
+                tl.warning(tl.loc('testImpactAndCCWontWork'));
+            }
         }
 
         return envVars;
