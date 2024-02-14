@@ -4,9 +4,10 @@ import apim = require('azure-devops-node-api');
 import { WorkItemDetails, TestCase } from 'azure-devops-node-api/interfaces/TestPlanInterfaces';
 import { PagedList } from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
 import TestPlanInterfaces = require('azure-devops-node-api/interfaces/TestPlanInterfaces');
-import { RunCreateModel, TestRun, ShallowReference } from 'azure-devops-node-api/interfaces/TestInterfaces';
+import { RunCreateModel, TestRun, ShallowReference, TestPlan, TestCaseResult, TestResultCreateModel, TestCaseMetadata2, TestCaseReference2 } from 'azure-devops-node-api/interfaces/TestInterfaces';
 import VSSInterfaces = require('azure-devops-node-api/interfaces/common/VSSInterfaces');
 import constants = require('./constants');
+import { ITestResultsApi } from "azure-devops-node-api/TestResultsApi";
 
 export interface TestPlanData {
     automatedTestPointIds: number[];
@@ -14,7 +15,8 @@ export interface TestPlanData {
     listOfFQNOfTestCases: string[];
     testPlanId: number;
     testSuiteIds: number[];
-    testConfigurationId: number
+    testConfigurationId: number;
+    listOfTestPointDetails: TestCaseResult[];
 }
 
 export interface ManualTestRunData {
@@ -30,7 +32,8 @@ export async function getTestPlanData(): Promise<TestPlanData> {
         manualTestPointIds: [],
         testPlanId: 0,
         testSuiteIds: [],
-        testConfigurationId: 0
+        testConfigurationId: 0,
+        listOfTestPointDetails: []
     };
 
     const testPlanInputId = parseInt(tl.getInput('testPlan'));
@@ -71,7 +74,8 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
         manualTestPointIds: [],
         testPlanId: 0,
         testSuiteIds: [],
-        testConfigurationId: 0
+        testConfigurationId: 0,
+        listOfTestPointDetails: []
     };
 
     let token = null;
@@ -145,7 +149,25 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
 
             if (isManualTest === true) {
                 if (testCase.pointAssignments.length > 0) {
-                    testPlanData.manualTestPointIds.push(testCase.pointAssignments[0].id);
+                    testPlanData.manualTestPointIds.push(
+                        testCase.pointAssignments[0].id
+                    );
+
+                    let testCaseResult: TestCaseResult = {
+                        testPoint: {
+                            id: testCase.pointAssignments[0].id.toString()
+                        },
+                        testCaseTitle: testCase.workItem.name,
+                        owner: testCase.pointAssignments[0].tester,
+                        configuration: {
+                            id: testCase.pointAssignments[0].configurationId.toString(),
+                            name: testCase.pointAssignments[0].configurationName
+                        }
+                    }
+
+                    testPlanData.listOfTestPointDetails.push(
+                        testCaseResult
+                    );
                 }
             }
         });
@@ -187,9 +209,12 @@ export async function createManualTestRun(testPlanInfo: TestPlanData): Promise<M
     const testRunRequestBody = prepareRunModel(testPlanInfo);
 
     try {
-        let testRunResponse = await createManualTestRunAsync(testRunRequestBody)
 
-        //to do: add test results to test run
+        let projectId = tl.getVariable('System.TeamProjectId');
+        var testResultsApi = await getTestResultApiClient();
+
+        let testRunResponse = await createManualTestRunAsync(testResultsApi, testRunRequestBody, projectId);
+        let testResultsResponse = await createManualTestResultsAsync(testResultsApi, testPlanInfo.listOfTestPointDetails, projectId, testRunResponse.id);
 
         manualTestRunResponse.testRunId = testRunResponse.id;
         manualTestRunResponse.runUrl = testRunResponse.webAccessUrl;
@@ -226,14 +251,16 @@ export function prepareRunModel(testPlanInfo: TestPlanData): RunCreateModel{
 
     return testRunRequestBody;
 }
-export async function createManualTestRunAsync(testRunRequest: RunCreateModel): Promise<TestRun> {
 
-    let url = tl.getEndpointUrl('SYSTEMVSSCONNECTION', false);
-    let token = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
-    let projectId = tl.getVariable('System.TeamProjectId');
-    let auth = token.length == 52 ? apim.getPersonalAccessTokenHandler(token) : apim.getBearerHandler(token);
-    let vsts: apim.WebApi = new apim.WebApi(url, auth);
-    let testResultsApi = await vsts.getTestResultsApi();
+export async function createManualTestResultsAsync(testResultsApi:ITestResultsApi, testResultsRequest: TestCaseResult[], projectId, testRunId): Promise<TestCaseResult[]> {
+    return testResultsApi.addTestResultsToTestRun(
+        testResultsRequest,
+        projectId,
+        testRunId)
+    
+}
+
+export async function createManualTestRunAsync(testResultsApi:ITestResultsApi, testRunRequest: RunCreateModel, projectId): Promise<TestRun> {
 
     tl.debug("Creating manual test run");
 
@@ -241,5 +268,15 @@ export async function createManualTestRunAsync(testRunRequest: RunCreateModel): 
         testRunRequest,
         projectId)
 
+}
+
+export async function getTestResultApiClient(){
+    let url = tl.getEndpointUrl('SYSTEMVSSCONNECTION', false);
+    let token = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
+
+    let auth = token.length == 52 ? apim.getPersonalAccessTokenHandler(token) : apim.getBearerHandler(token);
+    let vsts: apim.WebApi = new apim.WebApi(url, auth);
+    let testResultsApi = await vsts.getTestResultsApi();
+    return testResultsApi;
 }
 
