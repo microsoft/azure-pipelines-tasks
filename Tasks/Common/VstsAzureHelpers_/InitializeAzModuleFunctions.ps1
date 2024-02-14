@@ -105,7 +105,7 @@ function Import-AzAccountsModule {
 }
 
 function Uninstall-AzureRMModules {
-    Write-Verbose "Uninstalling AzureRM module"
+    Write-Verbose "Uninstalling AzureRM modules."
 
     # `Uninstall-AzureRm` is a part of Az.Accounts module
     if (Get-Module -ListAvailable -Name Az.Accounts) {
@@ -117,8 +117,13 @@ function Uninstall-AzureRMModules {
         $azureRmModules = Get-Module -ListAvailable | Where-Object { $_.Name -like 'AzureRM.*' }
         if ($azureRmModules) {
             Foreach ($azureRmModule in $azureRmModules) {
-                Write-Verbose "Uninstalling $($azureRmModule) module"
-                Uninstall-Module -Name $azureRmModule -AllVersions -Force
+                try {
+                    Write-Verbose "Uninstalling $($azureRmModule) module."
+                    Uninstall-Module -Name $azureRmModule -AllVersions -Force -ErrorAction Stop
+                    Write-Verbose "$($azureRmModule) module successfully uninstalled."
+                } catch {
+                    Write-Warning "An error occurred during uninstallation of $($azureRmModule) module: $_"
+                }
             }
         }
         else {
