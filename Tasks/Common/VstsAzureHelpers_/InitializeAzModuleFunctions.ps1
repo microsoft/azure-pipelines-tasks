@@ -73,7 +73,7 @@ function Import-AzAccountsModule {
         else {
             Write-Verbose "No module found with name: $($moduleName), installing it."
             if ($azVersion) {
-                Write-Host "##[command]Import-Module -Name $($module.Path)  -RequiredVersion $($azVersion) -Global -PassThru -Force"
+                Write-Host "##[command]Import-Module -Name $($module.Path)  -RequiredVersion $([version]$azVersion) -Global -PassThru -Force"
                 Install-Module -Name $moduleName -RequiredVersion $azVersion -Force -AllowClobber
             }
             else {
