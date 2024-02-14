@@ -93,7 +93,7 @@ function Import-AzAccountsModule {
         }
 
         Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
-        $module = Import-Module -Name $module.Path -Global -PassThru -Force
+        $module = (Import-Module -Name $module.Path -Global -PassThru -Force | Sort-Object Version -Descending)[0]
         Write-Verbose "Imported module '$($moduleName)', version: $($module.Version)"
 
         return $module.Version
