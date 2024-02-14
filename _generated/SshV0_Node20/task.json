@@ -151,10 +151,6 @@
       "target": "ssh.js",
       "argumentFormat": ""
     },
-    "Node10": {
-      "target": "ssh.js",
-      "argumentFormat": ""
-    },
     "Node20_1": {
       "target": "ssh.js",
       "argumentFormat": ""

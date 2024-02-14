@@ -137,10 +137,6 @@
       "target": "copyfilesoverssh.js",
       "argumentFormat": ""
     },
-    "Node10": {
-      "target": "copyfilesoverssh.js",
-      "argumentFormat": ""
-    },
     "Node20_1": {
       "target": "copyfilesoverssh.js",
       "argumentFormat": ""

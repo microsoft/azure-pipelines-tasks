@@ -150,10 +150,6 @@
         "Node16": {
             "target": "ssh.js",
             "argumentFormat": ""
-        },
-        "Node10": {
-            "target": "ssh.js",
-            "argumentFormat": ""
         }
     },
     "messages": {
