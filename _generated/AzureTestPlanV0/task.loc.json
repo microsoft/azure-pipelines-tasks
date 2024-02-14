@@ -131,8 +131,7 @@
     "testSuiteSelected": "ms-resource:loc.messages.testSuiteSelected",
     "automatedTestsTriggered": "ms-resource:loc.messages.automatedTestsTriggered",
     "ErrorFailTaskOnExecutingTests": "ms-resource:loc.messages.ErrorFailTaskOnExecutingTests",
-    "ErrorFailTaskOnAPIFailure": "ms-resource:loc.messages.ErrorFailTaskOnAPIFailure",
-    "ErrorFailTaskOnCreateRunFailure": "ms-resource:loc.messages.ErrorFailTaskOnCreateRunFailure"
+    "ErrorFailTaskOnAPIFailure": "ms-resource:loc.messages.ErrorFailTaskOnAPIFailure"
   },
   "_buildConfigMapping": {
     "Default": "0.235.0",

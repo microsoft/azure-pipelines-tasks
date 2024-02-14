@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 235,
-    "Patch": 1
+    "Patch": 5
   },
   "minimumAgentVersion": "2.144.0",
   "releaseNotes": "Fix bug where feature branches were being truncated.",
@@ -206,10 +206,10 @@
     "FoundMultipleFiles": "Found multiple files matching %s.",
     "FailedToCreateFile": "Failed to create %s with error: %s.",
     "FailedToFindFile": "Failed to find %s at %s.",
-    "DeprecatedTask": "The AppCenterDistribute@1 (App Center distribute) task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead."
+    "DeprecatedTask": "The AppCenterDistribute@1 (App Center distribute) task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
   },
   "_buildConfigMapping": {
-    "Default": "1.235.0",
-    "Node20_229_7": "1.235.1"
+    "Default": "1.235.4",
+    "Node20_229_7": "1.235.5"
   }
 }
