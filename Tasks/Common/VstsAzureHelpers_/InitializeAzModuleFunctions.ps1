@@ -27,9 +27,17 @@ function Initialize-AzModule {
         Write-Verbose "Importing Az Module."
         $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
 
+        $installedAzVersion = [System.Version]::new(
+            $azAccountsVersion.Major, 
+            $azAccountsVersion.Minor, 
+            $azAccountsVersion.Build
+        )
+
+        Write-Host "azAccountsVersion = $($azAccountsVersion.Major).$($azAccountsVersion.Minor).$($azAccountsVersion.Build)"
+
         Write-Verbose "Initializing Az Subscription."
         Initialize-AzSubscription -Endpoint $Endpoint -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $encryptedToken `
-            -azAccountsModuleVersion $azAccountsVersion -isPSCore $isPSCore
+            -azAccountsModuleVersion $installedAzVersion -isPSCore $isPSCore
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
