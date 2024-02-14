@@ -139,7 +139,7 @@
     "ErrorFailTaskOnCreateRunFailure": "Error occured while creating manual test run from test plan inputs"
   },
   "_buildConfigMapping": {
-    "Default": "0.235.0",
+    "Default": "0.235.1",
     "Node20-225": "0.235.1"
   }
 }

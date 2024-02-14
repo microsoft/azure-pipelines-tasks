@@ -139,7 +139,7 @@
     "ErrorFailTaskOnCreateRunFailure": "ms-resource:loc.messages.ErrorFailTaskOnCreateRunFailure"
   },
   "_buildConfigMapping": {
-    "Default": "0.235.0",
+    "Default": "0.235.1",
     "Node20-225": "0.235.1"
   }
 }
