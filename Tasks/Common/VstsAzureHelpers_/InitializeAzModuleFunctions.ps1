@@ -98,8 +98,10 @@ function Import-AzAccountsModule {
             Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo $moduleName
         }
 
+        Write-Verbose "Using $($moduleName) of version $($module.Version) now."
         return $module.Version
-    } finally {
+    }
+    finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
