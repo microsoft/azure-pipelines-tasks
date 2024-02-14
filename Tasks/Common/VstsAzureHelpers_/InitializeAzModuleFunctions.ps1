@@ -25,7 +25,7 @@ function Initialize-AzModule {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
 
         Write-Verbose "Importing Az Module."
-        $azAccountsVersion = [version](Import-AzAccountsModule -azVersion $azVersion)
+        $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
 
         Write-Verbose "Initializing Az Subscription."
         Initialize-AzSubscription -Endpoint $Endpoint -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $encryptedToken `
@@ -146,7 +146,8 @@ function Initialize-AzSubscription {
         [Parameter(Mandatory=$false)]
         [Version] $azAccountsModuleVersion,
         [Parameter(Mandatory=$false)]
-        [bool] $isPSCore)
+        [bool] $isPSCore
+    )
 
     #Set UserAgent for Azure Calls
     Set-UserAgent
