@@ -29,7 +29,7 @@ function Initialize-AzModule {
 
         Write-Verbose "Initializing Az Subscription."
         Initialize-AzSubscription -Endpoint $Endpoint -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $encryptedToken `
-            -azAccountsModuleVersion $azAccountsVersion -isPSCore $isPSCore
+            -azAccountsModuleVersion [version]$azAccountsVersion -isPSCore $isPSCore
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
