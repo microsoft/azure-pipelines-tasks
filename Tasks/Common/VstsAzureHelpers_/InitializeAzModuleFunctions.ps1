@@ -37,6 +37,7 @@ function Initialize-AzModule {
 
 function Import-AzAccountsModule {
     [CmdletBinding()]
+    [OutputType([version])]
     param([string] $azVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -66,14 +67,7 @@ function Import-AzAccountsModule {
             }
         }
 
-        # module path 
-        if ($module) {
-            Write-Verbose "Module was resolved: $($moduleName)"
-            Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
-            $module = Import-Module -Name $module.Path -Global -PassThru -Force
-            Write-Verbose "Imported module version: $($module.Version)"
-        }
-        else {
+        if (!$module) {
             Write-Verbose "No module found with name: $($moduleName), installing it."
             if ($azVersion) {
                 Write-Host "##[command]Import-Module -Name $($module.Path)  -RequiredVersion $([version]$azVersion) -Global -PassThru -Force"
@@ -83,9 +77,9 @@ function Import-AzAccountsModule {
                 Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
                 Install-Module -Name $moduleName -Force -AllowClobber
             }
+            $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
         }
-
-        $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+        
         if (!$module) {
             Write-Warning "Failed to import $($moduleName) module."
             throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, $moduleName)
@@ -98,7 +92,10 @@ function Import-AzAccountsModule {
             Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo $moduleName
         }
 
-        Write-Verbose "Using $($moduleName) of version $($module.Version) now."
+        Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
+        $module = Import-Module -Name $module.Path -Global -PassThru -Force
+        Write-Verbose "Imported module '$($moduleName)', version: $($module.Version)"
+
         return $module.Version
     }
     finally {
@@ -113,25 +110,20 @@ function Uninstall-AzureRMModules {
     if (Get-Module -ListAvailable -Name Az.Accounts) {
         Write-Verbose "Module Az.Accounts is already installed, calling 'Uninstall-AzureRm' to uninstall AzureRM."
         Uninstall-AzureRm
-    }
-    else {
-        Write-Verbose "Module Az.Accounts is not installed yet, manually removing AzureRM modules."
+
         $azureRmModules = Get-Module -ListAvailable | Where-Object { $_.Name -like 'AzureRM.*' }
         if ($azureRmModules) {
             Foreach ($azureRmModule in $azureRmModules) {
-                try {
-                    Write-Verbose "Uninstalling $($azureRmModule) module."
-                    Uninstall-Module -Name $azureRmModule -AllVersions -Force -ErrorAction Stop
-                    Write-Verbose "$($azureRmModule) module successfully uninstalled."
-                } catch {
-                    Write-Warning "An error occurred during uninstallation of $($azureRmModule) module: $_"
-                }
+                Write-Verbose "'$($azureRmModule)' AzureRM module found."
             }
         }
         else {
             Write-Verbose "No AzureRM modules found."
         }
     }
+    else {
+        Write-Verbose "Module Az.Accounts is not installed yet, AzureRM modules should be removed manually."
+    }    
 }
 
 function Initialize-AzSubscription {
