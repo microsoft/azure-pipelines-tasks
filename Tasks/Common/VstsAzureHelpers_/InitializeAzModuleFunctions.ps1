@@ -74,14 +74,15 @@ function Import-AzAccountsModule {
             Write-Verbose "No module found with name: $($moduleName), installing it."
             if ($azVersion) {
                 Write-Host "##[command]Import-Module -Name $($module.Path)  -RequiredVersion $($azVersion) -Global -PassThru -Force"
-                $module = Install-Module -Name $moduleName -RequiredVersion $azVersion -Force -AllowClobber
+                Install-Module -Name $moduleName -RequiredVersion $azVersion -Force -AllowClobber
             }
             else {
                 Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
-                $module = Install-Module -Name $moduleName -Force -AllowClobber
+                Install-Module -Name $moduleName -Force -AllowClobber
             }
         }
 
+        $module = Get-Module -Name Az.Accounts -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
         if (!$module) {
             Write-Warning "Failed to import $($moduleName) module."
             throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, "Az.Accounts")
