@@ -25,11 +25,11 @@ function Initialize-AzModule {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
 
         Write-Verbose "Importing Az Module."
-        $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
+        $azAccountsVersion = [version](Import-AzAccountsModule -azVersion $azVersion)
 
         Write-Verbose "Initializing Az Subscription."
         Initialize-AzSubscription -Endpoint $Endpoint -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $encryptedToken `
-            -azAccountsModuleVersion [version]$azAccountsVersion -isPSCore $isPSCore
+            -azAccountsModuleVersion $azAccountsVersion -isPSCore $isPSCore
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
@@ -43,6 +43,9 @@ function Import-AzAccountsModule {
     try {
         # We are only looking for Az.Accounts module becasue all the command required for initialize the azure PS session is in Az.Accounts module.
         $moduleName = "Az.Accounts"
+
+        # Uninstall AzureRM before importing Az module to avoid having both modules
+        Uninstall-AzureRMModules
         
         # Attempt to resolve the module.
         Write-Verbose "Attempting to find the module '$moduleName' from the module path."
@@ -82,39 +85,45 @@ function Import-AzAccountsModule {
             }
         }
 
-        $module = Get-Module -Name Az.Accounts -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+        $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
         if (!$module) {
             Write-Warning "Failed to import $($moduleName) module."
-            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, "Az.Accounts")
+            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, $moduleName)
         } else {
             Write-Verbose "$($moduleName) module imported successfully."
         }
 
         if ($featureFlags.retireAzureRM) {
-            # Supress breaking changes warnings
-            Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az.Accounts
-            Write-Verbose "Supressing breaking changes warnings of 'Az.Accounts' module"
-
-            # Uninstalling AzureRm
-            Write-Verbose "Uninstalling AzureRM module"
-            Uninstall-AzureRm
-
-            # After Initialize-AzModule all AzureRM modules should be uninstalled
-            Write-Verbose "Checking if any of AzureRM modules are still available."
-            $azureRmModules = Get-Module -ListAvailable | Where-Object { $_.Name -like 'AzureRM.*' }
-            if ($azureRmModules) {
-                Foreach ($Module in $azureRmModules) {
-                    Write-Warning "Found AzureRM module '$($Module.Name)': $_"
-                }
-            }
-            else {
-                Write-Debug "No AzureRM modules found."
-            }
+            Write-Verbose "Supressing breaking changes warnings of '$($moduleName)' module"
+            Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo $moduleName
         }
 
         return $module.Version
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+function Uninstall-AzureRMModules {
+    Write-Verbose "Uninstalling AzureRM module"
+
+    # `Uninstall-AzureRm` is a part of Az.Accounts module
+    if (Get-Module -ListAvailable -Name Az.Accounts) {
+        Write-Verbose "Module Az.Accounts is already installed, calling 'Uninstall-AzureRm' to uninstall AzureRM."
+        Uninstall-AzureRm
+    }
+    else {
+        Write-Verbose "Module Az.Accounts is not installed yet, manually removing AzureRM modules."
+        $azureRmModules = Get-Module -ListAvailable | Where-Object { $_.Name -like 'AzureRM.*' }
+        if ($azureRmModules) {
+            Foreach ($azureRmModule in $azureRmModules) {
+                Write-Verbose "Uninstalling $($azureRmModule) module"
+                Uninstall-Module -Name $azureRmModule -AllVersions -Force
+            }
+        }
+        else {
+            Write-Verbose "No AzureRM modules found."
+        }
     }
 }
 
