@@ -52,9 +52,6 @@ function Import-AzAccountsModule {
     try {
         # We are only looking for Az.Accounts module becasue all the command required for initialize the azure PS session is in Az.Accounts module.
         $moduleName = "Az.Accounts"
-
-        # Uninstall AzureRM before importing Az module to avoid having both modules
-        Uninstall-AzureRMModules
         
         # Attempt to resolve the module.
         Write-Verbose "Attempting to find the module '$moduleName' from the module path."
@@ -104,6 +101,8 @@ function Import-AzAccountsModule {
         $module = (Import-Module -Name $module.Path -Global -PassThru -Force | Sort-Object Version -Descending)[0]
         Write-Verbose "Imported module '$($moduleName)', version: $($module.Version)"
 
+        Uninstall-AzureRMModules
+
         return $module.Version
     }
     finally {
@@ -119,6 +118,7 @@ function Uninstall-AzureRMModules {
         Write-Verbose "Module Az.Accounts is already installed, calling 'Uninstall-AzureRm' to uninstall AzureRM."
         Uninstall-AzureRm
 
+        Write-Verbose "Checking if AzureRM modules are still available."
         $azureRmModules = Get-Module -ListAvailable | Where-Object { $_.Name -like 'AzureRM.*' }
         if ($azureRmModules) {
             Foreach ($azureRmModule in $azureRmModules) {
@@ -130,7 +130,7 @@ function Uninstall-AzureRMModules {
         }
     }
     else {
-        Write-Verbose "Module Az.Accounts is not installed yet, AzureRM modules should be removed manually."
+        Write-Warning "Module Az.Accounts is not installed yet, AzureRM modules should be removed manually."
     }    
 }
 
