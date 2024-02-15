@@ -22,10 +22,10 @@ Add-Tls12InSession
 
 # Dot source the private functions.
 if (!$featureFlags.retireAzureRM) {
-    . $PSScriptRoot/InitializeFunctions.ps1
     . $PSScriptRoot/ImportFunctions.ps1
     . $PSScriptRoot/InitializeAzureRMFunctions.ps1
 }
+. $PSScriptRoot/InitializeFunctions.ps1
 . $PSScriptRoot/InitializeAzModuleFunctions.ps1
 . $PSScriptRoot/PsModuleUtility.ps1
 
