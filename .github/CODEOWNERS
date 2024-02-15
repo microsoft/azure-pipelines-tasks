@@ -43,9 +43,9 @@ Tasks/AzureFileCopyV3/   @microsoft/release-management-task-team @manolerazvan
 
 Tasks/AzureFileCopyV4/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureFunctionAppV1/   @finvamp1 @patelchandni  
+Tasks/AzureFunctionAppV1/   @finvamp1 @patelchandni @microsoft/release-management-task-team @manolerazvan  
 
-Tasks/AzureFunctionAppV2/   @finvamp1 @patelchandni  
+Tasks/AzureFunctionAppV2/   @finvamp1 @patelchandni @microsoft/release-management-task-team @manolerazvan  
 
 Tasks/AzureFunctionAppContainerV1/   @microsoft/release-management-task-team @manolerazvan 
 
@@ -84,9 +84,9 @@ Tasks/AzureResourceGroupDeploymentV2/      @microsoft/release-management-task-te
 Tasks/AzureResourceManagerTemplateDeploymentV3/      @microsoft/release-management-task-team @manolerazvan 
 
 # DRI rotation: App Service (Web Apps)
-Tasks/AzureRmWebAppDeploymentV3/   @jvano @dannysongg @microsoft/azure-app-service-pipelines-tasks
+Tasks/AzureRmWebAppDeploymentV3/   @jvano @dannysongg @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureRmWebAppDeploymentV4/   @jvano @dannysongg @microsoft/azure-app-service-pipelines-tasks
+Tasks/AzureRmWebAppDeploymentV4/   @jvano @dannysongg @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan 
 
 # DRI rotation: Azure Spring Apps/AzDMSS-Support
 Tasks/AzureSpringCloudV0    @microsoft/azure-spring-apps @ruoyuwang @menxiao
@@ -97,7 +97,7 @@ Tasks/AzureTestPlanV0/     @rasunkar  @microsoft\adoautotest
 
 Tasks/AzureWebAppV1/  @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureWebAppContainerV1/  @jvano @dannysongg @manolerazvan @microsoft/azure-app-service-pipelines-tasks
+Tasks/AzureWebAppContainerV1/  @jvano @dannysongg @manolerazvan @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team 
 
 Tasks/AzureVmssDeploymentV0/       @bishal-pdmsft
 
