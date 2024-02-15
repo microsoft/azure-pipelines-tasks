@@ -338,8 +338,15 @@ function Initialize-AzureSubscription {
             
             if($scopeLevel -eq "Subscription")
             {
-                Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+                if ($featureFlags.retireAzureRM) {
+                    Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+                }
+                else {
+                    Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+                }
             }
+
+
         }
     } elseif ($Endpoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
         $accountId = $env:BUILD_BUILDID 
