@@ -71,7 +71,7 @@ Register-Mock Invoke-Process {
     return $procExitCode
 }
 
-$content = Get-Content (Join-Path $certTestDirectory 'originalcert.pem') -Raw;
+$content = 'Foo';
 
 $expectedFiles = @()
 try {
