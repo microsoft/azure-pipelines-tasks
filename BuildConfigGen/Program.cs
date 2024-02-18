@@ -347,8 +347,9 @@ namespace BuildConfigGen
 
                 var taskConfigExists = File.Exists(Path.Combine(taskOutput, "task.json"));
 
-                // only update task output if a new version was added or the config exists
-                if (versionUpdated || taskConfigExists)
+                // only update task output if a new version was added, the config exists, or the task contains preprocessor instructions
+                // Note: CheckTaskInputContainsPreprocessorInstructions is expensive, so only call if needed
+                if (versionUpdated || taskConfigExists || HasTaskInputContainsPreprocessorInstructions(taskTargetPath, config))
                 {
                     CopyConfig(taskTargetPath, taskOutput, skipPathName: buildConfigs, skipFileName: null, removeExtraFiles: true, throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor: false, config: config, allowPreprocessorDirectives: true);
 
@@ -361,7 +362,7 @@ namespace BuildConfigGen
                     // don't check content as preprocessor hasn't run
                     ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: true);
 
-                    HandlePreprocessingInTarget(taskOutput, config);
+                    HandlePreprocessingInTarget(taskOutput, config, validateAndWriteChanges: true, out _);
 
                     WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.json");
                     WriteTaskJson(taskOutput, configTaskVersionMapping, config, "task.loc.json");
@@ -378,6 +379,12 @@ namespace BuildConfigGen
 
             // delay updating version map file until after buildconfigs generated
             WriteVersionMapFile(versionMapFile, configTaskVersionMapping, targetConfigs: targetConfigs);
+        }
+
+        private static bool HasTaskInputContainsPreprocessorInstructions(string sourcePath, Config.ConfigRecord config)
+        {
+            HandlePreprocessingInTarget(sourcePath, config, validateAndWriteChanges: false, out bool hasPreprocessorDirectives);
+            return hasPreprocessorDirectives;
         }
 
         private static void EnsureBuildConfigFileOverrides(Config.ConfigRecord config, string taskTargetPath)
@@ -442,15 +449,22 @@ namespace BuildConfigGen
             }
         }
 
-        private static void HandlePreprocessingInTarget(string taskOutput, Config.ConfigRecord config)
+        private static void HandlePreprocessingInTarget(string taskOutput, Config.ConfigRecord config, bool validateAndWriteChanges, out bool hasDirectives)
         {
             var nonIgnoredFilesInTarget = new HashSet<string>(GitUtil.GetNonIgnoredFileListFromPath(taskOutput));
+
+            hasDirectives = false;
 
             foreach (var file in nonIgnoredFilesInTarget)
             {
                 string taskOutputFile = Path.Combine(taskOutput, file);
 
-                PreprocessIfExtensionEnabledInConfig(taskOutputFile, config, validateAndWriteChanges: true, out _);
+                PreprocessIfExtensionEnabledInConfig(taskOutputFile, config, validateAndWriteChanges, out bool madeChanges);
+
+                if (madeChanges)
+                {
+                    hasDirectives = true;
+                }
             }
         }
 
@@ -466,11 +480,6 @@ namespace BuildConfigGen
                 }
                 else
                 {
-                    if (!config.enableBuildConfigOverrides)
-                    {
-                        throw new Exception("BUG: should not get here: !config.enableBuildConfigOverrides");
-                    }
-
                     Console.WriteLine($"Checking if {file} has preprocessor directives ...");
                 }
 
@@ -579,9 +588,9 @@ namespace BuildConfigGen
             return false;
         }
 
-        private static void CopyConfig(string taskTarget, string taskOutput, string? skipPathName, string? skipFileName, bool removeExtraFiles, bool throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor, Config.ConfigRecord config, bool allowPreprocessorDirectives)
+        private static void CopyConfig(string taskTargetPathOrUnderscoreBuildConfigPath, string taskOutput, string? skipPathName, string? skipFileName, bool removeExtraFiles, bool throwIfNotUpdatingFileForApplyingOverridesAndPreProcessor, Config.ConfigRecord config, bool allowPreprocessorDirectives)
         {
-            var paths = GitUtil.GetNonIgnoredFileListFromPath(taskTarget);
+            var paths = GitUtil.GetNonIgnoredFileListFromPath(taskTargetPathOrUnderscoreBuildConfigPath);
 
             HashSet<string> pathsToRemoveFromOutput;
 
@@ -595,28 +604,28 @@ namespace BuildConfigGen
                 pathsToRemoveFromOutput = new HashSet<string>();
             }
 
+            if (allowPreprocessorDirectives)
+            {
+                // do nothing
+            }
+            else
+            {
+                if (!config.enableBuildConfigOverrides)
+                {
+                    throw new Exception("BUG: should not get here: !config.enableBuildConfigOverrides");
+                }
+
+                var hasPreprocessorDirectives = HasTaskInputContainsPreprocessorInstructions(taskTargetPathOrUnderscoreBuildConfigPath, config);
+
+                if (hasPreprocessorDirectives)
+                {
+                    throw new Exception($"Preprocessor directives not supported in files in _buildConfigs taskTargetPathOrUnderscoreBuildConfigPath={taskTargetPathOrUnderscoreBuildConfigPath}");
+                }
+            }
+
             foreach (var path in paths)
             {
-                string sourcePath = Path.Combine(taskTarget, path);
-
-                if (allowPreprocessorDirectives)
-                {
-                    // do nothing
-                }
-                else
-                {
-                    if (!config.enableBuildConfigOverrides)
-                    {
-                        throw new Exception("BUG: should not get here: !config.enableBuildConfigOverrides");
-                    }
-
-                    PreprocessIfExtensionEnabledInConfig(sourcePath, config, validateAndWriteChanges: false, out bool hasPreprocessorDirectives);
-
-                    if (hasPreprocessorDirectives)
-                    {
-                        throw new Exception($"Preprocessor directives not supported in files in _buildConfigs sourcePath={sourcePath}");
-                    }
-                }
+                string sourcePath = Path.Combine(taskTargetPathOrUnderscoreBuildConfigPath, path);
 
                 if (skipPathName != null && sourcePath.Contains(string.Concat(skipPathName, Path.DirectorySeparatorChar)))
                 {
