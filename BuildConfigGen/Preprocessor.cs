@@ -17,7 +17,7 @@ namespace BuildConfigGen
         private static partial Regex elseAndEndIfPreprocess();
 
 
-        internal static void Preprocess(string file, IEnumerable<string> lines, ISet<string> configreprocessorVariableName, string configName, out string processedOutput, out List<string> validationErrors, out bool madeChanges)
+        internal static void Preprocess(string file, IEnumerable<string> lines, ISet<string> validConfigPreprocessorVariableNames, string configName, out string processedOutput, out List<string> validationErrors, out bool madeChanges)
         {
             const string ifCommand = "if";
             const string elseIfCommand = "elseif";
@@ -67,9 +67,9 @@ namespace BuildConfigGen
                         validationErrors.Add($"Error {file}:{lineNumber}: there must be a single space after the hash");
                     }
 
-                    if (!configreprocessorVariableName.Contains(startPreprocessMatch.Groups["expression"].Value))
+                    if (!validConfigPreprocessorVariableNames.Contains(startPreprocessMatch.Groups["expression"].Value))
                     {
-                        validationErrors.Add($"Error {file}:{lineNumber}: the expression can only be {string.Join(',', configreprocessorVariableName.ToArray())}");
+                        validationErrors.Add($"Error {file}:{lineNumber}: the expression can only be {string.Join(',', validConfigPreprocessorVariableNames.ToArray())}");
                     }
 
                     command = startPreprocessMatch.Groups["command"].Value;
