@@ -57,6 +57,7 @@ export async function getTestPlanData(): Promise<TestPlanData> {
             testPlanDataResponse.testPlanId = testPlanInputId;
             testPlanDataResponse.testSuiteIds = testSuitesInputId;
             testPlanDataResponse.testConfigurationId = testPlanConfigInputId;
+            testPlanDataResponse.listOfTestPointDetails = testPlanData.listOfTestPointDetails;
         })
         .catch((error) => {
             tl.error("Error while fetching Test Plan Data :" + error);
@@ -157,7 +158,11 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
                         testPoint: {
                             id: testCase.pointAssignments[0].id.toString()
                         },
+                        testCase:{
+                            id: testCase.workItem.id.toString()
+                        },
                         testCaseTitle: testCase.workItem.name,
+                        testCaseRevision: 1,
                         owner: testCase.pointAssignments[0].tester,
                         configuration: {
                             id: testCase.pointAssignments[0].configurationId.toString(),
@@ -214,7 +219,10 @@ export async function createManualTestRun(testPlanInfo: TestPlanData): Promise<M
         var testResultsApi = await getTestResultApiClient();
 
         let testRunResponse = await createManualTestRunAsync(testResultsApi, testRunRequestBody, projectId);
+        console.log("Test run created with id: ", testRunResponse.id);
+
         let testResultsResponse = await createManualTestResultsAsync(testResultsApi, testPlanInfo.listOfTestPointDetails, projectId, testRunResponse.id);
+        console.log("Test results created for run id: ", testResultsResponse[0].testRun);
 
         manualTestRunResponse.testRunId = testRunResponse.id;
         manualTestRunResponse.runUrl = testRunResponse.webAccessUrl;
@@ -277,6 +285,8 @@ export async function getTestResultApiClient(){
     let auth = token.length == 52 ? apim.getPersonalAccessTokenHandler(token) : apim.getBearerHandler(token);
     let vsts: apim.WebApi = new apim.WebApi(url, auth);
     let testResultsApi = await vsts.getTestResultsApi();
+
+    console.log("Test result api client created");
     return testResultsApi;
 }
 
