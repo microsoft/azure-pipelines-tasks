@@ -161,20 +161,10 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
     }
     finally {
-        let RemoveScriptContent: string[] = [];
         let RemoveAzContextPath = path.join(path.resolve(__dirname), 'RemoveAzContext.ps1');
         let removeScripts = `${RemoveAzContextPath} -ErrorAction continue`
-        RemoveScriptContent.push(removeScripts);
         const removeScriptFilePath = path.join(tempDirectory, uuidV4() + '.ps1');
         try {
-            await fs.writeFile(
-                removeScriptFilePath,
-                '\ufeff' + RemoveScriptContent.join(os.EOL), // Prepend the Unicode BOM character.
-                { encoding: 'utf8' }, // Since UTF8 encoding is specified, node will
-                                            // encode the BOM into its UTF8 binary sequence.
-                function (err) {
-                    if (err) throw err;
-                });
             const powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
                 .arg('-NoLogo')
                 .arg('-NoProfile')
