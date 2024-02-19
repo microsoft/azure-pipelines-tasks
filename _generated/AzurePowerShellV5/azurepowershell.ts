@@ -182,7 +182,7 @@ async function run() {
                 .arg('-ExecutionPolicy')
                 .arg('Unrestricted')
                 .arg('-Command')
-                .arg(`. '${removeScriptFilePath.replace(/'/g, "''")}'`);
+                .arg(`. '${RemoveAzContextPath}'`);
 
             let options = <tr.IExecOptions>{
                     cwd: input_workingDirectory,
