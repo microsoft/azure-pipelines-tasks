@@ -167,11 +167,9 @@ function Initialize-AzureSubscription {
             Set-CurrentAzureSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -StorageAccount $StorageAccount
         }
 
-        if (!$featureFlags.retireAzureRM) {
-            # Select subscription (AzureRM).
-            if ($script:azureRMProfileModule) {
-                Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId
-            }
+        # Select subscription (AzureRM).
+        if ($script:azureRMProfileModule -and !$featureFlags.retireAzureRM) {
+            Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId
         }
 
         # Select subscription (Az).
@@ -207,7 +205,6 @@ function Initialize-AzureSubscription {
             # Throw if >=0.9.9 Azure.
             throw (Get-VstsLocString -Key "AZ_ServicePrincipalAuthNotSupportedAzureVersion0" -ArgumentList $script:azureModule.Version)
         }
-        # TODO: remove this block after migration
         elseif ($script:azureRMProfileModule -and !$featureFlags.retireAzureRM) {
             # This is AzureRM.            
             try {
@@ -411,11 +408,11 @@ function Set-CurrentAzureRMSubscription {
     if ($TenantId) { $additional['TenantId'] = $TenantId }
 
     if (Get-Command -Name "Select-AzureRmSubscription" -ErrorAction "SilentlyContinue") {
-        Write-Host "##[command] Select-AzureRMSubscription -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        Write-Host "##[command]Select-AzureRMSubscription -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
         $null = Select-AzureRMSubscription -SubscriptionId $SubscriptionId @additional
     }
     else {
-        Write-Host "##[command] Set-AzureRmContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        Write-Host "##[command]Set-AzureRmContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
         $null = Set-AzureRmContext -SubscriptionId $SubscriptionId @additional
     }
 }
