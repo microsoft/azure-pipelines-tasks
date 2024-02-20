@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 235,
-    "Patch": 2
+    "Minor": 236,
+    "Patch": 0
   },
   "releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
   "minimumAgentVersion": "2.115.0",
@@ -126,7 +126,7 @@
     "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
   },
   "_buildConfigMapping": {
-    "Default": "3.235.2",
-    "Node20-225": "3.235.3"
+    "Default": "3.236.0",
+    "Node20-225": "3.236.1"
   }
 }
