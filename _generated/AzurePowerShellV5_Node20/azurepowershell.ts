@@ -161,9 +161,6 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
     }
     finally {
-        let RemoveAzContextPath = path.join(path.resolve(__dirname), 'RemoveAzContext.ps1');
-        let removeScripts = `${RemoveAzContextPath} -ErrorAction continue`
-        const removeScriptFilePath = path.join(tempDirectory, uuidV4() + '.ps1');
         try {
             const powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
                 .arg('-NoLogo')
@@ -172,7 +169,7 @@ async function run() {
                 .arg('-ExecutionPolicy')
                 .arg('Unrestricted')
                 .arg('-Command')
-                .arg(`. '${RemoveAzContextPath}'`);
+                .arg(`. '{path.join(path.resolve(__dirname),'RemoveAzContext.ps1')}'`);
 
             let options = <tr.IExecOptions>{
                     cwd: input_workingDirectory,
