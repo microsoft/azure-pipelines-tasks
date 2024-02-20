@@ -191,11 +191,11 @@ Tasks/DockerComposeV0/     @microsoft/release-management-task-team @manolerazvan
 
 Tasks/DockerInstallerV0/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/DotNetCoreCLIV2/     @microsoft/release-management-task-team @manolerazvan 
+Tasks/DotNetCoreCLIV2/     @microsoft/akvelon-build-task-team @DergachevE 
 
-Tasks/DotNetCoreInstallerV0/   @microsoft/release-management-task-team @manolerazvan 
+Tasks/DotNetCoreInstallerV0/   @microsoft/akvelon-build-task-team @DergachevE 
 
-Tasks/DotNetCoreInstallerV1/   @microsoft/release-management-task-team @manolerazvan 
+Tasks/DotNetCoreInstallerV1/   @microsoft/akvelon-build-task-team @DergachevE 
 
 Tasks/DownloadBuildArtifactsV0/   @microsoft/release-management-task-team @manolerazvan 
 
@@ -418,7 +418,7 @@ Tasks/TwineAuthenticateV1/     @microsoft/azure-artifacts-packages
 
 Tasks/UniversalPackagesV0/     @microsoft/azure-artifacts-packages
 
-Tasks/UseDotNetV2/     @microsoft/release-management-task-team @manolerazvan 
+Tasks/UseDotNetV2/     @microsoft/akvelon-build-task-team @DergachevE
 
 Tasks/UseNodeV1/    @microsoft/akvelon-build-task-team
 
