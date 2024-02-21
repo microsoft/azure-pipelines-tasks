@@ -124,7 +124,7 @@ function Import-SpecificAzModule {
         }
 
         Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
-        $module = Import-Module -Name $moduleName -Global -PassThru -Force | Sort-Object Version -Descending | Select-Object -First 1
+        $module = (Import-Module -Name $moduleName -Global -PassThru -Force | Sort-Object Version -Descending | Select-Object -First 1)[0]
         Write-Host("Imported module 'Az.Accounts', version: $($module.Version)")
 
         Write-Verbose "Supressing breaking changes warnings of '$($moduleName)' module"
