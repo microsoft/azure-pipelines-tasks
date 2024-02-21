@@ -29,7 +29,7 @@ function Initialize-AzModule {
             $azAccountsModuleName = "Az.Accounts"
             $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName -azVersion $azVersion
             Write-Verbose "'$azAccountsModuleName' is available with version $azAccountsVersion."
-            # 'Uninstall-AzureRMModules' function is from 'Az.Accounts' module
+            # 'Az.Accounts' module is required
             Uninstall-AzureRMModules
 
             $azResourcesModuleName = "Az.Resources"
@@ -39,14 +39,6 @@ function Initialize-AzModule {
         else {
             # We are only looking for Az.Accounts module becasue all the command required for initialize the azure PS session is in Az.Accounts module.
             $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
-
-            $installedAzVersion = [System.Version]::new(
-                $azAccountsVersion.Major, 
-                $azAccountsVersion.Minor, 
-                $azAccountsVersion.Build
-            )
-    
-            Write-Host "azAccountsVersion = $($azAccountsVersion.Major).$($azAccountsVersion.Minor).$($azAccountsVersion.Build)"
         }
 
         Write-Verbose "Initializing Az Subscription."
@@ -54,7 +46,7 @@ function Initialize-AzModule {
             Endpoint = $Endpoint
             connectedServiceNameARM = $connectedServiceNameARM
             vstsAccessToken = $encryptedToken
-            azAccountsModuleVersion = $installedAzVersion
+            azAccountsModuleVersion = $azAccountsVersion
             isPSCore = $isPSCore
         }
         Initialize-AzSubscription @initializeAzSubscriptionParams
@@ -146,17 +138,16 @@ function Import-SpecificAzModule {
 
 function Import-AzAccountsModule {
     [CmdletBinding()]
-    [OutputType([version])]
     param([string] $azVersion)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         # We are only looking for Az.Accounts module becasue all the command required for initialize the azure PS session is in Az.Accounts module.
         $moduleName = "Az.Accounts"
-        $azureRmIsUninstalled = $false
         
         # Attempt to resolve the module.
         Write-Verbose "Attempting to find the module '$moduleName' from the module path."
+
         if ($azVersion -eq "") {
             $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
         }
@@ -174,50 +165,16 @@ function Import-AzAccountsModule {
             }
         }
 
-        # Uninstall AzureRM if Az was found
-        if ($module -and $featureFlags.retireAzureRM) {
-            Write-Verbose "Az.Accounts module is available, running Uninstall-AzureRMModules."
-            $azureRmIsUninstalled = Uninstall-AzureRMModules
-        }
-
         # Install Az if not found
         if (!$module) {
-            Write-Verbose "No module found with name: $($moduleName), installing it."
-            if ($azVersion) {
-                Write-Host "##[command]Import-Module -Name $($module.Path)  -RequiredVersion $([version]$azVersion) -Global -PassThru -Force"
-                Install-Module -Name $moduleName -RequiredVersion $azVersion -Force -AllowClobber
-            }
-            else {
-                Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
-                Install-Module -Name $moduleName -Force -AllowClobber
-            }
-            $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
-        }
-        
-        # Error if failed to import/install
-        if (!$module) {
-            Write-Warning "Failed to import $($moduleName) module."
-            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, $moduleName)
-        } else {
-            Write-Verbose "$($moduleName) module imported successfully."
+            Write-Verbose "No module found with name: $moduleName"
+            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, "Az.Accounts")
         }
 
-        if ($featureFlags.retireAzureRM) {
-            Write-Verbose "Supressing breaking changes warnings of '$($moduleName)' module"
-            Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo $moduleName
-        }
-
-        if (!$azureRmIsUninstalled -and $featureFlags.retireAzureRM) {
-            $azureRmIsUninstalled = Uninstall-AzureRMModules
-            if (!$azureRmIsUninstalled) {
-                Write-Warining "Unable to uninstall AzureRM."
-            }
-        }
-
-        Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
-        $module = (Import-Module -Name $module.Path -Global -PassThru -Force | Sort-Object Version -Descending)[0]
-        Write-Verbose "Imported module '$($moduleName)', version: $($module.Version)"
-        
+        # Import the module.
+        Write-Host "##[command]Import-Module -Name $($module.Path) -Global"
+        $module = Import-Module -Name $module.Path -Global -PassThru -Force
+        Write-Verbose "Imported module version: $($module.Version)"
         return $module.Version
     }
     finally {
