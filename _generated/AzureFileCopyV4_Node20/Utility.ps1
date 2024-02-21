@@ -1,7 +1,3 @@
-$featureFlags = @{
-    retireAzureRM = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
-}
-
 # Utility Functions used by AzureFileCopy.ps1 (other than azure calls) #
 
 $ErrorActionPreference = 'Stop'
@@ -24,17 +20,12 @@ function Get-AzureUtility
 	$azureUtilityARM = "AzureUtilityARM.ps1"
     $azUtilityVersion100 = "AzureUtilityAz1.0.ps1"
 
-    if ($featureFlags.retireAzureRM) {
+    if (Get-Module Az.Accounts -ListAvailable){
+        Write-Verbose "Az module is installed in the agent."
         return $azUtilityVersion100
     }
-    else {
-        if (Get-Module Az.Accounts -ListAvailable){
-            Write-Verbose "Az module is installed in the agent."
-            return $azUtilityVersion100
-        }
-        Write-Warning "Az module is not installed in the agent."
-        return $azureUtilityARM
-    }
+	
+    return $azureUtilityARM
 }
 
 function Get-Endpoint

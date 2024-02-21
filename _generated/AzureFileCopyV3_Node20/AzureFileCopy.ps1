@@ -3,10 +3,6 @@ param()
 
 Trace-VstsEnteringInvocation $MyInvocation
 
-$featureFlags = @{
-    retireAzureRM = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
-}
-
 # Get inputs for the task
 $sourcePath = Get-VstsInput -Name SourcePath -Require
 $destination = Get-VstsInput -Name Destination -Require
@@ -71,20 +67,13 @@ $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
 $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
-if ($featureFlags.retireAzureRM) {
-    Write-Verbose "Initializing Az Module."
+if (Get-Module Az.Accounts -ListAvailable) {
     $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
     Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
-} else {
-    if (Get-Module Az.Accounts -ListAvailable) {
-        $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
-        Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
-    }
-    else {
-        Write-Warning "Module Az.Accounts is unavailable"
-        Update-PSModulePathForHostedAgentWithLatestModule -Endpoint $endpoint
-        Initialize-AzureRMModule -Endpoint $endpoint
-    }
+}
+else {
+    Update-PSModulePathForHostedAgentWithLatestModule -Endpoint $endpoint
+    Initialize-AzureRMModule -Endpoint $endpoint
 }
 
 # Import the loc strings.

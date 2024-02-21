@@ -1,10 +1,6 @@
 [CmdletBinding()]
 param()
 
-$featureFlags = @{
-    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
-}
-
 Trace-VstsEnteringInvocation $MyInvocation
 
 # Get inputs for the task
@@ -74,19 +70,12 @@ CleanUp-PSModulePathForHostedAgent
 $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
 $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
-
-if ($featureFlags.retireAzureRM) {
-    Write-Debug "Initializing Az Module"
+if (Get-Module Az.Accounts -ListAvailable) {
     $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
     Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
-} else {
-    if (Get-Module Az.Accounts -ListAvailable) {
-        $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
-        Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
-    }
-    else {
-        Initialize-AzureRMModule -Endpoint $endpoint
-    }
+}
+else {
+    Initialize-AzureRMModule -Endpoint $endpoint
 }
 
 # Import the loc strings.
