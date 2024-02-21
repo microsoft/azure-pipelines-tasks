@@ -23,7 +23,7 @@ function Initialize-AzModule {
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
-        Write-Verbose "Importing Az Module."
+        Write-Verbose "Importing Az Modules."
         
         if ($featureFlags.retireAzureRM) {
             $azAccountsModuleName = "Az.Accounts"
@@ -91,7 +91,7 @@ function Import-SpecificAzModule {
         }
 
         if (-not $module) {
-            Write-Verbose "Module $($moduleName) not found; initiating install."
+            Write-Verbose "Installing '$moduleName' module."
             $installParams = @{
                 Name = $moduleName
                 Force = $true
@@ -102,11 +102,12 @@ function Import-SpecificAzModule {
                 $installParams['RequiredVersion'] = $azVersion   
             }
 
-            Write-Host "##[command]Install-Module -Name $moduleName -Force -AllowClobber$(if ($azVersion) {" -RequiredVersion $azVersion"})"
-            $module = Install-Module @installParams
+            Write-Host "##[command]Install-Module -Name $moduleName -Force -AllowClobber$(if (-not [string]::IsNullOrWhiteSpace($azVersion)) {" -RequiredVersion $azVersion"})"
+            Install-Module @installParams
+            $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
 
             if (-not $module) {
-                Write-Verbose "Unable to install module '$($moduleName)'$(if ($azVersion) {" of version '$azVersion'"})."
+                Write-Verbose "Unable to install module '$($moduleName)'$(if (-not [string]::IsNullOrWhiteSpace($azVersion)) {" of version '$azVersion'"})."
                 throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, $moduleName)
             }
             else {
