@@ -216,7 +216,7 @@ export class azureclitask {
         }
         catch (err) {
             // task should not fail if logout doesn`t occur
-            tl.warning(tl.loc("FailedToLogout"), tl.IssueSource.TaskInternal);
+            tl.warning(tl.loc("FailedToLogout"));
         }
     }
 
@@ -280,7 +280,7 @@ export class azureclitask {
             return auth.parameters['AccessToken'];
         }
         else {
-            tl.warning('Could not determine credentials to use', tl.IssueSource.TaskInternal);
+            tl.warning('Could not determine credentials to use');
         }
     }
 }

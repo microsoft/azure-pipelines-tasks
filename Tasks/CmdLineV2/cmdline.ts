@@ -71,7 +71,7 @@ async function run() {
 
         // Fail on exit code.
         if (exitCode !== 0) {
-            tl.error(tl.loc('JS_ExitCode', exitCode), IssueSource.TaskInternal);
+            tl.error(tl.loc('JS_ExitCode', exitCode));
             result = tl.TaskResult.Failed;
         }
 

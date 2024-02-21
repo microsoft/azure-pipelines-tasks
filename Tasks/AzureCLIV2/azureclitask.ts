@@ -207,7 +207,7 @@ export class azureclitask {
         }
         catch (err) {
             // task should not fail if logout doesn`t occur
-            tl.warning(tl.loc("FailedToLogout"), tl.IssueSource.TaskInternal);
+            tl.warning(tl.loc("FailedToLogout"));
         }
     }
 

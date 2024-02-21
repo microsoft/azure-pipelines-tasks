@@ -218,7 +218,7 @@ async function run() {
 
         // Fail on stderr.
         if (stderrFailure) {
-            tl.error(tl.loc('JS_Stderr'), IssueSource.TaskInternal);
+            tl.error(tl.loc('JS_Stderr'));
             aggregatedStderr.forEach((err: string) => {
                 tl.error(err, IssueSource.CustomerScript);
             });
