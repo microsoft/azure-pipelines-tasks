@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 235,
+    "Minor": 236,
     "Patch": 0
   },
   "preview": true,
@@ -131,6 +131,7 @@
     "testSuiteSelected": "ms-resource:loc.messages.testSuiteSelected",
     "automatedTestsTriggered": "ms-resource:loc.messages.automatedTestsTriggered",
     "ErrorFailTaskOnExecutingTests": "ms-resource:loc.messages.ErrorFailTaskOnExecutingTests",
-    "ErrorFailTaskOnAPIFailure": "ms-resource:loc.messages.ErrorFailTaskOnAPIFailure"
+    "ErrorFailTaskOnAPIFailure": "ms-resource:loc.messages.ErrorFailTaskOnAPIFailure",
+    "ErrorFailTaskOnCreateRunFailure": "ms-resource:loc.messages.ErrorFailTaskOnCreateRunFailure"
   }
 }
