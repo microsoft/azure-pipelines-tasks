@@ -120,7 +120,7 @@ function Initialize-AzureSubscription {
             }
         }
 
-        if (!$featureFlags.retireAzureRM) {
+        if (-not $featureFlags.retireAzureRM) {
             # Add account (AzureRM).
             if ($script:azureRMProfileModule) {
                 if ($featureFlags.retireAzureRM) {
@@ -168,7 +168,7 @@ function Initialize-AzureSubscription {
         }
 
         # Select subscription (AzureRM).
-        if ($script:azureRMProfileModule -and !$featureFlags.retireAzureRM) {
+        if ($script:azureRMProfileModule -and (-not $featureFlags.retireAzureRM)) {
             Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId
         }
 
@@ -205,7 +205,7 @@ function Initialize-AzureSubscription {
             # Throw if >=0.9.9 Azure.
             throw (Get-VstsLocString -Key "AZ_ServicePrincipalAuthNotSupportedAzureVersion0" -ArgumentList $script:azureModule.Version)
         }
-        elseif ($script:azureRMProfileModule -and !$featureFlags.retireAzureRM) {
+        elseif ($script:azureRMProfileModule -and (-not $featureFlags.retireAzureRM)) {
             # This is AzureRM.            
             try {
                 if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {

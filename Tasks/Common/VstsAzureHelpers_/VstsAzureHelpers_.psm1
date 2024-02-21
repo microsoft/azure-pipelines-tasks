@@ -21,7 +21,7 @@ Import-Module $PSScriptRoot/../TlsHelper_
 Add-Tls12InSession
 
 # Dot source the private functions.
-if (!$featureFlags.retireAzureRM) {
+if (-not $featureFlags.retireAzureRM) {
     . $PSScriptRoot/ImportFunctions.ps1
     . $PSScriptRoot/InitializeAzureRMFunctions.ps1
 }
