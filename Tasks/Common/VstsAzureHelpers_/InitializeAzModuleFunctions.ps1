@@ -129,8 +129,12 @@ function Import-SpecificAzModule {
 
         Write-Verbose "Supressing breaking changes warnings of '$($moduleName)' module"
         Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo $moduleName
-        
-        [System.Version]$moduleVersion = $module.Version
+
+        $moduleVersion = [System.Version]::new(
+            $module.Version.Major, 
+            $module.Version.Minor, 
+            $module.Version.Build
+        )
         return $moduleVersion
     }
     finally {
