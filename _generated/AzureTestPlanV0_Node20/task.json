@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 234,
+    "Minor": 236,
     "Patch": 1
   },
   "preview": true,
@@ -135,10 +135,11 @@
     "testSuiteSelected": "Test suite Id selected: %s",
     "automatedTestsTriggered": "Trigerring execution of Automated tests from test plan",
     "ErrorFailTaskOnExecutingTests": "Error occured while executing test command",
-    "ErrorFailTaskOnAPIFailure": "Error occured while fetching automated tests from test plan inputs"
+    "ErrorFailTaskOnAPIFailure": "Error occured while fetching automated tests from test plan inputs",
+    "ErrorFailTaskOnCreateRunFailure": "Error occured while creating manual test run from test plan inputs"
   },
   "_buildConfigMapping": {
-    "Default": "0.234.0",
-    "Node20-225": "0.234.1"
+    "Default": "0.236.0",
+    "Node20-225": "0.236.1"
   }
 }

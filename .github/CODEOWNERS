@@ -43,9 +43,9 @@ Tasks/AzureFileCopyV3/   @microsoft/release-management-task-team @manolerazvan
 
 Tasks/AzureFileCopyV4/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureFunctionAppV1/   @finvamp1 @patelchandni  
+Tasks/AzureFunctionAppV1/   @finvamp1 @patelchandni @microsoft/release-management-task-team @manolerazvan  
 
-Tasks/AzureFunctionAppV2/   @finvamp1 @patelchandni  
+Tasks/AzureFunctionAppV2/   @finvamp1 @patelchandni @microsoft/release-management-task-team @manolerazvan  
 
 Tasks/AzureFunctionAppContainerV1/   @microsoft/release-management-task-team @manolerazvan 
 
@@ -83,9 +83,10 @@ Tasks/AzureResourceGroupDeploymentV2/      @microsoft/release-management-task-te
 
 Tasks/AzureResourceManagerTemplateDeploymentV3/      @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureRmWebAppDeploymentV3/   @microsoft/release-management-task-team @manolerazvan 
+# DRI rotation: App Service (Web Apps)
+Tasks/AzureRmWebAppDeploymentV3/   @jvano @dannysongg @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureRmWebAppDeploymentV4/   @microsoft/release-management-task-team @manolerazvan 
+Tasks/AzureRmWebAppDeploymentV4/   @jvano @dannysongg @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan 
 
 # DRI rotation: Azure Spring Apps/AzDMSS-Support
 Tasks/AzureSpringCloudV0    @microsoft/azure-spring-apps @ruoyuwang @menxiao
@@ -96,7 +97,7 @@ Tasks/AzureTestPlanV0/     @rasunkar  @microsoft\adoautotest
 
 Tasks/AzureWebAppV1/  @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureWebAppContainerV1/   @microsoft/release-management-task-team @manolerazvan 
+Tasks/AzureWebAppContainerV1/  @jvano @dannysongg @manolerazvan @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team 
 
 Tasks/AzureVmssDeploymentV0/       @bishal-pdmsft
 
@@ -128,8 +129,6 @@ Tasks/Common/AzureRmDeploy-common/   @vincentdass    @microsoft/release-manageme
 
 Tasks/Common/Deployment/   @bishal-pdMSFT  @microsoft/release-management-task-team @manolerazvan  
 
-Tasks/Common/MSBuildHelpers/    @microsoft/akvelon-build-task-team
-
 Tasks/Common/PowershellHelpers/  @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/Common/RemoteDeployer/   @arjgupta
@@ -148,21 +147,13 @@ Tasks/Common/azure-arm-rest-v2/   @microsoft/release-management-task-team @manol
 
 Tasks/Common/azure-blobstorage-artifactProvider/   @omeshp   @hiyadav    @bishal-pdmsft
 
-Tasks/Common/codeanalysis-common/    @microsoft/akvelon-build-task-team
-
 Tasks/Common/coveragepublisher/     @rasunkar  @microsoft\adoautotest
 
 Tasks/Common/docker-common/      @microsoft/release-management-task-team @manolerazvan
 
-Tasks/Common/ios-signing-common/     @microsoft/akvelon-build-task-team   @hashtagchris
-
-Tasks/Common/java-common/        @microsoft/akvelon-build-task-team   @kelliejos
-
 Tasks/Common/kubernetes-common/      @nishubansal    @ds-ms
 
 Tasks/Common/packaging-common/     @microsoft/azure-artifacts-packages
-
-Tasks/Common/securefiles-common/   @microsoft/akvelon-build-task-team   @hashtagchris
 
 Tasks/Common/utility-common/       @nishubansal    @ds-ms
 
@@ -200,11 +191,11 @@ Tasks/DockerComposeV0/     @microsoft/release-management-task-team @manolerazvan
 
 Tasks/DockerInstallerV0/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/DotNetCoreCLIV2/     @microsoft/release-management-task-team @manolerazvan 
+Tasks/DotNetCoreCLIV2/     @microsoft/akvelon-build-task-team @DergachevE 
 
-Tasks/DotNetCoreInstallerV0/   @microsoft/release-management-task-team @manolerazvan 
+Tasks/DotNetCoreInstallerV0/   @microsoft/akvelon-build-task-team @DergachevE 
 
-Tasks/DotNetCoreInstallerV1/   @microsoft/release-management-task-team @manolerazvan 
+Tasks/DotNetCoreInstallerV1/   @microsoft/akvelon-build-task-team @DergachevE 
 
 Tasks/DownloadBuildArtifactsV0/   @microsoft/release-management-task-team @manolerazvan 
 
@@ -253,6 +244,8 @@ Tasks/GoV0/    @microsoft/release-management-task-team @manolerazvan
 Tasks/GoToolV0/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/GradleV2/    @microsoft/akvelon-build-task-team
+
+Tasks/GradleV3/    @microsoft/akvelon-build-task-team
 
 Tasks/GruntV0/     @microsoft/akvelon-build-task-team
 
@@ -425,7 +418,7 @@ Tasks/TwineAuthenticateV1/     @microsoft/azure-artifacts-packages
 
 Tasks/UniversalPackagesV0/     @microsoft/azure-artifacts-packages
 
-Tasks/UseDotNetV2/     @microsoft/release-management-task-team @manolerazvan 
+Tasks/UseDotNetV2/     @microsoft/akvelon-build-task-team @DergachevE
 
 Tasks/UseNodeV1/    @microsoft/akvelon-build-task-team
 

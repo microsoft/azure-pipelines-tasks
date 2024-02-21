@@ -192,8 +192,9 @@ finally {
     if ($__vstsAzPSInlineScriptPath -and (Test-Path -LiteralPath $__vstsAzPSInlineScriptPath) ) {
         Remove-Item -LiteralPath $__vstsAzPSInlineScriptPath -ErrorAction 'SilentlyContinue'
     }
-
-    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+    . "$PSScriptRoot\Utility.ps1"
+    Import-Module "$PSScriptRoot\ps_modules\VstsAzureHelpers_"
     Remove-EndpointSecrets
-    Disconnect-AzureAndClearContext -ErrorAction SilentlyContinue
+    Update-PSModulePathForHostedAgent
+    Disconnect-AzureAndClearContext -restrictContext 'True' -ErrorAction SilentlyContinue
 }

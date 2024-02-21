@@ -24,5 +24,6 @@
   "loc.messages.ReactivateExistingEnvironment": "기존 환경 %s이(가) 있는데, 작업의 \"환경 정리\" 매개 변수가 설정되지 않았습니다. 다시 활성화하는 중...",
   "loc.messages.ParameterRequired": "'%s' 매개 변수가 필요합니다.",
   "loc.messages.PlatformNotRecognized": "플랫폼을 인식할 수 없습니다.",
-  "loc.messages.PrependPath": "PATH 환경 변수 앞에 %s 디렉터리 추가 중"
+  "loc.messages.PrependPath": "PATH 환경 변수 앞에 %s 디렉터리 추가 중",
+  "loc.messages.DeprecatedTask": "CondaEnvironment@1(Conda 환경) 작업은 2019년 2월 13일부터 더 이상 사용되지 않으며 곧 사용 중지됩니다. bash/pwsh/script 태스크에서 직접 Conda CLI('conda')를 사용합니다. 사용되지 않는 작업에 대해 자세히 알아보려면 https://aka.ms/azdo-deprecated-tasks에 방문하세요."
 }

@@ -207,7 +207,12 @@ async function run() {
 
         // Fail on exit code.
         if (exitCode !== 0) {
-            tl.error(tl.loc('JS_ExitCode', exitCode), IssueSource.TaskInternal);
+            if (exitCode == 137) {
+                tl.error(tl.loc('JS_ExitCode_137'));
+            } 
+            else {
+                tl.error(tl.loc('JS_ExitCode', exitCode));
+            }
             result = tl.TaskResult.Failed;
         }
 
