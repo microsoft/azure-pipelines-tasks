@@ -84,7 +84,7 @@ function Import-SpecificAzModule {
             $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
             if ($module) {
                 Write-Verbose "Module '$moduleName' version $($module.Version) was found."
-                return $module
+                $module
             } else {
                 Write-Verbose "Unable to find module '$moduleName' from the module path."
             }
