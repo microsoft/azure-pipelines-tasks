@@ -23,22 +23,123 @@ function Initialize-AzModule {
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
-
         Write-Verbose "Importing Az Module."
-        $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
+        
+        if ($featureFlags.retireAzureRM) {
+            $azAccountsModuleName = "Az.Accounts"
+            $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName -azVersion $azVersion
+            Write-Verbose "'$azAccountsModuleName' is available with version $azAccountsVersion."
+            # 'Uninstall-AzureRMModules' function is from 'Az.Accounts' module
+            Uninstall-AzureRMModules
 
-        $installedAzVersion = [System.Version]::new(
-            $azAccountsVersion.Major, 
-            $azAccountsVersion.Minor, 
-            $azAccountsVersion.Build
-        )
+            $azResourcesModuleName = "Az.Resources"
+            $azResourcesVersion = Import-SpecificAzModule -moduleName $azResourcesModuleName -azVersion $azVersion
+            Write-Verbose "'$azResourcesModuleName' is available with version $azResourcesVersion."
+        }
+        else {
+            # We are only looking for Az.Accounts module becasue all the command required for initialize the azure PS session is in Az.Accounts module.
+            $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
 
-        Write-Host "azAccountsVersion = $($azAccountsVersion.Major).$($azAccountsVersion.Minor).$($azAccountsVersion.Build)"
+            $installedAzVersion = [System.Version]::new(
+                $azAccountsVersion.Major, 
+                $azAccountsVersion.Minor, 
+                $azAccountsVersion.Build
+            )
+    
+            Write-Host "azAccountsVersion = $($azAccountsVersion.Major).$($azAccountsVersion.Minor).$($azAccountsVersion.Build)"
+        }
 
         Write-Verbose "Initializing Az Subscription."
-        Initialize-AzSubscription -Endpoint $Endpoint -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $encryptedToken `
-            -azAccountsModuleVersion $installedAzVersion -isPSCore $isPSCore
-    } finally {
+        $initializeAzSubscriptionParams = @{
+            Endpoint = $Endpoint
+            connectedServiceNameARM = $connectedServiceNameARM
+            vstsAccessToken = $encryptedToken
+            azAccountsModuleVersion = $installedAzVersion
+            isPSCore = $isPSCore
+        }
+        Initialize-AzSubscription @initializeAzSubscriptionParams
+    }
+    finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+function Import-SpecificAzModule {
+    [OutputType([System.Version])]
+    [CmdletBinding()]
+    [OutputType([version])]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$moduleName,
+        [Parameter(Mandatory=$false)]
+        [string]$azVersion
+    )
+
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        if (-not [string]::IsNullOrWhiteSpace($azVersion)) {
+            Write-Verbose "Attempting to find module '$moduleName' of version '$azVersion'."
+            $module = Get-Module -Name $moduleName -ListAvailable | Where-Object { $_.Version -eq $azVersion } | Sort-Object Version -Descending | Select-Object -First 1
+            if ($module) {
+                Write-Verbose "Module '$moduleName' version $($module.Version) was found."
+            }
+            else {
+                Write-Verbose "Specified version $azVersion of module $moduleName not found."
+            }
+        }
+        else {
+            Write-Verbose "Attempting to find the latest version of module '$moduleName'."
+            $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+            if ($module) {
+                Write-Verbose "Module '$moduleName' version $($module.Version) was found."
+                return $module
+            } else {
+                Write-Verbose "Unable to find module '$moduleName' from the module path."
+            }
+        }
+
+        if (-not $module) {
+            Write-Verbose "Module $($moduleName) not found; initiating install."
+            $installParams = @{
+                Name = $moduleName
+                Force = $true
+                AllowClobber = $true
+            }
+
+            if ($azVersion) {
+                $installParams['RequiredVersion'] = $azVersion   
+            }
+
+            Write-Host "##[command]Install-Module -Name $moduleName -Force -AllowClobber$(if ($azVersion) {" -RequiredVersion $azVersion"})"
+            $module = Install-Module @installParams
+
+            if (-not $module) {
+                Write-Verbose "Unable to install module '$($moduleName)'$(if ($azVersion) {" of version '$azVersion'"})."
+                throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, $moduleName)
+            }
+            else {
+                Write-Verbose "Module '$($moduleName)' version $($module.Version) was installed."
+            }
+        }
+
+        if (-not $module) {
+            Write-Warning "Failed to import '$($moduleName)' module."
+            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, $moduleName)
+        }
+        else {
+            Write-Verbose "$($moduleName) module imported successfully."
+        }
+
+        Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
+        $module = (Import-Module -Name $module.Path -Global -PassThru -Force | Sort-Object Version -Descending)[0]
+        Write-Verbose "Imported module '$($moduleName)', version: $($module.Version)"
+
+        Write-Verbose "Supressing breaking changes warnings of '$($moduleName)' module"
+        Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo $moduleName
+        
+        return $module.Version
+    }
+    finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
