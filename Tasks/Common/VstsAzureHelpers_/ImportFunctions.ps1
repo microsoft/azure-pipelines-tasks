@@ -239,7 +239,7 @@ function ThrowAzureModuleNotFoundException {
         [string] $modules
     )
           
-    DiscoverAvailableAzureModules
+    Get-AvailableAzureModules
 
     if ($azurePsVersion) {
         throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azurePsVersion, $modules)
@@ -248,15 +248,15 @@ function ThrowAzureModuleNotFoundException {
     }
 }
 
-function DiscoverAvailableAzureModules {
+function Get-AvailableAzureModules {
     $env:PSModulePath = $env:SystemDrive + "\Modules;" + $env:PSModulePath
 
     Write-Host $(Get-VstsLocString -Key AZ_AvailableModules -ArgumentList "Azure")
-    Get-Module -Name Azure -ListAvailable | Select-Object Name,Version | ft
+    Get-Module -Name Azure -ListAvailable | Select-Object Name,Version | Format-Table
 
     Write-Host $(Get-VstsLocString -Key AZ_AvailableModules -ArgumentList "AzureRM")
-    Get-Module -Name AzureRM -ListAvailable | Select-Object Name,Version | ft
+    Get-Module -Name AzureRM -ListAvailable | Select-Object Name,Version | Format-Table
 
     Write-Host $(Get-VstsLocString -Key AZ_AvailableModules -ArgumentList "Az")
-    Get-Module -Name Az -ListAvailable | Select-Object Name,Version | ft
+    Get-Module -Name Az -ListAvailable | Select-Object Name,Version | Format-Table
 }
