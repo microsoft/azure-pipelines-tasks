@@ -124,13 +124,14 @@ function Import-SpecificAzModule {
         }
 
         Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
-        $module = (Import-Module -Name $module.Path -Global -PassThru -Force | Sort-Object Version -Descending)[0]
-        Write-Verbose "Imported module '$($moduleName)', version: $($module.Version)"
+        $module = Import-Module -Name $moduleName -Global -PassThru -Force | Sort-Object Version -Descending | Select-Object -First 1
+        Write-Host("Imported module 'Az.Accounts', version: $($module.Version)")
 
         Write-Verbose "Supressing breaking changes warnings of '$($moduleName)' module"
         Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo $moduleName
         
-        return $module.Version
+        [System.Version]$moduleVersion = $module.Version
+        return $moduleVersion
     }
     finally {
         Trace-VstsLeavingInvocation $MyInvocation
