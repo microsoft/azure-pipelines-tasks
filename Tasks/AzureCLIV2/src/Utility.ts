@@ -80,7 +80,7 @@ export class Utility {
         if (resultOfToolExecution.code != 0) {
             tl.error("Error Code: [" + resultOfToolExecution.code + "]");
             if (errormsg) {
-                tl.error("Error: " + errormsg, tl.IssueSource.TaskInternal);
+                tl.error("Error: " + errormsg);
             }
             throw resultOfToolExecution;
         }

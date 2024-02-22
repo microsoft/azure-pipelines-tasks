@@ -239,7 +239,7 @@ try {
     else {
         if ($LASTEXITCODE -ne 0) {
             $failed = $true
-            Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_ExitCode' -ArgumentList $LASTEXITCODE) -IssueSource $IssueSources.TaskInternal
+            Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_ExitCode' -ArgumentList $LASTEXITCODE)
         }
     }
 

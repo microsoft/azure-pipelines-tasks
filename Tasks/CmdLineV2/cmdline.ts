@@ -3,7 +3,6 @@ import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
 import { v4 as uuidV4 } from 'uuid';
-import { IssueSource } from 'azure-pipelines-task-lib/internal';
 
 async function run() {
     try {
@@ -77,9 +76,9 @@ async function run() {
 
         // Fail on stderr.
         if (stderrFailure) {
-            tl.error(tl.loc('JS_Stderr'), IssueSource.TaskInternal);
+            tl.error(tl.loc('JS_Stderr'));
             aggregatedStderr.forEach((err: string) => {
-                tl.error(err, IssueSource.CustomerScript);
+                tl.error(err, tl.IssueSource.CustomerScript);
             });
             result = tl.TaskResult.Failed;
         }

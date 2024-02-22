@@ -5,7 +5,6 @@ import tr = require('azure-pipelines-task-lib/toolrunner');
 import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
 import { ArgsSanitizingError } from './utils/errors';
 import { validateFileArgs } from './helpers';
-import { IssueSource } from 'azure-pipelines-task-lib/internal';
 var uuidV4 = require('uuid/v4');
 
 async function runBashPwd(bashPath: string, directoryPath: string): Promise<string> {
@@ -220,7 +219,7 @@ async function run() {
         if (stderrFailure) {
             tl.error(tl.loc('JS_Stderr'));
             aggregatedStderr.forEach((err: string) => {
-                tl.error(err, IssueSource.CustomerScript);
+                tl.error(err, tl.IssueSource.CustomerScript);
             });
             result = tl.TaskResult.Failed;
         }
