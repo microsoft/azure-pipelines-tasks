@@ -17,11 +17,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 229,
-    "Patch": 0
+    "Minor": 235,
+    "Patch": 1
   },
   "deprecated": true,
-  "removalDate": "2024-04-22",
+  "removalDate": "2024-01-31",
+  "deprecationMessage": "The Chef@1 (Deploy to Chef environments by editing environment attributes) task has been deprecated since March 5, 2018 and will soon be retired. To continue to use Chef, use the Chef CLI directly from a bash/pwsh/script task. See https://github.com/chef/chef-cli.",
   "demands": [
     "Chef",
     "KnifeReporting",

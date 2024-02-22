@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 230,
-    "Patch": 2
+    "Minor": 235,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.104.1",
@@ -140,7 +140,7 @@
       "target": "deployiiswebapp.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "deployiiswebapp.js",
       "argumentFormat": ""
     }
@@ -196,7 +196,7 @@
     "RetryToDeploy": "Retrying to deploy the package."
   },
   "_buildConfigMapping": {
-    "Default": "0.230.0",
-    "Node20_229_3": "0.230.2"
+    "Default": "0.235.0",
+    "Node20_229_3": "0.235.1"
   }
 }

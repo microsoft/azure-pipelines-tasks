@@ -42,5 +42,6 @@
   "loc.messages.NGCommon_RemovingSources": "Preparándose para establecer las credenciales en NuGet.config.",
   "loc.messages.NGCommon_AddingSources": "Estableciendo credenciales en NuGet.config.",
   "loc.messages.NGCommon_NoSourcesFoundInConfig": "No se encontró ningún origen de paquete en el archivo NuGet.config en %s.",
-  "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Se seleccionó una versión de NuGet desconocida."
+  "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Se seleccionó una versión de NuGet desconocida.",
+  "loc.messages.DeprecatedTask": "Esta tarea está en desuso. Cambie al uso de la opción \"restore\" o \"custom\" de NuGetCommand@2 https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
 }

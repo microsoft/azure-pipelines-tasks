@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 231,
-    "Patch": 2
+    "Minor": 236,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.115.0",
@@ -116,6 +116,7 @@
   "messages": {
     "GeneratingScript": "ms-resource:loc.messages.GeneratingScript",
     "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
+    "JS_ExitCode_137": "ms-resource:loc.messages.JS_ExitCode_137",
     "JS_FormattedCommand": "ms-resource:loc.messages.JS_FormattedCommand",
     "JS_InvalidFilePath": "ms-resource:loc.messages.JS_InvalidFilePath",
     "JS_ScriptContents": "ms-resource:loc.messages.JS_ScriptContents",

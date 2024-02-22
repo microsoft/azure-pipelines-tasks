@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
+    "Minor": 235,
     "Patch": 1
   },
   "demands": [],
@@ -52,7 +52,7 @@
       "target": "main.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     }
@@ -77,7 +77,7 @@
     }
   },
   "_buildConfigMapping": {
-    "Default": "0.231.0",
-    "Node20-225": "0.231.1"
+    "Default": "0.235.0",
+    "Node20-225": "0.235.1"
   }
 }

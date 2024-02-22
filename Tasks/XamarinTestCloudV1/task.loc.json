@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 229,
-    "Patch": 0
+    "Minor": 235,
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",
@@ -26,7 +26,8 @@
     }
   ],
   "deprecated": true,
-  "removalDate": "2024-04-22",
+  "removalDate": "2024-01-31",
+  "deprecationMessage": "The XamarinTestCloud@1 (Xamarin Test Cloud) task has been deprecated since January 11, 2018 and will soon be retired. Use the AppCenterDistribute@3 task instead.",
   "inputs": [
     {
       "name": "app",
@@ -179,7 +180,11 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node10": {
+      "target": "xamarintestcloud.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "xamarintestcloud.js",
       "argumentFormat": ""
     },
@@ -191,5 +196,8 @@
         "windows"
       ]
     }
+  },
+  "messages": {
+    "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
   }
 }
