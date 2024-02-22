@@ -41,7 +41,11 @@ export class DownloadHandlerContainerZip extends DownloadHandler {
 
             tl.debug(`Extracting ${this.zipLocation} to ${unzipLocation}`);
             tl.debug(`Using extract-zip package for extracting archive`);
-            return extract(this.zipLocation, { dir: unzipLocation });
+            extract(this.zipLocation, { dir: unzipLocation }).then(() => {
+                resolve();
+            }).catch((error) => {
+                reject(error);
+            });
         });
 
         return unZipPromise;

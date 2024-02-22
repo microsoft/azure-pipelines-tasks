@@ -44,7 +44,11 @@ export class DownloadHandlerContainerZip extends DownloadHandler {
             tl.debug(`Extracting ${this.zipLocation} to ${unzipLocation}`);
 #if NODE20
             tl.debug(`Using extract-zip package for extracting archive`);
-            return extract(this.zipLocation, { dir: unzipLocation });
+            extract(this.zipLocation, { dir: unzipLocation }).then(() => {
+                resolve();
+            }).catch((error) => {
+                reject(error);
+            });
 #else
             const unzipper = new DecompressZip(this.zipLocation);
             unzipper.on('error', err => {
