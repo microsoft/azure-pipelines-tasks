@@ -35,6 +35,10 @@ function Initialize-AzModule {
             $azResourcesModuleName = "Az.Resources"
             $azResourcesVersion = Import-SpecificAzModule -moduleName $azResourcesModuleName -azVersion $azVersion
             Write-Verbose "'$azResourcesModuleName' is available with version $azResourcesVersion."
+
+            $azStorageModuleName = "Az.Storage"
+            $azStorageVersion = Import-SpecificAzModule -moduleName $azStorageModuleName -azVersion $azVersion
+            Write-Verbose "'$azStorageModuleName' is available with version $azStorageVersion."
         }
         else {
             # We are only looking for Az.Accounts module becasue all the command required for initialize the azure PS session is in Az.Accounts module.
