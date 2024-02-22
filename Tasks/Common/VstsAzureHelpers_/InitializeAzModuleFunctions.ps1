@@ -26,11 +26,11 @@ function Initialize-AzModule {
         Write-Verbose "Importing Az Modules."
         
         if ($featureFlags.retireAzureRM) {
+            Uninstall-AzureRMModules
+
             $azAccountsModuleName = "Az.Accounts"
             $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName -azVersion $azVersion
             Write-Verbose "'$azAccountsModuleName' is available with version $azAccountsVersion."
-            # 'Az.Accounts' module is required
-            Uninstall-AzureRMModules
 
             $azResourcesModuleName = "Az.Resources"
             $azResourcesVersion = Import-SpecificAzModule -moduleName $azResourcesModuleName -azVersion $azVersion
@@ -194,15 +194,31 @@ function Import-AzAccountsModule {
 }
 
 function Uninstall-AzureRMModules {
-    Write-Verbose "Uninstalling AzureRM modules."
+    [CmdletBinding()]
+    param([switch] $UseAzUninstall)
 
-    # `Uninstall-AzureRm` is a part of Az.Accounts module
-    if (Get-Module -ListAvailable -Name Az.Accounts) {
-        Write-Verbose "Module Az.Accounts is already installed, calling 'Uninstall-AzureRm' to uninstall AzureRM."
-        Uninstall-AzureRm
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        Write-Verbose "Uninstalling AzureRM modules."
 
-        Write-Verbose "Checking if AzureRM modules are still available."
-        $azureRmModules = Get-Module -ListAvailable | Where-Object { $_.Name -like 'AzureRM.*' }
+        if ($UseAzUninstall -and (Get-Module -ListAvailable -Name Az.Accounts)) {
+            Write-Host "##[command]Uninstall-AzureRm"
+            Uninstall-AzureRm
+        }
+        else {
+            $azureRmModules = Get-Module -ListAvailable -Name AzureRM.* | Select-Object Name,Version
+            if ($azureRmModules) {
+                Foreach ($azureRmModule in $azureRmModules) {
+                    $azureRmModuleName = $azureRmModule.Name
+                    Write-Host "##[command]Uninstall-Module -Name $azureRmModuleName -AllVersions - Force "
+                    Uninstall-Module -Name $azureRmModuleName -AllVersions -Force
+                }
+            }
+        }
+
+        Write-Verbose "Making sure all AzureRM modules are gone after the uninstall."
+
+        $azureRmModules = Get-Module -ListAvailable -Name AzureRM.* | Select-Object Name,Version
         if ($azureRmModules) {
             Foreach ($azureRmModule in $azureRmModules) {
                 Write-Verbose "'$($azureRmModule)' AzureRM module found."
@@ -210,13 +226,11 @@ function Uninstall-AzureRMModules {
         }
         else {
             Write-Verbose "No AzureRM modules found."
-            return $true
         }
     }
-    else {
-        Write-Verbose "Module Az.Accounts is not installed yet, AzureRM modules should be removed manually."
+    finally {
+        Trace-VstsLeavingInvocation $MyInvocation
     }
-    return $false
 }
 
 function Initialize-AzSubscription {

@@ -32,8 +32,11 @@ if (-not $featureFlags.retireAzureRM) {
 # This is the only public function.
 function Initialize-Azure {
     [CmdletBinding()]
-    param( [string] $azurePsVersion,
-        [switch] $strict )
+    param(
+        [string] $azurePsVersion,
+        [switch] $strict
+    )
+
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         # Get the inputs.
@@ -52,7 +55,7 @@ function Initialize-Azure {
         $WarningPreference = "SilentlyContinue"
 
         if ($featureFlags.retireAzureRM) {
-            Initialize-AzModule -Endpoint $endpoint 
+            Initialize-AzModule -Endpoint $endpoint -azurePsVersion $azurePsVersion
         }
         else {
             # Determine which modules are preferred.
@@ -87,7 +90,9 @@ function Initialize-Azure {
 Export-ModuleMember -Function Initialize-Azure
 Export-ModuleMember -Function CmdletHasMember
 Export-ModuleMember -Function Remove-EndpointSecrets
-Export-ModuleMember -Function Initialize-AzureRMModule
+if (-not $featureFlags.retireAzureRM) {
+    Export-ModuleMember -Function Initialize-AzureRMModule
+}
 Export-ModuleMember -Function Initialize-AzModule
 Export-ModuleMember -Function Disconnect-AzureAndClearContext
 Export-ModuleMember -Function Update-PSModulePathForHostedAgentWithLatestModule
