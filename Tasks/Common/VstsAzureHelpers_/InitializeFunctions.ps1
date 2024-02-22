@@ -31,7 +31,8 @@ function Initialize-AzureSubscription {
                 Write-Verbose "Unable to disable Az context save: $message"
             }
         }
-    } else {
+    }
+    else {
         # Clear context only for Azure RM
         if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal' -and !$script:azureModule -and (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue")) {
             Write-Host "##[command]Clear-AzureRmContext -Scope Process"
