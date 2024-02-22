@@ -41,6 +41,12 @@ function Initialize-AzModule {
             $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
         }
 
+        $azAccountsVersion = [System.Version]::new(
+            $azAccountsVersion.Major, 
+            $azAccountsVersion.Minor, 
+            $azAccountsVersion.Build
+        )
+
         Write-Verbose "Initializing Az Subscription."
         $initializeAzSubscriptionParams = @{
             Endpoint = $Endpoint
@@ -130,12 +136,7 @@ function Import-SpecificAzModule {
         Write-Verbose "Supressing breaking changes warnings of '$($moduleName)' module"
         Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo $moduleName
 
-        $moduleVersion = [System.Version]::new(
-            $module.Version.Major, 
-            $module.Version.Minor, 
-            $module.Version.Build
-        )
-        return $moduleVersion
+        return $module.Version
     }
     finally {
         Trace-VstsLeavingInvocation $MyInvocation
