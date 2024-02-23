@@ -26,11 +26,11 @@ function Initialize-AzModule {
         Write-Verbose "Importing Az Modules."
         
         if ($featureFlags.retireAzureRM) {
-            Uninstall-AzureRMModules
-
             $azAccountsModuleName = "Az.Accounts"
             $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName -azVersion $azVersion
             Write-Verbose "'$azAccountsModuleName' is available with version $azAccountsVersion."
+
+            Uninstall-AzureRMModules -UseAzUninstall
 
             $azResourcesModuleName = "Az.Resources"
             $azResourcesVersion = Import-SpecificAzModule -moduleName $azResourcesModuleName -azVersion $azVersion
