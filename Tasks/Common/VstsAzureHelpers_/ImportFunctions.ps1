@@ -1,13 +1,24 @@
-﻿function Import-AzureModule {
+﻿$featureFlags = @{
+    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
+function Import-AzureModule {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateSet('Azure', 'AzureRM')]
         [string[]] $PreferredModule,
         [string] $azurePsVersion,
-        [switch] $strict)
+        [switch] $strict
+    )
 
     Trace-VstsEnteringInvocation $MyInvocation
+
+    if ($featureFlags.retireAzureRM) {
+        Write-Warning "Canceling 'Import-AzureModule' function, 'Az' module should be used instead"
+        return
+    }
+
     try {
         $oldWarningPreference = $WarningPreference
         $WarningPreference = "SilentlyContinue"
@@ -72,9 +83,16 @@ function Import-FromModulePath {
     [CmdletBinding()]
     param(
         [switch] $Classic,
-        [string] $azurePsVersion)
+        [string] $azurePsVersion
+    )
 
     Trace-VstsEnteringInvocation $MyInvocation
+
+    if ($featureFlags.retireAzureRM) {
+        Write-Warning "Canceling 'Import-FromModulePath' function, 'Az' module should be used instead"
+        return
+    }
+
     try {
         # Determine which module to look for.
         if ($Classic) {
@@ -141,10 +159,18 @@ function Import-FromModulePath {
 
 function Import-FromSdkPath {
     [CmdletBinding()]
-    param([switch] $Classic,
-          [string] $azurePsVersion)
+    param(
+        [switch] $Classic,
+        [string] $azurePsVersion
+    )
 
     Trace-VstsEnteringInvocation $MyInvocation
+
+    if ($featureFlags.retireAzureRM) {
+        Write-Warning "Canceling 'Import-FromSdkPath' function, 'Az' module should be used instead"
+        return
+    }
+
     try {
         if ($Classic) {
             $partialPath = 'Microsoft SDKs\Azure\PowerShell\ServiceManagement\Azure\Azure.psd1'
@@ -200,8 +226,16 @@ function Get-SdkVersion {
 
 function Import-AzureRmSubmodulesFromSdkPath {
     [CmdletBinding()]
-    param([string] $path,
-          [string] $programFiles)
+    param(
+        [string] $path,
+        [string] $programFiles
+    )
+
+    if ($featureFlags.retireAzureRM) {
+        Write-Warning "Canceling 'Import-AzureRmSubmodulesFromSdkPath' function, 'Az' module should be used instead"
+        return
+    }
+    
     try {
         # Azure.Storage submodule needs to be imported first
         $azureStorageModulePath = [System.IO.Path]::Combine($programFiles, "Microsoft SDKs\Azure\PowerShell\Storage\Azure.Storage\Azure.Storage.psd1")

@@ -1,13 +1,23 @@
 ﻿# Dot source Utility functions.
 . $PSScriptRoot/Utility.ps1
 
+$featureFlags = @{
+    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
 function Initialize-AzureRMModule {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)]
-        $Endpoint)
+        $Endpoint
+    )
 
     Trace-VstsEnteringInvocation $MyInvocation
+
+    if ($featureFlags.retireAzureRM) {
+        Write-Warning "Canceling 'Initialize-AzureRMModule' function, 'Az' module should be used instead"
+        return
+    }
+
     try {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
         if (!(Import-AzureRMModule))
@@ -26,6 +36,12 @@ function Import-AzureRMModule {
     param()
 
     Trace-VstsEnteringInvocation $MyInvocation
+
+    if ($featureFlags.retireAzureRM) {
+        Write-Warning "Canceling 'Import-AzureRMModule' function, 'Az' module should be used instead"
+        return
+    }
+
     try {
         $moduleName = "AzureRM"
         # Attempt to resolve the module.
@@ -72,7 +88,13 @@ function Initialize-AzureRMSubscription {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)]
-        $Endpoint)
+        $Endpoint
+    )
+
+    if ($featureFlags.retireAzureRM) {
+        Write-Warning "Canceling 'Initialize-AzureRMSubscription' function, 'Az' module should be used instead"
+        return
+    }
 
     #Set UserAgent for Azure Calls
     Set-UserAgent
@@ -191,7 +213,13 @@ function Set-CurrentAzureRMSubscriptionV2 {
     param(
         [Parameter(Mandatory=$true)]
         [string]$SubscriptionId,
-        [string]$TenantId)
+        [string]$TenantId
+    )
+
+    if ($featureFlags.retireAzureRM) {
+        Write-Warning "Canceling 'Set-CurrentAzureRMSubscriptionV2' function, 'Az' module should be used instead"
+        return
+    }
 
     $additional = @{ }
     if ($TenantId) { $additional['TenantId'] = $TenantId }
