@@ -210,14 +210,13 @@ function Uninstall-AzureRMModules {
             if ($azureRmModules -and $azureRmModules.Count -gt 0) {
                 Foreach ($azureRmModule in $azureRmModules) {
                     $azureRmModuleName = $azureRmModule.Name
-                    $moduleCount = (Get-Module -ListAvailable -Name $azureRmModuleName | Measure-Object).Count
-
-                    if ($moduleCount -gt 0) {
-                        Write-Host "Uninstalling module: $azureRmModuleName"
+                    Write-Verbose "Uninstalling module: $azureRmModuleName"
+                    try {
                         Write-Host "##[command]Uninstall-Module -Name $azureRmModuleName -AllVersions -Force"
                         Uninstall-Module -Name $azureRmModuleName -AllVersions -Force
-                    } else {
-                        Write-Host "Module $azureRmModuleName is not installed or already uninstalled."
+                    }
+                    catch {
+                        Write-Verbose "Failed to uninstall module: $azureRmModuleName"
                     }
                 }
             }
