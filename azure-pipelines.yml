@@ -23,7 +23,7 @@ parameters:
 - name: task_name
   displayName: Task Name
   type: string
-  default: TaskNameVN
+  default: BashV3
 - name: push_to_feed
   displayName: Push to Feed
   type: boolean
