@@ -5,11 +5,7 @@ var fs      = require('fs');
 import * as os from "os";
 import * as path from "path";
 import * as stream from "stream";
-#if NODE20
-import * as extract from 'extract-zip'
-#else
 var DecompressZip = require('decompress-zip');
-#endif
 import * as tl from "azure-pipelines-task-lib/task";
 
 // copy source file to destination folder. destination folder will be created if it does not exists, otherwise its contents will be overwritten.
@@ -57,14 +53,6 @@ export async function unzip(zipLocation, unzipLocation): Promise<string> {
         if(tl.exist(unzipLocation)) {
             tl.rmRF(unzipLocation);
         }
-#if NODE20
-        tl.debug(`Using extract-zip package for extracting archive`);
-        extract(zipLocation, { dir: unzipLocation }).then(() => {
-            resolve("true");
-        }).catch((error) => {
-            reject(error);
-        });
-#else
         var unzipper = new DecompressZip(zipLocation);
         tl.debug('extracting ' + zipLocation + ' to ' + unzipLocation);
         unzipper.on('error', err => reject(err));
@@ -76,7 +64,6 @@ export async function unzip(zipLocation, unzipLocation): Promise<string> {
         unzipper.extract({
             path: unzipLocation
         });
-#endif
     });
 
     return finishPromise;
