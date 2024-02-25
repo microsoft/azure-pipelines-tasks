@@ -70,7 +70,7 @@ export class PackageFile {
             tl.debug("Extracting " + zipLocation + " to " + unzipLocation);
 #if NODE20
             tl.debug(`Using extract-zip package for extracting archive`);
-            extract(this.zipLocation, { dir: unzipLocation }).then(() => {
+            extract(zipLocation, { dir: unzipLocation }).then(() => {
                 resolve();
             }).catch((error) => {
                 reject(error);

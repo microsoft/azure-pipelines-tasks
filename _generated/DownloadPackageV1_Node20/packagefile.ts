@@ -65,7 +65,7 @@ export class PackageFile {
         return new Promise<void>(function(resolve, reject) {
             tl.debug("Extracting " + zipLocation + " to " + unzipLocation);
             tl.debug(`Using extract-zip package for extracting archive`);
-            extract(this.zipLocation, { dir: unzipLocation }).then(() => {
+            extract(zipLocation, { dir: unzipLocation }).then(() => {
                 resolve();
             }).catch((error) => {
                 reject(error);
