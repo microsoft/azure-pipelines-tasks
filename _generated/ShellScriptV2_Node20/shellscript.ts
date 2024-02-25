@@ -6,9 +6,9 @@ async function run() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
 
-        let bash: trm.ToolRunner  = tl.tool(tl.which('bash', true));
+        const bash: trm.ToolRunner  = tl.tool(tl.which('bash', true));
 
-        let scriptPath: string = tl.getPathInput('scriptPath', true, true);
+        const scriptPath: string = tl.getPathInput('scriptPath', true, true);
         let cwd: string = tl.getPathInput('cwd', true, false);
 
         // if user didn't supply a cwd (advanced), then set cwd to folder script is in.
@@ -28,7 +28,7 @@ async function run() {
         // some tools write progress and other warnings to stderr.  scripts can also redirect.
         let failOnStdErr: boolean = tl.getBoolInput('failOnStandardError', false);
 
-        let options = <trm.IExecOptions>{
+        const options = <trm.IExecOptions>{
             failOnStdErr: failOnStdErr,
             ignoreReturnCode: true
         };
