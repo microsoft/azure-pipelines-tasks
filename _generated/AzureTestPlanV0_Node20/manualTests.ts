@@ -1,6 +1,13 @@
 import tl = require('azure-pipelines-task-lib/task');
+import { TestPlanData, createManualTestRun, ManualTestRunData } from './testPlanData';
 
-export function manualTestsFlow() {
-    console.log("To do:");
-    console.log("Manual trigger flow to be implemented");
+export async function manualTestsFlow(testPlanInfo: TestPlanData) {
+
+    let manualTestRun: ManualTestRunData = { testRunId: 0, runUrl: "" };
+
+    manualTestRun = await createManualTestRun(testPlanInfo);
+
+    console.log('Test run id created: ', manualTestRun.testRunId);
+    console.log('Test run url: ', manualTestRun.runUrl);
+
 }
