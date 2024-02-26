@@ -22,7 +22,7 @@ parameters:
 - name: task_name
   displayName: Task Name (List of tasks to build (e.g. BashV3 [, AzureCLIV1]))
   type: string
-  default: BashV3
+  default: TaskNameVN
 - name: push_to_feed
   displayName: Push to Feed
   type: boolean
