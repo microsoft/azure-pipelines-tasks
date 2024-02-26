@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 231,
+    "Minor": 236,
     "Patch": 1
   },
   "demands": [
@@ -93,10 +93,11 @@
   },
   "messages": {
     "BashReturnCode": "ms-resource:loc.messages.BashReturnCode",
-    "BashFailed": "ms-resource:loc.messages.BashFailed"
+    "BashFailed": "ms-resource:loc.messages.BashFailed",
+    "BashFailedWithCode137": "ms-resource:loc.messages.BashFailedWithCode137"
   },
   "_buildConfigMapping": {
-    "Default": "2.231.0",
-    "Node20-225": "2.231.1"
+    "Default": "2.236.0",
+    "Node20-225": "2.236.1"
   }
 }
