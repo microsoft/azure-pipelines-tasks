@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 234,
+    "Minor": 235,
     "Patch": 3
   },
   "demands": [],
@@ -201,8 +201,11 @@
       "argumentFormat": ""
     }
   },
+  "messages": {
+    "DeprecatedTask": "The XamarinTestCloud@1 (Xamarin Test Cloud) task has been deprecated since January 11, 2018 and will soon be retired. Use the AppCenterDistribute@3 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
+  },
   "_buildConfigMapping": {
-    "Default": "1.234.2",
-    "Node20-228": "1.234.3"
+    "Default": "1.235.2",
+    "Node20-228": "1.235.3"
   }
 }

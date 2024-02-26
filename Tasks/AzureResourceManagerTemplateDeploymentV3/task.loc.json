@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 231,
+    "Minor": 235,
     "Patch": 0
   },
   "demands": [],
@@ -331,6 +331,8 @@
     "LoginFailed": "ms-resource:loc.messages.LoginFailed",
     "MSILoginFailed": "ms-resource:loc.messages.MSILoginFailed",
     "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
-    "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription"
+    "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription",
+    "BicepParamBuildFailed": "ms-resource:loc.messages.BicepParamBuildFailed",
+    "IncompatibleAzureCLIVersionBicepParam": "ms-resource:loc.messages.IncompatibleAzureCLIVersionBicepParam"
   }
 }

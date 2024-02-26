@@ -193,7 +193,6 @@
         "VSBuildV1",
         "VsTestV1",
         "VsTestV2",
-        "VsTestV3",
         "VsTestPlatformToolInstallerV1",
         "WindowsMachineFileCopyV1",
         "WindowsMachineFileCopyV2",
@@ -221,6 +220,7 @@
     "Node20": [
         "AndroidSigningV2",
         "AndroidSigningV3",
+        "AzureTestPlanV0",
         "ANTV1",
         "ArchiveFilesV2",
         "BashV3",

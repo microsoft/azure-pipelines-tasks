@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 231,
-    "Patch": 4
+    "Minor": 236,
+    "Patch": 0
   },
   "releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
   "minimumAgentVersion": "2.115.0",
@@ -116,6 +116,7 @@
   "messages": {
     "GeneratingScript": "Generating script.",
     "JS_ExitCode": "Bash exited with code '%s'.",
+    "JS_ExitCode_137": "Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured.",
     "JS_FormattedCommand": "Formatted command: %s",
     "JS_InvalidFilePath": "Invalid file path '%s'.",
     "JS_ScriptContents": "Script contents:",

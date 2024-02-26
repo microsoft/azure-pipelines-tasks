@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 234,
-    "Patch": 1
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -130,10 +130,6 @@
     "Node16": {
       "target": "nugetinstaller.js",
       "argumentFormat": ""
-    },
-    "Node20_1": {
-      "target": "nugetinstaller.js",
-      "argumentFormat": ""
     }
   },
   "messages": {
@@ -174,9 +170,5 @@
     "Warning_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Warning_IncludeNuGetOrgEnabled",
     "Error_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Error_IncludeNuGetOrgEnabled",
     "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
-  },
-  "_buildConfigMapping": {
-    "Default": "1.234.0",
-    "Node20_229_1": "1.234.1"
   }
 }
