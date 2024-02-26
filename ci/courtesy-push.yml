@@ -30,10 +30,14 @@ steps:
     push.cmd
   displayName: Push Nuget packages
 
+# Set $(currentSprint) and $(currentSprintWeek) variables
+- powershell: ./ci/set-sprint-variables.ps1
+  displayName: Set sprint variables
+
+- template: generate-branch-name.yml
+
 - powershell: |
-    # Build the release branch name
-    $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"="application/json"} | ConvertFrom-Json).sprint
-    $releaseBranch = "users/$(username)/m" + $currentSprint + "." + $(currentDate) + "/courtesyPush"
+    $releaseBranch = $(branchName)
 
     # Push branch to git
     Write-Host "Pushing branch to AzureDevOps"

@@ -1,7 +1,5 @@
 trigger:
 - master
-- releases/*
-- node6hotfixes/*
 
 resources:
   repositories:
@@ -21,7 +19,7 @@ parameters:
   type: boolean
   default: false
 - name: task_name
-  displayName: Task Name
+  displayName: Task Name (List of tasks to build (e.g. BashV3 [, AzureCLIV1]))
   type: string
   default: BashV3
 - name: push_to_feed
@@ -39,6 +37,9 @@ parameters:
 
 variables:
   currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
+  taskName: ${{ parameters.task_name }}
+  taskNameIsSet: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
+  isHotfix: ${{ and(eq(parameters.push_to_feed, true), eq(variables.taskNameIsSet, true)) }}
 
 jobs:
 

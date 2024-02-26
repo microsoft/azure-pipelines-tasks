@@ -33,14 +33,12 @@ steps:
 - script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: Update unified deps
 
-# returns currentSprint
-- template: set-current-sprint-variable.yml
+# Set $(currentSprint) and $(currentSprintWeek) variables
+- powershell: ./ci/set-sprint-variables.ps1
+  displayName: Set sprint variables
 
 # returns branchName
 - template: generate-branch-name.yml
-  parameters:
-    postfix: hotfix
-    currentSprint: '$(currentSprint)'
 
 - bash: |
     cd azure-pipelines-tasks/ci/courtesy-push
