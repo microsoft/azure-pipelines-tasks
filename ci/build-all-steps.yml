@@ -189,7 +189,7 @@ steps:
       prefix: releases
 
   - powershell: |
-      $releaseBranch = $(branchName)
+      $releaseBranch = "$(branchName)"
 
       # add config entry to avoid errors while pulling
       git config --global user.email "$(username)@microsoft.com"
@@ -214,7 +214,7 @@ steps:
     displayName: Push release branch
 
   - powershell: |
-      $releaseBranch = $(branchName)
+      $releaseBranch = "$(branchName)"
 
       if ($(currentSprintWeek) -eq 3) {
         cd $(System.DefaultWorkingDirectory)/ci/ci-release-notes

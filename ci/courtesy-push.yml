@@ -37,7 +37,7 @@ steps:
 - template: generate-branch-name.yml
 
 - powershell: |
-    $releaseBranch = $(branchName)
+    $releaseBranch = "$(branchName)"
 
     # Push branch to git
     Write-Host "Pushing branch to AzureDevOps"
