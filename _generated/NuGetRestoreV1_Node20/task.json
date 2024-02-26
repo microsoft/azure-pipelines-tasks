@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 234,
-    "Patch": 0
+    "Minor": 236,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -130,6 +130,10 @@
     "Node16": {
       "target": "nugetinstaller.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "nugetinstaller.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -170,5 +174,9 @@
     "Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg is currently enabled for this task. To resolve this warning, edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
     "Error_IncludeNuGetOrgEnabled": "Packages failed to restore. Edit your build task and set 'includeNuGetOrg' to 'false' or deselect 'Use packages from NuGet.org'.",
     "DeprecatedTask": "This task is deprecated. Please switch to using NuGetCommand@2's 'restore' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.236.0",
+    "Node20_229_1": "1.236.1"
   }
 }

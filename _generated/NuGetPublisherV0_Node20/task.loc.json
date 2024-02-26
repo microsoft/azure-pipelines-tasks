@@ -9,7 +9,7 @@
   "author": "Lawrence Gripper",
   "version": {
     "Major": 0,
-    "Minor": 234,
+    "Minor": 236,
     "Patch": 1
   },
   "runsOn": [
@@ -181,7 +181,7 @@
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
   },
   "_buildConfigMapping": {
-    "Default": "0.234.0",
-    "Node20_229_1": "0.234.1"
+    "Default": "0.236.0",
+    "Node20_229_1": "0.236.1"
   }
 }
