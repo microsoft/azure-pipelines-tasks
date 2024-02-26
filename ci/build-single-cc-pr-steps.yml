@@ -25,7 +25,7 @@ steps:
     downloadPath: hotfixArtifact
   displayName: Download hotfix Artifact
 
-- powershell: ./ci/set-sprint-variables.ps1
+- powershell: ./azure-pipelines-tasks/ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
 
 # returns branchName
