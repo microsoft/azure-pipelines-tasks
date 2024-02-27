@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
-    "Patch": 3
+    "Minor": 235,
+    "Patch": 1
   },
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -91,7 +91,7 @@
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized"
   },
   "_buildConfigMapping": {
-    "Default": "0.231.2",
-    "Node20-225": "0.231.3"
+    "Default": "0.235.0",
+    "Node20-225": "0.235.1"
   }
 }

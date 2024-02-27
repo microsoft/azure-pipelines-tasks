@@ -22,5 +22,6 @@
   "loc.messages.RetryingOperation": "錯誤: 在 %s，因此即將重試 => 暫止的重試次數: %s",
   "loc.messages.OperationFailed": "無法於 %s，錯誤: %s",
   "loc.messages.Info_ResolvedToolFromCache": "已從工具快取中解析: %s",
-  "loc.messages.UnsupportedProjectScopedFeeds": "這個版本的 \"Download Package\" 工作不支援專案範圍摘要。請使用 1 版或更高版本。"
+  "loc.messages.UnsupportedProjectScopedFeeds": "這個版本的 \"Download Package\" 工作不支援專案範圍摘要。請使用 1 版或更高版本。",
+  "loc.messages.DeprecatedTask": "已取代此工作。請切換至使用 DownloadPackage@1 https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/download-package-v1"
 }

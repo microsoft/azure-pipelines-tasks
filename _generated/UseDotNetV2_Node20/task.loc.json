@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 231,
+    "Minor": 235,
     "Patch": 1
   },
   "satisfies": [
@@ -115,7 +115,7 @@
       "target": "usedotnet.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "usedotnet.js",
       "argumentFormat": ""
     }
@@ -199,7 +199,7 @@
     "DepricatedVersionNetCore": "ms-resource:loc.messages.DepricatedVersionNetCore"
   },
   "_buildConfigMapping": {
-    "Default": "2.231.0",
-    "Node20_229_3": "2.231.1"
+    "Default": "2.235.0",
+    "Node20_229_3": "2.235.1"
   }
 }

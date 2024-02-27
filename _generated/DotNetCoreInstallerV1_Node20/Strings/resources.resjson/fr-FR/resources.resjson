@@ -78,5 +78,6 @@
   "loc.messages.FilesDataIsIncorrectInVersion": "Dans la version release %s de la version %s, des données de fichiers sont incorrectes (des champs obligatoires tels que nom, RID et URL sont peut-être manquants) : %s",
   "loc.messages.VersionFilesDataIncorrect": "Des données de fichiers ou des champs obligatoires sont manquants pour la version.",
   "loc.messages.VersionInformationNotComplete": "Les informations obligatoires de la version %s sont incomplètes dans le fichier releases.json. Erreur : %s",
-  "loc.messages.FailedWhileExtractingPacakge": "Échec de l'extraction du package téléchargé. Erreur : %s"
+  "loc.messages.FailedWhileExtractingPacakge": "Échec de l'extraction du package téléchargé. Erreur : %s",
+  "loc.messages.DeprecatedTask": "La tâche DotNetCoreInstaller@1 (programme d’installation du kit SDK .NET Core/runtime) est déconseillée depuis le 22 août 2019 et sera bientôt mise hors service. Utilisez la tâche UseDotNet@2 à la place. Veuillez visiter https://aka.ms/azdo-deprecated-tasks pour en savoir plus sur les tâches déconseillées."
 }

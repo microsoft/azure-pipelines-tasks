@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 230,
+    "Minor": 233,
     "Patch": 1
   },
   "demands": [],
@@ -107,7 +107,7 @@
       "target": "mysqldeploy.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "mysqldeploy.js",
       "argumentFormat": ""
     }
@@ -129,7 +129,7 @@
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern"
   },
   "_buildConfigMapping": {
-    "Default": "1.227.0",
-    "Node20_229_3": "1.230.1"
+    "Default": "1.233.0",
+    "Node20_229_3": "1.233.1"
   }
 }

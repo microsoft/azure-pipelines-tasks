@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 231,
-    "Patch": 3
+    "Minor": 236,
+    "Patch": 1
   },
   "demands": [
     "azureps"
@@ -243,7 +243,7 @@
       "target": "PreJobExecutionAzureFileCopy.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node20_1": {
       "target": "PreJobExecutionAzureFileCopy.js",
       "argumentFormat": ""
     }
@@ -305,7 +305,7 @@
     "AzModuleNotFound": "ms-resource:loc.messages.AzModuleNotFound"
   },
   "_buildConfigMapping": {
-    "Default": "5.231.2",
-    "Node20_229_2": "5.231.3"
+    "Default": "5.236.0",
+    "Node20_229_2": "5.236.1"
   }
 }

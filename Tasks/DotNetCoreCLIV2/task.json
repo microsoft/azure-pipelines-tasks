@@ -100,11 +100,11 @@
         {
             "name": "projects",
             "type": "multiLine",
-            "label": "Path to project(s)",
+            "label": "Path to project(s) or solution(s)",
             "defaultValue": "",
             "visibleRule": "command = build || command = restore || command = run || command = test || command = custom || publishWebProjects = false",
             "required": false,
-            "helpMarkDown": "The path to the csproj file(s) to use. You can use wildcards (e.g. **/*.csproj for all .csproj files in all subfolders). **This field follows glob pattern, and is run against root of the repository at all times irrespective of Working Directory.**"
+            "helpMarkDown": "The path to the csproj or sln file(s) to use. You can use wildcards (e.g. **/*.csproj for all .csproj files in all subfolders). **This field follows glob pattern, and is run against root of the repository at all times irrespective of Working Directory.**"
         },
         {
             "name": "custom",

@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 231,
-    "Patch": 5
+    "Minor": 235,
+    "Patch": 1
   },
   "satisfies": [
     "Node",
@@ -92,7 +92,7 @@
     "AgentTempDirNotSet": "ms-resource:loc.messages.AgentTempDirNotSet"
   },
   "_buildConfigMapping": {
-    "Default": "1.231.4",
-    "Node20-225": "1.231.5"
+    "Default": "1.235.0",
+    "Node20-225": "1.235.1"
   }
 }

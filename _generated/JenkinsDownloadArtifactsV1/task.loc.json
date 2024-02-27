@@ -18,7 +18,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 231,
+    "Minor": 236,
     "Patch": 0
   },
   "groups": [
@@ -377,7 +377,7 @@
   },
   "minimumAgentVersion": "2.144.0",
   "_buildConfigMapping": {
-    "Default": "1.231.0",
-    "Node20_229_3": "1.231.1"
+    "Default": "1.236.0",
+    "Node20_229_3": "1.236.1"
   }
 }
