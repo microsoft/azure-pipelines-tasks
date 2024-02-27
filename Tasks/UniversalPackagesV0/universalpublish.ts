@@ -259,7 +259,7 @@ function authSetup(
         projectId = feedProject.projectId;
 
         // Setting up auth info
-        accessToken = pkgLocationUtils.getSystemAccessToken();
+        accessToken = getAcessToken();
     }
 
     else {
@@ -287,4 +287,43 @@ function authSetup(
         projectId,
         accessToken
     ];
+}
+
+function getAcessToken() : string {
+    let accessToken: string;
+    let allowServiceConnection = tl.getVariable('PUBLISH_VIA_SERVICE_CONNECTION');
+
+    if(allowServiceConnection) {
+        let endpoint = tl.getInput('externalEndpoints', false);
+
+        if(endpoint) {
+            tl.debug("Found external endpoint, will try to use token for auth");
+            let endpointAuth = tl.getEndpointAuthorization(endpoint, true);
+            let endpointScheme = tl.getEndpointAuthorizationScheme(endpoint, true).toLowerCase();
+            switch(endpointScheme)
+            {
+                case ("token"):
+                    accessToken = endpointAuth.parameters["apitoken"];
+                    break;
+                default:
+                    tl.warning("Invalid authentication type for internal feed. Use token based authentication.");
+                    break;
+            }
+        }
+        if(!accessToken)
+        {           
+            tl.debug("Checking for auth in environment variables."); 
+            accessToken = process.env["UNIVERSAL_PUBLISH_PAT"];
+        }
+        if(!accessToken)
+        {
+            tl.debug('Defaulting to use the System Access Token.');
+            accessToken = pkgLocationUtils.getSystemAccessToken();
+        }    
+    }
+    else {
+        accessToken = pkgLocationUtils.getSystemAccessToken();
+    }
+
+    return accessToken;
 }
