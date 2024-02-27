@@ -40,14 +40,6 @@ steps:
 - script: node ./ci/verifyMinAgentDemands/index.js
   displayName: Verify min agent demands
 
-- powershell: |
-    $currentSprintData = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json)
-    $currentSprint = [int]$currentSprintData.sprint
-    $currentSprintWeek = [int]$currentSprintData.week
-    echo "##vso[task.setvariable variable=currentSprint;]$currentSprint"
-    echo "##vso[task.setvariable variable=currentSprintWeek;]$currentSprintWeek"
-  displayName: Fetch current sprint
-
 # Filter out unchanged tasks
 - script: node ./ci/filter-tasks.js
   displayName: Filter out unchanged tasks
@@ -68,6 +60,9 @@ steps:
 # Verify generated files across tasks are up-to-date
 - script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --all-tasks
   displayName: Ensure BuildConfigGen outputs are consistent
+
+- powershell: ./ci/set-sprint-variables.ps1
+  displayName: Set currentSprint variables
 
 - script: node ./ci/check-downgrading.js --task "$(task_pattern_fordowngradingcheck)" --sprint $(currentSprint) --week $(currentSprintWeek)
   displayName: Check for downgrading tasks
@@ -188,9 +183,12 @@ steps:
         ne(variables['numTasks'], 0)
       )
 
+  - template: generate-branch-name.yml
+    parameters:
+      prefix: releases
+
   - powershell: |
-      # Build the release branch name
-      $releaseBranch = "releases/m" + $(currentSprint) + "." + $(currentDate)
+      $releaseBranch = "$(branchName)"
 
       # add config entry to avoid errors while pulling
       git config --global user.email "$(username)@microsoft.com"
@@ -215,8 +213,7 @@ steps:
     displayName: Push release branch
 
   - powershell: |
-      # Build the release branch name
-      $releaseBranch = "releases/m" + $(currentSprint) + "." + $(currentDate)
+      $releaseBranch = "$(branchName)"
 
       if ($(currentSprintWeek) -eq 3) {
         cd $(System.DefaultWorkingDirectory)/ci/ci-release-notes
