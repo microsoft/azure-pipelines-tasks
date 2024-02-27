@@ -198,7 +198,7 @@ export function validateFileArgs(inputArguments: string): void {
                     throw new ArgsSanitizingError(message);
                 }
                 if (featureFlags.audit) {
-                    tl.warning(message, tl.IssueSource.TaskInternal);
+                    tl.warning(message);
                 }
             }
         }

@@ -120,11 +120,11 @@ PROCESS {
         if (!(Test-Path -LiteralPath 'variable:\LASTEXITCODE')) {
             $failed = $true
             Write-Verbose "Unable to determine exit code"
-            Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_UnableToDetermineExitCode') -IssueSource $IssueSources.TaskInternal
+            Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_UnableToDetermineExitCode')
         } else {
             if ($LASTEXITCODE -ne 0) {
                 $failed = $true
-                Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_ExitCode' -ArgumentList $LASTEXITCODE) -IssueSource $IssueSources.TaskInternal
+                Write-VstsTaskError -Message (Get-VstsLocString -Key 'PS_ExitCode' -ArgumentList $LASTEXITCODE)
             }
         }
 

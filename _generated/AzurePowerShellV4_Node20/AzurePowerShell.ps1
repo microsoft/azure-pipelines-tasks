@@ -100,7 +100,7 @@ try
 }
 finally {
     if (!$success) {
-        Write-VstsTaskError "Initializing Az module failed: For troubleshooting, refer: $troubleshoot" -IssueSource $IssueSources.TaskInternal
+        Write-VstsTaskError "Initializing Az module failed: For troubleshooting, refer: $troubleshoot"
     }
 }
 

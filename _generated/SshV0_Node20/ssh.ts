@@ -82,7 +82,7 @@ async function run() {
                 }
                 fs.writeFileSync(scriptFile, inlineScript);
             } catch (err) {
-                tl.error(tl.loc('FailedToWriteScript', err.message), tl.IssueSource.TaskInternal);
+                tl.error(tl.loc('FailedToWriteScript', err.message));
                 tryDeleteFile(scriptFile);
                 throw err;
             }
@@ -180,7 +180,7 @@ async function run() {
                                 throw new Error(message);
                             }
                             if (featureFlags.audit) {
-                                tl.warning(message, tl.IssueSource.TaskInternal);
+                                tl.warning(message);
                             }
                         }
                     }
@@ -210,7 +210,7 @@ async function run() {
                 await sshHelper.runCommandOnRemoteMachine(
                     cleanUpScriptCmd, sshClientConnection, remoteCmdOptions);
             } catch (err) {
-                tl.warning(tl.loc('RemoteScriptFileCleanUpFailed', err), tl.IssueSource.TaskInternal);
+                tl.warning(tl.loc('RemoteScriptFileCleanUpFailed', err));
             }
         }
 
@@ -227,7 +227,7 @@ function tryDeleteFile(filePath: string): void {
         try {
             fs.unlinkSync(filePath);
         } catch (err) {
-            tl.error(err.message, tl.IssueSource.TaskInternal);
+            tl.error(err.message);
         }
     }
 }
