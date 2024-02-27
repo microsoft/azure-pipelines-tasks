@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 236,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": true,
   "demands": [],
@@ -176,7 +176,7 @@
     "ErrorFailTaskOnCreateRunFailure": "Error occured while creating manual test run from test plan inputs"
   },
   "_buildConfigMapping": {
-    "Default": "0.236.0",
-    "Node20-225": "0.236.1"
+    "Default": "0.236.1",
+    "Node20-225": "0.236.2"
   }
 }
