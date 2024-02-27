@@ -164,10 +164,6 @@
     "Node16": {
       "target": "runTestPlan.js",
       "argumentFormat": ""
-    },
-    "Node20_1": {
-      "target": "runTestPlan.js",
-      "argumentFormat": ""
     }
   },
   "messages": {
