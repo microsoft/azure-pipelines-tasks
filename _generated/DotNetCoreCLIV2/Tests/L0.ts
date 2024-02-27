@@ -6,7 +6,6 @@ import os = require('os');
 import fs = require('fs');
 
 describe('DotNetCoreExe Suite', function () {
-
     this.timeout(10000);
     before(() => {
     });

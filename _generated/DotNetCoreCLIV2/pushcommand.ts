@@ -244,4 +244,3 @@ function getAccessToken(isInternalFeed: boolean): string{
 
     return accessToken;
 }
-
