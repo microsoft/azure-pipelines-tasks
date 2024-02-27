@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 236,
-    "Patch": 1
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Azure Container Apps Deploy",
@@ -176,10 +176,6 @@
     },
     "Node16": {
       "target": "azurecontainerapps.js"
-    },
-    "Node20_1": {
-      "target": "azurecontainerapps.js",
-      "argumentFormat": ""
     }
   },
   "messages": {
