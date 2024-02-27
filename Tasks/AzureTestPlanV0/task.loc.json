@@ -23,9 +23,9 @@
     {
       "name": "testSelector",
       "type": "pickList",
-      "label": "Test cases to be executed",
+      "label": "ms-resource:loc.input.label.testSelector",
       "required": true,
-      "helpMarkDown": "<ul><li><b>Manual tests: </b>Use this option to trigger manual tests from your test plan.</li><li><b>Automated tests: </b>Use this option to run tests from your test plan that have automated test method associated with it.</li>",
+      "helpMarkDown": "ms-resource:loc.input.help.testSelector",
       "options": {
         "manualTests": "Manual tests",
         "automatedTests": "Automated tests"
@@ -37,10 +37,10 @@
     {
       "name": "testPlan",
       "type": "pickList",
-      "label": "Test plan",
+      "label": "ms-resource:loc.input.label.testPlan",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Select a test plan containing test suites with test cases.",
+      "helpMarkDown": "ms-resource:loc.input.help.testPlan",
       "properties": {
         "DisableManageLink": "True",
         "EditableOptions": "True"
@@ -49,9 +49,9 @@
     {
       "name": "testSuite",
       "type": "pickList",
-      "label": "Test suite",
+      "label": "ms-resource:loc.input.label.testSuite",
       "defaultValue": "",
-      "helpMarkDown": "Select one or more test suites containing test cases.",
+      "helpMarkDown": "ms-resource:loc.input.help.testSuite",
       "required": true,
       "properties": {
         "MultiSelect": "True",
@@ -62,10 +62,10 @@
     {
       "name": "testConfiguration",
       "type": "pickList",
-      "label": "Test configuration",
+      "label": "ms-resource:loc.input.label.testConfiguration",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Select Test Configuration.",
+      "helpMarkDown": "ms-resource:loc.input.help.testConfiguration",
       "properties": {
         "DisableManageLink": "True",
         "EditableOptions": "True"
@@ -74,8 +74,8 @@
     {
       "name": "testLanguageInput",
       "type": "pickList",
-      "label": "Select Test framework language",
-      "helpMarkDown": "Test Framework Language of automated tests in test plan",
+      "label": "ms-resource:loc.input.label.testLanguageInput",
+      "helpMarkDown": "ms-resource:loc.input.help.testLanguageInput",
       "options": {
         "Java-Maven": "Java-Maven",
         "Java-Gradle": "Java-Gradle",
@@ -88,43 +88,43 @@
     {
       "name": "mergeTestResults",
       "type": "boolean",
-      "label": "Merge test results",
+      "label": "ms-resource:loc.input.label.mergeTestResults",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "A test run is created for each results file. Check this option to merge results into a single test run. To optimize for better performance, results will be merged into a single run if there are more than 100 result files, irrespective of this option."
+      "helpMarkDown": "ms-resource:loc.input.help.mergeTestResults"
     },
     {
       "name": "publishRunAttachments",
       "type": "boolean",
-      "label": "Upload test results files",
+      "label": "ms-resource:loc.input.label.publishRunAttachments",
       "defaultValue": "true",
       "required": false,
-      "helpMarkDown": "Upload logs and other files containing diagnostic information collected when the tests were run.",
+      "helpMarkDown": "ms-resource:loc.input.help.publishRunAttachments",
       "groupName": "advanced"
     },
     {
       "name": "failTaskOnFailedTests",
       "type": "boolean",
-      "label": "Fail if there are test failures",
+      "label": "ms-resource:loc.input.label.failTaskOnFailedTests",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "Fail the task if there are any test failures. Check this option to fail the task if test failures are detected in the result files."
+      "helpMarkDown": "ms-resource:loc.input.help.failTaskOnFailedTests"
     },
     {
       "name": "failTaskOnFailureToPublishResults",
       "type": "boolean",
-      "label": "Fail if there is failure in publishing test results",
+      "label": "ms-resource:loc.input.label.failTaskOnFailureToPublishResults",
       "defaultValue": false,
       "required": false,
-      "helpMarkDown": "Fail if there is failure in publishing test results. Check this option to fail the task if publishing test results is failed partially."
+      "helpMarkDown": "ms-resource:loc.input.help.failTaskOnFailureToPublishResults"
     },
     {
       "name": "failTaskOnMissingResultsFile",
       "type": "boolean",
-      "label": "Fail if no result files are found",
+      "label": "ms-resource:loc.input.label.failTaskOnMissingResultsFile",
       "defaultValue": false,
       "required": false,
-      "helpMarkDown": "Fail the task if no result files are found."
+      "helpMarkDown": "ms-resource:loc.input.help.failTaskOnMissingResultsFile"
     }
   ],
   "dataSourceBindings": [
@@ -164,6 +164,10 @@
     "Node16": {
       "target": "runTestPlan.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "runTestPlan.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -174,5 +178,9 @@
     "ErrorFailTaskOnExecutingTests": "ms-resource:loc.messages.ErrorFailTaskOnExecutingTests",
     "ErrorFailTaskOnAPIFailure": "ms-resource:loc.messages.ErrorFailTaskOnAPIFailure",
     "ErrorFailTaskOnCreateRunFailure": "ms-resource:loc.messages.ErrorFailTaskOnCreateRunFailure"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.236.1",
+    "Node20-225": "0.236.2"
   }
 }
