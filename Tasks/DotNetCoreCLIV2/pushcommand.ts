@@ -11,6 +11,12 @@ import * as ngRunner from 'azure-pipelines-tasks-packaging-common/nuget/NuGetToo
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import { getProjectAndFeedIdFromInputParam, logError } from 'azure-pipelines-tasks-packaging-common/util';
 
+interface EndpointCredentials {
+    endpoint: string;
+    username?: string;
+    password: string;
+}
+
 export async function run(): Promise<void> {
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
@@ -65,8 +71,10 @@ export async function run(): Promise<void> {
         }
 
         // Setting up auth info
-        const accessToken = pkgLocationUtils.getSystemAccessToken();
+        let accessToken;
+        let feed;
         const isInternalFeed: boolean = nugetFeedType === 'internal';
+        accessToken = getAccessToken(isInternalFeed);
         const internalAuthInfo = new auth.InternalAuthInfo(urlPrefixes, accessToken, /*useCredProvider*/ null, true);
 
         let configFile = null;
@@ -181,4 +189,58 @@ function dotNetNuGetPushAsync(dotnetPath: string, packageFile: string, feedUri: 
     // dotnet.exe v1 and v2 do not accept the --verbosity parameter for the "nuget push"" command, although it does for other commands
     const envWithProxy = ngRunner.setNuGetProxyEnvironment(process.env, /*configFile*/ null, feedUri);
     return dotnet.exec({ cwd: workingDirectory, env: envWithProxy } as IExecOptions);
+}
+
+function getAccessToken(isInternalFeed: boolean): string{
+    let accessToken: string;
+    let allowServiceConnection = tl.getVariable('PUBLISH_VIA_SERVICE_CONNECTION');
+
+    if(allowServiceConnection) {
+        let endpoint = tl.getInput('externalEndpoint', false);
+
+        if(endpoint && isInternalFeed === true) {
+            tl.debug("Found external endpoint, will use token for auth");
+            let endpointAuth = tl.getEndpointAuthorization(endpoint, true);
+            let endpointScheme = tl.getEndpointAuthorizationScheme(endpoint, true).toLowerCase();
+            switch(endpointScheme)
+            {
+                case ("token"):
+                    accessToken = endpointAuth.parameters["apitoken"];
+                    break;
+                default:
+                    tl.warning("Invalid authentication type for internal feed. Use token based authentication.");
+                    break;
+            }
+        }
+        if(!accessToken && isInternalFeed === true)
+        {            
+            tl.debug("Checking for auth from Cred Provider."); 
+            const feed = getProjectAndFeedIdFromInputParam('feedPublish');
+            const JsonEndpointsString = process.env["VSS_NUGET_EXTERNAL_FEED_ENDPOINTS"];
+            if (JsonEndpointsString) {
+                tl.debug(`Endpoints found: ${JsonEndpointsString}`);
+
+                let endpointsArray: { endpointCredentials: EndpointCredentials[] } = JSON.parse(JsonEndpointsString);
+                tl.debug(`Feed details ${feed.feedId} ${feed.projectId}`);
+
+                for (let endpoint_in = 0; endpoint_in < endpointsArray.endpointCredentials.length; endpoint_in++) {
+                    if (endpointsArray.endpointCredentials[endpoint_in].endpoint.search(feed.feedName) != -1) {
+                        tl.debug(`Endpoint Credentials found for ${feed.feedName}`);
+                        accessToken = endpointsArray.endpointCredentials[endpoint_in].password;
+                        break;
+                    }
+                }
+            }
+        }
+        if(!accessToken)
+        {
+            tl.debug('Defaulting to use the System Access Token.');
+            accessToken = pkgLocationUtils.getSystemAccessToken();
+        }
+    }
+    else {
+        accessToken = pkgLocationUtils.getSystemAccessToken();
+    }
+
+    return accessToken;
 }
