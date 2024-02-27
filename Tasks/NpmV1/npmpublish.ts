@@ -109,4 +109,6 @@ function getAccessToken(): string {
     else{
         accessToken = getSystemAccessToken();
     }
+    
+    return accessToken;
 }
