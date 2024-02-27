@@ -29,7 +29,7 @@ function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, p
     tl.command('results.publish', properties, '');
 }
 
-async function run() {
+export async function publishAutomatedTestResult() {
     try{
         const testRunner = "JUnit";
         const testResultsFiles: string[] = ["**/TEST-*.xml"];
@@ -93,4 +93,3 @@ async function run() {
     }
 }
 
-run();
