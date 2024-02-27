@@ -89,7 +89,8 @@
   },
   "messages": {
     "BashReturnCode": "Bash exited with return code: %d",
-    "BashFailed": "Bash failed with error: %s"
+    "BashFailed": "Bash failed with error: %s",
+    "BashFailedWithCode137": "Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured."
   },
   "_buildConfigMapping": {
     "Default": "2.236.0",

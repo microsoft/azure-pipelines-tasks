@@ -89,6 +89,7 @@
   },
   "messages": {
     "BashReturnCode": "ms-resource:loc.messages.BashReturnCode",
-    "BashFailed": "ms-resource:loc.messages.BashFailed"
+    "BashFailed": "ms-resource:loc.messages.BashFailed",
+    "BashFailedWithCode137": "ms-resource:loc.messages.BashFailedWithCode137"
   }
 }
