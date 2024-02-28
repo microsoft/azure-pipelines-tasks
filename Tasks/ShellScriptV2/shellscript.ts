@@ -2,14 +2,14 @@ import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import trm = require('azure-pipelines-task-lib/toolrunner');
 
-async function run() {
-    try {    
+async function run() {  
+    try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
 
-        var bash: trm.ToolRunner  = tl.tool(tl.which('bash', true));
+        const bash: trm.ToolRunner  = tl.tool(tl.which('bash', true));
 
-        var scriptPath: string = tl.getPathInput('scriptPath', true, true);
-        var cwd: string = tl.getPathInput('cwd', true, false);
+        const scriptPath: string = tl.getPathInput('scriptPath', true, true);
+        let cwd: string = tl.getPathInput('cwd', true, false);
 
         // if user didn't supply a cwd (advanced), then set cwd to folder script is in.
         // All "script" tasks should do this
@@ -26,15 +26,33 @@ async function run() {
 
         // determines whether output to stderr will fail a task.
         // some tools write progress and other warnings to stderr.  scripts can also redirect.
-        var failOnStdErr: boolean = tl.getBoolInput('failOnStandardError', false);
+        let failOnStdErr: boolean = tl.getBoolInput('failOnStandardError', false);
 
-        var code: number = await bash.exec(<any>{failOnStdErr: failOnStdErr});
-        tl.setResult(tl.TaskResult.Succeeded, tl.loc('BashReturnCode', code));
+        const options = <trm.IExecOptions>{
+            failOnStdErr: failOnStdErr,
+            ignoreReturnCode: true
+        };
+
+        let exitCode: number = await bash.exec(options);
+
+        let result = tl.TaskResult.Succeeded;
+
+        if (exitCode !== 0)
+        {
+            if (exitCode == 137) {
+                tl.error(tl.loc('BashFailedWithCode137'));
+            }
+            else {
+                tl.error(tl.loc('BashFailed', exitCode));
+            }
+            result = tl.TaskResult.Failed;
+        }
+
+        tl.setResult(result, tl.loc('BashReturnCode', exitCode));
     }
-    catch(err) {
-        tl.error(err.message);
-        tl.setResult(tl.TaskResult.Failed, tl.loc('BashFailed', err.message));
-    }    
+    catch (err: any) {
+        tl.setResult(tl.TaskResult.Failed, err.message, true);
+    }
 }
 
 run();
