@@ -56,6 +56,8 @@ variables:
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
+    settings:
+      skipBuildTagsForGitHubPullRequests: true
     # featureFlags:
       # autoBaseline: false
     sdl:
@@ -70,6 +72,8 @@ extends:
         name: 1ES-ABTT-Shared-Pool
         image: abtt-windows-2022
         os: windows
+      excludeReposFromSDLSourcesScan: 
+        exclude: "AzureDevOps, ConfigChange"
     customBuildTags:
     - ES365AIMigrationTooling
     stages:
