@@ -72,7 +72,6 @@ export async function run(): Promise<void> {
 
         // Setting up auth info
         let accessToken;
-        let feed;
         const isInternalFeed: boolean = nugetFeedType === 'internal';
         accessToken = getAccessToken(isInternalFeed);
         const internalAuthInfo = new auth.InternalAuthInfo(urlPrefixes, accessToken, /*useCredProvider*/ null, true);
