@@ -74,8 +74,8 @@ extends:
         os: windows
       sourceRepositoriesToScan: 
         exclude: 
-          AzureDevOps
-          ConfigChange
+          - repository: AzureDevOps
+          - repository: ConfigChange
     customBuildTags:
     - ES365AIMigrationTooling
     stages:
