@@ -87,8 +87,10 @@ function Import-SpecificAzModule {
             Write-Verbose "Unable to find module '$moduleName' from the module path. Installing '$moduleName' module."
 
             Write-Host "##[command]Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop"
-            $module = Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop
+            Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop
         }
+
+        $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
 
         if (-not $module) {
             Write-Warning "Unable to install '$moduleName'."
