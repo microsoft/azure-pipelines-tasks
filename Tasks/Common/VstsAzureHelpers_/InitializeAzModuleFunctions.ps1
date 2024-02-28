@@ -27,17 +27,17 @@ function Initialize-AzModule {
         
         if ($featureFlags.retireAzureRM) {
             $azAccountsModuleName = "Az.Accounts"
-            $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName -azVersion $azVersion
+            $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName
             Write-Verbose "'$azAccountsModuleName' is available with version $azAccountsVersion."
 
             Uninstall-AzureRMModules -UseAzUninstall
 
             $azResourcesModuleName = "Az.Resources"
-            $azResourcesVersion = Import-SpecificAzModule -moduleName $azResourcesModuleName -azVersion $azVersion
+            $azResourcesVersion = Import-SpecificAzModule -moduleName $azResourcesModuleName
             Write-Verbose "'$azResourcesModuleName' is available with version $azResourcesVersion."
 
             $azStorageModuleName = "Az.Storage"
-            $azStorageVersion = Import-SpecificAzModule -moduleName $azStorageModuleName -azVersion $azVersion
+            $azStorageVersion = Import-SpecificAzModule -moduleName $azStorageModuleName
             Write-Verbose "'$azStorageModuleName' is available with version $azStorageVersion."
         }
         else {
@@ -72,90 +72,41 @@ function Import-SpecificAzModule {
     [OutputType([version])]
     param(
         [Parameter(Mandatory=$true)]
-        [string]$moduleName,
-        [Parameter(Mandatory=$false)]
-        [string]$azVersion
+        [string]$moduleName
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
-        if (-not [string]::IsNullOrWhiteSpace($azVersion)) {
-            Write-Verbose "Attempting to find module '$moduleName' of version '$azVersion'."
-            $module = Get-Module -Name $moduleName -ListAvailable | Where-Object { $_.Version -eq $azVersion } | Sort-Object Version -Descending | Select-Object -First 1
-            if ($module) {
-                Write-Verbose "Module '$moduleName' version $($module.Version) was found."
-            }
-            else {
-                Write-Verbose "Specified version $azVersion of module $moduleName not found."
-            }
+        Write-Verbose "Attempting to find the latest available version of module '$moduleName'."
+        $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+
+        if ($module) {
+            Write-Verbose "Module '$moduleName' version $($module.Version) was found."
         }
         else {
-            Write-Verbose "Attempting to find the latest version of module '$moduleName'."
-            $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
-            if ($module) {
-                Write-Verbose "Module '$moduleName' version $($module.Version) was found."
-                $module
-            } else {
-                Write-Verbose "Unable to find module '$moduleName' from the module path."
-            }
+            Write-Verbose "Unable to find module '$moduleName' from the module path. Installing '$moduleName' module."
+
+            Write-Host "##[command]Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop"
+            $module = Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop
         }
 
         if (-not $module) {
-            Write-Verbose "Installing '$moduleName' module."
-            $installParams = @{
-                Name = $moduleName
-                Force = $true
-                AllowClobber = $true
-            }
-
-            if ($azVersion) {
-                $installParams['RequiredVersion'] = $azVersion   
-            }
-
-            try {
-                Write-Host "##[command]Install-Module -Name $moduleName -Force -AllowClobber$(if (-not [string]::IsNullOrWhiteSpace($azVersion)) {" -RequiredVersion $azVersion"}) -ErrorAction Stop"
-                Install-Module @installParams -ErrorAction Stop
-            } catch {
-                if ($installParams.ContainsKey('RequiredVersion') -and $_.Exception -match 'No match was found for the specified search criteria and module name') {
-                    Write-Verbose "The specified version of the module '$moduleName' does not exist. Installing the latest available version."
-
-                    $installParams.Remove('RequiredVersion')
-
-                    Write-Host "##[command]Install-Module -Name $moduleName -Force -AllowClobber$(if (-not [string]::IsNullOrWhiteSpace($azVersion)) {" -RequiredVersion $azVersion"}) -ErrorAction Stop"
-                    Install-Module @installParams -ErrorAction Stop
-                } else {
-                    # If the error is due to another issue, rethrow the exception
-                    throw
-                }
-            }
-
-            $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
-
-            if (-not $module) {
-                Write-Verbose "Unable to install module '$($moduleName)'$(if (-not [string]::IsNullOrWhiteSpace($azVersion)) {" of version '$azVersion'"})."
-                throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, $moduleName)
-            }
-            else {
-                Write-Verbose "Module '$($moduleName)' version $($module.Version) was installed."
-            }
-        }
-
-        if (-not $module) {
-            Write-Warning "Failed to import '$($moduleName)' module."
-            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, $moduleName)
-        }
-        else {
-            Write-Verbose "$($moduleName) module imported successfully."
+            Write-Warning "Unable to install '$moduleName'."
+            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $moduleName)
         }
 
         Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
         $module = (Import-Module -Name $moduleName -Global -PassThru -Force | Sort-Object Version -Descending | Select-Object -First 1)[0]
-        Write-Host("Imported module 'Az.Accounts', version: $($module.Version)")
+        Write-Host("Imported module '$moduleName', version: $($module.Version)")
 
-        Write-Verbose "Supressing breaking changes warnings of '$($moduleName)' module"
+        Write-Verbose "Supressing breaking changes warnings of '$($moduleName)' module."
         Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo $moduleName
 
         return $module.Version
+    }
+    catch {
+        Write-Verbose "Import-SpecificAzModule: Failed to import module '$moduleName'."
+        throw
     }
     finally {
         Trace-VstsLeavingInvocation $MyInvocation
