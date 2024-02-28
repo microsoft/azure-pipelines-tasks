@@ -1,3 +1,8 @@
+# This Yaml Document has been converted by ESAI Yaml Pipeline Conversion Tool.
+# Please make sure to check all the converted content, it is your team's responsibility to make sure that the pipeline is still valid and functions as expected.
+# The Task 'PublishBuildArtifacts@1' has been converted to an output named 'Publish hotfix artifact' in the templateContext section. ci\build-single-jobs.yml - file
+# The Task 'PublishBuildArtifacts@1' has been converted to an output named 'Publish per task NuGet package artifact' in the templateContext section. ci\build-single-jobs.yml - file
+
 parameters:
 - name: task
   type: string
@@ -83,7 +88,7 @@ steps:
   displayName: Stage tasks individually into the package directory
 
 # Sign task zip as nuget package
-- template: sign-all-tasks.yml
+- template: /ci/sign-all-tasks.yml@self
   parameters:
     layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
@@ -101,14 +106,6 @@ steps:
     Compress-Archive -Path .\layout-version.txt -DestinationPath .\hotfix.zip -Update
     Remove-Item -Path .\layout-version.txt
   displayName: Add layout-version.txt to hotfix.zip
-
-  # Publish hotfix artifact
-- task: PublishBuildArtifacts@1
-  displayName: Publish hotfix artifact
-  inputs:
-    pathToPublish: _package/hotfix-layout
-    artifactName: hotfix
-    publishLocation: container
 
 - ${{ if parameters.push }}:
 
@@ -130,14 +127,6 @@ steps:
   # Stage per task NuGet package
   - script: npm run package
     displayName: npm run package
-
-  # Publish per task NuGet package artifact
-  - task: PublishBuildArtifacts@1
-    displayName: Publish per task NuGet package artifact
-    inputs:
-      pathToPublish: _package/nuget-packages
-      artifactName: IndividualNuGetPackages
-      publishLocation: container
 
   # Authenticate 
   - task: NuGetAuthenticate@1
