@@ -112,8 +112,23 @@ function Import-SpecificAzModule {
                 $installParams['RequiredVersion'] = $azVersion   
             }
 
-            Write-Host "##[command]Install-Module -Name $moduleName -Force -AllowClobber$(if (-not [string]::IsNullOrWhiteSpace($azVersion)) {" -RequiredVersion $azVersion"})"
-            Install-Module @installParams
+            try {
+                Write-Host "##[command]Install-Module -Name $moduleName -Force -AllowClobber$(if (-not [string]::IsNullOrWhiteSpace($azVersion)) {" -RequiredVersion $azVersion"}) -ErrorAction Stop"
+                Install-Module @installParams -ErrorAction Stop
+            } catch {
+                if ($installParams.ContainsKey('RequiredVersion') -and $_.Exception -match 'No match was found for the specified search criteria and module name') {
+                    Write-Verbose "The specified version of the module '$moduleName' does not exist. Installing the latest available version."
+
+                    $installParams.Remove('RequiredVersion')
+
+                    Write-Host "##[command]Install-Module -Name $moduleName -Force -AllowClobber$(if (-not [string]::IsNullOrWhiteSpace($azVersion)) {" -RequiredVersion $azVersion"}) -ErrorAction Stop"
+                    Install-Module @installParams -ErrorAction Stop
+                } else {
+                    # If the error is due to another issue, rethrow the exception
+                    throw
+                }
+            }
+
             $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
 
             if (-not $module) {
