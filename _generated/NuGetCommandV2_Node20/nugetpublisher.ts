@@ -431,7 +431,7 @@ function getAccessToken(isInternalFeed: boolean): string{
                     accessToken = endpointAuth.parameters["apitoken"];
                     break;
                 default:
-                    tl.warning("Invalid authentication type for internal feed. Use token based authentication.");
+                    tl.warning(tl.loc("Warning_UnsupportedServiceConnectionAuth"));
                     break;
             }
         }
