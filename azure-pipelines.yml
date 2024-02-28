@@ -58,8 +58,8 @@ extends:
   parameters:
     settings:
       skipBuildTagsForGitHubPullRequests: true
-    # featureFlags:
-      # autoBaseline: false
+    featureFlags:
+      autoBaseline: false
     sdl:
       # do not fail on CG
       # componentgovernance:
@@ -196,7 +196,7 @@ extends:
           timeoutInMinutes: 180
           pool:
             name: 1ES-ABTT-Shared-Pool
-            image: abtt-ubuntu-2022
+            image: abtt-ubuntu-2204
             os: linux
           steps:
           - template: /ci/build-all-steps.yml@self
