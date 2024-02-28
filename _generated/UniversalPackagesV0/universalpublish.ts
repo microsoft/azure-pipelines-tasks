@@ -259,7 +259,7 @@ function authSetup(
         projectId = feedProject.projectId;
 
         // Setting up auth info
-        accessToken = getAcessToken();
+        accessToken = getAccessToken();
     }
 
     else {
@@ -289,7 +289,7 @@ function authSetup(
     ];
 }
 
-function getAcessToken() : string {
+function getAccessToken() : string {
     let accessToken: string;
     let allowServiceConnection = tl.getVariable('PUBLISH_VIA_SERVICE_CONNECTION');
 
@@ -306,7 +306,7 @@ function getAcessToken() : string {
                     accessToken = endpointAuth.parameters["apitoken"];
                     break;
                 default:
-                    tl.warning("Invalid authentication type for internal feed. Use token based authentication.");
+                    tl.warning(tl.loc("Warning_UnsupportedServiceConnectionAuth"));
                     break;
             }
         }
