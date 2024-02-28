@@ -101,5 +101,9 @@
     "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage",
     "GeneratedHtmlReport": "ms-resource:loc.messages.GeneratedHtmlReport",
     "V1TaskDeprecationNotice": "ms-resource:loc.messages.V1TaskDeprecationNotice"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.236.0",
+    "Node20_229_4": "1.236.1"
   }
 }
