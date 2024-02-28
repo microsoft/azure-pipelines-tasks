@@ -82,5 +82,6 @@
   "loc.messages.SetDefaultBuilderFailed": "Unable to set the Oryx++ Builder as the default builder.",
   "loc.messages.UpdateContainerAppFailed": "Unable to update Azure Container App via 'az containerapp update' command.",
   "loc.messages.UpdateContainerAppFromYamlFailed": "Unable to update Azure Container App from YAML configuration file via 'az containerapp update' command.",
+  "loc.messages.UpdateContainerAppIngressFailed": "Unable to update Azure Container App ingress via 'az containerapp ingress update' command.",
   "loc.messages.UpdateContainerAppRegistryDetailsFailed": "Unable to update Azure Container App ACR details via 'az containerapp registry set' command."
 }
