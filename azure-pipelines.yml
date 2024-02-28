@@ -73,7 +73,9 @@ extends:
         image: abtt-windows-2022
         os: windows
       sourceRepositoriesToScan: 
-        exclude: "AzureDevOps ConfigChange"
+        exclude: 
+          AzureDevOps
+          ConfigChange
     customBuildTags:
     - ES365AIMigrationTooling
     stages:
