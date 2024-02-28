@@ -72,8 +72,8 @@ extends:
         name: 1ES-ABTT-Shared-Pool
         image: abtt-windows-2022
         os: windows
-      excludeReposFromSDLSourcesScan: 
-        exclude: "AzureDevOps, ConfigChange"
+      sourceRepositoriesToScan: 
+        exclude: "AzureDevOps ConfigChange"
     customBuildTags:
     - ES365AIMigrationTooling
     stages:
