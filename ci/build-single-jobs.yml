@@ -1,19 +1,37 @@
+# This Yaml Document has been converted by ESAI Yaml Pipeline Conversion Tool.
+# Outputs were added with YAML Conditional expressions generated using AI in a best attempt to preserve the boolean logic that would have lead to the tasks producing outputs executing before conversion. You may need to review the generated expressions for correctness of the execution logic, and you will need to manually translate any cross-template parameters.
+# Output from "ci\build-single-steps.yml" added to job "Build hotfix" with conditionals extracted using AI from the following files: "ci\build-single-steps.yml".
+
 parameters:
-  - name: task_name
-    type: string
-  - name: push_to_feed
-    type: boolean
-  - name: generate_prs
-    type: boolean
+- name: task_name
+  type: string
+- name: push_to_feed
+  type: boolean
+- name: generate_prs
+  type: boolean
 
 jobs:
 # Build Single Task and stage hotfix
 - job: build_single_task
   displayName: Build hotfix
-  pool:
-    vmImage: windows-2022
+  pool: 
+    name: 1ES-ABTT-Shared-Pool
+    image: abtt-windows-2022
+    os: windows
+  templateContext:
+    outputs:
+    - output: buildArtifacts
+      displayName: 'Publish hotfix artifact'
+      PathtoPublish: _package/hotfix-layout
+      ArtifactName: hotfix
+    - ${{ if parameters.push_to_feed }}:
+      - output: buildArtifacts
+        displayName: 'Publish per task NuGet package artifact'
+        PathtoPublish: _package/nuget-packages
+        ArtifactName: IndividualNuGetPackages
+
   steps:
-  - template: build-single-steps.yml
+  - template: /ci/build-single-steps.yml@self
     parameters:
       task: ${{ parameters.task_name }}
       push: ${{ parameters.push_to_feed }}
@@ -23,10 +41,12 @@ jobs:
   - job: create_hotfix
     displayName: Create HotFix PR
     dependsOn: build_single_task
-    pool:
-      name: 1ES-Shared-Hosted-Pool_Windows-Server-2022
-    steps: 
-    - template: build-single-cc-pr-steps.yml
+    pool: 
+      name: 1ES-ABTT-Shared-Pool
+      image: abtt-windows-2022
+      os: windows
+    steps:
+    - template: /ci/build-single-cc-pr-steps.yml@self
       parameters:
         task_name: ${{ parameters.task_name }}
 
@@ -35,9 +55,11 @@ jobs:
     - job: create_ado_pr
       displayName: Update UnifiedDependencies.xml
       dependsOn: build_single_task
-      pool:
-        vmImage: windows-2022
+      pool: 
+        name: 1ES-ABTT-Shared-Pool
+        image: abtt-windows-2022
+        os: windows
       steps:
-      - template: build-single-ado-pr-steps.yml
+      - template: /ci/build-single-ado-pr-steps.yml@self
         parameters:
           task_name: ${{ parameters.task_name }}

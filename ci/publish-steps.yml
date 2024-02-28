@@ -1,3 +1,6 @@
+# This Yaml Document has been converted by ESAI Yaml Pipeline Conversion Tool.
+# The Task 'PublishBuildArtifacts@1' has been converted to an output named 'Publish per task NuGet package artifact' in the templateContext section. azure-pipelines.yml - file, publish - job
+
 steps:
 
 # Clean
@@ -40,14 +43,6 @@ steps:
   displayName: npm run package
   env:
     COURTESY_PUSH: $(courtesyPush)
-
-# Publish per task NuGet package artifact
-- task: PublishBuildArtifacts@1
-  displayName: Publish per task NuGet package artifact
-  inputs:
-    pathToPublish: _package/nuget-packages
-    artifactName: IndividualNuGetPackages
-    publishLocation: container
 
 # Update build number
 - powershell: |

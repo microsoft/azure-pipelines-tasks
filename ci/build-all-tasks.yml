@@ -1,8 +1,12 @@
 # This YAML is intended for building ALL tasks and publish them as an artifact 
 # to be used later for Tasks Deployment train
+
+# This Yaml Document has been converted by ESAI Yaml Pipeline Conversion Tool.
+# The Task 'PublishBuildArtifacts@1' has been converted to an output named 'Publish package artifact' in the templateContext section. azure-pipelines.yml - file, build_all_tasks_for_deployments - job
+
 parameters:
-  - name: deploy_all_tasks
-    type: boolean
+- name: deploy_all_tasks
+  type: boolean
 
 steps:
 # Clean
@@ -49,18 +53,10 @@ steps:
   displayName: Remove _build folder to reduce space
 
 # Sign all task zips as nuget packages
-- template: sign-all-tasks.yml
+- template: /ci/sign-all-tasks.yml@self
   parameters:
     layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
 # Stage all the tasks into a single zip for upload
 - script: node ./ci/stage-package.js true
   displayName: Stage all the tasks into a single zip for upload
-
-# Publish artifact
-- task: PublishBuildArtifacts@1
-  displayName: Publish package artifact
-  inputs:
-    pathToPublish: _package/tasks.zip
-    artifactName: allTasks
-    publishLocation: container
