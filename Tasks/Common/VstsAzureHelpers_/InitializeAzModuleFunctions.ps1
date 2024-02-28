@@ -77,18 +77,18 @@ function Import-SpecificAzModule {
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
-        Write-Verbose "Attempting to find the latest available version of module '$moduleName'."
-        $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+        # Write-Verbose "Attempting to find the latest available version of module '$moduleName'."
+        # $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
 
-        if ($module) {
-            Write-Verbose "Module '$moduleName' version $($module.Version) was found."
-        }
-        else {
-            Write-Verbose "Unable to find module '$moduleName' from the module path. Installing '$moduleName' module."
+        # if ($module) {
+        #     Write-Verbose "Module '$moduleName' version $($module.Version) was found."
+        # }
+        # else {
+        #     Write-Verbose "Unable to find module '$moduleName' from the module path. Installing '$moduleName' module."
 
-            Write-Host "##[command]Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop"
-            Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop
-        }
+        Write-Host "##[command]Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop"
+        Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop
+        # }
 
         $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
 
