@@ -2,7 +2,7 @@ Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
 
 function Get-AzureStorageKeyFromARM
 {
-    param([string][Parameter(Mandatory=$false)]$storageAccountName,
+    param([string]$storageAccountName,
         [object]$serviceEndpoint,
         [string][Parameter(Mandatory=$false)]$connectedServiceNameARM,
         [string][Parameter(Mandatory=$false)]$vstsAccessToken)
