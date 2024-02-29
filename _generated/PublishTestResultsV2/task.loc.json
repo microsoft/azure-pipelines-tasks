@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 233,
-    "Patch": 1
+    "Minor": 236,
+    "Patch": 0
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -156,7 +156,7 @@
     "ErrorFailTaskOnFailedTests": "ms-resource:loc.messages.ErrorFailTaskOnFailedTests"
   },
   "_buildConfigMapping": {
-    "Default": "2.233.1",
-    "Node20_229_13": "2.233.2"
+    "Default": "2.236.0",
+    "Node20_229_13": "2.236.1"
   }
 }
