@@ -43,10 +43,6 @@ parameters:
   displayName: Build all tasks for deployment
   type: boolean
   default: false
-- name: os
-  displayName: build OS
-  type: string
-  default: ''
 
 variables:
   currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
