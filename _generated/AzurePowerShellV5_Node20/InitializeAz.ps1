@@ -98,21 +98,21 @@ if ($endpointObject.scheme -eq 'ServicePrincipal') {
         $TenantId = $endpointObject.tenantId
         $additional = @{ TenantId = $TenantId }
 
-        Write-Host "##[command] Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        Write-Host "##[command]Set-AzContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
         $null = Set-AzContext -SubscriptionId $SubscriptionId @additional
     }
 }
 elseif ($endpointObject.scheme -eq 'WorkloadIdentityFederation') {
     Write-Verbose "Using WorkloadIdentityFederation authentication scheme"
 
-    $logStr = "##[command] Connect-AzAccount -ServicePrincipal -Tenant $($endpointObject.tenantId) -ApplicationId $($endpointObject.servicePrincipalClientID)"
+    $logStr = "##[command]Connect-AzAccount -ServicePrincipal -Tenant $($endpointObject.tenantId) -ApplicationId $($endpointObject.servicePrincipalClientID)"
     $logStr += " -FederatedToken ***** -Environment $environmentName -Scope Process"
     Write-Host $logStr
     Connect-AzAccount -ServicePrincipal -Tenant $endpointObject.tenantId -ApplicationId $endpointObject.servicePrincipalClientID `
         -FederatedToken $clientAssertionJwt -Environment $environmentName -Scope 'Process'
 
     if ($scopeLevel -ne "ManagementGroup") {
-        Write-Host "##[command] Set-AzContext -SubscriptionId $($endpointObject.subscriptionID) -TenantId $($endpointObject.tenantId)"
+        Write-Host "##[command]Set-AzContext -SubscriptionId $($endpointObject.subscriptionID) -TenantId $($endpointObject.tenantId)"
         Set-AzContext -SubscriptionId $endpointObject.subscriptionID -TenantId $endpointObject.tenantId
     }
 }
