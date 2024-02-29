@@ -79,7 +79,7 @@ extends:
     customBuildTags:
     - ES365AIMigrationTooling
     stages:
-    - stage: stage
+    - stage: main
       jobs:
 
       - ${{ if parameters.build_single_task }}:
