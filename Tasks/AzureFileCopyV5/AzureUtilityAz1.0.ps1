@@ -10,7 +10,8 @@ function Get-AzureStorageAccountResourceGroupName
     if (-not [string]::IsNullOrEmpty($storageAccountName))
     {
         Write-Verbose "[Azure Call]Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType"
-        $azureStorageAccountResourceDetails = (Get-AzStorageAccount -ErrorAction Stop) | Where-Object {($_.StorageAccountName -eq $storageAccountName)} 
+        $azureStorageAccountResourceDetails = (Get-AzResource -ErrorAction Stop) | Where-Object { ($_.ResourceType -eq $ARMStorageAccountResourceType) -and ($_.Name -eq $storageAccountName)}
+
           
         Write-Verbose "[Azure Call]Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType"
 
