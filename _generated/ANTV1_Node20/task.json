@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 236,
+    "Minor": 231,
     "Patch": 1
   },
   "demands": [
@@ -272,7 +272,7 @@
     "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
   },
   "_buildConfigMapping": {
-    "Default": "1.236.0",
-    "Node20-225": "1.236.1"
+    "Default": "1.231.0",
+    "Node20-225": "1.231.1"
   }
 }
