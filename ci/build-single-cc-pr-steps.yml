@@ -25,14 +25,11 @@ steps:
     downloadPath: hotfixArtifact
   displayName: Download hotfix Artifact
 
-# returns currentSprint
-- template: set-current-sprint-variable.yml
+- powershell: ./azure-pipelines-tasks/ci/set-sprint-variables.ps1
+  displayName: Set currentSprint variables
 
 # returns branchName
 - template: generate-branch-name.yml
-  parameters:
-    postfix: hotfix
-    currentSprint: '$(currentSprint)'
 
 - powershell: |
     $currentDate = Get-Date -Format "yyyyMMdd-HHmm"

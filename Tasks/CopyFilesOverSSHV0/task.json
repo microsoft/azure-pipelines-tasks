@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 231,
+        "Minor": 236,
         "Patch": 0
     },
     "demands": [],
@@ -133,10 +133,6 @@
         }
     ],
     "execution": {
-        "Node10": {
-            "target": "copyfilesoverssh.js",
-            "argumentFormat": ""
-        },
         "Node16": {
             "target": "copyfilesoverssh.js",
             "argumentFormat": ""
