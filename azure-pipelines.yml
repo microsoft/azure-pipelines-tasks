@@ -59,6 +59,9 @@ extends:
     sdl:
       sbom:
         enabled: false
+      codeql:
+        compiled:
+          enabled: false
       baseline:
         baselineSet: default
         baselineFile: $(Build.SourcesDirectory)/.gdn/.gdnbaselines

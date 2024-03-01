@@ -37,16 +37,6 @@ jobs:
   - job: create_hotfix
     displayName: Create HotFix PR
     dependsOn: build_single_task
-    sdl:
-      sbom:
-        enabled: false
-      sourceRepositoriesToScan: 
-        exclude: 
-          - repository: AzureDevOps
-          - repository: ConfigChange
-      codeql:
-        compiled:
-          enabled: false
     pool: 
       name: 1ES-ABTT-Shared-Pool
       image: abtt-windows-2022
@@ -61,16 +51,6 @@ jobs:
     - job: create_ado_pr
       displayName: Update UnifiedDependencies.xml
       dependsOn: build_single_task
-      sdl:
-        sbom:
-          enabled: false
-        sourceRepositoriesToScan: 
-          exclude: 
-            - repository: AzureDevOps
-            - repository: ConfigChange
-        codeql:
-          compiled:
-            enabled: false
       pool: 
         name: 1ES-ABTT-Shared-Pool
         image: abtt-windows-2022
