@@ -57,10 +57,8 @@ extends:
     featureFlags:
       autoBaseline: false
     sdl:
-      # do not fail on CG
-      # componentgovernance:
-      #   failOnAlert: false
-      #   alertWarningLevel: "Never"
+      sbom:
+        enabled: false
       baseline:
         baselineSet: default
         baselineFile: $(Build.SourcesDirectory)/.gdn/.gdnbaselines
