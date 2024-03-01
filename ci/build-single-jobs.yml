@@ -1,7 +1,3 @@
-# This Yaml Document has been converted by ESAI Yaml Pipeline Conversion Tool.
-# Outputs were added with YAML Conditional expressions generated using AI in a best attempt to preserve the boolean logic that would have lead to the tasks producing outputs executing before conversion. You may need to review the generated expressions for correctness of the execution logic, and you will need to manually translate any cross-template parameters.
-# Output from "ci\build-single-steps.yml" added to job "Build hotfix" with conditionals extracted using AI from the following files: "ci\build-single-steps.yml".
-
 parameters:
 - name: task_name
   type: string

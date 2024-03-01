@@ -1,9 +1,5 @@
 # This YAML is intended for building ALL tasks and publish them as an artifact 
 # to be used later for Tasks Deployment train
-
-# This Yaml Document has been converted by ESAI Yaml Pipeline Conversion Tool.
-# The Task 'PublishBuildArtifacts@1' has been converted to an output named 'Publish package artifact' in the templateContext section. azure-pipelines.yml - file, build_all_tasks_for_deployments - job
-
 parameters:
 - name: deploy_all_tasks
   type: boolean
