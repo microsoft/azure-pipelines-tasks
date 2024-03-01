@@ -109,6 +109,7 @@ extends:
                   )
                 PathtoPublish: _package/tasks.zip
                 ArtifactName: package
+                sbomBuildDropPath: tasks-manifest
           steps:
           - template: /ci/build-all-steps.yml@self
             parameters:
@@ -130,6 +131,7 @@ extends:
               displayName: 'Publish per task NuGet package artifact'
               PathtoPublish: _package/nuget-packages
               ArtifactName: IndividualNuGetPackages
+              sbomBuildDropPath: nuget-packages-manifest
           steps:
           - template: /ci/publish-steps.yml@self
 
@@ -180,6 +182,7 @@ extends:
               displayName: 'Publish package artifact'
               PathtoPublish: _package/tasks.zip
               ArtifactName: allTasks
+              sbomBuildDropPath: allTasks-manifest
           steps:
           - template: /ci/build-all-tasks.yml@self
             parameters:
