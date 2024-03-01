@@ -24,13 +24,11 @@ jobs:
       displayName: 'Publish hotfix artifact'
       PathtoPublish: hotfix-layout
       ArtifactName: hotfix
-      sbomBuildDropPath: hotfix-layout-manifest
     - ${{ if parameters.push_to_feed }}:
       - output: buildArtifacts
         displayName: 'Publish per task NuGet package artifact'
         PathtoPublish: nuget-packages
         ArtifactName: IndividualNuGetPackages
-        sbomBuildDropPath: nuget-packages-manifest
 
   steps:
   - template: /ci/build-single-steps.yml@self
