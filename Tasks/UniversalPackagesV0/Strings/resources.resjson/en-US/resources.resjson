@@ -88,5 +88,6 @@
   "loc.messages.Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages",
   "loc.messages.Warning_SessionCreationFailed": "Could not create provenance session: %s",
   "loc.messages.Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages are not supported in Azure DevOps Server.",
-  "loc.messages.Error_ProcessorArchitectureNotSupported": "Universal Packages require an x64 agent."
+  "loc.messages.Error_ProcessorArchitectureNotSupported": "Universal Packages require an x64 agent.",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
 }
