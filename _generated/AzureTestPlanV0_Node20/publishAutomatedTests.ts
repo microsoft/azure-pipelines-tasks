@@ -33,7 +33,7 @@ function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, p
     tl.command('results.publish', properties, '');
 }
 
-export async function publishAutomatedTestResult(listOfTestPoints: TestCaseResult[]) {
+export async function publishAutomatedTestResult(listOfAutomatedTestPoints: TestCaseResult[]) {
     try{
         const testRunner = "JUnit";
         const testResultsFiles: string[] = ["**/TEST-*.xml"];
