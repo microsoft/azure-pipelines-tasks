@@ -107,6 +107,10 @@ steps:
     Remove-Item -Path .\layout-version.txt
   displayName: Add layout-version.txt to hotfix.zip
 
+- powershell: |
+    mv _package/hotfix-layout hotfix-layout
+  displayName: Move _package/hotfix-layout to hotfix-layout
+
 - ${{ if parameters.push }}:
 
   # Set variables
@@ -137,6 +141,10 @@ steps:
   #     cd $(Build.SourcesDirectory)\_package\nuget-packages
   #     push.cmd
   #   displayName: Push Nuget package
+
+  - powershell: |
+      mv _package/nuget-packages nuget-packages
+    displayName: Move _package/nuget-packages to nuget-packages
 
 # Stop collect diagnostics
 - powershell: ./ci/stop-collect-diagnostics.ps1

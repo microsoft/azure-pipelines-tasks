@@ -22,12 +22,12 @@ jobs:
     outputs:
     - output: buildArtifacts
       displayName: 'Publish hotfix artifact'
-      PathtoPublish: _package/hotfix-layout
+      PathtoPublish: hotfix-layout
       ArtifactName: hotfix
     - ${{ if parameters.push_to_feed }}:
       - output: buildArtifacts
         displayName: 'Publish per task NuGet package artifact'
-        PathtoPublish: _package/nuget-packages
+        PathtoPublish: nuget-packages
         ArtifactName: IndividualNuGetPackages
 
   steps:
