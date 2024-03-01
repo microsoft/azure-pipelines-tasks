@@ -10,13 +10,12 @@ import constants = require('./constants');
 import { ITestResultsApi } from "azure-devops-node-api/TestResultsApi";
 
 export interface TestPlanData {
-    automatedTestPointIds: number[];
-    manualTestPointIds: number[];
     listOfFQNOfTestCases: string[];
     testPlanId: number;
     testSuiteIds: number[];
     testConfigurationId: number;
-    listOfTestPointDetails: TestCaseResult[];
+    listOfManualTestPoints: TestCaseResult[];
+    listOfAutomatedTestPoints: TestCaseResult[];
 }
 
 export interface ManualTestRunData {
@@ -27,13 +26,12 @@ export interface ManualTestRunData {
 export async function getTestPlanData(): Promise<TestPlanData> {
 
     const testPlanDataResponse: TestPlanData = {
-        automatedTestPointIds: [],
         listOfFQNOfTestCases: [],
-        manualTestPointIds: [],
         testPlanId: 0,
         testSuiteIds: [],
         testConfigurationId: 0,
-        listOfTestPointDetails: []
+        listOfManualTestPoints: [],
+        listOfAutomatedTestPoints: []
     };
 
     const testPlanInputId = parseInt(tl.getInput('testPlan'));
@@ -51,13 +49,12 @@ export async function getTestPlanData(): Promise<TestPlanData> {
 
     await getTestPlanDataPoints(testPlanInputId, testSuitesInputId, testPlanConfigInputId)
         .then((testPlanData) => {
-            testPlanDataResponse.automatedTestPointIds = testPlanData.automatedTestPointIds;
             testPlanDataResponse.listOfFQNOfTestCases = testPlanData.listOfFQNOfTestCases;
-            testPlanDataResponse.manualTestPointIds = testPlanData.manualTestPointIds;
             testPlanDataResponse.testPlanId = testPlanInputId;
             testPlanDataResponse.testSuiteIds = testSuitesInputId;
             testPlanDataResponse.testConfigurationId = testPlanConfigInputId;
-            testPlanDataResponse.listOfTestPointDetails = testPlanData.listOfTestPointDetails;
+            testPlanDataResponse.listOfManualTestPoints = testPlanData.listOfManualTestPoints;
+            testPlanDataResponse.listOfAutomatedTestPoints = testPlanData.listOfAutomatedTestPoints;
         })
         .catch((error) => {
             tl.error("Error while fetching Test Plan Data :" + error);
@@ -70,20 +67,17 @@ export async function getTestPlanData(): Promise<TestPlanData> {
 export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesInputId: number[], testPlanConfigInputId: number): Promise<TestPlanData> {
     
     const testPlanData: TestPlanData = {
-        automatedTestPointIds: [],
         listOfFQNOfTestCases: [],
-        manualTestPointIds: [],
         testPlanId: 0,
         testSuiteIds: [],
         testConfigurationId: 0,
-        listOfTestPointDetails: []
+        listOfManualTestPoints: [],
+        listOfAutomatedTestPoints: []
     };
 
     let token = null;
     const AutomatedTestName = constants.AUTOMATED_TEST_NAME;
     const AutomatedTestStorage = constants.AUTOMATED_TEST_STORAGE;
-    const AutomationStatus = constants.AUTOMATION_STATUS;
-    
 
     if (testPlanInputId == 0 || testPlanConfigInputId == 0) {
         return testPlanData;
@@ -139,38 +133,35 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
                 if (parsedWitField[constants.AUTOMATION_STATUS] !== undefined && parsedWitField[constants.AUTOMATION_STATUS] !== null && parsedWitField[constants.AUTOMATION_STATUS] === constants.NOT_AUTOMATED) {
                     isManualTest = true;
                 }
-
             }
 
-            if (automatedTestName !== '' && automatedTestStorage !== '') {
-                if (testCase.pointAssignments.length > 0) {
-                    testPlanData.automatedTestPointIds.push(testCase.pointAssignments[0].id);
-                }
-            }
-
-            if (isManualTest === true) {
-                if (testCase.pointAssignments.length > 0) {
-                    testPlanData.manualTestPointIds.push(
-                        testCase.pointAssignments[0].id
-                    );
-
-                    let testCaseResult: TestCaseResult = {
-                        testPoint: {
-                            id: testCase.pointAssignments[0].id.toString()
-                        },
-                        testCase:{
-                            id: testCase.workItem.id.toString()
-                        },
-                        testCaseTitle: testCase.workItem.name,
-                        testCaseRevision: 1,
-                        owner: testCase.pointAssignments[0].tester,
-                        configuration: {
-                            id: testCase.pointAssignments[0].configurationId.toString(),
-                            name: testCase.pointAssignments[0].configurationName
-                        }
+            if(testCase.pointAssignments.length > 0) {
+                let testCaseResult: TestCaseResult = {
+                    testPoint: {
+                        id: testCase.pointAssignments[0].id.toString()
+                    },
+                    testCase:{
+                        id: testCase.workItem.id.toString()
+                    },
+                    testCaseTitle: testCase.workItem.name,
+                    testCaseRevision: 1,
+                    owner: testCase.pointAssignments[0].tester,
+                    configuration: {
+                        id: testCase.pointAssignments[0].configurationId.toString(),
+                        name: testCase.pointAssignments[0].configurationName
                     }
+                }
+                if(automatedTestName !== '' && automatedTestStorage !== '') {
+                    testCaseResult.automatedTestName = automatedTestName;
+                    testCaseResult.automatedTestStorage = automatedTestStorage;
+                    testCaseResult.state = "5";
 
-                    testPlanData.listOfTestPointDetails.push(
+                    testPlanData.listOfAutomatedTestPoints.push(
+                        testCaseResult
+                    );
+                }
+                if(isManualTest === true) {
+                    testPlanData.listOfManualTestPoints.push(
                         testCaseResult
                     );
                 }
@@ -179,8 +170,8 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
 
     }
 
-    console.log("Automated Test point ids :", testPlanData.automatedTestPointIds);
-    console.log("Manual Test point ids :", testPlanData.manualTestPointIds);
+    console.log("Number of Automated Test point ids :", testPlanData.listOfAutomatedTestPoints.length);
+    console.log("Number of Manual Test point ids :", testPlanData.listOfManualTestPoints.length);
 
     return testPlanData;
 }
@@ -221,7 +212,7 @@ export async function createManualTestRun(testPlanInfo: TestPlanData): Promise<M
         let testRunResponse = await createManualTestRunAsync(testResultsApi, testRunRequestBody, projectId);
         console.log("Test run created with id: ", testRunResponse.id);
 
-        let testResultsResponse = await createManualTestResultsAsync(testResultsApi, testPlanInfo.listOfTestPointDetails, projectId, testRunResponse.id);
+        let testResultsResponse = await createManualTestResultsAsync(testResultsApi, testPlanInfo.listOfManualTestPoints, projectId, testRunResponse.id);
         console.log("Test results created for run id: ", testResultsResponse[0].testRun);
 
         manualTestRunResponse.testRunId = testRunResponse.id;
@@ -240,7 +231,7 @@ export function prepareRunModel(testPlanInfo: TestPlanData): RunCreateModel{
 
     // some create run params may change on based of requirement
     let buildId = tl.getVariable('Build.BuildId');
-    let testPointIds: number[] = testPlanInfo.manualTestPointIds;
+    let testPointIds: number[] = testPlanInfo.listOfManualTestPoints.map(testPoint => parseInt(testPoint.testPoint.id));
     let testPlanId = testPlanInfo.testPlanId;
     let testConfigurationId = testPlanInfo.testConfigurationId;
 
