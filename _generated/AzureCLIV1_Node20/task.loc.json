@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 231,
-    "Patch": 0
+    "Minor": 236,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -164,7 +164,7 @@
     "GlobalCliConfigAgentVersionWarning": "ms-resource:loc.messages.GlobalCliConfigAgentVersionWarning"
   },
   "_buildConfigMapping": {
-    "Default": "1.225.0",
-    "Node20_229_2": "1.231.0"
+    "Default": "1.236.0",
+    "Node20_229_2": "1.236.1"
   }
 }

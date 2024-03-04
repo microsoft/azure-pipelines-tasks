@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 236,
-    "Patch": 1
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -460,10 +460,11 @@
     "Warn_CredentialsNotFound": "ms-resource:loc.messages.Warn_CredentialsNotFound",
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
     "Error_UniversalPackagesNotSupportedOnPrem": "ms-resource:loc.messages.Error_UniversalPackagesNotSupportedOnPrem",
-    "Error_ProcessorArchitectureNotSupported": "ms-resource:loc.messages.Error_ProcessorArchitectureNotSupported"
+    "Error_ProcessorArchitectureNotSupported": "ms-resource:loc.messages.Error_ProcessorArchitectureNotSupported",
+    "Warning_UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.Warning_UnsupportedServiceConnectionAuth"
   },
   "_buildConfigMapping": {
-    "Default": "0.236.0",
-    "Node20_229_1": "0.236.1"
+    "Default": "0.236.1",
+    "Node20_229_1": "0.236.2"
   }
 }
