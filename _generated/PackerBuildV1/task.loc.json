@@ -350,5 +350,9 @@
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
     "CreateManagedImageNotSupportedForVHDSource": "ms-resource:loc.messages.CreateManagedImageNotSupportedForVHDSource",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.236.0",
+    "Node20_229_6": "1.236.1"
   }
 }
