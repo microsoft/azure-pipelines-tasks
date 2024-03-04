@@ -767,5 +767,9 @@
     "JarNotSupported": "ms-resource:loc.messages.JarNotSupported",
     "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM",
     "MSDeployNotSupportTokenAuth": "ms-resource:loc.messages.MSDeployNotSupportTokenAuth"
+  },
+  "_buildConfigMapping": {
+    "Default": "3.236.0",
+    "Node20_229_2": "3.236.1"
   }
 }
