@@ -67,13 +67,13 @@ steps:
 - script: node ./ci/check-downgrading.js --task "$(task_pattern_fordowngradingcheck)" --sprint $(currentSprint) --week $(currentSprintWeek)
   displayName: Check for downgrading tasks
   condition: |
-      and(
-        succeeded(),
-        ne(variables['numTasksForDowngradingCheck'], 0),
-        ne(variables['COURTESY_PUSH'], 'true'),
-        eq(variables['build.reason'], 'PullRequest'),
-        eq(variables['System.PullRequest.TargetBranch'], 'master')
-      )
+    and(
+      succeeded(),
+      ne(variables['numTasksForDowngradingCheck'], 0),
+      ne(variables['COURTESY_PUSH'], 'true'),
+      eq(variables['build.reason'], 'PullRequest'),
+      eq(variables['System.PullRequest.TargetBranch'], 'master')
+    )
   env:
     PACKAGE_TOKEN: $(Package.Token)
 
@@ -127,7 +127,7 @@ steps:
       )
 
   # Sign all task zips as nuget packages
-  - template: sign-all-tasks.yml
+  - template: /ci/sign-all-tasks.yml@self
     parameters:
       layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
@@ -140,20 +140,6 @@ steps:
         ne(variables['build.reason'], 'PullRequest'),
         ne(variables['numTasks'], 0)
       )
-
-  # Publish artifact
-  - task: PublishBuildArtifacts@1
-    displayName: Publish package artifact
-    condition: |
-      and(
-        succeeded(),
-        ne(variables['build.reason'], 'PullRequest'),
-        ne(variables['numTasks'], 0)
-      )
-    inputs:
-      pathToPublish: _package/tasks.zip
-      artifactName: package
-      publishLocation: container
 
 # Test
 - script: node make.js test
@@ -183,7 +169,7 @@ steps:
         ne(variables['numTasks'], 0)
       )
 
-  - template: generate-branch-name.yml
+  - template: /ci/generate-branch-name.yml@self
     parameters:
       prefix: releases
 
