@@ -62,7 +62,7 @@ extends:
       codeql:
         compiled:
           enabled: false
-          # justificationForDisabling: 'Disabling to not scan AzureDevOpsRepo'
+          justificationForDisabling: 'Disabling to not scan AzureDevOpsRepo'
       baseline:
         baselineSet: default
         baselineFile: $(Build.SourcesDirectory)/.gdn/.gdnbaselines
@@ -95,13 +95,6 @@ extends:
           displayName: Build all tasks (Windows)
           condition: eq(variables.os, 'Windows_NT')
           timeoutInMinutes: 180
-          sdl:
-            sbom:
-              enabled: false
-            codeql:
-              compiled:
-                enabled: false
-                # justificationForDisabling: 'Disabling to not scan AzureDevOpsRepo'
           pool:
             name: 1ES-ABTT-Shared-Pool
             image: abtt-windows-2022
