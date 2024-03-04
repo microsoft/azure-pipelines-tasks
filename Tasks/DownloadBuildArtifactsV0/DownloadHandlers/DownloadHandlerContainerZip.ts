@@ -4,6 +4,9 @@ import { FilesystemProvider, ZipProvider } from 'artifact-engine/Providers';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
 import * as DecompressZip from 'decompress-zip';
+#if NODE20
+import * as extract from 'extract-zip'
+#endif
 
 /**
  * Handler for download artifact via build API
@@ -39,9 +42,15 @@ export class DownloadHandlerContainerZip extends DownloadHandler {
             }
 
             tl.debug(`Extracting ${this.zipLocation} to ${unzipLocation}`);
-
+#if NODE20
+            tl.debug(`Using extract-zip package for extracting archive`);
+            extract(this.zipLocation, { dir: unzipLocation }).then(() => {
+                resolve();
+            }).catch((error) => {
+                reject(error);
+            });
+#else
             const unzipper = new DecompressZip(this.zipLocation);
-
             unzipper.on('error', err => {
                 return reject(tl.loc('ExtractionFailed', err));
             });
@@ -54,7 +63,7 @@ export class DownloadHandlerContainerZip extends DownloadHandler {
             unzipper.extract({
                 path: unzipLocation
             });
-
+#endif
         });
 
         return unZipPromise;

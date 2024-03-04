@@ -159,7 +159,7 @@ try
                         $message = $errorLines.ToString().Trim()
                         $null = $errorLines.Clear()
                         if ($message) {
-                            Write-VstsTaskError -Message $message
+                            Write-VstsTaskError -Message $message -IssueSource $IssueSources.CustomerScript
                         }
                     }
 
@@ -173,7 +173,7 @@ try
             $message = $errorLines.ToString().Trim()
             $null = $errorLines.Clear()
             if ($message) {
-                Write-VstsTaskError -Message $message
+                Write-VstsTaskError -Message $message -IssueSource $IssueSources.CustomerScript
             }
         }
     }
