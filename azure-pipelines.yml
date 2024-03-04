@@ -61,7 +61,7 @@ extends:
         enabled: false
       codeql:
         compiled:
-          enabled: ${{ variables.system.debug }}
+          enabled: ${{ ne(variables.system.debug, true) }}
           justificationForDisabling: 'Disabling to not scan AzureDevOpsRepo'
       baseline:
         baselineSet: default
