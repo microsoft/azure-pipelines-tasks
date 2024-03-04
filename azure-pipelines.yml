@@ -23,6 +23,10 @@ resources:
     ref: refs/tags/release
 
 parameters:
+- name: enableCodeQL
+  displayName: Enable CodeQL for run
+  type: boolean
+  default: false
 - name: build_single_task
   displayName: Build Single Task
   type: boolean
@@ -49,7 +53,7 @@ variables:
   taskName: ${{ parameters.task_name }}
   taskNameIsSet: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
   isHotfix: ${{ and(eq(parameters.push_to_feed, true), eq(variables.taskNameIsSet, true)) }}
-  runCodeQl: ${{ eq(variables.skipTaskLibVersionVerifying, true) }}
+  runCodeQl: ${{ eq(parameters.enableCodeQL, true) }}
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
