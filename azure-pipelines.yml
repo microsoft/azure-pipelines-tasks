@@ -23,10 +23,6 @@ resources:
     ref: refs/tags/release
 
 parameters:
-- name: enableCodeQL
-  displayName: Enable CodeQL for run
-  type: boolean
-  default: false
 - name: build_single_task
   displayName: Build Single Task
   type: boolean
@@ -45,6 +41,10 @@ parameters:
   default: false
 - name: deploy_all_tasks
   displayName: Build all tasks for deployment
+  type: boolean
+  default: false
+- name: enableCodeQL
+  displayName: Enable CodeQL for run
   type: boolean
   default: false
 
