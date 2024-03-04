@@ -29,7 +29,7 @@ steps:
   displayName: Set currentSprint variables
 
 # returns branchName
-- template: generate-branch-name.yml
+- template: /ci/generate-branch-name.yml@self
 
 - powershell: |
     $currentDate = Get-Date -Format "yyyyMMdd-HHmm"

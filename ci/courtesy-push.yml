@@ -33,7 +33,7 @@ steps:
 - powershell: ./azure-pipelines-tasks/ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
 
-- template: generate-branch-name.yml
+- template: /ci/generate-branch-name.yml@self
 
 - powershell: |
     $releaseBranch = "$(branchName)"
