@@ -49,6 +49,7 @@ variables:
   taskName: ${{ parameters.task_name }}
   taskNameIsSet: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
   isHotfix: ${{ and(eq(parameters.push_to_feed, true), eq(variables.taskNameIsSet, true)) }}
+  runCodeQl: ${{ eq(variables.skipTaskLibVersionVerifying, true) }}
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
@@ -61,7 +62,7 @@ extends:
         enabled: false
       codeql:
         compiled:
-          enabled: ${{ variables.isHotfix }}
+          enabled: ${{ variables.runCodeQl }}
           justificationForDisabling: 'Disabling to not scan AzureDevOpsRepo'
       baseline:
         baselineSet: default
