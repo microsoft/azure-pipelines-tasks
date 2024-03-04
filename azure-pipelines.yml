@@ -61,7 +61,7 @@ extends:
         enabled: false
       codeql:
         compiled:
-          enabled: $(variables.skipTaskLibVersionVerifying)
+          enabled: $(skipTaskLibVersionVerifying)
           justificationForDisabling: 'Disabling to not scan AzureDevOpsRepo'
       baseline:
         baselineSet: default
