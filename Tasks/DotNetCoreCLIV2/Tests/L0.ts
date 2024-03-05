@@ -542,6 +542,22 @@ describe('DotNetCoreExe Suite', function () {
         done();
     });
 
+    it('test command with publish test results allows results directory to be explicitly defined', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './TestCommandTests/publishtestsWithExplicitResultsDirectory.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.invokedToolCount == 1, 'should have run dotnet once');
+        assert(tr.ran('c:\\path\\dotnet.exe test c:\\agent\\home\\directory\\temp.csproj --logger trx --results-directory c:\\customDirectory'), 'it should have run dotnet test');
+        assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
+        assert(tr.stdOutContained('vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=true;resultFiles=c:\\customDirectory\\sample.trx;]'), "should publish trx");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.strictEqual(tr.errorIssues.length, 0, 'should have no errors');
+        done();
+    });
+
     it('test command without publish test results', (done: MochaDone) => {
         this.timeout(1000);
 
