@@ -169,7 +169,7 @@ async function run() {
                 .arg('-ExecutionPolicy')
                 .arg('Unrestricted')
                 .arg('-Command')
-                .arg(`. '{path.join(path.resolve(__dirname),'RemoveAzContext.ps1')}'`);
+                .arg(`. '${path.join(path.resolve(__dirname),'RemoveAzContext.ps1')}'`);
 
             let options = <tr.IExecOptions>{
                     cwd: input_workingDirectory,
