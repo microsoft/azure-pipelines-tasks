@@ -217,7 +217,6 @@ export async function unzip(zipLocation: string, unzipLocation: string): Promise
 		}
 
 		tl.debug('Extracting ' + zipLocation + ' to ' + unzipLocation);
-
 		var unzipper = new DecompressZip(zipLocation);
 		unzipper.on('error', err => {
 			return reject(tl.loc("ExtractionFailed", err))

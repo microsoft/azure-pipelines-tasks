@@ -41,14 +41,6 @@ steps:
   env:
     COURTESY_PUSH: $(courtesyPush)
 
-# Publish per task NuGet package artifact
-- task: PublishBuildArtifacts@1
-  displayName: Publish per task NuGet package artifact
-  inputs:
-    pathToPublish: _package/nuget-packages
-    artifactName: IndividualNuGetPackages
-    publishLocation: container
-
 # Update build number
 - powershell: |
     Write-Host "##vso[build.updatebuildnumber]$(aggregate_version)"

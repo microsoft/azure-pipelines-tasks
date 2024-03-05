@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 231,
-    "Patch": 0
+    "Minor": 236,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -103,10 +103,11 @@
     "FailedToGenerateHtmlReport": "ms-resource:loc.messages.FailedToGenerateHtmlReport",
     "IgnoringReportDirectory": "ms-resource:loc.messages.IgnoringReportDirectory",
     "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage",
-    "GeneratedHtmlReport": "ms-resource:loc.messages.GeneratedHtmlReport"
+    "GeneratedHtmlReport": "ms-resource:loc.messages.GeneratedHtmlReport",
+    "V1TaskDeprecationNotice": "ms-resource:loc.messages.V1TaskDeprecationNotice"
   },
   "_buildConfigMapping": {
-    "Default": "1.228.0",
-    "Node20_229_4": "1.231.0"
+    "Default": "1.236.0",
+    "Node20_229_4": "1.236.1"
   }
 }

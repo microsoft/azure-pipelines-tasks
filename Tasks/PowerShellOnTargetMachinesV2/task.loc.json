@@ -3,6 +3,7 @@
   "name": "PowerShellOnTargetMachines",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/powershell-on-target-machines",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -12,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 198,
+    "Minor": 236,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
