@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 236,
-    "Patch": 0
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -172,7 +172,7 @@
     "DeprecatedTask": "This task is deprecated. Please switch to using NuGetCommand@2's 'restore' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
   },
   "_buildConfigMapping": {
-    "Default": "1.236.0",
-    "Node20_229_1": "1.236.1"
+    "Default": "1.236.2",
+    "Node20_229_1": "1.236.3"
   }
 }
