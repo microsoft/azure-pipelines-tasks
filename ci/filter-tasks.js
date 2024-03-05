@@ -59,8 +59,6 @@ var getTasksToBuildForCI = async function() {
         }
     });
 
-
-    console.log("The getTasksToBuildForCI with new token was called")
     return makeOptions.tasks.filter(function (taskName) {
         var taskJsonPath = path.join(__dirname, '..', 'Tasks' , taskName, 'task.json');
         if (fs.existsSync(taskJsonPath)){
