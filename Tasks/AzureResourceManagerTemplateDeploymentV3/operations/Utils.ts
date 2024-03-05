@@ -438,7 +438,14 @@ class Utils {
                         filePath = filePath.replace('.bicep', '.json')      
                     }
                     else{
-                        filePath = filePath.replace('.bicepparam', '.parameters.json')      
+                        var fullFileName: string = filePath.split(path.sep).pop()
+                        var bicepParamExtension: string = '.bicepparam'
+                        if(fullFileName.split('.').length > 2){
+                            var nameArray: Array<string> = fullFileName.split('.')
+                            nameArray.splice(0, 1)
+                            bicepParamExtension = '.'+nameArray.join('.')
+                        }
+                        filePath = filePath.replace(bicepParamExtension, '.parameters.json')      
                     }        
                     await this.logoutAzure();
                 }else{
@@ -474,9 +481,12 @@ class Utils {
     }
 
     private static async execBicepBuild(filePath): Promise<void> {
+        var fullFileName: string = filePath.split(path.sep).pop()
+        var fileDir: string = filePath.replace(path.sep + fullFileName, '')
         var filePathExtension: string = filePath.split('.').pop();
+        var fileName: string = filePath.split(path.sep).pop().split('.')[0];
         var finalPathExtension: string = ".json" 
-        
+
         if(filePathExtension === 'bicep'){
             const result: IExecSyncResult = tl.execSync("az", `bicep build --file ${filePath}`);
             if(result && result.code !== 0){
@@ -484,8 +494,6 @@ class Utils {
             }
         }
         else{
-            var fileName: string = filePath.split(path.sep).pop().split('.')[0];
-            var fileDir: string = filePath.replace(path.sep + fileName +'.bicepparam', '')
             finalPathExtension = ".parameters.json"
 
             //Using --outfile to avoid overwriting primary bicep file in the case bicep and param file have the the same file name.
@@ -495,7 +503,7 @@ class Utils {
             } 
         }
 
-        this.cleanupFileList.push(filePath.replace('.' + filePathExtension, finalPathExtension))  
+        this.cleanupFileList.push(fileDir + path.sep + fileName + finalPathExtension)  
     }
 
     private static async logoutAzure() {
