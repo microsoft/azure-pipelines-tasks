@@ -14,7 +14,7 @@ export async function executepythontests(testsToBeExecuted: string[]) {
         args.push(testcase);
     }
 
-    args.push('--junitxml=junit.xml')
+    args.push('--junitxml=TEST-python-junit.xml')
 
     tl.debug("Executing python tests with executable : " + executable);
     tl.debug("Executing python tests with args :" + args);
