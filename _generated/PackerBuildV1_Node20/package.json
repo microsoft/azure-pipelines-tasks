@@ -8,7 +8,8 @@
     "azure-pipelines-task-lib": "^4.3.1",
     "azure-pipelines-tasks-azure-arm-rest": "3.221.2",
     "agent-base": "^6.0.2",
-    "decompress-zip": "^0.3.3"
+    "decompress-zip": "^0.3.3",
+    "extract-zip": "2.0.1"
   },
   "devDependencies": {
     "typescript": "5.1.6"
