@@ -26,7 +26,7 @@ export async function publishAutomatedTestResult(listOfAutomatedTestPoints: stri
         const platform = "any cpu";
         const publishRunAttachments = tl.getInput('publishRunAttachments');
         const failTaskOnFailedTests = tl.getInput('failTaskOnFailedTests');
-	    const failTaskOnMissingResultsFile: boolean = tl.getBoolInput('failTaskOnMissingResultsFile');
+        const failTaskOnMissingResultsFile: boolean = tl.getBoolInput('failTaskOnMissingResultsFile');
         const failTaskOnFailureToPublishResults = tl.getInput('failTaskOnFailureToPublishResults');
         const testRunSystem = "AzureTestPlan : " + tl.getInput("testLanguageInput");
 
