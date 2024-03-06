@@ -1,39 +1,24 @@
 import tl = require('azure-pipelines-task-lib/task');
 import * as path from 'path';
 import constants = require('./constants');
-import { TestCaseResult } from 'azure-devops-node-api/interfaces/TestInterfaces';
 
 function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, platform, publishRunAttachments, testRunSystem , failTaskOnFailureToPublishResults, listOfAutomatedTestPoints) {
-    var properties = <{ [key: string]: string }>{};
+    var properties = <{ [key: string]: string }>{};    
     properties['type'] = testRunner;
-
-    if (mergeResults) {
-        properties['mergeResults'] = mergeResults;
-    }
-    if (platform) {
-        properties['platform'] = platform;
-    }
-    if (publishRunAttachments) {
-        properties['publishRunAttachments'] = publishRunAttachments;
-    }
-    if (resultFiles) {
-        properties['resultFiles'] = resultFiles;
-    }   
-    if(failTaskOnFailedTests){
-        properties['failTaskOnFailedTests'] = failTaskOnFailedTests;
-    }
-    if(failTaskOnFailureToPublishResults){
-        properties['failTaskOnFailureToPublishResults'] = failTaskOnFailureToPublishResults;
-    }
+    properties['mergeResults'] = mergeResults;
+    properties['platform'] = platform;
+    properties['publishRunAttachments'] = publishRunAttachments;
+    properties['resultFiles'] = resultFiles;
+    properties['failTaskOnFailedTests'] = failTaskOnFailedTests;
+    properties['failTaskOnFailureToPublishResults'] = failTaskOnFailureToPublishResults;
     properties['testRunSystem'] = testRunSystem;
-    if(listOfAutomatedTestPoints){
-        properties['listOfAutomatedTestPoints'] = listOfAutomatedTestPoints;
-    }
+    properties['listOfAutomatedTestPoints'] = listOfAutomatedTestPoints;
+    properties['testPlanId'] = tl.getVariable('TestPlanId');
 
     tl.command('results.publish', properties, '');
 }
 
-export async function publishAutomatedTestResult(listOfAutomatedTestPoints: TestCaseResult[]) {
+export async function publishAutomatedTestResult(listOfAutomatedTestPoints: string) {
     try{
         const testRunner = "JUnit";
         const testResultsFiles: string[] = ["**/TEST-*.xml"];
@@ -43,6 +28,8 @@ export async function publishAutomatedTestResult(listOfAutomatedTestPoints: Test
         const failTaskOnFailedTests = tl.getInput('failTaskOnFailedTests');
 	    const failTaskOnMissingResultsFile: boolean = tl.getBoolInput('failTaskOnMissingResultsFile');
         const failTaskOnFailureToPublishResults = tl.getInput('failTaskOnFailureToPublishResults');
+        const testRunSystem = "AzureTestPlan : " + tl.getInput("testLanguageInput");
+
         let searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
 
         tl.debug('testRunner: ' + testRunner);
@@ -51,7 +38,7 @@ export async function publishAutomatedTestResult(listOfAutomatedTestPoints: Test
         tl.debug('platform: ' + platform);
         tl.debug('publishRunAttachments: ' + publishRunAttachments);
         tl.debug('failTaskOnFailedTests: ' + failTaskOnFailedTests);
-	    tl.debug('failTaskOnMissingResultsFile: ' + failTaskOnMissingResultsFile);
+        tl.debug('failTaskOnMissingResultsFile: ' + failTaskOnMissingResultsFile);
         tl.debug('failTaskOnFailureToPublishResults: ' + failTaskOnFailureToPublishResults);
 
         if(tl.getVariable('System.DefaultWorkingDirectory') && (!path.isAbsolute(searchFolder)))
@@ -88,7 +75,7 @@ export async function publishAutomatedTestResult(listOfAutomatedTestPoints: Test
                 failTaskOnFailedTests,
                 platform,
                 publishRunAttachments,
-                constants.TESTRUN_SYSTEM,
+                testRunSystem,
                 failTaskOnFailureToPublishResults,
                 listOfAutomatedTestPoints);
         }

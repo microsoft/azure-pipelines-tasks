@@ -2,7 +2,6 @@ import tl = require('azure-pipelines-task-lib/task');
 import { testInvoker } from './automatedTestInvoker'
 import { TestPlanData } from './testPlanData'
 import { publishAutomatedTestResult } from './publishAutomatedTests'
-import { TestCase } from 'azure-devops-node-api/interfaces/TestPlanInterfaces';
 
 
 export async function automatedTestsFlow(testPlanInfo: TestPlanData, testSelectorInput: string) {
@@ -14,7 +13,7 @@ export async function automatedTestsFlow(testPlanInfo: TestPlanData, testSelecto
     if (listOfTestsToBeExecuted !== null && listOfTestsToBeExecuted !== undefined && listOfTestsToBeExecuted.length > 0) {
         tl.debug("Invoking test execution for tests: " + listOfTestsToBeExecuted);
         testInvoker(listOfTestsToBeExecuted);
-        publishAutomatedTestResult(testPlanInfo.listOfAutomatedTestPoints);
+        publishAutomatedTestResult(JSON.stringify(testPlanInfo.listOfAutomatedTestPoints));
     }
     else {
         console.log("No automated tests found for given test plan inputs ");

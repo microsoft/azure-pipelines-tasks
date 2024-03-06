@@ -8,4 +8,3 @@ export const AUTOMATED_TEST_STORAGE = "Microsoft.VSTS.TCM.AutomatedTestStorage";
 export const AUTOMATION_STATUS = 'Microsoft.VSTS.TCM.AutomationStatus';
 export const NOT_AUTOMATED = 'Not Automated'
 export const MERGE_THRESHOLD = 100;
-export const TESTRUN_SYSTEM = 'VSTS - ATP';
