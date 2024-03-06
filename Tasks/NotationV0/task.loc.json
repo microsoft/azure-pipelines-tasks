@@ -10,8 +10,8 @@
   "minimumAgentVersion": "2.144.0",
   "version": {
     "Major": 0,
-    "Minor": 232,
-    "Patch": 0
+    "Minor": 235,
+    "Patch": 1
   },
   "groups": [
     {
@@ -61,7 +61,7 @@
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
-      "defaultValue": "1.0.1",
+      "defaultValue": "1.1.0",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.version",
       "visibleRule": "command = install && isCustomVersion = false",

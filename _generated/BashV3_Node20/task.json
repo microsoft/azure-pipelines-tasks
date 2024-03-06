@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 231,
-    "Patch": 5
+    "Minor": 236,
+    "Patch": 2
   },
   "releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
   "minimumAgentVersion": "2.115.0",
@@ -120,6 +120,7 @@
   "messages": {
     "GeneratingScript": "Generating script.",
     "JS_ExitCode": "Bash exited with code '%s'.",
+    "JS_ExitCode_137": "Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured.",
     "JS_FormattedCommand": "Formatted command: %s",
     "JS_InvalidFilePath": "Invalid file path '%s'.",
     "JS_ScriptContents": "Script contents:",
@@ -129,7 +130,7 @@
     "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
   },
   "_buildConfigMapping": {
-    "Default": "3.231.4",
-    "Node20-225": "3.231.5"
+    "Default": "3.236.1",
+    "Node20-225": "3.236.2"
   }
 }
