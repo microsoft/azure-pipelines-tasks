@@ -46,7 +46,7 @@ steps:
   name: getTaskPattern
   env:
     PACKAGE_ENDPOINT: $(Package.Endpoint)
-    PACKAGE_TOKEN: $(Package.Token)
+    PACKAGE_TOKEN: $(System.AccessToken)
 
 - script: node ./ci/before-build-check-tasks.js
   displayName: Check that tasks has no duplicated libs
@@ -74,8 +74,6 @@ steps:
       eq(variables['build.reason'], 'PullRequest'),
       eq(variables['System.PullRequest.TargetBranch'], 'master')
     )
-  env:
-    PACKAGE_TOKEN: $(Package.Token)
 
 # Build BuildConfigGen
 - task: DotNetCoreCLI@2
