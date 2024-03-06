@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 236,
-    "Patch": 0
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -19,6 +19,7 @@
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
   "removalDate": "2023-12-11",
+  "deprecationMessage": "The NuGetRestore@1 (NuGet Restore) task has been deprecated and will soon be retired. Use the NuGetCommand@2 (with the restore option) task instead.",
   "groups": [
     {
       "name": "advanced",
@@ -171,7 +172,7 @@
     "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
   },
   "_buildConfigMapping": {
-    "Default": "1.236.0",
-    "Node20_229_1": "1.236.1"
+    "Default": "1.236.2",
+    "Node20_229_1": "1.236.3"
   }
 }
