@@ -1,5 +1,5 @@
 var fs = require('fs');
-var DecompressZip = require('decompress-zip');
+import * as extract from 'extract-zip'
 var path = require('path')
 
 import * as corem from 'azure-devops-node-api/CoreApi';
@@ -217,18 +217,11 @@ export async function unzip(zipLocation: string, unzipLocation: string): Promise
 		}
 
 		tl.debug('Extracting ' + zipLocation + ' to ' + unzipLocation);
-
-		var unzipper = new DecompressZip(zipLocation);
-		unzipper.on('error', err => {
-			return reject(tl.loc("ExtractionFailed", err))
-		});
-		unzipper.on('extract', () => {
-			tl.debug('Extracted ' + zipLocation + ' to ' + unzipLocation + ' successfully');
-			return resolve();
-		});
-
-		unzipper.extract({
-			path: path.normalize(unzipLocation)
+		tl.debug(`Using extract-zip package for extracting archive`);
+		extract(zipLocation, { dir: unzipLocation }).then(() => {
+			resolve();
+		}).catch((error) => {
+			reject(error);
 		});
 	});
 }

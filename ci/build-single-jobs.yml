@@ -1,19 +1,33 @@
 parameters:
-  - name: task_name
-    type: string
-  - name: push_to_feed
-    type: boolean
-  - name: generate_prs
-    type: boolean
+- name: task_name
+  type: string
+- name: push_to_feed
+  type: boolean
+- name: generate_prs
+  type: boolean
 
 jobs:
 # Build Single Task and stage hotfix
 - job: build_single_task
   displayName: Build hotfix
-  pool:
-    vmImage: windows-2022
+  pool: 
+    name: 1ES-ABTT-Shared-Pool
+    image: abtt-windows-2022
+    os: windows
+  templateContext:
+    outputs:
+    - output: buildArtifacts
+      displayName: 'Publish hotfix artifact'
+      PathtoPublish: hotfix-layout
+      ArtifactName: hotfix
+    - ${{ if parameters.push_to_feed }}:
+      - output: buildArtifacts
+        displayName: 'Publish per task NuGet package artifact'
+        PathtoPublish: nuget-packages
+        ArtifactName: IndividualNuGetPackages
+
   steps:
-  - template: build-single-steps.yml
+  - template: /ci/build-single-steps.yml@self
     parameters:
       task: ${{ parameters.task_name }}
       push: ${{ parameters.push_to_feed }}
@@ -23,10 +37,12 @@ jobs:
   - job: create_hotfix
     displayName: Create HotFix PR
     dependsOn: build_single_task
-    pool:
-      name: 1ES-Shared-Hosted-Pool_Windows-Server-2022
-    steps: 
-    - template: build-single-cc-pr-steps.yml
+    pool: 
+      name: 1ES-ABTT-Shared-Pool
+      image: abtt-windows-2022
+      os: windows
+    steps:
+    - template: /ci/build-single-cc-pr-steps.yml@self
       parameters:
         task_name: ${{ parameters.task_name }}
 
@@ -35,9 +51,11 @@ jobs:
     - job: create_ado_pr
       displayName: Update UnifiedDependencies.xml
       dependsOn: build_single_task
-      pool:
-        vmImage: windows-2022
+      pool: 
+        name: 1ES-ABTT-Shared-Pool
+        image: abtt-windows-2022
+        os: windows
       steps:
-      - template: build-single-ado-pr-steps.yml
+      - template: /ci/build-single-ado-pr-steps.yml@self
         parameters:
           task_name: ${{ parameters.task_name }}
