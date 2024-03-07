@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 236,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
   "groups": [],
@@ -428,10 +428,6 @@
       "target": "src//run.js"
     },
     "Node16": {
-      "target": "src//run.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "src//run.js",
       "argumentFormat": ""
     }
