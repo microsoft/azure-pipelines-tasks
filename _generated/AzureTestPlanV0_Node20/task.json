@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 236,
-    "Patch": 1
+    "Patch": 2
   },
   "preview": true,
   "demands": [],
@@ -84,6 +84,47 @@
       "properties": {
         "MultiSelectFlatList": "True"
       }
+    },
+    {
+      "name": "mergeTestResults",
+      "type": "boolean",
+      "label": "Merge test results",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "A test run is created for each results file. Check this option to merge results into a single test run. To optimize for better performance, results will be merged into a single run if there are more than 100 result files, irrespective of this option."
+    },
+    {
+      "name": "publishRunAttachments",
+      "type": "boolean",
+      "label": "Upload test results files",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Upload logs and other files containing diagnostic information collected when the tests were run.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "failTaskOnFailedTests",
+      "type": "boolean",
+      "label": "Fail if there are test failures",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Fail the task if there are any test failures. Check this option to fail the task if test failures are detected in the result files."
+    },
+    {
+      "name": "failTaskOnFailureToPublishResults",
+      "type": "boolean",
+      "label": "Fail if there is failure in publishing test results",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "Fail if there is failure in publishing test results. Check this option to fail the task if publishing test results is failed partially."
+    },
+    {
+      "name": "failTaskOnMissingResultsFile",
+      "type": "boolean",
+      "label": "Fail if no result files are found",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "Fail the task if no result files are found."
     }
   ],
   "dataSourceBindings": [
@@ -139,7 +180,7 @@
     "ErrorFailTaskOnCreateRunFailure": "Error occured while creating manual test run from test plan inputs"
   },
   "_buildConfigMapping": {
-    "Default": "0.236.0",
-    "Node20-225": "0.236.1"
+    "Default": "0.236.1",
+    "Node20-225": "0.236.2"
   }
 }
