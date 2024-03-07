@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 236,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": true,
   "demands": [],
@@ -84,6 +84,47 @@
       "properties": {
         "MultiSelectFlatList": "True"
       }
+    },
+    {
+      "name": "mergeTestResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.mergeTestResults",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.mergeTestResults"
+    },
+    {
+      "name": "publishRunAttachments",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishRunAttachments",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.publishRunAttachments",
+      "groupName": "advanced"
+    },
+    {
+      "name": "failTaskOnFailedTests",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failTaskOnFailedTests",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failTaskOnFailedTests"
+    },
+    {
+      "name": "failTaskOnFailureToPublishResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failTaskOnFailureToPublishResults",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failTaskOnFailureToPublishResults"
+    },
+    {
+      "name": "failTaskOnMissingResultsFile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failTaskOnMissingResultsFile",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failTaskOnMissingResultsFile"
     }
   ],
   "dataSourceBindings": [
@@ -133,5 +174,9 @@
     "ErrorFailTaskOnExecutingTests": "ms-resource:loc.messages.ErrorFailTaskOnExecutingTests",
     "ErrorFailTaskOnAPIFailure": "ms-resource:loc.messages.ErrorFailTaskOnAPIFailure",
     "ErrorFailTaskOnCreateRunFailure": "ms-resource:loc.messages.ErrorFailTaskOnCreateRunFailure"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.236.1",
+    "Node20-225": "0.236.2"
   }
 }
