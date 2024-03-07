@@ -13,7 +13,10 @@ function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, p
     properties['failTaskOnFailureToPublishResults'] = failTaskOnFailureToPublishResults;
     properties['testRunSystem'] = testRunSystem;
     properties['listOfAutomatedTestPoints'] = listOfAutomatedTestPoints;
-    properties['testPlanId'] = tl.getVariable('TestPlanId');
+
+    var testPlanId = tl.getInput('testPlan');
+    tl.debug('testPlanId: ' + testPlanId);
+    properties['testPlanId'] = testPlanId;
 
     tl.command('results.publish', properties, '');
 }
