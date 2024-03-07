@@ -52,5 +52,6 @@
   "loc.messages.OverridingProjectNpmrc": "Overriding project .npmrc: %s",
   "loc.messages.RestoringProjectNpmrc": "Restoring project .npmrc",
   "loc.messages.WorkingDirectoryNotDirectory": "Please change your working directory to a valid directory",
-  "loc.messages.NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region."
+  "loc.messages.NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region.",
+  "loc.messages.UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
 }

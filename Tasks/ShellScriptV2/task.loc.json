@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 231,
-    "Patch": 0
+    "Minor": 236,
+    "Patch": 1
   },
   "demands": [
     "sh"
@@ -89,6 +89,7 @@
   },
   "messages": {
     "BashReturnCode": "ms-resource:loc.messages.BashReturnCode",
-    "BashFailed": "ms-resource:loc.messages.BashFailed"
+    "BashFailed": "ms-resource:loc.messages.BashFailed",
+    "BashFailedWithCode137": "ms-resource:loc.messages.BashFailedWithCode137"
   }
 }

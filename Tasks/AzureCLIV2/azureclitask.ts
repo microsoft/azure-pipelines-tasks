@@ -71,7 +71,7 @@ export class azureclitask {
 
             if (failOnStdErr && aggregatedErrorLines.length > 0) {
                 let error = FAIL_ON_STDERR;
-                tl.error(aggregatedErrorLines.join("\n"));
+                tl.error(aggregatedErrorLines.join("\n"), tl.IssueSource.CustomerScript);
                 throw error;
             }
         }

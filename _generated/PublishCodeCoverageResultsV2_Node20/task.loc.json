@@ -15,7 +15,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 234,
+    "Minor": 236,
     "Patch": 1
   },
   "demands": [],
@@ -66,7 +66,7 @@
     "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
   },
   "_buildConfigMapping": {
-    "Default": "2.234.0",
-    "Node20_229_4": "2.234.1"
+    "Default": "2.236.0",
+    "Node20_229_4": "2.236.1"
   }
 }
