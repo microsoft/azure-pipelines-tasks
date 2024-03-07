@@ -15,7 +15,7 @@
   "version": {
     "Major": 3,
     "Minor": 236,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -336,7 +336,7 @@
     "IncompatibleAzureCLIVersionBicepParam": "ms-resource:loc.messages.IncompatibleAzureCLIVersionBicepParam"
   },
   "_buildConfigMapping": {
-    "Default": "3.236.0",
-    "Node20_229_2": "3.236.1"
+    "Default": "3.236.2",
+    "Node20_229_2": "3.236.3"
   }
 }

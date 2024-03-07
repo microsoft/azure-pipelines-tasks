@@ -6,7 +6,7 @@
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment",
   "helpMarkDown": "[Learn more about this task](https://aka.ms/argtaskreadme)",
   "category": "Deploy",
-  "releaseNotes": "-Works with cross-platform agents (Linux, macOS, or Windows)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like \"ConvertTo-SecureString\" when you migrate from version 1.0 to version 2.0.",
+  "releaseNotes": "-Works with cross-platform agents (Linux, macOS, or Windows)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for\u00A0\u00A0WinRM\" and is included in the section\u00A0\"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like \"ConvertTo-SecureString\" when you migrate from version 1.0 to version 2.0.",
   "visibility": [
     "Build",
     "Release"
@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 231,
+    "Minor": 236,
     "Patch": 0
   },
   "demands": [],

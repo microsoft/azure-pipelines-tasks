@@ -27,16 +27,16 @@
     "@types/q": "1.0.7",
     "@xmldom/xmldom": "^0.8.7",
     "JSONPath": "^0.11.2",
-    "azure-pipelines-tasks-azure-arm-rest": "^3.226.0",
-    "azure-pipelines-tasks-webdeployment-common": "^4.222.0",
+    "agent-base": "6.0.2",
     "azure-pipelines-task-lib": "4.4.0",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.236.0",
+    "azure-pipelines-tasks-webdeployment-common": "^4.222.0",
     "moment": "^2.29.4",
     "nock": "9.0.11",
     "q": "1.4.1",
     "tar": "^6.1.11",
     "uuid": "3.1.0",
-    "xml2js": "^0.5.0",
-    "agent-base": "6.0.2"
+    "xml2js": "^0.5.0"
   },
   "devDependencies": {
     "typescript": "4.0.2"

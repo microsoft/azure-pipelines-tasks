@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 235,
+    "Minor": 236,
     "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
@@ -388,7 +388,7 @@
     "MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task."
   },
   "_buildConfigMapping": {
-    "Default": "1.235.0",
-    "Node20_229_2": "1.235.1"
+    "Default": "1.236.0",
+    "Node20_229_2": "1.236.1"
   }
 }

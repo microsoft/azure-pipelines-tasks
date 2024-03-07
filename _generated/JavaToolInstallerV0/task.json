@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 233,
+    "Minor": 236,
     "Patch": 0
   },
   "satisfies": [
@@ -229,7 +229,7 @@
     "ErrorCleaningFolder": "Folder cleaning error: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.233.0",
-    "Node20-225": "0.233.1"
+    "Default": "0.236.0",
+    "Node20-225": "0.236.1"
   }
 }

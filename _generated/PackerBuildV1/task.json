@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 236,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -352,7 +352,7 @@
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
   },
   "_buildConfigMapping": {
-    "Default": "1.236.0",
-    "Node20_229_6": "1.236.1"
+    "Default": "1.236.2",
+    "Node20_229_6": "1.236.3"
   }
 }

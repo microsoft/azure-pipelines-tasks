@@ -15,8 +15,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
-    "Patch": 0
+    "Minor": 236,
+    "Patch": 1
   },
   "demands": [],
   "satisfies": [
@@ -63,7 +63,7 @@
     "Info_KubeloginDownloading": "Downloading kubelogin"
   },
   "_buildConfigMapping": {
-    "Default": "0.226.0",
-    "Node20_229_3": "0.231.0"
+    "Default": "0.236.0",
+    "Node20_229_3": "0.236.1"
   }
 }

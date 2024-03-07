@@ -1,0 +1,444 @@
+{
+  "id": "f045e430-8704-11e6-968f-e717e6411619",
+  "name": "AzureAppServiceManage",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-app-service-manage",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [],
+  "version": {
+    "Major": 0,
+    "Minor": 236,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "1.102.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "AdvancedSettings",
+      "displayName": "ms-resource:loc.group.displayName.AdvancedSettings",
+      "isExpanded": false,
+      "visibleRule": "Action == Enable Continuous Monitoring"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "Action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Action",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.Action",
+      "defaultValue": "Swap Slots",
+      "options": {
+        "Swap Slots": "Swap Slots",
+        "Start Azure App Service": "Start App Service",
+        "Stop Azure App Service": "Stop App Service",
+        "Restart Azure App Service": "Restart App Service",
+        "Start Swap With Preview": "Start Swap with Preview",
+        "Complete Swap": "Complete Swap With Preview",
+        "Cancel Swap": "Cancel Swap With Preview",
+        "Delete Slot": "Delete Slot",
+        "Install Extensions": "Install Extensions",
+        "Enable Continuous Monitoring": "Enable Continuous Monitoring",
+        "Start all continuous webjobs": "Start All Continuous Webjobs",
+        "Stop all continuous webjobs": "Stop All Continuous Webjobs"
+      }
+    },
+    {
+      "name": "WebAppName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.WebAppName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
+    },
+    {
+      "name": "SpecifySlot",
+      "aliases": [
+        "SpecifySlotOrASE"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.SpecifySlot",
+      "defaultValue": "false",
+      "required": false,
+      "visibleRule": "Action != Swap Slots && Action != Delete Slot && Action != Start Swap With Preview && Action != Complete Swap && Action != Cancel Swap"
+    },
+    {
+      "name": "ResourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ResourceGroupName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
+      "visibleRule": "Action = Swap Slots || Action = Delete Slot || SpecifySlot = true || Action = Start Swap With Preview || Action = Complete Swap || Action = Cancel Swap"
+    },
+    {
+      "name": "SourceSlot",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.SourceSlot",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.SourceSlot",
+      "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview  || Action = Complete Swap"
+    },
+    {
+      "name": "SwapWithProduction",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.SwapWithProduction",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SwapWithProduction",
+      "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview  || Action = Complete Swap"
+    },
+    {
+      "name": "TargetSlot",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.TargetSlot",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.TargetSlot",
+      "visibleRule": "SwapWithProduction = false"
+    },
+    {
+      "name": "PreserveVnet",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.PreserveVnet",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.PreserveVnet",
+      "visibleRule": "Action = Swap Slots || Action = Start Swap With Preview || Action = Complete Swap"
+    },
+    {
+      "name": "Slot",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Slot",
+      "defaultValue": "production",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "required": true,
+      "visibleRule": "Action = Delete Slot || Action = Cancel Swap || SpecifySlot = true"
+    },
+    {
+      "name": "ExtensionsList",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ExtensionsList",
+      "defaultValue": "",
+      "properties": {
+        "EditableOptions": "True",
+        "MultiSelectFlatList": "True"
+      },
+      "required": "True",
+      "visibleRule": "Action = Install Extensions",
+      "helpMarkDown": "ms-resource:loc.input.help.ExtensionsList"
+    },
+    {
+      "name": "OutputVariable",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.OutputVariable",
+      "defaultValue": "",
+      "properties": {
+        "Disabled": "True"
+      },
+      "visibleRule": "Action = Install Extensions",
+      "helpMarkDown": "ms-resource:loc.input.help.OutputVariable"
+    },
+    {
+      "name": "AppInsightsResourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AppInsightsResourceGroupName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "Action == Enable Continuous Monitoring",
+      "helpMarkDown": "ms-resource:loc.input.help.AppInsightsResourceGroupName"
+    },
+    {
+      "name": "ApplicationInsightsResourceName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ApplicationInsightsResourceName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True",
+        "EnableManage": "True",
+        "ManageLink": "https://ms.portal.azure.com/#create/Microsoft.AppInsights",
+        "ManageIcon": "Add",
+        "ManageButtonName": "New"
+      },
+      "visibleRule": "Action == Enable Continuous Monitoring",
+      "helpMarkDown": "ms-resource:loc.input.help.ApplicationInsightsResourceName"
+    },
+    {
+      "name": "ApplicationInsightsWebTestName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ApplicationInsightsWebTestName",
+      "groupName": "AdvancedSettings",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ApplicationInsightsWebTestName"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "LocalPathsForInstalledExtensions",
+      "description": "The local installation paths for the selected extensions for installation. <br/>Note: In case multiple extensions are selected for installation, the output is a comma separated list of local paths for each of the selected extension in the order they appear in the Install Extensions field."
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "WebAppName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppNames"
+    },
+    {
+      "target": "ResourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppResourceGroup",
+      "parameters": {
+        "WebAppName": "$(WebAppName)"
+      }
+    },
+    {
+      "target": "AppInsightsResourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureResourceGroups"
+    },
+    {
+      "target": "ApplicationInsightsResourceName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMApplicationInsightsResources",
+      "parameters": {
+        "AppInsightsResourceGroupName": "$(AppInsightsResourceGroupName)"
+      }
+    },
+    {
+      "target": "Slot",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppSlotsId",
+      "parameters": {
+        "WebAppName": "$(WebAppName)",
+        "ResourceGroupName": "$(ResourceGroupName)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+    },
+    {
+      "target": "SourceSlot",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppSlotsId",
+      "parameters": {
+        "WebAppName": "$(WebAppName)",
+        "ResourceGroupName": "$(ResourceGroupName)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+    },
+    {
+      "target": "TargetSlot",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppSlotsId",
+      "parameters": {
+        "WebAppName": "$(WebAppName)",
+        "ResourceGroupName": "$(ResourceGroupName)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+    },
+    {
+      "target": "ExtensionsList",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureSiteExtensions",
+      "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{ #stringReplace '\".' '' title}}}\"}"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "azureappservicemanage.js"
+    },
+    "Node16": {
+      "target": "azureappservicemanage.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ErrorNoSuchDeployingMethodExists": "ms-resource:loc.messages.ErrorNoSuchDeployingMethodExists",
+    "Successfullyupdatedslotswaphistory": "ms-resource:loc.messages.Successfullyupdatedslotswaphistory",
+    "Failedtoupdateslotswaphistory": "ms-resource:loc.messages.Failedtoupdateslotswaphistory",
+    "WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite",
+    "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "ms-resource:loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved",
+    "FailedToSwapWebAppSlots": "ms-resource:loc.messages.FailedToSwapWebAppSlots",
+    "SlotSwapOperationNotCompleted": "ms-resource:loc.messages.SlotSwapOperationNotCompleted",
+    "Successfullyswappedslots": "ms-resource:loc.messages.Successfullyswappedslots",
+    "SourceAndTargetSlotCannotBeSame": "ms-resource:loc.messages.SourceAndTargetSlotCannotBeSame",
+    "Successfullyupdateddeploymenthistory": "ms-resource:loc.messages.Successfullyupdateddeploymenthistory",
+    "Failedtoupdatedeploymenthistory": "ms-resource:loc.messages.Failedtoupdatedeploymenthistory",
+    "UnabletoretrieveconnectiondetailsforazureRMWebApp": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp",
+    "StartingAppService": "ms-resource:loc.messages.StartingAppService",
+    "AppServicestartedsuccessfully": "ms-resource:loc.messages.AppServicestartedsuccessfully",
+    "FailedtoStartAppService": "ms-resource:loc.messages.FailedtoStartAppService",
+    "StoppingAppService": "ms-resource:loc.messages.StoppingAppService",
+    "AppServicestoppedsuccessfully": "ms-resource:loc.messages.AppServicestoppedsuccessfully",
+    "FailedtoStopAppService": "ms-resource:loc.messages.FailedtoStopAppService",
+    "RestartingAppService": "ms-resource:loc.messages.RestartingAppService",
+    "AppServiceRestartedSuccessfully": "ms-resource:loc.messages.AppServiceRestartedSuccessfully",
+    "FailedtoRestartAppService": "ms-resource:loc.messages.FailedtoRestartAppService",
+    "RestartAppServiceAccepted": "ms-resource:loc.messages.RestartAppServiceAccepted",
+    "InvalidAction": "ms-resource:loc.messages.InvalidAction",
+    "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
+    "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist",
+    "UnabletoretrieveWebAppID": "ms-resource:loc.messages.UnabletoretrieveWebAppID",
+    "StartingSwapSlot": "ms-resource:loc.messages.StartingSwapSlot",
+    "ExtensionInstallFailedError": "ms-resource:loc.messages.ExtensionInstallFailedError",
+    "ExtensionInstallFailedResponseError": "ms-resource:loc.messages.ExtensionInstallFailedResponseError",
+    "ExtensionInstallSuccess": "ms-resource:loc.messages.ExtensionInstallSuccess",
+    "ExtensionAlreadyAvaiable": "ms-resource:loc.messages.ExtensionAlreadyAvaiable",
+    "ExtensionListFailedError": "ms-resource:loc.messages.ExtensionListFailedError",
+    "ExtensionListFailedResponseError": "ms-resource:loc.messages.ExtensionListFailedResponseError",
+    "FailedToFetchAppServiceState": "ms-resource:loc.messages.FailedToFetchAppServiceState",
+    "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
+    "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory",
+    "UnableToGetAppInsightsResource": "ms-resource:loc.messages.UnableToGetAppInsightsResource",
+    "UnableToIdentifyResourceGroupNameForAppInsightsResource": "ms-resource:loc.messages.UnableToIdentifyResourceGroupNameForAppInsightsResource",
+    "FailedToConfigureAlwaysOnProperty": "ms-resource:loc.messages.FailedToConfigureAlwaysOnProperty",
+    "SuccessfullyConfiguredAppInsights": "ms-resource:loc.messages.SuccessfullyConfiguredAppInsights",
+    "UnableToConfigureWebTest": "ms-resource:loc.messages.UnableToConfigureWebTest",
+    "UnableToConfigureInstrumentationKeyForAppService": "ms-resource:loc.messages.UnableToConfigureInstrumentationKeyForAppService",
+    "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
+    "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails",
+    "ResourceDoesntExist": "ms-resource:loc.messages.ResourceDoesntExist",
+    "UnableToFetchContinuousWebJobs": "ms-resource:loc.messages.UnableToFetchContinuousWebJobs",
+    "UnableToStartContinuousWebJob": "ms-resource:loc.messages.UnableToStartContinuousWebJob",
+    "UnableToStopContinuousWebJob": "ms-resource:loc.messages.UnableToStopContinuousWebJob",
+    "AppNameCannotBeNull": "ms-resource:loc.messages.AppNameCannotBeNull",
+    "SlotNameCannotBeNull": "ms-resource:loc.messages.SlotNameCannotBeNull",
+    "SourceSlotNameCannotBeNull": "ms-resource:loc.messages.SourceSlotNameCannotBeNull",
+    "DestinationSlotNameCannotBeNull": "ms-resource:loc.messages.DestinationSlotNameCannotBeNull",
+    "ResourceGroupNotFound": "ms-resource:loc.messages.ResourceGroupNotFound",
+    "ResourceTypeCannotBeNull": "ms-resource:loc.messages.ResourceTypeCannotBeNull",
+    "StartedAppService": "ms-resource:loc.messages.StartedAppService",
+    "StartedAppServiceSlot": "ms-resource:loc.messages.StartedAppServiceSlot",
+    "FailedToStartAppService": "ms-resource:loc.messages.FailedToStartAppService",
+    "FailedToStartAppServiceSlot": "ms-resource:loc.messages.FailedToStartAppServiceSlot",
+    "StoppingAppServiceSlot": "ms-resource:loc.messages.StoppingAppServiceSlot",
+    "StoppedAppService": "ms-resource:loc.messages.StoppedAppService",
+    "StoppedAppServiceSlot": "ms-resource:loc.messages.StoppedAppServiceSlot",
+    "FailedToStopAppService": "ms-resource:loc.messages.FailedToStopAppService",
+    "FailedToStopAppServiceSlot": "ms-resource:loc.messages.FailedToStopAppServiceSlot",
+    "RestartingAppServiceSlot": "ms-resource:loc.messages.RestartingAppServiceSlot",
+    "RestartedAppService": "ms-resource:loc.messages.RestartedAppService",
+    "RestartedAppServiceSlot": "ms-resource:loc.messages.RestartedAppServiceSlot",
+    "FailedToRestartAppService": "ms-resource:loc.messages.FailedToRestartAppService",
+    "FailedToRestartAppServiceSlot": "ms-resource:loc.messages.FailedToRestartAppServiceSlot",
+    "FailedToGetAppServiceDetails": "ms-resource:loc.messages.FailedToGetAppServiceDetails",
+    "FailedToGetAppServiceDetailsSlot": "ms-resource:loc.messages.FailedToGetAppServiceDetailsSlot",
+    "AppServiceState": "ms-resource:loc.messages.AppServiceState",
+    "InvalidMonitorAppState": "ms-resource:loc.messages.InvalidMonitorAppState",
+    "FailedToGetAppServicePublishingProfile": "ms-resource:loc.messages.FailedToGetAppServicePublishingProfile",
+    "FailedToGetAppServicePublishingProfileSlot": "ms-resource:loc.messages.FailedToGetAppServicePublishingProfileSlot",
+    "FailedToSwapAppServiceSlotWithProduction": "ms-resource:loc.messages.FailedToSwapAppServiceSlotWithProduction",
+    "FailedToSwapAppServiceSlotSlots": "ms-resource:loc.messages.FailedToSwapAppServiceSlotSlots",
+    "SwappingAppServiceSlotWithProduction": "ms-resource:loc.messages.SwappingAppServiceSlotWithProduction",
+    "SwappingAppServiceSlotSlots": "ms-resource:loc.messages.SwappingAppServiceSlotSlots",
+    "SwappedAppServiceSlotWithProduction": "ms-resource:loc.messages.SwappedAppServiceSlotWithProduction",
+    "SwappedAppServiceSlotSlots": "ms-resource:loc.messages.SwappedAppServiceSlotSlots",
+    "FailedToGetAppServicePublishingCredentials": "ms-resource:loc.messages.FailedToGetAppServicePublishingCredentials",
+    "FailedToGetAppServicePublishingCredentialsSlot": "ms-resource:loc.messages.FailedToGetAppServicePublishingCredentialsSlot",
+    "WarmingUpSlots": "ms-resource:loc.messages.WarmingUpSlots",
+    "DeploymentIDCannotBeNull": "ms-resource:loc.messages.DeploymentIDCannotBeNull",
+    "DeploymentDataEntityCannotBeNull": "ms-resource:loc.messages.DeploymentDataEntityCannotBeNull",
+    "SiteExtensionInstalled": "ms-resource:loc.messages.SiteExtensionInstalled",
+    "FailedToInstallSiteExtension": "ms-resource:loc.messages.FailedToInstallSiteExtension",
+    "JobNameCannotBeNull": "ms-resource:loc.messages.JobNameCannotBeNull",
+    "SiteExtensionCannotBeNull": "ms-resource:loc.messages.SiteExtensionCannotBeNull",
+    "TestNameCannotBeNull": "ms-resource:loc.messages.TestNameCannotBeNull",
+    "TestDefinitionCannotBeNull": "ms-resource:loc.messages.TestDefinitionCannotBeNull",
+    "AppInsightsPropertiesCannotBeNullOrEmpty": "ms-resource:loc.messages.AppInsightsPropertiesCannotBeNullOrEmpty",
+    "SpecifiedAzureRmEndpointIsInvalid": "ms-resource:loc.messages.SpecifiedAzureRmEndpointIsInvalid",
+    "FailedToFetchAzureStackDependencyData": "ms-resource:loc.messages.FailedToFetchAzureStackDependencyData",
+    "FailedToGetApplicationInsightsResource": "ms-resource:loc.messages.FailedToGetApplicationInsightsResource",
+    "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
+    "FailedToGetApplicationInsightsWebTestsForResourceGroup": "ms-resource:loc.messages.FailedToGetApplicationInsightsWebTestsForResourceGroup",
+    "FailedToCreateWebTests": "ms-resource:loc.messages.FailedToCreateWebTests",
+    "WebTestAlreadyConfigured": "ms-resource:loc.messages.WebTestAlreadyConfigured",
+    "FailedToGetAppServiceConfiguration": "ms-resource:loc.messages.FailedToGetAppServiceConfiguration",
+    "FailedToGetAppServiceConfigurationSlot": "ms-resource:loc.messages.FailedToGetAppServiceConfigurationSlot",
+    "FailedToUpdateAppServiceConfiguration": "ms-resource:loc.messages.FailedToUpdateAppServiceConfiguration",
+    "FailedToUpdateAppServiceConfigurationSlot": "ms-resource:loc.messages.FailedToUpdateAppServiceConfigurationSlot",
+    "FailedToGetAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToGetAppServiceApplicationSettings",
+    "FailedToGetAppServiceApplicationSettingsSlot": "ms-resource:loc.messages.FailedToGetAppServiceApplicationSettingsSlot",
+    "FailedToUpdateAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettings",
+    "FailedToUpdateAppServiceApplicationSettingsSlot": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettingsSlot",
+    "KuduSCMDetailsAreEmpty": "ms-resource:loc.messages.KuduSCMDetailsAreEmpty",
+    "FailedToGetContinuousWebJobs": "ms-resource:loc.messages.FailedToGetContinuousWebJobs",
+    "FailedToStartContinuousWebJob": "ms-resource:loc.messages.FailedToStartContinuousWebJob",
+    "FailedToStopContinuousWebJob": "ms-resource:loc.messages.FailedToStopContinuousWebJob",
+    "FailedToGetSiteExtensions": "ms-resource:loc.messages.FailedToGetSiteExtensions",
+    "FailedToGetAllSiteExtensions": "ms-resource:loc.messages.FailedToGetAllSiteExtensions",
+    "ExtensionAlreadyInstalled": "ms-resource:loc.messages.ExtensionAlreadyInstalled",
+    "InstallingSiteExtension": "ms-resource:loc.messages.InstallingSiteExtension",
+    "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID",
+    "ContinousMonitoringEnabled": "ms-resource:loc.messages.ContinousMonitoringEnabled",
+    "EnablingContinousMonitoring": "ms-resource:loc.messages.EnablingContinousMonitoring",
+    "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
+    "StartingContinousWebJobs": "ms-resource:loc.messages.StartingContinousWebJobs",
+    "StartedContinousWebJobs": "ms-resource:loc.messages.StartedContinousWebJobs",
+    "StoppingContinousWebJobs": "ms-resource:loc.messages.StoppingContinousWebJobs",
+    "StoppedContinousWebJobs": "ms-resource:loc.messages.StoppedContinousWebJobs",
+    "FailedToEnableContinuousMonitoring": "ms-resource:loc.messages.FailedToEnableContinuousMonitoring",
+    "InvalidSlotSwapEntity": "ms-resource:loc.messages.InvalidSlotSwapEntity",
+    "FailedToUpdateDeploymentHistory": "ms-resource:loc.messages.FailedToUpdateDeploymentHistory",
+    "StartingWebJob": "ms-resource:loc.messages.StartingWebJob",
+    "StartedWebJob": "ms-resource:loc.messages.StartedWebJob",
+    "WebJobAlreadyInRunningState": "ms-resource:loc.messages.WebJobAlreadyInRunningState",
+    "StoppingWebJob": "ms-resource:loc.messages.StoppingWebJob",
+    "StoppedWebJob": "ms-resource:loc.messages.StoppedWebJob",
+    "WebJobAlreadyInStoppedState": "ms-resource:loc.messages.WebJobAlreadyInStoppedState",
+    "RestartingKuduService": "ms-resource:loc.messages.RestartingKuduService",
+    "RestartedKuduService": "ms-resource:loc.messages.RestartedKuduService",
+    "FailedToRestartKuduService": "ms-resource:loc.messages.FailedToRestartKuduService",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "SwapWithPreviewNotsupported": "ms-resource:loc.messages.SwapWithPreviewNotsupported",
+    "InvalidActionForPublishProfileEndpoint": "ms-resource:loc.messages.InvalidActionForPublishProfileEndpoint"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.236.0",
+    "Node20_229_2": "0.236.1"
+  }
+}

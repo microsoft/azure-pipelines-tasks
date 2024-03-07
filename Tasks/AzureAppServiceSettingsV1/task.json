@@ -1,186 +1,186 @@
 {
-    "id": "3eeea460-bffa-11e9-9cb5-2a2ae2dbcce4",
-    "name": "AzureAppServiceSettings",
-    "friendlyName": "Azure App Service Settings",
-    "description": "Update/Add App settings an Azure Web App for Linux or Windows",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-app-service-settings",
-    "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-app-service-settings)",
-    "category": "Deploy",
-    "visibility": [
-        "Build",
-        "Release"
-    ],
-    "runsOn": [
-        "Agent",
-        "DeploymentGroup"
-    ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 1,
-        "Minor": 230,
-        "Patch": 1
-    },
-    "minimumAgentVersion": "2.104.1",
-    "groups": [
-        {
-            "name": "ApplicationAndConfigurationSettings",
-            "displayName": "Application and Configuration Settings",
-            "isExpanded": true
-        }
-    ],
-    "inputs": [
-        {
-            "name": "ConnectedServiceName",
-            "aliases": [
-                "azureSubscription"
-            ],
-            "type": "connectedService:AzureRM",
-            "label": "Azure subscription",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Select the Azure Resource Manager subscription"
-        },
-        {
-            "name": "appName",
-            "type": "pickList",
-            "label": "App Service name",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "Enter or Select the name of an existing Azure App Service"
-        },
-        {
-            "name": "resourceGroupName",
-            "type": "pickList",
-            "label": "Resource group",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above"
-        },
-        {
-            "name": "slotName",
-            "type": "pickList",
-            "label": "Slot",
-            "defaultValue": "production",
-            "required": false,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "helpMarkDown": "Enter or Select an existing Slot. If no slot is selected, changes will be made to production."
-        },
-        {
-            "name": "appSettings",
-            "type": "multiLine",
-            "label": "App settings",
-            "defaultValue": "",
-            "required": false,
-            "groupName": "ApplicationAndConfigurationSettings",
-            "helpMarkDown": "Add/Update App Service App Settings using the json syntax as follows:<br/> [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key1\", <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueabcd\",<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"slotSetting\": false <br/> &nbsp;&nbsp; },<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key2\", <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueefgh\",<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"slotSetting\": true <br/> &nbsp;&nbsp; }<br/>]",
-            "properties": {
-                "resizable": "true",
-                "rows": "8",
-                "maxLength": "5000"
-            }
-        },
-        {
-            "name": "generalSettings",
-            "type": "multiLine",
-            "label": "General settings",
-            "defaultValue": "",
-            "required": false,
-            "groupName": "ApplicationAndConfigurationSettings",
-            "helpMarkDown": "Add/Update App Service General Settings using the json syntax as follows:<br/> [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"alwaysOn\": true, <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"webSocketsEnabled\": false<br/> &nbsp;&nbsp; }<br/>]",
-            "properties": {
-                "resizable": "true",
-                "rows": "8",
-                "maxLength": "5000"
-            }
-        },
-        {
-            "name": "connectionStrings",
-            "type": "multiLine",
-            "label": "Connection Strings",
-            "defaultValue": "",
-            "required": false,
-            "groupName": "ApplicationAndConfigurationSettings",
-            "helpMarkDown": "Add/Update App Service Connection strings using the json syntax as follows:<br/> [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key1\", <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueabcd\",<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"type\": \"MySql\", <br/> &nbsp;&nbsp;&nbsp;&nbsp;\"slotSetting\": false <br/> &nbsp;&nbsp; },<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key2\", <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueefgh\",<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"type\": \"Custom\", <br/> &nbsp;&nbsp;&nbsp;&nbsp;\"slotSetting\": true <br/> &nbsp;&nbsp; }<br/>]",
-            "properties": {
-                "resizable": "true",
-                "rows": "8",
-                "maxLength": "5000"
-            }
-        }
-    ],
-    "dataSourceBindings": [
-        {
-            "target": "appName",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureRMWebAppNames"
-        },
-        {
-            "target": "resourceGroupName",
-            "endpointId": "$(ConnectedServiceName)",
-            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resources?$filter=resourceType EQ 'Microsoft.Web/Sites' and name EQ '{{{WebAppName}}}'&$top=100&$skipToken={{{skipToken}}}&api-version=2016-07-01",
-            "callbackContextTemplate": "{\"skipToken\": \"{{#getTokenValue response.nextLink}}{{extractUrlQueryParameter %24skipToken}}{{/getTokenValue}}\"}",
-            "callbackRequiredTemplate": "{{isTokenPresent response.nextLink}}",
-            "initialContextTemplate": "{\"skipToken\": \"\"}",
-            "parameters": {
-                "WebAppName": "$(appName)"
-            },
-            "resultSelector": "jsonpath:$.value[?(@.name=='{{WebAppName}}')]",
-            "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
-        },
-        {
-            "target": "slotName",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureRMWebAppSlotsId",
-            "parameters": {
-                "WebAppName": "$(appName)",
-                "ResourceGroupName": "$(resourceGroupName)"
-            },
-            "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
-        }
-    ],
-    "instanceNameFormat": "Azure App Service Settings: $(appName)",
-    "execution": {
-        "Node10": {
-            "target": "azurewebappsettings.js"
-        },
-        "Node16": {
-            "target": "azurewebappsettings.js"
-        }
-    },
-    "messages": {
-        "AppServiceConnectionStringsAlreadyPresent": "App Service Connection Strings are already present.",
-        "GotconnectiondetailsforazureRMWebApp0": "Got service connection details for Azure App Service:'%s'",
-        "ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
-        "FailedToGetAppServiceDetails": "Failed to fetch App Service '%s' details. Error: %s",
-        "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
-        "UpdatingAppServiceConfigurationSettings": "Trying to update App Service Configuration settings. Data: %s",
-        "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
-        "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
-        "UpdatingAppServiceConnectionStrings": "Trying to update App Service Connection Strings. Data: %s",
-        "UpdatedAppServiceConnectionStrings": "Updated App Service Connection Strings.",
-        "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
-        "FailedToUpdateAppServiceConfigSlotSettings": "Failed to update App service '%s' Configuration Slot Settings. Error: %s",
-        "FailedToUpdateAppServiceConnectionStrings": "Failed to update App service '%s' Connection Strings. Error: %s",
-        "FailedToUpdateAppServiceConnectionStringSlotSettings": "Failed to update App service '%s' Connection String Slot Settings. Error: %s",
-        "FailedToGetAppServiceConnectionStrings": "Failed to get App service '%s' Connection strings. Error: %s",
-        "FailedToGetAppServiceConnectionStringSlotSettings": "Failed to get App service '%s' Connection string slot settings. Error: %s",
-        "FailedToGetAppServiceSlotConfigurationNames": "Failed to get App service '%s' Slot Configuration Names. Error: %s",
-        "FailedToPatchAppServiceConfiguration": "Failed to patch App Service '%s' configuration. Error: %s",
-        "FailedToUpdateAppServiceConfiguration": "Failed to update App service '%s' configuration. Error: %s",
-        "FailedToGetAppServiceConfiguration": "Failed to get App service '%s' configuration. Error: %s",
-        "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
-        "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
-        "AppServiceSettingsNotEnabled": "App Service Settings is not enabled. Please provide one of the following : App Settings or General Settings or Connection Strings.",
-        "AppSettingInvalidJSON": "Application Settings object is not a valid JSON.",
-        "ConfigSettingInvalidJSON": "Configuration Settings object is not a valid JSON.",
-        "ConnectionStringInvalidJSON": "Connection String object is not a valid JSON."
+  "id": "3eeea460-bffa-11e9-9cb5-2a2ae2dbcce4",
+  "name": "AzureAppServiceSettings",
+  "friendlyName": "Azure App Service Settings",
+  "description": "Update/Add App settings an Azure Web App for Linux or Windows",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-app-service-settings",
+  "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-app-service-settings)",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 236,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "2.104.1",
+  "groups": [
+    {
+      "name": "ApplicationAndConfigurationSettings",
+      "displayName": "Application and Configuration Settings",
+      "isExpanded": true
     }
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure subscription",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Select the Azure Resource Manager subscription"
+    },
+    {
+      "name": "appName",
+      "type": "pickList",
+      "label": "App Service name",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Enter or Select the name of an existing Azure App Service"
+    },
+    {
+      "name": "resourceGroupName",
+      "type": "pickList",
+      "label": "Resource group",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above"
+    },
+    {
+      "name": "slotName",
+      "type": "pickList",
+      "label": "Slot",
+      "defaultValue": "production",
+      "required": false,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Enter or Select an existing Slot. If no slot is selected, changes will be made to production."
+    },
+    {
+      "name": "appSettings",
+      "type": "multiLine",
+      "label": "App settings",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "ApplicationAndConfigurationSettings",
+      "helpMarkDown": "Add/Update App Service App Settings using the json syntax as follows:<br/> [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key1\", <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueabcd\",<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"slotSetting\": false <br/> &nbsp;&nbsp; },<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key2\", <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueefgh\",<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"slotSetting\": true <br/> &nbsp;&nbsp; }<br/>]",
+      "properties": {
+        "resizable": "true",
+        "rows": "8",
+        "maxLength": "5000"
+      }
+    },
+    {
+      "name": "generalSettings",
+      "type": "multiLine",
+      "label": "General settings",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "ApplicationAndConfigurationSettings",
+      "helpMarkDown": "Add/Update App Service General Settings using the json syntax as follows:<br/> [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"alwaysOn\": true, <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"webSocketsEnabled\": false<br/> &nbsp;&nbsp; }<br/>]",
+      "properties": {
+        "resizable": "true",
+        "rows": "8",
+        "maxLength": "5000"
+      }
+    },
+    {
+      "name": "connectionStrings",
+      "type": "multiLine",
+      "label": "Connection Strings",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "ApplicationAndConfigurationSettings",
+      "helpMarkDown": "Add/Update App Service Connection strings using the json syntax as follows:<br/> [<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key1\", <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueabcd\",<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"type\": \"MySql\", <br/> &nbsp;&nbsp;&nbsp;&nbsp;\"slotSetting\": false <br/> &nbsp;&nbsp; },<br/>&nbsp;&nbsp; {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"name\": \"key2\", <br/>&nbsp;&nbsp;&nbsp;&nbsp;\"value\": \"valueefgh\",<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"type\": \"Custom\", <br/> &nbsp;&nbsp;&nbsp;&nbsp;\"slotSetting\": true <br/> &nbsp;&nbsp; }<br/>]",
+      "properties": {
+        "resizable": "true",
+        "rows": "8",
+        "maxLength": "5000"
+      }
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "appName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppNames"
+    },
+    {
+      "target": "resourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resources?$filter=resourceType EQ 'Microsoft.Web/Sites' and name EQ '{{{WebAppName}}}'&$top=100&$skipToken={{{skipToken}}}&api-version=2016-07-01",
+      "callbackContextTemplate": "{\"skipToken\": \"{{#getTokenValue response.nextLink}}{{extractUrlQueryParameter %24skipToken}}{{/getTokenValue}}\"}",
+      "callbackRequiredTemplate": "{{isTokenPresent response.nextLink}}",
+      "initialContextTemplate": "{\"skipToken\": \"\"}",
+      "parameters": {
+        "WebAppName": "$(appName)"
+      },
+      "resultSelector": "jsonpath:$.value[?(@.name=='{{WebAppName}}')]",
+      "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
+    },
+    {
+      "target": "slotName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppSlotsId",
+      "parameters": {
+        "WebAppName": "$(appName)",
+        "ResourceGroupName": "$(resourceGroupName)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+    }
+  ],
+  "instanceNameFormat": "Azure App Service Settings: $(appName)",
+  "execution": {
+    "Node10": {
+      "target": "azurewebappsettings.js"
+    },
+    "Node16": {
+      "target": "azurewebappsettings.js"
+    }
+  },
+  "messages": {
+    "AppServiceConnectionStringsAlreadyPresent": "App Service Connection Strings are already present.",
+    "GotconnectiondetailsforazureRMWebApp0": "Got service connection details for Azure App Service:'%s'",
+    "ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
+    "FailedToGetAppServiceDetails": "Failed to fetch App Service '%s' details. Error: %s",
+    "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
+    "UpdatingAppServiceConfigurationSettings": "Trying to update App Service Configuration settings. Data: %s",
+    "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
+    "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
+    "UpdatingAppServiceConnectionStrings": "Trying to update App Service Connection Strings. Data: %s",
+    "UpdatedAppServiceConnectionStrings": "Updated App Service Connection Strings.",
+    "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
+    "FailedToUpdateAppServiceConfigSlotSettings": "Failed to update App service '%s' Configuration Slot Settings. Error: %s",
+    "FailedToUpdateAppServiceConnectionStrings": "Failed to update App service '%s' Connection Strings. Error: %s",
+    "FailedToUpdateAppServiceConnectionStringSlotSettings": "Failed to update App service '%s' Connection String Slot Settings. Error: %s",
+    "FailedToGetAppServiceConnectionStrings": "Failed to get App service '%s' Connection strings. Error: %s",
+    "FailedToGetAppServiceConnectionStringSlotSettings": "Failed to get App service '%s' Connection string slot settings. Error: %s",
+    "FailedToGetAppServiceSlotConfigurationNames": "Failed to get App service '%s' Slot Configuration Names. Error: %s",
+    "FailedToPatchAppServiceConfiguration": "Failed to patch App Service '%s' configuration. Error: %s",
+    "FailedToUpdateAppServiceConfiguration": "Failed to update App service '%s' configuration. Error: %s",
+    "FailedToGetAppServiceConfiguration": "Failed to get App service '%s' configuration. Error: %s",
+    "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
+    "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
+    "AppServiceSettingsNotEnabled": "App Service Settings is not enabled. Please provide one of the following : App Settings or General Settings or Connection Strings.",
+    "AppSettingInvalidJSON": "Application Settings object is not a valid JSON.",
+    "ConfigSettingInvalidJSON": "Configuration Settings object is not a valid JSON.",
+    "ConnectionStringInvalidJSON": "Connection String object is not a valid JSON."
+  }
 }
