@@ -37,7 +37,7 @@ steps:
   displayName: Set currentSprint variables
 
 # returns branchName
-- template: generate-branch-name.yml
+- template: /ci/generate-branch-name.yml@self
 
 - bash: |
     cd azure-pipelines-tasks/ci/courtesy-push
