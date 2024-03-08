@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
+    "Minor": 236,
     "Patch": 1
   },
   "runsOn": [
@@ -80,10 +80,12 @@
     "CheckedInCredentialsOverriden": "Found and overrode credentials for the %s registry in the selected .npmrc file. Remove credentials from the file and store them in an npm service connection instead (recommended), or remove the npm Authenticate task from your build to use credentials checked into an .npmrc.",
     "NoIndexJsonFile": "No index.json file was found and no files were restored",
     "RevertedChangesToNpmrc": "Reverted changes made to %s.",
-    "NpmrcDoesNotExist": "The .npmrc file you selected at %s does not currently exist."
+    "NpmrcDoesNotExist": "The .npmrc file you selected at %s does not currently exist.",
+    "SuccessfulPush": "Successfully pushed .npmrc",
+    "SuccessfulAppend": "Successfully appended .npmrc"
   },
   "_buildConfigMapping": {
-    "Default": "0.231.0",
-    "Node20_229_1": "0.231.1"
+    "Default": "0.236.0",
+    "Node20_229_1": "0.236.1"
   }
 }
