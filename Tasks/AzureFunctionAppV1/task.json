@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 236,
-    "Patch": 0
+    "Patch": 6
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -117,9 +117,9 @@
       },
       "options": {
         "DOTNET|6.0": "DOTNET|6.0",
-        "DOTNET-ISOLATED|6.0" : "DOTNET-ISOLATED|6.0",
-        "DOTNET-ISOLATED|7.0" : "DOTNET-ISOLATED|7.0",
-        "DOTNET-ISOLATED|8.0" : "DOTNET-ISOLATED|8.0",
+        "DOTNET-ISOLATED|6.0": "DOTNET-ISOLATED|6.0",
+        "DOTNET-ISOLATED|7.0": "DOTNET-ISOLATED|7.0",
+        "DOTNET-ISOLATED|8.0": "DOTNET-ISOLATED|8.0",
         "JAVA|8": "JAVA|8",
         "JAVA|11": "JAVA|11",
         "JAVA|17": "JAVA|17",
