@@ -80,7 +80,9 @@
     "CheckedInCredentialsOverriden": "ms-resource:loc.messages.CheckedInCredentialsOverriden",
     "NoIndexJsonFile": "ms-resource:loc.messages.NoIndexJsonFile",
     "RevertedChangesToNpmrc": "ms-resource:loc.messages.RevertedChangesToNpmrc",
-    "NpmrcDoesNotExist": "ms-resource:loc.messages.NpmrcDoesNotExist"
+    "NpmrcDoesNotExist": "ms-resource:loc.messages.NpmrcDoesNotExist",
+    "SuccessfulPush": "ms-resource:loc.messages.SuccessfulPush",
+    "SuccessfulAppend": "ms-resource:loc.messages.SuccessfulAppend"
   },
   "_buildConfigMapping": {
     "Default": "0.236.0",
