@@ -18,7 +18,7 @@
   "version": {
     "Major": 5,
     "Minor": 236,
-    "Patch": 2
+    "Patch": 4
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -204,7 +204,7 @@
     "PS_ExitCode": "ms-resource:loc.messages.PS_ExitCode"
   },
   "_buildConfigMapping": {
-    "Default": "5.236.2",
-    "Node20_229_2": "5.236.3"
+    "Default": "5.236.4",
+    "Node20_229_2": "5.236.5"
   }
 }
