@@ -110,9 +110,9 @@ async function main(): Promise<void> {
         if (registry) {
             tl.debug(tl.loc('AddingAuthRegistry', registry.url));
             npmutil.appendToNpmrc(npmrc, os.EOL + registry.auth + os.EOL);
-            tl.debug(tl.log('SuccessfulAppend'));
+            tl.debug(tl.loc('SuccessfulAppend'));
             npmrcFile.push(os.EOL + registry.auth + os.EOL);
-            tl.debug(tl.log('SuccessfulPush'));
+            tl.debug(tl.loc('SuccessfulPush'));
         }
         else {
             console.log(tl.loc("IgnoringRegistry", registryURL.host));
