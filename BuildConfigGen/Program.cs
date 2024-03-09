@@ -256,7 +256,7 @@ namespace BuildConfigGen
             {
                 ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
 
-                Main2(task, currentSprint, targetConfigs);
+                MainUpdateTaskInner(task, currentSprint, targetConfigs);
 
                 ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: false);
             }
@@ -300,7 +300,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void Main2(string task, int? currentSprint, HashSet<Config.ConfigRecord> targetConfigs)
+        private static void MainUpdateTaskInner(string task, int? currentSprint, HashSet<Config.ConfigRecord> targetConfigs)
         {
             if (!currentSprint.HasValue)
             {
@@ -347,7 +347,7 @@ namespace BuildConfigGen
                 StringBuilder dupConfigsStr = new StringBuilder();
                 foreach (var x in duplicateVersions)
                 {
-                    dupConfigsStr.AppendLine($"version={x.version} specified in multiple configName={x.configName} config count={x.count}");
+                    dupConfigsStr.AppendLine($"task={task} version={x.version} specified in multiple configName={x.configName} config count={x.count}");
                 }
 
                 throw new Exception(dupConfigsStr.ToString());
