@@ -16,6 +16,7 @@ const physicalRootPath: string = '/site/wwwroot';
 const deploymentFolder: string = 'site/deployments';
 const manifestFileName: string = 'manifest';
 const VSTS_ZIP_DEPLOY: string = 'VSTS_ZIP_DEPLOY';
+const VSTS_ONE_DEPLOY: string = 'VSTS_ONE_DEPLOY';
 const VSTS_DEPLOY: string = 'VSTS';
 
 export class KuduServiceUtility {
@@ -236,6 +237,47 @@ export class KuduServiceUtility {
             return deploymentDetails.id;
         }
         catch(error) {
+            tl.error(tl.loc('PackageDeploymentFailed'));
+            throw Error(error);
+        }
+    }
+
+    public async deployUsingOneDeploy(packagePath: string, taskParams: TaskParameters, customMessage?: any): Promise<string> {
+        try {
+            console.log(tl.loc('OneDeploy Initiated'));
+
+            let queryParameters: Array<string> = [
+                'isAsync=true',
+                'deployer=' + VSTS_ONE_DEPLOY,
+                'type=' + taskParams.OneDeployType
+            ];
+
+            if (taskParams.Restart != null) {
+                queryParameters.push("restart=" + encodeURIComponent(taskParams.Restart));
+            }
+
+            if (taskParams.Clean != null) {
+                queryParameters.push("clean=" + encodeURIComponent(taskParams.Clean));
+            }
+
+            if (taskParams.IgnoreStack != null) {
+                queryParameters.push("ignoreStack=" + encodeURIComponent(taskParams.IgnoreStack));
+            }
+
+            if (taskParams.TargetPath != null) {
+                queryParameters.push("targetPath=" + encodeURIComponent(taskParams.TargetPath));
+            }
+            
+            var deploymentMessage = this._getUpdateHistoryRequest(true, null, customMessage).message;
+
+            queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
+            let deploymentDetails = await this._appServiceKuduService.oneDeploy(packagePath, queryParameters);
+            await this._processDeploymentResponse(deploymentDetails);
+            console.log(tl.loc('PackageDeploymentSuccess'));
+
+            return deploymentDetails.id;
+        }
+        catch (error) {
             tl.error(tl.loc('PackageDeploymentFailed'));
             throw Error(error);
         }

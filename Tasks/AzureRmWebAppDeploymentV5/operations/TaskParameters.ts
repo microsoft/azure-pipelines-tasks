@@ -7,7 +7,7 @@ export enum DeploymentType {
     webDeploy,
     zipDeploy,
     runFromZip,
-    warDeploy
+    oneDeploy
 }
 
 type AdditionalArgumentsTelemetry = {
@@ -38,7 +38,13 @@ export class TaskParametersUtility {
             DockerNamespace: tl.getInput('DockerNamespace', false),
             AppSettings: tl.getInput('AppSettings', false),
             StartupCommand: tl.getInput('StartupCommand', false),
-            ConfigurationSettings: tl.getInput('ConfigurationSettings', false)
+            ConfigurationSettings: tl.getInput('ConfigurationSettings', false),
+            //OneDeployParams
+            OneDeployType: tl.getInput('type', false),
+            Restart: tl.getBoolInput('restart', false),
+            Clean: tl.getBoolInput('clean', false),
+            IgnoreStack: tl.getBoolInput('ignorestack', false),
+            TargetPath : tl.getInput('targetPath', false)
         }
         
         if(taskParameters.ConnectionType === Constant.ConnectionType.PublishProfile) {
@@ -156,7 +162,7 @@ export class TaskParametersUtility {
             case "webDeploy": return DeploymentType.webDeploy;
             case "zipDeploy": return DeploymentType.zipDeploy;
             case "runFromZip": return DeploymentType.runFromZip;
-            case "warDeploy": return DeploymentType.warDeploy;
+            case "oneDeploy": return DeploymentType.oneDeploy;
         }
     }
 
@@ -292,4 +298,10 @@ export interface TaskParameters {
     isBuiltinLinuxWebApp?: boolean;
     isContainerWebApp?: boolean;
     isFunctionApp?: boolean;
+    /** OneDeploy parameters */
+    OneDeployType?: string;
+    Restart?: boolean;
+    Clean?: boolean;
+    IgnoreStack?: boolean;
+    TargetPath ?: string;
 }

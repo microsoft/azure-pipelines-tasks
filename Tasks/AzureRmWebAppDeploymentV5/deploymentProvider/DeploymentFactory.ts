@@ -9,7 +9,7 @@ import { WindowsWebAppRunFromZipProvider } from './WindowsWebAppRunFromZipProvid
 import { ContainerWebAppDeploymentProvider } from './ContainerWebAppDeploymentProvider';
 import tl = require('azure-pipelines-task-lib/task');
 import { PackageType } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
-import { WindowsWebAppWarDeployProvider } from './WindowsWebAppWarDeployProvider';
+import { WindowsWebAppOneDeployProvider } from './WindowsWebAppOneDeployProvider';
 
 export class DeploymentFactory {
 
@@ -59,41 +59,21 @@ export class DeploymentFactory {
     }
 
     private async _getWindowsDeploymentProvider(): Promise<IWebAppDeploymentProvider> {
-        tl.debug("Package type of deployment is: "+ this._taskParams.Package.getPackageType());
-        switch(this._taskParams.Package.getPackageType()){
-            case PackageType.war:
-                return new WindowsWebAppWarDeployProvider(this._taskParams);
-            case PackageType.jar:
-                return new WindowsWebAppZipDeployProvider(this._taskParams);
-            default:
-                return await this._getWindowsDeploymentProviderForZipAndFolderPackageType();
-            }
-    }
-
-    private async _getWindowsDeploymentProviderForZipAndFolderPackageType(): Promise<IWebAppDeploymentProvider> {
-        if(this._taskParams.UseWebDeploy) {
-            return await this._getUserSelectedDeploymentProviderForWindow();
-        } else {             
-            var _isMSBuildPackage = await this._taskParams.Package.isMSBuildPackage();           
-            if(_isMSBuildPackage || this._taskParams.VirtualApplication) {
-                return new WindowsWebAppWebDeployProvider(this._taskParams);
-            } else if(this._taskParams.ScriptType) {
-                return new WindowsWebAppZipDeployProvider(this._taskParams);
-            } else {
-                return new WindowsWebAppRunFromZipProvider(this._taskParams);
-            }
+        tl.debug("Package type of deployment is: " + this._taskParams.Package.getPackageType());
+        var _isMSBuildPackage = await this._taskParams.Package.isMSBuildPackage();   
+        if (this._taskParams.DeploymentType == DeploymentType.webDeploy || _isMSBuildPackage || this._taskParams.VirtualApplication || this._taskParams.UseWebDeploy)
+        {
+            return new WindowsWebAppWebDeployProvider(this._taskParams);
         }
-    }
-
-    private async _getUserSelectedDeploymentProviderForWindow(): Promise<IWebAppDeploymentProvider> {
-        switch(this._taskParams.DeploymentType){
-            case DeploymentType.webDeploy:
-                return new WindowsWebAppWebDeployProvider(this._taskParams);
-            case DeploymentType.zipDeploy:
-                return new WindowsWebAppZipDeployProvider(this._taskParams);
-            case DeploymentType.runFromZip:
-                return new WindowsWebAppRunFromZipProvider(this._taskParams);
+        // look into this ScriptType parameter
+        if (this._taskParams.DeploymentType == DeploymentType.zipDeploy || this._taskParams.ScriptType)
+        {
+            return new WindowsWebAppZipDeployProvider(this._taskParams);
         }
+        if (this._taskParams.DeploymentType == DeploymentType.runFromZip)
+        {
+            return new WindowsWebAppRunFromZipProvider(this._taskParams);
+        }
+        return new WindowsWebAppOneDeployProvider(this._taskParams);
     }
-
 }
