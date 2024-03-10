@@ -117,6 +117,7 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
             let automatedTestName = '';
             let automatedTestStorage = '';
             let isManualTest = false;
+            let revisionId = 0;
 
             for (const witField of testCase.workItem?.workItemFields || []) {
                 const parsedWitField = JSON.parse(JSON.stringify(witField)); // Deep copy for safety
@@ -133,6 +134,10 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
                 if (parsedWitField[constants.AUTOMATION_STATUS] !== undefined && parsedWitField[constants.AUTOMATION_STATUS] !== null && parsedWitField[constants.AUTOMATION_STATUS] === constants.NOT_AUTOMATED) {
                     isManualTest = true;
                 }
+
+                if (parsedWitField[constants.REVISION_ID] !== undefined && parsedWitField[constants.REVISION_ID] !== null) {
+                    revisionId = parseInt(parsedWitField[constants.REVISION_ID]);
+                }
             }
 
             if(testCase.pointAssignments.length > 0) {
@@ -144,7 +149,7 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
                         id: testCase.workItem.id.toString()
                     },
                     testCaseTitle: testCase.workItem.name,
-                    testCaseRevision: 1,
+                    testCaseRevision: revisionId,
                     owner: testCase.pointAssignments[0].tester,
                     configuration: {
                         id: testCase.pointAssignments[0].configurationId.toString(),
