@@ -29,11 +29,12 @@ const linuxFunctionRuntimeSettingValue = new Map([
 ]);
 
 export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider{
-    private zipDeploymentID: string;
+    private deploymentID: string;
 
     public async DeployWebAppStep() {
         let packageType = this.taskParams.Package.getPackageType();
-        let deploymentMethodtelemetry = packageType === PackageType.war ? '{"deploymentMethod":"War Deploy"}' : '{"deploymentMethod":"Zip Deploy"}';
+        let webPackage = this.taskParams.Package.getPath();
+        let deploymentMethodtelemetry = '{"deploymentMethod":"OneDeploy"}';
         console.log("##vso[telemetry.publish area=TaskDeploymentMethod;feature=AzureWebAppDeployment]" + deploymentMethodtelemetry);
 
         tl.debug('Performing Linux built-in package deployment');
@@ -52,44 +53,36 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
         if(!isNewValueUpdated) {
             await this.kuduServiceUtility.warmpUp();
         }
-        
-        switch(packageType){
-            case PackageType.folder:
-                let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
-                let archivedWebPackage = await zipUtility.archiveFolder(this.taskParams.Package.getPath(), "", tempPackagePath);
-                tl.debug("Compressed folder into zip " +  archivedWebPackage);
-                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(archivedWebPackage, this.taskParams.TakeAppOfflineFlag, 
-                    { slotName: this.appService.getSlot() });
-                    
-            break;
-            case PackageType.zip:
-                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(this.taskParams.Package.getPath(), this.taskParams.TakeAppOfflineFlag, 
-                { slotName: this.appService.getSlot() });
-                
-            break;
 
-            case PackageType.jar:
-                tl.debug("Initiated deployment via kudu service for webapp jar package : "+ this.taskParams.Package.getPath());
-                var folderPath = await webCommonUtility.generateTemporaryFolderForDeployment(false, this.taskParams.Package.getPath(), PackageType.jar);
-                var output = await webCommonUtility.archiveFolderForDeployment(false, folderPath);
-                var webPackage = output.webDeployPkg;
-                tl.debug("Initiated deployment via kudu service for webapp jar package : "+ webPackage);
-                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(webPackage, this.taskParams.TakeAppOfflineFlag, 
-                { slotName: this.appService.getSlot() });
-               
-            break;
-
-            case PackageType.war:
-                tl.debug("Initiated deployment via kudu service for webapp war package : "+ this.taskParams.Package.getPath());
-                var warName = webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".war");
-                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(), 
-                { slotName: this.appService.getSlot() }, warName);
-               
-            break;
-
-            default:
-                throw new Error(tl.loc('Invalidwebapppackageorfolderpathprovided', this.taskParams.Package.getPath()));
+        if (tl.stats(webPackage).isDirectory()) {
+            let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
+            webPackage = await zipUtility.archiveFolder(webPackage, "", tempPackagePath);
+            tl.debug("Compressed folder into zip " + webPackage);
         }
+
+        let validOneDeployTypes = ["war", "jar", "ear", "zip", "static"];
+        if (this.taskParams.OneDeployType != null && validOneDeployTypes.includes(this.taskParams.OneDeployType.toLowerCase())) {
+            tl.debug("Initiated deployment via kudu service for webapp" + this.taskParams.OneDeployType + " package : " + webPackage);
+        }
+        else {
+            switch (packageType) {
+                case PackageType.war:
+                    tl.debug("Initiated deployment via kudu service for webapp WAR package : " + webPackage);
+                    this.taskParams.OneDeployType = "war";
+                    break;
+                case PackageType.jar:
+                    tl.debug("Initiated deployment via kudu service for webapp JAR package : " + webPackage);
+                    this.taskParams.OneDeployType = "jar";
+                    break;
+                case PackageType.zip:
+                    tl.debug("Initiated deployment via kudu service for webapp ZIP package : " + webPackage);
+                    this.taskParams.OneDeployType = "zip";
+                    break;
+                default:
+                    throw new Error('Invalid App Service package: ' + webPackage + ' or type provided: ' + this.taskParams.OneDeployType);
+            }
+        }
+        this.deploymentID = await this.kuduServiceUtility.deployUsingOneDeploy(webPackage, this.taskParams, { slotName: this.appService.getSlot() });
 
         await this.appServiceUtility.updateStartupCommandAndRuntimeStack(this.taskParams.RuntimeStack, this.taskParams.StartupCommand);
 
@@ -99,8 +92,8 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
         if(this.kuduServiceUtility) {
             await super.UpdateDeploymentStatus(isDeploymentSuccess);
-            if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
-                await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
+            if(this.deploymentID && this.activeDeploymentID && isDeploymentSuccess) {
+                await this.kuduServiceUtility.postZipDeployOperation(this.deploymentID, this.activeDeploymentID);
             }
         }
     }
