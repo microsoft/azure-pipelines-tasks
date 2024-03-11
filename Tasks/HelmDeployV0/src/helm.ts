@@ -66,6 +66,7 @@ function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnS
         throw new Error(tl.loc("SaveSupportedInHelmsV3Only"));
     }
     process.env.HELM_EXPERIMENTAL_OCI="1";
+    //helm chart save has been replaced with helm package command in v3.7
     runHelm(helmCli, "package", kubectlCli, failOnStderr);
     helmCli.resetArguments();
     const chartRef = getHelmChartRef(tl.getVariable("helmOutput"));
@@ -73,8 +74,6 @@ function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnS
     runHelm(helmCli, "registry", kubectlCli, false);
     helmCli.resetArguments();
     runHelm(helmCli, "push", kubectlCli, failOnStderr);
-    helmCli.resetArguments();
-    runHelm(helmCli, "removeChart", kubectlCli, failOnStderr);
 }
 
 async function run() {
