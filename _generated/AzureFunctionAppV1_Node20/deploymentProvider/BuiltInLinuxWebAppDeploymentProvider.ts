@@ -17,13 +17,8 @@ const linuxFunctionRuntimeSettingValue = new Map([
     [ 'DOTNET|2.2', 'dotnet ' ],
     [ 'DOTNET|3.1', 'dotnet ' ],
     [ 'DOTNET|6.0', 'dotnet ' ],
-    [ 'DOTNET-ISOLATED|6.0', 'dotnet-isolated '],
-    [ 'DOTNET-ISOLATED|7.0', 'dotnet-isolated '],
-    [ 'DOTNET-ISOLATED|8.0', 'dotnet-isolated '],
     [ 'JAVA|8', 'java ' ],
     [ 'JAVA|11', 'java ' ],
-    [ 'JAVA|17', 'java ' ],
-    [ 'JAVA|21', 'java ' ],
     [ 'NODE|8', 'node ' ],
     [ 'NODE|10', 'node ' ],
     [ 'NODE|12', 'node ' ],
@@ -32,9 +27,7 @@ const linuxFunctionRuntimeSettingValue = new Map([
     [ 'PYTHON|3.6', 'python '],
     [ 'PYTHON|3.7', 'python '],
     [ 'PYTHON|3.8', 'python '],
-    [ 'PYTHON|3.9', 'python '],
-    [ 'PYTHON|3.10', 'python '],
-    [ 'PYTHON|3.11', 'python ']
+    [ 'PYTHON|3.9', 'python ']
 ]);
 
 export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider {

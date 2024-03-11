@@ -24,7 +24,5 @@
   "loc.messages.CheckedInCredentialsOverriden": "Found and overrode credentials for the %s registry in the selected .npmrc file. Remove credentials from the file and store them in an npm service connection instead (recommended), or remove the npm Authenticate task from your build to use credentials checked into an .npmrc.",
   "loc.messages.NoIndexJsonFile": "No index.json file was found and no files were restored",
   "loc.messages.RevertedChangesToNpmrc": "Reverted changes made to %s.",
-  "loc.messages.NpmrcDoesNotExist": "The .npmrc file you selected at %s does not currently exist.",
-  "loc.messages.SuccessfulPush": "Successfully pushed .npmrc",
-  "loc.messages.SuccessfulAppend": "Successfully appended .npmrc"
+  "loc.messages.NpmrcDoesNotExist": "The .npmrc file you selected at %s does not currently exist."
 }
