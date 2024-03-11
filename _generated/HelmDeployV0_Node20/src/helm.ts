@@ -65,15 +65,29 @@ function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnS
         //helm chart save and push commands are only supported in Helms v3  
         throw new Error(tl.loc("SaveSupportedInHelmsV3Only"));
     }
-    process.env.HELM_EXPERIMENTAL_OCI="1";
-    //helm chart save has been replaced with helm package command in v3.7
-    runHelm(helmCli, "package", kubectlCli, failOnStderr);
-    helmCli.resetArguments();
-    const chartRef = getHelmChartRef(tl.getVariable("helmOutput"));
-    tl.setVariable("helmChartRef", chartRef);
-    runHelm(helmCli, "registry", kubectlCli, false);
-    helmCli.resetArguments();
-    runHelm(helmCli, "push", kubectlCli, failOnStderr);
+
+    if (!helmCli.isHelmV37Plus()) {
+        process.env.HELM_EXPERIMENTAL_OCI="1";
+        runHelm(helmCli, "saveChart", kubectlCli, failOnStderr);
+        helmCli.resetArguments();
+        const chartRef = getHelmChartRef(tl.getVariable("helmOutput"));
+        tl.setVariable("helmChartRef", chartRef);
+        runHelm(helmCli, "registry", kubectlCli, false);
+        helmCli.resetArguments();
+        runHelm(helmCli, "pushChart", kubectlCli, failOnStderr);
+        helmCli.resetArguments();
+        runHelm(helmCli, "removeChart", kubectlCli, failOnStderr);
+    } else {
+        process.env.HELM_EXPERIMENTAL_OCI="1";
+        //helm chart save has been replaced with helm package command in Helm v3.7.0+
+        runHelm(helmCli, "package", kubectlCli, failOnStderr);
+        helmCli.resetArguments();
+        const chartRef = getHelmChartRef(tl.getVariable("helmOutput"));
+        tl.setVariable("helmChartRef", chartRef);
+        runHelm(helmCli, "registry", kubectlCli, false);
+        helmCli.resetArguments();
+        runHelm(helmCli, "push", kubectlCli, failOnStderr);
+    }
 }
 
 async function run() {
@@ -153,9 +167,11 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
         "init": "./helmcommands/helminit",
         "install": "./helmcommands/helminstall",
         "package": "./helmcommands/helmpackage",
+        "pushChart": "./helmcommands/helmchartpush",
         "push": "./helmcommands/helmpush",
-        "pull": "./helmcommands/helmpull",
         "registry": "./helmcommands/helmregistrylogin",
+        "removeChart": "./helmcommands/helmchartremove",
+        "saveChart": "./helmcommands/helmchartsave",
         "upgrade": "./helmcommands/helmupgrade"
     }
 
@@ -165,6 +181,12 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
     }
 
     //set command
+    //helm chart commands only supported in Helm v3 and were replaced since v3.7.0
+    if (helmCli.isHelmV3() && !helmCli.isHelmV37Plus() && (command === "saveChart" || command === "pushChart" || command === "removeChart")) {
+        helmCli.setCommand("chart");
+    } else {
+        helmCli.setCommand(command);
+    }
     helmCli.setCommand(command);
 
     // add arguments
