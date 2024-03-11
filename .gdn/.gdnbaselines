@@ -13,6 +13,60 @@
     }
   },
   "results": {
+    "a2a4017726eb18c7612da6ab3828cfdfd1218160fbd5d373c715476df1847499": {
+      "signature": "a2a4017726eb18c7612da6ab3828cfdfd1218160fbd5d373c715476df1847499",
+      "alternativeSignatures": [
+        "0742c8968835510ce413346da03c51d96319152e424445409e8338aeb9fc1840"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-11 11:59:39Z",
+      "justification": "Unable to remove -AsPlainText param from ConvertTo-SecureString method"
+    },
+    "090e1c6e9eea6f7f9683f554e11fca742dc2c836a9ec0b4bba6585507b844948": {
+      "signature": "090e1c6e9eea6f7f9683f554e11fca742dc2c836a9ec0b4bba6585507b844948",
+      "alternativeSignatures": [
+        "b3077fce06e27ed54f49f4f5433d412f3f785fd6f26bc2d2a3fb009fc31fdb4a"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-11 11:59:39Z",
+      "justification": "Unable to remove -AsPlainText param from ConvertTo-SecureString method"
+    },
+    "55e38dd157a1c41723a4c18ced54445089efe986f2103d3210c65357952b5462": {
+      "signature": "55e38dd157a1c41723a4c18ced54445089efe986f2103d3210c65357952b5462",
+      "alternativeSignatures": [
+        "bdee2be7b96a489a528869a2f96eecada6d0bc6ade922be945dd8f0af9925734"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-11 11:59:39Z",
+      "justification": "Unable to remove -AsPlainText param from ConvertTo-SecureString method"
+    },
+    "45a7c482a16da19bf9fa3c9de785faa5978746e382784f54275d9e53b45d5e33": {
+      "signature": "45a7c482a16da19bf9fa3c9de785faa5978746e382784f54275d9e53b45d5e33",
+      "alternativeSignatures": [
+        "e3c6edbc658ecaf0249a79c22b27b52735696a56ed92e715a04eb0430ed03c13"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-11 11:59:39Z"
+    },
+    "a87bffe963d7c34726ad023b1690d55b6e844187346311c79d939e3aab932db4": {
+      "signature": "a87bffe963d7c34726ad023b1690d55b6e844187346311c79d939e3aab932db4",
+      "alternativeSignatures": [
+        "1e170d51b900eaed0f341b5a2c5e4275e8f7a3bc21bf863b19b503bde34f5ecf"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-11 11:59:39Z",
+      "justification": "Unable to remove -AsPlainText param from ConvertTo-SecureString method"
+    },
     "5f8282717d3b2024249daf372400ed61161113c8605ea705dfb9bf7bfe72bc01": {
       "signature": "5f8282717d3b2024249daf372400ed61161113c8605ea705dfb9bf7bfe72bc01",
       "alternativeSignatures": [
@@ -22,7 +76,7 @@
         "default"
       ],
       "createdDate": "2024-03-11 11:59:39Z",
-      "justification": "Signature of generated task"
+      "justification": "Unable to remove -AsPlainText param from ConvertTo-SecureString method"
     },
     "7ae9f949e712a4855e8cdc176a7cb651b813e99d3613be7db583a910f5e3461e": {
       "signature": "7ae9f949e712a4855e8cdc176a7cb651b813e99d3613be7db583a910f5e3461e",
