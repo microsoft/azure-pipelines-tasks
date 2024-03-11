@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 235,
+    "Minor": 237,
     "Patch": 1
   },
   "demands": [],
@@ -138,7 +138,7 @@
     "InvalidKeyVaultName": "%s is an invalid KeyVault name."
   },
   "_buildConfigMapping": {
-    "Default": "2.235.0",
-    "Node20_229_2": "2.235.1"
+    "Default": "2.237.0",
+    "Node20_229_2": "2.237.1"
   }
 }
