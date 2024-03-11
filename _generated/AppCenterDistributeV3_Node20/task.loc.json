@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 232,
-    "Patch": 3
+    "Minor": 235,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.206.1",
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -59,6 +59,13 @@
       "label": "ms-resource:loc.input.label.buildVersion",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.buildVersion"
+    },
+    {
+      "name": "buildNumber",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.buildNumber",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.buildNumber"
     },
     {
       "name": "symbolsType",
@@ -250,7 +257,7 @@
     "FailedToFindFile": "ms-resource:loc.messages.FailedToFindFile"
   },
   "_buildConfigMapping": {
-    "Default": "3.232.0",
-    "Node20_229_7": "3.232.3"
+    "Default": "3.235.0",
+    "Node20_229_7": "3.235.1"
   }
 }

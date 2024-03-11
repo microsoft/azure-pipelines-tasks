@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 232,
-    "Patch": 3
+    "Minor": 235,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.206.1",
   "releaseNotes": "Added support for forwarding Android mapping to App Center Diagnostics. Added missing descriptions.",
@@ -59,6 +59,13 @@
       "label": "Build version",
       "required": false,
       "helpMarkDown": "The build version of the uploading binary which needs to be specified for `.zip` and `.msi`. This value will be ignored unless the platform is WPF or WinForms."
+    },
+    {
+      "name": "buildNumber",
+      "type": "string",
+      "label": "Build number",
+      "required": false,
+      "helpMarkDown": "The build number of the uploading binary which needs to be specified for `.dmg`. This value will be ignored unless the platform is Apple Objective-C / Swift."
     },
     {
       "name": "symbolsType",
@@ -250,7 +257,7 @@
     "FailedToFindFile": "Failed to find %s at %s."
   },
   "_buildConfigMapping": {
-    "Default": "3.232.0",
-    "Node20_229_7": "3.232.3"
+    "Default": "3.235.0",
+    "Node20_229_7": "3.235.1"
   }
 }
