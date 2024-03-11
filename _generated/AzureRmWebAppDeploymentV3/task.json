@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 236,
+    "Minor": 237,
     "Patch": 0
   },
   "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
@@ -769,7 +769,7 @@
     "MSDeployNotSupportTokenAuth": "App Service is configured to not use basic authentication. This requires Web Deploy msdeploy.exe version 7.1.7225 or higher. You need a version of Visual Studio that includes an updated version of msdeploy.exe. For more information, visit https://aka.ms/azdo-webapp-msdeploy ."
   },
   "_buildConfigMapping": {
-    "Default": "3.236.0",
-    "Node20_229_2": "3.236.1"
+    "Default": "3.237.0",
+    "Node20_229_2": "3.237.1"
   }
 }
