@@ -1,3 +1,7 @@
+$featureFlags = @{
+    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
 # Dot source Utility functions.
 . $PSScriptRoot/Utility.ps1
 
@@ -13,19 +17,100 @@ function Initialize-AzModule {
         [Parameter(Mandatory = $false)]
         [bool] $isPSCore,
         [Parameter(Mandatory=$false)]
-        [Security.SecureString]$encryptedToken)
+        [Security.SecureString]$encryptedToken
+    )
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
+        Write-Verbose "Importing Az Modules."
+        
+        if ($featureFlags.retireAzureRM) {
+            $azAccountsModuleName = "Az.Accounts"
+            $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName
+            Write-Verbose "'$azAccountsModuleName' is available with version $azAccountsVersion."
 
-        Write-Verbose "Importing Az Module."
-        $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
+            Uninstall-AzureRMModules -UseAzUninstall
+
+            $azResourcesModuleName = "Az.Resources"
+            $azResourcesVersion = Import-SpecificAzModule -moduleName $azResourcesModuleName
+            Write-Verbose "'$azResourcesModuleName' is available with version $azResourcesVersion."
+
+            $azStorageModuleName = "Az.Storage"
+            $azStorageVersion = Import-SpecificAzModule -moduleName $azStorageModuleName
+            Write-Verbose "'$azStorageModuleName' is available with version $azStorageVersion."
+        }
+        else {
+            # We are only looking for Az.Accounts module becasue all the command required for initialize the azure PS session is in Az.Accounts module.
+            $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
+        }
+
+        $azAccountsVersion = [System.Version]::new(
+            $azAccountsVersion.Major, 
+            $azAccountsVersion.Minor, 
+            $azAccountsVersion.Build
+        )
 
         Write-Verbose "Initializing Az Subscription."
-        Initialize-AzSubscription -Endpoint $Endpoint -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $encryptedToken `
-            -azAccountsModuleVersion $azAccountsVersion -isPSCore $isPSCore
-    } finally {
+        $initializeAzSubscriptionParams = @{
+            Endpoint = $Endpoint
+            connectedServiceNameARM = $connectedServiceNameARM
+            vstsAccessToken = $encryptedToken
+            azAccountsModuleVersion = $azAccountsVersion
+            isPSCore = $isPSCore
+        }
+        Initialize-AzSubscription @initializeAzSubscriptionParams
+    }
+    finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+function Import-SpecificAzModule {
+    [OutputType([System.Version])]
+    [CmdletBinding()]
+    [OutputType([version])]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$moduleName
+    )
+
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        # Write-Verbose "Attempting to find the latest available version of module '$moduleName'."
+        # $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+
+        # if ($module) {
+        #     Write-Verbose "Module '$moduleName' version $($module.Version) was found."
+        # }
+        # else {
+        #     Write-Verbose "Unable to find module '$moduleName' from the module path. Installing '$moduleName' module."
+
+        Write-Host "##[command]Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop"
+        Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop
+        # }
+
+        $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+
+        if (-not $module) {
+            Write-Warning "Unable to install '$moduleName'."
+            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $moduleName)
+        }
+
+        Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
+        $module = (Import-Module -Name $moduleName -Global -PassThru -Force | Sort-Object Version -Descending | Select-Object -First 1)[0]
+        Write-Host("Imported module '$moduleName', version: $($module.Version)")
+
+        Write-Verbose "Supressing breaking changes warnings of '$($moduleName)' module."
+        Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo $moduleName
+
+        return $module.Version
+    }
+    catch {
+        Write-Verbose "Import-SpecificAzModule: Failed to import module '$moduleName'."
+        throw
+    }
+    finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
@@ -38,6 +123,7 @@ function Import-AzAccountsModule {
     try {
         # We are only looking for Az.Accounts module becasue all the command required for initialize the azure PS session is in Az.Accounts module.
         $moduleName = "Az.Accounts"
+        
         # Attempt to resolve the module.
         Write-Verbose "Attempting to find the module '$moduleName' from the module path."
 
@@ -58,6 +144,7 @@ function Import-AzAccountsModule {
             }
         }
 
+        # Install Az if not found
         if (!$module) {
             Write-Verbose "No module found with name: $moduleName"
             throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, "Az.Accounts")
@@ -68,7 +155,57 @@ function Import-AzAccountsModule {
         $module = Import-Module -Name $module.Path -Global -PassThru -Force
         Write-Verbose "Imported module version: $($module.Version)"
         return $module.Version
-    } finally {
+    }
+    finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+function Uninstall-AzureRMModules {
+    [CmdletBinding()]
+    param([switch] $UseAzUninstall)
+
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        Write-Verbose "Uninstalling AzureRM modules."
+
+        if ($UseAzUninstall -and (Get-Module -ListAvailable -Name Az.Accounts)) {
+            Write-Host "##[command]Uninstall-AzureRm"
+            Uninstall-AzureRm
+        }
+        else {
+            $azureRmModules = Get-Module -ListAvailable -Name AzureRM.* | Select-Object Name,Version
+            if ($azureRmModules -and $azureRmModules.Count -gt 0) {
+                Foreach ($azureRmModule in $azureRmModules) {
+                    $azureRmModuleName = $azureRmModule.Name
+                    Write-Verbose "Uninstalling module: $azureRmModuleName"
+                    try {
+                        Write-Host "##[command]Uninstall-Module -Name $azureRmModuleName -AllVersions -Force"
+                        Uninstall-Module -Name $azureRmModuleName -AllVersions -Force
+                    }
+                    catch {
+                        Write-Verbose "Failed to uninstall module: $azureRmModuleName"
+                    }
+                }
+            }
+            else {
+                Write-Host "No AzureRM modules found to uninstall."
+            }
+        }
+
+        Write-Verbose "Making sure all AzureRM modules are gone after the uninstall."
+
+        $azureRmModules = Get-Module -ListAvailable -Name AzureRM.* | Select-Object Name,Version
+        if ($azureRmModules) {
+            Foreach ($azureRmModule in $azureRmModules) {
+                Write-Verbose "'$($azureRmModule)' AzureRM module found."
+            }
+        }
+        else {
+            Write-Verbose "No AzureRM modules found."
+        }
+    }
+    finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
@@ -85,7 +222,8 @@ function Initialize-AzSubscription {
         [Parameter(Mandatory=$false)]
         [Version] $azAccountsModuleVersion,
         [Parameter(Mandatory=$false)]
-        [bool] $isPSCore)
+        [bool] $isPSCore
+    )
 
     #Set UserAgent for Azure Calls
     Set-UserAgent

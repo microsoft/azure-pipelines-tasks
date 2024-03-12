@@ -1,3 +1,7 @@
+$featureFlags = @{
+    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
 Trace-VstsEnteringInvocation $MyInvocation
 Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
@@ -32,7 +36,11 @@ try{
     if ($EnableAdvancedStorageOptions)
     {
         $endpoint = Get-VstsEndpoint -Name $ARMConnectedServiceName -Require
-        Initialize-AzureRMModule -Endpoint $endpoint
+        if ($featureFlags.retireAzureRM) {
+            Initialize-AzModule -Endpoint $endpoint
+        } else {
+            Initialize-AzureRMModule -Endpoint $endpoint
+        }
     }
 
     # Load all dependent files for execution
