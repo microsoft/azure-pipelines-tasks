@@ -23,7 +23,7 @@
     "agent-base": "^6.0.2",
     "archiver": "1.2.0",
     "azure-pipelines-task-lib": "^4.4.0",
-    "azure-pipelines-tasks-azure-arm-rest": "^3.236.0",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.237.0",
     "azure-pipelines-tasks-webdeployment-common": "4.230.4",
     "decompress-zip": "^0.3.3",
     "ltx": "2.8.0",
