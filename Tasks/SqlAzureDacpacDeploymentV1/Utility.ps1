@@ -172,6 +172,11 @@ function Get-SqlPackageCommandArguments {
             }
         }
     }
+    elseif ($authenticationType -eq "Windows") {
+        if ($targetServerName) {
+            $targetConnectionString
+        }
+    }
     elseif ($authenticationType -eq "connectionString") {
         # check this for extract and export
         if ($TargetConnectionString) {
@@ -274,6 +279,17 @@ function Get-AADAuthenticationConnectionString {
     else {
         $connectionString += @("Authentication=Active Directory Integrated;")
     }
+
+    return $connectionString
+}
+
+Get-WindowsAuthenticationConnectionString {
+    param(
+        [String][Parameter(Mandatory = $true)] $serverName,
+        [String][Parameter(Mandatory = $true)] $databaseName
+    )
+    
+    $connectionString = "Data Source=$serverName; Initial Catalog=$databaseName; Integrated Security=SSPI;"
 
     return $connectionString
 }
