@@ -231,6 +231,7 @@
             "options": {
                 "Java_8": "Java 8",
                 "Java_11": "Java 11",
+                "Java_17": "Java 17",
                 "NetCore_31": ".Net Core 3.1"
             },
             "visibleRule": "Action = Deploy && DeploymentType = Artifacts"
