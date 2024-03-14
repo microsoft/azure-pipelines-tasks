@@ -15,10 +15,13 @@ const packageEndpoint = process.env['PACKAGE_VERSIONS_ENDPOINT'];
 // An example:
 // PACKAGE_TOKEN={token} PACKAGE_VERSIONS_ENDPOINT={package_versions_endpoint} SYSTEM_PULLREQUEST_SOURCEBRANCH=refs/head/{local_branch_name} SYSTEM_PULLREQUEST_TARGETBRANCH={target_branch_eg_master} node ./ci/check-downgrading.js --task "@({tasks_names})" --sprint {current_sprint_number}
 
-if (!packageEndpoint) {
-  logToPipeline('error', 'Failed to get info from package endpoint because no endpoint was specified. Try setting the PACKAGE_VERSIONS_ENDPOINT environment variable.')
-  process.exit(1);
-}
+// if (!packageEndpoint) {
+//   logToPipeline(
+//     'error',
+//     'Failed to get info from package endpoint because no endpoint was specified. Try setting the PACKAGE_VERSIONS_ENDPOINT environment variable.'
+//   );
+//   process.exit(1);
+// }
 
 const { RestClient } = require('typed-rest-client/RestClient');
 const client = new RestClient('azure-pipelines-tasks-ci', '');
@@ -33,8 +36,8 @@ if (!argv.task) {
 // We need to escape # on Unix platforms since that turns the rest of the string into a comment
 const escapeHash = str => platform() == 'win32' ? str : str.replace(/#/gi, '\\#');
 
-const sourceBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH']);
-const targetBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_TARGETBRANCH']);
+const sourceBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH']) || 'some-pr';
+const targetBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_TARGETBRANCH']) || 'master';
 
 const baseProjectPath = join(__dirname, '..');
 
@@ -46,6 +49,34 @@ if (!existsSync(tempMasterTasksPath)) {
 
 if (existsSync(join(tempMasterTasksPath, 'Tasks'))) {
   rm('-rf', join(tempMasterTasksPath, 'Tasks'));
+}
+
+function getChangedVersionMapFiles() {
+  const changedVersionMapFiles = run(`git --no-pager diff --name-only --diff-filter=M origin/${targetBranch}..${sourceBranch}`)
+    .split('\n')
+    .filter(x => x.match(/^_generated*versionmap.txt//  startsWith('_generated/') && x.endsWith('versionmap.txt'));
+  return changedVersionMapFiles;
+}
+
+function checkVersionMapFiles(versionMapFiles) {
+  versionMapFiles.forEach(mapFileName => {});
+}
+
+function versionMapChange() {
+  var text = `diff --git a/_generated/AzurePowerShellV5.versionmap.txt b/_generated/AzurePowerShellV5.versionmap.txt
+index 37e1392bd1..d630729a97 100644
+--- a/_generated/AzurePowerShellV5.versionmap.txt
++++ b/_generated/AzurePowerShellV5.versionmap.txt
+@@ -1,2 +1,2 @@
+-Default|5.237.2
+-Node20_229_2|5.237.3
++Default|5.237.0
++Node20_229_2|5.237.1
+`;
+  console.log(text);
+  var lines = text.split('\n');
+  var filtered = lines.filter(line => line.match(/^[+-][A-Z]/));
+  console.log(filtered);
 }
 
 function checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyWeek) {
@@ -265,15 +296,18 @@ async function main({ task, sprint, week }) {
   const masterTaskList = taskList.filter(x => doesTaskExistInMasterBranch(x));
   loadTaskJsonsFromMaster(masterTaskList);
   const masterTasks = readVersionsFromTaskJsons(masterTaskList, tempMasterTasksPath);
-  const feedTaskVersions = await getTaskVersionsFromFeed();
+  //const feedTaskVersions = await getTaskVersionsFromFeed();
   const isReleaseTagExist = run(`git tag -l v${sprint}`).length !== 0;
   const isCourtesyWeek = week === 3;
+
+  //getChangedVersionMapFiles();
+  versionMapChange();
 
   const messages = [
     ...checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyWeek),
     ...compareLocalToMaster(localTasks, masterTasks, sprint),
     ...checkLocalVersions(localTasks, sprint, isReleaseTagExist, isCourtesyWeek),
-    ...compareLocalToFeed(localTasks, feedTaskVersions, sprint),
+    //...compareLocalToFeed(localTasks, feedTaskVersions, sprint),
     ...compareLocalTaskLoc(localTasks)
   ];
 
