@@ -12,7 +12,7 @@ export async function automatedTestsFlow(testPlanInfo: TestPlanData, testSelecto
 
     if (listOfTestsToBeExecuted !== null && listOfTestsToBeExecuted !== undefined && listOfTestsToBeExecuted.length > 0) {
         tl.debug("Invoking test execution for tests: " + listOfTestsToBeExecuted);
-        testInvoker(listOfTestsToBeExecuted);
+        await testInvoker(listOfTestsToBeExecuted);
         publishAutomatedTestResult(JSON.stringify(testPlanInfo.listOfAutomatedTestPoints));
     }
     else {

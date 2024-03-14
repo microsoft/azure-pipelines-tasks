@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 237,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": true,
   "demands": [],
@@ -125,6 +125,18 @@
       "defaultValue": false,
       "required": false,
       "helpMarkDown": "Fail the task if no result files are found."
+    },
+    {
+      "name": "mavenPOMFile",
+      "aliases": [
+        "mavenPomFile"
+      ],
+      "type": "filePath",
+      "label": "Maven POM file",
+      "defaultValue": "pom.xml",
+      "required": true,
+      "helpMarkDown": "Relative path from the repository root to the Maven POM file.",
+      "visibleRule": "testLanguageInput = Java-Maven"
     }
   ],
   "dataSourceBindings": [
@@ -176,7 +188,7 @@
     "ErrorFailTaskOnCreateRunFailure": "Error occured while creating manual test run from test plan inputs"
   },
   "_buildConfigMapping": {
-    "Default": "0.237.0",
-    "Node20-225": "0.237.1"
+    "Default": "0.237.1",
+    "Node20-225": "0.237.2"
   }
 }

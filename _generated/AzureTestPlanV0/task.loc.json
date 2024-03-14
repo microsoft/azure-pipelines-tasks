@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 237,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": true,
   "demands": [],
@@ -125,6 +125,18 @@
       "defaultValue": false,
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failTaskOnMissingResultsFile"
+    },
+    {
+      "name": "mavenPOMFile",
+      "aliases": [
+        "mavenPomFile"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.mavenPOMFile",
+      "defaultValue": "pom.xml",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.mavenPOMFile",
+      "visibleRule": "testLanguageInput = Java-Maven"
     }
   ],
   "dataSourceBindings": [
@@ -176,7 +188,7 @@
     "ErrorFailTaskOnCreateRunFailure": "ms-resource:loc.messages.ErrorFailTaskOnCreateRunFailure"
   },
   "_buildConfigMapping": {
-    "Default": "0.237.0",
-    "Node20-225": "0.237.1"
+    "Default": "0.237.1",
+    "Node20-225": "0.237.2"
   }
 }
