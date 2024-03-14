@@ -83,7 +83,7 @@ steps:
   displayName: Stage tasks individually into the package directory
 
 # Sign task zip as nuget package
-- template: sign-all-tasks.yml
+- template: /ci/sign-all-tasks.yml@self
   parameters:
     layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
@@ -102,13 +102,9 @@ steps:
     Remove-Item -Path .\layout-version.txt
   displayName: Add layout-version.txt to hotfix.zip
 
-  # Publish hotfix artifact
-- task: PublishBuildArtifacts@1
-  displayName: Publish hotfix artifact
-  inputs:
-    pathToPublish: _package/hotfix-layout
-    artifactName: hotfix
-    publishLocation: container
+- powershell: |
+    mv _package/hotfix-layout hotfix-layout
+  displayName: Move _package/hotfix-layout to hotfix-layout
 
 - ${{ if parameters.push }}:
 
@@ -131,16 +127,8 @@ steps:
   - script: npm run package
     displayName: npm run package
 
-  # Publish per task NuGet package artifact
-  - task: PublishBuildArtifacts@1
-    displayName: Publish per task NuGet package artifact
-    inputs:
-      pathToPublish: _package/nuget-packages
-      artifactName: IndividualNuGetPackages
-      publishLocation: container
-
   # Authenticate 
-  - task: NuGetAuthenticate@0
+  - task: NuGetAuthenticate@1
     displayName: Authenticate with nuget
 
   # Push to feed
@@ -148,6 +136,10 @@ steps:
       cd $(Build.SourcesDirectory)\_package\nuget-packages
       push.cmd
     displayName: Push Nuget package
+
+  - powershell: |
+      mv _package/nuget-packages nuget-packages
+    displayName: Move _package/nuget-packages to nuget-packages
 
 # Stop collect diagnostics
 - powershell: ./ci/stop-collect-diagnostics.ps1

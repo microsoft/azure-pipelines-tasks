@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 232,
-    "Patch": 1
+    "Minor": 236,
+    "Patch": 2
   },
   "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
   "minimumAgentVersion": "2.115.0",
@@ -263,7 +263,7 @@
     "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backtick (`). More information is available here: https://aka.ms/ado/75787"
   },
   "_buildConfigMapping": {
-    "Default": "2.232.0",
-    "Node20-225": "2.232.1"
+    "Default": "2.236.1",
+    "Node20-225": "2.236.2"
   }
 }

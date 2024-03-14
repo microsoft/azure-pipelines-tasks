@@ -427,23 +427,41 @@ class Utils {
 
     private static async getFilePathForLinkedArtifact(filePath: string, taskParameters: armDeployTaskParameters.TaskParameters): Promise<string> {
         var filePathExtension: string = filePath.split('.').pop();
-        if(filePathExtension === 'bicep'){
+        if(filePathExtension.startsWith('bicep')){
             let azcliversion = await this.getAzureCliVersion()
             if(parseFloat(azcliversion)){
-                if(this.isBicepAvailable(azcliversion)){
+                if(this.isBicepAvailable(azcliversion, filePathExtension)){
                     setAzureCloudBasedOnServiceEndpoint(taskParameters.connectedService);
                     await loginAzureRM(taskParameters.connectedService);
                     await this.execBicepBuild(filePath)
-                    filePath = filePath.replace('.bicep', '.json')
-                    this.cleanupFileList.push(filePath)
+                    if(filePathExtension === 'bicep'){
+                        filePath = filePath.replace('.bicep', '.json')      
+                    }
+                    else{
+                        var fullFileName: string = filePath.split(path.sep).pop()
+                        var bicepParamExtension: string = '.bicepparam'
+                        if(fullFileName.split('.').length > 2){
+                            var nameArray: Array<string> = fullFileName.split('.')
+                            nameArray.splice(0, 1)
+                            bicepParamExtension = '.'+nameArray.join('.')
+                        }
+                        filePath = filePath.replace(bicepParamExtension, '.parameters.json')      
+                    }        
                     await this.logoutAzure();
                 }else{
-                    throw new Error(tl.loc("IncompatibleAzureCLIVersion"));
+                    //Maintain backwards compatibility for runs that are not using bicep param and do not require higher version
+                    if(filePathExtension === 'bicep'){
+                        throw new Error(tl.loc("IncompatibleAzureCLIVersion"));
+                    }
+                    else{
+                        throw new Error(tl.loc("IncompatibleAzureCLIVersionBicepParam"));
+                    }
                 }
             }else{
                 throw new Error(tl.loc("AzureCLINotFound"));
             }
         }
+
         return filePath
     }
 
@@ -463,10 +481,29 @@ class Utils {
     }
 
     private static async execBicepBuild(filePath): Promise<void> {
-        const result: IExecSyncResult = tl.execSync("az", `bicep build --file ${filePath}`);
-        if(result && result.code !== 0){
-            throw new Error(tl.loc("BicepBuildFailed", result.stderr));
+        var fullFileName: string = filePath.split(path.sep).pop()
+        var fileDir: string = filePath.replace(path.sep + fullFileName, '')
+        var filePathExtension: string = filePath.split('.').pop();
+        var fileName: string = filePath.split(path.sep).pop().split('.')[0];
+        var finalPathExtension: string = ".json" 
+
+        if(filePathExtension === 'bicep'){
+            const result: IExecSyncResult = tl.execSync("az", `bicep build --file ${filePath}`);
+            if(result && result.code !== 0){
+                throw new Error(tl.loc("BicepBuildFailed", result.stderr));
+            }
         }
+        else{
+            finalPathExtension = ".parameters.json"
+
+            //Using --outfile to avoid overwriting primary bicep file in the case bicep and param file have the the same file name.
+            const result: IExecSyncResult = tl.execSync("az", `bicep build-params --file ${filePath} --outfile ${path.join(fileDir, fileName + finalPathExtension)}`);
+            if(result && result.code !== 0){
+                throw new Error(tl.loc("BicepParamBuildFailed", result.stderr));
+            } 
+        }
+
+        this.cleanupFileList.push(fileDir + path.sep + fileName + finalPathExtension)  
     }
 
     private static async logoutAzure() {
@@ -476,11 +513,15 @@ class Utils {
         }
     }
 
-    private static isBicepAvailable(azcliversion): Boolean{
+    private static isBicepAvailable(azcliversion,extension): Boolean{
         let majorVersion = azcliversion.split('.')[0]
         let minorVersion = azcliversion.split('.')[1]
-        // Support Bicep was introduced in az-cli 2.20.0
-        if((majorVersion == 2 && minorVersion >= 20) || majorVersion > 2){
+        // Support for Bicep format was introduced in az-cli 2.20.0   
+        if(((majorVersion == 2 && minorVersion >= 20) && extension === 'bicep') || majorVersion > 2){
+            return true
+        }
+        // Support for Bicep Param format was introduced in az-cli 2.47.0
+        else if(((majorVersion == 2 && minorVersion >= 47) && extension === 'bicepparam') || majorVersion > 2){
             return true
         }
         return false

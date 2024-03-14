@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 233,
+    "Minor": 237,
     "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -497,6 +497,10 @@
   "execution": {
     "Node10": {
       "target": "azurermwebappdeployment.js"
+    },
+    "Node16": {
+      "target": "azurermwebappdeployment.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -655,7 +659,7 @@
     "MSDeployNotSupportTokenAuth": "ms-resource:loc.messages.MSDeployNotSupportTokenAuth"
   },
   "_buildConfigMapping": {
-    "Default": "4.233.2",
-    "Node16-225": "4.233.3"
+    "Default": "4.237.2",
+    "Node20_229_2": "4.237.3"
   }
 }

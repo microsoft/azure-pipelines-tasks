@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 231,
-    "Patch": 2
+    "Minor": 237,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -208,7 +208,7 @@
     "PS_ExitCode": "ms-resource:loc.messages.PS_ExitCode"
   },
   "_buildConfigMapping": {
-    "Default": "5.231.0",
-    "Node20_229_2": "5.231.2"
+    "Default": "5.237.0",
+    "Node20_229_2": "5.237.1"
   }
 }

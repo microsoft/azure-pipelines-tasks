@@ -17,7 +17,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 232,
+    "Minor": 236,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -579,10 +579,11 @@
     "Net5NugetVersionCompat": "ms-resource:loc.messages.Net5NugetVersionCompat",
     "DeprecatedDotnet2_2_And_3_0": "ms-resource:loc.messages.DeprecatedDotnet2_2_And_3_0",
     "Warning_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Warning_IncludeNuGetOrgEnabled",
-    "Error_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Error_IncludeNuGetOrgEnabled"
+    "Error_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Error_IncludeNuGetOrgEnabled",
+    "Warning_UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.Warning_UnsupportedServiceConnectionAuth"
   },
   "_buildConfigMapping": {
-    "Default": "2.232.0",
-    "Node20_229_2": "2.232.1"
+    "Default": "2.236.0",
+    "Node20_229_2": "2.236.1"
   }
 }

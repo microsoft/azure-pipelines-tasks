@@ -1,4 +1,8 @@
-﻿function Add-Certificate {
+﻿$featureFlags = @{
+    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
+function Add-Certificate {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)] $Endpoint,
@@ -156,7 +160,6 @@ function Get-MsiAccessToken {
     }
     while ($trialCount -le $retryLimit)
 }
-
 
 function Get-VstsFederatedToken {
     param(
@@ -585,29 +588,63 @@ function Add-AzureStackAzureRmEnvironment {
         GalleryEndpoint                          = $galleryEndpoint
         GraphEndpoint                            = $graphEndpoint
         GraphAudience                            = $graphAudience
-        StorageEndpointSuffix                    = $StorageEndpointSuffix
         AzureKeyVaultDnsSuffix                   = $AzureKeyVaultDnsSuffix
         AzureKeyVaultServiceEndpointResourceId   = $AzureKeyVaultServiceEndpointResourceId
         EnableAdfsAuthentication                 = $aadAuthorityEndpoint.TrimEnd("/").EndsWith("/adfs", [System.StringComparison]::OrdinalIgnoreCase)
     }
+    
+    if ($featureFlags.retireAzureRM)
+    {
+        $azureEnvironmentParams.StorageEndpoint = $StorageEndpointSuffix
+    }
+    else
+    {
+        $azureEnvironmentParams.StorageEndpointSuffix = $StorageEndpointSuffix
+    }
 
-    $armEnv = Get-AzureRmEnvironment -Name $name
-    if($armEnv -ne $null) {
-        Write-Verbose "Updating AzureRm environment $name" -Verbose
+    if ($featureFlags.retireAzureRM)
+    {
+        $armEnv = Get-AzEnvironment -Name $name
 
-        if (CmdletHasMember -cmdlet Remove-AzureRmEnvironment -memberName Force) {
-            Remove-AzureRmEnvironment -Name $name -Force | Out-Null
+        if($null -ne $armEnv) {
+            Write-Verbose "Updating Az environment $name" -Verbose
+    
+            if (CmdletHasMember -cmdlet Remove-AzEnvironment -memberName Force) {
+                Remove-AzEnvironment -Name $name -Force | Out-Null
+            }
+            else {
+                Remove-AzEnvironment -Name $name | Out-Null
+            }
         }
         else {
-            Remove-AzureRmEnvironment -Name $name | Out-Null
+            Write-Verbose "Adding Az environment $name" -Verbose
         }
     }
-    else {
-        Write-Verbose "Adding AzureRm environment $name" -Verbose
+    else
+    {
+        $armEnv = Get-AzureRmEnvironment -Name $name
+
+        if($null -ne $armEnv) {
+            Write-Verbose "Updating AzureRm environment $name" -Verbose
+    
+            if (CmdletHasMember -cmdlet Remove-AzureRmEnvironment -memberName Force) {
+                Remove-AzureRmEnvironment -Name $name -Force | Out-Null
+            }
+            else {
+                Remove-AzureRmEnvironment -Name $name | Out-Null
+            }
+        }
+        else {
+            Write-Verbose "Adding AzureRm environment $name" -Verbose
+        }
     }
 
     try {
-        return Add-AzureRmEnvironment @azureEnvironmentParams
+        if ($featureFlags.retireAzureRM) {
+            return Add-AzEnvironment @azureEnvironmentParams
+        } else {
+            return Add-AzureRmEnvironment @azureEnvironmentParams
+        }
     }
     catch {
         Assert-TlsError -exception $_.Exception
@@ -630,7 +667,11 @@ function Disconnect-AzureAndClearContext {
                 Disconnect-UsingAzModule -restrictContext $restrictContext
             }
             else {
-                Disconnect-UsingARMModule
+                if ($featureFlags.retireAzureRM) {
+                    Write-Error "Unable to get Az.Accounts module in Disconnect-AzureAndClearContext"
+                } else {
+                    Disconnect-UsingARMModule
+                }
             }
         }
     } catch {
@@ -683,3 +724,4 @@ function Disconnect-UsingARMModule {
         $null = Clear-AzureRmContext -Scope Process -ErrorAction Stop
     }
 }
+

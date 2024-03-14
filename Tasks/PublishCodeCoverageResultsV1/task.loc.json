@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 228,
+    "Minor": 236,
     "Patch": 0
   },
   "demands": [],
@@ -99,6 +99,7 @@
     "FailedToGenerateHtmlReport": "ms-resource:loc.messages.FailedToGenerateHtmlReport",
     "IgnoringReportDirectory": "ms-resource:loc.messages.IgnoringReportDirectory",
     "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage",
-    "GeneratedHtmlReport": "ms-resource:loc.messages.GeneratedHtmlReport"
+    "GeneratedHtmlReport": "ms-resource:loc.messages.GeneratedHtmlReport",
+    "V1TaskDeprecationNotice": "ms-resource:loc.messages.V1TaskDeprecationNotice"
   }
 }

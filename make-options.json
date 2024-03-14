@@ -193,12 +193,12 @@
         "VSBuildV1",
         "VsTestV1",
         "VsTestV2",
-        "VsTestV3",
         "VsTestPlatformToolInstallerV1",
         "WindowsMachineFileCopyV1",
         "WindowsMachineFileCopyV2",
         "XamarinAndroidV1",
         "XamariniOSV2",
+        "XamarinTestCloudV1",
         "XcodeV5"
     ],
     "taskResources": [
@@ -217,24 +217,19 @@
         "task.loc.json",
         "Tests"
     ],
-    "Node16_225": [
-        "AzureRmWebAppDeploymentV4",
-        "IISWebAppDeploymentOnMachineGroupV0"
-    ],
     "Node20": [
         "AndroidSigningV2",
         "AndroidSigningV3",
+        "AzureTestPlanV0",
         "ANTV1",
         "ArchiveFilesV2",
         "BashV3",
         "CMakeV1",
         "CmdLineV2",
         "CocoaPodsV0",
-        "CopyFilesV2",
         "CopyFilesOverSSHV0",
         "CUrlUploaderV2",
         "DecryptFileV1",
-        "DeleteFilesV1",
         "DownloadSecureFileV1",
         "ExtractFilesV1",
         "FtpUploadV1",
@@ -267,7 +262,11 @@
         "OpenPolicyAgentInstallerV0"
     ],
     "Node20_228": [
-        "MavenV2"
+        "MavenV2",
+        "PyPIPublisherV0",
+        "XamarinTestCloudV1",
+        "CopyFilesV2",
+        "DeleteFilesV1"
     ],
     "Node20_229_1": [
         "CargoAuthenticateV0",
@@ -311,6 +310,7 @@
         "AzureMysqlDeploymentV1",
         "AzureNLBManagementV1",
         "AzureRmWebAppDeploymentV3",
+        "AzureRmWebAppDeploymentV4",
         "AzurePowerShellV4",
         "AzurePowerShellV5",
         "AzureWebAppV1",
@@ -346,18 +346,22 @@
         "HelmDeployV0",
         "HelmInstallerV0",
         "HelmInstallerV1",
+        "IISWebAppDeploymentOnMachineGroupV0",
         "JenkinsDownloadArtifactsV1",
         "KubeloginInstallerV0",
         "KubectlInstallerV0",
         "KubernetesV1",
         "KubernetesManifestV0",
+        "KubernetesManifestV1",
         "MysqlDeploymentOnMachineGroupV1",
-        "UseDotNetV2"
+        "UseDotNetV2",
+        "PublishPipelineMetadataV0"
     ],
     "Node20_229_4": [
         "VsTestPlatformToolInstallerV1",
         "ContainerStructureTestV0",
         "PublishCodeCoverageResultsV1",
+        "PublishCodeCoverageResultsV2",
         "VsTestV2",
         "VsTestV3"
     ],
@@ -397,5 +401,7 @@
         "PublishTestResultsV1",
         "PublishTestResultsV2"
     ],
-    "Node20_229_14": []
+    "Node20_229_14": [
+        "PublishSymbolsV2"
+    ]
 }

@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/armtaskreadme)",
   "loc.description": "Deploy an Azure Resource Manager (ARM) template to all the deployment scopes",
   "loc.instanceNameFormat": "ARM Template deployment: $(deploymentScope) scope",
-  "loc.releaseNotes": "- Added support for deployment at all the deployment scopes.\n- Removed all the VM related actions.",
+  "loc.releaseNotes": "- Added support for bicepparam.",
   "loc.group.displayName.AzureDetails": "Azure Details",
   "loc.group.displayName.Template": "Template",
   "loc.group.displayName.Advanced": "Advanced",
@@ -27,7 +27,7 @@
   "loc.input.label.csmFile": "Template",
   "loc.input.help.csmFile": "Specify the path or a pattern pointing to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate. 'Linked artifact' also has support for Bicep files when the Azure CLI version > 2.20.0",
   "loc.input.label.csmParametersFile": "Template parameters",
-  "loc.input.help.csmParametersFile": "Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template. 'Linked artifact' also has support for Bicep files when the Azure CLI version > 2.20.0",
+  "loc.input.help.csmParametersFile": "Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template. 'Linked artifact' also has support for Bicep Param files when the Azure CLI version > 2.47.0",
   "loc.input.label.overrideParameters": "Override template parameters",
   "loc.input.help.overrideParameters": "To view the template parameters in a grid, click on “…” next to Override Parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS. Or type the template parameters to override in the textbox. Example, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).<br>If the parameter value you're using has multiple words, enclose them in quotes, even if you're passing them using variables. For example, -name \"parameter value\" -name2 \"$(var)\"<br>To override object type parameters use stringified JSON objects. For example, -options [\"option1\"] -map {\"key1\": \"value1\" }. ",
   "loc.input.label.deploymentMode": "Deployment mode",
@@ -99,5 +99,7 @@
   "loc.messages.LoginFailed": "Azure login failed: %s",
   "loc.messages.MSILoginFailed": "Azure login failed using Managed Service Identity: %s",
   "loc.messages.AuthSchemeNotSupported": "Auth Scheme %s is not supported",
-  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription: %s"
+  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription: %s",
+  "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\" failed. Error: %s",
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI version should be >= 2.47.0 to use .bicepparam file"
 }

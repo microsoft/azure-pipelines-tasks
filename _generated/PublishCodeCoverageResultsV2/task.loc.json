@@ -1,0 +1,68 @@
+{
+  "id": "2A7EBC54-C13E-490E-81A5-D7561AB7CD97",
+  "name": "PublishCodeCoverageResults",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-code-coverage-results",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Test",
+  "visibility": [
+    "Build"
+  ],
+  "runsOn": [
+    "Agent"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 236,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "summaryFileLocation",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.summaryFileLocation",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.summaryFileLocation"
+    },
+    {
+      "name": "pathToSources",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.pathToSources",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pathToSources"
+    },
+    {
+      "name": "failIfCoverageEmpty",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failIfCoverageEmpty",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failIfCoverageEmpty"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "publishcodecoverageresults.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "publishcodecoverageresults.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "FoundNMatchesForPattern": "ms-resource:loc.messages.FoundNMatchesForPattern",
+    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.236.0",
+    "Node20_229_4": "2.236.1"
+  }
+}

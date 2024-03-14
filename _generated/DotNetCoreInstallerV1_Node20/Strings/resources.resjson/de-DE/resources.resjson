@@ -78,5 +78,6 @@
   "loc.messages.FilesDataIsIncorrectInVersion": "In Release %s für Version %s sind die Dateidaten falsch (möglicherweise fehlen erforderliche Felder wie Name, RID und URL): %s",
   "loc.messages.VersionFilesDataIncorrect": "Die Dateidaten der Version fehlen, oder es fehlen erforderliche Felder.",
   "loc.messages.VersionInformationNotComplete": "Für Version %s erforderliche Informationen sind in der Datei \"releases.json\" nicht vollständig. Fehler: %s",
-  "loc.messages.FailedWhileExtractingPacakge": "Fehler beim Extrahieren des heruntergeladenen Pakets. Fehler: %s"
+  "loc.messages.FailedWhileExtractingPacakge": "Fehler beim Extrahieren des heruntergeladenen Pakets. Fehler: %s",
+  "loc.messages.DeprecatedTask": "Die Aufgabe DotNetCoreInstaller@1 (.NET Core SDK/Runtime-Installer) ist seit dem 22. August 2019 veraltet und wird in Kürze eingestellt. Verwenden Sie stattdessen die Aufgabe UseDotNet@2. Besuchen Sie https://aka.ms/azdo-deprecated-tasks, um weitere Informationen zu veralteten Aufgaben zu erhalten."
 }

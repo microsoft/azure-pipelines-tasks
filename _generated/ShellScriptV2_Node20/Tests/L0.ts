@@ -42,9 +42,7 @@ describe('ShellScript L0 Suite', function () {
         assert(tr.ran('/usr/local/bin/bash /script.sh arg1 arg2'), 'it should have run ShellScript');
         assert(tr.invokedToolCount == 1, 'should have only run ShellScript');
 
-        var expectedErr = '/usr/local/bin/bash failed with return code: 1';
-
-        assert(tr.stdOutContained(expectedErr), 'should have said: ' + expectedErr);
+        assert(tr.stdOutContained('loc_mock_BashFailed 1'), 'should have said: loc_mock_BashFailed 1');
         // failOnStdErr not set
         assert(!tr.stderr, 'should not have written to stderr');
         assert(tr.failed, 'task should have failed');
