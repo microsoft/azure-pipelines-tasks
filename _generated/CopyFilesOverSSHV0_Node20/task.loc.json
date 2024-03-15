@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 236,
+    "Minor": 237,
     "Patch": 1
   },
   "demands": [],
@@ -175,7 +175,7 @@
     "PathNotExists": "ms-resource:loc.messages.PathNotExists"
   },
   "_buildConfigMapping": {
-    "Default": "0.236.0",
-    "Node20-225": "0.236.1"
+    "Default": "0.237.0",
+    "Node20-225": "0.237.1"
   }
 }
