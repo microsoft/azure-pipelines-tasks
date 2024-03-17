@@ -174,10 +174,12 @@ function Get-SqlPackageCommandArguments {
     }
     elseif ($authenticationType -eq "Windows") {
         if ($targetServerName) {
-            $targetConnectionString = Get-WindowsAuthenticationConnectionString -serverName $targetServerName -databaseName $targetDatabaseName
+            $connectionString = Get-WindowsAuthenticationConnectionString -serverName $targetServerName -databaseName $targetDatabaseName
+            $sqlPackageArguments += @("$($sqlPackageOptions.TargetConnectionString)`"$connectionString`"")
         }
         else {
-            $sourceConnectionString = Get-WindowsAuthenticationConnectionString -serverName $sourceServerName -databaseName $sourceDatabaseName
+            $connectionString = Get-WindowsAuthenticationConnectionString -serverName $sourceServerName -databaseName $sourceDatabaseName
+            $sqlPackageArguments += @("$($sqlPackageOptions.SourceConnectionString)`"$connectionString`"")
         }
     }
     elseif ($authenticationType -eq "connectionString") {
