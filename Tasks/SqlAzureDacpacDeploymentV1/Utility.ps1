@@ -174,7 +174,10 @@ function Get-SqlPackageCommandArguments {
     }
     elseif ($authenticationType -eq "Windows") {
         if ($targetServerName) {
-            $targetConnectionString
+            $targetConnectionString = Get-WindowsAuthenticationConnectionString -serverName $targetServerName -databaseName $targetDatabaseName
+        }
+        else {
+            $sourceConnectionString = Get-WindowsAuthenticationConnectionString -serverName $sourceServerName -databaseName $sourceDatabaseName
         }
     }
     elseif ($authenticationType -eq "connectionString") {
@@ -283,7 +286,7 @@ function Get-AADAuthenticationConnectionString {
     return $connectionString
 }
 
-Get-WindowsAuthenticationConnectionString {
+function Get-WindowsAuthenticationConnectionString {
     param(
         [String][Parameter(Mandatory = $true)] $serverName,
         [String][Parameter(Mandatory = $true)] $databaseName

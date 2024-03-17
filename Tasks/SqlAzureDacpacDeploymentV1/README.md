@@ -2,7 +2,7 @@
 
 ### Overview:
 
-The task is used to deploy Azure SQL Database to an existing Azure SQL Server, either by using DACPACs or SQL Server scripts. The [DACPACs](https://msdn.microsoft.com/en-IN/library/ee210546.aspx) are deployed using [SqlPackage.exe](#1) and the [SQL Server scripts](https://msdn.microsoft.com/en-IN/library/hh245282.aspx) are deployed using the [Invoke-Sqlcmd cmdlet](https://msdn.microsoft.com/en-IN/library/cc281720.aspx). DACPACs and SqlPackage.exe and Invoke-Sqlcmd cmdlet provides for fine-grained control over the database creation and upgrades, including upgrades for schema, triggers, stored procedures, roles, users, extended properties etc. Using the task, multiple different properties can be set to ensure that the database is created or upgraded properly.
+The task is used to deploy Azure SQL Database to an existing Azure SQL DB, Azure SQL Managed Instance, Azure SQL VM, or SQL Server, either by using DACPACs or SQL Server scripts. The [DACPACs](https://msdn.microsoft.com/en-IN/library/ee210546.aspx) are deployed using [SqlPackage.exe](#1) and the [SQL Server scripts](https://msdn.microsoft.com/en-IN/library/hh245282.aspx) are deployed using the [Invoke-Sqlcmd cmdlet](https://msdn.microsoft.com/en-IN/library/cc281720.aspx). DACPACs and SqlPackage.exe and Invoke-Sqlcmd cmdlet provides for fine-grained control over the database creation and upgrades, including upgrades for schema, triggers, stored procedures, roles, users, extended properties etc. Using the task, multiple different properties can be set to ensure that the database is created or upgraded properly.
 
 ### Contact Information
 
@@ -51,6 +51,9 @@ The task runs on the automation agent machine and the following needs to be inst
 
 The task needs the Azure PowerShell version to be installed on the automation agent, and that can be done easily using the [Azure PowerShell Installer v1.3.0](https://github.com/Azure/azure-powershell/releases/tag/v1.3.0-March2016). Refer to "Supported Azure and AzureRM module versions" section below for recommended versions.
 
+##### SQL Server
+
+
 ### Parameters of the task:
 
 The parameters of the task are described in details, including examples, to show how to input the parameters. The parameters listed with a \* are required parameters for the task:
@@ -70,6 +73,8 @@ The parameters of the task are described in details, including examples, to show
 - **Connection String** : A connection string containing all the informations needed to connect the remote server.
 
 - **Service Principal** : Uses the Authentication data from **Azure Subscription**. 
+
+
 
 **SQL DB Details**
 
