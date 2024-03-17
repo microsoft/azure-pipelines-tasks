@@ -64,4 +64,4 @@ async function run(): Promise<void> {
 }
 
 run()
-    .catch((error) => tl.setResult(tl.TaskResult.Failed, !!error.message ? error.message : error));
+    .catch((error) => tl.setSanitizedResult(tl.TaskResult.Failed, !!error.message ? error.message : error));
