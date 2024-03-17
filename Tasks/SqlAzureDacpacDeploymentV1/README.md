@@ -2,7 +2,7 @@
 
 ### Overview:
 
-The task is used to deploy a compiled SQL Database project ([DACPACs](https://msdn.microsoft.com/en-IN/library/ee210546.aspx)) to an existing Azure SQL DB, Azure SQL Managed Instance, Azure SQL VM, or SQL Server, either by using DACPACs or SQL Server scripts. Either Visual Studio SQL Database projects or Visual Studio Code/Azure Data Studio SQL Database projects can be used, as both build a DACPAC file. The  are deployed using [SqlPackage.exe](#1) and the [SQL Server scripts](https://msdn.microsoft.com/en-IN/library/hh245282.aspx) are deployed using the [Invoke-Sqlcmd cmdlet](https://msdn.microsoft.com/en-IN/library/cc281720.aspx). DACPACs and SqlPackage.exe and Invoke-Sqlcmd cmdlet provides for fine-grained control over the database creation and upgrades, including upgrades for schema, triggers, stored procedures, roles, users, extended properties etc. Using the task, multiple different properties can be set to ensure that the database is created or upgraded properly.
+The task is used to deploy a compiled SQL Database project ([DACPACs](https://msdn.microsoft.com/en-IN/library/ee210546.aspx)) to an existing Azure SQL DB, Azure SQL Managed Instance, Azure SQL VM, or SQL Server, either by using DACPACs or SQL Server scripts. Either Visual Studio SQL Database projects or Visual Studio Code/Azure Data Studio SQL Database projects can be used, as both build a DACPAC file. The DACPACs are deployed using [SqlPackage.exe](#1) and the [SQL Server scripts](https://msdn.microsoft.com/en-IN/library/hh245282.aspx) are deployed using the [Invoke-Sqlcmd cmdlet](https://msdn.microsoft.com/en-IN/library/cc281720.aspx). DACPACs and SqlPackage.exe and Invoke-Sqlcmd cmdlet provides for fine-grained control over the database creation and upgrades, including upgrades for schema, triggers, stored procedures, roles, users, extended properties etc. Using the task, multiple different properties can be set to ensure that the database is created or upgraded properly.
 
 ### Contact Information
 
@@ -60,9 +60,9 @@ The parameters of the task are described in details, including examples, to show
 
 **Azure Subscription Connection Details**
 
-- **Azure Connection Type\*:** Specify Azure endpoint type, for Azure Classic resources use 'Azure' endpoint, for Azure ARM resources use 'Azure Resource Manager' endpoint.
+- **Azure Connection Type:** Specify Azure endpoint type, for Azure Classic resources use 'Azure' endpoint, for Azure ARM resources use 'Azure Resource Manager' endpoint.
 
-- **Azure Subscription\*:** Select the Azure Subscription where the Azure SQL Database will be deployed.
+- **Azure Subscription:** Select the Azure Subscription where the Azure SQL Database will be deployed.
 
 **Authentication types**
 
@@ -74,11 +74,11 @@ The parameters of the task are described in details, including examples, to show
 
 - **Service Principal** : Uses the Authentication data from **Azure Subscription**. 
 
-
+- **Windows Authentication** : Uses the credentials of the self-hosted pipeline agent.
 
 **SQL DB Details**
 
-- **Azure SQL Server Name\*:** The connection string for the Azure SQL Server and the format is same as that is followed in SQL Server Management Studio. For example, FabrikamSQL.database.windows.net, 1433 or FabrikamSQL.database.windows.net are both valid Azure SQL Server names.
+- **SQL Server Name\*:** The connection string for the Azure SQL Server and the format is same as that is followed in SQL Server Management Studio. For example, FabrikamSQL.database.windows.net, 1433 or FabrikamSQL.database.windows.net are both valid Azure SQL Server names.
 
 - **Database Name\*:** The name of the Azure SQL Database like FabrikanDB. The Database will be created new if it does not exist, else it will be updated if it already exists.
 
