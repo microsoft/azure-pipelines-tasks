@@ -4,17 +4,10 @@ import path = require('path');
 import fs = require('fs');
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
-//import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
-
-// let base64 = require('base-64');
-// let utf8 = require('utf8');
-// const accessTokenEnvSetting: string = 'ENV_MAVEN_ACCESS_TOKEN';
-
 
 var isWindows = os.type().match(/^Win/);
 var m2HomeEnvVar: string = null;
 var mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
-
 
 function getMavenExec(){
     var mvnExec: string = '';
@@ -47,10 +40,6 @@ function getMavenExec(){
 
     return mvnExec;
 }
-
-// function getAuthenticationToken() {
-//     return base64.encode(utf8.encode('VSTS:' + pkgLocationUtils.getSystemAccessToken()));
-// }
 
 let currentPlugin = '';
 
@@ -122,7 +111,6 @@ function processMavenOutput(buffer: Buffer) {
 
 function getExecOptions(): tr.IExecOptions {
     var env = process.env;
-    //env[accessTokenEnvSetting] = getAuthenticationToken();
     return <tr.IExecOptions> {
         env: env,
     };
