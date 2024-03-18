@@ -30,6 +30,9 @@ function Initialize-AzModule {
             $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName
             Write-Verbose "'$azAccountsModuleName' is available with version $azAccountsVersion."
 
+            Write-Verbose "Supressing breaking changes warnings of '$($azAccountsModuleName)' module."
+            Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo $azAccountsModuleName
+
             Uninstall-AzureRMModules -UseAzUninstall
 
             $azResourcesModuleName = "Az.Resources"
@@ -100,9 +103,6 @@ function Import-SpecificAzModule {
         Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
         $module = (Import-Module -Name $moduleName -Global -PassThru -Force | Sort-Object Version -Descending | Select-Object -First 1)[0]
         Write-Host("Imported module '$moduleName', version: $($module.Version)")
-
-        Write-Verbose "Supressing breaking changes warnings of '$($moduleName)' module."
-        Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo $moduleName
 
         return $module.Version
     }
