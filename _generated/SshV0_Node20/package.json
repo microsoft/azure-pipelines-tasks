@@ -9,7 +9,7 @@
     "@types/q": "^1.0.7",
     "@types/ssh2": "^1.11.19",
     "@types/ssh2-sftp-client": "^9.0.3",
-    "azure-pipelines-task-lib": "^4.10.0",
+    "azure-pipelines-task-lib": "^4.10.1",
     "azure-pipelines-tasks-utility-common": "^3.230.0",
     "ssh2": "^1.15.0",
     "ssh2-sftp-client": "^9.1.0",
