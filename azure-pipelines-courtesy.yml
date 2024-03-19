@@ -7,6 +7,14 @@ trigger:
 
 resources:
   repositories:
+  - repository: AzureDevOps
+    type: git
+    name: AzureDevOps/AzureDevOps
+
+  - repository: ConfigChange
+    type: git
+    name: AzureDevOps/AzureDevOps.ConfigChange
+
   - repository: 1ESPipelineTemplates
     type: git
     name: 1ESPipelineTemplates/1ESPipelineTemplates
@@ -23,6 +31,10 @@ parameters:
   default: TaskNameVN
 - name: push_to_feed
   displayName: Push to Feed
+  type: boolean
+  default: false
+- name: generate_prs
+  displayName: Create hotfix PRs and Release
   type: boolean
   default: false
 - name: deploy_all_tasks
