@@ -12,9 +12,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 5,
-    "Minor": 237,
-    "Patch": 4
+    "Major": 6,
+    "Minor": 238,
+    "Patch": 0
   },
   "demands": [
     "azureps"
@@ -167,15 +167,6 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
-      "name": "sasTokenTimeOutInMinutes",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.sasTokenTimeOutInMinutes",
-      "defaultValue": "240",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.sasTokenTimeOutInMinutes",
-      "visibleRule": "Destination = AzureBlob"
-    },
-    {
       "name": "enableCopyPrerequisites",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.enableCopyPrerequisites",
@@ -215,10 +206,6 @@
     {
       "name": "StorageContainerUri",
       "description": "Uri of the container where the files were copied to. Valid only when the selected destination is Azure Blob."
-    },
-    {
-      "name": "StorageContainerSasToken",
-      "description": "SasToken for the container where the files were copied to. Valid only when the selected destination is Azure Blob."
     }
   ],
   "dataSourceBindings": [
