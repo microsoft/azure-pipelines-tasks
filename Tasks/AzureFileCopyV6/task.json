@@ -12,9 +12,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 5,
-    "Minor": 237,
-    "Patch": 4
+    "Major": 6,
+    "Minor": 238,
+    "Patch": 0
   },
   "demands": [
     "azureps"
@@ -167,15 +167,6 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
-      "name": "sasTokenTimeOutInMinutes",
-      "type": "string",
-      "label": "SAS Token Expiration Period In Minutes",
-      "defaultValue": "240",
-      "required": false,
-      "helpMarkDown": "Provide the time in minutes after which SAS token for the container will expire. By default, this token expires after 4 hours.",
-      "visibleRule": "Destination = AzureBlob"
-    },
-    {
       "name": "enableCopyPrerequisites",
       "type": "boolean",
       "label": "Enable Copy Prerequisites",
@@ -215,10 +206,6 @@
     {
       "name": "StorageContainerUri",
       "description": "Uri of the container where the files were copied to. Valid only when the selected destination is Azure Blob."
-    },
-    {
-      "name": "StorageContainerSasToken",
-      "description": "SasToken for the container where the files were copied to. Valid only when the selected destination is Azure Blob."
     }
   ],
   "dataSourceBindings": [

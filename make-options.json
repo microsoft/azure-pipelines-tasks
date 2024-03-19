@@ -21,6 +21,7 @@
         "AzureFileCopyV3",
         "AzureFileCopyV4",
         "AzureFileCopyV5",
+        "AzureFileCopyV6",
         "AzureFunctionAppV1",
         "AzureFunctionAppV2",
         "AzureFunctionAppContainerV1",

@@ -107,7 +107,7 @@ function Get-StorageAccountType
 
     $storageAccountName = $storageAccountName.Trim()
     # getting storage account type from ARM endpoint
-    $storageAccountType = Get-AzureStorageAccountTypeFromARM $storageAccountName $endpoint $connectedServiceNameARM $vsstsAccessToken
+    $storageAccountType = Get-AzureStorageAccountTypeFromARM $storageAccountName $endpoint $connectedServiceNameARM $vstsAccessToken
 
 	if($null -ne $storageAccountType)
     {
@@ -177,7 +177,6 @@ function Upload-FilesToAzureContainer
           [string][Parameter(Mandatory=$true)]$destinationType,
           [bool]$useDefaultArguments,
           [bool]$cleanTargetBeforeCopy,
-          [string][Parameter(Mandatory=$false)]$containerSasToken = "",
           [bool]$useSanitizerActivate = $false
     )
 
@@ -187,31 +186,25 @@ function Upload-FilesToAzureContainer
         if ($endpoint.Data.EnvironmentAuthorityUrl -ne $null) {
             $aadAuthorityUrl = $endpoint.Data.EnvironmentAuthorityUrl
         }
-
+ 
         Write-Verbose "AAD autority URL = $aadAuthorityUrl"
         Write-Host " mime: $PSScriptRoot\MimeMapping.json"
         $env:AZCOPY_CONTENT_TYPE_MAP ="$PSScriptRoot\MimeMapping.json"
-
+       
         if ($endPoint.Auth.Scheme -eq 'ServicePrincipal') {
             try {
                 if($endPoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
                     $pemFileContent = $endPoint.Auth.Parameters.ServicePrincipalCertificate
                     $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
-                
+               
+                    $env:AZCOPY_AUTO_LOGIN_TYPE = "PSCRED"
                     $env:AZCOPY_SPA_CERT_PASSWORD = $pfxFilePassword
-                    Write-Output "##[command] & `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --certificate-path `"$($pfxFilePath)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`" --aad-endpoint `"$aadAuthorityUrl`""
-
-                    $command = "& `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --certificate-path `"$($pfxFilePath)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`" --aad-endpoint `"$aadAuthorityUrl`""
-                    Invoke-Expression $command
                 }
                 else {
+                    $env:AZCOPY_AUTO_LOGIN_TYPE = "PSCRED"
                     $env:AZCOPY_SPA_CLIENT_SECRET = $endPoint.Auth.Parameters.ServicePrincipalKey
-                    Write-Output "##[command] & `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`" --aad-endpoint `"$aadAuthorityUrl`""
-
-                    $command = "& `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`" --aad-endpoint `"$aadAuthorityUrl`""
-                    Invoke-Expression $command
                 }
-            } 
+            }
             catch {
                 # Provide an additional, custom, credentials-related error message.
                 $exceptionMessage = $_.Exception.Message.ToString()
@@ -219,48 +212,44 @@ function Upload-FilesToAzureContainer
                 throw (New-Object System.Exception((Get-VstsLocString -Key ServicePrincipalError), $_.Exception))
             }
         }
-        elseif ($endPoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
-            Write-Output "##[command] & `"$azCopyExeLocation`" login --identity --aad-endpoint `"$aadAuthorityUrl`""
-
-            $command = "& `"$azCopyExeLocation`" login --identity --aad-endpoint `"$aadAuthorityUrl`""
-            Invoke-Expression $command
-
+        elseif ($endPoint.Auth.Scheme -eq 'ManagedServiceIdentity' -or $endPoint.Auth.Scheme -eq 'WorkloadIdentityFederation') {
+            $env:AZCOPY_AUTO_LOGIN_TYPE = "PSCRED"
         }
         else {
             throw (Get-VstsLocString -Key UnsupportedAuthScheme -ArgumentList $endPoint.Auth.Scheme)
-        } 
-        
+        }
+       
         Write-Output (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
-
+       
         $blobPrefix = $blobPrefix.Trim()
         $trailingChars = [regex]::Escape("/") + '+$'
         $blobPrefix = $blobPrefix -replace $trailingChars, "/"
         $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix.TrimStart("/"))
-
+ 
         $containerURL = $containerURL.Replace('$','`$')
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
         if($cleanTargetBeforeCopy)
         {
            
              Write-Output "##[command] & `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
-
+ 
              $cleanToBlobCommand = "& `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
-
+ 
              Invoke-Expression $cleanToBlobCommand
-
+ 
         }
-
+ 
         if ($useSanitizerActivate) {
             # Splitting arguments on space, but not on space inside quotes
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
             Write-Output "##[command] & azcopy copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
-            & azcopy copy $sourcePath $containerURL$containerSasToken $sanitizedArguments
+            & azcopy copy $sourcePath $containerURL $sanitizedArguments
         } else {
-            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
-            $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"
-            Invoke-Expression $uploadToBlobCommand
+            Write-Output "##[command] & azcopy copy `"$sourcePath`" `"$containerURL`" $additionalArguments"
+            $azCopyCommand = "azcopy copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
+            Invoke-Expression -Command $azCopyCommand
         }
-
+ 
         if($LASTEXITCODE -eq 0)
         {
             Write-Output (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
@@ -986,7 +975,6 @@ function Copy-FilesToAzureVMsFromStorageContainer
         [object]$sessionOption,
         [string]$blobStorageEndpoint,
         [string]$containerName,
-        [string]$containerSasToken,
         [string]$targetPath,
         [bool]$cleanTargetBeforeCopy,
         [bool]$copyFilesInParallel,
@@ -1011,7 +999,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
     }
 
     # script block arguments
-    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments'"
+    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -additionalArguments '$additionalArguments'"
     if($cleanTargetBeforeCopy)
     {
         $scriptBlockArgs += " -CleanTargetBeforeCopy"

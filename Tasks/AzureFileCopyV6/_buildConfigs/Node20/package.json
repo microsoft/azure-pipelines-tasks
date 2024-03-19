@@ -1,5 +1,5 @@
 {
-  "name": "AzureFileCopyV5",
+  "name": "AzureFileCopyV6",
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",
