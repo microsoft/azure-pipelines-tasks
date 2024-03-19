@@ -215,7 +215,7 @@
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
   },
   "_buildConfigMapping": {
-    "Default": "4.237.0",
-    "Node20_229_2": "4.237.1"
+    "Default": "4.237.3",
+    "Node20_229_2": "4.237.4"
   }
 }

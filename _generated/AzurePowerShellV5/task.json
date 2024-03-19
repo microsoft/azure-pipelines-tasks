@@ -204,7 +204,7 @@
     "PS_ExitCode": "PowerShell exited with code '{0}'."
   },
   "_buildConfigMapping": {
-    "Default": "5.237.0",
-    "Node20_229_2": "5.237.1"
+    "Default": "5.237.3",
+    "Node20_229_2": "5.237.4"
   }
 }
