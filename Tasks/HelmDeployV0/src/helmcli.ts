@@ -68,6 +68,7 @@ export default class helmcli extends basecommand {
     public isHelmV37Plus(): boolean {
         if (!this.helmVersion)
             this.helmVersion = this.getHelmVersion().stdout;
+        tl.debug("Helm version is " + this.helmVersion);
         // Parse the version string
         const version = this.helmVersion.match(/^v(\d+)\.(\d+)\.(\d+)/);
         if (version) {
