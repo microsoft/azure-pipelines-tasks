@@ -15,5 +15,6 @@
   "loc.input.label.failOnStandardError": "표준 오류 시 실패",
   "loc.input.help.failOnStandardError": "true일 경우 StandardError 스트림에 오류가 작성되면 이 작업은 실패하게 됩니다.",
   "loc.messages.BashReturnCode": "반환 코드 %d(으)로 Bash 종료",
-  "loc.messages.BashFailed": "오류 %s(으)로 Bash 실패"
+  "loc.messages.BashFailed": "오류 %s(으)로 Bash 실패",
+  "loc.messages.BashFailedWithCode137": "Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured."
 }

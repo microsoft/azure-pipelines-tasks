@@ -88,5 +88,6 @@
   "loc.messages.Warn_CredentialsNotFound": "ユニバーサル パッケージに使用する資格情報を特定できませんでした",
   "loc.messages.Warning_SessionCreationFailed": "次の来歴セッションを作成できませんでした: %s",
   "loc.messages.Error_UniversalPackagesNotSupportedOnPrem": "ユニバーサル パッケージは Azure DevOps Server ではサポートされていません。",
-  "loc.messages.Error_ProcessorArchitectureNotSupported": "ユニバーサル パッケージでは x64 エージェントが必要です。"
+  "loc.messages.Error_ProcessorArchitectureNotSupported": "ユニバーサル パッケージでは x64 エージェントが必要です。",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
 }

@@ -19,6 +19,7 @@
   "loc.input.help.bashEnvValue": "If input is specified, it's value is expanded and used as the path of a startup file to execute before running the script. If the environment variable `BASH_ENV` has already been defined, the task will override this variable only for the current task. You can find more details by [link](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html).",
   "loc.messages.GeneratingScript": "正在產生指令碼。",
   "loc.messages.JS_ExitCode": "Bash 已結束，代碼為 '%s'。",
+  "loc.messages.JS_ExitCode_137": "Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured.",
   "loc.messages.JS_FormattedCommand": "經過格式化的命令: %s",
   "loc.messages.JS_InvalidFilePath": "檔案路徑 '%s' 無效。",
   "loc.messages.JS_ScriptContents": "指令碼內容:",

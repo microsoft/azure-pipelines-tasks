@@ -52,5 +52,6 @@
   "loc.messages.OverridingProjectNpmrc": "Переопределение файла NPMRC проекта: %s",
   "loc.messages.RestoringProjectNpmrc": "Восстанавливается файл NPMRC проекта",
   "loc.messages.WorkingDirectoryNotDirectory": "Измените рабочий каталог на допустимый",
-  "loc.messages.NGCommon_AreaNotFoundInSps": "Не удается найти область \"%s\" [%s]. Возможно, служба, содержащая эту область, недоступна в вашем регионе."
+  "loc.messages.NGCommon_AreaNotFoundInSps": "Не удается найти область \"%s\" [%s]. Возможно, служба, содержащая эту область, недоступна в вашем регионе.",
+  "loc.messages.UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
 }

@@ -19,6 +19,7 @@
   "loc.input.help.bashEnvValue": "Si se especifica la entrada, su valor se expande y se usa como ruta de acceso de un archivo de inicio que se va a ejecutar antes de ejecutar el script. Si la variable de entorno 'BASH_ENV' ya se ha definido, la tarea reemplazará esta variable solo para la tarea actual. Encontrará más detalles en [link](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html).",
   "loc.messages.GeneratingScript": "Generando script.",
   "loc.messages.JS_ExitCode": "Bash se cerró con el código \"%s\".",
+  "loc.messages.JS_ExitCode_137": "Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured.",
   "loc.messages.JS_FormattedCommand": "Comando con formato: %s",
   "loc.messages.JS_InvalidFilePath": "Ruta de acceso de archivo no válida: %s.",
   "loc.messages.JS_ScriptContents": "Contenido del script:",

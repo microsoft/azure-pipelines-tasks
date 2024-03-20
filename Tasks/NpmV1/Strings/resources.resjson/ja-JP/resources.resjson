@@ -52,5 +52,6 @@
   "loc.messages.OverridingProjectNpmrc": "プロジェクト .npmrc をオーバーライドしています: %s",
   "loc.messages.RestoringProjectNpmrc": "プロジェクト .npmrc を復元しています",
   "loc.messages.WorkingDirectoryNotDirectory": "作業ディレクトリを有効なディレクトリに変更してください",
-  "loc.messages.NGCommon_AreaNotFoundInSps": "'%s' [%s] 領域を特定できません。この領域を含むサービスは、ご利用の地域では提供されません。"
+  "loc.messages.NGCommon_AreaNotFoundInSps": "'%s' [%s] 領域を特定できません。この領域を含むサービスは、ご利用の地域では提供されません。",
+  "loc.messages.UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
 }

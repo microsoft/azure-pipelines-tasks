@@ -52,5 +52,6 @@
   "loc.messages.OverridingProjectNpmrc": "Remplacement du fichier .npmrc du projet : %s",
   "loc.messages.RestoringProjectNpmrc": "Restauration du fichier .npmrc du projet",
   "loc.messages.WorkingDirectoryNotDirectory": "Remplacez votre répertoire de travail par un répertoire valide",
-  "loc.messages.NGCommon_AreaNotFoundInSps": "Impossible de localiser la zone '%s' [%s]. Le service qui contient la zone n'est peut-être pas disponible dans votre région."
+  "loc.messages.NGCommon_AreaNotFoundInSps": "Impossible de localiser la zone '%s' [%s]. Le service qui contient la zone n'est peut-être pas disponible dans votre région.",
+  "loc.messages.UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
 }

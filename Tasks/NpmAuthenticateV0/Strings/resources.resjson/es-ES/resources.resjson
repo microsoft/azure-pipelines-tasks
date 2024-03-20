@@ -24,5 +24,7 @@
   "loc.messages.CheckedInCredentialsOverriden": "Se encontraron las credenciales del Registro %s en el archivo .npmrc seleccionado y se invalidaron. Quite las credenciales del archivo y almacénelas en una conexión de servicio de npm en su lugar (recomendado), o bien quite la tarea Autenticar de npm de la compilación para usar las credenciales protegidas en un archivo .npmrc",
   "loc.messages.NoIndexJsonFile": "No se encontró ningún archivo index.json y no se restauró ningún archivo.",
   "loc.messages.RevertedChangesToNpmrc": "Se revirtieron los cambios realizados en %s.",
-  "loc.messages.NpmrcDoesNotExist": "El archivo .npmrc que ha seleccionado en %s no existe actualmente."
+  "loc.messages.NpmrcDoesNotExist": "El archivo .npmrc que ha seleccionado en %s no existe actualmente.",
+  "loc.messages.SuccessfulPush": "Successfully pushed .npmrc",
+  "loc.messages.SuccessfulAppend": "Successfully appended .npmrc"
 }

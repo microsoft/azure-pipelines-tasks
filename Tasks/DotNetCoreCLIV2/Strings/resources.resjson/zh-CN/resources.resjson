@@ -138,5 +138,6 @@
   "loc.messages.Net5NugetVersionCompat": ".NET 5 与更低版本的 Nuget (版本不超过 5.7)存在一些兼容性问题，因此如果你在使用更低版本的 Nuget (且未使用 dotnet cli)进行还原，则依赖已还原的这类包的 dotnet cli 命令(例如 dotnet build)可能会失败。若要解决这种错误，可: (1) - 使用 dotnet cli 进行还原，(2) - 使用 Nuget 5.8 版本进行还原，(3) - 通过更低版本的 sdk (版本不超过 3)使用 global.json 来进行生成",
   "loc.messages.DeprecatedDotnet2_2_And_3_0": "信息: .NET Core SDK/运行时 2.2 和 3.0 现已到达生命周期结束(EOL)日期，已从所有托管的代理中将它们删除。如果你正在托管的代理上使用这些 SDK/运行时，请升级到尚未到达 EOL 的更新的版本，或者执行 UseDotNet 任务来安装所需的版本。",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "当前已为此任务启用 IncludeNugetOrg。若要解决此警告，请编辑生成任务并将 \"includeNuGetOrg\" 设置为 \"false\" 或取消选择“使用来自 NuGet.org 的包”。",
-  "loc.messages.Error_IncludeNuGetOrgEnabled": "包无法还原。请编辑生成任务并将 \"includeNuGetOrg\" 设置为 \"false\"，或取消选择“使用来自 NuGet.org 的包”。"
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "包无法还原。请编辑生成任务并将 \"includeNuGetOrg\" 设置为 \"false\"，或取消选择“使用来自 NuGet.org 的包”。",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
 }

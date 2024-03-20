@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "目標電腦上的 PowerShell",
-  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=627414)",
-  "loc.description": "在遠端電腦上執行 PowerShell 指令碼。",
+  "loc.friendlyName": "PowerShell on target machines",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=627414)",
+  "loc.description": "Execute PowerShell scripts on remote machines",
   "loc.instanceNameFormat": "在 $(EnvironmentName) 執行 PowerShell",
   "loc.releaseNotes": "2.0 版的新功能: <br/>&nbsp;&nbsp; 移除舊版 DTL 機器的支援。",
   "loc.group.displayName.deployment": "部署",

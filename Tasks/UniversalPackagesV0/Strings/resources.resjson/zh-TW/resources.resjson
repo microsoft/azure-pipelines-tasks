@@ -88,5 +88,6 @@
   "loc.messages.Warn_CredentialsNotFound": "無法判斷要用於通用套件的認證",
   "loc.messages.Warning_SessionCreationFailed": "無法建立來源工作階段: %s",
   "loc.messages.Error_UniversalPackagesNotSupportedOnPrem": "Azure DevOps Server 中不支援通用套件。",
-  "loc.messages.Error_ProcessorArchitectureNotSupported": "通用套件需要 x64 代理程式。"
+  "loc.messages.Error_ProcessorArchitectureNotSupported": "通用套件需要 x64 代理程式。",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
 }

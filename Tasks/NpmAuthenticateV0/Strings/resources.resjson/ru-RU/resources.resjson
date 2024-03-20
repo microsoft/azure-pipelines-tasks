@@ -24,5 +24,7 @@
   "loc.messages.CheckedInCredentialsOverriden": "Найдены и переопределены учетные данные для реестра %s в выбранном файле NPMRC. Вместо этого удалите учетные данные из файла и сохраните их в подключении к службе npm (рекомендуется) или удалите задачу проверки подлинности npm из сборки, чтобы использовать учетные данные, сохраненные в файле NPMRC.",
   "loc.messages.NoIndexJsonFile": "Файл index.json не найден, и файлы не были восстановлены.",
   "loc.messages.RevertedChangesToNpmrc": "Изменения, внесенные в %s, отменены.",
-  "loc.messages.NpmrcDoesNotExist": "Файл NPMRC, выбранный в %s, в настоящее время не существует."
+  "loc.messages.NpmrcDoesNotExist": "Файл NPMRC, выбранный в %s, в настоящее время не существует.",
+  "loc.messages.SuccessfulPush": "Successfully pushed .npmrc",
+  "loc.messages.SuccessfulAppend": "Successfully appended .npmrc"
 }

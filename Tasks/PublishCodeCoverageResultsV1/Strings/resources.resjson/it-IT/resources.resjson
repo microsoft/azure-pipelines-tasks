@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "Pubblica risultati di code coverage",
+  "loc.friendlyName": "[To be deprecated] Publish code coverage",
   "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "Pubblica i risultati del code coverage Cobertura o JaCoCo restituiti da una compilazione",
+  "loc.description": "[DEPRECATION WARNING! Users are recommended to switch to version 2*.] Publish Cobertura or JaCoCo code coverage results from a build",
   "loc.instanceNameFormat": "Pubblica code coverage da $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Strumento di code coverage",
-  "loc.input.help.codeCoverageTool": "Strumento con cui vengono generati i risultati del code coverage.",
+  "loc.input.help.codeCoverageTool": "[DEPRECATION WARNING! Users are recommended to switch to task version 2*. For more details, see https://devblogs.microsoft.com/devops/new-pccr-task.] The tool with which code coverage results are generated.",
   "loc.input.label.summaryFileLocation": "File di riepilogo",
   "loc.input.help.summaryFileLocation": "Percorso del file di riepilogo che contiene le statistiche di code coverage, ad esempio relative alla coverage di righe, metodi e classi. Il valore può contenere criteri di corrispondenza minima, ad esempio: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`",
   "loc.input.label.pathToSources": "Percorso dei file di origine",
@@ -22,5 +22,6 @@
   "loc.messages.FailedToGenerateHtmlReport": "Non è stato possibile generare il report HTML. Errore: %s",
   "loc.messages.IgnoringReportDirectory": "La directory dei report di code coverage con contenuto HTML verrà ignorata perché il contenuto HTML viene generato automaticamente",
   "loc.messages.UpgradeAgentMessage": "Aggiornare la versione dell'agente. https://github.com/Microsoft/vsts-agent/releases",
-  "loc.messages.GeneratedHtmlReport": "Il report HTML di code coverage è stato generato: %s"
+  "loc.messages.GeneratedHtmlReport": "Il report HTML di code coverage è stato generato: %s",
+  "loc.messages.V1TaskDeprecationNotice": "New V2 version of task publishing code coverage results is available to all our customers now. We highly recommend to stop using the V1 version and migrate to V2 version (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). For more details, see - https://devblogs.microsoft.com/devops/new-pccr-task."
 }

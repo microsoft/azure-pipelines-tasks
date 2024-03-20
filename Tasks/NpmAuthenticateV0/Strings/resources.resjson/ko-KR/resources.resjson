@@ -24,5 +24,7 @@
   "loc.messages.CheckedInCredentialsOverriden": "선택한 .npmrc 파일에서 %s 레지스트리에 대한 자격 증명을 찾고 재정의했습니다. 파일에서 자격 증명을 제거하고 대신 npm 서비스 연결에 저장하거나(권장), .npmrc에 체크 인된 자격 증명을 사용하도록 빌드에서 npm 인증 작업을 제거하세요.",
   "loc.messages.NoIndexJsonFile": "index.json 파일을 찾을 수 없어서 복원된 파일이 없습니다.",
   "loc.messages.RevertedChangesToNpmrc": "%s에 대한 변경 내용을 되돌렸습니다.",
-  "loc.messages.NpmrcDoesNotExist": "%s에서 선택한 .npmrc 파일이 현재 없습니다."
+  "loc.messages.NpmrcDoesNotExist": "%s에서 선택한 .npmrc 파일이 현재 없습니다.",
+  "loc.messages.SuccessfulPush": "Successfully pushed .npmrc",
+  "loc.messages.SuccessfulAppend": "Successfully appended .npmrc"
 }

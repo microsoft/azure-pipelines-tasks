@@ -138,5 +138,6 @@
   "loc.messages.Net5NugetVersionCompat": ".NET 5 には、旧バージョンの Nuget (5.7 以下) と互換性の問題があるため、復元に (dotnet CLI ではなく) 旧バージョンの Nuget を使用している場合、このような復元されたパッケージに依存する dotnet CLI コマンド (例: dotnet build) が失敗するおそれがあります。このようなエラーを軽減するには、次のいずれかを実行します: (1) - dotnet CLI を使用して復元する。(2) - Nuget バージョン 5.8 を使用して復元する。(3) - 旧バージョンの SDK (3 以下) が使用されている global.json を使ってビルドする。",
   "loc.messages.DeprecatedDotnet2_2_And_3_0": "情報: .NET Core SDK またはランタイム 2.2 および 3.0 の有効期間は終了しており (EOL)、ホストされているすべてのエージェントから削除されました。ホストされているエージェントでこれらの SDK またはランタイムを使用している場合は EOL を迎えていない新しいバージョンにアップグレードし、それ以外の場合は UseDotNet タスクを使用して必要なバージョンをインストールしてください。",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg は現在、このタスクに対して有効になっています。この警告を解決するには、ビルド タスクを編集し、'includeNuGetOrg' を 'false' に設定するか、'NuGet.org からパッケージを使用する' の選択を解除します。",
-  "loc.messages.Error_IncludeNuGetOrgEnabled": "パッケージを復元できませんでした。ビルド タスクを編集し、'includeNuGetOrg' を 'false' に設定するか、'NuGet.org からパッケージを使用する' の選択を解除します。"
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "パッケージを復元できませんでした。ビルド タスクを編集し、'includeNuGetOrg' を 'false' に設定するか、'NuGet.org からパッケージを使用する' の選択を解除します。",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
 }

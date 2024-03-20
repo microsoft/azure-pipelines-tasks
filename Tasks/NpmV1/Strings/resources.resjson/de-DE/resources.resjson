@@ -52,5 +52,6 @@
   "loc.messages.OverridingProjectNpmrc": "Projekt-NPMRC wird überschrieben: %s",
   "loc.messages.RestoringProjectNpmrc": "Projekt-NPMRC wird wiederhergestellt",
   "loc.messages.WorkingDirectoryNotDirectory": "Ändern Sie Ihr Arbeitsverzeichnis in ein gültiges Verzeichnis.",
-  "loc.messages.NGCommon_AreaNotFoundInSps": "Der Bereich \"%s\" [%s] wurde nicht gefunden. Der Dienst, der diesen Bereich enthält, ist ggf. in Ihrer Region nicht verfügbar."
+  "loc.messages.NGCommon_AreaNotFoundInSps": "Der Bereich \"%s\" [%s] wurde nicht gefunden. Der Dienst, der diesen Bereich enthält, ist ggf. in Ihrer Region nicht verfügbar.",
+  "loc.messages.UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
 }
