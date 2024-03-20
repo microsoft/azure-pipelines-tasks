@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "コード カバレッジ結果の公開",
+  "loc.friendlyName": "[To be deprecated] Publish code coverage",
   "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "ビルドからの Cobertura または JaCoCo コード カバレッジ結果の発行",
+  "loc.description": "[DEPRECATION WARNING! Users are recommended to switch to version 2*.] Publish Cobertura or JaCoCo code coverage results from a build",
   "loc.instanceNameFormat": "$(summaryFileLocation) からのコード カバレッジの発行",
   "loc.input.label.codeCoverageTool": "コード カバレッジ ツール",
-  "loc.input.help.codeCoverageTool": "コード カバレッジ結果が生成されるツール。",
+  "loc.input.help.codeCoverageTool": "[DEPRECATION WARNING! Users are recommended to switch to task version 2*. For more details, see https://devblogs.microsoft.com/devops/new-pccr-task.] The tool with which code coverage results are generated.",
   "loc.input.label.summaryFileLocation": "概要ファイル",
   "loc.input.help.summaryFileLocation": "行、メソッド、クラス カバレッジなどのコード カバレッジ統計を含む概要ファイルのパス。この値には minimatch パターンを指定できます。たとえば、`$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml` と指定します",
   "loc.input.label.pathToSources": "ソース ファイルへのパス",
@@ -22,5 +22,6 @@
   "loc.messages.FailedToGenerateHtmlReport": "HTML レポートを生成できませんでした。エラー: %s",
   "loc.messages.IgnoringReportDirectory": "HTML コンテンツが自動的に生成されているため、HTML コンテンツを含むカバレッジ レポート ディレクトリが無視されています",
   "loc.messages.UpgradeAgentMessage": "エージェントのバージョンをアップグレードしてください。https://github.com/Microsoft/vsts-agent/releases",
-  "loc.messages.GeneratedHtmlReport": "生成されたコード カバレッジ HTML レポート: %s"
+  "loc.messages.GeneratedHtmlReport": "生成されたコード カバレッジ HTML レポート: %s",
+  "loc.messages.V1TaskDeprecationNotice": "New V2 version of task publishing code coverage results is available to all our customers now. We highly recommend to stop using the V1 version and migrate to V2 version (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). For more details, see - https://devblogs.microsoft.com/devops/new-pccr-task."
 }
