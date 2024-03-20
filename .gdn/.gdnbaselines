@@ -13,6 +13,42 @@
     }
   },
   "results": {
+    "158c4b23b4ff681530f30aa80653ae6261210f9777a2cfd0f3535ebc66dfb227": {
+      "signature": "158c4b23b4ff681530f30aa80653ae6261210f9777a2cfd0f3535ebc66dfb227",
+      "alternativeSignatures": [
+        "c832f5a0cc0e2ce50496a2860c006279a37505b1a69c6a2ccb70295481910468"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-20 10:25:39Z",
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText"
+    },
+    "2c02eec8cf96bc63fb8ff72417da0e84215ba8dead870baedfdad351e7659372": {
+      "signature": "2c02eec8cf96bc63fb8ff72417da0e84215ba8dead870baedfdad351e7659372",
+      "alternativeSignatures": [
+        "92f202b770c277f86d23afc5fc79c53b64a7f2fe00544f9f4e0019e36403fd40"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-20 10:25:39Z",
+      "justification": "PSAvoidUsingUsernameAndPasswordParams"
+    },
+    "60a0aa841d38e44479e47d9d4349475efeb49a3e8f4cd8adfbe8ec832160713b": {
+      "signature": "60a0aa841d38e44479e47d9d4349475efeb49a3e8f4cd8adfbe8ec832160713b",
+      "alternativeSignatures": [
+        "30cc30f55e8853b028db85e8d8056968a779e3376453b4a28abafd228153f6be"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-20 10:25:39Z",
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText"
+    },
+
+
+
     "a2a4017726eb18c7612da6ab3828cfdfd1218160fbd5d373c715476df1847499": {
       "signature": "a2a4017726eb18c7612da6ab3828cfdfd1218160fbd5d373c715476df1847499",
       "alternativeSignatures": [
