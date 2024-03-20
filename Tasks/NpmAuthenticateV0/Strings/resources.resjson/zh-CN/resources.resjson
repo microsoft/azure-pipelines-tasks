@@ -24,5 +24,7 @@
   "loc.messages.CheckedInCredentialsOverriden": "找到并替代所选 .npmrc 文件中 %s 注册表的凭据。从文件中删除凭据并改为将其存储在 npm 服务连接中(推荐)，或从生成中删除 npm 身份验证任务以使用签入 .npmrc 的凭据。",
   "loc.messages.NoIndexJsonFile": "找不到任何 index.json 文件，未还原任何文件",
   "loc.messages.RevertedChangesToNpmrc": "已还原对 %s 所做的更改。",
-  "loc.messages.NpmrcDoesNotExist": "在 %s 选择的 .npmrc 文件当前不存在。"
+  "loc.messages.NpmrcDoesNotExist": "在 %s 选择的 .npmrc 文件当前不存在。",
+  "loc.messages.SuccessfulPush": "Successfully pushed .npmrc",
+  "loc.messages.SuccessfulAppend": "Successfully appended .npmrc"
 }

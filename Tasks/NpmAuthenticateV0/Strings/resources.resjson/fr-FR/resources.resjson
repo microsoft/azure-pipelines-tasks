@@ -24,5 +24,7 @@
   "loc.messages.CheckedInCredentialsOverriden": "Détection et remplacement des informations d'identification pour le registre %s dans le fichier .npmrc sélectionné. Supprimez les informations d'identification du fichier et stockez-les plutôt dans une connexion de service npm (recommandé), ou supprimez la tâche d'authentification npm de votre build pour utiliser les informations d'identification fournies à un fichier .npmrc.",
   "loc.messages.NoIndexJsonFile": "Fichier index.json introuvable. Aucun fichier n'a été restauré",
   "loc.messages.RevertedChangesToNpmrc": "Restauration des changements apportés à %s.",
-  "loc.messages.NpmrcDoesNotExist": "Le fichier .npmrc que vous avez sélectionné sur %s n'existe pas."
+  "loc.messages.NpmrcDoesNotExist": "Le fichier .npmrc que vous avez sélectionné sur %s n'existe pas.",
+  "loc.messages.SuccessfulPush": "Successfully pushed .npmrc",
+  "loc.messages.SuccessfulAppend": "Successfully appended .npmrc"
 }

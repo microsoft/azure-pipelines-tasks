@@ -88,5 +88,6 @@
   "loc.messages.Warn_CredentialsNotFound": "Universal Packages에 사용할 자격 증명을 확인할 수 없습니다.",
   "loc.messages.Warning_SessionCreationFailed": "출처 세션 %s을(를) 만들 수 없습니다.",
   "loc.messages.Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages는 Azure DevOps Server에서 지원되지 않습니다.",
-  "loc.messages.Error_ProcessorArchitectureNotSupported": "Universal Packages에는 x64 에이전트가 필요합니다."
+  "loc.messages.Error_ProcessorArchitectureNotSupported": "Universal Packages에는 x64 에이전트가 필요합니다.",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
 }

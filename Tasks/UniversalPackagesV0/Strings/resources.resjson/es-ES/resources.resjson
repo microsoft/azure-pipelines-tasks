@@ -88,5 +88,6 @@
   "loc.messages.Warn_CredentialsNotFound": "No se pudieron determinar las credenciales que se van a usar con Universal Packages",
   "loc.messages.Warning_SessionCreationFailed": "No se pudo crear la sesión de proveniencia: %s",
   "loc.messages.Error_UniversalPackagesNotSupportedOnPrem": "Azure DevOps Server no admite paquetes universales.",
-  "loc.messages.Error_ProcessorArchitectureNotSupported": "Los paquetes universales requieren un agente x64."
+  "loc.messages.Error_ProcessorArchitectureNotSupported": "Los paquetes universales requieren un agente x64.",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
 }

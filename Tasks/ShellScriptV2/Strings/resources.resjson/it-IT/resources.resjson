@@ -15,5 +15,6 @@
   "loc.input.label.failOnStandardError": "Interrompi in caso di errore standard",
   "loc.input.help.failOnStandardError": "Se è impostato su true, questa attività non riuscirà nel caso in cui vengano scritti errori nel flusso StandardError.",
   "loc.messages.BashReturnCode": "Bash terminato. Codice restituito: %d",
-  "loc.messages.BashFailed": "Bash non riuscito. Errore: %s"
+  "loc.messages.BashFailed": "Bash non riuscito. Errore: %s",
+  "loc.messages.BashFailedWithCode137": "Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured."
 }
