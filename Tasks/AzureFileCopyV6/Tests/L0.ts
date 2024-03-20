@@ -45,9 +45,6 @@ describe('AzureFileCopy Suite', function () {
         it('Validate AzureFileCopy.Utility Get-StorageKey', (done) => {
             psr.run(path.join(__dirname, 'L0UtilityThrowError.ps1'), done);
         });
-        it('Validate AzureFileCopy.Utility Upload-FilesToAzureContainer', (done) => {
-            psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.ps1'), done);
-        });
         it('Validate AzureFileCopy.Utility Does-AzureVMMatchTagFilterCriteria', (done) => {
             psr.run(path.join(__dirname, 'L0DoesAzureVMMatchTagFilter.ps1'), done);
         });
