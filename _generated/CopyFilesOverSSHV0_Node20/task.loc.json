@@ -17,11 +17,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
+    "Minor": 237,
     "Patch": 1
   },
   "demands": [],
-  "minimumAgentVersion": "2.182.1",
+  "minimumAgentVersion": "2.206.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -133,10 +133,6 @@
     }
   ],
   "execution": {
-    "Node10": {
-      "target": "copyfilesoverssh.js",
-      "argumentFormat": ""
-    },
     "Node16": {
       "target": "copyfilesoverssh.js",
       "argumentFormat": ""
@@ -179,7 +175,7 @@
     "PathNotExists": "ms-resource:loc.messages.PathNotExists"
   },
   "_buildConfigMapping": {
-    "Default": "0.231.0",
-    "Node20-225": "0.231.1"
+    "Default": "0.237.0",
+    "Node20-225": "0.237.1"
   }
 }

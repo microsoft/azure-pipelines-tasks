@@ -221,10 +221,26 @@ var setTaskVariables = function(tasks, tasksForDowngradingCheck) {
 
 var buildReason = process.env['BUILD_REASON'].toLowerCase();
 var forceCourtesyPush = process.env['FORCE_COURTESY_PUSH'] && process.env['FORCE_COURTESY_PUSH'].toLowerCase() === 'true';
+var taskNameIsSet = process.env['TASKNAMEISSET'] && process.env['TASKNAMEISSET'].toLowerCase() === 'true';
+
+if (taskNameIsSet) {
+    var taskName = process.env['TASKNAME'];
+    var tasksFromParameter = taskName.split(',').map(item => item.trim());
+}
+
+const AzpBuildReason = {
+    Individualci: 'individualci',
+    Batchedci: 'batchedci',
+    Schedule: 'schedule',
+    Pullrequest: 'pullrequest',
+    Manual: 'manual'
+};
+
+const ciBuildReasonList = [AzpBuildReason.Individualci, AzpBuildReason.Batchedci, AzpBuildReason.Schedule];
 
 async function filterTasks () {
     try {
-        if (buildReason == 'individualci' || buildReason == 'batchedci' || buildReason == 'schedule' || forceCourtesyPush) {
+        if (ciBuildReasonList.includes(buildReason) || (forceCourtesyPush && !taskNameIsSet)) {
             // If CI, we will compare any tasks that have updated versions.
             const tasks = await getTasksToBuildForCI();
             setTaskVariables(tasks, tasks);
@@ -234,17 +250,23 @@ async function filterTasks () {
             const regex = /^refs\/pull\/(\d+)\/merge$/;
             const prIdMatch = buildSourceBranch.match(regex);
 
-            if (buildReason == 'pullrequest') {
+            if (buildReason == AzpBuildReason.Pullrequest) {
                 // If PR, we will compare any tasks that could have been affected based on the diff.
                 const tasks = await getTasksToBuildForPR(null, false);
                 const tasksForDowngradingCheck = await getTasksToBuildForPR(null, true);
                 setTaskVariables(tasks, tasksForDowngradingCheck);
-            } else if (buildReason == 'manual' && prIdMatch) {
+            } else if (buildReason == AzpBuildReason.Manual && prIdMatch) {
                 // Manual rerun for PR.
                 const prId = prIdMatch[1];
                 const tasks = await getTasksToBuildForPR(prId, false);
                 const tasksForDowngradingCheck = await getTasksToBuildForPR(prId, true);
                 setTaskVariables(tasks, tasksForDowngradingCheck);
+            } else if (buildReason == AzpBuildReason.Manual && taskNameIsSet) {
+                const unknownTasks = tasksFromParameter.filter(task => !makeOptions.tasks.includes(task));
+                if (unknownTasks.length > 0) {
+                    throw new Error(`Can't find "${unknownTasks}" task(s) in the make-options.json file.`);
+                }
+                setTaskVariables(tasksFromParameter, tasksFromParameter);
             } else {
                 // If other, build everything.
                 setTaskVariables(makeOptions.tasks, makeOptions.tasks);

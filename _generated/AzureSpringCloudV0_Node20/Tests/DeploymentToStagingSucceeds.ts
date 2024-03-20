@@ -19,7 +19,7 @@ export class DeploymentToStagingSucceeds {
         tr.setInput('AppName', 'testapp');
         tr.setInput('UseStagingDeployment', "true");
         tr.setInput('Package', 'dummy.jar');
-        tr.setInput('RuntimeVersion', 'Java_11');
+        tr.setInput('RuntimeVersion', 'Java_17');
         tr.setInput('EnvironmentVariables', '-key1 val1 -key2 "val     2"');
         tr.setInput('DotNetCoreMainEntryPath', '/foobar.dll');
         tr.setInput('CreateNewDeployment', "false");

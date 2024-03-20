@@ -17,11 +17,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 231,
-        "Patch": 2
+        "Minor": 237,
+        "Patch": 0
     },
     "demands": [],
-    "minimumAgentVersion": "2.144.0",
+    "minimumAgentVersion": "2.206.1",
     "instanceNameFormat": "Run shell $(runOptions) on remote machine",
     "groups": [
         {
@@ -147,10 +147,6 @@
         }
     ],
     "execution": {
-        "Node10": {
-            "target": "ssh.js",
-            "argumentFormat": ""
-        },
         "Node16": {
             "target": "ssh.js",
             "argumentFormat": ""
