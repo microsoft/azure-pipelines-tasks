@@ -24,5 +24,7 @@
   "loc.messages.CheckedInCredentialsOverriden": "選択された .npmrc ファイルの %s レジストリの資格情報を見つけて上書きしました。ファイルから資格情報を削除して、代わりに npm サービス接続にそれらを保存するか (推奨)、ビルドから npm の認証タスクを削除して、.npmrc に登録された資格情報を使用します。",
   "loc.messages.NoIndexJsonFile": "Index.json ファイルが見つからず、復元されたファイルもありません",
   "loc.messages.RevertedChangesToNpmrc": "%s に加えられた変更を元に戻しました。",
-  "loc.messages.NpmrcDoesNotExist": "%s で選択した .npmrc ファイルが現時点では存在しません。"
+  "loc.messages.NpmrcDoesNotExist": "%s で選択した .npmrc ファイルが現時点では存在しません。",
+  "loc.messages.SuccessfulPush": "Successfully pushed .npmrc",
+  "loc.messages.SuccessfulAppend": "Successfully appended .npmrc"
 }
