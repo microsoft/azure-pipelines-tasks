@@ -207,7 +207,7 @@ export class DeploymentToStagingSucceedsL0 {
             .reply((uri, serializedRequestBody) => {
                 let requestBody = JSON.parse(serializedRequestBody);
                 assert.strictEqual(requestBody.properties.source.relativePath, MOCK_RELATIVE_PATH);
-                assert.strictEqual(requestBody.properties.deploymentSettings.runtimeVersion, 'Java_11');
+                assert.strictEqual(requestBody.properties.deploymentSettings.runtimeVersion, 'Java_17');
                 assert.strictEqual(requestBody.properties.deploymentSettings.environmentVariables.key1, 'val1');
                 assert.strictEqual(requestBody.properties.deploymentSettings.environmentVariables.key2, "val     2");
                 //We'd never have the .NET entry path parameter in a Java app in the real world,
