@@ -20,7 +20,7 @@
   "version": {
     "Major": 2,
     "Minor": 237,
-    "Patch": 0
+    "Patch": 2
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -200,6 +200,7 @@
     "JS_InvalidFilePath": "ms-resource:loc.messages.JS_InvalidFilePath",
     "JS_InvalidErrorActionPreference": "ms-resource:loc.messages.JS_InvalidErrorActionPreference",
     "GlobalCliConfigAgentVersionWarning": "ms-resource:loc.messages.GlobalCliConfigAgentVersionWarning",
-    "UnacceptedScriptLocationValue": "ms-resource:loc.messages.UnacceptedScriptLocationValue"
+    "UnacceptedScriptLocationValue": "ms-resource:loc.messages.UnacceptedScriptLocationValue",
+    "ExpiredServicePrincipalMessageWithLink": "ms-resource:loc.messages.ExpiredServicePrincipalMessageWithLink"
   }
 }
