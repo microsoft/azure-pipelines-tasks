@@ -2,7 +2,7 @@ import { spawn } from '../testexecutor'
 import tl = require('azure-pipelines-task-lib/task');
 import utils = require('../utils');
 import constants = require('../constants');
-import { execBuild } from '../testLibExecutor';
+import { execMavenBuild } from '../testLibExecutor';
 
 export async function executemaventests(testsToBeExecuted: string[]) {
 
@@ -31,14 +31,5 @@ export async function executemaventests(testsToBeExecuted: string[]) {
     tl.debug("Executing java maven tests with executable : " + executable);
     tl.debug("Executing java maven tests with args :" + args);
 
-
-    // const { status, error } = await spawn(executable, args)
-    // if (error) {
-    //     tl.error("Error executing mvn command, " + error);
-    // }
-
-    //     return { exitCode: status ?? 1 }
-    // }
-
-    await execBuild(args);
+    await execMavenBuild(args);
 }
