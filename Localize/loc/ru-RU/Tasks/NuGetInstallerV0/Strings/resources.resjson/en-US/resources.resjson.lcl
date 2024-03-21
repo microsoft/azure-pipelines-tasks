@@ -11,9 +11,9 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Installs or restores missing NuGet packages. Use NuGetAuthenticate@0 task for latest capabilities.]]></Val>
+          <Val><![CDATA[Installs or restores missing NuGet packages. Use NuGetAuthenticate@1 task for latest capabilities.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Устанавливает или восстанавливает отсутствующие пакеты NuGet. Используйте задачу NuGetAuthenticate@0 для получения последних возможностей.]]></Val>
+            <Val><![CDATA[Устанавливает или восстанавливает отсутствующие пакеты NuGet. Используйте задачу NuGetAuthenticate@1 для получения последних возможностей.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
