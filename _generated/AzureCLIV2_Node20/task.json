@@ -20,7 +20,7 @@
   "version": {
     "Major": 2,
     "Minor": 237,
-    "Patch": 1
+    "Patch": 3
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -208,7 +208,7 @@
     "ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at\u00A0%s See\u00A0https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
   },
   "_buildConfigMapping": {
-    "Default": "2.237.0",
-    "Node20_229_2": "2.237.1"
+    "Default": "2.237.2",
+    "Node20_229_2": "2.237.3"
   }
 }
