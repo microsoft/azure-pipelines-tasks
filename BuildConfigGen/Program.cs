@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -55,13 +56,19 @@ namespace BuildConfigGen
         static EnsureUpdateModeVerifier? ensureUpdateModeVerifier;
 
         /// <param name="task">The task to generate build configs for</param>
-        /// <param name="configs">List of configs to generate seperated by |</param>
+        /// <param name="configs">List of configs to generate seperated by | (optional - reads from make-options.json if not specified)</param>
         /// <param name="currentSprint">Overide current sprint; omit to get from whatsprintis.it</param>
         /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
-        /// <param name="allTasks"></param>
-        /// <param name="getTaskVersionTable"></param>
-        static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false, bool getTaskVersionTable = false)
+        /// <param name="allTasks">Apply to all tasks</param>
+        /// <param name="getTaskVersionTable">Extract task versions</param>
+        /// <param name="debug">Start debugger on launch</param>
+        static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false, bool getTaskVersionTable = false, bool debug = false)
         {
+            if (debug)
+            {
+                Debugger.Launch();
+            }
+
             if (allTasks)
             {
                 NullOrThrow(task, "If allTasks specified, task must not be supplied");
@@ -70,15 +77,16 @@ namespace BuildConfigGen
             else
             {
                 NotNullOrThrow(task, "Task is required");
-                NotNullOrThrow(configs, "Configs is required");
             }
+
+            string currentDir = Environment.CurrentDirectory;
+            string gitRootPath = GitUtil.GetGitRootPath(currentDir);
+            string makeOptionsPath = Path.Combine(gitRootPath, @"make-options.json");
 
             if (getTaskVersionTable)
             {
-                string currentDir = Environment.CurrentDirectory;
-                string gitRootPath = GitUtil.GetGitRootPath(currentDir);
 
-                var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
+                var tasks = MakeOptionsReader.ReadMakeOptions(makeOptionsPath);
 
                 Console.WriteLine("config\ttask\tversion");
 
@@ -97,10 +105,7 @@ namespace BuildConfigGen
 
             if (allTasks)
             {
-                string currentDir = Environment.CurrentDirectory;
-                string gitRootPath = GitUtil.GetGitRootPath(currentDir);
-
-                var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
+                var tasks = MakeOptionsReader.ReadMakeOptions(makeOptionsPath);
                 foreach (var t in tasks.Values)
                 {
                     Main3(t.Name, string.Join('|', t.Configs), writeUpdates, currentSprint);
@@ -108,12 +113,26 @@ namespace BuildConfigGen
             }
             else
             {
+
                 // error handling strategy:
                 // 1. design: anything goes wrong, try to detect and crash as early as possible to preserve the callstack to make debugging easier.
                 // 2. we allow all exceptions to fall though.  Non-zero exit code will be surfaced
                 // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
                 foreach (var t in task!.Split(',', '|'))
                 {
+                    if (string.IsNullOrEmpty(configs))
+                    {
+                        var tasks = MakeOptionsReader.ReadMakeOptions(makeOptionsPath);
+
+                        var makeOption = tasks.Values.Where(z => z.Name == t);
+                        if (!makeOption.Any())
+                        {
+                            throw new Exception($"Config not specified and cannot find t={t} in makeOptionsPath={makeOptionsPath}");
+                        }
+
+                        configs = string.Join('|', makeOption.First().Configs);
+                    }
+
                     Main3(t, configs!, writeUpdates, currentSprint);
                 }
             }
@@ -373,6 +392,7 @@ namespace BuildConfigGen
 
                 if (config.isNode)
                 {
+                    ValidateNodePackageJson(taskTargetPath, taskOutput);
                     WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript);
                 }
             }
@@ -542,9 +562,36 @@ namespace BuildConfigGen
             ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
-        private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion, bool shouldUpdateTypescript)
+        private static void ValidateNodePackageJson(string baseTask, string outputTask)
         {
-            string outputNodePackagePath = Path.Combine(taskOutputNode, "package.json");
+            string inputNodePackagePath = Path.Combine(baseTask, "package.json");
+            string outputNodePackagePath = Path.Combine(outputTask, "package.json");
+            Console.WriteLine($"ValidateNodePackageJson {inputNodePackagePath} {outputNodePackagePath}");
+
+            JsonNode inputodePackagePathJsonNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(inputNodePackagePath))!;
+            JsonNode outputNodePackagePathJsonNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNodePackagePath))!;
+
+            HashSet<string> inputDeps = new HashSet<string>(inputodePackagePathJsonNode["dependencies"]!.AsObject().Select(n => n.Key));
+            HashSet<string> outputDeps = new HashSet<string>(outputNodePackagePathJsonNode["dependencies"]!.AsObject().Select(n => n.Key));
+
+            // goal is to find any inputDeps missing from output.  
+            // remove any outputDeps from input.  If there are any left over, error!
+
+            foreach (var outputDep in outputDeps)
+            {
+                inputDeps.Remove(outputDep);
+            }
+
+            if (inputDeps.Any())
+            {
+                throw new Exception($"Some dependencies missing from package.json in target buildConfig.  baseTask={baseTask} taskOutputNode={outputTask} missing={string.Join(",",inputDeps)}");
+            }
+        }
+
+        private static void WriteNodePackageJson(string taskOutputPath, string nodeVersion, bool shouldUpdateTypescript)
+        {
+            string outputNodePackagePath = Path.Combine(taskOutputPath, "package.json");
+
             JsonNode outputNodePackagePathJsonNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNodePackagePath))!;
             outputNodePackagePathJsonNode["dependencies"]!["@types/node"] = nodeVersion;
 

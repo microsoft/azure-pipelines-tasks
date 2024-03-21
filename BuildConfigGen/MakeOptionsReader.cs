@@ -9,11 +9,11 @@ namespace BuildConfigGen
 {
     internal static class MakeOptionsReader
     {
-        internal static Dictionary<string, AgentTask> ReadMakeOptions(string gitRootPath)
+        internal static Dictionary<string, AgentTask> ReadMakeOptions(string makeOptionsPath)
         {
             Dictionary<string, AgentTask> agentTasks = new Dictionary<string, AgentTask>();
 
-            var r = new Utf8JsonReader(File.ReadAllBytes(Path.Combine(gitRootPath, @"make-options.json")));
+            var r = new Utf8JsonReader(File.ReadAllBytes(makeOptionsPath));
 
             bool inConfig = false;
             string configName = "";
