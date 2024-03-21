@@ -64,7 +64,7 @@
       "type": "connectedService:Azure",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
     },
@@ -104,7 +104,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "visibleRule": "AuthenticationType = server || AuthenticationType = windows || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated || AuthenticationType = servicePrincipal",
+      "visibleRule": "AuthenticationType = server || AutenticationType = windows || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated || AuthenticationType = servicePrincipal",
       "helpMarkDown": "ms-resource:loc.input.help.ServerName"
     },
     {
