@@ -19,7 +19,7 @@
   "demands": [
     "azureps"
   ],
-  "releaseNotes": "What's new in Version 5.0: <br/>&nbsp;&nbsp; Support AzCopy.exe version 10.12.2",
+  "releaseNotes": "What's new in Version 6.0: <br/>&nbsp;&nbsp; Support Workload identity federation and Azure RBAC",
   "minimumAgentVersion": "1.103.0",
   "inputs": [
     {
