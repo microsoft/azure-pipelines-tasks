@@ -231,14 +231,13 @@ function Upload-FilesToAzureContainer
         if($cleanTargetBeforeCopy)
         {
            
-             Write-Output "##[command] & `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
+             Write-Output "##[command] & azcopy rm `"$containerURL`" --recursive=true"
  
-             $cleanToBlobCommand = "& `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
+             $cleanToBlobCommand = "azcopy rm `"$containerURL`" --recursive=true"
  
-             Invoke-Expression $cleanToBlobCommand
+             Invoke-Expression -Command $cleanToBlobCommand
  
         }
- 
         if ($useSanitizerActivate) {
             # Splitting arguments on space, but not on space inside quotes
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
