@@ -41,6 +41,21 @@ function Create-AzureStorageContext
     }
 }
 
+# Create a context object using Azure AD credentials
+function Create-AzureStorageContextWithConnectedAcc
+{
+    param([string]$storageAccountName)
+ 
+    if(-not [string]::IsNullOrEmpty($storageAccountName))
+    {
+        Write-Verbose "[Azure Call]Creating AzStorageContext for storage account: $storageAccountName"
+        $storageContext = New-AzStorageContext -StorageAccountName $storageAccountName -UseConnectedAccount -ErrorAction Stop
+        Write-Verbose "[Azure Call]Created AzStorageContext for storage account: $storageAccountName"
+ 
+        return $storageContext
+    }
+}
+
 function Create-AzureContainer
 {
     param([string]$containerName,
