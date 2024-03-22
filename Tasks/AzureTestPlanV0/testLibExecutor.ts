@@ -48,12 +48,15 @@ function getExecOptions(): tr.IExecOptions {
     };
 }
 
+/**Maven orchestration occurs as follows:
+* 1. Check that Maven exists by executing it to retrieve its version.
+* 2. Run Maven. Compilation or test errors will cause this to fail.
+* 3. If #1 or #2 above failed, exit with an error code to mark the entire step as failed.
+* @param args Arguments to execute via mvn
+* @returns execution Status Code
+*/
 export async function execMavenBuild(args: string[]) {
-    // Maven orchestration occurs as follows:
-    // 1. Check that Maven exists by executing it to retrieve its version.
-    // 2. Run Maven. Compilation or test errors will cause this to fail.
-    //    In case the build has failed, the analysis will still succeed but the report will have less data. 
-    // 3. If #1 or #2 above failed, exit with an error code to mark the entire step as failed.
+
 
     var mvnExec = getMavenExec();
 
