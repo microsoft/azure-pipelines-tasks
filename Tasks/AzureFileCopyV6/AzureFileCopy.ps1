@@ -112,7 +112,7 @@ try {
 
 
         # creating storage context to be used while creating container, deleting container
-        $storageContext = Create-AzureStorageContext -StorageAccountName $storageAccount -ServiceConnectionName $connectedServiceName
+        $storageContext = Create-AzureStorageContextWithConnectedAcc -StorageAccountName $storageAccount
 
         # Geting Azure Storage Account type
         $storageAccountType = Get-StorageAccountType $storageAccount $endpoint $connectedServiceName $vstsAccessToken
