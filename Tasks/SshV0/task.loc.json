@@ -17,11 +17,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 236,
-    "Patch": 1
+    "Minor": 237,
+    "Patch": 2
   },
   "demands": [],
-  "minimumAgentVersion": "2.144.0",
+  "minimumAgentVersion": "2.206.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
