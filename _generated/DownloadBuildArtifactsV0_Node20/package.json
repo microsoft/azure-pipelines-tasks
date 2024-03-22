@@ -22,8 +22,7 @@
     "artifact-engine": "^1.4.0",
     "azure-devops-node-api": "^10.2.2",
     "azure-pipelines-task-lib": "^4.4.0",
-    "decompress-zip": "0.3.3",
-    "extract-zip": "2.0.1"
+    "decompress-zip": "0.3.3"
   },
   "devDependencies": {
     "typescript": "5.1.6"

@@ -39,7 +39,9 @@ export class DownloadHandlerContainerZip extends DownloadHandler {
             }
 
             tl.debug(`Extracting ${this.zipLocation} to ${unzipLocation}`);
+
             const unzipper = new DecompressZip(this.zipLocation);
+
             unzipper.on('error', err => {
                 return reject(tl.loc('ExtractionFailed', err));
             });
@@ -52,6 +54,7 @@ export class DownloadHandlerContainerZip extends DownloadHandler {
             unzipper.extract({
                 path: unzipLocation
             });
+
         });
 
         return unZipPromise;
