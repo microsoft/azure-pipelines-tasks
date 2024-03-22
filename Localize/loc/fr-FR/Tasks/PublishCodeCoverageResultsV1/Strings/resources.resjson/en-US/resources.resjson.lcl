@@ -11,19 +11,25 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Publish Cobertura or JaCoCo code coverage results from a build]]></Val>
+          <Val><![CDATA[[DEPRECATION WARNING! Users are recommended to switch to version 2*.]5D; Publish Cobertura or JaCoCo code coverage results from a build]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Publier les résultats de couverture du code Cobertura ou JaCoCo à partir d'une build]]></Val>
+            <Val><![CDATA[[AVERTISSEMENT DE DÉPRÉCIATION ! Nous recommandons aux utilisateurs de passer à la version 2*.]5D; Publier les résultats de couverture du code Cobertura ou JaCoCo à partir d’une build]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Publish Cobertura or JaCoCo code coverage results from a build]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Publish code coverage results]]></Val>
+          <Val><![CDATA[[To be deprecated]5D; Publish code coverage]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Publier les résultats de la couverture du code]]></Val>
+            <Val><![CDATA[[Bientôt déconseillé]5D; Publier la couverture du code]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Publish code coverage results]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -47,10 +53,13 @@
       </Item>
       <Item ItemId=";loc.input.help.codeCoverageTool" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The tool with which code coverage results are generated.]]></Val>
+          <Val><![CDATA[[DEPRECATION WARNING! Users are recommended to switch to task version 2*. For more details, see https://devblogs.microsoft.com/devops/new-pccr-task.]5D; The tool with which code coverage results are generated.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Outil de génération des résultats de couverture du code.]]></Val>
+            <Val><![CDATA[[AVERTISSEMENT DE DÉPRÉCIATION ! Nous recommandons aux utilisateurs de passer à la version 2* de la tâche. Pour obtenir plus d’informations, consultez https://devblogs.microsoft.com/devops/new-pccr-task.]5D; Outil avec lequel les résultats de couverture du code sont générés.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The tool with which code coverage results are generated.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -221,6 +230,15 @@
           <Val><![CDATA[Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Mettez à niveau votre version d'agent. https://github.com/Microsoft/vsts-agent/releases]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.V1TaskDeprecationNotice" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[New V2 version of task publishing code coverage results is available to all our customers now. We highly recommend to stop using the V1 version and migrate to V2 version (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). For more details, see - https://devblogs.microsoft.com/devops/new-pccr-task.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La nouvelle version V2 des résultats de couverture du code de publication de tâches est désormais disponible pour tous nos clients. Nous vous recommandons vivement de cesser d’utiliser la version V1 et de migrer vers la version V2 (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). Pour obtenir plus d’informations, consultez : https://devblogs.microsoft.com/devops/new-pccr-task.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

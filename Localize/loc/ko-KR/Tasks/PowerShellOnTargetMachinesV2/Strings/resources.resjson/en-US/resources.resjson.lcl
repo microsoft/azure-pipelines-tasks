@@ -11,19 +11,25 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Execute PowerShell scripts on remote machine(s)]]></Val>
+          <Val><![CDATA[Execute PowerShell scripts on remote machines]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[원격 컴퓨터에서 PowerShell 스크립트 실행]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Execute PowerShell scripts on remote machine(s)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[PowerShell on Target Machines]]></Val>
+          <Val><![CDATA[PowerShell on target machines]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[대상 컴퓨터의 PowerShell]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[PowerShell on Target Machines]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -47,10 +53,13 @@
       </Item>
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[[More Information]5D;(https://go.microsoft.com/fwlink/?linkid=627414)]]></Val>
+          <Val><![CDATA[[Learn more about this task]5D;(https://go.microsoft.com/fwlink/?linkid=627414)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[자세한 정보]5D;(https://go.microsoft.com/fwlink/?linkid=627414)]]></Val>
+            <Val><![CDATA[[이 작업에 대해 자세히 알아보기]5D;(https://go.microsoft.com/fwlink/?linkid=627414)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[[More Information]5D;(https://go.microsoft.com/fwlink/?linkid=627414)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

@@ -153,6 +153,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.BashFailedWithCode137" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Bash がコード 137 で終了しました。これはメモリ不足を意味しています。エージェント (コンテナー) ホストに十分なメモリが構成されていることを確認します。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.BashReturnCode" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Bash exited with return code: %d]]></Val>

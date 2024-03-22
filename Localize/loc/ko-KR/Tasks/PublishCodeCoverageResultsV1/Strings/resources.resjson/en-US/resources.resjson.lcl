@@ -11,19 +11,25 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Publish Cobertura or JaCoCo code coverage results from a build]]></Val>
+          <Val><![CDATA[[DEPRECATION WARNING! Users are recommended to switch to version 2*.]5D; Publish Cobertura or JaCoCo code coverage results from a build]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[빌드에서 Cobertura 또는 JaCoCo 코드 검사 결과를 게시합니다.]]></Val>
+            <Val><![CDATA[[사용 중단 경고! 사용자는 버전 2*로 전환하는 것이 좋습니다.]5D; 빌드에서 Cobertura 또는 JaCoCo 코드 검사 결과 게시]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Publish Cobertura or JaCoCo code coverage results from a build]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Publish code coverage results]]></Val>
+          <Val><![CDATA[[To be deprecated]5D; Publish code coverage]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[코드 검사 결과 게시]]></Val>
+            <Val><![CDATA[[더 이상 사용되지 않음]5D; 코드 검사 게시]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Publish code coverage results]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -47,10 +53,13 @@
       </Item>
       <Item ItemId=";loc.input.help.codeCoverageTool" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The tool with which code coverage results are generated.]]></Val>
+          <Val><![CDATA[[DEPRECATION WARNING! Users are recommended to switch to task version 2*. For more details, see https://devblogs.microsoft.com/devops/new-pccr-task.]5D; The tool with which code coverage results are generated.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[코드 검사 결과를 생성하는 데 사용하는 도구입니다.]]></Val>
+            <Val><![CDATA[[사용 중단 경고! 작업 버전 2*로 전환하는 것이 좋습니다. 자세한 내용은 https://devblogs.microsoft.com/devops/new-pccr-task를 참조하세요.]5D; 코드 검사 결과가 생성되는 도구입니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The tool with which code coverage results are generated.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -221,6 +230,15 @@
           <Val><![CDATA[Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[에이전트 버전을 업그레이드하세요. https://github.com/Microsoft/vsts-agent/releases]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.V1TaskDeprecationNotice" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[New V2 version of task publishing code coverage results is available to all our customers now. We highly recommend to stop using the V1 version and migrate to V2 version (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). For more details, see - https://devblogs.microsoft.com/devops/new-pccr-task.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[이제 모든 고객이 작업 게시 코드 검사 결과의 새 V2 버전을 사용할 수 있습니다. V1 버전 사용을 중지하고 V2 버전으로 마이그레이션하는 것이 좋습니다(https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). 자세한 내용은 https://devblogs.microsoft.com/devops/new-pccr-task를 참조하세요.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

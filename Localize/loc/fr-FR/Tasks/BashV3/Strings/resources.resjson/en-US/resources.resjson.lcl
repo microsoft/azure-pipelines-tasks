@@ -189,6 +189,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.JS_ExitCode_137" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Bash s’est arrêté avec le code 137, ce qui signifie qu’il n’a plus de mémoire. Vérifiez que la configuration de mémoire de l’hôte de l’agent (conteneur) est suffisante.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.JS_FormattedCommand" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Formatted command: %s]]></Val>
