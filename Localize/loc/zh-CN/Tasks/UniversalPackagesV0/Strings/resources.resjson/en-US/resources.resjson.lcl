@@ -822,6 +822,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Warning_UnsupportedServiceConnectionAuth" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[服务连接未使用受支持的身份验证方法。请配合使用服务连接与基于个人访问令牌的身份验证。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
     </Item>
   </Item>
 </LCX>
