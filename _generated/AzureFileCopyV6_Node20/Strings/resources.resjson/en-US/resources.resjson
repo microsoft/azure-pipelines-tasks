@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure file copy",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme) and to report any issues with this new version of the task [here](https://github.com/microsoft/azure-pipelines-tasks/issues/new?assignees=&labels=regression%2Cbug&projects=&template=1.regression.yml&title=%5BREGRESSION%5D%3A+)",
   "loc.description": "Copy files to Azure Blob Storage or virtual machines",
   "loc.instanceNameFormat": "$(Destination) File Copy",
   "loc.releaseNotes": "What's new in Version 6.0: <br/>&nbsp;&nbsp; Support Workload identity federation and Azure RBAC",

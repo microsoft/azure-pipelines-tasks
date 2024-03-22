@@ -4,7 +4,7 @@
   "friendlyName": "Azure file copy",
   "description": "Copy files to Azure Blob Storage or virtual machines",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-file-copy",
-  "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme)",
+  "helpMarkDown": "[Learn more about this task](https://aka.ms/azurefilecopyreadme) and to report any issues with this new version of the task [here](https://github.com/microsoft/azure-pipelines-tasks/issues/new?assignees=&labels=regression%2Cbug&projects=&template=1.regression.yml&title=%5BREGRESSION%5D%3A+)",
   "category": "Deploy",
   "visibility": [
     "Build",
