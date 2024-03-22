@@ -43,6 +43,10 @@ Tasks/AzureFileCopyV3/   @microsoft/release-management-task-team @manolerazvan
 
 Tasks/AzureFileCopyV4/   @microsoft/release-management-task-team @manolerazvan 
 
+Tasks/AzureFileCopyV5/   @microsoft/release-management-task-team @manolerazvan
+
+Tasks/AzureFileCopyV6/   @microsoft/release-management-task-team @manolerazvan
+
 Tasks/AzureFunctionAppV1/   @finvamp1 @patelchandni @microsoft/release-management-task-team @manolerazvan  
 
 Tasks/AzureFunctionAppV2/   @finvamp1 @patelchandni @microsoft/release-management-task-team @manolerazvan  
