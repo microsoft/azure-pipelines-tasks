@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 237,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [
     "vstest"
@@ -658,7 +658,7 @@
     "minimumExpectedTests": "ms-resource:loc.messages.minimumExpectedTests"
   },
   "_buildConfigMapping": {
-    "Default": "2.237.0",
-    "Node20_229_4": "2.237.1"
+    "Default": "2.237.2",
+    "Node20_229_4": "2.237.3"
   }
 }
