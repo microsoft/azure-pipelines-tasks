@@ -19,7 +19,7 @@
   "loc.input.help.bashEnvValue": "Если указаны входные данные, их значение расширяется и используется в качестве пути к файлу запуска, который выполняется перед запуском сценария. Если переменная среды BASH_ENV уже определена, эта задача переопределит эту переменную только для текущей задачи. Дополнительные сведения: [link](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html).",
   "loc.messages.GeneratingScript": "Формируется скрипт.",
   "loc.messages.JS_ExitCode": "Завершение работы Bash с кодом \"%s\".",
-  "loc.messages.JS_ExitCode_137": "Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured.",
+  "loc.messages.JS_ExitCode_137": "Bash завершил работу с кодом 137, что означает, что ему недостаточно памяти. Установите на узле агента достаточный объем памяти.",
   "loc.messages.JS_FormattedCommand": "Отформатирована команда: %s",
   "loc.messages.JS_InvalidFilePath": "Недопустимый путь к файлу \"%s\".",
   "loc.messages.JS_ScriptContents": "Содержимое скрипта:",

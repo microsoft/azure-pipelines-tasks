@@ -139,5 +139,5 @@
   "loc.messages.DeprecatedDotnet2_2_And_3_0": "信息: .NET Core SDK/运行时 2.2 和 3.0 现已到达生命周期结束(EOL)日期，已从所有托管的代理中将它们删除。如果你正在托管的代理上使用这些 SDK/运行时，请升级到尚未到达 EOL 的更新的版本，或者执行 UseDotNet 任务来安装所需的版本。",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "当前已为此任务启用 IncludeNugetOrg。若要解决此警告，请编辑生成任务并将 \"includeNuGetOrg\" 设置为 \"false\" 或取消选择“使用来自 NuGet.org 的包”。",
   "loc.messages.Error_IncludeNuGetOrgEnabled": "包无法还原。请编辑生成任务并将 \"includeNuGetOrg\" 设置为 \"false\"，或取消选择“使用来自 NuGet.org 的包”。",
-  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "服务连接未使用受支持的身份验证方法。请配合使用服务连接与基于个人访问令牌的身份验证。"
 }
