@@ -88,5 +88,6 @@
   "loc.messages.Warn_CredentialsNotFound": "Не удалось определить учетные данные для использования в Universal Packages",
   "loc.messages.Warning_SessionCreationFailed": "Не удалось создать сеанс происхождения: %s",
   "loc.messages.Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages не поддерживаются в Azure DevOps Server.",
-  "loc.messages.Error_ProcessorArchitectureNotSupported": "Universal Packages требуется агент x64."
+  "loc.messages.Error_ProcessorArchitectureNotSupported": "Universal Packages требуется агент x64.",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "Подключение к службе не использует поддерживаемый метод проверки подлинности. Используйте сервисное соединение с проверкой подлинности на основе токена личного доступа."
 }
