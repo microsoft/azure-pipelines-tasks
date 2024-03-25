@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 236,
+    "Minor": 237,
     "Patch": 1
   },
   "demands": [],
@@ -107,7 +107,7 @@
     "V1TaskDeprecationNotice": "New V2 version of task publishing code coverage results is available to all our customers now. We highly recommend to stop using the V1 version and migrate to V2 version (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). For more details, see - https://devblogs.microsoft.com/devops/new-pccr-task."
   },
   "_buildConfigMapping": {
-    "Default": "1.236.0",
-    "Node20_229_4": "1.236.1"
+    "Default": "1.237.0",
+    "Node20_229_4": "1.237.1"
   }
 }

@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 236,
+    "Minor": 237,
     "Patch": 1
   },
   "demands": [],
@@ -107,7 +107,7 @@
     "V1TaskDeprecationNotice": "ms-resource:loc.messages.V1TaskDeprecationNotice"
   },
   "_buildConfigMapping": {
-    "Default": "1.236.0",
-    "Node20_229_4": "1.236.1"
+    "Default": "1.237.0",
+    "Node20_229_4": "1.237.1"
   }
 }
