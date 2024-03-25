@@ -53,5 +53,5 @@
   "loc.messages.RestoringProjectNpmrc": "Ripristino del file di progetto con estensione npmrc",
   "loc.messages.WorkingDirectoryNotDirectory": "Sostituire la directory di lavoro con una directory valida",
   "loc.messages.NGCommon_AreaNotFoundInSps": "L'area '%s' [%s] non è stata trovata. Il servizio che contiene tale area potrebbe non essere disponibile nell'area geografica corrente.",
-  "loc.messages.UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
+  "loc.messages.UnsupportedServiceConnectionAuth": "La connessione al servizio non utilizza un metodo di autenticazione supportato. Usare una connessione al servizio con autenticazione basata su token di accesso personale."
 }

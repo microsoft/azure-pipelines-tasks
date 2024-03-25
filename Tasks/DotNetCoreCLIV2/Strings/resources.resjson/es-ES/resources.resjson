@@ -139,5 +139,5 @@
   "loc.messages.DeprecatedDotnet2_2_And_3_0": "Información: El SDK de .NET Core o el runtime 2.2 y 3.0 han llegado al final de su duración (EOL) y se han quitado de todos los agentes hospedados. Si está usando estos SDK o entornos de ejecución en agentes hospedados, actualice a versiones más recientes que no estén al final de su duración o bien use la tarea UseDotNet para instalar la versión requerida.",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg está habilitado actualmente para esta tarea. Para resolver esta advertencia, edite la tarea de compilación y establezca \"includeNuGetOrg\" en \"false\" o anule la selección de \"Usar paquetes de NuGet.org\".",
   "loc.messages.Error_IncludeNuGetOrgEnabled": "Error al restaurar los paquetes. Edite la tarea de compilación y establezca \"includeNuGetOrg\" en \"false\" o anule la selección de \"Usar paquetes de NuGet.org\".",
-  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "La conexión de servicio no usa un método de autenticación compatible. Use una conexión de servicio con autenticación basada en token de acceso personal."
 }

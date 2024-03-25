@@ -16,5 +16,5 @@
   "loc.input.help.failOnStandardError": "true の場合、StandardError ストリームにエラーが書き込まれると、このタスクは失敗します。",
   "loc.messages.BashReturnCode": "bash は、リターン コードを伴って終了しました: %d",
   "loc.messages.BashFailed": "bash でエラーが発生しました: %s",
-  "loc.messages.BashFailedWithCode137": "Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured."
+  "loc.messages.BashFailedWithCode137": "Bash がコード 137 で終了しました。これはメモリ不足を意味しています。エージェント (コンテナー) ホストに十分なメモリが構成されていることを確認します。"
 }

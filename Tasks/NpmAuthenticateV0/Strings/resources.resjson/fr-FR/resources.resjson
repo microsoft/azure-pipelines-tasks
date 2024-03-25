@@ -25,6 +25,6 @@
   "loc.messages.NoIndexJsonFile": "Fichier index.json introuvable. Aucun fichier n'a été restauré",
   "loc.messages.RevertedChangesToNpmrc": "Restauration des changements apportés à %s.",
   "loc.messages.NpmrcDoesNotExist": "Le fichier .npmrc que vous avez sélectionné sur %s n'existe pas.",
-  "loc.messages.SuccessfulPush": "Successfully pushed .npmrc",
-  "loc.messages.SuccessfulAppend": "Successfully appended .npmrc"
+  "loc.messages.SuccessfulPush": "L’envoi (push) du fichier .npmrc a été correctement effectué",
+  "loc.messages.SuccessfulAppend": "Le fichier .npmrc est correctement ajouté"
 }

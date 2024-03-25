@@ -136,5 +136,5 @@
   "loc.messages.Error_NugetFailedWithCodeAndErr": "Nuget 命令失败，提供了退出代码(%s)和错误(%s)",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "当前已为此任务启用 IncludeNugetOrg。若要解决此警告，请编辑生成任务并将 \"includeNuGetOrg\" 设置为 \"false\" 或取消选择“使用来自 NuGet.org 的包”。",
   "loc.messages.Error_IncludeNuGetOrgEnabled": "包无法还原。请编辑生成任务并将 \"includeNuGetOrg\" 设置为 \"false\"，或取消选择“使用来自 NuGet.org 的包”。",
-  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "服务连接未使用受支持的身份验证方法。请配合使用服务连接与基于个人访问令牌的身份验证。"
 }

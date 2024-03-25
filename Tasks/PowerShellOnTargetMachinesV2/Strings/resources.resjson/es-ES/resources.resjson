@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "PowerShell on target machines",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=627414)",
-  "loc.description": "Execute PowerShell scripts on remote machines",
+  "loc.friendlyName": "PowerShell en máquinas de destino",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=627414)",
+  "loc.description": "Ejecutar scripts de PowerShell en máquinas remotas",
   "loc.instanceNameFormat": "Ejecutar PowerShell en $(EnvironmentName)",
   "loc.releaseNotes": "Novedades de la versión 2.0: <br/>&nbsp;&nbsp; Se ha quitado la compatibilidad con las máquinas DTL heredadas.",
   "loc.group.displayName.deployment": "Implementación",

@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 236,
+        "Minor": 237,
         "Patch": 0
     },
     "runsOn": [
@@ -205,6 +205,6 @@
         "RestoringProjectNpmrc": "Restoring project .npmrc",
         "WorkingDirectoryNotDirectory": "Please change your working directory to a valid directory",
         "NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region.",
-        "UnsupportedServiceConnectionAuth" : "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
+        "UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
     }
 }

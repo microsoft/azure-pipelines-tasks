@@ -89,5 +89,5 @@
   "loc.messages.Warning_SessionCreationFailed": "Не удалось создать сеанс происхождения: %s",
   "loc.messages.Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages не поддерживаются в Azure DevOps Server.",
   "loc.messages.Error_ProcessorArchitectureNotSupported": "Universal Packages требуется агент x64.",
-  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "Подключение к службе не использует поддерживаемый метод проверки подлинности. Используйте сервисное соединение с проверкой подлинности на основе токена личного доступа."
 }

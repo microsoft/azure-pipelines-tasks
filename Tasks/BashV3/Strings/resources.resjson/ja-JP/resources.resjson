@@ -19,7 +19,7 @@
   "loc.input.help.bashEnvValue": "input が指定された場合は、その値が展開され、スクリプトを実行する前に実行するスタートアップ ファイルのパスとして使用されます。環境変数 `BASH_ENV` が既に定義されている場合は、現在のタスクに対してのみこの変数を上書きします。詳細は、[link](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html) で確認できます。",
   "loc.messages.GeneratingScript": "スクリプトを生成しています。",
   "loc.messages.JS_ExitCode": "bash がコード '%s' で終了しました。",
-  "loc.messages.JS_ExitCode_137": "Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured.",
+  "loc.messages.JS_ExitCode_137": "Bash がコード 137 で終了しました。これはメモリ不足を意味しています。エージェント (コンテナー) ホストに十分なメモリが構成されていることを確認します。",
   "loc.messages.JS_FormattedCommand": "フォーマット後のコマンド: %s",
   "loc.messages.JS_InvalidFilePath": "'%s' は、無効なファイル パスです。",
   "loc.messages.JS_ScriptContents": "スクリプト コンテンツ:",

@@ -25,6 +25,6 @@
   "loc.messages.NoIndexJsonFile": "Es wurde keine Datei \"index.json\" gefunden, und es wurden keine Dateien wiederhergestellt.",
   "loc.messages.RevertedChangesToNpmrc": "Die Änderungen an \"%s\" wurden zurückgesetzt.",
   "loc.messages.NpmrcDoesNotExist": "Die unter \"%s\" ausgewählte NPMRC-Datei ist zurzeit nicht vorhanden.",
-  "loc.messages.SuccessfulPush": "Successfully pushed .npmrc",
-  "loc.messages.SuccessfulAppend": "Successfully appended .npmrc"
+  "loc.messages.SuccessfulPush": "NPMRC erfolgreich gepusht",
+  "loc.messages.SuccessfulAppend": "NPMRC erfolgreich angefügt"
 }

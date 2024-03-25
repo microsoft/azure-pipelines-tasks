@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "[To be deprecated] Publish code coverage",
+  "loc.friendlyName": "[即將被取代] 發行程式碼涵蓋範圍",
   "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "[DEPRECATION WARNING! Users are recommended to switch to version 2*.] Publish Cobertura or JaCoCo code coverage results from a build",
+  "loc.description": "[取代警告！建議使用者切換到版本 2*。]發佈來自組建的 Cobertura 或 JaCoCo 程式碼涵蓋範圍結果",
   "loc.instanceNameFormat": "發行 $(summaryFileLocation) 中的程式碼涵蓋範圍",
   "loc.input.label.codeCoverageTool": "程式碼涵蓋範圍工具",
-  "loc.input.help.codeCoverageTool": "[DEPRECATION WARNING! Users are recommended to switch to task version 2*. For more details, see https://devblogs.microsoft.com/devops/new-pccr-task.] The tool with which code coverage results are generated.",
+  "loc.input.help.codeCoverageTool": "[取代警告！建議使用者切換到工作版本 2*。如需詳細資料，請參閱 https://devblogs.microsoft.com/devops/new-pccr-task。] 產生程式碼涵蓋範圍結果的工具。",
   "loc.input.label.summaryFileLocation": "摘要檔案",
   "loc.input.help.summaryFileLocation": "摘要檔案的路徑。該摘要檔案包含程式碼涵蓋範圍統計資料，例如折線圖、方法及類別涵蓋範圍。此值可包含 minimatch 格式。例如 '$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml'",
   "loc.input.label.pathToSources": "來源檔案的路徑",
@@ -23,5 +23,5 @@
   "loc.messages.IgnoringReportDirectory": "在我們自動產生 Html 內容時，忽略 Html 內容的涵蓋範圍報告目錄",
   "loc.messages.UpgradeAgentMessage": "請升級代理程式版本。https://github.com/Microsoft/vsts-agent/releases",
   "loc.messages.GeneratedHtmlReport": "已產生程式碼涵蓋範圍 HTML 報告: %s",
-  "loc.messages.V1TaskDeprecationNotice": "New V2 version of task publishing code coverage results is available to all our customers now. We highly recommend to stop using the V1 version and migrate to V2 version (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). For more details, see - https://devblogs.microsoft.com/devops/new-pccr-task."
+  "loc.messages.V1TaskDeprecationNotice": "我們所有的客戶現在都可以使用新 V2 版本的工作發佈程式碼涵蓋範圍結果。強烈建議您停止使用 V1 版本並移轉至 V2 版本 (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2)。如需詳細資料，請參閱 - https://devblogs.microsoft.com/devops/new-pccr-task。"
 }

@@ -89,5 +89,5 @@
   "loc.messages.Warning_SessionCreationFailed": "次の来歴セッションを作成できませんでした: %s",
   "loc.messages.Error_UniversalPackagesNotSupportedOnPrem": "ユニバーサル パッケージは Azure DevOps Server ではサポートされていません。",
   "loc.messages.Error_ProcessorArchitectureNotSupported": "ユニバーサル パッケージでは x64 エージェントが必要です。",
-  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "サービス接続では、サポートされている認証方法が使用されていません。個人用アクセス トークン ベースの認証でサービス接続を使用してください。"
 }

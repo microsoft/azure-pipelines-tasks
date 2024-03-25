@@ -16,5 +16,5 @@
   "loc.input.help.failOnStandardError": "Wenn dies wahr ist, tritt ein Aufgabenfehler auf, wenn Fehler in den StandardError-Stream geschrieben werden.",
   "loc.messages.BashReturnCode": "Bash wurde mit dem folgenden Rückgabecode beendet: %d",
   "loc.messages.BashFailed": "Bash-Fehler: %s",
-  "loc.messages.BashFailedWithCode137": "Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured."
+  "loc.messages.BashFailedWithCode137": "Bash wurde mit Code 137 beendet, was bedeutet, dass nicht genügend Arbeitsspeicher verfügbar war. Stellen Sie sicher, dass für den Agenthost (Containerhost) ausreichend Arbeitsspeicher konfiguriert ist."
 }

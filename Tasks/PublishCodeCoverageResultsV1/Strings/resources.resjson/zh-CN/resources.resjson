@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "[To be deprecated] Publish code coverage",
+  "loc.friendlyName": "[即将弃用] 发布代码覆盖率",
   "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "[DEPRECATION WARNING! Users are recommended to switch to version 2*.] Publish Cobertura or JaCoCo code coverage results from a build",
+  "loc.description": "[弃用警告!建议用户切换到版本 2*。] 发布生成中的 Cobertura 或 JaCoCo 代码覆盖率结果",
   "loc.instanceNameFormat": "发布 $(summaryFileLocation) 的代码覆盖率",
   "loc.input.label.codeCoverageTool": "代码覆盖率工具",
-  "loc.input.help.codeCoverageTool": "[DEPRECATION WARNING! Users are recommended to switch to task version 2*. For more details, see https://devblogs.microsoft.com/devops/new-pccr-task.] The tool with which code coverage results are generated.",
+  "loc.input.help.codeCoverageTool": "[弃用警告!建议用户切换到任务版本 2*。有关更多详细信息，请参阅 https://devblogs.microsoft.com/devops/new-pccr-task。] 生成代码覆盖率结果的工具。",
   "loc.input.label.summaryFileLocation": "摘要文件",
   "loc.input.help.summaryFileLocation": "摘要文件的路径，该文件包含代码覆盖率统计信息，如行、方法和类覆盖率。其值可能包含 minimatch 模式。例如: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`",
   "loc.input.label.pathToSources": "源文件的路径",
@@ -23,5 +23,5 @@
   "loc.messages.IgnoringReportDirectory": "忽略包含 HTML 内容的覆盖率报表目录，因为我们是自动生成 HTML 内容",
   "loc.messages.UpgradeAgentMessage": "请升级代理版本。https://github.com/Microsoft/vsts-agent/releases",
   "loc.messages.GeneratedHtmlReport": "生成的代码覆盖率 HTML 报表: %s",
-  "loc.messages.V1TaskDeprecationNotice": "New V2 version of task publishing code coverage results is available to all our customers now. We highly recommend to stop using the V1 version and migrate to V2 version (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). For more details, see - https://devblogs.microsoft.com/devops/new-pccr-task."
+  "loc.messages.V1TaskDeprecationNotice": "现在，所有客户都可以使用新的 V2 版本任务发布代码覆盖率结果。强烈建议停止使用 V1 版本并迁移到 V2 版本(https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2)。有关更多详细信息，请参阅 - https://devblogs.microsoft.com/devops/new-pccr-task。"
 }

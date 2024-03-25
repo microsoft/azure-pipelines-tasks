@@ -136,5 +136,5 @@
   "loc.messages.Error_NugetFailedWithCodeAndErr": "Il comando NuGet non è riuscito. Codice di uscita: %s. Errore: %s",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg è attualmente abilitato per questa attività. Per risolvere questo avviso, modificare l'attività di compilazione e impostare 'includeNuGetOrg' su 'false' o deselezionare 'Usa pacchetti da NuGet.org'.",
   "loc.messages.Error_IncludeNuGetOrgEnabled": "Impossibile ripristinare i pacchetti. Modificare l'attività di compilazione e impostare 'includeNuGetOrg' su 'false' o deselezionare 'Usa pacchetti da NuGet.org'.",
-  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "La connessione al servizio non utilizza un metodo di autenticazione supportato. Usare una connessione al servizio con autenticazione basata su token di accesso personale."
 }

@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "[To be deprecated] Publish code coverage",
+  "loc.friendlyName": "[En desuso] Publicar cobertura de código",
   "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "[DEPRECATION WARNING! Users are recommended to switch to version 2*.] Publish Cobertura or JaCoCo code coverage results from a build",
+  "loc.description": "[ADVERTENCIA DE DESUSO Se recomienda a los usuarios cambiar a la versión 2*.] Publicar los resultados de cobertura de código de cobertura de Cobertura o JaCoCo de una compilación",
   "loc.instanceNameFormat": "Publicar cobertura de código de $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Herramienta de cobertura de código",
-  "loc.input.help.codeCoverageTool": "[DEPRECATION WARNING! Users are recommended to switch to task version 2*. For more details, see https://devblogs.microsoft.com/devops/new-pccr-task.] The tool with which code coverage results are generated.",
+  "loc.input.help.codeCoverageTool": "[ADVERTENCIA DE DESUSO Se recomienda a los usuarios cambiar a la versión 2* de la tarea. Para obtener más información, consulte https://devblogs.microsoft.com/devops/new-pccr-task.] Herramienta con la que se generan los resultados de cobertura de código.",
   "loc.input.label.summaryFileLocation": "Archivo de resumen",
   "loc.input.help.summaryFileLocation": "Ruta de acceso del archivo de resumen que contiene estadísticas de cobertura de código, como línea, método y cobertura de clase. El valor puede contener patrones minimatch. Por ejemplo: \"$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml\"",
   "loc.input.label.pathToSources": "Ruta de acceso a los archivos de origen",
@@ -23,5 +23,5 @@
   "loc.messages.IgnoringReportDirectory": "Se ignora el directorio de informes de cobertura con contenido HTML, ya que se genera contenido HTML automáticamente",
   "loc.messages.UpgradeAgentMessage": "Actualice la versión del agente. https://github.com/Microsoft/vsts-agent/releases",
   "loc.messages.GeneratedHtmlReport": "Informe HTML de cobertura de código generado: %s",
-  "loc.messages.V1TaskDeprecationNotice": "New V2 version of task publishing code coverage results is available to all our customers now. We highly recommend to stop using the V1 version and migrate to V2 version (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). For more details, see - https://devblogs.microsoft.com/devops/new-pccr-task."
+  "loc.messages.V1TaskDeprecationNotice": "La nueva versión V2 de los resultados de cobertura de código de publicación de tareas ya está disponible para todos nuestros clientes. Se recomienda dejar de usar la versión V1 y migrar a la versión V2 (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). Para obtener más información, consulte: https://devblogs.microsoft.com/devops/new-pccr-task."
 }

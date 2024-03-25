@@ -25,6 +25,6 @@
   "loc.messages.NoIndexJsonFile": "找不到任何 index.json 文件，未还原任何文件",
   "loc.messages.RevertedChangesToNpmrc": "已还原对 %s 所做的更改。",
   "loc.messages.NpmrcDoesNotExist": "在 %s 选择的 .npmrc 文件当前不存在。",
-  "loc.messages.SuccessfulPush": "Successfully pushed .npmrc",
-  "loc.messages.SuccessfulAppend": "Successfully appended .npmrc"
+  "loc.messages.SuccessfulPush": "已成功推送 .npmrc",
+  "loc.messages.SuccessfulAppend": "已成功追加 .npmrc"
 }

@@ -25,6 +25,6 @@
   "loc.messages.NoIndexJsonFile": "Index.json ファイルが見つからず、復元されたファイルもありません",
   "loc.messages.RevertedChangesToNpmrc": "%s に加えられた変更を元に戻しました。",
   "loc.messages.NpmrcDoesNotExist": "%s で選択した .npmrc ファイルが現時点では存在しません。",
-  "loc.messages.SuccessfulPush": "Successfully pushed .npmrc",
-  "loc.messages.SuccessfulAppend": "Successfully appended .npmrc"
+  "loc.messages.SuccessfulPush": ".npmrc が正常にプッシュされました",
+  "loc.messages.SuccessfulAppend": ".npmrc が正常に追加されました"
 }
