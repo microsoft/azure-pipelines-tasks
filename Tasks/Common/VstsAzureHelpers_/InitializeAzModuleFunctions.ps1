@@ -284,9 +284,9 @@ function Initialize-AzSubscription {
                     ServicePrincipal=$true;
                     Scope='Process';
                     WarningAction='SilentlyContinue';
-                }
+                } `
+                -serviceConnectionId $connectedServiceNameARM
             }
-
         }
         catch {
             # Provide an additional, custom, credentials-related error message.
@@ -392,6 +392,7 @@ function Retry-Command {
     param(
         [Parameter(Mandatory=$true)][string]$command,
         [Parameter(Mandatory=$true)][hashtable]$args,
+        [Parameter(Mandatory=$false)][string]$serviceConnectionId,
         [Parameter(Mandatory=$false)][int]$retries=5,
         [Parameter(Mandatory=$false)][int]$secondsDelay=5
     )
@@ -408,7 +409,17 @@ function Retry-Command {
         } catch {
             if ($retryCount -ge $retries) {
                 Write-Verbose("Command [{0}] failed the maximum number of {1} times." -f $command, $retryCount)
-                throw
+                                
+                $expiredSecretErrorCode = "AADSTS7000222"
+                if ($_.Exception.Message -match $expiredSecretErrorCode) {
+
+                    $organizationURL = $Env:System_CollectionUri
+                    $projectName = $Env:System_TeamProject
+                    $serviceConnectionLink = [uri]::EscapeUriString("$organizationURL$projectName/_settings/adminservices?resourceId=$serviceConnectionId")
+                    throw (Get-VstsLocString -Key AZ_ExpiredServicePrincipalMessageWithLink -ArgumentList $serviceConnectionLink)
+                } else {
+                    throw
+                }
             } else {
                 $secondsDelay = [math]::Pow(2, $retryCount)
                 Write-Verbose("Command [{0}] failed. Retrying in {1} seconds." -f $command, $secondsDelay)
