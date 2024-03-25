@@ -13,6 +13,137 @@
     }
   },
   "results": {
+    "407cc257f37ce2a1a83660de9e661902b2aad514f7ca760e16ed4ac555cff1c3": {
+      "signature": "407cc257f37ce2a1a83660de9e661902b2aad514f7ca760e16ed4ac555cff1c3",
+      "alternativeSignatures": [
+        "fee414b5ea08713bc228b9edf15baee950baba8f8fa35f9c67be6e86795b77ee"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-20 15:10:36Z"
+    },
+    "9115d8d02bc9d2b3aa7a0509f742da5087765a603bf954512923566fa4ffa946": {
+      "signature": "9115d8d02bc9d2b3aa7a0509f742da5087765a603bf954512923566fa4ffa946",
+      "alternativeSignatures": [
+        "5330e2e2159d8073e5a7492e49d705b60c40b85436b9406e2ef4b8a19af77cca"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-20 15:10:36Z"
+    },
+    "784fc91626d8ee62fd3f99d56999618147f2b68218768aeeb7ea064ded65e6db": {
+      "signature": "784fc91626d8ee62fd3f99d56999618147f2b68218768aeeb7ea064ded65e6db",
+      "alternativeSignatures": [
+        "b67a25df17a2218170da5aa5eff32ed84727c6ba9f02f7a2308c7162a0821dfa"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-20 15:10:36Z"
+    },
+    "158c4b23b4ff681530f30aa80653ae6261210f9777a2cfd0f3535ebc66dfb227": {
+      "signature": "158c4b23b4ff681530f30aa80653ae6261210f9777a2cfd0f3535ebc66dfb227",
+      "alternativeSignatures": [
+        "c832f5a0cc0e2ce50496a2860c006279a37505b1a69c6a2ccb70295481910468"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-20 10:25:39Z",
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText"
+    },
+    "2c02eec8cf96bc63fb8ff72417da0e84215ba8dead870baedfdad351e7659372": {
+      "signature": "2c02eec8cf96bc63fb8ff72417da0e84215ba8dead870baedfdad351e7659372",
+      "alternativeSignatures": [
+        "92f202b770c277f86d23afc5fc79c53b64a7f2fe00544f9f4e0019e36403fd40"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-20 10:25:39Z",
+      "justification": "PSAvoidUsingUsernameAndPasswordParams"
+    },
+    "60a0aa841d38e44479e47d9d4349475efeb49a3e8f4cd8adfbe8ec832160713b": {
+      "signature": "60a0aa841d38e44479e47d9d4349475efeb49a3e8f4cd8adfbe8ec832160713b",
+      "alternativeSignatures": [
+        "30cc30f55e8853b028db85e8d8056968a779e3376453b4a28abafd228153f6be"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-20 10:25:39Z",
+      "justification": "PSAvoidUsingConvertToSecureStringWithPlainText"
+    },
+
+
+
+    "a2a4017726eb18c7612da6ab3828cfdfd1218160fbd5d373c715476df1847499": {
+      "signature": "a2a4017726eb18c7612da6ab3828cfdfd1218160fbd5d373c715476df1847499",
+      "alternativeSignatures": [
+        "0742c8968835510ce413346da03c51d96319152e424445409e8338aeb9fc1840"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-11 11:59:39Z",
+      "justification": "Unable to remove -AsPlainText param from ConvertTo-SecureString method"
+    },
+    "090e1c6e9eea6f7f9683f554e11fca742dc2c836a9ec0b4bba6585507b844948": {
+      "signature": "090e1c6e9eea6f7f9683f554e11fca742dc2c836a9ec0b4bba6585507b844948",
+      "alternativeSignatures": [
+        "b3077fce06e27ed54f49f4f5433d412f3f785fd6f26bc2d2a3fb009fc31fdb4a"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-11 11:59:39Z",
+      "justification": "Unable to remove -AsPlainText param from ConvertTo-SecureString method"
+    },
+    "55e38dd157a1c41723a4c18ced54445089efe986f2103d3210c65357952b5462": {
+      "signature": "55e38dd157a1c41723a4c18ced54445089efe986f2103d3210c65357952b5462",
+      "alternativeSignatures": [
+        "bdee2be7b96a489a528869a2f96eecada6d0bc6ade922be945dd8f0af9925734"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-11 11:59:39Z",
+      "justification": "Unable to remove -AsPlainText param from ConvertTo-SecureString method"
+    },
+    "45a7c482a16da19bf9fa3c9de785faa5978746e382784f54275d9e53b45d5e33": {
+      "signature": "45a7c482a16da19bf9fa3c9de785faa5978746e382784f54275d9e53b45d5e33",
+      "alternativeSignatures": [
+        "e3c6edbc658ecaf0249a79c22b27b52735696a56ed92e715a04eb0430ed03c13"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-11 11:59:39Z"
+    },
+    "a87bffe963d7c34726ad023b1690d55b6e844187346311c79d939e3aab932db4": {
+      "signature": "a87bffe963d7c34726ad023b1690d55b6e844187346311c79d939e3aab932db4",
+      "alternativeSignatures": [
+        "1e170d51b900eaed0f341b5a2c5e4275e8f7a3bc21bf863b19b503bde34f5ecf"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-11 11:59:39Z",
+      "justification": "Unable to remove -AsPlainText param from ConvertTo-SecureString method"
+    },
+    "5f8282717d3b2024249daf372400ed61161113c8605ea705dfb9bf7bfe72bc01": {
+      "signature": "5f8282717d3b2024249daf372400ed61161113c8605ea705dfb9bf7bfe72bc01",
+      "alternativeSignatures": [
+        "912555a66fcf7f5d24035344f7b73e3fab4bce0d27095c40cecb19ce4bed9ed7"
+      ],
+      "memberOf": [
+        "default"
+      ],
+      "createdDate": "2024-03-11 11:59:39Z",
+      "justification": "Unable to remove -AsPlainText param from ConvertTo-SecureString method"
+    },
     "7ae9f949e712a4855e8cdc176a7cb651b813e99d3613be7db583a910f5e3461e": {
       "signature": "7ae9f949e712a4855e8cdc176a7cb651b813e99d3613be7db583a910f5e3461e",
       "alternativeSignatures": [

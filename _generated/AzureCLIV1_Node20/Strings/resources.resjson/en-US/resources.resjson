@@ -34,5 +34,6 @@
   "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription",
   "loc.messages.SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
   "loc.messages.SettingAzureCloud": "Setting active cloud to: %s",
-  "loc.messages.GlobalCliConfigAgentVersionWarning": "For agent version < 2.115.0, only global Azure CLI configuration can be used"
+  "loc.messages.GlobalCliConfigAgentVersionWarning": "For agent version < 2.115.0, only global Azure CLI configuration can be used",
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
 }
