@@ -15,5 +15,6 @@
   "loc.input.label.failOnStandardError": "Échec sur une erreur standard",
   "loc.input.help.failOnStandardError": "Si la valeur est true, cette tâche échoue si des erreurs sont écrites dans le flux de données StandardError.",
   "loc.messages.BashReturnCode": "Sortie de Bash. Code de retour : %d",
-  "loc.messages.BashFailed": "Échec de Bash. Erreur : %s"
+  "loc.messages.BashFailed": "Échec de Bash. Erreur : %s",
+  "loc.messages.BashFailedWithCode137": "Bash s’est arrêté avec le code 137, ce qui signifie qu’il n’a plus de mémoire. Vérifiez que la configuration de mémoire de l’hôte de l’agent (conteneur) est suffisante."
 }
