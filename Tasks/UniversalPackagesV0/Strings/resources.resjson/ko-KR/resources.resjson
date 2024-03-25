@@ -89,5 +89,5 @@
   "loc.messages.Warning_SessionCreationFailed": "출처 세션 %s을(를) 만들 수 없습니다.",
   "loc.messages.Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages는 Azure DevOps Server에서 지원되지 않습니다.",
   "loc.messages.Error_ProcessorArchitectureNotSupported": "Universal Packages에는 x64 에이전트가 필요합니다.",
-  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "서비스 연결에서 지원되는 인증 방법을 사용하지 않습니다. 개인용 액세스 토큰 기반 인증이 포함된 서비스 연결을 사용하세요."
 }

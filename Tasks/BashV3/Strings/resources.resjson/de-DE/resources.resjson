@@ -19,7 +19,7 @@
   "loc.input.help.bashEnvValue": "Wenn eine Eingabe angegeben wird, wird der Wert erweitert und als Pfad einer Startdatei verwendet, die vor dem Ausführen des Skripts ausgeführt werden soll. Wenn die Umgebungsvariable „BASH_ENV“ bereits definiert wurde, überschreibt die Aufgabe diese Variable nur für die aktuellen Aufgabe. Weitere Details finden Sie in unter [Link](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html).",
   "loc.messages.GeneratingScript": "Skript wird erstellt.",
   "loc.messages.JS_ExitCode": "Bash wurde mit dem Code \"%s\" beendet.",
-  "loc.messages.JS_ExitCode_137": "Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured.",
+  "loc.messages.JS_ExitCode_137": "Bash wurde mit Code 137 beendet, was bedeutet, dass nicht genügend Arbeitsspeicher verfügbar war. Stellen Sie sicher, dass für den Agenthost (Containerhost) ausreichend Arbeitsspeicher konfiguriert ist.",
   "loc.messages.JS_FormattedCommand": "Formatierter Befehl: %s",
   "loc.messages.JS_InvalidFilePath": "Ungültiger Dateipfad \"%s\".",
   "loc.messages.JS_ScriptContents": "Skriptinhalte:",

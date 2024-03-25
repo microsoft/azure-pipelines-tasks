@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "[To be deprecated] Publish code coverage",
+  "loc.friendlyName": "[Bientôt déconseillé] Publier la couverture du code",
   "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "[DEPRECATION WARNING! Users are recommended to switch to version 2*.] Publish Cobertura or JaCoCo code coverage results from a build",
+  "loc.description": "[AVERTISSEMENT DE DÉPRÉCIATION ! Nous recommandons aux utilisateurs de passer à la version 2*.] Publier les résultats de couverture du code Cobertura ou JaCoCo à partir d’une build",
   "loc.instanceNameFormat": "Publier la couverture du code à partir de $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Outil de couverture du code",
-  "loc.input.help.codeCoverageTool": "[DEPRECATION WARNING! Users are recommended to switch to task version 2*. For more details, see https://devblogs.microsoft.com/devops/new-pccr-task.] The tool with which code coverage results are generated.",
+  "loc.input.help.codeCoverageTool": "[AVERTISSEMENT DE DÉPRÉCIATION ! Nous recommandons aux utilisateurs de passer à la version 2* de la tâche. Pour obtenir plus d’informations, consultez https://devblogs.microsoft.com/devops/new-pccr-task.] Outil avec lequel les résultats de couverture du code sont générés.",
   "loc.input.label.summaryFileLocation": "Fichier récapitulatif",
   "loc.input.help.summaryFileLocation": "Chemin du fichier récapitulatif contenant les statistiques de couverture du code, par exemple la couverture de ligne, de méthode et de classe. La valeur peut contenir des modèles minimatch. Exemple : '$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml'",
   "loc.input.label.pathToSources": "Chemin des fichiers sources",
@@ -23,5 +23,5 @@
   "loc.messages.IgnoringReportDirectory": "Le répertoire du rapport de couverture au format HTML est ignoré, car nous générons automatiquement le contenu HTML",
   "loc.messages.UpgradeAgentMessage": "Mettez à niveau votre version d'agent. https://github.com/Microsoft/vsts-agent/releases",
   "loc.messages.GeneratedHtmlReport": "Rapport HTML de couverture du code généré : %s",
-  "loc.messages.V1TaskDeprecationNotice": "New V2 version of task publishing code coverage results is available to all our customers now. We highly recommend to stop using the V1 version and migrate to V2 version (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). For more details, see - https://devblogs.microsoft.com/devops/new-pccr-task."
+  "loc.messages.V1TaskDeprecationNotice": "La nouvelle version V2 des résultats de couverture du code de publication de tâches est désormais disponible pour tous nos clients. Nous vous recommandons vivement de cesser d’utiliser la version V1 et de migrer vers la version V2 (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). Pour obtenir plus d’informations, consultez : https://devblogs.microsoft.com/devops/new-pccr-task."
 }

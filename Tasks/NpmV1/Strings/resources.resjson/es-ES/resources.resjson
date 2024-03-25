@@ -53,5 +53,5 @@
   "loc.messages.RestoringProjectNpmrc": "Restaurando el proyecto .npmrc",
   "loc.messages.WorkingDirectoryNotDirectory": "Cambie el directorio de trabajo a un directorio válido",
   "loc.messages.NGCommon_AreaNotFoundInSps": "No se encuentra el área \"%s\" [%s]. Puede que el servicio que contiene el área no esté disponible en la región.",
-  "loc.messages.UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
+  "loc.messages.UnsupportedServiceConnectionAuth": "La conexión de servicio no usa un método de autenticación compatible. Use una conexión de servicio con autenticación basada en token de acceso personal."
 }

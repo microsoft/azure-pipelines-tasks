@@ -139,5 +139,5 @@
   "loc.messages.DeprecatedDotnet2_2_And_3_0": "Information : Les kits SDK/runtimes .NET Core 2.2 et 3.0 sont en fin de vie (EOL) et ont été supprimés sur tous les agents hébergés. Si vous utilisez ces kits SDK/runtimes sur des agents hébergés, effectuez une mise à niveau vers des versions plus récentes qui ne sont pas en fin de vie (EOL), ou bien utilisez la tâche UseDotNet pour installer la version nécessaire.",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg est actuellement activé pour cette tâche. Pour résoudre cet avertissement, modifiez votre tâche de build et définissez 'includeNuGetOrg' sur 'false' ou désélectionnez 'Use packages from NuGet.org'.",
   "loc.messages.Error_IncludeNuGetOrgEnabled": "Nous n’avons pas pu restaurer des paquets. Editez votre tâche de build et mettez 'includeNuGetOrg' à 'false' ou désélectionnez 'Use packages from NuGet.org'.",
-  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "La connexion de service n’utilise aucune méthode d’authentification prise en charge. Veuillez utiliser une connexion de service avec une authentification basée sur un jeton d’accès personnel."
 }

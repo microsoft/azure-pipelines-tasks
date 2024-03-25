@@ -136,5 +136,5 @@
   "loc.messages.Error_NugetFailedWithCodeAndErr": "Сбой команды NuGet. Код выхода: %s, ошибка: %s",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg сейчас включен для этой задачи. Чтобы устранить это предупреждение, измените задачу сборки и установите для \"includeNuGetOrg\" \"ЛОЖЬ\" или отключите \"Использовать пакеты из NuGet.org\".",
   "loc.messages.Error_IncludeNuGetOrgEnabled": "Не удалось восстановить пакеты. Отредактируете задачу сборки и установите для \"includeNuGetOrg\" \"ЛОЖЬ\" или отключите \"Использовать пакеты из NuGet.org\".",
-  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "Подключение к службе не использует поддерживаемый метод проверки подлинности. Используйте сервисное соединение с проверкой подлинности на основе токена личного доступа."
 }

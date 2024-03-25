@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "PowerShell on target machines",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=627414)",
-  "loc.description": "Execute PowerShell scripts on remote machines",
+  "loc.friendlyName": "ターゲット マシンでの PowerShell",
+  "loc.helpMarkDown": "[このタスクの詳細](https://go.microsoft.com/fwlink/?linkid=627414)",
+  "loc.description": "リモート コンピューターで PowerShell スクリプトを実行します",
   "loc.instanceNameFormat": "$(EnvironmentName) での PowerShell の実行",
   "loc.releaseNotes": "バージョン 2.0 の新機能: <br/>&nbsp;&nbsp; レガシ DTL マシンのサポートが削除されました。",
   "loc.group.displayName.deployment": "配置",

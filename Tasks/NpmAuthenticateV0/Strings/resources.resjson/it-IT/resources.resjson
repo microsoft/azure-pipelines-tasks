@@ -25,6 +25,6 @@
   "loc.messages.NoIndexJsonFile": "Non è stato trovato alcun file index.json e non è stato ripristinato alcun file",
   "loc.messages.RevertedChangesToNpmrc": "Le modifiche apportate a %s sono state ripristinate.",
   "loc.messages.NpmrcDoesNotExist": "Il file con estensione npmrc selezionato in %s al momento non esiste.",
-  "loc.messages.SuccessfulPush": "Successfully pushed .npmrc",
-  "loc.messages.SuccessfulAppend": "Successfully appended .npmrc"
+  "loc.messages.SuccessfulPush": "Push di .npmrc riuscito",
+  "loc.messages.SuccessfulAppend": "Aggiunta di .npmrc riuscita"
 }

@@ -136,5 +136,5 @@
   "loc.messages.Error_NugetFailedWithCodeAndErr": "Échec de la commande nuget avec le code de sortie (%s) et l'erreur (%s)",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg est actuellement activé pour cette tâche. Pour résoudre cet avertissement, modifiez votre tâche de build et définissez 'includeNuGetOrg' sur 'false' ou désélectionnez 'Use packages from NuGet.org'.",
   "loc.messages.Error_IncludeNuGetOrgEnabled": "Nous n’avons pas pu restaurer des paquets. Editez votre tâche de build et mettez 'includeNuGetOrg' à 'false' ou désélectionnez 'Use packages from NuGet.org'.",
-  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "La connexion de service n’utilise aucune méthode d’authentification prise en charge. Veuillez utiliser une connexion de service avec une authentification basée sur un jeton d’accès personnel."
 }

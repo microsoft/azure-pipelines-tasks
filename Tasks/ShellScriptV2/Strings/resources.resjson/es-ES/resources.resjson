@@ -16,5 +16,5 @@
   "loc.input.help.failOnStandardError": "Si es true, esta tarea no se realizará cuando se registre algún error en la secuencia StandardError.",
   "loc.messages.BashReturnCode": "Bash se cerró con el código de retorno: %d",
   "loc.messages.BashFailed": "Error de Bash: %s",
-  "loc.messages.BashFailedWithCode137": "Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured."
+  "loc.messages.BashFailedWithCode137": "Bash se cerró con el código 137, lo que significa que se quedó sin memoria. Asegúrese de que el host del agente (contenedor) tenga suficiente memoria configurada."
 }

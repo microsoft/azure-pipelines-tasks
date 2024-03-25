@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "PowerShell on target machines",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=627414)",
-  "loc.description": "Execute PowerShell scripts on remote machines",
+  "loc.friendlyName": "Windows PowerShell на целевых компьютерах",
+  "loc.helpMarkDown": "[Подробнее об этой задаче](https://go.microsoft.com/fwlink/?linkid=627414)",
+  "loc.description": "Выполнить сценарии Windows PowerShell на удаленных компьютерах",
   "loc.instanceNameFormat": "Выполнить PowerShell в $(EnvironmentName)",
   "loc.releaseNotes": "Новые возможности в версии 2.0: <br/>Удалена поддержка устаревших компьютеров DTL.",
   "loc.group.displayName.deployment": "Развертывание",

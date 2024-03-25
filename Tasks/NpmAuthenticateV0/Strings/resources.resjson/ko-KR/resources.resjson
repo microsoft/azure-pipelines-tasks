@@ -25,6 +25,6 @@
   "loc.messages.NoIndexJsonFile": "index.json 파일을 찾을 수 없어서 복원된 파일이 없습니다.",
   "loc.messages.RevertedChangesToNpmrc": "%s에 대한 변경 내용을 되돌렸습니다.",
   "loc.messages.NpmrcDoesNotExist": "%s에서 선택한 .npmrc 파일이 현재 없습니다.",
-  "loc.messages.SuccessfulPush": "Successfully pushed .npmrc",
-  "loc.messages.SuccessfulAppend": "Successfully appended .npmrc"
+  "loc.messages.SuccessfulPush": ".npmrc를 푸시함",
+  "loc.messages.SuccessfulAppend": ".npmrc가 추가됨"
 }
