@@ -24,7 +24,7 @@
         "nugetv2": [
             {
                 "name": "VstsTaskSdk",
-                "version": "0.20.0",
+                "version": "0.20.1",
                 "repository": "https://www.powershellgallery.com/api/v2/",
                 "cp": [
                     {

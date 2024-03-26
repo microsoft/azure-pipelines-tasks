@@ -358,9 +358,8 @@ function ConvertTo-Pfx {
     $env:OPENSSL_CONF = "$PSScriptRoot\openssl\openssl.cnf"
     $env:RANDFILE=".rnd"
 
-    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password file:`"$pfxPasswordFilePath`""
-
-    Invoke-VstsTool -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
+    $openSSLArgs = "pkcs12 -export -in `"$pemFilePath`" -out `"$pfxFilePath`" -password file:`"$pfxPasswordFilePath`""
+    $procExitCode = Invoke-VstsProcess -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
 
     return $pfxFilePath, $pfxFilePassword
 }
