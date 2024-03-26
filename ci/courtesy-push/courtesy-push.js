@@ -59,7 +59,7 @@ async function extractDependency(xmlDependencyString) {
  * @returns {Promise<Dependencies>} - dictionary of dependencies
  */
 async function getDeps(depArr) {
-    /** @type {Record<key, Dependencies>} deps */
+    /** @type {Record<string, Dependencies>} deps */
     const deps = {};
     const getDependantConfigs = (arrKeys, packageName) => arrKeys.filter(key => key.includes(packageName) && key !== packageName);
 
@@ -77,20 +77,15 @@ async function getDeps(depArr) {
         dep.depStr = newDep;
     }
 
+
     const keys = Object.keys(deps);
+
     for (let dep in deps) {
         const configs = getDependantConfigs(keys, dep);
+
         if (!configs.length) continue;
 
-        deps[dep].configs = [];
         configs.forEach(config => {
-            const configDep = deps[config];
-            deps[dep].configs.push({
-                name: configDep.name,
-                version: configDep.version,
-                depStr: configDep.depStr
-            });
-
             delete deps[config];
         });
     }
@@ -190,17 +185,18 @@ function parseUnifiedDependencies(path) {
  * @param {String} pathToUnifiedDeps - path to UnifiedDependencies.xml
  * @param {String} pathToNewUnifiedDeps - path to unified_deps.xml which contains dependencies updated on current week
  */
-async function updateUnifiedDeps(pathToUnifiedDeps, pathToNewUnifiedDeps) {
-    let depsArray = parseUnifiedDependencies(pathToUnifiedDeps);
-    let newDepsArr = parseUnifiedDependencies(pathToNewUnifiedDeps);
+async function updateUnifiedDeps(unifiedDepsPath, newUnifiedDepsPath) {
+    let currentDependencies = parseUnifiedDependencies(unifiedDepsPath);
+    let updatedDependencies = parseUnifiedDependencies(newUnifiedDepsPath);
 
-    const depsForUpdate = await getDeps(newDepsArr);
+    const updatedDependenciesStructure = await getDeps(updatedDependencies);
+
     let updatedDeps = { added: [], removed: [] };
 
-    [ depsArray, updatedDeps ] = await removeConfigsForTasks(depsArray, depsForUpdate, updatedDeps);
-    [ depsArray, updatedDeps ] = await updateConfigsForTasks(depsArray, depsForUpdate, updatedDeps);
+    [ currentDependencies, updatedDeps ] = await removeConfigsForTasks(currentDependencies, updatedDependenciesStructure, updatedDeps);
+    [ currentDependencies, updatedDeps ] = await updateConfigsForTasks(currentDependencies, updatedDependenciesStructure, updatedDeps);
 
-    fs.writeFileSync(pathToUnifiedDeps, depsArray.join('\n'));
+    fs.writeFileSync(unifiedDepsPath, currentDependencies.join('\n'));
     console.log('Updating Unified Dependencies file done.');
     return updatedDeps;
 }
@@ -212,7 +208,9 @@ async function updateUnifiedDeps(pathToUnifiedDeps, pathToNewUnifiedDeps) {
  * @param {String} pathToTfsCore - path to TfsServer.Servicing.core.xml
  * @param {Object} depsToUpdate - structure to track added/removed dependencies (formed in updateUnifiedDeps)
  */
-async function updateTfsServerDeps(pathToTfsCore, depsToUpdate) {
+async function updateTfsServerDeps(pathToTfsCore) {
+    const depsToUpdate = await updateUnifiedDeps(unifiedDepsPath, newDeps);
+
     const tfsCore = fs.readFileSync(pathToTfsCore, 'utf8');
     const tfxCoreJson = await xml2js.parseStringPromise(tfsCore);
     const depsToAdd = depsToUpdate.added.filter(dep => depsToUpdate.removed.indexOf(dep) === -1);
@@ -244,5 +242,4 @@ async function updateTfsServerDeps(pathToTfsCore, depsToUpdate) {
     console.log('Inserting into Tfs Servicing Core file done.');
 }
 
-const changedTasks = updateUnifiedDeps(unifiedDepsPath, newDeps);
-updateTfsServerDeps(tfsServerPath, changedTasks);
+updateTfsServerDeps(tfsServerPath);
