@@ -39,7 +39,7 @@ export class NonDistributedTest {
             }
 
         } catch (err) {
-            tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'), true);
+            tl.setResult(tl.TaskResult.Failed, err, true);
         }
     }
 
