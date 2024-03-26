@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 237,
-    "Patch": 8
+    "Minor": 238,
+    "Patch": 1
   },
   "preview": true,
   "demands": [],
@@ -180,7 +180,7 @@
     "ErrorFailTaskOnCreateRunFailure": "Error occured while creating manual test run from test plan inputs"
   },
   "_buildConfigMapping": {
-    "Default": "0.237.7",
-    "Node20-225": "0.237.8"
+    "Default": "0.238.0",
+    "Node20-225": "0.238.1"
   }
 }
