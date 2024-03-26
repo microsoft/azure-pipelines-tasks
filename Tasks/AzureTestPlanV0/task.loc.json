@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 237,
+    "Minor": 238,
     "Patch": 0
   },
   "preview": true,
@@ -176,7 +176,7 @@
     "ErrorFailTaskOnCreateRunFailure": "ms-resource:loc.messages.ErrorFailTaskOnCreateRunFailure"
   },
   "_buildConfigMapping": {
-    "Default": "0.236.1",
-    "Node20-225": "0.236.2"
+    "Default": "0.237.3",
+    "Node20-225": "0.237.4"
   }
 }
