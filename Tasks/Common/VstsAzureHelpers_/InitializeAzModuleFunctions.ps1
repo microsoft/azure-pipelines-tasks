@@ -24,7 +24,7 @@ function Initialize-AzModule {
     try {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
         Write-Verbose "Importing Az Modules."
-        
+
         if ($featureFlags.retireAzureRM) {
             $azAccountsModuleName = "Az.Accounts"
             $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName
@@ -53,8 +53,8 @@ function Initialize-AzModule {
         }
 
         $azAccountsVersion = [System.Version]::new(
-            $azAccountsVersion.Major, 
-            $azAccountsVersion.Minor, 
+            $azAccountsVersion.Major,
+            $azAccountsVersion.Minor,
             $azAccountsVersion.Build
         )
 
@@ -127,7 +127,7 @@ function Import-AzAccountsModule {
     try {
         # We are only looking for Az.Accounts module becasue all the command required for initialize the azure PS session is in Az.Accounts module.
         $moduleName = "Az.Accounts"
-        
+
         # Attempt to resolve the module.
         Write-Verbose "Attempting to find the module '$moduleName' from the module path."
 
@@ -402,14 +402,14 @@ function Retry-Command {
 
     while(-not $completed) {
         try {
-            Write-Host "##[command]$command $args"
+            Write-Host "##[command]$command $($args | Out-String)"
             & $command @args
             Write-Verbose("Command [{0}] succeeded." -f $command)
             $completed = $true
         } catch {
             if ($retryCount -ge $retries) {
                 Write-Verbose("Command [{0}] failed the maximum number of {1} times." -f $command, $retryCount)
-                                
+
                 $expiredSecretErrorCode = "AADSTS7000222"
                 if ($_.Exception.Message -match $expiredSecretErrorCode) {
 
