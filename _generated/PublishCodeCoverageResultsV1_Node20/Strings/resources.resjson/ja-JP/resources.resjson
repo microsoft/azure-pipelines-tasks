@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "[非推奨になる] コード カバレッジの公開",
+  "loc.friendlyName": "コード カバレッジ結果の公開",
   "loc.helpMarkDown": "[このタスクの詳細を表示](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "[非推奨の警告!ユーザーはバージョン 2* に切り替えることが推奨されます。]ビルドから Cobertura または JaCoCo コード カバレッジの結果を発行する",
+  "loc.description": "ビルドからの Cobertura または JaCoCo コード カバレッジ結果の発行",
   "loc.instanceNameFormat": "$(summaryFileLocation) からのコード カバレッジの発行",
   "loc.input.label.codeCoverageTool": "コード カバレッジ ツール",
-  "loc.input.help.codeCoverageTool": "[非推奨の警告!ユーザーは、タスク バージョン 2* に切り替えることが推奨されます。詳細については、https://devblogs.microsoft.com/devops/new-pccr-task を参照してください。] コード カバレッジの結果が生成されるツール。",
+  "loc.input.help.codeCoverageTool": "コード カバレッジ結果が生成されるツール。",
   "loc.input.label.summaryFileLocation": "概要ファイル",
   "loc.input.help.summaryFileLocation": "行、メソッド、クラス カバレッジなどのコード カバレッジ統計を含む概要ファイルのパス。この値には minimatch パターンを指定できます。たとえば、`$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml` と指定します",
   "loc.input.label.pathToSources": "ソース ファイルへのパス",
@@ -22,6 +22,5 @@
   "loc.messages.FailedToGenerateHtmlReport": "HTML レポートを生成できませんでした。エラー: %s",
   "loc.messages.IgnoringReportDirectory": "HTML コンテンツが自動的に生成されているため、HTML コンテンツを含むカバレッジ レポート ディレクトリが無視されています",
   "loc.messages.UpgradeAgentMessage": "エージェントのバージョンをアップグレードしてください。https://github.com/Microsoft/vsts-agent/releases",
-  "loc.messages.GeneratedHtmlReport": "生成されたコード カバレッジ HTML レポート: %s",
-  "loc.messages.V1TaskDeprecationNotice": "コード カバレッジ結果を公開する新しい V2 バージョンのタスクを、すべてのお客様が利用できるようになりました。V1 バージョンの使用を停止し、V2 バージョンに移行することを強くお勧めします (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2)。詳細については、https://devblogs.microsoft.com/devops/new-pccr-task を参照してください。"
+  "loc.messages.GeneratedHtmlReport": "生成されたコード カバレッジ HTML レポート: %s"
 }

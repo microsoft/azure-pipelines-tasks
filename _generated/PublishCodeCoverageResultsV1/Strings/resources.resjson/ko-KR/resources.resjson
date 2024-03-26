@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "[더 이상 사용되지 않음] 코드 검사 게시",
+  "loc.friendlyName": "코드 검사 결과 게시",
   "loc.helpMarkDown": "[이 작업에 대한 자세한 정보](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "[사용 중단 경고! 사용자는 버전 2*로 전환하는 것이 좋습니다.] 빌드에서 Cobertura 또는 JaCoCo 코드 검사 결과 게시",
+  "loc.description": "빌드에서 Cobertura 또는 JaCoCo 코드 검사 결과를 게시합니다.",
   "loc.instanceNameFormat": "$(summaryFileLocation)에서 코드 검사 게시",
   "loc.input.label.codeCoverageTool": "코드 검사 도구",
-  "loc.input.help.codeCoverageTool": "[사용 중단 경고! 작업 버전 2*로 전환하는 것이 좋습니다. 자세한 내용은 https://devblogs.microsoft.com/devops/new-pccr-task를 참조하세요.] 코드 검사 결과가 생성되는 도구입니다.",
+  "loc.input.help.codeCoverageTool": "코드 검사 결과를 생성하는 데 사용하는 도구입니다.",
   "loc.input.label.summaryFileLocation": "요약 파일",
   "loc.input.help.summaryFileLocation": "줄, 메서드, 클래스 검사 등의 코드 검사 통계가 포함된 요약 파일의 경로입니다. 값에는 minimatch 패턴이 포함될 수 있습니다. 예: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`",
   "loc.input.label.pathToSources": "소스 파일의 경로",
@@ -22,6 +22,5 @@
   "loc.messages.FailedToGenerateHtmlReport": "HTML 보고서를 생성하지 못했습니다. 오류: %s",
   "loc.messages.IgnoringReportDirectory": "HTML 콘텐츠가 포함되는 검사 보고서 디렉터리를 무시하고 HTML 콘텐츠를 자동 생성하는 중",
   "loc.messages.UpgradeAgentMessage": "에이전트 버전을 업그레이드하세요. https://github.com/Microsoft/vsts-agent/releases",
-  "loc.messages.GeneratedHtmlReport": "생성된 코드 검사 HTML 보고서: %s",
-  "loc.messages.V1TaskDeprecationNotice": "이제 모든 고객이 작업 게시 코드 검사 결과의 새 V2 버전을 사용할 수 있습니다. V1 버전 사용을 중지하고 V2 버전으로 마이그레이션하는 것이 좋습니다(https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). 자세한 내용은 https://devblogs.microsoft.com/devops/new-pccr-task를 참조하세요."
+  "loc.messages.GeneratedHtmlReport": "생성된 코드 검사 HTML 보고서: %s"
 }
