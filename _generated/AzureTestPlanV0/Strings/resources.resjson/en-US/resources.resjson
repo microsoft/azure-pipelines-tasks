@@ -23,8 +23,6 @@
   "loc.input.help.failTaskOnFailureToPublishResults": "Fail if there is failure in publishing test results. Check this option to fail the task if publishing test results is failed partially.",
   "loc.input.label.failTaskOnMissingResultsFile": "Fail if no result files are found",
   "loc.input.help.failTaskOnMissingResultsFile": "Fail the task if no result files are found.",
-  "loc.input.label.mavenPOMFile": "Maven POM file",
-  "loc.input.help.mavenPOMFile": "Relative path from the repository root to the Maven POM file.",
   "loc.messages.testPlanInput": "Test plan Id : %s",
   "loc.messages.testplanConfigInput": "Test plan configuration Id : %s",
   "loc.messages.testSuiteSelected": "Test suite Id selected: %s",

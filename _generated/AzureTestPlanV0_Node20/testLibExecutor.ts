@@ -6,10 +6,9 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
 
 var isWindows = os.type().match(/^Win/);
-var m2HomeEnvVar: string = null;
-var mavenPOMFile: string = tl.getPathInput('mavenPOMFile', true, true);
 
 function getMavenExec(){
+    var m2HomeEnvVar: string = null;
     var mvnExec: string = '';
     m2HomeEnvVar = tl.getVariable('M2_HOME');
     if (m2HomeEnvVar) {
@@ -57,7 +56,6 @@ function getExecOptions(): tr.IExecOptions {
 */
 export async function execMavenBuild(args: string[]) {
 
-
     var mvnExec = getMavenExec();
 
     // Setup tool runner that executes Maven only to retrieve its version
@@ -74,9 +72,7 @@ export async function execMavenBuild(args: string[]) {
         .then(async function (code) {
             // Setup Maven Executable to run list of test runs provided as input
             var mvnRun = tl.tool(mvnExec);
-            mvnRun.arg('-f');
-            mvnRun.arg(mavenPOMFile);
-
+            mvnRun.arg('-ntp');
             mvnRun.arg(args);
             
             // 3. Run Maven. Compilation or test errors will cause this to fail.
@@ -87,5 +83,4 @@ export async function execMavenBuild(args: string[]) {
             tl.setResult(tl.TaskResult.Failed, "Build failed."); // tl.exit sets the step result but does not stop execution
             process.exit(1);
         });
-    
 }

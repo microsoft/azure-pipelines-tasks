@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 237,
-    "Patch": 3
+    "Patch": 5
   },
   "preview": true,
   "demands": [],
@@ -176,7 +176,7 @@
     "ErrorFailTaskOnCreateRunFailure": "ms-resource:loc.messages.ErrorFailTaskOnCreateRunFailure"
   },
   "_buildConfigMapping": {
-    "Default": "0.236.1",
-    "Node20-225": "0.236.2"
+    "Default": "0.237.3",
+    "Node20-225": "0.237.4"
   }
 }
