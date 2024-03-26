@@ -225,5 +225,6 @@
   "loc.messages.FailedToGetResourceID": "Échec de l'obtention de l'ID de ressource pour le type de ressource '%s' et le nom de ressource '%s'. Erreur : %s",
   "loc.messages.JarPathNotPresent": "Le chemin du fichier jar Java n'est pas présent",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Échec de la mise à jour de la ressource Application Insights '%s'. Erreur : %s",
-  "loc.messages.RunFromZipPreventsFileInUseError": "Passez de Web Deploy à l'exécution à partir d'un package, ce qui permet d'éviter l'erreur FILE_IN_USE. Notez que l'exécution à partir d'un package ne prend pas en charge le type de package msBuild. Changez le format de votre package pour utiliser cette méthode de déploiement."
+  "loc.messages.RunFromZipPreventsFileInUseError": "Passez de Web Deploy à l'exécution à partir d'un package, ce qui permet d'éviter l'erreur FILE_IN_USE. Notez que l'exécution à partir d'un package ne prend pas en charge le type de package msBuild. Changez le format de votre package pour utiliser cette méthode de déploiement.",
+  "loc.messages.MSDeployNotSupportTokenAuth": "App Service est configuré pour ne pas utiliser l’authentification de base. Cette opération nécessite Web Deploy msdeploy.exe version 7.1.7225 ou ultérieure. Vous avez besoin d’une version de Visual Studio qui inclut une version mise à jour de msdeploy.exe. Pour plus d’informations, visitez https://aka.ms/azdo-webapp-msdeploy."
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Copia file in computer Windows",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "Copia i file in computer Windows remoti",
   "loc.instanceNameFormat": "Copia file da $(SourcePath)",
   "loc.group.displayName.advanced": "Opzioni avanzate",

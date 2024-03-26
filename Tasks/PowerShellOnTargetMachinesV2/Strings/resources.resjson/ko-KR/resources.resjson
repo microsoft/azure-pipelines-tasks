@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "대상 컴퓨터의 PowerShell",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=627414)",
+  "loc.helpMarkDown": "[이 작업에 대해 자세히 알아보기](https://go.microsoft.com/fwlink/?linkid=627414)",
   "loc.description": "원격 컴퓨터에서 PowerShell 스크립트 실행",
   "loc.instanceNameFormat": "$(EnvironmentName)에서 PowerShell 실행",
   "loc.releaseNotes": "버전 2.0의 새로운 기능: <br/>&nbsp;&nbsp; 레거시 DTL 컴퓨터 지원이 제거되었습니다.",

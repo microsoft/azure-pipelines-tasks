@@ -23,6 +23,8 @@
   "loc.input.help.signingIdentity": "簽署憑證中主體的一般名稱。若保留為空白，將會嘗試剖析一般名稱。",
   "loc.input.label.setUpPartitionIdACLForPrivateKey": "為匯入的私密金鑰設定 partition_id ACL",
   "loc.input.help.setUpPartitionIdACLForPrivateKey": "如果為 true - 為匯入的私密金鑰設定 partition_id ACL，因此 codesign 不會提示使用金鑰用於簽署。暫時金鑰鏈不需要此動作，至少在 MacOS High Sierra 上。如需詳細資料，請參閱 [連結](http://www.openradar.me/28524119)。",
+  "loc.input.label.opensslPkcsArgs": "PKCS12 的 OpenSSL 引數",
+  "loc.input.help.opensslPkcsArgs": "使用 opensl 擷取憑證資訊的引數。",
   "loc.messages.INVALID_P12": "找不到憑證 SHA1 雜湊和一般名稱 (CN)。請確認憑證是有效的 P12。",
   "loc.messages.NoP12PwdWarning": "未提供任何 P12 密碼。如果 P12 檔需要密碼，最佳做法是以管線變數形式提供，並透過啟用鎖定圖示將其標示為祕密。",
   "loc.messages.P12PrivateKeyNameNotFound": "無法識別私密金鑰名稱: %s",
@@ -30,5 +32,6 @@
   "loc.messages.SetKeyPartitionListCommandFailed": "設定私密金鑰的 partition_id ACL 時發生錯誤。請驗證 [金鑰鏈密碼] 正確，或改用 [臨時金鑰鏈]。",
   "loc.messages.InstallRequiresMac": "必須有 macOS 代理程式才能安裝 Apple Certificate。Apple 不支援在 Linux 或 Windows 上安裝 Apple Certificate。",
   "loc.messages.CertNotValidYetError": "憑證 \"%s\" (指紋: %s) 於 %s 後才會生效",
-  "loc.messages.CertExpiredError": "憑證 \"%s\" (指紋: %s) 於 %s 過期"
+  "loc.messages.CertExpiredError": "憑證 \"%s\" (指紋: %s) 於 %s 過期",
+  "loc.messages.OpenSSLError": "剖析憑證時發生錯誤。這可能是由於不支援的演算法所造成。如果您正在搭配新的 OpenSSL 版本使用舊憑證，請嘗試在 opensslPkcsArgs 輸入中設定 -legacy 旗標。"
 }

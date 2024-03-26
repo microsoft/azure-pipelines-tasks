@@ -45,5 +45,6 @@
   "loc.messages.JS_InvalidFilePath": "指定されたスクリプトの場所 '%s' でスクリプト ファイルが見つかりませんでした。指定されたパスにスクリプトが存在することをご確認ください。インライン スクリプトを使用する場合は、入力 'スクリプトの場所' を 'inlineScript' と指定してください。",
   "loc.messages.JS_InvalidErrorActionPreference": "ErrorActionPreference '%s' は無効です。値は、'Stop'、'Continue'、'SilentlyContinue' のいずれかである必要があります",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "エージェント バージョンが 2.115.0 より前の場合、グローバルの Azure CLI 構成のみ使用できます",
-  "loc.messages.UnacceptedScriptLocationValue": "%s はタスク入力 'スクリプトの場所' (YAML での scriptLocation) の有効な値ではありません。値には 'inlineScript' または 'scriptPath' のいずれかを指定できます"
+  "loc.messages.UnacceptedScriptLocationValue": "%s はタスク入力 'スクリプトの場所' (YAML での scriptLocation) の有効な値ではありません。値には 'inlineScript' または 'scriptPath' のいずれかを指定できます",
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
 }

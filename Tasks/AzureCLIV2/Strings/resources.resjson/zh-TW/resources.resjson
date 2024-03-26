@@ -45,5 +45,6 @@
   "loc.messages.JS_InvalidFilePath": "在指定的指令碼位置找不到指令檔: '%s'。請確認指令碼存在於指定路徑中。若要使用內嵌指令碼，請將輸入 `Script Location` 指定為 `inlineScript`。",
   "loc.messages.JS_InvalidErrorActionPreference": "ErrorActionPreference '%s' 無效。此值必須是 'Stop'、'Continue' 或 'SilentlyContinue' 之一",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "2.115.0 以下的代理程式版本只能使用全域 Azure CLI 設定",
-  "loc.messages.UnacceptedScriptLocationValue": "%s 不是工作輸入 'Script Location' (在 YAML 中為 scriptLocation) 的有效值。值可以是 'inlineScript' 或 'scriptPath'"
+  "loc.messages.UnacceptedScriptLocationValue": "%s 不是工作輸入 'Script Location' (在 YAML 中為 scriptLocation) 的有效值。值可以是 'inlineScript' 或 'scriptPath'",
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
 }

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Copia de archivos en máquina de Windows",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "Copia archivos en máquinas remotas de Windows.",
   "loc.instanceNameFormat": "Copiar archivos desde $(SourcePath)",
   "loc.group.displayName.advanced": "Opciones avanzadas",

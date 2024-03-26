@@ -135,5 +135,6 @@
   "loc.messages.Warning_UpdatingNuGetVersion": "Actualizando la versión de NuGet.exe a %s desde %s. Podrían producirse cambios de comportamiento o cambios importantes a medida que NuGet se actualice a una nueva versión. Si quiere evitarlo, anule la selección de la opción \"Comprobar la última versión\" en la tarea.",
   "loc.messages.Error_NugetFailedWithCodeAndErr": "Error del comando nuget con el código de salida (%s) y el error (%s).",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg está habilitado actualmente para esta tarea. Para resolver esta advertencia, edite la tarea de compilación y establezca \"includeNuGetOrg\" en \"false\" o anule la selección de \"Usar paquetes de NuGet.org\".",
-  "loc.messages.Error_IncludeNuGetOrgEnabled": "Error al restaurar los paquetes. Edite la tarea de compilación y establezca \"includeNuGetOrg\" en \"false\" o anule la selección de \"Usar paquetes de NuGet.org\"."
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Error al restaurar los paquetes. Edite la tarea de compilación y establezca \"includeNuGetOrg\" en \"false\" o anule la selección de \"Usar paquetes de NuGet.org\".",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "La conexión de servicio no usa un método de autenticación compatible. Use una conexión de servicio con autenticación basada en token de acceso personal."
 }

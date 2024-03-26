@@ -1,5 +1,6 @@
 {
   "loc.friendlyName": "GitHub コメント",
+  "loc.helpMarkDown": "",
   "loc.description": "GitHub エンティティにコメントを書き込みます (イシューや pull request (PR) など)",
   "loc.instanceNameFormat": "GitHub コメントを書き込む",
   "loc.input.label.gitHubConnection": "GitHub 接続 (OAuth または PAT)",

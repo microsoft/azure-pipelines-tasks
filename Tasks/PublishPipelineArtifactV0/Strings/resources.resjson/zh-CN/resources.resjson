@@ -5,6 +5,8 @@
   "loc.instanceNameFormat": "发布管道工件",
   "loc.input.label.artifactName": "此项目的名称",
   "loc.input.help.artifactName": "此项目的名称。",
+  "loc.input.label.customProperties": "自定义属性",
+  "loc.input.help.customProperties": "输入要与项目关联的自定义属性。应提供所有键都具有前缀 “user-” 的有效 JSON 字符串",
   "loc.input.label.targetPath": "要发布的路径",
   "loc.input.help.targetPath": "要发布的文件夹或文件路径。这可以是完全限定的路径或相对于存储库根路径的路径。不支持通配符。支持 [变量](https://go.microsoft.com/fwlink/?LinkID=550988)。"
 }

@@ -55,5 +55,6 @@
   "loc.messages.Warning_UpdatingNuGetVersion": "Aggiornamento della versione di NuGet.exe a %s da %s. In seguito all'aggiornamento di NuGet a una nuova versione è possibile riscontrare modifiche al comportamento o modifiche di rilievo. Per evitare queste modifiche, deselezionare l'opzione 'Controlla disponibilità di versioni più recenti' nell'attività.",
   "loc.messages.UnsupportedProjectScopedFeeds": "I feed con ambito progetto non sono supportati da questa versione dell'attività \"Ripristino NuGet\". Usare la versione 2 o successiva dell'attività \"NuGet\".",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg è attualmente abilitato per questa attività. Per risolvere questo avviso, modificare l'attività di compilazione e impostare 'includeNuGetOrg' su 'false' o deselezionare 'Usa pacchetti da NuGet.org'.",
-  "loc.messages.Error_IncludeNuGetOrgEnabled": "Impossibile ripristinare i pacchetti. Modificare l'attività di compilazione e impostare 'includeNuGetOrg' su 'false' o deselezionare 'Usa pacchetti da NuGet.org'."
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Impossibile ripristinare i pacchetti. Modificare l'attività di compilazione e impostare 'includeNuGetOrg' su 'false' o deselezionare 'Usa pacchetti da NuGet.org'.",
+  "loc.messages.DeprecatedTask": "Questa attività è deprecata. Passare all'opzione 'restore' di NuGetCommand@2 https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
 }

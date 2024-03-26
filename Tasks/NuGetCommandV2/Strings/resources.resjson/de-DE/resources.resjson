@@ -135,5 +135,6 @@
   "loc.messages.Warning_UpdatingNuGetVersion": "Die Version von \"NuGet.exe\" wird von %s auf %s aktualisiert. NuGet-Updates auf eine neue Version können zu Änderungen im Verhalten oder Breaking Changes führen. Falls dies nicht gewünscht ist, deaktivieren Sie die Option \"Auf aktuelle Version überprüfen\" in der Aufgabe.",
   "loc.messages.Error_NugetFailedWithCodeAndErr": "Fehler bei nuget-Befehl mit Exitcode \"%s\" und Fehler \"%s\".",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "IncludeNugetOrg ist derzeit für diese Aufgabe aktiviert. Um diese Warnung zu beheben, bearbeiten Sie Ihre Buildaufgabe, und legen Sie \"includeNuGetOrg\" auf \"false\" fest, oder deaktivieren Sie \"Pakete aus NuGet.org verwenden\".",
-  "loc.messages.Error_IncludeNuGetOrgEnabled": "Pakete konnten nicht wiederhergestellt werden. Bearbeiten Sie Ihre Buildaufgabe, und legen Sie \"includeNuGetOrg\" auf \"false\" fest, oder deaktivieren Sie \"Pakete aus NuGet.org verwenden\"."
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "Pakete konnten nicht wiederhergestellt werden. Bearbeiten Sie Ihre Buildaufgabe, und legen Sie \"includeNuGetOrg\" auf \"false\" fest, oder deaktivieren Sie \"Pakete aus NuGet.org verwenden\".",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "Die Dienstverbindung verwendet keine unterstützte Authentifizierungsmethode. Verwenden Sie eine Dienstverbindung mit der auf persönlichen Zugriffstoken basierenden Authentifizierung."
 }

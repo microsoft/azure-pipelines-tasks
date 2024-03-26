@@ -34,5 +34,6 @@
   "loc.messages.ErrorInSettingUpSubscription": "サブスクリプションの設定のエラー",
   "loc.messages.SettingAzureConfigDir": "AZURE_CONFIG_DIR 環境変数を %s に設定しています",
   "loc.messages.SettingAzureCloud": "アクティブ クラウドを %s に設定しています",
-  "loc.messages.GlobalCliConfigAgentVersionWarning": "エージェント バージョンが 2.115.0 より前の場合、グローバルの Azure CLI 構成のみ使用できます"
+  "loc.messages.GlobalCliConfigAgentVersionWarning": "エージェント バージョンが 2.115.0 より前の場合、グローバルの Azure CLI 構成のみ使用できます",
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
 }
