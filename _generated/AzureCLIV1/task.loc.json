@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 236,
-    "Patch": 0
+    "Minor": 237,
+    "Patch": 2
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -157,10 +157,11 @@
     "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription",
     "SettingAzureConfigDir": "ms-resource:loc.messages.SettingAzureConfigDir",
     "SettingAzureCloud": "ms-resource:loc.messages.SettingAzureCloud",
-    "GlobalCliConfigAgentVersionWarning": "ms-resource:loc.messages.GlobalCliConfigAgentVersionWarning"
+    "GlobalCliConfigAgentVersionWarning": "ms-resource:loc.messages.GlobalCliConfigAgentVersionWarning",
+    "ExpiredServicePrincipalMessageWithLink": "ms-resource:loc.messages.ExpiredServicePrincipalMessageWithLink"
   },
   "_buildConfigMapping": {
-    "Default": "1.236.0",
-    "Node20_229_2": "1.236.1"
+    "Default": "1.237.2",
+    "Node20_229_2": "1.237.3"
   }
 }
