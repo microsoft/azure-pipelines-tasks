@@ -78,13 +78,13 @@ The parameters of the task are described in details, including examples, to show
 
 **SQL DB Details**
 
-- **SQL Server Name\*:** The connection string for the Azure SQL Server or SQL Server instance and the format is same as that is followed in SQL Server Management Studio. For example, FabrikamSQL.database.windows.net, 1433 or FabrikamSQL.database.windows.net are both valid Azure SQL Server names. FabrikamSQL.fabrikam.local, 1433 or FabrikamSQL.fabrikam.local are both valid SQL Server names
+- **SQL Server Name\*:** The connection string for the SQL Server instance or Azure SQL Server and the format is same as that is followed in SQL Server Management Studio. For example, FabrikamSQL.database.windows.net, 1433 or FabrikamSQL.database.windows.net are both valid Azure SQL Server names. FabrikamSQL.fabrikam.local, 1433 or FabrikamSQL.fabrikam.local are both valid SQL Server names.
 
-- **Database Name\*:** The name of the Azure SQL Database or SQL Server database like FabrikamDB. The Database will be created new if it does not exist, else it will be updated if it already exists.
+- **Database Name\*:** The name of the SQL Server database or Azure SQL Database like FabrikamDB. The Database will be created new if it does not exist, else it will be updated if it already exists.
 
-- **SQL Username\*:** Azure SQL Database task uses SQL Authentication to authenticate with the Azure SQL Server and this parameter specifies the Azure SQL Database administrator login.
+- **SQL Username\*:** SQL Server login or Azure SQL DB user.
 
-- **SQL Password\*:** The password for the Azure SQL Database administrator.
+- **SQL Password\*:** The password for the SQL Server login or the Azure SQL Database administrator.
 
 **Deployment Package**
 
@@ -108,11 +108,11 @@ The parameters of the task are described in details, including examples, to show
 - **Additional Invoke-Sqlcmd cmdlet Arguments:** Additional [Invoke-Sqlcmd cmdlet](https://msdn.microsoft.com/en-IN/library/cc281720.aspx) arguments that will be applied when creating or updating the Azure SQL Database like:
         -ConnectionTimeout 100 -OutputSqlError
 
-**Inline SQL Script:** Fill in the following options for running the Inline SQL Script against the Azure SQL Database or SQL Server databae.
+**Inline SQL Script:** Fill in the following options for running the Inline SQL Script against the SQL Server database of Azure SQL Database.
 
-- **Inline SQL Script\*:** Enter the SQL Script to run against the Azure SQL Server Database.
+- **Inline SQL Script\*:** Enter the SQL Script to run against the SQL Server database or Azure SQL  Database.
 
-- **Additional Invoke-Sqlcmd cmdlet Arguments:** Additional [Invoke-Sqlcmd cmdlet](https://msdn.microsoft.com/en-IN/library/cc281720.aspx) arguments that will be applied when creating or updating the Azure SQL Database like:
+- **Additional Invoke-Sqlcmd cmdlet Arguments:** Additional [Invoke-Sqlcmd cmdlet](https://msdn.microsoft.com/en-IN/library/cc281720.aspx) arguments that will be applied when creating or updating the SQL Server database or Azure SQL Database like:
         -ConnectionTimeout 100 -OutputSqlError
 
 **Azure SQL Server Firewall**
