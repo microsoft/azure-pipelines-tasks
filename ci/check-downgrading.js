@@ -39,6 +39,7 @@ const targetBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_TARGETBRANCH']);
 
 console.log(sourceBranch);
 console.log(targetBranch);
+console.log('---------------------------------');
 
 const baseProjectPath = join(__dirname, '..');
 const tempMasterTasksPath = join(baseProjectPath, 'temp', 'tasks-versions', targetBranch);
