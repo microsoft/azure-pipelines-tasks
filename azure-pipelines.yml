@@ -208,14 +208,14 @@ extends:
 
         # # All tasks on macOS
         # - job: build_all_darwin
-          displayName: Build all tasks (macOS)
-          condition: eq(variables.os, 'Darwin')
-          timeoutInMinutes: 180
-          pool:
-            name: Azure Pipelines
-            image: macos-11
-            os: macOS
-          steps:
-          - template: /ci/build-all-steps.yml@self
-            parameters:
-              os: Darwin
+          # displayName: Build all tasks (macOS)
+          # condition: eq(variables.os, 'Darwin')
+          # timeoutInMinutes: 180
+          # pool:
+          #   name: Azure Pipelines
+          #   image: macos-11
+          #   os: macOS
+          # steps:
+          # - template: /ci/build-all-steps.yml@self
+          #   parameters:
+          #     os: Darwin
