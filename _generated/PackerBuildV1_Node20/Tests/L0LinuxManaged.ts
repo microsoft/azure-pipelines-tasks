@@ -52,6 +52,10 @@ let a: any = <any>{
             "code": 0,
             "stdout": "1.2.4"
         },
+        "packer -machine-readable --version": {
+            "code": 0,
+            "stdout": "1234567,,version,1.2.4"
+        },
         "packer fix -validate=false /tmp/tempdir/100/default.managed.linux.template.json": {
             "code": 0,
             "stdout": "{ \"some-key\": \"some-value\" }"

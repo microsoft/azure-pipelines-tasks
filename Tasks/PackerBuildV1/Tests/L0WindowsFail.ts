@@ -51,6 +51,10 @@ let a: any = <any>{
             "code": 0,
             "stdout": "1.2.4"
         },
+        "packer -machine-readable --version": {
+            "code": 0,
+            "stdout": "1234567,,version,1.2.4"
+        },
         "packer fix -validate=false F:\\somedir\\tempdir\\100\\default.windows.template.json": {
             "code": process.env["__packer_fix_fails__"] === "true" ? 1 : 0,
             "stdout": process.env["__packer_fix_fails__"] === "true" ? "packer fix failed\r\nsome error" : "{ \"some-key\": \"some-value\" }",
