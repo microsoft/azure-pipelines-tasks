@@ -1,14 +1,11 @@
 const { join, posix, sep } = require('path');
-const {
-  readFileSync,
-  existsSync
-} = require('fs');
+const { readFileSync, existsSync } = require('fs');
 const { mkdir, rm } = require('shelljs');
 const { platform } = require('os');
 const { run, resolveTaskList, logToPipeline } = require('./ci-util');
-const { eq, inc, parse, lte, neq } = require('semver');
+const { eq, inc, parse, lte, neq, gt, compare, SemVer, patch } = require('semver');
 
-const taskVersionBumpingDocUrl = "https://aka.ms/azp-tasks-version-bumping";
+const taskVersionBumpingDocUrl = 'https://aka.ms/azp-tasks-version-bumping';
 
 const packageEndpoint = process.env['PACKAGE_VERSIONS_ENDPOINT'];
 
@@ -24,24 +21,26 @@ const packageEndpoint = process.env['PACKAGE_VERSIONS_ENDPOINT'];
 // }
 
 const { RestClient } = require('typed-rest-client/RestClient');
+const { config } = require('process');
 const client = new RestClient('azure-pipelines-tasks-ci', '');
 
 const argv = require('minimist')(process.argv.slice(2));
-
+з;
 if (!argv.task) {
   console.log(`$(task_pattern) variable is empty or not set. Aborting...`);
   process.exit(0);
-};
+}
 
 // We need to escape # on Unix platforms since that turns the rest of the string into a comment
-const escapeHash = str => platform() == 'win32' ? str : str.replace(/#/gi, '\\#');
+const escapeHash = str => (platform() == 'win32' ? str : str.replace(/#/gi, '\\#'));
 
-const sourceBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH']) || 'some-pr';
-const targetBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_TARGETBRANCH']) || 'master';
+const sourceBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH'] || 'some-pr');
+const targetBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_TARGETBRANCH'] || 'master');
 
 const baseProjectPath = join(__dirname, '..');
-
 const tempMasterTasksPath = join(baseProjectPath, 'temp', 'tasks-versions', targetBranch);
+
+const simpleVersionmapRegex = /(?<configName>.*)\|(?<version>.*)$/;
 
 if (!existsSync(tempMasterTasksPath)) {
   mkdir('-p', tempMasterTasksPath);
@@ -51,32 +50,56 @@ if (existsSync(join(tempMasterTasksPath, 'Tasks'))) {
   rm('-rf', join(tempMasterTasksPath, 'Tasks'));
 }
 
-function getChangedVersionMapFiles() {
-  const changedVersionMapFiles = run(`git --no-pager diff --name-only --diff-filter=M origin/${targetBranch}..${sourceBranch}`)
+function prCheck() {
+  const modifiedVersionMapFiles = getModifiedVersionMapFiles(targetBranch, sourceBranch);
+  if (modifiedVersionMapFiles.length == 0) return;
+
+  const targetBranchMapping = {};
+  const sourceBranchMapping = {};
+  modifiedVersionMapFiles.forEach(filePath => {
+    //get task name from a string like _generated/TaskNameVN.versionmap.txt
+    const taskName = filePath.slice(11, -15); //get task name from
+    targetBranchMapping[taskName] = parseVersionMap(getVersionMapContent(filePath, targetBranch));
+    sourceBranchMapping[taskName] = parseVersionMap(getVersionMapContent(filePath, sourceBranch));
+  });
+
+  for (const task in targetBranchMapping) {
+    console.log('checking task:' + task);
+    compareConfigs(targetBranchMapping[task], sourceBranchMapping[task]);
+  }
+}
+
+function compareConfigs(targetConfig, sourceConfig) {
+  for (const config in targetConfig) {
+    console.log('checking config:' + config);
+    // Check that new version is greater thatn old version + 1
+    if (!gt(sourceConfig[config], inc(targetConfig[config], 'patch'))) {
+      console.log(` ${config} : ${sourceConfig[config]} should be bumped`);
+    }
+  }
+}
+
+function getModifiedVersionMapFiles(targetBranch, sourceBranch) {
+  const versionmapPathRegex = /_generated\/.*versionmap.txt$/;
+  const versionMapFiles = run(`git --no-pager diff --name-only --diff-filter=M origin/${targetBranch}..origin/${sourceBranch}`)
     .split('\n')
-    .filter(x => x.match(/^_generated*versionmap.txt//  startsWith('_generated/') && x.endsWith('versionmap.txt'));
-  return changedVersionMapFiles;
+    .filter(line => line.match(versionmapPathRegex));
+  return versionMapFiles;
 }
 
-function checkVersionMapFiles(versionMapFiles) {
-  versionMapFiles.forEach(mapFileName => {});
+function getVersionMapContent(versionMapFilePath, branchName) {
+  return run(`git show origin/${branchName}:${versionMapFilePath}`);
 }
 
-function versionMapChange() {
-  var text = `diff --git a/_generated/AzurePowerShellV5.versionmap.txt b/_generated/AzurePowerShellV5.versionmap.txt
-index 37e1392bd1..d630729a97 100644
---- a/_generated/AzurePowerShellV5.versionmap.txt
-+++ b/_generated/AzurePowerShellV5.versionmap.txt
-@@ -1,2 +1,2 @@
--Default|5.237.2
--Node20_229_2|5.237.3
-+Default|5.237.0
-+Node20_229_2|5.237.1
-`;
-  console.log(text);
-  var lines = text.split('\n');
-  var filtered = lines.filter(line => line.match(/^[+-][A-Z]/));
-  console.log(filtered);
+function parseVersionMap(fileContent) {
+  const versionMap = {};
+  fileContent.split('\n').forEach(line => {
+    simpleVersionmapRegex.test(line);
+    var match = simpleVersionmapRegex.exec(line);
+    versionMap[match[1]] = match[2];
+  });
+
+  return versionMap;
 }
 
 function checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyWeek) {
@@ -116,7 +139,9 @@ function compareLocalToMaster(localTasks, masterTasks, sprint) {
 
       messages.push({
         type: 'error',
-        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${destinationVersion.format()} at least since local minor version is less than the sprint version(${taskVersionBumpingDocUrl})`
+        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${
+          localTask.version.version
+        } to v${destinationVersion.format()} at least since local minor version is less than the sprint version(${taskVersionBumpingDocUrl})`
       });
       continue;
     }
@@ -124,7 +149,10 @@ function compareLocalToMaster(localTasks, masterTasks, sprint) {
     if (localTask.version.minor === sprint && eq(localTask.version, masterTask.version)) {
       messages.push({
         type: 'error',
-        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${inc(masterTask.version, 'patch')} at least since local version is equal to the master version (${taskVersionBumpingDocUrl})`
+        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.version} to v${inc(
+          masterTask.version,
+          'patch'
+        )} at least since local version is equal to the master version (${taskVersionBumpingDocUrl})`
       });
       continue;
     }
@@ -153,7 +181,7 @@ function checkLocalVersions(localTasks, sprint, isReleaseTagExist, isCourtesyWee
       continue;
     }
 
-    if (localTask.version.minor > sprint && (!isReleaseTagExist && !isCourtesyWeek)) {
+    if (localTask.version.minor > sprint && !isReleaseTagExist && !isCourtesyWeek) {
       messages.push({
         type: 'error',
         payload: `[${sourceBranch}] ${localTask.name} has v${localTask.version.version} it's higher than the current sprint ${sprint} (${taskVersionBumpingDocUrl})`
@@ -167,7 +195,7 @@ function checkLocalVersions(localTasks, sprint, isReleaseTagExist, isCourtesyWee
 
 function readVersionsFromTaskJsons(tasks, basepath) {
   return tasks.map(x => {
-    const taskJSONPath = join(basepath, 'Tasks' , x, 'task.json');
+    const taskJSONPath = join(basepath, 'Tasks', x, 'task.json');
 
     if (!existsSync(taskJSONPath)) {
       logToPipeline('error', `Task.json of ${x} does not exist by path ${taskJSONPath}`);
@@ -179,12 +207,8 @@ function readVersionsFromTaskJsons(tasks, basepath) {
     return {
       id: taskJSONObject.id,
       name: x,
-      version: parse([
-        taskJSONObject.version.Major,
-        taskJSONObject.version.Minor,
-        taskJSONObject.version.Patch
-      ].join('.'))
-    }
+      version: parse([taskJSONObject.version.Major, taskJSONObject.version.Minor, taskJSONObject.version.Patch].join('.'))
+    };
   });
 }
 
@@ -205,14 +229,13 @@ async function getTaskVersionsFromFeed() {
     process.exit(1);
   }
 
-  return result.value
-    .map(x => ({
-      name: x.name.slice('Mseng.MS.TF.DistributedTask.Tasks.'.length),
-      versions: x.versions.map(y => ({
-        version: parse(y.version),
-        isLatest: y.isLatest
-      }))
-    }));
+  return result.value.map(x => ({
+    name: x.name.slice('Mseng.MS.TF.DistributedTask.Tasks.'.length),
+    versions: x.versions.map(y => ({
+      version: parse(y.version),
+      isLatest: y.isLatest
+    }))
+  }));
 }
 
 function compareLocalToFeed(localTasks, feedTasks, sprint) {
@@ -250,7 +273,7 @@ function compareLocalTaskLoc(localTasks) {
   const messages = [];
 
   for (const localTask of localTasks) {
-    const taskLocJSONPath = join(__dirname, '..', 'Tasks' , localTask.name, 'task.loc.json');
+    const taskLocJSONPath = join(__dirname, '..', 'Tasks', localTask.name, 'task.loc.json');
 
     if (!existsSync(taskLocJSONPath)) {
       logToPipeline('error', `Task.json of ${localTask.name} does not exist by path ${taskLocJSONPath}`);
@@ -259,7 +282,7 @@ function compareLocalTaskLoc(localTasks) {
 
     const taskLocJSONObject = JSON.parse(readFileSync(taskLocJSONPath, 'utf-8'));
     const taskLocJSONVersion = [taskLocJSONObject.version.Major, taskLocJSONObject.version.Minor, taskLocJSONObject.version.Patch].join('.');
-    
+
     if (neq(localTask.version, parse(taskLocJSONVersion))) {
       messages.push({
         type: 'error',
@@ -300,8 +323,7 @@ async function main({ task, sprint, week }) {
   const isReleaseTagExist = run(`git tag -l v${sprint}`).length !== 0;
   const isCourtesyWeek = week === 3;
 
-  //getChangedVersionMapFiles();
-  versionMapChange();
+  prCheck();
 
   const messages = [
     ...checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyWeek),
@@ -327,8 +349,7 @@ async function main({ task, sprint, week }) {
   }
 }
 
-main(argv)
-  .catch(error => {
-    console.error(error);
-    process.exit(1);
-  });
+main(argv).catch(error => {
+  console.error(error);
+  process.exit(1);
+});
