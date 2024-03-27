@@ -25,7 +25,7 @@ const { config } = require('process');
 const client = new RestClient('azure-pipelines-tasks-ci', '');
 
 const argv = require('minimist')(process.argv.slice(2));
-
+з;
 if (!argv.task) {
   console.log(`$(task_pattern) variable is empty or not set. Aborting...`);
   process.exit(0);
@@ -64,28 +64,21 @@ function prCheck() {
   });
 
   for (const task in targetBranchMapping) {
-    console.log('compare: ' + task);
-    console.log(targetBranchMapping[task]);
-    console.log(sourceBranchMapping[task]);
+    console.log('checking task:' + task);
     compareConfigs(targetBranchMapping[task], sourceBranchMapping[task]);
   }
 }
 
 function compareConfigs(targetConfig, sourceConfig) {
   for (const config in targetConfig) {
-    console.log(config);
-    console.log(targetConfig[config]);
-    var news = inc(targetConfig[config], 'patch');
-    console.log(news);
-    console.log(sourceConfig[config]);
-    console.log('=====');
-    if (!gt(sourceConfig[config], news)) {
-      console.log('!!!!!! it ' + sourceConfig[config] + ' should be bumped');
-    } else {
-      console.log('OK');
+    console.log('checking config:' + config);
+    // Check that new version is greater thatn old version + 1
+    if (!gt(sourceConfig[config], inc(targetConfig[config], 'patch'))) {
+      console.log(` ${config} : ${sourceConfig[config]} should be bumped`);
     }
   }
 }
+
 function getModifiedVersionMapFiles(targetBranch, sourceBranch) {
   const versionmapPathRegex = /_generated\/.*versionmap.txt$/;
   const versionMapFiles = run(`git --no-pager diff --name-only --diff-filter=M origin/${targetBranch}..origin/${sourceBranch}`)
@@ -95,14 +88,11 @@ function getModifiedVersionMapFiles(targetBranch, sourceBranch) {
 }
 
 function getVersionMapContent(versionMapFilePath, branchName) {
-  const versionMapFileContent = run(`git show origin/${branchName}:${versionMapFilePath}`);
-  return versionMapFileContent;
+  return run(`git show origin/${branchName}:${versionMapFilePath}`);
 }
 
 function parseVersionMap(fileContent) {
   const versionMap = {};
-
-  console.log(fileContent);
   fileContent.split('\n').forEach(line => {
     simpleVersionmapRegex.test(line);
     var match = simpleVersionmapRegex.exec(line);
