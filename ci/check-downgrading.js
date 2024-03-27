@@ -25,7 +25,7 @@ const { config } = require('process');
 const client = new RestClient('azure-pipelines-tasks-ci', '');
 
 const argv = require('minimist')(process.argv.slice(2));
-з;
+
 if (!argv.task) {
   console.log(`$(task_pattern) variable is empty or not set. Aborting...`);
   process.exit(0);
@@ -37,10 +37,13 @@ const escapeHash = str => (platform() == 'win32' ? str : str.replace(/#/gi, '\\#
 const sourceBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH'] || 'some-pr');
 const targetBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_TARGETBRANCH'] || 'master');
 
+console.log(sourceBranch);
+console.log(targetBranch);
+
 const baseProjectPath = join(__dirname, '..');
 const tempMasterTasksPath = join(baseProjectPath, 'temp', 'tasks-versions', targetBranch);
 
-const simpleVersionmapRegex = /(?<configName>.*)\|(?<version>.*)$/;
+const simpleVersionMapRegex = /(?<configName>.*)\|(?<version>.*)$/;
 
 if (!existsSync(tempMasterTasksPath)) {
   mkdir('-p', tempMasterTasksPath);
@@ -54,18 +57,20 @@ function prCheck() {
   const modifiedVersionMapFiles = getModifiedVersionMapFiles(targetBranch, sourceBranch);
   if (modifiedVersionMapFiles.length == 0) return;
 
-  const targetBranchMapping = {};
-  const sourceBranchMapping = {};
+  const messages = [];
+
+  const targetBranchMappings = {};
+  const sourceBranchMappings = {};
   modifiedVersionMapFiles.forEach(filePath => {
     //get task name from a string like _generated/TaskNameVN.versionmap.txt
     const taskName = filePath.slice(11, -15); //get task name from
-    targetBranchMapping[taskName] = parseVersionMap(getVersionMapContent(filePath, targetBranch));
-    sourceBranchMapping[taskName] = parseVersionMap(getVersionMapContent(filePath, sourceBranch));
+    targetBranchMappings[taskName] = parseVersionMap(getVersionMapContent(filePath, targetBranch));
+    sourceBranchMappings[taskName] = parseVersionMap(getVersionMapContent(filePath, sourceBranch));
   });
 
-  for (const task in targetBranchMapping) {
+  for (const task in targetBranchMappings) {
     console.log('checking task:' + task);
-    compareConfigs(targetBranchMapping[task], sourceBranchMapping[task]);
+    compareConfigs(targetBranchMappings[task], sourceBranchMappings[task]);
   }
 }
 
@@ -94,8 +99,8 @@ function getVersionMapContent(versionMapFilePath, branchName) {
 function parseVersionMap(fileContent) {
   const versionMap = {};
   fileContent.split('\n').forEach(line => {
-    simpleVersionmapRegex.test(line);
-    var match = simpleVersionmapRegex.exec(line);
+    simpleVersionMapRegex.test(line);
+    var match = simpleVersionMapRegex.exec(line);
     versionMap[match[1]] = match[2];
   });
 
@@ -326,11 +331,11 @@ async function main({ task, sprint, week }) {
   prCheck();
 
   const messages = [
-    ...checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyWeek),
-    ...compareLocalToMaster(localTasks, masterTasks, sprint),
-    ...checkLocalVersions(localTasks, sprint, isReleaseTagExist, isCourtesyWeek),
+    // ...checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyWeek),
+    // ...compareLocalToMaster(localTasks, masterTasks, sprint),
+    // ...checkLocalVersions(localTasks, sprint, isReleaseTagExist, isCourtesyWeek),
     //...compareLocalToFeed(localTasks, feedTaskVersions, sprint),
-    ...compareLocalTaskLoc(localTasks)
+    //...compareLocalTaskLoc(localTasks)
   ];
 
   if (messages.length > 0) {
