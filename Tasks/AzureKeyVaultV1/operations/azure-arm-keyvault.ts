@@ -5,12 +5,17 @@ import util = require("util");
 import tl = require('azure-pipelines-task-lib/task');
 import webClient = require("azure-pipelines-tasks-azure-arm-rest/webClient");
 
+let retrysCount: number;
+let retryWait: number;
+
 export class AzureKeyVaultSecret {
     name: string;
     enabled: boolean;
     expires: Date;
     contentType: string;
+    
 }
+
 
 export class KeyVaultClient extends azureServiceClient.ServiceClient {
     private keyVaultName;
@@ -178,19 +183,55 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         );
 
         console.log(tl.loc("DownloadingSecretValue", secretName));
-        this.invokeRequest(httpRequest).then(async (response: webClient.WebResponse) => {
-            if (response.statusCode == 200) {
-                var result = response.body.value;
-                return new azureServiceClientBase.ApiResult(null, result);
-            }
-            else if (response.statusCode == 400) {
-                return new azureServiceClientBase.ApiResult(tl.loc('GetSecretFailedBecauseOfInvalidCharacters', secretName));
-            }
-            else {
-                return new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response));
-            }
-        }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
-            (error) => callback(error));
+        // this.invokeRequest(httpRequest).then(async (response: webClient.WebResponse) => {
+        //     if (response.statusCode == 200) {
+        //         var result = response.body.value;
+        //         return new azureServiceClientBase.ApiResult(null, result);
+        //     }
+        //     else if (response.statusCode == 400) {
+        //         return new azureServiceClientBase.ApiResult(tl.loc('GetSecretFailedBecauseOfInvalidCharacters', secretName));
+        //     }
+        //     else {
+        //         return new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response));
+        //     }
+        // }).then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result),
+        //     (error) => callback(error));
+        this.invokeRequestWithRetry(httpRequest,secretName)
+    .then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result))
+    .catch(error => callback(error));
+    }
+
+    async invokeRequestWithRetry(httpRequest, secretName, retrysCount: number = 3, retryWait: number = 2000) {
+        return this.invokeRequest(httpRequest).then(async (response: webClient.WebResponse) => {
+             // Retry logic
+        //const maxAttempts = 3;
+        let attempts = 0;
+       
+                // Check response status code
+                if (retrysCount > 0) {
+                    try {
+                        // Check response status code
+                        if (response.statusCode === 200) {
+                            var result = response.body.value;
+                            return new azureServiceClientBase.ApiResult(null, result);
+                        } else if (response.statusCode === 400) {
+                            return new azureServiceClientBase.ApiResult(tl.loc('GetSecretFailedBecauseOfInvalidCharacters', secretName));
+                        } else {
+                            throw new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response));
+                        }
+                    } catch (error) {
+                        console.error(tl.loc(`Attempt ${attempts + 1} failed with error: ${error}`));
+                        attempts++;
+                            console.log(tl.loc(`Retrying ...`));
+                            await new Promise(r => setTimeout(r, retryWait));
+                            return await this.invokeRequestWithRetry(httpRequest,secretName, retrysCount-1)
+                        
+                    }
+                }
+                throw new Error(`Failed after ${retrysCount} attempts`);
+        
+                });
+       
     }
 
     private convertToAzureKeyVaults(result: any[]): AzureKeyVaultSecret[] {
