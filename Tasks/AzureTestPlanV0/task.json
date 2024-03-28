@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 238,
-    "Patch": 2
+    "Patch": 4
   },
   "preview": true,
   "demands": [],
@@ -170,9 +170,11 @@
     "testPlanInput": "Test plan Id : %s",
     "testplanConfigInput": "Test plan configuration Id : %s",
     "testSuiteSelected": "Test suite Id selected: %s",
-    "automatedTestsTriggered": "Trigerring execution of Automated tests from test plan",
+    "automatedTestsTriggered": "Triggering execution of Automated tests from test plan",
     "ErrorFailTaskOnExecutingTests": "Error occured while executing test command",
     "ErrorFailTaskOnAPIFailure": "Error occured while fetching automated tests from test plan inputs",
-    "ErrorFailTaskOnCreateRunFailure": "Error occured while creating manual test run from test plan inputs"
+    "ErrorFailTaskOnCreateRunFailure": "Error occured while creating manual test run from test plan inputs",
+    "chmodGradlew": "Used 'chmod' method for gradlew file to make it executable.",
+    "NoMatchingFilesFound": "No test result files matching '%s' were found."
   }
 }
