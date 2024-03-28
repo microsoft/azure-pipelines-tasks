@@ -1,7 +1,7 @@
 import os = require('os');
 import Q = require('q');
 import fs = require('fs');
-﻿import * as path from 'path';
+import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
 
@@ -86,35 +86,32 @@ export async function execMavenBuild(args: string[]) {
 }
 
 function getGradlewExec() {
-    const testResultsFiles: string[] = ["**/gradlew"];
+    const gradlewExecFileSearchPattern: string[] = ["**/gradlew"];
+    let workingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
 
-    let searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
-
-    if(tl.getVariable('System.DefaultWorkingDirectory') && (!path.isAbsolute(searchFolder)))
-    {
-        searchFolder = path.join(tl.getVariable('System.DefaultWorkingDirectory'),searchFolder);
+    if (tl.getVariable('System.DefaultWorkingDirectory') && (!path.isAbsolute(workingDirectory))) {
+        workingDirectory = path.join(tl.getVariable('System.DefaultWorkingDirectory'), workingDirectory);
     }
-    console.log(searchFolder);
+
+    console.debug(workingDirectory);
 
     const findOptions = <tl.FindOptions>{
         allowBrokenSymbolicLinks: true,
         followSpecifiedSymbolicLink: true,
         followSymbolicLinks: true
-    }; 
+    };
 
-    const gradlewPath = tl.findMatch(searchFolder, testResultsFiles, findOptions);
+    const gradlewPath = tl.findMatch(workingDirectory, gradlewExecFileSearchPattern, findOptions);
 
-    if(gradlewPath.length == 0){
-        console.log("Missing gradlew file");
+    if (gradlewPath.length == 0) {
+        tl.setResult(tl.TaskResult.Failed, "Missing gradlew file");
     }
 
-    if(gradlewPath.length > 1){
-        console.log("Multiple gradlew files found. Selecting the first matched instance");
+    if (gradlewPath.length > 1) {
+        tl.warning(tl.loc('MultipleMatchingGradlewFound'));
     }
 
     var gradlewExec: string = gradlewPath[0];
-
-    console.log(gradlewExec);
 
     if (isWindows) {
         tl.debug('Append .bat extension name to gradlew script.');
@@ -138,13 +135,14 @@ function getGradlewExec() {
 /** Gradle Orchestration via gradlew script
  * @param args Arguments to execute via mvn
  * @returns execution Status Code
- * 
  */
 export async function execGradleBuild(args: string[]) {
     var gradleExec = getGradlewExec();
 
     // Setup tool runner that executes Maven only to retrieve its version
     var gradleRunner = tl.tool(gradleExec);
+
+    // Add args prepared by invoker for executing individual test cases
     gradleRunner.arg('clean');
     gradleRunner.arg(args);
 
