@@ -262,13 +262,6 @@
         "CondaEnvironmentV1",
         "OpenPolicyAgentInstallerV0"
     ],
-    "Node20_228": [
-        "MavenV2",
-        "PyPIPublisherV0",
-        "XamarinTestCloudV1",
-        "CopyFilesV2",
-        "DeleteFilesV1"
-    ],
     "Node20_229_1": [
         "CargoAuthenticateV0",
         "CondaAuthenticateV0",

@@ -10,10 +10,10 @@
   "license": "MIT",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^16.11.39",
+    "@types/node": "^20.11.0",
     "azure-pipelines-task-lib": "^5.0.1-preview.0"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "5.1.6"
   }
 }
