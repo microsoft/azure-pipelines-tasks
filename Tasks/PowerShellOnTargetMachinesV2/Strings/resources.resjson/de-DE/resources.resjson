@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "PowerShell auf Zielcomputern",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=627414)",
-  "loc.description": "PowerShell-Skripte auf Remotecomputern ausführen",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=627414)",
+  "loc.description": "Ausführen von PowerShell-Skripts auf Remotecomputern",
   "loc.instanceNameFormat": "PowerShell in $(EnvironmentName) ausführen",
   "loc.releaseNotes": "Neuigkeiten in Version 2.0: <br/>Die Unterstützung von Legacy-DTL-Computern wurde eingestellt.",
   "loc.group.displayName.deployment": "Bereitstellung",

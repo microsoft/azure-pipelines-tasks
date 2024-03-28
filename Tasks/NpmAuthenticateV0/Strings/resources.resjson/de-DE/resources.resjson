@@ -24,5 +24,7 @@
   "loc.messages.CheckedInCredentialsOverriden": "Für die %s-Registrierung in der ausgewählten NPMRC-Datei wurden Anmeldeinformationen gefunden und überschrieben. Entfernen Sie die Anmeldeinformationen aus der Datei, und speichern Sie sie stattdessen in einer npm-Dienstverbindung (empfohlen), oder entfernen Sie die Aufgabe zur npm-Authentifizierung aus Ihrem Build, um die in einer NPMRC-Datei eingecheckten Anmeldeinformationen zu verwenden.",
   "loc.messages.NoIndexJsonFile": "Es wurde keine Datei \"index.json\" gefunden, und es wurden keine Dateien wiederhergestellt.",
   "loc.messages.RevertedChangesToNpmrc": "Die Änderungen an \"%s\" wurden zurückgesetzt.",
-  "loc.messages.NpmrcDoesNotExist": "Die unter \"%s\" ausgewählte NPMRC-Datei ist zurzeit nicht vorhanden."
+  "loc.messages.NpmrcDoesNotExist": "Die unter \"%s\" ausgewählte NPMRC-Datei ist zurzeit nicht vorhanden.",
+  "loc.messages.SuccessfulPush": "NPMRC erfolgreich gepusht",
+  "loc.messages.SuccessfulAppend": "NPMRC erfolgreich angefügt"
 }
