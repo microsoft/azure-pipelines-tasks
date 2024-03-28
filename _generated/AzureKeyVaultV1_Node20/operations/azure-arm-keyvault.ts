@@ -5,7 +5,7 @@ import util = require("util");
 import tl = require('azure-pipelines-task-lib/task');
 import webClient = require("azure-pipelines-tasks-azure-arm-rest/webClient");
 
-let retrysCount: number;
+let retriesCount: number;
 let retryWait: number;
 
 export class AzureKeyVaultSecret {
@@ -181,41 +181,36 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         );
         console.log(tl.loc("DownloadingSecretValue", secretName));
         this.invokeRequestWithRetry(httpRequest,secretName)
-    .then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result))
-    .catch(error => callback(error));
+            .then((apiResult: azureServiceClientBase.ApiResult) => callback(apiResult.error, apiResult.result))
+            .catch(error => callback(error));
 
     }
 
-    async invokeRequestWithRetry(httpRequest, secretName, retrysCount: number = 3, retryWait: number = 2000) {
+    async invokeRequestWithRetry(httpRequest, secretName, retriesCount: number = 3, retryWait: number = 2000) {
         return this.invokeRequest(httpRequest).then(async (response: webClient.WebResponse) => {
-             // Retry logic
-        let attempts = 0;
-                if (retrysCount > 0) {
-                    try {
-                        // Check response status code
-                        if (response.statusCode === 200) {
-                            var result = response.body.value;
-                            return new azureServiceClientBase.ApiResult(null, result);
-                        } else if (response.statusCode === 400) {
-                            return new azureServiceClientBase.ApiResult(tl.loc('GetSecretFailedBecauseOfInvalidCharacters', secretName));
-                        } else {
-                            return new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response));
-                        }
-                    } catch (error) {
-                        console.error(tl.loc(`Attempt ${attempts + 1} failed with error: ${error}`));
-                        attempts++;
-                        console.log(tl.loc(`Retrying ...`));
-                            await new Promise(r => setTimeout(r, retryWait));
-                            return await this.invokeRequestWithRetry(httpRequest,secretName, retrysCount-1, retryWait)
-                        
-                    }
+            try {
+                // Check response status code
+                if (response.statusCode === 200) {
+                    var result = response.body.value;
+                    return new azureServiceClientBase.ApiResult(null, result);
+                } else if (response.statusCode === 400) {
+                    return new azureServiceClientBase.ApiResult(tl.loc('GetSecretFailedBecauseOfInvalidCharacters', secretName));
+                } else {
+                    return new azureServiceClientBase.ApiResult(azureServiceClientBase.ToError(response));
                 }
-                throw new Error(`Failed after ${attempts} attempts`);
-        
-                });
-       
+            } catch (error) {
+                // Retry logic
+                if (retriesCount > 0) {
+                    console.error(tl.loc(`failed with error: ${error} - remaining attempts: ${retriesCount}`));
+                    console.log(tl.loc(`Retrying ...`));
+                    await new Promise(r => setTimeout(r, retryWait));
+                    return await this.invokeRequestWithRetry(httpRequest, secretName, retriesCount - 1, retryWait)
+                }
+            }
+            throw new Error(tl.loc(`Failed after ${4 - retriesCount} attempts`));
+        });
     }
-
+    
     private convertToAzureKeyVaults(result: any[]): AzureKeyVaultSecret[] {
         var listOfSecrets: AzureKeyVaultSecret[] = [];
         result.forEach((value: any, index: number) => {
