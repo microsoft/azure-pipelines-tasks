@@ -1,6 +1,6 @@
 export function removeParenthesesFromEnd(inputString) {
     // Check if the string ends with parentheses
-    if (inputString.endsWith('()')) {
+    if (inputString.endsWith("()")) {
         // Remove the parentheses from the end
         return inputString.slice(0, -2);
     } else {

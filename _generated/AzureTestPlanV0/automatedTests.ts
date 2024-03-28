@@ -8,7 +8,7 @@ export async function automatedTestsFlow(testPlanInfo: TestPlanData, testSelecto
 
     let listOfTestsToBeExecuted: string[] = testPlanInfo.listOfFQNOfTestCases;
 
-    console.log(tl.loc('automatedTestsTriggered'));
+    console.log(tl.loc('automatedTestTriggered'));
 
     if (listOfTestsToBeExecuted !== null && listOfTestsToBeExecuted !== undefined && listOfTestsToBeExecuted.length > 0) {
         tl.debug("Invoking test execution for tests: " + listOfTestsToBeExecuted);
