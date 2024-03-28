@@ -5,15 +5,13 @@ import util = require("util");
 import tl = require('azure-pipelines-task-lib/task');
 import webClient = require("azure-pipelines-tasks-azure-arm-rest/webClient");
 
-let retriesCount: number;
-let retryWait: number;
-
 export class AzureKeyVaultSecret {
     name: string;
     enabled: boolean;
     expires: Date;
     contentType: string;
 }
+
 
 export class KeyVaultClient extends azureServiceClient.ServiceClient {
     private keyVaultName;
