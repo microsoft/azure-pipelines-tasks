@@ -29,6 +29,8 @@
   "loc.input.help.failOnStandardError": "If this is true, this task will fail when any errors are written to the StandardError stream. Unselect the checkbox to ignore standard errors and rely on exit codes to determine the status",
   "loc.input.label.powerShellIgnoreLASTEXITCODE": "Ignore $LASTEXITCODE",
   "loc.input.help.powerShellIgnoreLASTEXITCODE": "If this is false, the line `if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }` is appended to the end of your script. This will cause the last exit code from an external command to be propagated as the exit code of powershell. Otherwise the line is not appended to the end of your script.",
+  "loc.input.label.visibleAzLogin": "az login output visibility",
+  "loc.input.help.visibleAzLogin": "If this is set to true, az login command will output to the task. Setting it to false will suppress the az login output",
   "loc.messages.ScriptReturnCode": "Script exited with return code: %d",
   "loc.messages.ScriptFailed": "Script failed with error: %s",
   "loc.messages.ScriptFailedStdErr": "Script has output to stderr. Failing as failOnStdErr is set to true.",
