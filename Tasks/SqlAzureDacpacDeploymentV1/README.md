@@ -2,7 +2,7 @@
 
 ### Overview:
 
-The task is used to deploy Azure SQL Database to an existing Azure SQL Server, either by using DACPACs or SQL Server scripts. The [DACPACs](https://msdn.microsoft.com/en-IN/library/ee210546.aspx) are deployed using [SqlPackage.exe](#1) and the [SQL Server scripts](https://msdn.microsoft.com/en-IN/library/hh245282.aspx) are deployed using the [Invoke-Sqlcmd cmdlet](https://msdn.microsoft.com/en-IN/library/cc281720.aspx). DACPACs and SqlPackage.exe and Invoke-Sqlcmd cmdlet provides for fine-grained control over the database creation and upgrades, including upgrades for schema, triggers, stored procedures, roles, users, extended properties etc. Using the task, multiple different properties can be set to ensure that the database is created or upgraded properly.
+The task is used to deploy a SQL Database project ([DACPACs](https://msdn.microsoft.com/en-IN/library/ee210546.aspx)) through DACPACs, or with T-SQL scripts, to an existing Azure SQL DB, Azure SQL Managed Instance, or SQL Server (on-premises or in a cloud). Visual Studio SQL Database projects or Visual Studio Code/Azure Data Studio SQL Database projects can be used, as all tools build a DACPAC. The DACPACs are deployed using [SqlPackage.exe](#1) and the [SQL Server scripts](https://msdn.microsoft.com/en-IN/library/hh245282.aspx) are deployed using the [Invoke-Sqlcmd cmdlet](https://msdn.microsoft.com/en-IN/library/cc281720.aspx). DACPACs and SqlPackage.exe and Invoke-Sqlcmd cmdlet provides for fine-grained control over the database creation and upgrades, including upgrades for schema, triggers, stored procedures, roles, users, extended properties etc. Using the task, multiple different properties can be set to ensure that the database is created or upgraded properly.
 
 ### Contact Information
 
@@ -14,7 +14,7 @@ The following pre-requisites need to be setup for the task to work properly.
 
 ##### Azure Subscription
 
-To deploy to Azure SQL Database, an Azure subscription has to be linked to Team Foundation Server or to Azure Pipelines using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab.
+To deploy to Azure SQL Database or Azure SQL Managed Instance, an Azure subscription needs to be linked to Azure DevOps as a Service Connection in the Project Settings. 
 
 - For Azure Classic resources use 'Azure' endpoint type with Certificate or Credentials based authentication. If you are using credentials based auth, ensure that the credentials are for a [**work account**](https://azure.microsoft.com/en-in/pricing/member-offers/msdn-benefits-details/work-accounts-faq/) because Microsoft accounts like [**joe@live.com**](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/DeployAzureResourceGroup) or [**joe@hotmail.com**](https://github.com/Microsoft/azure-pipelines-tasks/blob/master/Tasks/DeployAzureResourceGroup) are not supported.
 
@@ -31,9 +31,9 @@ For Azure MSDN accounts, one can either use a [Service Principal](https://go.mic
 
 There should be an Azure SQL Server that is already pre-created in the [Azure portal](https://ms.portal.azure.com/#create/Microsoft.SQLServer). The task deploys Azure SQL Databases but does not create Azure SQL Server.
 
-##### Automation Agent
+##### Pipeline Agent
 
-The task runs on the automation agent machine and the following needs to be installed on the machine:
+The task runs on the pipeline agent machine and the following needs to be installed on the machine:
 
 1. For deploying DACPACs, SqlPackage.exe is used, and can be installed by using any one of the following -
     * Visual Studio 2015 installs the SqlPackage.exe at - C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\120. Here the install location of Visual Studio is - C:\Program Files (x86)\Microsoft Visual Studio 14.0.
@@ -51,15 +51,18 @@ The task runs on the automation agent machine and the following needs to be inst
 
 The task needs the Azure PowerShell version to be installed on the automation agent, and that can be done easily using the [Azure PowerShell Installer v1.3.0](https://github.com/Azure/azure-powershell/releases/tag/v1.3.0-March2016). Refer to "Supported Azure and AzureRM module versions" section below for recommended versions.
 
+##### SQL Server
+
+
 ### Parameters of the task:
 
 The parameters of the task are described in details, including examples, to show how to input the parameters. The parameters listed with a \* are required parameters for the task:
 
 **Azure Subscription Connection Details**
 
-- **Azure Connection Type\*:** Specify Azure endpoint type, for Azure Classic resources use 'Azure' endpoint, for Azure ARM resources use 'Azure Resource Manager' endpoint.
+- **Azure Connection Type:** Specify Azure endpoint type, for Azure Classic resources use 'Azure' endpoint, for Azure ARM resources use 'Azure Resource Manager' endpoint.
 
-- **Azure Subscription\*:** Select the Azure Subscription where the Azure SQL Database will be deployed.
+- **Azure Subscription:** Select the Azure Subscription where the Azure SQL Database will be deployed.
 
 **Authentication types**
 
@@ -71,15 +74,17 @@ The parameters of the task are described in details, including examples, to show
 
 - **Service Principal** : Uses the Authentication data from **Azure Subscription**. 
 
+- **Windows Authentication** : Uses the credentials of the self-hosted pipeline agent.
+
 **SQL DB Details**
 
-- **Azure SQL Server Name\*:** The connection string for the Azure SQL Server and the format is same as that is followed in SQL Server Management Studio. For example, FabrikamSQL.database.windows.net, 1433 or FabrikamSQL.database.windows.net are both valid Azure SQL Server names.
+- **SQL Server Name\*:** The connection string for the SQL Server instance or Azure SQL Server and the format is same as that is followed in SQL Server Management Studio. For example, FabrikamSQL.database.windows.net, 1433 or FabrikamSQL.database.windows.net are both valid Azure SQL Server names. FabrikamSQL.fabrikam.local, 1433 or FabrikamSQL.fabrikam.local are both valid SQL Server names.
 
-- **Database Name\*:** The name of the Azure SQL Database like FabrikanDB. The Database will be created new if it does not exist, else it will be updated if it already exists.
+- **Database Name\*:** The name of the SQL Server database or Azure SQL Database like FabrikamDB. The Database will be created new if it does not exist, else it will be updated if it already exists.
 
-- **SQL Username\*:** Azure SQL Database task uses SQL Authentication to authenticate with the Azure SQL Server and this parameter specifies the Azure SQL Database administrator login.
+- **SQL Username\*:** SQL Server login or Azure SQL DB user.
 
-- **SQL Password\*:** The password for the Azure SQL Database administrator.
+- **SQL Password\*:** The password for the SQL Server login or the Azure SQL Database administrator.
 
 **Deployment Package**
 
@@ -103,11 +108,11 @@ The parameters of the task are described in details, including examples, to show
 - **Additional Invoke-Sqlcmd cmdlet Arguments:** Additional [Invoke-Sqlcmd cmdlet](https://msdn.microsoft.com/en-IN/library/cc281720.aspx) arguments that will be applied when creating or updating the Azure SQL Database like:
         -ConnectionTimeout 100 -OutputSqlError
 
-**Inline SQL Script:** Fill in the following options for running the Inline SQL Script against the Azure SQL Database.
+**Inline SQL Script:** Fill in the following options for running the Inline SQL Script against the SQL Server database of Azure SQL Database.
 
-- **Inline SQL Script\*:** Enter the SQL Script to run against the Azure SQL Server Database.
+- **Inline SQL Script\*:** Enter the SQL Script to run against the SQL Server database or Azure SQL  Database.
 
-- **Additional Invoke-Sqlcmd cmdlet Arguments:** Additional [Invoke-Sqlcmd cmdlet](https://msdn.microsoft.com/en-IN/library/cc281720.aspx) arguments that will be applied when creating or updating the Azure SQL Database like:
+- **Additional Invoke-Sqlcmd cmdlet Arguments:** Additional [Invoke-Sqlcmd cmdlet](https://msdn.microsoft.com/en-IN/library/cc281720.aspx) arguments that will be applied when creating or updating the SQL Server database or Azure SQL Database like:
         -ConnectionTimeout 100 -OutputSqlError
 
 **Azure SQL Server Firewall**

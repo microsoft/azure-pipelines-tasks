@@ -124,5 +124,11 @@ describe('SqlAzureDacpacDeployment - Utility Suite', function () {
 
             psr.run(path.join(__dirname, 'L0FindSqlPackagePathSelectHighestVersion.ps1'), done);
         });
+        it('Get-WindowsAuthenticationConnectionString should return a connection string with Integrated Security=SSPI', (done) => {
+            this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+            psr.run(path.join(__dirname, 'L0UtilityWindowsAuthentication.ps1'), done)
+            ;
+        });
     }
 });

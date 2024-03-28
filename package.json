@@ -47,5 +47,8 @@
     "typed-rest-client": "^1.8.9",
     "typescript": "4.0.2",
     "validator": "^13.7.0"
+  },
+  "dependencies": {
+    "azure-devops-extension-sdk": "^4.0.2"
   }
 }
