@@ -1,7 +1,7 @@
 import os = require('os');
 import Q = require('q');
-import path = require('path');
 import fs = require('fs');
+﻿import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
 
@@ -86,13 +86,35 @@ export async function execMavenBuild(args: string[]) {
 }
 
 function getGradlewExec() {
+    const testResultsFiles: string[] = ["**/gradlew"];
 
-    const workingDirectory: string = tl.getPathInput('cwd', false, true);
-    tl.cd(workingDirectory);
+    let searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
 
-    var gradlewExec: string = '';
+    if(tl.getVariable('System.DefaultWorkingDirectory') && (!path.isAbsolute(searchFolder)))
+    {
+        searchFolder = path.join(tl.getVariable('System.DefaultWorkingDirectory'),searchFolder);
+    }
+    console.log(searchFolder);
 
-    gradlewExec = path.join(workingDirectory, 'gradlew');
+    const findOptions = <tl.FindOptions>{
+        allowBrokenSymbolicLinks: true,
+        followSpecifiedSymbolicLink: true,
+        followSymbolicLinks: true
+    }; 
+
+    const gradlewPath = tl.findMatch(searchFolder, testResultsFiles, findOptions);
+
+    if(gradlewPath.length == 0){
+        console.log("Missing gradlew file");
+    }
+
+    if(gradlewPath.length > 1){
+        console.log("Multiple gradlew files found. Selecting the first matched instance");
+    }
+
+    var gradlewExec: string = gradlewPath[0];
+
+    console.log(gradlewExec);
 
     if (isWindows) {
         tl.debug('Append .bat extension name to gradlew script.');
@@ -124,13 +146,14 @@ export async function execGradleBuild(args: string[]) {
     // Setup tool runner that executes Maven only to retrieve its version
     var gradleRunner = tl.tool(gradleExec);
     gradleRunner.arg('clean');
-    gradleRunner.arg('test');
     gradleRunner.arg(args);
 
-    await gradleRunner.exec(getExecOptions())
+    var statusCode = await gradleRunner.exec(getExecOptions())
         .fail(function (err) {
             console.error(err.message);
             tl.setResult(tl.TaskResult.Failed, "Build failed."); // tl.exit sets the step result but does not stop execution
             process.exit(1);
         });
+
+    return statusCode;
 }
