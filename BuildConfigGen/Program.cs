@@ -62,6 +62,28 @@ namespace BuildConfigGen
         /// <param name="getTaskVersionTable"></param>
         static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false, bool getTaskVersionTable = false)
         {
+            try
+            {
+                MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable);
+            }
+            catch (Exception e2)
+            {
+                // format exceptions nicer than the default formatting.  This prevents a long callstack from DragonFruit and puts the exception on the bottom so it's easier to find.
+
+                var restore = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(e2.ToString());
+                Console.ForegroundColor = restore;
+                Console.WriteLine();
+                Console.WriteLine("An exception occured generating configs. Exception message below: (full callstack above)");
+                Console.WriteLine(e2.Message);
+
+                Environment.Exit(1);
+            }
+        }
+
+        private static void MainInner(string? task, string? configs, int? currentSprint, bool writeUpdates, bool allTasks, bool getTaskVersionTable)
+        {
             if (allTasks)
             {
                 NullOrThrow(task, "If allTasks specified, task must not be supplied");
@@ -103,7 +125,7 @@ namespace BuildConfigGen
                 var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
                 foreach (var t in tasks.Values)
                 {
-                    Main3(t.Name, string.Join('|', t.Configs), writeUpdates, currentSprint);
+                    MainUpdateTask(t.Name, string.Join('|', t.Configs), writeUpdates, currentSprint);
                 }
             }
             else
@@ -114,7 +136,7 @@ namespace BuildConfigGen
                 // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
                 foreach (var t in task!.Split(',', '|'))
                 {
-                    Main3(t, configs!, writeUpdates, currentSprint);
+                    MainUpdateTask(t, configs!, writeUpdates, currentSprint);
                 }
             }
         }
@@ -194,7 +216,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void Main3(string task, string configsString, bool writeUpdates, int? currentSprint)
+        private static void MainUpdateTask(string task, string configsString, bool writeUpdates, int? currentSprint)
         {
             if (string.IsNullOrEmpty(task))
             {
@@ -234,7 +256,7 @@ namespace BuildConfigGen
             {
                 ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
 
-                Main2(task, currentSprint, targetConfigs);
+                MainUpdateTaskInner(task, currentSprint, targetConfigs);
 
                 ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: false);
             }
@@ -278,7 +300,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void Main2(string task, int? currentSprint, HashSet<Config.ConfigRecord> targetConfigs)
+        private static void MainUpdateTaskInner(string task, int? currentSprint, HashSet<Config.ConfigRecord> targetConfigs)
         {
             if (!currentSprint.HasValue)
             {
@@ -317,8 +339,19 @@ namespace BuildConfigGen
 
             string versionMapFile = Path.Combine(gitRootPath, "_generated", @$"{task}.versionmap.txt");
 
-
             UpdateVersions(gitRootPath, task, taskTargetPath, out var configTaskVersionMapping, targetConfigs: targetConfigs, currentSprint.Value, versionMapFile, out HashSet<Config.ConfigRecord> versionsUpdated);
+
+            var duplicateVersions = configTaskVersionMapping.GroupBy(x => x.Value).Select(x => new { version = x.Key, configName = String.Join(",", x.Select(x => x.Key.name)), count = x.Count() }).Where(x => x.count > 1);
+            if (duplicateVersions.Any())
+            {
+                StringBuilder dupConfigsStr = new StringBuilder();
+                foreach (var x in duplicateVersions)
+                {
+                    dupConfigsStr.AppendLine($"task={task} version={x.version} specified in multiple configName={x.configName} config count={x.count}");
+                }
+
+                throw new Exception(dupConfigsStr.ToString());
+            }
 
             foreach (var config in targetConfigs)
             {
