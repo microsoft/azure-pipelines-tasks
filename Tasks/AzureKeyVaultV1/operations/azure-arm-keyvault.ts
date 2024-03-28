@@ -12,7 +12,6 @@ export class AzureKeyVaultSecret {
     contentType: string;
 }
 
-
 export class KeyVaultClient extends azureServiceClient.ServiceClient {
     private keyVaultName;
     private keyVaultUrl;
