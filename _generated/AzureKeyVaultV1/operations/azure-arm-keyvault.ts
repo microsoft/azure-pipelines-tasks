@@ -12,7 +12,7 @@ export class AzureKeyVaultSecret {
     name: string;
     enabled: boolean;
     expires: Date;
-    contentType: string;  
+    contentType: string;
 }
 
 export class KeyVaultClient extends azureServiceClient.ServiceClient {
