@@ -26,11 +26,11 @@
   "loc.messages.testPlanInput": "Test plan Id : %s",
   "loc.messages.testplanConfigInput": "Test plan configuration Id : %s",
   "loc.messages.testSuiteSelected": "Test suite Id selected: %s",
-  "loc.messages.automatedTestsTriggered": "Trigerring execution of Automated tests from test plan",
+  "loc.messages.automatedTestTriggered": "Triggering execution of Automated tests from test plan",
   "loc.messages.ErrorFailTaskOnExecutingTests": "Error occured while executing test command",
   "loc.messages.ErrorFailTaskOnAPIFailure": "Error occured while fetching automated tests from test plan inputs",
   "loc.messages.ErrorFailTaskOnCreateRunFailure": "Error occured while creating manual test run from test plan inputs",
-  "loc.messages.chmodGradlew": "Used 'chmod' method for gradlew file to make it executable",
+  "loc.messages.chmodGradlew": "Used 'chmod' method for gradlew file to make it executable.",
   "loc.messages.NoMatchingFilesFound": "No test result files matching '%s' were found.",
   "loc.messages.MultipleMatchingGradlewFound": "Multiple gradlew files found. Selecting the first matched instance"
 }
