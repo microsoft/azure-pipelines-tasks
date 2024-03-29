@@ -174,13 +174,10 @@
     "testPlanInput": "ms-resource:loc.messages.testPlanInput",
     "testplanConfigInput": "ms-resource:loc.messages.testplanConfigInput",
     "testSuiteSelected": "ms-resource:loc.messages.testSuiteSelected",
-    "automatedTestTriggered": "ms-resource:loc.messages.automatedTestTriggered",
+    "automatedTestsTriggered": "ms-resource:loc.messages.automatedTestsTriggered",
     "ErrorFailTaskOnExecutingTests": "ms-resource:loc.messages.ErrorFailTaskOnExecutingTests",
     "ErrorFailTaskOnAPIFailure": "ms-resource:loc.messages.ErrorFailTaskOnAPIFailure",
-    "ErrorFailTaskOnCreateRunFailure": "ms-resource:loc.messages.ErrorFailTaskOnCreateRunFailure",
-    "chmodGradlew": "ms-resource:loc.messages.chmodGradlew",
-    "NoMatchingFilesFound": "ms-resource:loc.messages.NoMatchingFilesFound",
-    "MultipleMatchingGradlewFound": "ms-resource:loc.messages.MultipleMatchingGradlewFound"
+    "ErrorFailTaskOnCreateRunFailure": "ms-resource:loc.messages.ErrorFailTaskOnCreateRunFailure"
   },
   "_buildConfigMapping": {
     "Default": "0.238.4",
