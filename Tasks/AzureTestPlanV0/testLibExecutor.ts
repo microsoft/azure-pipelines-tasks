@@ -93,7 +93,7 @@ function getGradlewExec() {
         workingDirectory = path.join(tl.getVariable('System.DefaultWorkingDirectory'), workingDirectory);
     }
 
-    console.debug(workingDirectory);
+    tl.debug(workingDirectory);
 
     const findOptions = <tl.FindOptions>{
         allowBrokenSymbolicLinks: true,
