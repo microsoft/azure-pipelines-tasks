@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 237,
+    "Minor": 238,
     "Patch": 0
   },
   "runsOn": [
@@ -460,7 +460,7 @@
     "Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
   },
   "_buildConfigMapping": {
-    "Default": "0.237.0",
-    "Node20_229_1": "0.237.1"
+    "Default": "0.238.0",
+    "Node20_229_1": "0.238.1"
   }
 }
