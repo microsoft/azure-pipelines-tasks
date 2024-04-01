@@ -1,13 +1,13 @@
 import os = require('os');
 import Q = require('q');
-import path = require('path');
 import fs = require('fs');
+import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
 
 var isWindows = os.type().match(/^Win/);
 
-function getMavenExec(){
+function getMavenExec() {
     var m2HomeEnvVar: string = null;
     var mvnExec: string = '';
     m2HomeEnvVar = tl.getVariable('M2_HOME');
@@ -42,7 +42,7 @@ function getMavenExec(){
 
 function getExecOptions(): tr.IExecOptions {
     var env = process.env;
-    return <tr.IExecOptions> {
+    return <tr.IExecOptions>{
         env: env,
     };
 }
@@ -74,7 +74,7 @@ export async function execMavenBuild(args: string[]) {
             var mvnRun = tl.tool(mvnExec);
             mvnRun.arg('-ntp');
             mvnRun.arg(args);
-            
+
             // 3. Run Maven. Compilation or test errors will cause this to fail.
             return mvnRun.exec(getExecOptions());
         })
@@ -83,4 +83,75 @@ export async function execMavenBuild(args: string[]) {
             tl.setResult(tl.TaskResult.Failed, "Build failed."); // tl.exit sets the step result but does not stop execution
             process.exit(1);
         });
+}
+
+function getGradlewExec() {
+    const gradlewExecFileSearchPattern: string[] = ["**/gradlew"];
+    let workingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
+
+    if (tl.getVariable('System.DefaultWorkingDirectory') && (!path.isAbsolute(workingDirectory))) {
+        workingDirectory = path.join(tl.getVariable('System.DefaultWorkingDirectory'), workingDirectory);
+    }
+
+    tl.debug(workingDirectory);
+
+    const findOptions = <tl.FindOptions>{
+        allowBrokenSymbolicLinks: true,
+        followSpecifiedSymbolicLink: true,
+        followSymbolicLinks: true
+    };
+
+    const gradlewPath = tl.findMatch(workingDirectory, gradlewExecFileSearchPattern, findOptions);
+
+    if (gradlewPath.length == 0) {
+        tl.setResult(tl.TaskResult.Failed, "Missing gradlew file");
+    }
+
+    if (gradlewPath.length > 1) {
+        tl.warning(tl.loc('MultipleMatchingGradlewFound'));
+    }
+
+    var gradlewExec: string = gradlewPath[0];
+
+    if (isWindows) {
+        tl.debug('Append .bat extension name to gradlew script.');
+        gradlewExec += '.bat';
+    }
+
+    if (fs.existsSync(gradlewExec)) {
+        try {
+            // Make sure the wrapper script is executable
+            fs.accessSync(gradlewExec, fs.constants.X_OK)
+        } catch (err) {
+            // If not, show warning and chmodding the gradlew file to make it executable
+            tl.warning(tl.loc('chmodGradlew'));
+            fs.chmodSync(gradlewExec, '755');
+        }
+    }
+
+    return gradlewExec;
+}
+
+/** Gradle Orchestration via gradlew script
+ * @param args Arguments to execute via mvn
+ * @returns execution Status Code
+ */
+export async function execGradleBuild(args: string[]) {
+    var gradleExec = getGradlewExec();
+
+    // Setup tool runner that executes Maven only to retrieve its version
+    var gradleRunner = tl.tool(gradleExec);
+
+    // Add args prepared by invoker for executing individual test cases
+    gradleRunner.arg('clean');
+    gradleRunner.arg(args);
+
+    var statusCode = await gradleRunner.exec(getExecOptions())
+        .fail(function (err) {
+            console.error(err.message);
+            tl.setResult(tl.TaskResult.Failed, "Build failed."); // tl.exit sets the step result but does not stop execution
+            process.exit(1);
+        });
+
+    return statusCode;
 }

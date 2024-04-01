@@ -1,5 +1,5 @@
 import * as tl from 'azure-pipelines-task-lib/task'
-import { executepythontests } from './Invokers/pythonivoker'
+import { executepythontests } from './Invokers/pythoninvoker'
 import { executemaventests } from './Invokers/maveninvoker'
 import { executegradletests } from './Invokers/gradleinvoker'
 

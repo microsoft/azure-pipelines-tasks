@@ -97,7 +97,10 @@ $AzureFileCopyRemoteJob = {
             Write-DetailLogs "Using default AzCopy arguments for dowloading to VM"
             $additionalArguments = "--recursive --log-level=INFO"
         }
-
+        if (-not $containerSasToken.StartsWith("?"))
+        {
+            $containerSasToken = '?' + $containerSasToken
+        }
         if ($useSanitizerActivate) {
             # Splitting arguments on space, but not on space inside quotes
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')

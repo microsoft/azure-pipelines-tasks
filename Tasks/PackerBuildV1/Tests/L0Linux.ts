@@ -50,6 +50,10 @@ let a: any = <any>{
             "code": 0,
             "stdout": "1.2.4"
         },
+        "packer -machine-readable --version": {
+            "code": 0,
+            "stdout": "1234567,,version,1.2.4"
+        },
         "packer fix -validate=false /tmp/tempdir/100/default.linux.template.json": {
             "code": 0,
             "stdout": "{ \"some-key\": \"some-value\" }"
@@ -98,6 +102,12 @@ var utMock = {
     StringWritable: ut.StringWritable,
     PackerVersion: ut.PackerVersion,
     isGreaterVersion: ut.isGreaterVersion,
+    download: function(packerDownloadUrl, downloadPath) {
+        if(process.env["__download_fails__"] === "true") {
+            throw "packer download failed!!";
+        }
+        console.log('downloading from url ' + packerDownloadUrl + ' to ' + downloadPath);
+    },
     deleteDirectory: function(dir) {
         console.log("rmRF " + dir);
     },
