@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 236,
-    "Patch": 1
+    "Minor": 238,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -460,7 +460,7 @@
     "Warning_UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.Warning_UnsupportedServiceConnectionAuth"
   },
   "_buildConfigMapping": {
-    "Default": "0.236.1",
-    "Node20_229_1": "0.236.2"
+    "Default": "0.238.0",
+    "Node20_229_1": "0.238.1"
   }
 }

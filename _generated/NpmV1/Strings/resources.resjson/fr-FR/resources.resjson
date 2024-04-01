@@ -52,5 +52,6 @@
   "loc.messages.OverridingProjectNpmrc": "Remplacement du fichier .npmrc du projet : %s",
   "loc.messages.RestoringProjectNpmrc": "Restauration du fichier .npmrc du projet",
   "loc.messages.WorkingDirectoryNotDirectory": "Remplacez votre répertoire de travail par un répertoire valide",
-  "loc.messages.NGCommon_AreaNotFoundInSps": "Impossible de localiser la zone '%s' [%s]. Le service qui contient la zone n'est peut-être pas disponible dans votre région."
+  "loc.messages.NGCommon_AreaNotFoundInSps": "Impossible de localiser la zone '%s' [%s]. Le service qui contient la zone n'est peut-être pas disponible dans votre région.",
+  "loc.messages.UnsupportedServiceConnectionAuth": "La connexion de service n’utilise aucune méthode d’authentification prise en charge. Veuillez utiliser une connexion de service avec une authentification basée sur un jeton d’accès personnel."
 }
