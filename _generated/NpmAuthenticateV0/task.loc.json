@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 236,
+    "Minor": 238,
     "Patch": 0
   },
   "runsOn": [
@@ -77,7 +77,7 @@
     "SuccessfulAppend": "ms-resource:loc.messages.SuccessfulAppend"
   },
   "_buildConfigMapping": {
-    "Default": "0.236.0",
-    "Node20_229_1": "0.236.1"
+    "Default": "0.238.0",
+    "Node20_229_1": "0.238.1"
   }
 }
