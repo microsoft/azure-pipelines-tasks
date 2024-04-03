@@ -46,5 +46,5 @@
   "loc.messages.JS_InvalidErrorActionPreference": "无效的 ErrorActionPreference“%s”。值必须为下列之一: \"Stop\"、\"Continue\" 或 \"SilentlyContinue\"",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "对于低于 2.115.0 的代理版本，只能使用全局 Azure CLI 配置",
   "loc.messages.UnacceptedScriptLocationValue": "%s 不是任务输入“脚本位置”(YAML 中为 scriptLocation)的有效值。值可以是 \"inlineScript\" 或 \"scriptPath\"",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "机密已过期，请在 %s 更新服务连接。若要详细了解如何转换到无机密服务连接，请参阅 https://aka.ms/azdo-rm-workload-identity-conversion。"
 }

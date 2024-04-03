@@ -35,5 +35,5 @@
   "loc.messages.SettingAzureConfigDir": "AZURE_CONFIG_DIR-Umgebungsvariable wird festgelegt auf: %s",
   "loc.messages.SettingAzureCloud": "Aktive Cloud wird festgelegt auf: %s",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Für Agent-Versionen vor 2.115.0 kann nur die globale Azure CLI-Konfiguration verwendet werden.",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Das Geheimnis ist abgelaufen. Aktualisieren Sie die Dienstverbindung unter %s. Weitere Informationen zur Konvertierung in Dienstverbindungen ohne Geheimnis finden Sie unter https://aka.ms/azdo-rm-workload-identity-conversion."
 }

@@ -46,5 +46,5 @@
   "loc.messages.JS_InvalidErrorActionPreference": "잘못된 ErrorActionPreference '%s'입니다. 값은 'Stop', 'Continue', 'SilentlyContinue' 중 하나여야 합니다.",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "2.115.0 이전의 에이전트 버전에서는 전역 Azure CLI 구성만 사용할 수 있습니다.",
   "loc.messages.UnacceptedScriptLocationValue": "%s은(는) '스크립트 위치'(YAML의 scriptLocation) 작업 입력에 유효한 값이 아닙니다. 값은 be'inlineScript' 또는 'scriptPath' 중 하나일 수 있습니다.",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "비밀이 만료되었습니다. %s에서 서비스 연결을 업데이트하세요. 비밀 없는 서비스 연결로의 변환에 대한 자세한 정보는 https://aka.ms/azdo-rm-workload-identity-conversion을 참고하세요."
 }
