@@ -231,11 +231,11 @@ function Upload-FilesToAzureContainer
         if($cleanTargetBeforeCopy)
         {
            
-             Write-Output "##[command] & azcopy rm `"$containerURL`" --recursive=true"
+            Write-Output "##[command] & `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
  
-             $cleanToBlobCommand = "azcopy rm `"$containerURL`" --recursive=true"
+            $cleanToBlobCommand = "& `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
  
-             Invoke-Expression -Command $cleanToBlobCommand
+            Invoke-Expression $cleanToBlobCommand
  
         }
         if ($useSanitizerActivate) {
@@ -244,11 +244,11 @@ function Upload-FilesToAzureContainer
             Write-Output "##[command] & azcopy copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
             & azcopy copy $sourcePath $containerURL $sanitizedArguments
         } else {
-            Write-Output "##[command] & azcopy copy `"$sourcePath`" `"$containerURL`" $additionalArguments"
-            $azCopyCommand = "azcopy copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
-            Invoke-Expression -Command $azCopyCommand
-        }
  
+            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
+            $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"
+            Invoke-Expression $uploadToBlobCommand
+        }
         if($LASTEXITCODE -eq 0)
         {
             Write-Output (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
