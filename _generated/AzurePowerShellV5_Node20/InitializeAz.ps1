@@ -108,12 +108,12 @@ elseif ($endpointObject.scheme -eq 'WorkloadIdentityFederation') {
     $logStr = "##[command] Connect-AzAccount -ServicePrincipal -Tenant $($endpointObject.tenantId) -ApplicationId $($endpointObject.servicePrincipalClientID)"
     $logStr += " -FederatedToken ***** -Environment $environmentName -Scope Process"
     Write-Host $logStr
-    Connect-AzAccount -ServicePrincipal -Tenant $endpointObject.tenantId -ApplicationId $endpointObject.servicePrincipalClientID `
+    $null = Connect-AzAccount -ServicePrincipal -Tenant $endpointObject.tenantId -ApplicationId $endpointObject.servicePrincipalClientID `
         -FederatedToken $clientAssertionJwt -Environment $environmentName -Scope 'Process'
 
     if ($scopeLevel -ne "ManagementGroup") {
         Write-Host "##[command] Set-AzContext -SubscriptionId $($endpointObject.subscriptionID) -TenantId $($endpointObject.tenantId)"
-        Set-AzContext -SubscriptionId $endpointObject.subscriptionID -TenantId $endpointObject.tenantId
+        $null = Set-AzContext -SubscriptionId $endpointObject.subscriptionID -TenantId $endpointObject.tenantId
     }
 }
 else {
