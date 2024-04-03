@@ -35,5 +35,5 @@
   "loc.messages.SettingAzureConfigDir": "Impostazione della variabile di ambiente AZURE_CONFIG_DIR su: %s",
   "loc.messages.SettingAzureCloud": "Impostazione del cloud attivo su: %s",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Se la versione dell'agente è inferiore a quella 2.115.0, è possibile usare solo la configurazione globale dell'interfaccia della riga di comando di Azure",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Segreto scaduto. Aggiornare la connessione al servizio in %s Per altre informazioni sulla conversione a connessioni al servizio senza segreto, vedere https://aka.ms/azdo-rm-workload-identity-conversion."
 }

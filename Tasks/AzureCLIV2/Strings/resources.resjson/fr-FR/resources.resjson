@@ -46,5 +46,5 @@
   "loc.messages.JS_InvalidErrorActionPreference": "ErrorActionPreference '%s' non valide. La valeur doit correspondre à 'Stop', 'Continue' ou 'SilentlyContinue'",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Pour une version d'agent < 2.115.0, seule la configuration Azure CLI globale peut être utilisée",
   "loc.messages.UnacceptedScriptLocationValue": "%s n'est pas une valeur valide pour l'entrée de tâche 'Script Location' (scriptLocation en YAML). La valeur peut être 'inlineScript' ou 'scriptPath'",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expiré, mettez à jour la connexion de service à l’adresse %s Consultez https://aka.ms/azdo-rm-workload-identity-conversion pour en savoir plus sur la conversion en connexions de service sans secret."
 }
