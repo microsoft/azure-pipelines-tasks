@@ -18,8 +18,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 231,
-    "Patch": 0
+    "Minor": 236,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Azure Container Apps Deploy",
@@ -223,10 +223,11 @@
     "SetDefaultBuilderFailed": "Unable to set the Oryx++ Builder as the default builder.",
     "UpdateContainerAppFailed": "Unable to update Azure Container App via 'az containerapp update' command.",
     "UpdateContainerAppFromYamlFailed": "Unable to update Azure Container App from YAML configuration file via 'az containerapp update' command.",
+    "UpdateContainerAppIngressFailed": "Unable to update Azure Container App ingress via 'az containerapp ingress update' command.",
     "UpdateContainerAppRegistryDetailsFailed": "Unable to update Azure Container App ACR details via 'az containerapp registry set' command."
   },
   "_buildConfigMapping": {
-    "Default": "1.225.1",
-    "Node20_229_10": "1.231.0"
+    "Default": "1.236.0",
+    "Node20_229_10": "1.236.1"
   }
 }

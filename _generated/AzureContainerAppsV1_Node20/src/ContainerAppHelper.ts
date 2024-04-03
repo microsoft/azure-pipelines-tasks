@@ -143,6 +143,40 @@ export class ContainerAppHelper {
         }
 
     /**
+     * Update container app with update and ingress update to avoid failure of acr authentication.
+     * @param containerAppName - the name of the existing Container App
+     * @param resourceGroup - the resource group that the existing Container App is found in
+     * @param ingress - the ingress that the Container App will be exposed on
+     * @param targetPort - the target port that the Container App will be exposed on
+     */
+    public updateContainerAppIngress(
+        containerAppName: string,
+        resourceGroup: string,
+        ingress?: string,
+        targetPort?: string) {
+            tl.debug(`Attempting to update Container App ingress with name "${containerAppName}" in resource group "${resourceGroup}"`);
+            const util = new Utility();
+            try {
+                let command = `containerapp ingress update -n ${containerAppName} -g ${resourceGroup}`;
+                if (!util.isNullOrEmpty(ingress)) {
+                    command += ` --type ${ingress}`;
+                }
+
+                if (!util.isNullOrEmpty(targetPort)) {
+                    command += ` --target-port ${targetPort}`;
+                }
+
+                util.throwIfError(
+                    tl.execSync('az', command),
+                    tl.loc('UpdateContainerAppIngressFailed')
+                )
+            } catch (err) {
+                tl.error(err.message);
+                throw err;
+            }
+    }
+        
+    /**
      * Updates an existing Azure Container App based from a YAML configuration file.
      * @param containerAppName - the name of the existing Container App
      * @param resourceGroup - the resource group that the existing Container App is found in
@@ -266,7 +300,7 @@ export class ContainerAppHelper {
         try {
             const command = `containerapp env list -g ${resourceGroup} --query [0].name"`;
             const result = tl.execSync('az', command);
-            return result.code == 0 ? result.stdout : null;
+            return result.code == 0 ? result.stdout.replace(/(\r\n|\n|\r)/gm, "") : null;
         } catch (err) {
             tl.warning(err.message);
             return null;
