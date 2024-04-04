@@ -112,7 +112,7 @@ export async function run(nuGetPath: string): Promise<void> {
         let accessToken;
         let feed;
         const isInternalFeed: boolean = nugetFeedType === "internal";
-        accessToken = getAccessToken(isInternalFeed);
+        accessToken = await getAccessToken(isInternalFeed, packagingLocation);
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
 
         // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
@@ -414,7 +414,7 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
     return false;
 }
 
-function getAccessToken(isInternalFeed: boolean): string{
+async function getAccessToken(isInternalFeed: boolean, packagingLocation: pkgLocationUtils.PackagingLocation): Promise<string>{
     let accessToken: string;
     let allowServiceConnection = tl.getVariable('PUBLISH_VIA_SERVICE_CONNECTION');
 
@@ -439,17 +439,25 @@ function getAccessToken(isInternalFeed: boolean): string{
         {           
             tl.debug("Checking for auth from Cred Provider."); 
             const feed = getProjectAndFeedIdFromInputParam('feedPublish');
+            const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(
+                packagingLocation.DefaultPackagingUri,
+                feed.feedId,
+                feed.projectId,
+                null /* default to V3 */,
+                null /* no accessToken  */,
+                false /* useSession */);
+
             const JsonEndpointsString = process.env["VSS_NUGET_EXTERNAL_FEED_ENDPOINTS"];
+
             if (JsonEndpointsString) {
-                tl.debug(`Endpoints found: ${JsonEndpointsString}`);
-
-                let endpointsArray: { endpointCredentials: EndpointCredentials[] } = JSON.parse(JsonEndpointsString);
                 tl.debug(`Feed details ${feed.feedId} ${feed.projectId}`);
+                tl.debug(`Endpoints found: ${JsonEndpointsString}`);
+                let endpointsArray: { endpointCredentials: EndpointCredentials[] } = JSON.parse(JsonEndpointsString);
 
-                for (let endpoint_in = 0; endpoint_in < endpointsArray.endpointCredentials.length; endpoint_in++) {
-                    if (endpointsArray.endpointCredentials[endpoint_in].endpoint.search(feed.feedName) != -1) {
-                        tl.debug(`Endpoint Credentials found for ${feed.feedName}`);
-                        accessToken = endpointsArray.endpointCredentials[endpoint_in].password;
+                for (const e of endpointsArray.endpointCredentials) {
+                    if (e.endpoint == feedUrl) {
+                        tl.debug(`Endpoint Credentials found for ${feed.feedId}`);
+                        accessToken = e.password;
                         break;
                     }
                 }
