@@ -190,19 +190,47 @@ var linkNonAggregateLayoutContent = function (sourceRoot, destRoot, metadataOnly
                 return;
             }
 
-            // create a junction point for directories, hardlink files
             var itemSourcePath = path.join(taskSourcePath, itemName);
             var itemDestPath = path.join(taskDestPath, itemName);
-            if (fs.statSync(itemSourcePath).isDirectory()) {
-                if (copyFiles) shell.cp('-R', itemSourcePath, itemDestPath);
-                else fs.symlinkSync(itemSourcePath, itemDestPath, 'junction');
-            }
-            else {
-                if (copyFiles) shell.cp(itemSourcePath, itemDestPath);
-                else fs.linkSync(itemSourcePath, itemDestPath);
+
+            if (itemName === "node_modules") {
+                // copy node modules with excluded mockery
+                fs.mkdirSync(itemDestPath);
+                copyNodeModules(itemSourcePath, itemDestPath, copyFiles);
+            } else {
+                // create a junction point for directories, hardlink files
+                if (fs.statSync(itemSourcePath).isDirectory()) {
+                    if (copyFiles) shell.cp('-R', itemSourcePath, itemDestPath);
+                    else fs.symlinkSync(itemSourcePath, itemDestPath, 'junction');
+                }
+                else {
+                    if (copyFiles) shell.cp(itemSourcePath, itemDestPath);
+                    else fs.linkSync(itemSourcePath, itemDestPath);
+                }
             }
         });
     });
+}
+
+var copyNodeModules = function ( sourcePath, desPath, copyFiles ) {
+    fs.readdirSync(sourcePath).forEach(function (itemName) {
+        // skip mockery
+        if (itemName == 'mockery') {
+            return;
+        }
+
+        var itemSourcePath = path.join(sourcePath, itemName);
+        var itemDestPath = path.join(desPath, itemName);
+
+        if (fs.statSync(itemSourcePath).isDirectory()) {
+            if (copyFiles) shell.cp('-R', itemSourcePath, itemDestPath);
+            else fs.symlinkSync(itemSourcePath, itemDestPath, 'junction');
+        }
+        else {
+            if (copyFiles) shell.cp(itemSourcePath, itemDestPath);
+            else fs.linkSync(itemSourcePath, itemDestPath);
+        }
+    })
 }
 
 var linkAggregateLayoutContent = function (sourceRoot, destRoot, release, commit, taskDestMap) {
@@ -385,7 +413,6 @@ var createIndividualTaskZipFiles = function (omitLayoutVersion) {
     var nestedZipsLayoutPath = path.join(packagePath, 'nested-zips-layout');
     fs.mkdirSync(nestedZipsLayoutPath);
     linkNonAggregateLayoutContent(buildTasksPath, nestedZipsLayoutPath, /*metadataOnly*/false,  /*copyFiles*/false);
-
     // create the nested task zips (part of the tasks layout)
     console.log();
     console.log('> Creating nested task zips (content for tasks)');
