@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 235,
+    "Minor": 238,
     "Patch": 0
   },
   "releaseNotes": "This version of the task is compatible with Xcode 8 - 13. Features that were solely to maintain compatibility with Xcode 7 have been removed. This task has better options for using Microsoft-hosted macOS agents.",
@@ -412,7 +412,7 @@
     "UsingDefaultSimulator": "Using default simulator: %s."
   },
   "_buildConfigMapping": {
-    "Default": "5.235.0",
-    "Node20-225": "5.235.1"
+    "Default": "5.238.0",
+    "Node20-225": "5.238.1"
   }
 }
