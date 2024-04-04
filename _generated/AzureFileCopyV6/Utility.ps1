@@ -249,7 +249,7 @@ function Upload-FilesToAzureContainer
             $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"
             Invoke-Expression $uploadToBlobCommand
         }
-  
+        
         if($LASTEXITCODE -eq 0)
         {
             Write-Output (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
