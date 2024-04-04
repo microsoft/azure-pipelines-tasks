@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
-    "Patch": 0
+    "Minor": 235,
+    "Patch": 1
   },
   "demands": [],
   "groups": [],
@@ -393,7 +393,7 @@
     "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink"
   },
   "_buildConfigMapping": {
-    "Default": "0.228.0",
-    "Node20_229_3": "0.231.0"
+    "Default": "0.235.0",
+    "Node20_229_3": "0.235.1"
   }
 }
