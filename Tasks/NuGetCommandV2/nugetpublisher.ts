@@ -455,7 +455,7 @@ async function getAccessToken(isInternalFeed: boolean, packagingLocation: pkgLoc
                 let endpointsArray: { endpointCredentials: EndpointCredentials[] } = JSON.parse(JsonEndpointsString);
 
                 for (const e of endpointsArray.endpointCredentials) {
-                    if (e.endpoint == feedUrl) {
+                    if (e.endpoint === feedUrl) {
                         tl.debug(`Endpoint Credentials found for ${feed.feedId}`);
                         accessToken = e.password;
                         break;
