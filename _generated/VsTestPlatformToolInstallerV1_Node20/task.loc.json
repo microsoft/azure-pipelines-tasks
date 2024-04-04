@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 238,
-    "Patch": 1
+    "Patch": 2
   },
   "satisfies": [
     "VsTest"
@@ -144,7 +144,7 @@
     "ParsedVersion": "ms-resource:loc.messages.ParsedVersion"
   },
   "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_4": "1.238.1"
+    "Default": "1.238.1",
+    "Node20_229_4": "1.238.2"
   }
 }
