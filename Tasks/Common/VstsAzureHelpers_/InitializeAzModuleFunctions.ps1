@@ -402,7 +402,7 @@ function Retry-Command {
 
     while(-not $completed) {
         try {
-            Write-Host "##[command]$command $args"
+            Write-Host "##[command]$command $($args | Out-String)"
             & $command @args
             Write-Verbose("Command [{0}] succeeded." -f $command)
             $completed = $true
