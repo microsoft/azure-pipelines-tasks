@@ -221,5 +221,9 @@
     "UpdateContainerAppFailed": "ms-resource:loc.messages.UpdateContainerAppFailed",
     "UpdateContainerAppFromYamlFailed": "ms-resource:loc.messages.UpdateContainerAppFromYamlFailed",
     "UpdateContainerAppRegistryDetailsFailed": "ms-resource:loc.messages.UpdateContainerAppRegistryDetailsFailed"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.238.0",
+    "Node20_229_10": "0.238.1"
   }
 }
