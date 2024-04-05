@@ -61,19 +61,30 @@ export class DeploymentFactory {
     private async _getWindowsDeploymentProvider(): Promise<IWebAppDeploymentProvider> {
         tl.debug("Package type of deployment is: " + this._taskParams.Package.getPackageType());
         var _isMSBuildPackage = await this._taskParams.Package.isMSBuildPackage();   
-        if (this._taskParams.DeploymentType == DeploymentType.webDeploy || _isMSBuildPackage || this._taskParams.VirtualApplication || this._taskParams.UseWebDeploy)
+        if (this._taskParams.DeploymentType != null) {
+            return await this._getUserSelectedDeploymentProviderForWindow();
+        }
+        if (_isMSBuildPackage || this._taskParams.VirtualApplication || this._taskParams.UseWebDeploy)
         {
             return new WindowsWebAppWebDeployProvider(this._taskParams);
         }
-        // look into this ScriptType parameter
-        if (this._taskParams.DeploymentType == DeploymentType.zipDeploy || this._taskParams.ScriptType)
+        if (this._taskParams.ScriptType)
         {
             return new WindowsWebAppZipDeployProvider(this._taskParams);
         }
-        if (this._taskParams.DeploymentType == DeploymentType.runFromZip)
-        {
-            return new WindowsWebAppRunFromZipProvider(this._taskParams);
-        }
         return new WindowsWebAppOneDeployProvider(this._taskParams);
+    }
+
+    private async _getUserSelectedDeploymentProviderForWindow(): Promise<IWebAppDeploymentProvider> {
+        switch (this._taskParams.DeploymentType) {
+            case DeploymentType.webDeploy:
+                return new WindowsWebAppWebDeployProvider(this._taskParams);
+            case DeploymentType.zipDeploy:
+                return new WindowsWebAppZipDeployProvider(this._taskParams);
+            case DeploymentType.runFromZip:
+                return new WindowsWebAppRunFromZipProvider(this._taskParams);
+            case DeploymentType.oneDeploy:
+                return new WindowsWebAppOneDeployProvider(this._taskParams);
+        }
     }
 }

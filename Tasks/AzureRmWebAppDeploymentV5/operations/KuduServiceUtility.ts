@@ -247,9 +247,9 @@ export class KuduServiceUtility {
             console.log(tl.loc('OneDeploy Initiated'));
 
             let queryParameters: Array<string> = [
-                'isAsync=true',
-                'deployer=' + VSTS_ONE_DEPLOY,
-                'type=' + taskParams.OneDeployType
+                'type=' + taskParams.OneDeployType,
+                'async=true',
+                'deployer=' + VSTS_ONE_DEPLOY
             ];
 
             if (taskParams.Restart != null) {
@@ -314,6 +314,7 @@ export class KuduServiceUtility {
 
     private async _processDeploymentResponse(deploymentDetails: any): Promise<void> {
         try {
+            tl.debug('Deployment details: ' + JSON.stringify(deploymentDetails));
             var kuduDeploymentDetails = await this._appServiceKuduService.getDeploymentDetails(deploymentDetails.id);
             tl.debug(`logs from kudu deploy: ${kuduDeploymentDetails.log_url}`);
 
