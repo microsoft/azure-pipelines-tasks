@@ -500,5 +500,9 @@
     "ManagedServiceIdentityDetails": "ms-resource:loc.messages.ManagedServiceIdentityDetails",
     "DeploymentGroupConfigurationFailedOnVM": "ms-resource:loc.messages.DeploymentGroupConfigurationFailedOnVM",
     "TroubleshootingGuide": "ms-resource:loc.messages.TroubleshootingGuide"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.238.0",
+    "Node20_229_2": "2.238.1"
   }
 }
