@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 236,
+    "Minor": 238,
     "Patch": 0
   },
   "demands": [],
@@ -156,7 +156,7 @@
     "ErrorFailTaskOnFailedTests": "There are one or more test failures detected in result files. Detailed summary of published test results can be viewed in the Tests tab."
   },
   "_buildConfigMapping": {
-    "Default": "2.236.0",
-    "Node20_229_13": "2.236.1"
+    "Default": "2.238.0",
+    "Node20_229_13": "2.238.1"
   }
 }

@@ -18,7 +18,7 @@
     "preview": false,
     "version": {
         "Major": 0,
-        "Minor": 234,
+        "Minor": 237,
         "Patch": 0
     },
     "minimumAgentVersion": "2.104.1",
@@ -231,6 +231,8 @@
             "options": {
                 "Java_8": "Java 8",
                 "Java_11": "Java 11",
+                "Java_17": "Java 17",
+                "Java_21": "Java 21",
                 "NetCore_31": ".Net Core 3.1"
             },
             "visibleRule": "Action = Deploy && DeploymentType = Artifacts"

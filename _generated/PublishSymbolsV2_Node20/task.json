@@ -13,7 +13,7 @@
   "preview": false,
   "version": {
     "Major": 2,
-    "Minor": 234,
+    "Minor": 237,
     "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
@@ -248,7 +248,7 @@
     "Win32Error0FromMethod1": "Encountered Win32 error '{0}' from method '{1}'."
   },
   "_buildConfigMapping": {
-    "Default": "2.234.0",
-    "Node20_229_14": "2.234.1"
+    "Default": "2.237.0",
+    "Node20_229_14": "2.237.1"
   }
 }
