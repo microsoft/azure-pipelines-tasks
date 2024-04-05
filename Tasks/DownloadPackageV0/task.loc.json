@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 238,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -97,6 +97,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "download.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "download.js",
       "argumentFormat": ""
     }

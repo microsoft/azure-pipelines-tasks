@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 238,
-    "Patch": 0
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -55,6 +55,10 @@
     },
     "Node16": {
       "target": "mavenauth.js"
+    },
+    "Node20_1": {
+      "target": "mavenauth.js",
+      "argumentFormat": ""
     }
   },
   "postjobexecution": {
@@ -63,6 +67,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "cleanup.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "cleanup.js",
       "argumentFormat": ""
     }

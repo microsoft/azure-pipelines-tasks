@@ -1,30 +1,30 @@
 {
-    "name": "universalpackages",
-    "version": "0.0.9",
-    "description": "Download or publish universal packages.",
-    "main": "universalmain.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
-    },
-    "author": "Microsoft Corporation",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
-    },
-    "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
-    "dependencies": {
-        "@types/mocha": "^5.2.7",
-        "@types/node": "^16.11.39",
-        "@types/uuid": "^8.3.0",
-        "azure-pipelines-task-lib": "^4.1.0",
-        "azure-pipelines-tasks-packaging-common": "^3.236.0",
-        "azure-pipelines-tasks-utility-common": "^3.212.0"
-    },
-    "devDependencies": {
-        "typescript": "4.0.2"
-    }
+  "name": "universalpackages",
+  "version": "0.0.9",
+  "description": "Download or publish universal packages.",
+  "main": "universalmain.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^20.3.1",
+    "@types/uuid": "^8.3.0",
+    "azure-pipelines-task-lib": "^4.1.0",
+    "azure-pipelines-tasks-packaging-common": "^3.236.0",
+    "azure-pipelines-tasks-utility-common": "^3.212.0"
+  },
+  "devDependencies": {
+    "typescript": "5.1.6"
+  }
 }

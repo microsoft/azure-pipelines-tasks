@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 238,
-    "Patch": 2
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -177,6 +177,10 @@
     },
     "Node16": {
       "target": "npm.js"
+    },
+    "Node20_1": {
+      "target": "npm.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
