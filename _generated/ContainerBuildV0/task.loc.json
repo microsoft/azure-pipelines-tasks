@@ -81,5 +81,9 @@
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
     "VerifyBuildctlInstallation": "ms-resource:loc.messages.VerifyBuildctlInstallation",
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.238.0",
+    "Node20_229_2": "0.238.1"
   }
 }
