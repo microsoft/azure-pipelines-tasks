@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 238,
-    "Patch": 1
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
   "preview": true,
@@ -25,10 +25,6 @@
     },
     "Node16": {
       "target": "publishmetadata.js"
-    },
-    "Node20_1": {
-      "target": "publishmetadata.js",
-      "argumentFormat": ""
     }
   },
   "_buildConfigMapping": {
