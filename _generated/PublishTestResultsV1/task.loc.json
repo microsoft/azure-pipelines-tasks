@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 238,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -107,10 +107,6 @@
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "publishtestresults.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "publishtestresults.js",
       "argumentFormat": ""
     }
