@@ -436,5 +436,9 @@
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
     "SwapWithPreviewNotsupported": "Swap with preview isn't supported for Linux webapps and Container webapps.",
     "InvalidActionForPublishProfileEndpoint": "Invalid Action selected to use with publish profile endpoint!. Supported actions are 'Start/Stop all continuous webjobs' & 'Install Extensions'"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.238.0",
+    "Node20_229_2": "0.238.1"
   }
 }
