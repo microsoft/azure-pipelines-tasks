@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 238,
-    "Patch": 0
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -77,7 +77,7 @@
     "SuccessfulAppend": "ms-resource:loc.messages.SuccessfulAppend"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20_229_1": "0.238.1"
+    "Default": "0.238.2",
+    "Node20_229_1": "0.238.3"
   }
 }
