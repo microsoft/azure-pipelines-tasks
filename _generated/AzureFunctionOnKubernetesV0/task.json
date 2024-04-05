@@ -121,5 +121,9 @@
     "NoDataWrittenOnFile": "No data was written into the file %s",
     "ServiceExternalIP": "service %s external IP is %s",
     "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.238.0",
+    "Node20_229_2": "0.238.1"
   }
 }
