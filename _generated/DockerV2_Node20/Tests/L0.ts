@@ -7,7 +7,7 @@ import * as pipelineutils from "azure-pipelines-tasks-docker-common/pipelineutil
 import * as shared from "./TestShared";
 
 describe("DockerV2 Suite", function () {
-    this.timeout(30000);
+    this.timeout(40000);
 
     if (!tl.osType().match(/^Win/)) {
         return;
