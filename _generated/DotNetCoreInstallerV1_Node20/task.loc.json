@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 235,
-    "Patch": 5
+    "Minor": 238,
+    "Patch": 1
   },
   "deprecated": true,
   "removalDate": "2024-01-31",
@@ -161,7 +161,7 @@
     "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
   },
   "_buildConfigMapping": {
-    "Default": "1.235.4",
-    "Node20_229_3": "1.235.5"
+    "Default": "1.238.0",
+    "Node20_229_3": "1.238.1"
   }
 }
