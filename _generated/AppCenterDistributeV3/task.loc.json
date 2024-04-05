@@ -244,5 +244,9 @@
     "FoundMultipleFiles": "ms-resource:loc.messages.FoundMultipleFiles",
     "FailedToCreateFile": "ms-resource:loc.messages.FailedToCreateFile",
     "FailedToFindFile": "ms-resource:loc.messages.FailedToFindFile"
+  },
+  "_buildConfigMapping": {
+    "Default": "3.238.0",
+    "Node20_229_7": "3.238.1"
   }
 }
