@@ -9,8 +9,8 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 0,
-    "Minor": 236,
-    "Patch": 2
+    "Minor": 238,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -117,7 +117,7 @@
     "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
   },
   "_buildConfigMapping": {
-    "Default": "0.236.2",
-    "Node20_229_1": "0.236.3"
+    "Default": "0.238.0",
+    "Node20_229_1": "0.238.1"
   }
 }
