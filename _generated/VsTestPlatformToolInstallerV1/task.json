@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 238,
-    "Patch": 1
+    "Patch": 2
   },
   "satisfies": [
     "VsTest"
@@ -140,7 +140,7 @@
     "ParsedVersion": "Parsed the version of the Microsoft.Testplatform package to be %s from the file name. Please ensure that the file name is the same as when the .nupkg file is downloaded from the official nuget feed."
   },
   "_buildConfigMapping": {
-    "Default": "1.238.1",
-    "Node20_229_4": "1.238.2"
+    "Default": "1.238.2",
+    "Node20_229_4": "1.238.3"
   }
 }
