@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 238,
-    "Patch": 1
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -104,10 +104,6 @@
       "target": "mysqldeploy.js"
     },
     "Node16": {
-      "target": "mysqldeploy.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "mysqldeploy.js",
       "argumentFormat": ""
     }
