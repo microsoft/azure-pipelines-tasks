@@ -332,5 +332,9 @@
     "SingleContainerDeployment": "ms-resource:loc.messages.SingleContainerDeployment",
     "MultiContainerDeploymentWithTransformation": "ms-resource:loc.messages.MultiContainerDeploymentWithTransformation",
     "MultiContainerDeploymentWithoutTransformation": "ms-resource:loc.messages.MultiContainerDeploymentWithoutTransformation"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.238.0",
+    "Node20_229_2": "1.238.1"
   }
 }

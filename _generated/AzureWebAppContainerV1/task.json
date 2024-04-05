@@ -332,5 +332,9 @@
     "SingleContainerDeployment": "Single-container Deployment to the webapp '%s' as only the image detail was specified.",
     "MultiContainerDeploymentWithTransformation": "Multi-container deployment to the webapp '%s' with the transformation of Docker-Compose file as both image name and Docker-Compose file were specified",
     "MultiContainerDeploymentWithoutTransformation": "Multi-container deployment to the webapp '%s' without transformation of Docker-Compose file because only Docker-Compose file was specified."
+  },
+  "_buildConfigMapping": {
+    "Default": "1.238.0",
+    "Node20_229_2": "1.238.1"
   }
 }
