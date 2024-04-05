@@ -18,7 +18,7 @@
   "version": {
     "Major": 5,
     "Minor": 238,
-    "Patch": 3
+    "Patch": 5
   },
   "releaseNotes": "Added support for Az Module and cross platform agents.",
   "groups": [
@@ -208,7 +208,7 @@
     "PS_ExitCode": "PowerShell exited with code '{0}'."
   },
   "_buildConfigMapping": {
-    "Default": "5.238.2",
-    "Node20_229_2": "5.238.3"
+    "Default": "5.238.4",
+    "Node20_229_2": "5.238.5"
   }
 }
