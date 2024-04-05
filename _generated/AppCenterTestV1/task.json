@@ -1,10 +1,10 @@
 {
   "id": "AD5CD22A-BE4E-48BB-ADCE-181A32432DA5",
   "name": "AppCenterTest",
-  "friendlyName": "ms-resource:loc.friendlyName",
-  "description": "ms-resource:loc.description",
+  "friendlyName": "App Center test",
+  "description": "Test app packages with Visual Studio App Center",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/app-center-test",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport).",
   "category": "Test",
   "visibility": [
     "Build"
@@ -13,23 +13,23 @@
   "version": {
     "Major": 1,
     "Minor": 238,
-    "Patch": 1
+    "Patch": 0
   },
   "minimumAgentVersion": "2.206.1",
   "groups": [
     {
       "name": "prepare",
-      "displayName": "ms-resource:loc.group.displayName.prepare",
+      "displayName": "Prepare Tests",
       "isExpanded": true
     },
     {
       "name": "run",
-      "displayName": "ms-resource:loc.group.displayName.run",
+      "displayName": "Run Tests",
       "isExpanded": true
     },
     {
       "name": "advanced",
-      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "displayName": "Advanced",
       "isExpanded": true
     }
   ],
@@ -40,10 +40,10 @@
         "appFile"
       ],
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.app",
+      "label": "Binary application file path",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.app"
+      "helpMarkDown": "Relative path from the repo root to the APK or IPA file you want to test."
     },
     {
       "name": "artifactsDir",
@@ -51,10 +51,10 @@
         "artifactsDirectory"
       ],
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.artifactsDir",
+      "label": "Artifacts directory",
       "defaultValue": "$(Build.ArtifactStagingDirectory)/AppCenterTest",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.artifactsDir"
+      "helpMarkDown": "Where to place the artifacts produced by the prepare step and used by the run step. This directory will be created if it does not exist."
     },
     {
       "name": "enablePrepare",
@@ -62,7 +62,7 @@
         "prepareTests"
       ],
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.enablePrepare",
+      "label": "Prepare tests",
       "defaultValue": true,
       "groupName": "prepare"
     },
@@ -72,7 +72,7 @@
         "frameworkOption"
       ],
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.framework",
+      "label": "Test framework",
       "defaultValue": "appium",
       "visibleRule": "enablePrepare = true",
       "required": true,
@@ -91,11 +91,11 @@
         "appiumBuildDirectory"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.appiumBuildDir",
+      "label": "Build directory",
       "defaultValue": "",
       "visibleRule": "enablePrepare = true && framework = appium",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.appiumBuildDir",
+      "helpMarkDown": "Path to directory with Appium tests.",
       "groupName": "prepare"
     },
     {
@@ -104,11 +104,11 @@
         "espressoBuildDirectory"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.espressoBuildDir",
+      "label": "Build directory",
       "defaultValue": "",
       "visibleRule": "enablePrepare = true && framework = espresso",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.espressoBuildDir",
+      "helpMarkDown": "Path to Espresso output directory.",
       "groupName": "prepare"
     },
     {
@@ -117,11 +117,11 @@
         "espressoTestApkFile"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.espressoTestApkPath",
+      "label": "Test APK path",
       "defaultValue": "",
       "visibleRule": "enablePrepare = true && framework = espresso",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.espressoTestApkPath",
+      "helpMarkDown": "Path to APK file with Espresso tests. If not set, build-dir is used to discover it. Wildcard is allowed.",
       "groupName": "prepare"
     },
     {
@@ -130,41 +130,41 @@
         "calabashProjectDirectory"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.calabashProjectDir",
+      "label": "Project directory",
       "defaultValue": "",
       "visibleRule": "enablePrepare = true && framework = calabash",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.calabashProjectDir",
+      "helpMarkDown": "Path to Calabash workspace directory.",
       "groupName": "prepare"
     },
     {
       "name": "calabashConfigFile",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.calabashConfigFile",
+      "label": "Cucumber config file",
       "defaultValue": "",
       "visibleRule": "enablePrepare = true && framework = calabash",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.calabashConfigFile",
+      "helpMarkDown": "Path to Cucumber configuration file, usually cucumber.yml.",
       "groupName": "prepare"
     },
     {
       "name": "calabashProfile",
       "type": "string",
-      "label": "ms-resource:loc.input.label.calabashProfile",
+      "label": "Profile to run",
       "defaultValue": "",
       "visibleRule": "enablePrepare = true && framework = calabash",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.calabashProfile",
+      "helpMarkDown": "Profile to run.  This value must exists in the Cucumber configuration file.",
       "groupName": "prepare"
     },
     {
       "name": "calabashSkipConfigCheck",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.calabashSkipConfigCheck",
+      "label": "Skip Configuration Check",
       "defaultValue": false,
       "visibleRule": "enablePrepare = true && framework = calabash",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.calabashSkipConfigCheck",
+      "helpMarkDown": "Force running without Cucumber profile.",
       "groupName": "prepare"
     },
     {
@@ -173,17 +173,17 @@
         "uiTestBuildDirectory"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.uitestBuildDir",
+      "label": "Build directory",
       "defaultValue": "",
       "visibleRule": "enablePrepare = true && framework = uitest",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.uitestBuildDir",
+      "helpMarkDown": "Path to directory with built test assemblies.",
       "groupName": "prepare"
     },
     {
       "name": "uitestStorePath",
       "type": "string",
-      "label": "ms-resource:loc.input.label.uitestStorePath",
+      "label": "Store file",
       "defaultValue": "",
       "visibleRule": "enablePrepare = true && framework = uitest",
       "required": false,
@@ -195,7 +195,7 @@
         "uiTestStorePassword"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.uitestStorePass",
+      "label": "Store password",
       "defaultValue": "",
       "visibleRule": "enablePrepare = true && framework = uitest",
       "required": false,
@@ -204,7 +204,7 @@
     {
       "name": "uitestKeyAlias",
       "type": "string",
-      "label": "ms-resource:loc.input.label.uitestKeyAlias",
+      "label": "Key alias",
       "defaultValue": "",
       "visibleRule": "enablePrepare = true && framework = uitest",
       "required": false,
@@ -216,7 +216,7 @@
         "uiTestKeyPassword"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.uitestKeyPass",
+      "label": "Key password",
       "defaultValue": "",
       "visibleRule": "enablePrepare = true && framework = uitest",
       "required": false,
@@ -228,21 +228,21 @@
         "uiTestToolsDirectory"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.uitestToolsDir",
+      "label": "Test tools directory",
       "defaultValue": "",
       "visibleRule": "enablePrepare = true && framework = uitest",
-      "helpMarkDown": "ms-resource:loc.input.help.uitestToolsDir",
+      "helpMarkDown": "Path to directory with Xamarin UI test tools that contains test-cloud.exe.",
       "required": false,
       "groupName": "prepare"
     },
     {
       "name": "signInfo",
       "type": "string",
-      "label": "ms-resource:loc.input.label.signInfo",
+      "label": "Signing information",
       "defaultValue": "",
       "visibleRule": "framework = calabash || framework = uitest",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.signInfo",
+      "helpMarkDown": "Use Signing Infor for signing the test server.",
       "groupName": "prepare"
     },
     {
@@ -251,11 +251,11 @@
         "xcUITestBuildDirectory"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.xcuitestBuildDir",
+      "label": "Build directory",
       "defaultValue": "",
       "visibleRule": "enablePrepare = true && framework = xcuitest",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.xcuitestBuildDir",
+      "helpMarkDown": "Path to the build output directory (usually $(ProjectDir)/Build/Products/Debug-iphoneos).",
       "groupName": "prepare"
     },
     {
@@ -264,11 +264,11 @@
         "xcUITestIpaFile"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.xcuitestTestIpaPath",
+      "label": "Test IPA path",
       "defaultValue": "",
       "visibleRule": "enablePrepare = true && framework = xcuitest",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.xcuitestTestIpaPath",
+      "helpMarkDown": "Path to the *.ipa file with the XCUITest tests.",
       "groupName": "prepare"
     },
     {
@@ -277,11 +277,11 @@
         "prepareOptions"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.prepareOpts",
+      "label": "Additional options",
       "required": false,
       "defaultValue": "",
       "visibleRule": "enablePrepare = true",
-      "helpMarkDown": "ms-resource:loc.input.help.prepareOpts",
+      "helpMarkDown": "Additional arguments passed to the App Center test prepare step.",
       "groupName": "prepare"
     },
     {
@@ -290,7 +290,7 @@
         "runTests"
       ],
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.enableRun",
+      "label": "Run tests",
       "defaultValue": true,
       "groupName": "run"
     },
@@ -300,12 +300,12 @@
         "credentialsOption"
       ],
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.credsType",
+      "label": "Authentication method",
       "defaultValue": "serviceEndpoint",
       "visibleRule": "enableRun = true",
       "required": true,
       "groupName": "run",
-      "helpMarkDown": "ms-resource:loc.input.help.credsType",
+      "helpMarkDown": "Use App Center service connection or enter credentials to connect to Visual Studio App Center.",
       "options": {
         "serviceEndpoint": "App Center service connection",
         "inputs": "Credentials"
@@ -314,62 +314,62 @@
     {
       "name": "serverEndpoint",
       "type": "connectedService:vsmobilecenter",
-      "label": "ms-resource:loc.input.label.serverEndpoint",
+      "label": "App Center service connection",
       "defaultValue": "",
       "required": true,
       "groupName": "run",
-      "helpMarkDown": "ms-resource:loc.input.help.serverEndpoint",
+      "helpMarkDown": "Select the service connection for Visual Studio App Center. To create one, click the Manage link and create a new service connection.",
       "visibleRule": "enableRun = true && credsType = serviceEndpoint"
     },
     {
       "name": "username",
       "type": "string",
-      "label": "ms-resource:loc.input.label.username",
+      "label": "App Center username",
       "defaultValue": "",
       "required": true,
       "groupName": "run",
-      "helpMarkDown": "ms-resource:loc.input.help.username",
+      "helpMarkDown": "Visit https://appcenter.ms/settings/profile to get your username.",
       "visibleRule": "enableRun = true && credsType = inputs"
     },
     {
       "name": "password",
       "type": "string",
-      "label": "ms-resource:loc.input.label.password",
+      "label": "App Center password",
       "defaultValue": "",
       "required": true,
       "groupName": "run",
-      "helpMarkDown": "ms-resource:loc.input.help.password",
+      "helpMarkDown": "Visit https://appcenter.ms/settings/profile to set your password. It can accept a variable defined in build or release pipelines as '$(passwordVariable)'. You may mark variable type as 'secret' to secure it.",
       "visibleRule": "enableRun = true && credsType = inputs"
     },
     {
       "name": "appSlug",
       "type": "string",
-      "label": "ms-resource:loc.input.label.appSlug",
+      "label": "App slug",
       "defaultValue": "",
       "visibleRule": "enableRun = true",
       "required": true,
       "groupName": "run",
-      "helpMarkDown": "ms-resource:loc.input.help.appSlug"
+      "helpMarkDown": "The app slug is in the format of {username}/{app_identifier}.  To locate {username} and {app_identifier} for an app, click on its name from https://appcenter.ms/apps, and the resulting URL is in the format of https://appcenter.ms/users/{username}/apps/{app_identifier}."
     },
     {
       "name": "devices",
       "type": "string",
-      "label": "ms-resource:loc.input.label.devices",
+      "label": "Devices",
       "visibleRule": "enableRun = true",
       "required": true,
       "groupName": "run",
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.devices"
+      "helpMarkDown": "String to identify what devices this test will run against.  Copy and paste this string when you define a new test run from App Center Test beacon."
     },
     {
       "name": "series",
       "type": "string",
-      "label": "ms-resource:loc.input.label.series",
+      "label": "Test series",
       "defaultValue": "master",
       "visibleRule": "enableRun = true",
       "required": false,
       "groupName": "run",
-      "helpMarkDown": "ms-resource:loc.input.help.series"
+      "helpMarkDown": "The series name for organizing test runs (e.g. master, production, beta)."
     },
     {
       "name": "dsymDir",
@@ -377,12 +377,12 @@
         "dsymDirectory"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.dsymDir",
+      "label": "dSYM directory",
       "defaultValue": "",
       "visibleRule": "enableRun = true",
       "required": false,
       "groupName": "run",
-      "helpMarkDown": "ms-resource:loc.input.help.dsymDir"
+      "helpMarkDown": "Path to iOS symbol files."
     },
     {
       "name": "locale",
@@ -390,7 +390,7 @@
         "localeOption"
       ],
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.locale",
+      "label": "System language",
       "defaultValue": "en_US",
       "visibleRule": "enableRun = true",
       "required": true,
@@ -408,17 +408,17 @@
         "es_ES": "Spanish (Spain)",
         "user": "Other"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.locale"
+      "helpMarkDown": "If your language isn't displayed, select 'Other' and enter its locale below, such as en_US."
     },
     {
       "name": "userDefinedLocale",
       "type": "string",
-      "label": "ms-resource:loc.input.label.userDefinedLocale",
+      "label": "Other locale",
       "defaultValue": "",
       "required": false,
       "groupName": "run",
       "visibleRule": "enableRun = true && locale = user",
-      "helpMarkDown": "ms-resource:loc.input.help.userDefinedLocale"
+      "helpMarkDown": "Enter any two-letter ISO-639 language code along with any two-letter ISO 3166 country code in the format [language]_[country], such as en_US."
     },
     {
       "name": "loginOpts",
@@ -426,11 +426,11 @@
         "loginOptions"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.loginOpts",
+      "label": "Additional options for login",
       "defaultValue": "",
       "required": false,
       "groupName": "run",
-      "helpMarkDown": "ms-resource:loc.input.help.loginOpts",
+      "helpMarkDown": "Additional arguments passed to the App Center login step.",
       "visibleRule": "enableRun = true && credsType = inputs"
     },
     {
@@ -439,12 +439,12 @@
         "runOptions"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.runOpts",
+      "label": "Additional options for run",
       "required": false,
       "defaultValue": "",
       "visibleRule": "enableRun = true",
       "groupName": "run",
-      "helpMarkDown": "ms-resource:loc.input.help.runOpts"
+      "helpMarkDown": "Additional arguments passed to the App Center test run."
     },
     {
       "name": "async",
@@ -452,12 +452,12 @@
         "skipWaitingForResults"
       ],
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.async",
+      "label": "Do not wait for test result",
       "defaultValue": false,
       "visibleRule": "enableRun = true",
       "required": false,
       "groupName": "run",
-      "helpMarkDown": "ms-resource:loc.input.help.async"
+      "helpMarkDown": "Execute command asynchronously, exit when tests are uploaded, without waiting for test results."
     },
     {
       "name": "cliLocationOverride",
@@ -465,11 +465,11 @@
         "cliFile"
       ],
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.cliLocationOverride",
+      "label": "App Center CLI location",
       "groupName": "advanced",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.cliLocationOverride"
+      "helpMarkDown": "Path to the App Center CLI on the build or release agent."
     },
     {
       "name": "debug",
@@ -477,30 +477,26 @@
         "showDebugOutput"
       ],
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.debug",
+      "label": "Enable debug output",
       "required": false,
       "defaultValue": false,
       "groupName": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.debug"
+      "helpMarkDown": "Add --debug to the App Center CLI."
     }
   ],
-  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "instanceNameFormat": "Test with Visual Studio App Center",
   "execution": {
     "Node16": {
-      "target": "appcentertest.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "appcentertest.js",
       "argumentFormat": ""
     }
   },
   "messages": {
-    "Succeeded": "ms-resource:loc.messages.Succeeded",
-    "CannotDecodeEndpoint": "ms-resource:loc.messages.CannotDecodeEndpoint",
-    "CannotLocateAppCenterCLI": "ms-resource:loc.messages.CannotLocateAppCenterCLI",
-    "CannotFindAnyFile": "ms-resource:loc.messages.CannotFindAnyFile",
-    "FoundMultipleFiles": "ms-resource:loc.messages.FoundMultipleFiles"
+    "Succeeded": "Visual Studio App Center Test task succeeded.",
+    "CannotDecodeEndpoint": "Could not decode the endpoint.",
+    "CannotLocateAppCenterCLI": "Could not find the App Center CLI. Install appcenter-cli using npm.",
+    "CannotFindAnyFile": "Cannot find any file based on %s.",
+    "FoundMultipleFiles": "Found multiple files matching %s."
   },
   "_buildConfigMapping": {
     "Default": "1.238.0",
