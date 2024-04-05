@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 231,
+    "Minor": 238,
     "Patch": 0
   },
   "runsOn": [
@@ -99,7 +99,7 @@
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
   },
   "_buildConfigMapping": {
-    "Default": "1.231.0",
-    "Node20_229_1": "1.231.1"
+    "Default": "1.238.0",
+    "Node20_229_1": "1.238.1"
   }
 }
