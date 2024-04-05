@@ -1,10 +1,10 @@
 {
   "id": "FD1AA5B9-400C-4F4B-9C0B-069BA74E53C6",
   "name": "AzureFunctionOnKubernetes",
-  "friendlyName": "ms-resource:loc.friendlyName",
-  "description": "ms-resource:loc.description",
+  "friendlyName": "Azure Function on Kubernetes",
+  "description": "Deploy Azure function to Kubernetes cluster.",
   "helpUrl": "https://aka.ms/func-k8s",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpMarkDown": "[Learn more about this task](https://aka.ms/func-k8s) or [see Azure Functions on Kubernetes with KEDA](https://docs.microsoft.com/en-us/azure/azure-functions/functions-kubernetes-keda) or [check out sample-hello-world-azure-functions](https://github.com/kedacore/sample-hello-world-azure-functions)",
   "category": "Deploy",
   "preview": true,
   "visibility": [
@@ -21,12 +21,12 @@
   "groups": [
     {
       "name": "serviceConnections",
-      "displayName": "ms-resource:loc.group.displayName.serviceConnections",
+      "displayName": "Service Connections",
       "isExpanded": true
     },
     {
       "name": "commands",
-      "displayName": "ms-resource:loc.group.displayName.commands",
+      "displayName": "Commands",
       "isExpanded": true
     }
   ],
@@ -34,7 +34,7 @@
     {
       "name": "connectionType",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.connectionType",
+      "label": "Service connection type",
       "defaultValue": "Kubernetes Service Connection",
       "required": true,
       "options": {
@@ -42,15 +42,15 @@
         "Kubernetes Service Connection": "Kubernetes Service Connection"
       },
       "groupName": "serviceConnections",
-      "helpMarkDown": "ms-resource:loc.input.help.connectionType"
+      "helpMarkDown": "Select a Kubernetes service connection type."
     },
     {
       "name": "dockerRegistryServiceConnection",
       "type": "connectedService:dockerregistry",
-      "label": "ms-resource:loc.input.label.dockerRegistryServiceConnection",
+      "label": "Docker registry service connection",
       "required": true,
       "groupName": "serviceConnections",
-      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryServiceConnection"
+      "helpMarkDown": "Select a Docker registry service connection."
     },
     {
       "name": "kubernetesServiceEndpoint",
@@ -58,11 +58,11 @@
         "kubernetesServiceConnection"
       ],
       "type": "connectedService:kubernetes",
-      "label": "ms-resource:loc.input.label.kubernetesServiceEndpoint",
+      "label": "Kubernetes service connection",
       "visibleRule": "connectionType = Kubernetes Service Connection",
       "required": true,
       "groupName": "serviceConnections",
-      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceEndpoint"
+      "helpMarkDown": "Select a Kubernetes service connection."
     },
     {
       "name": "azureSubscriptionEndpoint",
@@ -70,8 +70,8 @@
         "azureSubscriptionConnection"
       ],
       "type": "connectedService:AzureRM",
-      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
-      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "label": "Azure subscription",
+      "helpMarkDown": "Select the Azure Resource Manager subscription, which contains Azure Container Registry.Note: To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Add' or 'Manage' button.",
       "visibleRule": "connectionType = Azure Resource Manager",
       "defaultValue": "",
       "groupName": "serviceConnections",
@@ -79,9 +79,9 @@
     },
     {
       "name": "azureResourceGroup",
-      "label": "ms-resource:loc.input.label.azureResourceGroup",
+      "label": "Resource group",
       "type": "pickList",
-      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup",
+      "helpMarkDown": "Select an Azure resource group.",
       "visibleRule": "connectionType = Azure Resource Manager",
       "defaultValue": "",
       "required": true,
@@ -92,9 +92,9 @@
     },
     {
       "name": "kubernetesCluster",
-      "label": "ms-resource:loc.input.label.kubernetesCluster",
+      "label": "Kubernetes cluster",
       "type": "pickList",
-      "helpMarkDown": "ms-resource:loc.input.help.kubernetesCluster",
+      "helpMarkDown": "Select an Azure managed cluster.",
       "visibleRule": "connectionType = Azure Resource Manager",
       "defaultValue": "",
       "required": true,
@@ -106,54 +106,54 @@
     {
       "name": "namespace",
       "type": "string",
-      "label": "ms-resource:loc.input.label.namespace",
+      "label": "Kubernetes namespace",
       "groupName": "commands",
-      "helpMarkDown": "ms-resource:loc.input.help.namespace"
+      "helpMarkDown": "Kubernetes namespace"
     },
     {
       "name": "secretName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.secretName",
+      "label": "Secret Name",
       "groupName": "commands",
-      "helpMarkDown": "ms-resource:loc.input.help.secretName"
+      "helpMarkDown": "Kubernetes secret containing function config data (for ex. AzureWebJobsStorage: <Azure storage connection string>)"
     },
     {
       "name": "dockerHubNamespace",
       "type": "string",
-      "label": "ms-resource:loc.input.label.dockerHubNamespace",
+      "label": "Docker Hub namespace",
       "groupName": "commands",
-      "helpMarkDown": "ms-resource:loc.input.help.dockerHubNamespace"
+      "helpMarkDown": "Docker Hub namespace. Required for private Docker Hub repository."
     },
     {
       "name": "appName",
       "type": "string",
       "required": true,
-      "label": "ms-resource:loc.input.label.appName",
+      "label": "Application Name",
       "groupName": "commands",
-      "helpMarkDown": "ms-resource:loc.input.help.appName"
+      "helpMarkDown": "Application Name. The Kubernetes objects created use this name. This should follow Kubernetes naming conventions for resource names."
     },
     {
       "name": "functionRootDirectory",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.functionRootDirectory",
+      "label": "Function root directory",
       "required": false,
       "groupName": "commands",
-      "helpMarkDown": "ms-resource:loc.input.help.functionRootDirectory"
+      "helpMarkDown": "Function root directory. Should contain host.json. Docker build and push is performed from this directory."
     },
     {
       "name": "waitForStability",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.waitForStability",
+      "label": "Wait for stability",
       "groupName": "commands",
       "defaultValue": "true",
-      "helpMarkDown": "ms-resource:loc.input.help.waitForStability"
+      "helpMarkDown": "Wait for the Kubernetes objects to reach the desired state."
     },
     {
       "name": "arguments",
       "type": "string",
-      "label": "ms-resource:loc.input.label.arguments",
+      "label": "Arguments",
       "groupName": "commands",
-      "helpMarkDown": "ms-resource:loc.input.help.arguments"
+      "helpMarkDown": "Pass arguments to command. Ex:<br>--no-docker --service-type NodePort"
     }
   ],
   "dataSourceBindings": [
@@ -172,7 +172,7 @@
       "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
     }
   ],
-  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "instanceNameFormat": "Func on K8s - deploy",
   "execution": {
     "Node10": {
       "target": "src//run.js"
@@ -183,16 +183,20 @@
     }
   },
   "messages": {
-    "AllContainersNotInReadyState": "ms-resource:loc.messages.AllContainersNotInReadyState",
-    "CouldNotDeterminePodStatus": "ms-resource:loc.messages.CouldNotDeterminePodStatus",
-    "CouldNotDetermineServiceStatus": "ms-resource:loc.messages.CouldNotDetermineServiceStatus",
-    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
-    "KubectlClientVersion": "ms-resource:loc.messages.KubectlClientVersion",
-    "KubectlServerVersion": "ms-resource:loc.messages.KubectlServerVersion",
-    "KubernetesClusterResourceGroup": "ms-resource:loc.messages.KubernetesClusterResourceGroup",
-    "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
-    "ServiceExternalIP": "ms-resource:loc.messages.ServiceExternalIP",
-    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile",
-    "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
+    "AllContainersNotInReadyState": "All the containers are not in a ready state.",
+    "CouldNotDeterminePodStatus": "Could not determine the pod's status due to the error: %s",
+    "CouldNotDetermineServiceStatus": "Could not determine the service %s status due to the error: %s",
+    "FileContentSynced": "Synced the file content to the disk. The content is %s.",
+    "KubectlClientVersion": "Kubectl Client Version",
+    "KubectlServerVersion": "Kubectl Server Version",
+    "KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",
+    "NoDataWrittenOnFile": "No data was written into the file %s",
+    "ServiceExternalIP": "service %s external IP is %s",
+    "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s",
+    "KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.238.0",
+    "Node20_229_2": "1.238.1"
   }
 }
