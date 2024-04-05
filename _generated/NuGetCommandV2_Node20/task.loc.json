@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 236,
+    "Minor": 238,
     "Patch": 1
   },
   "runsOn": [
@@ -550,7 +550,7 @@
     "Warning_UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.Warning_UnsupportedServiceConnectionAuth"
   },
   "_buildConfigMapping": {
-    "Default": "2.236.0",
-    "Node20_229_1": "2.236.1"
+    "Default": "2.238.0",
+    "Node20_229_1": "2.238.1"
   }
 }

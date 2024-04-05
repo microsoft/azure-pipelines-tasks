@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 238,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [
     "vstest"
@@ -658,7 +658,7 @@
     "minimumExpectedTests": "Minimum tests expected to be run: %d"
   },
   "_buildConfigMapping": {
-    "Default": "3.238.0",
-    "Node20_229_4": "3.238.1"
+    "Default": "3.238.2",
+    "Node20_229_4": "3.238.3"
   }
 }
