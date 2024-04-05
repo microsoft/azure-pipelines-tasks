@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
+    "Minor": 238,
     "Patch": 0
   },
   "runsOn": [
@@ -65,7 +65,7 @@
     "BuildCredentialsWarn": "ms-resource:loc.messages.BuildCredentialsWarn"
   },
   "_buildConfigMapping": {
-    "Default": "0.231.0",
-    "Node20_229_1": "0.231.1"
+    "Default": "0.238.0",
+    "Node20_229_1": "0.238.1"
   }
 }

@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 236,
-    "Patch": 1
+    "Minor": 238,
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -212,7 +212,7 @@
     "UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
   },
   "_buildConfigMapping": {
-    "Default": "1.236.0",
-    "Node20_229_1": "1.236.1"
+    "Default": "1.238.2",
+    "Node20_229_1": "1.238.3"
   }
 }
