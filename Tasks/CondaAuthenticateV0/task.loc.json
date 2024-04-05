@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 231,
-    "Patch": 0
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -24,6 +24,10 @@
     },
     "Node16": {
       "target": "condaauthenticatemain.js"
+    },
+    "Node20_1": {
+      "target": "condaauthenticatemain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

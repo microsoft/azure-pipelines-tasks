@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 238,
-    "Patch": 2
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -413,6 +413,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "universalmain.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "universalmain.js",
       "argumentFormat": ""
     }

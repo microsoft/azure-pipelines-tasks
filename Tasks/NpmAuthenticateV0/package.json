@@ -20,10 +20,10 @@
     "azure-pipelines-task-lib": "^4.1.0",
     "azure-pipelines-tasks-packaging-common-v3": "^3.206.0",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^16.11.39",
+    "@types/node": "^20.3.1",
     "@types/uuid": "^8.3.0"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "5.1.6"
   }
 }

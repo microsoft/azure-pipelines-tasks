@@ -10,7 +10,7 @@
   "version": {
     "Major": 2,
     "Minor": 238,
-    "Patch": 0
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -477,6 +477,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "nugetcommandmain.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "nugetcommandmain.js",
       "argumentFormat": ""
     }

@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 238,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": false,
   "satisfies": [
@@ -46,6 +46,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "nugettoolinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "nugettoolinstaller.js",
       "argumentFormat": ""
     }

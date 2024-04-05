@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 238,
-    "Patch": 0
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -132,6 +132,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "nugetpublisher.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "nugetpublisher.js",
       "argumentFormat": ""
     }

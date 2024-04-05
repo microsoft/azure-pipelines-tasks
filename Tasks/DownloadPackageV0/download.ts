@@ -1,9 +1,5 @@
 var fs = require('fs');
-#if NODE20
 import * as extract from 'extract-zip'
-#else
-var DecompressZip = require('decompress-zip');
-#endif
 var path = require('path')
 
 import * as corem from 'azure-devops-node-api/CoreApi';
@@ -70,11 +66,7 @@ export async function downloadPackage(feedConnection: WebApi, pkgsConnection: We
 	
 	var packageUrl = await getNuGetPackageUrl(feedsClient, feedId, packageId);
 
-#if NODE20
 	await new Promise<void>((resolve, reject) => {
-#else
-	await new Promise((resolve, reject) => {
-#endif
 		feedsClient.restClient.client.get(packageUrl).then(async response => {
 			if (response.message.statusCode != 200) {
 				return reject(tl.loc("FailedToGetPackageMetadata", response.message.statusMessage));
@@ -225,27 +217,12 @@ export async function unzip(zipLocation: string, unzipLocation: string): Promise
 		}
 
 		tl.debug('Extracting ' + zipLocation + ' to ' + unzipLocation);
-#if NODE20
 		tl.debug(`Using extract-zip package for extracting archive`);
 		extract(zipLocation, { dir: unzipLocation }).then(() => {
 			resolve();
 		}).catch((error) => {
 			reject(error);
 		});
-#else
-		var unzipper = new DecompressZip(zipLocation);
-		unzipper.on('error', err => {
-			return reject(tl.loc("ExtractionFailed", err))
-		});
-		unzipper.on('extract', () => {
-			tl.debug('Extracted ' + zipLocation + ' to ' + unzipLocation + ' successfully');
-			return resolve();
-		});
-
-		unzipper.extract({
-			path: path.normalize(unzipLocation)
-		});
-#endif
 	});
 }
 
