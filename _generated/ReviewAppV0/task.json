@@ -1,9 +1,9 @@
 {
   "id": "DEEAFED4-0B18-4F58-968D-86655B4D2CE9",
   "name": "ReviewApp",
-  "friendlyName": "ms-resource:loc.friendlyName",
-  "description": "ms-resource:loc.description",
-  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "friendlyName": "Review App",
+  "description": "Use this task under deploy phase provider to create a resource dynamically",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613735)",
   "category": "Utility",
   "preview": true,
   "visibility": [
@@ -17,34 +17,34 @@
   "version": {
     "Major": 0,
     "Minor": 238,
-    "Patch": 1
+    "Patch": 0
   },
-  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "releaseNotes": "Use this task under deploy phase provider to create a resource dynamically",
   "inputs": [
     {
       "name": "resourceName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.resourceName",
+      "label": "Resource name",
       "required": true,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.resourceName"
+      "helpMarkDown": "Name of an existing resource in the environment which will be used for resource type information"
     },
     {
       "name": "baseEnvironmentName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.baseEnvironmentName",
+      "label": "Environment name",
       "required": false,
       "defaultValue": ""
     },
     {
       "name": "reviewResourceName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.reviewResourceName",
+      "label": "Review Resource Name",
       "required": false,
       "defaultValue": ""
     }
   ],
-  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "instanceNameFormat": "Dynamic Resource created using - $(resourceName)",
   "execution": {
     "Node10": {
       "target": "run.js",
@@ -53,14 +53,10 @@
     "Node16": {
       "target": "run.js",
       "argumentFormat": ""
-    },
-    "Node20_1": {
-      "target": "run.js",
-      "argumentFormat": ""
     }
   },
   "messages": {
-    "CreatedDynamicResource": "ms-resource:loc.messages.CreatedDynamicResource"
+    "CreatedDynamicResource": "A dynamic resource is created using %s"
   },
   "_buildConfigMapping": {
     "Default": "0.238.0",
