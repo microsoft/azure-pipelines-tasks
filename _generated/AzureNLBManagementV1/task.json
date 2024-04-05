@@ -103,5 +103,9 @@
     "CouldNotFetchNetworkInterface": "Could not fetch Network Interface %s.\nStatus Code : %s\nStatus Message : %s\n%s",
     "FailedSettingNetworkInterface": "Failed setting the Network Interface %s.\nStatus Code : %s\nStatus Message : %s\n%s",
     "SettingTheNetworkInterface": "Setting the network interface %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.238.0",
+    "Node20_229_2": "1.238.1"
   }
 }
