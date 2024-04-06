@@ -22,7 +22,7 @@
     "@types/q": "1.0.7",
     "agent-base": "^6.0.2",
     "azure-pipelines-task-lib": "4.4.0",
-    "azure-pipelines-tasks-azure-arm-rest": "^3.232.0",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.237.0",
     "azure-pipelines-tasks-webdeployment-common": "4.230.6",
     "moment": "^2.29.4",
     "q": "1.4.1",

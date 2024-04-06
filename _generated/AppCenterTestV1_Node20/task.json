@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 232,
+    "Minor": 238,
     "Patch": 1
   },
   "minimumAgentVersion": "2.206.1",
@@ -503,7 +503,7 @@
     "FoundMultipleFiles": "Found multiple files matching %s."
   },
   "_buildConfigMapping": {
-    "Default": "1.232.0",
-    "Node20_229_7": "1.232.1"
+    "Default": "1.238.0",
+    "Node20_229_7": "1.238.1"
   }
 }

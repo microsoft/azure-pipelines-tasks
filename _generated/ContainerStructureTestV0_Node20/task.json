@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
-    "Patch": 0
+    "Minor": 238,
+    "Patch": 3
   },
   "preview": true,
   "demands": [],
@@ -108,7 +108,7 @@
     "NotSupportedOS": "Container Structure test task is not supported in OS: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.230.0",
-    "Node20_229_4": "0.231.0"
+    "Default": "0.238.2",
+    "Node20_229_4": "0.238.3"
   }
 }

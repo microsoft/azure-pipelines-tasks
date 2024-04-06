@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell sur des ordinateurs cibles",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=627414)",
+  "loc.helpMarkDown": "[Découvrir plus d’informations sur cette tâche](https://go.microsoft.com/fwlink/?linkid=627414)",
   "loc.description": "Exécuter des scripts PowerShell sur des ordinateurs distants",
   "loc.instanceNameFormat": "Exécuter PowerShell sur $(EnvironmentName)",
   "loc.releaseNotes": "Nouveautés de la version 2.0 : <br/>&nbsp;&nbsp; Suppression de la prise en charge des machines DTL héritées.",

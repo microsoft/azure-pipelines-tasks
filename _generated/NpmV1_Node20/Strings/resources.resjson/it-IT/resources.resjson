@@ -52,5 +52,6 @@
   "loc.messages.OverridingProjectNpmrc": "Override del file di progetto con estensione npmrc: %s",
   "loc.messages.RestoringProjectNpmrc": "Ripristino del file di progetto con estensione npmrc",
   "loc.messages.WorkingDirectoryNotDirectory": "Sostituire la directory di lavoro con una directory valida",
-  "loc.messages.NGCommon_AreaNotFoundInSps": "L'area '%s' [%s] non è stata trovata. Il servizio che contiene tale area potrebbe non essere disponibile nell'area geografica corrente."
+  "loc.messages.NGCommon_AreaNotFoundInSps": "L'area '%s' [%s] non è stata trovata. Il servizio che contiene tale area potrebbe non essere disponibile nell'area geografica corrente.",
+  "loc.messages.UnsupportedServiceConnectionAuth": "La connessione al servizio non utilizza un metodo di autenticazione supportato. Usare una connessione al servizio con autenticazione basata su token di accesso personale."
 }

@@ -24,5 +24,7 @@
   "loc.messages.CheckedInCredentialsOverriden": "Le credenziali per il registro %s sono state trovate nel file con estensione npmrc selezionato e ne è stato eseguito l'override. Rimuovere le credenziali dal file e archiviarle in una connessione al servizio npm (scelta consigliata) oppure rimuovere l'attività Autenticazione npm dalla compilazione per usare le credenziali controllate in un file con estensione npmrc.",
   "loc.messages.NoIndexJsonFile": "Non è stato trovato alcun file index.json e non è stato ripristinato alcun file",
   "loc.messages.RevertedChangesToNpmrc": "Le modifiche apportate a %s sono state ripristinate.",
-  "loc.messages.NpmrcDoesNotExist": "Il file con estensione npmrc selezionato in %s al momento non esiste."
+  "loc.messages.NpmrcDoesNotExist": "Il file con estensione npmrc selezionato in %s al momento non esiste.",
+  "loc.messages.SuccessfulPush": "Push di .npmrc riuscito",
+  "loc.messages.SuccessfulAppend": "Aggiunta di .npmrc riuscita"
 }

@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 236,
-    "Patch": 2
+    "Minor": 238,
+    "Patch": 6
   },
   "preview": true,
   "demands": [],
@@ -103,28 +103,28 @@
       "groupName": "advanced"
     },
     {
-        "name": "failTaskOnFailedTests",
-        "type": "boolean",
-        "label": "Fail if there are test failures",
-        "defaultValue": "false",
-        "required": false,
-        "helpMarkDown": "Fail the task if there are any test failures. Check this option to fail the task if test failures are detected in the result files."
+      "name": "failTaskOnFailedTests",
+      "type": "boolean",
+      "label": "Fail if there are test failures",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Fail the task if there are any test failures. Check this option to fail the task if test failures are detected in the result files."
     },
     {
-        "name": "failTaskOnFailureToPublishResults",
-        "type": "boolean",
-        "label": "Fail if there is failure in publishing test results",
-        "defaultValue": false,
-        "required": false,
-        "helpMarkDown": "Fail if there is failure in publishing test results. Check this option to fail the task if publishing test results is failed partially."
+      "name": "failTaskOnFailureToPublishResults",
+      "type": "boolean",
+      "label": "Fail if there is failure in publishing test results",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "Fail if there is failure in publishing test results. Check this option to fail the task if publishing test results is failed partially."
     },
     {
-        "name": "failTaskOnMissingResultsFile",
-        "type": "boolean",
-        "label": "Fail if no result files are found",
-        "defaultValue": false,
-        "required": false,
-        "helpMarkDown": "Fail the task if no result files are found."
+      "name": "failTaskOnMissingResultsFile",
+      "type": "boolean",
+      "label": "Fail if no result files are found",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "Fail the task if no result files are found."
     }
   ],
   "dataSourceBindings": [
@@ -170,9 +170,12 @@
     "testPlanInput": "Test plan Id : %s",
     "testplanConfigInput": "Test plan configuration Id : %s",
     "testSuiteSelected": "Test suite Id selected: %s",
-    "automatedTestsTriggered": "Trigerring execution of Automated tests from test plan",
+    "automatedTestTriggered": "Triggering execution of Automated tests from test plan",
     "ErrorFailTaskOnExecutingTests": "Error occured while executing test command",
     "ErrorFailTaskOnAPIFailure": "Error occured while fetching automated tests from test plan inputs",
-    "ErrorFailTaskOnCreateRunFailure": "Error occured while creating manual test run from test plan inputs"
+    "ErrorFailTaskOnCreateRunFailure": "Error occured while creating manual test run from test plan inputs",
+    "chmodGradlew": "Used 'chmod' method for gradlew file to make it executable.",
+    "NoMatchingFilesFound": "No test result files matching '%s' were found.",
+    "MultipleMatchingGradlewFound": "Multiple gradlew files found. Selecting the first matched instance"
   }
 }

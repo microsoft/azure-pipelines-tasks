@@ -18,7 +18,7 @@
   "preview": false,
   "version": {
     "Major": 0,
-    "Minor": 234,
+    "Minor": 238,
     "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
@@ -231,6 +231,8 @@
       "options": {
         "Java_8": "Java 8",
         "Java_11": "Java 11",
+        "Java_17": "Java 17",
+        "Java_21": "Java 21",
         "NetCore_31": ".Net Core 3.1"
       },
       "visibleRule": "Action = Deploy && DeploymentType = Artifacts"
@@ -341,7 +343,7 @@
     "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern"
   },
   "_buildConfigMapping": {
-    "Default": "0.234.0",
-    "Node20_229_5": "0.234.1"
+    "Default": "0.238.0",
+    "Node20_229_5": "0.238.1"
   }
 }
