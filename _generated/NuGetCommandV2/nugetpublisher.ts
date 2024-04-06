@@ -15,6 +15,8 @@ import * as vstsNuGetPushToolRunner from "./Common/VstsNuGetPushToolRunner";
 import * as vstsNuGetPushToolUtilities from "./Common/VstsNuGetPushToolUtilities";
 import { getProjectAndFeedIdFromInputParam } from 'azure-pipelines-tasks-packaging-common/util';
 import { logError } from 'azure-pipelines-tasks-packaging-common/util';
+import { WebRequest, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
+
 
 class PublishOptions implements INuGetCommandOptions {
     constructor(
@@ -417,7 +419,9 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
 async function getAccessToken(isInternalFeed: boolean, packagingLocation: pkgLocationUtils.PackagingLocation): Promise<string>{
     let accessToken: string;
     let allowServiceConnection = tl.getVariable('PUBLISH_VIA_SERVICE_CONNECTION');
+    // get host id here
 
+    // check feature flag status
     if(allowServiceConnection) {
         let endpoint = tl.getInput('externalEndpoint', false);
 
@@ -439,27 +443,29 @@ async function getAccessToken(isInternalFeed: boolean, packagingLocation: pkgLoc
         {           
             tl.debug("Checking for auth from Cred Provider."); 
             const feed = getProjectAndFeedIdFromInputParam('feedPublish');
-            const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(
-                packagingLocation.DefaultPackagingUri,
-                feed.feedId,
-                feed.projectId,
-                null /* default to V3 */,
-                null /* no accessToken  */,
-                false /* useSession */);
-
             const JsonEndpointsString = process.env["VSS_NUGET_EXTERNAL_FEED_ENDPOINTS"];
 
             if (JsonEndpointsString) {
                 tl.debug(`Feed details ${feed.feedId} ${feed.projectId}`);
                 tl.debug(`Endpoints found: ${JsonEndpointsString}`);
+
                 let endpointsArray: { endpointCredentials: EndpointCredentials[] } = JSON.parse(JsonEndpointsString);
+                let matchingEndpoint: EndpointCredentials;
 
                 for (const e of endpointsArray.endpointCredentials) {
-                    if (e.endpoint === feedUrl) {
-                        tl.debug(`Endpoint Credentials found for ${feed.feedId}`);
-                        accessToken = e.password;
-                        break;
+                    // Only try the service connections that contain this org name
+                    if (e.endpoint.search("h") != -1){
+                        if (tryServiceConnection(e, feed) )
+                        {
+                            // if true, then the service connection works for the feed so we'll return it
+                            matchingEndpoint = e;
+                            break;
+                        }
                     }
+                }
+
+                if(matchingEndpoint) {
+                    accessToken = matchingEndpoint.password;
                 }
             }
         }
@@ -474,4 +480,39 @@ async function getAccessToken(isInternalFeed: boolean, packagingLocation: pkgLoc
     }
 
     return accessToken;
+}
+
+async function tryServiceConnection(endpoint: EndpointCredentials, feed: any) : Promise<boolean>
+{
+    // Create request
+    const request = new WebRequest();
+    const token64 = Buffer.from(`${endpoint.username}:${endpoint.password}`).toString('base64');
+    request.uri = endpoint.endpoint;
+    request.method = 'GET';
+    request.headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Basic " + token64
+    };
+
+    return await sendRequest(request).then((response: WebResponse) => {
+        if(response.statusCode == 200) { // Not sure if we actually need this null check here..
+            if(response.body) {
+                for (const entry of response.body.resources) {
+                    if (entry['@type'] === 'AzureDevOpsProjectId' && entry['label'].toUpperCase() !== feed.projectId.toUpperCase()) 
+                    {
+                        tl.debug(`Project Ids do not match. Found: ${entry['label']}, expected: ${feed.projectId}`);
+                        return false;
+                    }
+                    if (entry['@type'] === 'VssFeedId' &&  entry['label'].toUpperCase() !== feed.feedId.toUpperCase())
+                    {
+                        tl.debug(`Feed Ids do not match. Found: ${entry['label']}, expected: ${feed.feedId}`);
+                        return false;
+                    }
+                }
+                // We got to the end of the list without throwing, therefore its a match
+                return true;
+            }
+        } 
+        return false;
+    });
 }
