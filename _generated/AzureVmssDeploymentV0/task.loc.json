@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 233,
+    "Minor": 238,
     "Patch": 0
   },
   "demands": [],
@@ -226,7 +226,7 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   },
   "_buildConfigMapping": {
-    "Default": "0.233.0",
-    "Node20_229_6": "0.233.1"
+    "Default": "0.238.0",
+    "Node20_229_6": "0.238.1"
   }
 }
