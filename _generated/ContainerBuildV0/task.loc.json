@@ -1,0 +1,89 @@
+{
+  "id": "8413C881-4959-43D5-8840-B4EA0FFC5CFE",
+  "name": "ContainerBuild",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 238,
+    "Patch": 0
+  },
+  "demands": [],
+  "satisfies": [
+    "Buildctl"
+  ],
+  "preview": "true",
+  "groups": [],
+  "inputs": [
+    {
+      "name": "dockerRegistryServiceConnection",
+      "type": "connectedService:dockerregistry",
+      "label": "ms-resource:loc.input.label.dockerRegistryServiceConnection",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryServiceConnection"
+    },
+    {
+      "name": "repository",
+      "label": "ms-resource:loc.input.label.repository",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.repository",
+      "defaultValue": ""
+    },
+    {
+      "name": "Dockerfile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.Dockerfile",
+      "defaultValue": "Dockerfile",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Dockerfile"
+    },
+    {
+      "name": "buildContext",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.buildContext",
+      "defaultValue": ".",
+      "helpMarkDown": "ms-resource:loc.input.help.buildContext"
+    },
+    {
+      "name": "tags",
+      "type": "multiLine",
+      "defaultValue": "$(Build.BuildId)",
+      "properties": {
+        "resizable": "true",
+        "rows": "2"
+      },
+      "label": "ms-resource:loc.input.label.tags",
+      "helpMarkDown": "ms-resource:loc.input.help.tags"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "src//buildcontainer.js"
+    },
+    "Node16": {
+      "target": "src//buildcontainer.js"
+    }
+  },
+  "messages": {
+    "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
+    "CouldNotFindDockerConfig": "ms-resource:loc.messages.CouldNotFindDockerConfig",
+    "BuildctlLatestNotKnown": "ms-resource:loc.messages.BuildctlLatestNotKnown",
+    "BuildctlDownloadFailed": "ms-resource:loc.messages.BuildctlDownloadFailed",
+    "BuildctlNotFoundInFolder": "ms-resource:loc.messages.BuildctlNotFoundInFolder",
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
+    "VerifyBuildctlInstallation": "ms-resource:loc.messages.VerifyBuildctlInstallation",
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.238.0",
+    "Node20_229_2": "0.238.1"
+  }
+}
