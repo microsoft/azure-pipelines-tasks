@@ -54,6 +54,7 @@ variables:
   taskNameIsSet: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
   isHotfix: ${{ and(eq(parameters.push_to_feed, true), eq(variables.taskNameIsSet, true)) }}
   runCodeQl: ${{ eq(parameters.enableCodeQL, true) }}
+  OneES_JobScannedCount: 1  #Sckip CG scan for now
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
