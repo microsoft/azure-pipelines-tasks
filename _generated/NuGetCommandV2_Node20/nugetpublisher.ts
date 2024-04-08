@@ -115,7 +115,7 @@ export async function run(nuGetPath: string): Promise<void> {
         let accessToken;
         let feed;
         const isInternalFeed: boolean = nugetFeedType === "internal";
-        accessToken = await getAccessToken(isInternalFeed, packagingLocation);
+        accessToken = await getAccessToken(isInternalFeed);
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
 
         // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
@@ -417,7 +417,7 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
     return false;
 }
 
-async function getAccessToken(isInternalFeed: boolean, packagingLocation: pkgLocationUtils.PackagingLocation): Promise<string>{
+async function getAccessToken(isInternalFeed: boolean): Promise<string>{
     let allowServiceConnection = tl.getVariable('PUBLISH_VIA_SERVICE_CONNECTION');
     let accessToken: string;
 
