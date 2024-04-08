@@ -1,0 +1,22 @@
+{
+    "name": "vsts-tasks-azurewebapponcontainerdeployment",
+    "version": "1.0.1",
+    "description": "Azure Pipelines Azure Web App on Container Deployment",
+    "main": "azurermappservicedeployment.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+    },
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Microsoft/vsts-tasks/issues"
+    },
+    "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+    "devDependencies": {
+        "nock": "^13.4.0"
+    }
+}

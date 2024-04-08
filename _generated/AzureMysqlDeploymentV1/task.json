@@ -1,0 +1,238 @@
+{
+  "id": "BD1BED02-F04E-11E7-8C3F-9A214CF093AE",
+  "name": "AzureMysqlDeployment",
+  "friendlyName": "Azure Database for MySQL deployment",
+  "description": "Run your scripts and make changes to your Azure Database for MySQL",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-mysql-deployment",
+  "helpMarkDown": "[Learn more about this task](https://aka.ms/mysqlazuredeployreadme)",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 238,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "1.100.0",
+  "groups": [
+    {
+      "name": "target",
+      "displayName": "DB Details",
+      "isExpanded": true
+    },
+    {
+      "name": "taskDetails",
+      "displayName": "Deployment Package",
+      "isExpanded": true
+    },
+    {
+      "name": "firewall",
+      "displayName": "Firewall",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure Subscription",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "This is needed to connect to your Azure account.<br>To configure new service connection, select the Azure subscription from the list and click 'Authorize'.<br>If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Add' or 'Manage' button."
+    },
+    {
+      "name": "ServerName",
+      "type": "pickList",
+      "label": "Host Name",
+      "required": true,
+      "defaultValue": "",
+      "groupName": "target",
+      "helpMarkDown": "Server name of 'Azure Database for MySQL'.Example: fabrikam.mysql.database.azure.com. When you connect using MySQL Workbench, this is the same value that is used for 'Hostname' in 'Parameters'",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "DatabaseName",
+      "type": "string",
+      "label": "Database Name",
+      "required": false,
+      "groupName": "target",
+      "defaultValue": "",
+      "helpMarkDown": "The name of database, if you already have one, on which the below script is needed to be run, else the script itself can be used to create the database."
+    },
+    {
+      "name": "SqlUsername",
+      "type": "string",
+      "label": "Server Admin Login",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "helpMarkDown": "Azure Database for MySQL server supports native MySQL authentication. You can connect and authenticate to a server with the server's admin login. Example:  bbo1@fabrikam. When you connect using MySQL Workbench, this is the same value that is used for 'Username' in 'Parameters'."
+    },
+    {
+      "name": "SqlPassword",
+      "type": "string",
+      "label": "Password",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "helpMarkDown": "Administrator password for Azure Database for MySQL. In case you don’t recall the password you can change the password from [Azure portal](https://docs.microsoft.com/en-us/azure/mysql/howto-create-manage-server-portal).<br>It can be variable defined in the pipeline. Example : $(password).<br>Also, you may mark the variable type as 'secret' to secure it."
+    },
+    {
+      "name": "TaskNameSelector",
+      "type": "pickList",
+      "label": "Type",
+      "required": false,
+      "helpMarkDown": "Select one of the options between Script File & Inline Script.",
+      "groupName": "taskDetails",
+      "defaultValue": "SqlTaskFile",
+      "options": {
+        "SqlTaskFile": "MySQL Script File",
+        "InlineSqlTask": "Inline MySQL Script"
+      }
+    },
+    {
+      "name": "SqlFile",
+      "type": "filePath",
+      "label": "MySQL Script",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "Full path of the script file on the automation agent or on a UNC path accessible to the automation agent like,  \\\\\\\\BudgetIT\\DeployBuilds\\script.sql. Also, predefined system variables like, $(agent.releaseDirectory) can also be used here. A file containing SQL statements can be used here.​",
+      "visibleRule": "TaskNameSelector = SqlTaskFile"
+    },
+    {
+      "name": "SqlInline",
+      "type": "multiLine",
+      "label": "Inline MySQL Script",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "Enter the MySQL script to execute on the Database selected above.",
+      "visibleRule": "TaskNameSelector = InlineSqlTask",
+      "properties": {
+        "resizable": "true",
+        "rows": "10"
+      }
+    },
+    {
+      "name": "SqlAdditionalArguments",
+      "type": "string",
+      "label": "Additional MySQL Arguments",
+      "required": false,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "Additional options supported by MySQL simple SQL shell.  These options will be applied when executing the given file on the Azure Database for MySQL.​<br>Example: You can change to default tab separated output format to HTML or even XML format. Or if you have problems due to insufficient memory for large result sets, use the --quick option.​"
+    },
+    {
+      "name": "IpDetectionMethod",
+      "type": "pickList",
+      "label": "Specify Firewall Rules Using",
+      "required": true,
+      "groupName": "firewall",
+      "defaultValue": "AutoDetect",
+      "options": {
+        "AutoDetect": "AutoDetect",
+        "IPAddressRange": "IPAddressRange"
+      },
+      "helpMarkDown": "For successful execution of the task, we need to enable administrators to access the Azure Database for MySQL Server from the IP Address of the automation agent.<br>By selecting auto-detect you can automatically add firewall exception for range of possible IP Address of automation agent ​or else you can specify the range explicitly."
+    },
+    {
+      "name": "StartIpAddress",
+      "type": "string",
+      "label": "Start IP Address",
+      "required": true,
+      "groupName": "firewall",
+      "defaultValue": "",
+      "visibleRule": "IpDetectionMethod = IPAddressRange",
+      "helpMarkDown": "The starting IP Address of the automation agent machine pool like 196.21.30.50 ."
+    },
+    {
+      "name": "EndIpAddress",
+      "type": "string",
+      "label": "End IP Address",
+      "required": true,
+      "groupName": "firewall",
+      "defaultValue": "",
+      "visibleRule": "IpDetectionMethod = IPAddressRange",
+      "helpMarkDown": "The ending IP Address of the automation agent machine pool like 196.21.30.65 ."
+    },
+    {
+      "name": "DeleteFirewallRule",
+      "type": "boolean",
+      "label": "Delete Rule After Task Ends",
+      "required": false,
+      "groupName": "firewall",
+      "defaultValue": "true",
+      "helpMarkDown": "If selected, the added exception for IP addresses of the automation agent will be removed for corresponding Azure Database for MySQL."
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "ServerName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureMysqlServers",
+      "resultTemplate": "{ \"Value\" : \"{{{properties.fullyQualifiedDomainName}}}\", \"DisplayValue\" : \"{{{properties.fullyQualifiedDomainName}}}\" }"
+    }
+  ],
+  "instanceNameFormat": "Execute Azure MySQL : $(TaskNameSelector)",
+  "execution": {
+    "Node10": {
+      "target": "azuremysqldeploy.js"
+    },
+    "Node16": {
+      "target": "azuremysqldeploy.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ARGD_ConstructorFailed": "The task failed while initializing. Error: %s .",
+    "FirewallRuleNameCannotBeEmpty": "The firewall rule name cannot be null.",
+    "FirewallAddressRangeCannotBeEmpty": "The firewall address cannot be null.",
+    "StartIpAddressCannotBeEmpty": "The start IP address of the firewall rule cannot be null.",
+    "EndIpAddressCannotBeEmpty": "The end IP address of the firewall rule cannot be null.",
+    "MysqlServerNameCannotBeEmpty": "The MySQL server name cannot be null.",
+    "MysqlFullyQualifiedServerNameCannotBeEmpty": "The MySQL server fully qualified name cannot be null.",
+    "ResourceGroupCannotBeEmpty": "The resource group name cannot be null.",
+    "NotAbleToAddFirewallRule": "An error occurred while adding the firewall rule to the MySQL server. Error: %s .",
+    "NotAbleToDeleteFirewallRule": "An error occurred while deleting the firewall rule from the MySQL server. Error: %s .",
+    "AgentIpAddressIsMissingInAddedFirewallRule": "The agent IP address is missing in the manually added firewall rule.",
+    "NotAbleToGetAllServers": "Failed to retrieve all MySQL servers of a subscription. Error: %s .",
+    "EmptyOrNullServerList": "The MySQL server list is empty. The MySQL server host name is invalid.",
+    "UnableToFindResourceGroupDueToNullId": "Unable to find the resource group due to a null ID.",
+    "UnableToFindResourceGroupDueToInvalidId": "Unable to find the resource group due to an invalid ID.",
+    "NotAbleToGetInstalledLocationOfMysqlFromPath": "The MySQL client is missing on the agent machine.",
+    "UnableToFindMysqlFromRegistryOnMachineError": "Unable to find MySQL using the registry on the machine.",
+    "UnableToFindMysqlFromRegistry": "Unable to find MySQL using the registry. Error: %s .",
+    "UnableToFindTheLocationOfMysqlFromRegistryOnMachineError": "Unable to find the location of MySQL using the registry on the machine. Error: %s .",
+    "AzureMysqlTaskParameterCannotBeEmpty": "The Azure MySQL task parameter cannot be null.",
+    "ToolPathCannotBeNull": "Tool path cannot be null.",
+    "SqlExecutionException": "A SQL execution exception occurred. Please check the SQL script. Error: %s .",
+    "AzureEndpointCannotBeNull": "Invalid subscription name. The Azure service connection cannot be null.",
+    "CallbackCannotBeNull": "The callback cannot be null.",
+    "UnableToCreateDatabaseException": "Unable to create database.",
+    "WindowMysqlClientMissingError": "MySQL client is missing on the Windows agent machine. Please install it by running the MySQL client installer 'https://aka.ms/window-mysqlcli-installer' script file on the agent machine.",
+    "LinuxMysqlClientMissingError": "MySQL client is missing on the Linux agent machine. Please install it by running 'sudo apt-get install mysql-client'.",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "Could not retrieve an access token for Azure. Status code: %s. Status message: %s",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not retrieve an access token for the managed service principal. Please configure Managed Service Identity (MSI) for the virtual machine. See 'https://aka.ms/azure-msi-docs'.Assign role to created MSI Identity. See 'https://aka.ms/assign-role-msi'. Status code: %s. Status message: %s",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "Could not retrieve an access token for the managed service principal. Status code: %s. Status message: %s",
+    "NotAbleToCreateFirewallRule": "Getting error during adding firewall rule to Azure mysql server. Error: %s",
+    "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+    "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.238.0",
+    "Node20_229_2": "1.238.1"
+  }
+}
