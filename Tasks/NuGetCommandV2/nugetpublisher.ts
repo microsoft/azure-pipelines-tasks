@@ -13,6 +13,7 @@ import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import INuGetCommandOptions from "azure-pipelines-tasks-packaging-common/nuget/INuGetCommandOptions2";
 import * as vstsNuGetPushToolRunner from "./Common/VstsNuGetPushToolRunner";
 import * as vstsNuGetPushToolUtilities from "./Common/VstsNuGetPushToolUtilities";
+import * as url from "url";
 import { getProjectAndFeedIdFromInputParam } from 'azure-pipelines-tasks-packaging-common/util';
 import { logError } from 'azure-pipelines-tasks-packaging-common/util';
 import { WebRequest, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
@@ -417,11 +418,12 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
 }
 
 async function getAccessToken(isInternalFeed: boolean, packagingLocation: pkgLocationUtils.PackagingLocation): Promise<string>{
-    let accessToken: string;
     let allowServiceConnection = tl.getVariable('PUBLISH_VIA_SERVICE_CONNECTION');
-    // get host id here
+    let accessToken: string;
 
-    // check feature flag status
+    const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
+    const collectionPathName:string = url.parse(collectionUrl).pathname;
+
     if(allowServiceConnection) {
         let endpoint = tl.getInput('externalEndpoint', false);
 
@@ -454,10 +456,11 @@ async function getAccessToken(isInternalFeed: boolean, packagingLocation: pkgLoc
 
                 for (const e of endpointsArray.endpointCredentials) {
                     // Only try the service connections that contain this org name
-                    if (e.endpoint.search("h") != -1){
+                    if (e.endpoint.search(new RegExp(collectionPathName, "i")) != -1){
                         if (await tryServiceConnection(e, feed) )
                         {
-                            // if true, then the service connection works for the feed so we'll return it
+                            // This service connection matches the user specified feed, so return it
+                            tl.debug("Endpoint: " + e.endpoint + " matched feed: " + feed.feedId + " and project: " + feed.projectId);
                             matchingEndpoint = e;
                             break;
                         }
@@ -500,16 +503,14 @@ async function tryServiceConnection(endpoint: EndpointCredentials, feed: any) : 
                 for (const entry of response.body.resources) {
                     if (entry['@type'] === 'AzureDevOpsProjectId' && entry['label'].toUpperCase() !== feed.projectId.toUpperCase()) 
                     {
-                        tl.debug(`Project Ids do not match. Found: ${entry['label']}, expected: ${feed.projectId}`);
                         return false;
                     }
                     if (entry['@type'] === 'VssFeedId' &&  entry['label'].toUpperCase() !== feed.feedId.toUpperCase())
                     {
-                        tl.debug(`Feed Ids do not match. Found: ${entry['label']}, expected: ${feed.feedId}`);
                         return false;
                     }
                 }
-                // We got to the end of the list without throwing, therefore its a match
+                // We found matches in feedId and projectId, return the service connection
                 return true;
             }
         } 
