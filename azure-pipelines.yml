@@ -99,7 +99,7 @@ extends:
         - job: build_all_windows
           displayName: Build all tasks (Windows)
           condition: eq(variables.os, 'Windows_NT')
-          timeoutInMinutes: 180
+          timeoutInMinutes: 360
           pool:
             name: 1ES-ABTT-Shared-Pool
             image: abtt-windows-2022
@@ -174,7 +174,7 @@ extends:
           - courtesy_push
           - build_all_windows
           condition: succeeded()
-          timeoutInMinutes: 180
+          timeoutInMinutes: 360
           pool:
             name: 1ES-ABTT-Shared-Pool
             image: abtt-windows-2022
@@ -196,7 +196,7 @@ extends:
         - job: build_all_linux
           displayName: Build all tasks (Linux)
           condition: eq(variables.os, 'Linux')
-          timeoutInMinutes: 180
+          timeoutInMinutes: 360
           pool:
             name: 1ES-ABTT-Shared-Pool
             image: abtt-ubuntu-2204
@@ -210,7 +210,7 @@ extends:
         - job: build_all_darwin
           displayName: Build all tasks (macOS)
           condition: eq(variables.os, 'Darwin')
-          timeoutInMinutes: 180
+          timeoutInMinutes: 360
           pool:
             name: Azure Pipelines
             image: macos-11
