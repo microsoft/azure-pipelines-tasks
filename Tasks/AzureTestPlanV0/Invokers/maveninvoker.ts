@@ -4,7 +4,7 @@ import utils = require('../utils');
 import constants = require('../constants');
 import { execMavenBuild } from '../testLibExecutor';
 
-export async function executemaventests(testsToBeExecuted: string[]) {
+export async function executemaventests(testsToBeExecuted: string[]):Promise<number> {
 
     //public doc link: https://maven.apache.org/surefire/maven-surefire-plugin/examples/single-test.html
     //maven command like "mvn test -Dtest=<package.className#testName>,<package.className#testName1>"
@@ -33,5 +33,5 @@ export async function executemaventests(testsToBeExecuted: string[]) {
 
    let status = await execMavenBuild(args);
 
-   return { exitCode: status ?? 1 };
+   return status ?? 1;
 }

@@ -8,7 +8,7 @@ export async function testInvoker(testsToBeExecuted: string[]): Promise<number> 
     const testLanguageStrings = tl.getDelimitedInput('testLanguageInput', ',', true);
 
     let exitStatusCode = 0;
-    let exitCode;
+    let exitCode = 0;
 
     for (const testLanguage of testLanguageStrings) {
 
@@ -20,14 +20,17 @@ export async function testInvoker(testsToBeExecuted: string[]): Promise<number> 
         switch (testLanguage) {
             case 'Java-Maven':
                 exitCode = await executemaventests(testsToBeExecuted);
+                tl.debug(`Execution Status Code for Maven: ${exitCode}`);
                 break;
 
             case 'Java-Gradle':
                 exitCode = await executegradletests(testsToBeExecuted);
+                tl.debug(`Execution Status Code for Gradle: ${exitCode}`);
                 break;
 
             case 'Python':
                 exitCode =  await executepythontests(testsToBeExecuted);
+                tl.debug(`Execution Status Code for Python: ${exitCode}`);
                 break;
 
             default:
@@ -42,5 +45,6 @@ export async function testInvoker(testsToBeExecuted: string[]): Promise<number> 
         }
     }
     
+    tl.debug(`Execution Status Code for Automated Execution Flow: ${exitStatusCode}`);
     return exitStatusCode
 }

@@ -23,6 +23,7 @@ export async function automatedTestsFlow(testPlanInfo: TestPlanData, testSelecto
       return 1;
     }
 
+    tl.debug(`Execution Status Code for test Invoker: ${testInvokerStatusCode}`);
     return testInvokerStatusCode;
   } else {
     console.log('No automated tests found for given test plan inputs ');

@@ -1,10 +1,9 @@
-import { spawn } from '../testexecutor'
 import tl = require('azure-pipelines-task-lib/task');
 import utils = require('../utils');
 import constants = require('../constants');
 import { execGradleBuild } from '../testLibExecutor';
 
-export async function executegradletests(testsToBeExecuted: string[]) {
+export async function executegradletests(testsToBeExecuted: string[]):Promise<number> {
 
     //public doc link: https://docs.gradle.org/current/userguide/command_line_interface.html
     //gradle command like "gradlew clean test --tests <package.className.testName> --tests <package.className.testName>"
@@ -26,5 +25,5 @@ export async function executegradletests(testsToBeExecuted: string[]) {
 
     var status = await execGradleBuild(args);
 
-    return { exitCode: status ?? 1 }
+    return status ?? 1;
 }

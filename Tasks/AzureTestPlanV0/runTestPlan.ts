@@ -22,6 +22,8 @@ export async function run() {
     }
 
     if( manualTestFlowReturnCode || automatedTestFlowReturnCode){
+        tl.debug(`Execution Status Code for Manual Test Flow is ${manualTestFlowReturnCode}`);
+        tl.debug(`Execution Status Code for Automated Test Flow is ${automatedTestFlowReturnCode}`);
         tl.setResult(tl.TaskResult.Failed, "Faced error in execution.");
     }
 }
