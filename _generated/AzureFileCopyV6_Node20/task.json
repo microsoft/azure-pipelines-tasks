@@ -13,13 +13,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 6,
-    "Minor": 237,
-    "Patch": 5
+    "Minor": 238,
+    "Patch": 3
   },
   "demands": [
     "azureps"
   ],
-  "releaseNotes": "What's new in Version 6.0: <br/>&nbsp;&nbsp; Support Workload identity federation and [Azure RBAC](https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal)",
+  "releaseNotes": "What's new in Version 6.0: <br/>&nbsp;&nbsp; Support Workload identity federation and [Azure RBAC](https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal), also use [AzCopy.exe](https://github.com/Azure/azure-storage-azcopy/tree/v10.24.0) with version 10.24.0, for more info:[here](https://github.com/Azure/azure-storage-azcopy/releases)",
   "minimumAgentVersion": "1.103.0",
   "inputs": [
     {
@@ -292,7 +292,7 @@
     "AzModuleNotFound": "Could not find the modules: 'Az.Accounts'. If the module was recently installed, retry after restarting the Azure Pipelines task agent."
   },
   "_buildConfigMapping": {
-    "Default": "6.237.4",
-    "Node20_229_2": "6.237.5"
+    "Default": "6.238.2",
+    "Node20_229_2": "6.238.3"
   }
 }

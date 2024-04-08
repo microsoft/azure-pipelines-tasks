@@ -24,5 +24,7 @@
   "loc.messages.CheckedInCredentialsOverriden": "已在選取的 .npmrc 檔案中找到並覆寫 %s 登錄的認證。請從檔案中移除認證，並改為將其儲存在 npm 服務連線中 (建議做法)，或從您的組建移除 npm 驗證工作，即可使用簽入 .npmrc 的認證。",
   "loc.messages.NoIndexJsonFile": "找不到任何 index.json 檔案，未還原任何檔案",
   "loc.messages.RevertedChangesToNpmrc": "已還原對 %s 進行的變更。",
-  "loc.messages.NpmrcDoesNotExist": "您在 %s 選取的 .npmrc 檔案目前不存在。"
+  "loc.messages.NpmrcDoesNotExist": "您在 %s 選取的 .npmrc 檔案目前不存在。",
+  "loc.messages.SuccessfulPush": "已成功推送 .npmrc",
+  "loc.messages.SuccessfulAppend": "已成功附加 .npmrc"
 }
