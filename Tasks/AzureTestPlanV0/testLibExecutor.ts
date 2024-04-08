@@ -54,7 +54,7 @@ function getExecOptions(): tr.IExecOptions {
 * @param args Arguments to execute via mvn
 * @returns execution Status Code
 */
-export async function execMavenBuild(args: string[]) {
+export async function execMavenBuild(args: string[]):Promise<number> {
 
     var mvnExec = getMavenExec();
 
@@ -63,11 +63,11 @@ export async function execMavenBuild(args: string[]) {
     mvnGetVersion.arg('-version');
 
     // 1. Check that Maven exists by executing it to retrieve its version.
-    await mvnGetVersion.exec()
+    return await mvnGetVersion.exec()
         .fail(function (err) {
             console.error("Maven is not installed on the agent");
             tl.setResult(tl.TaskResult.Failed, "Maven is not installed."); // tl.exit sets the step result but does not stop execution
-            process.exit(1);
+            return 1;
         })
         .then(async function (code) {
             // Setup Maven Executable to run list of test runs provided as input
@@ -81,7 +81,7 @@ export async function execMavenBuild(args: string[]) {
         .fail(function (err) {
             console.error(err.message);
             tl.setResult(tl.TaskResult.Failed, "Build failed."); // tl.exit sets the step result but does not stop execution
-            process.exit(1);
+            return 1;
         });
 }
 
@@ -105,13 +105,15 @@ function getGradlewExec() {
 
     if (gradlewPath.length == 0) {
         tl.setResult(tl.TaskResult.Failed, "Missing gradlew file");
-    }
-
-    if (gradlewPath.length > 1) {
-        tl.warning(tl.loc('MultipleMatchingGradlewFound'));
+        return "";
     }
 
     var gradlewExec: string = gradlewPath[0];
+
+    if (gradlewPath.length > 1) {
+        tl.warning(tl.loc('MultipleMatchingGradlewFound'));
+        tl.debug(gradlewExec);
+    }
 
     if (isWindows) {
         tl.debug('Append .bat extension name to gradlew script.');
@@ -139,6 +141,10 @@ function getGradlewExec() {
 export async function execGradleBuild(args: string[]) {
     var gradleExec = getGradlewExec();
 
+    if(!gradleExec || gradleExec == ""){
+        return 1;
+    }
+
     // Setup tool runner that executes Maven only to retrieve its version
     var gradleRunner = tl.tool(gradleExec);
 
@@ -146,12 +152,10 @@ export async function execGradleBuild(args: string[]) {
     gradleRunner.arg('clean');
     gradleRunner.arg(args);
 
-    var statusCode = await gradleRunner.exec(getExecOptions())
+    return await gradleRunner.exec(getExecOptions())
         .fail(function (err) {
             console.error(err.message);
             tl.setResult(tl.TaskResult.Failed, "Build failed."); // tl.exit sets the step result but does not stop execution
-            process.exit(1);
+            return 1;
         });
-
-    return statusCode;
 }

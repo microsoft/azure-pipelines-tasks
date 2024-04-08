@@ -31,5 +31,7 @@ export async function executemaventests(testsToBeExecuted: string[]) {
     tl.debug("Executing java maven tests with executable : " + executable);
     tl.debug("Executing java maven tests with args :" + args);
 
-    await execMavenBuild(args);
+   let status = await execMavenBuild(args);
+
+   return { exitCode: status ?? 1 };
 }

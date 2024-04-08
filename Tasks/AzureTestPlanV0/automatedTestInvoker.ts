@@ -3,9 +3,12 @@ import { executepythontests } from './Invokers/pythoninvoker'
 import { executemaventests } from './Invokers/maveninvoker'
 import { executegradletests } from './Invokers/gradleinvoker'
 
-export async function testInvoker(testsToBeExecuted: string[]) {
+export async function testInvoker(testsToBeExecuted: string[]): Promise<number> {
 
     const testLanguageStrings = tl.getDelimitedInput('testLanguageInput', ',', true);
+
+    let exitStatusCode = 0;
+    let exitCode;
 
     for (const testLanguage of testLanguageStrings) {
 
@@ -16,21 +19,28 @@ export async function testInvoker(testsToBeExecuted: string[]) {
 
         switch (testLanguage) {
             case 'Java-Maven':
-                await executemaventests(testsToBeExecuted);
+                exitCode = await executemaventests(testsToBeExecuted);
                 break;
 
             case 'Java-Gradle':
-                await executegradletests(testsToBeExecuted);
+                exitCode = await executegradletests(testsToBeExecuted);
                 break;
 
             case 'Python':
-                await executepythontests(testsToBeExecuted);
+                exitCode =  await executepythontests(testsToBeExecuted);
                 break;
 
             default:
                 console.log('Invalid test Language Input selected.');
         }
 
+        if(exitStatusCode == null){
+            exitStatusCode = exitCode;
+        }
+        else{
+            exitStatusCode = exitStatusCode || exitCode;
+        }
     }
- 
+    
+    return exitStatusCode
 }
