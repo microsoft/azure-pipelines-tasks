@@ -1,9 +1,9 @@
 {
-  "id": "501DD25D-1785-43E4-B4E5-A5C78CCC0573",
-  "name": "AzureFunctionApp",
+  "id": "13C22CE0-3B93-43F9-AEB7-71FBCE7BF5B2",
+  "name": "AzureFunctionAppContainer",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://aka.ms/azurefunctiontroubleshooting",
+  "helpUrl": "https://aka.ms/azurefunctioncontainertroubleshooting",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
@@ -16,19 +16,12 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 2,
+    "Major": 1,
     "Minor": 238,
-    "Patch": 1
+    "Patch": 0
   },
-  "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
   "groups": [
-    {
-      "name": "AdditionalDeploymentOptions",
-      "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
-      "isExpanded": false,
-      "visibleRule": "appType != \"\" && package NotEndsWith .war && Package NotEndsWith .jar"
-    },
     {
       "name": "ApplicationAndConfigurationSettings",
       "displayName": "ms-resource:loc.group.displayName.ApplicationAndConfigurationSettings",
@@ -38,26 +31,11 @@
   "inputs": [
     {
       "name": "azureSubscription",
-      "aliases": [
-        "connectedServiceNameARM"
-      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.azureSubscription",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscription"
-    },
-    {
-      "name": "appType",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.appType",
-      "defaultValue": "",
-      "required": true,
-      "options": {
-        "functionApp": "Function App on Windows",
-        "functionAppLinux": "Function App on Linux"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.appType"
     },
     {
       "name": "appName",
@@ -76,8 +54,7 @@
       "label": "ms-resource:loc.input.label.deployToSlotOrASE",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.deployToSlotOrASE",
-      "visibleRule": "appType != \"\""
+      "helpMarkDown": "ms-resource:loc.input.help.deployToSlotOrASE"
     },
     {
       "name": "resourceGroupName",
@@ -104,42 +81,20 @@
       "visibleRule": "deployToSlotOrASE = true"
     },
     {
-      "name": "package",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.package",
-      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
+      "name": "imageName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.imageName",
+      "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.package"
+      "helpMarkDown": "ms-resource:loc.input.help.imageName"
     },
     {
-      "name": "runtimeStack",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.runtimeStack",
+      "name": "containerCommand",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.containerCommand",
       "defaultValue": "",
       "required": false,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "options": {
-        "DOTNET|6.0": "DOTNET|6.0",
-        "DOTNET-ISOLATED|6.0": "DOTNET-ISOLATED|6.0",
-        "DOTNET-ISOLATED|7.0": "DOTNET-ISOLATED|7.0",
-        "DOTNET-ISOLATED|8.0": "DOTNET-ISOLATED|8.0",
-        "JAVA|8": "JAVA|8",
-        "JAVA|11": "JAVA|11",
-        "JAVA|17": "JAVA|17",
-        "JAVA|21": "JAVA|21",
-        "NODE|14": "NODE|14",
-        "NODE|16": "NODE|16",
-        "NODE|18": "NODE|18",
-        "NODE|20": "NODE|20",
-        "PYTHON|3.8": "PYTHON|3.8",
-        "PYTHON|3.9": "PYTHON|3.9",
-        "PYTHON|3.10": "PYTHON|3.10",
-        "PYTHON|3.11": "PYTHON|3.11"
-      },
-      "visibleRule": "appType = functionAppLinux",
-      "helpMarkDown": "ms-resource:loc.input.help.runtimeStack"
+      "helpMarkDown": "ms-resource:loc.input.help.containerCommand"
     },
     {
       "name": "appSettings",
@@ -154,33 +109,31 @@
       }
     },
     {
-      "name": "deploymentMethod",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.deploymentMethod",
-      "defaultValue": "auto",
-      "required": true,
-      "groupName": "AdditionalDeploymentOptions",
-      "options": {
-        "auto": "Auto-detect",
-        "zipDeploy": "Zip Deploy",
-        "runFromPackage": "Zip Deploy with Run From Package"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.deploymentMethod"
+      "name": "configurationStrings",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.configurationStrings",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "ApplicationAndConfigurationSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.configurationStrings",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      }
     }
   ],
   "outputVariables": [
     {
       "name": "AppServiceApplicationUrl",
-      "description": "Application URL of the selected Azure Function App."
+      "description": "Application URL of the selected App Service."
     }
   ],
   "dataSourceBindings": [
     {
       "target": "appName",
       "endpointId": "$(azureSubscription)",
-      "dataSourceName": "AzureFunctionAppNamesByAppType",
+      "dataSourceName": "AzureRMWebAppNamesByAppType",
       "parameters": {
-        "WebAppKind": "$(appType)"
+        "WebAppKind": "functionAppContainer"
       }
     },
     {
@@ -192,12 +145,12 @@
       }
     },
     {
-      "target": "slotName",
+      "target": "rlotName",
       "endpointId": "$(azureSubscription)",
       "dataSourceName": "AzureRMWebAppSlotsId",
       "parameters": {
         "WebAppName": "$(appName)",
-        "ResourceGroupName": "$(resourceGroupName)"
+        "ResourceGroupName": "$(ResourceGroupName)"
       },
       "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
     }
@@ -205,21 +158,15 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {
-      "target": "azurermwebappdeployment.js"
+      "target": "azurefunctiononcontainerdeployment.js"
     },
     "Node16": {
-      "target": "azurermwebappdeployment.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
-      "target": "azurermwebappdeployment.js",
+      "target": "azurefunctiononcontainerdeployment.js",
       "argumentFormat": ""
     }
   },
   "messages": {
     "Invalidwebapppackageorfolderpathprovided": "ms-resource:loc.messages.Invalidwebapppackageorfolderpathprovided",
-    "SetParamFilenotfound0": "ms-resource:loc.messages.SetParamFilenotfound0",
-    "XDTTransformationsappliedsuccessfully": "ms-resource:loc.messages.XDTTransformationsappliedsuccessfully",
     "GotconnectiondetailsforazureRMWebApp0": "ms-resource:loc.messages.GotconnectiondetailsforazureRMWebApp0",
     "ErrorNoSuchDeployingMethodExists": "ms-resource:loc.messages.ErrorNoSuchDeployingMethodExists",
     "UnabletoretrieveconnectiondetailsforazureRMWebApp": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp",
@@ -268,6 +215,7 @@
     "RequestedURLforkuduphysicalpath": "ms-resource:loc.messages.RequestedURLforkuduphysicalpath",
     "Physicalpathalreadyexists": "ms-resource:loc.messages.Physicalpathalreadyexists",
     "KuduPhysicalpathCreatedSuccessfully": "ms-resource:loc.messages.KuduPhysicalpathCreatedSuccessfully",
+    "KuduStackTraceURL": "ms-resource:loc.messages.KuduStackTraceURL",
     "FailedtocreateKuduPhysicalPath": "ms-resource:loc.messages.FailedtocreateKuduPhysicalPath",
     "FailedtocheckphysicalPath": "ms-resource:loc.messages.FailedtocheckphysicalPath",
     "VirtualApplicationDoesNotExist": "ms-resource:loc.messages.VirtualApplicationDoesNotExist",
@@ -288,11 +236,15 @@
     "RetryForTimeoutIssue": "ms-resource:loc.messages.RetryForTimeoutIssue",
     "stdoutFromScript": "ms-resource:loc.messages.stdoutFromScript",
     "stderrFromScript": "ms-resource:loc.messages.stderrFromScript",
+    "WebConfigAlreadyExists": "ms-resource:loc.messages.WebConfigAlreadyExists",
+    "SuccessfullyGeneratedWebConfig": "ms-resource:loc.messages.SuccessfullyGeneratedWebConfig",
+    "FailedToGenerateWebConfig": "ms-resource:loc.messages.FailedToGenerateWebConfig",
     "FailedToGetKuduFileContent": "ms-resource:loc.messages.FailedToGetKuduFileContent",
     "FailedToGetKuduFileContentError": "ms-resource:loc.messages.FailedToGetKuduFileContentError",
     "ScriptStatusTimeout": "ms-resource:loc.messages.ScriptStatusTimeout",
     "PollingForFileTimeOut": "ms-resource:loc.messages.PollingForFileTimeOut",
     "InvalidPollOption": "ms-resource:loc.messages.InvalidPollOption",
+    "MissingAppTypeWebConfigParameters": "ms-resource:loc.messages.MissingAppTypeWebConfigParameters",
     "AutoDetectDjangoSettingsFailed": "ms-resource:loc.messages.AutoDetectDjangoSettingsFailed",
     "FailedToApplyTransformation": "ms-resource:loc.messages.FailedToApplyTransformation",
     "FailedToApplyTransformationReason1": "ms-resource:loc.messages.FailedToApplyTransformationReason1",
@@ -337,12 +289,13 @@
     "UpdatingAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatingAppServiceConfigurationSettings",
     "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
     "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
-    "UpdatedOnlyAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedOnlyAppServiceApplicationSettings",
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
     "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",
     "PackageDeploymentInitiated": "ms-resource:loc.messages.PackageDeploymentInitiated",
+    "WarPackageDeploymentInitiated": "ms-resource:loc.messages.WarPackageDeploymentInitiated",
     "FailedToGetDeploymentLogs": "ms-resource:loc.messages.FailedToGetDeploymentLogs",
     "GoExeNameNotPresent": "ms-resource:loc.messages.GoExeNameNotPresent",
+    "WarDeploymentRetry": "ms-resource:loc.messages.WarDeploymentRetry",
     "Updatemachinetoenablesecuretlsprotocol": "ms-resource:loc.messages.Updatemachinetoenablesecuretlsprotocol",
     "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
@@ -361,16 +314,15 @@
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "InvalidDockerImageName": "ms-resource:loc.messages.InvalidDockerImageName",
-    "MsBuildPackageNotSupported": "ms-resource:loc.messages.MsBuildPackageNotSupported",
-    "FailedToGetStorageAccountDetails": "ms-resource:loc.messages.FailedToGetStorageAccountDetails",
-    "FailedToSyncTriggers": "ms-resource:loc.messages.FailedToSyncTriggers",
-    "SyncingFunctionTriggers": "ms-resource:loc.messages.SyncingFunctionTriggers",
-    "SyncFunctionTriggersSuccess": "ms-resource:loc.messages.SyncFunctionTriggersSuccess",
-    "UpdatedRunFromPackageSettings": "ms-resource:loc.messages.UpdatedRunFromPackageSettings",
-    "DeploymentTypeNotSupportedForLinuxConsumption": "ms-resource:loc.messages.DeploymentTypeNotSupportedForLinuxConsumption"
+    "RestartingAppService": "ms-resource:loc.messages.RestartingAppService",
+    "RestartingAppServiceSlot": "ms-resource:loc.messages.RestartingAppServiceSlot",
+    "RestartedAppService": "ms-resource:loc.messages.RestartedAppService",
+    "RestartedAppServiceSlot": "ms-resource:loc.messages.RestartedAppServiceSlot",
+    "FailedToRestartAppService": "ms-resource:loc.messages.FailedToRestartAppService",
+    "FailedToRestartAppServiceSlot": "ms-resource:loc.messages.FailedToRestartAppServiceSlot"
   },
   "_buildConfigMapping": {
-    "Default": "2.238.0",
-    "Node20_229_9": "2.238.1"
+    "Default": "1.238.0",
+    "Node20_229_2": "1.238.1"
   }
 }
