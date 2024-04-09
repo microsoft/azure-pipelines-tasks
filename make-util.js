@@ -1892,6 +1892,7 @@ var mergeBuildConfigIntoBaseTasks = function(buildConfig) {
 
                 // Copy generated task to base task, delete generated files
                 cp('-rf', generatedTaskPath + "/*", baseTaskPath);
+                cp('-rf', generatedTaskPath + "/.npmrc", baseTaskPath);
                 console.log(`Copied ${generatedTaskPath} to ${baseTaskPath}`);
                 rm("-rf", buildConfigTaskPath);
                 console.log(`Deleted ${buildConfigTaskPath} folder`);
