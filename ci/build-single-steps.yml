@@ -20,11 +20,11 @@ steps:
   inputs:
     version: 8.x
 
-# Use node 10, npm 6
+# Use node 20, npm 6
 - task: NodeTool@0
-  displayName: Use node 10
+  displayName: Use node 20
   inputs:
-    versionSpec: 10.24.1
+    versionSpec: 20.3.1
 
 # npm install
 - script: npm install
