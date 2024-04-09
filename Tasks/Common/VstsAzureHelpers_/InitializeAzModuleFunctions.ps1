@@ -55,7 +55,8 @@ function Initialize-AzModule {
             # Enable-AzureRmAlias for azureRm compability
             if (Get-Command Enable-AzureRmAlias -ErrorAction SilentlyContinue) {
                 Write-Verbose "Enable-AzureRmAlias for backward compability"
-                Enable-AzureRmAlias -Scope global
+                Write-Host "##[command]Enable-AzureRmAlias -Scope Process"
+                Enable-AzureRmAlias -Scope Process
             } else {
                 Write-Verbose "Enable-AzureRmAlias cmdlet is not available."
             }
