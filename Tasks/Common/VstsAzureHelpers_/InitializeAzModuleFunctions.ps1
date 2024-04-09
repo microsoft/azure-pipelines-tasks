@@ -28,17 +28,38 @@ function Initialize-AzModule {
         if ($featureFlags.retireAzureRM) {
             # Supress breaking changes messages
             Set-Item -Path Env:\SuppressAzurePowerShellBreakingChangeWarnings -Value $true
+            $azureRMUninstalled = $false;
 
-            $azAccountsModuleName = "Az.Accounts"
-            $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName
-            Write-Verbose "'$azAccountsModuleName' is available with version $azAccountsVersion."
-          
+            # If Az.Account already installed, remove RM modules
+            if (Get-Module -ListAvailable -Name Az.Accounts) {
+                Write-Host "##[command]Uninstall-AzureRm"
+                # Uninstall-AzureRm
+                $azureRMUninstalled = $true;
+            } else {
+                $azAccountsModuleName = "Az.Accounts"
+                $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName
+                Write-Verbose "'$azAccountsModuleName' is available with version $azAccountsVersion."
+            }
+
             # Update-AzConfig is a part of Az.Accounts
             if (Get-Command Update-AzConfig -ErrorAction SilentlyContinue) {
                 Write-Verbose "Supressing breaking changes warnings of Az module."
                 Update-AzConfig -DisplayBreakingChangeWarning $false -CheckForUpgrade $false -AppliesTo Az
             } else {
                 Write-Verbose "Update-AzConfig cmdlet is not available."
+            }
+
+            if ($azureRMUninstalled -eq $false) {
+                Write-Host "##[command]Uninstall-AzureRm"
+                # Uninstall-AzureRMModules -UseAzUninstall
+            }
+
+            # Enable-AzureRmAlias for azureRm compability
+            if (Get-Command Enable-AzureRmAlias -ErrorAction SilentlyContinue) {
+                Write-Verbose "Enable-AzureRmAlias for backward compability"
+                Enable-AzureRmAlias -Scope CurrentUser
+            } else {
+                Write-Verbose "Enable-AzureRmAlias cmdlet is not available."
             }
 
             $azResourcesModuleName = "Az.Resources"
@@ -166,6 +187,54 @@ function Import-AzAccountsModule {
     }
 }
 
+function Uninstall-AzureRMModules {
+    [CmdletBinding()]
+    param([switch] $UseAzUninstall)
+
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        Write-Verbose "Uninstalling AzureRM modules."
+
+        if ($UseAzUninstall -and (Get-Module -ListAvailable -Name Az.Accounts)) {
+            Write-Host "##[command]Uninstall-AzureRm"
+            Uninstall-AzureRm
+        }
+        else {
+            $azureRmModules = Get-Module -ListAvailable -Name AzureRM.* | Select-Object Name,Version
+            if ($azureRmModules -and $azureRmModules.Count -gt 0) {
+                Foreach ($azureRmModule in $azureRmModules) {
+                    $azureRmModuleName = $azureRmModule.Name
+                    Write-Verbose "Uninstalling module: $azureRmModuleName"
+                    try {
+                        Write-Host "##[command]Uninstall-Module -Name $azureRmModuleName -AllVersions -Force"
+                        Uninstall-Module -Name $azureRmModuleName -AllVersions -Force
+                    }
+                    catch {
+                        Write-Verbose "Failed to uninstall module: $azureRmModuleName"
+                    }
+                }
+            }
+            else {
+                Write-Host "No AzureRM modules found to uninstall."
+            }
+        }
+
+        Write-Verbose "Making sure all AzureRM modules are gone after the uninstall."
+
+        $azureRmModules = Get-Module -ListAvailable -Name AzureRM.* | Select-Object Name,Version
+        if ($azureRmModules) {
+            Foreach ($azureRmModule in $azureRmModules) {
+                Write-Verbose "'$($azureRmModule)' AzureRM module found."
+            }
+        }
+        else {
+            Write-Verbose "No AzureRM modules found."
+        }
+    }
+    finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
 
 function Initialize-AzSubscription {
     [CmdletBinding()]
