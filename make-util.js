@@ -1899,25 +1899,8 @@ var mergeBuildConfigIntoBaseTasks = function(buildConfig) {
                 console.log(`Deleted ${generatedTaskPath} folder`);
                 rm("-rf", generatedDefaultTaskPath);
                 console.log(`Deleted ${generatedDefaultTaskPath} folder`);
-
-                // Update versionmap.txt file
-                var versionmapFile = fs.readFileSync(versionmapFilePath, { encoding: 'utf-8' });
-                const lines = versionmapFile.split(/\r?\n/);
-                var buildConfigVersion = null;
-                for (let i = lines.length - 1; i >= 0; i--) {
-                    if (!lines[i]) continue;
-                    const [name, version] = lines[i].split('|');
-                    if (name.startsWith(surfixBuildConfig)) {
-                        buildConfigVersion = version;
-                        lines.splice(i, 1);
-                        i++;
-                    } else if (name === "Default" && buildConfigVersion != null) {
-                        lines[i] = `Default|${buildConfigVersion}`;
-                    }
-                }
-                const updatedContent = lines.join(os.EOL);
-                fs.writeFileSync(versionmapFilePath, updatedContent, { encoding: 'utf-8' });
-                console.log(`Updated ${versionmapFilePath} file`);
+                rm("-rf", versionmapFilePath);
+                console.log(`Deleted ${versionmapFilePath} file`);
 
                 // Remove _buildConfigMapping section in task.json and task-loc.json
                 var taskJsonPath = path.join(baseTaskPath, 'task.json');
