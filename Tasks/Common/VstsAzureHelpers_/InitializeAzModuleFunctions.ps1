@@ -33,7 +33,7 @@ function Initialize-AzModule {
             # If Az.Account already installed, remove RM modules
             if (Get-Module -ListAvailable -Name Az.Accounts) {
                 Write-Host "##[command]Uninstall-AzureRm"
-                # Uninstall-AzureRm
+                Uninstall-AzureRm
                 $azureRMUninstalled = $true;
             } else {
                 $azAccountsModuleName = "Az.Accounts"
@@ -51,7 +51,7 @@ function Initialize-AzModule {
 
             if ($azureRMUninstalled -eq $false) {
                 Write-Host "##[command]Uninstall-AzureRm"
-                # Uninstall-AzureRMModules -UseAzUninstall
+                Uninstall-AzureRMModules -UseAzUninstall
             }
 
             # Enable-AzureRmAlias for azureRm compability
