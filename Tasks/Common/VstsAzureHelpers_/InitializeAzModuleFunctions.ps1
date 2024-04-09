@@ -188,7 +188,7 @@ function Import-AzAccountsModule {
 }
 
 function Uninstall-AzureRMModules {
-    [CmdletBinding()]
+    [CmdletBinding()]Param()
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
