@@ -115,7 +115,7 @@ export async function run(nuGetPath: string): Promise<void> {
         let accessToken;
         let feed;
         const isInternalFeed: boolean = nugetFeedType === "internal";
-        accessToken = await getAccessToken(isInternalFeed);
+        accessToken = await getAccessToken(isInternalFeed, urlPrefixes);
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
 
         // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
@@ -417,12 +417,9 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
     return false;
 }
 
-async function getAccessToken(isInternalFeed: boolean): Promise<string>{
+async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): Promise<string>{
     let allowServiceConnection = tl.getVariable('PUBLISH_VIA_SERVICE_CONNECTION');
     let accessToken: string;
-
-    const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
-    const collectionPathName:string = url.parse(collectionUrl).pathname;
 
     if(allowServiceConnection) {
         let endpoint = tl.getInput('externalEndpoint', false);
@@ -453,22 +450,20 @@ async function getAccessToken(isInternalFeed: boolean): Promise<string>{
 
                 let endpointsArray: { endpointCredentials: EndpointCredentials[] } = JSON.parse(JsonEndpointsString);
                 let matchingEndpoint: EndpointCredentials;
-
                 for (const e of endpointsArray.endpointCredentials) {
-                    // Only try the service connections that contain this org name
-                    if (e.endpoint.search(new RegExp(collectionPathName, "i")) != -1){
-                        if (await tryServiceConnection(e, feed) )
-                        {
-                            // This service connection matches the user specified feed, so return it
-                            tl.debug("Endpoint: " + e.endpoint + " matched feed: " + feed.feedId + " and project: " + feed.projectId);
-                            matchingEndpoint = e;
-                            break;
+                    for (const prefix of uriPrefixes) {
+                        if (e.endpoint.toUpperCase().startsWith(prefix.toUpperCase())) {
+                            let isServiceConnectionValid = await tryServiceConnection(e, feed);
+                            if (isServiceConnectionValid) {
+                                matchingEndpoint = e;
+                                break;
+                            }
                         }
                     }
-                }
-
-                if(matchingEndpoint) {
-                    accessToken = matchingEndpoint.password;
+                    if (matchingEndpoint) {
+                        accessToken = matchingEndpoint.password;
+                        break;
+                    }
                 }
             }
         }
@@ -481,7 +476,7 @@ async function getAccessToken(isInternalFeed: boolean): Promise<string>{
     else {
         accessToken = pkgLocationUtils.getSystemAccessToken();
     }
-
+    
     return accessToken;
 }
 
@@ -497,23 +492,24 @@ async function tryServiceConnection(endpoint: EndpointCredentials, feed: any) : 
         "Authorization": "Basic " + token64
     };
 
-    return await sendRequest(request).then((response: WebResponse) => {
-        if(response.statusCode == 200) { // Not sure if we actually need this null check here..
-            if(response.body) {
-                for (const entry of response.body.resources) {
-                    if (entry['@type'] === 'AzureDevOpsProjectId' && entry['label'].toUpperCase() !== feed.projectId.toUpperCase()) 
-                    {
-                        return false;
-                    }
-                    if (entry['@type'] === 'VssFeedId' &&  entry['label'].toUpperCase() !== feed.feedId.toUpperCase())
-                    {
-                        return false;
-                    }
+    const response = await sendRequest(request);
+
+    if(response.statusCode == 200) { 
+        // Not sure if we actually need this null check here..
+        if(response.body) {
+            for (const entry of response.body.resources) {
+                if (entry['@type'] === 'AzureDevOpsProjectId' && entry['label'].toUpperCase() !== feed.projectId.toUpperCase()) 
+                {
+                    return false;
                 }
-                // We found matches in feedId and projectId, return the service connection
-                return true;
+                if (entry['@type'] === 'VssFeedId' &&  entry['label'].toUpperCase() !== feed.feedId.toUpperCase())
+                {
+                    return false;
+                }
             }
-        } 
-        return false;
-    });
+            // We found matches in feedId and projectId, return the service connection
+            return true;
+        }
+    }
+    return false;
 }
