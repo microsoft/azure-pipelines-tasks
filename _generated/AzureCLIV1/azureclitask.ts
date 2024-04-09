@@ -108,19 +108,22 @@ export class azureclitask {
 
             //set the task result to either succeeded or failed based on error was thrown or not
             if (toolExecutionError) {
-                let message = tl.loc("ScriptFailed", toolExecutionError);
+                let message = tl.loc('ScriptFailed', toolExecutionError);
 
-                const expiredSecretErrorCode = "AADSTS7000222";
-                let serviceEndpointSecretIsExpired = toolExecutionError.indexOf(expiredSecretErrorCode) >= 0;
-                if (serviceEndpointSecretIsExpired) {
+                if (typeof toolExecutionError === 'string') {
+                  const expiredSecretErrorCode = 'AADSTS7000222';
+                  let serviceEndpointSecretIsExpired = toolExecutionError.indexOf(expiredSecretErrorCode) >= 0;
+                  
+                  if (serviceEndpointSecretIsExpired) {
                     const organizationURL = tl.getVariable('System.CollectionUri');
                     const projectName = tl.getVariable('System.TeamProject');
                     const serviceConnectionLink = encodeURI(`${organizationURL}${projectName}/_settings/adminservices?resourceId=${connectedService}`);
-                    
+        
                     message = tl.loc('ExpiredServicePrincipalMessageWithLink', serviceConnectionLink);
+                  }
                 }
-
-                tl.setResult(tl.TaskResult.Failed, message);
+        
+                tl.setResult(tl.TaskResult.Failed, message);  
             }
             else {
                 tl.setResult(tl.TaskResult.Succeeded, tl.loc("ScriptReturnCode", 0));
