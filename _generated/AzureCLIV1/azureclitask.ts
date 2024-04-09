@@ -122,8 +122,8 @@ export class azureclitask {
                     message = tl.loc('ExpiredServicePrincipalMessageWithLink', serviceConnectionLink);
                   }
                 }
-        
-                tl.setResult(tl.TaskResult.Failed, message);  
+
+                tl.setResult(tl.TaskResult.Failed, message);
             }
             else {
                 tl.setResult(tl.TaskResult.Succeeded, tl.loc("ScriptReturnCode", 0));
