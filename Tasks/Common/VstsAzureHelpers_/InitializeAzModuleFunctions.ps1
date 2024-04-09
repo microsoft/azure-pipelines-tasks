@@ -28,7 +28,6 @@ function Initialize-AzModule {
         if ($featureFlags.retireAzureRM) {
             # Supress breaking changes messages
             Set-Item -Path Env:\SuppressAzurePowerShellBreakingChangeWarnings -Value $true
-            $azureRMUninstalled = $false;
 
             $azAccountsModuleName = "Az.Accounts"
             $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName
