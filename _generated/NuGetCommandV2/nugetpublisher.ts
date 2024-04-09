@@ -13,7 +13,6 @@ import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import INuGetCommandOptions from "azure-pipelines-tasks-packaging-common/nuget/INuGetCommandOptions2";
 import * as vstsNuGetPushToolRunner from "./Common/VstsNuGetPushToolRunner";
 import * as vstsNuGetPushToolUtilities from "./Common/VstsNuGetPushToolUtilities";
-import * as url from "url";
 import { getProjectAndFeedIdFromInputParam } from 'azure-pipelines-tasks-packaging-common/util';
 import { logError } from 'azure-pipelines-tasks-packaging-common/util';
 import { WebRequest, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
@@ -476,7 +475,7 @@ async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): Promis
     else {
         accessToken = pkgLocationUtils.getSystemAccessToken();
     }
-    
+
     return accessToken;
 }
 
@@ -495,7 +494,6 @@ async function tryServiceConnection(endpoint: EndpointCredentials, feed: any) : 
     const response = await sendRequest(request);
 
     if(response.statusCode == 200) { 
-        // Not sure if we actually need this null check here..
         if(response.body) {
             for (const entry of response.body.resources) {
                 if (entry['@type'] === 'AzureDevOpsProjectId' && entry['label'].toUpperCase() !== feed.projectId.toUpperCase()) 
