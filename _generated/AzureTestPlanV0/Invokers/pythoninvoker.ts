@@ -2,7 +2,7 @@ import { spawn, SpawnResult } from '../testexecutor';
 import tl = require('azure-pipelines-task-lib/task');
 import constants = require('../constants');
 
-export async function executepythontests(testsToBeExecuted: string[]):Promise<number> {
+export async function executePythonTests(testsToBeExecuted: string[]):Promise<number> {
     // Perform test discovery
     const discoveryArgs: string[] = ['--collect-only'];
     const discoveryResult = await runPytestCommand(discoveryArgs);

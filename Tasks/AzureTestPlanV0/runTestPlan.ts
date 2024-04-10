@@ -16,14 +16,14 @@ export async function run() {
     // trigger manual, automated or both tests based on user's input
     if (testSelectorInput.includes('manualTests')) {
         manualTestFlowReturnCode = await manualTestsFlow(testPlanInfo);
+        tl.debug(`Execution Status Code for Manual Test Flow is ${manualTestFlowReturnCode}`);
     }
     if (testSelectorInput.includes('automatedTests')) {
         automatedTestFlowReturnCode = await automatedTestsFlow(testPlanInfo, testSelectorInput);
+        tl.debug(`Execution Status Code for Automated Test Flow is ${automatedTestFlowReturnCode}`);
     }
 
     if( manualTestFlowReturnCode || automatedTestFlowReturnCode){
-        tl.debug(`Execution Status Code for Manual Test Flow is ${manualTestFlowReturnCode}`);
-        tl.debug(`Execution Status Code for Automated Test Flow is ${automatedTestFlowReturnCode}`);
         tl.setResult(tl.TaskResult.Failed, "Faced error in execution.");
     }
 }

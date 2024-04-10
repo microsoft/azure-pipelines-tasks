@@ -14,6 +14,7 @@ export async function automatedTestsFlow(testPlanInfo: TestPlanData, testSelecto
       testInvokerStatusCode = await testInvoker(listOfTestsToBeExecuted);
     } catch (err) {
       tl.debug(`Unable to invoke automated test execution. Err:( ${err} )`);
+      testInvokerStatusCode = 1;
     }
 
     try {
