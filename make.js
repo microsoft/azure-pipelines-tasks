@@ -61,7 +61,7 @@ var genTaskCommonPath = path.join(__dirname, '_generated', 'Common');
 var CLI = {};
 
 // node min version
-var minNodeVer = '6.10.3';
+var minNodeVer = '10.24.1';
 if (semver.lt(process.versions.node, minNodeVer)) {
     fail('requires node >= ' + minNodeVer + '.  installed: ' + process.versions.node);
 }
@@ -258,8 +258,8 @@ function getNodeVersion (taskName) {
         console.log(`Node verion from @types/node in package.json is ${nodeVersion} returning ${nodeVersion.split('.')[0]}`);
         return nodeVersion.split('.')[0];
     } else {
-        console.log("Node version not found in dependencies, using default node 10.");
-        return 10;
+        console.log("Node version not found in dependencies, using default node 20.");
+        return 20;
     }
 }
 
@@ -475,7 +475,7 @@ function buildTask(taskName, taskListLength, nodeVersion) {
 // node make.js test --task ShellScript --suite L0
 //
 CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
-    var minIstanbulVersion = '10';
+    var minIstanbulVersion = '20';
     ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('mocha', '--version', '6.2.3');
 

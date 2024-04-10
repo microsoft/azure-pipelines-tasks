@@ -341,7 +341,7 @@ var installNode = function (nodeVersion) {
     };
 
     if (!nodeVersion) {
-        nodeVersion = versions[6];
+        nodeVersion = versions[20];
     } else {
         if (!versions[nodeVersion]) {
             fail(`Unexpected node version '${nodeVersion}'. Supported versions: ${Object.keys(versions).join(', ')}`);
@@ -1708,8 +1708,8 @@ var getTaskNodeVersion = function(buildPath, taskName) {
     const nodes = [];
     var taskJsonPath = path.join(buildPath, taskName, "task.json");
     if (!fs.existsSync(taskJsonPath)) {
-        console.warn('Unable to find task.json, defaulting to use Node 14');
-        nodes.push(14);
+        console.warn('Unable to find task.json, defaulting to use Node 20');
+        nodes.push(20);
         return nodes;
     }
     var taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
@@ -1720,15 +1720,15 @@ var getTaskNodeVersion = function(buildPath, taskName) {
         if (!executor.startsWith('node')) continue;
         
         const version = executor.replace('node', '');
-        nodes.push(parseInt(version) || 6);
+        nodes.push(parseInt(version) || 20);
     }
 
     if (nodes.length) {
         return nodes;
     }
 
-    console.warn('Unable to determine execution type from task.json, defaulting to use Node 10');
-    nodes.push(10);
+    console.warn('Unable to determine execution type from task.json, defaulting to use Node 20');
+    nodes.push(20);
     return nodes;
 }
 exports.getTaskNodeVersion = getTaskNodeVersion;
