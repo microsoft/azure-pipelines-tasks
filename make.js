@@ -69,7 +69,7 @@ if (semver.lt(process.versions.node, minNodeVer)) {
 // Node 14 is supported by the build system, but not currently by the agent. Block it for now
 var supportedNodeTargets = ["Node", "Node10"/*, "Node14"*/];
 var node10Version = '10.24.1';
-var node20Version = '20.3.1';
+var node20Version = '20.11.0';
 
 // add node modules .bin to the path so we can dictate version of tsc etc...
 if (!test('-d', binPath)) {
@@ -244,8 +244,8 @@ function getNodeVersion (taskName) {
     } else {
         packageJsonPath = path.join(tasksPath, taskName, "package.json");
         if (!fs.existsSync(packageJsonPath)) {
-            console.error(`Unable to find package.json file for ${taskName} in _generated folder or Tasks folder, using default node 10.`);
-            return 10;
+            console.error(`Unable to find package.json file for ${taskName} in _generated folder or Tasks folder, using default node 20.`);
+            return 20;
         }
         console.log(`Found package.json for ${taskName} in Tasks folder ${packageJsonPath}`)
     }
