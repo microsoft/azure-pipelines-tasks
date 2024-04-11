@@ -58,7 +58,6 @@ variables:
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
-    enableComponentGovernanceScan: true
     settings:
       skipBuildTagsForGitHubPullRequests: true
     featureFlags:
@@ -115,7 +114,6 @@ extends:
                 condition: >
                   and(
                     succeeded(),
-                    ne(variables['build.reason'], 'PullRequest'),
                     ne(variables['numTasks'], 0)
                   )
                 PathtoPublish: _package/tasks.zip
