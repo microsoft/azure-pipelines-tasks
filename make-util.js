@@ -332,7 +332,7 @@ exports.ensureTool = ensureTool;
 
 var installNode = function (nodeVersion) {
     const versions = {
-        20: 'v20.3.1',
+        20: 'v20.11.0',
         16: 'v16.17.1',
         14: 'v14.10.1',
         10: 'v10.24.1',
@@ -341,7 +341,7 @@ var installNode = function (nodeVersion) {
     };
 
     if (!nodeVersion) {
-        nodeVersion = versions[6];
+        nodeVersion = versions[20];
     } else {
         if (!versions[nodeVersion]) {
             fail(`Unexpected node version '${nodeVersion}'. Supported versions: ${Object.keys(versions).join(', ')}`);
@@ -1708,8 +1708,8 @@ var getTaskNodeVersion = function(buildPath, taskName) {
     const nodes = [];
     var taskJsonPath = path.join(buildPath, taskName, "task.json");
     if (!fs.existsSync(taskJsonPath)) {
-        console.warn('Unable to find task.json, defaulting to use Node 14');
-        nodes.push(14);
+        console.warn('Unable to find task.json, defaulting to use Node 20');
+        nodes.push(20);
         return nodes;
     }
     var taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
@@ -1720,15 +1720,15 @@ var getTaskNodeVersion = function(buildPath, taskName) {
         if (!executor.startsWith('node')) continue;
         
         const version = executor.replace('node', '');
-        nodes.push(parseInt(version) || 6);
+        nodes.push(parseInt(version) || 20);
     }
 
     if (nodes.length) {
         return nodes;
     }
 
-    console.warn('Unable to determine execution type from task.json, defaulting to use Node 10');
-    nodes.push(10);
+    console.warn('Unable to determine execution type from task.json, defaulting to use Node 20');
+    nodes.push(20);
     return nodes;
 }
 exports.getTaskNodeVersion = getTaskNodeVersion;
@@ -1892,6 +1892,7 @@ var mergeBuildConfigIntoBaseTasks = function(buildConfig) {
 
                 // Copy generated task to base task, delete generated files
                 cp('-rf', generatedTaskPath + "/*", baseTaskPath);
+                cp('-rf', generatedTaskPath + "/.npmrc", baseTaskPath);
                 console.log(`Copied ${generatedTaskPath} to ${baseTaskPath}`);
                 rm("-rf", buildConfigTaskPath);
                 console.log(`Deleted ${buildConfigTaskPath} folder`);
@@ -1899,25 +1900,8 @@ var mergeBuildConfigIntoBaseTasks = function(buildConfig) {
                 console.log(`Deleted ${generatedTaskPath} folder`);
                 rm("-rf", generatedDefaultTaskPath);
                 console.log(`Deleted ${generatedDefaultTaskPath} folder`);
-
-                // Update versionmap.txt file
-                var versionmapFile = fs.readFileSync(versionmapFilePath, { encoding: 'utf-8' });
-                const lines = versionmapFile.split(/\r?\n/);
-                var buildConfigVersion = null;
-                for (let i = lines.length - 1; i >= 0; i--) {
-                    if (!lines[i]) continue;
-                    const [name, version] = lines[i].split('|');
-                    if (name.startsWith(surfixBuildConfig)) {
-                        buildConfigVersion = version;
-                        lines.splice(i, 1);
-                        i++;
-                    } else if (name === "Default" && buildConfigVersion != null) {
-                        lines[i] = `Default|${buildConfigVersion}`;
-                    }
-                }
-                const updatedContent = lines.join(os.EOL);
-                fs.writeFileSync(versionmapFilePath, updatedContent, { encoding: 'utf-8' });
-                console.log(`Updated ${versionmapFilePath} file`);
+                rm("-rf", versionmapFilePath);
+                console.log(`Deleted ${versionmapFilePath} file`);
 
                 // Remove _buildConfigMapping section in task.json and task-loc.json
                 var taskJsonPath = path.join(baseTaskPath, 'task.json');
