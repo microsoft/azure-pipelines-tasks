@@ -2,14 +2,14 @@ import { spawn, SpawnResult } from '../testexecutor';
 import tl = require('azure-pipelines-task-lib/task');
 import constants = require('../constants');
 
-export async function executepythontests(testsToBeExecuted: string[]) {
+export async function executePythonTests(testsToBeExecuted: string[]):Promise<number> {
     // Perform test discovery
     const discoveryArgs: string[] = ['--collect-only'];
     const discoveryResult = await runPytestCommand(discoveryArgs);
 
     if (discoveryResult.status !== 0) {
         tl.error("Error occurred during test discovery: " + (discoveryResult.error ? discoveryResult.error.message : "Unknown error"));
-        return { exitCode: 1 };
+        return 1;
     }
 
     // Extract discovered tests from stdout
@@ -20,7 +20,7 @@ export async function executepythontests(testsToBeExecuted: string[]) {
 
     if (testsToRun.length === 0) {
         tl.warning("No common tests found between specified tests and discovered tests.");
-        return { exitCode: 0 };
+        return 0;
     }
 
     console.log(`Found ${testsToRun.length} tests to run`);
@@ -34,10 +34,10 @@ export async function executepythontests(testsToBeExecuted: string[]) {
 
     if (error) {
         tl.error("Error executing pytest command: " + error.message);
-        return { exitCode: 1 };
+        return 1;
     }
 
-    return { exitCode: status ?? 1 };
+    return status ?? 1;
 }
 
 async function runPytestCommand(args: string[]): Promise<SpawnResult> {

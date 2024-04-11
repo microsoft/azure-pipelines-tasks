@@ -10,12 +10,21 @@ export async function run() {
 
     const testPlanInfo = await getTestPlanData();
 
+    let manualTestFlowReturnCode = 0;
+    let automatedTestFlowReturnCode = 0;
+
     // trigger manual, automated or both tests based on user's input
     if (testSelectorInput.includes('manualTests')) {
-        await manualTestsFlow(testPlanInfo);
+        manualTestFlowReturnCode = await manualTestsFlow(testPlanInfo);
+        tl.debug(`Execution Status Code for Manual Test Flow is ${manualTestFlowReturnCode}`);
     }
     if (testSelectorInput.includes('automatedTests')) {
-        await automatedTestsFlow(testPlanInfo, testSelectorInput);
+        automatedTestFlowReturnCode = await automatedTestsFlow(testPlanInfo, testSelectorInput);
+        tl.debug(`Execution Status Code for Automated Test Flow is ${automatedTestFlowReturnCode}`);
+    }
+
+    if( manualTestFlowReturnCode || automatedTestFlowReturnCode){
+        tl.setResult(tl.TaskResult.Failed, "Faced error in execution.");
     }
 }
 
