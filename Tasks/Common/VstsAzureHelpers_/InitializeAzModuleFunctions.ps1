@@ -26,18 +26,40 @@ function Initialize-AzModule {
         Write-Verbose "Importing Az Modules."
         
         if ($featureFlags.retireAzureRM) {
-            $azAccountsModuleName = "Az.Accounts"
-            $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName
-            Write-Verbose "'$azAccountsModuleName' is available with version $azAccountsVersion."
+            # Supress breaking changes messages
+            Set-Item -Path Env:\SuppressAzurePowerShellBreakingChangeWarnings -Value $true
+            $azureRMUninstalled = $false;
 
+            # If Az.Account already installed, remove RM modules
+            if (Get-Module -ListAvailable -Name Az.Accounts) {
+                Uninstall-AzureRMModules
+                $azureRMUninstalled = $true;
+            } else {
+                $azAccountsModuleName = "Az.Accounts"
+                $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName
+                Write-Verbose "'$azAccountsModuleName' is available with version $azAccountsVersion."
+            }
+
+            # Update-AzConfig is a part of Az.Accounts
             if (Get-Command Update-AzConfig -ErrorAction SilentlyContinue) {
-                Write-Verbose "Supressing breaking changes warnings of '$($azAccountsModuleName)' module."
-                Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo $azAccountsModuleName
+                Write-Verbose "Supressing breaking changes warnings of Az module."
+                Update-AzConfig -DisplayBreakingChangeWarning $false -CheckForUpgrade $false -AppliesTo Az
             } else {
                 Write-Verbose "Update-AzConfig cmdlet is not available."
             }
 
-            Uninstall-AzureRMModules -UseAzUninstall
+            if ($azureRMUninstalled -eq $false) {
+                Uninstall-AzureRMModules
+            }
+
+            # Enable-AzureRmAlias for azureRm compability
+            if (Get-Command Enable-AzureRmAlias -ErrorAction SilentlyContinue) {
+                Write-Verbose "Enable-AzureRmAlias for backward compability"
+                Write-Host "##[command]Enable-AzureRmAlias -Scope Process"
+                Enable-AzureRmAlias -Scope Process
+            } else {
+                Write-Verbose "Enable-AzureRmAlias cmdlet is not available."
+            }
 
             $azResourcesModuleName = "Az.Resources"
             $azResourcesVersion = Import-SpecificAzModule -moduleName $azResourcesModuleName
@@ -84,28 +106,27 @@ function Import-SpecificAzModule {
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
-        # Write-Verbose "Attempting to find the latest available version of module '$moduleName'."
-        # $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
-
-        # if ($module) {
-        #     Write-Verbose "Module '$moduleName' version $($module.Version) was found."
-        # }
-        # else {
-        #     Write-Verbose "Unable to find module '$moduleName' from the module path. Installing '$moduleName' module."
-
-        Write-Host "##[command]Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop"
-        Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop
-        # }
-
+        Write-Verbose "Attempting to find the latest available version of module '$moduleName'."
         $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+
+        if ($module) {
+            Write-Verbose "Module '$moduleName' version $($module.Version) was found."
+        }
+        else {
+            Write-Verbose "Unable to find module '$moduleName' from the module path. Installing '$moduleName' module."
+
+            Write-Host "##[command]Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop"
+            Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop
+            $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+        }
 
         if (-not $module) {
             Write-Warning "Unable to install '$moduleName'."
             throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $moduleName)
         }
 
-        Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
-        $module = (Import-Module -Name $moduleName -Global -PassThru -Force | Sort-Object Version -Descending | Select-Object -First 1)[0]
+        Write-Host "##[command]Import-Module -Name $($module.Path) -DisableNameChecking -Global -PassThru -Force"
+        $module = (Import-Module -Name $moduleName -DisableNameChecking -Global -PassThru -Force | Sort-Object Version -Descending | Select-Object -First 1)[0]
         Write-Host("Imported module '$moduleName', version: $($module.Version)")
 
         return $module.Version
@@ -166,47 +187,27 @@ function Import-AzAccountsModule {
 }
 
 function Uninstall-AzureRMModules {
-    [CmdletBinding()]
-    param([switch] $UseAzUninstall)
+    [CmdletBinding()]Param()
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         Write-Verbose "Uninstalling AzureRM modules."
 
-        if ($UseAzUninstall -and (Get-Module -ListAvailable -Name Az.Accounts)) {
+        if (Get-Module -ListAvailable -Name Az.Accounts) {
             Write-Host "##[command]Uninstall-AzureRm"
             Uninstall-AzureRm
-        }
-        else {
+
+            Write-Verbose "Making sure all AzureRM modules are gone after the uninstall."
+
             $azureRmModules = Get-Module -ListAvailable -Name AzureRM.* | Select-Object Name,Version
-            if ($azureRmModules -and $azureRmModules.Count -gt 0) {
+            if ($azureRmModules) {
                 Foreach ($azureRmModule in $azureRmModules) {
-                    $azureRmModuleName = $azureRmModule.Name
-                    Write-Verbose "Uninstalling module: $azureRmModuleName"
-                    try {
-                        Write-Host "##[command]Uninstall-Module -Name $azureRmModuleName -AllVersions -Force"
-                        Uninstall-Module -Name $azureRmModuleName -AllVersions -Force
-                    }
-                    catch {
-                        Write-Verbose "Failed to uninstall module: $azureRmModuleName"
-                    }
+                    Write-Verbose "'$($azureRmModule)' AzureRM module found."
                 }
             }
             else {
-                Write-Host "No AzureRM modules found to uninstall."
+                Write-Verbose "No AzureRM modules found."
             }
-        }
-
-        Write-Verbose "Making sure all AzureRM modules are gone after the uninstall."
-
-        $azureRmModules = Get-Module -ListAvailable -Name AzureRM.* | Select-Object Name,Version
-        if ($azureRmModules) {
-            Foreach ($azureRmModule in $azureRmModules) {
-                Write-Verbose "'$($azureRmModule)' AzureRM module found."
-            }
-        }
-        else {
-            Write-Verbose "No AzureRM modules found."
         }
     }
     finally {
