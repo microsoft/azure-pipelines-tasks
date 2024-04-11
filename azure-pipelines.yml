@@ -58,6 +58,7 @@ variables:
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
+    enableComponentGovernanceScan: true
     settings:
       skipBuildTagsForGitHubPullRequests: true
     featureFlags:
