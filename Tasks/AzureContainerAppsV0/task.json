@@ -1,25 +1,42 @@
 {
-    "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
-    "id": "cad8dd6a-de28-4d89-a7db-1bc20a2fbb2d",
-    "name": "AzureContainerApps",
-    "friendlyName": "Azure Container Apps Deploy",
-    "description": "An Azure DevOps Task to build and deploy Azure Container Apps.",
-    "author": "Microsoft Corporation",
-    "helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureContainerAppsV0/README.md)",
-    "releaseNotes": "Released new AzureContainerApps task for building and deploying Azure Container Apps.",
-    "category": "Deploy",
-    "visibility": [
-        "Build",
-        "Release"
-    ],
-    "runsOn": [
-        "Agent",
-        "DeploymentGroup"
-    ],
-    "version": {
-        "Major": 0,
-        "Minor": 238,
-        "Patch": 0
+  "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+  "id": "cad8dd6a-de28-4d89-a7db-1bc20a2fbb2d",
+  "name": "AzureContainerApps",
+  "friendlyName": "Azure Container Apps Deploy",
+  "description": "An Azure DevOps Task to build and deploy Azure Container Apps.",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureContainerAppsV0/README.md)",
+  "releaseNotes": "Released new AzureContainerApps task for building and deploying Azure Container Apps.",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "version": {
+    "Major": 0,
+    "Minor": 238,
+    "Patch": 1
+  },
+  "preview": true,
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "Azure Container Apps Deploy",
+  "showEnvironmentVariables": false,
+  "inputs": [
+    {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
+      "type": "filePath",
+      "label": "Working Directory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Current working directory where the script is run.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
+      "groupName": "advanced"
     },
     {
       "name": "appSourcePath",
