@@ -8,7 +8,7 @@ steps:
 - task: NodeTool@0
   displayName: Use node 20
   inputs:
-    versionSpec: 20.11.0
+    versionSpec: 20.3.1
 
 # Use NuGet 4
 - task: NuGetToolInstaller@0
