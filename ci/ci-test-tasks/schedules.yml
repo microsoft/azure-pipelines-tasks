@@ -35,9 +35,9 @@ jobs:
     vmImage: ubuntu-latest
   steps:
   - task: NodeTool@0
-    displayName: Use Node 20.x
+    displayName: Use Node 20
     inputs:
-      versionSpec: 20.x
+      versionSpec: 20.3.1
 
   - script: |
       cd ./ci/ci-test-tasks/test-and-verify-v2
