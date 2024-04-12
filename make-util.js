@@ -8,7 +8,7 @@ var path = require('path');
 var process = require('process');
 var semver = require('semver');
 var shell = require('shelljs');
-var syncRequest = require('sync-request');
+const Downloader = require("nodejs-file-downloader");
 
 // global paths
 var repoPath = __dirname;
@@ -330,7 +330,7 @@ var ensureTool = function (name, versionArgs, validate) {
 }
 exports.ensureTool = ensureTool;
 
-var installNode = function (nodeVersion) {
+var installNodeAsync = async function (nodeVersion) {
     const versions = {
         20: 'v20.11.0',
         16: 'v16.17.1',
@@ -363,19 +363,19 @@ var installNode = function (nodeVersion) {
     var nodeUrl = 'https://nodejs.org/dist';
     switch (platform) {
         case 'darwin':
-            var nodeArchivePath = downloadArchive(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-darwin-x64.tar.gz');
+            var nodeArchivePath = await downloadArchiveAsync(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-darwin-x64.tar.gz');
             addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-darwin-x64', 'bin'));
             break;
         case 'linux':
-            var nodeArchivePath = downloadArchive(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-linux-x64.tar.gz');
+            var nodeArchivePath = await downloadArchiveAsync(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-linux-x64.tar.gz');
             addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-linux-x64', 'bin'));
             break;
         case 'win32':
             var nodeDirectory = path.join(downloadPath, `node-${nodeVersion}`);
             var marker = nodeDirectory + '.completed';
             if (!test('-f', marker)) {
-                var nodeExePath = downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.exe');
-                var nodeLibPath = downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.lib');
+                var nodeExePath = await downloadFileAsync(nodeUrl + '/' + nodeVersion + '/win-x64/node.exe');
+                var nodeLibPath = await downloadFileAsync(nodeUrl + '/' + nodeVersion + '/win-x64/node.lib');
                 rm('-Rf', nodeDirectory);
                 mkdir('-p', nodeDirectory);
                 cp(nodeExePath, path.join(nodeDirectory, 'node.exe'));
@@ -387,44 +387,47 @@ var installNode = function (nodeVersion) {
             break;
     }
 }
-exports.installNode = installNode;
+exports.installNodeAsync = installNodeAsync;
 
-var downloadFile = function (url) {
+var downloadFileAsync = async function (url) {
     // validate parameters
     if (!url) {
         throw new Error('Parameter "url" must be set.');
     }
 
     // skip if already downloaded
-    var scrubbedUrl = url.replace(/[/\:?]/g, '_');
-    var targetPath = path.join(downloadPath, 'file', scrubbedUrl);
-    var marker = targetPath + '.completed';
-    if (!test('-f', marker)) {
-        console.log('Downloading file: ' + url);
-
-        // delete any previous partial attempt
-        if (test('-f', targetPath)) {
-            rm('-f', targetPath);
-        }
-
-        // download the file
-        mkdir('-p', path.join(downloadPath, 'file'));
-        var result = syncRequest('GET', url, {
-            retry: true,
-            retryDelay: 5000,
-            maxRetries: 3
-        });
-        fs.writeFileSync(targetPath, result.getBody());
-
-        // write the completed marker
-        fs.writeFileSync(marker, '');
+    const scrubbedUrl = url.replace(/[/\:?]/g, '_');
+    const targetPath = path.join(downloadPath, 'file', scrubbedUrl);
+    const marker = targetPath + '.completed';
+    if (test('-f', marker)) {
+        console.log('File already exists: ' + targetPath);
+        return targetPath;
     }
 
-    return targetPath;
-}
-exports.downloadFile = downloadFile;
+    console.log('Downloading file: ' + url);
+    // delete any previous partial attempt
+    if (test('-f', targetPath)) {
+        rm('-f', targetPath);
+    }
 
-var downloadArchive = function (url, omitExtensionCheck) {
+    // download the file
+    mkdir('-p', path.join(downloadPath, 'file'));
+
+    const downloader = new Downloader({
+        url: url,
+        directory: path.join(downloadPath, 'file'),
+        fileName: scrubbedUrl
+    });
+
+
+    const { filePath } = await downloader.download(); // Downloader.download() resolves with some useful properties.
+    fs.writeFileSync(marker, '');
+
+    return filePath;
+}
+exports.downloadFileAsync = downloadFileAsync;
+
+var downloadArchiveAsync = async function (url, omitExtensionCheck) {
     // validate parameters
     if (!url) {
         throw new Error('Parameter "url" must be set.');
@@ -457,7 +460,7 @@ var downloadArchive = function (url, omitExtensionCheck) {
     var marker = targetPath + '.completed';
     if (!test('-f', marker)) {
         // download the archive
-        var archivePath = downloadFile(url);
+        var archivePath = await downloadFileAsync(url);
         console.log('Extracting archive: ' + url);
 
         // delete any previously attempted extraction directory
@@ -495,7 +498,7 @@ var downloadArchive = function (url, omitExtensionCheck) {
 
     return targetPath;
 }
-exports.downloadArchive = downloadArchive;
+exports.downloadArchiveAsync = downloadArchiveAsync;
 
 var copyGroup = function (group, sourceRoot, destRoot) {
     // example structure to copy a single file:
@@ -657,31 +660,31 @@ var addPath = function (directory) {
 }
 exports.addPath = addPath;
 
-var getExternals = function (externals, destRoot) {
+var getExternalsAsync = async function (externals, destRoot) {
     assert(externals, 'externals');
     assert(destRoot, 'destRoot');
 
     // .zip files
     if (externals.hasOwnProperty('archivePackages')) {
         var archivePackages = externals.archivePackages;
-        archivePackages.forEach(function (archive) {
+        for (const archive of archivePackages) {
             assert(archive.url, 'archive.url');
             assert(archive.dest, 'archive.dest');
 
             // download and extract the archive package
-            var archiveSource = downloadArchive(archive.url);
+            var archiveSource = await downloadArchiveAsync(archive.url);
 
             // copy the files
             var archiveDest = path.join(destRoot, archive.dest);
             mkdir('-p', archiveDest);
             cp('-R', path.join(archiveSource, '*'), archiveDest);
-        });
+        }
     }
 
     // external NuGet V2 packages
     if (externals.hasOwnProperty('nugetv2')) {
         var nugetPackages = externals.nugetv2;
-        nugetPackages.forEach(function (package) {
+        for (const package of nugetPackages) {
             // validate the structure of the data
             assert(package.name, 'package.name');
             assert(package.version, 'package.version');
@@ -691,30 +694,30 @@ var getExternals = function (externals, destRoot) {
 
             // download and extract the NuGet V2 package
             var url = package.repository.replace(/\/$/, '') + '/package/' + package.name + '/' + package.version;
-            var packageSource = downloadArchive(url, /*omitExtensionCheck*/true);
+            var packageSource = await downloadArchiveAsync(url, /*omitExtensionCheck*/true);
 
             // copy specific files
             copyGroups(package.cp, packageSource, destRoot);
-        });
+        }
     }
 
     // for any file type that has to be shipped with task
     if (externals.hasOwnProperty('files')) {
         var files = externals.files;
-        files.forEach(function (file) {
+        for (const file of files) {
             assert(file.url, 'file.url');
             assert(file.dest, 'file.dest');
 
             // download the file from url
-            var fileSource = downloadFile(file.url);
+            var fileSource = await downloadFileAsync(file.url);
             // copy the files
             var fileDest = path.join(destRoot, file.dest);
             mkdir('-p', path.dirname(fileDest));
             cp(fileSource, fileDest);
-        });
+        }
     }
 }
-exports.getExternals = getExternals;
+exports.getExternalsAsync = getExternalsAsync;
 
 //------------------------------------------------------------------------------
 // task.json functions
@@ -1953,8 +1956,8 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, callGenTa
     // If the task is building on the ci, we don't want to sync files
     if (callGenTaskDuringBuild === false) return originalFunction;
 
-    return function(taskName, ...args) {
-        originalFunction.apply(this, [taskName, ...args]);
+    return async function(taskName, ...args) {
+        await originalFunction.apply(this, [taskName, ...args]);
 
         const genTaskPath = path.join(basicGenTaskPath, taskName);
 

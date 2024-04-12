@@ -28,7 +28,7 @@ var matchFind = util.matchFind;
 var matchCopy = util.matchCopy;
 var ensureTool = util.ensureTool;
 var assert = util.assert;
-var getExternals = util.getExternals;
+var getExternalsAsync = util.getExternalsAsync;
 var createResjson = util.createResjson;
 var createTaskLocJson = util.createTaskLocJson;
 var validateTask = util.validateTask;
@@ -180,17 +180,17 @@ CLI.gendocs = function() {
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
 //
-CLI.build = function(/** @type {{ task: string }} */ argv) 
+CLI.build = async function(/** @type {{ task: string }} */ argv) 
 {
     if (process.env.TF_BUILD) {
         fail('Please use serverBuild for CI builds for proper validation');
     }
 
     writeUpdatedsFromGenTasks = true;
-    CLI.serverBuild(argv);
+    await CLI.serverBuild(argv);
 }
 
-CLI.serverBuild = function(/** @type {{ task: string }} */ argv) {
+CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     ensureBuildTasksAndRemoveTestPath();
     ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('npm', '--version', function (output) {
@@ -207,7 +207,7 @@ CLI.serverBuild = function(/** @type {{ task: string }} */ argv) {
     const allTasks = getTaskList(taskList);
 
     // Wrap build function  to store files that changes after the build 
-    const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTask, genTaskPath, writeUpdatedsFromGenTasks);
+    const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTaskAsync, genTaskPath, writeUpdatedsFromGenTasks);
     const allTasksNode20 = allTasks.filter((taskName) => {
         return getNodeVersion(taskName) == 20;
     });
@@ -216,15 +216,18 @@ CLI.serverBuild = function(/** @type {{ task: string }} */ argv) {
     });
 
     if (allTasksNode20.length > 0) {
-        util.installNode('20');
+        await util.installNodeAsync('20');
         ensureTool('node', '--version', `v${node20Version}`);
-        allTasksNode20.forEach(taskName => buildTaskWrapped(taskName, allTasksNode20.length, 20));
-
+        for (const taskName of allTasksNode20) {
+            await buildTaskWrapped(taskName, allTasksNode20.length, 20);
+        }
     } 
     if (allTasksDefault.length > 0) {
-        util.installNode('10');
+       await util.installNodeAsync('10');
         ensureTool('node', '--version', `v${node10Version}`);
-        allTasksDefault.forEach(taskName => buildTaskWrapped(taskName, allTasksDefault.length, 10));
+        for (const taskName of allTasksDefault) {
+            await buildTaskWrapped(taskName, allTasksNode20.length, 10);
+        }
     }
 
     // Remove Commons from _generated folder as it is not required
@@ -263,7 +266,7 @@ function getNodeVersion (taskName) {
     }
 }
 
-function buildTask(taskName, taskListLength, nodeVersion) {
+async function buildTaskAsync(taskName, taskListLength, nodeVersion) {
     let isGeneratedTask = false;
     banner(`Building task ${taskName} using Node.js ${nodeVersion}`);
     const removeNodeModules = taskListLength > 1;
@@ -315,7 +318,7 @@ function buildTask(taskName, taskListLength, nodeVersion) {
     if (taskMake.hasOwnProperty('externals')) {
         console.log('');
         console.log('> getting task externals');
-        getExternals(taskMake.externals, outDir);
+        await getExternalsAsync(taskMake.externals, outDir);
     }
 
     //--------------------------------
@@ -325,7 +328,7 @@ function buildTask(taskName, taskListLength, nodeVersion) {
     if (taskMake.hasOwnProperty('common')) {
         var common = taskMake['common'];
 
-        common.forEach(function(mod) {
+        for (const mod of common) {
             var modPath = path.join(taskPath, mod['module']);
             var modName = path.basename(modPath);
             var modOutDir = path.join(buildTasksCommonPath, modName);
@@ -362,7 +365,7 @@ function buildTask(taskName, taskListLength, nodeVersion) {
                 if (modMake.hasOwnProperty('externals')) {
                     console.log('');
                     console.log('> getting module externals');
-                    getExternals(modMake.externals, modOutDir);
+                    await getExternalsAsync(modMake.externals, modOutDir);
                 }
 
                 if (mod.type === 'node' && mod.compile == true || test('-f', path.join(modPath, 'package.json'))) {
@@ -396,7 +399,7 @@ function buildTask(taskName, taskListLength, nodeVersion) {
 
                 matchCopy('!Tests', modOutDir, dest, { noRecurse: true, matchBase: true });
             }
-        });
+        }
 
         // npm install the common modules to the task dir
         if (commonPacks.length) {
@@ -474,7 +477,7 @@ function buildTask(taskName, taskListLength, nodeVersion) {
 // node make.js test
 // node make.js test --task ShellScript --suite L0
 //
-CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
+CLI.test = async function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
     var minIstanbulVersion = '20';
     ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('mocha', '--version', '6.2.3');
@@ -490,7 +493,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
     matchCopy(path.join('**', '@(*.ps1|*.psm1)'), path.join(testsPath, 'lib'), path.join(buildTestsPath, 'lib'));
 
     var suiteType = argv.suite || 'L0';
-    function runTaskTests(taskName) {
+    async function runTaskTests(taskName) {
         banner('Testing: ' + taskName);
         // find the tests
         var nodeVersions = argv.node ? new Array(argv.node) : [Math.max(...getTaskNodeVersion(buildTasksPath, taskName))];
@@ -514,12 +517,12 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
             return;
         }
 
-        nodeVersions.forEach(function (nodeVersion) {
+        for (let nodeVersion of nodeVersions) {
             try {
                 nodeVersion = String(nodeVersion);
                 banner('Run Mocha Suits for node ' + nodeVersion);
                 // setup the version of node to run the tests
-                util.installNode(nodeVersion);
+                await util.installNodeAsync(nodeVersion);
 
 
                 if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
@@ -534,18 +537,18 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
                 console.error(e);
                 process.exit(1);
             }
-        });
+        }
     }
 
     // Run tests for each task that exists
     const allTasks = getTaskList(taskList);
 
-    allTasks.forEach(function(taskName) {
+    for (const taskName of allTasks) {
         var taskPath = path.join(buildTasksPath, taskName);
         if (fs.existsSync(taskPath)) {
-            runTaskTests(taskName);
+            await runTaskTests(taskName);
         }
-    });
+    };
 
     if (!argv.task) {
         banner('Running common library tests');
@@ -556,7 +559,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
         }
         if (specs.length > 0) {
             // setup the version of node to run the tests
-            util.installNode(argv.node);
+            await util.installNodeAsync(argv.node);
             run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
         } else {
             console.warn("No common library tests found");
@@ -569,7 +572,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
     var specs = matchFind(commonPattern, buildTestsPath, { noRecurse: true });
     if (specs.length > 0) {
         // setup the version of node to run the tests
-        util.installNode(argv.node);
+        await util.installNodeAsync(argv.node);
         run('mocha ' + specs.join(' '), /*inheritStreams:*/true);
     } else {
         console.warn("No common tests found");
@@ -578,7 +581,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
     try {
         // Installing node version 10 to run code coverage report, since common library tests run under node 6,
         // which is incompatible with nyc
-        util.installNode(minIstanbulVersion);
+        await util.installNodeAsync(minIstanbulVersion);
         util.rm(path.join(coverageTasksPath, '*coverage-summary.json'));
         util.run(`nyc merge ${coverageTasksPath} ${path.join(coverageTasksPath, 'mergedcoverage.json')}`, true);
         util.rm(path.join(coverageTasksPath, '*-coverage.json'));
@@ -594,7 +597,7 @@ CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */
 // node make.js testLegacy --suite L0/XCode
 //
 
-CLI.testLegacy = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
+CLI.testLegacy = async function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
     ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('mocha', '--version', '6.2.3');
 
@@ -679,7 +682,7 @@ CLI.testLegacy = function(/** @type {{ suite: string; node: string; task: string
     }
 
     // setup the version of node to run the tests
-    util.installNode(argv.node);
+    await util.installNodeAsync(argv.node);
 
     // mocha doesn't always return a non-zero exit code on test failure. when only
     // a single suite fails during a run that contains multiple suites, mocha does
