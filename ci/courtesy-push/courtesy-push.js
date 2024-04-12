@@ -5,7 +5,7 @@ const xml2js = require('xml2js');
 const azureSourceFolder = process.argv[2];
 const newDeps = process.argv[3];
 const unifiedDepsPath = path.join(azureSourceFolder, '.nuget', 'externals', 'UnifiedDependencies.xml');
-const tfsServerPath = path.join(azureSourceFolder, 'Tfs', 'Service', 'Deploy', 'components', 'TfsServer.Servicing.core.xml');
+const tfsServerPath = path.join(azureSourceFolder, 'Tfs', 'Service', 'Deploy', 'components', 'TfsServer.hosted.xml');
 const msPrefix = 'Mseng.MS.TF.DistributedTask.Tasks.';
 
 /**
