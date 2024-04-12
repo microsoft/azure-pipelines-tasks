@@ -85,7 +85,16 @@ async function getDeps(depArr) {
 
         if (!configs.length) continue;
 
+        
+        deps[dep].configs = [];
         configs.forEach(config => {
+            const configDep = deps[config];
+            deps[dep].configs.push({
+                name: configDep.name,
+                version: configDep.version,
+                depStr: configDep.depStr
+            });
+
             delete deps[config];
         });
     }
