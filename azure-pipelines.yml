@@ -65,11 +65,11 @@ extends:
     sdl:
       sbom:
         enabled: false
-        ${{ if eq (parameters.enableCodeQL, true) }}:
-      codeql:
-        compiled:
-          enabled: ${{ variables.runCodeQl }}
-          justificationForDisabling: 'Disabling to not scan AzureDevOpsRepo'
+      ${{ eq(parameters.enableCodeQL, true) }}:
+        codeql:
+          compiled:
+            enabled: ${{ variables.runCodeQl }}
+            justificationForDisabling: 'Disabling to not scan AzureDevOpsRepo'
       baseline:
         baselineSet: default
         baselineFile: $(Build.SourcesDirectory)/.gdn/.gdnbaselines
