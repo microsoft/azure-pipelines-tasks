@@ -10,6 +10,7 @@ import { NuGetConfigHelper2 } from 'azure-pipelines-tasks-packaging-common/nuget
 import * as ngRunner from 'azure-pipelines-tasks-packaging-common/nuget/NuGetToolRunner2';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import { getProjectAndFeedIdFromInputParam, logError } from 'azure-pipelines-tasks-packaging-common/util';
+import { WebRequest, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
 
 interface EndpointCredentials {
     endpoint: string;
@@ -73,7 +74,7 @@ export async function run(): Promise<void> {
         // Setting up auth info
         let accessToken;
         const isInternalFeed: boolean = nugetFeedType === 'internal';
-        accessToken = getAccessToken(isInternalFeed, urlPrefixes);
+        accessToken = await getAccessToken(isInternalFeed, urlPrefixes);
         const internalAuthInfo = new auth.InternalAuthInfo(urlPrefixes, accessToken, /*useCredProvider*/ null, true);
 
         let configFile = null;
@@ -190,7 +191,7 @@ function dotNetNuGetPushAsync(dotnetPath: string, packageFile: string, feedUri: 
     return dotnet.exec({ cwd: workingDirectory, env: envWithProxy } as IExecOptions);
 }
 
-function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): string {
+async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): Promise<string> {
     let accessToken: string;
     let allowServiceConnection = tl.getVariable('PUBLISH_VIA_SERVICE_CONNECTION');
 
