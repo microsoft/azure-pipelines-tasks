@@ -190,19 +190,18 @@ function dotNetNuGetPushAsync(dotnetPath: string, packageFile: string, feedUri: 
     return dotnet.exec({ cwd: workingDirectory, env: envWithProxy } as IExecOptions);
 }
 
-function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): string{
+function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): string {
     let accessToken: string;
     let allowServiceConnection = tl.getVariable('PUBLISH_VIA_SERVICE_CONNECTION');
 
-    if(allowServiceConnection) {
+    if (allowServiceConnection) {
         let endpoint = tl.getInput('externalEndpoint', false);
 
-        if(endpoint && isInternalFeed === true) {
+        if (endpoint && isInternalFeed === true) {
             tl.debug("Found external endpoint, will use token for auth");
             let endpointAuth = tl.getEndpointAuthorization(endpoint, true);
             let endpointScheme = tl.getEndpointAuthorizationScheme(endpoint, true).toLowerCase();
-            switch(endpointScheme)
-            {
+            switch (endpointScheme) {
                 case ("token"):
                     accessToken = endpointAuth.parameters["apitoken"];
                     break;
@@ -211,9 +210,8 @@ function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): string{
                     break;
             }
         }
-        if(!accessToken && isInternalFeed === true)
-        {
-            tl.debug("Checking for auth from Cred Provider."); 
+        if (!accessToken && isInternalFeed === true) {
+            tl.debug("Checking for auth from Cred Provider.");
             const feed = getProjectAndFeedIdFromInputParam('feedPublish');
             const JsonEndpointsString = process.env["VSS_NUGET_EXTERNAL_FEED_ENDPOINTS"];
 
@@ -240,21 +238,17 @@ function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): string{
                 }
             }
         }
-        if(!accessToken)
-        {
-            tl.debug('Defaulting to use the System Access Token.');
-            accessToken = pkgLocationUtils.getSystemAccessToken();
+        if (accessToken) {
+            return accessToken;
         }
     }
-    else {
-        accessToken = pkgLocationUtils.getSystemAccessToken();
-    }
+    tl.debug('Defaulting to use the System Access Token.');
+    accessToken = pkgLocationUtils.getSystemAccessToken();
 
     return accessToken;
 }
 
-async function tryServiceConnection(endpoint: EndpointCredentials, feed: any) : Promise<boolean>
-{
+async function tryServiceConnection(endpoint: EndpointCredentials, feed: any): Promise<boolean> {
     // Create request
     const request = new WebRequest();
     const token64 = Buffer.from(`${endpoint.username}:${endpoint.password}`).toString('base64');
@@ -267,16 +261,14 @@ async function tryServiceConnection(endpoint: EndpointCredentials, feed: any) : 
 
     const response = await sendRequest(request);
 
-    if(response.statusCode == 200) { 
-        if(response.body) {
+    if (response.statusCode == 200) {
+        if (response.body) {
             for (const entry of response.body.resources) {
-                if (entry['@type'] === 'AzureDevOpsProjectId' && !(entry['label'].toUpperCase() === feed.projectId.toUpperCase() || entry['@id'].toUpperCase().endsWith(feed.projectId.toUpperCase())))
-                {
+                if (entry['@type'] === 'AzureDevOpsProjectId' && !(entry['label'].toUpperCase() === feed.projectId.toUpperCase() || entry['@id'].toUpperCase().endsWith(feed.projectId.toUpperCase()))) {
                     tl.debug('throwing on project');
                     return false;
                 }
-                if (entry['@type'] === 'VssFeedId' && !(entry['label'].toUpperCase() !== feed.feedId.toUpperCase() || entry['@id'].toUpperCase().endsWith(feed.feedId.toUpperCase())) )
-                {
+                if (entry['@type'] === 'VssFeedId' && !(entry['label'].toUpperCase() !== feed.feedId.toUpperCase() || entry['@id'].toUpperCase().endsWith(feed.feedId.toUpperCase()))) {
                     tl.debug('throwing on feed');
                     return false;
                 }
