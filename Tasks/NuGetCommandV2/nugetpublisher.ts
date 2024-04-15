@@ -496,12 +496,10 @@ async function tryServiceConnection(endpoint: EndpointCredentials, feed: any) : 
     if(response.statusCode == 200) { 
         if(response.body) {
             for (const entry of response.body.resources) {
-                if (entry['@type'] === 'AzureDevOpsProjectId' && entry['label'].toUpperCase() !== feed.projectId.toUpperCase()) 
-                {
+                if (entry['@type'] === 'AzureDevOpsProjectId' && !(entry['label'].toUpperCase() === feed.projectId.toUpperCase() || entry['@id'].toUpperCase().endsWith(feed.projectId.toUpperCase()))) {
                     return false;
                 }
-                if (entry['@type'] === 'VssFeedId' &&  entry['label'].toUpperCase() !== feed.feedId.toUpperCase())
-                {
+                if (entry['@type'] === 'VssFeedId' && !(entry['label'].toUpperCase() === feed.feedId.toUpperCase() || entry['@id'].toUpperCase().endsWith(feed.feedId.toUpperCase()))) {
                     return false;
                 }
             }
