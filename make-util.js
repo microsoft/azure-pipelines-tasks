@@ -371,19 +371,8 @@ var installNodeAsync = async function (nodeVersion) {
             addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-linux-x64', 'bin'));
             break;
         case 'win32':
-            var nodeDirectory = path.join(downloadPath, `node-${nodeVersion}`);
-            var marker = nodeDirectory + '.completed';
-            if (!test('-f', marker)) {
-                var nodeExePath = await downloadFileAsync(nodeUrl + '/' + nodeVersion + '/win-x64/node.exe');
-                var nodeLibPath = await downloadFileAsync(nodeUrl + '/' + nodeVersion + '/win-x64/node.lib');
-                rm('-Rf', nodeDirectory);
-                mkdir('-p', nodeDirectory);
-                cp(nodeExePath, path.join(nodeDirectory, 'node.exe'));
-                cp(nodeLibPath, path.join(nodeDirectory, 'node.lib'));
-                fs.writeFileSync(marker, '');
-            }
-
-            addPath(nodeDirectory);
+            var nodeArchivePath = await downloadArchiveAsync(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-win-x64.zip');
+            addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-linux-x64', 'bin'));
             break;
     }
 }
