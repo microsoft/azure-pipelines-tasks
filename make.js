@@ -61,7 +61,7 @@ var genTaskCommonPath = path.join(__dirname, '_generated', 'Common');
 var CLI = {};
 
 // node min version
-var minNodeVer = '6.10.3';
+var minNodeVer = '10.24.1';
 if (semver.lt(process.versions.node, minNodeVer)) {
     fail('requires node >= ' + minNodeVer + '.  installed: ' + process.versions.node);
 }
@@ -69,7 +69,7 @@ if (semver.lt(process.versions.node, minNodeVer)) {
 // Node 14 is supported by the build system, but not currently by the agent. Block it for now
 var supportedNodeTargets = ["Node", "Node10"/*, "Node14"*/];
 var node10Version = '10.24.1';
-var node20Version = '20.3.1';
+var node20Version = '20.11.0';
 
 // add node modules .bin to the path so we can dictate version of tsc etc...
 if (!test('-d', binPath)) {
@@ -244,8 +244,8 @@ function getNodeVersion (taskName) {
     } else {
         packageJsonPath = path.join(tasksPath, taskName, "package.json");
         if (!fs.existsSync(packageJsonPath)) {
-            console.error(`Unable to find package.json file for ${taskName} in _generated folder or Tasks folder, using default node 10.`);
-            return 10;
+            console.error(`Unable to find package.json file for ${taskName} in _generated folder or Tasks folder, using default node 20.`);
+            return 20;
         }
         console.log(`Found package.json for ${taskName} in Tasks folder ${packageJsonPath}`)
     }
@@ -258,8 +258,8 @@ function getNodeVersion (taskName) {
         console.log(`Node verion from @types/node in package.json is ${nodeVersion} returning ${nodeVersion.split('.')[0]}`);
         return nodeVersion.split('.')[0];
     } else {
-        console.log("Node version not found in dependencies, using default node 10.");
-        return 10;
+        console.log("Node version not found in dependencies, using default node 20.");
+        return 20;
     }
 }
 
@@ -475,7 +475,7 @@ function buildTask(taskName, taskListLength, nodeVersion) {
 // node make.js test --task ShellScript --suite L0
 //
 CLI.test = function(/** @type {{ suite: string; node: string; task: string }} */ argv) {
-    var minIstanbulVersion = '10';
+    var minIstanbulVersion = '20';
     ensureTool('tsc', '--version', 'Version 4.0.2');
     ensureTool('mocha', '--version', '6.2.3');
 
