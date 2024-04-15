@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 238,
-    "Patch": 3
+    "Patch": 1
   },
   "preview": "true",
   "releaseNotes": "More optimized task fields that allow users to enable any/all of the transformation (XML), variable substitution (JSON and XML) features in a single task instance.</br>Task fails when any of the configured transformation/substitution is NOT applied or when the task is no-op.",
@@ -114,7 +114,7 @@
     "FileTranformationNotEnabled": "File Tranformation is not enabled. Please provide one of the following : XML Tranformation rules or JSON/XML target files for variable substitution."
   },
   "_buildConfigMapping": {
-    "Default": "2.238.2",
-    "Node20_229_3": "2.238.3"
+    "Default": "2.238.0",
+    "Node20_229_3": "2.238.1"
   }
 }

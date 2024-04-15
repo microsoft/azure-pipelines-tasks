@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 238,
-    "Patch": 3
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -113,7 +113,7 @@
     "NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region."
   },
   "_buildConfigMapping": {
-    "Default": "1.238.2",
-    "Node20_229_3": "1.238.3"
+    "Default": "1.238.0",
+    "Node20_229_3": "1.238.1"
   }
 }

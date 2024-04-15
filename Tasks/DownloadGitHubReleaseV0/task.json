@@ -11,7 +11,7 @@
     "version": {
         "Major": 0,
         "Minor": 238,
-        "Patch": 2
+        "Patch": 0
     },
     "minimumAgentVersion": "2.144.0",
     "instanceNameFormat": "Download GitHub Release",
