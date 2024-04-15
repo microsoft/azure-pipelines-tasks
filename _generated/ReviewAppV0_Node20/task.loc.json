@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
-    "Patch": 2
+    "Minor": 238,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "inputs": [
@@ -63,7 +63,7 @@
     "CreatedDynamicResource": "ms-resource:loc.messages.CreatedDynamicResource"
   },
   "_buildConfigMapping": {
-    "Default": "0.231.1",
-    "Node20_229_12": "0.231.2"
+    "Default": "0.238.0",
+    "Node20_229_12": "0.238.1"
   }
 }

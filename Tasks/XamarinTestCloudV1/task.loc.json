@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 235,
+    "Minor": 238,
     "Patch": 2
   },
   "demands": [],
@@ -195,6 +195,10 @@
       "platforms": [
         "windows"
       ]
+    },
+    "Node20_1": {
+      "target": "xamarintestcloud.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

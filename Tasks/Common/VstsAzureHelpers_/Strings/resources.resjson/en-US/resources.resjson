@@ -13,5 +13,6 @@
   "loc.messages.AZ_InvalidARMEndpoint": "Specified AzureRM endpoint is invalid.",
   "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Could not fetch access token for Managed Identity. Please configure Managed Identity for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: '{0}', Error message: {1}",
   "loc.messages.AZ_MsiAccessTokenFetchFailure": "Could not fetch access token for Managed Identity. Status code: '{0}', Error message: {1}",
-  "loc.messages.AZ_MsiFailure": "Could not fetch access token for Managed Identity. {0}"
+  "loc.messages.AZ_MsiFailure": "Could not fetch access token for Managed Identity. {0}",
+  "loc.messages.AZ_ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at {0} See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
 }
