@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 238,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [
     "sqlpackage"
@@ -64,7 +64,7 @@
       "type": "connectedService:Azure",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
     },
@@ -89,6 +89,7 @@
       "defaultValue": "server",
       "options": {
         "server": "SQL Server Authentication",
+        "windows": "Windows Authentication",
         "aadAuthenticationPassword": "Active Directory - Password",
         "aadAuthenticationIntegrated": "Active Directory - Integrated",
         "connectionString": "Connection String",
@@ -103,7 +104,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated || AuthenticationType = servicePrincipal",
+      "visibleRule": "AuthenticationType = server || AutenticationType = windows || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated || AuthenticationType = servicePrincipal",
       "helpMarkDown": "ms-resource:loc.input.help.ServerName"
     },
     {
@@ -113,7 +114,7 @@
       "required": true,
       "groupName": "target",
       "defaultValue": "",
-      "visibleRule": "AuthenticationType = server || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated || AuthenticationType = servicePrincipal",
+      "visibleRule": "AuthenticationType = server || AuthenticationType = windows || AuthenticationType = aadAuthenticationPassword || AuthenticationType = aadAuthenticationIntegrated || AuthenticationType = servicePrincipal",
       "helpMarkDown": "ms-resource:loc.input.help.DatabaseName"
     },
     {
