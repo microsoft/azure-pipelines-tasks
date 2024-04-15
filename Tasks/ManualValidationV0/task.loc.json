@@ -23,10 +23,10 @@
     {
       "name": "notifyUsers",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.validators",
+      "label": "ms-resource:loc.input.label.notifyUsers",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.validators"
+      "helpMarkDown": "ms-resource:loc.input.help.notifyUsers"
     },
     {
       "name": "instructions",
@@ -44,12 +44,12 @@
     {
       "name": "onTimeout",
       "type": "radio",
-      "label": "loc.input.label.onTimeout",
-      "defaultValue": "loc.input.label.onTimeoutReject",
+      "label": "ms-resource:loc.input.label.onTimeout",
+      "defaultValue": "reject",
       "required": false,
       "options": {
-        "reject": "loc.input.label.onTimeoutReject",
-        "resume": "loc.input.label.onTimeoutResume"
+        "reject": "Reject",
+        "resume": "Resume"
       },
       "helpMarkDown": "ms-resource:loc.input.help.onTimeout"
     }

@@ -82,12 +82,12 @@
       "visibleRule": "artifactType = filepath && parallel = true"
     },
     {
-        "name": "properties",
-        "type": "string",
-        "label": "ms-resource:loc.input.label.customProperties",
-        "defaultValue": "",
-        "required": false,
-        "helpMarkDown": "ms-resource:loc.input.help.customProperties"
+      "name": "properties",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.properties",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.properties"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
