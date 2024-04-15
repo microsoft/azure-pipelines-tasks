@@ -1696,32 +1696,37 @@ var storeNonAggregatedZip = function (zipPath, release, commit) {
 }
 exports.storeNonAggregatedZip = storeNonAggregatedZip;
 
-var getTaskNodeVersion = function(buildPath, taskName) {
-    const nodes = [];
-    var taskJsonPath = path.join(buildPath, taskName, "task.json");
+const getTaskNodeVersion = function(buildPath, taskName) {
+    const nodes = new Set();
+    const taskJsonPath = path.join(buildPath, taskName, "task.json");
     if (!fs.existsSync(taskJsonPath)) {
         console.warn('Unable to find task.json, defaulting to use Node 20');
-        nodes.push(20);
-        return nodes;
-    }
-    var taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
-    var taskJson = JSON.parse(taskJsonContents);
-    var execution = taskJson['execution'] || taskJson['prejobexecution'];
-    for (var key of Object.keys(execution)) {
-        const executor = key.toLocaleLowerCase();
-        if (!executor.startsWith('node')) continue;
-        
-        const version = executor.replace('node', '');
-        nodes.push(parseInt(version) || 20);
+        nodes.add(20);
+        return Array.from(nodes);
     }
 
-    if (nodes.length) {
-        return nodes;
+    const taskJsonContents = fs.readFileSync(taskJsonPath, { encoding: 'utf-8' });
+    const taskJson = JSON.parse(taskJsonContents);
+
+    const executors = ['execution', 'prejobexecution', 'postjobexecution'];
+    for (const executor of executors) {
+        if (!taskJson[executor]) continue;
+
+        for (const key of Object.keys(taskJson[executor])) {
+            const currExecutor = key.toLocaleLowerCase();
+            if (!currExecutor.startsWith('node')) continue;
+            const version = currExecutor.replace('node', '');
+            nodes.add(parseInt(version) || 20);
+        }
+    }
+
+    if (nodes.size) {
+        return Array.from(nodes);
     }
 
     console.warn('Unable to determine execution type from task.json, defaulting to use Node 20');
-    nodes.push(20);
-    return nodes;
+    nodes.add(20);
+    return Array.from(nodes);
 }
 exports.getTaskNodeVersion = getTaskNodeVersion;
 

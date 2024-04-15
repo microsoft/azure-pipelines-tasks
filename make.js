@@ -202,19 +202,24 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     // Need to validate generated tasks first
     const makeOptions = fileToJson(makeOptionsPath);
 
+    // Verify generated files across tasks are up-to-date
     util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint);
 
     const allTasks = getTaskList(taskList);
 
     // Wrap build function  to store files that changes after the build 
     const buildTaskWrapped = util.syncGeneratedFilesWrapper(buildTaskAsync, genTaskPath, writeUpdatedsFromGenTasks);
-    const allTasksNode20 = allTasks.filter((taskName) => {
-        return getNodeVersion(taskName) == 20;
-    });
-    const allTasksDefault = allTasks.filter((taskName) => {
-        return getNodeVersion(taskName) != 20;
-    });
+    const { allTasksNode20, allTasksDefault } = allTasks.
+        reduce((res, taskName) => {
+            if (getNodeVersion(taskName) == 20) {
+                res.allTasksNode20.push(taskName)
+            } else {
+                res.allTasksDefault.push(taskName)
+            }
 
+            return res;
+        }, {allTasksNode20: [], allTasksDefault: []})
+    
     if (allTasksNode20.length > 0) {
         await util.installNodeAsync('20');
         ensureTool('node', '--version', `v${node20Version}`);
@@ -239,31 +244,18 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
 }
 
 function getNodeVersion (taskName) {
-    var packageJsonPath = path.join(genTaskPath, taskName, "package.json");
-    // We prefer tasks in _generated folder because they might contain node20 version
-    // while the tasks in Tasks/ folder still could use only node16 handler 
-    if (fs.existsSync(packageJsonPath)) {
-        console.log(`Found package.json for ${taskName} in _generated folder ${packageJsonPath}`);
-    } else {
-        packageJsonPath = path.join(tasksPath, taskName, "package.json");
-        if (!fs.existsSync(packageJsonPath)) {
-            console.error(`Unable to find package.json file for ${taskName} in _generated folder or Tasks folder, using default node 20.`);
-            return 20;
-        }
-        console.log(`Found package.json for ${taskName} in Tasks folder ${packageJsonPath}`)
+    let taskPath = tasksPath;
+    // if task exists inside gen folder prefere it
+    if (fs.existsSync(path.join(genTaskPath, taskName))) {
+        taskPath = genTaskPath;
     }
 
-    var packageJsonContents = fs.readFileSync(packageJsonPath, { encoding: 'utf-8' });
-    var packageJson = JSON.parse(packageJsonContents);
-    if (packageJson.dependencies && packageJson.dependencies["@types/node"]) {
-        // Extracting major version from the node version
-        const nodeVersion = packageJson.dependencies["@types/node"].replace('^', '');
-        console.log(`Node verion from @types/node in package.json is ${nodeVersion} returning ${nodeVersion.split('.')[0]}`);
-        return nodeVersion.split('.')[0];
-    } else {
-        console.log("Node version not found in dependencies, using default node 20.");
-        return 20;
-    }
+    // get node runner from task.json
+    const handlers = getTaskNodeVersion(taskPath, taskName);
+    if (handlers.includes(20)) return 20;
+
+    return 10;
+
 }
 
 async function buildTaskAsync(taskName, taskListLength, nodeVersion) {
