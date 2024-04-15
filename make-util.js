@@ -1700,8 +1700,8 @@ const getTaskNodeVersion = function(buildPath, taskName) {
     const nodes = new Set();
     const taskJsonPath = path.join(buildPath, taskName, "task.json");
     if (!fs.existsSync(taskJsonPath)) {
-        console.warn('Unable to find task.json, defaulting to use Node 20');
-        nodes.add(20);
+        console.warn('Unable to find task.json, defaulting to use Node 10');
+        nodes.add(10);
         return Array.from(nodes);
     }
 
@@ -1724,8 +1724,8 @@ const getTaskNodeVersion = function(buildPath, taskName) {
         return Array.from(nodes);
     }
 
-    console.warn('Unable to determine execution type from task.json, defaulting to use Node 20');
-    nodes.add(20);
+    console.warn('Unable to determine execution type from task.json, defaulting to use Node 10');
+    nodes.add(10);
     return Array.from(nodes);
 }
 exports.getTaskNodeVersion = getTaskNodeVersion;
