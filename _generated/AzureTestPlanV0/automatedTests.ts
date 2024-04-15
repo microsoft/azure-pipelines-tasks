@@ -2,8 +2,9 @@ import tl = require('azure-pipelines-task-lib/task');
 import { testInvoker } from './automatedTestInvoker';
 import { TestPlanData } from './testPlanData';
 import { publishAutomatedTestResult } from './publishAutomatedTests';
+import { ciDictionary } from './ciEventLogger';
 
-export async function automatedTestsFlow(testPlanInfo: TestPlanData, testSelectorInput: string): Promise<number> {
+export async function automatedTestsFlow(testPlanInfo: TestPlanData, testSelectorInput: string, ciData: ciDictionary): Promise<number> {
   let listOfTestsToBeExecuted: string[] = testPlanInfo.listOfFQNOfTestCases;
   let testInvokerStatusCode = 0;
 
@@ -11,7 +12,7 @@ export async function automatedTestsFlow(testPlanInfo: TestPlanData, testSelecto
     tl.debug('Invoking test execution for tests: ' + listOfTestsToBeExecuted);
 
     try {
-      testInvokerStatusCode = await testInvoker(listOfTestsToBeExecuted);
+      testInvokerStatusCode = await testInvoker(listOfTestsToBeExecuted, ciData);
     } catch (err) {
       tl.debug(`Unable to invoke automated test execution. Err:( ${err} )`);
       testInvokerStatusCode = 1;
