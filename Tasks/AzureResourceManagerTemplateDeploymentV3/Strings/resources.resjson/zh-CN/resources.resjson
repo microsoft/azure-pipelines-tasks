@@ -27,7 +27,7 @@
   "loc.input.label.csmFile": "模板",
   "loc.input.help.csmFile": "指定指向 Azure 资源管理器模板的路径或模式。有关模板的详细信息，请参阅 https://aka.ms/azuretemplates。要立即开始使用模板，请参阅 https://aka.ms/sampletemplate。当 Azure CLI版本 > 2.20.0 时，“链接项目”还支持 Bicep 文件",
   "loc.input.label.csmParametersFile": "模板参数",
-  "loc.input.help.csmParametersFile": "为 Azure 资源管理器模板的参数文件指定路径或模式指向。当 Azure CLI 版本 > 2.47.0 时，“链接项目”还支持 Bicep 项目文件",
+  "loc.input.help.csmParametersFile": "为 Azure 资源管理器模板的参数文件指定路径或模式指向。当 Azure CLI版本 > 2.20.0 时，“链接项目”还支持 Bicep 文件",
   "loc.input.label.overrideParameters": "替代模板参数",
   "loc.input.help.overrideParameters": "若要查看网格中的模板参数，请单击“替代参数”文本框旁的 \"…\"。此功能需要在源启用 CORS 规则。如果模板位于 Azure 存储 blob 中，请参阅 [此文章](https://docs.microsoft.com/zh-cn/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests)以启用 CORS。或键入文本框中重写的模板参数。例如，<br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre)。<br>如果正在使用的参数值具有多个词，请将它们括在引号中，即使将使用变量传递它们。例如 -name \"parameter value\" -name2 \"$(var)\"<br>若要替代对象类型参数，请使用 stringified JSON 对象。例如 -options [\"option1\"] -map {\"key1\": \"value1\" }。",
   "loc.input.label.deploymentMode": "部署模式",

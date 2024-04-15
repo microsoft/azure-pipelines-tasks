@@ -27,7 +27,7 @@
   "loc.input.label.csmFile": "テンプレート",
   "loc.input.help.csmFile": "Azure Resource Manager テンプレートを指すパスまたはパターンを指定します。テンプレートの詳細については、「https://aka.ms/azuretemplates」を参照してください。すぐに開始するには、テンプレート https://aka.ms/sampletemplate を使用します。Azure CLI バージョンが 2.20.0 よりも新しい場合、'リンクされた成果物' には Bicep ファイルのサポートも含まれます。",
   "loc.input.label.csmParametersFile": "テンプレート パラメーター",
-  "loc.input.help.csmParametersFile": "Azure Resource Manager テンプレートのパラメータ ファイルを指すパスまたはパターンを指定します。Azure CLI バージョンが 2.47.0 よりも新しい場合、'リンクされた成果物' には Bicep パラメータ ファイルのサポートも含まれます。",
+  "loc.input.help.csmParametersFile": "Azure Resource Manager テンプレートのパラメーター ファイルを指すパスまたはパターンを指定します。Azure CLI バージョンが 2.20.0 よりも新しい場合、'リンクされた成果物' には Bicep ファイルのサポートも含まれます。",
   "loc.input.label.overrideParameters": "テンプレート パラメーターのオーバーライド",
   "loc.input.help.overrideParameters": "グリッドでテンプレートのパラメーターを表示するには、[パラメーターのオーバーライド] のテキストボックスの横にある [...] をクリックします。この機能は、ソースで CORS ルールが有効になっている必要があります。テンプレートが Azure Storage BLOB にある場合は、[こちら](https://docs.microsoft.com/ja-jp/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) を参照して CORS を有効にします。または、テキストボックスにテンプレート パラメーターを入力してオーバーライドします。たとえば、<br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre) です。<br>使用しているパラメーターの値に複数の単語が含まれる場合、変数を使用してそれらの単語を渡すとしても、引用符で囲みます。たとえば、-name \"parameter value\" -name2 \"$(var)\" です<br>オブジェクトの種類のパラメーターを上書きするには、文字列化した JSON オブジェクトを使用します。たとえば、-options [\"option1\"] -map {\"key1\": \"value1\" } です。",
   "loc.input.label.deploymentMode": "配置モード",
