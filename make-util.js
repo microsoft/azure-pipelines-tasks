@@ -372,7 +372,7 @@ var installNodeAsync = async function (nodeVersion) {
             break;
         case 'win32':
             var nodeArchivePath = await downloadArchiveAsync(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-win-x64.zip');
-            addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-linux-x64', 'bin'));
+            addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-win-x64'));
             break;
     }
 }
