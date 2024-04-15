@@ -217,6 +217,8 @@ catch [Exception] {
         $errorMessage = $_.Exception.ToString()
     }
 
+    $errorMessage += " "
+
     if ($deploymentAction -eq "DriftReport" -and $LASTEXITCODE -eq 1) {
         $errorMessage += Get-VstsLocString -Key "SAD_DriftReportWarning"
     }
