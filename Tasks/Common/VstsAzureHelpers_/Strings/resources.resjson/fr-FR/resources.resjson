@@ -13,5 +13,6 @@
   "loc.messages.AZ_InvalidARMEndpoint": "Le point de terminaison AzureRM spécifié est non valide.",
   "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Impossible de récupérer (fetch) le jeton d'accès pour l'identité managée. Configurez l'identité managée pour la machine virtuelle ('https://aka.ms/azure-msi-docs'). Code d'état : '{0}'. Message d'erreur : {1}",
   "loc.messages.AZ_MsiAccessTokenFetchFailure": "Impossible de récupérer (fetch) le jeton d'accès pour l'identité managée. Code d'état : '{0}'. Message d'erreur : {1}",
-  "loc.messages.AZ_MsiFailure": "Impossible de récupérer (fetch) le jeton d'accès pour l'identité managée. {0}"
+  "loc.messages.AZ_MsiFailure": "Impossible de récupérer (fetch) le jeton d'accès pour l'identité managée. {0}",
+  "loc.messages.AZ_ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at {0} See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
 }

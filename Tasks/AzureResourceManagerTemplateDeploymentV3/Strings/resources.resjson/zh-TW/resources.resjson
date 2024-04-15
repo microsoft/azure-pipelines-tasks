@@ -27,7 +27,7 @@
   "loc.input.label.csmFile": "範本",
   "loc.input.help.csmFile": "請指定指向 Azure Resource Manager 範本的路徑或模式。如需範本的詳細資訊，請參閱 https://aka.ms/azuretemplates。若要立即啟動，請使用範本 https://aka.ms/sampletemplate。當 Azure CLI 版本大於 2.20.0 時，'連結的成品' 也支援 Bicep 檔案",
   "loc.input.label.csmParametersFile": "範本參數",
-  "loc.input.help.csmParametersFile": "指定指向 Azure Resource Manager 範本之參數檔案的路徑或模式。當 Azure CLI 版本大於 2.47.0 時，「連結的成品」也支援 Bicep Param 檔案",
+  "loc.input.help.csmParametersFile": "指定 Azure Resource Manager 範本之參數檔案的路徑或模式指標。當 Azure CLI 版本大於 2.20.0 時，'連結的成品' 也支援 Bicep 檔案",
   "loc.input.label.overrideParameters": "覆寫範本參數",
   "loc.input.help.overrideParameters": "若要以網格模式檢視範本參數，請按一下 [Override Parameters] 文字方塊旁的 [...]。必須在來源啟用 CORS 規則才能使用此功能。若範本在 Azure 儲存體 Blob 中，請參閱[本篇](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests)來啟用 CORS，或是在文字方塊中鍵入要覆寫的範本參數。例如，<br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre)。<br>若您使用的參數有多個文字，請以引號括住文字，即使您使用變數來傳遞文字亦同。例如，-name \"參數值\" -name2 \"$(var)\"<br>若要覆寫物件類型參數，請使用已轉換為字串的 JSON 物件。例如，-options [\"option1\"] -map {\"key1\": \"value1\" }。 ",
   "loc.input.label.deploymentMode": "部署模式",
