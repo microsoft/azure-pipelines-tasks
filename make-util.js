@@ -1818,37 +1818,34 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
 
         makeOptions[key].forEach((taskName) => {
             if (taskList.indexOf(taskName) ===  -1) return;
-            if (validatingTasks[taskName]) {
-                validatingTasks[taskName].push(key);
+            if (validatingTasks[key]) {
+                validatingTasks[key].push(taskName);
             } else {
-                validatingTasks[taskName] = [key];
+                validatingTasks[key] = [taskName];
             }
         });
     }
-
-    for (const taskName in validatingTasks) {
+    for (const config in validatingTasks) {
         const programPath = getBuildConfigGenerator(baseConfigToolPath);
-        const config = validatingTasks[taskName];
-        const configString = config.join("|");
         const args = [
             "--configs",
-            `"${configString}"`,
+            config,
             "--task",
-            taskName,
+            `"${validatingTasks[config].join('|')}"`
         ];
 
         if (sprintNumber) {
             args.push("--current-sprint");
             args.push(sprintNumber);
         }
-
+        
         var writeUpdateArg = "";
         if(writeUpdates)
         {
             writeUpdateArg += " --write-updates";
         }
 
-        banner('Validating: ' + taskName);
+        banner(`Validating: tasks ${validatingTasks[config].join('|')} \n with config: ${config}`);
         run(`${programPath} ${args.join(' ')} ${writeUpdateArg}`, true);
     }
 }
