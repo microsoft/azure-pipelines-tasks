@@ -12,13 +12,13 @@ const packageEndpoint = process.env['PACKAGE_VERSIONS_ENDPOINT'];
 // An example:
 // PACKAGE_TOKEN={token} PACKAGE_VERSIONS_ENDPOINT={package_versions_endpoint} SYSTEM_PULLREQUEST_SOURCEBRANCH=refs/head/{local_branch_name} SYSTEM_PULLREQUEST_TARGETBRANCH={target_branch_eg_master} node ./ci/check-downgrading.js --task "@({tasks_names})" --sprint {current_sprint_number}
 
-// if (!packageEndpoint) {
-//   logToPipeline(
-//     'error',
-//     'Failed to get info from package endpoint because no endpoint was specified. Try setting the PACKAGE_VERSIONS_ENDPOINT environment variable.'
-//   );
-//   process.exit(1);
-// }
+if (!packageEndpoint) {
+  logToPipeline(
+    'error',
+    'Failed to get info from package endpoint because no endpoint was specified. Try setting the PACKAGE_VERSIONS_ENDPOINT environment variable.'
+  );
+  process.exit(1);
+}
 
 const { RestClient } = require('typed-rest-client/RestClient');
 const { config } = require('process');
@@ -34,17 +34,11 @@ if (!argv.task) {
 // We need to escape # on Unix platforms since that turns the rest of the string into a comment
 const escapeHash = str => (platform() == 'win32' ? str : str.replace(/#/gi, '\\#'));
 
-const sourceBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH']);
-const targetBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_TARGETBRANCH']);
-
-console.log(sourceBranch);
-console.log(targetBranch);
-console.log('---------------------------------');
+const sourceBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH'] || 'some-pr');
+const targetBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_TARGETBRANCH'] || 'master');
 
 const baseProjectPath = join(__dirname, '..');
 const tempMasterTasksPath = join(baseProjectPath, 'temp', 'tasks-versions', targetBranch);
-
-const simpleVersionMapRegex = /(?<configName>.*)\|(?<version>.*)$/;
 
 if (!existsSync(tempMasterTasksPath)) {
   mkdir('-p', tempMasterTasksPath);
@@ -54,55 +48,86 @@ if (existsSync(join(tempMasterTasksPath, 'Tasks'))) {
   rm('-rf', join(tempMasterTasksPath, 'Tasks'));
 }
 
-function prCheck() {
-  const modifiedVersionMapFiles = getModifiedVersionMapFiles(targetBranch, sourceBranch);
-  if (modifiedVersionMapFiles.length == 0) return;
-
+function compareVersionMapFilesToMaster() {
   const messages = [];
 
-  const targetBranchMappings = {};
-  const sourceBranchMappings = {};
+  //   var versionMapCheckIsEnabled = process.env['versionMapCheckIsEnabled'] && process.env['versionMapCheckIsEnabled'].toLowerCase() === 'true';
+  //   if (!versionMapCheckIsEnabled) return messages;
+
+  const defaultBranch = 'origin/master';
+  const modifiedVersionMapFiles = getModifiedVersionMapFiles(defaultBranch, sourceBranch);
+  if (modifiedVersionMapFiles.length == 0) return messages;
+
   modifiedVersionMapFiles.forEach(filePath => {
     //get task name from a string like _generated/TaskNameVN.versionmap.txt
-    const taskName = filePath.slice(11, -15); //get task name from
-    targetBranchMappings[taskName] = parseVersionMap(getVersionMapContent(filePath, targetBranch));
-    sourceBranchMappings[taskName] = parseVersionMap(getVersionMapContent(filePath, sourceBranch));
+    const taskName = filePath.slice(11, -15);
+
+    defaultBranchVersionMap = parseVersionMap(getVersionMapContent(filePath, defaultBranch));
+    sourceBranchVersionMap = parseVersionMap(getVersionMapContent(filePath, sourceBranch));
+
+    const versionMapIssues = findVersionMapUpdateIssues(defaultBranchVersionMap, sourceBranchVersionMap);
+    versionMapIssues.forEach(issue => {
+      messages.push({
+        type: 'error',
+        payload: `Task Name: ${taskName}. Please check ${filePath}. ${issue}`
+      });
+    });
   });
 
-  for (const task in targetBranchMappings) {
-    console.log('checking task:' + task);
-    compareConfigs(targetBranchMappings[task], sourceBranchMappings[task]);
-  }
+  return messages;
 }
 
-function compareConfigs(targetConfig, sourceConfig) {
-  for (const config in targetConfig) {
-    console.log('checking config:' + config);
+function findMaxConfigVersion(versionMap) {
+  let maxVersion = '0.0.0';
+  for (const config in versionMap) {
     // Check that new version is greater thatn old version + 1
-    if (!gt(sourceConfig[config], inc(targetConfig[config], 'patch'))) {
-      console.log(` ${config} : ${sourceConfig[config]} should be bumped`);
+    if (gt(versionMap[config], maxVersion)) {
+      maxVersion = versionMap[config];
     }
   }
+  return maxVersion;
 }
 
-function getModifiedVersionMapFiles(targetBranch, sourceBranch) {
-  const versionmapPathRegex = /_generated\/.*versionmap.txt$/;
-  const versionMapFiles = run(`git --no-pager diff --name-only --diff-filter=M origin/${targetBranch}..origin/${sourceBranch}`)
+function findVersionMapUpdateIssues(defaultBranchConfig, sourceBranchConfig) {
+  const defaultBranchMaxVersion = findMaxConfigVersion(defaultBranchConfig);
+  const issues = [];
+  for (const config in sourceBranchConfig) {
+    // Check that new versions are greater than previous max version
+    if (!gt(sourceBranchConfig[config], defaultBranchMaxVersion)) {
+      issues.push(
+        `New versions of the task should be greater than the previous max version. ${config}|${sourceBranchConfig[config]} should be greater than ${defaultBranchMaxVersion}`
+      );
+      break;
+    }
+  }
+
+  return issues;
+}
+
+function getModifiedVersionMapFiles(defaultBranch, sourceBranch) {
+  const versionMapPathRegex = /_generated\/.*versionmap.txt$/;
+  //git diff A...B is equivalent to git diff $(git merge-base A B) B
+  const versionMapFiles = run(`git --no-pager diff --name-only --diff-filter=M ${defaultBranch}...${sourceBranch}`)
     .split('\n')
-    .filter(line => line.match(versionmapPathRegex));
+    .filter(line => line.match(versionMapPathRegex));
   return versionMapFiles;
 }
 
 function getVersionMapContent(versionMapFilePath, branchName) {
-  return run(`git show origin/${branchName}:${versionMapFilePath}`);
+  return run(`git show ${branchName}:${versionMapFilePath}`);
 }
 
 function parseVersionMap(fileContent) {
+  //TODO: update regex
+  const simpleVersionMapRegex = /(?<configName>.*)\|(?<version>.*)$/;
   const versionMap = {};
   fileContent.split('\n').forEach(line => {
-    simpleVersionMapRegex.test(line);
-    var match = simpleVersionMapRegex.exec(line);
-    versionMap[match[1]] = match[2];
+    if (simpleVersionMapRegex.test(line)) {
+      const { configName, version } = simpleVersionMapRegex.exec(line).groups;
+      versionMap[configName] = version;
+    } else {
+      throw new Error(`Unable to parse version map ${line}`);
+    }
   });
 
   return versionMap;
@@ -329,14 +354,13 @@ async function main({ task, sprint, week }) {
   const isReleaseTagExist = run(`git tag -l v${sprint}`).length !== 0;
   const isCourtesyWeek = week === 3;
 
-  prCheck();
-
   const messages = [
     // ...checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyWeek),
     // ...compareLocalToMaster(localTasks, masterTasks, sprint),
     // ...checkLocalVersions(localTasks, sprint, isReleaseTagExist, isCourtesyWeek),
     //...compareLocalToFeed(localTasks, feedTaskVersions, sprint),
     //...compareLocalTaskLoc(localTasks)
+    ...compareVersionMapFilesToMaster()
   ];
 
   if (messages.length > 0) {
