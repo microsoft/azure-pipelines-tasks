@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 237,
-    "Patch": 10
+    "Minor": 238,
+    "Patch": 6
   },
   "demands": [
     "azureps"
@@ -301,7 +301,7 @@
     "AzModuleNotFound": "ms-resource:loc.messages.AzModuleNotFound"
   },
   "_buildConfigMapping": {
-    "Default": "5.237.10",
-    "Node20_229_2": "5.237.11"
+    "Default": "5.238.6",
+    "Node20_229_2": "5.238.7"
   }
 }

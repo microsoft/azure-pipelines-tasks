@@ -9,7 +9,7 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 236,
+    "Minor": 238,
     "Patch": 1
   },
   "demands": [],
@@ -199,7 +199,7 @@
     "Info_ResolvedLatestVersion": "ms-resource:loc.messages.Info_ResolvedLatestVersion"
   },
   "_buildConfigMapping": {
-    "Default": "1.236.0",
-    "Node20_229_1": "1.236.1"
+    "Default": "1.238.0",
+    "Node20_229_1": "1.238.1"
   }
 }

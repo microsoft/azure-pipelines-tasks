@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 238,
-    "Patch": 0
+    "Patch": 8
   },
   "preview": true,
   "demands": [],
@@ -170,13 +170,16 @@
     "testPlanInput": "Test plan Id : %s",
     "testplanConfigInput": "Test plan configuration Id : %s",
     "testSuiteSelected": "Test suite Id selected: %s",
-    "automatedTestsTriggered": "Trigerring execution of Automated tests from test plan",
+    "automatedTestTriggered": "Triggering execution of Automated tests from test plan",
     "ErrorFailTaskOnExecutingTests": "Error occured while executing test command",
     "ErrorFailTaskOnAPIFailure": "Error occured while fetching automated tests from test plan inputs",
-    "ErrorFailTaskOnCreateRunFailure": "Error occured while creating manual test run from test plan inputs"
+    "ErrorFailTaskOnCreateRunFailure": "Error occured while creating manual test run from test plan inputs",
+    "chmodGradlew": "Used 'chmod' method for gradlew file to make it executable.",
+    "NoMatchingFilesFound": "No test result files matching '%s' were found.",
+    "MultipleMatchingGradlewFound": "Multiple gradlew files found. Selecting the first matched instance"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20-225": "0.238.1"
+    "Default": "0.238.8",
+    "Node20-225": "0.238.9"
   }
 }
