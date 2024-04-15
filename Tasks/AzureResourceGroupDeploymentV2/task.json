@@ -1,504 +1,504 @@
 {
-  "id": "94A74903-F93F-4075-884F-DC11F34058B4",
-  "name": "AzureResourceGroupDeployment",
-  "friendlyName": "Azure resource group deployment",
-  "description": "Deploy an Azure Resource Manager (ARM) template to a resource group and manage virtual machines",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment",
-  "helpMarkDown": "[Learn more about this task](https://aka.ms/argtaskreadme)",
-  "category": "Deploy",
-  "releaseNotes": "-Works with cross-platform agents (Linux, macOS, or Windows)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like \"ConvertTo-SecureString\" when you migrate from version 1.0 to version 2.0.",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "author": "Microsoft Corporation",
-  "version": {
-    "Major": 2,
-    "Minor": 231,
-    "Patch": 0
-  },
-  "demands": [],
-  "minimumAgentVersion": "2.119.1",
-  "groups": [
-    {
-      "name": "AzureDetails",
-      "displayName": "Azure Details",
-      "isExpanded": true
+    "id": "94A74903-F93F-4075-884F-DC11F34058B4",
+    "name": "AzureResourceGroupDeployment",
+    "friendlyName": "Azure resource group deployment",
+    "description": "Deploy an Azure Resource Manager (ARM) template to a resource group and manage virtual machines",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/argtaskreadme)",
+    "category": "Deploy",
+    "releaseNotes": "-Works with cross-platform agents (Linux, macOS, or Windows)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like \"ConvertTo-SecureString\" when you migrate from version 1.0 to version 2.0.",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 2,
+        "Minor": 238,
+        "Patch": 1
     },
-    {
-      "name": "Template",
-      "displayName": "Template",
-      "isExpanded": true,
-      "visibleRule": "action = Create Or Update Resource Group"
+    "demands": [],
+    "minimumAgentVersion": "2.119.1",
+    "groups": [
+        {
+            "name": "AzureDetails",
+            "displayName": "Azure Details",
+            "isExpanded": true
+        },
+        {
+            "name": "Template",
+            "displayName": "Template",
+            "isExpanded": true,
+            "visibleRule": "action = Create Or Update Resource Group"
+        },
+        {
+            "name": "AdvancedDeploymentOptions",
+            "displayName": "Advanced deployment options for virtual machines",
+            "isExpanded": true,
+            "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
+        },
+        {
+            "name": "Advanced",
+            "displayName": "Advanced",
+            "isExpanded": true,
+            "visibleRule": "action = Create Or Update Resource Group"
+        }
+    ],
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "aliases": [
+                "azureSubscription"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+        },
+        {
+            "name": "action",
+            "type": "pickList",
+            "label": "Action",
+            "defaultValue": "Create Or Update Resource Group",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Action to be performed on the Azure resources or resource group.",
+            "options": {
+                "Create Or Update Resource Group": "Create or update resource group",
+                "Select Resource Group": "Configure virtual machine deployment options",
+                "Start": "Start virtual machines",
+                "Stop": "Stop virtual machines",
+                "StopWithDeallocate": "Stop and deallocate virtual machines",
+                "Restart": "Restart virtual machines",
+                "Delete": "Delete virtual machines",
+                "DeleteRG": "Delete resource group"
+            }
+        },
+        {
+            "name": "resourceGroupName",
+            "type": "pickList",
+            "label": "Resource group",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Provide the name of a resource group.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "location",
+            "type": "pickList",
+            "label": "Location",
+            "required": true,
+            "helpMarkDown": "Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.",
+            "groupName": "AzureDetails",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "visibleRule": "action = Create Or Update Resource Group"
+        },
+        {
+            "name": "templateLocation",
+            "type": "pickList",
+            "label": "Template location",
+            "required": true,
+            "defaultValue": "Linked artifact",
+            "groupName": "Template",
+            "options": {
+                "Linked artifact": "Linked artifact",
+                "URL of the file": "URL of the file"
+            }
+        },
+        {
+            "name": "csmFileLink",
+            "type": "string",
+            "label": "Template link",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "Template",
+            "helpMarkDown": "Specify the URL of the template file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.json) \n\nTo deploy a template stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a template file (or a linked template) to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911).\n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters text box. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
+            "visibleRule": "templateLocation = URL of the file"
+        },
+        {
+            "name": "csmParametersFileLink",
+            "type": "string",
+            "label": "Template parameters link",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "Template",
+            "helpMarkDown": "Specify the URL of the parameters file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.parameters.json) \n\nTo use a file stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a parameters file to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911). \n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters text box. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
+            "visibleRule": " templateLocation = URL of the file"
+        },
+        {
+            "name": "csmFile",
+            "type": "filePath",
+            "label": "Template",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "Template",
+            "visibleRule": " templateLocation = Linked artifact",
+            "helpMarkDown": "Specify the path or a pattern pointing to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate."
+        },
+        {
+            "name": "csmParametersFile",
+            "type": "filePath",
+            "label": "Template parameters",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "Template",
+            "helpMarkDown": "Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template.",
+            "visibleRule": " templateLocation = Linked artifact"
+        },
+        {
+            "name": "overrideParameters",
+            "type": "multiLine",
+            "label": "Override template parameters",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "Template",
+            "helpMarkDown": "To view the template parameters in a grid, click on “…” next to Override Parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS. Or type the template parameters to override in the textbox. Example, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).<br>If the parameter value you're using has multiple words, enclose them in quotes, even if you're passing them using variables. For example, -name \"parameter value\" -name2 \"$(var)\"<br>To override object type parameters use stringified JSON objects. For example, -options [\"option1\"] -map {\"key1\": \"value1\" }. ",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.azurerg-parameters-grid"
+            }
+        },
+        {
+            "name": "deploymentMode",
+            "type": "pickList",
+            "label": "Deployment mode",
+            "defaultValue": "Incremental",
+            "required": true,
+            "groupName": "Template",
+            "helpMarkDown": "Refer to [this](https://docs.microsoft.com/en-us/azure/azure-resource-manager/deployment-modes) for more details. \n\n Incremental mode handles deployments as incremental updates to the resource group. It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. Complete mode takes relatively more time than incremental mode. If the task times out, consider increasing the timeout, or changing the mode to 'Incremental'. \n **[Warning] Complete mode will delete all the existing resources in the resource group that are not specified in the template. Do review if the resource group you're deploying to doesn't contain any necessary resources that are not specified in the template.** \n\n Validate mode enables you to find problems with the template before creating actual resources. Validate mode enables you to find problems with the template before creating actual resources. Please note that this mode will anyways create a resource group even if it does not deploy any resource.\n\n By default, Incremental mode is used.",
+            "options": {
+                "Incremental": "Incremental",
+                "Complete": "Complete",
+                "Validation": "Validation only"
+            }
+        },
+        {
+            "name": "enableDeploymentPrerequisites",
+            "type": "pickList",
+            "label": "Enable prerequisites",
+            "defaultValue": "None",
+            "groupName": "AdvancedDeploymentOptions",
+            "options": {
+                "None": "None",
+                "ConfigureVMwithWinRM": "Configure with WinRM agent",
+                "ConfigureVMWithDGAgent": "Configure with Deployment Group agent"
+            },
+            "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Choosing Deployment Group option would configure Deployment Group agent on each of the virtual machines. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
+        },
+        {
+            "name": "deploymentGroupEndpoint",
+            "aliases": [
+                "teamServicesConnection"
+            ],
+            "type": "connectedService:ExternalTfs",
+            "label": "Azure Pipelines service connection",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+            "required": true,
+            "helpMarkDown": "Specify the service connection to connect to an Azure DevOps organization or collection for agent registration.<br><br>You can create a service connection using \"+New\", and select \"Token-based authentication\". You need a [personal access token(PAT)](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate?view=vsts) to setup a service connection. <br><br>​Click \"Manage\" to update the service connection details.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "project",
+            "aliases": [
+                "teamProject"
+            ],
+            "type": "pickList",
+            "label": "Team project",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+            "required": true,
+            "helpMarkDown": "Specify the Team Project which has the Deployment Group defined in it​",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "deploymentGroupName",
+            "type": "pickList",
+            "label": "Deployment Group",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+            "required": true,
+            "helpMarkDown": "Specify the Deployment Group against which the agent(s) will be registered. For more guidance, refer to [Deployment Groups](https://aka.ms/832442)",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "copyAzureVMTags",
+            "type": "boolean",
+            "label": "Copy Azure VM tags to agents",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+            "defaultValue": true,
+            "helpMarkDown": "Choose if the tags configured on the Azure VM need to be copied to the corresponding Deployment Group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)"
+        },
+        {
+            "name": "runAgentServiceAsUser",
+            "type": "boolean",
+            "label": "Run agent service as a user",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+            "defaultValue": false,
+            "helpMarkDown": "Decide whether to run the agent service as a user other than the default. <br>The default user is \"NT AUTHORITY\\SYSTEM\" in Windows and \"root\" in Linux."
+        },
+        {
+            "name": "userName",
+            "type": "string",
+            "label": "User name",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && runAgentServiceAsUser = true",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The username to run the agent service on the virtual machines. <br>For domain users, please enter values as \"domain\\username\" or \"username@domain.com\". For local users, please enter just the user name. <br>It is assumed that the same domain user\\a local user with the same name, respectively, is present on all the virtual machines in the resource group."
+        },
+        {
+            "name": "password",
+            "type": "string",
+            "label": "Password",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && runAgentServiceAsUser = true",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The password for the user to run the agent service on the Windows VMs. <br>It is assumed that the password is the same for the specified user on all the VMs. <br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'. You may mark variable as 'secret' to secure it. <br>For linux VMs, a password is not required and will be ignored. "
+        },
+        {
+            "name": "outputVariable",
+            "type": "string",
+            "label": "VM details for WinRM",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMwithWinRM || enableDeploymentPrerequisites = None",
+            "helpMarkDown": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. <br>Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected."
+        },
+        {
+            "name": "deploymentName",
+            "type": "string",
+            "label": "Deployment name",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "Advanced",
+            "helpMarkDown": "Specifies the name of the resource group deployment to create."
+        },
+        {
+            "name": "deploymentOutputs",
+            "type": "string",
+            "label": "Deployment outputs",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "Advanced",
+            "helpMarkDown": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)"
+        },
+        {
+            "name": "addSpnToEnvironment",
+            "type": "boolean",
+            "label": "Access service principal details in override parameters",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId` and `$servicePrincipalKey` in your override parameters like `-key $servicePrincipalKey`",
+            "groupName": "Advanced"
+        },
+        {
+            "name": "useWithoutJSON",
+            "type": "boolean",
+            "label": "Use individual output values without JSON.Stringify applied",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Individual output values are being converted via JSON.Stringify by default. If you want to use the output values as it is without converting them via JSON.Stringify, enable this option. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)",
+            "groupName": "Advanced"
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "resourceGroupName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureResourceGroups"
+        },
+        {
+            "target": "location",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureLocations"
+        },
+        {
+            "target": "project",
+            "endpointId": "$(deploymentGroupEndpoint)",
+            "dataSourceName": "Projects",
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        },
+        {
+            "target": "deploymentGroupName",
+            "endpointId": "$(deploymentGroupEndpoint)",
+            "dataSourceName": "DeploymentGroups",
+            "parameters": {
+                "project": "$(project)"
+            },
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+        }
+    ],
+    "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
+    "execution": {
+        "Node10": {
+            "target": "main.js"
+        },
+        "Node16": {
+            "target": "main.js",
+            "argumentFormat": ""
+        }
     },
-    {
-      "name": "AdvancedDeploymentOptions",
-      "displayName": "Advanced deployment options for virtual machines",
-      "isExpanded": true,
-      "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
-    },
-    {
-      "name": "Advanced",
-      "displayName": "Advanced",
-      "isExpanded": true,
-      "visibleRule": "action = Create Or Update Resource Group"
+    "messages": {
+        "CheckResourceGroupExistence": "Checking if the following resource group exists: %s.",
+        "ResourceGroupStatusFetchFailed": "Failed to check the resource group status. Error: %s.",
+        "ResourceGroupStatus": "Resource group exists: %s.",
+        "ResourceGroupCreationFailed": "Failed to create the resource group. Error: %s",
+        "CreatingNewRG": "Creating resource Group: %s",
+        "CreatedRG": "Resource Group created successfully.",
+        "CreatingTemplateDeployment": "Creating deployment parameters.",
+        "TemplateParsingFailed": "Ensure the Template file ( '%s' ) is valid. Task failed while parsing with following error: %s",
+        "FileFetchFailed": "Failed to download the file. URL: '%s'. Error: %s",
+        "ParametersFileParsingFailed": "Ensure the Parameters file ( '%s' ) is valid. Task failed while parsing with following error: %s",
+        "StartingDeployment": "Starting Deployment.",
+        "CreateTemplateDeploymentSucceeded": "Successfully deployed the template.",
+        "CreateTemplateDeploymentFailed": "Task failed while creating or updating the template deployment.",
+        "ErrorsInYourDeployment": "There were errors in your deployment. Error code: %s.",
+        "Details": "Details:",
+        "ErrorType": "Error Type:",
+        "PolicyDefinitionName": "Policy Definition Name :",
+        "PolicyAssignmentName": "Policy Assignment Name :",
+        "StartingValidation": "Starting template validation.",
+        "ValidDeployment": "Template deployment validation was completed successfully.",
+        "CreateTemplateDeploymentValidationFailed": "Template validation failed. Error: %s.",
+        "TemplateValidationHadErrors": "Task failed while validating the template deployment.",
+        "DeletingResourceGroup": "Deleting resource group: %s",
+        "CouldNotDeletedResourceGroup": "Could not delete resource group: '%s'. Operation failed with error: %s",
+        "DeletedResourceGroup": "Deleted resource group: %s",
+        "VM_ListFetchFailed": "Failed to fetch the list of virtual machines from resource group: %s. Error: %s",
+        "NoVMsFound": "No virtual machines found in the resource group.",
+        "VM_Start": "Starting virtual machine: %s",
+        "VM_Restart": "Restarting virtual machine: %s",
+        "VM_Stop": "Stopping virtual machine: %s",
+        "VM_Deallocate": "Deallocating virtual machine: %s",
+        "VM_Delete": "Deleting virtual machine: %s",
+        "SucceededOnVMOperation": "Operation: '%s' succeeded on all the virtual machines.",
+        "FailureOnVMOperation": "Operation: '%s' did not succeed on all the virtual machines. Errors: \n%s",
+        "VirtualMachineNameAndError": "%s: %s",
+        "RegisteringEnvironmentVariable": "Selecting the resource group details: %s.",
+        "FailedToFetchNetworkInterfaces": "Failed to fetch the list of network interfaces. Error: %s.",
+        "FailedToFetchLoadBalancers": "Failed to fetch the list of load balancers. Error: %s.",
+        "FailedToFetchPublicAddresses": "Failed to fetch the list of public addresses. Error: %s.",
+        "AddedToOutputVariable": "Resource group details were saved in following output variable: %s.",
+        "InvalidAction": "This action is not defined. Check with the task author.",
+        "TaskNotFound": "Task.json file could not be found: %s",
+        "ARGD_ConstructorFailed": "Task failed while initializing. Error: %s",
+        "RuleExistsAlready": "Rule %s already exists on the security group '%s'",
+        "AddExtension": "Adding extension '%s' on virtual machine '%s'",
+        "DeleteExtension": "Trying to delete extension %s from virtual machine %s",
+        "FailedToAddExtension": "Failed to add the network security rule with exception: %s",
+        "AddingSecurityRuleNSG": "Adding security rule for the network security group: %s",
+        "AddedSecurityRuleNSG": "Added inbound network security rule config %s with priority %s for port %s under security group %s with result: %s",
+        "FailedAddingNSGRule3Times": "Failed to add the network security rule to the security group %s after trying 3 times",
+        "FailedToDeleteExtension": "Deletion of extension failed",
+        "CredentialsCannotBeNull": "'credentials' cannot be null.",
+        "SubscriptionIdCannotBeNull": "'subscriptionId' cannot be null.",
+        "CallbackCannotBeNull": "callback cannot be null.",
+        "ResourceGroupCannotBeNull": "resourceGroupName cannot be null or undefined and it must be of type string.",
+        "ResourceGroupExceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MaxLength\": 90",
+        "ResourceGroupDeceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MinLength\": 1",
+        "ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" should satisfy the constraint - \"Pattern\": /^[-\\w\\._\\(\\)]+$/",
+        "ParametersCannotBeNull": "parameters cannot be null or undefined.",
+        "DeploymentNameCannotBeNull": "deploymentName cannot be null or undefined and it must be of type string.",
+        "VMNameCannotBeNull": "vmName cannot be null or undefined and it must be of type string.",
+        "InvalidValue": "%s is not a valid value. The valid values are: %s",
+        "VmExtensionNameCannotBeNull": "vmExtensionName cannot be null or undefined and it must be of type string.",
+        "ExpandShouldBeOfTypeString": "expand must be of type string.",
+        "ExtensionParametersCannotBeNull": "extensionParameters cannot be null or undefined.",
+        "ClientIdCannotBeEmpty": "clientId must be a non empty string.",
+        "DomainCannotBeEmpty": "domain must be a non empty string.",
+        "SecretCannotBeEmpty": "secret must be a non empty string.",
+        "armUrlCannotBeEmpty": "arm URL must be a non empty string.",
+        "authorityUrlCannotBeEmpty": "authority must be a non empty string.",
+        "LoadBalancerNameCannotBeNull": "'loadBalancerName cannot be null or undefined and it must be of type string.'",
+        "NetworkInterfaceNameCannotBeNull": "networkInterfaceName cannot be null or undefined and it must be of type string.",
+        "NetworkSecurityGroupNameCannotBeNull": "networkSecurityGroupName cannot be null or undefined and it must be of type string.",
+        "SecurityRuleNameCannotBeNull": "securityRuleName cannot be null or undefined and it must be of type string.",
+        "SecurityRuleParametersCannotBeNull": "securityRuleParameters cannot be null or undefined.",
+        "OutputVariableShouldNotBeEmpty": "Output variable should not be empty.",
+        "ARG_SetExtensionFailedForVm": "Standard Error Message: Failed to set extension on Virtual Machine %s. Error: %s",
+        "InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
+        "AddingInboundNatRule": "Adding Inbound Nat Rule for the Virtual Machine %s to the Load Balancer %s",
+        "InboundNatRuleAdditionFailed": "Addition of Inbound Nat Rule to the Load Balancer %s failed. Error: %s ",
+        "InboundNatRulesToNICFailed": "Addition of rule Id to the loadBalancerInboundNatRules of nic %s failed with the error: %s",
+        "AddedTargetInboundNatRuleLB": "Added the target virtual machine for the inbound NAT rules of load balancer %s",
+        "FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine. Error : %s",
+        "CreationOfExtensionFailed": "Failed to add the extension to the vm: '%s'. Error: %s",
+        "AddedExtension": "Successfully added the WinRMCustomScriptExtension for the virtual Machine %s",
+        "AddingExtensionSucceeded": "Addition of extension on vm %s succeeded",
+        "DeletionSucceeded": "Deletion of extension on vm %s succeeded",
+        "AdditionFailed": "Addition of %s on vm %s failed. Error : %s",
+        "DeletionFailed": "Deletion of %s on vm %s failed. Error : %s",
+        "DeleteAgentManually": "After the task execution completes, if the deployment group agent corresponding to the virtual machine %s is present but not active in the deployment group %s, then please delete it manually from the deployment group.",
+        "DGAgentAddedOnAllVMs": "Deployment group agent added on all virtual machines of the resource group",
+        "DGAgentDeletedFromAllVMs": "Deployment group agent deleted from all virtual machines of the resource group",
+        "DGAgentHandlerMajorVersion": "Deployment group extension handler major version is 1",
+        "VMStartFailed": "Could not start the virtual machine %s. Error : %s",
+        "VMStarted": "Started virtual machine: %s",
+        "VMTransitioningSkipExtensionAddition": "Virtual machine %s is in a transitioning state. Skipping adding extension on it.",
+        "VMDetailsFetchFailed": "Could not get details of virtual machine %s. Error : %s",
+        "VMDetailsFetchSucceeded": "Fetched details of virtual machine %s.",
+        "AddingDGAgentOnVMs": "Adding deployment group agent on the resource group virtual machines.",
+        "DeletingDGAgentOnVMs": "Deleting deployment group agent on virtual machines",
+        "AddingExtensionFailed": "Addition of extension on vm %s failed",
+        "TimeoutWhileWaiting": "Timed out while waiting",
+        "InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'",
+        "EncodingNotSupported": "Encoding of the file '%s' is '%s' which is not supported. Supported file encodings are ['utf-8', 'utf-16le']",
+        "CouldNotDetectEncoding": "Could not detect encoding of file '%s'",
+        "DetectedFileEncoding": "The detected encoding for file '%s' is '%s'",
+        "HostUrlCannotBeEmpty": "Host URL must be a non empty string.",
+        "PatTokenCannotBeEmpty": "Personal access token must be a non empty string.",
+        "OnlyTokenAuthAllowed": "Service connection can be of Token authorization type only.",
+        "DeploymentGroupEndpointUrlCannotBeEmpty": "Deployment group service connection URL cannot be empty",
+        "DeploymentGroupEndpointPatTokenCannotBeEmpty": "Deployment group service connection personal access token cannot be empty",
+        "ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s', make sure it follows JavaScript Object Notation (JSON)",
+        "TemplateFilePatternMatchingMoreThanOneFile": "Found multiple files matching template file pattern: %s",
+        "TemplateParameterFilePatternMatchingMoreThanOneFile": "Found multiple files matching template parameters file pattern: %s",
+        "TemplateFilePatternMatchingNoFile": "Could not find any file matching the template file pattern",
+        "TemplateParameterFilePatternMatchingNoFile": "Could not find any file matching the template file pattern",
+        "ParametersPatternMatchesADirectoryInsteadOfAFile": "Parameters file pattern matches a directory instead of a file.",
+        "CsmFilePatternMatchesADirectoryInsteadOfAFile": "Template file pattern matches a directory instead of a file: %s",
+        "ResourceNameCannotBeNull": "Resource name cannot be null.",
+        "ProvisioningStatusOfExtensionIsNotSucceeded": "Provisioning State of WinRMCustomScriptExtension is not succeeded on vm: '%s'.",
+        "ListingOfExtensionsFailed": "Failed to list the extensions for the vm: '%s'. Error '%s'",
+        "ExtensionNotFound": "Extension not found on the vm: %s",
+        "AddedOutputVariable": "Updated output variable '%s', which contains the outputs section of the current deployment object in string format.",
+        "UnableToFetchAuthorityURL": "Unable to fetch authority URL.",
+        "UnableToFetchActiveDirectory": "Unable to fetch Active Directory resource ID.",
+        "SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm service connection URL: '{0}' is invalid.",
+        "FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data, error message: {0}",
+        "UnableToReadResponseBody": "Unable to read response body. Error: %s",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+        "UserNameCannotBeNull": "If the 'Run agent service as a user' input is selected, then 'User name' cannot be null.",
+        "ASE_SSLIssueRecommendation": "To use a certificate, the certificate must be signed by a trusted certificate authority. If getting certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline.",
+        "MoreInformationOnAzurePortal": "More information on Azure Portal",
+        "ResponseNotValid": "Response is not in a valid format",
+        "LogDeploymentName": "Deployment name is %s",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+        "DeploymentGroupConfigurationNotSucceeded": "Deployment group configuration did not succeed on one or more Virtual Machine(s): %s",
+        "ServicePrincipalRoleAssignmentDetails": "Please make sure the Service Principal with name %s is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal",
+        "ServicePrincipalFetchFailed": "Error while fetching Service Principal details: %s",
+        "FindMoreDeploymentDetailsAzurePortal": "Task successfully created an Azure Resource Manager deployment, but the deployment failed. Please see more detailed Azure resource manager deployment logs at: (Please Copy-Paste the link) %s",
+        "TemplateValidationFailure": "Validation errors were found in the Azure Resource Manager template. This can potentially cause template deployment to fail. %s. Please follow https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-syntax",
+        "ManagedServiceIdentityDetails": "Please make sure the Managed Service Identity used for deployment is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal",
+        "DeploymentGroupConfigurationFailedOnVM": "Failure for Virtual Machine '%s': %s",
+        "TroubleshootingGuide": "Check out the troubleshooting guide to see if your issue is addressed: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
     }
-  ],
-  "inputs": [
-    {
-      "name": "ConnectedServiceName",
-      "aliases": [
-        "azureSubscription"
-      ],
-      "type": "connectedService:AzureRM",
-      "label": "Azure subscription",
-      "defaultValue": "",
-      "required": true,
-      "groupName": "AzureDetails",
-      "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
-    },
-    {
-      "name": "action",
-      "type": "pickList",
-      "label": "Action",
-      "defaultValue": "Create Or Update Resource Group",
-      "required": true,
-      "groupName": "AzureDetails",
-      "helpMarkDown": "Action to be performed on the Azure resources or resource group.",
-      "options": {
-        "Create Or Update Resource Group": "Create or update resource group",
-        "Select Resource Group": "Configure virtual machine deployment options",
-        "Start": "Start virtual machines",
-        "Stop": "Stop virtual machines",
-        "StopWithDeallocate": "Stop and deallocate virtual machines",
-        "Restart": "Restart virtual machines",
-        "Delete": "Delete virtual machines",
-        "DeleteRG": "Delete resource group"
-      }
-    },
-    {
-      "name": "resourceGroupName",
-      "type": "pickList",
-      "label": "Resource group",
-      "required": true,
-      "groupName": "AzureDetails",
-      "helpMarkDown": "Provide the name of a resource group.",
-      "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
-      "name": "location",
-      "type": "pickList",
-      "label": "Location",
-      "required": true,
-      "helpMarkDown": "Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.",
-      "groupName": "AzureDetails",
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "visibleRule": "action = Create Or Update Resource Group"
-    },
-    {
-      "name": "templateLocation",
-      "type": "pickList",
-      "label": "Template location",
-      "required": true,
-      "defaultValue": "Linked artifact",
-      "groupName": "Template",
-      "options": {
-        "Linked artifact": "Linked artifact",
-        "URL of the file": "URL of the file"
-      }
-    },
-    {
-      "name": "csmFileLink",
-      "type": "string",
-      "label": "Template link",
-      "defaultValue": "",
-      "required": true,
-      "groupName": "Template",
-      "helpMarkDown": "Specify the URL of the template file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.json) \n\nTo deploy a template stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a template file (or a linked template) to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911).\n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters text box. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
-      "visibleRule": "templateLocation = URL of the file"
-    },
-    {
-      "name": "csmParametersFileLink",
-      "type": "string",
-      "label": "Template parameters link",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "Template",
-      "helpMarkDown": "Specify the URL of the parameters file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.parameters.json) \n\nTo use a file stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a parameters file to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911). \n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters text box. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
-      "visibleRule": " templateLocation = URL of the file"
-    },
-    {
-      "name": "csmFile",
-      "type": "filePath",
-      "label": "Template",
-      "defaultValue": "",
-      "required": true,
-      "groupName": "Template",
-      "visibleRule": " templateLocation = Linked artifact",
-      "helpMarkDown": "Specify the path or a pattern pointing to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate."
-    },
-    {
-      "name": "csmParametersFile",
-      "type": "filePath",
-      "label": "Template parameters",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "Template",
-      "helpMarkDown": "Specify the path or a pattern pointing for the parameters file for the Azure Resource Manager template.",
-      "visibleRule": " templateLocation = Linked artifact"
-    },
-    {
-      "name": "overrideParameters",
-      "type": "multiLine",
-      "label": "Override template parameters",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "Template",
-      "helpMarkDown": "To view the template parameters in a grid, click on “…” next to Override Parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS. Or type the template parameters to override in the textbox. Example, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).<br>If the parameter value you're using has multiple words, enclose them in quotes, even if you're passing them using variables. For example, -name \"parameter value\" -name2 \"$(var)\"<br>To override object type parameters use stringified JSON objects. For example, -options [\"option1\"] -map {\"key1\": \"value1\" }. ",
-      "properties": {
-        "editorExtension": "ms.vss-services-azure.azurerg-parameters-grid"
-      }
-    },
-    {
-      "name": "deploymentMode",
-      "type": "pickList",
-      "label": "Deployment mode",
-      "defaultValue": "Incremental",
-      "required": true,
-      "groupName": "Template",
-      "helpMarkDown": "Refer to [this](https://docs.microsoft.com/en-us/azure/azure-resource-manager/deployment-modes) for more details. \n\n Incremental mode handles deployments as incremental updates to the resource group. It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. Complete mode takes relatively more time than incremental mode. If the task times out, consider increasing the timeout, or changing the mode to 'Incremental'. \n **[Warning] Complete mode will delete all the existing resources in the resource group that are not specified in the template. Do review if the resource group you're deploying to doesn't contain any necessary resources that are not specified in the template.** \n\n Validate mode enables you to find problems with the template before creating actual resources. Validate mode enables you to find problems with the template before creating actual resources. Please note that this mode will anyways create a resource group even if it does not deploy any resource.\n\n By default, Incremental mode is used.",
-      "options": {
-        "Incremental": "Incremental",
-        "Complete": "Complete",
-        "Validation": "Validation only"
-      }
-    },
-    {
-      "name": "enableDeploymentPrerequisites",
-      "type": "pickList",
-      "label": "Enable prerequisites",
-      "defaultValue": "None",
-      "groupName": "AdvancedDeploymentOptions",
-      "options": {
-        "None": "None",
-        "ConfigureVMwithWinRM": "Configure with WinRM agent",
-        "ConfigureVMWithDGAgent": "Configure with Deployment Group agent"
-      },
-      "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Choosing Deployment Group option would configure Deployment Group agent on each of the virtual machines. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
-    },
-    {
-      "name": "deploymentGroupEndpoint",
-      "aliases": [
-        "teamServicesConnection"
-      ],
-      "type": "connectedService:ExternalTfs",
-      "label": "Azure Pipelines service connection",
-      "groupName": "AdvancedDeploymentOptions",
-      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
-      "required": true,
-      "helpMarkDown": "Specify the service connection to connect to an Azure DevOps organization or collection for agent registration.<br><br>You can create a service connection using \"+New\", and select \"Token-based authentication\". You need a [personal access token(PAT)](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate?view=vsts) to setup a service connection. <br><br>​Click \"Manage\" to update the service connection details.",
-      "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
-      "name": "project",
-      "aliases": [
-        "teamProject"
-      ],
-      "type": "pickList",
-      "label": "Team project",
-      "groupName": "AdvancedDeploymentOptions",
-      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
-      "required": true,
-      "helpMarkDown": "Specify the Team Project which has the Deployment Group defined in it​",
-      "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
-      "name": "deploymentGroupName",
-      "type": "pickList",
-      "label": "Deployment Group",
-      "groupName": "AdvancedDeploymentOptions",
-      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
-      "required": true,
-      "helpMarkDown": "Specify the Deployment Group against which the agent(s) will be registered. For more guidance, refer to [Deployment Groups](https://aka.ms/832442)",
-      "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
-      "name": "copyAzureVMTags",
-      "type": "boolean",
-      "label": "Copy Azure VM tags to agents",
-      "groupName": "AdvancedDeploymentOptions",
-      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
-      "defaultValue": true,
-      "helpMarkDown": "Choose if the tags configured on the Azure VM need to be copied to the corresponding Deployment Group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)"
-    },
-    {
-      "name": "runAgentServiceAsUser",
-      "type": "boolean",
-      "label": "Run agent service as a user",
-      "groupName": "AdvancedDeploymentOptions",
-      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
-      "defaultValue": false,
-      "helpMarkDown": "Decide whether to run the agent service as a user other than the default. <br>The default user is \"NT AUTHORITY\\SYSTEM\" in Windows and \"root\" in Linux."
-    },
-    {
-      "name": "userName",
-      "type": "string",
-      "label": "User name",
-      "groupName": "AdvancedDeploymentOptions",
-      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && runAgentServiceAsUser = true",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "The username to run the agent service on the virtual machines. <br>For domain users, please enter values as \"domain\\username\" or \"username@domain.com\". For local users, please enter just the user name. <br>It is assumed that the same domain user\\a local user with the same name, respectively, is present on all the virtual machines in the resource group."
-    },
-    {
-      "name": "password",
-      "type": "string",
-      "label": "Password",
-      "groupName": "AdvancedDeploymentOptions",
-      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && runAgentServiceAsUser = true",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "The password for the user to run the agent service on the Windows VMs. <br>It is assumed that the password is the same for the specified user on all the VMs. <br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'. You may mark variable as 'secret' to secure it. <br>For linux VMs, a password is not required and will be ignored. "
-    },
-    {
-      "name": "outputVariable",
-      "type": "string",
-      "label": "VM details for WinRM",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "AdvancedDeploymentOptions",
-      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMwithWinRM || enableDeploymentPrerequisites = None",
-      "helpMarkDown": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. <br>Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected."
-    },
-    {
-      "name": "deploymentName",
-      "type": "string",
-      "label": "Deployment name",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "Advanced",
-      "helpMarkDown": "Specifies the name of the resource group deployment to create."
-    },
-    {
-      "name": "deploymentOutputs",
-      "type": "string",
-      "label": "Deployment outputs",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "Advanced",
-      "helpMarkDown": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)"
-    },
-    {
-      "name": "addSpnToEnvironment",
-      "type": "boolean",
-      "label": "Access service principal details in override parameters",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "Adds service principal id and key of the Azure endpoint you chose to the script's execution environment. You can use these variables: `$servicePrincipalId` and `$servicePrincipalKey` in your override parameters like `-key $servicePrincipalKey`",
-      "groupName": "Advanced"
-    },
-    {
-      "name": "useWithoutJSON",
-      "type": "boolean",
-      "label": "Use individual output values without JSON.Stringify applied",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "Individual output values are being converted via JSON.Stringify by default. If you want to use the output values as it is without converting them via JSON.Stringify, enable this option. For more details refer to [this](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceGroupDeploymentV2#deployment-outputs)",
-      "groupName": "Advanced"
-    }
-  ],
-  "dataSourceBindings": [
-    {
-      "target": "resourceGroupName",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureResourceGroups"
-    },
-    {
-      "target": "location",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureLocations"
-    },
-    {
-      "target": "project",
-      "endpointId": "$(deploymentGroupEndpoint)",
-      "dataSourceName": "Projects",
-      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
-    },
-    {
-      "target": "deploymentGroupName",
-      "endpointId": "$(deploymentGroupEndpoint)",
-      "dataSourceName": "DeploymentGroups",
-      "parameters": {
-        "project": "$(project)"
-      },
-      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
-    }
-  ],
-  "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
-  "execution": {
-    "Node10": {
-      "target": "main.js"
-    },
-    "Node16": {
-      "target": "main.js",
-      "argumentFormat": ""
-    }
-  },
-  "messages": {
-    "CheckResourceGroupExistence": "Checking if the following resource group exists: %s.",
-    "ResourceGroupStatusFetchFailed": "Failed to check the resource group status. Error: %s.",
-    "ResourceGroupStatus": "Resource group exists: %s.",
-    "ResourceGroupCreationFailed": "Failed to create the resource group. Error: %s",
-    "CreatingNewRG": "Creating resource Group: %s",
-    "CreatedRG": "Resource Group created successfully.",
-    "CreatingTemplateDeployment": "Creating deployment parameters.",
-    "TemplateParsingFailed": "Ensure the Template file ( '%s' ) is valid. Task failed while parsing with following error: %s",
-    "FileFetchFailed": "Failed to download the file. URL: '%s'. Error: %s",
-    "ParametersFileParsingFailed": "Ensure the Parameters file ( '%s' ) is valid. Task failed while parsing with following error: %s",
-    "StartingDeployment": "Starting Deployment.",
-    "CreateTemplateDeploymentSucceeded": "Successfully deployed the template.",
-    "CreateTemplateDeploymentFailed": "Task failed while creating or updating the template deployment.",
-    "ErrorsInYourDeployment": "There were errors in your deployment. Error code: %s.",
-    "Details": "Details:",
-    "ErrorType": "Error Type:",
-    "PolicyDefinitionName": "Policy Definition Name :",
-    "PolicyAssignmentName": "Policy Assignment Name :",
-    "StartingValidation": "Starting template validation.",
-    "ValidDeployment": "Template deployment validation was completed successfully.",
-    "CreateTemplateDeploymentValidationFailed": "Template validation failed. Error: %s.",
-    "TemplateValidationHadErrors": "Task failed while validating the template deployment.",
-    "DeletingResourceGroup": "Deleting resource group: %s",
-    "CouldNotDeletedResourceGroup": "Could not delete resource group: '%s'. Operation failed with error: %s",
-    "DeletedResourceGroup": "Deleted resource group: %s",
-    "VM_ListFetchFailed": "Failed to fetch the list of virtual machines from resource group: %s. Error: %s",
-    "NoVMsFound": "No virtual machines found in the resource group.",
-    "VM_Start": "Starting virtual machine: %s",
-    "VM_Restart": "Restarting virtual machine: %s",
-    "VM_Stop": "Stopping virtual machine: %s",
-    "VM_Deallocate": "Deallocating virtual machine: %s",
-    "VM_Delete": "Deleting virtual machine: %s",
-    "SucceededOnVMOperation": "Operation: '%s' succeeded on all the virtual machines.",
-    "FailureOnVMOperation": "Operation: '%s' did not succeed on all the virtual machines. Errors: \n%s",
-    "VirtualMachineNameAndError": "%s: %s",
-    "RegisteringEnvironmentVariable": "Selecting the resource group details: %s.",
-    "FailedToFetchNetworkInterfaces": "Failed to fetch the list of network interfaces. Error: %s.",
-    "FailedToFetchLoadBalancers": "Failed to fetch the list of load balancers. Error: %s.",
-    "FailedToFetchPublicAddresses": "Failed to fetch the list of public addresses. Error: %s.",
-    "AddedToOutputVariable": "Resource group details were saved in following output variable: %s.",
-    "InvalidAction": "This action is not defined. Check with the task author.",
-    "TaskNotFound": "Task.json file could not be found: %s",
-    "ARGD_ConstructorFailed": "Task failed while initializing. Error: %s",
-    "RuleExistsAlready": "Rule %s already exists on the security group '%s'",
-    "AddExtension": "Adding extension '%s' on virtual machine '%s'",
-    "DeleteExtension": "Trying to delete extension %s from virtual machine %s",
-    "FailedToAddExtension": "Failed to add the network security rule with exception: %s",
-    "AddingSecurityRuleNSG": "Adding security rule for the network security group: %s",
-    "AddedSecurityRuleNSG": "Added inbound network security rule config %s with priority %s for port %s under security group %s with result: %s",
-    "FailedAddingNSGRule3Times": "Failed to add the network security rule to the security group %s after trying 3 times",
-    "FailedToDeleteExtension": "Deletion of extension failed",
-    "CredentialsCannotBeNull": "'credentials' cannot be null.",
-    "SubscriptionIdCannotBeNull": "'subscriptionId' cannot be null.",
-    "CallbackCannotBeNull": "callback cannot be null.",
-    "ResourceGroupCannotBeNull": "resourceGroupName cannot be null or undefined and it must be of type string.",
-    "ResourceGroupExceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MaxLength\": 90",
-    "ResourceGroupDeceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MinLength\": 1",
-    "ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" should satisfy the constraint - \"Pattern\": /^[-\\w\\._\\(\\)]+$/",
-    "ParametersCannotBeNull": "parameters cannot be null or undefined.",
-    "DeploymentNameCannotBeNull": "deploymentName cannot be null or undefined and it must be of type string.",
-    "VMNameCannotBeNull": "vmName cannot be null or undefined and it must be of type string.",
-    "InvalidValue": "%s is not a valid value. The valid values are: %s",
-    "VmExtensionNameCannotBeNull": "vmExtensionName cannot be null or undefined and it must be of type string.",
-    "ExpandShouldBeOfTypeString": "expand must be of type string.",
-    "ExtensionParametersCannotBeNull": "extensionParameters cannot be null or undefined.",
-    "ClientIdCannotBeEmpty": "clientId must be a non empty string.",
-    "DomainCannotBeEmpty": "domain must be a non empty string.",
-    "SecretCannotBeEmpty": "secret must be a non empty string.",
-    "armUrlCannotBeEmpty": "arm URL must be a non empty string.",
-    "authorityUrlCannotBeEmpty": "authority must be a non empty string.",
-    "LoadBalancerNameCannotBeNull": "'loadBalancerName cannot be null or undefined and it must be of type string.'",
-    "NetworkInterfaceNameCannotBeNull": "networkInterfaceName cannot be null or undefined and it must be of type string.",
-    "NetworkSecurityGroupNameCannotBeNull": "networkSecurityGroupName cannot be null or undefined and it must be of type string.",
-    "SecurityRuleNameCannotBeNull": "securityRuleName cannot be null or undefined and it must be of type string.",
-    "SecurityRuleParametersCannotBeNull": "securityRuleParameters cannot be null or undefined.",
-    "OutputVariableShouldNotBeEmpty": "Output variable should not be empty.",
-    "ARG_SetExtensionFailedForVm": "Standard Error Message: Failed to set extension on Virtual Machine %s. Error: %s",
-    "InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
-    "AddingInboundNatRule": "Adding Inbound Nat Rule for the Virtual Machine %s to the Load Balancer %s",
-    "InboundNatRuleAdditionFailed": "Addition of Inbound Nat Rule to the Load Balancer %s failed. Error: %s ",
-    "InboundNatRulesToNICFailed": "Addition of rule Id to the loadBalancerInboundNatRules of nic %s failed with the error: %s",
-    "AddedTargetInboundNatRuleLB": "Added the target virtual machine for the inbound NAT rules of load balancer %s",
-    "FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine. Error : %s",
-    "CreationOfExtensionFailed": "Failed to add the extension to the vm: '%s'. Error: %s",
-    "AddedExtension": "Successfully added the WinRMCustomScriptExtension for the virtual Machine %s",
-    "AddingExtensionSucceeded": "Addition of extension on vm %s succeeded",
-    "DeletionSucceeded": "Deletion of extension on vm %s succeeded",
-    "AdditionFailed": "Addition of %s on vm %s failed. Error : %s",
-    "DeletionFailed": "Deletion of %s on vm %s failed. Error : %s",
-    "DeleteAgentManually": "After the task execution completes, if the deployment group agent corresponding to the virtual machine %s is present but not active in the deployment group %s, then please delete it manually from the deployment group.",
-    "DGAgentAddedOnAllVMs": "Deployment group agent added on all virtual machines of the resource group",
-    "DGAgentDeletedFromAllVMs": "Deployment group agent deleted from all virtual machines of the resource group",
-    "DGAgentHandlerMajorVersion": "Deployment group extension handler major version is 1",
-    "VMStartFailed": "Could not start the virtual machine %s. Error : %s",
-    "VMStarted": "Started virtual machine: %s",
-    "VMTransitioningSkipExtensionAddition": "Virtual machine %s is in a transitioning state. Skipping adding extension on it.",
-    "VMDetailsFetchFailed": "Could not get details of virtual machine %s. Error : %s",
-    "VMDetailsFetchSucceeded": "Fetched details of virtual machine %s.",
-    "AddingDGAgentOnVMs": "Adding deployment group agent on the resource group virtual machines.",
-    "DeletingDGAgentOnVMs": "Deleting deployment group agent on virtual machines",
-    "AddingExtensionFailed": "Addition of extension on vm %s failed",
-    "TimeoutWhileWaiting": "Timed out while waiting",
-    "InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'",
-    "EncodingNotSupported": "Encoding of the file '%s' is '%s' which is not supported. Supported file encodings are ['utf-8', 'utf-16le']",
-    "CouldNotDetectEncoding": "Could not detect encoding of file '%s'",
-    "DetectedFileEncoding": "The detected encoding for file '%s' is '%s'",
-    "HostUrlCannotBeEmpty": "Host URL must be a non empty string.",
-    "PatTokenCannotBeEmpty": "Personal access token must be a non empty string.",
-    "OnlyTokenAuthAllowed": "Service connection can be of Token authorization type only.",
-    "DeploymentGroupEndpointUrlCannotBeEmpty": "Deployment group service connection URL cannot be empty",
-    "DeploymentGroupEndpointPatTokenCannotBeEmpty": "Deployment group service connection personal access token cannot be empty",
-    "ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s', make sure it follows JavaScript Object Notation (JSON)",
-    "TemplateFilePatternMatchingMoreThanOneFile": "Found multiple files matching template file pattern: %s",
-    "TemplateParameterFilePatternMatchingMoreThanOneFile": "Found multiple files matching template parameters file pattern: %s",
-    "TemplateFilePatternMatchingNoFile": "Could not find any file matching the template file pattern",
-    "TemplateParameterFilePatternMatchingNoFile": "Could not find any file matching the template file pattern",
-    "ParametersPatternMatchesADirectoryInsteadOfAFile": "Parameters file pattern matches a directory instead of a file.",
-    "CsmFilePatternMatchesADirectoryInsteadOfAFile": "Template file pattern matches a directory instead of a file: %s",
-    "ResourceNameCannotBeNull": "Resource name cannot be null.",
-    "ProvisioningStatusOfExtensionIsNotSucceeded": "Provisioning State of WinRMCustomScriptExtension is not succeeded on vm: '%s'.",
-    "ListingOfExtensionsFailed": "Failed to list the extensions for the vm: '%s'. Error '%s'",
-    "ExtensionNotFound": "Extension not found on the vm: %s",
-    "AddedOutputVariable": "Updated output variable '%s', which contains the outputs section of the current deployment object in string format.",
-    "UnableToFetchAuthorityURL": "Unable to fetch authority URL.",
-    "UnableToFetchActiveDirectory": "Unable to fetch Active Directory resource ID.",
-    "SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm service connection URL: '{0}' is invalid.",
-    "FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data, error message: {0}",
-    "UnableToReadResponseBody": "Unable to read response body. Error: %s",
-    "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
-    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-    "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
-    "UserNameCannotBeNull": "If the 'Run agent service as a user' input is selected, then 'User name' cannot be null.",
-    "ASE_SSLIssueRecommendation": "To use a certificate, the certificate must be signed by a trusted certificate authority. If getting certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline.",
-    "MoreInformationOnAzurePortal": "More information on Azure Portal",
-    "ResponseNotValid": "Response is not in a valid format",
-    "LogDeploymentName": "Deployment name is %s",
-    "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
-    "DeploymentGroupConfigurationNotSucceeded": "Deployment group configuration did not succeed on one or more Virtual Machine(s): %s",
-    "ServicePrincipalRoleAssignmentDetails": "Please make sure the Service Principal with name %s is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal",
-    "ServicePrincipalFetchFailed": "Error while fetching Service Principal details: %s",
-    "FindMoreDeploymentDetailsAzurePortal": "Task successfully created an Azure Resource Manager deployment, but the deployment failed. Please see more detailed Azure resource manager deployment logs at: (Please Copy-Paste the link) %s",
-    "TemplateValidationFailure": "Validation errors were found in the Azure Resource Manager template. This can potentially cause template deployment to fail. %s. Please follow https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-syntax",
-    "ManagedServiceIdentityDetails": "Please make sure the Managed Service Identity used for deployment is assigned the right roles for the Resource Group %s. Follow the link for more details: https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal",
-    "DeploymentGroupConfigurationFailedOnVM": "Failure for Virtual Machine '%s': %s",
-    "TroubleshootingGuide": "Check out the troubleshooting guide to see if your issue is addressed: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
-  }
 }

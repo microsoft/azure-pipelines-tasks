@@ -13,5 +13,6 @@
   "loc.messages.AZ_InvalidARMEndpoint": "指定的 AzureRM 端點無效。",
   "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "無法擷取受控識別的存取權杖。請設定虛擬機器的受控識別 'https://aka.ms/azure-msi-docs'。狀態碼: '{0}'，錯誤訊息: {1}",
   "loc.messages.AZ_MsiAccessTokenFetchFailure": "無法擷取受控識別的存取權杖。狀態碼: '{0}'，錯誤訊息: {1}",
-  "loc.messages.AZ_MsiFailure": "無法擷取受控識別的存取權杖。{0}"
+  "loc.messages.AZ_MsiFailure": "無法擷取受控識別的存取權杖。{0}",
+  "loc.messages.AZ_ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at {0} See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
 }

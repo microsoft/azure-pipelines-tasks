@@ -10,8 +10,8 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "version": {
     "Major": 0,
-    "Minor": 236,
-    "Patch": 0
+    "Minor": 238,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",

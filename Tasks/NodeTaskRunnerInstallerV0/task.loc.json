@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
-    "Patch": 2
+    "Minor": 238,
+    "Patch": 1
   },
   "preview": true,
   "demands": [],
@@ -35,7 +35,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.runnerVersion",
       "options": {
         "6": "Node.js 6.17.1",
-        "10": "Node.js 10.24.1"
+        "10": "Node.js 10.24.1",
+        "16": "Node.js 16.20.2"
       }
     }
   ],

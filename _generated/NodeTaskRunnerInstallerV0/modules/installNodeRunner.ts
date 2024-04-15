@@ -8,18 +8,20 @@ import { isDarwinArmWithRosetta } from '../utils/isDarwinArmWithRosetta';
 import { getAgentExternalsPath } from '../utils/getAgentExternalsPath';
 import { getDirContent } from '../utils/getDirContent';
 import { NodeOsPlatform, TargetOsInfo } from '../interfaces/os-types';
+import { RunnerFolder } from '../constants';
 
 export async function installNodeRunner(targetNodeVersion: string, osInfo: TargetOsInfo) {
     let installedArch = osInfo.osArch;
 
     let targetNodePath: string;
+    let nodeFolderName = RunnerFolder[toolLib.cleanVersion(targetNodeVersion)];
 
     // check cache
-    targetNodePath = toolLib.findLocalTool('node', targetNodeVersion, installedArch);
+    targetNodePath = toolLib.findLocalTool(nodeFolderName, targetNodeVersion, installedArch);
 
     // In case if it's darwin arm and toolPath is empty trying to find x64 version
     if (!targetNodePath && isDarwinArmWithRosetta(osInfo.osPlatform, installedArch)) {
-        targetNodePath = toolLib.findLocalTool('node', installedArch, 'x64');
+        targetNodePath = toolLib.findLocalTool(nodeFolderName, installedArch, 'x64');
         installedArch = 'x64';
     }
 
@@ -32,7 +34,7 @@ export async function installNodeRunner(targetNodeVersion: string, osInfo: Targe
         );
     }
 
-    const resultNodePath = await copyNodeToAgentExternals(targetNodePath, 'node', osInfo.osPlatform);
+    const resultNodePath = await copyNodeToAgentExternals(targetNodePath, nodeFolderName, osInfo.osPlatform);
 
     taskLib.debug('resultNodePath = ' + resultNodePath);
 

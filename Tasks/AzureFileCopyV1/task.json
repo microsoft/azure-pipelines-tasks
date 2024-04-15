@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 237,
-        "Patch": 5
+        "Minor": 238,
+        "Patch": 4
     },
     "demands": [
         "azureps"

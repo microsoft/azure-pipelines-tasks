@@ -1,228 +1,228 @@
 {
-  "id": "4dda660c-b643-4598-a4a2-61080d0002d9",
-  "name": "AzureVmssDeployment",
-  "friendlyName": "Azure VM scale set deployment",
-  "description": "Deploy a virtual machine scale set image",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-vmss-deployment",
-  "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-vmss-deployment)",
-  "category": "Deploy",
-  "releaseNotes": "- Updates Azure Virtual Machine scale set with a custom machine image.",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "author": "Microsoft Corporation",
-  "version": {
-    "Major": 0,
-    "Minor": 233,
-    "Patch": 0
-  },
-  "demands": [],
-  "minimumAgentVersion": "2.0.0",
-  "groups": [
-    {
-      "name": "AzureDetails",
-      "displayName": "Azure Details",
-      "isExpanded": true
+    "id": "4dda660c-b643-4598-a4a2-61080d0002d9",
+    "name": "AzureVmssDeployment",
+    "friendlyName": "Azure VM scale set deployment",
+    "description": "Deploy a virtual machine scale set image",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-vmss-deployment",
+    "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-vmss-deployment)",
+    "category": "Deploy",
+    "releaseNotes": "- Updates Azure Virtual Machine scale set with a custom machine image.",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 238,
+        "Patch": 1
     },
-    {
-      "name": "Image",
-      "displayName": "Image Details",
-      "isExpanded": true,
-      "visibleRule": "action = Update image || action = UpdateImage"
+    "demands": [],
+    "minimumAgentVersion": "2.0.0",
+    "groups": [
+        {
+            "name": "AzureDetails",
+            "displayName": "Azure Details",
+            "isExpanded": true
+        },
+        {
+            "name": "Image",
+            "displayName": "Image Details",
+            "isExpanded": true,
+            "visibleRule": "action = Update image || action = UpdateImage"
+        },
+        {
+            "name": "StartupConfiguration",
+            "displayName": "Configure start-up",
+            "isExpanded": true,
+            "visibleRule": "action = Configure application startup || action = Update image || action = UpdateImage"
+        },
+        {
+            "name": "Advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "aliases": [
+                "azureSubscription"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the scale set."
+        },
+        {
+            "name": "action",
+            "type": "pickList",
+            "label": "Action",
+            "defaultValue": "Update image",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Choose between updating a VM scale set by using a VHD image and/or by running deployment/install scripts using Custom Script VM extension.<br/>The VHD image approach is better for scaling quickly and doing rollback. The extension approach is useful for post deployment configuration, software installation, or any other configuration / management task.<br/>You can use a VHD image to update a VM scale set only when it was created by using a custom image, the update will fail if the VM Scale set was created by using a platform/gallery image available in Azure.<br/>The Custom script VM extension approach can be used for VM scale set created by using either custom image or platform/gallery image.",
+            "options": {
+                "Update image": "Update VM Scale set by using an image",
+                "Configure application startup": "Run Custom Script VM extension on VM scale set"
+            }
+        },
+        {
+            "name": "vmssName",
+            "type": "pickList",
+            "label": "Virtual Machine scale set name",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Name of VM scale set which you want to update by using either a VHD image or by using Custom script VM extension.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "vmssOsType",
+            "type": "pickList",
+            "label": "OS type",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Select the operating system type of VM scale set.",
+            "options": {
+                "Windows": "Windows",
+                "Linux": "Linux"
+            },
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "imageUrl",
+            "type": "string",
+            "label": "Image URL",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "Image",
+            "helpMarkDown": "Specify the URL of VHD image. If it is an Azure storage blob URL, the storage account location should be same as scale set location."
+        },
+        {
+            "name": "customScriptsDirectory",
+            "type": "filePath",
+            "label": "Custom script directory",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "StartupConfiguration",
+            "helpMarkDown": "Path to directory containing custom script(s) that will be run by using Custom Script VM extension. The extension approach is useful for post deployment configuration, application/software installation, or any other application configuration/management task. For example: the script can set a machine level environment variable which the application uses, like database connection string."
+        },
+        {
+            "name": "customScript",
+            "type": "string",
+            "label": "Command",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "StartupConfiguration",
+            "helpMarkDown": "The script that will be run by using Custom Script VM extension. This script can invoke other scripts in the directory. The script will be invoked with arguments passed below.<br/>This script in conjugation with such arguments can be used to execute commands. For example:<br/>1. Update-DatabaseConnectionStrings.ps1 -clusterType dev -user $(dbUser) -password $(dbUserPwd) will update connection string in web.config of web application.<br/>2. install-secrets.sh --key-vault-type prod -key serviceprincipalkey will create an encrypted file containing service principal key."
+        },
+        {
+            "name": "customScriptArguments",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "StartupConfiguration",
+            "helpMarkDown": "The custom script will be invoked with arguments passed. Build/Release variables can be used which makes it easy to use secrets."
+        },
+        {
+            "name": "customScriptsStorageAccount",
+            "type": "pickList",
+            "label": "Azure storage account where custom scripts will be uploaded",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "StartupConfiguration",
+            "helpMarkDown": "The Custom Script Extension downloads and executes scripts provided by you on each virtual machines in the VM scale set. These scripts will be stored in the storage account specified here. Specify a pre-existing ARM storage account.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "skipArchivingCustomScripts",
+            "type": "boolean",
+            "label": "Skip Archiving custom scripts",
+            "defaultValue": false,
+            "groupName": "Advanced",
+            "helpMarkDown": "By default, this task creates a compressed archive of directory containing custom scripts. This improves performance and reliability while uploading to azure storage. If not selected, archiving will not be done and all files will be inidividually uploaded."
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "vmssName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureVirtualMachineScaleSetNames"
+        },
+        {
+            "target": "customScriptsStorageAccount",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureStorageAccountRM"
+        }
+    ],
+    "instanceNameFormat": "Azure VMSS $(vmssName): $(action)",
+    "execution": {
+        "Node10": {
+            "target": "main.js"
+        },
+        "Node16": {
+            "target": "main.js",
+            "argumentFormat": ""
+        }
     },
-    {
-      "name": "StartupConfiguration",
-      "displayName": "Configure start-up",
-      "isExpanded": true,
-      "visibleRule": "action = Configure application startup || action = Update image || action = UpdateImage"
-    },
-    {
-      "name": "Advanced",
-      "displayName": "Advanced",
-      "isExpanded": false
+    "messages": {
+        "InvalidAction": "This action is not defined. Check with the task author.",
+        "TaskNotFound": "Task.json file could not be found: %s",
+        "TaskConstructorFailed": "Task failed while initializing. Error: %s",
+        "InvalidValue": "%s is not a valid value. The valid values are: %s",
+        "VMSSListFetchFailed": "Failed to fetch VMSS details. Error: %s",
+        "NoVMSSFound": "No VMSS found with name %s.",
+        "FailedToGetRGForVMSS": "Failed to get resource group information for VMSS %s.",
+        "VMSSImageUpdateFailed": "Failed to update image for VMSS %s. Error: %s",
+        "UpdatedVMSSImage": "Successfully updated VMSS image.",
+        "GetVMSSExtensionsListFailed": "Failed to fetch list of VM extensions for VMSS %s. Error: %s.",
+        "CustomScriptExtensionRemoved": "Custom script extension %s removed successfully.",
+        "CustomScriptExtensionInstalled": "Custom script extension %s installed successfully.",
+        "RemovingCustomScriptExtension": "VMSS already has an custom script extension %s. This will be removed first.",
+        "RemoveVMSSExtensionsFailed": "Failed to remove VM extension %s. Error: %s.",
+        "SettingVMExtensionFailed": "Failed to install VM custom script extension on VMSS. Error: %s.",
+        "VMSSNameCannotBeNull": "VMSS name cannot be null or undefined and it must be of type string.",
+        "GetVMSSFailed": "Failed to get VMSS details with resource group %s and name %s. Error: %s",
+        "VMSSDoesNotHaveCustomImage": "VMSS %s can not be updated as it uses a platform image. Only a VMSS which is currently using a custom image can be updated.",
+        "VMSSImageUrlCannotBeNull": "Image URL must be a non empty string.",
+        "VMSSImageAlreadyUptoDate": "Image is already up-to-date for %s. Skipping image update.",
+        "NewVMSSImageUrl": "URL for new VMSS image: %s.",
+        "VMSSUpdateImage": "Updating VMSS %s to use new image...",
+        "ResourceNameCannotBeNull": "Resource name cannot be null.",
+        "ArchivingCustomScripts": "Creating compressed archive of custom scripts directory %s.",
+        "SkippedArchivingCustomScripts": "Skipped archiving custom scripts directory",
+        "CustomScriptsArchiveFile": "Custom scripts archive created at %s.",
+        "CopiedInvokerScript": "Script to extract and execute custom script archive has been copied to %s.",
+        "CustomScriptsArchivingFailed": "Could not compress custom scripts. Will use individual files.",
+        "UploadingCustomScriptsBlobs": "Uploading custom scripts from %s to azure blobs.",
+        "UploadingToStorageBlobsFailed": "Failed to upload custom scripts to azure blob storage. Error: %s.",
+        "DestinationBlobContainer": "Files will be uploaded to container URL: %s.",
+        "StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
+        "activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource URL cannot be empty.",
+        "StorageAccountCannotBeNull": "storage accountName cannot be null or undefined and it must be of type string.",
+        "ArtifactItemsTruncationWarning": "Downloaded items may be truncated at 5000 items, all artifact items might not have been downloaded.",
+        "CreatedBlobForItem": "Created blob for item %s. Blob uri: %s.",
+        "CreatedContainer": "Created container %s.",
+        "ErrorInReadStream": "Error in Read stream: %s.",
+        "ErrorInWriteStream": "Error in write stream: %s.",
+        "FailedToCreateBlob": "Failed to create blob %s. Error: %s.",
+        "FailedToCreateContainer": "Failed to create container %s. Error: %s.",
+        "FailedToListItemInsideContainer": "Failed to list items inside container: %s. Error: %s.",
+        "SuccessFullyFetchedItemList": "Successfully fetched list of items",
+        "UnableToFetchItem": "Unable to fetch item: %s. Error: %s.",
+        "UploadingItem": "Uploading %s.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+        "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
     }
-  ],
-  "inputs": [
-    {
-      "name": "ConnectedServiceName",
-      "aliases": [
-        "azureSubscription"
-      ],
-      "type": "connectedService:AzureRM",
-      "label": "Azure subscription",
-      "defaultValue": "",
-      "required": true,
-      "groupName": "AzureDetails",
-      "helpMarkDown": "Select the Azure Resource Manager subscription for the scale set."
-    },
-    {
-      "name": "action",
-      "type": "pickList",
-      "label": "Action",
-      "defaultValue": "Update image",
-      "required": true,
-      "groupName": "AzureDetails",
-      "helpMarkDown": "Choose between updating a VM scale set by using a VHD image and/or by running deployment/install scripts using Custom Script VM extension.<br/>The VHD image approach is better for scaling quickly and doing rollback. The extension approach is useful for post deployment configuration, software installation, or any other configuration / management task.<br/>You can use a VHD image to update a VM scale set only when it was created by using a custom image, the update will fail if the VM Scale set was created by using a platform/gallery image available in Azure.<br/>The Custom script VM extension approach can be used for VM scale set created by using either custom image or platform/gallery image.",
-      "options": {
-        "Update image": "Update VM Scale set by using an image",
-        "Configure application startup": "Run Custom Script VM extension on VM scale set"
-      }
-    },
-    {
-      "name": "vmssName",
-      "type": "pickList",
-      "label": "Virtual Machine scale set name",
-      "required": true,
-      "groupName": "AzureDetails",
-      "helpMarkDown": "Name of VM scale set which you want to update by using either a VHD image or by using Custom script VM extension.",
-      "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
-      "name": "vmssOsType",
-      "type": "pickList",
-      "label": "OS type",
-      "required": true,
-      "groupName": "AzureDetails",
-      "helpMarkDown": "Select the operating system type of VM scale set.",
-      "options": {
-        "Windows": "Windows",
-        "Linux": "Linux"
-      },
-      "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
-      "name": "imageUrl",
-      "type": "string",
-      "label": "Image URL",
-      "defaultValue": "",
-      "required": true,
-      "groupName": "Image",
-      "helpMarkDown": "Specify the URL of VHD image. If it is an Azure storage blob URL, the storage account location should be same as scale set location."
-    },
-    {
-      "name": "customScriptsDirectory",
-      "type": "filePath",
-      "label": "Custom script directory",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "StartupConfiguration",
-      "helpMarkDown": "Path to directory containing custom script(s) that will be run by using Custom Script VM extension. The extension approach is useful for post deployment configuration, application/software installation, or any other application configuration/management task. For example: the script can set a machine level environment variable which the application uses, like database connection string."
-    },
-    {
-      "name": "customScript",
-      "type": "string",
-      "label": "Command",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "StartupConfiguration",
-      "helpMarkDown": "The script that will be run by using Custom Script VM extension. This script can invoke other scripts in the directory. The script will be invoked with arguments passed below.<br/>This script in conjugation with such arguments can be used to execute commands. For example:<br/>1. Update-DatabaseConnectionStrings.ps1 -clusterType dev -user $(dbUser) -password $(dbUserPwd) will update connection string in web.config of web application.<br/>2. install-secrets.sh --key-vault-type prod -key serviceprincipalkey will create an encrypted file containing service principal key."
-    },
-    {
-      "name": "customScriptArguments",
-      "type": "string",
-      "label": "Arguments",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "StartupConfiguration",
-      "helpMarkDown": "The custom script will be invoked with arguments passed. Build/Release variables can be used which makes it easy to use secrets."
-    },
-    {
-      "name": "customScriptsStorageAccount",
-      "type": "pickList",
-      "label": "Azure storage account where custom scripts will be uploaded",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "StartupConfiguration",
-      "helpMarkDown": "The Custom Script Extension downloads and executes scripts provided by you on each virtual machines in the VM scale set. These scripts will be stored in the storage account specified here. Specify a pre-existing ARM storage account.",
-      "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
-      "name": "skipArchivingCustomScripts",
-      "type": "boolean",
-      "label": "Skip Archiving custom scripts",
-      "defaultValue": false,
-      "groupName": "Advanced",
-      "helpMarkDown": "By default, this task creates a compressed archive of directory containing custom scripts. This improves performance and reliability while uploading to azure storage. If not selected, archiving will not be done and all files will be inidividually uploaded."
-    }
-  ],
-  "dataSourceBindings": [
-    {
-      "target": "vmssName",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureVirtualMachineScaleSetNames"
-    },
-    {
-      "target": "customScriptsStorageAccount",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureStorageAccountRM"
-    }
-  ],
-  "instanceNameFormat": "Azure VMSS $(vmssName): $(action)",
-  "execution": {
-    "Node10": {
-      "target": "main.js"
-    },
-    "Node16": {
-      "target": "main.js",
-      "argumentFormat": ""
-    }
-  },
-  "messages": {
-    "InvalidAction": "This action is not defined. Check with the task author.",
-    "TaskNotFound": "Task.json file could not be found: %s",
-    "TaskConstructorFailed": "Task failed while initializing. Error: %s",
-    "InvalidValue": "%s is not a valid value. The valid values are: %s",
-    "VMSSListFetchFailed": "Failed to fetch VMSS details. Error: %s",
-    "NoVMSSFound": "No VMSS found with name %s.",
-    "FailedToGetRGForVMSS": "Failed to get resource group information for VMSS %s.",
-    "VMSSImageUpdateFailed": "Failed to update image for VMSS %s. Error: %s",
-    "UpdatedVMSSImage": "Successfully updated VMSS image.",
-    "GetVMSSExtensionsListFailed": "Failed to fetch list of VM extensions for VMSS %s. Error: %s.",
-    "CustomScriptExtensionRemoved": "Custom script extension %s removed successfully.",
-    "CustomScriptExtensionInstalled": "Custom script extension %s installed successfully.",
-    "RemovingCustomScriptExtension": "VMSS already has an custom script extension %s. This will be removed first.",
-    "RemoveVMSSExtensionsFailed": "Failed to remove VM extension %s. Error: %s.",
-    "SettingVMExtensionFailed": "Failed to install VM custom script extension on VMSS. Error: %s.",
-    "VMSSNameCannotBeNull": "VMSS name cannot be null or undefined and it must be of type string.",
-    "GetVMSSFailed": "Failed to get VMSS details with resource group %s and name %s. Error: %s",
-    "VMSSDoesNotHaveCustomImage": "VMSS %s can not be updated as it uses a platform image. Only a VMSS which is currently using a custom image can be updated.",
-    "VMSSImageUrlCannotBeNull": "Image URL must be a non empty string.",
-    "VMSSImageAlreadyUptoDate": "Image is already up-to-date for %s. Skipping image update.",
-    "NewVMSSImageUrl": "URL for new VMSS image: %s.",
-    "VMSSUpdateImage": "Updating VMSS %s to use new image...",
-    "ResourceNameCannotBeNull": "Resource name cannot be null.",
-    "ArchivingCustomScripts": "Creating compressed archive of custom scripts directory %s.",
-    "SkippedArchivingCustomScripts": "Skipped archiving custom scripts directory",
-    "CustomScriptsArchiveFile": "Custom scripts archive created at %s.",
-    "CopiedInvokerScript": "Script to extract and execute custom script archive has been copied to %s.",
-    "CustomScriptsArchivingFailed": "Could not compress custom scripts. Will use individual files.",
-    "UploadingCustomScriptsBlobs": "Uploading custom scripts from %s to azure blobs.",
-    "UploadingToStorageBlobsFailed": "Failed to upload custom scripts to azure blob storage. Error: %s.",
-    "DestinationBlobContainer": "Files will be uploaded to container URL: %s.",
-    "StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
-    "activeDirectoryResourceIdUrlCannotBeEmpty": "Active directory resource URL cannot be empty.",
-    "StorageAccountCannotBeNull": "storage accountName cannot be null or undefined and it must be of type string.",
-    "ArtifactItemsTruncationWarning": "Downloaded items may be truncated at 5000 items, all artifact items might not have been downloaded.",
-    "CreatedBlobForItem": "Created blob for item %s. Blob uri: %s.",
-    "CreatedContainer": "Created container %s.",
-    "ErrorInReadStream": "Error in Read stream: %s.",
-    "ErrorInWriteStream": "Error in write stream: %s.",
-    "FailedToCreateBlob": "Failed to create blob %s. Error: %s.",
-    "FailedToCreateContainer": "Failed to create container %s. Error: %s.",
-    "FailedToListItemInsideContainer": "Failed to list items inside container: %s. Error: %s.",
-    "SuccessFullyFetchedItemList": "Successfully fetched list of items",
-    "UnableToFetchItem": "Unable to fetch item: %s. Error: %s.",
-    "UploadingItem": "Uploading %s.",
-    "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
-    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-    "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
-    "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
-  }
 }
