@@ -15,17 +15,11 @@ steps:
 #     displayName: Start collect diagnostics
 #     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
 
-# Use node 10, npm 6
+# Use node 20, npm 9
 - task: NodeTool@0
-  displayName: Use node 10
+  displayName: Use node 20
   inputs:
-    versionSpec: 10.24.1
-
-# # Use .NET SDK 8
-# - task: UseDotNet@2
-#   displayName: 'Install .NET Core SDK 8.x'
-#   inputs:
-#     version: 8.x
+    versionSpec: 20.11.0
 
 # npm install
 - script: npm install
@@ -48,18 +42,14 @@ steps:
     PACKAGE_ENDPOINT: $(Package.Endpoint)
     PACKAGE_TOKEN: $(System.AccessToken)
 
-# - script: node ./ci/before-build-check-tasks.js
-#   displayName: Check that tasks has no duplicated libs
-#   condition: |
-#     and(
-#       succeeded(),
-#       eq(variables['build.reason'], 'PullRequest'),
-#       ne(variables['numTasks'], 0)
-#     )
-
-# # Verify generated files across tasks are up-to-date
-# - script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --all-tasks
-#   displayName: Ensure BuildConfigGen outputs are consistent
+- script: node ./ci/before-build-check-tasks.js
+  displayName: Before build task validation
+  condition: |
+    and(
+      succeeded(),
+      eq(variables['build.reason'], 'PullRequest'),
+      ne(variables['numTasks'], 0)
+    )
 
 - powershell: ./ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
@@ -75,16 +65,9 @@ steps:
       eq(variables['System.PullRequest.TargetBranch'], 'master')
     )
 
-# # Build BuildConfigGen
-# - task: DotNetCoreCLI@2
-#   displayName: Build BuildConfigGen
-#   inputs:
-#     command: build
-#     projects: './BuildConfigGen/BuildConfigGen.csproj'
-
-# # Clean
-# - script: node make.js clean
-#   displayName: Clean tasks
+# Clean
+- script: node make.js clean
+  displayName: Clean tasks
 
 # # Build Tasks
 # - script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)"

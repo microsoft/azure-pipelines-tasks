@@ -1,0 +1,10 @@
+{
+  "name": "github.release",
+  "version": "0.0.0",
+  "main": "main.js",
+  "devDependencies": {
+    "@types/sinon": "^4.3.1",
+    "sinon": "^4.5.0",
+    "@types/mocha": "2.2.48"
+  }
+}

@@ -4,11 +4,11 @@ steps:
 - checkout: self
   clean: true
 
-# Use node 10, npm 6
+# Use node 20, npm 9
 - task: NodeTool@0
-  displayName: Use node 10
+  displayName: Use node 20
   inputs:
-    versionSpec: 10.x
+    versionSpec: 20.11.0
 
 # Use NuGet 4
 - task: NuGetToolInstaller@0
