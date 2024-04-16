@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 238,
-    "Patch": 0
+    "Patch": 2
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -583,7 +583,7 @@
     "Warning_UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.Warning_UnsupportedServiceConnectionAuth"
   },
   "_buildConfigMapping": {
-    "Default": "2.238.0",
-    "Node20_229_2": "2.238.1"
+    "Default": "2.238.2",
+    "Node20_229_2": "2.238.3"
   }
 }
