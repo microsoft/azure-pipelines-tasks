@@ -2,8 +2,9 @@ import * as tl from 'azure-pipelines-task-lib/task'
 import { executePythonTests } from './Invokers/pythoninvoker'
 import { executeMavenTests } from './Invokers/maveninvoker'
 import { executeGradleTests } from './Invokers/gradleinvoker'
+import { ciDictionary } from './ciEventLogger';
 
-export async function testInvoker(testsToBeExecuted: string[]): Promise<number> {
+export async function testInvoker(testsToBeExecuted: string[], ciData: ciDictionary): Promise<number> {
 
     const testLanguageStrings = tl.getDelimitedInput('testLanguageInput', ',', true);
 
@@ -21,20 +22,24 @@ export async function testInvoker(testsToBeExecuted: string[]): Promise<number> 
             case 'Java-Maven':
                 exitCode = await executeMavenTests(testsToBeExecuted);
                 tl.debug(`Execution Status Code for Maven: ${exitCode}`);
+                ciData["isJavaMavenExecution"] = true;
                 break;
 
             case 'Java-Gradle':
                 exitCode = await executeGradleTests(testsToBeExecuted);
                 tl.debug(`Execution Status Code for Gradle: ${exitCode}`);
+                ciData["isJavaGradleExecution"] = true;
                 break;
 
             case 'Python':
                 exitCode =  await executePythonTests(testsToBeExecuted);
                 tl.debug(`Execution Status Code for Python: ${exitCode}`);
+                ciData["isPythonExecution"] = true;
                 break;
 
             default:
                 console.log('Invalid test Language Input selected.');
+                ciData["NoLanguageInput"] = true;
         }
         
         exitStatusCode = exitStatusCode || exitCode;
