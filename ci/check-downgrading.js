@@ -1,4 +1,4 @@
-const { join, posix, sep } = require('path');
+const { join, posix, sep, basename } = require('path');
 const {
   readFileSync,
   existsSync
@@ -57,7 +57,7 @@ function compareVersionMapFilesToDefaultBranch() {
 
   modifiedVersionMapFiles.forEach(filePath => {
     //get task name from a string like _generated/TaskNameVN.versionmap.txt
-    const taskName = filePath.slice(11, -15);
+    const taskName = basename(filePath, '.versionmap.txt');
 
     defaultBranchVersionMap = parseVersionMap(getVersionMapContent(filePath, defaultBranch));
     sourceBranchVersionMap = parseVersionMap(getVersionMapContent(filePath, sourceBranch));
@@ -114,8 +114,7 @@ function getVersionMapContent(versionMapFilePath, branchName) {
 }
 
 function parseVersionMap(fileContent) {
-  //TODO: make regex more accurate
-  const simpleVersionMapRegex = /(?<configName>.*)\|(?<version>.*)$/;
+  const simpleVersionMapRegex = /(?<configName>.+)\|(?<version>\d.\d{1,3}.\d+)$/;
   const versionMap = {};
   fileContent.split('\n').forEach(line => {
     if (simpleVersionMapRegex.test(line)) {
