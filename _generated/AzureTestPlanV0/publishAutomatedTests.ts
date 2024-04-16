@@ -31,7 +31,7 @@ export async function publishAutomatedTestResult(listOfAutomatedTestPoints: stri
         const failTaskOnFailedTests = tl.getInput('failTaskOnFailedTests');
         const failTaskOnMissingResultsFile: boolean = tl.getBoolInput('failTaskOnMissingResultsFile');
         const failTaskOnFailureToPublishResults = tl.getInput('failTaskOnFailureToPublishResults');
-        const testRunSystem = "AzureTestPlan : " + tl.getInput("testLanguageInput");
+        const testRunSystem = "AzureTestPlan : " + tl.getInput("testLanguageInput").toString();
 
         let searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
 
