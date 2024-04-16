@@ -88,7 +88,7 @@ async function runTaskPipelines(taskName: string): Promise<Promise<BuildResult>[
     for (const config of configs) {
       console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`);
       const pipelineBuild = await startTestPipeline(pipeline, config);
-      console.log(pipelineBuild)
+
       const buildPromise = new Promise<BuildResult>(resolve => completeBuild(taskName, pipelineBuild, resolve));
       runningBuilds.push(buildPromise);
     }
