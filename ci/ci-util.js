@@ -524,6 +524,34 @@ var resolveTaskList = function(taskPattern) {
 exports.resolveTaskList = resolveTaskList;
 
 /**
+ * The function recieves task list and return the tasks including generated names
+ * @param {Array<string>} taskList - tasks to check
+ * @returns {Array<string>} - array of tasks with generated names
+ */
+function getAllTaskList(taskList) {
+    let tasksToBuild = taskList;
+
+    if (!fs.existsSync(genTaskPath)) return tasksToBuild;
+
+    const generatedTaskFolders = fs.readdirSync(genTaskPath)
+        .filter((taskName) => {
+            return fs.statSync(path.join(genTaskPath, taskName)).isDirectory();
+        });
+
+    taskList.forEach((taskName) => {
+        generatedTaskFolders.forEach((generatedTaskName) => {
+            if (taskName !== generatedTaskName && generatedTaskName.startsWith(taskName)) {
+                tasksToBuild.push(generatedTaskName);
+            }
+        });
+    });
+
+    return tasksToBuild.sort();
+}
+exports.getAllTaskList = getAllTaskList;
+
+
+/**
  * @param {string} type - log type
  * @param {string} payload - log message
  */
