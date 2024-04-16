@@ -376,6 +376,6 @@ async function main({ task, sprint, week }) {
 }
 
 main(argv).catch(error => {
-  console.log(`##vso[task.logissue type=error;sourcepath=${__filename};]${error.message}`);
+  console.log(`##vso[task.logissue type=error]${error}`);
   process.exit(1);
 });
