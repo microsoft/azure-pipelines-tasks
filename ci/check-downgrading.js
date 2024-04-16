@@ -6,7 +6,7 @@ const {
 const { mkdir, rm } = require('shelljs');
 const { platform } = require('os');
 const { run, resolveTaskList, logToPipeline } = require('./ci-util');
-const { eq, inc, parse, lte, neq } = require('semver');
+const { eq, inc, parse, lte, neq, gt } = require('semver');
 
 const taskVersionBumpingDocUrl = "https://aka.ms/azp-tasks-version-bumping";
 
@@ -46,6 +46,87 @@ if (!existsSync(tempMasterTasksPath)) {
 
 if (existsSync(join(tempMasterTasksPath, 'Tasks'))) {
   rm('-rf', join(tempMasterTasksPath, 'Tasks'));
+}
+
+function compareVersionMapFilesToDefaultBranch() {
+  const messages = [];
+  const defaultBranch = 'origin/master';
+
+  const modifiedVersionMapFiles = getModifiedVersionMapFiles(defaultBranch, sourceBranch);
+  if (modifiedVersionMapFiles.length == 0) return messages;
+
+  modifiedVersionMapFiles.forEach(filePath => {
+    //get task name from a string like _generated/TaskNameVN.versionmap.txt
+    const taskName = filePath.slice(11, -15);
+
+    defaultBranchVersionMap = parseVersionMap(getVersionMapContent(filePath, defaultBranch));
+    sourceBranchVersionMap = parseVersionMap(getVersionMapContent(filePath, sourceBranch));
+
+    const versionMapIssues = findVersionMapUpdateIssues(defaultBranchVersionMap, sourceBranchVersionMap);
+    versionMapIssues.forEach(issue => {
+      messages.push({
+        type: 'error',
+        payload: `Task Name: ${taskName}. Please check ${filePath}. ${issue}`
+      });
+    });
+  });
+
+  return messages;
+}
+
+function findMaxConfigVersion(versionMap) {
+  let maxVersion = '0.0.0';
+  for (const config in versionMap) {
+    if (gt(versionMap[config], maxVersion)) {
+      maxVersion = versionMap[config];
+    }
+  }
+  return maxVersion;
+}
+
+function findVersionMapUpdateIssues(defaultBranchConfig, sourceBranchConfig) {
+  const defaultBranchMaxVersion = findMaxConfigVersion(defaultBranchConfig);
+  const issues = [];
+  for (const config in sourceBranchConfig) {
+    // Check that new versions are greater than previous max version
+    if (!gt(sourceBranchConfig[config], defaultBranchMaxVersion)) {
+      issues.push(
+        `New versions of the task should be greater than the previous max version. ${config}|${sourceBranchConfig[config]} should be greater than ${defaultBranchMaxVersion}`
+      );
+      break;
+    }
+  }
+
+  return issues;
+}
+
+function getModifiedVersionMapFiles(defaultBranch, sourceBranch) {
+  const versionMapPathRegex = /_generated\/.*versionmap.txt$/;
+  //git diff A...B is equivalent to git diff $(git merge-base A B) B
+  const versionMapFiles = run(`git --no-pager diff --name-only --diff-filter=M ${defaultBranch}...${sourceBranch}`)
+    .split('\n')
+    .filter(line => line.match(versionMapPathRegex));
+  return versionMapFiles;
+}
+
+function getVersionMapContent(versionMapFilePath, branchName) {
+  return run(`git show ${branchName}:${versionMapFilePath}`);
+}
+
+function parseVersionMap(fileContent) {
+  //TODO: make regex more accurate
+  const simpleVersionMapRegex = /(?<configName>.*)\|(?<version>.*)$/;
+  const versionMap = {};
+  fileContent.split('\n').forEach(line => {
+    if (simpleVersionMapRegex.test(line)) {
+      const { configName, version } = simpleVersionMapRegex.exec(line).groups;
+      versionMap[configName] = version;
+    } else {
+      throw new Error(`Unable to parse version map ${line}`);
+    }
+  });
+
+  return versionMap;
 }
 
 function checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyWeek) {
@@ -274,7 +355,8 @@ async function main({ task, sprint, week }) {
     ...compareLocalToMaster(localTasks, masterTasks, sprint),
     ...checkLocalVersions(localTasks, sprint, isReleaseTagExist, isCourtesyWeek),
     ...compareLocalToFeed(localTasks, feedTaskVersions, sprint),
-    ...compareLocalTaskLoc(localTasks)
+    ...compareLocalTaskLoc(localTasks),
+    ...compareVersionMapFilesToDefaultBranch(),
   ];
 
   if (messages.length > 0) {
