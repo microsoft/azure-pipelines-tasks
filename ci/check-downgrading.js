@@ -48,19 +48,16 @@ if (existsSync(join(tempMasterTasksPath, 'Tasks'))) {
   rm('-rf', join(tempMasterTasksPath, 'Tasks'));
 }
 
-function compareVersionMapFilesToMaster() {
+function compareVersionMapFilesToDefaultBranch() {
   const messages = [];
-
-  //   var versionMapCheckIsEnabled = process.env['versionMapCheckIsEnabled'] && process.env['versionMapCheckIsEnabled'].toLowerCase() === 'true';
-  //   if (!versionMapCheckIsEnabled) return messages;
-
   const defaultBranch = 'origin/master';
+
   const modifiedVersionMapFiles = getModifiedVersionMapFiles(defaultBranch, sourceBranch);
   if (modifiedVersionMapFiles.length == 0) return messages;
 
   modifiedVersionMapFiles.forEach(filePath => {
     //get task name from a string like _generated/TaskNameVN.versionmap.txt
-    const taskName = filePath.slice(11, -15);
+    const taskName = path.basename(filePath, '.versionmap.txt');
 
     defaultBranchVersionMap = parseVersionMap(getVersionMapContent(filePath, defaultBranch));
     sourceBranchVersionMap = parseVersionMap(getVersionMapContent(filePath, sourceBranch));
@@ -80,7 +77,6 @@ function compareVersionMapFilesToMaster() {
 function findMaxConfigVersion(versionMap) {
   let maxVersion = '0.0.0';
   for (const config in versionMap) {
-    // Check that new version is greater thatn old version + 1
     if (gt(versionMap[config], maxVersion)) {
       maxVersion = versionMap[config];
     }
@@ -118,8 +114,8 @@ function getVersionMapContent(versionMapFilePath, branchName) {
 }
 
 function parseVersionMap(fileContent) {
-  //TODO: update regex
-  const simpleVersionMapRegex = /(?<configName>.*)\|(?<version>.*)$/;
+  //TODO: make regex more accurate
+  const simpleVersionMapRegex = /(?<configName>.+)\|(?<version>\d.\d{1,3}.\d+)$/;
   const versionMap = {};
   fileContent.split('\n').forEach(line => {
     if (simpleVersionMapRegex.test(line)) {
@@ -360,7 +356,7 @@ async function main({ task, sprint, week }) {
     ...checkLocalVersions(localTasks, sprint, isReleaseTagExist, isCourtesyWeek),
     ...compareLocalToFeed(localTasks, feedTaskVersions, sprint),
     ...compareLocalTaskLoc(localTasks),
-    ...compareVersionMapFilesToMaster(),
+    ...compareVersionMapFilesToDefaultBranch(),
   ];
 
   if (messages.length > 0) {
