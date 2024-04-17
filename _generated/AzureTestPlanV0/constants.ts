@@ -9,3 +9,6 @@ export const AUTOMATION_STATUS = 'Microsoft.VSTS.TCM.AutomationStatus';
 export const REVISION_ID = 'System.Rev';
 export const NOT_AUTOMATED = 'Not Automated'
 export const MERGE_THRESHOLD = 100;
+export const AUTOMATED_EXECUTION = "AutomatedExecutionPhase";
+export const AUTOMATED_PUBLISHING = "PublishingAutomatedResultsPhase";
+export const MANUALTESTS_EXECUTION = "ManualTestResultsPublishingPhase";
