@@ -30,27 +30,21 @@ function Initialize-AzModule {
             Set-Item -Path Env:\SuppressAzurePowerShellBreakingChangeWarnings -Value $true
             $azureRMUninstalled = $false;
 
-            # If Az.Account already installed, remove RM modules
-            if (Get-Module -ListAvailable -Name Az.Accounts) {
-                Uninstall-AzureRMModules
-                $azureRMUninstalled = $true;
-            } else {
-                $azAccountsModuleName = "Az.Accounts"
-                $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName
-                Write-Verbose "'$azAccountsModuleName' is available with version $azAccountsVersion."
-            }
+            $azAccountsModuleName = "Az.Accounts"
+            $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName
+            Write-Verbose "'$azAccountsModuleName' is available with version $azAccountsVersion."
 
             # Update-AzConfig is a part of Az.Accounts
             if (Get-Command Update-AzConfig -ErrorAction SilentlyContinue) {
                 Write-Verbose "Supressing breaking changes warnings of Az module."
-                Update-AzConfig -DisplayBreakingChangeWarning $false -CheckForUpgrade $false -AppliesTo Az
+                Write-Host "##[command]Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az"
+                Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az
             } else {
                 Write-Verbose "Update-AzConfig cmdlet is not available."
             }
 
-            if ($azureRMUninstalled -eq $false) {
-                Uninstall-AzureRMModules
-            }
+            # Uninstall-AzureRm is a part of Az.Accounts
+            Uninstall-AzureRMModules
 
             # Enable-AzureRmAlias for azureRm compability
             if (Get-Command Enable-AzureRmAlias -ErrorAction SilentlyContinue) {
