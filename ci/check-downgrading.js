@@ -59,16 +59,17 @@ function compareVersionMapFilesToDefaultBranch() {
     //get task name from a string like _generated/TaskNameVN.versionmap.txt
     const taskName = basename(filePath, '.versionmap.txt');
 
-    defaultBranchVersionMap = parseVersionMap(getVersionMapContent(filePath, defaultBranch));
-    sourceBranchVersionMap = parseVersionMap(getVersionMapContent(filePath, sourceBranch));
+    try {
+      defaultBranchVersionMap = parseVersionMap(getVersionMapContent(filePath, defaultBranch));
+      sourceBranchVersionMap = parseVersionMap(getVersionMapContent(filePath, sourceBranch));
 
-    const versionMapIssues = findVersionMapUpdateIssues(defaultBranchVersionMap, sourceBranchVersionMap);
-    versionMapIssues.forEach(issue => {
+      checkVersionMapUpdate(defaultBranchVersionMap, sourceBranchVersionMap);
+    } catch (error) {
       messages.push({
         type: 'error',
-        payload: `Task Name: ${taskName}. Please check ${filePath}. ${issue}`
+        payload: `Task Name: ${taskName}. Please check ${filePath}. ${error}`
       });
-    });
+    }
   });
 
   return messages;
@@ -84,20 +85,17 @@ function findMaxConfigVersion(versionMap) {
   return maxVersion;
 }
 
-function findVersionMapUpdateIssues(defaultBranchConfig, sourceBranchConfig) {
+function checkVersionMapUpdate(defaultBranchConfig, sourceBranchConfig) {
   const defaultBranchMaxVersion = findMaxConfigVersion(defaultBranchConfig);
-  const issues = [];
+
   for (const config in sourceBranchConfig) {
     // Check that new versions are greater than previous max version
-    if (!gt(sourceBranchConfig[config], defaultBranchMaxVersion)) {
-      issues.push(
+    if (lte(sourceBranchConfig[config], defaultBranchMaxVersion)) {
+      throw new Error(
         `New versions of the task should be greater than the previous max version. ${config}|${sourceBranchConfig[config]} should be greater than ${defaultBranchMaxVersion}`
       );
-      break;
     }
   }
-
-  return issues;
 }
 
 function getModifiedVersionMapFiles(defaultBranch, sourceBranch) {
