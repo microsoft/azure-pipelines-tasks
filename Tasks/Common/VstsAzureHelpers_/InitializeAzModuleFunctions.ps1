@@ -100,27 +100,18 @@ function Import-SpecificAzModule {
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
-        Write-Verbose "Attempting to find the latest available version of module '$moduleName'."
+        Write-Host "##[command]Install-Module -Name $moduleName -Scope CurrentUser -Force -AllowClobber -ErrorAction Stop"
+        Install-Module -Name $moduleName -Scope CurrentUser -Force -AllowClobber -ErrorAction Stop
+
         $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
-
-        if ($module) {
-            Write-Verbose "Module '$moduleName' version $($module.Version) was found."
-        }
-        else {
-            Write-Verbose "Unable to find module '$moduleName' from the module path. Installing '$moduleName' module."
-
-            Write-Host "##[command]Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop"
-            Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop
-            $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
-        }
 
         if (-not $module) {
             Write-Warning "Unable to install '$moduleName'."
             throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $moduleName)
         }
 
-        Write-Host "##[command]Import-Module -Name $($module.Path) -DisableNameChecking -Global -PassThru -Force"
-        $module = (Import-Module -Name $moduleName -DisableNameChecking -Global -PassThru -Force | Sort-Object Version -Descending | Select-Object -First 1)[0]
+        Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
+        $module = (Import-Module -Name $moduleName -Global -PassThru -Force | Sort-Object Version -Descending | Select-Object -First 1)[0]
         Write-Host("Imported module '$moduleName', version: $($module.Version)")
 
         return $module.Version
