@@ -8,7 +8,7 @@ export async function manualTestsFlow(testPlanInfo: TestPlanData, ciData: ciDict
 
     let manualTestRun: ManualTestRunData = { testRunId: 0, runUrl: "" };
 
-    let simpleTimer = new SimpleTimer(constant.MANUALTESTS_EXECUTION);
+    let simpleTimer = new SimpleTimer(constant.MANUALTESTS_PUBLISHING);
 
     try{
         manualTestRun = await createManualTestRun(testPlanInfo);

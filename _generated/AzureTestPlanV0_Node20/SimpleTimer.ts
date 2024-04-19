@@ -1,4 +1,6 @@
 import { ciDictionary } from "./ciEventLogger";
+import * as tl from 'azure-pipelines-task-lib/task';
+let perf = require('performance-now');
 
 export class SimpleTimer {
     private startTime: number;
@@ -12,11 +14,12 @@ export class SimpleTimer {
     }
 
     start() {
-        this.startTime = Date.now();
+        this.startTime = perf();
     }
 
     stop(ciData:ciDictionary) {
-        this.endTime = Date.now();
+        this.endTime = perf();
+        tl.debug(`Execution Time for ${this.featureName} was ${this.getElapsedTime()} in milli-seconds`);
         ciData[`Execution Time for ${this.featureName} in milli-seconds`] = this.getElapsedTime();
     }
 
