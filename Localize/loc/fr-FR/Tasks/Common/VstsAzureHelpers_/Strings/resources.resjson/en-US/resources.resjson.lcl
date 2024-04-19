@@ -54,6 +54,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.AZ_ExpiredServicePrincipalMessageWithLink" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Secret expired, update service connection at {0} See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Secret expiré, mettez à jour la connexion de service à l’adresse {0} Consultez https://aka.ms/azdo-rm-workload-identity-conversion pour en savoir plus sur la conversion en connexions de service sans secret.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.AZ_FederatedTokenFailure" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Could not fetch federated token for Workload Identity Federation. {0}]]></Val>
