@@ -64,7 +64,7 @@ export async function getTestPlanData(): Promise<TestPlanData> {
     return testPlanDataResponse;
 }
 
-export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesInputId: number[], testPlanConfigInputId: number): Promise<TestPlanData> {
+async function getTestPlanDataPoints(testPlanInputId: number, testSuitesInputId: number[], testPlanConfigInputId: number): Promise<TestPlanData> {
     
     const testPlanData: TestPlanData = {
         listOfFQNOfTestCases: [],
@@ -93,6 +93,8 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
         do {
             try {
                 let testCasesResponse = await getTestCaseListAsync(testPlanInputId, testSuiteId, testPlanConfigInputId.toString(), token);
+
+                console.log(JSON.stringify(testCasesResponse, null, 2));
 
                 token = testCasesResponse.continuationToken;
 
