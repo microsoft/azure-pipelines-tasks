@@ -30,3 +30,5 @@ Import-Module "$PSScriptRoot\ps_modules\VstsAzureHelpers_"
 $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
 Initialize-AzModule -Endpoint $endpointObject -connectedServiceNameARM $connectedServiceNameARM `
     -azVersion $targetAzurePs -isPSCore $isPSCore -encryptedToken $encryptedToken
+
+$env:AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = $connectedServiceNameARM
