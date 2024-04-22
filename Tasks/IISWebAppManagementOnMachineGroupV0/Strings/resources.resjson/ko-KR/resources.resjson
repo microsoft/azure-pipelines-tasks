@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "IIS 웹앱 관리",
-  "loc.helpMarkDown": "[자세한 정보](https://aka.ms/iis-webapp-management-readme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/iis-webapp-management-readme)",
   "loc.description": "웹 사이트, 웹앱, 가상 디렉터리 또는 애플리케이션 풀을 만들거나 업데이트합니다.",
   "loc.instanceNameFormat": "$(IISDeploymentType) 관리",
   "loc.group.displayName.Website": "IIS 웹 사이트",
