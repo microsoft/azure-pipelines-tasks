@@ -19,10 +19,12 @@
   "loc.input.help.bashEnvValue": "Si l’entrée est spécifiée, sa valeur est développée et utilisée comme chemin d’accès d’un fichier de démarrage à exécuter avant d’exécuter le script. Si la variable d’environnement ' BASH_ENV' a déjà été définie, la tâche remplace cette variable uniquement pour la tâche active. Pour plus d’informations, consultez [link](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html).",
   "loc.messages.GeneratingScript": "Génération du script.",
   "loc.messages.JS_ExitCode": "Arrêt de Bash. Code de sortie : '%s'.",
+  "loc.messages.JS_ExitCode_137": "Bash s’est arrêté avec le code 137, ce qui signifie qu’il n’a plus de mémoire. Vérifiez que la configuration de mémoire de l’hôte de l’agent (conteneur) est suffisante.",
   "loc.messages.JS_FormattedCommand": "Commande mise en forme : %s",
   "loc.messages.JS_InvalidFilePath": "Chemin de fichier non valide : '%s'.",
   "loc.messages.JS_ScriptContents": "Contenu du script :",
   "loc.messages.JS_Stderr": "Bash a écrit une ou plusieurs lignes dans le flux d'erreurs standard.",
   "loc.messages.JS_TranslatePathFailed": "Impossible de traduire le chemin '%s' vers le système de fichiers Linux.",
-  "loc.messages.JS_BashEnvAlreadyDefined": "La variable d’environnement BASH_ENV a déjà été définie sur un « %s », la tâche la remplacera par « %s »."
+  "loc.messages.JS_BashEnvAlreadyDefined": "La variable d’environnement BASH_ENV a déjà été définie sur un « %s », la tâche la remplacera par « %s ».",
+  "loc.messages.ScriptArgsSanitized": "Caractères détectés dans les arguments qui peuvent ne pas être exécutés correctement par le shell. Veuillez échapper les caractères spéciaux en utilisant une barre oblique inverse (\\). Plus d'informations sont disponibles ici: https://aka.ms/ado/75787"
 }

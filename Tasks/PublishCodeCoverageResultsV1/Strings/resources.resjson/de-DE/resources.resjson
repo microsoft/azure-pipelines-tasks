@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "Code Coverage-Ergebnisse veröffentlichen",
+  "loc.friendlyName": "[Wird eingestellt] Code Coverage veröffentlichen",
   "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "Veröffentlicht Cobertura- oder JaCoCo-Code Coverage-Ergebnisse von einem Build.",
+  "loc.description": "[VERALTETE WARNUNG! Benutzern wird empfohlen, zu Version 2* zu wechseln.] Veröffentlichen von Cobertura- oder JaCoCo-Code Coverage-Ergebnissen aus einem Build",
   "loc.instanceNameFormat": "Code Coverage veröffentlichen von $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Code Coverage-Tool",
-  "loc.input.help.codeCoverageTool": "Das Tool, mit dem die Code Coverage-Ergebnisse generiert werden.",
+  "loc.input.help.codeCoverageTool": "[VERALTETE WARNUNG! Benutzern wird empfohlen, zu Version 2* der Aufgabe zu wechseln. Weitere Informationen finden Sie unter https://devblogs.microsoft.com/devops/new-pccr-task.] Das Tool, mit dem Code Coverage-Ergebnisse generiert werden.",
   "loc.input.label.summaryFileLocation": "Zusammenfassungsdatei",
   "loc.input.help.summaryFileLocation": "Der Pfad der Zusammenfassungsdatei mit der Code Coverage-Statistik, z. B. Zeile, Methode und Klassenabdeckung. Der Wert enthält unter Umständen Minimatch-Muster. Beispiel: \"$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml\"",
   "loc.input.label.pathToSources": "Pfad zu Quelldateien",
@@ -22,5 +22,6 @@
   "loc.messages.FailedToGenerateHtmlReport": "Fehler beim Generieren des HTML-Berichts. Fehler: %s",
   "loc.messages.IgnoringReportDirectory": "Das Code Coverage-Berichtsverzeichnis mit HTML-Inhalt wird ignoriert, weil HTML-Inhalte automatisch generiert werden.",
   "loc.messages.UpgradeAgentMessage": "Führen Sie ein Upgrade Ihrer Agent-Version durch. https://github.com/Microsoft/vsts-agent/releases",
-  "loc.messages.GeneratedHtmlReport": "Generierter Code Coverage-HTML-Bericht: %s"
+  "loc.messages.GeneratedHtmlReport": "Generierter Code Coverage-HTML-Bericht: %s",
+  "loc.messages.V1TaskDeprecationNotice": "Die neue V2-Version der Code Coverage-Ergebnisse der Aufgabenveröffentlichung ist jetzt für alle unsere Kunden verfügbar. Es wird dringend empfohlen, die V1-Version nicht mehr zu verwenden und zur V2-Version (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2) zu migrieren. Weitere Informationen finden Sie unter https://devblogs.microsoft.com/devops/new-pccr-task."
 }

@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "Опубликовать результаты оценки объема протестированного кода",
+  "loc.friendlyName": "[Скоро станет нерекомендуемым] Публикация объема протестированного кода",
   "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?LinkID=626485)",
-  "loc.description": "Опубликовать результаты оценки объема протестированного кода Cobertura или JaCoCo для сборки",
+  "loc.description": "[ПРЕДУПРЕЖДЕНИЕ ОБ ОБЪЯВЛЕНИИ ВОЗМОЖНОСТИ НЕРЕКОМЕНДУЕМОЙ! Пользователям рекомендуется перейти на версию 2*.] Публикация результатов объема протестированного кода Cobertura или JaCoCo из сборки",
   "loc.instanceNameFormat": "Опубликовать объем протестированного кода из $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "Средство оценки объема протестированного кода",
-  "loc.input.help.codeCoverageTool": "Средство, с помощью которого создаются результаты объема протестированного кода.",
+  "loc.input.help.codeCoverageTool": "[ПРЕДУПРЕЖДЕНИЕ ОБ ОБЪЯВЛЕНИИ ВОЗМОЖНОСТИ НЕРЕКОМЕНДУЕМОЙ! Пользователям рекомендуется перейти на версию задачи 2*. Дополнительные сведения см. в https://devblogs.microsoft.com/devops/new-pccr-task.] Средство, с помощью которого генерируются результаты объема протестированного кода.",
   "loc.input.label.summaryFileLocation": "Файл сводки",
   "loc.input.help.summaryFileLocation": "Путь к файлу сводки, который содержит статистику объема протестированного кода, например для строк, методов и классов. Значение может содержать шаблоны minimatch. Пример: \"$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml\"",
   "loc.input.label.pathToSources": "Путь к исходным файлам",
@@ -22,5 +22,6 @@
   "loc.messages.FailedToGenerateHtmlReport": "Не удалось создать HTML-отчет. Ошибка: %s",
   "loc.messages.IgnoringReportDirectory": "Пропускается каталог отчетов об объеме протестированного кода с HTML-содержимым, так как HTML-содержимое создается автоматически",
   "loc.messages.UpgradeAgentMessage": "Обновите версию агента. https://github.com/Microsoft/vsts-agent/releases",
-  "loc.messages.GeneratedHtmlReport": "Создан HTML-отчет об объеме протестированного кода: %s"
+  "loc.messages.GeneratedHtmlReport": "Создан HTML-отчет об объеме протестированного кода: %s",
+  "loc.messages.V1TaskDeprecationNotice": "Новая версия V2 результатов задачи публикации объема протестированного кода теперь доступна всем нашим клиентам. Настоятельно рекомендуется прекратить использование версии V1 и перейти на версию V2 (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). Дополнительные сведения см. в https://devblogs.microsoft.com/devops/new-pccr-task."
 }

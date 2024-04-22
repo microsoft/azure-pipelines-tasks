@@ -1,5 +1,6 @@
 {
   "loc.friendlyName": "GitHub 註解",
+  "loc.helpMarkDown": "",
   "loc.description": "將註解寫入 Github 實體，即問題或提取要求 (PR)",
   "loc.instanceNameFormat": "寫入 GitHub 註解",
   "loc.input.label.gitHubConnection": "GitHub 連線 (OAuth 或 PAT)",

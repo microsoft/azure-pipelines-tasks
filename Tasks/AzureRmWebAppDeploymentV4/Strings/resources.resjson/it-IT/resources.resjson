@@ -225,5 +225,6 @@
   "loc.messages.FailedToGetResourceID": "Non è stato possibile ottenere l'ID risorsa per il tipo di risorsa '%s' e il nome di risorsa '%s'. Errore: %s",
   "loc.messages.JarPathNotPresent": "Il percorso del file jar Java non è presente",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Non è stato possibile aggiornare la risorsa '%s' di Application Insights. Errore: %s",
-  "loc.messages.RunFromZipPreventsFileInUseError": "Passare da Distribuzione Web a Run From Package, che consente di evitare errori FILE_IN_USE. Tenere presente che Run From Package non supporta il tipo di pacchetto msBuild. Per usare questo metodo di distribuzione, modificare il formato del pacchetto."
+  "loc.messages.RunFromZipPreventsFileInUseError": "Passare da Distribuzione Web a Run From Package, che consente di evitare errori FILE_IN_USE. Tenere presente che Run From Package non supporta il tipo di pacchetto msBuild. Per usare questo metodo di distribuzione, modificare il formato del pacchetto.",
+  "loc.messages.MSDeployNotSupportTokenAuth": "Servizio app è configurato per non usare l'autenticazione di base. Richiede Distribuzione Web msdeploy.exe versione 7.1.7225 o successiva. È necessaria una versione di Visual Studio che includa una versione aggiornata di msdeploy.exe. Per altre informazioni, visitare https://aka.ms/azdo-webapp-msdeploy."
 }
