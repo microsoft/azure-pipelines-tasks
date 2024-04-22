@@ -27,7 +27,7 @@ export async function run() {
 
     // trigger manual, automated or both tests based on user's input
     if (testSelectorInput.includes('manualTests')) {
-        manualTestFlowReturnCode = await manualTestsFlow(testPlanInfo);
+        manualTestFlowReturnCode = await manualTestsFlow(testPlanInfo, ciData);
         tl.debug(`Execution Status Code for Manual Test Flow is ${manualTestFlowReturnCode}`);
         ciData["manualTestFlowReturnCode"] = manualTestFlowReturnCode;
     }

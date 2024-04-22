@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 238,
-    "Patch": 10
+    "Patch": 12
   },
   "preview": true,
   "demands": [],
@@ -179,7 +179,7 @@
     "MultipleMatchingGradlewFound": "Multiple gradlew files found. Selecting the first matched instance"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.10",
-    "Node20-225": "0.238.11"
+    "Default": "0.238.12",
+    "Node20-225": "0.238.13"
   }
 }
