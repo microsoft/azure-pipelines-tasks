@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 237,
+    "Minor": 240,
     "Patch": 0
   },
   "demands": [],
@@ -130,6 +130,24 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.flattenFolders",
       "groupName": "advanced"
+    },
+    {
+      "name": "concurrentUploads",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.concurrentUploads",
+      "defaultValue": "10",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.concurrentUploads",
+      "grouName": "advanced"
+    },
+    {
+      "name": "delayBetweenUploads",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.delayBetweenUploads",
+      "defaultValue": "50",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.delayBetweenUploads",
+      "grouName": "advanced"
     }
   ],
   "execution": {
@@ -153,9 +171,13 @@
     "ConnectionFailed": "ms-resource:loc.messages.ConnectionFailed",
     "ConnectionNotSetup": "ms-resource:loc.messages.ConnectionNotSetup",
     "CopyCompleted": "ms-resource:loc.messages.CopyCompleted",
+    "CopyDirectoryCompleted": "ms-resource:loc.messages.CopyDirectoryCompleted",
+    "CopyDirectoryFailed": "ms-resource:loc.messages.CopyDirectoryFailed",
     "CopyingFiles": "ms-resource:loc.messages.CopyingFiles",
     "FailedOnFile": "ms-resource:loc.messages.FailedOnFile",
     "FileExists": "ms-resource:loc.messages.FileExists",
+    "FolderCreated": "ms-resource:loc.messages.FolderCreated",
+    "FoldersCreated": "ms-resource:loc.messages.FoldersCreated",
     "NothingToCopy": "ms-resource:loc.messages.NothingToCopy",
     "NumberFailed": "ms-resource:loc.messages.NumberFailed",
     "RemoteCmdExecutionErr": "ms-resource:loc.messages.RemoteCmdExecutionErr",
@@ -168,10 +190,11 @@
     "TargetNotCreated": "ms-resource:loc.messages.TargetNotCreated",
     "CheckingPathExistance": "ms-resource:loc.messages.CheckingPathExistance",
     "PathExists": "ms-resource:loc.messages.PathExists",
-    "PathNotExists": "ms-resource:loc.messages.PathNotExists"
+    "PathNotExists": "ms-resource:loc.messages.PathNotExists",
+    "UploadFolderFailed": "ms-resource:loc.messages.UploadFolderFailed"
   },
   "_buildConfigMapping": {
-    "Default": "0.237.0",
-    "Node20-225": "0.237.1"
+    "Default": "0.240.0",
+    "Node20-225": "0.240.1"
   }
 }
