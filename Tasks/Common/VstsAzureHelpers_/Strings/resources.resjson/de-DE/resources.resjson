@@ -14,5 +14,5 @@
   "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Für die verwaltete Identität konnte kein Zugriffstoken abgerufen werden. Konfigurieren Sie die verwaltete Identität für die VM, siehe https://aka.ms/azure-msi-docs. Statuscode: {0}, Fehlermeldung: {1}",
   "loc.messages.AZ_MsiAccessTokenFetchFailure": "Für die verwaltete Identität konnte kein Zugriffstoken abgerufen werden. Statuscode: {0}, Fehlermeldung: {1}",
   "loc.messages.AZ_MsiFailure": "Für die verwaltete Identität konnte kein Zugriffstoken abgerufen werden. {0}",
-  "loc.messages.AZ_ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at {0} See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
+  "loc.messages.AZ_ExpiredServicePrincipalMessageWithLink": "Das Geheimnis ist abgelaufen. Aktualisieren Sie die Dienstverbindung unter {0}. Weitere Informationen zur Konvertierung in Dienstverbindungen ohne Geheimnis finden Sie unter https://aka.ms/azdo-rm-workload-identity-conversion."
 }

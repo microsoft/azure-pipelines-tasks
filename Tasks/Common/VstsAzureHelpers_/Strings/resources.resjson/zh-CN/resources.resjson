@@ -14,5 +14,5 @@
   "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "无法提取托管标识的访问令牌。请为虚拟机配置托管标识 \"https://aka.ms/azure-msi-docs\"。状态代码:“{0}”，错误消息: {1}",
   "loc.messages.AZ_MsiAccessTokenFetchFailure": "无法提取托管标识的访问令牌。状态代码:“{0}”，错误消息: {1}",
   "loc.messages.AZ_MsiFailure": "无法提取托管标识的访问令牌。{0}",
-  "loc.messages.AZ_ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at {0} See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
+  "loc.messages.AZ_ExpiredServicePrincipalMessageWithLink": "机密已过期，请在 {0} 更新服务连接。若要详细了解如何转换到无机密服务连接，请参阅 https://aka.ms/azdo-rm-workload-identity-conversion。"
 }

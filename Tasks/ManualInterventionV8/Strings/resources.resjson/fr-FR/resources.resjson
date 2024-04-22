@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Intervention manuelle",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=870234)",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870234)",
   "loc.description": "Suspendre le déploiement et attendre une intervention manuelle",
   "loc.instanceNameFormat": "Intervention manuelle",
   "loc.input.label.instructions": "Instructions",
