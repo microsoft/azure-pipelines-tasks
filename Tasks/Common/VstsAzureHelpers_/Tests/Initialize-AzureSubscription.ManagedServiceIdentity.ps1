@@ -1,6 +1,10 @@
 [CmdletBinding()]
 param()
 
+$featureFlags = @{
+    retireAzureRM = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 Microsoft.PowerShell.Core\Import-Module Microsoft.PowerShell.Security
@@ -48,9 +52,17 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Set-UserAgent
     Register-Mock Invoke-WebRequest { $response }
     
-    # Act.
-    $result = & $module Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $variableSet.StorageAccount
+    if ($featureFlags.retireAzureRM) {
+        try {
+            & $module Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $variableSet.StorageAccount
+        } catch {
+            Assert-AreEqual -Expected "AZ_MsiFailure" -Actual $_.Exception.Message -Message "When FF enabled AzureRM should fail"
+        }
+    } else {
+        # Act.
+        $result = & $module Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $variableSet.StorageAccount
 
-    Assert-AreEqual $null $result
-    Assert-WasCalled Set-CurrentAzureRMSubscription -- -SubscriptionId $endpoint.Data.SubscriptionId -TenantId $endpoint.Auth.Parameters.TenantId
+        Assert-AreEqual $null $result
+        Assert-WasCalled Set-CurrentAzureRMSubscription -- -SubscriptionId $endpoint.Data.SubscriptionId -TenantId $endpoint.Auth.Parameters.TenantId
+    }
 }
