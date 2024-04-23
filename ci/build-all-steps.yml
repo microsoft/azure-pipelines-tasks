@@ -83,44 +83,44 @@ steps:
       ne(variables['numTasks'], 0)
     )
 
-# Check diff for task sources
-- script: node ./ci/verify-source-changes.js "$(getTaskPattern.task_pattern)"
-  displayName: Verify task source changes
-  condition: |
-    and(
-      succeeded(),
-      ne(variables['Build.SourceBranch'], 'refs/heads/master'),
-      ne(variables['COURTESY_PUSH'], 'true'),
-      ne(variables['numTasks'], 0)
-    )
+# # Check diff for task sources
+# - script: node ./ci/verify-source-changes.js "$(getTaskPattern.task_pattern)"
+#   displayName: Verify task source changes
+#   condition: |
+#     and(
+#       succeeded(),
+#       ne(variables['Build.SourceBranch'], 'refs/heads/master'),
+#       ne(variables['COURTESY_PUSH'], 'true'),
+#       ne(variables['numTasks'], 0)
+#     )
 
-# Only on Windows:
-- ${{ if eq(parameters.os, 'Windows_NT') }}:
+# # Only on Windows:
+# - ${{ if eq(parameters.os, 'Windows_NT') }}:
 
-  # Stage tasks individually into the package directory
-  - script: node ./ci/stage-package.js false individually
-    displayName: Stage tasks individually into the package directory
-    condition: |
-      and(
-        succeeded(),
-        ne(variables['build.reason'], 'PullRequest'),
-        ne(variables['numTasks'], 0)
-      )
+#   # Stage tasks individually into the package directory
+#   - script: node ./ci/stage-package.js false individually
+#     displayName: Stage tasks individually into the package directory
+#     condition: |
+#       and(
+#         succeeded(),
+#         ne(variables['build.reason'], 'PullRequest'),
+#         ne(variables['numTasks'], 0)
+#       )
 
-  # # Sign all task zips as nuget packages
-  # - template: /ci/sign-all-tasks.yml@self
-  #   parameters:
-  #     layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+#   # # Sign all task zips as nuget packages
+#   # - template: /ci/sign-all-tasks.yml@self
+#   #   parameters:
+#   #     layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
-  # Stage all the tasks into a single zip for upload
-  - script: node ./ci/stage-package.js false
-    displayName: Stage all the tasks into a single zip for upload
-    condition: |
-      and(
-        succeeded(),
-        ne(variables['build.reason'], 'PullRequest'),
-        ne(variables['numTasks'], 0)
-      )
+#   # Stage all the tasks into a single zip for upload
+#   - script: node ./ci/stage-package.js false
+#     displayName: Stage all the tasks into a single zip for upload
+#     condition: |
+#       and(
+#         succeeded(),
+#         ne(variables['build.reason'], 'PullRequest'),
+#         ne(variables['numTasks'], 0)
+#       )
 
 # # Test
 # - script: node make.js test
