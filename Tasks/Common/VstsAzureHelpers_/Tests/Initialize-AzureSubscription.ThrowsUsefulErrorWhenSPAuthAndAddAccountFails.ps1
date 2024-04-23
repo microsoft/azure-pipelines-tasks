@@ -1,6 +1,10 @@
 [CmdletBinding()]
 param()
 
+$featureFlags = @{
+    retireAzureRM = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 Microsoft.PowerShell.Core\Import-Module Microsoft.PowerShell.Security
@@ -54,10 +58,11 @@ foreach ($variableSet in $variableSets) {
     } -MessagePattern AZ_ServicePrincipalError
 
     # Assert.
-    Assert-WasCalled Write-VstsTaskError -- -Message 'Some add account error'
     if ($variableSet.Classic) {
+        Assert-WasCalled Write-VstsTaskError -- -Message 'Some add account error'
         Assert-WasCalled Add-AzureAccount
-    } else {
+    } elseif (-not $featureFlags.retireAzureRM){
+        Assert-WasCalled Write-VstsTaskError -- -Message 'Some add account error'
         Assert-WasCalled Add-AzureRMAccount
     }
 }
