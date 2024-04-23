@@ -55,6 +55,9 @@ foreach ($variableSet in $variableSets) {
     if ($featureFlags.retireAzureRM) {
         try {
             & $module Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $variableSet.StorageAccount
+            
+            # Fail test if Initialize-AzureSubscription passed with enabled FF
+            throw "AzureRM should fail"
         } catch {
             Assert-AreEqual -Expected "AZ_MsiFailure" -Actual $_.Exception.Message -Message "When FF enabled AzureRM should fail"
         }
