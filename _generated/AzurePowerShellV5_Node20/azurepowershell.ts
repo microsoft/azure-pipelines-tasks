@@ -83,7 +83,7 @@ async function run() {
         }
         if (endpointObject.scheme === 'WorkloadIdentityFederation') {
             const oidc_token = await endpointObject.applicationTokenCredentials.getFederatedToken();
-            initAzCommand += ` -clientAssertionJwt  ${oidc_token}`;
+            initAzCommand += ` -clientAssertionJwt ${oidc_token} -serviceConnectionId ${serviceName}`;
         }
         contents.push(initAzCommand);
 
@@ -170,6 +170,8 @@ async function run() {
                 .arg('Unrestricted')
                 .arg('-Command')
                 .arg(`. '${path.join(path.resolve(__dirname),'RemoveAzContext.ps1')}'`);
+
+            process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = '';
 
             let options = <tr.IExecOptions>{
                     cwd: input_workingDirectory,
