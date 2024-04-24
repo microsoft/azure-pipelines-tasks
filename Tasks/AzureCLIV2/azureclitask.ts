@@ -33,6 +33,8 @@ export class azureclitask {
             var connectedService: string = tl.getInput("connectedServiceNameARM", true);
             await this.loginAzureRM(connectedService);
 
+            process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = connectedService;
+
             let errLinesCount: number = 0;
             let aggregatedErrorLines: string[] = [];
             tool.on('errline', (errorLine: string) => {
@@ -100,16 +102,16 @@ export class azureclitask {
               if (typeof toolExecutionError === 'string') {
                 const expiredSecretErrorCode = 'AADSTS7000222';
                 let serviceEndpointSecretIsExpired = toolExecutionError.indexOf(expiredSecretErrorCode) >= 0;
-                
+
                 if (serviceEndpointSecretIsExpired) {
                   const organizationURL = tl.getVariable('System.CollectionUri');
                   const projectName = tl.getVariable('System.TeamProject');
                   const serviceConnectionLink = encodeURI(`${organizationURL}${projectName}/_settings/adminservices?resourceId=${connectedService}`);
-      
+
                   message = tl.loc('ExpiredServicePrincipalMessageWithLink', serviceConnectionLink);
                 }
               }
-      
+
               tl.setResult(tl.TaskResult.Failed, message);
             } else if (exitCode != 0){
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedWithExitCode", exitCode));
@@ -122,6 +124,8 @@ export class azureclitask {
             if (this.isLoggedIn) {
                 this.logoutAzure();
             }
+
+            process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = '';
         }
     }
 

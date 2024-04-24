@@ -1,6 +1,10 @@
 [CmdletBinding()]
 param()
 
+$featureFlags = @{
+    retireAzureRM = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 Unregister-Mock Import-Module
@@ -94,21 +98,31 @@ foreach ($variableSet in $variableSets) {
     }
     # Clear the private module variables.
     & $module { $script:azureModule = $null ; $script:azureRMProfileModule = $null }
-
-    # Act.
-    $result = & $module Import-FromSdkPath -Classic:($variableSet.Classic)
-
-    # Assert.
-    Assert-AreEqual $true $result
-    if ($variableSet.FoundInProgramFilesX86) {
-        Assert-WasCalled Import-Module -- -Name $wowPsd1 -Global -PassThru -Force
+    
+    if ($featureFlags.retireAzureRM) {
+        $isModuleExists = $false;
+        Get-Command -Module $module | ForEach-Object {
+            if ($_.name -match "Import-FromSdkPath") {
+                $isModuleExists = $true;
+            }
+        }
+        Assert-AreEqual -Expected $false -Actual $isModuleExists -Message "Property should not exists"
     } else {
-        Assert-WasCalled Import-Module -- -Name $psd1 -Global -PassThru -Force
-    }
+        # Act.
+        $result = & $module Import-FromSdkPath -Classic:($variableSet.Classic)
 
-    if ($variableSet.Classic) {
-        Assert-AreEqual $expectedModule (& $module { $script:azureModule })
-    } else {
-        Assert-AreEqual $expectedModule (& $module { $script:azureRMProfileModule })
+        # Assert.
+        Assert-AreEqual $true $result
+        if ($variableSet.FoundInProgramFilesX86) {
+            Assert-WasCalled Import-Module -- -Name $wowPsd1 -Global -PassThru -Force
+        } else {
+            Assert-WasCalled Import-Module -- -Name $psd1 -Global -PassThru -Force
+        }
+
+        if ($variableSet.Classic) {
+            Assert-AreEqual $expectedModule (& $module { $script:azureModule })
+        } else {
+            Assert-AreEqual $expectedModule (& $module { $script:azureRMProfileModule })
+        }
     }
 }
