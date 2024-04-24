@@ -19,9 +19,11 @@ export default class DockerComposeConnection extends ContainerConnection {
     private requireAdditionalDockerComposeFiles: boolean;
     private projectName: string;
     private finalComposeFile: string;
+    private useDockerComposeV2: boolean;
 
     constructor() {
         super();
+        this.useDockerComposeV2 = tl.getBoolFeatureFlag('USE_DOCKERCOMPOSEV2');
         this.setDockerComposePath();
         this.dockerComposeFile = DockerComposeUtils.findDockerFile(tl.getInput("dockerComposeFile", true), tl.getInput("cwd"));
         if (!this.dockerComposeFile) {
@@ -91,6 +93,12 @@ export default class DockerComposeConnection extends ContainerConnection {
 
     public createComposeCommand(): tr.ToolRunner {
         var command = tl.tool(this.dockerComposePath);
+
+        if (this.useDockerComposeV2) {
+            command.arg("compose");
+            command.arg("--compatibility");
+        }
+
         command.arg(["-f", this.dockerComposeFile]);
         var basePath = path.dirname(this.dockerComposeFile);
         this.additionalDockerComposeFiles.forEach(file => {
@@ -177,8 +185,13 @@ export default class DockerComposeConnection extends ContainerConnection {
         //Priority to docker-compose path provided by user
         this.dockerComposePath = tl.getInput('dockerComposePath');
         if (!this.dockerComposePath) {
-            //If not use the docker-compose avilable on agent
-            this.dockerComposePath = tl.which("docker-compose");
+            // If not use the docker-compose avilable on agent
+            if (this.useDockerComposeV2) {
+                this.dockerComposePath = tl.which("docker");
+            } else {
+                this.dockerComposePath = tl.which("docker-compose");
+            }
+
             if (!this.dockerComposePath) {
                 throw new Error("Docker Compose was not found. You can provide the path to docker-compose via 'dockerComposePath' ");
             }
