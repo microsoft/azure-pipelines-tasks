@@ -171,8 +171,6 @@ async function run() {
                 .arg('-Command')
                 .arg(`. '${path.join(path.resolve(__dirname),'RemoveAzContext.ps1')}'`);
 
-            process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = '';
-
             let options = <tr.IExecOptions>{
                     cwd: input_workingDirectory,
                     failOnStdErr: false,
