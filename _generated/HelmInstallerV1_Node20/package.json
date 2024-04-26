@@ -1,4 +1,6 @@
 {
+  "name": "helminstaller",
+  "version": "1.0.0",
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",

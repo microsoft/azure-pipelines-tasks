@@ -1,5 +1,6 @@
 {
   "name": "vsts-tasks-vstest",
+  "version": "3.0.0",
   "description": "Azure Pipelines VSTEST Task",
   "main": "VSTest.js",
   "repository": {

@@ -1,5 +1,6 @@
 {
   "name": "vsts-gulp-task",
+  "version": "0.0.0",
   "description": "Azure Pipelines gulp tasks",
   "repository": {
     "type": "git",

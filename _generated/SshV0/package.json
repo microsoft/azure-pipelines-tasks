@@ -1,4 +1,6 @@
 {
+  "name": "ssh",
+  "version": "0.0.0",
   "scripts": {
     "build": "node ../../make.js build --task SshV0",
     "test": "node ../../make.js test --task SshV0"

@@ -1,4 +1,6 @@
 {
+  "name": "functoolsinstaller",
+  "version": "0.0.0",
   "devDependencies": {
     "typescript": "5.1.6"
   },

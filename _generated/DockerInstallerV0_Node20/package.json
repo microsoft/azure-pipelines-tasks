@@ -1,4 +1,6 @@
 {
+  "name": "dockerinstaller",
+  "version": "0.0.0",
   "dependencies": {
     "@types/node": "^20.3.1",
     "@types/mocha": "^5.2.7",

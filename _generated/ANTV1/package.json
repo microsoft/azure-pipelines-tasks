@@ -1,5 +1,6 @@
 {
   "name": "Ant",
+  "version": "1.0.0",
   "author": "Microsoft Corporation",
   "description": "Build with Apache Ant",
   "license": "MIT",

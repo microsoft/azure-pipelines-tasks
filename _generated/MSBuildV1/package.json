@@ -1,5 +1,6 @@
 {
   "name": "vsts-tasks-msbuild",
+  "version": "1.0.0",
   "description": "Azure Pipelines MSBuild Task",
   "repository": {
     "type": "git",

@@ -1,4 +1,6 @@
 {
+  "name": "publishcodecoverageresults",
+  "version": "1.0.0",
   "dependencies": {
     "@types/node": "^20.11.0",
     "@types/mocha": "^5.2.7",

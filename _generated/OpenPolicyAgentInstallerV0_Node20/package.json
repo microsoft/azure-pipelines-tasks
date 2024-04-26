@@ -1,5 +1,6 @@
 {
   "name": "openpolicyagentinstaller",
+  "version": "0.0.0",
   "description": "Azure Pipelines Open Policy Agent Installer",
   "repository": {
     "type": "git",

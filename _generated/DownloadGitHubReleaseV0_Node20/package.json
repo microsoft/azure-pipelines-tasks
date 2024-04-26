@@ -1,5 +1,6 @@
 {
   "name": "downloadgithubrelease",
+  "version": "0.0.0",
   "description": "Azure Pipelines GitHub Release Download Task",
   "repository": {
     "type": "git",

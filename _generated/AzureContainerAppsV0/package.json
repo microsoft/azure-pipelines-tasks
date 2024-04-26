@@ -1,5 +1,6 @@
 {
   "name": "azure-container-apps",
+  "version": "0.0.0",
   "private": true,
   "description": "Azure Pipelines Task for building and deploying Azure Container Apps.",
   "main": "azurecontainerapps.js",

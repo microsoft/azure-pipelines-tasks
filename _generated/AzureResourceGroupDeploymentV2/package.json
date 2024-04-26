@@ -1,5 +1,6 @@
 {
   "name": "AzureResourceGroupDeployment",
+  "version": "2.0.0",
   "main": "main.js",
   "dependencies": {
     "@types/node": "^16.11.39",

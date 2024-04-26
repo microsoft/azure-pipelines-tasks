@@ -1,5 +1,6 @@
 {
   "name": "AzureResourceManagerTemplateDeployment",
+  "version": "3.0.0",
   "main": "main.js",
   "dependencies": {
     "@types/node": "^20.3.1",
