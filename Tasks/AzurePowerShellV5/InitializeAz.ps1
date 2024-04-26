@@ -119,6 +119,8 @@ elseif ($endpointObject.scheme -eq 'WorkloadIdentityFederation') {
     }
 
     $env:AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = $serviceConnectionId
+    $env:AZURESUBSCRIPTION_CLIENT_ID = $endpointObject.servicePrincipalClientID
+    $env:AZURESUBSCRIPTION_TENANT_ID = $endpointObject.tenantId
 }
 else {
     #  Provide an additional, custom, credentials-related error message. Will handle localization later
