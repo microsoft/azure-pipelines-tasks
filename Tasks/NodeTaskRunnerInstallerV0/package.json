@@ -1,4 +1,5 @@
 {
+  "name": "nodetaskrunnerinstaller",
   "private": "true",
   "main": "index.js",
   "author": "Microsoft Corporation",

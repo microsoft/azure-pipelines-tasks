@@ -1,4 +1,5 @@
 {
+  "name": "kubernetesmanifest",
   "dependencies": {
     "@types/del": "^2.2.0",
     "@types/glob": "^5.0.10",

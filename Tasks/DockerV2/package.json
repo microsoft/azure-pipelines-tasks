@@ -1,4 +1,5 @@
 {
+  "name": "docker",
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.17.0",
