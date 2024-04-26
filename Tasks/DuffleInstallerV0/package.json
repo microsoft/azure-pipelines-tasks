@@ -1,5 +1,6 @@
 {
   "name": "duffleinstaller",
+  "version": "0.0.0",
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^16.11.39",

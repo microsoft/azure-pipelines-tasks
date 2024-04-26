@@ -1,5 +1,6 @@
 {
   "name": "vsts-tasks-jenkinsdownloadartifacts",
+  "version": "1.0.0",
   "description": "Azure Pipelines Jenkins Download Task",
   "repository": {
     "type": "git",
