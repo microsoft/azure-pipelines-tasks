@@ -1,45 +1,45 @@
 {
   "id": "263abc27-4582-4174-8789-af599697778e",
   "name": "DownloadGitHubRelease",
-  "friendlyName": "Download GitHub Release",
-  "description": "Downloads a GitHub Release from a repository",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
   "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-github-release",
-  "helpMarkDown": "[Learn more about this task](https://aka.ms/AA3x715)",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "demands": [],
   "version": {
     "Major": 0,
     "Minor": 239,
-    "Patch": 1
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
-  "instanceNameFormat": "Download GitHub Release",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "preview": true,
   "inputs": [
     {
       "name": "connection",
       "type": "connectedService:github",
-      "label": "GitHub Connection",
+      "label": "ms-resource:loc.input.label.connection",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "GitHub service connection"
+      "helpMarkDown": "ms-resource:loc.input.help.connection"
     },
     {
       "name": "userRepository",
       "type": "githubRepositoryPicker",
-      "label": "Repository",
+      "label": "ms-resource:loc.input.label.userRepository",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "GitHub repository full name"
+      "helpMarkDown": "ms-resource:loc.input.help.userRepository"
     },
     {
       "name": "defaultVersionType",
       "type": "pickList",
-      "label": "Default version",
+      "label": "ms-resource:loc.input.label.defaultVersionType",
       "defaultValue": "latest",
       "required": true,
       "options": {
@@ -47,35 +47,35 @@
         "specificVersion": "Specific Version",
         "specificTag": "Specific Tag"
       },
-      "helpMarkDown": "Download assets from latest release or specific release version/tag"
+      "helpMarkDown": "ms-resource:loc.input.help.defaultVersionType"
     },
     {
       "name": "version",
       "type": "pickList",
-      "label": "Release",
+      "label": "ms-resource:loc.input.label.version",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
       "visibleRule": "defaultVersionType != latest",
-      "helpMarkDown": "Release version/tag to download"
+      "helpMarkDown": "ms-resource:loc.input.help.version"
     },
     {
       "name": "itemPattern",
       "type": "string",
-      "label": "Item Pattern",
+      "label": "ms-resource:loc.input.label.itemPattern",
       "defaultValue": "**",
       "required": false,
-      "helpMarkDown": "Minimatch pattern to filter files to be downloaded. To download all files within release use **"
+      "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
     },
     {
       "name": "downloadPath",
       "type": "string",
-      "label": "Destination directory",
+      "label": "ms-resource:loc.input.label.downloadPath",
       "defaultValue": "$(System.ArtifactsDirectory)",
       "required": true,
-      "helpMarkDown": "Path on the agent machine where the release assets will be downloaded"
+      "helpMarkDown": "ms-resource:loc.input.help.downloadPath"
     }
   ],
   "dataSourceBindings": [
@@ -104,16 +104,12 @@
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
-    },
-    "Node20_1": {
-      "target": "main.js",
-      "argumentFormat": ""
     }
   },
   "messages": {
-    "DownloadArtifacts": "Downloading assets of release '%s' from: %s",
-    "ArtifactsSuccessfullyDownloaded": "Successfully downloaded release assets to '%s'",
-    "InvalidRelease": "The release version/tag input '%s' is not valid"
+    "DownloadArtifacts": "ms-resource:loc.messages.DownloadArtifacts",
+    "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded",
+    "InvalidRelease": "ms-resource:loc.messages.InvalidRelease"
   },
   "_buildConfigMapping": {
     "Default": "0.239.0",
