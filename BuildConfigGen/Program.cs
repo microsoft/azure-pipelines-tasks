@@ -205,7 +205,7 @@ namespace BuildConfigGen
                     throw new Exception($"versionMapFile {versionMapFile} does not exist");
                 }
 
-                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: false);
+                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: true);
             }
             finally
             {
@@ -258,7 +258,7 @@ namespace BuildConfigGen
 
                 MainUpdateTaskInner(task, currentSprint, targetConfigs);
 
-                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: false);
+                ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: true);
             }
             finally
             {
