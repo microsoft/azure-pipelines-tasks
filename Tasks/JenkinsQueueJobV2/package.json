@@ -1,5 +1,6 @@
 {
   "name": "vsts-tasks-jenkinsqueuejob",
+  "version": "2.0.0",
   "description": "Azure Pipelines Jenkins Queue Job Task",
   "repository": {
     "type": "git",

@@ -1,5 +1,6 @@
 {
   "name": "AzureVmssDeployment",
+  "version": "0.0.0",
   "main": "main.js",
   "dependencies": {
     "@types/mocha": "^9.1.1",
