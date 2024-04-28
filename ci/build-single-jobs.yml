@@ -37,6 +37,8 @@ jobs:
   - job: create_hotfix
     displayName: Create HotFix PR
     dependsOn: build_single_task
+    variables:
+      ONEES_ENFORCED_CODEQL_ENABLED: ${{ eq(parameters.enableCodeQL, true) }}
     pool: 
       name: 1ES-ABTT-Shared-Pool
       image: abtt-windows-2022
@@ -51,6 +53,8 @@ jobs:
     - job: create_ado_pr
       displayName: Update UnifiedDependencies.xml
       dependsOn: build_single_task
+      variables:
+        ONEES_ENFORCED_CODEQL_ENABLED: ${{ eq(parameters.enableCodeQL, true) }}
       pool: 
         name: 1ES-ABTT-Shared-Pool
         image: abtt-windows-2022

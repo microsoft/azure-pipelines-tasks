@@ -141,7 +141,10 @@ export default class PackerHost implements definitions.IPackerHost {
         if(!!packerPath && tl.exist(packerPath)) {
             // if failed to get version, do not fail task
             try {
-                return tl.tool(packerPath).arg("--version").execSync().stdout.trim();
+                const machineReadableVersion = tl.tool(packerPath).arg("-machine-readable").arg("--version").execSync().stdout;
+                const versionFirstLine = machineReadableVersion.split('\n')[0].split(',');
+                const versionLastElement = versionFirstLine[versionFirstLine.length - 1];
+                return versionLastElement;
             } catch (err) {}
         }
 

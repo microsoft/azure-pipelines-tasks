@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 235,
-        "Patch": 4
+        "Minor": 238,
+        "Patch": 0
     },
     "minimumAgentVersion": "2.144.0",
     "releaseNotes": "Added support for multiple destinations.",

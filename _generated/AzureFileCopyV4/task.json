@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 237,
-    "Patch": 8
+    "Minor": 239,
+    "Patch": 2
   },
   "demands": [
     "azureps"
@@ -301,7 +301,7 @@
     "ServicePrincipalError": "There was an error with the service principal used for the deployment."
   },
   "_buildConfigMapping": {
-    "Default": "4.237.8",
-    "Node20_229_2": "4.237.9"
+    "Default": "4.239.2",
+    "Node20_229_2": "4.239.3"
   }
 }

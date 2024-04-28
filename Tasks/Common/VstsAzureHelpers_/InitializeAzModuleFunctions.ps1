@@ -26,30 +26,37 @@ function Initialize-AzModule {
         Write-Verbose "Importing Az Modules."
         
         if ($featureFlags.retireAzureRM) {
-            $azAccountsModuleName = "Az.Accounts"
-            $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName
-            Write-Verbose "'$azAccountsModuleName' is available with version $azAccountsVersion."
+            $azInitialized = $false;
 
-            if (Get-Command Update-AzConfig -ErrorAction SilentlyContinue) {
-                Write-Verbose "Supressing breaking changes warnings of '$($azAccountsModuleName)' module."
-                Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo $azAccountsModuleName
-            } else {
-                Write-Verbose "Update-AzConfig cmdlet is not available."
+            # Supress breaking changes messages
+            Set-Item -Path Env:\SuppressAzurePowerShellBreakingChangeWarnings -Value $true
+            
+            try {
+                Write-Verbose "Trying to import Az modules"
+                $azAccountsVersion = Initialize-AzModules 
+                $azInitialized = $true;
+            } catch {
+                Write-Verbose -Message $_.Exception.Message
+                Write-VstsTaskWarning -Message (Get-VstsLocString -Key AZ_ModuleInitFailWarning) -AsOutput
             }
 
-            Uninstall-AzureRMModules -UseAzUninstall
+            try {
+                if ($azInitialized -eq $false) {
+                    Write-Verbose "Trying to install Az modules"
+                    $azAccountsVersion = Initialize-AzModules -tryInstallModule
+                    $azInitialized = $true;
+                }
 
-            $azResourcesModuleName = "Az.Resources"
-            $azResourcesVersion = Import-SpecificAzModule -moduleName $azResourcesModuleName
-            Write-Verbose "'$azResourcesModuleName' is available with version $azResourcesVersion."
-
-            $azStorageModuleName = "Az.Storage"
-            $azStorageVersion = Import-SpecificAzModule -moduleName $azStorageModuleName
-            Write-Verbose "'$azStorageModuleName' is available with version $azStorageVersion."
-        }
-        else {
+                # Uninstall-AzureRm is a part of Az.Accounts
+                Uninstall-AzureRMModules
+            } catch {
+                Write-VstsTaskError -Message $_.Exception.Message
+                throw (Get-VstsLocString -Key AZ_ModuleInstallFail)
+            }
+        } else  {
             # We are only looking for Az.Accounts module becasue all the command required for initialize the azure PS session is in Az.Accounts module.
             $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
+            Write-VstsTaskWarning -Message (Get-VstsLocString -Key AZ_RMDeprecationMessage) -AsOutput 
         }
 
         $azAccountsVersion = [System.Version]::new(
@@ -73,34 +80,77 @@ function Initialize-AzModule {
     }
 }
 
+function Initialize-AzModules {
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [switch] $tryInstallModule
+    )
+    Trace-VstsEnteringInvocation $MyInvocation
+
+    try {
+        $azAccountsModuleName = "Az.Accounts"
+        $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName -tryInstallModule:$tryInstallModule
+        Write-Verbose "'$azAccountsModuleName' is available with version $azAccountsVersion."
+
+        # Update-AzConfig is a part of Az.Accounts
+        if (Get-Command Update-AzConfig -ErrorAction SilentlyContinue) {
+            Write-Verbose "Supressing breaking changes warnings of Az module."
+            Write-Host "##[command]Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az"
+            Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az
+        } else {
+            Write-Verbose "Update-AzConfig cmdlet is not available."
+        }
+
+        # Enable-AzureRmAlias for azureRm compability
+        if (Get-Command Enable-AzureRmAlias -ErrorAction SilentlyContinue) {
+            Write-Verbose "Enable-AzureRmAlias for backward compability"
+            Write-Host "##[command]Enable-AzureRmAlias -Scope Process"
+            Enable-AzureRmAlias -Scope Process
+        } else {
+            Write-Verbose "Enable-AzureRmAlias cmdlet is not available."
+        }
+
+        $azResourcesModuleName = "Az.Resources"
+        $azResourcesVersion = Import-SpecificAzModule -moduleName $azResourcesModuleName -tryInstallModule:$tryInstallModule
+        Write-Verbose "'$azResourcesModuleName' is available with version $azResourcesVersion."
+
+        $azStorageModuleName = "Az.Storage"
+        $azStorageVersion = Import-SpecificAzModule -moduleName $azStorageModuleName -tryInstallModule:$tryInstallModule
+        Write-Verbose "'$azStorageModuleName' is available with version $azStorageVersion."
+        return $azAccountsVersion
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
 function Import-SpecificAzModule {
     [OutputType([System.Version])]
     [CmdletBinding()]
     [OutputType([version])]
     param(
         [Parameter(Mandatory=$true)]
-        [string]$moduleName
+        [string]$moduleName, 
+        
+        [Parameter()]
+        [switch]$tryInstallModule
     )
-
     Trace-VstsEnteringInvocation $MyInvocation
     try {
-        # Write-Verbose "Attempting to find the latest available version of module '$moduleName'."
-        # $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
-
-        # if ($module) {
-        #     Write-Verbose "Module '$moduleName' version $($module.Version) was found."
-        # }
-        # else {
-        #     Write-Verbose "Unable to find module '$moduleName' from the module path. Installing '$moduleName' module."
-
-        Write-Host "##[command]Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop"
-        Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop
-        # }
-
+        Write-Verbose "Attempting to find the latest available version of module '$moduleName'."
         $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
 
+        if ($module) {
+            Write-Verbose "Module '$moduleName' version $($module.Version) was found."
+        } elseif ($tryInstallModule -eq $true) {
+            Write-Verbose "Unable to find module '$moduleName' from the module path. Installing '$moduleName' module."
+
+            Write-Host "##[command]Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop SkipPublisherCheck"
+            Install-Module -Name $moduleName -Force -AllowClobber -ErrorAction Stop -SkipPublisherCheck
+            $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+        }
+
         if (-not $module) {
-            Write-Warning "Unable to install '$moduleName'."
             throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $moduleName)
         }
 
@@ -166,50 +216,32 @@ function Import-AzAccountsModule {
 }
 
 function Uninstall-AzureRMModules {
-    [CmdletBinding()]
-    param([switch] $UseAzUninstall)
+    [CmdletBinding()]Param()
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         Write-Verbose "Uninstalling AzureRM modules."
 
-        if ($UseAzUninstall -and (Get-Module -ListAvailable -Name Az.Accounts)) {
+        if ((Get-Module -ListAvailable -Name Az.Accounts) -and (Get-Command Uninstall-AzureRm -ErrorAction SilentlyContinue)) {
             Write-Host "##[command]Uninstall-AzureRm"
             Uninstall-AzureRm
-        }
-        else {
+
+            Write-Verbose "Making sure all AzureRM modules are gone after the uninstall."
+
             $azureRmModules = Get-Module -ListAvailable -Name AzureRM.* | Select-Object Name,Version
-            if ($azureRmModules -and $azureRmModules.Count -gt 0) {
+            if ($azureRmModules) {
                 Foreach ($azureRmModule in $azureRmModules) {
-                    $azureRmModuleName = $azureRmModule.Name
-                    Write-Verbose "Uninstalling module: $azureRmModuleName"
-                    try {
-                        Write-Host "##[command]Uninstall-Module -Name $azureRmModuleName -AllVersions -Force"
-                        Uninstall-Module -Name $azureRmModuleName -AllVersions -Force
-                    }
-                    catch {
-                        Write-Verbose "Failed to uninstall module: $azureRmModuleName"
-                    }
+                    Write-Verbose "'$($azureRmModule)' AzureRM module found."
                 }
             }
             else {
-                Write-Host "No AzureRM modules found to uninstall."
+                Write-Verbose "No AzureRM modules found."
             }
         }
-
-        Write-Verbose "Making sure all AzureRM modules are gone after the uninstall."
-
-        $azureRmModules = Get-Module -ListAvailable -Name AzureRM.* | Select-Object Name,Version
-        if ($azureRmModules) {
-            Foreach ($azureRmModule in $azureRmModules) {
-                Write-Verbose "'$($azureRmModule)' AzureRM module found."
-            }
-        }
-        else {
-            Write-Verbose "No AzureRM modules found."
-        }
-    }
-    finally {
+    } catch {
+        Write-Verbose -Message $_.Exception.Message
+        Write-VstsTaskWarning -Message "Failed to uninstall AzureRm modules" -AsOutput
+    } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
@@ -284,9 +316,9 @@ function Initialize-AzSubscription {
                     ServicePrincipal=$true;
                     Scope='Process';
                     WarningAction='SilentlyContinue';
-                }
+                } `
+                -serviceConnectionId $connectedServiceNameARM
             }
-
         }
         catch {
             # Provide an additional, custom, credentials-related error message.
@@ -392,6 +424,7 @@ function Retry-Command {
     param(
         [Parameter(Mandatory=$true)][string]$command,
         [Parameter(Mandatory=$true)][hashtable]$args,
+        [Parameter(Mandatory=$false)][string]$serviceConnectionId,
         [Parameter(Mandatory=$false)][int]$retries=5,
         [Parameter(Mandatory=$false)][int]$secondsDelay=5
     )
@@ -401,14 +434,24 @@ function Retry-Command {
 
     while(-not $completed) {
         try {
-            Write-Host "##[command]$command $args"
+            Write-Host "##[command]$command $($args | Out-String)"
             & $command @args
             Write-Verbose("Command [{0}] succeeded." -f $command)
             $completed = $true
         } catch {
             if ($retryCount -ge $retries) {
                 Write-Verbose("Command [{0}] failed the maximum number of {1} times." -f $command, $retryCount)
-                throw
+                                
+                $expiredSecretErrorCode = "AADSTS7000222"
+                if ($_.Exception.Message -match $expiredSecretErrorCode) {
+
+                    $organizationURL = $Env:System_CollectionUri
+                    $projectName = $Env:System_TeamProject
+                    $serviceConnectionLink = [uri]::EscapeUriString("$organizationURL$projectName/_settings/adminservices?resourceId=$serviceConnectionId")
+                    throw (Get-VstsLocString -Key AZ_ExpiredServicePrincipalMessageWithLink -ArgumentList $serviceConnectionLink)
+                } else {
+                    throw
+                }
             } else {
                 $secondsDelay = [math]::Pow(2, $retryCount)
                 Write-Verbose("Command [{0}] failed. Retrying in {1} seconds." -f $command, $secondsDelay)

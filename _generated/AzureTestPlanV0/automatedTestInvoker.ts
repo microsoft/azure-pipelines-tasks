@@ -1,13 +1,17 @@
 import * as tl from 'azure-pipelines-task-lib/task'
-import { executepythontests } from './Invokers/pythonivoker'
-import { executemaventests } from './Invokers/maveninvoker'
-import { executegradletests } from './Invokers/gradleinvoker'
+import { executePythonTests } from './Invokers/pythoninvoker'
+import { executeMavenTests } from './Invokers/maveninvoker'
+import { executeGradleTests } from './Invokers/gradleinvoker'
+import { ciDictionary } from './ciEventLogger';
 
-export async function testInvoker(testsToBeExecuted: string[]) {
+export async function testInvoker(testsToBeExecuted: string[], ciData: ciDictionary): Promise<number> {
 
     const testLanguageStrings = tl.getDelimitedInput('testLanguageInput', ',', true);
 
+    let exitStatusCode = 0;
+
     for (const testLanguage of testLanguageStrings) {
+        let exitCode = 0;
 
         if (testLanguage === null || testLanguage === undefined) {
             console.log("Please select the test framework language from the task dropdown list to execute automated tests");
@@ -16,21 +20,31 @@ export async function testInvoker(testsToBeExecuted: string[]) {
 
         switch (testLanguage) {
             case 'Java-Maven':
-                await executemaventests(testsToBeExecuted);
+                exitCode = await executeMavenTests(testsToBeExecuted);
+                tl.debug(`Execution Status Code for Maven: ${exitCode}`);
+                ciData["isJavaMavenExecution"] = true;
                 break;
 
             case 'Java-Gradle':
-                await executegradletests(testsToBeExecuted);
+                exitCode = await executeGradleTests(testsToBeExecuted);
+                tl.debug(`Execution Status Code for Gradle: ${exitCode}`);
+                ciData["isJavaGradleExecution"] = true;
                 break;
 
             case 'Python':
-                await executepythontests(testsToBeExecuted);
+                exitCode =  await executePythonTests(testsToBeExecuted);
+                tl.debug(`Execution Status Code for Python: ${exitCode}`);
+                ciData["isPythonExecution"] = true;
                 break;
 
             default:
                 console.log('Invalid test Language Input selected.');
+                ciData["NoLanguageInput"] = true;
         }
-
+        
+        exitStatusCode = exitStatusCode || exitCode;
     }
- 
+    
+    tl.debug(`Execution Status Code for Automated Execution Flow: ${exitStatusCode}`);
+    return exitStatusCode;
 }

@@ -52,6 +52,10 @@ let a: any = <any>{
             "code": 0,
             "stdout": "1.2.4"
         },
+        "packer -machine-readable --version": {
+            "code": 0,
+            "stdout": "1234567,,version,1.2.4"
+        },
         "packer fix -validate=false F:\\somedir\\tempdir\\100\\default.windows.template.json": {
             "code": 0,
             "stdout": "{ \"some-key\": \"some-value\" }"
@@ -85,6 +89,18 @@ var utMock = {
     StringWritable: ut.StringWritable,
     PackerVersion: ut.PackerVersion,
     isGreaterVersion: ut.isGreaterVersion,
+    download: function(packerDownloadUrl, downloadPath) {
+        if(process.env["__download_fails__"] === "true") {
+            throw "packer download failed!!";
+        }
+        console.log('downloading from url ' + packerDownloadUrl + ' to ' + downloadPath);
+    },
+    unzip: function(zipLocation, unzipLocation) {
+        if(process.env["__extract_fails__"] === "true") {
+            throw "packer zip extraction failed!!";
+        }
+        console.log('extracting from zip ' + zipLocation + ' to ' + unzipLocation);
+    },
     deleteDirectory: function(dir) {
         console.log("rmRF " + dir);
     },

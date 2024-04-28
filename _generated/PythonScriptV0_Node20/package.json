@@ -21,7 +21,7 @@
     "@types/mocha": "^5.2.7",
     "@types/q": "^1.5.4",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-task-lib": "^4.10.0"
+    "azure-pipelines-task-lib": "^4.10.1"
   },
   "devDependencies": {
     "typescript": "5.1.6"
