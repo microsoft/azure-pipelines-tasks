@@ -10,8 +10,8 @@
   "minimumAgentVersion": "2.144.0",
   "version": {
     "Major": 0,
-    "Minor": 238,
-    "Patch": 1
+    "Minor": 239,
+    "Patch": 0
   },
   "groups": [
     {
@@ -136,7 +136,7 @@
       "name": "akvPluginVersion",
       "type": "string",
       "label": "ms-resource:loc.input.label.akvPluginVersion",
-      "defaultValue": "1.0.1",
+      "defaultValue": "1.1.0",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.akvPluginVersion",
       "visibleRule": "plugin = azureKeyVault",

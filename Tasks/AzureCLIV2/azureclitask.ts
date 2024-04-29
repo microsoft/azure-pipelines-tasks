@@ -33,8 +33,6 @@ export class azureclitask {
             var connectedService: string = tl.getInput("connectedServiceNameARM", true);
             await this.loginAzureRM(connectedService);
 
-            process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = connectedService;
-
             let errLinesCount: number = 0;
             let aggregatedErrorLines: string[] = [];
             tool.on('errline', (errorLine: string) => {
@@ -125,7 +123,12 @@ export class azureclitask {
                 this.logoutAzure();
             }
 
-            process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = '';
+            if (process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID && process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID !== "")
+            {
+                process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = '';
+                process.env.AZURESUBSCRIPTION_CLIENT_ID = '';
+                process.env.AZURESUBSCRIPTION_TENANT_ID = '';
+            }
         }
     }
 
@@ -151,9 +154,13 @@ export class azureclitask {
             //login using OpenID Connect federation
             Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
 
-             this.servicePrincipalId = servicePrincipalId;
-             this.federatedToken = federatedToken;
-             this.tenantId = tenantId;
+            this.servicePrincipalId = servicePrincipalId;
+            this.federatedToken = federatedToken;
+            this.tenantId = tenantId;
+
+            process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = connectedService;
+            process.env.AZURESUBSCRIPTION_CLIENT_ID = servicePrincipalId;
+            process.env.AZURESUBSCRIPTION_TENANT_ID = tenantId;
         }
         else if (authScheme.toLowerCase() == "serviceprincipal") {
             let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
