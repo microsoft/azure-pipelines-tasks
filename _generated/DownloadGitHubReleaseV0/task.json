@@ -11,7 +11,7 @@
   "version": {
     "Major": 0,
     "Minor": 239,
-    "Patch": 1
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Download GitHub Release",
@@ -102,10 +102,6 @@
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "main.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "main.js",
       "argumentFormat": ""
     }
