@@ -23,7 +23,7 @@ export default class DockerComposeConnection extends ContainerConnection {
 
     constructor() {
         super();
-        this.useDockerComposeV2 = tl.getBoolFeatureFlag('USE_DOCKERCOMPOSEV2');
+        this.useDockerComposeV2 = tl.getBoolFeatureFlag('USE_DOCKER_COMPOSE_V2_COMPATIBLE_MODE');
         this.setDockerComposePath();
         this.dockerComposeFile = DockerComposeUtils.findDockerFile(tl.getInput("dockerComposeFile", true), tl.getInput("cwd"));
         if (!this.dockerComposeFile) {
