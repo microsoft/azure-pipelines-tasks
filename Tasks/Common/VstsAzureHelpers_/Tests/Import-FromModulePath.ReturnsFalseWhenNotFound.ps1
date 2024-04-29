@@ -1,6 +1,10 @@
 [CmdletBinding()]
 param()
 
+$featureFlags = @{
+    retireAzureRM = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 Unregister-Mock Import-Module
@@ -15,9 +19,19 @@ $variableSets = @(
 foreach ($variableSet in $variableSets) {
     Write-Verbose ('-' * 80)
 
-    # Act.
-    $result = & $module Import-FromModulePath -Classic:($variableSet.Classic)
+    if ($featureFlags.retireAzureRM) {
+        $isModuleExists = $false;
+        Get-Command -Module $module | ForEach-Object {
+            if ($_.name -match "Import-FromModulePath") {
+                $isModuleExists = $true;
+            }
+        }
+        Assert-AreEqual -Expected $false -Actual $isModuleExists -Message "Property should not exists"
+    } else {
+        # Act.
+        $result = & $module Import-FromModulePath -Classic:($variableSet.Classic)
 
-    # Assert.
-    Assert-AreEqual $false $result
+        # Assert.
+        Assert-AreEqual $false $result
+    }
 }

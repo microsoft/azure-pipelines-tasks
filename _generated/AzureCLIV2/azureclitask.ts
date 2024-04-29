@@ -100,16 +100,16 @@ export class azureclitask {
               if (typeof toolExecutionError === 'string') {
                 const expiredSecretErrorCode = 'AADSTS7000222';
                 let serviceEndpointSecretIsExpired = toolExecutionError.indexOf(expiredSecretErrorCode) >= 0;
-                
+
                 if (serviceEndpointSecretIsExpired) {
                   const organizationURL = tl.getVariable('System.CollectionUri');
                   const projectName = tl.getVariable('System.TeamProject');
                   const serviceConnectionLink = encodeURI(`${organizationURL}${projectName}/_settings/adminservices?resourceId=${connectedService}`);
-      
+
                   message = tl.loc('ExpiredServicePrincipalMessageWithLink', serviceConnectionLink);
                 }
               }
-      
+
               tl.setResult(tl.TaskResult.Failed, message);
             } else if (exitCode != 0){
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedWithExitCode", exitCode));
@@ -121,6 +121,13 @@ export class azureclitask {
             //Logout of Azure if logged in
             if (this.isLoggedIn) {
                 this.logoutAzure();
+            }
+
+            if (process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID && process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID !== "")
+            {
+                process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = '';
+                process.env.AZURESUBSCRIPTION_CLIENT_ID = '';
+                process.env.AZURESUBSCRIPTION_TENANT_ID = '';
             }
         }
     }
@@ -147,9 +154,13 @@ export class azureclitask {
             //login using OpenID Connect federation
             Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
 
-             this.servicePrincipalId = servicePrincipalId;
-             this.federatedToken = federatedToken;
-             this.tenantId = tenantId;
+            this.servicePrincipalId = servicePrincipalId;
+            this.federatedToken = federatedToken;
+            this.tenantId = tenantId;
+
+            process.env.AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = connectedService;
+            process.env.AZURESUBSCRIPTION_CLIENT_ID = servicePrincipalId;
+            process.env.AZURESUBSCRIPTION_TENANT_ID = tenantId;
         }
         else if (authScheme.toLowerCase() == "serviceprincipal") {
             let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);

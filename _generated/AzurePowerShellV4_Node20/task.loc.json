@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 239,
-    "Patch": 1
+    "Patch": 5
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -215,7 +215,7 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   },
   "_buildConfigMapping": {
-    "Default": "4.239.0",
-    "Node20_229_2": "4.239.1"
+    "Default": "4.239.4",
+    "Node20_229_2": "4.239.5"
   }
 }
