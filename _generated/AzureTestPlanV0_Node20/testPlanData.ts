@@ -94,11 +94,10 @@ async function getTestPlanDataPoints(testPlanInputId: number, testSuitesInputId:
             try {
                 let testCasesResponse = await getTestCaseListAsync(testPlanInputId, testSuiteId, testPlanConfigInputId.toString(), token);
 
-                console.log(JSON.stringify(testCasesResponse, null, 2));
-
                 token = testCasesResponse.continuationToken;
 
                 for (let key in testCasesResponse) {
+                    console.log(`Key iteration: ${key}`);
                     if (testCasesResponse.hasOwnProperty(key)) {
                         testCasesData.push(testCasesResponse[key]);
                     }

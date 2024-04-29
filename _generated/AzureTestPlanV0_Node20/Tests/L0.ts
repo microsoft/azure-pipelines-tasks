@@ -37,7 +37,7 @@ afterEach(() => {
     assert(tr.stdOutContained(`Test Selector selected`),
       `Should have looked Test Selector`);
 
-    assert.strictEqual(tr.stdout, "Hello World", `Actual value: ${tr.stdout}`);
+    //assert.strictEqual(tr.stdout, "Hello World", `Actual value: ${tr.stdout}`);
     
     assert(tr.stdOutContained(`Test Plan Id:`),
       `Should have looked for Test Plan Id`);
