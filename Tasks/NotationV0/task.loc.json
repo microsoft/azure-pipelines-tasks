@@ -222,6 +222,7 @@
     "ChecksumValidationFailed": "ms-resource:loc.messages.ChecksumValidationFailed",
     "FailedArtifacts": "ms-resource:loc.messages.FailedArtifacts",
     "FailedToAddCertToTrustStore": "ms-resource:loc.messages.FailedToAddCertToTrustStore",
+    "FailedToGetWorkloadIdToken": "ms-resource:loc.messages.FailedToGetWorkloadIdToken",
     "FailedToImportTrustPolicy": "ms-resource:loc.messages.FailedToImportTrustPolicy",
     "FailedToListTrustStore": "ms-resource:loc.messages.FailedToListTrustStore",
     "FailedToShowTrustPolicy": "ms-resource:loc.messages.FailedToShowTrustPolicy",
