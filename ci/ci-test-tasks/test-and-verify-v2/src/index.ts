@@ -70,7 +70,7 @@ async function main() {
     }
 
     if (invalidPipelines.length > 0) {
-      console.log('\nInvalid pipelines:');
+      console.log('\nInvalid pipelines (can not be triggered due to an incorrect YML file structure and/or issues with pipeline resources such as service connections):');
 
       invalidPipelines.map(invalidPipeline => console.log(
         `##vso[task.issue type=error]${invalidPipeline} is not valid`
