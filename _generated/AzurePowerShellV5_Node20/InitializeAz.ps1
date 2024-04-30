@@ -6,7 +6,9 @@ param
     [String] [Parameter(Mandatory = $false)]
     $targetAzurePs,
     [String] [Parameter(Mandatory = $false)]
-    $clientAssertionJwt
+    $clientAssertionJwt,
+    [String] [Parameter(Mandatory = $false)]
+    $serviceConnectionId
 )
 
 $endpointObject =  ConvertFrom-Json  $endpoint
@@ -115,6 +117,10 @@ elseif ($endpointObject.scheme -eq 'WorkloadIdentityFederation') {
         Write-Host "##[command] Set-AzContext -SubscriptionId $($endpointObject.subscriptionID) -TenantId $($endpointObject.tenantId)"
         $null = Set-AzContext -SubscriptionId $endpointObject.subscriptionID -TenantId $endpointObject.tenantId
     }
+
+    $env:AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = $serviceConnectionId
+    $env:AZURESUBSCRIPTION_CLIENT_ID = $endpointObject.servicePrincipalClientID
+    $env:AZURESUBSCRIPTION_TENANT_ID = $endpointObject.tenantId
 }
 else {
     #  Provide an additional, custom, credentials-related error message. Will handle localization later
