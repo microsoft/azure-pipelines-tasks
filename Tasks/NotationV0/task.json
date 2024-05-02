@@ -10,8 +10,8 @@
   "minimumAgentVersion": "2.144.0",
   "version": {
     "Major": 0,
-    "Minor": 235,
-    "Patch": 1
+    "Minor": 239,
+    "Patch": 0
   },
   "groups": [
     {
@@ -136,7 +136,7 @@
       "name": "akvPluginVersion",
       "type": "string",
       "label": "Plugin Version",
-      "defaultValue": "1.0.1",
+      "defaultValue": "1.1.0",
       "required": true,
       "helpMarkDown": "The version of the Azure Key Vault plugin to be installed. please visit the [release page](https://github.com/Azure/notation-azure-kv/releases) for the available versions.",
       "visibleRule": "plugin = azureKeyVault",

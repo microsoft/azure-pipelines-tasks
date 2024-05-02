@@ -15,5 +15,6 @@
   "loc.input.label.failOnStandardError": "Сбой со стандартной ошибкой",
   "loc.input.help.failOnStandardError": "Если задано значение True, задача завершится сбоем при записи любых ошибок в поток StandardError.",
   "loc.messages.BashReturnCode": "Завершение работы Bash с кодом возврата %d",
-  "loc.messages.BashFailed": "Сбой Bash с ошибкой %s"
+  "loc.messages.BashFailed": "Сбой Bash с ошибкой %s",
+  "loc.messages.BashFailedWithCode137": "Bash завершил работу с кодом 137, что означает, что ему недостаточно памяти. Установите на узле агента достаточный объем памяти."
 }

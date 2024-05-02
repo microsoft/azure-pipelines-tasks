@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 236,
-    "Patch": 0
+    "Minor": 238,
+    "Patch": 2
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "dotnet $(command)",
@@ -583,7 +583,7 @@
     "Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
   },
   "_buildConfigMapping": {
-    "Default": "2.236.0",
-    "Node20_229_2": "2.236.1"
+    "Default": "2.238.2",
+    "Node20_229_2": "2.238.3"
   }
 }

@@ -197,4 +197,10 @@ finally {
     Remove-EndpointSecrets
     Update-PSModulePathForHostedAgent
     Disconnect-AzureAndClearContext -restrictContext 'True' -ErrorAction SilentlyContinue
+
+    if ($env:AZURESUBSCRIPTION_SERVICE_CONNECTION_ID) {
+        $env:AZURESUBSCRIPTION_SERVICE_CONNECTION_ID = ""
+        $env:AZURESUBSCRIPTION_CLIENT_ID = ""
+        $env:AZURESUBSCRIPTION_TENANT_ID = ""
+    }
 }

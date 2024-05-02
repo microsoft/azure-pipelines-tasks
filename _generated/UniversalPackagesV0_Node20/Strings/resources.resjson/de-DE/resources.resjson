@@ -88,5 +88,6 @@
   "loc.messages.Warn_CredentialsNotFound": "Die für Universal Packages zu verwendenden Anmeldeinformationen konnten nicht ermittelt werden.",
   "loc.messages.Warning_SessionCreationFailed": "Die Herkunftssitzung konnte nicht erstellt werden: %s",
   "loc.messages.Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages wird in Azure DevOps Server nicht unterstützt.",
-  "loc.messages.Error_ProcessorArchitectureNotSupported": "Universal Packages erfordert einen x64-Agent."
+  "loc.messages.Error_ProcessorArchitectureNotSupported": "Universal Packages erfordert einen x64-Agent.",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "Die Dienstverbindung verwendet keine unterstützte Authentifizierungsmethode. Verwenden Sie eine Dienstverbindung mit der auf persönlichen Zugriffstoken basierenden Authentifizierung."
 }
