@@ -14,7 +14,7 @@
   "version": {
     "Major": 5,
     "Minor": 239,
-    "Patch": 6
+    "Patch": 8
   },
   "demands": [
     "azureps"
@@ -301,7 +301,7 @@
     "AzModuleNotFound": "Could not find the modules: 'Az.Accounts'. If the module was recently installed, retry after restarting the Azure Pipelines task agent."
   },
   "_buildConfigMapping": {
-    "Default": "5.239.6",
-    "Node20_229_2": "5.239.7"
+    "Default": "5.239.8",
+    "Node20_229_2": "5.239.9"
   }
 }
