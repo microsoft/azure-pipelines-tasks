@@ -3,7 +3,7 @@
   "name": "AzureResourceManagerTemplateDeployment",
   "friendlyName": "ARM template deployment",
   "description": "Deploy an Azure Resource Manager (ARM) template to all the deployment scopes",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-resource-manager-template-deployment-v3",
   "helpMarkDown": "[Learn more about this task](https://aka.ms/armtaskreadme)",
   "category": "Deploy",
   "releaseNotes": "- Added support for bicepparam.",
@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 238,
+    "Minor": 239,
     "Patch": 0
   },
   "demands": [],
@@ -336,7 +336,7 @@
     "IncompatibleAzureCLIVersionBicepParam": "Azure CLI version should be >= 2.47.0 to use .bicepparam file"
   },
   "_buildConfigMapping": {
-    "Default": "3.238.0",
-    "Node20_229_2": "3.238.1"
+    "Default": "3.239.0",
+    "Node20_229_2": "3.239.1"
   }
 }
