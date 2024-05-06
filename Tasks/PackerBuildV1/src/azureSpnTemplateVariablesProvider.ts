@@ -27,10 +27,18 @@ export default class AzureSpnTemplateVariablesProvider implements definitions.IT
 
         this._spnVariables = new Map<string, string>();
         var connectedService = taskParameters.serviceEndpoint;
-        var subscriptionId: string = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true)
+        var subscriptionId: string = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
+        let endpointObject = await taskParameters.getEndpoint(connectedService);
         this._spnVariables.set(constants.TemplateVariableSubscriptionIdName, subscriptionId);
         this._spnVariables.set(constants.TemplateVariableClientIdName, tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalid', false));
-        this._spnVariables.set(constants.TemplateVariableClientSecretName, tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalkey', false));
+        if (endpointObject.scheme === 'WorkloadIdentityFederation') {
+            const oidc_token = await endpointObject.applicationTokenCredentials.getFederatedToken();
+            tl.setSecret(oidc_token);
+            this._spnVariables.set(constants.TemplateVariableClientjwtName, oidc_token);
+        }
+        else  {
+            this._spnVariables.set(constants.TemplateVariableClientSecretName, tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalkey', false));
+        }
         this._spnVariables.set(constants.TemplateVariableTenantIdName, tl.getEndpointAuthorizationParameter(connectedService, 'tenantid', false));
 
         return this._spnVariables;
