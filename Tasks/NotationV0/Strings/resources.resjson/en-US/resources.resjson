@@ -66,7 +66,7 @@
   "loc.messages.UnsupportedFileExtension": "Unsupported file extension: %s.",
   "loc.messages.UnsupportedPlatform": "Unsupported platform: %s.",
   "loc.messages.UnsupportedVersion": "Unsupported version: %s.",
-  "loc.messages.UseManagedIdentity": "Use managed identity to access Azure Key Vault.",
+  "loc.messages.UseAuthenticationMethod": "Use %s to access Azure Key Vault.",
   "loc.messages.UnknownCommand": "Unknown command: %s.",
   "loc.messages.UnknownError": "An unknown error occurred.",
   "loc.messages.UnknownPlugin": "Unknown plugin: %s.",

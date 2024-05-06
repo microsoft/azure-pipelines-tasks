@@ -243,7 +243,7 @@
     "UnsupportedFileExtension": "Unsupported file extension: %s.",
     "UnsupportedPlatform": "Unsupported platform: %s.",
     "UnsupportedVersion": "Unsupported version: %s.",
-    "UseManagedIdentity": "Use managed identity to access Azure Key Vault.",
+    "UseAuthenticationMethod": "Use %s to access Azure Key Vault.",
     "UnknownCommand": "Unknown command: %s.",
     "UnknownError": "An unknown error occurred.",
     "UnknownPlugin": "Unknown plugin: %s.",
