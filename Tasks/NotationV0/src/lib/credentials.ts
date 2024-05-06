@@ -23,10 +23,11 @@ export async function getVaultCredentials(): Promise<[{ [key: string]: string },
     switch (authScheme.toLocaleLowerCase()) {
         case "managedserviceidentity":
             // azure key vault plugin will automatially try managed idenitty
-            console.log(taskLib.loc('UseManagedIdentity'));
-            credentialType = "managedId";
+            console.log(taskLib.loc('UseAuthenticationMethod', 'Managed Identity'));
+            credentialType = "managedid";
             break;
         case "serviceprincipal":
+            console.log(taskLib.loc('UseAuthenticationMethod', 'Service Principal'));
             let authType = taskLib.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
             let cliPassword: string | undefined = "";
             var servicePrincipalId = taskLib.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
@@ -58,6 +59,7 @@ export async function getVaultCredentials(): Promise<[{ [key: string]: string },
             credentialType = "environment"
             break;
         case "workloadidentityfederation":
+            console.log(taskLib.loc('UseAuthenticationMethod', 'Workload Identity Federation'));
             var servicePrincipalId = taskLib.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
             var tenantId = taskLib.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
             const federatedToken = await getWorkloadIdToken(connectedService);

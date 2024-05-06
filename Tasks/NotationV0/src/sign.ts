@@ -23,13 +23,18 @@ export async function sign(): Promise<void> {
     const pluginName = taskLib.getInput('plugin', true);
     switch (pluginName) {
         case 'azureKeyVault':
-            // azure-kv plugin specific inputs
+            // install akv plugin 
             const akvPluginVersion = taskLib.getInput('akvPluginVersion', true) || '';
+            const installedVersion = await installAzureKV(akvPluginVersion);
+
+            // get plugin config
             const caCertBundle = taskLib.getInput('caCertBundle', false) || '';
             const selfSignedCert = taskLib.getBoolInput('selfSigned', false);
+
+            // setup env
             const [credentialEnvs, credentialType] = await getVaultCredentials();
             const keyVaultPluginEnv = { ...env, ...credentialEnvs}
-            const installedVersion = await installAzureKV(akvPluginVersion);
+
             await notationRunner(artifactRefs, async (notation: ToolRunner, artifactRef: string, execOptions: IExecOptions) => {
                 execOptions.env = keyVaultPluginEnv;
                 return notation
@@ -63,39 +68,44 @@ async function installAzureKV(versionPrefix: string): Promise<string> {
     const pluginDir = path.join(getConfigHome(), NOTATION, PLUGINS, 'azure-kv');
     const downloadInfo = getDownloadInfo(versionPrefix, AZURE_KV_PLUGIN_VERSION_FILE);
 
-    if (taskLib.exist(path.join(pluginDir, binaryName))) {
-        // if the plugin is already installed, check if the version is the same
-        // as the expected version
-        const currentVersion = await getPluginVersion('azure-kv');
-        if (currentVersion === downloadInfo.version) {
-            console.log(taskLib.loc('AzureKVPluginAlreadyInstalled', currentVersion));
-        }
-    } else {
-        await installFromURL(downloadInfo.url, downloadInfo.checksum, pluginDir);
+    // check if the plugin is already installed
+    const currentVersion = await getPluginVersion('azure-kv');
+    if (currentVersion === downloadInfo.version) {
+        console.log(taskLib.loc('AzureKVPluginAlreadyInstalled', currentVersion));
+        return currentVersion;
     }
 
+    await installFromURL(downloadInfo.url, downloadInfo.checksum, pluginDir);
     taskLib.tool(NOTATION_BINARY).arg(['plugin', 'list']).execSync();
     return downloadInfo.version;
 }
 
+// check if the plugin version supports credential type
+//
+// if version >= 1.1.0, support credential type
 function isSupportCredentialType(version: string): boolean {
-    // if version >= 1.1.0, support credential type
     const versionParts = version.split('.');
     if (versionParts.length < 2) {
         return false;
     }
+    const major = parseInt(versionParts[0]);
+    const minor = parseInt(versionParts[1]);
 
-    if (parseInt(versionParts[0]) > 1) {
+    if (major > 1) {
         return true;
     }
 
-    if (parseInt(versionParts[0]) === 1 && parseInt(versionParts[1]) >= 1) {
+    if (major === 1 && minor >= 1) {
         return true;
     }
 
     return false
 }
 
+// getPluginVersion returns the version of the plugin by running
+// the notation plugin list command
+//
+// if the plugin is not found, return empty string
 function getPluginVersion(pluginName: string): string {
     const result = taskLib.tool(NOTATION).arg(['plugin', 'list']).execSync();
     if (result.code !== 0) {
@@ -109,7 +119,6 @@ function getPluginVersion(pluginName: string): string {
         if (line.startsWith(pluginName)) {
             const parts = line.trim().split('  ');
             let nonEmptyParts = parts.filter(part => part !== '');
-            console.log(nonEmptyParts);
             return nonEmptyParts.slice(-3)[0].trim();
         }
     }
