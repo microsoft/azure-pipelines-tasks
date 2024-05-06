@@ -284,7 +284,7 @@ describe('PackerBuild Suite V1', function() {
             process.env["__ostype__"] = "windows";
 
             assert(tr.failed, 'task should have failed');
-            assert(tr.stdout.indexOf("##vso[task.issue type=error;]loc_mock_OSTypeNotSupported") != -1, "error message should be right");
+            assert(tr.stdout.indexOf("##vso[task.issue type=error;]loc_mock_OSTypeNotSupported") != -1 || tr.stdout.indexOf("##vso[task.issue type=error;source=TaskInternal;]loc_mock_OSTypeNotSupported") != -1, "error message should be right");
             done();
         });
 
@@ -365,7 +365,7 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.failed, 'task should fail if output is not parsed properly');
             assert(tr.invokedToolCount == 4, 'all 4 commands should have been invoked. actual: ' + tr.invokedToolCount);
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;isOutput=false;issecret=false;]") == -1, "should not try to set output variable");
-            assert(tr.stdout.indexOf("##vso[task.issue type=error;]loc_mock_ImageURIOutputVariableNotFound") != -1, "should show proper console message");
+            assert(tr.stdout.indexOf("##vso[task.issue type=error;]loc_mock_ImageURIOutputVariableNotFound") != -1 || tr.stdout.indexOf("##vso[task.issue type=error;source=TaskInternal;]loc_mock_ImageURIOutputVariableNotFound") != -1, "should show proper console message");
             done();
         });
 
@@ -496,7 +496,7 @@ describe('PackerBuild Suite V1', function() {
 
             assert(tr.invokedToolCount == 1, 'should have invoked tool only once. actual: ' + tr.invokedToolCount);
             assert(tr.failed, 'task should fail if download fails');
-            assert(tr.stdout.indexOf("##vso[task.issue type=error;]packer download failed!!") != -1, "error message should be right");
+            assert(tr.stdout.indexOf("##vso[task.issue type=error;]packer download failed!!") != -1 || tr.stdout.indexOf("##vso[task.issue type=error;source=TaskInternal;]packer download failed!!") != -1, "error message should be right");
             done();
         });
 
@@ -510,7 +510,7 @@ describe('PackerBuild Suite V1', function() {
 
             assert(tr.invokedToolCount == 0, 'should have invoked tool not even once. actual: ' + tr.invokedToolCount);
             assert(tr.failed, 'task should fail if extraction fails');
-            assert(tr.stdout.indexOf("##vso[task.issue type=error;]packer zip extraction failed!!") != -1, "error message should be right");
+            assert(tr.stdout.indexOf("##vso[task.issue type=error;]packer zip extraction failed!!") != -1 || tr.stdout.indexOf("##vso[task.issue type=error;source=TaskInternal;]packer zip extraction failed!!") != -1, "error message should be right");
             done();
         });
 
