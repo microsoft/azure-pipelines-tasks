@@ -8,6 +8,7 @@ import { getBuildConfigs } from './helpers';
 interface BuildResult { result: string; message: string }
 
 const DISABLED = 'disabled';
+const INVALID = 'invalid';
 
 const buildResultCode = {
   0: 'None',
@@ -27,6 +28,7 @@ const buildResultEnum = {
 
 async function main() {
   const disabledPipelines: string[] = [];
+  const invalidPipelines: string[] = [];
   const runningTestBuilds: Promise<BuildResult>[] = [];
   for (const task of api.tasks) {
     console.log(`starting tests for ${task} task`);
@@ -34,6 +36,8 @@ async function main() {
 
     if (runResult === DISABLED) {
       disabledPipelines.push(task);
+    } else if (runResult === INVALID) {
+      invalidPipelines.push(task);
     } else {
       runningTestBuilds.push(...runResult);
     }
@@ -65,13 +69,23 @@ async function main() {
       ));
     }
 
+    if (invalidPipelines.length > 0) {
+      console.log('\nInvalid pipelines (can not be triggered due to an incorrect YML file structure and/or issues with pipeline resources such as service connections):');
+
+      invalidPipelines.map(invalidPipeline => console.log(
+        `##vso[task.issue type=error]${invalidPipeline} is not valid`
+      ));
+
+      failed = true;
+    }
+
     console.log('\n');
     if (failed) console.log('##vso[task.complete result=Failed]');
   });
 }
 
 // Running test pipelines for task by build configs
-async function runTaskPipelines(taskName: string): Promise<Promise<BuildResult>[] | typeof DISABLED> {
+async function runTaskPipelines(taskName: string): Promise<Promise<BuildResult>[] | typeof DISABLED | typeof INVALID> {
   const pipelines = await fetchPipelines()();
   const pipeline = pipelines.find(pipeline => pipeline.name === taskName);
 
@@ -89,6 +103,11 @@ async function runTaskPipelines(taskName: string): Promise<Promise<BuildResult>[
       console.log(`Running tests for "${taskName}" task with config "${config}" for pipeline "${pipeline.name}"`);
       const pipelineBuild = await startTestPipeline(pipeline, config);
 
+      if (pipelineBuild === null) {
+        console.log(`Pipeline "${pipeline.name}" is not valid.`);
+        return INVALID;
+      }
+
       const buildPromise = new Promise<BuildResult>(resolve => completeBuild(taskName, pipelineBuild, resolve));
       runningBuilds.push(buildPromise);
     }
@@ -101,7 +120,7 @@ async function runTaskPipelines(taskName: string): Promise<Promise<BuildResult>[
   return [];
 }
 
-async function startTestPipeline(pipeline: BuildDefinitionReference, config = ''): Promise<Build> {
+async function startTestPipeline(pipeline: BuildDefinitionReference, config = ''): Promise<Build | null> {
   console.log(`Run ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`);
 
   const { BUILD_SOURCEVERSION: branch, CANARY_TEST_NODE_VERSION: nodeVersion } = process.env;
@@ -117,6 +136,10 @@ async function startTestPipeline(pipeline: BuildDefinitionReference, config = ''
       CANARY_TEST_NODE_VERSION: nodeVersion
     });
   } catch (err: any) {
+    if (err.message === 'Could not queue the build because there were validation errors or warnings.') {
+      return null;
+    }
+
     err.stack = `Error running ${pipeline.name} pipeline. Stack: ${err.stack}`;
     console.error(err.stack);
     if (err.response?.data) {

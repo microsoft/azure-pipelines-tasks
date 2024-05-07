@@ -19,7 +19,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 238,
+    "Minor": 239,
     "Patch": 5
   },
   "minimumAgentVersion": "2.0.0",
@@ -171,6 +171,15 @@
       "visibleRule": "scriptType = ps || scriptType = pscore",
       "helpMarkDown": "ms-resource:loc.input.help.powerShellIgnoreLASTEXITCODE",
       "groupName": "advanced"
+    },
+    {
+      "name": "visibleAzLogin",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.visibleAzLogin",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.visibleAzLogin",
+      "groupName": "advanced"
     }
   ],
   "execution": {
@@ -208,7 +217,7 @@
     "ExpiredServicePrincipalMessageWithLink": "ms-resource:loc.messages.ExpiredServicePrincipalMessageWithLink"
   },
   "_buildConfigMapping": {
-    "Default": "2.238.4",
-    "Node20_229_2": "2.238.5"
+    "Default": "2.239.4",
+    "Node20_229_2": "2.239.5"
   }
 }
