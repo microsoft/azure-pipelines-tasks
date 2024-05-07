@@ -58,6 +58,14 @@ steps:
   env:
     TOKEN: $(Package.Token)
 
+- task: ComponentGovernanceComponentDetection@0
+  displayName: Component Governance
+  inputs:
+    scanType: 'Register'
+    verbosity: 'Verbose'
+    alertWarningLevel: 'High'
+    ignoreDirectories: _download
+
 - powershell: .\azure-pipelines-tasks\ci\courtesy-push\send-notification.ps1
   displayName: Send MS Teams notification
   condition: eq(variables['build.reason'], 'Schedule')

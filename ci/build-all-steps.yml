@@ -93,6 +93,13 @@ steps:
       ne(variables['COURTESY_PUSH'], 'true'),
       ne(variables['numTasks'], 0)
     )
+- task: ComponentGovernanceComponentDetection@0
+  displayName: Component Governance
+  inputs:
+    scanType: 'Register'
+    verbosity: 'Verbose'
+    alertWarningLevel: 'High'
+    ignoreDirectories: _download
 
 # Only on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
