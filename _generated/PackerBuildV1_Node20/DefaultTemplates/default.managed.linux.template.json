@@ -2,6 +2,7 @@
   "variables": {
     "client_id": "",
     "client_secret": "",
+    "client_jwt": "",
     "subscription_id": "",
     "tenant_id": "",
     "object_id": "",
@@ -23,6 +24,7 @@
         "type": "azure-arm",
         "client_id": "{{user `client_id`}}",
         "client_secret": "{{user `client_secret`}}",
+        "client_jwt": "{{user `client_jwt`}}",
         "managed_image_resource_group_name": "{{user `resource_group`}}",
         "managed_image_name": "{{user `managed_image_name`}}",
         "subscription_id": "{{user `subscription_id`}}",

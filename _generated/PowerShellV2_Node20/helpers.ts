@@ -2,6 +2,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
 import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry"
 import { ArgsSanitizingError } from './errors';
+import { IssueSource } from 'azure-pipelines-task-lib/internal';
 
 type ProcessEnvPowerShellTelemetry = {
     foundPrefixes: number,
@@ -197,7 +198,7 @@ export function validateFileArgs(inputArguments: string): void {
                     throw new ArgsSanitizingError(message);
                 }
                 if (featureFlags.audit) {
-                    tl.warning(message);
+                    tl.warning(message, IssueSource.TaskInternal, 1);
                 }
             }
         }
