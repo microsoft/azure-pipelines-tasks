@@ -20,6 +20,8 @@ getToken().then((val) => {
     let isLogin = (command === "login");
     const isDockerRequired = !isLogin && !isLogout;
 
+// test comment
+
     // Connect to any specified container registry
     let connection = new ContainerConnection(isDockerRequired);
     connection.open(null, registryAuthenticationToken, true, isLogout);
