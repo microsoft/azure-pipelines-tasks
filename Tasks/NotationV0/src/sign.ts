@@ -119,6 +119,11 @@ function getPluginVersion(pluginName: string): string {
         if (line.startsWith(pluginName)) {
             const parts = line.trim().split('  ');
             let nonEmptyParts = parts.filter(part => part !== '');
+            if (nonEmptyParts.length < 3) {
+                // version is not found
+                return '';
+            }
+
             return nonEmptyParts.slice(-3)[0].trim();
         }
     }
