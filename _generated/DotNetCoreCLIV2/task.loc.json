@@ -262,7 +262,7 @@
       "name": "verbosityRestore",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.verbosityRestore",
-      "defaultValue": "Minimal",
+      "defaultValue": "Normal",
       "helpMarkDown": "ms-resource:loc.input.help.verbosityRestore",
       "required": "false",
       "groupName": "restoreAdvanced",

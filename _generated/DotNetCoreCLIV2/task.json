@@ -262,7 +262,7 @@
       "name": "verbosityRestore",
       "type": "pickList",
       "label": "Verbosity",
-      "defaultValue": "Minimal",
+      "defaultValue": "Normal",
       "helpMarkDown": "Specifies the amount of detail displayed in the output.",
       "required": "false",
       "groupName": "restoreAdvanced",
