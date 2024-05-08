@@ -64,7 +64,7 @@ steps:
     scanType: 'Register'
     verbosity: 'Verbose'
     alertWarningLevel: 'High'
-    ignoreDirectories: _download
+    ignoreDirectories: _download, AzureMonitorAlertsV0, PyPIPublisherV0, NuGetPublisherV0, NuGetV0, XamarinTestCloudV1
 
 - powershell: .\azure-pipelines-tasks\ci\courtesy-push\send-notification.ps1
   displayName: Send MS Teams notification
