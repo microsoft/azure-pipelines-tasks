@@ -25,10 +25,10 @@ steps:
   displayName: Set publish variables
 
 # Download slices
-# - powershell: .\ci\download-built.ps1
-#   displayName: Download built packages
-#   env:
-#     SYSTEM_ACCESSTOKEN: $(system.accessToken)
+- powershell: .\ci\download-built.ps1
+  displayName: Download built packages
+  env:
+    SYSTEM_ACCESSTOKEN: $(system.accessToken)
 
 # Stage milestone
 # TODO: Rename this.. we are staging task packages not the milestone.
