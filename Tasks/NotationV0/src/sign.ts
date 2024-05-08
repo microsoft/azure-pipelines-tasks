@@ -105,7 +105,7 @@ function isSupportCredentialType(version: string): boolean {
 // getPluginVersion returns the version of the plugin by running
 // the notation plugin list command
 //
-// if the plugin is not found, return empty string
+// if the plugin or version is not found, return empty string
 function getPluginVersion(pluginName: string): string {
     const result = taskLib.tool(NOTATION).arg(['plugin', 'list']).execSync();
     if (result.code !== 0) {
