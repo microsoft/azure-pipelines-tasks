@@ -474,7 +474,7 @@
             "name": "verbosityPack",
             "type": "pickList",
             "label": "Verbosity",
-            "defaultValue": "Detailed",
+            "defaultValue": "Normal",
             "helpMarkDown": "Specifies the amount of detail displayed in the output.",
             "required": "false",
             "groupName": "packAdvanced",
