@@ -685,6 +685,20 @@ var getExternalsAsync = async function (externals, destRoot) {
             var url = package.repository.replace(/\/$/, '') + '/package/' + package.name + '/' + package.version;
             var packageSource = await downloadArchiveAsync(url, /*omitExtensionCheck*/true);
 
+            // If nuget doesn't find specific package version, it will download the latest.
+            // We can't specify nuget to fail such request, so we need at least to check version post-factum.
+            const { XMLParser } = require("fast-xml-parser");
+            const parser = new XMLParser();
+
+            const nuspecPath = path.join(packageSource, package.name + '.nuspec');
+            const nuspecXml = fs.readFileSync(nuspecPath);
+            const nuspec = parser.parse(nuspecXml);
+
+            const nuspecVersion = nuspec && nuspec.package && nuspec.package.metadata && nuspec.package.metadata.version;
+            if (nuspecVersion !== package.version) {
+                fail(`Expected version '${package.version}' but got '${nuspecVersion}' for nuget package '${package.name}'`);
+            }
+
             // copy specific files
             copyGroups(package.cp, packageSource, destRoot);
         }
