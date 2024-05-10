@@ -8,7 +8,7 @@ var uuidV4 = require("uuid/v4");
 export async function addReleaseAnnotation(endpoint: AzureEndpoint, azureAppService: AzureAppService, isDeploymentSuccess: boolean): Promise<void> {
     try {
         var appSettings = await azureAppService.getApplicationSettings();
-        var instrumentationKey = appSettings && appSettings.properties && appSettings.properties.APPINSIGHTS_INSTRUMENTATIONKEY;
+        var instrumentationKey = getInstrumentationKey(appSettings);
         if(instrumentationKey) {
             let appinsightsResources: ApplicationInsightsResources = new ApplicationInsightsResources(endpoint);
             var appInsightsResources = await appinsightsResources.list(null, [`$filter=InstrumentationKey eq '${instrumentationKey}'`]);
@@ -90,4 +90,21 @@ function getPipelineVariable(variableName: string): string | undefined {
     let variable = tl.getVariable(variableName);
     //we dont want to set a variable to be empty string
     return !!variable ? variable : undefined;
+}
+
+function getInstrumentationKey(appSettings: any): string | undefined {
+    let connectionString = appSettings?.properties?.APPLICATIONINSIGHTS_CONNECTION_STRING;
+    if (connectionString){
+        const FIELDS_SEPARATOR = ";";
+        const FIELD_KEY_VALUE_SEPARATOR = "=";
+
+        const kvPairs = connectionString.split(FIELDS_SEPARATOR);
+        for (const kvPair of kvPairs) {
+            const pair = kvPair.split(FIELD_KEY_VALUE_SEPARATOR);
+            if (pair.length === 2 && pair[0].trim().toLowerCase() === "instrumentationkey") {
+                return pair[1].trim();
+            }
+        }
+    }
+    return appSettings?.properties?.APPINSIGHTS_INSTRUMENTATIONKEY;
 }
