@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 239,
+    "Minor": 240,
     "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
@@ -404,7 +404,7 @@
     "UpdatedRunFromPackageSettings": "ms-resource:loc.messages.UpdatedRunFromPackageSettings"
   },
   "_buildConfigMapping": {
-    "Default": "1.239.0",
-    "Node20_229_9": "1.239.1"
+    "Default": "1.240.0",
+    "Node20_229_9": "1.240.1"
   }
 }
