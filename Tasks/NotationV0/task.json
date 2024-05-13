@@ -10,7 +10,7 @@
   "minimumAgentVersion": "2.144.0",
   "version": {
     "Major": 0,
-    "Minor": 239,
+    "Minor": 240,
     "Patch": 0
   },
   "groups": [
@@ -216,12 +216,13 @@
     "ArtifactRefs": "Artifact references: %s.",
     "ArtifactRefsNotSpecified": "Artifact references are not specified.",
     "APPDATANotSet": "APPDATA is not set.",
-    "AzureKVPluginAlreadyInstalled": "Azure Key Vault plugin is already installed.",
+    "AzureKVPluginAlreadyInstalled": "Azure Key Vault plugin v%s is already installed.",
     "CannotFindTrustStore": "Cannot find trust store directory: %s.",
     "ChecksumValidated": "Checksum validated: %s.",
     "ChecksumValidationFailed": "Checksum validation failed. Expected: %s, Actual: %s.",
     "FailedArtifacts": "Failed artifacts: %s.",
     "FailedToAddCertToTrustStore": "Failed to add a certificate to trust store: %s.",
+    "FailedToGetWorkloadIdToken": "Failed to get workload identity token: %s.",
     "FailedToImportTrustPolicy": "Failed to import trust policy: %s.",
     "FailedToListTrustStore": "Failed to list the trust store.",
     "FailedToShowTrustPolicy": "Failed to show trust policy.",
@@ -242,7 +243,7 @@
     "UnsupportedFileExtension": "Unsupported file extension: %s.",
     "UnsupportedPlatform": "Unsupported platform: %s.",
     "UnsupportedVersion": "Unsupported version: %s.",
-    "UseManagedIdentity": "Use managed identity to access Azure Key Vault.",
+    "UseAuthenticationMethod": "Use %s to access Azure Key Vault.",
     "UnknownCommand": "Unknown command: %s.",
     "UnknownError": "An unknown error occurred.",
     "UnknownPlugin": "Unknown plugin: %s.",
