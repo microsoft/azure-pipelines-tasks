@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 238,
-    "Patch": 2
+    "Minor": 240,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -262,7 +262,7 @@
       "name": "verbosityRestore",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.verbosityRestore",
-      "defaultValue": "Detailed",
+      "defaultValue": "Normal",
       "helpMarkDown": "ms-resource:loc.input.help.verbosityRestore",
       "required": "false",
       "groupName": "restoreAdvanced",
@@ -474,7 +474,7 @@
       "name": "verbosityPack",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.verbosityPack",
-      "defaultValue": "Detailed",
+      "defaultValue": "Normal",
       "helpMarkDown": "ms-resource:loc.input.help.verbosityPack",
       "required": "false",
       "groupName": "packAdvanced",
@@ -583,7 +583,7 @@
     "Warning_UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.Warning_UnsupportedServiceConnectionAuth"
   },
   "_buildConfigMapping": {
-    "Default": "2.238.2",
-    "Node20_229_2": "2.238.3"
+    "Default": "2.240.0",
+    "Node20_229_2": "2.240.1"
   }
 }
