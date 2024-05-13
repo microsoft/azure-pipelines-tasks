@@ -299,6 +299,8 @@ Tasks/ManualInterventionV8/    @microsoft/release-management-task-team @manolera
 
 Tasks/ManualValidationV0/      @microsoft/release-management-task-team @manolerazvan 
 
+Tasks/ManualValidationV1/      @microsoft/release-management-task-team @manolerazvan 
+
 Tasks/MavenAuthenticateV0/     @microsoft/azure-artifacts-packages
 
 Tasks/MavenV2/     @microsoft/akvelon-build-task-team
