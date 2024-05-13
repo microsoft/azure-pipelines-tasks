@@ -17,7 +17,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 239,
+    "Minor": 240,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -583,7 +583,7 @@
     "Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
   },
   "_buildConfigMapping": {
-    "Default": "2.239.0",
-    "Node20_229_2": "2.239.1"
+    "Default": "2.240.0",
+    "Node20_229_2": "2.240.1"
   }
 }
