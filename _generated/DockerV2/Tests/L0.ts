@@ -126,7 +126,7 @@ describe("DockerV2 Suite", function () {
         assert.equal(tr.succeeded, true, 'should have passed');
         assert.equal(tr.warningIssues.length, 0, "should have no warnings");
         assert.equal(tr.errorIssues.length, 0, "should have no error issue");
-        console.log();
+        console.log(tr.stderr);
         done();
     });
 
