@@ -9,12 +9,10 @@ resources:
   repositories:
   - repository: AzureDevOps
     type: git
-    endpoint: AzureDevOpsRepos
     name: AzureDevOps/AzureDevOps
 
   - repository: ConfigChange
     type: git
-    endpoint: AzureDevOpsRepos
     name: AzureDevOps/AzureDevOps.ConfigChange
 
   - repository: 1ESPipelineTemplates
