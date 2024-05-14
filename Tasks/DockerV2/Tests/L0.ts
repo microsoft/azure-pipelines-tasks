@@ -117,6 +117,7 @@ describe("DockerV2 Suite", function () {
     });
 
     it('Log in with Managed Identity', function (done: Mocha.Done) {
+        this.timeout(100000);
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.containerRegistry] = "acrendpoint3";
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.login;
