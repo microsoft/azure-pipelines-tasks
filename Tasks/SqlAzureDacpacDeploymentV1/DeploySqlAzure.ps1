@@ -72,6 +72,9 @@ try {
         Write-Verbose "Detected authentication type : $authenticationType"
     }
 
+    $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+    $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
+
     # Parse server name and database name from connection string for adding firewall rules
     if ($authenticationType -eq "connectionString") {
         $sb = New-Object System.Data.Common.DbConnectionStringBuilder
@@ -101,8 +104,6 @@ try {
         $dbDns = $endpoint.Data.sqlDatabaseDnsSuffix
         $dbDns = $dbDns.Trim(".")
         $dbUrl = (New-Object -TypeName UriBuilder -ArgumentList @("https", $dbDns)).Uri
-        $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
-        $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
         $token = Get-AzureRMAccessToken -endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $vstsAccessToken -overrideResourceType $dbUrl
         $accessToken = $token.access_token
     }

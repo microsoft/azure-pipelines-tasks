@@ -27,6 +27,8 @@ Register-Mock Get-VstsInput { $endIPAddress } -ParametersEvaluator { $Name -eq "
 Register-Mock Remove-EndpointSecrets
 Register-Mock Detect-AuthenticationType {return "server"}
 
+Register-Mock Get-VstsEndpoint { return $systemEndpoint }
+
 Register-Mock Get-Endpoint { return $spnEndpoint }
 Register-Mock Import-SqlPs { }
 

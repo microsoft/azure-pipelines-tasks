@@ -12,22 +12,28 @@ $certificateFirewallRuleName= "certificateFirewallRuleName"
 $credentialsFirewallRuleName = "credentialsFirewallRuleName"
 $spnFirewallRuleName = "spnFirewallRuleName"
 
-$certEndpoint=@{}
-$usernameEndpoint=@{}
-$spnEndpoint=@{}
+$certEndpoint = @{}
+$certAuth = @{}
+$certAuth.Scheme = 'Certificate'
+$certEndpoint.Auth = $certAuth
 
-$certAuth=@{}
-$usernameAuth=@{}
-$spnAuth=@{}
+$usernameEndpoint = @{}
+$usernameAuth = @{}
+$usernameAuth.Scheme = 'UserNamePassword'
+$usernameEndpoint.Auth = $usernameAuth
 
-$certAuth.Scheme='Certificate'
-$certEndpoint.Auth =$certAuth
+$spnEndpoint = @{}
+$spnAuth = @{}
+$spnAuth.Scheme = 'ServicePrincipal'
+$spnEndpoint.Auth = $spnAuth
 
-$usernameAuth.Scheme='UserNamePassword'
-$usernameEndpoint.Auth =$usernameAuth
-
-$spnEndpoint.Scheme='ServicePrincipal'
-$spnEndpoint.Auth =$spnEndpoint
+$systemEndpoint = @{}
+$systemAuth = @{}
+$systemAuth.Scheme = 'System'
+$systemAuthParams = @{}
+$systemAuthParams.AccessToken = "AccessToken"
+$systemAuth.parameters = $systemAuthParams
+$systemEndpoint.Auth = $systemAuth
 
 $ipDetectionMethod = "IPAddressRange";
 
