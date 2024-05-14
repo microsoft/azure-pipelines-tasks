@@ -27,14 +27,6 @@ $spnAuth = @{}
 $spnAuth.Scheme = 'ServicePrincipal'
 $spnEndpoint.Auth = $spnAuth
 
-$systemEndpoint = @{}
-$systemAuth = @{}
-$systemAuth.Scheme = 'System'
-$systemAuthParams = @{}
-$systemAuthParams.AccessToken = "AccessToken"
-$systemAuth.parameters = $systemAuthParams
-$systemEndpoint.Auth = $systemAuth
-
 $ipDetectionMethod = "IPAddressRange";
 
 #### Main File Mock Constants ####
