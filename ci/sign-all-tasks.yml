@@ -9,35 +9,35 @@ steps:
   inputs:
     version: 6.x
 
-- task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@2
-  inputs:
-    ConnectedServiceName: AzurePipelinesTasksESRP
-    FolderPath: '${{ parameters.layoutRoot }}'
-    Pattern: '*.zip'
-    signConfigType: inlineSignParams
-    inlineOperation: |
-      [{
-      "keyCode": "CP-401405",
-      "operationSetCode": "NuGetSign",
-      "parameters": [],
-      "toolName": "sign",
-      "toolVersion": "1.0"
-      },
-      {
-      "keyCode": "CP-401405",
-      "operationSetCode": "NuGetVerify",
-      "parameters": [],
-      "toolName": "sign",
-      "toolVersion": "1.0"
-      }
-      ]
-  displayName: Sign Task Nuget Packages
-  condition: |
-    and(
-      succeeded(),
-      ne(variables['build.reason'], 'PullRequest'),
-      ne(variables['numTasks'], 0), eq(variables.os, 'Windows_NT')
-    )
+# - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@2
+#   inputs:
+#     ConnectedServiceName: AzurePipelinesTasksESRP
+#     FolderPath: '${{ parameters.layoutRoot }}'
+#     Pattern: '*.zip'
+#     signConfigType: inlineSignParams
+#     inlineOperation: |
+#       [{
+#       "keyCode": "CP-401405",
+#       "operationSetCode": "NuGetSign",
+#       "parameters": [],
+#       "toolName": "sign",
+#       "toolVersion": "1.0"
+#       },
+#       {
+#       "keyCode": "CP-401405",
+#       "operationSetCode": "NuGetVerify",
+#       "parameters": [],
+#       "toolName": "sign",
+#       "toolVersion": "1.0"
+#       }
+#       ]
+#   displayName: Sign Task Nuget Packages
+#   condition: |
+#     and(
+#       succeeded(),
+#       ne(variables['build.reason'], 'PullRequest'),
+#       ne(variables['numTasks'], 0), eq(variables.os, 'Windows_NT')
+#     )
 
 - script: del ${{ parameters.layoutRoot }}\CodeSignSummary*.md
   displayName: Remove CodeSignSummary file from package folder
