@@ -50,6 +50,13 @@
       "helpMarkDown": "Indicates whether to inject source server information into the PDB files. This option is only supported on Windows agents."
     },
     {
+      "name": "entraServiceConnection",
+      "type": "connectedService:AzureRM",
+      "label": "Azure Resource Manager connection",
+      "required": false,
+      "helpMarkDown": "Name of the Azure Resource Manager service connection. Supported authentication type is currently only workload identity federation."
+    },
+    {
       "name": "PublishSymbols",
       "type": "boolean",
       "label": "Publish symbols",
