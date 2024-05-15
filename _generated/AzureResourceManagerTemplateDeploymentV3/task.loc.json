@@ -3,7 +3,7 @@
   "name": "AzureResourceManagerTemplateDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/reference/azure-resource-manager-template-deployment-v3",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 238,
+    "Minor": 240,
     "Patch": 0
   },
   "demands": [],
@@ -336,7 +336,7 @@
     "IncompatibleAzureCLIVersionBicepParam": "ms-resource:loc.messages.IncompatibleAzureCLIVersionBicepParam"
   },
   "_buildConfigMapping": {
-    "Default": "3.238.0",
-    "Node20_229_2": "3.238.1"
+    "Default": "3.240.0",
+    "Node20_229_2": "3.240.1"
   }
 }
