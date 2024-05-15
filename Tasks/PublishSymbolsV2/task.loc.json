@@ -13,7 +13,7 @@
   "preview": false,
   "version": {
     "Major": 2,
-    "Minor": 237,
+    "Minor": 240,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -48,6 +48,13 @@
       "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.IndexSources"
+    },
+    {
+      "name": "entraServiceConnection",
+      "type": "connectedService:AzureRM",
+      "label": "Azure Resource Manager connection",
+      "required": false,
+      "helpMarkDown": "Name of the Azure Resource Manager service connection. Supported authentication type is currently only workload identity federation."
     },
     {
       "name": "PublishSymbols",
