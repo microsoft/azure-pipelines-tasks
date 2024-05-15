@@ -1,0 +1,4 @@
+{
+    "$schema" : "../../module.schema.json",
+    "moduleType": "ps"
+}

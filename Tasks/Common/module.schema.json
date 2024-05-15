@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "$id": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-tasks/master/Tasks/Common/module.schema.json",
+  "title": "CommonModule",
+  "description": "Schema for common module",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "moduleType": {
+      "description": "The type of the module",
+      "type": "string",
+      "enum": ["ps", "node"]
+    },
+    "messages": {
+      "description": "The loc messages of the module",
+      "type": "object"
+    },
+    "compile": {
+        "description": "Determine whether to compile the module or not",
+        "type" : "boolean"
+    },
+    "$schema": {
+      "type": "string"
+    }
+  },
+  "required": ["moduleType"]
+}
