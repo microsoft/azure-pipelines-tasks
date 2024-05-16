@@ -191,11 +191,11 @@
         "windows"
       ]
     },
-    "Node10": {
+    "Node16": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
     },
-    "Node16": {
+    "Node10": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
     }

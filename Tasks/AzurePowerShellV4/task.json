@@ -191,14 +191,14 @@
         "windows"
       ]
     },
-    "Node10": {
-      "target": "azurepowershell.js",
-      "argumentFormat": ""
-    },
     "Node16": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
-    }
+    },
+    "Node10": {
+      "target": "azurepowershell.js",
+      "argumentFormat": ""
+    }    
   },
   "messages": {
     "GeneratingScript": "Generating script.",

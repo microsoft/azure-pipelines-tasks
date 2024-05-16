@@ -87,12 +87,12 @@
     }
   },
   "execution": {
-    "Node10": {
-      "target": "run.js"
-    },
     "Node16": {
       "target": "run.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "run.js"
     },
     "Node20_1": {
       "target": "run.js",
