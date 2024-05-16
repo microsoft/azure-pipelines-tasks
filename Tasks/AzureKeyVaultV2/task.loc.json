@@ -74,21 +74,21 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "prejobexecution": {
-    "Node10": {
-      "target": "runprejob.js"
-    },
     "Node16": {
       "target": "runprejob.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "runprejob.js"
     }
   },
   "execution": {
-    "Node10": {
-      "target": "run.js"
-    },
     "Node16": {
       "target": "run.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "run.js"
     }
   },
   "messages": {

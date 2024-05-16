@@ -74,12 +74,12 @@
   ],
   "instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
   "prejobexecution": {
-    "Node10": {
-      "target": "runprejob.js"
-    },
     "Node16": {
       "target": "runprejob.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "runprejob.js"
     },
     "Node20_1": {
       "target": "runprejob.js",
