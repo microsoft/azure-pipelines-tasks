@@ -428,7 +428,7 @@ function Get-AccessTokenMSAL {
         [parameter(Mandatory = $false)] $overrideResourceType
     )
 
-    Get-MSALInstance $endpoint $connectedServiceNameARMvstsAccessToken
+    Get-MSALInstance $endpoint $connectedServiceNameARM
 
     # prepare MSAL scopes
     [string] $azureActiveDirectoryResourceId = if ($overrideResourceType) { $overrideResourceType } else { (Get-AzureActiverDirectoryResourceId -endpoint $endpoint) }
