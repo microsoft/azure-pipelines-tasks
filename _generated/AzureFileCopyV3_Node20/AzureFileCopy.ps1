@@ -136,7 +136,7 @@ try {
         $storageContext = Create-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
 
         # Geting Azure Storage Account type
-        $storageAccountType = Get-StorageAccountType $storageAccount $endpoint $connectedServiceName $vstsEndpoint
+        $storageAccountType = Get-StorageAccountType $storageAccount $endpoint $connectedServiceName
         Write-Verbose "Obtained Storage Account type: $storageAccountType"
         if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.Contains('Premium'))
         {
