@@ -143,7 +143,7 @@ function Import-SpecificAzModule {
         Write-Verbose "Attempting to find the latest available version of module '$moduleName'."
         $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
 
-        if ($module -and $module.Version.Major >= $minimumMajorVersion) {
+        if ($module -and ($module.Version.Major -ge $minimumMajorVersion)) {
             Write-Verbose "Module '$moduleName' version $($module.Version) was found."
         } elseif ($tryInstallModule -eq $true) {
             Write-Verbose "Unable to find module '$moduleName' from the module path. Installing '$moduleName' module."
@@ -153,7 +153,7 @@ function Import-SpecificAzModule {
             $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
         }
 
-        if (-not $module -or $module.Version.Major < $minimumMajorVersion) {
+        if (-not $module -or ($module.Version.Major -lt $minimumMajorVersion) ) {
             throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $moduleName)
         }
 
