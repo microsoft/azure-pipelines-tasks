@@ -133,7 +133,7 @@ function Import-SpecificAzModule {
         [string]$moduleName, 
         
         [Parameter()]
-        [switch]$tryInstallModule
+        [switch]$tryInstallModule,
 
         [Parameter(Mandatory=$true)]
         [int]$minimumMajorVersion
@@ -154,7 +154,7 @@ function Import-SpecificAzModule {
         }
 
         if (-not $module -or ($module.Version.Major -lt $minimumMajorVersion) ) {
-            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $moduleName)
+            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $minimumMajorVersion, $moduleName)
         }
 
         Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
