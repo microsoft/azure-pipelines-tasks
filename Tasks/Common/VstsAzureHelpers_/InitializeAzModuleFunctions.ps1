@@ -431,7 +431,7 @@ function Retry-Command {
 
     while(-not $completed) {
         try {
-            Write-Host "##[command]$command $($args | Out-String)"
+            Write-Host "##[command]$command $($args.GetEnumerator() | where-object { $_.key -ne "FederatedToken"} | out-string)"
             & $command @args
             Write-Verbose("Command [{0}] succeeded." -f $command)
             $completed = $true
