@@ -138,7 +138,7 @@
       "defaultValue": "10",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.concurrentUploads",
-      "grouName": "advanced"
+      "groupName": "advanced"
     },
     {
       "name": "delayBetweenUploads",
@@ -147,7 +147,7 @@
       "defaultValue": "50",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.delayBetweenUploads",
-      "grouName": "advanced"
+      "groupName": "advanced"
     }
   ],
   "execution": {

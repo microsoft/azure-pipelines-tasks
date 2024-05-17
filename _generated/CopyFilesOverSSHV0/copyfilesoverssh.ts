@@ -154,6 +154,7 @@ async function newRun() {
 
     const readyTimeout = parseInt(tl.getInput('readyTimeout', true), 10);
     const useFastPut = !(process.env['USE_FAST_PUT'] === 'false');
+    const concurrentUploads = parseInt(tl.getInput('concurrentUploads'));
 
     // Set up the SSH connection configuration based on endpoint details
     let sshConfig: Object = {
@@ -161,7 +162,8 @@ async function newRun() {
         port: port,
         username: username,
         readyTimeout: readyTimeout,
-        useFastPut: useFastPut
+        useFastPut: useFastPut,
+        promiseLimit: isNaN(concurrentUploads) ? 10 : concurrentUploads
     };
 
     if (privateKey) {
@@ -279,7 +281,6 @@ async function newRun() {
 
     console.log(tl.loc("FoldersCreated", folderStructure.length));
 
-    const concurrentUploads = parseInt(tl.getInput('concurrentUploads'));
     const delayBetweenUploads = parseInt(tl.getInput('delayBetweenUploads'));
 
     // Upload files to remote machine

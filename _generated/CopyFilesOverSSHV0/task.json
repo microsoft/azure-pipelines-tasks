@@ -138,7 +138,7 @@
       "defaultValue": "10",
       "required": false,
       "helpMarkDown": "Number of concurrent uploads when copying files. Default is 10.",
-      "grouName": "advanced"
+      "groupName": "advanced"
     },
     {
       "name": "delayBetweenUploads",
@@ -147,7 +147,7 @@
       "defaultValue": "50",
       "required": false,
       "helpMarkDown": "Delay between queueing uploads (in milliseconds). Default is 50.",
-      "grouName": "advanced"
+      "groupName": "advanced"
     }
   ],
   "execution": {
