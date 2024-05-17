@@ -32,12 +32,15 @@ export async function run(clientToolFilePath: string): Promise<void> {
         let personalAccessToken;
         const entraServiceConnection: string = tl.getInput("entraServiceConnection", false);
         if(entraServiceConnection){
+            tl.debug("entraServiceConnection: " + entraServiceConnection);
             personalAccessToken = await getAccessToken();
         }
         else if (AsAccountName) {
+            tl.debug("AsAccountName: " + AsAccountName);
             personalAccessToken = tl.getVariable("ArtifactServices.Symbol.PAT");
         }
         else {
+            tl.debug("SystemAccessToken");
             personalAccessToken = clientToolUtils.getSystemAccessToken();
             const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
             symbolServiceUri = await getSymbolServiceUri(serviceUri, personalAccessToken);
