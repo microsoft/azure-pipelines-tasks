@@ -118,8 +118,7 @@ function Get-AzureBlobStorageEndpointFromARM
 {
     param([string]$storageAccountName,
         [object]$endpoint,
-        [string]$connectedServiceNameARM,
-        [string]$vstsAccessToken)
+        [string]$connectedServiceNameARM)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -139,7 +138,7 @@ function Get-AzureBlobStorageEndpointFromARM
 	    Write-Verbose "[Azure Call]Retrieved storage account endpoint successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
 
         return $storageAccountEnpoint
-    }	
+    }
 }
 
 function Get-AzureStorageAccountTypeFromRDFE
@@ -162,8 +161,7 @@ function Get-AzureStorageAccountTypeFromARM
 {
     param([string]$storageAccountName,
         [object]$endpoint,
-        [string]$connectedServiceNameARM,
-        [string]$vstsAccessToken)
+        [string]$connectedServiceNameARM)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -183,7 +181,7 @@ function Get-AzureStorageAccountTypeFromARM
 	    Write-Verbose "[Azure Call]Retrieved storage account type successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
 
         return $storageAccountType
-    }	
+    }
 }
 
 function Create-AzureContainer
@@ -197,7 +195,7 @@ function Create-AzureContainer
         $storageAccountName = $storageContext.StorageAccountName
 
         Write-Verbose "[Azure Call]Creating container: $containerName in storage account: $storageAccountName"
-        if ($isPremiumStorage) 
+        if ($isPremiumStorage)
         {
             if ($featureFlags.retireAzureRM)
             {
@@ -353,8 +351,7 @@ function Get-AzureRMResourceGroupResourcesDetailsForAzureStack
     param([string]$resourceGroupName,
         [object]$azureRMVMResources,
         [object]$endpoint,
-        [string]$connectedServiceNameARM,
-        [string]$vstsAccessToken)
+        [string]$connectedServiceNameARM)
 
     [hashtable]$azureRGResourcesDetails = @{}
     [hashtable]$loadBalancerDetails = @{}
@@ -362,17 +359,17 @@ function Get-AzureRMResourceGroupResourcesDetailsForAzureStack
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
     {
         Write-Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName"
-        $networkInterfaceResources = Get-AzureNetworkInterfaceDetails $resourceGroupName $endpoint $connectedServiceNameARM $vstsAccessToken
+        $networkInterfaceResources = Get-AzureNetworkInterfaceDetails $resourceGroupName $endpoint $connectedServiceNameARM
         Write-Verbose "[Azure Call]Got network interfaces in resource group $resourceGroupName"
         $azureRGResourcesDetails.Add("networkInterfaceResources", $networkInterfaceResources)
 
         Write-Verbose "[Azure Call]Getting public IP Addresses in resource group $resourceGroupName"
-        $publicIPAddressResources = Get-AzurePublicIpAddressDetails $resourceGroupName $endpoint $connectedServiceNameARM $vstsAccessToken
+        $publicIPAddressResources = Get-AzurePublicIpAddressDetails $resourceGroupName $endpoint $connectedServiceNameARM
         Write-Verbose "[Azure Call]Got public IP Addresses in resource group $resourceGroupName"
         $azureRGResourcesDetails.Add("publicIPAddressResources", $publicIPAddressResources)
 
         Write-Verbose "[Azure Call]Getting load balancers in resource group $resourceGroupName"
-        $lbGroup =  Get-AzureLoadBalancersDetails $resourceGroupName $endpoint $connectedServiceNameARM $vstsAccessToken
+        $lbGroup =  Get-AzureLoadBalancersDetails $resourceGroupName $endpoint $connectedServiceNameARM
         Write-Verbose "[Azure Call]Got load balancers in resource group $resourceGroupName"
 
         if($lbGroup)
@@ -381,7 +378,7 @@ function Get-AzureRMResourceGroupResourcesDetailsForAzureStack
             {
                 $lbDetails = @{}
                 Write-Verbose "[Azure Call]Getting load balancer in resource group $resourceGroupName"
-                $loadBalancer = Get-AzureLoadBalancerDetails $resourceGroupName $lb.Name $endpoint $connectedServiceNameARM $vstsAccessToken
+                $loadBalancer = Get-AzureLoadBalancerDetails $resourceGroupName $lb.Name $endpoint $connectedServiceNameARM
                 Write-Verbose "[Azure Call]Got load balancer in resource group $resourceGroupName"
 
                 Write-Verbose "[Azure Call]Getting LoadBalancer Frontend Ip Config"
@@ -552,8 +549,7 @@ function Get-AzureMachineCustomScriptExtension
         [string]$vmName,
         [string]$name,
         [object]$endpoint,
-        [string]$connectedServiceNameARM,
-        [string]$vstsAccessToken)
+        [string]$connectedServiceNameARM)
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName))
     {
@@ -605,8 +601,7 @@ function Remove-AzureMachineCustomScriptExtension
         [string]$vmName,
         [string]$name,
         [object]$endpoint,
-        [string]$connectedServiceNameARM,
-        [string]$vstsAccessToken)
+        [string]$connectedServiceNameARM)
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))
     {
@@ -644,7 +639,7 @@ function Get-NetworkSecurityGroups
             $networkInterfaces = Get-AzureRmNetworkInterface -ResourceGroupName $resourceGroupName | Where-Object { $_.VirtualMachine.Id -eq $vmId }
         }
         Write-Verbose "[Azure Call]Got network interfaces in resource group $resourceGroupName"
-        
+
         if($networkInterfaces)
         {
             $noOfNics = $networkInterfaces.Count
@@ -657,20 +652,20 @@ function Get-NetworkSecurityGroups
                 {
                     $nsId = $networkSecurityGroupEntry.Id
 					Write-Verbose "Network Security Group Id: $nsId"
-					
+
                     $securityGroupName = $nsId.Split('/')[-1]
-                    $sgResourceGroup = $nsId.Split('/')[4]                    
+                    $sgResourceGroup = $nsId.Split('/')[4]
                     Write-Verbose "Security Group name is $securityGroupName and the related resource group $sgResourceGroup"
 
                     # Get the network security group object
                     Write-Verbose "[Azure Call]Getting network security group $securityGroupName in resource group $sgResourceGroup"
                     if ($featureFlags.retireAzureRM)
                     {
-                        $securityGroup = Get-AzNetworkSecurityGroup -ResourceGroupName $sgResourceGroup -Name $securityGroupName                    
+                        $securityGroup = Get-AzNetworkSecurityGroup -ResourceGroupName $sgResourceGroup -Name $securityGroupName
                     }
                     else
                     {
-                        $securityGroup = Get-AzureRmNetworkSecurityGroup -ResourceGroupName $sgResourceGroup -Name $securityGroupName    
+                        $securityGroup = Get-AzureRmNetworkSecurityGroup -ResourceGroupName $sgResourceGroup -Name $securityGroupName
                     }
                     Write-Verbose "[Azure Call]Got network security group $securityGroupName in resource group $sgResourceGroup"
 
@@ -687,7 +682,7 @@ function Get-NetworkSecurityGroups
     {
         throw (Get-VstsLocString -Key "AFC_NullOrEmptyResourceGroup")
     }
-    
+
     return $securityGroups
 }
 
@@ -720,13 +715,13 @@ function Add-NetworkSecurityRuleConfig
                 Write-Verbose "[Azure Call]Got network security rule config $ruleName under security group $securityGroupName"
             }
             catch
-            { 
+            {
                 #Ignore the exception
             }
 
             # Add the network security rule if it doesn't exists
-            if(-not $winRMConfigRule)                                                              
-            {           
+            if(-not $winRMConfigRule)
+            {
                 $maxRetries = 3
                 for($retryCnt=1; $retryCnt -le $maxRetries; $retryCnt++)
                 {
@@ -741,7 +736,7 @@ function Add-NetworkSecurityRuleConfig
                         {
                             $securityGroup = Add-AzureRmNetworkSecurityRuleConfig -NetworkSecurityGroup $securityGroup -Name $ruleName -Direction Inbound -Access Allow -SourceAddressPrefix '*' -SourcePortRange '*' -DestinationAddressPrefix '*' -DestinationPortRange $winrmHttpsPort -Protocol * -Priority $rulePriotity
                         }
-                        Write-Verbose "[Azure Call]Added inbound network security rule config $ruleName with priority $rulePriotity for port $winrmHttpsPort under security group $securityGroupName"                         
+                        Write-Verbose "[Azure Call]Added inbound network security rule config $ruleName with priority $rulePriotity for port $winrmHttpsPort under security group $securityGroupName"
 
                         Write-Verbose "[Azure Call]Setting the azure network security group"
                         if ($featureFlags.retireAzureRM)
@@ -757,7 +752,7 @@ function Add-NetworkSecurityRuleConfig
                     catch
                     {
                         Write-Verbose "Failed to add inbound network security rule config $ruleName with priority $rulePriotity for port $winrmHttpsPort under security group $securityGroupName : $_.Exception.Message"
-                            
+
                         $newPort = [convert]::ToInt32($rulePriotity, 10) + 50;
                         $rulePriotity = $newPort.ToString()
 
@@ -771,7 +766,7 @@ function Add-NetworkSecurityRuleConfig
                             $securityGroup = Get-AzureRmNetworkSecurityGroup -ResourceGroupName $resourceGroupName -Name $securityGroupName
                         }
                         Write-Verbose "[Azure Call]Got network security group $securityGroupName in resource group $resourceGroupName"
-                        
+
 
                         if($retryCnt -eq $maxRetries)
                         {
@@ -779,10 +774,10 @@ function Add-NetworkSecurityRuleConfig
                         }
 
                         continue
-                    }           
-                        
+                    }
+
                     Write-Verbose "Successfully added the network security group rule $ruleName with priority $rulePriotity for port $winrmHttpsPort"
-                    break             
+                    break
                 }
             }
         }

@@ -296,7 +296,6 @@ function Get-AzureRMAccessToken {
     param(
         [Parameter(Mandatory = $true)] $endpoint,
         [string][Parameter(Mandatory=$false)] $connectedServiceNameARM,
-        [string][Parameter(Mandatory=$false)] $vstsAccessToken,
         [parameter(Mandatory = $false)] $overrideResourceType = $null,
         [parameter(Mandatory = $false)] $useMSAL = $false
     )
@@ -335,7 +334,7 @@ function Get-AzureRMAccessToken {
     }
     # MSAL - access token
     elseif ($useMSAL) {
-        $result = Get-AccessTokenMSAL $endpoint $connectedServiceNameARM $vstsAccessToken $overrideResourceType
+        $result = Get-AccessTokenMSAL $endpoint $connectedServiceNameARM $overrideResourceType
 
         $accessToken.token_type = $result.TokenType
         $accessToken.access_token = $result.AccessToken
@@ -358,8 +357,7 @@ function Build-MSALInstance {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)] $endpoint,
-        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM,
-        [string][Parameter(Mandatory=$false)] $vstsAccessToken
+        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM
     )
 
     $clientId = $endpoint.Auth.Parameters.ServicePrincipalId
@@ -382,6 +380,9 @@ function Build-MSALInstance {
         }
         elseif ($endpoint.Auth.Scheme -eq $wifConnection) {
             Write-Verbose "MSAL - WorkloadIdentityFederation is used";
+
+            $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+            $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
             $oidc_token = Get-VstsFederatedToken -serviceConnectionId $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
 
@@ -407,13 +408,12 @@ function Get-MSALInstance {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)] $endpoint,
-        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM,
-        [string][Parameter(Mandatory=$false)] $vstsAccessToken
+        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM
     )
 
     # build MSAL if instance does not exist
     if ($null -eq $script:msalClientInstance) {
-        $script:msalClientInstance = Build-MSALInstance $endpoint $connectedServiceNameARM $vstsAccessToken
+        $script:msalClientInstance = Build-MSALInstance $endpoint $connectedServiceNameARM
     }
 
     return $script:msalClientInstance
@@ -425,11 +425,10 @@ function Get-AccessTokenMSAL {
     param(
         [Parameter(Mandatory = $true)] $endpoint,
         [string][Parameter(Mandatory=$false)] $connectedServiceNameARM,
-        [string][Parameter(Mandatory=$false)] $vstsAccessToken,
         [parameter(Mandatory = $false)] $overrideResourceType
     )
 
-    Get-MSALInstance $endpoint $connectedServiceNameARM $vstsAccessToken
+    Get-MSALInstance $endpoint $connectedServiceNameARM
 
     # prepare MSAL scopes
     [string] $azureActiveDirectoryResourceId = if ($overrideResourceType) { $overrideResourceType } else { (Get-AzureActiverDirectoryResourceId -endpoint $endpoint) }
@@ -710,11 +709,10 @@ function Get-AzRMStorageKeys {
     param([string] [Parameter(Mandatory = $true)] $resourceGroupName,
         [string] [Parameter(Mandatory = $true)] $storageAccountName,
         [object] [Parameter(Mandatory = $true)] $endpoint,
-        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM,
-        [string][Parameter(Mandatory=$false)] $vstsAccessToken)
+        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM)
 
     try {
-        $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM $vstsAccessToken
+        $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM
 
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint $accessToken
         $resourceGroupId = $resourceGroupDetails.id
@@ -745,11 +743,10 @@ function Get-AzRmVmCustomScriptExtension {
         [String] [Parameter(Mandatory = $true)] $vmName,
         [String] [Parameter(Mandatory = $true)] $Name,
         [Object] [Parameter(Mandatory = $true)] $endpoint,
-        [string] [Parameter(Mandatory=$false)] $connectedServiceNameARM,
-        [string] [Parameter(Mandatory=$false)] $vstsAccessToken)
+        [string] [Parameter(Mandatory=$false)] $connectedServiceNameARM)
 
     try {
-        $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM $vstsAccessToken
+        $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint $accessToken
         $resourceGroupId = $resourceGroupDetails.id
 
@@ -787,11 +784,10 @@ function Remove-AzRmVmCustomScriptExtension {
         [String] [Parameter(Mandatory = $true)] $vmName,
         [String] [Parameter(Mandatory = $true)] $Name,
         [Object] [Parameter(Mandatory = $true)] $endpoint,
-        [string] [Parameter(Mandatory=$false)] $connectedServiceNameARM,
-        [string] [Parameter(Mandatory=$false)] $vstsAccessToken)
+        [string] [Parameter(Mandatory=$false)] $connectedServiceNameARM)
 
     try {
-        $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM $vstsAccessToken
+        $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint $accessToken
         $resourceGroupId = $resourceGroupDetails.id
 
@@ -851,11 +847,10 @@ function Get-AzRmStorageAccount {
     param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
         [String] [Parameter(Mandatory = $true)] $storageAccountName,
         [Object] [Parameter(Mandatory = $true)] $endpoint,
-        [string] [Parameter(Mandatory=$false)] $connectedServiceNameARM,
-        [string] [Parameter(Mandatory=$false)] $vstsAccessToken)
+        [string] [Parameter(Mandatory=$false)] $connectedServiceNameARM)
 
     try {
-        $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM $vstsAccessToken
+        $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint $accessToken
         $resourceGroupId = $resourceGroupDetails.id
 
@@ -997,10 +992,9 @@ function Add-AzureRmSqlServerFirewall {
         [String] [Parameter(Mandatory = $true)] $endIPAddress,
         [String] [Parameter(Mandatory = $true)] $serverName,
         [String] [Parameter(Mandatory = $true)] $firewallRuleName,
-        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM,
-        [string] [Parameter(Mandatory = $false)] $vstsAccessToken)
+        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM)
 
-    $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM $vstsAccessToken
+    $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM
     # get azure sql server resource Id
     $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
 
@@ -1048,10 +1042,9 @@ function Remove-AzureRmSqlServerFirewall {
     param([Object] [Parameter(Mandatory = $true)] $endpoint,
         [String] [Parameter(Mandatory = $true)] $serverName,
         [String] [Parameter(Mandatory = $true)] $firewallRuleName,
-        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM,
-        [string] [Parameter(Mandatory = $false)] $vstsAccessToken)
+        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM)
 
-    $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM $vstsAccessToken
+    $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM
 
     # Fetch Azure SQL server resource Id
     $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
@@ -1070,8 +1063,7 @@ function Add-AzureSqlDatabaseServerFirewallRule {
         [String] [Parameter(Mandatory = $true)] $endIPAddress,
         [String] [Parameter(Mandatory = $true)] $serverName,
         [String] [Parameter(Mandatory = $true)] $firewallRuleName,
-        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM,
-        [string] [Parameter(Mandatory = $false)] $vstsAccessToken)
+        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM)
 
     Trace-VstsEnteringInvocation $MyInvocation
 
@@ -1085,7 +1077,7 @@ function Add-AzureSqlDatabaseServerFirewallRule {
         }
         elseif (IsAzureRmConnection $connectionType) {
             Add-AzureRmSqlServerFirewall -endpoint $endpoint -serverName $serverName -startIPAddress $startIPAddress -endIPAddress $endIPAddress `
-                -firewallRuleName $firewallRuleName -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $vstsAccessToken
+                -firewallRuleName $firewallRuleName -connectedServiceNameARM $connectedServiceNameARM
         }
         else {
             throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $connectionType)
@@ -1107,8 +1099,7 @@ function Remove-AzureSqlDatabaseServerFirewallRule {
     param([Object] [Parameter(Mandatory = $true)] $endpoint,
         [String] [Parameter(Mandatory = $true)] $serverName,
         [String] [Parameter(Mandatory = $true)] $firewallRuleName,
-        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM,
-        [string] [Parameter(Mandatory = $false)] $vstsAccessToken)
+        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM)
 
     Trace-VstsEnteringInvocation $MyInvocation
 
@@ -1121,7 +1112,7 @@ function Remove-AzureSqlDatabaseServerFirewallRule {
             Remove-LegacyAzureSqlServerFirewall -endpoint $endpoint -serverName $serverName -firewallRuleName $firewallRuleName
         }
         elseif (IsAzureRmConnection $connectionType) {
-            Remove-AzureRmSqlServerFirewall $endpoint $serverName $firewallRuleName $connectedServiceNameARM $vstsAccessToken
+            Remove-AzureRmSqlServerFirewall $endpoint $serverName $firewallRuleName $connectedServiceNameARM
         }
         else {
             throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $connectionType)
@@ -1191,10 +1182,9 @@ function Get-AzureNetworkInterfaceDetails {
     [CmdletBinding()]
     param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
         [Object] [Parameter(Mandatory = $true)] $endpoint,
-        [string] [Parameter(Mandatory=$false)] $connectedServiceNameARM,
-        [string] [Parameter(Mandatory=$false)] $vstsAccessToken)
+        [string] [Parameter(Mandatory=$false)] $connectedServiceNameARM)
 
-    $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM $vstsAccessToken
+    $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
     Write-Verbose "[Azure Rest Call] Get Network Interface Details"
@@ -1220,10 +1210,9 @@ function Get-AzurePublicIpAddressDetails {
     [CmdletBinding()]
     param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
         [Object] [Parameter(Mandatory = $true)] $endpoint,
-        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM,
-        [string] [Parameter(Mandatory = $false)] $vstsAccessToken)
+        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM)
 
-    $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM $vstsAccessToken
+    $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
     Write-Verbose "[Azure Rest Call] Get Public IP Addresses Details"
@@ -1249,10 +1238,9 @@ function Get-AzureLoadBalancersDetails {
     [CmdletBinding()]
     param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
         [Object] [Parameter(Mandatory = $true)] $endpoint,
-        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM,
-        [string] [Parameter(Mandatory = $false)] $vstsAccessToken)
+        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM)
 
-    $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM $vstsAccessToken
+    $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
     Write-Verbose "[Azure Rest Call] Get Load Balancers details"
@@ -1279,10 +1267,9 @@ function Get-AzureLoadBalancerDetails {
     param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
         [String] [Parameter(Mandatory = $true)] $name,
         [Object] [Parameter(Mandatory = $true)] $endpoint,
-        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM,
-        [string] [Parameter(Mandatory = $false)] $vstsAccessToken)
+        [string] [Parameter(Mandatory = $false)] $connectedServiceNameARM)
 
-    $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM $vstsAccessToken
+    $accessToken = Get-AzureRMAccessToken $endpoint $connectedServiceNameARM
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
     Write-Verbose "[Azure Rest Call] Get Load balancer details with name : $name"
