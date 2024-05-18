@@ -90,7 +90,7 @@ function Initialize-AzModules {
 
     try {
         $azAccountsModuleName = "Az.Accounts"
-        $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName -tryInstallModule:$tryInstallModule
+        $azAccountsVersion = Import-SpecificAzModule -moduleName $azAccountsModuleName -tryInstallModule:$tryInstallModule -minimumMajorVersion 2
         Write-Verbose "'$azAccountsModuleName' is available with version $azAccountsVersion."
 
         # Update-AzConfig is a part of Az.Accounts
@@ -112,11 +112,11 @@ function Initialize-AzModules {
         }
 
         $azResourcesModuleName = "Az.Resources"
-        $azResourcesVersion = Import-SpecificAzModule -moduleName $azResourcesModuleName -tryInstallModule:$tryInstallModule
+        $azResourcesVersion = Import-SpecificAzModule -moduleName $azResourcesModuleName -tryInstallModule:$tryInstallModule -minimumMajorVersion 6
         Write-Verbose "'$azResourcesModuleName' is available with version $azResourcesVersion."
 
         $azStorageModuleName = "Az.Storage"
-        $azStorageVersion = Import-SpecificAzModule -moduleName $azStorageModuleName -tryInstallModule:$tryInstallModule
+        $azStorageVersion = Import-SpecificAzModule -moduleName $azStorageModuleName -tryInstallModule:$tryInstallModule -minimumMajorVersion 4
         Write-Verbose "'$azStorageModuleName' is available with version $azStorageVersion."
         return $azAccountsVersion
     } finally {
@@ -133,14 +133,17 @@ function Import-SpecificAzModule {
         [string]$moduleName, 
         
         [Parameter()]
-        [switch]$tryInstallModule
+        [switch]$tryInstallModule,
+
+        [Parameter(Mandatory=$true)]
+        [int]$minimumMajorVersion
     )
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         Write-Verbose "Attempting to find the latest available version of module '$moduleName'."
         $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
 
-        if ($module) {
+        if ($module -and ($module.Version.Major -ge $minimumMajorVersion)) {
             Write-Verbose "Module '$moduleName' version $($module.Version) was found."
         } elseif ($tryInstallModule -eq $true) {
             Write-Verbose "Unable to find module '$moduleName' from the module path. Installing '$moduleName' module."
@@ -150,8 +153,8 @@ function Import-SpecificAzModule {
             $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
         }
 
-        if (-not $module) {
-            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $moduleName)
+        if (-not $module -or ($module.Version.Major -lt $minimumMajorVersion) ) {
+            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $minimumMajorVersion, $moduleName)
         }
 
         Write-Host "##[command]Import-Module -Name $($module.Path) -Global -PassThru -Force"
@@ -223,16 +226,10 @@ function Uninstall-AzureRMModules {
         Write-Verbose "Uninstalling AzureRM modules."
 
         if ((Get-Module -ListAvailable -Name Az.Accounts) -and (Get-Command Uninstall-AzureRm -ErrorAction SilentlyContinue)) {
-            Write-Host "##[command]Uninstall-AzureRm"
-            Uninstall-AzureRm
-
-            Write-Verbose "Making sure all AzureRM modules are gone after the uninstall."
-
             $azureRmModules = Get-Module -ListAvailable -Name AzureRM.* | Select-Object Name,Version
             if ($azureRmModules) {
-                Foreach ($azureRmModule in $azureRmModules) {
-                    Write-Verbose "'$($azureRmModule)' AzureRM module found."
-                }
+                Write-Host "##[command]Uninstall-AzureRm"
+                Uninstall-AzureRm
             }
             else {
                 Write-Verbose "No AzureRM modules found."
@@ -434,7 +431,7 @@ function Retry-Command {
 
     while(-not $completed) {
         try {
-            Write-Host "##[command]$command $($args | Out-String)"
+            Write-Host "##[command]$command $($args.GetEnumerator() | where-object { $_.key -ne "FederatedToken"} | out-string)"
             & $command @args
             Write-Verbose("Command [{0}] succeeded." -f $command)
             $completed = $true

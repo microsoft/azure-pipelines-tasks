@@ -208,7 +208,7 @@ extends:
           timeoutInMinutes: 360
           pool:
             name: Azure Pipelines
-            image: macos-11
+            image: macos-14
             os: macOS
           steps:
           - template: /ci/build-all-steps.yml@self
