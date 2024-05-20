@@ -14,7 +14,7 @@
   "version": {
     "Major": 4,
     "Minor": 240,
-    "Patch": 5
+    "Patch": 7
   },
   "demands": [
     "azureps"
@@ -237,12 +237,12 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "prejobexecution": {
-    "Node10": {
-      "target": "PreJobExecutionAzureFileCopy.js"
-    },
     "Node16": {
       "target": "PreJobExecutionAzureFileCopy.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "PreJobExecutionAzureFileCopy.js"
     },
     "Node20_1": {
       "target": "PreJobExecutionAzureFileCopy.js",
@@ -305,7 +305,7 @@
     "ServicePrincipalError": "ms-resource:loc.messages.ServicePrincipalError"
   },
   "_buildConfigMapping": {
-    "Default": "4.240.4",
-    "Node20_229_2": "4.240.5"
+    "Default": "4.240.6",
+    "Node20_229_2": "4.240.7"
   }
 }
