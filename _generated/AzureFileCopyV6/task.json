@@ -14,7 +14,7 @@
   "version": {
     "Major": 6,
     "Minor": 240,
-    "Patch": 6
+    "Patch": 8
   },
   "demands": [
     "azureps"
@@ -223,12 +223,12 @@
   ],
   "instanceNameFormat": "$(Destination) File Copy",
   "prejobexecution": {
-    "Node10": {
-      "target": "PreJobExecutionAzureFileCopy.js"
-    },
     "Node16": {
       "target": "PreJobExecutionAzureFileCopy.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "PreJobExecutionAzureFileCopy.js"
     }
   },
   "execution": {
@@ -288,7 +288,7 @@
     "AzModuleNotFound": "Could not find the modules: 'Az.Accounts'. If the module was recently installed, retry after restarting the Azure Pipelines task agent."
   },
   "_buildConfigMapping": {
-    "Default": "6.240.6",
-    "Node20_229_2": "6.240.7"
+    "Default": "6.240.8",
+    "Node20_229_2": "6.240.9"
   }
 }
