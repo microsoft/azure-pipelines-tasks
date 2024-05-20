@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 239,
-    "Patch": 0
+    "Minor": 240,
+    "Patch": 6
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -296,12 +296,12 @@
   "sourceDefinitions": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
-      "target": "./src//main.js"
-    },
     "Node16": {
       "target": "./src//main.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "./src//main.js"
     }
   },
   "messages": {
@@ -352,7 +352,7 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   },
   "_buildConfigMapping": {
-    "Default": "1.239.0",
-    "Node20_229_6": "1.239.1"
+    "Default": "1.240.6",
+    "Node20_229_6": "1.240.7"
   }
 }
