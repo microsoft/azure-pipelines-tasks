@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 240,
     "Patch": 0
   },
   "demands": [],
@@ -510,30 +510,30 @@
     }
   ],
   "prejobexecution": {
-    "Node10": {
-      "target": "src//downloadsecurefiles.js"
-    },
     "Node16": {
       "target": "src//downloadsecurefiles.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "src//downloadsecurefiles.js"
     }
   },
   "execution": {
-    "Node10": {
-      "target": "src//helm.js"
-    },
     "Node16": {
       "target": "src//helm.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "src//helm.js"
     }
   },
   "postjobexecution": {
-    "Node10": {
-      "target": "src//deletesecurefiles.js"
-    },
     "Node16": {
       "target": "src//deletesecurefiles.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "src//deletesecurefiles.js"
     }
   },
   "messages": {
@@ -561,7 +561,7 @@
     "KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20_229_3": "0.238.1"
+    "Default": "0.240.0",
+    "Node20_229_3": "0.240.1"
   }
 }

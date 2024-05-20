@@ -15,7 +15,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 240,
     "Patch": 0
   },
   "demands": [],
@@ -33,10 +33,10 @@
     }
   ],
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "kubelogin.js"
     },
-    "Node16": {
+    "Node10": {
       "target": "kubelogin.js"
     }
   },
@@ -59,7 +59,7 @@
     "Info_KubeloginDownloading": "ms-resource:loc.messages.Info_KubeloginDownloading"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20_229_3": "0.238.1"
+    "Default": "0.240.0",
+    "Node20_229_3": "0.240.1"
   }
 }

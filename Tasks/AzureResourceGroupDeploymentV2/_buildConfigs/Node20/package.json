@@ -3,8 +3,8 @@
   "main": "main.js",
   "dependencies": {
     "@types/node": "^20.3.1",
-    "azure-pipelines-task-lib": "^4.4.0",
-    "azure-pipelines-tasks-azure-arm-rest": "3.223.3",
+    "azure-pipelines-task-lib": "^4.11.0",
+    "azure-pipelines-tasks-azure-arm-rest": "3.239.0",
     "agent-base": "6.0.2",
     "moment": "^2.29.4",
     "typed-rest-client": "^1.8.9"

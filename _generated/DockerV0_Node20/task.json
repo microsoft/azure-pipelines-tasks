@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 240,
     "Patch": 1
   },
   "demands": [],
@@ -341,10 +341,10 @@
   ],
   "instanceNameFormat": "$(action)",
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "container.js"
     },
-    "Node16": {
+    "Node10": {
       "target": "container.js"
     },
     "Node20_1": {
@@ -366,7 +366,7 @@
     "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20_229_2": "0.238.1"
+    "Default": "0.240.0",
+    "Node20_229_2": "0.240.1"
   }
 }

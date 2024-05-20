@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 239,
+    "Minor": 240,
     "Patch": 0
   },
   "demands": [],
@@ -296,12 +296,12 @@
   "sourceDefinitions": [],
   "instanceNameFormat": "Build immutable image",
   "execution": {
-    "Node10": {
-      "target": "./src//main.js"
-    },
     "Node16": {
       "target": "./src//main.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "./src//main.js"
     }
   },
   "messages": {

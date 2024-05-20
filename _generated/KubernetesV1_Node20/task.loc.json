@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 240,
     "Patch": 1
   },
   "demands": [],
@@ -450,10 +450,10 @@
     }
   ],
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "src//kubernetes.js"
     },
-    "Node16": {
+    "Node10": {
       "target": "src//kubernetes.js"
     },
     "Node20_1": {
@@ -496,7 +496,7 @@
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   },
   "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_3": "1.238.1"
+    "Default": "1.240.0",
+    "Node20_229_3": "1.240.1"
   }
 }

@@ -18,7 +18,7 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 240,
     "Patch": 0
   },
   "minimumAgentVersion": "1.102.0",
@@ -285,12 +285,12 @@
     }
   ],
   "execution": {
-    "Node10": {
-      "target": "azureappservicemanage.js"
-    },
     "Node16": {
       "target": "azureappservicemanage.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "azureappservicemanage.js"
     }
   },
   "messages": {
@@ -438,7 +438,7 @@
     "InvalidActionForPublishProfileEndpoint": "ms-resource:loc.messages.InvalidActionForPublishProfileEndpoint"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20_229_2": "0.238.1"
+    "Default": "0.240.0",
+    "Node20_229_2": "0.240.1"
   }
 }

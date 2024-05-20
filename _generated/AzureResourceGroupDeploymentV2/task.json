@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 238,
+    "Minor": 240,
     "Patch": 0
   },
   "demands": [],
@@ -346,12 +346,12 @@
   ],
   "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
   "execution": {
-    "Node10": {
-      "target": "main.js"
-    },
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "main.js"
     }
   },
   "messages": {
@@ -502,7 +502,7 @@
     "TroubleshootingGuide": "Check out the troubleshooting guide to see if your issue is addressed: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
   },
   "_buildConfigMapping": {
-    "Default": "2.238.0",
-    "Node20_229_2": "2.238.1"
+    "Default": "2.240.0",
+    "Node20_229_2": "2.240.1"
   }
 }
