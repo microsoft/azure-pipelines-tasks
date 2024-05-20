@@ -1,153 +1,153 @@
 {
-    "id": "72A1931B-EFFB-4D2E-8FD8-F8472A07CB62",
-    "name": "AzurePowerShell",
-    "friendlyName": "Azure PowerShell",
-    "description": "Run a PowerShell script within an Azure environment",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-powershell",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613749)",
-    "category": "Deploy",
-    "visibility": [
-        "Build",
-        "Release"
-    ],
-    "runsOn": [
-        "Agent",
-        "DeploymentGroup"
-    ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 2,
-        "Minor": 240,
-        "Patch": 3
+  "id": "72A1931B-EFFB-4D2E-8FD8-F8472A07CB62",
+  "name": "AzurePowerShell",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-powershell",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 240,
+    "Patch": 3
+  },
+  "demands": [
+    "azureps"
+  ],
+  "minimumAgentVersion": "1.95.0",
+  "inputs": [
+    {
+      "name": "ConnectedServiceNameSelector",
+      "aliases": [
+        "azureConnectionType"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ConnectedServiceNameSelector",
+      "required": false,
+      "helpMarkDown": "",
+      "defaultValue": "ConnectedServiceNameARM",
+      "options": {
+        "ConnectedServiceName": "Azure Classic",
+        "ConnectedServiceNameARM": "Azure Resource Manager"
+      }
     },
-    "demands": [
-        "azureps"
-    ],
-    "minimumAgentVersion": "1.95.0",
-    "inputs": [
-        {
-            "name": "ConnectedServiceNameSelector",
-            "aliases": [
-                "azureConnectionType"
-            ],
-            "type": "pickList",
-            "label": "Azure Connection Type",
-            "required": false,
-            "helpMarkDown": "",
-            "defaultValue": "ConnectedServiceNameARM",
-            "options": {
-                "ConnectedServiceName": "Azure Classic",
-                "ConnectedServiceNameARM": "Azure Resource Manager"
-            }
-        },
-        {
-            "name": "ConnectedServiceName",
-            "aliases": [
-                "azureClassicSubscription"
-            ],
-            "type": "connectedService:Azure",
-            "label": "Azure Classic Subscription",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Azure Classic subscription to configure before running PowerShell",
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
-        },
-        {
-            "name": "ConnectedServiceNameARM",
-            "aliases": [
-                "azureSubscription"
-            ],
-            "type": "connectedService:AzureRM",
-            "label": "Azure Subscription",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Azure Resource Manager subscription to configure before running PowerShell",
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
-        },
-        {
-            "name": "ScriptType",
-            "type": "pickList",
-            "label": "Script Type",
-            "required": true,
-            "helpMarkDown": "Type of the script: File Path or Inline Script",
-            "defaultValue": "FilePath",
-            "options": {
-                "FilePath": "Script File Path",
-                "InlineScript": "Inline Script"
-            }
-        },
-        {
-            "name": "ScriptPath",
-            "type": "filePath",
-            "label": "Script Path",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Path of the script. Should be fully qualified path or relative to the default working directory.",
-            "visibleRule": "ScriptType = FilePath"
-        },
-        {
-            "name": "Inline",
-            "type": "multiLine",
-            "label": "Inline Script",
-            "required": false,
-            "defaultValue": "# You can write your azure powershell scripts inline here. \n# You can also pass predefined and custom variables to this script using arguments",
-            "helpMarkDown": "Enter the script to execute.",
-            "visibleRule": "ScriptType = InlineScript",
-            "properties": {
-                "resizable": "true",
-                "rows": "10",
-                "maxLength": "500"
-            }
-        },
-        {
-            "name": "ScriptArguments",
-            "type": "string",
-            "label": "Script Arguments",
-            "defaultValue": "",
-            "required": false,
-            "properties": {
-                "editorExtension": "ms.vss-services-azure.parameters-grid"
-            },
-            "helpMarkDown": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters."
-        },
-        {
-            "name": "TargetAzurePs",
-            "aliases": [
-                "azurePowerShellVersion"
-            ],
-            "type": "pickList",
-            "label": "Azure PowerShell Version",
-            "defaultValue": "OtherVersion",
-            "required": false,
-            "options": {
-                "LatestVersion": "Latest installed version",
-                "OtherVersion": "Specify other version"
-            },
-            "helpMarkDown": "In case of hosted agents, the supported Azure PowerShell Versions are: 2.1.0, 3.8.0, 4.2.1, 5.1.1 and 6.7.0(Hosted VS2017 Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\""
-        },
-        {
-            "name": "CustomTargetAzurePs",
-            "aliases": [
-                "preferredAzurePowerShellVersion"
-            ],
-            "type": "string",
-            "label": "Preferred Azure PowerShell Version",
-            "defaultValue": "",
-            "required": true,
-            "visibleRule": "TargetAzurePs = OtherVersion",
-            "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports Azure module versions: 2.1.0, 3.8.0, 4.2.1, 5.1.1 and AzureRM module versions: 2.1.0, 3.8.0, 4.2.1, 5.1.1, 6.7.0"
-        }
-    ],
-    "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
-    "execution": {
-        "PowerShell3": {
-            "target": "AzurePowerShell.ps1"
-        }
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureClassicSubscription"
+      ],
+      "type": "connectedService:Azure",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
     },
-    "messages": {
-        "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
-        "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",
-        "InvalidAzurePsVersion": "The Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1",
-        "OverrideAzurePowerShellVersion": "The Azure PowerShell version '{0}' is not supported for Hosted Agent. Overriding it with version '{1}'. Consider changing the version selected."
+    {
+      "name": "ConnectedServiceNameARM",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM",
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
+    },
+    {
+      "name": "ScriptType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ScriptType",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptType",
+      "defaultValue": "FilePath",
+      "options": {
+        "FilePath": "Script File Path",
+        "InlineScript": "Inline Script"
+      }
+    },
+    {
+      "name": "ScriptPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.ScriptPath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptPath",
+      "visibleRule": "ScriptType = FilePath"
+    },
+    {
+      "name": "Inline",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.Inline",
+      "required": false,
+      "defaultValue": "# You can write your azure powershell scripts inline here. \n# You can also pass predefined and custom variables to this script using arguments",
+      "helpMarkDown": "ms-resource:loc.input.help.Inline",
+      "visibleRule": "ScriptType = InlineScript",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "500"
+      }
+    },
+    {
+      "name": "ScriptArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ScriptArguments",
+      "defaultValue": "",
+      "required": false,
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
+    },
+    {
+      "name": "TargetAzurePs",
+      "aliases": [
+        "azurePowerShellVersion"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.TargetAzurePs",
+      "defaultValue": "OtherVersion",
+      "required": false,
+      "options": {
+        "LatestVersion": "Latest installed version",
+        "OtherVersion": "Specify other version"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.TargetAzurePs"
+    },
+    {
+      "name": "CustomTargetAzurePs",
+      "aliases": [
+        "preferredAzurePowerShellVersion"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.CustomTargetAzurePs",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "TargetAzurePs = OtherVersion",
+      "helpMarkDown": "ms-resource:loc.input.help.CustomTargetAzurePs"
     }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell3": {
+      "target": "AzurePowerShell.ps1"
+    }
+  },
+  "messages": {
+    "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
+    "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0",
+    "InvalidAzurePsVersion": "ms-resource:loc.messages.InvalidAzurePsVersion",
+    "OverrideAzurePowerShellVersion": "ms-resource:loc.messages.OverrideAzurePowerShellVersion"
+  }
 }
