@@ -14,7 +14,7 @@
   "version": {
     "Major": 6,
     "Minor": 240,
-    "Patch": 6
+    "Patch": 8
   },
   "demands": [
     "azureps"
@@ -223,12 +223,12 @@
   ],
   "instanceNameFormat": "$(Destination) File Copy",
   "prejobexecution": {
-    "Node10": {
-      "target": "PreJobExecutionAzureFileCopy.js"
-    },
     "Node16": {
       "target": "PreJobExecutionAzureFileCopy.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "PreJobExecutionAzureFileCopy.js"
     }
   },
   "execution": {
