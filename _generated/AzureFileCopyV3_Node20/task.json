@@ -14,7 +14,7 @@
   "version": {
     "Major": 3,
     "Minor": 240,
-    "Patch": 3
+    "Patch": 7
   },
   "demands": [
     "azureps"
@@ -251,12 +251,12 @@
   ],
   "instanceNameFormat": "$(Destination) File Copy",
   "prejobexecution": {
-    "Node10": {
-      "target": "PreJobExecutionAzureFileCopy.js"
-    },
     "Node16": {
       "target": "PreJobExecutionAzureFileCopy.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "PreJobExecutionAzureFileCopy.js"
     },
     "Node20_1": {
       "target": "PreJobExecutionAzureFileCopy.js",
@@ -317,7 +317,7 @@
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
   },
   "_buildConfigMapping": {
-    "Default": "3.240.2",
-    "Node20_229_2": "3.240.3"
+    "Default": "3.240.6",
+    "Node20_229_2": "3.240.7"
   }
 }

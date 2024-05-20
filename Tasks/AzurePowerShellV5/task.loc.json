@@ -18,7 +18,7 @@
   "version": {
     "Major": 5,
     "Minor": 240,
-    "Patch": 0
+    "Patch": 4
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -183,11 +183,11 @@
         "windows"
       ]
     },
-    "Node10": {
+    "Node16": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
     },
-    "Node16": {
+    "Node10": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
     }
