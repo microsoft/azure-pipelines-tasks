@@ -3,6 +3,18 @@ import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import tl = require('azure-pipelines-task-lib');
 
+function runValidations(validator: () => void, tr, done) {
+    try {
+        validator();
+        done();
+    }
+    catch (error) {
+        console.log("STDERR", tr.stderr);
+        console.log("STDOUT", tr.stdout);
+        done(error);
+    }
+}
+
 describe('Docker Compose Suite', function() {
     this.timeout(30000);
     before((done) => {
@@ -190,13 +202,12 @@ describe('Docker Compose Suite', function() {
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env["__command__"] = "Build services";
             tr.run();
-
-            assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
-            assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-            assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf("[command]docker-compose -f /tmp/tempdir/100/docker-compose.yml build") != -1, "docker compose build should run");
-            console.log(tr.stderr);
-            done();
+            runValidations(() => {
+                assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+                assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.indexOf("[command]docker-compose -f /tmp/tempdir/100/docker-compose.yml build") != -1, "docker compose build should run");
+            }, tr, done);
         });
 
         it('Runs successfully for linux docker compose service build, using user defined dcoker compose path', (done:Mocha.Done) => {
