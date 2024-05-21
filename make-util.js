@@ -401,17 +401,24 @@ var downloadFileAsync = async function (url) {
 
     // download the file
     mkdir('-p', path.join(downloadPath, 'file'));
-
+    bar1.start(100, 0);
     const downloader = new Downloader({
         url: url,
         directory: path.join(downloadPath, 'file'),
-        fileName: scrubbedUrl
+        fileName: scrubbedUrl,
+        maxAttempts: 3,
+        timeout: 60000,
+        onProgress: function (percentage, chunk, remainingSize) {
+            // check that we run inside pipeline
+            if (process.env['AGENT_TEMPDIRECTORY']) {
+                console.log(`##vso[task.setprogress value=${percentage};]Downloading file: ${scrubbedUrl}`)
+            }
+        },
     });
 
 
     const { filePath } = await downloader.download(); // Downloader.download() resolves with some useful properties.
     fs.writeFileSync(marker, '');
-
     return filePath;
 }
 exports.downloadFileAsync = downloadFileAsync;
