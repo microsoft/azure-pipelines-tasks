@@ -33,10 +33,10 @@
     }
   ],
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "kubelogin.js"
     },
-    "Node16": {
+    "Node10": {
       "target": "kubelogin.js"
     }
   },

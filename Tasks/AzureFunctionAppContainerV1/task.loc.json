@@ -157,12 +157,12 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
-      "target": "azurefunctiononcontainerdeployment.js"
-    },
     "Node16": {
       "target": "azurefunctiononcontainerdeployment.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "azurefunctiononcontainerdeployment.js"
     }
   },
   "messages": {

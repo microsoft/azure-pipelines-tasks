@@ -450,10 +450,10 @@
     }
   ],
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "src//kubernetes.js"
     },
-    "Node16": {
+    "Node10": {
       "target": "src//kubernetes.js"
     }
   },
