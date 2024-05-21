@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 240,
     "Patch": 2
   },
   "demands": [],
@@ -74,21 +74,21 @@
   ],
   "instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
   "prejobexecution": {
-    "Node10": {
-      "target": "runprejob.js"
-    },
     "Node16": {
       "target": "runprejob.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "runprejob.js"
     }
   },
   "execution": {
-    "Node10": {
-      "target": "run.js"
-    },
     "Node16": {
       "target": "run.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "run.js"
     }
   },
   "messages": {
@@ -129,7 +129,7 @@
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
   },
   "_buildConfigMapping": {
-    "Default": "1.238.2",
-    "Node20_229_2": "1.238.3"
+    "Default": "1.240.2",
+    "Node20_229_2": "1.240.3"
   }
 }
