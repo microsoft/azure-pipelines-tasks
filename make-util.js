@@ -401,7 +401,6 @@ var downloadFileAsync = async function (url) {
 
     // download the file
     mkdir('-p', path.join(downloadPath, 'file'));
-    bar1.start(100, 0);
     const downloader = new Downloader({
         url: url,
         directory: path.join(downloadPath, 'file'),
