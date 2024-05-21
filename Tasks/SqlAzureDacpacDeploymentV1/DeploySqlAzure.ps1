@@ -101,9 +101,7 @@ try {
         $dbDns = $endpoint.Data.sqlDatabaseDnsSuffix
         $dbDns = $dbDns.Trim(".")
         $dbUrl = (New-Object -TypeName UriBuilder -ArgumentList @("https", $dbDns)).Uri
-        $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
-        $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
-        $token = Get-AzureRMAccessToken -endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $vstsAccessToken -overrideResourceType $dbUrl
+        $token = Get-AzureRMAccessToken -endpoint $endpoint -connectedServiceNameARM $connectedServiceName -overrideResourceType $dbUrl
         $accessToken = $token.access_token
     }
 
@@ -118,7 +116,7 @@ try {
     $firewallRuleName, $isFirewallConfigured = Add-FirewallRule -endpoint $endpoint -authenticationType $authenticationType -serverName $serverName `
         -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString `
         -ipDetectionMethod $ipDetectionMethod -startIPAddress $startIpAddress -endIPAddress $endIpAddress -token $accessToken `
-        -connectedServiceNameARM $connectedServiceName -vstsAccessToken $vstsAccessToken
+        -connectedServiceNameARM $connectedServiceName
 
     $firewallConfigWaitTime = $env:SqlFirewallConfigWaitTime
 
@@ -232,8 +230,7 @@ finally {
         Write-Verbose "Deleting $firewallRuleName"
         $serverFriendlyName = $serverName.split(".")[0]
         Delete-AzureSqlDatabaseServerFirewallRule -serverName $serverFriendlyName -firewallRuleName $firewallRuleName -endpoint $endpoint `
-            -isFirewallConfigured $isFirewallConfigured -deleteFireWallRule $deleteFirewallRule -connectedServiceNameARM $connectedServiceName `
-            -vstsAccessToken $vstsAccessToken
+            -isFirewallConfigured $isFirewallConfigured -deleteFireWallRule $deleteFirewallRule -connectedServiceNameARM $connectedServiceName
     }
     else {
         Write-Verbose "No Firewall Rule was added"
