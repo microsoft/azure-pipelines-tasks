@@ -270,11 +270,11 @@
     }
   ],
   "execution": {
-    "Node16": {
+    "Node10": {
       "target": "jenkinsdownloadartifacts.js",
       "argumentFormat": ""
     },
-    "Node10": {
+    "Node16": {
       "target": "jenkinsdownloadartifacts.js",
       "argumentFormat": ""
     },
