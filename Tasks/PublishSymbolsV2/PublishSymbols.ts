@@ -2,10 +2,10 @@ import * as fs from "fs";
 import * as path from "path";
 import * as uuidV4 from 'uuid/v4';
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
-import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
 import * as clientToolRunner from "azure-pipelines-tasks-packaging-common/universal/ClientToolRunner";
 import * as tl from "azure-pipelines-task-lib/task";
 import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
+import { getAccessToken } from './Auth';
 
 const symbolRequestAlreadyExistsError = 17;
 
@@ -29,7 +29,13 @@ export async function run(clientToolFilePath: string): Promise<void> {
         let AsAccountName = tl.getVariable("ArtifactServices.Symbol.AccountName");
         let symbolServiceUri = "https://" + encodeURIComponent(AsAccountName) + ".artifacts.visualstudio.com"
         let personalAccessToken;
-        if (AsAccountName) {
+        const entraServiceConnection: string = tl.getInput("entraServiceConnection", false);
+        if(entraServiceConnection){
+            tl.debug("entraServiceConnection: " + entraServiceConnection);
+            personalAccessToken = await getAccessToken();
+        }
+        else if (AsAccountName) {
+            tl.debug("AsAccountName: " + AsAccountName);
             personalAccessToken = tl.getVariable("ArtifactServices.Symbol.PAT");
         }
         else {
@@ -55,7 +61,7 @@ export async function run(clientToolFilePath: string): Promise<void> {
             requestName = (tl.getVariable("System.TeamProject") + "/" +
                 tl.getVariable("Build.DefinitionName") + "/" +
                 tl.getVariable("Build.BuildNumber") + "/" +
-                tl.getVariable("Build.BuildId")  + "/" +  
+                tl.getVariable("Build.BuildId")  + "/" +
                 uniqueId).toLowerCase();
         }
 
@@ -77,7 +83,7 @@ export async function run(clientToolFilePath: string): Promise<void> {
             if (fs.existsSync(clientToolFilePath)) {
                 tl.debug("Publishing the symbols");
                 tl.debug(`Using endpoint ${symbolServiceUri} to create request ${requestName} with content in ${symbolsFolder}`);
-                
+
                 tl.debug(`Removing trailing '\/' in ${symbolServiceUri}`);
                 symbolServiceUri = clientToolUtils.trimEnd(symbolServiceUri, '/');
 
