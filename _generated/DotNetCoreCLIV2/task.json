@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 238,
-    "Patch": 2
+    "Minor": 240,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "dotnet $(command)",
@@ -262,7 +262,7 @@
       "name": "verbosityRestore",
       "type": "pickList",
       "label": "Verbosity",
-      "defaultValue": "Detailed",
+      "defaultValue": "Normal",
       "helpMarkDown": "Specifies the amount of detail displayed in the output.",
       "required": "false",
       "groupName": "restoreAdvanced",
@@ -474,7 +474,7 @@
       "name": "verbosityPack",
       "type": "pickList",
       "label": "Verbosity",
-      "defaultValue": "Detailed",
+      "defaultValue": "Normal",
       "helpMarkDown": "Specifies the amount of detail displayed in the output.",
       "required": "false",
       "groupName": "packAdvanced",
@@ -583,7 +583,7 @@
     "Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
   },
   "_buildConfigMapping": {
-    "Default": "2.238.2",
-    "Node20_229_2": "2.238.3"
+    "Default": "2.240.0",
+    "Node20_229_2": "2.240.1"
   }
 }
