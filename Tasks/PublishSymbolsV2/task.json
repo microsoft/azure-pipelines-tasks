@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 240,
-    "Patch": 24
+    "Patch": 36
   },
   "minimumAgentVersion": "2.144.0",
   "groups": [
@@ -26,7 +26,7 @@
   ],
   "inputs": [
     {
-      "name": "entraServiceConnection",
+      "name": "ConnectedServiceName",
       "type": "connectedService:AzureRM",
       "label": "Azure Resource Manager connection",
       "required": false,
