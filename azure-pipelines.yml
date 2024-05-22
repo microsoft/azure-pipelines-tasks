@@ -172,6 +172,8 @@ extends:
             persistCredentials: true
           - checkout: self
           - template: /ci/courtesy-push.yml@self
+            parameters:
+              deprecatedTasks: ${{ parameters.deprecatedTasks }}
 
         - job: build_all_tasks_for_deployments
           displayName: Build all tasks for deployments (Windows)
