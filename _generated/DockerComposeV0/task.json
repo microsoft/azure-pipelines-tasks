@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 240,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "preview": "false",
@@ -335,11 +335,11 @@
   ],
   "instanceNameFormat": "$(action)",
   "execution": {
-    "Node16": {
+    "Node10": {
       "target": "dockercompose.js",
       "argumentFormat": ""
     },
-    "Node10": {
+    "Node16": {
       "target": "dockercompose.js",
       "argumentFormat": ""
     }
@@ -358,7 +358,7 @@
     "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.240.0",
-    "Node20_229_2": "0.240.1"
+    "Default": "0.240.2",
+    "Node20_229_2": "0.240.3"
   }
 }
