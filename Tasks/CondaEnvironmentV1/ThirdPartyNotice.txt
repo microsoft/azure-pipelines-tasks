@@ -35,7 +35,6 @@ This Azure DevOps extension (CondaEnvironmentV1) is based on or incorporates mat
 29.	uuid (git+https://github.com/kelektiv/node-uuid.git)
 30.	vsts-task-lib (git+https://github.com/Microsoft/vsts-task-lib.git)
 
-
 %% @sinonjs/formatio NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 (The BSD License)
