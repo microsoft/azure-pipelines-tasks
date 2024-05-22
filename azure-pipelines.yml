@@ -142,6 +142,8 @@ extends:
               ArtifactName: IndividualNuGetPackages
           steps:
           - template: /ci/publish-steps.yml@self
+            parameters:
+              deprecatedTasks: ${{ parameters.deprecatedTasks }}
 
         # Courtesy Push
         - job: courtesy_push
