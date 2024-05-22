@@ -6,7 +6,7 @@ import { getFederatedToken } from "azure-pipelines-tasks-artifacts-common/webapi
 
 export async function getAccessToken(): Promise<string> {
   try {
-    const connectedServiceName : string | undefined = tl.getInput("ConnectedServiceName", false);
+    const connectedServiceName : string = tl.getInput("ConnectedServiceName", false);
     tl.debug(`connectedServiceName: ${connectedServiceName}`);
     const usePat : boolean = tl.getBoolInput("usePat", false);
 
