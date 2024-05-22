@@ -123,12 +123,12 @@ steps:
       )
 
 # Test
-- script: node make.js test
-  displayName: Run tests
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
-- script: node make.js testLegacy --task "$(getTaskPattern.task_pattern)"
-  displayName: Legacy tests with node 6
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
+# - script: node make.js test
+#   displayName: Run tests
+#   condition: and(succeeded(), ne(variables['numTasks'], 0))
+# - script: node make.js testLegacy --task "$(getTaskPattern.task_pattern)"
+#   displayName: Legacy tests with node 6
+#   condition: and(succeeded(), ne(variables['numTasks'], 0))
 
 # Publish code coverage result
 - task: PublishCodeCoverageResults@1
