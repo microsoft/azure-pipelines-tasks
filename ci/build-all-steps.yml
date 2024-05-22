@@ -1,9 +1,6 @@
 parameters:
   os: ''
-
-
-variables:
-  deprecatedTasks: 'AzureMonitorAlertsV0, PyPIPublisherV0, NuGetPublisherV0, NuGetV0, XamarinTestCloudV1'
+  deprecatedTasks: ''
 
 steps:
 
@@ -104,7 +101,7 @@ steps:
     scanType: 'Register'
     verbosity: 'Verbose'
     alertWarningLevel: 'High'
-    ignoreDirectories: '_download, $(deprecatedTasks)'
+    ignoreDirectories: '_download,  ${{ parameters.deprecatedTasks }}'
 
 # Only on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
