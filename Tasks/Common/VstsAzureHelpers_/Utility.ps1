@@ -256,8 +256,9 @@ function Get-VstsFederatedToken {
             $null
         ).Result
         $federatedToken = $tokenResponse.OidcToken
-        if ($null -ne $federatedToken)
+        if ($null -ne $federatedToken) {
             return $federatedToken
+        }
 
         if ($retryAttempt -lt $retryLimit) {
             Write-Verbose "Failed to fetch federated token. Remaining retries count = '$($retryLimit - $retryAttempt)'"
