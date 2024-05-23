@@ -10,7 +10,7 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 239,
+    "Minor": 240,
     "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
@@ -116,7 +116,7 @@
     "InvalidRelease": "ms-resource:loc.messages.InvalidRelease"
   },
   "_buildConfigMapping": {
-    "Default": "0.239.0",
-    "Node20_229_3": "0.239.1"
+    "Default": "0.240.0",
+    "Node20_229_3": "0.240.1"
   }
 }
