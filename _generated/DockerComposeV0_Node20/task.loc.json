@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 240,
-    "Patch": 3
+    "Patch": 5
   },
   "demands": [],
   "preview": "false",
@@ -335,11 +335,11 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "dockercompose.js",
       "argumentFormat": ""
     },
-    "Node16": {
+    "Node10": {
       "target": "dockercompose.js",
       "argumentFormat": ""
     },
@@ -362,7 +362,7 @@
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
   },
   "_buildConfigMapping": {
-    "Default": "0.240.2",
-    "Node20_229_2": "0.240.3"
+    "Default": "0.240.4",
+    "Node20_229_2": "0.240.5"
   }
 }
