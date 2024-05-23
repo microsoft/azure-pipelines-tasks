@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 240,
-        "Patch": 1
+        "Patch": 0
     },
     "preview": true,
     "inputs": [
@@ -26,7 +26,7 @@
             "label": "Notify users",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Send a manual validation pending email to specific users (or groups). Only users with queue build permission can act on a manual validation."
+            "helpMarkDown": "Send a manual validation pending email to specific users (or groups). Only users specified in approvers can act on a manual validation."
         },
         {
             "name": "approvers",
@@ -34,7 +34,7 @@
             "label": "Approvers",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify users/groups/project teams to act on a manual validation."
+            "helpMarkDown": "Specify users/groups/project teams separated by commas to act on a manual validation. In absence of input, users with queue build permission will be able to take action."
         },
         {
             "name": "instructions",
