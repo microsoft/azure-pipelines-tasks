@@ -40,7 +40,6 @@ steps:
   displayName: npm run package
   env:
     COURTESY_PUSH: $(courtesyPush)
-    FEED_TOKEN: $(FeedToken)
 
 # Update build number
 - powershell: |
