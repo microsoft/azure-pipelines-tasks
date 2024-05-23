@@ -108,7 +108,10 @@ async function main(): Promise<void> {
     }
 }
 
-// Move to a common location
+// Register the value as a secret to the logger before setting the value  in an enviornment variable.
+// Use when needed to set a specific enviornment variable whose value is a secret. We cannot use 
+// setVariable(_, , isSecret=true) because it adds SECRET_ as a prefix to the env variable.
+// TODO: Move to a common location
 function setSecretEnvVariable(variableName: string, value: string){
     tl.setSecret(value);
     tl.setVariable(variableName, value);
