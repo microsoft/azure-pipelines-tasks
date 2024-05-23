@@ -1507,11 +1507,22 @@ var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
 
     var taskFeedUrl = process.env.AGGREGATE_TASKS_FEED_URL;
 
-    var pushCmd = `nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey %1`;
+    var pushCmd = `nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey ${apiKey}`;
 
-    if (process.env['COURTESY_PUSH']) {
-        pushCmd += ' -skipDuplicate'
-    }
+    var skipDuplicate = process.env.COURTESY_PUSH ? '-skipDuplicate' : '';
+    
+    var pushCmd = `
+        @echo off
+        if "%1"=="" (
+            echo API key is missing.
+            exit /b 1
+        )
+        nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey %1 ${skipDuplicate}
+        if not %errorlevel% == 0 (
+            echo Failed to push the package.
+            exit /b 1
+        )
+    `;
 
     fs.writeFileSync(taskPushCmdPath, pushCmd);
 }
