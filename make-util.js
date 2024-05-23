@@ -1507,8 +1507,6 @@ var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
 
     var taskFeedUrl = process.env.AGGREGATE_TASKS_FEED_URL;
 
-    var pushCmd = `nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey ${apiKey}`;
-
     var skipDuplicate = process.env.COURTESY_PUSH ? '-skipDuplicate' : '';
     
     var pushCmd = `
