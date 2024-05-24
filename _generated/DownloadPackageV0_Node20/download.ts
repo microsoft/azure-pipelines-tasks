@@ -13,51 +13,7 @@ import { WebApi } from 'azure-devops-node-api';
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function main(): Promise<void> {
-	tl.warning(tl.loc("DeprecatedTask"));
-	var feed = getProjectAndFeedIdFromInputParam("feed");
-	if(feed.projectId) {
-		throw new Error(tl.loc("UnsupportedProjectScopedFeeds"));
-	}
-	let feedId = feed.feedId;
-	let regexGuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-	let packageId = tl.getInput("definition");
-
-	if(!regexGuid.test(packageId)){
-		packageId = "Nuget_" + tl.getInput("definition");
-	}
-
-	let version = tl.getInput("version");
-	let downloadPath = tl.getInput("downloadPath");
-	let collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
-
-	var accessToken = getAuthToken();
-	
-	const feedConnection = await getConnection("7AB4E64E-C4D8-4F50-AE73-5EF2E21642A5", collectionUrl, accessToken);
-	const pkgsConnection = await getConnection("B3BE7473-68EA-4A81-BFC7-9530BAAA19AD", collectionUrl, accessToken);
-
-	const retryLimitValue: string = tl.getVariable("VSTS_HTTP_RETRY");
-	const retryLimit: number = (!!retryLimitValue && !isNaN(parseInt(retryLimitValue))) ? parseInt(retryLimitValue) : 4;
-	tl.debug(`RetryLimit set to ${retryLimit}`);
-
-	await executeWithRetries("downloadPackage", () => downloadPackage(feedConnection, pkgsConnection, feedId, packageId, version, downloadPath).catch((reason) => {
-		throw reason;
-	}), retryLimit);
-
-	let shouldFail = tl.getVariable('FAIL_DEPRECATED_TASK');
-
-	if (shouldFail != null && shouldFail.toLowerCase() === 'true') {
-	    throw new Error(tl.loc("DeprecatedTask"));
-	}
-}
-
-function getAuthToken() {
-	var auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
-	if (auth.scheme.toLowerCase() === 'oauth') {
-		return auth.parameters['AccessToken'];
-	}
-	else {
-		throw new Error(tl.loc("CredentialsNotFound"))
-	}
+	throw new Error(tl.loc("DeprecatedTask"));
 }
 
 export async function downloadPackage(feedConnection: WebApi, pkgsConnection: WebApi, feedId: string, packageId: string, version: string, downloadPath: string) {

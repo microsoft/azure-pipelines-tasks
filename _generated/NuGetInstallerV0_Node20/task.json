@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 240,
     "Patch": 1
   },
   "runsOn": [
@@ -154,7 +154,7 @@
     "DeprecatedTask": "This task is deprecated. Please switch to using NuGetCommand@2's 'restore' or 'custom' option https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20_229_1": "0.238.1"
+    "Default": "0.240.0",
+    "Node20_229_1": "0.240.1"
   }
 }

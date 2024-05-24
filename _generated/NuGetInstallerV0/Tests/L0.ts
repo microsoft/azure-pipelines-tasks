@@ -13,13 +13,13 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet');
-        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
-        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
-        assert(tr.invokedToolCount == 1, 'should have run NuGet');
+        assert(!tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should not have run NuGet');
+        assert(!tr.stdOutContained('setting console code page'), 'it should not have run chcp');
+        assert(!tr.stdOutContained('NuGet output here'), "should not have nuget output");
+        assert(tr.invokedToolCount == 0, 'should not have run NuGet');
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
+        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues[0], "loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);
 
@@ -28,14 +28,14 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet');
-        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
-        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
-        assert(tr.stdout.indexOf('credProviderPath = ') >= 0, "should have found credential provider path");
-        assert(tr.invokedToolCount == 1, 'should have run NuGet');
+        assert(!tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should not have run NuGet');
+        assert(!tr.stdOutContained('setting console code page'), 'it should not have run chcp');
+        assert(!tr.stdOutContained('NuGet output here'), "should not have nuget output");
+        assert(tr.stdout.indexOf('credProviderPath = ') < 0, "should not have found credential provider path");
+        assert(tr.invokedToolCount == 0, 'should not have run NuGet');
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
+        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues[0], "loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);
     
@@ -44,13 +44,13 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\packages.config'), 'it should have run NuGet');
-        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
-        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
-        assert(tr.invokedToolCount == 1, 'should have run NuGet');
+        assert(!tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\packages.config'), 'it should not have run NuGet');
+        assert(!tr.stdOutContained('setting console code page'), 'it should not have run chcp');
+        assert(!tr.stdOutContained('NuGet output here'), "should not have nuget output");
+        assert(tr.invokedToolCount == 0, 'should not have run NuGet');
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
+        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues[0], "loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);   
     
@@ -59,13 +59,13 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -NoCache'), 'it should have run NuGet');
-        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
-        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
-        assert(tr.invokedToolCount == 1, 'should have run NuGet');
+        assert(!tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -NoCache'), 'it should not have run NuGet');
+        assert(!tr.stdOutContained('setting console code page'), 'it should not have run chcp');
+        assert(!tr.stdOutContained('NuGet output here'), "should not have nuget output");
+        assert(tr.invokedToolCount == 0, 'should not have run NuGet');
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
+        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues[0], "loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);
 	
@@ -74,13 +74,13 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -Foo'), 'it should have run NuGet');
-        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
-        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
-        assert(tr.invokedToolCount == 1, 'should have run NuGet');
+        assert(!tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -Foo'), 'it should not have run NuGet');
+        assert(!tr.stdOutContained('setting console code page'), 'it should not have run chcp');
+        assert(!tr.stdOutContained('NuGet output here'), "should not have nuget output");
+        assert(tr.invokedToolCount == 0, 'should not have run NuGet');
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
+        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues[0], "loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);
     
@@ -91,14 +91,14 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet with ConfigFile specified');
-        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
-        assert(tr.stdOutContained("adding package source uri: mockFeedUri"), "should have added content to temp config");
-        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
-        assert(tr.invokedToolCount == 1, 'should have run NuGet');
+        assert(!tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should not have run NuGet with ConfigFile specified');
+        assert(!tr.stdOutContained('setting console code page'), 'it should not have run chcp');
+        assert(!tr.stdOutContained("adding package source uri: mockFeedUri"), "should not have added content to temp config");
+        assert(!tr.stdOutContained('NuGet output here'), "should not have nuget output");
+        assert(tr.invokedToolCount == 0, 'should not have run NuGet');
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
+        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues[0], "loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);
 
@@ -107,13 +107,13 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        assert(tr.ran('c:\\custompath\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet');
-        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
-        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
-        assert(tr.invokedToolCount == 1, 'should have run NuGet');
+        assert(!tr.ran('c:\\custompath\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should not have run NuGet');
+        assert(!tr.stdOutContained('setting console code page'), 'it should not have run chcp');
+        assert(!tr.stdOutContained('NuGet output here'), "should not have nuget output");
+        assert(tr.invokedToolCount == 0, 'should not have run NuGet');
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
+        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues[0], "loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);
 
@@ -122,14 +122,14 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
-        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet on single.sln');
-        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\double\\double.sln'), 'it should have run NuGet on double.sln');
-        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
-        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
-        assert(tr.invokedToolCount == 2, 'should have run NuGet twice');
+        assert(!tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should not have run NuGet on single.sln');
+        assert(!tr.ran('c:\\from\\tool\\installer\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\double\\double.sln'), 'it should not have run NuGet on double.sln');
+        assert(!tr.stdOutContained('setting console code page'), 'it should not have run chcp');
+        assert(!tr.stdOutContained('NuGet output here'), "should not have nuget output");
+        assert(tr.invokedToolCount == 0, 'should not have run NuGet');
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
+        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues[0], "loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);
     
@@ -138,12 +138,12 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('/usr/bin/mono ~/myagent/_work/_tasks/NuGet/nuget.exe restore -NonInteractive ~/myagent/_work/1/s/single.sln'), 'it should have run NuGet with mono');
-        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
-        assert(tr.invokedToolCount == 1, 'should have run NuGet');
+        assert(!tr.ran('/usr/bin/mono ~/myagent/_work/_tasks/NuGet/nuget.exe restore -NonInteractive ~/myagent/_work/1/s/single.sln'), 'it should not have run NuGet with mono');
+        assert(!tr.stdOutContained('NuGet output here'), "should not have nuget output");
+        assert(tr.invokedToolCount == 0, 'should not have run NuGet');
         assert(tr.failed, 'should have failed');
-        assert.equal(tr.errorIssues.length, 2, "should have 2 errors");
-        assert.equal(tr.errorIssues[0], "Error: loc_mock_DeprecatedTask", "Error should be about deprecation");
+        assert.equal(tr.errorIssues.length, 1, "should have 1 error");
+        assert.equal(tr.errorIssues[0], "loc_mock_DeprecatedTask", "Error should be about deprecation");
         done();
     }).timeout(20000);
 });
