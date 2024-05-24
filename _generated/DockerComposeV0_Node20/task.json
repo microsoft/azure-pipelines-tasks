@@ -339,7 +339,7 @@
       "target": "dockercompose.js",
       "argumentFormat": ""
     },
-    "Node20": {
+    "Node10": {
       "target": "dockercompose.js",
       "argumentFormat": ""
     },
