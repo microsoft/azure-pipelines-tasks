@@ -27,7 +27,7 @@ process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
 process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = "https://abc.visualstudio.com/";
 process.env["SYSTEM_SERVERTYPE"] = "hosted";
 process.env['AGENT_TEMPDIRECTORY'] = '.';
-process.env["ENDPOINT_AUTH_dockerhubendpoint"] = "{\"parameters\":{\"username\":\"test\", \"password\":\"regpassword\", \"email\":\"test@microsoft.com\",\"registry\":\"https://index.docker.io/v1/\"},\"scheme\":\"UsernamePassword\"}";
+process.env["ENDPOINT_AUTH_dockerhubendpoint"] = "{\"parameters\": {\"username\":\"test\", \"password\":\"regpassword\", \"email\":\"test@microsoft.com\",\"registry\":\"https://index.docker.io/v1/\"},\"scheme\":\"UsernamePassword\"}";
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALKEY"] = "spKey";
@@ -48,11 +48,27 @@ let a: any = <any>{
         "docker-compose": true
     },
     "exec": {
-        "docker-compose -f F:\\dir2\\docker-compose.yml build" :{
+        "docker-compose -f F:\\dir2\\docker-compose.yml build" : {
             "code": 0,
             "stdout": "sucessfully built the service images"
         },
-        "docker-compose -f F:\\dir2\\docker-compose.yml config" :{
+        "docker compose --compatibility -f F:\\dir2\\docker-compose.yml build" : {
+            "code": 0,
+            "stdout": "sucessfully built the service images"
+        },
+        "docker-compose-userdefined -f F:\\dir2\\docker-compose.yml build" : {
+            "code": 0,
+            "stdout": "sucessfully built the service images"
+        },
+        "docker-compose -f F:\\dir2\\docker-compose.yml config" : {
+            "code": 0,
+            "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: C:\\docketest\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - C:\\docketest:/code:rw\nversion: '2.0'"
+        },
+        "docker compose --compatibility -f F:\\dir2\\docker-compose.yml config" : {
+            "code": 0,
+            "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: C:\\docketest\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - C:\\docketest:/code:rw\nversion: '2.0'"
+        },
+        "docker-compose-userdefined -f F:\\dir2\\docker-compose.yml config" : {
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: C:\\docketest\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - C:\\docketest:/code:rw\nversion: '2.0'"
         },
@@ -64,39 +80,55 @@ let a: any = <any>{
             "code": 0,
             "stdout": "sucessfully ran services"
         },
-        "docker-compose -f F:\\dir2\\docker-compose.yml -f F:\\dir2\\.docker-compose.12345.yml config":{
+        "docker-compose -f F:\\dir2\\docker-compose.yml build --pull --parallel" : {
+            "code": 0,
+            "stdout": "sucessfully built the service images"
+        },
+        "docker compose --compatibility -f F:\\dir2\\docker-compose.yml build --pull --parallel" : {
+            "code": 0,
+            "stdout": "sucessfully built the service images"
+        },
+        "docker-compose -f F:\\dir2\\docker-compose.yml -f F:\\dir2\\.docker-compose.12345.yml config": {
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: F:\\dir2\n    image: ajgtestacr1.azurecr.io/dir2_web\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - F:\\dir2:/code:rw\nversion: '2.0'"
         },
-        "docker push ajgtestacr1.azurecr.io/dir2_web":{
+        "docker compose --compatibility -f F:\\dir2\\docker-compose.yml -f F:\\dir2\\.docker-compose.12345.yml config": {
+            "code": 0,
+            "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: F:\\dir2\n    image: ajgtestacr1.azurecr.io/dir2_web\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - F:\\dir2:/code:rw\nversion: '2.0'"
+        },
+        "docker push ajgtestacr1.azurecr.io/dir2_web": {
             "code": 0,
             "stdout": "successfully pushed with qualified image"
         },
-        "docker-compose -f F:\\dir2\\docker-compose.yml -f F:\\dir2\\docker-compose.override.yml config":{
+        "docker-compose -f F:\\dir2\\docker-compose.yml -f F:\\dir2\\docker-compose.override.yml up -d": {
+            "code": 0,
+            "stdout": "successfully ran up command"
+        },
+        "docker compose --compatibility -f F:\\dir2\\docker-compose.yml -f F:\\dir2\\docker-compose.override.yml up -d": {
+            "code": 0,
+            "stdout": "successfully ran up command"
+        },
+        "docker-compose -f F:\\dir2\\docker-compose.yml -f F:\\dir2\\docker-compose.override.yml config": {
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: F:\\dir2\n    image: ajgtestacr1.azurecr.io/dir2_web\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - F:\\dir2:/code:rw\nversion: '2.0'"
         },
-         "docker-compose -f F:\\dir2\\docker-compose.yml -f F:\\dir2\\docker-compose.override.yml up -d":{
+        "docker compose --compatibility -f F:\\dir2\\docker-compose.yml -f F:\\dir2\\docker-compose.override.yml config": {
+            "code": 0,
+            "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: F:\\dir2\n    image: ajgtestacr1.azurecr.io/dir2_web\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - F:\\dir2:/code:rw\nversion: '2.0'"
+        },
+        "docker-compose -f F:\\dir2\\docker-compose.yml up -d": {
             "code": 0,
             "stdout": "successfully ran up command"
         },
-        "docker-compose -f F:\\dir2\\docker-compose.yml up -d":{
+        "docker compose --compatibility -f F:\\dir2\\docker-compose.yml up -d": {
             "code": 0,
             "stdout": "successfully ran up command"
         },
-        "docker-compose -f F:\\dir2\\docker-compose.yml build --pull --parallel" :{
+        "docker-compose -f F:\\dir2\\docker-compose.yml pull service1 service2" : {
             "code": 0,
-            "stdout": "sucessfully built the service images"
+            "stdout": "successfully pulled the passed service images"
         },
-        "docker-compose-userdefined -f F:\\dir2\\docker-compose.yml config" :{
-            "code": 0,
-            "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: C:\\docketest\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - C:\\docketest:/code:rw\nversion: '2.0'"
-        },
-        "docker-compose-userdefined -f F:\\dir2\\docker-compose.yml build" :{
-            "code": 0,
-            "stdout": "sucessfully built the service images"
-        },
-        "docker-compose -f F:\\dir2\\docker-compose.yml pull service1 service2" :{
+        "docker compose --compatibility -f F:\\dir2\\docker-compose.yml pull service1 service2" : {
             "code": 0,
             "stdout": "successfully pulled the passed service images"
         }
