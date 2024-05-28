@@ -465,12 +465,12 @@ function Get-RequiredAzModules {
     [PSCustomObject]@{
         Name    = 'Az.Resources'
         Version = $AzResources
-        Major   = 6
+        Major   = 4
     }
 
     [PSCustomObject]@{
         Name    = 'Az.Storage'
         Version = $AzStorage
-        Major   = 6
+        Major   = 3
     }
 }
