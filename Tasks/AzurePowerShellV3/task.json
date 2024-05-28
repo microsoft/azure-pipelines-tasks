@@ -18,7 +18,7 @@
     "version": {
         "Major": 3,
         "Minor": 240,
-        "Patch": 4
+        "Patch": 5
     },
     "releaseNotes": "Added support for Fail on standard error and ErrorActionPreference",
     "demands": [
