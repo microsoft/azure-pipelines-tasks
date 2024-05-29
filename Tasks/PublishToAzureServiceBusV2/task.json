@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 239,
+        "Minor": 240,
         "Patch": 0
     },
     "groups": [
@@ -47,12 +47,12 @@
             "helpMarkDown": "ms-resource:loc.input.help.serviceBusQueueName"
         },
         {
-        "name": "serviceBusNamespace",
-        "type": "string",
-        "label": "ms-resource:loc.input.label.serviceBusQueueName",
-        "required": true,
-        "defaultValue": "",
-        "helpMarkDown": "ms-resource:loc.input.help.serviceBusQueueName"
+            "name": "serviceBusNamespace",
+            "type": "string",
+            "label": "ms-resource:loc.input.label.serviceBusNamespace",
+            "required": true,
+            "defaultValue": "",
+            "helpMarkDown": "ms-resource:loc.input.help.serviceBusNamespace"
         },
         {
             "name": "messageBody",
