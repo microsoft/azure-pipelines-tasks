@@ -374,30 +374,5 @@
         "AppCenterDistributeV2",
         "AppCenterDistributeV3",
         "AppCenterTestV1"
-    ],
-    "Node20_229_8": [
-        "AzureStaticWebAppV0"
-    ],
-    "Node20_229_9": [
-        "AzureFunctionAppV1",
-        "AzureFunctionAppV2"
-    ],
-    "Node20_229_10": [
-        "AzureContainerAppsV0",
-        "AzureContainerAppsV1"
-    ],
-    "Node20_229_11": [
-        "AzureIoTEdgeV2"
-    ],
-    "Node20_229_12": [
-        "GitHubCommentV0",
-        "ReviewAppV0"
-    ],
-    "Node20_229_13": [
-        "PublishTestResultsV1",
-        "PublishTestResultsV2"
-    ],
-    "Node20_229_14": [
-        "PublishSymbolsV2"
     ]
 }

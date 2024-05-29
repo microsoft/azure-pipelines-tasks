@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 238,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "inputs": [
@@ -51,6 +51,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "run.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "run.js",
       "argumentFormat": ""
     }

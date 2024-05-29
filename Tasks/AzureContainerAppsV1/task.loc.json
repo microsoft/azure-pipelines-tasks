@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 238,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -176,6 +176,10 @@
     },
     "Node16": {
       "target": "azurecontainerapps.js"
+    },
+    "Node20_1": {
+      "target": "azurecontainerapps.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
