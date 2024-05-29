@@ -1,0 +1,51 @@
+{
+  "name": "Agent.Tasks",
+  "version": "0.6.0",
+  "description": "Tasks for the Azure Pipelines build system",
+  "main": "make.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "node make.js build",
+    "bump": "node make.js bump",
+    "gensprintly": "node make.js gensprintlyzip",
+    "test": "node make.js test",
+    "testLegacy": "node make.js testLegacy",
+    "package": "node make.js package"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks"
+  },
+  "keywords": [
+    "Azure",
+    "Pipelines",
+    "build",
+    "tasks"
+  ],
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks",
+  "devDependencies": {
+    "adm-zip": "0.4.13",
+    "azure-devops-node-api": "^12.2.0",
+    "js-yaml": "^3.13.1",
+    "minimatch": "3.0.2",
+    "minimist": "^1.2.6",
+    "mocha": "^6.2.3",
+    "node-fetch": "2.6.11",
+    "node-uuid": "1.4.6",
+    "nodejs-file-downloader": "^4.12.1",
+    "nyc": "^15.1.0",
+    "q": "1.4.1",
+    "semver": "4.3.3",
+    "shelljs": "^0.8.5",
+    "typed-rest-client": "^1.8.9",
+    "typescript": "4.0.2",
+    "validator": "^13.7.0"
+  }
+}
