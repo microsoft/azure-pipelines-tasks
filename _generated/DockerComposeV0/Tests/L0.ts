@@ -38,20 +38,12 @@ import tl = require('azure-pipelines-task-lib');
 
                 tr.run();
 
-    if(tl.osType().match(/^Win/)) {
-         it('Runs successfully for windows docker compose service build', (done:Mocha.Done) => {
-            let tp = path.join(__dirname, 'L0Windows.js');
-            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            process.env["__command__"] = "Build services";
-            tr.run();
-            console.log(tr);
-            assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
-            assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-            assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf("[command]docker-compose -f F:\\dir2\\docker-compose.yml build") != -1, "docker compose build should run");
-            console.log(tr.stderr);
-            done();
-        });
+                assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+                assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.indexOf("[command]" + composeCommand + " -f F:\\dir2\\docker-compose.yml build") != -1, "docker compose build should run");
+                done();
+            });
 
             it('Runs successfully for windows docker compose service build, using user defined docker compose exe', (done:Mocha.Done) => {
                 let tp = path.join(__dirname, 'L0Windows.js');
