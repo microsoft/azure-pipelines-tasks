@@ -130,6 +130,7 @@
         "KubernetesManifestV1",
         "ManualInterventionV8",
         "ManualValidationV0",
+        "ManualValidationV1",
         "MavenAuthenticateV0",
         "MavenV2",
         "MavenV3",
