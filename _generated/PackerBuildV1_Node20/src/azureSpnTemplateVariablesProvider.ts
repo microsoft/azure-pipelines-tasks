@@ -33,7 +33,7 @@ export default class AzureSpnTemplateVariablesProvider implements definitions.IT
         this._spnVariables.set(constants.TemplateVariableClientIdName, tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalid', false));
         if (endpointObject.scheme === 'WorkloadIdentityFederation') {
             const oidc_token = await endpointObject.applicationTokenCredentials.getFederatedToken();
-            tl.setSecret(oidc_token);
+            // tl.setSecret(oidc_token);
             this._spnVariables.set(constants.TemplateVariableClientjwtName, oidc_token);
         }
         else  {
