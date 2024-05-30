@@ -62,6 +62,7 @@ process.env.BUILD_DEFINITIONNAME = definitionName;
 
 process.env.AGENT_JOBNAME = jobName;
 process.env.SYSTEM_HOSTTYPE = 'build';
+process.env['AGENT_TEMPDIRECTORY'] = '.';
 
 process.env[shared.TestEnvVars.manifests] = process.env[shared.TestEnvVars.manifests] || shared.ManifestFilesPath;
 process.env.ENDPOINT_DATA_kubernetesConnection_AUTHORIZATIONTYPE = process.env[shared.TestEnvVars.endpointAuthorizationType] || shared.AuthorizationType.Kubeconfig;
