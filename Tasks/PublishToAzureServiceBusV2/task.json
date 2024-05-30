@@ -41,18 +41,18 @@
         {
             "name": "serviceBusQueueName",
             "type": "string",
-            "label": "ms-resource:loc.input.label.serviceBusQueueName",
+            "label": "Azure Service Bus Queue name",
             "required": true,
             "defaultValue": "",
-            "helpMarkDown": "ms-resource:loc.input.help.serviceBusQueueName"
+            "helpMarkDown": "Specify the name of the queue for which the message is intended."
         },
         {
             "name": "serviceBusNamespace",
             "type": "string",
-            "label": "ms-resource:loc.input.label.serviceBusNamespace",
+            "label": "Azure Service Bus Namespace",
             "required": true,
             "defaultValue": "",
-            "helpMarkDown": "ms-resource:loc.input.help.serviceBusNamespace"
+            "helpMarkDown": "Specify the namespace of your Azure Service Bus"
         },
         {
             "name": "messageBody",
