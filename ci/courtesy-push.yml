@@ -27,7 +27,7 @@ steps:
 - script: |
     cd IndividualNugetPackagesDownloaded
     cd IndividualNugetPackages
-    push.cmd $(FeedToken)
+    push.cmd testKey
   displayName: Push Nuget packages
 
 - powershell: ./azure-pipelines-tasks/ci/set-sprint-variables.ps1

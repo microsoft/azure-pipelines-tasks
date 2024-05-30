@@ -1511,6 +1511,7 @@ var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
     
     var pushCmd = `
         @echo off
+        echo %1
         if "%1"=="" (
             echo API key is missing.
             exit /b 1
