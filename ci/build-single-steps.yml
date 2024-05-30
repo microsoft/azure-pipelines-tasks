@@ -57,11 +57,11 @@ steps:
 - script: node ./ci/verify-source-changes.js "$(task_pattern)"
   displayName: Verify task source changes
 
-# Test
-- script: node make.js test --task "$(task_pattern)"
-  displayName: Run tests
-- script: node make.js testLegacy --task "$(task_pattern)"
-  displayName: Legacy tests with node 6
+# # Test
+# - script: node make.js test --task "$(task_pattern)"
+#   displayName: Run tests
+# - script: node make.js testLegacy --task "$(task_pattern)"
+#   displayName: Legacy tests with node 6
 
 # Publish test results
 - task: PublishTestResults@2

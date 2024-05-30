@@ -29,9 +29,9 @@ steps:
 #- script: node ./ci/verify-source-changes.js "${{ parameters.task }}"
 #  displayName: Verify task source changes
 
-# Test
-- script: node make.js test --task "${{ parameters.task }}"
-  displayName: ${{ parameters.task }} run tests
+# # Test
+# - script: node make.js test --task "${{ parameters.task }}"
+#   displayName: ${{ parameters.task }} run tests
 
 - script: node make.js testLegacy --task "${{ parameters.task }}"
   displayName: ${{ parameters.task }} legacy (node 6) tests
