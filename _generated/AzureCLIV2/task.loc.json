@@ -19,7 +19,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 240,
+    "Minor": 241,
     "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
@@ -214,7 +214,7 @@
     "ProxyConfig": "ms-resource:loc.messages.ProxyConfig"
   },
   "_buildConfigMapping": {
-    "Default": "2.240.0",
-    "Node20_229_2": "2.240.1"
+    "Default": "2.241.0",
+    "Node20_229_2": "2.241.1"
   }
 }
