@@ -20,7 +20,7 @@ export class azureclitask {
             if (proxyConfig) {
                 process.env['HTTP_PROXY'] = proxyConfig.proxyFormattedUrl;
                 process.env['HTTPS_PROXY'] = proxyConfig.proxyFormattedUrl;
-                tl.debug(tl.loc('ProxyConfig', proxyConfig.proxyUrl));
+                tl.debug(tl.loc('ProxyConfigMessage', proxyConfig.proxyUrl));
             }
         }
 

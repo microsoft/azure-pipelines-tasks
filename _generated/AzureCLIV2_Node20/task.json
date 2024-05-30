@@ -20,7 +20,7 @@
   "version": {
     "Major": 2,
     "Minor": 240,
-    "Patch": 3
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -214,10 +214,11 @@
     "JS_InvalidErrorActionPreference": "Invalid ErrorActionPreference '%s'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
     "GlobalCliConfigAgentVersionWarning": "For agent version < 2.115.0, only global Azure CLI configuration can be used",
     "UnacceptedScriptLocationValue": "%s is not a valid value for task input 'Script Location' (scriptLocation in YAML). Value can either be'inlineScript' or 'scriptPath'",
-    "ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at\u00A0%s See\u00A0https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
+    "ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at\u00A0%s See\u00A0https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections.",
+    "ProxyConfig": "az tool is configured to use %s as proxy server"
   },
   "_buildConfigMapping": {
-    "Default": "2.240.2",
-    "Node20_229_2": "2.240.3"
+    "Default": "2.240.0",
+    "Node20_229_2": "2.240.1"
   }
 }
