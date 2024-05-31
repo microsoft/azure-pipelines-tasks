@@ -64,7 +64,7 @@ export async function getTestPlanData(): Promise<TestPlanData> {
     return testPlanDataResponse;
 }
 
-export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesInputId: number[], testPlanConfigInputId: number): Promise<TestPlanData> {
+async function getTestPlanDataPoints(testPlanInputId: number, testSuitesInputId: number[], testPlanConfigInputId: number): Promise<TestPlanData> {
     
     const testPlanData: TestPlanData = {
         listOfFQNOfTestCases: [],
@@ -97,6 +97,7 @@ export async function getTestPlanDataPoints(testPlanInputId: number, testSuitesI
                 token = testCasesResponse.continuationToken;
 
                 for (let key in testCasesResponse) {
+                    console.log(`Key iteration: ${key}`);
                     if (testCasesResponse.hasOwnProperty(key)) {
                         testCasesData.push(testCasesResponse[key]);
                     }

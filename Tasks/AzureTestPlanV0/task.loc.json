@@ -12,9 +12,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 238,
-    "Patch": 12
+    "Major": 0
+    "Minor": 239,
+    "Patch": 0
   },
   "preview": true,
   "demands": [],
