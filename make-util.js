@@ -1512,17 +1512,13 @@ var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
     var pushCmd = `
         @echo off
         echo %1
-        if "%1"=="" (
-            echo API key is missing.
-            exit /b 1
-        )
         nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey %1 ${skipDuplicate}
         if not %errorlevel% == 0 (
             echo Failed to push the package.
             exit /b 1
         )
     `;
-
+    console.log('> push.cmd content ' + pushCmd)
     fs.writeFileSync(taskPushCmdPath, pushCmd);
 }
 
