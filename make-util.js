@@ -1408,7 +1408,6 @@ var createRootPushCmd = function (nugetPackagesPath) {
     var contents = 'for /D %%s in (.\\*) do ( ' + os.EOL;
     contents +=     'pushd %%s' + os.EOL;
     contents +=     'if exist push.cmd (' + os.EOL;
-    contents +=     'type push.cmd' + os.EOL;
     contents +=     'push.cmd' + os.EOL;
     contents +=     ') else (' + os.EOL;
     contents +=     'echo "file not exist"' + os.EOL;
@@ -1508,16 +1507,13 @@ var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
 
     var taskFeedUrl = process.env.AGGREGATE_TASKS_FEED_URL;
 
-    var skipDuplicate = process.env.COURTESY_PUSH ? '-skipDuplicate' : '';
-    
-    var pushCmd = `
-        @echo off
-        nuget.exe push ${nupkgName} -source https://pkgs.dev.azure.com/v-iismayilov/lab/_packaging/myfeed/nuget/v3/index.json -apikey "SkyRise" ${skipDuplicate}
-        if not %errorlevel% == 0 (
-            echo Failed to push the package.
-            exit /b 1
-        )
-    `;
+    var apiKey = 'Skyrise';
+
+    var pushCmd = `nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey ${apiKey}`;
+
+    if (process.env['COURTESY_PUSH']) {
+        pushCmd += ' -skipDuplicate'
+    }
 
     fs.writeFileSync(taskPushCmdPath, pushCmd);
 }
