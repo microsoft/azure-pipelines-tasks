@@ -18,7 +18,7 @@ describe("ContainerBuildV0 Suite", function () {
         process.env[shared.TestEnvVars.operatingSystem] = tl.osType().match(/^Win/) ? shared.OperatingSystems.Windows : shared.OperatingSystems.Other;
         done();
     });
-    
+
     beforeEach(() => {
         delete process.env[shared.TestEnvVars.runningOn];
         delete process.env[shared.TestEnvVars.dockerRegistryServiceConnection];
@@ -27,7 +27,7 @@ describe("ContainerBuildV0 Suite", function () {
         delete process.env[shared.TestEnvVars.buildContext];
         delete process.env[shared.TestEnvVars.tags];
     });
-    
+
     after(function () {
         delete process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'];
         delete process.env['BUILD_SOURCEVERSION'];
@@ -159,7 +159,7 @@ describe("ContainerBuildV0 Suite", function () {
 
     it('Docker build should honour Dockerfile and buildcontext input', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
-        process.env[shared.TestEnvVars.repository] = "testuser/testrepo";   
+        process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.dockerFile] = shared.formatPath("a/w/meta/Dockerfile");
         process.env[shared.TestEnvVars.buildContext] = shared.formatPath("a/w/context");
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -177,7 +177,7 @@ describe("ContainerBuildV0 Suite", function () {
     it('Buildctl should honour Dockerfile and buildcontext input', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env['RUNNING_ON'] = 'KUBERNETES';
-        process.env[shared.TestEnvVars.repository] = "testuser/testrepo";   
+        process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.dockerFile] = shared.formatPath("a/w/meta/Dockerfile");
         process.env[shared.TestEnvVars.buildContext] = shared.formatPath("a/w/context");
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -195,7 +195,7 @@ describe("ContainerBuildV0 Suite", function () {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env['RUNNING_ON'] = 'KUBERNETES';
         process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "dockerhubendpoint";
-        process.env[shared.TestEnvVars.repository] = "testuser/testrepo";   
+        process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.dockerFile] = shared.formatPath("a/w/meta/Dockerfile");
         process.env[shared.TestEnvVars.buildContext] = shared.formatPath("a/w/context");
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -249,13 +249,13 @@ describe("ContainerBuildV0 Suite", function () {
         ring.addNode("buildkitd-1");
         ring.addNode("buildkitd-2");
         var chosenbuildkitpod = ring.getNode("testrepoF:\a\w\meta\Dockerfile");
-        
+
         // can return different pod for different key
         assert(chosenbuildkitpod,"buildkitd-2");
         var chosenbuildkitpod1 = ring.getNode("testuser\testrepoF:\a\w\meta\Dockerfile");
-        
+
         assert(chosenbuildkitpod1,"buildkitd-0");
-       
+
         // must return same pod if same key given
         var chosenbuildkitpod3 = ring.getNode("testrepoF:\a\w\meta\Dockerfile");
         assert(chosenbuildkitpod3,"buildkitd-2");
