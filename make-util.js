@@ -1406,9 +1406,9 @@ exports.createNugetPackagePerTask = createNugetPackagePerTask;
  */
 var createRootPushCmd = function (nugetPackagesPath) {
     var contents = 'for /D %%s in (.\\*) do ( ' + os.EOL;
-    contents +=     'type %%s' + os.EOL;
     contents +=     'pushd %%s' + os.EOL;
     contents +=     'if exist push.cmd (' + os.EOL;
+    contents +=     'type push.cmd' + os.EOL;
     contents +=     'push.cmd' + os.EOL;
     contents +=     ') else (' + os.EOL;
     contents +=     'echo "file not exist"' + os.EOL;
