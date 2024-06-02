@@ -66,7 +66,7 @@ async function main(): Promise<void> {
 
                     const tokenAuthInfo = serviceConnection as TokenServiceConnection;
                     tl.debug(`Detected token credentials for '${serviceConnection.packageSource.uri}'`);
-                    tl.setVariable("CARGO_REGISTRY_TOKEN", tokenAuthInfo.token);
+                    setSecretEnvVariable("CARGO_REGISTRY_TOKEN", tokenAuthInfo.token);
                     tl.setVariable("CARGO_REGISTRY_CREDENTIAL_PROVIDER", "cargo:token");
                     break;
                 default:
@@ -87,14 +87,14 @@ async function main(): Promise<void> {
                         currentRegistry = registry;
                         tl.debug(`Detected username/password or PAT credentials for '${serviceConnection.packageSource.uri}'`);
                         tl.debug(tl.loc('AddingAuthExternalRegistry', registry, tokenName));
-                        tl.setVariable(tokenName, `Basic ${base64.encode(utf8.encode(`${usernamePasswordAuthInfo.username}:${usernamePasswordAuthInfo.password}`))}`);
+                        setSecretEnvVariable(tokenName, `Basic ${base64.encode(utf8.encode(`${usernamePasswordAuthInfo.username}:${usernamePasswordAuthInfo.password}`))}`);
                         tl.setVariable(credProviderName, "cargo:token");
                     }      
                 }
                 // Default to internal registry if no token has been set yet
                 if (!currentRegistry) {
                     tl.debug(tl.loc('AddingAuthRegistry', registry, tokenName));
-                    tl.setVariable(tokenName, localAccesstoken);
+                    setSecretEnvVariable(tokenName, localAccesstoken);
                     tl.setVariable(credProviderName, "cargo:token");
                 }  
             }   
@@ -106,6 +106,15 @@ async function main(): Promise<void> {
         tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToAddAuthentication"));
         return;
     }
+}
+
+// Register the value as a secret to the logger before setting the value  in an enviornment variable.
+// Use when needed to set a specific enviornment variable whose value is a secret. We cannot use 
+// setVariable(_, , isSecret=true) because it adds SECRET_ as a prefix to the env variable.
+// TODO: Move to a common location
+function setSecretEnvVariable(variableName: string, value: string){
+    tl.setSecret(value);
+    tl.setVariable(variableName, value);
 }
 
 main();

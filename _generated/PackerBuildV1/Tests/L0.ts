@@ -442,8 +442,8 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("loc_mock_DownloadingPackerRequired") != -1, "should show message that packer will be downloaded");
-            assert(tr.stdout.indexOf("Downloading packer from url: https://releases.hashicorp.com/packer/1.2.4/packer_1.2.4_windows_amd64.zip") != -1, "should download from correct url");
-            assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/1.2.4/packer_1.2.4_windows_amd64.zip to F:\\somedir\\tempdir\\100\\packer.zip") != -1, "should download to correct staging dir");
+            assert(tr.stdout.indexOf("Downloading packer from url: https://releases.hashicorp.com/packer/1.5.4/packer_1.5.4_windows_amd64.zip") != -1, "should download from correct url");
+            assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/1.5.4/packer_1.5.4_windows_amd64.zip to F:\\somedir\\tempdir\\100\\packer.zip") != -1, "should download to correct staging dir");
             assert(tr.stdout.indexOf("extracting from zip F:\\somedir\\tempdir\\100\\packer.zip to F:\\somedir\\tempdir\\100\\packer") != -1, "should extract from and to correct path");
             assert(tr.stdout.indexOf("Packer path to be used by task: F:\\somedir\\tempdir\\100\\packer\\packer.exe") != -1, "should show message that packer will be downloaded");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;isOutput=false;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
@@ -464,8 +464,8 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("loc_mock_DownloadingPackerRequired") != -1, "should show message that packer will be downloaded");
-            assert(tr.stdout.indexOf("Downloading packer from url: https://releases.hashicorp.com/packer/1.2.4/packer_1.2.4_windows_amd64.zip") != -1, "should download from correct url");
-            assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/1.2.4/packer_1.2.4_windows_amd64.zip to F:\\somedir\\tempdir\\100\\packer.zip") != -1, "should download to correct staging dir");
+            assert(tr.stdout.indexOf("Downloading packer from url: https://releases.hashicorp.com/packer/1.5.4/packer_1.5.4_windows_amd64.zip") != -1, "should download from correct url");
+            assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/1.5.4/packer_1.5.4_windows_amd64.zip to F:\\somedir\\tempdir\\100\\packer.zip") != -1, "should download to correct staging dir");
             assert(tr.stdout.indexOf("extracting from zip F:\\somedir\\tempdir\\100\\packer.zip to F:\\somedir\\tempdir\\100\\packer") != -1, "should extract from and to correct path");
             assert(tr.stdout.indexOf("Packer path to be used by task: F:\\somedir\\tempdir\\100\\packer\\packer.exe") != -1, "should show message that packer will be downloaded");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;isOutput=false;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
@@ -669,8 +669,8 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("loc_mock_DownloadingPackerRequired") != -1, "should show message that packer will be downloaded");
-            assert(tr.stdout.indexOf("Downloading packer from url: https://releases.hashicorp.com/packer/1.2.4/packer_1.2.4_linux_amd64.zip") != -1, "should download from correct url");
-            assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/1.2.4/packer_1.2.4_linux_amd64.zip to /tmp/tempdir/100/packer.zip") != -1, "should download to correct staging dir");
+            assert(tr.stdout.indexOf("Downloading packer from url: https://releases.hashicorp.com/packer/1.5.4/packer_1.5.4_linux_amd64.zip") != -1, "should download from correct url");
+            assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/1.5.4/packer_1.5.4_linux_amd64.zip to /tmp/tempdir/100/packer.zip") != -1, "should download to correct staging dir");
             assert(tr.stdout.indexOf("extracting from zip /tmp/tempdir/100/packer.zip to /tmp/tempdir/100/packer") != -1, "should extract from and to correct path");
             assert(tr.stdout.indexOf("Packer path to be used by task: /tmp/tempdir/100/packer/packer") != -1, "should show message that packer will be downloaded");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;isOutput=false;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
@@ -691,8 +691,8 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("loc_mock_DownloadingPackerRequired") != -1, "should show message that packer will be downloaded");
-            assert(tr.stdout.indexOf("Downloading packer from url: https://releases.hashicorp.com/packer/1.2.4/packer_1.2.4_linux_amd64.zip") != -1, "should download from correct url");
-            assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/1.2.4/packer_1.2.4_linux_amd64.zip to /tmp/tempdir/100/packer.zip") != -1, "should download to correct staging dir");
+            assert(tr.stdout.indexOf("Downloading packer from url: https://releases.hashicorp.com/packer/1.5.4/packer_1.5.4_linux_amd64.zip") != -1, "should download from correct url");
+            assert(tr.stdout.indexOf("downloading from url https://releases.hashicorp.com/packer/1.5.4/packer_1.5.4_linux_amd64.zip to /tmp/tempdir/100/packer.zip") != -1, "should download to correct staging dir");
             assert(tr.stdout.indexOf("extracting from zip /tmp/tempdir/100/packer.zip to /tmp/tempdir/100/packer") != -1, "should extract from and to correct path");
             assert(tr.stdout.indexOf("Packer path to be used by task: /tmp/tempdir/100/packer/packer") != -1, "should show message that packer will be downloaded");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;isOutput=false;issecret=false;]https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd") != -1, "image uri output variable not set");
