@@ -1512,10 +1512,10 @@ var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
     var pushCmd = `
         @echo off
         if not defined FEED_TOKEN (
-            echo The variable FEED_TOKEN is not defined
+            echo The variable 'FEED_TOKEN' is not defined
             exit /b 1
         ) else (
-            FEED_TOKEN is defined
+            echo 'FEED_TOKEN' is defined
         )
         nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey %FEED_TOKEN% ${skipDuplicate}
         if not %errorlevel% == 0 (
