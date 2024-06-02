@@ -1518,7 +1518,7 @@ var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
         ) else (
             echo 'FEED_TOKEN' is defined
         )
-        nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey %FEED_TOKEN% ${skipDuplicate}
+        nuget.exe push ${nupkgName} -source https://pkgs.dev.azure.com/v-iismayilov/lab/_packaging/myfeed/nuget/v3/index.json -apikey %FEED_TOKEN% ${skipDuplicate}
         if not %errorlevel% == 0 (
             echo Failed to push the package.
             exit /b 1
