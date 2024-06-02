@@ -1512,13 +1512,7 @@ var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
     
     var pushCmd = `
         @echo off
-        if not defined FEED_TOKEN (
-            echo The variable 'FEED_TOKEN' is not defined
-            exit /b 1
-        ) else (
-            echo 'FEED_TOKEN' is defined
-        )
-        nuget.exe push ${nupkgName} -source https://pkgs.dev.azure.com/v-iismayilov/lab/_packaging/myfeed/nuget/v3/index.json -apikey %FEED_TOKEN% ${skipDuplicate}
+        nuget.exe push ${nupkgName} -source https://pkgs.dev.azure.com/v-iismayilov/lab/_packaging/myfeed/nuget/v3/index.json -apikey "SkyRise" ${skipDuplicate}
         if not %errorlevel% == 0 (
             echo Failed to push the package.
             exit /b 1

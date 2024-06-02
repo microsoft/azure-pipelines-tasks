@@ -129,19 +129,14 @@ steps:
 
   # Authenticate 
   - task: NuGetAuthenticate@1
-    displayName: Authenticate with nuget
+    inputs:
+      nuGetServiceConnections: 'v-iismayilov-courtesy-push-test'
 
-  - script: |
-      cd $(Build.SourcesDirectory)\_package\nuget-packages
-      type push.cmd
-    displayName: Display file content
   # Push to feed
   - script: |
       cd $(Build.SourcesDirectory)\_package\nuget-packages
       push.cmd
     displayName: Push Nuget package
-    env:
-      FEED_TOKEN: $(FeedToken2)
 
   - powershell: |
       mv _package/nuget-packages nuget-packages
