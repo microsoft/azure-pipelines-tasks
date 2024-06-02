@@ -131,6 +131,10 @@ steps:
   - task: NuGetAuthenticate@1
     displayName: Authenticate with nuget
 
+  - script: |
+      cd $(Build.SourcesDirectory)\_package\nuget-packages
+      type push.cmd
+    displayName: Display file content
   # Push to feed
   - script: |
       cd $(Build.SourcesDirectory)\_package\nuget-packages
