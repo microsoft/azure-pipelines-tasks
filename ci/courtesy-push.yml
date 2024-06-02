@@ -30,7 +30,7 @@ steps:
     push.cmd
   displayName: Push Nuget packages
   env:
-    FEED_TOKEN: testdata
+    FEED_TOKEN: 'testdata'
 
 - powershell: ./azure-pipelines-tasks/ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
