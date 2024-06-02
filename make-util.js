@@ -1511,14 +1511,16 @@ var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
     
     var pushCmd = `
         @echo off
-        echo %1
-        nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey %1 ${skipDuplicate}
+        if not defined FEED_TOKEN (
+            echo The variable FEED_TOKEN is not defined
+        )
+        nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey %FEED_TOKEN% ${skipDuplicate}
         if not %errorlevel% == 0 (
             echo Failed to push the package.
             exit /b 1
         )
     `;
-    console.log('> push.cmd content ' + pushCmd)
+
     fs.writeFileSync(taskPushCmdPath, pushCmd);
 }
 
