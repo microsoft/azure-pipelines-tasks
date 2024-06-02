@@ -137,7 +137,7 @@ steps:
       push.cmd
     displayName: Push Nuget package
     env:
-      FEED_TOKEN: 'testdata'
+      FEED_TOKEN: $(FeedToken)
 
   - powershell: |
       mv _package/nuget-packages nuget-packages
