@@ -3,6 +3,8 @@ import { executePythonTests } from './Invokers/pythoninvoker'
 import { executeMavenTests } from './Invokers/maveninvoker'
 import { executeGradleTests } from './Invokers/gradleinvoker'
 import { ciDictionary } from './ciEventLogger';
+import { executeGoTests } from './Invokers/goinvoker';
+
 
 export async function testInvoker(testsToBeExecuted: string[], ciData: ciDictionary): Promise<number> {
 
@@ -35,6 +37,12 @@ export async function testInvoker(testsToBeExecuted: string[], ciData: ciDiction
                 exitCode =  await executePythonTests(testsToBeExecuted);
                 tl.debug(`Execution Status Code for Python: ${exitCode}`);
                 ciData["isPythonExecution"] = true;
+                break;
+
+            case 'Go':
+                exitCode = await executeGoTests(testsToBeExecuted);
+                tl.debug(`Execution Status Code for Go: ${exitCode}`);
+                ciData["isGoExecution"] = true;
                 break;
 
             default:

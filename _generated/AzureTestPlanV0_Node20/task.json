@@ -79,7 +79,8 @@
       "options": {
         "Java-Maven": "Java-Maven",
         "Java-Gradle": "Java-Gradle",
-        "Python": "Python"
+        "Python": "Python",
+        "Go": "Go"
       },
       "properties": {
         "MultiSelectFlatList": "True"
