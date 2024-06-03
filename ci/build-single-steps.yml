@@ -127,17 +127,13 @@ steps:
   - script: npm run package
     displayName: npm run package
 
-  # Authenticate 
-  - task: NuGetAuthenticate@1
+  - task: NuGetCommand@2
     inputs:
-      nuGetServiceConnections: 'courtesy-push-feed'
-
-  # Push to feed
-  - script: |
-      cd $(Build.SourcesDirectory)\_package\nuget-packages
-      push.cmd
-    displayName: Push Nuget package
-
+      command: 'push'
+      packagesToPush: '$(Build.SourcesDirectory)/_package/nuget-packages/*/*.nupkg'
+      nuGetFeedType: 'internal'
+      publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
+  
   - powershell: |
       mv _package/nuget-packages nuget-packages
     displayName: Move _package/nuget-packages to nuget-packages
