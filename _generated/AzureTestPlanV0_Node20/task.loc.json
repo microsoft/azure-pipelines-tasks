@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
-    "Patch": 13
+    "Minor": 241,
+    "Patch": 1
   },
   "preview": true,
   "demands": [],
@@ -79,7 +79,8 @@
       "options": {
         "Java-Maven": "Java-Maven",
         "Java-Gradle": "Java-Gradle",
-        "Python": "Python"
+        "Python": "Python",
+        "Go": "Go"
       },
       "properties": {
         "MultiSelectFlatList": "True"
@@ -183,7 +184,7 @@
     "MultipleMatchingGradlewFound": "ms-resource:loc.messages.MultipleMatchingGradlewFound"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.12",
-    "Node20-225": "0.238.13"
+    "Default": "0.241.0",
+    "Node20-225": "0.241.1"
   }
 }
