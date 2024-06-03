@@ -18,7 +18,7 @@
   "preview": false,
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 240,
     "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
@@ -304,12 +304,12 @@
   ],
   "instanceNameFormat": "Azure Spring Apps $(Action): $(AppName)",
   "execution": {
-    "Node10": {
-      "target": "azurespringappsdeployment.js"
-    },
     "Node16": {
       "target": "azurespringappsdeployment.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "azurespringappsdeployment.js"
     }
   },
   "messages": {
@@ -339,7 +339,7 @@
     "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern: %s. Please restrain the search pattern."
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20_229_5": "0.238.1"
+    "Default": "0.240.0",
+    "Node20_229_5": "0.240.1"
   }
 }

@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 238,
-    "Patch": 1
+    "Minor": 240,
+    "Patch": 3
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -148,10 +148,10 @@
   ],
   "instanceNameFormat": "Azure App Service Settings: $(appName)",
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "azurewebappsettings.js"
     },
-    "Node16": {
+    "Node10": {
       "target": "azurewebappsettings.js"
     },
     "Node20_1": {
@@ -188,7 +188,7 @@
     "ConnectionStringInvalidJSON": "Connection String object is not a valid JSON."
   },
   "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_2": "1.238.1"
+    "Default": "1.240.2",
+    "Node20_229_2": "1.240.3"
   }
 }

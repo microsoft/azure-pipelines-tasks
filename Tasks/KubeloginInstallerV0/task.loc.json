@@ -15,7 +15,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 240,
     "Patch": 0
   },
   "demands": [],
@@ -33,10 +33,10 @@
     }
   ],
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "kubelogin.js"
     },
-    "Node16": {
+    "Node10": {
       "target": "kubelogin.js"
     }
   },

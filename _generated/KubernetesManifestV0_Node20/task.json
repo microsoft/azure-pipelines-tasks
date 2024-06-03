@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 240,
     "Patch": 1
   },
   "demands": [],
@@ -349,12 +349,12 @@
     }
   ],
   "execution": {
-    "Node10": {
-      "target": "src//run.js"
-    },
     "Node16": {
       "target": "src//run.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "src//run.js"
     },
     "Node20_1": {
       "target": "src//run.js",
@@ -393,7 +393,7 @@
     "EnvironmentLink": "For more information, go to %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20_229_3": "0.238.1"
+    "Default": "0.240.0",
+    "Node20_229_3": "0.240.1"
   }
 }

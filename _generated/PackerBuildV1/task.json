@@ -15,7 +15,7 @@
   "version": {
     "Major": 1,
     "Minor": 240,
-    "Patch": 0
+    "Patch": 6
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -296,12 +296,12 @@
   "sourceDefinitions": [],
   "instanceNameFormat": "Build immutable image",
   "execution": {
-    "Node10": {
-      "target": "./src//main.js"
-    },
     "Node16": {
       "target": "./src//main.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "./src//main.js"
     }
   },
   "messages": {
@@ -352,7 +352,7 @@
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
   },
   "_buildConfigMapping": {
-    "Default": "1.240.0",
-    "Node20_229_6": "1.240.1"
+    "Default": "1.240.6",
+    "Node20_229_6": "1.240.7"
   }
 }

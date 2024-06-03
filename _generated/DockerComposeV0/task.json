@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 240,
-    "Patch": 2
+    "Patch": 8
   },
   "demands": [],
   "preview": "false",
@@ -358,7 +358,7 @@
     "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.240.2",
-    "Node20_229_2": "0.240.3"
+    "Default": "0.240.8",
+    "Node20_229_2": "0.240.9"
   }
 }
