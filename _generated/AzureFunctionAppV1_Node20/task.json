@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 240,
+    "Minor": 241,
     "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
@@ -404,7 +404,7 @@
     "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.240.0",
-    "Node20_229_9": "1.240.1"
+    "Default": "1.241.0",
+    "Node20_229_9": "1.241.1"
   }
 }

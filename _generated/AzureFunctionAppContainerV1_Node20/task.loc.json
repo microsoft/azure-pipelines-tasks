@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 240,
+    "Minor": 241,
     "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
@@ -326,7 +326,7 @@
     "FailedToRestartAppServiceSlot": "ms-resource:loc.messages.FailedToRestartAppServiceSlot"
   },
   "_buildConfigMapping": {
-    "Default": "1.240.0",
-    "Node20_229_2": "1.240.1"
+    "Default": "1.241.0",
+    "Node20_229_2": "1.241.1"
   }
 }
