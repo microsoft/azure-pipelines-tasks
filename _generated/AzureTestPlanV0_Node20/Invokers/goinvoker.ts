@@ -6,13 +6,10 @@ export async function executeGoTests(testsToBeExecuted: string[]): Promise<numbe
 
     //Go execution will be added
     /*executable = go;
-    args = test, ./...
-    // 
+    args = test, ./...  
     spawn*/
-    console.log("Go changes1");
 
-    
-     return 1;
-    
+    console.log("Go changes1");  
+    return 1;
 }
 

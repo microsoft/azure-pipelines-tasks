@@ -4,8 +4,6 @@ import { executeMavenTests } from './Invokers/maveninvoker'
 import { executeGradleTests } from './Invokers/gradleinvoker'
 import { ciDictionary } from './ciEventLogger';
 import { executeGoTests } from './Invokers/goinvoker';
-
-
 export async function testInvoker(testsToBeExecuted: string[], ciData: ciDictionary): Promise<number> {
 
     const testLanguageStrings = tl.getDelimitedInput('testLanguageInput', ',', true);
