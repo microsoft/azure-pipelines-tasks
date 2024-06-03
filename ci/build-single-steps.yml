@@ -4,15 +4,6 @@ parameters:
 - name: push
   type: boolean
 
-templateContext:
-  outputs:
-  - output: nuget
-    packagesToPush:  '$(Build.SourcesDirectory)/nuget-packages/*/*.nupkg'
-    packageParentPath: '$(Build.SourcesDirectory)\_package\nuget-packages'
-    publishVstsFeed: '09e4dd8f-5b60-45cb-b972-6283755c59d5/4713d969-309a-4af3-85e5-e0935e8d6029'
-    nuGetFeedType: internal
-  # allowPackageConflicts: true # Optional. NuGetCommand task only.
-
 steps:
 
 # Clean
