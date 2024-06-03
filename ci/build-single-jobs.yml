@@ -29,7 +29,7 @@ jobs:
       - output: nuget
         packagesToPush:  '$(Build.SourcesDirectory)/nuget-packages/*/*.nupkg'
         packageParentPath: '$(Build.SourcesDirectory)/nuget-packages'
-        publishVstsFeed: '09e4dd8f-5b60-45cb-b972-6283755c59d5/4713d969-309a-4af3-85e5-e0935e8d6029'
+        publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
         nuGetFeedType: internal
         displayName: Push Nuget package
 
