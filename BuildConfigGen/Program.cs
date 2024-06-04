@@ -2,6 +2,7 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 
 namespace BuildConfigGen
 {
@@ -406,12 +407,51 @@ namespace BuildConfigGen
 
                 if (config.isNode)
                 {
+                    EnsureDependencyVersionsAreSyncronized(
+                        Path.Combine(taskTargetPath, "package.json"),
+                        Path.Combine(taskOutput, "package.json"));
                     WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript);
                 }
             }
 
             // delay updating version map file until after buildconfigs generated
             WriteVersionMapFile(versionMapFile, configTaskVersionMapping, targetConfigs: targetConfigs);
+        }
+
+        private static bool VersionIsGreaterThan(string version1, string version2)
+        {
+            const string versionRE = @"(\d+)\.(\d+)\.(\d+)";
+            var originMatch = Regex.Match(version1, versionRE);
+            var generatedMatch = Regex.Match(version2, versionRE);
+            var originDependencyVersion = Version.Parse($"{originMatch.Groups[1].Value}.{originMatch.Groups[2].Value}.{originMatch.Groups[3].Value}");
+            var generatedDependencyVersion = Version.Parse($"{generatedMatch.Groups[1].Value}.{generatedMatch.Groups[2].Value}.{generatedMatch.Groups[3].Value}");
+            return originDependencyVersion.CompareTo(generatedDependencyVersion) > 0;
+        }
+
+        private static void EnsureDependencyVersionsAreSyncronized(string originPackagePath, string generatedPackagePath)
+        {
+            JsonNode originTaskPackage = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(originPackagePath))!;
+            JsonNode generatedTaskPackage = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(generatedPackagePath))!;
+            List<string> notSyncronizedDependencies = [];
+
+            foreach (var originDependency in originTaskPackage["dependencies"]?.AsObject()!)
+            {
+                string originVersion = originDependency.Value!.ToString();
+                string generatedVersion = generatedTaskPackage["dependencies"]![originDependency.Key]!.ToString();
+
+                if (VersionIsGreaterThan(originVersion, generatedVersion))
+                {
+                    notSyncronizedDependencies.Add($"- Dependency {originDependency.Key}");
+                    notSyncronizedDependencies.Add($"\tOrigin package.json has {originVersion} version;");
+                    notSyncronizedDependencies.Add($"\tGenerated package.json has {generatedVersion} version");
+                }
+            }
+
+            if (notSyncronizedDependencies.Count > 0)
+            {
+                notSyncronizedDependencies.Insert(0, $"Not synchronized dependencies:");
+                throw new Exception(string.Join("\r\n", notSyncronizedDependencies));
+            }
         }
 
         private static bool HasTaskInputContainsPreprocessorInstructions(string sourcePath, Config.ConfigRecord config)
