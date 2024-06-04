@@ -52,6 +52,8 @@ namespace BuildConfigGen
             public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, Node20_229_6, Node20_229_7, Node20_229_8, Node20_229_9, Node20_229_10, Node20_229_11, Node20_229_12, Node20_229_13, Node20_229_14, WorkloadIdentityFederation };
         }
 
+        static List<string> notSyncronizedDependencies = [];
+
         // ensureUpdateModeVerifier wraps all writes.  if writeUpdate=false, it tracks writes that would have occured
         static EnsureUpdateModeVerifier? ensureUpdateModeVerifier;
 
@@ -139,6 +141,12 @@ namespace BuildConfigGen
                 {
                     MainUpdateTask(t, configs!, writeUpdates, currentSprint);
                 }
+            }
+
+            if (notSyncronizedDependencies.Count > 0)
+            {
+                notSyncronizedDependencies.Insert(0, $"Not synchronized dependencies:");
+                throw new Exception(string.Join("\r\n", notSyncronizedDependencies));
             }
         }
 
@@ -407,9 +415,12 @@ namespace BuildConfigGen
 
                 if (config.isNode)
                 {
+                    GetBuildConfigFileOverridePaths(config, taskTargetPath, out string configTaskPath, out string readmePath);
+
                     EnsureDependencyVersionsAreSyncronized(
+                        task,
                         Path.Combine(taskTargetPath, "package.json"),
-                        Path.Combine(taskOutput, "package.json"));
+                        Path.Combine(taskTargetPath, buildConfigs, configTaskPath, "package.json"));
                     WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript);
                 }
             }
@@ -428,11 +439,14 @@ namespace BuildConfigGen
             return originDependencyVersion.CompareTo(generatedDependencyVersion) > 0;
         }
 
-        private static void EnsureDependencyVersionsAreSyncronized(string originPackagePath, string generatedPackagePath)
+        private static void EnsureDependencyVersionsAreSyncronized(
+            string task,
+            string originPackagePath,
+            string generatedPackagePath
+        )
         {
             JsonNode originTaskPackage = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(originPackagePath))!;
             JsonNode generatedTaskPackage = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(generatedPackagePath))!;
-            List<string> notSyncronizedDependencies = [];
 
             foreach (var originDependency in originTaskPackage["dependencies"]?.AsObject()!)
             {
@@ -441,16 +455,10 @@ namespace BuildConfigGen
 
                 if (VersionIsGreaterThan(originVersion, generatedVersion))
                 {
-                    notSyncronizedDependencies.Add($"- Dependency {originDependency.Key}");
-                    notSyncronizedDependencies.Add($"\tOrigin package.json has {originVersion} version;");
-                    notSyncronizedDependencies.Add($"\tGenerated package.json has {generatedVersion} version");
+                    notSyncronizedDependencies.Add($"- Dependency {originDependency.Key} in {task}");
+                    notSyncronizedDependencies.Add($"\tOrigin {originPackagePath} has {originVersion} version;");
+                    notSyncronizedDependencies.Add($"\tGenerated {generatedPackagePath} has {generatedVersion} version");
                 }
-            }
-
-            if (notSyncronizedDependencies.Count > 0)
-            {
-                notSyncronizedDependencies.Insert(0, $"Not synchronized dependencies:");
-                throw new Exception(string.Join("\r\n", notSyncronizedDependencies));
             }
         }
 
