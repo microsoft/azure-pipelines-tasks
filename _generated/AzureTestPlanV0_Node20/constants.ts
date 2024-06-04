@@ -12,3 +12,5 @@ export const MERGE_THRESHOLD = 100;
 export const AUTOMATED_EXECUTION = "AutomatedExecutionPhase";
 export const AUTOMATED_PUBLISHING = "PublishingAutomatedResultsPhase";
 export const MANUALTESTS_PUBLISHING = "ManualTestResultsPublishingPhase";
+
+export const GO_EXECUTABLE: string = 'go';
