@@ -40,7 +40,7 @@ function getSevenZipLocation(): string {
 
 function findFiles(): string[] {
     if (includeRootFolder) {
-        if(!fs.existsSync(rootFolderOrFile)) {
+        if (!fs.existsSync(rootFolderOrFile)) {
             tl.warning(`No file or directory found - ${rootFolderOrFile}`)
         }
         return [path.basename(rootFolderOrFile)];
@@ -80,7 +80,6 @@ function createFileList(files: string[]): string {
         if (fs.existsSync(file)) {
             fs.unlinkSync(file);
         }
-
         throw error;
     }
 
@@ -129,7 +128,7 @@ function sevenZipArchive(archive: string, compression: string, files: string[]) 
 }
 
 // map from YAML-friendly value to 7-Zip numeric value
-function mapSevenZipCompressionLevel(sevenZipCompression: string) {    
+function mapSevenZipCompressionLevel(sevenZipCompression: string) {
     switch (sevenZipCompression.toLowerCase()) {
         case "ultra":
             return "9";
@@ -322,7 +321,7 @@ function createArchive(files: string[]) {
 
 function doWork() {
     try {
-        tl.setResourcePath(path.join( __dirname, 'task.json'));
+        tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         // replaceExistingArchive before creation?
         if (tl.exist(archiveFile)) {
