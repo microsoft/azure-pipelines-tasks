@@ -88,4 +88,138 @@ extends:
             push_to_feed: ${{ parameters.push_to_feed }}
             generate_prs: ${{ parameters.generate_prs }}
 
-     
+      - ${{ if not(parameters.build_single_task) }}:
+
+        # All tasks on Windows
+        - job: build_all_windows
+          displayName: Build all tasks (Windows)
+          condition: eq(variables.os, 'Windows_NT')
+          timeoutInMinutes: 360
+          pool:
+            name: 1ES-ABTT-Shared-Pool
+            image: abtt-windows-2022
+            os: windows
+          templateContext:
+            outputs:
+              - output: buildArtifacts
+                displayName: 'Publish package artifact'
+                condition: >
+                  and(
+                    succeeded(),
+                    ne(variables['build.reason'], 'PullRequest'),
+                    ne(variables['numTasks'], 0)
+                  )
+                PathtoPublish: _package/tasks.zip
+                ArtifactName: package
+          steps:
+          - template: /ci/build-all-steps.yml@self
+            parameters:
+              os: Windows_NT
+
+        # Publish
+        - job: publish
+          displayName: Publish
+          dependsOn:
+          - build_all_windows
+          condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
+          pool:
+            name: 1ES-ABTT-Shared-Pool
+            image: abtt-windows-2022
+            os: windows
+          templateContext:
+            outputs:
+            - output: buildArtifacts
+              displayName: 'Publish per task NuGet package artifact'
+              PathtoPublish: _package/nuget-packages
+              ArtifactName: IndividualNuGetPackages
+          steps:
+          - template: /ci/publish-steps.yml@self
+
+        # Courtesy Push
+        - job: courtesy_push
+          displayName: Courtesy Push
+          pool:
+            name: 1ES-ABTT-Shared-Pool
+            image: abtt-windows-2022
+            os: windows
+          dependsOn:
+          - publish
+          condition: |
+            and(
+              succeeded(),
+              eq(variables['COURTESY_PUSH'], 'true'),
+              or(
+                eq(variables['build.reason'], 'Schedule'),
+                and(
+                  eq(variables['build.reason'], 'Manual'),
+                  eq(variables['FORCE_COURTESY_PUSH'], 'true')
+                )
+              )
+            )
+          templateContext:
+            outputs:
+            - output: nuget
+                packagesToPush:  '$(Build.SourcesDirectory)/nuget-packages/*/*.nupkg'
+                packageParentPath: '$(Build.SourcesDirectory)'
+                publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
+                nuGetFeedType: internal
+                displayName: Push Nuget package
+                allowPackageConflicts: $(COURTESY_PUSH)
+          steps:
+          - checkout: AzureDevOps
+            fetchDepth: 1
+            persistCredentials: true
+          - checkout: self
+          - template: /ci/courtesy-push.yml@self
+
+        - job: build_all_tasks_for_deployments
+          displayName: Build all tasks for deployments (Windows)
+          dependsOn:
+          - courtesy_push
+          - build_all_windows
+          condition: succeeded()
+          timeoutInMinutes: 360
+          pool:
+            name: 1ES-ABTT-Shared-Pool
+            image: abtt-windows-2022
+            os: windows
+          variables:
+            task_pattern: $[dependencies.build_all_windows.outputs['getTaskPattern.task_pattern']]
+          templateContext:
+            outputs:
+            - output: buildArtifacts
+              displayName: 'Publish package artifact'
+              PathtoPublish: _package/tasks.zip
+              ArtifactName: allTasks
+          steps:
+          - template: /ci/build-all-tasks.yml@self
+            parameters:
+              deploy_all_tasks: ${{ parameters.deploy_all_tasks }}
+
+        # All tasks on Linux
+        - job: build_all_linux
+          displayName: Build all tasks (Linux)
+          condition: eq(variables.os, 'Linux')
+          timeoutInMinutes: 360
+          pool:
+            name: 1ES-ABTT-Shared-Pool
+            image: abtt-ubuntu-2204
+            os: linux
+          steps:
+          - template: /ci/build-all-steps.yml@self
+            parameters:
+              os: Linux
+
+        # All tasks on macOS
+        - job: build_all_darwin
+          displayName: Build all tasks (macOS)
+          condition: eq(variables.os, 'Darwin')
+          timeoutInMinutes: 360
+          pool:
+            name: Azure Pipelines
+            image: macos-14
+            os: macOS
+          steps:
+          - template: /ci/build-all-steps.yml@self
+            parameters:
+              os: Darwin

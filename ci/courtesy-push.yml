@@ -18,18 +18,6 @@ steps:
 - script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: Update unified deps
 
-- task: NuGetAuthenticate@1
-  displayName: Authenticate with nuget
-
-# Everything until this point is idempotent (other than pushing tasks release branch which will get overwritten if we re-do this anyways).
-# Note: Pushing the tasks release branch has to happen in the first job in case commits are pushed between now and then.
-
-- script: |
-    cd IndividualNugetPackagesDownloaded
-    cd IndividualNugetPackages
-    push.cmd
-  displayName: Push Nuget packages
-
 - powershell: ./azure-pipelines-tasks/ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
 
