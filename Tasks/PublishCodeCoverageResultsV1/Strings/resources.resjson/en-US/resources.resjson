@@ -23,5 +23,5 @@
   "loc.messages.IgnoringReportDirectory": "Ignoring coverage report directory with Html content as we are auto-generating Html content",
   "loc.messages.UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
   "loc.messages.GeneratedHtmlReport": "Generated code coverage html report: %s",
-  "loc.messages.V1TaskDeprecationNotice": "New V2 version of task publishing code coverage results is available to all our customers now. We highly recommend to stop using the V1 version and migrate to V2 version (https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2). For more details, see - https://devblogs.microsoft.com/devops/new-pccr-task."
+  "loc.messages.V1TaskDeprecationNotice": "New V2 version of task publishing code coverage results is available to all our customers now. We highly recommend to stop using the V1 version and migrate to V2 version https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2. For more details, see - https://devblogs.microsoft.com/devops/new-pccr-task."
 }
