@@ -285,15 +285,16 @@
       }
     },
     "azure-pipelines-tasks-docker-common": {
-      "version": "2.0.1-preview.0",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-docker-common/-/azure-pipelines-tasks-docker-common-2.0.1-preview.0.tgz",
-      "integrity": "sha512-7bgoEVL5aUtylCq1m2XqvWHh6nE7IBaVPXeSxXIhaznqvVtqk6/wPO0UKqc0H1iamQeb8EiE7FunReMjPH9ftA==",
+      "version": "2.226.0",
+      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-docker-common/-/azure-pipelines-tasks-docker-common-2.226.0.tgz",
+      "integrity": "sha512-gk8XJGYviqQrt9OUVX4YhD3JjuowsvLNYJZSalNdFPIVM9ZgEaSohuGL/DoXZFF7x+fgSS8UawsQ5dg+87Ktig==",
       "requires": {
         "@types/mocha": "^5.2.7",
         "@types/node": "^10.17.0",
         "@types/q": "1.5.4",
         "@types/uuid": "^8.3.0",
-        "azure-pipelines-task-lib": "3.0.6-preview.0",
+        "azure-pipelines-task-lib": "^3.1.0",
+        "azure-pipelines-tasks-azure-arm-rest": "3.226.0",
         "del": "2.2.0",
         "q": "1.4.1"
       },
@@ -309,15 +310,15 @@
           "integrity": "sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug=="
         },
         "azure-pipelines-task-lib": {
-          "version": "3.0.6-preview.0",
-          "resolved": "https://registry.npmjs.org/azure-pipelines-task-lib/-/azure-pipelines-task-lib-3.0.6-preview.0.tgz",
-          "integrity": "sha512-Fx+7p5GzvYqVXOQI+LhPk56Pio9yBeEyypKZoPI9cQyti8WTVkmJ7YZwn9HRXurftcLumi2Xq+TC3PwnDq5U5Q==",
+          "version": "3.4.0",
+          "resolved": "https://registry.npmjs.org/azure-pipelines-task-lib/-/azure-pipelines-task-lib-3.4.0.tgz",
+          "integrity": "sha512-3eC4OTFw+7xD7A2aUhxR/j+jRlTI+vVfS0CGxt1pCLs4c/KmY0tQWgbqjD3157kmiucWxELBvgZHaD2gCBe9fg==",
           "requires": {
-            "minimatch": "3.0.4",
-            "mockery": "^1.7.0",
+            "minimatch": "3.0.5",
+            "mockery": "^2.1.0",
             "q": "^1.5.1",
             "semver": "^5.1.0",
-            "shelljs": "^0.8.4",
+            "shelljs": "^0.8.5",
             "sync-request": "6.1.0",
             "uuid": "^3.0.1"
           },
@@ -330,12 +331,17 @@
           }
         },
         "minimatch": {
-          "version": "3.0.4",
-          "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.4.tgz",
-          "integrity": "sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==",
+          "version": "3.0.5",
+          "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.5.tgz",
+          "integrity": "sha512-tUpxzX0VAzJHjLu0xUfFv1gwVp9ba3IOuRAVH2EGuRW8a5emA2FlACLqiT/lDVtS1W+TGNwqz3sWaNyLgDJWuw==",
           "requires": {
             "brace-expansion": "^1.1.7"
           }
+        },
+        "mockery": {
+          "version": "2.1.0",
+          "resolved": "https://registry.npmjs.org/mockery/-/mockery-2.1.0.tgz",
+          "integrity": "sha512-9VkOmxKlWXoDO/h1jDZaS4lH33aWfRiJiNT/tKj+8OGzrcFDLo8d0syGdbsc3Bc4GvRXPb+NMMvojotmuGJTvA=="
         }
       }
     },
@@ -1099,7 +1105,7 @@
     "q": {
       "version": "1.4.1",
       "resolved": "https://registry.npmjs.org/q/-/q-1.4.1.tgz",
-      "integrity": "sha1-VXBbzZPF82c1MMLCy8DCs63cKG4="
+      "integrity": "sha512-/CdEdaw49VZVmyIDGUQKDDT53c7qBkO6g5CefWz91Ae+l4+cRtcDYwMTXh6me4O8TMldeGHG3N2Bl84V78Ywbg=="
     },
     "qs": {
       "version": "6.11.2",
