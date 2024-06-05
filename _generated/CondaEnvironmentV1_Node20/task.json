@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 240,
-    "Patch": 1
+    "Minor": 235,
+    "Patch": 5
   },
   "deprecated": true,
   "removalDate": "2024-01-31",
@@ -109,7 +109,7 @@
     "DeprecatedTask": "The CondaEnvironment@1 (Conda environment) task has been deprecated since February 13, 2019 and will soon be retired. Use the Conda CLI ('conda') directly from a bash/pwsh/script task. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
   },
   "_buildConfigMapping": {
-    "Default": "1.240.0",
-    "Node20-225": "1.240.1"
+    "Default": "1.235.4",
+    "Node20-225": "1.235.5"
   }
 }

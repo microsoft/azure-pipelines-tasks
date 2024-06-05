@@ -8,7 +8,7 @@
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^4.4.0",
     "azure-pipelines-tasks-azure-arm-rest": "3.223.4",
-    "azure-pipelines-tasks-docker-common": "2.0.1-preview.0",
+    "azure-pipelines-tasks-docker-common": "2.226.0",
     "azure-pipelines-tasks-kubernetes-common": "^2.224.1",
     "azure-pipelines-tasks-utility-common": "^3.210.0",
     "azure-pipelines-tool-lib": "^2.0.4",
