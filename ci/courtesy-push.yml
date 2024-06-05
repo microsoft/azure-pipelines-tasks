@@ -5,6 +5,12 @@ steps:
   displayName: Install nuget
 
 - powershell: |
+    $sourcePath = "$(Build.SourcesDirectory)/azure-pipelines-tasks/.gdn"
+    $destinationPath = "$(Build.SourcesDirectory)/"
+    Copy-Item -Path $sourcePath -Destination $destinationPath -Recurse
+  displayName: Copy baseline files to root
+
+- powershell: |
     cd azure-pipelines-tasks/ci/courtesy-push
     npm install
   displayName: npm install

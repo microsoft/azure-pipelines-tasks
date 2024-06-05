@@ -142,20 +142,6 @@ extends:
             name: 1ES-ABTT-Shared-Pool
             image: abtt-windows-2022
             os: windows
-          sdl:
-            sbom:
-              enabled: false
-            baseline:
-              baselineSet: default
-              baselineFile: $(Build.SourcesDirectory)/azure-pipelines-tasks/.gdn/.gdnbaselines
-            sourceAnalysisPool:
-              name: 1ES-ABTT-Shared-Pool
-              image: abtt-windows-2022
-              os: windows
-            sourceRepositoriesToScan: 
-              exclude: 
-                - repository: AzureDevOps
-                - repository: ConfigChange
           dependsOn:
           - publish
           condition: |
