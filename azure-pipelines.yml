@@ -159,12 +159,12 @@ extends:
           templateContext:
             outputs:
             - output: nuget
-                packagesToPush:  '$(Build.SourcesDirectory)/nuget-packages/*/*.nupkg'
-                packageParentPath: '$(Build.SourcesDirectory)'
-                publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
-                nuGetFeedType: internal
-                displayName: Push Nuget package
-                allowPackageConflicts: $(COURTESY_PUSH)
+              packagesToPush:  '$(Build.SourcesDirectory)/nuget-packages/*/*.nupkg'
+              packageParentPath: '$(Build.SourcesDirectory)'
+              publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
+              nuGetFeedType: internal
+              displayName: Push Nuget package
+              allowPackageConflicts: $(COURTESY_PUSH)
           steps:
           - checkout: AzureDevOps
             fetchDepth: 1
