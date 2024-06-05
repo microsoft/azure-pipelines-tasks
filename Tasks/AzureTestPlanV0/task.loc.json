@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 241,
-    "Patch": 0
+    "Minor": 238,
+    "Patch": 12
   },
   "preview": true,
   "demands": [],
@@ -79,8 +79,7 @@
       "options": {
         "Java-Maven": "Java-Maven",
         "Java-Gradle": "Java-Gradle",
-        "Python": "Python",
-        "Go":  "Go"
+        "Python": "Python"
       },
       "properties": {
         "MultiSelectFlatList": "True"

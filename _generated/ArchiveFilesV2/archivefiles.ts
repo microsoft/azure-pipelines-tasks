@@ -80,6 +80,7 @@ function createFileList(files: string[]): string {
         if (fs.existsSync(file)) {
             fs.unlinkSync(file);
         }
+
         throw error;
     }
 

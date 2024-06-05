@@ -23,8 +23,8 @@
     "@types/uuid": "^8.3.0",
     "agent-base": "^6.0.2",
     "azure-devops-node-api": "11.2.0",
-    "azure-pipelines-task-lib": "^4.11.0",
-    "azure-pipelines-tasks-azure-arm-rest": "3.239.0",
+    "azure-pipelines-task-lib": "^4.1.0",
+    "azure-pipelines-tasks-azure-arm-rest": "3.223.3",
     "moment": "^2.29.4",
     "q": "1.4.1",
     "xml2js": "0.4.13"

@@ -14,16 +14,6 @@ export class azureclitask {
     public static async runMain(): Promise<void> {
         var toolExecutionError = null;
         var exitCode: number = 0;
-
-        if(tl.getBoolFeatureFlag('AZP_AZURECLIV2_SETUP_PROXY_ENV')) {
-            const proxyConfig: tl.ProxyConfiguration | null = tl.getHttpProxyConfiguration();
-            if (proxyConfig) {
-                process.env['HTTP_PROXY'] = proxyConfig.proxyFormattedUrl;
-                process.env['HTTPS_PROXY'] = proxyConfig.proxyFormattedUrl;
-                tl.debug(tl.loc('ProxyConfigMessage', proxyConfig.proxyUrl));
-            }
-        }
-
         try{
             var scriptType: ScriptType = ScriptTypeFactory.getSriptType();
             var tool: any = await scriptType.getTool();

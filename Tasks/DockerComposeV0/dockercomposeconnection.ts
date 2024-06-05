@@ -94,7 +94,7 @@ export default class DockerComposeConnection extends ContainerConnection {
     public createComposeCommand(): tr.ToolRunner {
         var command = tl.tool(this.dockerComposePath);
 
-        if (this.useDockerComposeV2 && !tl.getInput('dockerComposePath')) {
+        if (this.useDockerComposeV2) {
             command.arg("compose");
             command.arg("--compatibility");
         }

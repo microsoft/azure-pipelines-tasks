@@ -22,11 +22,11 @@ export function run(connection: ClusterConnection, secret: string): any {
     } 
 }
 
-async function createSecret(connection: ClusterConnection, secret: string): Promise<any> {
+function createSecret(connection: ClusterConnection, secret: string): any {
     var typeOfSecret = tl.getInput("secretType", true);
     if (typeOfSecret === "dockerRegistry")
     {
-        var authenticationToken = await getRegistryAuthenticationToken();
+        var authenticationToken = getRegistryAuthenticationToken();
         return createDockerRegistrySecret(connection, authenticationToken, secret);
     }
     else if (typeOfSecret === "generic")
@@ -95,7 +95,7 @@ function createGenericSecret(connection: ClusterConnection, secret: string): any
     return connection.execCommand(command);
 }
 
-async function getRegistryAuthenticationToken(): Promise<AuthenticationToken> {
+function getRegistryAuthenticationToken(): AuthenticationToken {
     var registryType = tl.getInput("containerRegistryType", true);
     var authenticationProvider : AuthenticationTokenProvider;
 
@@ -103,8 +103,8 @@ async function getRegistryAuthenticationToken(): Promise<AuthenticationToken> {
         authenticationProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpointForSecrets"), tl.getInput("azureContainerRegistry"));
     } 
     else {
-        return await getDockerRegistryEndpointAuthenticationToken(tl.getInput("dockerRegistryEndpoint"));
+        return getDockerRegistryEndpointAuthenticationToken(tl.getInput("dockerRegistryEndpoint"));
     }
 
-    return await authenticationProvider.getAuthenticationToken();
+    return authenticationProvider.getAuthenticationToken();
 }

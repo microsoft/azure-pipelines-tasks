@@ -8,7 +8,7 @@ import { getDockerRegistryEndpointAuthenticationToken } from "azure-pipelines-ta
 
 export async function dockerBuildAndPush() {
     let endpointId = tl.getInput("dockerRegistryServiceConnection");
-    let registryAuthenticationToken: RegistryAuthenticationToken = await getDockerRegistryEndpointAuthenticationToken(endpointId);
+    let registryAuthenticationToken: RegistryAuthenticationToken = getDockerRegistryEndpointAuthenticationToken(endpointId);
 
     // Connect to any specified container registry
     let connection = new ContainerConnection();
@@ -20,7 +20,7 @@ export async function dockerBuildAndPush() {
         throw new Error(error.message);
     });
 
-    if (endpointId) {
+    if (tl.getInput("dockerRegistryServiceConnection")) {
         commandImplementation = require("./dockerpush")
         await commandImplementation.run(connection).then(() => {}).catch((error) => {
             throw new Error(error.message);

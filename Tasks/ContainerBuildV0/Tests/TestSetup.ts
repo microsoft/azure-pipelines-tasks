@@ -31,7 +31,6 @@ process.env["RELEASE_RELEASENAME"] = "Release-1";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
 process.env["SYSTEM_HOSTTYPE"] = process.env[shared.TestEnvVars.hostType] || shared.HostTypes.build;
 process.env["SYSTEM_SERVERTYPE"] = "hosted";
-process.env['AGENT_TEMPDIRECTORY'] = '.';
 process.env["ENDPOINT_AUTH_dockerhubendpoint"] = "{\"parameters\":{\"username\":\"testuser\", \"password\":\"regpassword\", \"email\":\"testuser1@microsoft.com\",\"registry\":\"https://index.docker.io/v1/\"},\"scheme\":\"UsernamePassword\"}";
 // Docker registry endpoint with ACR registrytype
 process.env["ENDPOINT_AUTH_PARAMETER_acrendpoint_serviceprincipalid"] = "testspn";
