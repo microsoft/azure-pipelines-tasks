@@ -170,6 +170,7 @@
         "PublishTestResultsV1",
         "PublishTestResultsV2",
         "PublishToAzureServiceBusV1",
+        "PublishToAzureServiceBusV2",
         "PythonScriptV0",
         "QueryWorkItemsV0",
         "QuickPerfTestV1",
