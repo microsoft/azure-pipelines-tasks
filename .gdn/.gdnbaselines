@@ -2272,15 +2272,6 @@
       ],
       "justification": "Unit tests data",
       "createdDate": "2024-06-05 17:14:35Z"
-    },
-    "a8a07e8b44cc2993fc2a826f3e7dc239cfc9462f9ccb9b9a55fda8ea308c6aaf": {
-      "signature": "a8a07e8b44cc2993fc2a826f3e7dc239cfc9462f9ccb9b9a55fda8ea308c6aaf",
-      "alternativeSignatures": [],
-      "memberOf": [
-        "default"
-      ],
-      "justification": "Unit tests data",
-      "createdDate": "2024-06-05 17:14:35Z"
     }
   }
 }
