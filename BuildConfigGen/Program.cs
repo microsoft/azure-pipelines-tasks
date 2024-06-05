@@ -145,7 +145,7 @@ namespace BuildConfigGen
 
             if (notSyncronizedDependencies.Count > 0)
             {
-                notSyncronizedDependencies.Insert(0, $"Not synchronized dependencies:");
+                notSyncronizedDependencies.Insert(0, $"##vso[task.logissue type=error]There are dependencies that are not synchronized and ought to be updated:");
                 throw new Exception(string.Join("\r\n", notSyncronizedDependencies));
             }
         }
