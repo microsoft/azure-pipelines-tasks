@@ -211,8 +211,6 @@ async function getTasksToBuildForPR (prId, forDowngradingCheck) {
 }
 
 var setTaskVariables = function(tasks, tasksForDowngradingCheck) {
-    tasks = ["ArchiveFilesV2"] // TODO temporary override to avoid pushing unctonrolled tasks
-    tasksForDowngradingCheck = [] // TODO temporary override to avoid pushing unctonrolled tasks
     console.log('tasks: ' + JSON.stringify(tasks));
     console.log('tasksForDowngradingCheck: ' + JSON.stringify(tasksForDowngradingCheck));
     console.log('##vso[task.setVariable variable=task_pattern;isOutput=true;]@(' + tasks.join('|') + ')');
