@@ -359,8 +359,7 @@
         "ContainerStructureTestV0",
         "PublishCodeCoverageResultsV1",
         "PublishCodeCoverageResultsV2",
-        "VsTestV2",
-        "VsTestV3"
+        "VsTestV2"
     ],
     "Node20_229_5": [
         "AzureSpringCloudV0"
