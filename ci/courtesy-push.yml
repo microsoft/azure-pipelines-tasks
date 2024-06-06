@@ -57,3 +57,8 @@ steps:
 #   condition: eq(variables['build.reason'], 'Schedule')
 #   env:
 #     TEAMS_WEBHOOK: $(MSTeamsUri)
+- task: DownloadBuildArtifacts@0
+  inputs:
+    artifactName: IndividualNugetPackages
+    downloadPath: $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded
+  displayName: Download Artifact
