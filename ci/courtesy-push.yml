@@ -60,5 +60,5 @@ steps:
 - task: DownloadBuildArtifacts@0
   inputs:
     artifactName: IndividualNugetPackages
-    downloadPath: $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded
+    downloadPath: $(Build.SourcesDirectory)
   displayName: Download Artifact
