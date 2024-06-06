@@ -5,7 +5,7 @@ import path = require('path');
 import fs = require('fs');
 import { basicSetup } from './UnitTests/TestHelpers';
 const Stats = require('fs').Stats;
-const mockery = require('mockery');
+const libMocker = require('azure-pipelines-task-lib/lib-mocker');
 
 let taskPath = path.join(__dirname, '..', 'appcenterdistribute.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -56,4 +56,4 @@ tmr.registerMock('fs', mockedFs);
 
 tmr.run();
 
-mockery.deregisterMock('fs');
+libMocker.deregisterMock('fs');
