@@ -52,8 +52,8 @@ steps:
   env:
     TOKEN: $(Package.Token)
 
-- powershell: .\azure-pipelines-tasks\ci\courtesy-push\send-notification.ps1
-  displayName: Send MS Teams notification
-  condition: eq(variables['build.reason'], 'Schedule')
-  env:
-    TEAMS_WEBHOOK: $(MSTeamsUri)
+# - powershell: .\azure-pipelines-tasks\ci\courtesy-push\send-notification.ps1
+#   displayName: Send MS Teams notification
+#   condition: eq(variables['build.reason'], 'Schedule')
+#   env:
+#     TEAMS_WEBHOOK: $(MSTeamsUri)
