@@ -21,7 +21,7 @@ export function replaceLastDotWithHash(inputString) {
     }
 }
 
-export function separateString(inputString) {
+export function separatePath(inputString) {
     const lastDotIndex = inputString.lastIndexOf('.');
 
     if (lastDotIndex !== -1) {
@@ -32,11 +32,11 @@ export function separateString(inputString) {
         return inputString;
     }
 }
-export function testName(inputString) {
+export function separateTestName(inputString) {
     const lastDotIndex = inputString.lastIndexOf('.');
 
     if (lastDotIndex !== -1) {
-        const stringWith = '"^' + inputString.slice(lastDotIndex+1) + '$"';
+        const stringWith =  inputString.slice(lastDotIndex+1) ;
         return stringWith;
     } 
 }
