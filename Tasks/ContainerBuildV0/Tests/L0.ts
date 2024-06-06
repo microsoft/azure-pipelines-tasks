@@ -7,6 +7,18 @@ import * as pipelineutils from "azure-pipelines-tasks-docker-common/pipelineutil
 import * as shared from "./TestShared";
 import ConsistentHashing = require("consistent-hashing");
 
+function runValidations(validator: () => void, tr, done) {
+    try {
+        validator();
+        done();
+    }
+    catch (error) {
+        console.log("STDERR", tr.stderr);
+        console.log("STDOUT", tr.stdout);
+        done(error);
+    }
+}
+
 describe("ContainerBuildV0 Suite", function () {
     this.timeout(30000);
 
@@ -49,14 +61,15 @@ describe("ContainerBuildV0 Suite", function () {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
-
+       
+        tr.runAsync();
+        runValidations(() => {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} -t testuser/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
         console.log(tr.stderr);
-        done();
+    }, tr, done);
     });
 
     it('Runs successfully for docker build with tags', (done:Mocha.Done) => {
@@ -64,7 +77,7 @@ describe("ContainerBuildV0 Suite", function () {
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.tags] = "tag1";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -79,7 +92,7 @@ describe("ContainerBuildV0 Suite", function () {
         process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 2, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -96,7 +109,7 @@ describe("ContainerBuildV0 Suite", function () {
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.tags] = "tag1";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 2, 'should have invoked tool two times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -113,7 +126,7 @@ describe("ContainerBuildV0 Suite", function () {
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.tags] = "tag1\ntag2";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -130,7 +143,7 @@ describe("ContainerBuildV0 Suite", function () {
         process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "acrendpoint";
         process.env[shared.TestEnvVars.repository] = "testrepo";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 2, 'should have invoked tool twice. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -146,7 +159,7 @@ describe("ContainerBuildV0 Suite", function () {
         process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "acrendpoint2";
         process.env[shared.TestEnvVars.repository] = "testrepo";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 2, 'should have invoked tool twice. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -163,7 +176,7 @@ describe("ContainerBuildV0 Suite", function () {
         process.env[shared.TestEnvVars.dockerFile] = shared.formatPath("a/w/meta/Dockerfile");
         process.env[shared.TestEnvVars.buildContext] = shared.formatPath("a/w/context");
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -181,7 +194,7 @@ describe("ContainerBuildV0 Suite", function () {
         process.env[shared.TestEnvVars.dockerFile] = shared.formatPath("a/w/meta/Dockerfile");
         process.env[shared.TestEnvVars.buildContext] = shared.formatPath("a/w/context");
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -199,7 +212,7 @@ describe("ContainerBuildV0 Suite", function () {
         process.env[shared.TestEnvVars.dockerFile] = shared.formatPath("a/w/meta/Dockerfile");
         process.env[shared.TestEnvVars.buildContext] = shared.formatPath("a/w/context");
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -216,7 +229,7 @@ describe("ContainerBuildV0 Suite", function () {
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.tags] = "tag1\ntag2";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -233,7 +246,7 @@ describe("ContainerBuildV0 Suite", function () {
         process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "acrendpoint";
         process.env[shared.TestEnvVars.repository] = "testrepo";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool once. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
