@@ -29,6 +29,8 @@
   "loc.input.help.failOnStandardError": "Bei aktivierter Option kann diese Aufgabe nicht erfolgreich ausgeführt werden, wenn Fehler in den StandardError-Stream geschrieben werden. Deaktivieren Sie das Kontrollkästchen, um Standardfehler zu ignorieren, und bestimmen Sie den Status mithilfe von Exitcodes.",
   "loc.input.label.powerShellIgnoreLASTEXITCODE": "$LASTEXITCODE ignorieren",
   "loc.input.help.powerShellIgnoreLASTEXITCODE": "Wenn dieser Wert FALSE ist, wird am Ende Ihres Skripts die Zeile \"if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }\" angehängt. Dadurch wird der letzte Exitcode aus einem externen Befehl als Exitcode der PowerShell weitergegeben. Andernfalls wird die Zeile nicht an das Ende Ihres Skripts angehängt.",
+  "loc.input.label.visibleAzLogin": "az login output visibility",
+  "loc.input.help.visibleAzLogin": "If this is set to true, az login command will output to the task. Setting it to false will suppress the az login output",
   "loc.messages.ScriptReturnCode": "Skript wurde mit Rückgabecode beendet: %d",
   "loc.messages.ScriptFailed": "Skriptfehler: %s",
   "loc.messages.ScriptFailedStdErr": "Das Skript weist Ausgabe in stderr auf. Dies verursacht einen Fehler, weil \"failOnStdErr\" auf TRUE festgelegt ist.",
@@ -46,5 +48,6 @@
   "loc.messages.JS_InvalidErrorActionPreference": "ErrorActionPreference \"%s\" ungültig. Der Wert muss \"Stop\", \"Continue\" oder \"SilentlyContinue\" sein.",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Für Agent-Versionen vor 2.115.0 kann nur die globale Azure CLI-Konfiguration verwendet werden.",
   "loc.messages.UnacceptedScriptLocationValue": "\"%s\" ist kein gültiger Wert für die Aufgabeneingabe für den Skriptspeicherort (\"scriptLocation\" in YAML). Der Wert kann entweder \"inlineScript\"oder \"scriptPath\" lauten.",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Das Geheimnis ist abgelaufen. Aktualisieren Sie die Dienstverbindung unter %s. Weitere Informationen zur Konvertierung in Dienstverbindungen ohne Geheimnis finden Sie unter https://aka.ms/azdo-rm-workload-identity-conversion."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Das Geheimnis ist abgelaufen. Aktualisieren Sie die Dienstverbindung unter %s. Weitere Informationen zur Konvertierung in Dienstverbindungen ohne Geheimnis finden Sie unter https://aka.ms/azdo-rm-workload-identity-conversion.",
+  "loc.messages.ProxyConfig": "az tool is configured to use %s as proxy server"
 }

@@ -29,6 +29,8 @@
   "loc.input.help.failOnStandardError": "Если задано значение true, то при наличии ошибок, записанных в стандартный поток ошибок, задача завершится сбоем. Снимите флажок, чтобы игнорировать стандартные ошибки и использовать коды завершения для определения состояния",
   "loc.input.label.powerShellIgnoreLASTEXITCODE": "Игнорировать $LASTEXITCODE",
   "loc.input.help.powerShellIgnoreLASTEXITCODE": "Если задано значение False, в конец скрипта добавляется строка \"if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }\". Это приведет к тому, что последний код выхода из внешней команды будет использоваться как код выхода PowerShell. В противном случае эта строка не добавляется в конец скрипта.",
+  "loc.input.label.visibleAzLogin": "az login output visibility",
+  "loc.input.help.visibleAzLogin": "If this is set to true, az login command will output to the task. Setting it to false will suppress the az login output",
   "loc.messages.ScriptReturnCode": "Выход из сценария с кодом возврата: %d",
   "loc.messages.ScriptFailed": "Сбой сценария с ошибкой: %s",
   "loc.messages.ScriptFailedStdErr": "Скрипт выводит выходные данные в stderr. Завершается сбоем, если failOnStdErr имеет значение true.",
@@ -46,5 +48,6 @@
   "loc.messages.JS_InvalidErrorActionPreference": "Недопустимое значение ErrorActionPreference \"%s\". Возможные значения: Stop, Continue или SilentlyContinue",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Для агента версии ниже 2.115.0 можно использовать только глобальную конфигурацию Azure CLI",
   "loc.messages.UnacceptedScriptLocationValue": "%s не является допустимым значением для входных данных задачи \"Расположение скрипта\" (scriptLocation в YAML). Значение может быть равно inlineScript либо scriptPath",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Срок действия секрета истек. Обновите подключение службы %s. Подробнее о преобразовании в подключения служб без секретов см. https://aka.ms/azdo-rm-workload-identity-conversion."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Срок действия секрета истек. Обновите подключение службы %s. Подробнее о преобразовании в подключения служб без секретов см. https://aka.ms/azdo-rm-workload-identity-conversion.",
+  "loc.messages.ProxyConfig": "az tool is configured to use %s as proxy server"
 }
