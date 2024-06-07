@@ -2,7 +2,6 @@ import tl = require('azure-pipelines-task-lib/task');
 import utils = require('../utils');
 import constants = require('../constants');
 import { executeGo, executeGotestsum } from '../testexecutor';
-import tr = require("azure-pipelines-task-lib/toolrunner");
 
 export async function executeGoTests(testsToBeExecuted: string[]): Promise<number> {
 
