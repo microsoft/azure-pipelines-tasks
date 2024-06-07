@@ -87,6 +87,7 @@ extends:
             task_name: ${{ parameters.task_name }}
             push_to_feed: ${{ parameters.push_to_feed }}
             generate_prs: ${{ parameters.generate_prs }}
+            enableCodeQL: ${{ parameters.enableCodeQL }}
 
       - ${{ if not(parameters.build_single_task) }}:
 

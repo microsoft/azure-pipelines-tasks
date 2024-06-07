@@ -5,6 +5,10 @@ parameters:
   type: boolean
 - name: generate_prs
   type: boolean
+- name: enableCodeQL
+  displayName: Enable CodeQL for run
+  type: boolean
+  default: false
 
 jobs:
 # Build Single Task and stage hotfix
