@@ -29,6 +29,8 @@
   "loc.input.help.failOnStandardError": "true이면 StandardError 스트림에 오류가 기록될 때 이 작업이 실패합니다. 표준 오류를 무시하고 종료 코드를 사용하여 상태를 확인하려면 이 확인란의 선택을 취소하세요.",
   "loc.input.label.powerShellIgnoreLASTEXITCODE": "$LASTEXITCODE 무시",
   "loc.input.help.powerShellIgnoreLASTEXITCODE": "false이면 스크립트의 끝에 `if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }` 줄이 추가됩니다. 이 줄로 인해 외부 명령의 마지막 종료 코드가 PowerShell의 종료 코드로 전파됩니다. true이면 줄이 스크립트의 끝에 추가되지 않습니다.",
+  "loc.input.label.visibleAzLogin": "az login output visibility",
+  "loc.input.help.visibleAzLogin": "If this is set to true, az login command will output to the task. Setting it to false will suppress the az login output",
   "loc.messages.ScriptReturnCode": "다음 반환 코드로 스크립트가 종료됨: %d",
   "loc.messages.ScriptFailed": "다음 오류가 발생하여 스크립트 실패: %s",
   "loc.messages.ScriptFailedStdErr": "스크립트가 STDERR에 출력되었습니다. failOnStdErr이 true로 설정되어 있으므로 실패합니다.",
@@ -46,5 +48,6 @@
   "loc.messages.JS_InvalidErrorActionPreference": "잘못된 ErrorActionPreference '%s'입니다. 값은 'Stop', 'Continue', 'SilentlyContinue' 중 하나여야 합니다.",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "2.115.0 이전의 에이전트 버전에서는 전역 Azure CLI 구성만 사용할 수 있습니다.",
   "loc.messages.UnacceptedScriptLocationValue": "%s은(는) '스크립트 위치'(YAML의 scriptLocation) 작업 입력에 유효한 값이 아닙니다. 값은 be'inlineScript' 또는 'scriptPath' 중 하나일 수 있습니다.",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "비밀이 만료되었습니다. %s에서 서비스 연결을 업데이트하세요. 비밀 없는 서비스 연결로의 변환에 대한 자세한 정보는 https://aka.ms/azdo-rm-workload-identity-conversion을 참고하세요."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "비밀이 만료되었습니다. %s에서 서비스 연결을 업데이트하세요. 비밀 없는 서비스 연결로의 변환에 대한 자세한 정보는 https://aka.ms/azdo-rm-workload-identity-conversion을 참고하세요.",
+  "loc.messages.ProxyConfig": "az tool is configured to use %s as proxy server"
 }

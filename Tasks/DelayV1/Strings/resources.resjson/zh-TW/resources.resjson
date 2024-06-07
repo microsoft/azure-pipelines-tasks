@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "延遲",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870239)",
+  "loc.helpMarkDown": "[深入了解此工作](https://go.microsoft.com/fwlink/?linkid=870239)",
   "loc.description": "以固定時間延遲工作流程的進一步執行",
   "loc.instanceNameFormat": "延遲 $(delayForMinutes) 分鐘",
   "loc.input.label.delayForMinutes": "延遲時間 (分鐘)",

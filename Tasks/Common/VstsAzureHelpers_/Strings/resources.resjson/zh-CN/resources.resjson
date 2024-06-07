@@ -14,5 +14,8 @@
   "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "无法提取托管标识的访问令牌。请为虚拟机配置托管标识 \"https://aka.ms/azure-msi-docs\"。状态代码:“{0}”，错误消息: {1}",
   "loc.messages.AZ_MsiAccessTokenFetchFailure": "无法提取托管标识的访问令牌。状态代码:“{0}”，错误消息: {1}",
   "loc.messages.AZ_MsiFailure": "无法提取托管标识的访问令牌。{0}",
-  "loc.messages.AZ_ExpiredServicePrincipalMessageWithLink": "机密已过期，请在 {0} 更新服务连接。若要详细了解如何转换到无机密服务连接，请参阅 https://aka.ms/azdo-rm-workload-identity-conversion。"
+  "loc.messages.AZ_ExpiredServicePrincipalMessageWithLink": "机密已过期，请在 {0} 更新服务连接。若要详细了解如何转换到无机密服务连接，请参阅 https://aka.ms/azdo-rm-workload-identity-conversion。",
+  "loc.messages.AZ_ModuleInitFailWarning": "无法初始化现有 Az 模块，请回退到安装",
+  "loc.messages.AZ_ModuleInstallFail": "未能安装 Az 模块",
+  "loc.messages.AZ_RMDeprecationMessage": "你使用的是即将停用的 AzureRM，请安排更新。"
 }

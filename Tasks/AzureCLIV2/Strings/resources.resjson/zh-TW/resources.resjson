@@ -29,6 +29,8 @@
   "loc.input.help.failOnStandardError": "若此項目為 true，則當任何錯誤寫入 StandardError 串流時此工作將失敗。取消選取核取方塊可略過標準錯誤並根據結束代碼判斷狀態",
   "loc.input.label.powerShellIgnoreLASTEXITCODE": "略過 $LASTEXITCODE",
   "loc.input.help.powerShellIgnoreLASTEXITCODE": "若此為 false，則會將 `if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }` 附加至您指令碼的結尾。如此會讓來自外部命令中的最後一個結束代碼，以 PowerShell 的結束代碼散佈。否則，不會將此行附加至您的指令碼結尾。",
+  "loc.input.label.visibleAzLogin": "az login output visibility",
+  "loc.input.help.visibleAzLogin": "If this is set to true, az login command will output to the task. Setting it to false will suppress the az login output",
   "loc.messages.ScriptReturnCode": "指令碼已結束。傳回碼: %d",
   "loc.messages.ScriptFailed": "指令碼失敗。錯誤: %s",
   "loc.messages.ScriptFailedStdErr": "指令碼有到 stderr 的輸出。因為 failOnStdErr 設為 true 而失敗。",
@@ -46,5 +48,6 @@
   "loc.messages.JS_InvalidErrorActionPreference": "ErrorActionPreference '%s' 無效。此值必須是 'Stop'、'Continue' 或 'SilentlyContinue' 之一",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "2.115.0 以下的代理程式版本只能使用全域 Azure CLI 設定",
   "loc.messages.UnacceptedScriptLocationValue": "%s 不是工作輸入 'Script Location' (在 YAML 中為 scriptLocation) 的有效值。值可以是 'inlineScript' 或 'scriptPath'",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "秘密已過期，請在 %s 更新服務連線，參閱 https://aka.ms/azdo-rm-workload-identity-conversion 以深入了解如何轉換為無秘密服務連線。"
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "秘密已過期，請在 %s 更新服務連線，參閱 https://aka.ms/azdo-rm-workload-identity-conversion 以深入了解如何轉換為無秘密服務連線。",
+  "loc.messages.ProxyConfig": "az tool is configured to use %s as proxy server"
 }

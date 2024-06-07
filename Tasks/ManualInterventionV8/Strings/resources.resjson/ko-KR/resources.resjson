@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "수동 작업",
-  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870234)",
+  "loc.helpMarkDown": "[이 작업에 대해 자세히 알아보기](https://go.microsoft.com/fwlink/?linkid=870234)",
   "loc.description": "배포를 일시 중지하고 수동 작업을 기다립니다.",
   "loc.instanceNameFormat": "수동 작업",
   "loc.input.label.instructions": "지침",
