@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 237,
+    "Minor": 239,
     "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -130,7 +130,7 @@
     "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   },
   "_buildConfigMapping": {
-    "Default": "3.237.0",
-    "Node20-225": "3.237.1"
+    "Default": "3.239.0",
+    "Node20-225": "3.239.1"
   }
 }

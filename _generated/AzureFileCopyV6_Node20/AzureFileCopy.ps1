@@ -115,7 +115,7 @@ try {
         $storageContext = Create-AzureStorageContextWithConnectedAcc -StorageAccountName $storageAccount
 
         # Geting Azure Storage Account type
-        $storageAccountType = Get-StorageAccountType $storageAccount $endpoint $connectedServiceName $vstsAccessToken
+        $storageAccountType = Get-StorageAccountType $storageAccount $endpoint $connectedServiceName
         Write-Verbose "Obtained Storage Account type: $storageAccountType"
         if (-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.Contains('Premium')) {
             $isPremiumStorage = $true
@@ -137,10 +137,10 @@ try {
                 Create-AzureContainer -containerName $containerName -storageContext $storageContext
             }
         }
-    
+
 
         # Getting Azure Blob Storage Endpoint
-        $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -endpoint $endpoint -vstsAccessToken $vstsAccessToken
+        $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -endpoint $endpoint
 
         # Setting environment variable for tracking Azure Pipelines usage in AzCopy telemetry
         $env:AZCOPY_USER_AGENT_PREFIX = "TFS_useragent"
@@ -190,7 +190,7 @@ try {
         -useDefaultArguments $useDefaultArgumentsForBlobCopy `
         -cleanTargetBeforeCopy $cleanTargetBeforeCopy `
         -useSanitizerActivate $useSanitizerActivate
-    
+
     # Complete the task if destination is azure blob
     if ($destination -eq "AzureBlob") {
         # Get URI for output variable
@@ -199,7 +199,7 @@ try {
 
         Remove-EndpointSecrets
         Write-Verbose "Completed Azure File Copy Task for Azure Blob Destination"
-        
+
         return
     }
 
@@ -212,7 +212,7 @@ try {
         # getting azure vms properties(name, fqdn, winrmhttps port)
         $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName `
             -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites `
-            -connectedServiceName $connectedServiceName -vstsAccessToken $vstsAccessToken
+            -connectedServiceName $connectedServiceName
 
         $azureVMsCredentials = Get-AzureVMsCredentials -vmsAdminUserName $vmsAdminUserName -vmsAdminPassword $vmsAdminPassword
 
@@ -221,7 +221,7 @@ try {
             -networkCredentials $azureVMsCredentials `
             -skipCACheck $skipCACheck
 
-        # Copies files on azureVMs 
+        # Copies files on azureVMs
         Copy-FilesToAzureVMsFromStorageContainer -targetMachineNames $invokeRemoteScriptParams.targetMachineNames `
             -credential $invokeRemoteScriptParams.credential `
             -protocol $invokeRemoteScriptParams.protocol `
