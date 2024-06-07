@@ -62,6 +62,11 @@ nock('https://example.test')
     })
     .reply(200);
 
+nock('https://example.test')
+    .post('/v0.1/apps/testuser/testapp/releases/1/groups', {
+        id: "00000000-0000-0000-0000-000000000000",
+        mandatory_update: false
+    }).reply(200);
 // provide answers for task mock
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'checkPath': {
