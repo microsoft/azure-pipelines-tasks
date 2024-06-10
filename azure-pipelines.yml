@@ -9,12 +9,10 @@ resources:
   repositories:
   - repository: AzureDevOps
     type: git
-    endpoint: AzureDevOpsRepos
     name: AzureDevOps/AzureDevOps
 
   - repository: ConfigChange
     type: git
-    endpoint: AzureDevOpsRepos
     name: AzureDevOps/AzureDevOps.ConfigChange
 
   - repository: 1ESPipelineTemplates
@@ -89,6 +87,7 @@ extends:
             task_name: ${{ parameters.task_name }}
             push_to_feed: ${{ parameters.push_to_feed }}
             generate_prs: ${{ parameters.generate_prs }}
+            enableCodeQL: ${{ parameters.enableCodeQL }}
 
       - ${{ if not(parameters.build_single_task) }}:
 
@@ -158,6 +157,15 @@ extends:
                 )
               )
             )
+          templateContext:
+            outputs:
+            - output: nuget
+              packagesToPush:  '$(Build.SourcesDirectory)/IndividualNugetPackages/*/*.nupkg'
+              packageParentPath: '$(Build.SourcesDirectory)'
+              publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
+              nuGetFeedType: internal
+              displayName: Push Nuget package
+              allowPackageConflicts: $(COURTESY_PUSH)
           steps:
           - checkout: AzureDevOps
             fetchDepth: 1

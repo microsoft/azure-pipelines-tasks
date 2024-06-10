@@ -45,7 +45,7 @@ steps:
     node open-hotfix-pr.js
   displayName: Create PR
   env:
-    TOKEN: $(Package.Token)
+    TOKEN: $(System.AccessToken)
     TASK_NAME: ${{ parameters.task_name }}
     REPOSITORY: AzureDevOps
     BRANCH: $(branchName)
