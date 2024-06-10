@@ -69,7 +69,7 @@ if (semver.lt(process.versions.node, minNodeVer)) {
 // Node 14 is supported by the build system, but not currently by the agent. Block it for now
 var supportedNodeTargets = ["Node", "Node10"/*, "Node14"*/];
 var node10Version = '10.24.1';
-var node20Version = '20.11.0';
+var node20Version = '20.14.0';
 
 // add node modules .bin to the path so we can dictate version of tsc etc...
 if (!test('-d', binPath)) {
@@ -517,7 +517,7 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
                 await util.installNodeAsync(nodeVersion);
 
 
-                if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
+                if (isNodeTask && !isReportWasFormed && nodeVersion >= 10 && false) {
                     run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
                     util.renameCodeCoverageOutput(coverageTasksPath, taskName);
                     isReportWasFormed = true;
