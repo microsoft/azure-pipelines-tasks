@@ -19,7 +19,7 @@
   "version": {
     "Major": 2,
     "Minor": 231,
-    "Patch": 1
+    "Patch": 0
   },
   "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -188,10 +188,6 @@
     "Node16": {
       "target": "ftpuploadtask.js",
       "argumentFormat": ""
-    },
-    "Node20_1": {
-      "target": "ftpuploadtask.js",
-      "argumentFormat": ""
     }
   },
   "restrictions": {
@@ -218,9 +214,5 @@
     "UploadSucceedMsg": "ms-resource:loc.messages.UploadSucceedMsg",
     "UploadSucceedRes": "ms-resource:loc.messages.UploadSucceedRes",
     "UploadFailed": "ms-resource:loc.messages.UploadFailed"
-  },
-  "_buildConfigMapping": {
-    "Default": "2.231.0",
-    "Node20-225": "2.231.1"
   }
 }
