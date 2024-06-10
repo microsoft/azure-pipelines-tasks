@@ -98,7 +98,6 @@ describe("ContainerBuildV0 Suite", function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.runAsync()
             .then(() => {
-
                 assert(tr.invokedToolCount == 2, 'should have invoked tool two times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
