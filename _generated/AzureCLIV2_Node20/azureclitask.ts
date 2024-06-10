@@ -8,6 +8,7 @@ import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
 
 const FAIL_ON_STDERR: string = "FAIL_ON_STDERR";
+const AZ_SESSION_REFRESH_INTERVAL_MS: number = 80000; // 480000; // 8 minutes, 2 minutes before IdToken expiry date
 
 export class azureclitask {
 
@@ -28,6 +29,7 @@ export class azureclitask {
             var scriptType: ScriptType = ScriptTypeFactory.getSriptType();
             var tool: any = await scriptType.getTool();
             var cwd: string = tl.getPathInput("cwd", true, false);
+            
             if (tl.getInput("scriptLocation", true).toLowerCase() === "scriptPath" && !tl.filePathSupplied("cwd")) {
                 cwd = path.dirname(tl.getPathInput("scriptPath", true, true));
             }
@@ -41,7 +43,22 @@ export class azureclitask {
             this.setConfigDirectory();
             this.setAzureCloudBasedOnServiceEndpoint();
             var connectedService: string = tl.getInput("connectedServiceNameARM", true);
+            const authorizationScheme = tl.getEndpointAuthorizationScheme(connectedService, true).toLowerCase();
+            
             await this.loginAzureRM(connectedService);
+
+            var keepAzSessionActive: boolean = tl.getBoolInput('keepAzSessionActive', false);
+            var stopRefreshingSession: () => void = () => {};
+            if (keepAzSessionActive) {
+                // This is a tactical workaround to keep the session active for the duration of the task to avoid AADSTS700024 errors.
+                // This is a temporary solution until the az cli provides a way to refresh the session.
+                if (authorizationScheme !== 'workloadidentityfederation') {
+                    const errorMessage = tl.loc('KeepingAzSessionActiveUnsupportedScheme');
+                    tl.error(errorMessage);
+                    throw errorMessage;
+                }
+                stopRefreshingSession = this.keepRefreshingAzSession(connectedService);
+            }
 
             let errLinesCount: number = 0;
             let aggregatedErrorLines: string[] = [];
@@ -52,8 +69,7 @@ export class azureclitask {
                 errLinesCount++;
             });
 
-            var addSpnToEnvironment: boolean = tl.getBoolInput('addSpnToEnvironment', false);
-            var authorizationScheme = tl.getEndpointAuthorizationScheme(connectedService, true).toLowerCase();
+            const addSpnToEnvironment: boolean = tl.getBoolInput('addSpnToEnvironment', false);
             if (!!addSpnToEnvironment && authorizationScheme == 'serviceprincipal') {
                 exitCode = await tool.exec({
                     failOnStdErr: false,
@@ -92,6 +108,10 @@ export class azureclitask {
             }
         }
         finally {
+            if (keepAzSessionActive) {
+              stopRefreshingSession();
+            }
+
             if (scriptType) {
                 await scriptType.cleanUp();
             }
@@ -275,6 +295,19 @@ export class azureclitask {
         }
 
         return response.oidcToken;
+    }
+
+    private static keepRefreshingAzSession(connectedService: string): () => void {
+        const intervalId = setInterval(async () => {
+         try {
+            tl.debug(tl.loc('RefreshingAzSession'));
+            await this.loginAzureRM(connectedService);
+         } catch (error) {
+            tl.warning(tl.loc('FailedToRefreshAzSession', error));
+         }
+        }, AZ_SESSION_REFRESH_INTERVAL_MS);
+
+        return () => clearInterval(intervalId);
     }
 }
 
