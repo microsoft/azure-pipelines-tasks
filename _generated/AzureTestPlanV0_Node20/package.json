@@ -27,7 +27,8 @@
     "azure-devops-node-api": "^12.2.0",
     "azure-pipelines-tool-lib": "^2.0.0-preview",
     "typed-rest-client": "^1.8.9",
-    "axios": "^1.6.2"
+    "axios": "^1.6.2",
+    "performance-now": "0.2.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"
