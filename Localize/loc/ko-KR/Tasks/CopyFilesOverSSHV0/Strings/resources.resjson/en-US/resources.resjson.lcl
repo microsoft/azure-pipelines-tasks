@@ -63,11 +63,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.concurrentUploads" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Number of concurrent uploads when copying files. Default is 10.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[파일을 복사할 때의 동시 업로드 수. 기본값은 10입니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.contents" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[File paths to include as part of the copy. Supports multiple lines of minimatch patterns. [More Information]5D;(https://go.microsoft.com/fwlink/?LinkId=821894)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[복사의 일부로 포함할 파일 경로입니다. 여러 줄로 된 minimatch 패턴을 지원합니다. [자세한 정보]5D;(https://go.microsoft.com/fwlink/?LinkId=821894)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.delayBetweenUploads" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delay between queueing uploads (in milliseconds). Default is 50.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[업로드 대기 중 지연(밀리초). 기본값은 50입니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -162,11 +180,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.concurrentUploads" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Number of concurrent uploads when copying files]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[파일을 복사할 때 동시 업로드 수]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.contents" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Contents]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[콘텐츠]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.delayBetweenUploads" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delay between queueing uploads (in milliseconds)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[업로드 대기 중 지연(밀리초)]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -315,6 +351,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.CopyDirectoryCompleted" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Completed copying %s directory to the remote machine.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s 디렉터리를 원격 컴퓨터에 복사했습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.CopyDirectoryFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to copy %s directory to the remote machine. %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s 디렉터리를 원격 컴퓨터에 복사하지 못했습니다. %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.CopyingFiles" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Found %s files to copy to the remote machine.]]></Val>
@@ -338,6 +392,24 @@
           <Val><![CDATA[File %s cannot be copied to the remote machine because it already exists and the 'Overwrite' option is disabled.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[%s 파일이 이미 있고 '덮어쓰기' 옵션이 사용하지 않도록 설정되어 있으므로 해당 파일을 원격 컴퓨터에 복사할 수 없습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.FolderCreated" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Created folder %s on the remote machine.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[원격 컴퓨터에서 %s 폴더를 만들었습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.FoldersCreated" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Created %s folders on the remote machine.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[원격 컴퓨터에서 %s 폴더를 만들었습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -425,10 +497,13 @@
       </Item>
       <Item ItemId=";loc.messages.TargetNotCreated" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Unable to create target folder %s.]]></Val>
+          <Val><![CDATA[Unable to create target folder %s. %s.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[대상 폴더 %s을(를) 만들 수 없습니다.]]></Val>
+            <Val><![CDATA[대상 폴더 %s을(를) 만들 수 없습니다. %s.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Unable to create target folder %s.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -437,6 +512,15 @@
           <Val><![CDATA[Failed to upload %s to %s on remote machine. %s.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[%s을(를) 원격 컴퓨터에 있는 %s에 업로드하지 못했습니다. %s.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.UploadFolderFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to upload folder %s to %s on remote machine. %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[원격 컴퓨터의 %s 폴더를 %s에 업로드하지 못했습니다. %s.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
