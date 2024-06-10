@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 241,
     "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
@@ -148,10 +148,10 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "azurewebappsettings.js"
     },
-    "Node16": {
+    "Node10": {
       "target": "azurewebappsettings.js"
     }
   },
@@ -184,7 +184,7 @@
     "ConnectionStringInvalidJSON": "ms-resource:loc.messages.ConnectionStringInvalidJSON"
   },
   "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_2": "1.238.1"
+    "Default": "1.241.0",
+    "Node20_229_2": "1.241.1"
   }
 }

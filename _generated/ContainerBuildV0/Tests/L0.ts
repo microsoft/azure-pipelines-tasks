@@ -47,36 +47,38 @@ describe("ContainerBuildV0 Suite", function () {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
-
+        tr.runAsync()
+        .then(() => {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} -t testuser/testrepo:11 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
         console.log(tr.stderr);
     });
+});
 
     it('Runs successfully for docker build with tags', async () => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.tags] = "tag1";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
-
+        tr.runAsync()
+        .then(() => {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/Dockerfile")} -t testuser/testrepo:tag1 ${shared.formatPath("a/w")}`) != -1, "docker build should run with expected arguments");
         console.log(tr.stderr);
     });
+});
 
     it('Runs successfully for docker build and push', async () => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
-
+        tr.runAsync()
+        .then(() => {
         assert(tr.invokedToolCount == 2, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
@@ -84,14 +86,15 @@ describe("ContainerBuildV0 Suite", function () {
         assert(tr.stdout.indexOf(`[command]docker push testuser/testrepo:11`) != -1, "docker push should run with expected arguments");
         console.log(tr.stderr);
     });
-
-    it('Runs successfully for docker build and push with tags', async () => {
+});
+    it('Runs successfully for docker build and push with tags', (done:Mocha.Done) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "dockerhubendpoint";
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.tags] = "tag1";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
+        tr.runAsync()
+        .then(() => {
 
         assert(tr.invokedToolCount == 2, 'should have invoked tool two times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -100,6 +103,7 @@ describe("ContainerBuildV0 Suite", function () {
         assert(tr.stdout.indexOf(`[command]docker push testuser/testrepo:tag1`) != -1, "docker push should run with expected arguments");
         console.log(tr.stderr);
     });
+});
 
     it('Runs successfully for docker build and push with mutiple tags', async () => {
         let tp = path.join(__dirname, 'TestSetup.js');
@@ -107,8 +111,8 @@ describe("ContainerBuildV0 Suite", function () {
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.tags] = "tag1\ntag2";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
-
+        tr.runAsync()
+        .then(() => {
         assert(tr.invokedToolCount == 3, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
@@ -117,14 +121,15 @@ describe("ContainerBuildV0 Suite", function () {
         assert(tr.stdout.indexOf(`[command]docker push testuser/testrepo:tag2`) != -1, "docker push should run with expected arguments");
         console.log(tr.stderr);
     });
+});
 
     it('Runs successfully for docker build when registry other than Docker hub is used', async () => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "acrendpoint";
         process.env[shared.TestEnvVars.repository] = "testrepo";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
-
+        tr.runAsync()
+        .then(() => {
         assert(tr.invokedToolCount == 2, 'should have invoked tool twice. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
@@ -132,14 +137,15 @@ describe("ContainerBuildV0 Suite", function () {
         assert(tr.stdout.indexOf(`[command]docker push testacr.azurecr.io/testrepo:11`) != -1, "docker push should run with expected arguments");
         console.log(tr.stderr);
     });
+});
 
     it('Runs successfully for docker build when registry type is ACR and registry URL contains uppercase characters', async () => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "acrendpoint2";
         process.env[shared.TestEnvVars.repository] = "testrepo";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
-
+        tr.runAsync()
+        .then(() => {
         assert(tr.invokedToolCount == 2, 'should have invoked tool twice. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
@@ -147,6 +153,7 @@ describe("ContainerBuildV0 Suite", function () {
         assert(tr.stdout.indexOf(`[command]docker push testacr2.azurecr.io/testrepo:11`) != -1, "docker push should run with expected arguments");
         console.log(tr.stderr);
     });
+});
 
     it('Docker build should honour Dockerfile and buildcontext input', async () => {
         let tp = path.join(__dirname, 'TestSetup.js');
@@ -154,14 +161,15 @@ describe("ContainerBuildV0 Suite", function () {
         process.env[shared.TestEnvVars.dockerFile] = shared.formatPath("a/w/meta/Dockerfile");
         process.env[shared.TestEnvVars.buildContext] = shared.formatPath("a/w/context");
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
-
+        tr.runAsync()
+        .then(() => {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("a/w/meta/Dockerfile")} -t testuser/testrepo:11 ${shared.formatPath("a/w/context")}`) != -1, "docker build should run with expected arguments");
         console.log(tr.stderr);
     });
+});
 
     //buildctl
     it('Buildctl should honour Dockerfile and buildcontext input', async () => {
@@ -171,14 +179,15 @@ describe("ContainerBuildV0 Suite", function () {
         process.env[shared.TestEnvVars.dockerFile] = shared.formatPath("a/w/meta/Dockerfile");
         process.env[shared.TestEnvVars.buildContext] = shared.formatPath("a/w/context");
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
-
+        tr.runAsync()
+        .then(() => {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]buildctl build --frontend=dockerfile.v0 --local=context=${shared.formatPath("a/w/context")} --local=dockerfile=${shared.formatPath("a/w/meta/")}`) != -1, "buildctl build should run with expected arguments");
         console.log(tr.stderr);
     });
+});
 
     it('Buildctl should perform build as well as push if dockerregistryserviceconnect is present', async () => {
         let tp = path.join(__dirname, 'TestSetup.js');
@@ -188,14 +197,15 @@ describe("ContainerBuildV0 Suite", function () {
         process.env[shared.TestEnvVars.dockerFile] = shared.formatPath("a/w/meta/Dockerfile");
         process.env[shared.TestEnvVars.buildContext] = shared.formatPath("a/w/context");
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
-
+        tr.runAsync()
+        .then(() => {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]buildctl build --frontend=dockerfile.v0 --local=context=${shared.formatPath("a/w/context")} --local=dockerfile=${shared.formatPath("a/w/meta/")} --exporter=image --exporter-opt=name=testuser/testrepo:11 --exporter-opt=push=true`) != -1, "buildctl build should run with expected arguments");
         console.log(tr.stderr);
     });
+});
 
     it('Runs successfully for buildctl build and push with multiple tags', async () => {
         let tp = path.join(__dirname, 'TestSetup.js');
@@ -204,8 +214,8 @@ describe("ContainerBuildV0 Suite", function () {
         process.env[shared.TestEnvVars.repository] = "testuser/testrepo";
         process.env[shared.TestEnvVars.tags] = "tag1\ntag2";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
-
+        tr.runAsync()
+        .then(() => {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
@@ -213,6 +223,7 @@ describe("ContainerBuildV0 Suite", function () {
         assert(tr.stdout.indexOf(`[command]buildctl build --frontend=dockerfile.v0 --local=context=${shared.formatPath("a/w/**")} --local=dockerfile=${shared.formatPath("a/w/**/")} --exporter=image --exporter-opt=name=testuser/testrepo:tag1,testuser/testrepo:tag2 --exporter-opt=push=true`) != -1, "buildctl build should run with expected arguments");
         console.log(tr.stderr);
     });
+});
 
     it('Runs successfully for buildctl build when registry other than Docker hub is used', async () => {
         let tp = path.join(__dirname, 'TestSetup.js');
@@ -220,15 +231,15 @@ describe("ContainerBuildV0 Suite", function () {
         process.env[shared.TestEnvVars.dockerRegistryServiceConnection] = "acrendpoint";
         process.env[shared.TestEnvVars.repository] = "testrepo";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
-
+        tr.runAsync()
+        .then(() => {
         assert(tr.invokedToolCount == 1, 'should have invoked tool once. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]buildctl build --frontend=dockerfile.v0 --local=context=${shared.formatPath("a/w/**")} --local=dockerfile=${shared.formatPath("a/w/**/")} --exporter=image --exporter-opt=name=testacr.azurecr.io/testrepo:11 --exporter-opt=push=true`) != -1, "buildctl build should run with expected arguments");
         console.log(tr.stderr);
     });
-
+});
     it('Consistent hash must be computed correctly', (done) => {
         var ring = new ConsistentHashing([]);
         ring.addNode("buildkitd-0");
