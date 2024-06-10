@@ -145,7 +145,7 @@ namespace BuildConfigGen
 
             if (notSyncronizedDependencies.Count > 0)
             {
-                notSyncronizedDependencies.Insert(0, $"##vso[task.logissue type=error]There are problems with the dependencies in the generated package.json files. Please fix the following issues:");
+                notSyncronizedDependencies.Insert(0, $"##vso[task.logissue type=error]There are problems with the dependencies in the buildConfig's package.json files. Please fix the following issues:");
                 throw new Exception(string.Join("\r\n", notSyncronizedDependencies));
             }
         }
@@ -448,9 +448,9 @@ namespace BuildConfigGen
             NotNullOrThrow(ensureUpdateModeVerifier, "BUG: ensureUpdateModeVerifier is null");
 
             JsonNode? originTaskPackage = JsonNode.Parse(ensureUpdateModeVerifier.FileReadAllText(originPackagePath));
-            JsonNode? generatedTaskPackage = JsonNode.Parse(ensureUpdateModeVerifier.FileReadAllText(generatedPackagePath));
+            JsonNode? buildConfigTaskPackage = JsonNode.Parse(ensureUpdateModeVerifier.FileReadAllText(generatedPackagePath));
             NotNullOrThrow(originTaskPackage, $"BUG: originTaskPackage is null for {task}");
-            NotNullOrThrow(generatedTaskPackage, $"BUG: generatedTaskPackage is null for {task}");
+            NotNullOrThrow(buildConfigTaskPackage, $"BUG: buildConfigTaskPackage is null for {task}");
 
             var originDependencies = originTaskPackage["dependencies"];
             NotNullOrThrow(originDependencies, $"BUG: origin dependencies in {task} is null");
@@ -459,18 +459,18 @@ namespace BuildConfigGen
             {
                 string? originVersion = originDependency.Value?.ToString();
                 NotNullOrThrow(originVersion, $"BUG: origin dependency {originDependency.Key} version in {task} is null");
-                var generatedDependencies = generatedTaskPackage["dependencies"];
-                NotNullOrThrow(generatedDependencies, $"BUG: generated dependencies in {task} is null");
-                string? generatedVersion = generatedDependencies[originDependency.Key]?.ToString();
+                var buildConfigTaskDependencies = buildConfigTaskPackage["dependencies"];
+                NotNullOrThrow(buildConfigTaskDependencies, $"BUG: buildConfigs dependencies in {task} is null");
+                string? buildConfigDependencyVersion = buildConfigTaskDependencies[originDependency.Key]?.ToString();
                 
-                if (generatedVersion is null) {
+                if (buildConfigDependencyVersion is null) {
                     notSyncronizedDependencies.Add($@"Dependency ""{originDependency.Key}"" in {task} is missing in buildConfig's package.json");
                     continue;
                 }
 
-                if (VersionIsGreaterThan(originVersion, generatedVersion))
+                if (VersionIsGreaterThan(originVersion, buildConfigDependencyVersion))
                 {
-                    notSyncronizedDependencies.Add($@"Dependency ""{originDependency.Key}"" in {generatedPackagePath} has {generatedVersion} version and should be updated to {originVersion} as in {originPackagePath}");
+                    notSyncronizedDependencies.Add($@"Dependency ""{originDependency.Key}"" in {generatedPackagePath} has {buildConfigDependencyVersion} version and should be updated to {originVersion} as in {originPackagePath}");
                 }
             }
         }
