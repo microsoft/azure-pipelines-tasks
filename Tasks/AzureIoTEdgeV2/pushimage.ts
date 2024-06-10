@@ -6,23 +6,29 @@ import Constants from "./constant";
 import util from "./util";
 import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 import { TaskError } from './taskerror';
+import AuthenticationToken from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/registryauthenticationtoken";
+import AuthenticationTokenProvider  from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/authenticationtokenprovider";
+import ACRAuthenticationTokenProvider from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/acrauthenticationtokenprovider";
+import { getDockerRegistryEndpointAuthenticationToken } from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/registryauthenticationtoken";
 
-function getRegistryAuthenticationToken(): RegistryCredential {
+async function getRegistryAuthenticationToken(): Promise<AuthenticationToken> {
   // get the registry server authentication provider 
   var registryType: string = tl.getInput("containerregistrytype", true);
-  let token: RegistryCredential;
+ var authenticationProvider : AuthenticationTokenProvider;
+  let token : AuthenticationToken;
 
   if (registryType == "Azure Container Registry") {
-    token = RegistryCredentialFactory.fetchRegistryCredential(tl.getInput("azureSubscriptionEndpoint"), RegistryEndpointType.ACR);
+    authenticationProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpointForSecrets"), tl.getInput("azureContainerRegistry"));
+    token = authenticationProvider.getAuthenticationToken();
   }
   else {
-    token = RegistryCredentialFactory.fetchRegistryCredential(tl.getInput("dockerRegistryEndpoint"), RegistryEndpointType.Generic);
+    token = await getDockerRegistryEndpointAuthenticationToken(tl.getInput("dockerRegistryEndpoint"));
   }
 
-  if (token == null || token.username == null || token.password == null || token.serverUrl == null) {
+  if (token == null || token.getUsername() == null || token.getPassword() == null ||  token.getLoginServerUrl() == null) {
     let username = "";
-    if (token != null && token.username != null) {
-      username = token.username;
+    if (token != null && token.getUsername() != null) {
+      username = token.getUsername();
     }
     throw new TaskError('Failed to fetch container registry authentication token', tl.loc('InvalidContainerRegistry', username));
   }
@@ -30,7 +36,7 @@ function getRegistryAuthenticationToken(): RegistryCredential {
 }
 
 export async function run() {
-  let registryAuthenticationToken: RegistryCredential = getRegistryAuthenticationToken();
+  var authenticationToken = await getRegistryAuthenticationToken();
 
   let bypassModules = tl.getInput('bypassModules');
   if (bypassModules == null) bypassModules = "";
@@ -54,15 +60,15 @@ export async function run() {
    * However, "michaeljqzq" is not in the scope of a credential.
    * So here is a work around to login in advanced call to `iotedgedev push` and then logout after everything done.
    */
-  tl.execSync(`docker`, ["login", "-u", registryAuthenticationToken.username, "-p", registryAuthenticationToken.password, registryAuthenticationToken.serverUrl], Constants.execSyncSilentOption)
+  tl.execSync(`docker`, ["login", "-u", authenticationToken.getUsername(), "-p", authenticationToken.getPassword(), authenticationToken.getLoginServerUrl()], Constants.execSyncSilentOption)
 
   let envList = process.env;
   // Set bypass modules
   util.setCliVarialbe(envList, Constants.iotedgedevEnv.bypassModules, bypassModules);
   // Set registry credentials
-  util.setCliVarialbe(envList, Constants.iotedgedevEnv.registryServer, registryAuthenticationToken.serverUrl);
-  util.setCliVarialbe(envList, Constants.iotedgedevEnv.registryUsername, registryAuthenticationToken.username);
-  util.setCliVarialbe(envList, Constants.iotedgedevEnv.registryPassword, registryAuthenticationToken.password);
+  util.setCliVarialbe(envList, Constants.iotedgedevEnv.registryServer, authenticationToken.getLoginServerUrl());
+  util.setCliVarialbe(envList, Constants.iotedgedevEnv.registryUsername, authenticationToken.getUsername());
+  util.setCliVarialbe(envList, Constants.iotedgedevEnv.registryPassword, authenticationToken.getPassword());
 
   // Pass secrets to sub process
   util.populateSecretToEnvironmentVariable(envList);
@@ -79,7 +85,7 @@ export async function run() {
     await tl.exec(`${Constants.iotedgedev}`, ["push", "--no-build", "--file", templateFilePath, "--platform", defaultPlatform], execOptions);
 
     tl.execSync(`docker`, `logout`, Constants.execSyncSilentOption);
-    util.createOrAppendDockerCredentials(registryAuthenticationToken);
+    util.createOrAppendDockerCredentials(authenticationToken);
 
     let fillRegistryCredential = tl.getBoolInput('fillRegistryCredential', true);
     tl.debug(`fillRegistryCredential: ${fillRegistryCredential}`);
