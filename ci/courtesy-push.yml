@@ -18,10 +18,10 @@ steps:
 - task: DownloadBuildArtifacts@0
   inputs:
     artifactName: IndividualNugetPackages
-    downloadPath: IndividualNugetPackagesDownloaded
+    downloadPath: $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded
   displayName: Download Artifact
 
-- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
+- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: Update unified deps
 
 - powershell: ./azure-pipelines-tasks/ci/set-sprint-variables.ps1
@@ -57,9 +57,4 @@ steps:
   condition: eq(variables['build.reason'], 'Schedule')
   env:
     TEAMS_WEBHOOK: $(MSTeamsUri)
-    
-- task: DownloadBuildArtifacts@0
-  inputs:
-    artifactName: IndividualNugetPackages
-    downloadPath: $(Build.SourcesDirectory)
-  displayName: Download Artifact
+  
