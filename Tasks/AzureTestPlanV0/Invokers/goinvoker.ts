@@ -1,30 +1,15 @@
 import tl = require('azure-pipelines-task-lib/task');
 import utils = require('../utils');
 import constants = require('../constants');
-import { executeGo, executeGotestsum } from '../testexecutor';
 
-//GO command like "gotestsum --junitfile TEST-Go<i>-junit.xml -- <filepath> -v -run ^<TestName>$"
-export async function executeGoTests
-    (testsToBeExecuted: string[]): Promise<number> {
+export async function executeGoTests(testsToBeExecuted: string[]): Promise<number> {
 
-    let command = constants.INSTALL;
-    let argument = constants.GOTESTSUM_PACKAGE;
-    const installGotestsum = await executeGo(command, argument);
-    console.log(installGotestsum);
+    //Go execution will be added
+    /*executable = go;
+    args = test, ./...  
+    spawn*/
 
-    let i = 0;
-    for (let tests of testsToBeExecuted) {
-        try {
-            const modifiedPath = utils.separatePath(tests);
-            const modifiedTest = utils.separateTestName(tests);
-            const command = constants.GOTESTSUM_JUNITFILE;
-            const argument = `TEST-Go${i}-junit.xml -- ${modifiedPath} -v -run ^${modifiedTest}$ `;
-            const testsToRun = await executeGotestsum(command, argument);
-            console.log(testsToRun);
-        } catch (error) {
-            console.error(`Error executing test case:`, error);
-        }
-        i++;
-    }
-    return 0;
+    console.log("Go changes1");  
+    return 1;
 }
+

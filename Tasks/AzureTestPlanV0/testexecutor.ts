@@ -3,7 +3,6 @@ import * as fs from 'fs';
 import * as semver from "semver"
 import { spawnSync } from 'child_process'
 import tl = require('azure-pipelines-task-lib/task');
-import tr = require("azure-pipelines-task-lib/toolrunner");
 
 export async function spawn(executable: string, args: string[]): Promise<SpawnResult> {
 
@@ -22,26 +21,3 @@ export interface SpawnResult {
     error?: Error
     stdout?: string
 }
-
-export async function executeGo(command, argument) {
-
-    let goPath = tl.which("go", true);
-    let go: tr.ToolRunner = tl.tool(goPath);
-
-    go.arg(command);
-    go.line(argument);
-    return await go.exec(<tr.IExecOptions>{
-        cwd: ""
-    });
-}
-export async function executeGotestsum(command, argument) {
-
-    let goPath = tl.which("gotestsum", true);
-    let go: tr.ToolRunner = tl.tool(goPath);
-
-    go.arg(command);
-    go.line(argument);
-    return await go.exec(<tr.IExecOptions>{
-        cwd: ""
-    });
-} 
