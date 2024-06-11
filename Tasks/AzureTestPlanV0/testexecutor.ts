@@ -22,26 +22,3 @@ export interface SpawnResult {
     error?: Error
     stdout?: string
 }
-
-export async function executeGo(command, argument) {
-
-    let goPath = tl.which("go", true);
-    let go: tr.ToolRunner = tl.tool(goPath);
-
-    go.arg(command);
-    go.line(argument);
-    return await go.exec(<tr.IExecOptions>{
-        cwd: ""
-    });
-}
-export async function executeGotestsum(command, argument) {
-
-    let goPath = tl.which("gotestsum", true);
-    let go: tr.ToolRunner = tl.tool(goPath);
-
-    go.arg(command);
-    go.line(argument);
-    return await go.exec(<tr.IExecOptions>{
-        cwd: ""
-    });
-} 
