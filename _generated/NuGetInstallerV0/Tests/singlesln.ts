@@ -12,8 +12,6 @@ let nmh: util.NugetMockHelper = new util.NugetMockHelper(tmr);
 nmh.setNugetVersionInputDefault();
 tmr.setInput('solution', 'single.sln');
 
-process.env['FAIL_DEPRECATED_TASK'] = "true";
-
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},
     "checkPath": {
