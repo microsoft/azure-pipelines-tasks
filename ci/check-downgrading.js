@@ -33,8 +33,8 @@ if (!argv.task) {
 // We need to escape # on Unix platforms since that turns the rest of the string into a comment
 const escapeHash = str => platform() == 'win32' ? str : str.replace(/#/gi, '\\#');
 
-const sourceBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH']);
-const targetBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_TARGETBRANCH']);
+const sourceBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH'] || 'some-pr');
+const targetBranch = escapeHash(process.env['SYSTEM_PULLREQUEST_TARGETBRANCH'] || 'some-pr');
 
 const baseProjectPath = join(__dirname, '..');
 
