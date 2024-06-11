@@ -23,7 +23,7 @@
     "@types/uuid": "^8.3.0",
     "agent-base": "6.0.2",
     "azure-devops-node-api": "11.2.0",
-    "azure-pipelines-task-lib": "^4.4.0",
+    "azure-pipelines-task-lib": "^4.11.0",
     "azure-pipelines-tasks-azure-arm-rest": "^3.226.0",
     "azure-pipelines-tasks-webdeployment-common": "^4.222.0",
     "moment": "^2.29.4",

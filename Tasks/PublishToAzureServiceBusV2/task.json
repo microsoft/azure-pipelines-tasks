@@ -2,7 +2,7 @@
     "id": "BA761F24-CBD6-48CB-92F3-FC13396405B1",
     "name": "PublishToAzureServiceBus",
     "friendlyName": "Publish To Azure Service Bus",
-    "description": "Sends a message to Azure Service Bus using a service connection (no agent is required)",
+    "description": "Sends a message to Azure Service Bus using an Azure Resource Manager service connection (no agent is required)",
     "category": "Utility",
     "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-to-azure-service-bus",
     "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=870237)",
@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 241,
-        "Patch": 0
+        "Patch": 1
     },
     "groups": [
         {
@@ -33,10 +33,10 @@
                 "azureSubscription"
             ],
             "type": "connectedService:AzureRM",
-            "label": "Azure Service Bus service connection",
+            "label": "Azure Resource Manager service connection",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select an Azure Service Bus service connection."
+            "helpMarkDown": "Select an Azure Resource Manager service connection."
         },
         {
             "name": "serviceBusQueueName",
