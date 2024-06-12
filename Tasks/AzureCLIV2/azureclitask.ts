@@ -160,10 +160,12 @@ export class azureclitask {
 
             const federatedToken = await this.getIdToken(connectedService);
             tl.setSecret(federatedToken);
-            const args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
-
-            //login using OpenID Connect federation
-            Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
+            // Login using OpenID Connect federation
+			if (visibleAzLogin) {
+				Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`), tl.loc("LoginFailed"));
+			} else {
+				Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}" --output none`), tl.loc("LoginFailed"));
+			}
 
             this.servicePrincipalId = servicePrincipalId;
             this.federatedToken = federatedToken;
