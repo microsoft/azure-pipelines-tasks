@@ -29,7 +29,6 @@ export class azureclitask {
             var scriptType: ScriptType = ScriptTypeFactory.getSriptType();
             var tool: any = await scriptType.getTool();
             var cwd: string = tl.getPathInput("cwd", true, false);
-            
             if (tl.getInput("scriptLocation", true).toLowerCase() === "scriptPath" && !tl.filePathSupplied("cwd")) {
                 cwd = path.dirname(tl.getPathInput("scriptPath", true, true));
             }
