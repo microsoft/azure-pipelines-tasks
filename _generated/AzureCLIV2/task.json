@@ -20,7 +20,7 @@
   "version": {
     "Major": 2,
     "Minor": 241,
-    "Patch": 2
+    "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -180,15 +180,6 @@
       "required": false,
       "helpMarkDown": "If this is set to true, az login command will output to the task. Setting it to false will suppress the az login output",
       "groupName": "advanced"
-    },
-    {
-      "name": "keepAzSessionActive",
-      "type": "boolean",
-      "label": "[Experimental] Keep Azure CLI session active",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "When set to true, the task will keep signing into Azure to prevent AADSTS700024 errors when access tokens are requested past IdToken expiry date. It is an EXPERIMENTAL feature that might not work in all cases. Use at your own risk.",
-      "groupName": "advanced"
     }
   ],
   "execution": {
@@ -220,13 +211,10 @@
     "GlobalCliConfigAgentVersionWarning": "For agent version < 2.115.0, only global Azure CLI configuration can be used",
     "UnacceptedScriptLocationValue": "%s is not a valid value for task input 'Script Location' (scriptLocation in YAML). Value can either be'inlineScript' or 'scriptPath'",
     "ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at\u00A0%s See\u00A0https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections.",
-    "ProxyConfig": "az tool is configured to use %s as proxy server",
-    "FailedToRefreshAzSession": "The following error occurred while trying to refresh az-cli session: %s",
-    "RefreshingAzSession": "Attempting to refresh az-cli session...",
-    "KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input."
+    "ProxyConfig": "az tool is configured to use %s as proxy server"
   },
   "_buildConfigMapping": {
-    "Default": "2.241.2",
-    "Node20_229_2": "2.241.3"
+    "Default": "2.241.0",
+    "Node20_229_2": "2.241.1"
   }
 }
