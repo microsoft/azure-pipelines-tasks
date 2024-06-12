@@ -27,10 +27,10 @@ steps:
 - task: DownloadBuildArtifacts@0
   inputs:
     artifactName: IndividualNugetPackages
-    downloadPath: IndividualNugetPackagesDownloaded
+    downloadPath: $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded
   displayName: Download Artifact
 
-- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
+- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: Update unified deps
 
 - powershell: ./azure-pipelines-tasks/ci/set-sprint-variables.ps1
@@ -45,7 +45,7 @@ steps:
     node open-hotfix-pr.js
   displayName: Create PR
   env:
-    TOKEN: $(Package.Token)
+    TOKEN: $(System.AccessToken)
     TASK_NAME: ${{ parameters.task_name }}
     REPOSITORY: AzureDevOps
     BRANCH: $(branchName)
