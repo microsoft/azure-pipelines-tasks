@@ -221,8 +221,8 @@
     "UnacceptedScriptLocationValue": "ms-resource:loc.messages.UnacceptedScriptLocationValue",
     "ExpiredServicePrincipalMessageWithLink": "ms-resource:loc.messages.ExpiredServicePrincipalMessageWithLink",
     "ProxyConfig": "ms-resource:loc.messages.ProxyConfig",
-    "FailedToRefreshAzSession": "loc.messages.FailedToRefreshAzSession",
-    "RefreshingAzSession": "loc.messages.RefreshingAzSession",
-    "KeepingAzSessionActiveUnsupportedScheme": "loc.messages.KeepingAzSessionActiveUnsupportedScheme"
+    "FailedToRefreshAzSession": "ms-resource:loc.messages.FailedToRefreshAzSession",
+    "RefreshingAzSession": "ms-resource:loc.messages.RefreshingAzSession",
+    "KeepingAzSessionActiveUnsupportedScheme": "ms-resource:loc.messages.KeepingAzSessionActiveUnsupportedScheme"
   }
 }
