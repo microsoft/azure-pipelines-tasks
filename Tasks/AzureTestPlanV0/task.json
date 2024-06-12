@@ -82,7 +82,6 @@
         "Python": "Python",
         "Go":  "Go"
       }
-     
     },
     {
       "name": "mergeTestResults",
