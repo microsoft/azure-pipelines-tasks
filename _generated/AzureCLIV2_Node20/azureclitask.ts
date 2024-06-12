@@ -53,7 +53,7 @@ export class azureclitask {
                 // This is a tactical workaround to keep the session active for the duration of the task to avoid AADSTS700024 errors.
                 // This is a temporary solution until the az cli provides a way to refresh the session.
                 if (authorizationScheme !== 'workloadidentityfederation') {
-                    const errorMessage = tl.loc('KeepingAzSessionActiveUnsupportedScheme');
+                    const errorMessage = tl.loc('KeepingAzSessionActiveUnsupportedScheme', authorizationScheme);
                     tl.error(errorMessage);
                     throw errorMessage;
                 }
