@@ -8,7 +8,7 @@ import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
 
 const FAIL_ON_STDERR: string = "FAIL_ON_STDERR";
-const AZ_SESSION_REFRESH_INTERVAL_MS: number = 80000; // 480000; // 8 minutes, 2 minutes before IdToken expiry date
+const AZ_SESSION_REFRESH_INTERVAL_MS: number = 480000; // 8 minutes, 2 minutes before IdToken expiry date
 
 export class azureclitask {
 
