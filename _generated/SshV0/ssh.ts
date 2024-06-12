@@ -168,7 +168,7 @@ async function run() {
                             args,
                             {
                                 argsSplitSymbols: '\\\\',
-                                saniziteRegExp: new RegExp(`(?<!\\\\)([^a-zA-Z0-9\\\\ _'"\\-=\\/:.])`, 'g')
+                                saniziteRegExp: new RegExp(`(?<!\\\\)([^\\w\\\\ _'"\\-=\\/:.*+%,#^\\n])`, 'g')
                             }
                         );
                         if (sanitizedArgs !== args) {
