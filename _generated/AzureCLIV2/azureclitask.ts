@@ -99,7 +99,14 @@ export class azureclitask {
             if (this.cliPasswordPath) {
                 tl.debug('Removing spn certificate file');
                 tl.rmRF(this.cliPasswordPath);
-            }
+            }const federatedToken = await this.getIdToken(connectedService);
+            tl.setSecret(federatedToken);
+            // Login using OpenID Connect federation
+			if (visibleAzLogin) {
+				Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`), tl.loc("LoginFailed"));
+			} else {
+				Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}" --output none`), tl.loc("LoginFailed"));
+			}
 
             //set the task result to either succeeded or failed based on error was thrown or not
             if(toolExecutionError === FAIL_ON_STDERR) {
@@ -160,10 +167,14 @@ export class azureclitask {
 
             const federatedToken = await this.getIdToken(connectedService);
             tl.setSecret(federatedToken);
-            const args = `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`;
-
-            //login using OpenID Connect federation
-            Utility.throwIfError(tl.execSync("az", args), tl.loc("LoginFailed"));
+            const federatedToken = await this.getIdToken(connectedService);
+            tl.setSecret(federatedToken);
+            // Login using OpenID Connect federation
+			if (visibleAzLogin) {
+				Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}"`), tl.loc("LoginFailed"));
+			} else {
+				Utility.throwIfError(tl.execSync("az", `login --service-principal -u "${servicePrincipalId}" --tenant "${tenantId}" --allow-no-subscriptions --federated-token "${federatedToken}" --output none`), tl.loc("LoginFailed"));
+			}
 
             this.servicePrincipalId = servicePrincipalId;
             this.federatedToken = federatedToken;
