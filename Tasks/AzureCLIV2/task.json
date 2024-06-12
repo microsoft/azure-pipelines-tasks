@@ -187,7 +187,7 @@
             "label": "[Experimental] Keep Azure CLI session active",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "When set to true, the task will keep signing into Azure to prevent AADSTS700024 errors when access tokens are requested past IdToken expiry date. It is an EXPERIMENTAL feature that might not work in all cases. Use at your own risk.",
+            "helpMarkDown": "When enabled, this task will continuously sign into Azure to avoid AADSTS700024 errors when requesting access tokens beyond the IdToken expiry date. Note that this feature is EXPERIMENTAL, may not work in all scenarios and you are using it without any guarantees. Valid only for service connections using the Workload Identity Federation authentication scheme.",
             "groupName": "advanced"
         }
     ],
