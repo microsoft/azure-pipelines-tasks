@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace BuildConfigGen.Debugging
 {
@@ -78,7 +79,8 @@ namespace BuildConfigGen.Debugging
             compilerOptionsObject?.Add("inlineSourceMap", true);
             compilerOptionsObject?.Add("inlineSources", true);
 
-            var outputTsConfigString = tsConfigObject?.ToJsonString();
+            JsonSerializerOptions options = new() { WriteIndented = true };
+            var outputTsConfigString = JsonSerializer.Serialize(tsConfigObject, options);
             File.WriteAllText(tsconfigPath, outputTsConfigString);
         }
     }
