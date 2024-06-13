@@ -2,7 +2,7 @@ import fs = require('fs');
 
 import { findCommonParent } from '../../../utils';
 import { assertByExitCode } from '../TestHelpers';
-const mockery = require('mockery');
+const libMocker = require('azure-pipelines-task-lib/lib-mocker');
 
 const lstatSync  = (s: string) => {
     const stat = {} as fs.Stats;
@@ -11,11 +11,11 @@ const lstatSync  = (s: string) => {
 }
 
 const mockedFs = {...fs, lstatSync};
-mockery.registerMock('fs', mockedFs);
+libMocker.registerMock('fs', mockedFs);
 
 const singleSoFilePath = "/a/b/c/symbol.so";
 const expectedParentPath = "/a/b/c";
 const actualParentPath = findCommonParent([singleSoFilePath]);
 assertByExitCode.equal(actualParentPath, expectedParentPath);
 
-mockery.deregisterMock('fs');
+libMocker.deregisterMock('fs');
