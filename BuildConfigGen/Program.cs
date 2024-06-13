@@ -64,12 +64,12 @@ namespace BuildConfigGen
         /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
         /// <param name="allTasks"></param>
         /// <param name="getTaskVersionTable"></param>
-        /// <param name="agentPath">When set to the local pipeline agent directory, this tool will produce tasks in debug mode with the corresponding visual studio launch configurations</param>
-        static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false, bool getTaskVersionTable = false, string? agentPath = null)
+        /// <param name="debugAgentDir">When set to the local pipeline agent directory, this tool will produce tasks in debug mode with the corresponding visual studio launch configurations that can be used to attach to built tasks running on this agent</param>
+        static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false, bool getTaskVersionTable = false, string? debugAgentDir = null)
         {
             try
             {
-                MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable, agentPath);
+                MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable, debugAgentDir);
             }
             catch (Exception e2)
             {
@@ -87,7 +87,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void MainInner(string? task, string? configs, int? currentSprint, bool writeUpdates, bool allTasks, bool getTaskVersionTable, string? agentPath)
+        private static void MainInner(string? task, string? configs, int? currentSprint, bool writeUpdates, bool allTasks, bool getTaskVersionTable, string? debugAgentDir)
         {
             if (allTasks)
             {
@@ -98,14 +98,6 @@ namespace BuildConfigGen
             {
                 NotNullOrThrow(task, "Task is required");
                 NotNullOrThrow(configs, "Configs is required");
-            }
-
-            if (!string.IsNullOrEmpty(agentPath))
-            {
-                if(!Directory.Exists(agentPath))
-                {
-                    throw new Exception($"The provided agent path does not exist: '${agentPath}'");
-                }
             }
 
             string currentDir = Environment.CurrentDirectory;
@@ -129,9 +121,9 @@ namespace BuildConfigGen
                 return;
             }
 
-            DebugConfigGenerator debugConfGen = string.IsNullOrEmpty(agentPath)
+            DebugConfigGenerator debugConfGen = string.IsNullOrEmpty(debugAgentDir)
                 ? new NoDebugConfigGenerator()
-                : new VsCodeLaunchConfigGenerator(gitRootPath, agentPath);
+                : new VsCodeLaunchConfigGenerator(gitRootPath, debugAgentDir);
 
             if (allTasks)
             {

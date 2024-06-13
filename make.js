@@ -53,8 +53,6 @@ var testTestsLegacyPath = path.join(__dirname, '_test', 'Tests-Legacy');
 var binPath = path.join(__dirname, 'node_modules', '.bin');
 var makeOptionsPath = path.join(__dirname, 'make-options.json');
 var gendocsPath = path.join(__dirname, '_gendocs');
-var vscodePath = path.join(__dirname, '.vscode');
-var vscodeLaunchConfigPath = path.join(vscodePath, 'launch.json');
 var packagePath = path.join(__dirname, '_package');
 var coverageTasksPath = path.join(buildPath, 'coverage');
 var baseConfigToolPath = path.join(__dirname, 'BuildConfigGen');
@@ -182,83 +180,6 @@ CLI.gendocs = function() {
 }
 
 //
-// Generate debugger configuration (currently only for node tasks)
-// ex: node make.js gendebugconfig --agent <path to agent directory>
-// ex: node make.js gendebugconfig --task <task> --agent <path to agent directory>
-//
-CLI.gendebugconfig = function() {
-    const agentPath = argv.agent;
-
-    if (agentPath) {
-        if(!test('-d', agentPath)) {
-            fail(`Agent directory ${argv.agent} does not exist.`);
-        }
-    }
-
-    console.log();
-    console.log('> generating Visual Studio Code debug configurations');
-
-    if (!pathExists(vscodePath)) {
-        mkdir(vscodePath);
-    }
-
-    const addConfig = (taskDef, nodeVersion) => {
-        const node16PatchVersion = taskDef.version.Patch;
-        const node20PatchVersion = taskDef.version.Patch + 1;
-
-        const patchVersion = nodeVersion === 20 ? node20PatchVersion : node16PatchVersion;
-
-        configsToAdd.push({
-            "name": `Debug ${taskDef.name}V${taskDef.version.Major} Node ${nodeVersion}`,
-            "type": "node",
-            "request": "attach",
-            "address": "localhost",
-            "port": 9229,
-            "autoAttachChildProcesses": true,
-            "skipFiles": ["<node_internals>/**"],
-            "sourceMaps": true,
-            "remoteRoot": `${agentPath}/_work/_tasks/${taskDef.name}_${taskDef.id.toLowerCase()}/${taskDef.version.Major}.${taskDef.version.Minor}.${patchVersion}`
-        });
-    };
-    
-    const configsToAdd = [];
-    taskList.forEach(function(taskName) {
-        var taskPath = path.join(tasksPath, taskName);
-        ensureExists(taskPath);
-
-        var taskJsonPath = path.join(taskPath, 'task.json');
-        if (test('-f', taskJsonPath)) {
-            var taskDef = fileToJson(taskJsonPath);
-            validateTask(taskDef);
-
-            addConfig(taskDef, 16);
-            addConfig(taskDef, 20);
-        }
-    });
-
-    var launchConfig = {};
-    if (pathExists(vscodeLaunchConfigPath)) {
-        launchConfig = fileToJsonRemovedComments(vscodeLaunchConfigPath);
-    } else {
-        launchConfig.version = "0.2.0";
-        launchConfig.configurations = [];
-    }
-
-    for(const config of configsToAdd) {
-        let index = launchConfig.configurations.findIndex(obj => obj.name === config.name);
-        if (index > -1) {
-            launchConfig.configurations[index] = config;
-        } else {
-            launchConfig.configurations.push(config);
-        }
-    }
-
-    fs.writeFileSync(vscodeLaunchConfigPath, JSON.stringify(launchConfig, null, 4));
-
-    banner('Generating launch configurations successful', true);
-}
-
-//
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
 //
@@ -285,7 +206,7 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     const makeOptions = fileToJson(makeOptionsPath);
 
     // Verify generated files across tasks are up-to-date
-    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint);
+    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv.agentDir);
 
     const allTasks = getTaskList(taskList);
 

@@ -39,7 +39,7 @@ namespace BuildConfigGen
 
             if (!Directory.Exists(agentPath))
             {
-                throw new ArgumentException($"Agent directory at {Path.GetFullPath(agentPath)} does not exist!");
+                throw new ArgumentException($"Agent directory used for debugging could not be found at {Path.GetFullPath(agentPath)}!");
             }
 
             AgentPath = agentPath;
