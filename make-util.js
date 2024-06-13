@@ -153,7 +153,7 @@ var getCommonPackInfo = function (modOutDir) {
 }
 exports.getCommonPackInfo = getCommonPackInfo;
 
-var buildNodeTask = function (taskPath, outDir, mode) {
+var buildNodeTask = function (taskPath, outDir) {
     var originalDir = shell.pwd().toString();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
@@ -183,25 +183,14 @@ var buildNodeTask = function (taskPath, outDir, mode) {
         cd(taskPath);
     }
 
-    var projectConfig = '';
-    if (mode) {
-        var projectConfigPath = rp(`tsconfig.${mode}.json`);
-        if (test('-f', projectConfigPath)) {
-            projectConfig = ` --project "${projectConfigPath}"`;
-        } 
-        else {
-            console.warn(`Unable to find typescript configuration for mode {mode} at "{projectConfigPath}" path. Falling back to default configuration.`);
-        }
-    }
-
     // Use the tsc version supplied by the task if it is available, otherwise use the global default.
     if (overrideTscPath) {
         var tscExec = path.join(overrideTscPath, "bin", "tsc");
-        run("node " + tscExec + ' --outDir "' + outDir + '" --rootDir "' + taskPath + '"' + projectConfig);
+        run("node " + tscExec + ' --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
         // Don't include typescript in node_modules
         rm("-rf", overrideTscPath);
     } else {
-        run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"' + projectConfig);
+        run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
     }
 
     cd(originalDir);
@@ -733,21 +722,6 @@ var fileToJson = function (file) {
     return jsonFromFile;
 }
 exports.fileToJson = fileToJson;
-
-// TODO: remove comments and then read
-// todo: how to preserve the original user's launch.json with the original comments in it?
-var fileToJsonRemovedComments = function (file) {
-    const fileString = fs.readFileSync(file).toString();
-
-    const outputString = fileString
-        .split('\n')
-        .filter(line => !line.trim().startsWith('//'))
-        .join('\n');
-
-    const jsonFromFile = JSON.parse(outputString);
-    return jsonFromFile;
-}
-exports.fileToJsonRemovedComments = fileToJsonRemovedComments;
 
 var createResjson = function (task, taskPath) {
     var resources = {};

@@ -1,28 +1,8 @@
 ﻿using System.Text.Json.Nodes;
 
-namespace BuildConfigGen
+namespace BuildConfigGen.Debugging
 {
-    internal interface DebugConfigGenerator
-    {
-        void AddForTask(string taskConfigPath);
-
-        void CommitChanges();
-    }
-
-    internal class NoDebugConfigGenerator : DebugConfigGenerator
-    {
-        public void AddForTask(string taskConfigPath)
-        {
-            // noop
-        }
-
-        public void CommitChanges()
-        {
-            // noop
-        }
-    }
-
-    internal class VsCodeLaunchConfigGenerator : DebugConfigGenerator
+    internal class VsCodeLaunchConfigGenerator : IDebugConfigGenerator
     {
         private string GitRootPath { get; }
 
@@ -72,10 +52,34 @@ namespace BuildConfigGen
             );
         }
 
-        public void CommitChanges()
+        public void WriteLaunchConfigurations()
         {
             var launchConfigString = LaunchConfig.ToJsonString();
             File.WriteAllText(LaunchConfigPath, launchConfigString);
+        }
+
+        public void WriteTypescriptConfig(string taskOutput)
+        {
+            var tsconfigPath = Path.Combine(taskOutput, "tsconfig.json");
+            if (!File.Exists(tsconfigPath))
+            {
+                return;
+            }
+
+            var tsConfigContent = File.ReadAllText(tsconfigPath);
+            var tsConfigObject = JsonNode.Parse(tsConfigContent)?.AsObject();
+
+            if (tsConfigObject == null)
+            {
+                return;
+            }
+
+            var compilerOptionsObject = tsConfigObject["compilerOptions"]?.AsObject();
+            compilerOptionsObject?.Add("inlineSourceMap", true);
+            compilerOptionsObject?.Add("inlineSources", true);
+
+            var outputTsConfigString = tsConfigObject?.ToJsonString();
+            File.WriteAllText(tsconfigPath, outputTsConfigString);
         }
     }
 }

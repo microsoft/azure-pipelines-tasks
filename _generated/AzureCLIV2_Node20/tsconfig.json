@@ -1,6 +1,1 @@
-{
-    "compilerOptions": {
-        "target": "ES6",
-        "module": "commonjs"
-    }
-}
+{"compilerOptions":{"target":"ES6","module":"commonjs","inlineSourceMap":true,"inlineSources":true}}

@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using BuildConfigGen.Debugging;
 
 namespace BuildConfigGen
 {
@@ -121,7 +122,7 @@ namespace BuildConfigGen
                 return;
             }
 
-            DebugConfigGenerator debugConfGen = string.IsNullOrEmpty(debugAgentDir)
+            IDebugConfigGenerator debugConfGen = string.IsNullOrEmpty(debugAgentDir)
                 ? new NoDebugConfigGenerator()
                 : new VsCodeLaunchConfigGenerator(gitRootPath, debugAgentDir);
 
@@ -145,7 +146,7 @@ namespace BuildConfigGen
                 }
             }
 
-            debugConfGen.CommitChanges();
+            debugConfGen.WriteLaunchConfigurations();
 
             if (notSyncronizedDependencies.Count > 0)
             {
@@ -234,7 +235,7 @@ namespace BuildConfigGen
             string configsString,
             bool writeUpdates,
             int? currentSprint,
-            DebugConfigGenerator debugConfigGen)
+            IDebugConfigGenerator debugConfigGen)
         {
             if (string.IsNullOrEmpty(task))
             {
@@ -322,7 +323,7 @@ namespace BuildConfigGen
             string task,
             int? currentSprint,
             HashSet<Config.ConfigRecord> targetConfigs,
-            DebugConfigGenerator debugConfigGen)
+            IDebugConfigGenerator debugConfigGen)
         {
             if (!currentSprint.HasValue)
             {
@@ -438,6 +439,7 @@ namespace BuildConfigGen
                     WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript);
                 }
 
+                debugConfigGen.WriteTypescriptConfig(taskOutput);
                 debugConfigGen.AddForTask(taskConfigPath);
             }
 

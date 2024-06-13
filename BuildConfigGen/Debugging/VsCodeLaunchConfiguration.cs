@@ -109,9 +109,4 @@ namespace BuildConfigGen
 
         private const string c_taskName = "name";
     }
-
-    record LaunchConfiguration
-    {
-        public required string AgentPath;
-    }
 }

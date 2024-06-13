@@ -84,9 +84,6 @@ dlldata.c
 !_generated/PublishTestResultsV1_Node20/Tests/data/rec/a.log
 !_generated/PublishTestResultsV1_Node20/Tests/data/rec/b.log
 
-# Non-production configurations never get to production
-_generated/**/tsconfig.*.json
-
 # Chutzpah Test files
 _Chutzpah*
 
