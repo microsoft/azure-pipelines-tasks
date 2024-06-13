@@ -1,109 +1,107 @@
 {
-  "id": "03DD16C3-43E0-4667-BA84-40515D27A410",
-  "name": "CondaEnvironment",
-  "friendlyName": "Conda environment",
-  "description": "This task is deprecated. Use `conda` directly in script to work with Anaconda environments.",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/conda-environment",
-  "helpMarkDown": "[Learn more about this task](https://aka.ms/pipelines-anaconda-guide)<br>[Task documentation](https://go.microsoft.com/fwlink/?linkid=873466)",
-  "category": "Package",
-  "runsOn": [
-    "Agent",
-    "DeploymentGroup"
-  ],
-  "author": "Microsoft Corporation",
-  "version": {
-    "Major": 1,
-    "Minor": 231,
-    "Patch": 2
-  },
-  "deprecated": true,
-  "removalDate": "2024-04-22",
-  "demands": [],
-  "instanceNameFormat": "Conda environment $(environmentName)",
-  "inputs": [
-    {
-      "name": "createCustomEnvironment",
-      "type": "boolean",
-      "label": "Create a custom environment",
-      "required": false,
-      "defaultValue": false,
-      "helpMarkDown": "Create or reactivate a Conda environment instead of using the `base` environment (recommended for self-hosted agents)."
+    "id": "03DD16C3-43E0-4667-BA84-40515D27A410",
+    "name": "CondaEnvironment",
+    "friendlyName": "Conda environment",
+    "description": "This task is deprecated. Use `conda` directly in script to work with Anaconda environments.",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/conda-environment",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/pipelines-anaconda-guide)<br>[Task documentation](https://go.microsoft.com/fwlink/?linkid=873466)",
+    "category": "Package",
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 235,
+        "Patch": 4
     },
-    {
-      "name": "environmentName",
-      "type": "string",
-      "label": "Environment name",
-      "required": true,
-      "defaultValue": "",
-      "visibleRule": "createCustomEnvironment == true",
-      "helpMarkDown": "Name of the Conda environment to create and activate, or reactivate if it already exists."
+    "deprecated": true,
+    "removalDate": "2024-01-31",
+    "deprecationMessage": "The CondaEnvironment@1 (Conda environment) task has been deprecated since February 13, 2019 and will soon be retired. Use the Conda CLI ('conda') directly from a bash/pwsh/script task.",
+    "demands": [],
+    "instanceNameFormat": "Conda environment $(environmentName)",
+    "inputs": [
+        {
+            "name": "createCustomEnvironment",
+            "type": "boolean",
+            "label": "Create a custom environment",
+            "required": false,
+            "defaultValue": false,
+            "helpMarkDown": "Create or reactivate a Conda environment instead of using the `base` environment (recommended for self-hosted agents)."
+        },
+        {
+            "name": "environmentName",
+            "type": "string",
+            "label": "Environment name",
+            "required": true,
+            "defaultValue": "",
+            "visibleRule": "createCustomEnvironment == true",
+            "helpMarkDown": "Name of the Conda environment to create and activate, or reactivate if it already exists."
+        },
+        {
+            "name": "packageSpecs",
+            "type": "string",
+            "label": "Package specs",
+            "required": false,
+            "defaultValue": "python=3",
+            "helpMarkDown": "Space-delimited list of packages to install in the environment."
+        },
+        {
+            "name": "updateConda",
+            "type": "boolean",
+            "label": "Update to the latest Conda",
+            "required": false,
+            "defaultValue": true,
+            "helpMarkDown": "Update Conda to the latest version. This applies to the Conda installation found in `PATH` or at the path specified by the `CONDA` environment variable."
+        },
+        {
+            "name": "installOptions",
+            "type": "string",
+            "label": "Other options for `conda install`",
+            "required": false,
+            "defaultValue": "",
+            "visibleRule": "createCustomEnvironment == false",
+            "helpMarkDown": "Space-delimited list of additional arguments to pass to the `conda install` command."
+        },
+        {
+            "name": "createOptions",
+            "type": "string",
+            "label": "Other options for `conda create`",
+            "required": false,
+            "defaultValue": "",
+            "visibleRule": "createCustomEnvironment == true",
+            "helpMarkDown": "Space-delimited list of additional arguments to pass to the `conda create` command."
+        },
+        {
+            "name": "cleanEnvironment",
+            "type": "boolean",
+            "label": "Clean the environment",
+            "required": false,
+            "defaultValue": false,
+            "visibleRule": "createCustomEnvironment == true",
+            "helpMarkDown": "Delete the environment and recreate it if it already exists. If not selected, the task will reactivate an existing environment."
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "main.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
+            "target": "main.js",
+            "argumentFormat": ""
+        }
     },
-    {
-      "name": "packageSpecs",
-      "type": "string",
-      "label": "Package specs",
-      "required": false,
-      "defaultValue": "python=3",
-      "helpMarkDown": "Space-delimited list of packages to install in the environment."
-    },
-    {
-      "name": "updateConda",
-      "type": "boolean",
-      "label": "Update to the latest Conda",
-      "required": false,
-      "defaultValue": true,
-      "helpMarkDown": "Update Conda to the latest version. This applies to the Conda installation found in `PATH` or at the path specified by the `CONDA` environment variable."
-    },
-    {
-      "name": "installOptions",
-      "type": "string",
-      "label": "Other options for `conda install`",
-      "required": false,
-      "defaultValue": "",
-      "visibleRule": "createCustomEnvironment == false",
-      "helpMarkDown": "Space-delimited list of additional arguments to pass to the `conda install` command."
-    },
-    {
-      "name": "createOptions",
-      "type": "string",
-      "label": "Other options for `conda create`",
-      "required": false,
-      "defaultValue": "",
-      "visibleRule": "createCustomEnvironment == true",
-      "helpMarkDown": "Space-delimited list of additional arguments to pass to the `conda create` command."
-    },
-    {
-      "name": "cleanEnvironment",
-      "type": "boolean",
-      "label": "Clean the environment",
-      "required": false,
-      "defaultValue": false,
-      "visibleRule": "createCustomEnvironment == true",
-      "helpMarkDown": "Delete the environment and recreate it if it already exists. If not selected, the task will reactivate an existing environment."
+    "messages": {
+        "CleanEnvironment": "Found existing environment %s and the task's \"Clean environment\" parameter is set. Deleting ...",
+        "CreateFailed": "Failed to create Conda environment %s. %s",
+        "CondaNotFound": "The `conda` executable was not found on the system. Ask your administrator to install Miniconda or Anaconda. Then add the `conda` executable to `PATH` or set the `CONDA` environment variable to the root of the installation.",
+        "InstallFailed": "Failed to install packages. %s",
+        "ReactivateExistingEnvironment": "Found existing environment %s and the task's \"Clean environment\" parameter is not set. Reactivating ...",
+        "ParameterRequired": "The `%s` parameter is required",
+        "PlatformNotRecognized": "Platform not recognized",
+        "PrependPath": "Prepending PATH environment variable with directory: %s",
+        "DeprecatedTask": "The CondaEnvironment@1 (Conda environment) task has been deprecated since February 13, 2019 and will soon be retired. Use the Conda CLI ('conda') directly from a bash/pwsh/script task. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
     }
-  ],
-  "execution": {
-    "Node10": {
-      "target": "main.js",
-      "argumentFormat": ""
-    },
-    "Node16": {
-      "target": "main.js",
-      "argumentFormat": ""
-    }
-  },
-  "messages": {
-    "CleanEnvironment": "Found existing environment %s and the task's \"Clean environment\" parameter is set. Deleting ...",
-    "CreateFailed": "Failed to create Conda environment %s. %s",
-    "CondaNotFound": "The `conda` executable was not found on the system. Ask your administrator to install Miniconda or Anaconda. Then add the `conda` executable to `PATH` or set the `CONDA` environment variable to the root of the installation.",
-    "InstallFailed": "Failed to install packages. %s",
-    "ReactivateExistingEnvironment": "Found existing environment %s and the task's \"Clean environment\" parameter is not set. Reactivating ...",
-    "ParameterRequired": "The `%s` parameter is required",
-    "PlatformNotRecognized": "Platform not recognized",
-    "PrependPath": "Prepending PATH environment variable with directory: %s"
-  },
-  "_buildConfigMapping": {
-    "Default": "1.222.1",
-    "Node16-219": "1.222.0"
-  }
 }

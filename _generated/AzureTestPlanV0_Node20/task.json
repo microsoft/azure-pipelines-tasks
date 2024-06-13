@@ -1,0 +1,187 @@
+{
+  "id": "105e2492-460a-4da6-56d5-2fa9ab3f0174",
+  "name": "AzureTestPlan",
+  "friendlyName": "Azure Test Plan",
+  "description": "Run manual and automated tests in test plan in Java and python language",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/publish-test-results",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613742)",
+  "category": "Test",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 241,
+    "Patch": 3
+  },
+  "preview": true,
+  "demands": [],
+  "minimumAgentVersion": "2.144.0",
+  "inputs": [
+    {
+      "name": "testSelector",
+      "type": "pickList",
+      "label": "Test cases to be executed",
+      "required": true,
+      "helpMarkDown": "<ul><li><b>Manual tests: </b>Use this option to trigger manual tests from your test plan.</li><li><b>Automated tests: </b>Use this option to run tests from your test plan that have automated test method associated with it.</li>",
+      "options": {
+        "manualTests": "Manual tests",
+        "automatedTests": "Automated tests"
+      },
+      "properties": {
+        "MultiSelectFlatList": "True"
+      }
+    },
+    {
+      "name": "testPlan",
+      "type": "pickList",
+      "label": "Test plan",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Select a test plan containing test suites with test cases.",
+      "properties": {
+        "DisableManageLink": "True",
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "testSuite",
+      "type": "pickList",
+      "label": "Test suite",
+      "defaultValue": "",
+      "helpMarkDown": "Select one or more test suites containing test cases.",
+      "required": true,
+      "properties": {
+        "MultiSelect": "True",
+        "DisableManageLink": "True",
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "testConfiguration",
+      "type": "pickList",
+      "label": "Test configuration",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Select Test Configuration.",
+      "properties": {
+        "DisableManageLink": "True",
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "testLanguageInput",
+      "type": "pickList",
+      "label": "Select Test framework language",
+      "helpMarkDown": "Test Framework Language of automated tests in test plan",
+      "options": {
+        "Java-Maven": "Java-Maven",
+        "Java-Gradle": "Java-Gradle",
+        "Python": "Python",
+        "Go": "Go"
+      }
+    },
+    {
+      "name": "mergeTestResults",
+      "type": "boolean",
+      "label": "Merge test results",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "A test run is created for each results file. Check this option to merge results into a single test run. To optimize for better performance, results will be merged into a single run if there are more than 100 result files, irrespective of this option."
+    },
+    {
+      "name": "publishRunAttachments",
+      "type": "boolean",
+      "label": "Upload test results files",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Upload logs and other files containing diagnostic information collected when the tests were run.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "failTaskOnFailedTests",
+      "type": "boolean",
+      "label": "Fail if there are test failures",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Fail the task if there are any test failures. Check this option to fail the task if test failures are detected in the result files."
+    },
+    {
+      "name": "failTaskOnFailureToPublishResults",
+      "type": "boolean",
+      "label": "Fail if there is failure in publishing test results",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "Fail if there is failure in publishing test results. Check this option to fail the task if publishing test results is failed partially."
+    },
+    {
+      "name": "failTaskOnMissingResultsFile",
+      "type": "boolean",
+      "label": "Fail if no result files are found",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "Fail the task if no result files are found."
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "testPlan",
+      "endpointId": "tfs:teamfoundation",
+      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans?filterActivePlans=true&api-version=3.0-preview.2&$skip={{skip}}&$top=1000",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{id}}} - {{{name}}}\" }",
+      "callbackContextTemplate": "{\"skip\": \"{{add skip 1000}}\"}",
+      "callbackRequiredTemplate": "{{isEqualNumber result.count 1000}}",
+      "initialContextTemplate": "{\"skip\": \"0\"}"
+    },
+    {
+      "target": "testConfiguration",
+      "endpointId": "tfs:teamfoundation",
+      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/configurations?api-version=3.0-preview.1",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{id}}} - {{{name}}}\" }"
+    },
+    {
+      "target": "testSuite",
+      "endpointId": "tfs:teamfoundation",
+      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans/{{testPlan}}/suites?$asTreeView=true&api-version=3.0-preview.2",
+      "parameters": {
+        "testPlan": "$(testPlan)"
+      },
+      "resultSelector": "jsonpath:$.value[*]"
+    }
+  ],
+  "instanceNameFormat": "Azure Test Plan - $(testSelector)",
+  "execution": {
+    "Node10": {
+      "target": "runTestPlan.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "runTestPlan.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "runTestPlan.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "testPlanInput": "Test plan Id : %s",
+    "testplanConfigInput": "Test plan configuration Id : %s",
+    "testSuiteSelected": "Test suite Id selected: %s",
+    "automatedTestTriggered": "Triggering execution of Automated tests from test plan",
+    "ErrorFailTaskOnExecutingTests": "Error occured while executing test command",
+    "ErrorFailTaskOnAPIFailure": "Error occured while fetching automated tests from test plan inputs",
+    "ErrorFailTaskOnCreateRunFailure": "Error occured while creating manual test run from test plan inputs",
+    "chmodGradlew": "Used 'chmod' method for gradlew file to make it executable.",
+    "NoMatchingFilesFound": "No test result files matching '%s' were found.",
+    "MultipleMatchingGradlewFound": "Multiple gradlew files found. Selecting the first matched instance"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.241.2",
+    "Node20-225": "0.241.3"
+  }
+}

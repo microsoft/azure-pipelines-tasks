@@ -1,19 +1,25 @@
 # This YAML is intended for building ALL tasks and publish them as an artifact 
 # to be used later for Tasks Deployment train
 parameters:
-  - name: deploy_all_tasks
-    type: boolean
+- name: deploy_all_tasks
+  type: boolean
 
 steps:
 # Clean
 - checkout: self
   clean: true
 
-# Use node 10, npm 6
-- task: NodeTool@0
-  displayName: Use node 10
+# Use .NET SDK 8
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK 8.x'
   inputs:
-    versionSpec: 10.24.1
+    version: 8.x
+
+# Use node 20, npm 9
+- task: NodeTool@0
+  displayName: Use node 20
+  inputs:
+    versionSpec: 20.11.0
 
 # npm install
 - script: npm install
@@ -43,18 +49,10 @@ steps:
   displayName: Remove _build folder to reduce space
 
 # Sign all task zips as nuget packages
-- template: sign-all-tasks.yml
+- template: /ci/sign-all-tasks.yml@self
   parameters:
     layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
 # Stage all the tasks into a single zip for upload
 - script: node ./ci/stage-package.js true
   displayName: Stage all the tasks into a single zip for upload
-
-# Publish artifact
-- task: PublishBuildArtifacts@1
-  displayName: Publish package artifact
-  inputs:
-    pathToPublish: _package/tasks.zip
-    artifactName: allTasks
-    publishLocation: container

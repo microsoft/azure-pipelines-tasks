@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 231,
-    "Patch": 1
+    "Minor": 238,
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -80,10 +80,12 @@
     "CheckedInCredentialsOverriden": "ms-resource:loc.messages.CheckedInCredentialsOverriden",
     "NoIndexJsonFile": "ms-resource:loc.messages.NoIndexJsonFile",
     "RevertedChangesToNpmrc": "ms-resource:loc.messages.RevertedChangesToNpmrc",
-    "NpmrcDoesNotExist": "ms-resource:loc.messages.NpmrcDoesNotExist"
+    "NpmrcDoesNotExist": "ms-resource:loc.messages.NpmrcDoesNotExist",
+    "SuccessfulPush": "ms-resource:loc.messages.SuccessfulPush",
+    "SuccessfulAppend": "ms-resource:loc.messages.SuccessfulAppend"
   },
   "_buildConfigMapping": {
-    "Default": "0.231.0",
-    "Node20_229_1": "0.231.1"
+    "Default": "0.238.2",
+    "Node20_229_1": "0.238.3"
   }
 }

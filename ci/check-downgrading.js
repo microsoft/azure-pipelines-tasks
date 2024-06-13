@@ -1,4 +1,4 @@
-const { join, posix, sep } = require('path');
+const { join, posix, sep, basename } = require('path');
 const {
   readFileSync,
   existsSync
@@ -6,11 +6,14 @@ const {
 const { mkdir, rm } = require('shelljs');
 const { platform } = require('os');
 const { run, resolveTaskList, logToPipeline } = require('./ci-util');
-const { eq, inc, parse, lte, neq } = require('semver');
+const { eq, inc, parse, lte, neq, gt } = require('semver');
 
 const taskVersionBumpingDocUrl = "https://aka.ms/azp-tasks-version-bumping";
 
 const packageEndpoint = process.env['PACKAGE_VERSIONS_ENDPOINT'];
+
+// An example:
+// PACKAGE_TOKEN={token} PACKAGE_VERSIONS_ENDPOINT={package_versions_endpoint} SYSTEM_PULLREQUEST_SOURCEBRANCH=refs/head/{local_branch_name} SYSTEM_PULLREQUEST_TARGETBRANCH={target_branch_eg_master} node ./ci/check-downgrading.js --task "@({tasks_names})" --sprint {current_sprint_number}
 
 if (!packageEndpoint) {
   logToPipeline('error', 'Failed to get info from package endpoint because no endpoint was specified. Try setting the PACKAGE_VERSIONS_ENDPOINT environment variable.')
@@ -45,6 +48,84 @@ if (existsSync(join(tempMasterTasksPath, 'Tasks'))) {
   rm('-rf', join(tempMasterTasksPath, 'Tasks'));
 }
 
+function compareVersionMapFilesToDefaultBranch() {
+  const messages = [];
+  const defaultBranch = 'origin/master';
+
+  const modifiedVersionMapFiles = getModifiedVersionMapFiles(defaultBranch, sourceBranch);
+  if (modifiedVersionMapFiles.length == 0) return messages;
+
+  modifiedVersionMapFiles.forEach(filePath => {
+    //get task name from a string like _generated/TaskNameVN.versionmap.txt
+    const taskName = basename(filePath, '.versionmap.txt');
+
+    try {
+      defaultBranchVersionMap = parseVersionMap(getVersionMapContent(filePath, defaultBranch));
+      sourceBranchVersionMap = parseVersionMap(getVersionMapContent(filePath, sourceBranch));
+
+      checkVersionMapUpdate(defaultBranchVersionMap, sourceBranchVersionMap);
+    } catch (error) {
+      messages.push({
+        type: 'error',
+        payload: `Task Name: ${taskName}. Please check ${filePath}. ${error}`
+      });
+    }
+  });
+
+  return messages;
+}
+
+function findMaxConfigVersion(versionMap) {
+  let maxVersion = '0.0.0';
+  for (const config in versionMap) {
+    if (gt(versionMap[config], maxVersion)) {
+      maxVersion = versionMap[config];
+    }
+  }
+  return maxVersion;
+}
+
+function checkVersionMapUpdate(defaultBranchConfig, sourceBranchConfig) {
+  const defaultBranchMaxVersion = findMaxConfigVersion(defaultBranchConfig);
+
+  for (const config in sourceBranchConfig) {
+    // Check that new versions are greater than previous max version
+    if (lte(sourceBranchConfig[config], defaultBranchMaxVersion)) {
+      throw new Error(
+        `New versions of the task should be greater than the previous max version. ${config}|${sourceBranchConfig[config]} should be greater than ${defaultBranchMaxVersion}`
+      );
+    }
+  }
+}
+
+function getModifiedVersionMapFiles(defaultBranch, sourceBranch) {
+  const versionMapPathRegex = /_generated\/.*versionmap.txt$/;
+  //git diff A...B is equivalent to git diff $(git merge-base A B) B
+  const versionMapFiles = run(`git --no-pager diff --name-only --diff-filter=M ${defaultBranch}...${sourceBranch}`)
+    .split('\n')
+    .filter(line => line.match(versionMapPathRegex));
+  return versionMapFiles;
+}
+
+function getVersionMapContent(versionMapFilePath, branchName) {
+  return run(`git show ${branchName}:${versionMapFilePath}`);
+}
+
+function parseVersionMap(fileContent) {
+  const simpleVersionMapRegex = /(?<configName>.+)\|(?<version>\d.\d{1,3}.\d+)$/;
+  const versionMap = {};
+  fileContent.split('\n').forEach(line => {
+    if (simpleVersionMapRegex.test(line)) {
+      const { configName, version } = simpleVersionMapRegex.exec(line).groups;
+      versionMap[configName] = version;
+    } else {
+      throw new Error(`Unable to parse version map ${line}`);
+    }
+  });
+
+  return versionMap;
+}
+
 function checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyWeek) {
   const messages = [];
 
@@ -66,7 +147,7 @@ function checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyW
   return messages;
 }
 
-function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExist, isCourtesyWeek) {
+function compareLocalToMaster(localTasks, masterTasks, sprint) {
   const messages = [];
 
   for (const localTask of localTasks) {
@@ -94,6 +175,22 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
       });
       continue;
     }
+  }
+
+  return messages;
+}
+
+function checkLocalVersions(localTasks, sprint, isReleaseTagExist, isCourtesyWeek) {
+  const messages = [];
+
+  for (const localTask of localTasks) {
+    if (localTask.version.minor < sprint) {
+      messages.push({
+        type: 'error',
+        payload: `${localTask.name} have to be upgraded (task.json, task.loc.json) from v${localTask.version.minor} to v${sprint} at least since local minor version is less than the sprint version(${taskVersionBumpingDocUrl})`
+      });
+      continue;
+    }
 
     if (localTask.version.minor === sprint && isCourtesyWeek) {
       messages.push({
@@ -115,7 +212,7 @@ function compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExi
   return messages;
 }
 
-function getTasksVersions(tasks, basepath) {
+function readVersionsFromTaskJsons(tasks, basepath) {
   return tasks.map(x => {
     const taskJSONPath = join(basepath, 'Tasks' , x, 'task.json');
 
@@ -147,7 +244,7 @@ async function clientWrapper(url) {
   }
 }
 
-async function getFeedTasksVersions() {
+async function getTaskVersionsFromFeed() {
   const { result, statusCode } = await clientWrapper(packageEndpoint);
 
   if (statusCode !== 200) {
@@ -165,7 +262,7 @@ async function getFeedTasksVersions() {
     }));
 }
 
-function compareLocalWithFeed(localTasks, feedTasks, sprint) {
+function compareLocalToFeed(localTasks, feedTasks, sprint) {
   const messages = [];
 
   for (const localTask of localTasks) {
@@ -221,27 +318,42 @@ function compareLocalTaskLoc(localTasks) {
   return messages;
 }
 
-function getChangedTaskJsonFromMaster(names) {
+function loadTaskJsonsFromMaster(names) {
   names.forEach(x => {
     mkdir('-p', join(tempMasterTasksPath, 'Tasks', x));
     run(`git show origin/master:Tasks/${x}/task.json > ${tempMasterTasksPath.split(sep).join(posix.sep)}/Tasks/${x}/task.json`);
   });
 }
 
+function doesTaskExistInMasterBranch(name) {
+  try {
+    // If task.json doesn't exist in the main branch it means that it's a new task
+    run(`git cat-file -e origin/master:Tasks/${name}/task.json`, true);
+  } catch (error) {
+    return false;
+  }
+
+  return true;
+}
+
 async function main({ task, sprint, week }) {
-  const changedTasksNames = resolveTaskList(task);
-  const localTasks = getTasksVersions(changedTasksNames, join(__dirname, '..'));
-  getChangedTaskJsonFromMaster(changedTasksNames);
-  const masterTasks = getTasksVersions(changedTasksNames, tempMasterTasksPath);
-  const feedTasks = await getFeedTasksVersions();
+  const taskList = resolveTaskList(task);
+
+  const localTasks = readVersionsFromTaskJsons(taskList, join(__dirname, '..'));
+  const masterTaskList = taskList.filter(x => doesTaskExistInMasterBranch(x));
+  loadTaskJsonsFromMaster(masterTaskList);
+  const masterTasks = readVersionsFromTaskJsons(masterTaskList, tempMasterTasksPath);
+  const feedTaskVersions = await getTaskVersionsFromFeed();
   const isReleaseTagExist = run(`git tag -l v${sprint}`).length !== 0;
   const isCourtesyWeek = week === 3;
 
   const messages = [
     ...checkMasterVersions(masterTasks, sprint, isReleaseTagExist, isCourtesyWeek),
-    ...compareLocalWithMaster(localTasks, masterTasks, sprint, isReleaseTagExist, isCourtesyWeek),
-    ...compareLocalWithFeed(localTasks, feedTasks, sprint),
-    ...compareLocalTaskLoc(localTasks)
+    ...compareLocalToMaster(localTasks, masterTasks, sprint),
+    ...checkLocalVersions(localTasks, sprint, isReleaseTagExist, isCourtesyWeek),
+    ...compareLocalToFeed(localTasks, feedTaskVersions, sprint),
+    ...compareLocalTaskLoc(localTasks),
+    ...compareVersionMapFilesToDefaultBranch(),
   ];
 
   if (messages.length > 0) {
@@ -260,4 +372,8 @@ async function main({ task, sprint, week }) {
   }
 }
 
-main(argv);
+main(argv)
+  .catch(error => {
+    console.error(error);
+    process.exit(1);
+  });

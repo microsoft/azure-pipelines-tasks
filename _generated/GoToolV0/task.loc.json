@@ -1,0 +1,73 @@
+{
+  "id": "334727F4-9495-4F9D-A391-FC621D671474",
+  "name": "GoTool",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/go-tool",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 238,
+    "Patch": 0
+  },
+  "satisfies": [
+    "GO"
+  ],
+  "demands": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "version",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.version",
+      "defaultValue": "1.10",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.version"
+    },
+    {
+      "name": "goPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.goPath",
+      "helpMarkDown": "ms-resource:loc.input.help.goPath",
+      "groupName": "advanced"
+    },
+    {
+      "name": "goBin",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.goBin",
+      "helpMarkDown": "ms-resource:loc.input.help.goBin",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "gotool.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "gotool.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "FailedToDownload": "ms-resource:loc.messages.FailedToDownload",
+    "TempDirNotSet": "ms-resource:loc.messages.TempDirNotSet"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.238.0",
+    "Node20_229_3": "0.238.1"
+  }
+}

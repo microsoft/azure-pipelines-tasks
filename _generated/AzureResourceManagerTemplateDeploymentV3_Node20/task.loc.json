@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 231,
-    "Patch": 2
+    "Minor": 240,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -263,12 +263,12 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
-      "target": "main.js"
-    },
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "main.js"
     },
     "Node20_1": {
       "target": "main.js",
@@ -335,10 +335,12 @@
     "LoginFailed": "ms-resource:loc.messages.LoginFailed",
     "MSILoginFailed": "ms-resource:loc.messages.MSILoginFailed",
     "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
-    "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription"
+    "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription",
+    "BicepParamBuildFailed": "ms-resource:loc.messages.BicepParamBuildFailed",
+    "IncompatibleAzureCLIVersionBicepParam": "ms-resource:loc.messages.IncompatibleAzureCLIVersionBicepParam"
   },
   "_buildConfigMapping": {
-    "Default": "3.231.0",
-    "Node20_229_2": "3.231.2"
+    "Default": "3.240.0",
+    "Node20_229_2": "3.240.1"
   }
 }

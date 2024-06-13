@@ -9,8 +9,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 231,
-        "Patch": 0
+        "Minor": 238,
+        "Patch": 2
     },
     "runsOn": [
         "Agent",
@@ -204,6 +204,7 @@
         "OverridingProjectNpmrc": "Overriding project .npmrc: %s",
         "RestoringProjectNpmrc": "Restoring project .npmrc",
         "WorkingDirectoryNotDirectory": "Please change your working directory to a valid directory",
-        "NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region."
+        "NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region.",
+        "UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
     }
 }

@@ -10,7 +10,7 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "version": {
     "Major": 0,
-    "Minor": 231,
+    "Minor": 238,
     "Patch": 0
   },
   "runsOn": [
@@ -19,7 +19,8 @@
   ],
   "minimumAgentVersion": "2.144.0",
   "deprecated": true,
-  "removalDate": "2024-04-22",
+  "removalDate": "2024-01-31",
+  "deprecationMessage": "The NuGet@0 (NuGet command) task has been deprecated and will soon be retired. Use the NuGetCommand@2 task instead.",
   "groups": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
@@ -81,7 +82,7 @@
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
   },
   "_buildConfigMapping": {
-    "Default": "0.231.0",
-    "Node20_229_1": "0.231.1"
+    "Default": "0.238.0",
+    "Node20_229_1": "0.238.1"
   }
 }

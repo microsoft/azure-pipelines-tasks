@@ -14,11 +14,17 @@ steps:
 - powershell: ./ci/start-collect-diagnostics.ps1
   displayName: Start collect diagnostics
 
-# Use node 10, npm 6
-- task: NodeTool@0
-  displayName: Use node 10
+# Use .NET SDK 8
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK 8.x'
   inputs:
-    versionSpec: 10.24.1
+    version: 8.x
+
+# Use node 20, npm 9
+- task: NodeTool@0
+  displayName: Use node 20
+  inputs:
+    versionSpec: 20.11.0
 
 # npm install
 - script: npm install
@@ -30,7 +36,7 @@ steps:
     npm install
   displayName: npm install min agent demands
 
-- script: node ./ci/verifyMinAgentDemands/index.js
+- script: node ./ci/verifyMinAgentDemands/index.js --pat $(GitHubPAT)
   displayName: Verify min agent demands
 
 - powershell: |
@@ -77,7 +83,7 @@ steps:
   displayName: Stage tasks individually into the package directory
 
 # Sign task zip as nuget package
-- template: sign-all-tasks.yml
+- template: /ci/sign-all-tasks.yml@self
   parameters:
     layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
@@ -96,13 +102,9 @@ steps:
     Remove-Item -Path .\layout-version.txt
   displayName: Add layout-version.txt to hotfix.zip
 
-  # Publish hotfix artifact
-- task: PublishBuildArtifacts@1
-  displayName: Publish hotfix artifact
-  inputs:
-    pathToPublish: _package/hotfix-layout
-    artifactName: hotfix
-    publishLocation: container
+- powershell: |
+    mv _package/hotfix-layout hotfix-layout
+  displayName: Move _package/hotfix-layout to hotfix-layout
 
 - ${{ if parameters.push }}:
 
@@ -125,23 +127,9 @@ steps:
   - script: npm run package
     displayName: npm run package
 
-  # Publish per task NuGet package artifact
-  - task: PublishBuildArtifacts@1
-    displayName: Publish per task NuGet package artifact
-    inputs:
-      pathToPublish: _package/nuget-packages
-      artifactName: IndividualNuGetPackages
-      publishLocation: container
-
-  # Authenticate 
-  - task: NuGetAuthenticate@0
-    displayName: Authenticate with nuget
-
-  # Push to feed
-  - script: |
-      cd $(Build.SourcesDirectory)\_package\nuget-packages
-      push.cmd
-    displayName: Push Nuget package
+  - powershell: |
+      mv _package/nuget-packages nuget-packages
+    displayName: Move _package/nuget-packages to nuget-packages
 
 # Stop collect diagnostics
 - powershell: ./ci/stop-collect-diagnostics.ps1

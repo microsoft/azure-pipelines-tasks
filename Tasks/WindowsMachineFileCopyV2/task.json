@@ -1,117 +1,117 @@
 {
-    "id": "731004D4-1D66-4F70-8C05-638018B22210",
-    "name": "WindowsMachineFileCopy",
-    "friendlyName": "Windows machine file copy",
-    "description": "Copy files to remote Windows machines",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/windows-machine-file-copy",
-    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=627415)",
-    "category": "Deploy",
-    "visibility": [
-        "Build",
-        "Release"
-    ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 2,
-        "Minor": 231,
-        "Patch": 1
-    },
-    "releaseNotes": "What's new in Version 2.0: <br/>&nbsp;&nbsp;Proxy support is being added. <br/>&nbsp;&nbsp; Removed support of legacy DTL machines.",
-    "minimumAgentVersion": "1.104.0",
-    "groups": [
-        {
-            "name": "advanced",
-            "displayName": "Advanced Options",
-            "isExpanded": false
-        }
-    ],
-    "inputs": [
-        {
-            "name": "SourcePath",
-            "type": "filePath",
-            "label": "Source",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Absolute path of the source folder or file on the local machine, or a UNC Share like c:\\fabrikamfiber or \\\\\\\\fabrikamshare\\fabrikamfiber."
-        },
-        {
-            "name": "MachineNames",
-            "type": "multiLine",
-            "label": "Machines",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs. <br>Eg: dbserver.fabrikam.com,192.168.12.34 <br>Or provide output variable of other tasks. Eg: $(variableName)"
-        },
-        {
-            "name": "AdminUserName",
-            "type": "string",
-            "label": "Admin Login",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Administrator login for the target machines."
-        },
-        {
-            "name": "AdminPassword",
-            "type": "string",
-            "label": "Password",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Password for administrator login for the target machines. <br>It can accept a variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark the variable as 'secret' to secure it. "
-        },
-        {
-            "name": "TargetPath",
-            "type": "string",
-            "label": "Destination Folder",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Local Path on the target machines or an accessible UNC path for copying the files from the source like d:\\fabrikam or \\\\\\\\fabrikam\\Web."
-        },
-        {
-            "name": "CleanTargetBeforeCopy",
-            "type": "boolean",
-            "label": "Clean Target",
-            "defaultValue": "false",
-            "required": false,
-            "groupName": "advanced",
-            "helpMarkDown": "Selecting it will clean the destination folder before copying the files."
-        },
-        {
-            "name": "CopyFilesInParallel",
-            "type": "boolean",
-            "label": "Copy Files in Parallel",
-            "defaultValue": "true",
-            "required": false,
-            "groupName": "advanced",
-            "helpMarkDown": "Selecting it will copy files in parallel to the machines."
-        },
-        {
-            "name": "AdditionalArguments",
-            "type": "multiLine",
-            "label": "Additional Arguments",
-            "required": false,
-            "groupName": "advanced",
-            "defaultValue": "",
-            "helpMarkDown": "Additional robocopy arguments that will be applied when copying files like, /min:33553332 /l."
-        }
-    ],
-    "instanceNameFormat": "Copy files from $(SourcePath)",
-    "execution": {
-        "PowerShell3": {
-            "target": "WindowsMachineFileCopy.ps1"
-        }
-    },
-    "messages": {
-        "WFC_ParameterCannotBeNullorEmpty": "Parameter '{0}' cannot be null or empty.",
-        "WFC_FailedToConnectToPathWithUser": "Failed to connect to the path {0} with the user {1} for copying.",
-        "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails": "Copying failed. Consult the robocopy logs for more details.",
-        "WFC_CopyingRecurivelyFrom0to1MachineSucceed": "Copying recursively from {0} to {1} on machine {2} succeeded.",
-        "WFC_SourcePathDoesNotExist": "Source path '{0}' does not exist.",
-        "WFC_RemoteDestinationPathCannotContainEnvironmentVariables": "Remote destination path '{0}' cannot contain environment variables.",
-        "WFC_CopyStartedFor0": "Copy started for - {0}",
-        "WFC_NoMachineExistsUnderEnvironment": "No machine exists under environment: '{0}' for deployment",
-        "WFC_NoMachineExistsUnderEnvironment0ForDeployment": "No machine exists under environment: '{0}' for deployment",
-        "WFC_CopyingFailedForResource": "Copying failed for resource: {0}",
-        "WFC_FailedToCreatePSDrive": "Failed to Create PSDrive with Destination: '{0}', ErrorMessage: '{1}'",
-        "WFC_RobocopyError": "Robocopy Error. Computer: '{0}'. ErrorMessage: '{1}'"
+  "id": "731004D4-1D66-4F70-8C05-638018B22210",
+  "name": "WindowsMachineFileCopy",
+  "friendlyName": "Windows machine file copy",
+  "description": "Copy files to remote Windows machines",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/windows-machine-file-copy",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 239,
+    "Patch": 0
+  },
+  "releaseNotes": "What's new in Version 2.0: <br/>&nbsp;&nbsp;Proxy support is being added. <br/>&nbsp;&nbsp; Removed support of legacy DTL machines.",
+  "minimumAgentVersion": "1.104.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced Options",
+      "isExpanded": false
     }
+  ],
+  "inputs": [
+    {
+      "name": "SourcePath",
+      "type": "filePath",
+      "label": "Source",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Absolute path of the source folder or file on the local machine, or a UNC Share like c:\\fabrikamfiber or \\\\\\\\fabrikamshare\\fabrikamfiber."
+    },
+    {
+      "name": "MachineNames",
+      "type": "multiLine",
+      "label": "Machines",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs. <br>Eg: dbserver.fabrikam.com,192.168.12.34 <br>Or provide output variable of other tasks. Eg: $(variableName)"
+    },
+    {
+      "name": "AdminUserName",
+      "type": "string",
+      "label": "Admin Login",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Administrator login for the target machines."
+    },
+    {
+      "name": "AdminPassword",
+      "type": "string",
+      "label": "Password",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Password for administrator login for the target machines. <br>It can accept a variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark the variable as 'secret' to secure it. "
+    },
+    {
+      "name": "TargetPath",
+      "type": "string",
+      "label": "Destination Folder",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Local Path on the target machines or an accessible UNC path for copying the files from the source like d:\\fabrikam or \\\\\\\\fabrikam\\Web."
+    },
+    {
+      "name": "CleanTargetBeforeCopy",
+      "type": "boolean",
+      "label": "Clean Target",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Selecting it will clean the destination folder before copying the files."
+    },
+    {
+      "name": "CopyFilesInParallel",
+      "type": "boolean",
+      "label": "Copy Files in Parallel",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Selecting it will copy files in parallel to the machines."
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "multiLine",
+      "label": "Additional Arguments",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "",
+      "helpMarkDown": "Additional robocopy arguments that will be applied when copying files like, /min:33553332 /l."
+    }
+  ],
+  "instanceNameFormat": "Copy files from $(SourcePath)",
+  "execution": {
+    "PowerShell3": {
+      "target": "WindowsMachineFileCopy.ps1"
+    }
+  },
+  "messages": {
+    "WFC_ParameterCannotBeNullorEmpty": "Parameter '{0}' cannot be null or empty.",
+    "WFC_FailedToConnectToPathWithUser": "Failed to connect to the path {0} with the user {1} for copying.",
+    "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails": "Copying failed. Consult the robocopy logs for more details.",
+    "WFC_CopyingRecurivelyFrom0to1MachineSucceed": "Copying recursively from {0} to {1} on machine {2} succeeded.",
+    "WFC_SourcePathDoesNotExist": "Source path '{0}' does not exist.",
+    "WFC_RemoteDestinationPathCannotContainEnvironmentVariables": "Remote destination path '{0}' cannot contain environment variables.",
+    "WFC_CopyStartedFor0": "Copy started for - {0}",
+    "WFC_NoMachineExistsUnderEnvironment": "No machine exists under environment: '{0}' for deployment",
+    "WFC_NoMachineExistsUnderEnvironment0ForDeployment": "No machine exists under environment: '{0}' for deployment",
+    "WFC_CopyingFailedForResource": "Copying failed for resource: {0}",
+    "WFC_FailedToCreatePSDrive": "Failed to Create PSDrive with Destination: '{0}', ErrorMessage: '{1}'",
+    "WFC_RobocopyError": "Robocopy Error. Computer: '{0}'. ErrorMessage: '{1}'"
+  }
 }

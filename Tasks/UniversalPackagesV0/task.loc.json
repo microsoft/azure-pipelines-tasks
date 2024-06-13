@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 231,
+    "Minor": 239,
     "Patch": 0
   },
   "runsOn": [
@@ -456,6 +456,7 @@
     "Warn_CredentialsNotFound": "ms-resource:loc.messages.Warn_CredentialsNotFound",
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
     "Error_UniversalPackagesNotSupportedOnPrem": "ms-resource:loc.messages.Error_UniversalPackagesNotSupportedOnPrem",
-    "Error_ProcessorArchitectureNotSupported": "ms-resource:loc.messages.Error_ProcessorArchitectureNotSupported"
+    "Error_ProcessorArchitectureNotSupported": "ms-resource:loc.messages.Error_ProcessorArchitectureNotSupported",
+    "Warning_UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.Warning_UnsupportedServiceConnectionAuth"
   }
 }

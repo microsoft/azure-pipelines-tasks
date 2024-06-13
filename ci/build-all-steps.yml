@@ -15,17 +15,11 @@ steps:
     displayName: Start collect diagnostics
     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
 
-# Use node 10, npm 6
+# Use node 20, npm 9
 - task: NodeTool@0
-  displayName: Use node 10
+  displayName: Use node 20
   inputs:
-    versionSpec: 10.24.1
-
-# Use .NET SDK 7
-- task: UseDotNet@2
-  displayName: 'Install .NET Core SDK 7.x'
-  inputs:
-    version: 7.x
+    versionSpec: 20.11.0
 
 # npm install
 - script: npm install
@@ -37,16 +31,8 @@ steps:
     npm install
   displayName: npm install min agent demands
 
-- script: node ./ci/verifyMinAgentDemands/index.js
+- script: node ./ci/verifyMinAgentDemands/index.js --pat $(GitHubPAT)
   displayName: Verify min agent demands
-
-- powershell: |
-    $currentSprintData = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json)
-    $currentSprint = [int]$currentSprintData.sprint
-    $currentSprintWeek = [int]$currentSprintData.week
-    echo "##vso[task.setvariable variable=currentSprint;]$currentSprint"
-    echo "##vso[task.setvariable variable=currentSprintWeek;]$currentSprintWeek"
-  displayName: Fetch current sprint
 
 # Filter out unchanged tasks
 - script: node ./ci/filter-tasks.js
@@ -54,10 +40,10 @@ steps:
   name: getTaskPattern
   env:
     PACKAGE_ENDPOINT: $(Package.Endpoint)
-    PACKAGE_TOKEN: $(Package.Token)
+    PACKAGE_TOKEN: $(System.AccessToken)
 
 - script: node ./ci/before-build-check-tasks.js
-  displayName: Check that tasks has no duplicated libs
+  displayName: Before build task validation
   condition: |
     and(
       succeeded(),
@@ -65,29 +51,19 @@ steps:
       ne(variables['numTasks'], 0)
     )
 
-# Verify generated files across tasks are up-to-date
-- script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --all-tasks
-  displayName: Ensure BuildConfigGen outputs are consistent
+- powershell: ./ci/set-sprint-variables.ps1
+  displayName: Set currentSprint variables
 
 - script: node ./ci/check-downgrading.js --task "$(task_pattern_fordowngradingcheck)" --sprint $(currentSprint) --week $(currentSprintWeek)
   displayName: Check for downgrading tasks
   condition: |
-      and(
-        succeeded(),
-        ne(variables['numTasks'], 0),
-        ne(variables['COURTESY_PUSH'], 'true'),
-        eq(variables['build.reason'], 'PullRequest'),
-        eq(variables['System.PullRequest.TargetBranch'], 'master')
-      )
-  env:
-    PACKAGE_TOKEN: $(Package.Token)
-
-# Build BuildConfigGen
-- task: DotNetCoreCLI@2
-  displayName: Build BuildConfigGen
-  inputs:
-    command: build
-    projects: './BuildConfigGen/BuildConfigGen.csproj'
+    and(
+      succeeded(),
+      ne(variables['numTasksForDowngradingCheck'], 0),
+      ne(variables['COURTESY_PUSH'], 'true'),
+      eq(variables['build.reason'], 'PullRequest'),
+      eq(variables['System.PullRequest.TargetBranch'], 'master')
+    )
 
 # Clean
 - script: node make.js clean
@@ -132,7 +108,7 @@ steps:
       )
 
   # Sign all task zips as nuget packages
-  - template: sign-all-tasks.yml
+  - template: /ci/sign-all-tasks.yml@self
     parameters:
       layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
@@ -145,20 +121,6 @@ steps:
         ne(variables['build.reason'], 'PullRequest'),
         ne(variables['numTasks'], 0)
       )
-
-  # Publish artifact
-  - task: PublishBuildArtifacts@1
-    displayName: Publish package artifact
-    condition: |
-      and(
-        succeeded(),
-        ne(variables['build.reason'], 'PullRequest'),
-        ne(variables['numTasks'], 0)
-      )
-    inputs:
-      pathToPublish: _package/tasks.zip
-      artifactName: package
-      publishLocation: container
 
 # Test
 - script: node make.js test
@@ -188,9 +150,12 @@ steps:
         ne(variables['numTasks'], 0)
       )
 
+  - template: /ci/generate-branch-name.yml@self
+    parameters:
+      prefix: releases
+
   - powershell: |
-      # Build the release branch name
-      $releaseBranch = "releases/m" + $(currentSprint) + "." + $(currentDate)
+      $releaseBranch = "$(branchName)"
 
       # add config entry to avoid errors while pulling
       git config --global user.email "$(username)@microsoft.com"
@@ -215,8 +180,7 @@ steps:
     displayName: Push release branch
 
   - powershell: |
-      # Build the release branch name
-      $releaseBranch = "releases/m" + $(currentSprint) + "." + $(currentDate)
+      $releaseBranch = "$(branchName)"
 
       if ($(currentSprintWeek) -eq 3) {
         cd $(System.DefaultWorkingDirectory)/ci/ci-release-notes

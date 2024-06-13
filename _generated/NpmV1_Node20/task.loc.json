@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 231,
-    "Patch": 1
+    "Minor": 238,
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -208,10 +208,11 @@
     "OverridingProjectNpmrc": "ms-resource:loc.messages.OverridingProjectNpmrc",
     "RestoringProjectNpmrc": "ms-resource:loc.messages.RestoringProjectNpmrc",
     "WorkingDirectoryNotDirectory": "ms-resource:loc.messages.WorkingDirectoryNotDirectory",
-    "NGCommon_AreaNotFoundInSps": "ms-resource:loc.messages.NGCommon_AreaNotFoundInSps"
+    "NGCommon_AreaNotFoundInSps": "ms-resource:loc.messages.NGCommon_AreaNotFoundInSps",
+    "UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.UnsupportedServiceConnectionAuth"
   },
   "_buildConfigMapping": {
-    "Default": "1.231.0",
-    "Node20_229_1": "1.231.1"
+    "Default": "1.238.2",
+    "Node20_229_1": "1.238.3"
   }
 }

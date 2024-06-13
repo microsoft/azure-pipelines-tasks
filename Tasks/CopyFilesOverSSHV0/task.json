@@ -17,11 +17,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 231,
+        "Minor": 240,
         "Patch": 0
     },
     "demands": [],
-    "minimumAgentVersion": "2.182.1",
+    "minimumAgentVersion": "2.206.1",
     "instanceNameFormat": "Securely copy files to the remote machine",
     "groups": [
         {
@@ -130,13 +130,27 @@
             "required": false,
             "helpMarkDown": "Flatten the folder structure and copy all files into the specified target folder on the remote machine.",
             "groupName": "advanced"
+        },
+        {
+            "name": "concurrentUploads",
+            "type": "string",
+            "label": "Number of concurrent uploads when copying files",
+            "defaultValue": "10",
+            "required": false,
+            "helpMarkDown": "Number of concurrent uploads when copying files. Default is 10.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "delayBetweenUploads",
+            "type": "string",
+            "label": "Delay between queueing uploads (in milliseconds)",
+            "defaultValue": "50",
+            "required": false,
+            "helpMarkDown": "Delay between queueing uploads (in milliseconds). Default is 50.",
+            "groupName": "advanced"
         }
     ],
     "execution": {
-        "Node10": {
-            "target": "copyfilesoverssh.js",
-            "argumentFormat": ""
-        },
         "Node16": {
             "target": "copyfilesoverssh.js",
             "argumentFormat": ""
@@ -157,9 +171,13 @@
         "ConnectionFailed": "Failed to connect to remote machine. Verify the SSH service connection details. %s.",
         "ConnectionNotSetup": "SSH service connection is not set up.",
         "CopyCompleted": "Completed copying %s files to the remote machine.",
+        "CopyDirectoryCompleted": "Completed copying %s directory to the remote machine.",
+        "CopyDirectoryFailed": "Failed to copy %s directory to the remote machine. %s",
         "CopyingFiles": "Found %s files to copy to the remote machine.",
         "FailedOnFile": "Failed to copy %s. %s",
         "FileExists": "File %s cannot be copied to the remote machine because it already exists and the 'Overwrite' option is disabled.",
+        "FolderCreated": "Created folder %s on the remote machine.",
+        "FoldersCreated": "Created %s folders on the remote machine.",
         "NothingToCopy": "No files were found matching the patterns specified to copy to the remote machine.",
         "NumberFailed": "Failed to copy %d files",
         "RemoteCmdExecutionErr": "Command %s failed with errors on remote machine. %s.",
@@ -169,9 +187,10 @@
         "StartedFileCopy": "Copying file %s to %s on remote machine.",
         "UploadFileFailed": "Failed to upload %s to %s on remote machine. %s.",
         "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
-        "TargetNotCreated": "Unable to create target folder %s.",
+        "TargetNotCreated": "Unable to create target folder %s. %s.",
         "CheckingPathExistance": "Checking if %s on the remote machine exists.",
         "PathExists": "%s exists on the remote machine",
-        "PathNotExists": "%s doesn't exist on the remote machine"
+        "PathNotExists": "%s doesn't exist on the remote machine",
+        "UploadFolderFailed": "Failed to upload folder %s to %s on remote machine. %s."
     }
 }

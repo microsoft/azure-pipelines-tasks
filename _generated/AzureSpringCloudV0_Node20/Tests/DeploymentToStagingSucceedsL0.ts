@@ -123,6 +123,49 @@ export class DeploymentToStagingSucceedsL0 {
                     }]
 
             }).persist();
+
+            nock('https://management.azure.com', {
+                reqheaders: {
+                    "authorization": "Bearer DUMMY_ACCESS_TOKEN",
+                    "content-type": "application/json; charset=utf-8",
+                    "user-agent": "TFS_useragent"
+                }
+            }).get(`/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/deployments/theOtherOne?api-version=${API_VERSION}`)
+                .reply(200, {
+                    "id": `/subscriptions/${MOCK_SUBSCRIPTION_ID}/resourceGroups/${encodeURIComponent(MOCK_RESOURCE_GROUP_NAME)}/providers/${ASC_RESOURCE_TYPE}/${this.TEST_NAME}/apps/${this.MOCK_APP_NAME}/deployments/theOtherOne`,
+                    "name": "theOtherOne",
+                    "properties": {
+                        "active": false,
+                        "appName": this.MOCK_APP_NAME,
+                        "deploymentSettings": {
+                            "cpu": 1,
+                            "environmentVariables": null,
+                            "memoryInGB": 1,
+                            "runtimeVersion": "Java_8"
+                        },
+                        "instances": [
+                            {
+                                "discoveryStatus": "UP",
+                                "name": `${this.MOCK_APP_NAME}-theOtherOne-7-7b77f5b6f5-90210`,
+                                "startTime": "2021-03-13T01:39:20Z",
+                                "status": "Running"
+                            }
+                        ],
+                        "provisioningState": "Succeeded",
+                        "source": {
+                            "relativePath": "<default>",
+                            "type": "Jar"
+                        },
+                        "status": "Running"
+                    },
+                    "resourceGroup": MOCK_RESOURCE_GROUP_NAME,
+                    "sku": {
+                        "capacity": 1,
+                        "name": "S0",
+                        "tier": "Standard"
+                    },
+                    "type": `${ASC_RESOURCE_TYPE}/apps/deployments`
+                }).persist();
     }
 
     /** Simulate APIs invoked as part of deployment */
@@ -164,7 +207,7 @@ export class DeploymentToStagingSucceedsL0 {
             .reply((uri, serializedRequestBody) => {
                 let requestBody = JSON.parse(serializedRequestBody);
                 assert.strictEqual(requestBody.properties.source.relativePath, MOCK_RELATIVE_PATH);
-                assert.strictEqual(requestBody.properties.deploymentSettings.runtimeVersion, 'Java_11');
+                assert.strictEqual(requestBody.properties.deploymentSettings.runtimeVersion, 'Java_17');
                 assert.strictEqual(requestBody.properties.deploymentSettings.environmentVariables.key1, 'val1');
                 assert.strictEqual(requestBody.properties.deploymentSettings.environmentVariables.key2, "val     2");
                 //We'd never have the .NET entry path parameter in a Java app in the real world,

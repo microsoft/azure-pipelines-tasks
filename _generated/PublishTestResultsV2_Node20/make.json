@@ -2,7 +2,7 @@
   "externals": {
     "archivePackages": [
       {
-        "url": "https://publishtestresult.blob.core.windows.net/publishtestresult/22540424/PublishTestResults.zip",
+        "url": "https://testmanagementstore.blob.core.windows.net/testmanagementptrcontainer/28213918/PublishTestResults.zip",
         "dest": "./"
       }
     ]

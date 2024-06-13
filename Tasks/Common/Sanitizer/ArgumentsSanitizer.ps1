@@ -38,7 +38,7 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
     $sanitizedArgs, $sanitizeTelemetry = Get-SanitizedArguments -InputArgs $expandedArgs
 
     if ($sanitizedArgs -eq $inputArgs) {
-        Write-Host (Get-VstsLocString -Key 'PS_ScriptArgsNotSanitized');
+        Write-Debug 'Arguments passed sanitization without change.'
     }
     else {
         if ($featureFlags.telemetry) {
@@ -57,7 +57,7 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
                 throw $message
             }
             elseif ($featureFlags.audit) {
-                Write-Warning $message
+                Write-VstsTaskWarning -Message $message -AuditAction 1
             }
         }
     }

@@ -28,6 +28,12 @@ tl.setResourcePath(path.join(__dirname, 'task.json'));
 const area: string = 'DownloadBuildArtifacts';
 const DefaultParallelProcessingLimit: number = 8;
 
+enum ErrorDisplayMode {
+    ShowError = 0,
+    ShowWarning,
+    DoNotShowError,
+}
+
 function getDefaultProps() {
     var hostType = (tl.getVariable('SYSTEM.HOSTTYPE') || "").toLowerCase();
     return {
@@ -326,7 +332,7 @@ async function main(): Promise<void> {
                         await downloadPromise;
                     } else {
                         const operationName: string = `Download container - ${artifact.name}`;
-                        
+
                         if (!preferRedirect || retryRedirectLimitDownload < 0) {
                             // Keep current logic exactly as-is, for complete safety do not refactor yet
                             const handlerConfig: IContainerHandlerConfig = { ...config, endpointUrl, templatePath, handler, preferRedirect: false  };
@@ -335,12 +341,12 @@ async function main(): Promise<void> {
                                 operationName,
                                 () => downloadHandler.downloadResources(),
                                 retryLimitDownload,
-                                true
+                                ErrorDisplayMode.DoNotShowError
                             ).catch((reason) => {
                                 reject(reason);
                                 return;
                             });
-    
+
                             downloadPromises.push(downloadPromise);
                             await downloadPromise;
                         } else {
@@ -352,9 +358,11 @@ async function main(): Promise<void> {
                             const downloadPromise: Promise<models.ArtifactDownloadTicket[]> = executeWithRetries(
                                 operationName,
                                 () => downloadHandler.downloadResources(),
-                                retryRedirectLimitDownload
+                                retryRedirectLimitDownload,
+                                ErrorDisplayMode.ShowWarning
                             ).catch((reason) => {
                                 console.log(tl.loc("FollowingDownloadRedirectFailed", reason));
+                                publishEvent('download-redirect', { "redirectLimit": retryRedirectLimitDownload, "err": JSON.stringify(reason, Object.getOwnPropertyNames(reason)) });
                                 const handlerConfig: IContainerHandlerConfig = { ...config, endpointUrl, templatePath, handler, preferRedirect: false  };
                                 const downloadHandler: DownloadHandlerContainer = new DownloadHandlerContainer(handlerConfig);
                                 const fallbackDownloadPromise: Promise<models.ArtifactDownloadTicket[]> = executeWithRetries(
@@ -407,28 +415,31 @@ async function main(): Promise<void> {
     return promise;
 }
 
-function executeWithRetries(operationName: string, operation: () => Promise<any>, retryCount, silentFail: boolean = false): Promise<any> {
+function executeWithRetries(operationName: string, operation: () => Promise<any>, retryCount, errorDisplayMode: ErrorDisplayMode = ErrorDisplayMode.ShowError): Promise<any> {
     var executePromise = new Promise((resolve, reject) => {
-        executeWithRetriesImplementation(operationName, operation, retryCount, resolve, reject, retryCount, silentFail);
+        executeWithRetriesImplementation(operationName, operation, retryCount, resolve, reject, retryCount, errorDisplayMode);
     });
 
     return executePromise;
 }
 
-function executeWithRetriesImplementation(operationName: string, operation: () => Promise<any>, currentRetryCount, resolve, reject, retryCountLimit, silentFail) {
+function executeWithRetriesImplementation(operationName: string, operation: () => Promise<any>, currentRetryCount, resolve, reject, retryCountLimit, errorDisplayMode: ErrorDisplayMode) {
     operation().then((result) => {
         resolve(result);
     }).catch((error) => {
         if (currentRetryCount <= 0) {
-            if (!silentFail) {
+            if (errorDisplayMode == ErrorDisplayMode.ShowError) {
                 tl.error(tl.loc("OperationFailed", operationName, error));
+            }
+            else if (errorDisplayMode == ErrorDisplayMode.ShowWarning) {
+                tl.warning(tl.loc("OperationFailed", operationName, error));
             }
             reject(error);
         }
         else {
             console.log(tl.loc('RetryingOperation', operationName, currentRetryCount));
             currentRetryCount = currentRetryCount - 1;
-            setTimeout(() => executeWithRetriesImplementation(operationName, operation, currentRetryCount, resolve, reject, retryCountLimit, silentFail), getRetryIntervalInSeconds(retryCountLimit - currentRetryCount) * 1000);
+            setTimeout(() => executeWithRetriesImplementation(operationName, operation, currentRetryCount, resolve, reject, retryCountLimit, errorDisplayMode), getRetryIntervalInSeconds(retryCountLimit - currentRetryCount) * 1000);
         }
     });
 }
@@ -454,7 +465,7 @@ function configureDownloaderOptions(maxRetries?: number): engine.ArtifactEngineO
     if (maxRetries !== undefined) {
         downloaderOptions.retryLimit = maxRetries;
     }
-    
+
     return downloaderOptions;
 }
 

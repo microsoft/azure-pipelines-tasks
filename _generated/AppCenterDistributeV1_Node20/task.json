@@ -7,7 +7,8 @@
   "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport/).",
   "category": "Deploy",
   "deprecated": true,
-  "removalDate": "2024-04-22",
+  "removalDate": "2024-01-31",
+  "deprecationMessage": "The AppCenterDistribute@1 (App Center distribute) task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead.",
   "visibility": [
     "Build",
     "Release"
@@ -15,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 232,
+    "Minor": 241,
     "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
@@ -204,10 +205,11 @@
     "CannotFindAnyFile": "Cannot find any file based on %s.",
     "FoundMultipleFiles": "Found multiple files matching %s.",
     "FailedToCreateFile": "Failed to create %s with error: %s.",
-    "FailedToFindFile": "Failed to find %s at %s."
+    "FailedToFindFile": "Failed to find %s at %s.",
+    "DeprecatedTask": "The AppCenterDistribute@1 (App Center distribute) task has been deprecated since November 14, 2022 and will soon be retired. Use the AppCenterDistribute@3 task instead. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
   },
   "_buildConfigMapping": {
-    "Default": "1.232.0",
-    "Node20_229_7": "1.232.1"
+    "Default": "1.241.0",
+    "Node20_229_7": "1.241.1"
   }
 }

@@ -10,7 +10,7 @@
   "minimumAgentVersion": "2.144.0",
   "version": {
     "Major": 0,
-    "Minor": 231,
+    "Minor": 240,
     "Patch": 0
   },
   "groups": [
@@ -61,7 +61,7 @@
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
-      "defaultValue": "1.0.1",
+      "defaultValue": "1.1.0",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.version",
       "visibleRule": "command = install && isCustomVersion = false",
@@ -136,7 +136,7 @@
       "name": "akvPluginVersion",
       "type": "string",
       "label": "ms-resource:loc.input.label.akvPluginVersion",
-      "defaultValue": "1.0.1",
+      "defaultValue": "1.1.0",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.akvPluginVersion",
       "visibleRule": "plugin = azureKeyVault",
@@ -222,6 +222,7 @@
     "ChecksumValidationFailed": "ms-resource:loc.messages.ChecksumValidationFailed",
     "FailedArtifacts": "ms-resource:loc.messages.FailedArtifacts",
     "FailedToAddCertToTrustStore": "ms-resource:loc.messages.FailedToAddCertToTrustStore",
+    "FailedToGetWorkloadIdToken": "ms-resource:loc.messages.FailedToGetWorkloadIdToken",
     "FailedToImportTrustPolicy": "ms-resource:loc.messages.FailedToImportTrustPolicy",
     "FailedToListTrustStore": "ms-resource:loc.messages.FailedToListTrustStore",
     "FailedToShowTrustPolicy": "ms-resource:loc.messages.FailedToShowTrustPolicy",
@@ -242,7 +243,7 @@
     "UnsupportedFileExtension": "ms-resource:loc.messages.UnsupportedFileExtension",
     "UnsupportedPlatform": "ms-resource:loc.messages.UnsupportedPlatform",
     "UnsupportedVersion": "ms-resource:loc.messages.UnsupportedVersion",
-    "UseManagedIdentity": "ms-resource:loc.messages.UseManagedIdentity",
+    "UseAuthenticationMethod": "ms-resource:loc.messages.UseAuthenticationMethod",
     "UnknownCommand": "ms-resource:loc.messages.UnknownCommand",
     "UnknownError": "ms-resource:loc.messages.UnknownError",
     "UnknownPlugin": "ms-resource:loc.messages.UnknownPlugin",

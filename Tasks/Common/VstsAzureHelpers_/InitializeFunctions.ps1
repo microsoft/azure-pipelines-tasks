@@ -1,3 +1,6 @@
+$featureFlags = @{
+    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
 
 function Initialize-AzureSubscription {
     [CmdletBinding()]
@@ -10,49 +13,55 @@ function Initialize-AzureSubscription {
     #Set UserAgent for Azure Calls
     Set-UserAgent
     
-    # Clear context only for Azure RM
-    if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal' -and !$script:azureModule -and (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue")) {
-        Write-Host "##[command]Clear-AzureRmContext -Scope Process"
-        $null = Clear-AzureRmContext -Scope Process
-    }
-
-    if (Get-Command -Name "Disable-AzureRmContextAutosave" -ErrorAction "SilentlyContinue") 
-    {
-        try {
-            Write-Host "##[command]Disable-AzureRmContextAutosave -ErrorAction Stop"
-            $null = Disable-AzureRmContextAutosave -ErrorAction Stop
+    if ($featureFlags.retireAzureRM) {
+        # Clear context only for Az
+        if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal' -and !$script:azureModule -and (Get-Command -Name "Clear-AzContext" -ErrorAction "SilentlyContinue")) {
+            Write-Host "##[command]Clear-AzContext -Scope Process"
+            $null = Clear-AzContext -Scope Process
         }
-        catch {
-            $message = $_.Exception.Message
-            Write-Verbose "Unable to disable Azure RM context save: $message"
-        }
-    }
 
-    # Clear context only for Az
-    if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal' -and !$script:azureModule -and (Get-Command -Name "Clear-AzContext" -ErrorAction "SilentlyContinue")) {
-        Write-Host "##[command]Clear-AzContext -Scope Process"
-        $null = Clear-AzContext -Scope Process
-    }
-
-    if (Get-Command -Name "Disable-AzContextAutosave" -ErrorAction "SilentlyContinue") 
-    {
-        try {
-            Write-Host "##[command]Disable-AzContextAutosave -ErrorAction Stop"
-            $null = Disable-AzContextAutosave -ErrorAction Stop
-        }
-        catch {
-            $message = $_.Exception.Message
-            Write-Verbose "Unable to disable Az context save: $message"
+        if (Get-Command -Name "Disable-AzContextAutosave" -ErrorAction "SilentlyContinue") 
+        {
+            try {
+                Write-Host "##[command]Disable-AzContextAutosave -ErrorAction Stop"
+                $null = Disable-AzContextAutosave -ErrorAction Stop
+            }
+            catch {
+                $message = $_.Exception.Message
+                Write-Verbose "Unable to disable Az context save: $message"
+            }
         }
     }
+    else {
+        # Clear context only for Azure RM
+        if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal' -and !$script:azureModule -and (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue")) {
+            Write-Host "##[command]Clear-AzureRmContext -Scope Process"
+            $null = Clear-AzureRmContext -Scope Process
+        }
 
+        if (Get-Command -Name "Disable-AzureRmContextAutosave" -ErrorAction "SilentlyContinue") 
+        {
+            try {
+                Write-Host "##[command]Disable-AzureRmContextAutosave -ErrorAction Stop"
+                $null = Disable-AzureRmContextAutosave -ErrorAction Stop
+            }
+            catch {
+                $message = $_.Exception.Message
+                Write-Verbose "Unable to disable Azure RM context save: $message"
+            }
+        }
+    }
 
     $environmentName = "AzureCloud"
     if($Endpoint.Data.Environment) {
         $environmentName = $Endpoint.Data.Environment
         if($environmentName -eq "AzureStack")
         {
-            Add-AzureStackAzureRmEnvironment -endpoint $Endpoint -name "AzureStack"
+            if ($featureFlags.retireAzureRM) {
+                Write-Warning "Add-AzureStackAzureRmEnvironment was about to be used, retireAzureRM=true"
+            } else {
+                Add-AzureStackAzureRmEnvironment -endpoint $Endpoint -name "AzureStack"
+            }
         }
     }
     
@@ -90,6 +99,15 @@ function Initialize-AzureSubscription {
             $Endpoint.Auth.Parameters.UserName,
             (ConvertTo-SecureString $Endpoint.Auth.Parameters.Password -AsPlainText -Force))
 
+        # TODO: remove debug output
+        if ($featureFlags.retireAzureRM) {
+            Write-Debug "script:azureModule = $(!$script:azureModule), script:azureRMProfileModule = $(!$script:azureRMProfileModule), script:azProfileModule = $(!$script:azProfileModule)"
+
+            if ($script:azureRMProfileModule) {
+                Write-Warning "script:azureRMProfileModule was found"
+            }
+        }
+
         # Add account (Azure).
         if ($script:azureModule) {
             try {
@@ -103,40 +121,46 @@ function Initialize-AzureSubscription {
             }
         }
 
-        # Add account (AzureRM).
-        if ($script:azureRMProfileModule) {
-            try {
-                if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {
-                    Write-Host "##[command] Add-AzureRMAccount -Credential $psCredential"
-                    $null = Add-AzureRMAccount -Credential $psCredential
-                } else {
-                    Write-Host "##[command] Connect-AzureRMAccount -Credential $psCredential"
-                    $null = Connect-AzureRMAccount -Credential $psCredential
+        if (-not $featureFlags.retireAzureRM) {
+            # Add account (AzureRM).
+            if ($script:azureRMProfileModule) {
+                if ($featureFlags.retireAzureRM) {
+                    Write-Warning "Add-AzureRmAccount was about to be used, retireAzureRM=true"
                 }
-            } catch {
-                # Provide an additional, custom, credentials-related error message.
-                Write-VstsTaskError -Message $_.Exception.Message
-                Assert-TlsError -exception $_.Exception
-                throw (New-Object System.Exception((Get-VstsLocString -Key AZ_CredentialsError), $_.Exception))
+
+                try {
+                    if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {
+                        Write-Host "##[command] Add-AzureRMAccount -Credential $psCredential"
+                        $null = Add-AzureRMAccount -Credential $psCredential
+                    } else {
+                        Write-Host "##[command] Connect-AzureRMAccount -Credential $psCredential"
+                        $null = Connect-AzureRMAccount -Credential $psCredential
+                    }
+                } catch {
+                    # Provide an additional, custom, credentials-related error message.
+                    Write-VstsTaskError -Message $_.Exception.Message
+                    Assert-TlsError -exception $_.Exception
+                    throw (New-Object System.Exception((Get-VstsLocString -Key AZ_CredentialsError), $_.Exception))
+                }
+            } else {
+                Write-Warning "Add-AzureRmAccount was about to be used, retireAzureRM=true"
             }
-        }
+        } 
+
 
         # Add account (Az).
         if ($script:azProfileModule) {
             try {
-                if (Get-Command -Name "Add-AzAccount" -ErrorAction "SilentlyContinue") {
-                    Write-Host "##[command] Add-AzAccount -Credential $psCredential"
-                    $null = Add-AzAccount -Credential $psCredential
-                } else {
-                    Write-Host "##[command] Connect-AzAccount -Credential $psCredential"
-                    $null = Connect-AzAccount -Credential $psCredential
-                }
+                Write-Host "##[command] Connect-AzAccount -Credential $psCredential"
+                $null = Connect-AzAccount -Credential $psCredential
             } catch {
                 # Provide an additional, custom, credentials-related error message.
                 Write-VstsTaskError -Message $_.Exception.Message
                 Assert-TlsError -exception $_.Exception
                 throw (New-Object System.Exception((Get-VstsLocString -Key AZ_CredentialsError), $_.Exception))
             }
+        } else {
+            Write-Warning "script:azProfileModule not found"
         }
 
         # Select subscription (Azure).
@@ -145,7 +169,7 @@ function Initialize-AzureSubscription {
         }
 
         # Select subscription (AzureRM).
-        if ($script:azureRMProfileModule) {
+        if ($script:azureRMProfileModule -and (-not $featureFlags.retireAzureRM)) {
             Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId
         }
 
@@ -181,7 +205,8 @@ function Initialize-AzureSubscription {
         } elseif ($script:azureModule) {
             # Throw if >=0.9.9 Azure.
             throw (Get-VstsLocString -Key "AZ_ServicePrincipalAuthNotSupportedAzureVersion0" -ArgumentList $script:azureModule.Version)
-        } elseif ($script:azureRMProfileModule) {
+        }
+        elseif ($script:azureRMProfileModule -and (-not $featureFlags.retireAzureRM)) {
             # This is AzureRM.            
             try {
                 if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {
@@ -311,8 +336,15 @@ function Initialize-AzureSubscription {
             
             if($scopeLevel -eq "Subscription")
             {
-                Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+                if ($featureFlags.retireAzureRM) {
+                    Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+                }
+                else {
+                    Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+                }
             }
+
+
         }
     } elseif ($Endpoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
         $accountId = $env:BUILD_BUILDID 
@@ -324,15 +356,24 @@ function Initialize-AzureSubscription {
         $access_token = Get-MsiAccessToken $Endpoint
         try {
             Write-Host "##[command]Add-AzureRmAccount  -AccessToken ****** -AccountId $accountId "
-            $null = Add-AzureRmAccount -AccessToken $access_token -AccountId $accountId
+            if ($featureFlags.retireAzureRM) {
+                $context = New-AzContext -AccessToken $access_token -AccountId $accountId
+                $null = Connect-AzAccount -Identity $context
+            } else {
+                $null = Add-AzureRmAccount -AccessToken $access_token -AccountId $accountId
+            }
         } catch {
             # Provide an additional, custom, credentials-related error message.
             Write-VstsTaskError -Message $_.Exception.Message
             throw (New-Object System.Exception((Get-VstsLocString -Key AZ_MsiFailure), $_.Exception))
         }
         
-        Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
-    }else {
+        if ($featureFlags.retireAzureRM) {
+            Set-CurrentAzSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+        } else {
+            Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+        }
+    } else {
         throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
     } 
 }
@@ -368,11 +409,12 @@ function Set-CurrentAzureRMSubscription {
     if ($TenantId) { $additional['TenantId'] = $TenantId }
 
     if (Get-Command -Name "Select-AzureRmSubscription" -ErrorAction "SilentlyContinue") {
-        Write-Host "##[command] Select-AzureRMSubscription -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        Write-Host "##[command]Select-AzureRMSubscription -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
         $null = Select-AzureRMSubscription -SubscriptionId $SubscriptionId @additional
     }
     else {
-        Write-Host "##[command] Set-AzureRmContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        Write-Host "##[command]Set-AzureRmContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
         $null = Set-AzureRmContext -SubscriptionId $SubscriptionId @additional
     }
 }
+

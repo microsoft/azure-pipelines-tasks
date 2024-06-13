@@ -16,11 +16,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 229,
-    "Patch": 0
+    "Minor": 235,
+    "Patch": 1
   },
   "deprecated": true,
-  "removalDate": "2024-04-22",
+  "removalDate": "2024-01-31",
+  "deprecationMessage": "The ChefKnife@1 (Run scripts with Knife commands on your Chef workstation) task has been deprecated since March 5, 2018 and will soon be retired. To continue to use Chef Knife, use the Knife client directly from a bash/pwsh/script task. See https://docs.chef.io/workstation/knife_client/.",
   "demands": [
     "Chef",
     "DotNetFramework"

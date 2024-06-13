@@ -1,3 +1,5 @@
+$env:RETIRE_AZURERM_POWERSHELL_MODULE = $false
+
 Trace-VstsEnteringInvocation $MyInvocation
 Import-VstsLocStrings "$PSScriptRoot\Task.json"
 

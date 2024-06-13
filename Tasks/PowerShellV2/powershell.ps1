@@ -98,7 +98,7 @@ try {
     if ("$input_targetType".ToUpperInvariant() -eq 'FILEPATH') {
 
         try {
-            Protect-ScriptArguments -InputArgs $input_arguments -TaskName "PowerShellV2"
+            $null = Protect-ScriptArguments -InputArgs $input_arguments -TaskName "PowerShellV2"
         }
         catch {
             $message = $_.Exception.Message
@@ -211,7 +211,7 @@ try {
                     $message = $errorLines.ToString().Trim()
                     $null = $errorLines.Clear()
                     if ($message) {
-                        Write-VstsTaskError -Message $message
+                        Write-VstsTaskError -Message $message -IssueSource $IssueSources.CustomerScript
                     }
                 }
 
@@ -225,7 +225,7 @@ try {
             $message = $errorLines.ToString().Trim()
             $null = $errorLines.Clear()
             if ($message) {
-                Write-VstsTaskError -Message $message
+                Write-VstsTaskError -Message $message -IssueSource $IssueSources.CustomerScript
             }
         }
     }

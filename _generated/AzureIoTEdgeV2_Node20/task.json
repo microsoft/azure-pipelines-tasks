@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 231,
-    "Patch": 2
+    "Minor": 241,
+    "Patch": 1
   },
   "preview": false,
   "showEnvironmentVariables": true,
@@ -300,7 +300,7 @@
     }
   ],
   "_buildConfigMapping": {
-    "Default": "2.231.1",
-    "Node20_229_11": "2.231.2"
+    "Default": "2.241.0",
+    "Node20_229_11": "2.241.1"
   }
 }

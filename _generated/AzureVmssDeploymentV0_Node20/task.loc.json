@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 232,
+    "Minor": 241,
     "Patch": 1
   },
   "demands": [],
@@ -166,12 +166,12 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
-      "target": "main.js"
-    },
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "main.js"
     },
     "Node20_1": {
       "target": "main.js",
@@ -230,7 +230,7 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   },
   "_buildConfigMapping": {
-    "Default": "0.232.0",
-    "Node20_229_6": "0.232.1"
+    "Default": "0.241.0",
+    "Node20_229_6": "0.241.1"
   }
 }

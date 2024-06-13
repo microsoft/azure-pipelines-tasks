@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 232,
+    "Minor": 241,
     "Patch": 0
   },
   "demands": [],
@@ -166,12 +166,12 @@
   ],
   "instanceNameFormat": "Azure VMSS $(vmssName): $(action)",
   "execution": {
-    "Node10": {
-      "target": "main.js"
-    },
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "main.js"
     }
   },
   "messages": {
@@ -226,7 +226,7 @@
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
   },
   "_buildConfigMapping": {
-    "Default": "0.232.0",
-    "Node20_229_6": "0.232.1"
+    "Default": "0.241.0",
+    "Node20_229_6": "0.241.1"
   }
 }

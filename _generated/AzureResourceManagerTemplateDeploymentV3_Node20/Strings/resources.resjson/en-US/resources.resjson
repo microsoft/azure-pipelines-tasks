@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/armtaskreadme)",
   "loc.description": "Deploy an Azure Resource Manager (ARM) template to all the deployment scopes",
   "loc.instanceNameFormat": "ARM Template deployment: $(deploymentScope) scope",
-  "loc.releaseNotes": "- Added support for deployment at all the deployment scopes.\n- Removed all the VM related actions.",
+  "loc.releaseNotes": "- Added support for bicepparam.",
   "loc.group.displayName.AzureDetails": "Azure Details",
   "loc.group.displayName.Template": "Template",
   "loc.group.displayName.Advanced": "Advanced",
@@ -99,5 +99,7 @@
   "loc.messages.LoginFailed": "Azure login failed: %s",
   "loc.messages.MSILoginFailed": "Azure login failed using Managed Service Identity: %s",
   "loc.messages.AuthSchemeNotSupported": "Auth Scheme %s is not supported",
-  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription: %s"
+  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription: %s",
+  "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\" failed. Error: %s",
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI version should be >= 2.47.0 to use .bicepparam file"
 }

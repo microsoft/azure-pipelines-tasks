@@ -3,6 +3,10 @@ param()
 
 Trace-VstsEnteringInvocation $MyInvocation
 
+$featureFlags = @{
+    retireAzureRM = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
 # Get inputs for the task
 $sourcePath = Get-VstsInput -Name SourcePath -Require
 $destination = Get-VstsInput -Name Destination -Require
@@ -67,13 +71,20 @@ $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
 $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
-if (Get-Module Az.Accounts -ListAvailable) {
+if ($featureFlags.retireAzureRM) {
+    Write-Verbose "Initializing Az Module."
     $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
     Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
-}
-else {
-    Update-PSModulePathForHostedAgentWithLatestModule -Endpoint $endpoint
-    Initialize-AzureRMModule -Endpoint $endpoint
+} else {
+    if (Get-Module Az.Accounts -ListAvailable) {
+        $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
+        Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
+    }
+    else {
+        Write-Warning "Module Az.Accounts is unavailable"
+        Update-PSModulePathForHostedAgentWithLatestModule -Endpoint $endpoint
+        Initialize-AzureRMModule -Endpoint $endpoint
+    }
 }
 
 # Import the loc strings.
@@ -119,13 +130,13 @@ try {
         Write-Host "##vso[telemetry.publish area=TaskEndpointId;feature=AzureFileCopy]$telemetryJsonContent"
 
         # Getting storage key for the storage account
-        $storageKey = Get-StorageKey -storageAccountName $storageAccount -endpoint $endpoint -connectedServiceNameARM $connectedServiceName -vstsAccessToken $vstsAccessToken
+        $storageKey = Get-StorageKey -storageAccountName $storageAccount -endpoint $endpoint -connectedServiceNameARM $connectedServiceName
 
         # creating storage context to be used while creating container, sas token, deleting container
         $storageContext = Create-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
 
         # Geting Azure Storage Account type
-        $storageAccountType = Get-StorageAccountType $storageAccount $endpoint $connectedServiceName $vstsEndpoint
+        $storageAccountType = Get-StorageAccountType $storageAccount $endpoint $connectedServiceName
         Write-Verbose "Obtained Storage Account type: $storageAccountType"
         if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.Contains('Premium'))
         {
@@ -138,7 +149,7 @@ try {
             $containerName = [guid]::NewGuid().ToString()
             Create-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage
         }
-        
+
         # Getting Azure Blob Storage Endpoint
         $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -endpoint $endpoint
 
@@ -166,7 +177,7 @@ try {
         $logFilePath = Join-Path -Path $azCopyLocation -ChildPath $logFileName
 
         $additionalArgumentsForBlobCopy = "/XO /Y /SetContentType /Z:`"$azCopyLocation`" /V:`"$logFilePath`""
-        
+
         # Add more arguments if required
 
         # Premium storage accounts only support page blobs
@@ -183,9 +194,9 @@ try {
             $additionalArgumentsForBlobCopy += " /S"
         }
     }
-    
+
     Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArgumentsForBlobCopy
-    
+
     # Uploading files to container
     Upload-FilesToAzureContainer -sourcePath $sourcePath `
                                 -storageAccountName $storageAccount `
@@ -199,7 +210,7 @@ try {
                                 -useDefaultArguments $useDefaultArgumentsForBlobCopy `
                                 -azCopyLogFilePath $logFilePath `
                                 -useSanitizerActivate $useSanitizerActivate
-    
+
     # Complete the task if destination is azure blob
     if ($destination -eq "AzureBlob")
     {
@@ -217,7 +228,7 @@ try {
 
         Remove-EndpointSecrets
         Write-Verbose "Completed Azure File Copy Task for Azure Blob Destination"
-        
+
         return
     }
 
@@ -232,7 +243,7 @@ try {
         # getting azure vms properties(name, fqdn, winrmhttps port)
         $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName `
             -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites `
-            -connectedServiceName $connectedServiceName -vstsAccessToken $vstsAccessToken
+            -connectedServiceName $connectedServiceName
 
         $azureVMsCredentials = Get-AzureVMsCredentials -vmsAdminUserName $vmsAdminUserName -vmsAdminPassword $vmsAdminPassword
 
@@ -244,7 +255,7 @@ try {
         # generate container sas token with full permissions
         $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInMinutes $sasTokenTimeOutInMinutes
 
-        # Copies files on azureVMs 
+        # Copies files on azureVMs
         Copy-FilesToAzureVMsFromStorageContainer -targetMachineNames $invokeRemoteScriptParams.targetMachineNames `
                                                 -credential $invokeRemoteScriptParams.credential `
                                                 -protocol $invokeRemoteScriptParams.protocol `

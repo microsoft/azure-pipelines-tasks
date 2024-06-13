@@ -1,3 +1,7 @@
+$featureFlags = @{
+    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
 # Dot source Utility functions.
 . $PSScriptRoot/Utility.ps1
 
@@ -13,19 +17,162 @@ function Initialize-AzModule {
         [Parameter(Mandatory = $false)]
         [bool] $isPSCore,
         [Parameter(Mandatory=$false)]
-        [Security.SecureString]$encryptedToken)
+        [Security.SecureString]$encryptedToken
+    )
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         Write-Verbose "Env:PSModulePath: '$env:PSMODULEPATH'"
+        Write-Verbose "Importing Az Modules."
+        
+        if ($featureFlags.retireAzureRM) {
+            $azInitialized = $false;
 
-        Write-Verbose "Importing Az Module."
-        $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
+            # Supress breaking changes messages
+            Set-Item -Path Env:\SuppressAzurePowerShellBreakingChangeWarnings -Value $true
+            
+            try {
+                Write-Verbose "Trying to import Az modules"
+                $azAccountsVersion = Initialize-AzModules 
+                $azInitialized = $true;
+            } catch {
+                Write-Verbose -Message $_.Exception.Message
+                Write-VstsTaskWarning -Message (Get-VstsLocString -Key AZ_ModuleInitFailWarning) -AsOutput
+            }
+
+            try {
+                if ($azInitialized -eq $false) {
+                    Write-Verbose "Trying to install Az modules"
+                    $azAccountsVersion = Initialize-AzModules -tryInstallModule
+                    $azInitialized = $true;
+                }
+
+            } catch {
+                Write-VstsTaskError -Message $_.Exception.Message
+                throw (Get-VstsLocString -Key AZ_ModuleInstallFail)
+            }
+        } else  {
+            # We are only looking for Az.Accounts module becasue all the command required for initialize the azure PS session is in Az.Accounts module.
+            $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
+            Write-VstsTaskWarning -Message (Get-VstsLocString -Key AZ_RMDeprecationMessage) -AsOutput 
+        }
+
+        $azAccountsVersion = [System.Version]::new(
+            $azAccountsVersion.Major, 
+            $azAccountsVersion.Minor, 
+            $azAccountsVersion.Build
+        )
 
         Write-Verbose "Initializing Az Subscription."
-        Initialize-AzSubscription -Endpoint $Endpoint -connectedServiceNameARM $connectedServiceNameARM -vstsAccessToken $encryptedToken `
-            -azAccountsModuleVersion $azAccountsVersion -isPSCore $isPSCore
+        $initializeAzSubscriptionParams = @{
+            Endpoint = $Endpoint
+            connectedServiceNameARM = $connectedServiceNameARM
+            vstsAccessToken = $encryptedToken
+            azAccountsModuleVersion = $azAccountsVersion
+            isPSCore = $isPSCore
+        }
+        Initialize-AzSubscription @initializeAzSubscriptionParams
+    }
+    finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+function Initialize-AzModules {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $false)]
+        [PSCustomObject[]] $RequiredAzModules = (Get-RequiredAzModules),
+        
+        [Parameter()]
+        [switch] $TryInstallModule
+    )
+    Trace-VstsEnteringInvocation $MyInvocation
+
+    try {
+        $azAccountsVersion = $null;
+        foreach ($RequiredAzModule in $RequiredAzModules) {
+            $ModuleVersion = Import-SpecificAzModule -ModuleToImport $RequiredAzModule -TryInstallModule:$TryInstallModule;
+            Write-Verbose "$($RequiredAzModule.Name) is available with version $ModuleVersion."
+            
+            if ($RequiredAzModule.Name -eq 'Az.Accounts') {
+                $azAccountsVersion = $ModuleVersion;
+
+                # Update-AzConfig is a part of Az.Accounts
+                if (Get-Command Update-AzConfig -ErrorAction SilentlyContinue) {
+                    Write-Verbose "Supressing breaking changes warnings of Az module."
+                    Write-Host "##[command]Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az"
+                    Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az
+                } else {
+                    Write-Verbose "Update-AzConfig cmdlet is not available."
+                }
+
+                # Enable-AzureRmAlias for azureRm compability
+                if (Get-Command Enable-AzureRmAlias -ErrorAction SilentlyContinue) {
+                    Write-Verbose "Enable-AzureRmAlias for backward compability"
+                    Write-Host "##[command]Enable-AzureRmAlias -Scope Process"
+                    Enable-AzureRmAlias -Scope Process
+                } else {
+                    Write-Verbose "Enable-AzureRmAlias cmdlet is not available."
+                }
+            }
+        }
+        
+        return $azAccountsVersion
     } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+function Import-SpecificAzModule {
+    [OutputType([System.Version])]
+    [CmdletBinding()]
+    [OutputType([version])]
+    param(
+        [Parameter(Mandatory=$true)]
+        [PSCustomObject[]]$ModuleToImport, 
+        
+        [Parameter()]
+        [switch]$TryInstallModule
+    )
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        Write-Verbose "Attempting to find the latest available version of module $($ModuleToImport.Name)."
+        $RequiredModule = Get-Module -Name $ModuleToImport.Name -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+
+        if ($RequiredModule -and ($RequiredModule.Version.Major -ge $ModuleToImport.Major)) {
+            Write-Verbose "Module $($ModuleToImport.Name) version $($RequiredModule.Version) was found."
+        } elseif ($TryInstallModule -eq $true) {
+            Write-Verbose "Unable to find module $($ModuleToImport.Name) from the module path. Installing $($ModuleToImport.Name) module."
+
+            Write-Host "##[command]Install-Module -Name $($ModuleToImport.Name) -RequiredVersion $($ModuleToImport.Version) -Force -AllowClobber -ErrorAction Stop -SkipPublisherCheck"
+            Install-Module -Name $ModuleToImport.Name -RequiredVersion $ModuleToImport.Version -Force -AllowClobber -ErrorAction Stop -SkipPublisherCheck
+            $AvaiableModules = Get-Module -Name $ModuleToImport.Name -ListAvailable;
+            
+            foreach ($AvaiableModule in $AvaiableModules) {
+                if ($AvaiableModule.Version -eq $ModuleToImport.Version) {
+                    $RequiredModule = $AvaiableModule;
+                    break;
+                }
+            }
+        }
+
+        if (-not $RequiredModule -or ($RequiredModule.Version.Major -lt $ModuleToImport.Major) ) {
+            Write-Verbose "Failed to find the required module $($RequiredModule). $($RequiredModule.Version.Major). $($ModuleToImport.Major)"
+            throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $ModuleToImport.Major, $ModuleToImport.Name)
+        }
+
+        Write-Host "##[command]Import-Module -Name $($ModuleToImport.Name) -Global -PassThru -Force -RequiredVersion $($RequiredModule.Version)"
+        $RequiredModule = Import-Module -Name $ModuleToImport.Name -Global -PassThru -Force -RequiredVersion $RequiredModule.Version
+        Write-Host("Imported module $($ModuleToImport.Name), version: $($RequiredModule.Version)")
+
+        return $RequiredModule.Version
+    }
+    catch {
+        Write-Verbose "Import-SpecificAzModule: Failed to import module $($ModuleToImport.Name)."
+        throw
+    }
+    finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
@@ -38,6 +185,7 @@ function Import-AzAccountsModule {
     try {
         # We are only looking for Az.Accounts module becasue all the command required for initialize the azure PS session is in Az.Accounts module.
         $moduleName = "Az.Accounts"
+        
         # Attempt to resolve the module.
         Write-Verbose "Attempting to find the module '$moduleName' from the module path."
 
@@ -58,6 +206,7 @@ function Import-AzAccountsModule {
             }
         }
 
+        # Install Az if not found
         if (!$module) {
             Write-Verbose "No module found with name: $moduleName"
             throw (Get-VstsLocString -Key AZ_ModuleNotFound -ArgumentList $azVersion, "Az.Accounts")
@@ -68,7 +217,8 @@ function Import-AzAccountsModule {
         $module = Import-Module -Name $module.Path -Global -PassThru -Force
         Write-Verbose "Imported module version: $($module.Version)"
         return $module.Version
-    } finally {
+    }
+    finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
@@ -85,7 +235,8 @@ function Initialize-AzSubscription {
         [Parameter(Mandatory=$false)]
         [Version] $azAccountsModuleVersion,
         [Parameter(Mandatory=$false)]
-        [bool] $isPSCore)
+        [bool] $isPSCore
+    )
 
     #Set UserAgent for Azure Calls
     Set-UserAgent
@@ -142,9 +293,9 @@ function Initialize-AzSubscription {
                     ServicePrincipal=$true;
                     Scope='Process';
                     WarningAction='SilentlyContinue';
-                }
+                } `
+                -serviceConnectionId $connectedServiceNameARM
             }
-
         }
         catch {
             # Provide an additional, custom, credentials-related error message.
@@ -250,6 +401,7 @@ function Retry-Command {
     param(
         [Parameter(Mandatory=$true)][string]$command,
         [Parameter(Mandatory=$true)][hashtable]$args,
+        [Parameter(Mandatory=$false)][string]$serviceConnectionId,
         [Parameter(Mandatory=$false)][int]$retries=5,
         [Parameter(Mandatory=$false)][int]$secondsDelay=5
     )
@@ -259,14 +411,24 @@ function Retry-Command {
 
     while(-not $completed) {
         try {
-            Write-Host "##[command]$command $args"
+            Write-Host "##[command]$command $($args.GetEnumerator() | where-object { $_.key -ne "FederatedToken"} | out-string)"
             & $command @args
             Write-Verbose("Command [{0}] succeeded." -f $command)
             $completed = $true
         } catch {
             if ($retryCount -ge $retries) {
                 Write-Verbose("Command [{0}] failed the maximum number of {1} times." -f $command, $retryCount)
-                throw
+                                
+                $expiredSecretErrorCode = "AADSTS7000222"
+                if ($_.Exception.Message -match $expiredSecretErrorCode) {
+
+                    $organizationURL = $Env:System_CollectionUri
+                    $projectName = $Env:System_TeamProject
+                    $serviceConnectionLink = [uri]::EscapeUriString("$organizationURL$projectName/_settings/adminservices?resourceId=$serviceConnectionId")
+                    throw (Get-VstsLocString -Key AZ_ExpiredServicePrincipalMessageWithLink -ArgumentList $serviceConnectionLink)
+                } else {
+                    throw
+                }
             } else {
                 $secondsDelay = [math]::Pow(2, $retryCount)
                 Write-Verbose("Command [{0}] failed. Retrying in {1} seconds." -f $command, $secondsDelay)
@@ -274,5 +436,41 @@ function Retry-Command {
                 $retryCount++
             }
         }
+    }
+}
+
+function Get-RequiredAzModules {
+    [CmdletBinding()]
+    [OutputType([PSCustomObject[]])]
+    param(
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string] $AzAccounts = '2.19.0',
+        
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string] $AzResources = '6.15.1',
+
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string] $AzStorage = '6.1.1'
+    )
+
+    [PSCustomObject]@{
+        Name    = 'Az.Accounts'
+        Version = $AzAccounts
+        Major   = 2
+    }
+
+    [PSCustomObject]@{
+        Name    = 'Az.Resources'
+        Version = $AzResources
+        Major   = 4
+    }
+
+    [PSCustomObject]@{
+        Name    = 'Az.Storage'
+        Version = $AzStorage
+        Major   = 3
     }
 }

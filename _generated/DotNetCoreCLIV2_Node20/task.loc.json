@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 231,
-    "Patch": 0
+    "Minor": 240,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -262,7 +262,7 @@
       "name": "verbosityRestore",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.verbosityRestore",
-      "defaultValue": "Detailed",
+      "defaultValue": "Normal",
       "helpMarkDown": "ms-resource:loc.input.help.verbosityRestore",
       "required": "false",
       "groupName": "restoreAdvanced",
@@ -474,7 +474,7 @@
       "name": "verbosityPack",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.verbosityPack",
-      "defaultValue": "Detailed",
+      "defaultValue": "Normal",
       "helpMarkDown": "ms-resource:loc.input.help.verbosityPack",
       "required": "false",
       "groupName": "packAdvanced",
@@ -583,10 +583,11 @@
     "Net5NugetVersionCompat": "ms-resource:loc.messages.Net5NugetVersionCompat",
     "DeprecatedDotnet2_2_And_3_0": "ms-resource:loc.messages.DeprecatedDotnet2_2_And_3_0",
     "Warning_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Warning_IncludeNuGetOrgEnabled",
-    "Error_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Error_IncludeNuGetOrgEnabled"
+    "Error_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Error_IncludeNuGetOrgEnabled",
+    "Warning_UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.Warning_UnsupportedServiceConnectionAuth"
   },
   "_buildConfigMapping": {
-    "Default": "2.221.0",
-    "Node20_229_2": "2.231.0"
+    "Default": "2.240.0",
+    "Node20_229_2": "2.240.1"
   }
 }

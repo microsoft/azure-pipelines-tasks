@@ -10,9 +10,9 @@ steps:
   fetchDepth: 1
 
 - task: NodeTool@0
-  displayName: Use node 10
+  displayName: Use node 20
   inputs:
-    versionSpec: 10.x
+    versionSpec: 20.11.0
 
 - script: |
     cd azure-pipelines-tasks
@@ -25,14 +25,11 @@ steps:
     downloadPath: hotfixArtifact
   displayName: Download hotfix Artifact
 
-# returns currentSprint
-- template: set-current-sprint-variable.yml
+- powershell: ./azure-pipelines-tasks/ci/set-sprint-variables.ps1
+  displayName: Set currentSprint variables
 
 # returns branchName
-- template: generate-branch-name.yml
-  parameters:
-    postfix: hotfix
-    currentSprint: '$(currentSprint)'
+- template: /ci/generate-branch-name.yml@self
 
 - powershell: |
     $currentDate = Get-Date -Format "yyyyMMdd-HHmm"
@@ -49,7 +46,7 @@ steps:
     node open-hotfix-pr.js
   displayName: Open PR in ConfigChange
   env:
-    TOKEN: $(Package.Token)
+    TOKEN: $(System.AccessToken)
     TASK_NAME: ${{ parameters.task_name }}
     REPOSITORY: AzureDevOps.ConfigChange
     BRANCH: '$(branchName)'
@@ -59,4 +56,4 @@ steps:
     node create-hotfix-release.js $(hotfixFolderPath) "${{ parameters.task_name }}"
   displayName: Create Release in AzureDevOps.ConfigChange
   env:
-    TOKEN: $(Package.Token)
+    TOKEN: $(System.AccessToken)

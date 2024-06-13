@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 231,
+    "Minor": 241,
     "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -121,23 +121,22 @@
         "EditableOptions": "True"
       },
       "options": {
-        "DOTNET|2.2": "DOTNET|2.2 (functionapp v2)",
-        "DOTNET|3.1": "DOTNET|3.1 (functionapp v3)",
-        "DOTNET|6.0": "DOTNET|6.0 (functionapp v4)",
-        "DOTNET-ISOLATED|7.0": "DOTNET-ISOLATED|7.0 (functionapp v4)",
-        "JAVA|8": "JAVA|8 (functionapp v2/v3/v4)",
-        "JAVA|11": "JAVA|11  (functionapp v3/v4)",
-        "NODE|8": "NODE|8 (functionapp v2)",
-        "NODE|10": "NODE|10 (functionapp v2/v3)",
-        "NODE|12": "NODE|12 (functionapp v3)",
-        "NODE|14": "NODE|14 (functionapp v3/v4)",
-        "NODE|16": "NODE|16 (functionapp v4)",
-        "NODE|18": "NODE|18 (functionapp v4)",
-        "PYTHON|3.6": "PYTHON|3.6 (functionapp v2/v3)",
-        "PYTHON|3.7": "PYTHON|3.7 (functionapp v2/v3/v4)",
-        "PYTHON|3.8": "PYTHON|3.8 (functionapp v3/v4)",
-        "PYTHON|3.9": "PYTHON|3.9 (functionapp v3/v4)",
-        "PYTHON|3.10": "PYTHON|3.10 (functionapp v3/v4)"
+        "DOTNET|6.0": "DOTNET|6.0",
+        "DOTNET-ISOLATED|6.0": "DOTNET-ISOLATED|6.0",
+        "DOTNET-ISOLATED|7.0": "DOTNET-ISOLATED|7.0",
+        "DOTNET-ISOLATED|8.0": "DOTNET-ISOLATED|8.0",
+        "JAVA|8": "JAVA|8",
+        "JAVA|11": "JAVA|11",
+        "JAVA|17": "JAVA|17",
+        "JAVA|21": "JAVA|21",
+        "NODE|14": "NODE|14",
+        "NODE|16": "NODE|16",
+        "NODE|18": "NODE|18",
+        "NODE|20": "NODE|20",
+        "PYTHON|3.8": "PYTHON|3.8",
+        "PYTHON|3.9": "PYTHON|3.9",
+        "PYTHON|3.10": "PYTHON|3.10",
+        "PYTHON|3.11": "PYTHON|3.11"
       },
       "visibleRule": "appType = functionAppLinux",
       "helpMarkDown": "ms-resource:loc.input.help.runtimeStack"
@@ -205,12 +204,12 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
-      "target": "azurermwebappdeployment.js"
-    },
     "Node16": {
       "target": "azurermwebappdeployment.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "azurermwebappdeployment.js"
     },
     "Node20_1": {
       "target": "azurermwebappdeployment.js",
@@ -371,7 +370,7 @@
     "DeploymentTypeNotSupportedForLinuxConsumption": "ms-resource:loc.messages.DeploymentTypeNotSupportedForLinuxConsumption"
   },
   "_buildConfigMapping": {
-    "Default": "2.231.0",
-    "Node20_229_9": "2.231.1"
+    "Default": "2.241.0",
+    "Node20_229_9": "2.241.1"
   }
 }

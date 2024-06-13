@@ -60,7 +60,7 @@ export var PackerLogTokenManagedImageId = "ManagedImageId";
 export var OutputVariableImageUri = "imageUri";
 export var OutputVariableImageId = "imageId";
 
-export var CurrentSupportedPackerVersionString = "1.2.4";
+export var CurrentSupportedPackerVersionString = "1.5.4";
 export var PackerDownloadUrlFormat = "https://releases.hashicorp.com/packer/%s/packer_%s_%s.zip"
 
 export var TemplateTypeCustom = "custom";
@@ -77,3 +77,4 @@ export var BuiltinManagedWindowsDefaultImageTemplateKey = BuiltInTemplateOSTypeW
 export var BuiltinManagedWindowsCustomImageTemplateKey = BuiltInTemplateOSTypeWindows + '-' + BaseImageManagedSourceCustomVhd;
 export var BuiltinManagedLinuxDefaultImageTemplateKey = BuiltInTemplateOSTypeLinux + '-' + BaseImageManagedSourceDefault;
 export var BuiltinManagedLinuxCustomImageTemplateKey = BuiltInTemplateOSTypeLinux + '-' + BaseImageManagedSourceCustomVhd;
+export var TemplateVariableClientjwtName = "client_jwt";

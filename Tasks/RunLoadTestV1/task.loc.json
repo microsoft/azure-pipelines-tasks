@@ -13,11 +13,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 229,
-    "Patch": 0
+    "Minor": 235,
+    "Patch": 1
   },
   "deprecated": true,
-  "removalDate": "2024-04-22",
+  "removalDate": "2024-01-31",
+  "deprecationMessage": "The CloudLoadTest@1 (Cloud-based load test) has been deprecated since June 4, 2019 and will soon be retired. Use the AzureLoadTest@1 task instead.",
   "demands": [
     "msbuild",
     "azureps"

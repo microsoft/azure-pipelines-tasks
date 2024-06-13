@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 231,
-    "Patch": 4
+    "Minor": 241,
+    "Patch": 5
   },
   "demands": [
     "azureps"
@@ -237,12 +237,12 @@
   ],
   "instanceNameFormat": "$(Destination) File Copy",
   "prejobexecution": {
-    "Node10": {
-      "target": "PreJobExecutionAzureFileCopy.js"
-    },
     "Node16": {
       "target": "PreJobExecutionAzureFileCopy.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "PreJobExecutionAzureFileCopy.js"
     },
     "Node20_1": {
       "target": "PreJobExecutionAzureFileCopy.js",
@@ -305,7 +305,7 @@
     "ServicePrincipalError": "There was an error with the service principal used for the deployment."
   },
   "_buildConfigMapping": {
-    "Default": "4.231.2",
-    "Node20_229_2": "4.231.4"
+    "Default": "4.241.4",
+    "Node20_229_2": "4.241.5"
   }
 }

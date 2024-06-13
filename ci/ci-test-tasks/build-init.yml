@@ -10,11 +10,11 @@ steps:
     git checkout --progress --force refs/remotes/origin/${{ parameters.BuildSourceVersion }}
   displayName: Checkout ${{ parameters.BuildSourceVersion }}
 
-# Use node 10, npm 6
+# Use node 20, npm 9
 - task: NodeTool@0
-  displayName: Use node 10
+  displayName: Use node 20
   inputs:
-    versionSpec: 10.x
+    versionSpec: 20.11.0
 
 # npm install
 - script: npm install
@@ -26,5 +26,5 @@ steps:
     npm install
   displayName: Npm install min agent demands
 
-- script: node ./ci/verifyMinAgentDemands/index.js
+- script: node ./ci/verifyMinAgentDemands/index.js --pat $(GitHubPAT)
   displayName: Verify min agent demands

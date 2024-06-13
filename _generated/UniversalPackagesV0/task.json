@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 231,
+    "Minor": 239,
     "Patch": 0
   },
   "runsOn": [
@@ -456,10 +456,11 @@
     "Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages",
     "Warning_SessionCreationFailed": "Could not create provenance session: %s",
     "Error_UniversalPackagesNotSupportedOnPrem": "Universal Packages are not supported in Azure DevOps Server.",
-    "Error_ProcessorArchitectureNotSupported": "Universal Packages require an x64 agent."
+    "Error_ProcessorArchitectureNotSupported": "Universal Packages require an x64 agent.",
+    "Warning_UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
   },
   "_buildConfigMapping": {
-    "Default": "0.231.0",
-    "Node20_229_1": "0.231.1"
+    "Default": "0.239.0",
+    "Node20_229_1": "0.239.1"
   }
 }

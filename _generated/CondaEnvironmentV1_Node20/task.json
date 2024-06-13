@@ -13,11 +13,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 231,
-    "Patch": 3
+    "Minor": 235,
+    "Patch": 5
   },
   "deprecated": true,
-  "removalDate": "2024-04-22",
+  "removalDate": "2024-01-31",
+  "deprecationMessage": "The CondaEnvironment@1 (Conda environment) task has been deprecated since February 13, 2019 and will soon be retired. Use the Conda CLI ('conda') directly from a bash/pwsh/script task.",
   "demands": [],
   "instanceNameFormat": "Conda environment $(environmentName)",
   "inputs": [
@@ -104,10 +105,11 @@
     "ReactivateExistingEnvironment": "Found existing environment %s and the task's \"Clean environment\" parameter is not set. Reactivating ...",
     "ParameterRequired": "The `%s` parameter is required",
     "PlatformNotRecognized": "Platform not recognized",
-    "PrependPath": "Prepending PATH environment variable with directory: %s"
+    "PrependPath": "Prepending PATH environment variable with directory: %s",
+    "DeprecatedTask": "The CondaEnvironment@1 (Conda environment) task has been deprecated since February 13, 2019 and will soon be retired. Use the Conda CLI ('conda') directly from a bash/pwsh/script task. Please visit https://aka.ms/azdo-deprecated-tasks to learn more about deprecated tasks."
   },
   "_buildConfigMapping": {
-    "Default": "1.231.2",
-    "Node20-225": "1.231.3"
+    "Default": "1.235.4",
+    "Node20-225": "1.235.5"
   }
 }
