@@ -9,7 +9,7 @@ export async function executeGoTests(testsToBeExecuted: string[]): Promise<numbe
     args = test, ./...  
     spawn*/
 
-    console.log("Go changes1");  
+    console.log("Go changes123");  
     return 1;
 }
 
