@@ -10,7 +10,7 @@ param()
 # $env:PublishSymbols_UseDbgLkg = "true"
 # .\_build\Tasks\PublishSymbols\PublishSymbols.ps1
 
-.\Auth.ps1
+
 
 Trace-VstsEnteringInvocation $MyInvocation
 
@@ -185,49 +185,27 @@ try {
 
         Write-Host "Symbol Request Name = $RequestName"
 
+        . $PSScriptRoot\Auth.ps1
+
         [string]$connectedServiceName = Get-VstsInput -Name 'ConnectedServiceName' -Default 'None'
         [string]$asAccountName = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.AccountName')
         [string]$PersonalAccessToken = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.PAT')
         [bool]$UseAad = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.UseAad' -AsBool)
         [string]$IndexableFileFormats = (Get-VstsInput -Name 'IndexableFileFormats')
-        [bool]$usePat = (asAccountName) ? $true : $false;
+
+        Write-Host "Get the access token"
+        [string]$PersonalAccessToken = Get-AccessToken($connectedServiceName, $asAccountName, $UseAad)
+
+
         Write-Host "connectedServiceName: $connectedServiceName"
-        if( $connectedServiceName )
-        {
-            Write-Host "connectedServiceName is specified. Using it to get the access token. - $connectedServiceName"
-            $PersonalAccessToken = Get-connectedServiceNameAccessToken($connectedServiceName, $usePat);
-        }
-        elseif ( $asAccountName ) {
-            if ( $PersonalAccessToken ) {
-                if ( $UseAad ) {
-                    throw "If AccountName is specified, then only one of PAT or UseAad should be present"
-                }
-
-                $variableInfo = Get-VstsTaskVariableInfo | Where-Object { $_.Name -eq "ArtifactServices.Symbol.PAT" }
-
-                if ($variableInfo -and -not $variableInfo.Secret) {
-                    throw "The PAT needs to be specified as a secret"
-                }
-            }
-            elseif ( -not $UseAad ) {
-                throw "If AccountName is specified, then either PAT or UseAad needs to be present"
-            }
+        if ( $asAccountName ) {
+            $PersonalAccessToken = Get-PATToken
 
             [string]$SymbolServiceUri = "https://" + [System.Web.HttpUtility]::UrlEncode($asAccountName) + ".artifacts.visualstudio.com"
         }
         else {
-            if ( $PersonalAccessToken -or $UseAad ) {
-                throw "If PAT or UseAad is specified, then AccountName needs to be present"
-            }
 
             [string]$SymbolServiceUri = Get-SymbolServiceUri (Get-VstsTaskVariable -Name 'System.TeamFoundationCollectionUri' -Require)
-
-            $Endpoint = Get-VstsEndPoint -Name "SystemVssConnection"
-            [string]$PersonalAccessToken = $Endpoint.Auth.Parameters.AccessToken
-
-            if ( [string]::IsNullOrEmpty($PersonalAccessToken) ) {
-                throw "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator"
-            }
         }
 
         [string]$SymbolServiceUri = $SymbolServiceUri.TrimEnd('/')

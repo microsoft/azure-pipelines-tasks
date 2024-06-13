@@ -13,8 +13,8 @@
   "preview": false,
   "version": {
     "Major": 2,
-    "Minor": 240,
-    "Patch": 36
+    "Minor": 241,
+    "Patch": 10
   },
   "minimumAgentVersion": "2.144.0",
   "groups": [
@@ -29,6 +29,7 @@
       "name": "ConnectedServiceName",
       "type": "connectedService:AzureRM",
       "label": "Azure Resource Manager connection",
+      "defaultValue": "",
       "required": false,
       "helpMarkDown": "Name of the Azure Resource Manager service connection. Supported authentication type is currently only workload identity federation."
     },

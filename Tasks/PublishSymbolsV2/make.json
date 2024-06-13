@@ -1,16 +1,36 @@
 {
   "common": [
     {
-        "module": "../Common/PowershellHelpers",
-        "type": "ps"
+      "module": "../Common/PowershellHelpers",
+      "type": "ps"
     },
     {
       "module": "../Common/VstsAzureHelpers_",
       "type": "ps"
     },
     {
-        "module": "../Common/TlsHelper_",
-        "type": "ps"
+      "module": "../Common/VstsAzureRestHelpers_",
+      "type": "ps"
+    },
+    {
+      "module": "../Common/Deployment/TelemetryHelper",
+      "type": "ps"
+    },
+    {
+      "module": "../Common/TlsHelper_",
+      "type": "ps"
+    },
+    {
+      "module": "../Common/Deployment/TelemetryHelper",
+      "type": "ps"
+    },
+    {
+      "module": "../Common/RemoteDeployer",
+      "type": "ps"
+    },
+    {
+      "module": "../Common/Sanitizer",
+      "type": "ps"
     }
   ],
   "externals": {
