@@ -23,7 +23,7 @@
 
         public void WriteTypescriptConfig(string taskOutput)
         {
-            throw new NotImplementedException();
+            // noop
         }
     }
 }
