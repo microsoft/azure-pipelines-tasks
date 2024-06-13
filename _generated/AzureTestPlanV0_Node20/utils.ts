@@ -21,7 +21,7 @@ export function replaceLastDotWithHash(inputString) {
     }
 }
 
-export function separatePath(inputString) {
+export function separateGoPath(inputString) {
     const lastDotIndex = inputString.lastIndexOf('.');
 
     if (lastDotIndex !== -1) {
@@ -32,7 +32,7 @@ export function separatePath(inputString) {
         return inputString;
     }
 }
-export function separateTestName(inputString) {
+export function separateGoTestName(inputString) {
     const lastDotIndex = inputString.lastIndexOf('.');
 
     if (lastDotIndex !== -1) {
