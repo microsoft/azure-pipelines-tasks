@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 241,
-    "Patch": 11
+    "Patch": 23
   },
   "minimumAgentVersion": "2.144.0",
   "groups": [
@@ -256,7 +256,7 @@
     "Win32Error0FromMethod1": "ms-resource:loc.messages.Win32Error0FromMethod1"
   },
   "_buildConfigMapping": {
-    "Default": "2.241.10",
-    "Node20_229_14": "2.241.11"
+    "Default": "2.241.22",
+    "Node20_229_14": "2.241.23"
   }
 }
