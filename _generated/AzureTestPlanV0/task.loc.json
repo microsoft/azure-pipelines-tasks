@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 241,
-    "Patch": 2
+    "Patch": 4
   },
   "preview": true,
   "demands": [],
@@ -180,7 +180,7 @@
     "MultipleMatchingGradlewFound": "ms-resource:loc.messages.MultipleMatchingGradlewFound"
   },
   "_buildConfigMapping": {
-    "Default": "0.241.2",
-    "Node20-225": "0.241.3"
+    "Default": "0.241.4",
+    "Node20-225": "0.241.5"
   }
 }
