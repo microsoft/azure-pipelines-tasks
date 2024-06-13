@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Задержка",
-  "loc.helpMarkDown": "[Подробнее об этой задаче](https://go.microsoft.com/fwlink/?linkid=870239)",
+  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=870239)",
   "loc.description": "Отложить дальнейшее выполнение рабочего процесса на фиксированное время",
   "loc.instanceNameFormat": "Задержка на $(delayForMinutes) мин",
   "loc.input.label.delayForMinutes": "Время задержки (в минутах)",

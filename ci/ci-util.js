@@ -27,6 +27,7 @@ var aggregatePackSourceContentsZipPath = path.join(packagePath, 'aggregate-pack-
 var aggregatePackageName = 'Mseng.MS.TF.Build.Tasks';
 var aggregateNuspecPath = path.join(packagePath, 'Mseng.MS.TF.Build.Tasks.nuspec');
 var publishLayoutPath = path.join(packagePath, 'publish-layout');
+var publishPushCmdPath = path.join(packagePath, 'publish-layout', 'push.cmd');
 var genTaskPath = path.join(__dirname, '..', '_generated');
 var makeOptionPath = path.join(__dirname, '..', 'make-options.json');
 
@@ -48,6 +49,7 @@ exports.aggregatePackSourceContentsZipPath = aggregatePackSourceContentsZipPath;
 exports.aggregatePackageName = aggregatePackageName;
 exports.aggregateNuspecPath = aggregateNuspecPath;
 exports.publishLayoutPath = publishLayoutPath;
+exports.publishPushCmdPath = publishPushCmdPath;
 exports.genTaskPath = genTaskPath;
 exports.makeOptionPath = makeOptionPath;
 

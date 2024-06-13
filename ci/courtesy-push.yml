@@ -5,12 +5,6 @@ steps:
   displayName: Install nuget
 
 - powershell: |
-    $sourcePath = "$(Build.SourcesDirectory)/azure-pipelines-tasks/.gdn"
-    $destinationPath = "$(Build.SourcesDirectory)/"
-    Copy-Item -Path $sourcePath -Destination $destinationPath -Recurse
-  displayName: Copy baseline files to root
-
-- powershell: |
     cd azure-pipelines-tasks/ci/courtesy-push
     npm install
   displayName: npm install
@@ -18,11 +12,23 @@ steps:
 - task: DownloadBuildArtifacts@0
   inputs:
     artifactName: IndividualNugetPackages
-    downloadPath: $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded
+    downloadPath: IndividualNugetPackagesDownloaded
   displayName: Download Artifact
 
-- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
+- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: Update unified deps
+
+- task: NuGetAuthenticate@1
+  displayName: Authenticate with nuget
+
+# Everything until this point is idempotent (other than pushing tasks release branch which will get overwritten if we re-do this anyways).
+# Note: Pushing the tasks release branch has to happen in the first job in case commits are pushed between now and then.
+
+- script: |
+    cd IndividualNugetPackagesDownloaded
+    cd IndividualNugetPackages
+    push.cmd
+  displayName: Push Nuget packages
 
 - powershell: ./azure-pipelines-tasks/ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
@@ -50,11 +56,10 @@ steps:
     Start-Sleep -Seconds 30
   displayName: Create PR in Azure DevOps
   env:
-    TOKEN: $(System.AccessToken)
+    TOKEN: $(Package.Token)
 
 - powershell: .\azure-pipelines-tasks\ci\courtesy-push\send-notification.ps1
   displayName: Send MS Teams notification
   condition: eq(variables['build.reason'], 'Schedule')
   env:
     TEAMS_WEBHOOK: $(MSTeamsUri)
-  
