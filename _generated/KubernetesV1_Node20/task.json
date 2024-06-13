@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 241,
-    "Patch": 1
+    "Patch": 3
   },
   "demands": [],
   "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
@@ -450,10 +450,10 @@
     }
   ],
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "src//kubernetes.js"
     },
-    "Node16": {
+    "Node10": {
       "target": "src//kubernetes.js"
     },
     "Node20_1": {
@@ -496,7 +496,7 @@
     "KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.241.0",
-    "Node20_229_3": "1.241.1"
+    "Default": "1.241.2",
+    "Node20_229_3": "1.241.3"
   }
 }

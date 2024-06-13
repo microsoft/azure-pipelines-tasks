@@ -1,0 +1,1 @@
+successfully build ajgtestacr1.azurecr.io/test/test image with latest tag

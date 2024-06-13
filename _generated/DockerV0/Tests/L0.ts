@@ -31,7 +31,7 @@ describe('Docker Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
         process.env[shared.TestEnvVars.addBaseImageData] = "false";
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -47,7 +47,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
         process.env[shared.TestEnvVars.memory] = "2GB";
         process.env[shared.TestEnvVars.addBaseImageData] = "false";
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -64,7 +64,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.imageName] = 'test/Te st:2';
         process.env[shared.TestEnvVars.enforceDockerNamingConvention] = 'true';
         process.env[shared.TestEnvVars.addBaseImageData] = "false";
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -81,7 +81,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.imageName] = 'test/Te st:2';
         process.env[shared.TestEnvVars.enforceDockerNamingConvention] = 'false';
         process.env[shared.TestEnvVars.addBaseImageData] = "false";
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 1 || tr.errorIssues.length, 'should have written to stderror');
@@ -99,7 +99,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.additionalImageTags] = '6';
         process.env[shared.TestEnvVars.enforceDockerNamingConvention] = 'true';
         process.env[shared.TestEnvVars.addBaseImageData] = "false";
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -116,7 +116,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
         process.env[shared.TestEnvVars.includeLatestTag] = "true";
         process.env[shared.TestEnvVars.addBaseImageData] = "false";
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -130,7 +130,7 @@ describe('Docker Suite', function() {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.runImage;
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -145,7 +145,7 @@ describe('Docker Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.runImage;
         process.env[shared.TestEnvVars.memory] = "2GB";
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -161,7 +161,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.tagImages;
         process.env[shared.TestEnvVars.containerType] = shared.ContainerTypes.AzureContainerRegistry;
         process.env[shared.TestEnvVars.qualifyImageName] = "true";
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -176,7 +176,7 @@ describe('Docker Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.pushImage;
         process.env[shared.TestEnvVars.addBaseImageData] = "false";
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -190,7 +190,7 @@ describe('Docker Suite', function() {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.pushImages;
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -204,7 +204,7 @@ describe('Docker Suite', function() {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.dockerCommand;
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -220,7 +220,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
         process.env[shared.TestEnvVars.containerType] = shared.ContainerTypes.AzureContainerRegistry;
         process.env[shared.TestEnvVars.addBaseImageData] = "false";
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -237,7 +237,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.containerType] = shared.ContainerTypes.AzureContainerRegistry;
         process.env[shared.TestEnvVars.qualifyImageName] = "true";
         process.env[shared.TestEnvVars.addBaseImageData] = "false";
-        tr.run();
+        tr.runAsync();
         
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -252,7 +252,7 @@ describe('Docker Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
         process.env[shared.TestEnvVars.addBaseImageData] = "false";
-        tr.run();
+        tr.runAsync();
 
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf("set DockerOutputPath=") != -1, "docker build should set DockerOutputPath env variable.")
@@ -266,7 +266,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
         process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -282,7 +282,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
         process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -297,7 +297,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.imageName] = "testuser/imagewithannotations:11";
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 3, 'should have invoked tool three time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -313,7 +313,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
         process.env[shared.TestEnvVars.addBaseImageData] = "false";
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+        tr.runAsync();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
