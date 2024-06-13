@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -63,11 +64,12 @@ namespace BuildConfigGen
         /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
         /// <param name="allTasks"></param>
         /// <param name="getTaskVersionTable"></param>
-        static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false, bool getTaskVersionTable = false)
+        /// <param name="agentPath">When set to the local pipeline agent directory, this tool will produce tasks in debug mode with the corresponding visual studio launch configurations</param>
+        static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false, bool getTaskVersionTable = false, string? agentPath = null)
         {
             try
             {
-                MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable);
+                MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable, agentPath);
             }
             catch (Exception e2)
             {
@@ -85,7 +87,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void MainInner(string? task, string? configs, int? currentSprint, bool writeUpdates, bool allTasks, bool getTaskVersionTable)
+        private static void MainInner(string? task, string? configs, int? currentSprint, bool writeUpdates, bool allTasks, bool getTaskVersionTable, string? agentPath)
         {
             if (allTasks)
             {
@@ -96,6 +98,14 @@ namespace BuildConfigGen
             {
                 NotNullOrThrow(task, "Task is required");
                 NotNullOrThrow(configs, "Configs is required");
+            }
+
+            if (!string.IsNullOrEmpty(agentPath))
+            {
+                if(!Directory.Exists(agentPath))
+                {
+                    throw new Exception($"The provided agent path does not exist: '${agentPath}'");
+                }
             }
 
             if (getTaskVersionTable)
@@ -128,7 +138,7 @@ namespace BuildConfigGen
                 var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
                 foreach (var t in tasks.Values)
                 {
-                    MainUpdateTask(t.Name, string.Join('|', t.Configs), writeUpdates, currentSprint);
+                    MainUpdateTask(t.Name, string.Join('|', t.Configs), writeUpdates, currentSprint, agentPath);
                 }
             }
             else
@@ -139,7 +149,7 @@ namespace BuildConfigGen
                 // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
                 foreach (var t in task!.Split(',', '|'))
                 {
-                    MainUpdateTask(t, configs!, writeUpdates, currentSprint);
+                    MainUpdateTask(t, configs!, writeUpdates, currentSprint, agentPath);
                 }
             }
 
@@ -225,7 +235,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void MainUpdateTask(string task, string configsString, bool writeUpdates, int? currentSprint)
+        private static void MainUpdateTask(string task, string configsString, bool writeUpdates, int? currentSprint, string? agentPath)
         {
             if (string.IsNullOrEmpty(task))
             {
@@ -265,7 +275,7 @@ namespace BuildConfigGen
             {
                 ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
 
-                MainUpdateTaskInner(task, currentSprint, targetConfigs);
+                MainUpdateTaskInner(task, currentSprint, targetConfigs, agentPath);
 
                 ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: false);
             }
@@ -309,7 +319,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void MainUpdateTaskInner(string task, int? currentSprint, HashSet<Config.ConfigRecord> targetConfigs)
+        private static void MainUpdateTaskInner(string task, int? currentSprint, HashSet<Config.ConfigRecord> targetConfigs, string? agentPath)
         {
             if (!currentSprint.HasValue)
             {
@@ -427,7 +437,83 @@ namespace BuildConfigGen
 
             // delay updating version map file until after buildconfigs generated
             WriteVersionMapFile(versionMapFile, configTaskVersionMapping, targetConfigs: targetConfigs);
+
+            if (!string.IsNullOrEmpty(agentPath))
+            {
+                WriteLaunchConfigurations(targetConfigs, agentPath, gitRootPath, taskHandlerContents, configTaskVersionMapping);
+            }
         }
+
+        public static string RemoveJsonComments(string jsonString)
+        {
+            // Remove single-line comments
+            jsonString = Regex.Replace(jsonString, @"//.*(?=\r?\n|$)", string.Empty);
+
+            // Remove multi-line comments
+            jsonString = Regex.Replace(jsonString, @"/\*.*?\*/", string.Empty, RegexOptions.Singleline);
+
+            return jsonString;
+        }
+
+        private static void WriteLaunchConfigurations(HashSet<Config.ConfigRecord> targetConfigs, string? agentPath, string gitRootPath, JsonNode taskHandlerContents, Dictionary<Config.ConfigRecord, TaskVersion> configTaskVersionMapping)
+        {
+            string launchConfigurationFilePath = Path.Combine(gitRootPath, ".vscode", "launch.json");
+            string rawLaunchConfigurationsFile = ensureUpdateModeVerifier!.FileReadAllText(launchConfigurationFilePath);
+            string validJsonLaunchConfigurationsString = RemoveJsonComments(rawLaunchConfigurationsFile);
+            JsonObject? originalLaunchConfig = JsonNode.Parse(validJsonLaunchConfigurationsString)?.AsObject();
+            if (originalLaunchConfig != null)
+            {
+                JsonNode? configurationsNode;
+                if (!originalLaunchConfig.TryGetPropertyValue("configurations", out configurationsNode))
+                {
+                    configurationsNode = new JsonArray();
+                    originalLaunchConfig["configurations"] = configurationsNode;
+                }
+
+                var configurationsList = configurationsNode!.AsArray();
+
+                foreach (var config in targetConfigs)
+                {
+                    var version = configTaskVersionMapping[config];
+                    var shortTaskName = taskHandlerContents["name"]?.GetValue<string>()!;
+                    var taskId = taskHandlerContents["id"]?.GetValue<string>()!;
+                    var launchConfigName = GetLaunchConfigurationName(shortTaskName, version);
+
+                    var existingLaunchConfig = configurationsList.FirstOrDefault(x =>
+                    {
+                        var name = x?["name"]?.GetValue<string>();
+
+                        return string.Equals(name, launchConfigName, StringComparison.OrdinalIgnoreCase);
+                    });
+
+                    configurationsList.Remove(existingLaunchConfig);
+
+                    var launchConfig = new JsonObject
+                    {
+                        ["name"] = launchConfigName,
+                        ["type"] = "node",
+                        ["request"] = "attach",
+                        ["address"] = "localhost",
+                        ["port"] = 9229,
+                        ["autoAttachChildProcesses"] = true,
+                        ["skipFiles"] = new JsonArray("<node_internals>/**"),
+                        ["sourceMaps"] = true,
+                        ["remoteRoot"] = @$"{agentPath}\_work\_tasks\{shortTaskName}_{taskId.ToLower()}\{version}"
+                    };
+
+                    configurationsList.Add(launchConfig);
+                }
+
+                //originalLaunchConfig["configurations"]?.ReplaceWith(new JsonArray([.. configurationsList]));
+
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                string jsonString = JsonSerializer.Serialize(originalLaunchConfig, options);
+
+                ensureUpdateModeVerifier.WriteAllText(launchConfigurationFilePath, jsonString, true);
+            }
+        }
+
+        private static string GetLaunchConfigurationName(string task, string version) => $"Attach to {task} ({version})";
 
         private static bool VersionIsGreaterThan(string version1, string version2)
         {
