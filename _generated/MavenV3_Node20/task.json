@@ -18,7 +18,7 @@
   "version": {
     "Major": 3,
     "Minor": 235,
-    "Patch": 1
+    "Patch": 0
   },
   "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
   "demands": [
@@ -475,10 +475,6 @@
     "Node16": {
       "target": "maventask.js",
       "argumentFormat": ""
-    },
-    "Node20_1": {
-      "target": "maventask.js",
-      "argumentFormat": ""
     }
   },
   "messages": {
@@ -519,9 +515,5 @@
     "AuthenticationNotNecessary": "No Artifacts feeds requiring authentication were found. Disable 'Authenticate with Artifacts feeds' for faster builds.",
     "UsingAuthFeed": "Using Artifacts feed: ",
     "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
-  },
-  "_buildConfigMapping": {
-    "Default": "3.235.0",
-    "Node20-225": "3.235.1"
   }
 }
