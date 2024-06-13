@@ -6,12 +6,12 @@ import { getFederatedToken } from "azure-pipelines-tasks-artifacts-common/webapi
 
 export async function getAccessToken(): Promise<string> {
   try {
+    const connectedServiceName : string = tl.getInput("ConnectedServiceName", false);
+    tl.debug(`connectedServiceName: ${connectedServiceName}`);
     const usePat : boolean = tl.getBoolInput("usePat", false);
-    const entraServiceConnection: string = tl.getInput("entraServiceConnection", false);
 
-    // Reminder: `usePat = true` means "don't use a PAT"
-    if (!usePat) {
-      if (entraServiceConnection)
+    if (usePat) {
+      if (connectedServiceName)
       {
         throw new Error(`Service connection is not supported when 'usePat' is set to 'false'.`);
       }
@@ -22,10 +22,10 @@ export async function getAccessToken(): Promise<string> {
       return tl.getVariable(patVar);
     }
 
-    if (entraServiceConnection)
+    if (connectedServiceName)
     {
       tl.debug(`Retrieving access token from service connection.`);
-      return await getAccessTokenViaWorkloadIdentityFederation(entraServiceConnection);
+      return await getAccessTokenViaWorkloadIdentityFederation(connectedServiceName);
     }
 
     tl.debug(`Retrieving system access token`);
@@ -56,6 +56,8 @@ async function getAccessTokenViaWorkloadIdentityFederation(connectedService: str
 
   const authorityUrl =
     tl.getEndpointDataParameter(connectedService, "activeDirectoryAuthority", true) ?? "https://login.microsoftonline.com/";
+
+  tl.debug(`Getting federated token for service connection ${connectedService}`);
 
   var federatedToken: string = await getFederatedToken(connectedService);
 
