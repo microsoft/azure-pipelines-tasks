@@ -45,6 +45,11 @@ parameters:
   displayName: Enable CodeQL for run
   type: boolean
   default: false
+- name: deprecatedTasks
+  displayName: "Deprecated tasks list to skip CG"
+  type: string
+  default: 'AzureMonitorAlertsV0, PyPIPublisherV0, NuGetPublisherV0, NuGetV0, XamarinTestCloudV1'
+
 
 variables:
   currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
@@ -116,6 +121,7 @@ extends:
           - template: /ci/build-all-steps.yml@self
             parameters:
               os: Windows_NT
+              deprecatedTasks: ${{ parameters.deprecatedTasks }}
 
         # Publish
         - job: publish
@@ -135,6 +141,8 @@ extends:
               ArtifactName: IndividualNuGetPackages
           steps:
           - template: /ci/publish-steps.yml@self
+            parameters:
+              deprecatedTasks: ${{ parameters.deprecatedTasks }}
 
         # Courtesy Push
         - job: courtesy_push
@@ -172,6 +180,8 @@ extends:
             persistCredentials: true
           - checkout: self
           - template: /ci/courtesy-push.yml@self
+            parameters:
+              deprecatedTasks: ${{ parameters.deprecatedTasks }}
 
         - job: build_all_tasks_for_deployments
           displayName: Build all tasks for deployments (Windows)
@@ -210,6 +220,8 @@ extends:
           - template: /ci/build-all-steps.yml@self
             parameters:
               os: Linux
+              deprecatedTasks: ${{ parameters.deprecatedTasks }}
+
 
         # All tasks on macOS
         - job: build_all_darwin
@@ -224,3 +236,5 @@ extends:
           - template: /ci/build-all-steps.yml@self
             parameters:
               os: Darwin
+              deprecatedTasks: ${{ parameters.deprecatedTasks }}
+

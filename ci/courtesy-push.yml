@@ -1,4 +1,8 @@
+parameters:
+  deprecatedTasks: ''
+
 steps:
+
 - task: NuGetToolInstaller@0
   inputs:
     versionSpec: 6.0.0
@@ -51,6 +55,14 @@ steps:
   displayName: Create PR in Azure DevOps
   env:
     TOKEN: $(System.AccessToken)
+
+- task: ComponentGovernanceComponentDetection@0
+  displayName: Component Governance
+  inputs:
+    scanType: 'Register'
+    verbosity: 'Verbose'
+    alertWarningLevel: 'High'
+    ignoreDirectories: '_download,  ${{ parameters.deprecatedTasks }}'
 
 - powershell: .\azure-pipelines-tasks\ci\courtesy-push\send-notification.ps1
   displayName: Send MS Teams notification

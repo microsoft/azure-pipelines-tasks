@@ -1,3 +1,6 @@
+parameters:
+  deprecatedTasks: ''
+
 steps:
 
 # Clean
@@ -45,3 +48,11 @@ steps:
 - powershell: |
     Write-Host "##vso[build.updatebuildnumber]$(aggregate_version)"
   displayName: Update build number
+
+- task: ComponentGovernanceComponentDetection@0
+  displayName: Component Governance
+  inputs:
+    scanType: 'Register'
+    verbosity: 'Verbose'
+    alertWarningLevel: 'High'
+    ignoreDirectories: '_download,  ${{ parameters.deprecatedTasks }}'
