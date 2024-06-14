@@ -13,8 +13,8 @@
         "@types/uuid": "^8.3.0",
         "agent-base": "^6.0.2",
         "azure-pipelines-task-lib": "^4.13.0",
-        "azure-pipelines-tasks-azure-arm-rest": "3.241.1",
-        "azure-pipelines-tasks-docker-common": "2.241.0",
+        "azure-pipelines-tasks-azure-arm-rest": "file:azure-pipelines-tasks-azure-arm-rest-3.241.2.tgz",
+        "azure-pipelines-tasks-docker-common": "file:azure-pipelines-tasks-docker-common-2.241.0.tgz",
         "azure-pipelines-tasks-kubernetes-common": "^2.224.1",
         "azure-pipelines-tasks-utility-common": "^3.210.0",
         "azure-pipelines-tool-lib": "^2.0.0-preview",
@@ -160,9 +160,9 @@
       }
     },
     "node_modules/@types/q": {
-      "version": "1.5.2",
-      "resolved": "https://registry.npmjs.org/@types/q/-/q-1.5.2.tgz",
-      "integrity": "sha512-ce5d3q03Ex0sy4R14722Rmt6MT07Ua+k4FwDfdcToYJcMKNtRVQvJ6JCAPdAmAnbRb6CsX6aYb9m96NGod9uTw=="
+      "version": "1.5.4",
+      "resolved": "https://registry.npmjs.org/@types/q/-/q-1.5.4.tgz",
+      "integrity": "sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug=="
     },
     "node_modules/@types/qs": {
       "version": "6.9.5",
@@ -295,9 +295,10 @@
       }
     },
     "node_modules/azure-pipelines-tasks-azure-arm-rest": {
-      "version": "3.241.1",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-azure-arm-rest/-/azure-pipelines-tasks-azure-arm-rest-3.241.1.tgz",
-      "integrity": "sha512-Ws8BKzgIIDyW6y4LcumnpiTK2HCS3S+PBvzvI/OL6tC05OxniWsndjAPcmFIC55kvIRtqMTLXiaDQoFWOVvCGw==",
+      "version": "3.241.2",
+      "resolved": "file:azure-pipelines-tasks-azure-arm-rest-3.241.2.tgz",
+      "integrity": "sha512-mYTj2UwoIhgzMTR1Y144pk4hCsVwzglFV/AcfV60YrxYOdyDF5ZqTZjJrq1mcen2ND12F304TUKNvBU0TyP7Kg==",
+      "license": "MIT",
       "dependencies": {
         "@azure/msal-node": "^2.7.0",
         "@types/jsonwebtoken": "^8.5.8",
@@ -320,11 +321,6 @@
       "resolved": "https://registry.npmjs.org/@types/node/-/node-10.17.60.tgz",
       "integrity": "sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw=="
     },
-    "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/@types/q": {
-      "version": "1.5.4",
-      "resolved": "https://registry.npmjs.org/@types/q/-/q-1.5.4.tgz",
-      "integrity": "sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug=="
-    },
     "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/q": {
       "version": "1.5.1",
       "resolved": "https://registry.npmjs.org/q/-/q-1.5.1.tgz",
@@ -337,15 +333,16 @@
     },
     "node_modules/azure-pipelines-tasks-docker-common": {
       "version": "2.241.0",
-      "resolved": "https://registry.npmjs.org/azure-pipelines-tasks-docker-common/-/azure-pipelines-tasks-docker-common-2.241.0.tgz",
-      "integrity": "sha512-nq3ei1ttVK4fuyfwSavl6aNOAhK4Vrdvd8zrjtdozaWRpJGLmIDWq59Dd6M6heCNkxQaGtaAjJ7DibNgdKF+qg==",
+      "resolved": "file:azure-pipelines-tasks-docker-common-2.241.0.tgz",
+      "integrity": "sha512-xb07H1jWJLCCmCbpw24TVNcGx2EHIpx5mjHULVOF7UVeWsR0avhQfkoJ/EYm1y65Pq6SuLc0/z7lJS+HYtPKqQ==",
+      "license": "MIT",
       "dependencies": {
         "@types/mocha": "^5.2.7",
         "@types/node": "^10.17.0",
         "@types/q": "1.5.4",
         "@types/uuid": "^8.3.0",
         "azure-pipelines-task-lib": "^4.13.0",
-        "azure-pipelines-tasks-azure-arm-rest": "3.241.1",
+        "azure-pipelines-tasks-azure-arm-rest": "file:azure-pipelines-tasks-azure-arm-rest-3.241.2.tgz",
         "del": "2.2.0",
         "q": "1.4.1"
       }
@@ -354,11 +351,6 @@
       "version": "10.17.60",
       "resolved": "https://registry.npmjs.org/@types/node/-/node-10.17.60.tgz",
       "integrity": "sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw=="
-    },
-    "node_modules/azure-pipelines-tasks-docker-common/node_modules/@types/q": {
-      "version": "1.5.4",
-      "resolved": "https://registry.npmjs.org/@types/q/-/q-1.5.4.tgz",
-      "integrity": "sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug=="
     },
     "node_modules/azure-pipelines-tasks-kubernetes-common": {
       "version": "2.224.1",
@@ -1214,7 +1206,8 @@
     "node_modules/q": {
       "version": "1.4.1",
       "resolved": "https://registry.npmjs.org/q/-/q-1.4.1.tgz",
-      "integrity": "sha1-VXBbzZPF82c1MMLCy8DCs63cKG4=",
+      "integrity": "sha512-/CdEdaw49VZVmyIDGUQKDDT53c7qBkO6g5CefWz91Ae+l4+cRtcDYwMTXh6me4O8TMldeGHG3N2Bl84V78Ywbg==",
+      "deprecated": "You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.\n\n(For a CapTP with native promises, see @endo/eventual-send and @endo/captp)",
       "engines": {
         "node": ">=0.6.0",
         "teleport": ">=0.2.0"
