@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Gestione app Web IIS",
-  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://aka.ms/iis-webapp-management-readme)",
+  "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/iis-webapp-management-readme)",
   "loc.description": "Consente di creare o aggiornare siti Web, app Web, directory virtuali o pool di applicazioni",
   "loc.instanceNameFormat": "Gestisci $(IISDeploymentType)",
   "loc.group.displayName.Website": "Sito Web IIS",

@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 241,
-    "Patch": 0
+    "Minor": 238,
+    "Patch": 2
   },
   "preview": true,
   "demands": [],
@@ -104,7 +104,7 @@
     "NotSupportedOS": "ms-resource:loc.messages.NotSupportedOS"
   },
   "_buildConfigMapping": {
-    "Default": "0.241.0",
-    "Node20_229_4": "0.241.1"
+    "Default": "0.238.2",
+    "Node20_229_4": "0.238.3"
   }
 }

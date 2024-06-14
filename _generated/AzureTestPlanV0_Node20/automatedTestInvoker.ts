@@ -6,10 +6,12 @@ import { ciDictionary } from './ciEventLogger';
 import { executeGoTests } from './Invokers/goinvoker';
 export async function testInvoker(testsToBeExecuted: string[], ciData: ciDictionary): Promise<number> {
 
-    const testLanguage = tl.getInput('testLanguageInput', true);
+    const testLanguageStrings = tl.getDelimitedInput('testLanguageInput', ',', true);
 
     let exitStatusCode = 0;
-    let exitCode = 0;
+
+    for (const testLanguage of testLanguageStrings) {
+        let exitCode = 0;
 
         if (testLanguage === null || testLanguage === undefined) {
             console.log("Please select the test framework language from the task dropdown list to execute automated tests");
@@ -47,6 +49,7 @@ export async function testInvoker(testsToBeExecuted: string[], ciData: ciDiction
         }
         
         exitStatusCode = exitStatusCode || exitCode;
+    }
     
     tl.debug(`Execution Status Code for Automated Execution Flow: ${exitStatusCode}`);
     return exitStatusCode;

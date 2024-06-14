@@ -39,8 +39,7 @@ async function run() {
         let image;
         if (endpointId) {
             // Establishing registry connection and pulling the container.
-            let containerRegistry = new ContainerRegistry();
-            await containerRegistry.open(endpointId);
+            let containerRegistry = new ContainerRegistry(endpointId);
             tl.debug(`Successfully finished docker login`);
             image = `${containerRegistry.getQualifiedImageName(repository, tag)}`;
             tl.debug(`Image: ${image}`);

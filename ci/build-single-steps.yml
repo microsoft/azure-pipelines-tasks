@@ -127,6 +127,16 @@ steps:
   - script: npm run package
     displayName: npm run package
 
+  # Authenticate 
+  - task: NuGetAuthenticate@1
+    displayName: Authenticate with nuget
+
+  # Push to feed
+  - script: |
+      cd $(Build.SourcesDirectory)\_package\nuget-packages
+      push.cmd
+    displayName: Push Nuget package
+
   - powershell: |
       mv _package/nuget-packages nuget-packages
     displayName: Move _package/nuget-packages to nuget-packages
