@@ -7,6 +7,7 @@ import { executeGoCommand } from '../testLibExecutor';
 //GO command like "gotestsum --junitfile TEST-Go<i>-junit.xml -- <filepath> -v -run ^<TestName>$"
 export async function executeGoTests(testsToBeExecuted: string[]): Promise<number> {
 
+    let finalStatus = 0; 
     let goPath = tl.which("go", true);
     await executeGoCommand(goPath, constants.INSTALL_GOTESTSUM);
     tl.debug("Installed Gotestsum");
@@ -19,12 +20,16 @@ export async function executeGoTests(testsToBeExecuted: string[]): Promise<numbe
             const GoTestPath = utils.separateGoPath(tests);
             const GoTestName = utils.separateGoTestName(tests);
             const argument = `--junitfile TEST-Go${i}-junit.xml -- ${GoTestPath} -v -run ^${GoTestName}$`;
-            await executeGoCommand(goPath, argument);
+            const status = await executeGoCommand(goPath, argument);
+            if (status != 0) {
+                finalStatus = 1;
+            }
             tl.debug("Tests Run Successfully");
         } catch (error) {
             console.error(`Error executing test case:`, error);
+            finalStatus = 1;
         }
         i++;
     }
-    return 0;
+    return finalStatus;
 }
