@@ -1,252 +1,252 @@
 {
-  "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
-  "id": "c7d56ba6-35a6-453d-8192-8b602bf234bd",
-  "name": "Notation",
-  "friendlyName": "Notation",
-  "description": "Azure Pipepine Task for setting up Notation CLI, sign and verify with Notation",
-  "helpMarkDown": "",
-  "category": "Utility",
-  "author": "Notation Developers",
-  "minimumAgentVersion": "2.144.0",
-  "version": {
-    "Major": 0,
-    "Minor": 240,
-    "Patch": 0
-  },
-  "groups": [
-    {
-      "name": "commandConfig",
-      "displayName": "Command Configuration",
-      "isExpanded": true
+    "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+    "id": "c7d56ba6-35a6-453d-8192-8b602bf234bd",
+    "name": "Notation",
+    "friendlyName": "Notation",
+    "description": "Azure Pipepine Task for setting up Notation CLI, sign and verify with Notation",
+    "helpMarkDown": "",
+    "category": "Utility",
+    "author": "Notation Developers",
+    "minimumAgentVersion": "2.144.0",
+    "version": {
+        "Major": 0,
+        "Minor": 241,
+        "Patch": 0
     },
-    {
-      "name": "pluginConfig",
-      "displayName": "Plugin Configuration",
-      "isExpanded": true,
-      "visibleRule": "command = sign"
+    "groups": [
+        {
+            "name": "commandConfig",
+            "displayName": "Command Configuration",
+            "isExpanded": true
+        },
+        {
+            "name": "pluginConfig",
+            "displayName": "Plugin Configuration",
+            "isExpanded": true,
+            "visibleRule": "command = sign"
+        },
+        {
+            "name": "advancedConfig",
+            "displayName": "Advanced Configuration",
+            "isExpanded": false,
+            "visibleRule": "command = sign || command = verify"
+        }
+    ],
+    "instanceNameFormat": "$(command)",
+    "inputs": [
+        {
+            "name": "command",
+            "type": "pickList",
+            "label": "Command to run",
+            "defaultValue": "install",
+            "helpMarkDown": "example: install",
+            "required": true,
+            "options": {
+                "install": "Install",
+                "sign": "Sign",
+                "verify": "Verify"
+            }
+        },
+        {
+            "name": "isCustomVersion",
+            "type": "boolean",
+            "label": "Custom Version",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "If checked, you can provide a custom version for the task",
+            "visibleRule": "command = install",
+            "groupName": "commandConfig"
+        },
+        {
+            "name": "version",
+            "type": "string",
+            "label": "Version",
+            "defaultValue": "1.1.0",
+            "required": true,
+            "helpMarkDown": "The version of Notation to install. Example: 1.0.0, 1, 1.0, 1.0.0",
+            "visibleRule": "command = install && isCustomVersion = false",
+            "groupName": "commandConfig"
+        },
+        {
+            "name": "url",
+            "type": "string",
+            "label": "Download URL",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "example: https://github.com/notaryproject/notation/releases/download/v1.0.0/notation_1.0.0_linux_amd64.tar.gz",
+            "groupName": "commandConfig",
+            "visibleRule": "command = install && isCustomVersion = true"
+        },
+        {
+            "name": "checksum",
+            "type": "string",
+            "label": "Checksum",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The SHA-256 checksum of the downloaded file",
+            "groupName": "commandConfig",
+            "visibleRule": "command = install && isCustomVersion = true"
+        },
+        {
+            "name": "artifactRefs",
+            "type": "string",
+            "label": "Artifact references",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "command = verify || command = sign",
+            "helpMarkDown": "Container artifact references for signing. If it was not specified, use the artifact reference from previous Docker push task. Example: <registry name>/<repository name>@<digest> If multiple, separate by comma.",
+            "groupName": "commandConfig"
+        },
+        {
+            "name": "signatureFormat",
+            "type": "pickList",
+            "label": "Signature Format",
+            "defaultValue": "cose",
+            "required": false,
+            "options": {
+                "cose": "COSE",
+                "jws": "JWS"
+            },
+            "visibleRule": "command = sign",
+            "helpMarkDown": "Signature envelope format, options: \"jws\", \"cose\" (default \"jws\")",
+            "groupName": "advancedConfig"
+        },
+        {
+            "name": "allowReferrersAPI",
+            "type": "boolean",
+            "label": "[Experimental] Allow Referrers API",
+            "defaultValue": false,
+            "required": false,
+            "visibleRule": "command = sign || command = verify",
+            "helpMarkDown": "Use the Referrers API to sign signatures, if not supported (returns 404), fallback to the Referrers tag schema.",
+            "groupName": "advancedConfig"
+        },
+        {
+            "name": "plugin",
+            "type": "pickList",
+            "label": "Plugin",
+            "defaultValue": "azureKeyVault",
+            "required": true,
+            "options": {
+                "azureKeyVault": "Azure Key Vault Plugin"
+            },
+            "groupName": "pluginConfig"
+        },
+        {
+            "name": "akvPluginVersion",
+            "type": "string",
+            "label": "Plugin Version",
+            "defaultValue": "1.1.0",
+            "required": true,
+            "helpMarkDown": "The version of the Azure Key Vault plugin to be installed. please visit the [release page](https://github.com/Azure/notation-azure-kv/releases) for the available versions.",
+            "visibleRule": "plugin = azureKeyVault",
+            "groupName": "pluginConfig"
+        },
+        {
+            "name": "azurekvServiceConection",
+            "type": "connectedService:AzureRM",
+            "label": "Azure Key Vault service connection",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Select the Azure subscription for the key vault if prefer to use service connection for authentication.",
+            "visibleRule": "plugin = azureKeyVault",
+            "groupName": "pluginConfig"
+        },
+        {
+            "name": "keyid",
+            "type": "string",
+            "label": "Key ID",
+            "required": true,
+            "defaultValue": "",
+            "helpMarkDown": "The Key ID is the key or certificate identifier for Azure Key Vault.",
+            "visibleRule": "plugin = azureKeyVault",
+            "groupName": "pluginConfig"
+        },
+        {
+            "name": "caCertBundle",
+            "type": "string",
+            "label": "Certificate Bundle File Path",
+            "required": false,
+            "defaultValue": "",
+            "visibleRule": "plugin = azureKeyVault",
+            "helpMarkDown": "A file with root and all intermediate certificates, starting from the root certificate, following the order in the certificate chain.",
+            "groupName": "pluginConfig"
+        },
+        {
+            "name": "selfSigned",
+            "type": "boolean",
+            "label": "Self-signed Certificate",
+            "required": false,
+            "defaultValue": false,
+            "visibleRule": "plugin = azureKeyVault",
+            "groupName": "pluginConfig"
+        },
+        {
+            "name": "trustPolicy",
+            "type": "string",
+            "label": "Trust Policy File Path",
+            "required": true,
+            "defaultValue": "",
+            "visibleRule": "command = verify",
+            "helpMarkDown": "The path to the [trust policy](https://github.com/notaryproject/specifications/blob/v1.0.0/specs/trust-store-trust-policy.md#trust-policy) file relative to the repository. Example: ./path/to/trust-policy.json",
+            "groupName": "commandConfig"
+        },
+        {
+            "name": "trustStore",
+            "type": "string",
+            "label": "Trust Store Folder Path",
+            "required": true,
+            "defaultValue": "",
+            "visibleRule": "command = verify",
+            "helpMarkDown": "The path to the directory containing the [trust store](https://github.com/notaryproject/specifications/blob/v1.0.0/specs/trust-store-trust-policy.md#trust-store) relative to the repository. Example: ./path/to/truststore/",
+            "groupName": "commandConfig"
+        }
+    ],
+    "execution": {
+        "Node16": {
+            "target": "src/index.js",
+            "argumentFormat": ""
+        },
+        "Node20_1": {
+            "target": "src/index.js",
+            "argumentFormat": ""
+        }
     },
-    {
-      "name": "advancedConfig",
-      "displayName": "Advanced Configuration",
-      "isExpanded": false,
-      "visibleRule": "command = sign || command = verify"
+    "messages": {
+        "ArtifactRefs": "Artifact references: %s.",
+        "ArtifactRefsNotSpecified": "Artifact references are not specified.",
+        "APPDATANotSet": "APPDATA is not set.",
+        "AzureKVPluginAlreadyInstalled": "Azure Key Vault plugin v%s is already installed.",
+        "CannotFindTrustStore": "Cannot find trust store directory: %s.",
+        "ChecksumValidated": "Checksum validated: %s.",
+        "ChecksumValidationFailed": "Checksum validation failed. Expected: %s, Actual: %s.",
+        "FailedArtifacts": "Failed artifacts: %s.",
+        "FailedToAddCertToTrustStore": "Failed to add a certificate to trust store: %s.",
+        "FailedToGetWorkloadIdToken": "Failed to get workload identity token: %s.",
+        "FailedToImportTrustPolicy": "Failed to import trust policy: %s.",
+        "FailedToListTrustStore": "Failed to list the trust store.",
+        "FailedToShowTrustPolicy": "Failed to show trust policy.",
+        "TryToGetArtifactRefsFromDockerTask": "Try to get artifact references from Docker task.",
+        "InvalidResourceURI": "Invalid resource URI: %s.",
+        "InvalidVersionPrefix": "Invalid version prefix: %s.",
+        "ResultSummary": "Total artifacts: %s, succeeded: %s, failed: %s.",
+        "RepeatedArtifactRef": "Repeated artifact reference: %s.",
+        "SucceededArtifacts": "Succeeded artifacts: %s.",
+        "TempDirectoryNotSet": "Agent.TempDirectory is not set.",
+        "TempDirectoryOrWorkingDirectoryNotSet": "Agent.TempDirectory or system.DefaultWorkingDirectory is not set",
+        "NoAuthScheme": "No authentication scheme is specified.",
+        "NotationAlreadyInstalled": "Notation is already installed, please do not install it again.",
+        "NotationInstalledFromURL": "Notation is installed from %s.",
+        "NotationInstalledFromVersion": "Notation v%s is installed.",
+        "NoServiceConnection": "No Azure Key Vault service connection endpoint is specified.",
+        "UnsupportedArchitecture": "Unsupported architecture: %s.",
+        "UnsupportedFileExtension": "Unsupported file extension: %s.",
+        "UnsupportedPlatform": "Unsupported platform: %s.",
+        "UnsupportedVersion": "Unsupported version: %s.",
+        "UseAuthenticationMethod": "Use %s to access Azure Key Vault.",
+        "UnknownCommand": "Unknown command: %s.",
+        "UnknownError": "An unknown error occurred.",
+        "UnknownPlugin": "Unknown plugin: %s.",
+        "UnsupportedAuthScheme": "Unsupported authentication scheme: %s."
     }
-  ],
-  "instanceNameFormat": "$(command)",
-  "inputs": [
-    {
-      "name": "command",
-      "type": "pickList",
-      "label": "Command to run",
-      "defaultValue": "install",
-      "helpMarkDown": "example: install",
-      "required": true,
-      "options": {
-        "install": "Install",
-        "sign": "Sign",
-        "verify": "Verify"
-      }
-    },
-    {
-      "name": "isCustomVersion",
-      "type": "boolean",
-      "label": "Custom Version",
-      "defaultValue": false,
-      "required": false,
-      "helpMarkDown": "If checked, you can provide a custom version for the task",
-      "visibleRule": "command = install",
-      "groupName": "commandConfig"
-    },
-    {
-      "name": "version",
-      "type": "string",
-      "label": "Version",
-      "defaultValue": "1.1.0",
-      "required": true,
-      "helpMarkDown": "The version of Notation to install. Example: 1.0.0, 1, 1.0, 1.0.0",
-      "visibleRule": "command = install && isCustomVersion = false",
-      "groupName": "commandConfig"
-    },
-    {
-      "name": "url",
-      "type": "string",
-      "label": "Download URL",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "example: https://github.com/notaryproject/notation/releases/download/v1.0.0/notation_1.0.0_linux_amd64.tar.gz",
-      "groupName": "commandConfig",
-      "visibleRule": "command = install && isCustomVersion = true"
-    },
-    {
-      "name": "checksum",
-      "type": "string",
-      "label": "Checksum",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "The SHA-256 checksum of the downloaded file",
-      "groupName": "commandConfig",
-      "visibleRule": "command = install && isCustomVersion = true"
-    },
-    {
-      "name": "artifactRefs",
-      "type": "string",
-      "label": "Artifact references",
-      "defaultValue": "",
-      "required": false,
-      "visibleRule": "command = verify || command = sign",
-      "helpMarkDown": "Container artifact references for signing. If it was not specified, use the artifact reference from previous Docker push task. Example: <registry name>/<repository name>@<digest> If multiple, separate by comma.",
-      "groupName": "commandConfig"
-    },
-    {
-      "name": "signatureFormat",
-      "type": "pickList",
-      "label": "Signature Format",
-      "defaultValue": "cose",
-      "required": false,
-      "options": {
-        "cose": "COSE",
-        "jws": "JWS"
-      },
-      "visibleRule": "command = sign",
-      "helpMarkDown": "Signature envelope format, options: \"jws\", \"cose\" (default \"jws\")",
-      "groupName": "advancedConfig"
-    },
-    {
-      "name": "allowReferrersAPI",
-      "type": "boolean",
-      "label": "[Experimental] Allow Referrers API",
-      "defaultValue": false,
-      "required": false,
-      "visibleRule": "command = sign || command = verify",
-      "helpMarkDown": "Use the Referrers API to sign signatures, if not supported (returns 404), fallback to the Referrers tag schema.",
-      "groupName": "advancedConfig"
-    },
-    {
-      "name": "plugin",
-      "type": "pickList",
-      "label": "Plugin",
-      "defaultValue": "azureKeyVault",
-      "required": true,
-      "options": {
-        "azureKeyVault": "Azure Key Vault Plugin"
-      },
-      "groupName": "pluginConfig"
-    },
-    {
-      "name": "akvPluginVersion",
-      "type": "string",
-      "label": "Plugin Version",
-      "defaultValue": "1.1.0",
-      "required": true,
-      "helpMarkDown": "The version of the Azure Key Vault plugin to be installed. please visit the [release page](https://github.com/Azure/notation-azure-kv/releases) for the available versions.",
-      "visibleRule": "plugin = azureKeyVault",
-      "groupName": "pluginConfig"
-    },
-    {
-      "name": "azurekvServiceConection",
-      "type": "connectedService:AzureRM",
-      "label": "Azure Key Vault service connection",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Select the Azure subscription for the key vault if prefer to use service connection for authentication.",
-      "visibleRule": "plugin = azureKeyVault",
-      "groupName": "pluginConfig"
-    },
-    {
-      "name": "keyid",
-      "type": "string",
-      "label": "Key ID",
-      "required": true,
-      "defaultValue": "",
-      "helpMarkDown": "The Key ID is the key or certificate identifier for Azure Key Vault.",
-      "visibleRule": "plugin = azureKeyVault",
-      "groupName": "pluginConfig"
-    },
-    {
-      "name": "caCertBundle",
-      "type": "string",
-      "label": "Certificate Bundle File Path",
-      "required": false,
-      "defaultValue": "",
-      "visibleRule": "plugin = azureKeyVault",
-      "helpMarkDown": "A file with root and all intermediate certificates, starting from the root certificate, following the order in the certificate chain.",
-      "groupName": "pluginConfig"
-    },
-    {
-      "name": "selfSigned",
-      "type": "boolean",
-      "label": "Self-signed Certificate",
-      "required": false,
-      "defaultValue": false,
-      "visibleRule": "plugin = azureKeyVault",
-      "groupName": "pluginConfig"
-    },
-    {
-      "name": "trustPolicy",
-      "type": "string",
-      "label": "Trust Policy File Path",
-      "required": true,
-      "defaultValue": "",
-      "visibleRule": "command = verify",
-      "helpMarkDown": "The path to the [trust policy](https://github.com/notaryproject/specifications/blob/v1.0.0/specs/trust-store-trust-policy.md#trust-policy) file relative to the repository. Example: ./path/to/trust-policy.json",
-      "groupName": "commandConfig"
-    },
-    {
-      "name": "trustStore",
-      "type": "string",
-      "label": "Trust Store Folder Path",
-      "required": true,
-      "defaultValue": "",
-      "visibleRule": "command = verify",
-      "helpMarkDown": "The path to the directory containing the [trust store](https://github.com/notaryproject/specifications/blob/v1.0.0/specs/trust-store-trust-policy.md#trust-store) relative to the repository. Example: ./path/to/truststore/",
-      "groupName": "commandConfig"
-    }
-  ],
-  "execution": {
-    "Node16": {
-      "target": "src/index.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
-      "target": "src/index.js",
-      "argumentFormat": ""
-    }
-  },
-  "messages": {
-    "ArtifactRefs": "Artifact references: %s.",
-    "ArtifactRefsNotSpecified": "Artifact references are not specified.",
-    "APPDATANotSet": "APPDATA is not set.",
-    "AzureKVPluginAlreadyInstalled": "Azure Key Vault plugin v%s is already installed.",
-    "CannotFindTrustStore": "Cannot find trust store directory: %s.",
-    "ChecksumValidated": "Checksum validated: %s.",
-    "ChecksumValidationFailed": "Checksum validation failed. Expected: %s, Actual: %s.",
-    "FailedArtifacts": "Failed artifacts: %s.",
-    "FailedToAddCertToTrustStore": "Failed to add a certificate to trust store: %s.",
-    "FailedToGetWorkloadIdToken": "Failed to get workload identity token: %s.",
-    "FailedToImportTrustPolicy": "Failed to import trust policy: %s.",
-    "FailedToListTrustStore": "Failed to list the trust store.",
-    "FailedToShowTrustPolicy": "Failed to show trust policy.",
-    "TryToGetArtifactRefsFromDockerTask": "Try to get artifact references from Docker task.",
-    "InvalidResourceURI": "Invalid resource URI: %s.",
-    "InvalidVersionPrefix": "Invalid version prefix: %s.",
-    "ResultSummary": "Total artifacts: %s, succeeded: %s, failed: %s.",
-    "RepeatedArtifactRef": "Repeated artifact reference: %s.",
-    "SucceededArtifacts": "Succeeded artifacts: %s.",
-    "TempDirectoryNotSet": "Agent.TempDirectory is not set.",
-    "TempDirectoryOrWorkingDirectoryNotSet": "Agent.TempDirectory or system.DefaultWorkingDirectory is not set",
-    "NoAuthScheme": "No authentication scheme is specified.",
-    "NotationAlreadyInstalled": "Notation is already installed, please do not install it again.",
-    "NotationInstalledFromURL": "Notation is installed from %s.",
-    "NotationInstalledFromVersion": "Notation v%s is installed.",
-    "NoServiceConnection": "No Azure Key Vault service connection endpoint is specified.",
-    "UnsupportedArchitecture": "Unsupported architecture: %s.",
-    "UnsupportedFileExtension": "Unsupported file extension: %s.",
-    "UnsupportedPlatform": "Unsupported platform: %s.",
-    "UnsupportedVersion": "Unsupported version: %s.",
-    "UseAuthenticationMethod": "Use %s to access Azure Key Vault.",
-    "UnknownCommand": "Unknown command: %s.",
-    "UnknownError": "An unknown error occurred.",
-    "UnknownPlugin": "Unknown plugin: %s.",
-    "UnsupportedAuthScheme": "Unsupported authentication scheme: %s."
-  }
 }

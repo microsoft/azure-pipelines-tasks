@@ -29,8 +29,8 @@
   "loc.input.help.failOnStandardError": "Si es true, la tarea no se podrá ejecutar cuando se registre algún error en la secuencia StandardError. Anule la selección de la casilla para ignorar los errores estándar y use los códigos de salida para determinar el estado.",
   "loc.input.label.powerShellIgnoreLASTEXITCODE": "Ignorar $LASTEXITCODE",
   "loc.input.help.powerShellIgnoreLASTEXITCODE": "Si es false, se anexa la línea \"if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }\" al final del script. Esto hará que se propague el último código de salida de un comando externo como código de salida de PowerShell. De lo contrario, no se anexa la línea al final del script.",
-  "loc.input.label.visibleAzLogin": "az login output visibility",
-  "loc.input.help.visibleAzLogin": "If this is set to true, az login command will output to the task. Setting it to false will suppress the az login output",
+  "loc.input.label.visibleAzLogin": "visibilidad de salida de acceso de zona de disponibilidad",
+  "loc.input.help.visibleAzLogin": "Si se establece en true, el comando de acceso de zona de disponibilidad generará la salida en la tarea. Si se establece en false, se suprimirá la salida de acceso de zona de disponibilidad.",
   "loc.messages.ScriptReturnCode": "El script finalizó con el código de retorno: %d",
   "loc.messages.ScriptFailed": "No se pudo ejecutar el script. Error: %s",
   "loc.messages.ScriptFailedStdErr": "El script tiene la salida en stderr. Se produce un error cuando failOnStdErr está establecido en true.",
@@ -49,5 +49,5 @@
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Para la versión del agente < 2.115.0, solo se puede usar la configuración global de la CLI de Azure.",
   "loc.messages.UnacceptedScriptLocationValue": "%s no es un valor válido para la entrada de tarea \"Ubicación del script\" (scriptLocation en YAML). El valor puede ser \"inlineScript\" o \"scriptPath\".",
   "loc.messages.ExpiredServicePrincipalMessageWithLink": "El secreto expiró. Actualice la conexión de servicio en %s Consulte https://aka.ms/azdo-rm-workload-identity-conversion para obtener más información sobre la conversión a conexiones de servicio sin secretos.",
-  "loc.messages.ProxyConfig": "az tool is configured to use %s as proxy server"
+  "loc.messages.ProxyConfig": "la herramienta de zona de disponibilidad está configurada para usar %s como servidor proxy"
 }
