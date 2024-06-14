@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 239,
     "Patch": 0
   },
   "preview": true,
@@ -160,6 +160,12 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.data_api_location"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "AZURESTATICWEBAPP_STATIC_WEB_APP_URL",
+      "description": "URL of the Static Web App after a successful deployment."
     }
   ],
   "execution": {
