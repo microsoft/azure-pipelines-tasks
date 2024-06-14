@@ -89,6 +89,7 @@ async function main(): Promise<void> {
                     let serviceURL = URL.parse(serviceEndpoint.url);
                     console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
                     registry = serviceEndpoint;
+                    tl.setSecret(registry.auth);
                     addedRegistry.push(serviceURL);
                     npmrcFile = clearFileOfReferences(npmrc, npmrcFile, serviceURL, addedRegistry);
                     break;
@@ -101,6 +102,7 @@ async function main(): Promise<void> {
                     let localURL = URL.parse(localRegistry.url);
                     console.log(tl.loc("AddingLocalCredentials"));
                     registry = localRegistry;
+                    tl.setSecret(registry.auth);
                     addedRegistry.push(localURL);
                     npmrcFile = clearFileOfReferences(npmrc, npmrcFile, localURL, addedRegistry);
                     break;
