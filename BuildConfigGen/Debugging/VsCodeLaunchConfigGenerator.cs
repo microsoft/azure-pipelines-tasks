@@ -25,7 +25,7 @@ namespace BuildConfigGen.Debugging
 
             AgentPath = agentPath;
             GitRootPath = gitRootPath;
-            LaunchConfig = VsCodeLaunchConfiguration.ReadFrom(LaunchConfigPath);
+            LaunchConfig = VsCodeLaunchConfiguration.ReadFromFileIfPresentOrDefault(LaunchConfigPath);
         }
 
         public void AddForTask(string taskConfigPath)

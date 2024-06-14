@@ -28,18 +28,25 @@ namespace BuildConfigGen
             });
         }
 
-        public static VsCodeLaunchConfiguration ReadFrom(string configPath)
+        public static VsCodeLaunchConfiguration ReadFromFileIfPresentOrDefault(string configPath)
         {
             ArgumentException.ThrowIfNullOrEmpty(configPath);
-            if(!File.Exists(configPath))
+
+            JsonObject launchConfiguration;
+            if (File.Exists(configPath))
             {
-                throw new ArgumentException($"Launch configuration file at {Path.GetFullPath(configPath)} does not exist!");
+                var rawConfigurationsString = File.ReadAllText(configPath);
+                var safeConfigurationsString = RemoveJsonComments(rawConfigurationsString);
+
+                launchConfiguration = JsonNode.Parse(safeConfigurationsString)?.AsObject() ?? throw new ArgumentException($"Provided configuration file at {Path.GetFullPath(configPath)} is not a valid JSON file!");
+            } else
+            {
+                launchConfiguration = new JsonObject
+                {
+                    ["version"] = "0.2.0",
+                    ["configurations"] = new JsonArray()
+                };
             }
-
-            var rawConfigurationsString = File.ReadAllText(configPath);
-            var safeConfigurationsString = RemoveJsonComments(rawConfigurationsString);
-
-            var launchConfiguration = JsonNode.Parse(safeConfigurationsString)?.AsObject() ?? throw new ArgumentException($"Provided configuration file at {Path.GetFullPath(configPath)} is not a valid JSON file!");
 
             return new VsCodeLaunchConfiguration(launchConfiguration);
         }
