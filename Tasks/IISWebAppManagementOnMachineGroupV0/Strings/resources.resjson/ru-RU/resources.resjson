@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Управление веб-приложением IIS",
-  "loc.helpMarkDown": "[Дополнительные сведения](https://aka.ms/iis-webapp-management-readme)",
+  "loc.helpMarkDown": "[Подробнее об этой задаче](https://aka.ms/iis-webapp-management-readme)",
   "loc.description": "Создание или обновление веб-сайтов, веб-приложений, виртуальных каталогов или пулов приложений",
   "loc.instanceNameFormat": "Управление $(IISDeploymentType)",
   "loc.group.displayName.Website": "Веб-сайт IIS",

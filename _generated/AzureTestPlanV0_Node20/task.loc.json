@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 241,
-    "Patch": 1
+    "Patch": 5
   },
   "preview": true,
   "demands": [],
@@ -81,9 +81,6 @@
         "Java-Gradle": "Java-Gradle",
         "Python": "Python",
         "Go": "Go"
-      },
-      "properties": {
-        "MultiSelectFlatList": "True"
       }
     },
     {
@@ -184,7 +181,7 @@
     "MultipleMatchingGradlewFound": "ms-resource:loc.messages.MultipleMatchingGradlewFound"
   },
   "_buildConfigMapping": {
-    "Default": "0.241.0",
-    "Node20-225": "0.241.1"
+    "Default": "0.241.4",
+    "Node20-225": "0.241.5"
   }
 }

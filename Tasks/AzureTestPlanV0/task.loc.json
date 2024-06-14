@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 241,
-    "Patch": 0
+    "Patch": 4
   },
   "preview": true,
   "demands": [],
@@ -81,9 +81,6 @@
         "Java-Gradle": "Java-Gradle",
         "Python": "Python",
         "Go":  "Go"
-      },
-      "properties": {
-        "MultiSelectFlatList": "True"
       }
     },
     {
