@@ -1,4 +1,5 @@
 import * as path from 'path';
+import fs from 'fs';
 import * as Q from 'q';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as codeCoverageUtilities from 'azure-pipelines-tasks-codecoverage-tools/codecoverageutilities';
@@ -15,8 +16,13 @@ const TESTRUN_SYSTEM = 'VSTS - gradle';
  */
 export function enableCodeCoverageAsync(settings: ICodeCoverageSettings): Q.Promise<boolean> {
     const buildProperties: { [key: string]: string } = {};
+    
+    if (fs.existsSync(path.join(settings.workingDirectory, 'build.gradle.kts'))) {
+      buildProperties['buildfile'] = path.join(settings.workingDirectory, 'build.gradle.kts');
+    } else {
+      buildProperties['buildfile'] = path.join(settings.workingDirectory, 'build.gradle');
+    }
 
-    buildProperties['buildfile'] = path.join(settings.workingDirectory, 'build.gradle');
     buildProperties['classfilter'] = settings.classFilter;
     buildProperties['classfilesdirectories'] = settings.classFilesDirectories;
     buildProperties['summaryfile'] = settings.summaryFileName;
