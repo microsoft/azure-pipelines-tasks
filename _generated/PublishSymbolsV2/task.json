@@ -13,8 +13,8 @@
   "preview": false,
   "version": {
     "Major": 2,
-    "Minor": 237,
-    "Patch": 0
+    "Minor": 241,
+    "Patch": 32
   },
   "minimumAgentVersion": "2.144.0",
   "groups": [
@@ -25,6 +25,14 @@
     }
   ],
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:AzureRM",
+      "label": "Azure Resource Manager connection",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Name of the Azure Resource Manager service connection. Supported authentication type is currently only workload identity federation."
+    },
     {
       "name": "SymbolsFolder",
       "type": "string",
@@ -240,7 +248,7 @@
     "Win32Error0FromMethod1": "Encountered Win32 error '{0}' from method '{1}'."
   },
   "_buildConfigMapping": {
-    "Default": "2.237.0",
-    "Node20_229_14": "2.237.1"
+    "Default": "2.241.32",
+    "Node20_229_14": "2.241.33"
   }
 }

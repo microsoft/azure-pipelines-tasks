@@ -13,8 +13,8 @@
   "preview": false,
   "version": {
     "Major": 2,
-    "Minor": 237,
-    "Patch": 1
+    "Minor": 241,
+    "Patch": 33
   },
   "minimumAgentVersion": "2.144.0",
   "groups": [
@@ -25,6 +25,14 @@
     }
   ],
   "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
     {
       "name": "SymbolsFolder",
       "type": "string",
@@ -248,7 +256,7 @@
     "Win32Error0FromMethod1": "ms-resource:loc.messages.Win32Error0FromMethod1"
   },
   "_buildConfigMapping": {
-    "Default": "2.237.0",
-    "Node20_229_14": "2.237.1"
+    "Default": "2.241.32",
+    "Node20_229_14": "2.241.33"
   }
 }

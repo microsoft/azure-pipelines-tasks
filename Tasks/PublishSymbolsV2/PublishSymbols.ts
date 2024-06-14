@@ -43,9 +43,11 @@ export async function run(clientToolFilePath: string): Promise<void> {
         }
         else {
             personalAccessToken = clientToolUtils.getSystemAccessToken();
-            const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-            symbolServiceUri = await getSymbolServiceUri(serviceUri, personalAccessToken);
         }
+
+        //Get the symbol service uri and set it to the symbolServiceUri
+        const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
+        symbolServiceUri = await getSymbolServiceUri(serviceUri, personalAccessToken);
 
         let defaultSymbolFolder: string = tl.getVariable("Build.SourcesDirectory") ? tl.getVariable("Build.SourcesDirectory") : "";
         let symbolsFolder: string = tl.getInput("SymbolsFolder", false) ? tl.getInput("SymbolsFolder", false) : defaultSymbolFolder;
