@@ -16,17 +16,17 @@ export async function executeGoTests(testsToBeExecuted: string[]): Promise<numbe
     goPath = tl.which("gotestsum", true);
     let i = 0;
     for (let tests of testsToBeExecuted) {
+        const GoTestPath = utils.separateGoPath(tests);
+        const GoTestName = utils.separateGoTestName(tests);
         try {
-            const GoTestPath = utils.separateGoPath(tests);
-            const GoTestName = utils.separateGoTestName(tests);
             const argument = `--junitfile TEST-Go${i}-junit.xml -- ${GoTestPath} -v -run ^${GoTestName}$`;
             const status = await executeGoCommand(goPath, argument);
             if (status != 0) {
                 finalStatus = 1;
             }
-            tl.debug("Tests Run Successfully");
+            tl.debug(`Test case ${GoTestName} executed successfully.`);
         } catch (error) {
-            console.error(`Error executing test case:`, error);
+            tl.debug(`Error executing ${GoTestName} test case: ${error}`);
             finalStatus = 1;
         }
         i++;
