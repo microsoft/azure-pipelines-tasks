@@ -7,6 +7,14 @@ trigger:
 
 resources:
   repositories:
+  - repository: AzureDevOps
+    type: git
+    name: AzureDevOps/AzureDevOps
+
+  - repository: ConfigChange
+    type: git
+    name: AzureDevOps/AzureDevOps.ConfigChange
+
   - repository: 1ESPipelineTemplates
     type: git
     name: 1ESPipelineTemplates/1ESPipelineTemplates
@@ -25,6 +33,10 @@ parameters:
   displayName: Push to Feed
   type: boolean
   default: false
+- name: generate_prs
+  displayName: Create hotfix PRs and Release
+  type: boolean
+  default: false
 - name: deploy_all_tasks
   displayName: Build all tasks for deployment
   type: boolean
@@ -40,7 +52,6 @@ variables:
   taskNameIsSet: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
   isHotfix: ${{ and(eq(parameters.push_to_feed, true), eq(variables.taskNameIsSet, true)) }}
   runCodeQl: ${{ eq(parameters.enableCodeQL, true) }}
-
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
@@ -51,6 +62,10 @@ extends:
     sdl:
       sbom:
         enabled: false
+      codeql:
+        compiled:
+          enabled: ${{ variables.runCodeQl }}
+          justificationForDisabling: 'Disabling to not scan AzureDevOpsRepo'
       baseline:
         baselineSet: default
         baselineFile: $(Build.SourcesDirectory)/.gdn/.gdnbaselines
@@ -75,7 +90,6 @@ extends:
             task_name: ${{ parameters.task_name }}
             push_to_feed: ${{ parameters.push_to_feed }}
             generate_prs: ${{ parameters.generate_prs }}
-            enableCodeQL: ${{ parameters.enableCodeQL }}
 
       - ${{ if not(parameters.build_single_task) }}:
 
@@ -83,7 +97,7 @@ extends:
         - job: build_all_windows
           displayName: Build all tasks (Windows)
           condition: eq(variables.os, 'Windows_NT')
-          timeoutInMinutes: 360
+          timeoutInMinutes: 180
           pool:
             name: 1ES-ABTT-Shared-Pool
             image: abtt-windows-2022
@@ -145,15 +159,6 @@ extends:
                 )
               )
             )
-          templateContext:
-            outputs:
-            - output: nuget
-              packagesToPush:  '$(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded/IndividualNugetPackages/*/*.nupkg'
-              packageParentPath: '$(Build.SourcesDirectory)'
-              publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
-              nuGetFeedType: internal
-              displayName: Push Nuget package
-              allowPackageConflicts: $(COURTESY_PUSH)
           steps:
           - checkout: AzureDevOps
             fetchDepth: 1
@@ -167,7 +172,7 @@ extends:
           - courtesy_push
           - build_all_windows
           condition: succeeded()
-          timeoutInMinutes: 360
+          timeoutInMinutes: 180
           pool:
             name: 1ES-ABTT-Shared-Pool
             image: abtt-windows-2022
@@ -189,7 +194,7 @@ extends:
         - job: build_all_linux
           displayName: Build all tasks (Linux)
           condition: eq(variables.os, 'Linux')
-          timeoutInMinutes: 360
+          timeoutInMinutes: 180
           pool:
             name: 1ES-ABTT-Shared-Pool
             image: abtt-ubuntu-2204
@@ -203,10 +208,10 @@ extends:
         - job: build_all_darwin
           displayName: Build all tasks (macOS)
           condition: eq(variables.os, 'Darwin')
-          timeoutInMinutes: 360
+          timeoutInMinutes: 180
           pool:
             name: Azure Pipelines
-            image: macos-14
+            image: macos-11
             os: macOS
           steps:
           - template: /ci/build-all-steps.yml@self
