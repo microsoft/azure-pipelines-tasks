@@ -31,6 +31,8 @@
   "loc.input.help.powerShellIgnoreLASTEXITCODE": "Если задано значение False, в конец скрипта добавляется строка \"if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }\". Это приведет к тому, что последний код выхода из внешней команды будет использоваться как код выхода PowerShell. В противном случае эта строка не добавляется в конец скрипта.",
   "loc.input.label.visibleAzLogin": "Видимость вывода при az login",
   "loc.input.help.visibleAzLogin": "Если для этого параметра установлено значение ИСТИНА, команда az login выведет задачу. Установка значения ЛОЖЬ приведет к скрытию вывода az login.",
+  "loc.input.label.keepAzSessionActive": "[Experimental] Keep Azure CLI session active",
+  "loc.input.help.keepAzSessionActive": "When enabled, this task will continuously sign into Azure to avoid AADSTS700024 errors when requesting access tokens beyond the IdToken expiry date. Note that this feature is EXPERIMENTAL, may not work in all scenarios and you are using it without any guarantees. Valid only for service connections using the Workload Identity Federation authentication scheme.",
   "loc.messages.ScriptReturnCode": "Выход из сценария с кодом возврата: %d",
   "loc.messages.ScriptFailed": "Сбой сценария с ошибкой: %s",
   "loc.messages.ScriptFailedStdErr": "Скрипт выводит выходные данные в stderr. Завершается сбоем, если failOnStdErr имеет значение true.",
@@ -49,5 +51,8 @@
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Для агента версии ниже 2.115.0 можно использовать только глобальную конфигурацию Azure CLI",
   "loc.messages.UnacceptedScriptLocationValue": "%s не является допустимым значением для входных данных задачи \"Расположение скрипта\" (scriptLocation в YAML). Значение может быть равно inlineScript либо scriptPath",
   "loc.messages.ExpiredServicePrincipalMessageWithLink": "Срок действия секрета истек. Обновите подключение службы %s. Подробнее о преобразовании в подключения служб без секретов см. https://aka.ms/azdo-rm-workload-identity-conversion.",
-  "loc.messages.ProxyConfig": "Инструмент az настроен на использование %s в качестве прокси-сервера"
+  "loc.messages.ProxyConfig": "Инструмент az настроен на использование %s в качестве прокси-сервера",
+  "loc.messages.FailedToRefreshAzSession": "The following error occurred while trying to refresh az-cli session: %s",
+  "loc.messages.RefreshingAzSession": "Attempting to refresh az-cli session...",
+  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input."
 }
