@@ -159,3 +159,9 @@ export async function execGradleBuild(args: string[]): Promise<number> {
         return 1; // Return 1 indicating failure
     }
 }
+
+export async function executeGoCommand(goPath: string, argument: string): Promise<number> {
+    let go: tr.ToolRunner = tl.tool(goPath);
+    go.line(argument);
+    return await go.exec(<tr.IExecOptions>{ cwd: "" });
+}
