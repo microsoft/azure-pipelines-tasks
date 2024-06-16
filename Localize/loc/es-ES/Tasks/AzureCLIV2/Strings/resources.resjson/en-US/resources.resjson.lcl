@@ -90,6 +90,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.keepAzSessionActive" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[When enabled, this task will continuously sign into Azure to avoid AADSTS700024 errors when requesting access tokens beyond the IdToken expiry date. Note that this feature is EXPERIMENTAL, may not work in all scenarios and you are using it without any guarantees. Valid only for service connections using the Workload Identity Federation authentication scheme.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Cuando se habilita, esta tarea iniciará sesión continuamente en Azure para evitar errores de AADSTS700024 al solicitar tokens de acceso más allá de la fecha de expiración del IdToken. Tenga en cuenta que esta característica es EXPERIMENTAL, podría no funcionar en todos los escenarios y está usándola sin ninguna garantía. Solo es válido para las conexiones de servicio que usan el esquema de autenticación de federación de identidades de carga de trabajo.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.powerShellErrorActionPreference" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Prepends the line `$ErrorActionPreference = 'VALUE'` at the top of your powershell/powershell core script.]]></Val>
@@ -203,6 +212,15 @@
           <Val><![CDATA[Inline Script]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Script en línea]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.keepAzSessionActive" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[[Experimental]5D; Keep Azure CLI session active]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[[Experimental]5D; Mantener la sesión de la CLI de Azure activa]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -333,6 +351,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.FailedToRefreshAzSession" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The following error occurred while trying to refresh az-cli session: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Error al intentar actualizar la sesión de az-cli: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.GlobalCliConfigAgentVersionWarning" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[For agent version < 2.115.0, only global Azure CLI configuration can be used]]></Val>
@@ -360,6 +387,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.KeepingAzSessionActiveUnsupportedScheme" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La entrada "keepAzSessionActive" solo se puede usar para la conexión del servicio ARM de federación de identidades de carga de trabajo. No se esperaba el esquema de autenticación del punto de conexión de servicio al que se hace referencia: %s. Cambie el esquema o quite la entrada "keepAzSessionActive".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.LoginFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Azure login failed]]></Val>
@@ -383,6 +419,15 @@
           <Val><![CDATA[az tool is configured to use %s as proxy server]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[la herramienta de zona de disponibilidad está configurada para usar %s como servidor proxy]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.RefreshingAzSession" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Attempting to refresh az-cli session...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Intentando actualizar la sesión de az-cli...]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
