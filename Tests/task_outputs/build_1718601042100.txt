@@ -1,0 +1,1 @@
+successfully build test/test:2 and test/test:6 image
