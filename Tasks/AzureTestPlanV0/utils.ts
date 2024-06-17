@@ -21,3 +21,25 @@ export function replaceLastDotWithHash(inputString) {
     }
 }
 
+export function separateGoPath(inputString) {
+    const lastDotIndex = inputString.lastIndexOf('.');
+
+    if (lastDotIndex !== -1) {
+        const stringWith = inputString.slice(0, lastDotIndex);
+        return stringWith;
+    } else {
+        // If there is no dot in the string, return the original string
+        return inputString;
+    }
+}
+export function separateGoTestName(inputString) {
+    const lastDotIndex = inputString.lastIndexOf('.');
+
+    if (lastDotIndex !== -1) {
+        const stringWith = inputString.slice(lastDotIndex + 1);
+        return stringWith;
+    } else {
+        // If there is no dot in the string, return the original string
+        return inputString;
+    }
+}

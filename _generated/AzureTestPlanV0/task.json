@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 241,
-    "Patch": 2
+    "Patch": 6
   },
   "preview": true,
   "demands": [],
@@ -80,7 +80,8 @@
         "Java-Maven": "Java-Maven",
         "Java-Gradle": "Java-Gradle",
         "Python": "Python",
-        "Go": "Go"
+        "Go": "Go",
+        "Jest": "Jest"
       }
     },
     {
@@ -177,7 +178,7 @@
     "MultipleMatchingGradlewFound": "Multiple gradlew files found. Selecting the first matched instance"
   },
   "_buildConfigMapping": {
-    "Default": "0.241.2",
-    "Node20-225": "0.241.3"
+    "Default": "0.241.6",
+    "Node20-225": "0.241.7"
   }
 }

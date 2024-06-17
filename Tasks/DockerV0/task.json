@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 241,
     "Patch": 0
   },
   "demands": [],
@@ -341,10 +341,10 @@
   ],
   "instanceNameFormat": "$(action)",
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "container.js"
     },
-    "Node16": {
+    "Node10": {
       "target": "container.js"
     }
   },
