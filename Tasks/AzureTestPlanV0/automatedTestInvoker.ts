@@ -4,6 +4,8 @@ import { executeMavenTests } from './Invokers/maveninvoker'
 import { executeGradleTests } from './Invokers/gradleinvoker'
 import { ciDictionary } from './ciEventLogger';
 import { executeGoTests } from './Invokers/goinvoker';
+import { executeJestTests } from './Invokers/jestinvoker';
+
 export async function testInvoker(testsToBeExecuted: string[], ciData: ciDictionary): Promise<number> {
 
     const testLanguage = tl.getInput('testLanguageInput', true);
@@ -39,6 +41,12 @@ export async function testInvoker(testsToBeExecuted: string[], ciData: ciDiction
                 exitCode = await executeGoTests(testsToBeExecuted);
                 tl.debug(`Execution Status Code for Go: ${exitCode}`);
                 ciData["isGoExecution"] = true;
+                break;
+
+            case 'Jest':
+                exitCode = await executeJestTests(testsToBeExecuted);
+                tl.debug(`Execution Status Code for Jest: ${exitCode}`);
+                ciData["isJestExecution"] = true;
                 break;
 
             default:
