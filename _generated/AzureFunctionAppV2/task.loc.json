@@ -365,5 +365,9 @@
     "SyncFunctionTriggersSuccess": "ms-resource:loc.messages.SyncFunctionTriggersSuccess",
     "UpdatedRunFromPackageSettings": "ms-resource:loc.messages.UpdatedRunFromPackageSettings",
     "DeploymentTypeNotSupportedForLinuxConsumption": "ms-resource:loc.messages.DeploymentTypeNotSupportedForLinuxConsumption"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.240.0",
+    "Node20_229_9": "2.240.1"
   }
 }

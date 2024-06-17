@@ -38,7 +38,9 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
         tl.debug("Initiated deployment via kudu service for webapp package : ");
 
         var deleteApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting)
-        var isNewValueUpdated: boolean = await this.appServiceUtility.updateAndMonitorAppSettings(null, deleteApplicationSetting);
+        var isNewValueUpdated: boolean = await this.appServiceUtilityExt.updateAndMonitorAppSettings(null, deleteApplicationSetting);
+        // add Output for isNewValueUpdated  
+        tl.debug(" Ouutput the value for App Settings isNewValueUpdated : " + isNewValueUpdated);
 
         if(!isNewValueUpdated) {
             await this.kuduServiceUtility.warmpUp();

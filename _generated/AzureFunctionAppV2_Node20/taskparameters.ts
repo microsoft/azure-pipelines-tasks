@@ -7,6 +7,7 @@ import { Package } from 'azure-pipelines-tasks-webdeployment-common/packageUtili
 
 const skuDynamicValue: string = 'dynamic';
 const skuElasticPremiumValue: string = 'elasticpremium';
+const skuFlexConsumptionValue: string = 'flexconsumption';
 
 const webAppKindMap = new Map([
     [ 'functionapp', 'functionApp' ],
@@ -44,6 +45,7 @@ export class TaskParametersUtility {
         taskParameters.WebAppKind = appDetails["webAppKind"];
         taskParameters.isConsumption = appDetails["sku"].toLowerCase() == skuDynamicValue;
         taskParameters.isPremium = appDetails["sku"].toLowerCase() == skuElasticPremiumValue;
+        taskParameters.isFlexConsumption = appDetails["sku"].toLowerCase() == skuFlexConsumptionValue;
 
         taskParameters.isLinuxApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("Linux") !=-1;
 
@@ -116,4 +118,5 @@ export interface TaskParameters {
     isLinuxApp?: boolean;
     isConsumption?: boolean;
     isPremium?: boolean;
+    isFlexConsumption?: boolean
 }

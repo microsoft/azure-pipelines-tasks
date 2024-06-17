@@ -58,7 +58,10 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
             linuxFunctionAppSetting = linuxFunctionAppSetting + removeRunFromZipAppSetting;
         }
         var customApplicationSetting = ParameterParser.parse(linuxFunctionAppSetting);
-        isNewValueUpdated = await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
+        isNewValueUpdated = await this.appServiceUtilityExt.updateAndMonitorAppSettings(customApplicationSetting);
+
+        // add Output for isNewValueUpdated  
+        tl.debug(" Ouutput the value for App Settings isNewValueUpdated : " + isNewValueUpdated);
 
         if(!isNewValueUpdated) {
             await this.kuduServiceUtility.warmpUp();
