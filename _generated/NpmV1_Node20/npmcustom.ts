@@ -32,6 +32,7 @@ export async function run(packagingLocation: PackagingLocation, command?: string
     tl.rmRF(util.getTempPath());
 }
 
+/** Return Custom NpmRegistry with masked auth*/
 export async function getCustomRegistries(packagingLocation: PackagingLocation): Promise<NpmRegistry[]> {
     const workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
     const npmRegistries: INpmRegistry[] = await npmutil.getLocalNpmRegistries(workingDir, packagingLocation.PackagingUris);
