@@ -14,5 +14,8 @@
   "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Non è stato possibile recuperare il token di accesso per l'identità gestita. Configurare l'identità gestita per la macchina virtuale 'https://aka.ms/azure-msi-docs'. Codice di stato: '{0}'. Messaggio di errore: {1}",
   "loc.messages.AZ_MsiAccessTokenFetchFailure": "Non è stato possibile recuperare il token di accesso per l'identità gestita. Codice di stato: '{0}'. Messaggio di errore: {1}",
   "loc.messages.AZ_MsiFailure": "Non è stato possibile recuperare il token di accesso per l'identità gestita. {0}",
-  "loc.messages.AZ_ExpiredServicePrincipalMessageWithLink": "Segreto scaduto. Aggiornare la connessione al servizio in {0} Per altre informazioni sulla conversione a connessioni al servizio senza segreto, vedere https://aka.ms/azdo-rm-workload-identity-conversion."
+  "loc.messages.AZ_ExpiredServicePrincipalMessageWithLink": "Segreto scaduto. Aggiornare la connessione al servizio in {0} Per altre informazioni sulla conversione a connessioni al servizio senza segreto, vedere https://aka.ms/azdo-rm-workload-identity-conversion.",
+  "loc.messages.AZ_ModuleInitFailWarning": "Impossibile inizializzare i moduli AZ esistenti, fallback all'installazione",
+  "loc.messages.AZ_ModuleInstallFail": "Impossibile installare i moduli AZ",
+  "loc.messages.AZ_RMDeprecationMessage": "Si sta usando AzureRM, che verrà ritirato a breve. Pianificare un aggiornamento."
 }
