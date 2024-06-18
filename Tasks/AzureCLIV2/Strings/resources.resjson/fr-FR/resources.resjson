@@ -31,8 +31,8 @@
   "loc.input.help.powerShellIgnoreLASTEXITCODE": "Si cette valeur est false, la ligne 'if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }' est ajoutée à la fin de votre script. Cela entraîne la propagation du dernier code de sortie d'une commande externe en tant que code de sortie de PowerShell. Sinon, la ligne n'est pas ajoutée à la fin de votre script.",
   "loc.input.label.visibleAzLogin": "visibilité de sortie de connexion az",
   "loc.input.help.visibleAzLogin": "Si la valeur est définie sur true, la commande de connexion az est générée dans la tâche. Si la valeur est définie sur false, la sortie de connexion az est supprimée",
-  "loc.input.label.keepAzSessionActive": "[Experimental] Keep Azure CLI session active",
-  "loc.input.help.keepAzSessionActive": "When enabled, this task will continuously sign into Azure to avoid AADSTS700024 errors when requesting access tokens beyond the IdToken expiry date. Note that this feature is EXPERIMENTAL, may not work in all scenarios and you are using it without any guarantees. Valid only for service connections using the Workload Identity Federation authentication scheme.",
+  "loc.input.label.keepAzSessionActive": "[Expérimental] Maintenir une session Azure CLI active",
+  "loc.input.help.keepAzSessionActive": "Si vous activez cette option, cette tâche va se connecter continuellement à Azure pour éviter des erreurs de type AADSTS700024 lors d’une demande de jetons d’accès au-delà de la date d’expiration de IdToken. Notez que cette fonctionnalité est EXPÉRIMENTALE, risque de ne pas fonctionner dans tous les scénarios et que vous l’utilisez sans aucune garantie. Valide uniquement pour les connexions de service utilisant le schéma d’authentification de fédération des identités de charge de travail.",
   "loc.messages.ScriptReturnCode": "Arrêt du script. Code de retour : %d",
   "loc.messages.ScriptFailed": "Échec du script. Erreur : %s",
   "loc.messages.ScriptFailedStdErr": "Le script a une sortie vers stderr. Échec, car failOnStdErr a la valeur true.",
@@ -52,7 +52,7 @@
   "loc.messages.UnacceptedScriptLocationValue": "%s n'est pas une valeur valide pour l'entrée de tâche 'Script Location' (scriptLocation en YAML). La valeur peut être 'inlineScript' ou 'scriptPath'",
   "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expiré, mettez à jour la connexion de service à l’adresse %s Consultez https://aka.ms/azdo-rm-workload-identity-conversion pour en savoir plus sur la conversion en connexions de service sans secret.",
   "loc.messages.ProxyConfig": "l’outil az est configuré pour utiliser %s comme serveur proxy",
-  "loc.messages.FailedToRefreshAzSession": "The following error occurred while trying to refresh az-cli session: %s",
-  "loc.messages.RefreshingAzSession": "Attempting to refresh az-cli session...",
-  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input."
+  "loc.messages.FailedToRefreshAzSession": "L’erreur suivante s’est produite lors de la tentative d’actualisation de la session az-cli : %s",
+  "loc.messages.RefreshingAzSession": "Tentative d’actualisation de la session az-cli... Merci de patienter.",
+  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "L’entrée « keepAzSessionActive » est susceptible d’être uniquement utilisée pour la connexion du service ARM de fédération des identités de charge de travail. Le schéma d’authentification du point de terminaison de service référencé était inattendu : %s. Modifiez le schéma ou supprimez l’entrée « keepAzSessionActive »."
 }
