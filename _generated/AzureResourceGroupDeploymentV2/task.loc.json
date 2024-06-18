@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 238,
+    "Minor": 241,
     "Patch": 0
   },
   "demands": [],
@@ -346,12 +346,12 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
-      "target": "main.js"
-    },
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "main.js"
     }
   },
   "messages": {
@@ -502,7 +502,7 @@
     "TroubleshootingGuide": "ms-resource:loc.messages.TroubleshootingGuide"
   },
   "_buildConfigMapping": {
-    "Default": "2.238.0",
-    "Node20_229_2": "2.238.1"
+    "Default": "2.241.0",
+    "Node20_229_2": "2.241.1"
   }
 }
