@@ -14,8 +14,8 @@
   "loc.input.help.command": "要运行的 dotnet 命令。选择“自定义”以添加参数或使用此处未列出的命令。",
   "loc.input.label.publishWebProjects": "发布 Web 项目",
   "loc.input.help.publishWebProjects": "如果为 true，任务将尝试查找存储库中的 Web 项目，并对其运行发布命令。可通过目录中的 web.config 文件或 wwwroot 文件夹来识别 Web 项目。",
-  "loc.input.label.projects": "项目路径",
-  "loc.input.help.projects": "要使用的 csproj 文件的路径。可使用通配符(例如，对所有子文件夹中的所有 .csproj 文件使用 **/*.csproj)。**此字段遵循 glob 模式，且无论工作目录如何，都始终针对存储库的根目录运行。**",
+  "loc.input.label.projects": "项目或解决方案的路径",
+  "loc.input.help.projects": "要使用的 csproj 或 sln 文件的路径。你可以使用通配符（例如，对所有子文件夹中的所有 .csproj 文件使用 **/*.csproj）。**此字段遵循 glob 模式，且无论工作目录如何，都始终针对存储库的根目录运行。**",
   "loc.input.label.custom": "自定义命令",
   "loc.input.help.custom": "传递到 dotnet.exe 进行执行的命令。",
   "loc.input.label.arguments": "参数",
@@ -72,11 +72,11 @@
   "loc.input.label.versionEnvVar": "环境变量",
   "loc.input.help.versionEnvVar": "输入变量名称，其中不含 $、$env 或 %。",
   "loc.input.label.requestedMajorVersion": "主版本",
-  "loc.input.help.requestedMajorVersion": "版本 [X.Y.Z] 中的 \"X\"(http://semver.org/spec/v1.0.0.html)",
+  "loc.input.help.requestedMajorVersion": "The 'X' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
   "loc.input.label.requestedMinorVersion": "次版本",
-  "loc.input.help.requestedMinorVersion": "版本 [X.Y.Z] 中的 \"Y\"(http://semver.org/spec/v1.0.0.html)",
+  "loc.input.help.requestedMinorVersion": "The 'Y' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
   "loc.input.label.requestedPatchVersion": "修补",
-  "loc.input.help.requestedPatchVersion": "版本 [X.Y.Z] 中的 \"Z\"(http://semver.org/spec/v1.0.0.html)",
+  "loc.input.help.requestedPatchVersion": "The 'Z' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
   "loc.input.label.buildProperties": "其他生成属性",
   "loc.input.help.buildProperties": "指定令牌 = 值对列表，用分号分隔，其中 .nuspec 文件中 $token$ 的每个匹配项都将替换为给定的值。值可以是用引号引起来的字符串。",
   "loc.input.label.verbosityPack": "详细信息",
@@ -138,5 +138,6 @@
   "loc.messages.Net5NugetVersionCompat": ".NET 5 与更低版本的 Nuget (版本不超过 5.7)存在一些兼容性问题，因此如果你在使用更低版本的 Nuget (且未使用 dotnet cli)进行还原，则依赖已还原的这类包的 dotnet cli 命令(例如 dotnet build)可能会失败。若要解决这种错误，可: (1) - 使用 dotnet cli 进行还原，(2) - 使用 Nuget 5.8 版本进行还原，(3) - 通过更低版本的 sdk (版本不超过 3)使用 global.json 来进行生成",
   "loc.messages.DeprecatedDotnet2_2_And_3_0": "信息: .NET Core SDK/运行时 2.2 和 3.0 现已到达生命周期结束(EOL)日期，已从所有托管的代理中将它们删除。如果你正在托管的代理上使用这些 SDK/运行时，请升级到尚未到达 EOL 的更新的版本，或者执行 UseDotNet 任务来安装所需的版本。",
   "loc.messages.Warning_IncludeNuGetOrgEnabled": "当前已为此任务启用 IncludeNugetOrg。若要解决此警告，请编辑生成任务并将 \"includeNuGetOrg\" 设置为 \"false\" 或取消选择“使用来自 NuGet.org 的包”。",
-  "loc.messages.Error_IncludeNuGetOrgEnabled": "包无法还原。请编辑生成任务并将 \"includeNuGetOrg\" 设置为 \"false\"，或取消选择“使用来自 NuGet.org 的包”。"
+  "loc.messages.Error_IncludeNuGetOrgEnabled": "包无法还原。请编辑生成任务并将 \"includeNuGetOrg\" 设置为 \"false\"，或取消选择“使用来自 NuGet.org 的包”。",
+  "loc.messages.Warning_UnsupportedServiceConnectionAuth": "服务连接未使用受支持的身份验证方法。请配合使用服务连接与基于个人访问令牌的身份验证。"
 }

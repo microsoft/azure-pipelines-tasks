@@ -5,6 +5,8 @@
   "loc.instanceNameFormat": "發佈管線成品",
   "loc.input.label.artifactName": "成品的名稱",
   "loc.input.help.artifactName": "成品的名稱。",
+  "loc.input.label.customProperties": "自訂屬性",
+  "loc.input.help.customProperties": "輸入要與成品關聯的自訂屬性。所有具有首碼 'user-' 的索引鍵都預期為有效 JSON 字串",
   "loc.input.label.targetPath": "要發佈的路徑",
   "loc.input.help.targetPath": "要發佈的資料夾或檔案路徑。此項目可為完整路徑，或與存放庫根相對的路徑。不支援萬用字元。支援[變數](https://go.microsoft.com/fwlink/?LinkID=550988)。"
 }

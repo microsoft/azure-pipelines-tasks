@@ -29,6 +29,10 @@
   "loc.input.help.failOnStandardError": "Se è impostato su true, questa attività non riuscirà nel caso in cui vengano scritti errori nel flusso StandardError. Deselezionare la casella di controllo per ignorare gli errori standard e determinare lo stato in base ai codici di uscita",
   "loc.input.label.powerShellIgnoreLASTEXITCODE": "Ignora $LASTEXITCODE",
   "loc.input.help.powerShellIgnoreLASTEXITCODE": "Se è false, la riga 'if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }' viene aggiunta alla fine dello script. In questo modo l'ultimo codice di uscita da un comando esterno verrà propagato come codice di uscita di PowerShell. In caso contrario, la riga non viene aggiunta alla fine dello script.",
+  "loc.input.label.visibleAzLogin": "visibilità dell'output dell'account di accesso az",
+  "loc.input.help.visibleAzLogin": "Se questa opzione è impostata su true, l'output del comando az login verrà restituito all'attività. Se si imposta su false, l'output dell'account di accesso az verrà eliminato",
+  "loc.input.label.keepAzSessionActive": "[Experimental] Keep Azure CLI session active",
+  "loc.input.help.keepAzSessionActive": "When enabled, this task will continuously sign into Azure to avoid AADSTS700024 errors when requesting access tokens beyond the IdToken expiry date. Note that this feature is EXPERIMENTAL, may not work in all scenarios and you are using it without any guarantees. Valid only for service connections using the Workload Identity Federation authentication scheme.",
   "loc.messages.ScriptReturnCode": "Lo script è stato terminato. Codice restituito: %d",
   "loc.messages.ScriptFailed": "Lo script non è riuscito. Errore: %s",
   "loc.messages.ScriptFailedStdErr": "L'output dello script viene inviato a STDERR. Verrà restituito un errore perché failOnStdErr è impostato su true.",
@@ -46,5 +50,9 @@
   "loc.messages.JS_InvalidErrorActionPreference": "ErrorActionPreference '%s' non valido. Il valore deve essere uno tra i seguenti: 'Stop', 'Continue' o 'SilentlyContinue'",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Se la versione dell'agente è inferiore a quella 2.115.0, è possibile usare solo la configurazione globale dell'interfaccia della riga di comando di Azure",
   "loc.messages.UnacceptedScriptLocationValue": "%s non è un valore valido per il valore di input attività 'Percorso script' (scriptLocation in YAML). Il valore può essere 'inlineScript' o 'scriptPath'",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Segreto scaduto. Aggiornare la connessione al servizio in %s Per altre informazioni sulla conversione a connessioni al servizio senza segreto, vedere https://aka.ms/azdo-rm-workload-identity-conversion.",
+  "loc.messages.ProxyConfig": "lo strumento az è configurato per l'utilizzo di %s come server proxy",
+  "loc.messages.FailedToRefreshAzSession": "The following error occurred while trying to refresh az-cli session: %s",
+  "loc.messages.RefreshingAzSession": "Attempting to refresh az-cli session...",
+  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input."
 }

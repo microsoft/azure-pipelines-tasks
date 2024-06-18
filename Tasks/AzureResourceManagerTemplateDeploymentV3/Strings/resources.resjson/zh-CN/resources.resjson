@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[详细了解此任务](https://aka.ms/armtaskreadme)",
   "loc.description": "将 Azure 资源管理器(ARM)模板部署到所有部署范围",
   "loc.instanceNameFormat": "ARM 模板部署: $(deploymentScope)范围",
-  "loc.releaseNotes": "- 已在所有部署范围添加部署支持。\n- 已删除所有 VM 相关操作。",
+  "loc.releaseNotes": "- 添加了对 bicepparam 的支持。",
   "loc.group.displayName.AzureDetails": "Azure 详细信息",
   "loc.group.displayName.Template": "模板",
   "loc.group.displayName.Advanced": "高级",
@@ -38,6 +38,8 @@
   "loc.input.help.deploymentOutputs": "提供输出变量的变量名称，该输出变量中将包含字符串格式的当前部署对象的输出部分。可使用 \"ConvertFrom-Json\" PowerShell cmdlet 分析 JSON 对象并访问单个输出值。有关详细信息，请参阅[此链接](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceManagerTemplateDeploymentV3#deployment-outputs)",
   "loc.input.label.addSpnToEnvironment": "在替代参数中访问服务主体详细信息",
   "loc.input.help.addSpnToEnvironment": "将选择的 Azure 终结点的服务主体 ID 和密钥添加到脚本的执行环境中。可以在 \"-key $servicePrincipalKey\" 等替代参数中使用以下变量: \"$servicePrincipalId\" 和 \"$servicePrincipalKey\"",
+  "loc.input.label.useWithoutJSON": "在未应用 JSON.Stringify 的情况下使用单个输出值",
+  "loc.input.help.useWithoutJSON": "默认情况下，单个输出值通过 JSON.Stringify 进行转换。如果你想要按原样使用输出值，而不通过 JSON.Stringify 转换它们，请启用此选项。有关更多详细详细，请参阅[此处](https://github.com/microsoft/azure-pipelines-tasks/tree/master/Tasks/AzureResourceManagerTemplateDeploymentV3#deployment-outputs)",
   "loc.messages.CheckResourceGroupExistence": "正在检查是否存在以下资源组: %s。",
   "loc.messages.ResourceGroupStatusFetchFailed": "未能检查资源组状态。错误: %s。",
   "loc.messages.ResourceGroupStatus": "资源组已存在: %s。",
@@ -93,5 +95,11 @@
   "loc.messages.AzureCLINotFound": "在代理上找不到 Azure CLI。",
   "loc.messages.FailedToFetchAzureCLIVersion": "无法从代理提取 az cli 版本。错误: %s",
   "loc.messages.BicepBuildFailed": "“az bicep 版本”失败。错误: %s",
-  "loc.messages.BicepFileCleanupFailed": "未能删除 Bicep 文件。错误: %s"
+  "loc.messages.BicepFileCleanupFailed": "未能删除 Bicep 文件。错误: %s",
+  "loc.messages.LoginFailed": "Azure 登录失败: %s",
+  "loc.messages.MSILoginFailed": "使用托管服务标识进行 Azure 登录失败: %s",
+  "loc.messages.AuthSchemeNotSupported": "不支持身份验证方案 %s",
+  "loc.messages.ErrorInSettingUpSubscription": "设置订阅时出错: %s",
+  "loc.messages.BicepParamBuildFailed": "“az bicep build-param”失败。错误: %s",
+  "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI 版本应 >= 2.47.0 以使用 .bicepparam 文件"
 }

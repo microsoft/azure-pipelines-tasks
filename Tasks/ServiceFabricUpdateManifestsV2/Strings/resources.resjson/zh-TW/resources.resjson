@@ -6,7 +6,7 @@
   "loc.input.label.updateType": "更新類型",
   "loc.input.help.updateType": "請指定要對資訊清單檔案進行的更新類型。若兩種更新類型都要使用，請將此工作的執行個體新增至各欲執行之更新的建置管線。",
   "loc.input.label.applicationPackagePath": "應用程式套件",
-  "loc.input.help.applicationPackagePath": "應用程式套件的路徑。路徑中可以使用 [變數] (https://go.microsoft.com/fwlink/?LinkID=550988) 和萬用字元。",
+  "loc.input.help.applicationPackagePath": "Path to the application package. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path.",
   "loc.input.label.versionSuffix": "版本值",
   "loc.input.help.versionSuffix": "用於指定資訊清單檔中版本的值。預設值為 .$(Build.BuildNumber)。",
   "loc.input.label.versionBehavior": "版本行為",
