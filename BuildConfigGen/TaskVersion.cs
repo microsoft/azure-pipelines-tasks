@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 
 internal class TaskVersion : IComparable<TaskVersion>, IEquatable<TaskVersion>
 {
