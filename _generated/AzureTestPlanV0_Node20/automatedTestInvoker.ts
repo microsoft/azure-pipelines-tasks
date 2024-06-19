@@ -4,14 +4,14 @@ import { executeMavenTests } from './Invokers/maveninvoker'
 import { executeGradleTests } from './Invokers/gradleinvoker'
 import { ciDictionary } from './ciEventLogger';
 import { executeGoTests } from './Invokers/goinvoker';
+import { executeJestTests } from './Invokers/jestinvoker';
+
 export async function testInvoker(testsToBeExecuted: string[], ciData: ciDictionary): Promise<number> {
 
-    const testLanguageStrings = tl.getDelimitedInput('testLanguageInput', ',', true);
+    const testLanguage = tl.getInput('testLanguageInput', true);
 
     let exitStatusCode = 0;
-
-    for (const testLanguage of testLanguageStrings) {
-        let exitCode = 0;
+    let exitCode = 0;
 
         if (testLanguage === null || testLanguage === undefined) {
             console.log("Please select the test framework language from the task dropdown list to execute automated tests");
@@ -43,13 +43,18 @@ export async function testInvoker(testsToBeExecuted: string[], ciData: ciDiction
                 ciData["isGoExecution"] = true;
                 break;
 
+            case 'Jest':
+                exitCode = await executeJestTests(testsToBeExecuted);
+                tl.debug(`Execution Status Code for Jest: ${exitCode}`);
+                ciData["isJestExecution"] = true;
+                break;
+
             default:
                 console.log('Invalid test Language Input selected.');
                 ciData["NoLanguageInput"] = true;
         }
         
         exitStatusCode = exitStatusCode || exitCode;
-    }
     
     tl.debug(`Execution Status Code for Automated Execution Flow: ${exitStatusCode}`);
     return exitStatusCode;
