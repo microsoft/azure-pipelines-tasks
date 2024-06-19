@@ -12,6 +12,7 @@ import { extractManifestsFromHelmOutput, getDeploymentMetadata, getManifestFileU
 
 import { AzureAksService } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-aks-service';
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
+import ACRAuthenticationTokenProvider from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/acrauthenticationtokenprovider"
 import { Kubelogin } from 'azure-pipelines-tasks-kubernetes-common/kubelogin';
 import helmcli from "./helmcli";
 import kubernetescli from "./kubernetescli"
@@ -77,6 +78,13 @@ function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnS
     runHelm(helmCli, "removeChart", kubectlCli, failOnStderr);
 }
 
+async function setAccessToken(endpointId: string): Promise<void> {
+    const tokenProvider = new ACRAuthenticationTokenProvider(endpointId, tl.getInput("azureContainerRegistry"));
+    const token = await tokenProvider.getToken();
+
+    tl.setVariable("ACR_ACCESS_TOKEN", token.getPassword(), true);
+}
+
 async function run() {
     var command = tl.getInput("command", true).toLowerCase();
     var connectionType = tl.getInput("connectionType", true);
@@ -95,6 +103,16 @@ async function run() {
         var kubeconfigfilePath = (command === "logout" || externalAuth) ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
         kubectlCli = new kubernetescli(kubeconfigfilePath);
         kubectlCli.login();
+    }
+
+    if (command === "save") {
+        let endpoint = tl.getInput("azureSubscriptionEndpointForACR");
+        let authScheme = tl.getEndpointAuthorizationScheme(endpoint, false).toLowerCase()
+        let isWifAuth = authScheme === "workloadidentityfederation";
+
+        if (isWifAuth) {
+            await setAccessToken(endpoint);
+        }
     }
   
     const kubelogin = new Kubelogin(helmutil.getTaskTempDir());
