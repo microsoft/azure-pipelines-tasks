@@ -28,6 +28,7 @@ export async function run(packagingLocation: PackagingLocation): Promise<void> {
     tl.rmRF(util.getTempPath());
 }
 
+/** Return Publish NpmRegistry with masked auth*/
 export async function getPublishRegistry(packagingLocation: PackagingLocation): Promise<INpmRegistry> {
     let npmRegistry: INpmRegistry;
     const registryLocation = tl.getInput(NpmTaskInput.PublishRegistry) || null;
@@ -37,7 +38,7 @@ export async function getPublishRegistry(packagingLocation: PackagingLocation): 
             const feed = util.getProjectAndFeedIdFromInputParam(NpmTaskInput.PublishFeed);
             npmRegistry = await getNpmRegistry(
                 packagingLocation.DefaultPackagingUri,
-                feed, 
+                feed,
                 false /* authOnly */,
                 true /* useSession */);
             break;
@@ -50,6 +51,7 @@ export async function getPublishRegistry(packagingLocation: PackagingLocation): 
     return npmRegistry;
 }
 
+/** Return NpmRegistry with masked auth*/
 async function getNpmRegistry(defaultPackagingUri: string, feed: any, authOnly?: boolean, useSession?: boolean) {
     const lineEnd = os.EOL;
     let url: string;
@@ -59,7 +61,7 @@ async function getNpmRegistry(defaultPackagingUri: string, feed: any, authOnly?:
     let email: string;
     let password64: string;
 
-    url = npmrcparser.NormalizeRegistry( await getFeedRegistryUrl(defaultPackagingUri, RegistryType.npm, feed.feedId, feed.projectId, null, useSession));
+    url = npmrcparser.NormalizeRegistry(await getFeedRegistryUrl(defaultPackagingUri, RegistryType.npm, feed.feedId, feed.projectId, null, useSession));
     nerfed = util.toNerfDart(url);
 
     // Setting up auth info
@@ -78,19 +80,19 @@ async function getNpmRegistry(defaultPackagingUri: string, feed: any, authOnly?:
     return new NpmRegistry(url, auth, authOnly);
 }
 
+/** Return a masked AccessToken */
 function getAccessToken(): string {
     let accessToken: string;
     let allowServiceConnection = tl.getVariable('PUBLISH_VIA_SERVICE_CONNECTION');
 
-    if(allowServiceConnection) {
+    if (allowServiceConnection) {
         let endpoint = tl.getInput('publishEndpoint', false);
 
-        if(endpoint) {
+        if (endpoint) {
             tl.debug("Found external endpoint, will use token for auth");
             let endpointAuth = tl.getEndpointAuthorization(endpoint, true);
             let endpointScheme = tl.getEndpointAuthorizationScheme(endpoint, true).toLowerCase();
-            switch(endpointScheme)
-            {
+            switch (endpointScheme) {
                 case ("token"):
                     accessToken = endpointAuth.parameters["apitoken"];
                     break;
@@ -99,16 +101,14 @@ function getAccessToken(): string {
                     break;
             }
         }
-        if(!accessToken)
-        {
+        if (!accessToken) {
             tl.debug('Defaulting to use the System Access Token.');
             accessToken = getSystemAccessToken();
         }
-        return accessToken;
     }
-    else{
+    else {
         accessToken = getSystemAccessToken();
     }
-    
+    tl.setSecret(accessToken);
     return accessToken;
 }
