@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 241,
+    "Minor": 242,
     "Patch": 1
   },
   "runsOn": [
@@ -35,7 +35,7 @@
     "AddingAuthChannel": "Adding auth for the token %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.241.0",
-    "Node20_229_1": "0.241.1"
+    "Default": "0.242.0",
+    "Node20_229_1": "0.242.1"
   }
 }
