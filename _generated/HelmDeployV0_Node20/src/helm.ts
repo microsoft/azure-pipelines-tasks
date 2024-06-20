@@ -49,6 +49,15 @@ function isKubConfigLogoutRequired(command: string): boolean {
     return command !== "package" && command !== "save" && command !== "login" && connectionType !== "None";
 }
 
+function setEnableHelm37SupportSettings(): boolean {
+    let setEnableHelm37SupportSettings = false;
+    if (tl.getVariable('ENABLE_HELM37_SUPPORT')) {
+        setEnableHelm37SupportSettings = true;
+    }
+    tl.debug('Enable Helm 3.7+ support feature flag is set to: ' + setEnableHelm37SupportSettings);
+    return setEnableHelm37SupportSettings;
+}
+
 // get kubeconfig file path
 async function getKubeConfigFile(): Promise<string> {
     return getClusterType().getKubeConfig().then((config) => {
@@ -66,7 +75,7 @@ function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnS
         throw new Error(tl.loc("SaveSupportedInHelmsV3Only"));
     }
 
-    if (!helmCli.isHelmV37Plus()) {
+    if (!helmCli.isHelmV37Plus() || !setEnableHelm37SupportSettings) {
         process.env.HELM_EXPERIMENTAL_OCI="1";
         runHelm(helmCli, "saveChart", kubectlCli, failOnStderr);
         helmCli.resetArguments();
@@ -77,6 +86,7 @@ function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnS
         runHelm(helmCli, "pushChart", kubectlCli, failOnStderr);
         helmCli.resetArguments();
         runHelm(helmCli, "removeChart", kubectlCli, failOnStderr);
+        tl.debug("Run Helm Save command using helm saveChart command.");
     } else {
         process.env.HELM_EXPERIMENTAL_OCI="1";
         //helm chart save has been replaced with helm package command in Helm v3.7.0+
@@ -87,6 +97,7 @@ function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnS
         runHelm(helmCli, "registry", kubectlCli, false);
         helmCli.resetArguments();
         runHelm(helmCli, "push", kubectlCli, failOnStderr);
+        tl.debug("Run Helm Save command using helm package command.");
     }
 }
 
