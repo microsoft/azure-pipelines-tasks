@@ -79,7 +79,6 @@ export async function run(): Promise<void> {
 
         let configFile = null;
         let apiKey: string;
-        let credCleanup = () => { return; };
 
         // dotnet nuget push does not currently accept a --config-file parameter
         // so we are going to work around this by creating a temporary working directory for dotnet with
@@ -87,6 +86,11 @@ export async function run(): Promise<void> {
         const tempNuGetConfigDirectory = path.join(NuGetConfigHelper2.getTempNuGetConfigBasePath(), 'NuGet_' + tl.getVariable('build.buildId'));
         const tempNuGetPath = path.join(tempNuGetConfigDirectory, 'nuget.config');
         tl.mkdirP(tempNuGetConfigDirectory);
+        let credCleanup = () => {
+            if (tl.exist(tempNuGetConfigDirectory)) {
+                tl.rmRF(tempNuGetConfigDirectory)
+            }
+        };
 
         let feedUri: string = undefined;
 
@@ -108,7 +112,6 @@ export async function run(): Promise<void> {
             feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed.feedId, feed.projectId, null, accessToken, /* useSession */ true);
             nuGetConfigHelper.addSourcesToTempNuGetConfig([<auth.IPackageSource>{ feedName: feed.feedId, feedUri: feedUri, isInternal: true }]);
             configFile = nuGetConfigHelper.tempNugetConfigPath;
-            credCleanup = () => { tl.rmRF(tempNuGetConfigDirectory); };
 
             apiKey = 'VSTS';
         } else {
@@ -132,7 +135,6 @@ export async function run(): Promise<void> {
             nuGetConfigHelper.addSourcesToTempNuGetConfig([externalAuth.packageSource]);
             feedUri = externalAuth.packageSource.feedUri;
             configFile = nuGetConfigHelper.tempNugetConfigPath;
-            credCleanup = () => { tl.rmRF(tempNuGetConfigDirectory); };
 
             const authType: auth.ExternalAuthType = externalAuth.authType;
             switch (authType) {
