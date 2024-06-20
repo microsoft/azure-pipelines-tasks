@@ -1768,8 +1768,9 @@ exports.getBuildConfigGenerator = getBuildConfigGenerator;
  * @param {Object} makeOptions Object with all tasks
  * @param {Boolean} writeUpdates Write Updates (false to validateOnly)
  * @param {Number} sprintNumber Sprint number option to pass in the BuildConfigGenerator tool
+ * @param {String} debugAgentDir When set to local agent root directory, the BuildConfigGenerator tool will generate launch configurations for the task(s)
  */
-var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber) {
+var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, writeUpdates, sprintNumber, debugAgentDir) {
     if (!makeOptions) fail("makeOptions is not defined");
     if (sprintNumber && !Number.isInteger(sprintNumber)) fail("Sprint is not a number");
 
@@ -1808,8 +1809,13 @@ var processGeneratedTasks = function(baseConfigToolPath, taskList, makeOptions, 
             writeUpdateArg += " --write-updates";
         }
 
+        var debugAgentDirArg = "";
+        if(debugAgentDir) {
+            debugAgentDirArg += ` --debug-agent-dir ${debugAgentDir}`;
+        }
+
         banner(`Validating: tasks ${validatingTasks[config].join('|')} \n with config: ${config}`);
-        run(`${programPath} ${args.join(' ')} ${writeUpdateArg}`, true);
+        run(`${programPath} ${args.join(' ')} ${writeUpdateArg} ${debugAgentDirArg}`, true);
     }
 }
 exports.processGeneratedTasks = processGeneratedTasks;

@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 241,
     "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
@@ -231,6 +231,9 @@
   ],
   "instanceNameFormat": "Azure Web App Deploy: $(appName)",
   "execution": {
+    "Node20": {
+      "target": "azurermwebappdeployment.js"
+    },
     "Node10": {
       "target": "azurermwebappdeployment.js"
     }
