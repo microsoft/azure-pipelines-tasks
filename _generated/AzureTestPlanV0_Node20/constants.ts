@@ -13,3 +13,4 @@ export const AUTOMATED_EXECUTION = "AutomatedExecutionPhase";
 export const AUTOMATED_PUBLISHING = "PublishingAutomatedResultsPhase";
 export const MANUALTESTS_PUBLISHING = "ManualTestResultsPublishingPhase";
 export const INSTALL_GOTESTSUM = "install gotest.tools/gotestsum@latest";
+export const INSTALL_JESTJUNIT = "i jest-junit";
