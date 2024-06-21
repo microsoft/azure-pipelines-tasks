@@ -125,7 +125,7 @@ async function createDockerEnvVarFile(envVarFilePath: string) {
     addSystemVariableToString("IS_PULL_REQUEST", "");
     addSystemVariableToString("BASE_BRANCH", "");
     addSystemVariableToString("REPOSITORY_BASE", containerWorkingDir);
-    addSystemVariableToString("BRANCH", process.env.BUILD_SOURCEBRANCHNAME || process.env.BUILD_SOURCEBRANCH || "");
+    addSystemVariableToString("BRANCH", process.env.SYSTEM_PULLREQUEST_SOURCEBRANCH || process.env.BUILD_SOURCEBRANCHNAME || process.env.BUILD_SOURCEBRANCH || "");
     addSystemVariableToString("DEPLOYMENT_ACTION", "upload");
 
     const denylistString = await fs.promises.readFile(path.join(__dirname, 'envVarDenylist.json'), 'utf8');
