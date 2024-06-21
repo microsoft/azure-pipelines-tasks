@@ -18,7 +18,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 241,
     "Patch": 1
   },
   "groups": [
@@ -270,11 +270,11 @@
     }
   ],
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "jenkinsdownloadartifacts.js",
       "argumentFormat": ""
     },
-    "Node16": {
+    "Node10": {
       "target": "jenkinsdownloadartifacts.js",
       "argumentFormat": ""
     },
@@ -381,7 +381,7 @@
   },
   "minimumAgentVersion": "2.144.0",
   "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_3": "1.238.1"
+    "Default": "1.241.0",
+    "Node20_229_3": "1.241.1"
   }
 }
