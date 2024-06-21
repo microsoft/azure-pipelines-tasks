@@ -11,3 +11,4 @@
 **Checklist**:
 - [ ] Task version was bumped - please check [instruction](https://github.com/microsoft/azure-pipelines-tasks/tree/master/docs/taskversionbumping.md) how to do it
 - [ ] Checked that applied changes work as expected
+- [ ] If applicable, ensure any co-authors are mentioned by adding ```Co-authored-by: name <name@example.com>``` more info: https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/creating-a-commit-with-multiple-authors
