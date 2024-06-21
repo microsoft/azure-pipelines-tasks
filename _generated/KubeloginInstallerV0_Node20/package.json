@@ -25,7 +25,7 @@
     "@types/q": "^1.0.7",
     "agent-base": "^6.0.2",
     "azure-pipelines-task-lib": "^4.11.0",
-    "azure-pipelines-tasks-azure-arm-rest": "3.223.4",
+    "azure-pipelines-tasks-azure-arm-rest": "3.239.0",
     "azure-pipelines-tool-lib": "^2.0.4"
   },
   "devDependencies": {
