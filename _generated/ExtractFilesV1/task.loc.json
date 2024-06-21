@@ -19,7 +19,7 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 1,
-    "Minor": 231,
+    "Minor": 240,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -114,7 +114,7 @@
     "SucceedMsg": "ms-resource:loc.messages.SucceedMsg"
   },
   "_buildConfigMapping": {
-    "Default": "1.231.0",
-    "Node20-225": "1.231.1"
+    "Default": "1.240.0",
+    "Node20-225": "1.240.1"
   }
 }
