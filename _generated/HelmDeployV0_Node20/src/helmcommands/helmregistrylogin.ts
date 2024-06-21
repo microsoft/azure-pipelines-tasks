@@ -21,6 +21,9 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
 
         user = token.getUsername();
         password = token.getPassword();
+
+        // Set the token as a secret to prevent it from being printed in the logs
+        tl.setSecret(password);
     }
     else {    
         user = tl.getEndpointAuthorizationParameter(acrEndpoint, 'serviceprincipalid', true);

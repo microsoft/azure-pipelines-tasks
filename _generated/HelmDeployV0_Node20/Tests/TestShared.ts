@@ -34,8 +34,7 @@ export let TestEnvVars = {
     failOnStderr: "__failOnStderr__",
     publishPipelineMetadata: "__publishPipelineMetadata__",
     chartNameForACR: "__chartNameForACR__",
-    chartPathForACR: "__chartPathForACR__",
-    tempDirectory: ""
+    chartPathForACR: "__chartPathForACR__"
 };
 
 export let Commands = {
