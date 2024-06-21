@@ -488,7 +488,7 @@ class Utils {
         var finalPathExtension: string = ".json" 
 
         if(filePathExtension === 'bicep'){
-            const result: IExecSyncResult = tl.execSync("az", `bicep build --file ${filePath}`);
+            const result: IExecSyncResult = tl.execSync("az", `bicep build --file "${filePath}"`);
             if(result && result.code !== 0){
                 throw new Error(tl.loc("BicepBuildFailed", result.stderr));
             }
@@ -497,7 +497,7 @@ class Utils {
             finalPathExtension = ".parameters.json"
 
             //Using --outfile to avoid overwriting primary bicep file in the case bicep and param file have the the same file name.
-            const result: IExecSyncResult = tl.execSync("az", `bicep build-params --file ${filePath} --outfile ${path.join(fileDir, fileName + finalPathExtension)}`);
+            const result: IExecSyncResult = tl.execSync("az", `bicep build-params --file "${filePath}" --outfile "${path.join(fileDir, fileName + finalPathExtension)}"`);
             if(result && result.code !== 0){
                 throw new Error(tl.loc("BicepParamBuildFailed", result.stderr));
             } 
