@@ -206,6 +206,26 @@ describe('Azure Resource Manager Template Deployment', function () {
         }
     });
 
+    it('Successfully triggered createOrUpdate deployment using bicep file with space in path', (done) => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSMwithBicep WithSpaceInPath.bicep";
+        process.env["csmParametersFile"] = "";
+        process.env["deploymentOutputs"] = "someVar";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.succeeded, "Should have succeeded");
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=someVar;]") >= 0, "deploymentsOutput should have been updated");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+
     it('Successfully triggered createOrUpdate deployment using bicep file with unused params', (done) => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSMwithBicepWithWarning.bicep";

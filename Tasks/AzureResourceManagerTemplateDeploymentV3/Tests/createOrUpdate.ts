@@ -33,6 +33,7 @@ process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_AUTHENTICATIONTYPE"] = "key";
 
 var CSMJson = path.join(__dirname, "CSM.json");
 var CSMBicep = path.join(__dirname, "CSMwithBicep.bicep");
+var CSMBicepWithSpaceInPath = path.join(__dirname, "CSMwithBicep WithSpaceInPath.bicep");
 var CSMBicepParam = path.join(__dirname, "CSMwithBicep.bicepparam");
 var CSMBicepParamWithEnv = path.join(__dirname, "CSMwithBicep.prod.bicepparam");
 var CSMBicepWithWarning = path.join(__dirname, "CSMwithBicepWithWarning.bicep");
@@ -41,6 +42,7 @@ var CSMwithComments = path.join(__dirname, "CSMwithComments.json");
 var defaults = path.join(__dirname, "defaults.json");
 var faultyCSM = path.join(__dirname, "faultyCSM.json");
 var bicepbuildCmd = `az bicep build --file ${path.join(__dirname, "CSMwithBicep.bicep")}`;
+var bicepbuildwithspaceinpathCmd = `az bicep build --file "${path.join(__dirname, "CSMwithBicep WithSpaceInPath.bicep")}"`;
 var bicepparambuildCmd = `az bicep build-params --file ${path.join(__dirname, "CSMwithBicep.bicepparam")} --outfile ${path.join(__dirname, "CSMwithBicep.parameters.json")}`;
 var bicepparambuildwithenvironmentCmd = `az bicep build-params --file ${path.join(__dirname, "CSMwithBicep.prod.bicepparam")} --outfile ${path.join(__dirname, "CSMwithBicep.parameters.json")}`;
 var bicepbuildwithWarning = `az bicep build --file ${path.join(__dirname, "CSMwithBicepWithWarning.bicep")}`;
@@ -54,6 +56,7 @@ const successExec = {
     "stdout": "Executed Successfully"
 }
 exec[bicepbuildCmd] = successExec;
+exec[bicepbuildwithspaceinpathCmd] = successExec;
 exec[bicepparambuildCmd] = successExec;
 exec[bicepparambuildwithenvironmentCmd] = successExec;
 exec[bicepbuildwithWarning] = successExec;
@@ -72,6 +75,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "findMatch": {
         "CSM.json": [CSMJson],
         "CSMwithBicep.bicep": [CSMBicep],
+        "CSMwithBicep WithSpaceInPath.bicep": [CSMBicepWithSpaceInPath],
         "CSMwithBicep.bicepparam": [CSMBicepParam],
         "CSMwithBicep.prod.bicepparam": [CSMBicepParamWithEnv],
         "CSMwithBicepWithWarning.bicep": [CSMBicepWithWarning],
