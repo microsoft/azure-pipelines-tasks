@@ -3,6 +3,7 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 var mockery = require('mockery');
 
+process.env['AGENT_TEMPDIRECTORY'] = '.';
 // provide answers for task mock
 let a: any = <any>{
     "which": {

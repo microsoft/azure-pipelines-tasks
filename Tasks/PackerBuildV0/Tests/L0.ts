@@ -3,6 +3,7 @@ import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import tl = require('azure-pipelines-task-lib');
 
+
 function runValidations(validator: () => void, tr, done) {
     try {
         validator();

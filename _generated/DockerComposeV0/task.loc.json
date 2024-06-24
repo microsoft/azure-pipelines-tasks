@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 240,
-    "Patch": 2
+    "Minor": 242,
+    "Patch": 0
   },
   "demands": [],
   "preview": "false",
@@ -358,7 +358,7 @@
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
   },
   "_buildConfigMapping": {
-    "Default": "0.240.2",
-    "Node20_229_2": "0.240.3"
+    "Default": "0.242.0",
+    "Node20_229_2": "0.242.1"
   }
 }
