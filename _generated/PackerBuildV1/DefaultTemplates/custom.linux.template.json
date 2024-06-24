@@ -2,6 +2,7 @@
   "variables": {
     "client_id": "{{env `client_id`}}",
     "client_secret": "{{env `client_secret`}}",
+    "client_jwt": "{{env `client_jwt`}}",
     "subscription_id": "{{env `subscription_id`}}",
     "tenant_id": "{{env `tenant_id`}}",
     "object_id": "{{env `object_id`}}",
@@ -20,6 +21,7 @@
         "type": "azure-arm",
         "client_id": "{{user `client_id`}}",
         "client_secret": "{{user `client_secret`}}",
+        "client_jwt": "{{user `client_jwt`}}",
         "resource_group_name": "{{user `resource_group`}}",
         "storage_account": "{{user `storage_account`}}",
         "subscription_id": "{{user `subscription_id`}}",

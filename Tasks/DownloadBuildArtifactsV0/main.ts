@@ -362,6 +362,7 @@ async function main(): Promise<void> {
                                 ErrorDisplayMode.ShowWarning
                             ).catch((reason) => {
                                 console.log(tl.loc("FollowingDownloadRedirectFailed", reason));
+                                publishEvent('download-redirect', { "redirectLimit": retryRedirectLimitDownload, "err": JSON.stringify(reason, Object.getOwnPropertyNames(reason)) });
                                 const handlerConfig: IContainerHandlerConfig = { ...config, endpointUrl, templatePath, handler, preferRedirect: false  };
                                 const downloadHandler: DownloadHandlerContainer = new DownloadHandlerContainer(handlerConfig);
                                 const fallbackDownloadPromise: Promise<models.ArtifactDownloadTicket[]> = executeWithRetries(

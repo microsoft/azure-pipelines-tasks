@@ -57,7 +57,7 @@ function Protect-ScriptArguments([string]$inputArgs, [string]$taskName) {
                 throw $message
             }
             elseif ($featureFlags.audit) {
-                Write-Warning $message
+                Write-VstsTaskWarning -Message $message -AuditAction 1
             }
         }
     }

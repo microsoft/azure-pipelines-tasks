@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 238,
+    "Minor": 240,
     "Patch": 0
   },
   "demands": [],
@@ -263,12 +263,12 @@
   ],
   "instanceNameFormat": "ARM Template deployment: $(deploymentScope) scope",
   "execution": {
-    "Node10": {
-      "target": "main.js"
-    },
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "main.js"
     }
   },
   "messages": {
@@ -336,7 +336,7 @@
     "IncompatibleAzureCLIVersionBicepParam": "Azure CLI version should be >= 2.47.0 to use .bicepparam file"
   },
   "_buildConfigMapping": {
-    "Default": "3.238.0",
-    "Node20_229_2": "3.238.1"
+    "Default": "3.240.0",
+    "Node20_229_2": "3.240.1"
   }
 }

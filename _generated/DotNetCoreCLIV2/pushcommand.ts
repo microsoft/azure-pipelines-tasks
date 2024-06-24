@@ -10,6 +10,7 @@ import { NuGetConfigHelper2 } from 'azure-pipelines-tasks-packaging-common/nuget
 import * as ngRunner from 'azure-pipelines-tasks-packaging-common/nuget/NuGetToolRunner2';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import { getProjectAndFeedIdFromInputParam, logError } from 'azure-pipelines-tasks-packaging-common/util';
+import { WebRequest, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
 
 interface EndpointCredentials {
     endpoint: string;
@@ -73,12 +74,11 @@ export async function run(): Promise<void> {
         // Setting up auth info
         let accessToken;
         const isInternalFeed: boolean = nugetFeedType === 'internal';
-        accessToken = getAccessToken(isInternalFeed);
+        accessToken = await getAccessToken(isInternalFeed, urlPrefixes);
         const internalAuthInfo = new auth.InternalAuthInfo(urlPrefixes, accessToken, /*useCredProvider*/ null, true);
 
         let configFile = null;
         let apiKey: string;
-        let credCleanup = () => { return; };
 
         // dotnet nuget push does not currently accept a --config-file parameter
         // so we are going to work around this by creating a temporary working directory for dotnet with
@@ -86,6 +86,11 @@ export async function run(): Promise<void> {
         const tempNuGetConfigDirectory = path.join(NuGetConfigHelper2.getTempNuGetConfigBasePath(), 'NuGet_' + tl.getVariable('build.buildId'));
         const tempNuGetPath = path.join(tempNuGetConfigDirectory, 'nuget.config');
         tl.mkdirP(tempNuGetConfigDirectory);
+        let credCleanup = () => {
+            if (tl.exist(tempNuGetConfigDirectory)) {
+                tl.rmRF(tempNuGetConfigDirectory)
+            }
+        };
 
         let feedUri: string = undefined;
 
@@ -107,7 +112,6 @@ export async function run(): Promise<void> {
             feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed.feedId, feed.projectId, null, accessToken, /* useSession */ true);
             nuGetConfigHelper.addSourcesToTempNuGetConfig([<auth.IPackageSource>{ feedName: feed.feedId, feedUri: feedUri, isInternal: true }]);
             configFile = nuGetConfigHelper.tempNugetConfigPath;
-            credCleanup = () => { tl.rmRF(tempNuGetConfigDirectory); };
 
             apiKey = 'VSTS';
         } else {
@@ -131,7 +135,6 @@ export async function run(): Promise<void> {
             nuGetConfigHelper.addSourcesToTempNuGetConfig([externalAuth.packageSource]);
             feedUri = externalAuth.packageSource.feedUri;
             configFile = nuGetConfigHelper.tempNugetConfigPath;
-            credCleanup = () => { tl.rmRF(tempNuGetConfigDirectory); };
 
             const authType: auth.ExternalAuthType = externalAuth.authType;
             switch (authType) {
@@ -190,19 +193,18 @@ function dotNetNuGetPushAsync(dotnetPath: string, packageFile: string, feedUri: 
     return dotnet.exec({ cwd: workingDirectory, env: envWithProxy } as IExecOptions);
 }
 
-function getAccessToken(isInternalFeed: boolean): string{
+async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): Promise<string> {
     let accessToken: string;
     let allowServiceConnection = tl.getVariable('PUBLISH_VIA_SERVICE_CONNECTION');
 
-    if(allowServiceConnection) {
+    if (allowServiceConnection) {
         let endpoint = tl.getInput('externalEndpoint', false);
 
-        if(endpoint && isInternalFeed === true) {
+        if (endpoint && isInternalFeed === true) {
             tl.debug("Found external endpoint, will use token for auth");
             let endpointAuth = tl.getEndpointAuthorization(endpoint, true);
             let endpointScheme = tl.getEndpointAuthorizationScheme(endpoint, true).toLowerCase();
-            switch(endpointScheme)
-            {
+            switch (endpointScheme) {
                 case ("token"):
                     accessToken = endpointAuth.parameters["apitoken"];
                     break;
@@ -211,35 +213,70 @@ function getAccessToken(isInternalFeed: boolean): string{
                     break;
             }
         }
-        if(!accessToken && isInternalFeed === true)
-        {            
-            tl.debug("Checking for auth from Cred Provider."); 
+        if (!accessToken && isInternalFeed === true) {
+            tl.debug("Checking for auth from Cred Provider.");
             const feed = getProjectAndFeedIdFromInputParam('feedPublish');
             const JsonEndpointsString = process.env["VSS_NUGET_EXTERNAL_FEED_ENDPOINTS"];
+
             if (JsonEndpointsString) {
+                tl.debug(`Feed details ${feed.feedId} ${feed.projectId}`);
                 tl.debug(`Endpoints found: ${JsonEndpointsString}`);
 
                 let endpointsArray: { endpointCredentials: EndpointCredentials[] } = JSON.parse(JsonEndpointsString);
-                tl.debug(`Feed details ${feed.feedId} ${feed.projectId}`);
-
-                for (let endpoint_in = 0; endpoint_in < endpointsArray.endpointCredentials.length; endpoint_in++) {
-                    if (endpointsArray.endpointCredentials[endpoint_in].endpoint.search(feed.feedName) != -1) {
-                        tl.debug(`Endpoint Credentials found for ${feed.feedName}`);
-                        accessToken = endpointsArray.endpointCredentials[endpoint_in].password;
+                let matchingEndpoint: EndpointCredentials;
+                for (const e of endpointsArray.endpointCredentials) {
+                    for (const prefix of uriPrefixes) {
+                        if (e.endpoint.toUpperCase().startsWith(prefix.toUpperCase())) {
+                            let isServiceConnectionValid = await tryServiceConnection(e, feed);
+                            if (isServiceConnectionValid) {
+                                matchingEndpoint = e;
+                                break;
+                            }
+                        }
+                    }
+                    if (matchingEndpoint) {
+                        accessToken = matchingEndpoint.password;
                         break;
                     }
                 }
             }
         }
-        if(!accessToken)
-        {
-            tl.debug('Defaulting to use the System Access Token.');
-            accessToken = pkgLocationUtils.getSystemAccessToken();
+        if (accessToken) {
+            return accessToken;
         }
     }
-    else {
-        accessToken = pkgLocationUtils.getSystemAccessToken();
-    }
 
+    tl.debug('Defaulting to use the System Access Token.');
+    accessToken = pkgLocationUtils.getSystemAccessToken();
     return accessToken;
+}
+
+async function tryServiceConnection(endpoint: EndpointCredentials, feed: any): Promise<boolean> {
+    // Create request
+    const request = new WebRequest();
+    const token64 = Buffer.from(`${endpoint.username}:${endpoint.password}`).toString('base64');
+    request.uri = endpoint.endpoint;
+    request.method = 'GET';
+    request.headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Basic " + token64
+    };
+
+    const response = await sendRequest(request);
+
+    if (response.statusCode == 200) {
+        if (response.body) {
+            for (const entry of response.body.resources) {
+                if (entry['@type'] === 'AzureDevOpsProjectId' && !(entry['label'].toUpperCase() === feed.projectId.toUpperCase() || entry['@id'].toUpperCase().endsWith(feed.projectId.toUpperCase()))) {
+                    return false;
+                }
+                if (entry['@type'] === 'VssFeedId' && !(entry['label'].toUpperCase() === feed.feedId.toUpperCase() || entry['@id'].toUpperCase().endsWith(feed.feedId.toUpperCase()))) {
+                    return false;
+                }
+            }
+            // We found matches in feedId and projectId, return the service connection
+            return true;
+        }
+    }
+    return false;
 }

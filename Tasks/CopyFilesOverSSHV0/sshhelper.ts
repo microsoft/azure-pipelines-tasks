@@ -1,8 +1,7 @@
-import Q = require('q');
 import tl = require('azure-pipelines-task-lib/task');
-const path = require('path');
 var Ssh2Client = require('ssh2').Client;
 var SftpClient = require('ssh2-sftp-client');
+var path = require('path');
 
 export class RemoteCommandOptions {
     public failOnStdErr : boolean;
@@ -30,27 +29,27 @@ export class SshHelper {
     }
 
     private async setupSshClientConnection() : Promise<void> {
-        const defer = Q.defer<void>();
-        this.sshClient = new Ssh2Client();
-        this.sshClient.once('ready', () => {
-            defer.resolve();
-        }).once('error', (err) => {
-            defer.reject(tl.loc('ConnectionFailed', err));
-        }).connect(this.sshConfig);
-        await defer.promise;
+        return new Promise((resolve, reject) => {
+            this.sshClient = new Ssh2Client();
+            this.sshClient.once('ready', () => {
+                resolve();
+            }).once('error', (err) => {
+                reject(tl.loc('ConnectionFailed', err));
+            }).connect(this.sshConfig);
+        });
     }
 
     private async setupSftpConnection() : Promise<void> {
-        const defer = Q.defer<void>();
-        try {
-            this.sftpClient = new SftpClient();
-            await this.sftpClient.connect(this.sshConfig);
-            defer.resolve();
-        } catch (err) {
-            this.sftpClient = null;
-            defer.reject(tl.loc('ConnectionFailed', err));
-        }
-        await defer.promise;
+        return new Promise(async (resolve, reject) => {
+            try {
+                this.sftpClient = new SftpClient();
+                await this.sftpClient.connect(this.sshConfig);
+                resolve();
+            } catch (err) {
+                this.sftpClient = null;
+                reject(tl.loc('ConnectionFailed', err));
+            }
+        });
     }
 
     /**
@@ -103,31 +102,46 @@ export class SshHelper {
     async uploadFile(sourceFile: string, dest: string) : Promise<string> {
         tl.debug('Upload ' + sourceFile + ' to ' + dest + ' on remote machine.');
 
-        var defer = Q.defer<string>();
-        if(!this.sftpClient) {
-            defer.reject(tl.loc('ConnectionNotSetup'));
+        if (!this.sftpClient) {
+            return Promise.reject(tl.loc('ConnectionNotSetup'));
         }
 
         const remotePath = path.dirname(dest);
-        try {
-            if (!await this.sftpClient.exists(remotePath)) {
-                await this.sftpClient.mkdir(remotePath, true);
+
+        if (!tl.getBoolFeatureFlag('COPYFILESOVERSSHV0_USE_QUEUE')) {
+            try {
+
+                if (!await this.sftpClient.exists(remotePath)) {
+                    await this.sftpClient.mkdir(remotePath, true);
+                }
+            } catch (error) {
+                return Promise.reject(tl.loc('TargetNotCreated', remotePath));
             }
-        } catch (error) {
-            defer.reject(tl.loc('TargetNotCreated', remotePath));
         }
 
-        try {
-            if (this.sshConfig.useFastPut) {
-                await this.sftpClient.fastPut(sourceFile, dest);
-            } else {
-                await this.sftpClient.put(sourceFile, dest);
-            }
-            defer.resolve(dest);
-        } catch (err) {
-            defer.reject(tl.loc('UploadFileFailed', sourceFile, dest, err));
+        if (this.sshConfig.useFastPut) {
+            return this.sftpClient.fastPut(sourceFile, dest);
+        } else {
+            return this.sftpClient.put(sourceFile, dest);
         }
-        return defer.promise;
+    }
+
+    async uploadFolder(sourceFolder: string, destFolder: string) : Promise<string> {
+        tl.debug('Upload ' + sourceFolder + ' to ' + destFolder + ' on remote machine.');
+
+        return new Promise(async (resolve, reject) => {
+            if (!this.sftpClient) {
+                reject(tl.loc('ConnectionNotSetup'));
+                return;
+            }
+
+            try {
+                await this.sftpClient.uploadDir(sourceFolder, destFolder);
+                return resolve(destFolder);
+            } catch (err) {
+                reject(tl.loc('UploadFolderFailed', sourceFolder, destFolder, err));
+            }
+        });
     }
 
     /**
@@ -136,23 +150,30 @@ export class SshHelper {
      * @returns {Promise<boolean>}
      */
     async checkRemotePathExists(path: string) : Promise<boolean> {
-        var defer = Q.defer<boolean>();
+        return new Promise(async (resolve, reject) => {
+            tl.debug(tl.loc('CheckingPathExistance', path));
 
-        tl.debug(tl.loc('CheckingPathExistance', path));
-        if(!this.sftpClient) {
-            defer.reject(tl.loc('ConnectionNotSetup'));
-        }
-        if (await this.sftpClient.exists(path)) {
-            //path exists
-            tl.debug(tl.loc('PathExists', path));
-            defer.resolve(true);
-        } else {
-            //path does not exist
-            tl.debug(tl.loc('PathNotExists', path));
-            defer.resolve(false);
-        }
+            if (!this.sftpClient) {
+                reject(tl.loc('ConnectionNotSetup'));
+                return;
+            }
 
-        return defer.promise;
+            if (await this.sftpClient.exists(path)) {
+                // path exists
+                tl.debug(tl.loc('PathExists', path));
+                resolve(true);
+            } else {
+                // path does not exist
+                tl.debug(tl.loc('PathNotExists', path));
+                resolve(false);
+            }
+        });
+    }
+
+    async createRemoteDirectory(path: string) {
+        if (!await this.sftpClient.exists(path)) {
+            return await this.sftpClient.mkdir(path, true);
+        }
     }
 
     /**
@@ -161,58 +182,64 @@ export class SshHelper {
      * @param options
      * @returns {Promise<string>}
      */
-    runCommandOnRemoteMachine(command: string, options: RemoteCommandOptions) : Q.Promise<string> {
-        var defer = Q.defer<string>();
-        var stdErrWritten:boolean = false;
+    runCommandOnRemoteMachine(command: string, options: RemoteCommandOptions) : Promise<string> {
+        return new Promise((resolve, reject) => {
+            let stdErrWritten = false;
 
-        if(!this.sshClient) {
-            defer.reject(tl.loc('ConnectionNotSetup'));
-        }
-
-        if(!options) {
-            tl.debug('Options not passed to runCommandOnRemoteMachine, setting defaults.');
-            var options = new RemoteCommandOptions();
-            options.failOnStdErr = true;
-        }
-
-        var cmdToRun = command;
-        if(cmdToRun.indexOf(';') > 0) {
-            //multiple commands were passed separated by ;
-            cmdToRun = cmdToRun.replace(/;/g, '\n');
-        }
-        tl.debug('cmdToRun = ' + cmdToRun);
-
-        this.sshClient.exec(cmdToRun, (err, stream) => {
-            if(err) {
-                defer.reject(tl.loc('RemoteCmdExecutionErr', cmdToRun, err))
+            if (!this.sshClient) {
+                reject(tl.loc('ConnectionNotSetup'));
+                return;
             }
-            stream.on('close', (code, signal) => {
-                tl.debug('code = ' + code + ', signal = ' + signal);
-                if(code && code != 0) {
-                    //non zero exit code - fail
-                    defer.reject(tl.loc('RemoteCmdNonZeroExitCode', cmdToRun, code));
-                } else {
-                    //no exit code or exit code of 0
 
-                    //based on the options decide whether to fail the build or not if data was written to STDERR
-                    if(stdErrWritten === true && options.failOnStdErr === true) {
-                        //stderr written - fail the build
-                        defer.reject(tl.loc('RemoteCmdExecutionErr', cmdToRun, tl.loc('CheckLogForStdErr')));
-                    } else {
-                        //success
-                        defer.resolve('0');
-                    }
+            if (!options) {
+                tl.debug('Options not passed to runCommandOnRemoteMachine, setting defaults.');
+                const options = new RemoteCommandOptions();
+                options.failOnStdErr = true;
+            }
+
+            let cmdToRun = command;
+
+            if (cmdToRun.indexOf(';') > 0) {
+                // multiple commands were passed separated by ;
+                cmdToRun = cmdToRun.replace(/;/g, '\n');
+            }
+
+            tl.debug('cmdToRun = ' + cmdToRun);
+
+            this.sshClient.exec(cmdToRun, (err, stream) => {
+                if (err) {
+                    reject(tl.loc('RemoteCmdExecutionErr', cmdToRun, err));
+                    return;
                 }
-            }).on('data', (data) => {
-                console.log(data);
-            }).stderr.on('data', (data) => {
+
+                stream.on('close', (code, signal) => {
+                    tl.debug('code = ' + code + ', signal = ' + signal);
+
+                    if (code && code != 0) {
+                        // non zero exit code - fail
+                        reject(tl.loc('RemoteCmdNonZeroExitCode', cmdToRun, code));
+                    } else {
+                        // no exit code or exit code of 0
+
+                        // based on the options decide whether to fail the build or not if data was written to STDERR
+                        if (stdErrWritten === true && options.failOnStdErr === true) {
+                            // stderr written - fail the build
+                            reject(tl.loc('RemoteCmdExecutionErr', cmdToRun, tl.loc('CheckLogForStdErr')));
+                        } else {
+                            // success
+                            resolve('0');
+                        }
+                    }
+                }).on('data', (data) => {
+                    console.log(data.toString());
+                }).stderr.on('data', (data) => {
                     stdErrWritten = true;
                     tl.debug('stderr = ' + data);
-                    if(data && data.toString().trim() !== '') {
+                    if (data && data.toString().trim() !== '') {
                         tl.error(data);
                     }
                 });
+            });
         });
-        return defer.promise;
     }
 }

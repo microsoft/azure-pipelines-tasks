@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 238,
-    "Patch": 1
+    "Minor": 241,
+    "Patch": 3
   },
   "demands": [],
   "groups": [],
@@ -424,12 +424,12 @@
     }
   ],
   "execution": {
-    "Node10": {
-      "target": "src//run.js"
-    },
     "Node16": {
       "target": "src//run.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "src//run.js"
     },
     "Node20_1": {
       "target": "src//run.js",
@@ -470,7 +470,7 @@
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   },
   "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_3": "1.238.1"
+    "Default": "1.241.2",
+    "Node20_229_3": "1.241.3"
   }
 }

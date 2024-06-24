@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 238,
+    "Minor": 241,
     "Patch": 7
   },
   "demands": [
@@ -236,12 +236,12 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "prejobexecution": {
-    "Node10": {
-      "target": "PreJobExecutionAzureFileCopy.js"
-    },
     "Node16": {
       "target": "PreJobExecutionAzureFileCopy.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "PreJobExecutionAzureFileCopy.js"
     },
     "Node20_1": {
       "target": "PreJobExecutionAzureFileCopy.js",
@@ -305,7 +305,7 @@
     "AzModuleNotFound": "ms-resource:loc.messages.AzModuleNotFound"
   },
   "_buildConfigMapping": {
-    "Default": "5.238.6",
-    "Node20_229_2": "5.238.7"
+    "Default": "5.241.6",
+    "Node20_229_2": "5.241.7"
   }
 }

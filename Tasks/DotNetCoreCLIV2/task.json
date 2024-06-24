@@ -17,7 +17,7 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 238,
+        "Minor": 242,
         "Patch": 0
     },
     "minimumAgentVersion": "2.144.0",
@@ -262,7 +262,7 @@
             "name": "verbosityRestore",
             "type": "pickList",
             "label": "Verbosity",
-            "defaultValue": "Detailed",
+            "defaultValue": "Normal",
             "helpMarkDown": "Specifies the amount of detail displayed in the output.",
             "required": "false",
             "groupName": "restoreAdvanced",
@@ -474,7 +474,7 @@
             "name": "verbosityPack",
             "type": "pickList",
             "label": "Verbosity",
-            "defaultValue": "Detailed",
+            "defaultValue": "Normal",
             "helpMarkDown": "Specifies the amount of detail displayed in the output.",
             "required": "false",
             "groupName": "packAdvanced",

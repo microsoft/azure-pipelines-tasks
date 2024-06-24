@@ -27,7 +27,6 @@ var aggregatePackSourceContentsZipPath = path.join(packagePath, 'aggregate-pack-
 var aggregatePackageName = 'Mseng.MS.TF.Build.Tasks';
 var aggregateNuspecPath = path.join(packagePath, 'Mseng.MS.TF.Build.Tasks.nuspec');
 var publishLayoutPath = path.join(packagePath, 'publish-layout');
-var publishPushCmdPath = path.join(packagePath, 'publish-layout', 'push.cmd');
 var genTaskPath = path.join(__dirname, '..', '_generated');
 var makeOptionPath = path.join(__dirname, '..', 'make-options.json');
 
@@ -49,7 +48,6 @@ exports.aggregatePackSourceContentsZipPath = aggregatePackSourceContentsZipPath;
 exports.aggregatePackageName = aggregatePackageName;
 exports.aggregateNuspecPath = aggregateNuspecPath;
 exports.publishLayoutPath = publishLayoutPath;
-exports.publishPushCmdPath = publishPushCmdPath;
 exports.genTaskPath = genTaskPath;
 exports.makeOptionPath = makeOptionPath;
 
@@ -522,6 +520,34 @@ var resolveTaskList = function(taskPattern) {
     return taskList;
 }
 exports.resolveTaskList = resolveTaskList;
+
+/**
+ * The function recieves task list and return the tasks including generated names
+ * @param {Array<string>} taskList - tasks to check
+ * @returns {Array<string>} - array of tasks with generated names
+ */
+function getAllTaskList(taskList) {
+    let tasksToBuild = taskList;
+
+    if (!fs.existsSync(genTaskPath)) return tasksToBuild;
+
+    const generatedTaskFolders = fs.readdirSync(genTaskPath)
+        .filter((taskName) => {
+            return fs.statSync(path.join(genTaskPath, taskName)).isDirectory();
+        });
+
+    taskList.forEach((taskName) => {
+        generatedTaskFolders.forEach((generatedTaskName) => {
+            if (taskName !== generatedTaskName && generatedTaskName.startsWith(taskName)) {
+                tasksToBuild.push(generatedTaskName);
+            }
+        });
+    });
+
+    return tasksToBuild.sort();
+}
+exports.getAllTaskList = getAllTaskList;
+
 
 /**
  * @param {string} type - log type

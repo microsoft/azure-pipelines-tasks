@@ -2,7 +2,6 @@ $AzureFileCopyRemoteJob = {
     param(
         [string]$containerURL,
         [string]$targetPath,
-        [string]$containerSasToken,
         [string]$additionalArguments,
         [switch]$CleanTargetBeforeCopy,
         [switch]$EnableDetailedLogging,
@@ -24,6 +23,8 @@ $AzureFileCopyRemoteJob = {
 
     try
     {
+        $env:AZCOPY_AUTO_LOGIN_TYPE = "PSCRED"
+
         $useDefaultArguments = ($additionalArguments -eq "")
 
         # Argument to check whether azcopy.exe needs to be downloaded on VM or it is already present on VM
@@ -46,7 +47,7 @@ $AzureFileCopyRemoteJob = {
         {
             $azCopyVersionCommand = azcopy --version
             $azCopyVersion = $azCopyVersionCommand.split(' ')[2]
-            if([version]$azCopyVersion -lt [version]"10.12.2")
+            if([version]$azCopyVersion -lt [version]"10.24.0")
             {
                 $shouldDownload = $true
             }
@@ -55,7 +56,7 @@ $AzureFileCopyRemoteJob = {
         {
             $shouldDownload = $true
         }
-
+        
         if($shouldDownload)
         {
             try
@@ -68,7 +69,7 @@ $AzureFileCopyRemoteJob = {
 
                 # Downloading AzCopy from URL and copying it in $azcopyZipPath
                 $webclient = New-Object System.Net.WebClient
-                $webclient.DownloadFile('https://vstsagenttools.blob.core.windows.net/tools/azcopy/10.12/AzCopy.zip',$azCopyZipPath)
+                $webclient.DownloadFile('https://vstsagenttools.blob.core.windows.net/tools/azcopy/10.24/AzCopy.zip',$azCopyZipPath)
 
                 #Unzipping the azcopy zip to $azcopyFolderPath
                 Expand-Archive $azCopyZipPath -DestinationPath $azCopyFolderPath -Force
@@ -84,7 +85,7 @@ $AzureFileCopyRemoteJob = {
             catch
             {
                 $exceptionMessage = $_.Exception.Message.ToString()
-                throw "Failed while downloading azcopy.exe from the URL with exception $exceptionMessage. Please download azcopy.exe 10.12.2 and set this extracted path in env:Path"
+                throw "Failed while downloading azcopy.exe from the URL with exception $exceptionMessage. Please download azcopy.exe 10.24.0 and set this extracted path in env:Path"
             }
         }
 
@@ -97,18 +98,15 @@ $AzureFileCopyRemoteJob = {
             Write-DetailLogs "Using default AzCopy arguments for dowloading to VM"
             $additionalArguments = "--recursive --log-level=INFO"
         }
-        if (-not $containerSasToken.StartsWith("?"))
-        {
-            $containerSasToken = '?' + $containerSasToken
-        }
+
         if ($useSanitizerActivate) {
             # Splitting arguments on space, but not on space inside quotes
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
             Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $sanitizedArguments"
-            & azcopy copy "$containerURL/*$containerSasToken" "$targetPath" $sanitizedArguments
+            & azcopy copy "$containerURL/" "$targetPath" $sanitizedArguments
         } else {
-            Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $additionalArguments"
-            $azCopyCommand = "& azcopy copy `"$containerURL/*$containerSasToken`" `"$targetPath`" $additionalArguments"
+            Write-DetailLogs "##[command] & `"$azCopyExeLocation`" copy `"$containerURL*****`" `"$targetPath`" $additionalArguments"
+            $azCopyCommand = "& azcopy copy `"$containerURL/`" `"$targetPath`" $additionalArguments"
             Invoke-Expression $azCopyCommand
         }
     }

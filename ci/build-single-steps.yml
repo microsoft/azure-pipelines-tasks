@@ -36,7 +36,7 @@ steps:
     npm install
   displayName: npm install min agent demands
 
-- script: node ./ci/verifyMinAgentDemands/index.js
+- script: node ./ci/verifyMinAgentDemands/index.js --pat $(GitHubPAT)
   displayName: Verify min agent demands
 
 - powershell: |
@@ -126,16 +126,6 @@ steps:
   # Stage per task NuGet package
   - script: npm run package
     displayName: npm run package
-
-  # Authenticate 
-  - task: NuGetAuthenticate@1
-    displayName: Authenticate with nuget
-
-  # Push to feed
-  - script: |
-      cd $(Build.SourcesDirectory)\_package\nuget-packages
-      push.cmd
-    displayName: Push Nuget package
 
   - powershell: |
       mv _package/nuget-packages nuget-packages
