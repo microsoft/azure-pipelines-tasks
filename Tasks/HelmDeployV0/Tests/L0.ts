@@ -233,6 +233,7 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.TestEnvVars.chartPathForACR] = shared.testChartPathForACR;
         process.env[shared.TestEnvVars.chartNameForACR] = shared.testChartNameForACR;
         process.env[shared.TestEnvVars.azureSubscriptionEndpointForACR] = shared.testAzureSubscriptionEndpointForACR;
+        process.env[shared.testEndpointAuthVar] = "ServicePrincipal";
         process.env[shared.TestEnvVars.azureResourceGroupForACR] = shared.testAzureResourceGroupForACR;
         process.env[shared.TestEnvVars.azureContainerRegistry] = shared.testAzureContainerRegistry;
         process.env[shared.TestEnvVars.failOnStderr] = "false";
