@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Pipelineartefakt veröffentlichen",
+  "loc.friendlyName": "Publish Pipeline Artifacts",
   "loc.helpMarkDown": "Hiermit wird eine Datei oder Verzeichnis als benanntes Artefakt für die aktuelle Ausführung veröffentlicht (hochgeladen). Veröffentlichte Artefakte können mit der Aufgabe \"Pipelineartefakt herunterladen\" in andere Aufträge, Stages oder Pipelines heruntergeladen werden.",
   "loc.description": "Hiermit wird eine Datei oder Verzeichnis als benanntes Artefakt für die aktuelle Ausführung veröffentlicht (hochgeladen).",
   "loc.instanceNameFormat": "Pipelineartefakt veröffentlichen",
@@ -9,12 +9,12 @@
   "loc.input.help.artifactName": "Der Name des Artefakts, das veröffentlicht werden soll. Sofern nicht festgelegt, wird standardmäßig eine eindeutige bereichsbezogene ID für den Auftrag festgelegt.",
   "loc.input.label.artifactType": "Veröffentlichungsort für Artefakte",
   "loc.input.help.artifactType": "Wählen Sie aus, ob Sie das Artefakt in Azure Pipelines speichern oder in eine Dateifreigabe kopieren möchten, die vom Pipeline-Agent aus zugänglich sein muss.",
-  "loc.input.label.customProperties": "Benutzerdefinierte Eigenschaften",
-  "loc.input.help.customProperties": "Geben Sie benutzerdefinierte Eigenschaften ein, die dem Artefakt zugeordnet werden sollen. Gültige JSON-Zeichenfolge mit allen Schlüsseln mit dem Präfix \"user-\" erwartet",
   "loc.input.label.fileSharePath": "Pfad zur Dateifreigabe",
   "loc.input.help.fileSharePath": "Die Dateifreigabe, in die die Artefaktdateien kopiert werden. Diese kann Variablen umfassen. Beispiel: \\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). Das Veröffentlichen von Artefakten über einen Linux- oder macOS-Agent in einer Dateifreigabe wird nicht unterstützt.",
   "loc.input.label.parallel": "Paralleles Kopieren",
   "loc.input.help.parallel": "Wählen Sie aus, ob Dateien mithilfe mehrerer Threads parallel kopiert werden sollen, um einen höheren Durchsatz zu erzielen. Wenn diese Einstellung nicht aktiviert ist, wird nur ein Thread verwendet.",
   "loc.input.label.parallelCount": "Parallele Anzahl",
-  "loc.input.help.parallelCount": "Geben Sie den Parallelitätsgrad oder die Anzahl von Threads zum Durchführen des Kopiervorgangs ein. Der Wert muss mindestens 1 lauten und darf nicht größer sein als 128."
+  "loc.input.help.parallelCount": "Geben Sie den Parallelitätsgrad oder die Anzahl von Threads zum Durchführen des Kopiervorgangs ein. Der Wert muss mindestens 1 lauten und darf nicht größer sein als 128.",
+  "loc.input.label.properties": "Custom properties",
+  "loc.input.help.properties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'"
 }

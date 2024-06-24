@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Publier un artefact de pipeline",
+  "loc.friendlyName": "Publish Pipeline Artifacts",
   "loc.helpMarkDown": "Publiez (chargez) un fichier ou un répertoire en tant qu'artefact nommé pour l'exécution actuelle. Les artefacts publiés peuvent être téléchargés dans d'autres travaux, phases ou pipelines à l'aide de la tâche \"Télécharger un artefact de pipeline\".",
   "loc.description": "Publier (charger) un fichier ou un répertoire en tant qu'artefact nommé pour l'exécution actuelle",
   "loc.instanceNameFormat": "Publier l'artefact de pipeline",
@@ -9,12 +9,12 @@
   "loc.input.help.artifactName": "Nom de l'artefact à publier. Si aucune valeur n'est définie, la valeur par défaut est un ID unique dont l'étendue correspond au travail.",
   "loc.input.label.artifactType": "Emplacement de publication des artefacts",
   "loc.input.help.artifactType": "Choisissez entre le stockage de l'artefact dans Azure Pipelines, ou sa copie sur un partage de fichiers accessible à l'agent de pipeline.",
-  "loc.input.label.customProperties": "Propriétés personnalisées",
-  "loc.input.help.customProperties": "Entrez les propriétés personnalisées à associer à l’artefact. Chaîne JSON valide attendue avec toutes les clés ayant le préfixe 'user-'",
   "loc.input.label.fileSharePath": "Chemin du partage de fichiers",
   "loc.input.help.fileSharePath": "Partage de fichiers où sont copiés les fichiers d'artefacts. Il peut inclure des variables. Exemple : \\\\\\\\mon\\\\partage\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). La publication d'artefacts d'un agent Linux ou macOS vers un partage de fichiers n'est pas prise en charge.",
   "loc.input.label.parallel": "Copie parallèle",
   "loc.input.help.parallel": "Choisissez s'il est nécessaire de copier les fichiers en parallèle à l'aide de plusieurs threads pour un meilleur débit potentiel. Si ce paramètre n'est pas activé, un seul thread est utilisé.",
   "loc.input.label.parallelCount": "Nombre parallèle",
-  "loc.input.help.parallelCount": "Entrez le degré de parallélisme ou le nombre de threads utilisés pour effectuer la copie. La valeur doit être au moins égal à 1 et inférieur à 128."
+  "loc.input.help.parallelCount": "Entrez le degré de parallélisme ou le nombre de threads utilisés pour effectuer la copie. La valeur doit être au moins égal à 1 et inférieur à 128.",
+  "loc.input.label.properties": "Custom properties",
+  "loc.input.help.properties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'"
 }

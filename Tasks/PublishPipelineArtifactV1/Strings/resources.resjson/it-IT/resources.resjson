@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Pubblica artefatto della pipeline",
+  "loc.friendlyName": "Publish Pipeline Artifacts",
   "loc.helpMarkDown": "Pubblica (carica) un file o una directory come artefatto denominato per l'esecuzione corrente. Per scaricare gli artefatti pubblicati in altri processi, fasi o pipeline, usare l'attività \"Scarica artefatto della pipeline\".",
   "loc.description": "Pubblica (carica) un file o una directory come artefatto denominato per l'esecuzione corrente",
   "loc.instanceNameFormat": "Pubblica artefatto della pipeline",
@@ -9,12 +9,12 @@
   "loc.input.help.artifactName": "Nome dell'artefatto da pubblicare. Se non è impostato, il valore predefinito è un ID univoco il cui ambito è il processo.",
   "loc.input.label.artifactType": "Percorso di pubblicazione degli artefatti",
   "loc.input.help.artifactType": "Consente di scegliere se archiviare l'artefatto in Azure Pipelines oppure copiarlo in una condivisione file accessibile dall'agente della pipeline.",
-  "loc.input.label.customProperties": "Proprietà personalizzate",
-  "loc.input.help.customProperties": "Immettere le proprietà personalizzate da associare all'artefatto. È prevista una stringa JSON valida con tutte le chiavi con prefisso 'user-'",
   "loc.input.label.fileSharePath": "Percorso della condivisione file",
   "loc.input.help.fileSharePath": "Condivisione file in cui verranno copiati i file di artefatto. Può includere variabili. Esempio: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). La pubblicazione di artefatti da un agente Linux o macOS in una condivisione file non è supportata.",
   "loc.input.label.parallel": "Copia parallela",
   "loc.input.help.parallel": "Consente di scegliere se copiare i file in parallelo usando più thread per una maggiore velocità effettiva potenziale. Se questa impostazione non è abilitata, verrà usato un solo thread.",
   "loc.input.label.parallelCount": "Conteggio parallelo",
-  "loc.input.help.parallelCount": "Consente di immettere il grado di parallelismo o il numero di thread usati per eseguire la copia. Il valore deve essere almeno 1 e non superare 128."
+  "loc.input.help.parallelCount": "Consente di immettere il grado di parallelismo o il numero di thread usati per eseguire la copia. Il valore deve essere almeno 1 e non superare 128.",
+  "loc.input.label.properties": "Custom properties",
+  "loc.input.help.properties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'"
 }

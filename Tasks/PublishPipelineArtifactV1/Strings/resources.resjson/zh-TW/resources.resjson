@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "發佈管線成品",
+  "loc.friendlyName": "Publish Pipeline Artifacts",
   "loc.helpMarkDown": "將檔案或目錄發行 (上傳) 為目前執行的具名成品。您可使用「下載管線成品」工作，在其他作業、階段或管線中下載已發行的成品。",
   "loc.description": "將檔案或目錄發行 (上傳) 為目前執行的具名成品",
   "loc.instanceNameFormat": "發佈管線成品",
@@ -9,12 +9,12 @@
   "loc.input.help.artifactName": "要發行的成品名稱。若未設定，則預設為作業範圍內的唯一識別碼。",
   "loc.input.label.artifactType": "成品發佈位置",
   "loc.input.help.artifactType": "選擇要在 Azure Pipelines 中儲存成品，還是將成品複製到必須從管線代理程式存取的檔案共用。",
-  "loc.input.label.customProperties": "自訂屬性",
-  "loc.input.help.customProperties": "輸入要與成品關聯的自訂屬性。所有具有首碼 'user-' 的索引鍵都預期為有效 JSON 字串",
   "loc.input.label.fileSharePath": "檔案共用路徑",
   "loc.input.help.fileSharePath": "成品檔案所要複製到的檔案共用。此項目可包含變數。範例: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber)。不支援從 Linux 或 macOS 代理程式將成品發佈至檔案共用。",
   "loc.input.label.parallel": "平行複製",
   "loc.input.help.parallel": "選取是否要使用多重執行緒平行複製檔案，以追求更高的輸送量。若此設定未啟用，則只會使用一個執行緒。",
   "loc.input.label.parallelCount": "平行計數",
-  "loc.input.help.parallelCount": "輸入平行處理的程度或使用的執行緒數量，以執行複製。該值必須至少為 1 且不大於 128。"
+  "loc.input.help.parallelCount": "輸入平行處理的程度或使用的執行緒數量，以執行複製。該值必須至少為 1 且不大於 128。",
+  "loc.input.label.properties": "Custom properties",
+  "loc.input.help.properties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'"
 }
