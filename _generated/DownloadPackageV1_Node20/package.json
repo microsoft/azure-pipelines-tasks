@@ -21,8 +21,8 @@
     "@types/node": "^20.3.1",
     "azure-devops-node-api": "11.2.0",
     "azure-pipelines-task-lib": "3.3.1",
-    "azure-pipelines-tasks-packaging-common": "3.206.0",
-    "azure-pipelines-tasks-utility-common": "^3.198.1",
+    "azure-pipelines-tasks-packaging-common": "3.241.1",
+    "azure-pipelines-tasks-utility-common": "^3.241.0",
     "decompress-zip": "0.3.3",
     "tar-fs": "1.16.3",
     "extract-zip": "2.0.1"
