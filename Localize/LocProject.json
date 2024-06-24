@@ -136,6 +136,12 @@
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\AzureFileCopyV6\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\AzureFileCopyV6\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "Tasks\\AzureFunctionAppContainerV1\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\AzureFunctionAppContainerV1\\Strings\\resources.resjson"
@@ -280,6 +286,12 @@
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\AzureTestPlanV0\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\AzureTestPlanV0\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "Tasks\\AzureVmssDeploymentV0\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\AzureVmssDeploymentV0\\Strings\\resources.resjson"
@@ -379,6 +391,12 @@
             "SourceFile": "Tasks\\Common\\RemoteDeployer\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\Common\\RemoteDeployer\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\Common\\Sanitizer\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\Common\\Sanitizer\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
@@ -826,6 +844,12 @@
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\ManualValidationV1\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\ManualValidationV1\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
             "SourceFile": "Tasks\\MavenAuthenticateV0\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\MavenAuthenticateV0\\Strings\\resources.resjson"
@@ -865,6 +889,12 @@
             "SourceFile": "Tasks\\NodeToolV0\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\NodeToolV0\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\NotationV0\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\NotationV0\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
@@ -1021,6 +1051,18 @@
             "SourceFile": "Tasks\\PublishCodeCoverageResultsV2\\Strings\\resources.resjson\\en-US\\resources.resjson",
             "CopyOption": "LangIDOnPath",
             "OutputPath": "Tasks\\PublishCodeCoverageResultsV2\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\PublishPipelineArtifactV0\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\PublishPipelineArtifactV0\\Strings\\resources.resjson"
+          },
+          {
+            "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
+            "SourceFile": "Tasks\\PublishPipelineArtifactV1\\Strings\\resources.resjson\\en-US\\resources.resjson",
+            "CopyOption": "LangIDOnPath",
+            "OutputPath": "Tasks\\PublishPipelineArtifactV1\\Strings\\resources.resjson"
           },
           {
             "Languages": "de-DE;es-ES;fr-FR;it-IT;ja-JP;ko-KR;ru-RU;zh-CN;zh-TW",
