@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Publicar artefacto de canalización",
+  "loc.friendlyName": "Publish Pipeline Artifacts",
   "loc.helpMarkDown": "Publique (cargue) un archivo o directorio como artefacto con nombre para la ejecución actual. Los artefactos publicados pueden descargarse en otros trabajos, fases o canalizaciones mediante la tarea \"Descargar artefactos de canalización\".",
   "loc.description": "Publica (carga) un archivo o directorio como artefacto con nombre para la ejecución actual.",
   "loc.instanceNameFormat": "Publicar artefacto de canalización",
@@ -9,12 +9,12 @@
   "loc.input.help.artifactName": "Nombre del artefacto que se va a publicar. Si no se establece, tiene como valor predeterminado un identificador único con el trabajo como ámbito.",
   "loc.input.label.artifactType": "Ubicación de publicación de artefactos",
   "loc.input.help.artifactType": "Elija si el artefacto se va a almacenar en Azure Pipelines o se va a copiar en un recurso compartido de archivos al que se pueda acceder desde el agente de canalización.",
-  "loc.input.label.customProperties": "Propiedades personalizadas",
-  "loc.input.help.customProperties": "Escriba las propiedades personalizadas para asociar con el artefacto. Se esperaba una cadena JSON válida con todas las claves con el prefijo \"user-\".",
   "loc.input.label.fileSharePath": "Ruta de acceso del recurso compartido de archivos",
   "loc.input.help.fileSharePath": "El recurso compartido de archivos en el que se copiarán los archivos de artefacto. Puede incluir variables. Ejemplo: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). No se admite la publicación de artefactos de un agente de Linux o macOS en un recurso compartido de archivos.",
   "loc.input.label.parallel": "Copia en paralelo",
   "loc.input.help.parallel": "Seleccione si quiere copiar los archivos en paralelo con varios subprocesos para obtener un mayor rendimiento potencial. Si esta configuración no está habilitada, se usará un subproceso.",
   "loc.input.label.parallelCount": "Recuento de elementos en paralelo",
-  "loc.input.help.parallelCount": "Especifique el grado de paralelismo o el número de subprocesos usados para realizar la copia. Debe ser un valor entre 1 y 128."
+  "loc.input.help.parallelCount": "Especifique el grado de paralelismo o el número de subprocesos usados para realizar la copia. Debe ser un valor entre 1 y 128.",
+  "loc.input.label.properties": "Custom properties",
+  "loc.input.help.properties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'"
 }
