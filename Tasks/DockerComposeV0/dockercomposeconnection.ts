@@ -32,7 +32,8 @@ export default class DockerComposeConnection extends ContainerConnection {
         this.dockerComposeVersion = "2";
         this.additionalDockerComposeFiles = tl.getDelimitedInput("additionalDockerComposeFiles", "\n");
         this.requireAdditionalDockerComposeFiles = tl.getBoolInput("requireAdditionalDockerComposeFiles");
-        this.projectName = tl.getInput("projectName");
+        // docker-compose project name must be lowercase and only contain [a-z_-]
+        this.projectName = tl.getInput("projectName").toLowerCase().replace(/\\/g, "_");
     }
 
     public open(hostEndpoint?: string, authenticationToken?: AuthenticationToken): any {
