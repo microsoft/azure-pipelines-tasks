@@ -37,14 +37,14 @@ describe("authenticate azure artifacts feeds for maven", function() {
         tl.rmRF(m2DirPath);
     });
 
-    it("it should create a new settings.xml in the .m2 folder and add auth for 1 feed.", (done: MochaDone) => {
+    it("it should create a new settings.xml in the .m2 folder and add auth for 1 feed.", async (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0AuthSettingsXml.js");
 
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        await tr.runAsync();
 
         assert.equal(tl.ls(null, [m2DirPath]).length, 1, "Should have one file.");
         const settingsXmlStats = tl.stats(settingsXmlPath);
@@ -62,7 +62,7 @@ describe("authenticate azure artifacts feeds for maven", function() {
         done();
     });
 
-    it("it should read the existing settings.xml and add auth for 1 new feed", (done: Mocha.Done) => {
+    it("it should read the existing settings.xml and add auth for 1 new feed", async (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0AuthSettingsXmlExists.js");
@@ -71,7 +71,7 @@ describe("authenticate azure artifacts feeds for maven", function() {
 
         tl.cp(settingsOtherFeedName, settingsXmlPath);
 
-        tr.run();
+        tr.runAsync();
 
         assert.equal(tl.ls(null, [m2DirPath]).length, 1, "Should have one file.");
         const settingsXmlStats = tl.stats(settingsXmlPath);
@@ -90,7 +90,7 @@ describe("authenticate azure artifacts feeds for maven", function() {
         done();
     });
 
-    it("it should read the existing settings.xml and not add any new entries.", (done: Mocha.Done) => {
+    it("it should read the existing settings.xml and not add any new entries.", async (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0AuthSettingsXmlExists.js");
@@ -99,7 +99,7 @@ describe("authenticate azure artifacts feeds for maven", function() {
 
         tl.cp(settingsFeedName1, settingsXmlPath);
 
-        tr.run();
+        tr.runAsync();
 
         assert.equal(tl.ls(null, [m2DirPath]).length, 1, "Should have one file.");
         const settingsXmlStats = tl.stats(settingsXmlPath);
@@ -118,14 +118,14 @@ describe("authenticate azure artifacts feeds for maven", function() {
         done();
     });
 
-    it("it should create a new settings.xml in the .m2 folder and add auth for 3 different types of service connections.", (done: Mocha.Done) => {
+    it("it should create a new settings.xml in the .m2 folder and add auth for 3 different types of service connections.", async (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0ServiceConnections.js");
 
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        tr.runAsync();
 
         assert.equal(tl.ls(null, [m2DirPath]).length, 1, "Should have one file.");
         const settingsXmlStats = tl.stats(settingsXmlPath);
@@ -155,14 +155,14 @@ describe("authenticate azure artifacts feeds for maven", function() {
         done();
     });
 
-    it("it should warn if no inputs are provided.", (done: Mocha.Done) => {
+    it("it should warn if no inputs are provided.", async (done: Mocha.Done) => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0EmptyInput.js");
 
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        tr.runAsync();
 
         assert.equal(tl.ls(null, [m2DirPath]).length, 0, "Settings.xml file should not be created.");
 
