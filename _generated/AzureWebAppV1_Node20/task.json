@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 241,
     "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
@@ -231,6 +231,9 @@
   ],
   "instanceNameFormat": "Azure Web App Deploy: $(appName)",
   "execution": {
+    "Node20": {
+      "target": "azurermwebappdeployment.js"
+    },
     "Node10": {
       "target": "azurermwebappdeployment.js"
     },
@@ -392,7 +395,7 @@
     "MsBuildPackageNotSupported": "Deployment of msBuild generated package is not supported. Change package format or use Azure App Service Deploy task."
   },
   "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_2": "1.238.1"
+    "Default": "1.241.0",
+    "Node20_229_2": "1.241.1"
   }
 }

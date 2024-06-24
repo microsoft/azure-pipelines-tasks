@@ -82,7 +82,11 @@ export async function run(): Promise<void> {
             null /* tempConfigPath */,
             false /* useNugetToModifyConfigFile */);
 
-        let credCleanup = () => { return; };
+        let credCleanup = () => {
+            if (tl.exist(nuGetConfigHelper.tempNugetConfigPath)) {
+                tl.rmRF(nuGetConfigHelper.tempNugetConfigPath)
+            }
+        };
 
         let isNugetOrgBehaviorWarn = false;
 
@@ -122,7 +126,6 @@ export async function run(): Promise<void> {
             if (sources.length > 0) {
                 tl.debug(`Adding the following sources to the config file: ${sources.map(x => x.feedName).join(';')}`);
                 nuGetConfigHelper.addSourcesToTempNuGetConfig(sources);
-                credCleanup = () => { tl.rmRF(nuGetConfigHelper.tempNugetConfigPath); };
                 nuGetConfigPath = nuGetConfigHelper.tempNugetConfigPath;
             } else {
                 tl.debug('No sources were added to the temp NuGet.config file');
