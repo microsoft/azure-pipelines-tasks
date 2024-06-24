@@ -90,6 +90,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.keepAzSessionActive" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[When enabled, this task will continuously sign into Azure to avoid AADSTS700024 errors when requesting access tokens beyond the IdToken expiry date. Note that this feature is EXPERIMENTAL, may not work in all scenarios and you are using it without any guarantees. Valid only for service connections using the Workload Identity Federation authentication scheme.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[有効にすると、このタスクは引き続き Azure にサインインし、IdToken の有効期限を超えてアクセス トークンを要求するときに AADSTS700024 エラーが発生しないようにします。この機能は試験段階であるため、すべてのシナリオでは動作しない場合があり、保証なしで使用していることにご注意ください。ワークロード ID フェデレーション認証スキームを使用するサービス接続に対してのみ有効です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.powerShellErrorActionPreference" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Prepends the line `$ErrorActionPreference = 'VALUE'` at the top of your powershell/powershell core script.]]></Val>
@@ -203,6 +212,15 @@
           <Val><![CDATA[Inline Script]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[インライン スクリプト]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.keepAzSessionActive" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[[Experimental]5D; Keep Azure CLI session active]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[[試験段階l]5D; Azure CLI セッションをアクティブに保ってください]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -333,6 +351,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.FailedToRefreshAzSession" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The following error occurred while trying to refresh az-cli session: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[az-cli セッションの更新中に次のエラーが発生しました: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.GlobalCliConfigAgentVersionWarning" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[For agent version < 2.115.0, only global Azure CLI configuration can be used]]></Val>
@@ -360,6 +387,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.KeepingAzSessionActiveUnsupportedScheme" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['keepAzSessionActive' 入力は、ワークロード ID フェデレーション ARM サービス接続でのみ使用できます。参照されたサービス エンドポイント認証スキームは予期されていませんでした: %s。スキームを変更するか、'keepAzSessionActive' 入力を削除します。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.LoginFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Azure login failed]]></Val>
@@ -383,6 +419,15 @@
           <Val><![CDATA[az tool is configured to use %s as proxy server]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[az ツールは、%s をプロキシ サーバーとして使用するように構成されています]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.RefreshingAzSession" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Attempting to refresh az-cli session...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[az-cli セッションを更新しようとしています...]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

@@ -90,6 +90,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.keepAzSessionActive" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[When enabled, this task will continuously sign into Azure to avoid AADSTS700024 errors when requesting access tokens beyond the IdToken expiry date. Note that this feature is EXPERIMENTAL, may not work in all scenarios and you are using it without any guarantees. Valid only for service connections using the Workload Identity Federation authentication scheme.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[啟用時，此工作會持續登入 Azure，以避免在 IdToken 到期日之後，要求存取權杖時的 AADSTS700024 錯誤。請注意，此功能是實驗性的，可能無法在所有情況下運作，而且使用它並無法獲得任何保證。僅適用使用工作負載識別身分同盟驗證配置的服務連線。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.powerShellErrorActionPreference" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Prepends the line `$ErrorActionPreference = 'VALUE'` at the top of your powershell/powershell core script.]]></Val>
@@ -203,6 +212,15 @@
           <Val><![CDATA[Inline Script]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[內嵌指令碼]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.keepAzSessionActive" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[[Experimental]5D; Keep Azure CLI session active]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[[實驗]5D; 讓 Azure CLI 工作階段保持使用中]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -333,6 +351,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.FailedToRefreshAzSession" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The following error occurred while trying to refresh az-cli session: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[嘗試重新整理 az-cli 工作階段時發生下列錯誤: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.GlobalCliConfigAgentVersionWarning" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[For agent version < 2.115.0, only global Azure CLI configuration can be used]]></Val>
@@ -360,6 +387,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.KeepingAzSessionActiveUnsupportedScheme" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['keepAzSessionActive' 輸入只能用於工作負載識別身分同盟 ARM 服務連線。參考的服務端點驗證配置非預期: %s。變更配置或移除 'keepAzSessionActive' 輸入。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.LoginFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Azure login failed]]></Val>
@@ -383,6 +419,15 @@
           <Val><![CDATA[az tool is configured to use %s as proxy server]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[az 工具已設定為使用 %s 做為 Proxy 伺服器]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.RefreshingAzSession" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Attempting to refresh az-cli session...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[正在嘗試重新整理 az-cli 工作階段...]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
