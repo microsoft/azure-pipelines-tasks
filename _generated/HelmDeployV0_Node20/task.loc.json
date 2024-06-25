@@ -573,7 +573,7 @@
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   },
   "_buildConfigMapping": {
-    "Default": "0.242.0",
-    "Node20_229_3": "0.242.1"
+    "Default": "0.242.2",
+    "Node20_229_3": "0.242.3"
   }
 }

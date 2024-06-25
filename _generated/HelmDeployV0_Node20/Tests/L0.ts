@@ -240,16 +240,15 @@ describe("HelmDeployV0 Suite", function () {
         process.env[shared.isHelmV3] = "true";
         process.env[shared.isHelmV37Plus] = "false";
 
-        tr.run();
+        await tr.runAsync();
         assert(tr.stdout.indexOf("Successfully saved the helm chart to local registry cache.") != -1, "Chart should have been successfully saved to local registry cache.");
         assert(tr.stdout.indexOf(`Successfully logged in to  ${process.env[shared.TestEnvVars.azureContainerRegistry]}.`) != -1, "Azure container registry login should have been successful.");
         assert(tr.stdout.indexOf("Successfully pushed to the chart to container registry.") != -1, "Chart should have been successfully pushed to container registry.");
         assert(tr.stdout.indexOf("Successfully removed the chart from local cache.") != -1, "Chart should have been successfully removed from local cache.");
         assert(tr.succeeded, "task should have succeeded");
-        done();
     });
 
-    it("Run successfully with Helm save command (version 3.7.0+)", function (done: Mocha.Done) {
+    it("Run successfully with Helm save command (version 3.7.0+)", async function (done: Mocha.Done) {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.save;
