@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 240,
-    "Patch": 3
+    "Minor": 242,
+    "Patch": 1
   },
   "demands": [],
   "preview": "false",
@@ -359,10 +359,12 @@
     "NoDataWrittenOnFile": "No data was written into the file %s",
     "FileContentSynced": "Synced the file content to the disk. The content is %s.",
     "ImageNameWithoutTag": "Image name not specified with tag, pushing all tags of the image specified.",
-    "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
+    "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s",
+    "InvalidProjectName": "The project name \"%s\" must be a valid docker compose project name. Follow the link for more details: https://docs.docker.com/compose/project-name/#set-a-project-name",
+    "MigrateToDockerComposeV2": "The task is utilizing Docker Compose V1, but there are plans to transition to Docker Compose V2. It's necessary to investigate how to adapt your project to Docker Compose V2. For guidance on this migration, you can refer to the official Docker Compose documentation at the provided link: https://docs.docker.com/compose/migrate/"
   },
   "_buildConfigMapping": {
-    "Default": "0.240.2",
-    "Node20_229_2": "0.240.3"
+    "Default": "0.242.0",
+    "Node20_229_2": "0.242.1"
   }
 }
