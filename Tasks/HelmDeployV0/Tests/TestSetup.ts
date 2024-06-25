@@ -59,6 +59,7 @@ tr.setInput("chartNameForACR", process.env[shared.TestEnvVars.chartNameForACR] |
 tr.setInput("chartPathForACR", process.env[shared.TestEnvVars.chartPathForACR] || "");
 
 process.env.SYSTEM_DEFAULTWORKINGDIRECTORY = testnamespaceWorkingDirectory;
+process.env.AGENT_TEMPDIRECTORY = path.resolve(__dirname, "../../../../Tests");
 process.env.SYSTEM_TEAMFOUNDATIONCOLLECTIONURI = teamFoundationCollectionUri;
 process.env.SYSTEM_TEAMPROJECT = teamProject;
 process.env.SYSTEM_COLLECTIONID = collectionId;
