@@ -136,7 +136,7 @@ import tl = require('azure-pipelines-task-lib');
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.stdout.indexOf("[command]" + composeCommand + " -f F:\\dir2\\docker-compose.yml up -d") != -1, "successfully ran up command");
-                assert(tr.stdout.indexOf("vso[task.issue type=warning;]loc_mock_AdditionalDockerComposeFileDoesNotExists F:\\dir2\\docker-compose.override-notpresent.yml") != -1, "successfully identified missing override file.");
+                assert(tr.stdout.indexOf("vso[task.issue type=warning;source=TaskInternal;]loc_mock_AdditionalDockerComposeFileDoesNotExists F:\\dir2\\docker-compose.override-notpresent.yml") != -1, "successfully identified missing override file.");
                 
             });
 
@@ -293,7 +293,7 @@ import tl = require('azure-pipelines-task-lib');
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.stdout.indexOf("[command]" + composeCommand + " -f /tmp/tempdir/100/docker-compose.yml up -d") != -1, "successfully ran up command");
-                assert(tr.stdout.indexOf("vso[task.issue type=warning;]loc_mock_AdditionalDockerComposeFileDoesNotExists /tmp/tempdir/100/docker-compose.override-notpresent.yml") != -1, "successfully identifed missing additional compose file.");
+                assert(tr.stdout.indexOf("vso[task.issue type=warning;source=TaskInternal;]loc_mock_AdditionalDockerComposeFileDoesNotExists /tmp/tempdir/100/docker-compose.override-notpresent.yml") != -1, "successfully identifed missing additional compose file.");
                 
             });
 
