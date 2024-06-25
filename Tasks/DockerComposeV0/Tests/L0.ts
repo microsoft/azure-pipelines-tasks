@@ -36,7 +36,7 @@ import tl = require('azure-pipelines-task-lib');
                 let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
                 process.env["__command__"] = "Build services";
 
-                tr.run();
+                tr.runAsync();
 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -51,7 +51,7 @@ import tl = require('azure-pipelines-task-lib');
                 process.env["__command__"] = "Build services";
                 process.env["__dockerComposePath__"] = "docker-compose-userdefined";
 
-                tr.run();
+                tr.runAsync();
 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -65,7 +65,7 @@ import tl = require('azure-pipelines-task-lib');
                 let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
                 process.env["__command__"] = "Push services";
 
-                tr.run();
+                tr.runAsync();
 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -79,7 +79,7 @@ import tl = require('azure-pipelines-task-lib');
                 let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
                 process.env["__command__"] = "Run services";
 
-                tr.run();
+                tr.runAsync();
                 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -95,7 +95,7 @@ import tl = require('azure-pipelines-task-lib');
                 process.env["__container_type__"] = "Azure Container Registry";
                 process.env["__qualifyImageNames__"] = "true";
 
-                tr.run();
+                tr.runAsync();
 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -112,7 +112,7 @@ import tl = require('azure-pipelines-task-lib');
                 process.env["__additionalDockerComposeFiles__"] = "F:\\dir2\\docker-compose.override.yml";
                 process.env["__dockerComposeCommand__"] = "up -d"
 
-                tr.run();
+                tr.runAsync();
 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -129,7 +129,7 @@ import tl = require('azure-pipelines-task-lib');
                 process.env["__additionalDockerComposeFiles__"] = "F:\\dir2\\docker-compose.override-notpresent.yml";
                 process.env["__dockerComposeCommand__"] = "up -d"
 
-                tr.run();
+                tr.runAsync();
 
                 console.log(tr.stdout);
                 console.log(tr.stderr);
@@ -150,7 +150,7 @@ import tl = require('azure-pipelines-task-lib');
                 process.env["__dockerComposeCommand__"] = "pull"
                 process.env["__arguments__"] = "service1 service2";
 
-                tr.run();
+                tr.runAsync();
 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -167,7 +167,7 @@ import tl = require('azure-pipelines-task-lib');
                 process.env["__additionalDockerComposeFiles__"] = "docker-compose.override.yml";
                 process.env["__dockerComposeCommand__"] = "up -d"
 
-                tr.run();
+                tr.runAsync();
 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -182,7 +182,7 @@ import tl = require('azure-pipelines-task-lib');
                 process.env["__command__"] = "Build services";
                 process.env["__arguments__"] = "--pull --parallel";
 
-                tr.run();
+                tr.runAsync();
 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -196,7 +196,7 @@ import tl = require('azure-pipelines-task-lib');
                 let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
                 process.env["__command__"] = "Build services";
 
-                tr.run();
+                tr.runAsync();
 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -211,7 +211,7 @@ import tl = require('azure-pipelines-task-lib');
                 process.env["__command__"] = "Build services";
                 process.env["__dockerComposePath__"] = "docker-compose-userdefined";
 
-                tr.run();
+                tr.runAsync();
 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -225,7 +225,7 @@ import tl = require('azure-pipelines-task-lib');
                 let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
                 process.env["__command__"] = "Push services";
 
-                tr.run();
+                tr.runAsync();
 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -239,7 +239,7 @@ import tl = require('azure-pipelines-task-lib');
                 let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
                 process.env["__command__"] = "Run services";
 
-                tr.run();
+                tr.runAsync();
 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool three times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -255,7 +255,7 @@ import tl = require('azure-pipelines-task-lib');
                 process.env["__container_type__"] = "Azure Container Registry";
                 process.env["__qualifyImageNames__"] = "true";
 
-                tr.run();
+                tr.runAsync();
 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -272,7 +272,7 @@ import tl = require('azure-pipelines-task-lib');
                 process.env["__additionalDockerComposeFiles__"] = "/tmp/tempdir/100/docker-compose.override.yml";
                 process.env["__dockerComposeCommand__"] = "up -d"
 
-                tr.run();
+                tr.runAsync();
 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -289,7 +289,7 @@ import tl = require('azure-pipelines-task-lib');
                 process.env["__additionalDockerComposeFiles__"] = "/tmp/tempdir/100/docker-compose.override-notpresent.yml";
                 process.env["__dockerComposeCommand__"] = "up -d"
 
-                tr.run();
+                tr.runAsync();
 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -307,7 +307,7 @@ import tl = require('azure-pipelines-task-lib');
                 process.env["__additionalDockerComposeFiles__"] = "docker-compose.override.yml";
                 process.env["__dockerComposeCommand__"] = "up -d"
 
-                tr.run();
+                tr.runAsync();
 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -322,7 +322,7 @@ import tl = require('azure-pipelines-task-lib');
                 process.env["__command__"] = "Build services";
                 process.env["__arguments__"] = "--pull --parallel";
 
-                tr.run();
+                tr.runAsync();
 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -339,7 +339,7 @@ import tl = require('azure-pipelines-task-lib');
                 process.env["__dockerComposeCommand__"] = "pull"
                 process.env["__arguments__"] = "service1 service2";
                 
-                tr.run();
+                tr.runAsync();
 
                 assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
                 assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
