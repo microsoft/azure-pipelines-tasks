@@ -190,6 +190,11 @@ CLI.build = async function(/** @type {{ task: string }} */ argv)
     await CLI.serverBuild(argv);
 }
 
+CLI.buildandtest = async function (/** @type {{ task: string }} */ argv) {
+    await CLI.build(argv);
+    await CLI.test(argv);
+}
+
 CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     ensureBuildTasksAndRemoveTestPath();
     ensureTool('tsc', '--version', 'Version 4.0.2');
@@ -1020,7 +1025,7 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
 var command  = argv._[0];
 
 if (typeof CLI[command] !== 'function') {
-  fail('Invalid CLI command: "' + command + '"\r\nValid commands:' + Object.keys(CLI));
+  fail(`Invalid CLI command: "${command}"\r\nValid commands: ${Object.keys(CLI).join(', ')}`);
 }
 
 CLI[command](argv);
