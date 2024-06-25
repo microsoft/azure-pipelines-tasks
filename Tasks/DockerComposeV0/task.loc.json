@@ -355,6 +355,8 @@
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
     "ImageNameWithoutTag": "ms-resource:loc.messages.ImageNameWithoutTag",
-    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile",
+    "InvalidProjectName": "ms-resource:loc.messages.InvalidProjectName",
+    "MigrateToDockerComposeV2": "ms-resource:loc.messages.MigrateToDockerComposeV2"
   }
 }
