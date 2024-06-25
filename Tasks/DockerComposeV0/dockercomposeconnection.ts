@@ -225,6 +225,6 @@ export default class DockerComposeConnection extends ContainerConnection {
             return;
         }
         
-        return tl.debug("Project name is valid");
+        tl.debug("Project name is valid");
     }
 }
