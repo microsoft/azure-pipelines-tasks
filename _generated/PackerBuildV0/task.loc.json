@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 242,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -311,7 +311,7 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   },
   "_buildConfigMapping": {
-    "Default": "0.242.0",
-    "Node20_229_6": "0.242.1"
+    "Default": "0.242.2",
+    "Node20_229_6": "0.242.3"
   }
 }
