@@ -69,7 +69,7 @@ async function getKubeConfigFile(): Promise<string> {
     });
 }
 
-function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnStderr: boolean): void {
+async function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnStderr: boolean): Promise<void> {
     if (!helmCli.isHelmV3()) {
         //helm chart save and push commands are only supported in Helms v3  
         throw new Error(tl.loc("SaveSupportedInHelmsV3Only"));
@@ -155,10 +155,10 @@ async function run() {
                 kubectlCli.unsetKubeConfigEnvVariable();
                 break;
             case "save":
-                runHelmSaveCommand(helmCli, kubectlCli, failOnStderr);
+                await runHelmSaveCommand(helmCli, kubectlCli, failOnStderr);
                 break;
             default:
-                runHelm(helmCli, command, kubectlCli, failOnStderr);
+                await runHelm(helmCli, command, kubectlCli, failOnStderr);
         }
     } catch (err) {
         // not throw error so that we can logout from helm and kubernetes
@@ -173,7 +173,7 @@ async function run() {
     }
 }
 
-function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, failOnStderr: boolean) {
+async function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, failOnStderr: boolean): Promise<void> {
     var helmCommandMap = {
         "init": "./helmcommands/helminit",
         "install": "./helmcommands/helminstall",
@@ -202,7 +202,7 @@ function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetescli, f
 
     // add arguments
     commonCommandOptions.addArguments(helmCli);
-    commandImplementation.addArguments(helmCli);
+    await commandImplementation.addArguments(helmCli);
 
     const execResult = helmCli.execHelmCommand();
     tl.setVariable('helmExitCode', execResult.code.toString());
