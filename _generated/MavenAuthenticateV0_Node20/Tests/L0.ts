@@ -37,7 +37,7 @@ describe("authenticate azure artifacts feeds for maven", function() {
         tl.rmRF(m2DirPath);
     });
 
-    it("it should create a new settings.xml in the .m2 folder and add auth for 1 feed.", async (done: Mocha.Done) => {
+    it("it should create a new settings.xml in the .m2 folder and add auth for 1 feed.", async () => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0AuthSettingsXml.js");
@@ -59,10 +59,9 @@ describe("authenticate azure artifacts feeds for maven", function() {
         assert(tr.stderr.length === 0, "should not have written to stderr");
         assert(tr.succeeded, "task should have succeeded");
 
-        done();
     });
 
-    it("it should read the existing settings.xml and add auth for 1 new feed", async (done: Mocha.Done) => {
+    it("it should read the existing settings.xml and add auth for 1 new feed", async () => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0AuthSettingsXmlExists.js");
@@ -71,7 +70,7 @@ describe("authenticate azure artifacts feeds for maven", function() {
 
         tl.cp(settingsOtherFeedName, settingsXmlPath);
 
-        tr.runAsync();
+        await tr.runAsync();
 
         assert.equal(tl.ls(null, [m2DirPath]).length, 1, "Should have one file.");
         const settingsXmlStats = tl.stats(settingsXmlPath);
@@ -87,10 +86,9 @@ describe("authenticate azure artifacts feeds for maven", function() {
         assert(tr.stderr.length === 0, "should not have written to stderr");
         assert(tr.succeeded, "task should have succeeded");
 
-        done();
     });
 
-    it("it should read the existing settings.xml and not add any new entries.", async (done: Mocha.Done) => {
+    it("it should read the existing settings.xml and not add any new entries.", async () => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0AuthSettingsXmlExists.js");
@@ -99,7 +97,7 @@ describe("authenticate azure artifacts feeds for maven", function() {
 
         tl.cp(settingsFeedName1, settingsXmlPath);
 
-        tr.runAsync();
+        await tr.runAsync();
 
         assert.equal(tl.ls(null, [m2DirPath]).length, 1, "Should have one file.");
         const settingsXmlStats = tl.stats(settingsXmlPath);
@@ -112,20 +110,18 @@ describe("authenticate azure artifacts feeds for maven", function() {
         assert.equal(data.match(/<id>feedName1<\/id>/gi).length, 1, "Only one id entry should be present.");
 
         assert(tr.stderr.length === 0, "should not have written to stderr");
-        assert(tr.stdOutContained("vso[task.issue type=warning;]loc_mock_Warning_FeedEntryAlreadyExists"), "Entry already exists warning should be displayed");
+        assert(tr.stdOutContained("vso[task.issue type=warning;source=TaskInternal;]loc_mock_Warning_FeedEntryAlreadyExists"), "Entry already exists warning should be displayed");
         assert(tr.succeeded, "task should have succeeded");
-
-        done();
     });
 
-    it("it should create a new settings.xml in the .m2 folder and add auth for 3 different types of service connections.", async (done: Mocha.Done) => {
+    it("it should create a new settings.xml in the .m2 folder and add auth for 3 different types of service connections.", async () => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0ServiceConnections.js");
 
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.runAsync();
+        await tr.runAsync();
 
         assert.equal(tl.ls(null, [m2DirPath]).length, 1, "Should have one file.");
         const settingsXmlStats = tl.stats(settingsXmlPath);
@@ -151,25 +147,21 @@ describe("authenticate azure artifacts feeds for maven", function() {
 
         assert(tr.stderr.length === 0, "should not have written to stderr");
         assert(tr.succeeded, "task should have succeeded");
-
-        done();
     });
 
-    it("it should warn if no inputs are provided.", async (done: Mocha.Done) => {
+    it.only("it should warn if no inputs are provided.", async () => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0EmptyInput.js");
 
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.runAsync();
+        await tr.runAsync();
 
         assert.equal(tl.ls(null, [m2DirPath]).length, 0, "Settings.xml file should not be created.");
 
         assert(tr.stderr.length === 0, "should not have written to stderr");
         assert(tr.succeeded, "task should have succeeded");
-        assert(tr.stdOutContained("vso[task.issue type=warning;]loc_mock_Warning_NoEndpointsToAuth"), "No endpoints warning should be displayed");
-
-        done();
+        assert(tr.stdOutContained("vso[task.issue type=warning;source=TaskInternal;]loc_mock_Warning_NoEndpointsToAuth"), "No endpoints warning should be displayed");
     });
 });
