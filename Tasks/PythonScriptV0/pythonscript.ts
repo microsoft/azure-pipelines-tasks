@@ -73,6 +73,12 @@ export async function pythonScript(parameters: Readonly<TaskParameters>): Promis
         python.line(parameters.arguments);
     }
 
+    ['SIGINT', 'SIGTERM'].forEach((signal) => {
+        process.on(signal, () => {
+            python.killChildProcess(signal as NodeJS.Signals);
+        });
+    });
+
     // Run the script
     // Use `any` to work around what I suspect are bugs with `IExecOptions`'s type annotations:
     // - optional fields need to be typed as optional
