@@ -4,7 +4,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import helmcli from "./../helmcli";
 import * as helmutil from "./../utils";
 
-export function addArguments(helmCli: helmcli): void {
+export async function addArguments(helmCli: helmcli): Promise<void> {
 
     var chart = tl.getInput("chartPath", true);
     var version = tl.getInput("version", false);
