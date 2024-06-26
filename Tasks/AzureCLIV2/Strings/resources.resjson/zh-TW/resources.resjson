@@ -31,8 +31,8 @@
   "loc.input.help.powerShellIgnoreLASTEXITCODE": "若此為 false，則會將 `if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }` 附加至您指令碼的結尾。如此會讓來自外部命令中的最後一個結束代碼，以 PowerShell 的結束代碼散佈。否則，不會將此行附加至您的指令碼結尾。",
   "loc.input.label.visibleAzLogin": "az 登入輸出可見度",
   "loc.input.help.visibleAzLogin": "如果設定為 True，az 登入命令將會輸出到工作。設定為 False 將會隱藏 az 登入輸出",
-  "loc.input.label.keepAzSessionActive": "[Experimental] Keep Azure CLI session active",
-  "loc.input.help.keepAzSessionActive": "When enabled, this task will continuously sign into Azure to avoid AADSTS700024 errors when requesting access tokens beyond the IdToken expiry date. Note that this feature is EXPERIMENTAL, may not work in all scenarios and you are using it without any guarantees. Valid only for service connections using the Workload Identity Federation authentication scheme.",
+  "loc.input.label.keepAzSessionActive": "[實驗] 讓 Azure CLI 工作階段保持使用中",
+  "loc.input.help.keepAzSessionActive": "啟用時，此工作會持續登入 Azure，以避免在 IdToken 到期日之後，要求存取權杖時的 AADSTS700024 錯誤。請注意，此功能是實驗性的，可能無法在所有情況下運作，而且使用它並無法獲得任何保證。僅適用使用工作負載識別身分同盟驗證配置的服務連線。",
   "loc.messages.ScriptReturnCode": "指令碼已結束。傳回碼: %d",
   "loc.messages.ScriptFailed": "指令碼失敗。錯誤: %s",
   "loc.messages.ScriptFailedStdErr": "指令碼有到 stderr 的輸出。因為 failOnStdErr 設為 true 而失敗。",
@@ -52,7 +52,7 @@
   "loc.messages.UnacceptedScriptLocationValue": "%s 不是工作輸入 'Script Location' (在 YAML 中為 scriptLocation) 的有效值。值可以是 'inlineScript' 或 'scriptPath'",
   "loc.messages.ExpiredServicePrincipalMessageWithLink": "秘密已過期，請在 %s 更新服務連線，參閱 https://aka.ms/azdo-rm-workload-identity-conversion 以深入了解如何轉換為無秘密服務連線。",
   "loc.messages.ProxyConfig": "az 工具已設定為使用 %s 做為 Proxy 伺服器",
-  "loc.messages.FailedToRefreshAzSession": "The following error occurred while trying to refresh az-cli session: %s",
-  "loc.messages.RefreshingAzSession": "Attempting to refresh az-cli session...",
-  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input."
+  "loc.messages.FailedToRefreshAzSession": "嘗試重新整理 az-cli 工作階段時發生下列錯誤: %s",
+  "loc.messages.RefreshingAzSession": "正在嘗試重新整理 az-cli 工作階段...",
+  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "'keepAzSessionActive' 輸入只能用於工作負載識別身分同盟 ARM 服務連線。參考的服務端點驗證配置非預期: %s。變更配置或移除 'keepAzSessionActive' 輸入。"
 }

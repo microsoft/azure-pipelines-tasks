@@ -16,5 +16,5 @@
   "loc.input.label.parallelCount": "Conteggio parallelo",
   "loc.input.help.parallelCount": "Consente di immettere il grado di parallelismo o il numero di thread usati per eseguire la copia. Il valore deve essere almeno 1 e non superare 128.",
   "loc.input.label.properties": "Custom properties",
-  "loc.input.help.properties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'"
+  "loc.input.help.properties": "Immettere le proprietà personalizzate da associare all'artefatto. È prevista una stringa JSON valida con tutte le chiavi con prefisso 'user-'"
 }

@@ -16,5 +16,5 @@
   "loc.input.label.parallelCount": "Recuento de elementos en paralelo",
   "loc.input.help.parallelCount": "Especifique el grado de paralelismo o el número de subprocesos usados para realizar la copia. Debe ser un valor entre 1 y 128.",
   "loc.input.label.properties": "Custom properties",
-  "loc.input.help.properties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'"
+  "loc.input.help.properties": "Escriba las propiedades personalizadas para asociar con el artefacto. Se esperaba una cadena JSON válida con todas las claves con el prefijo \"user-\"."
 }

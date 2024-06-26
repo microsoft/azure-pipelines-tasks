@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Publish Pipeline Artifacts",
+  "loc.friendlyName": "Публикация артефактов конвейера",
   "loc.helpMarkDown": "Публикация (отправка) каталога или файла в качестве именованного артефакта для текущего выполнения. Опубликованные артефакты можно скачать в других заданиях, этапах или конвейерах с помощью задачи \"Скачать артефакт конвейера\".",
   "loc.description": "Публикация (отправка) каталога или файла в качестве именованного артефакта для текущего выполнения",
   "loc.instanceNameFormat": "Публикация артефакта конвейера",
@@ -15,6 +15,6 @@
   "loc.input.help.parallel": "Выберите, следует ли копировать файлы параллельно с использованием нескольких потоков для возможного повышения пропускной способности. Если этот параметр не установлен, используется один поток.",
   "loc.input.label.parallelCount": "Счетчик параллелизма",
   "loc.input.help.parallelCount": "Введите степень параллелизма (число потоков, используемых для копирования). Допустимые значения: от 1 до 128 включительно.",
-  "loc.input.label.properties": "Custom properties",
-  "loc.input.help.properties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'"
+  "loc.input.label.properties": "Настраиваемые свойства",
+  "loc.input.help.properties": "Введите настраиваемые свойства для связи с артефактом. Требуется допустимая строка JSON со всеми ключами и префиксом \"user-\""
 }
