@@ -149,7 +149,7 @@ describe("authenticate azure artifacts feeds for maven", function() {
         assert(tr.succeeded, "task should have succeeded");
     });
 
-    it.only("it should warn if no inputs are provided.", async () => {
+    it("it should warn if no inputs are provided.", async () => {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, "L0EmptyInput.js");
