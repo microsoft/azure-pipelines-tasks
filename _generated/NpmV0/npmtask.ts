@@ -1,12 +1,11 @@
 import Q = require('q');
 import path = require('path');
-import url = require('url');
 import tl = require('azure-pipelines-task-lib/task');
 import trm = require('azure-pipelines-task-lib/toolrunner');
 var extend = require('util')._extend;
+import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
 import { logError } from 'azure-pipelines-tasks-packaging-common/util';
-import {IExecSyncResult} from 'azure-pipelines-task-lib/toolrunner';
 import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 
 interface EnvironmentDictionary { [key: string]: string; }
@@ -121,7 +120,6 @@ function getUserNpmrcPath() {
 
 async function tryRunNpmConfigAsync(npmConfigRunner: trm.ToolRunner, execOptions : trm.IExecOptions) {
     try {
-        var code = await npmConfigRunner.exec(execOptions);
     } catch (err) {
         // 'npm config list' comamnd is run only for debugging/diagnostic
         // purposes only. Failure of this shouldn't be fatal.
@@ -199,7 +197,6 @@ async function addBuildCredProviderEnv(env: EnvironmentDictionary) : Promise<Env
     var accessToken : string = pkgLocationUtils.getSystemAccessToken();
 
     // get uri prefixes
-    var serviceUri : string = tl.getEndpointUrl('SYSTEMVSSCONNECTION', false);
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
