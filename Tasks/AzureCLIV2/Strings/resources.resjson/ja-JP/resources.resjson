@@ -31,8 +31,8 @@
   "loc.input.help.powerShellIgnoreLASTEXITCODE": "これが false の場合、行 `if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }` がスクリプトの末尾に追加されます。この行があると、外部コマンドからの最後の終了コードが PowerShell の終了コードとして伝達されます。それ以外の場合、スクリプトの末尾にこの行が追加されることはありません。",
   "loc.input.label.visibleAzLogin": "az ログイン出力の可視性",
   "loc.input.help.visibleAzLogin": "これが true に設定されている場合、az login コマンドはタスクに出力します。false に設定すると、az ログイン出力は表示されません",
-  "loc.input.label.keepAzSessionActive": "[Experimental] Keep Azure CLI session active",
-  "loc.input.help.keepAzSessionActive": "When enabled, this task will continuously sign into Azure to avoid AADSTS700024 errors when requesting access tokens beyond the IdToken expiry date. Note that this feature is EXPERIMENTAL, may not work in all scenarios and you are using it without any guarantees. Valid only for service connections using the Workload Identity Federation authentication scheme.",
+  "loc.input.label.keepAzSessionActive": "[試験段階l] Azure CLI セッションをアクティブに保ってください",
+  "loc.input.help.keepAzSessionActive": "有効にすると、このタスクは引き続き Azure にサインインし、IdToken の有効期限を超えてアクセス トークンを要求するときに AADSTS700024 エラーが発生しないようにします。この機能は試験段階であるため、すべてのシナリオでは動作しない場合があり、保証なしで使用していることにご注意ください。ワークロード ID フェデレーション認証スキームを使用するサービス接続に対してのみ有効です。",
   "loc.messages.ScriptReturnCode": "スクリプトが次のリターン コードで終了しました: %d",
   "loc.messages.ScriptFailed": "スクリプトがエラーで失敗しました: %s",
   "loc.messages.ScriptFailedStdErr": "スクリプトに stderr への出力があります。failOnStdErr が true に設定されているため、失敗しています。",
@@ -52,7 +52,7 @@
   "loc.messages.UnacceptedScriptLocationValue": "%s はタスク入力 'スクリプトの場所' (YAML での scriptLocation) の有効な値ではありません。値には 'inlineScript' または 'scriptPath' のいずれかを指定できます",
   "loc.messages.ExpiredServicePrincipalMessageWithLink": "シークレットの有効期限が切れました。%s でサービスの接続を更新してください。秘密度の低いサービスの接続への変換については、https://aka.ms/azdo-rm-workload-identity-conversion を参照してください。",
   "loc.messages.ProxyConfig": "az ツールは、%s をプロキシ サーバーとして使用するように構成されています",
-  "loc.messages.FailedToRefreshAzSession": "The following error occurred while trying to refresh az-cli session: %s",
-  "loc.messages.RefreshingAzSession": "Attempting to refresh az-cli session...",
-  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input."
+  "loc.messages.FailedToRefreshAzSession": "az-cli セッションの更新中に次のエラーが発生しました: %s",
+  "loc.messages.RefreshingAzSession": "az-cli セッションを更新しようとしています...",
+  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "'keepAzSessionActive' 入力は、ワークロード ID フェデレーション ARM サービス接続でのみ使用できます。参照されたサービス エンドポイント認証スキームは予期されていませんでした: %s。スキームを変更するか、'keepAzSessionActive' 入力を削除します。"
 }

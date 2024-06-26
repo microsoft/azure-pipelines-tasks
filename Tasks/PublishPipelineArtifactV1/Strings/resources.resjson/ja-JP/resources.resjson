@@ -16,5 +16,5 @@
   "loc.input.label.parallelCount": "並列数",
   "loc.input.help.parallelCount": "コピーを実行するための並列処理の程度、つまり使用するスレッド数を入力します。この値は 1 以上 128 以下でなければなりません。",
   "loc.input.label.properties": "Custom properties",
-  "loc.input.help.properties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'"
+  "loc.input.help.properties": "成果物に関連付けるカスタム プロパティを入力します。プレフィックス 'user-' を持つすべてのキーに有効な JSON 文字列が必要です"
 }

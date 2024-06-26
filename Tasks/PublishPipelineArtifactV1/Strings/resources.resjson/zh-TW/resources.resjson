@@ -16,5 +16,5 @@
   "loc.input.label.parallelCount": "平行計數",
   "loc.input.help.parallelCount": "輸入平行處理的程度或使用的執行緒數量，以執行複製。該值必須至少為 1 且不大於 128。",
   "loc.input.label.properties": "Custom properties",
-  "loc.input.help.properties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'"
+  "loc.input.help.properties": "輸入要與成品關聯的自訂屬性。所有具有首碼 'user-' 的索引鍵都預期為有效 JSON 字串"
 }

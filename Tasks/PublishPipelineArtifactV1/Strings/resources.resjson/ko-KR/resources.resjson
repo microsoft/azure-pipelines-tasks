@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Publish Pipeline Artifacts",
+  "loc.friendlyName": "파이프라인 아티팩트 게시",
   "loc.helpMarkDown": "파일 또는 디렉터리를 현재 실행의 명명된 아티팩트로 게시(업로드)합니다. 게시한 아티팩트는 \"파이프라인 아티팩트 다운로드\" 작업을 사용하여 다른 작업, 스테이지 또는 파이프라인에 다운로드할 수 있습니다.\n",
   "loc.description": "파일 또는 디렉터리를 현재 실행의 명명된 아티팩트로 게시(업로드)합니다.",
   "loc.instanceNameFormat": "파이프라인 아티팩트 게시",
@@ -15,6 +15,6 @@
   "loc.input.help.parallel": "잠재적인 처리량 증대를 위해 다중 스레드를 사용하여 파일을 병렬 복사할지 여부를 선택합니다. 이 설정을 사용하도록 설정하지 않으면 하나의 스레드가 사용됩니다.",
   "loc.input.label.parallelCount": "병렬 개수",
   "loc.input.help.parallelCount": "병렬 처리 수준, 즉 복사를 수행하는 데 사용되는 스레드 수를 입력합니다. 값은 1에서 128 사이여야 합니다.",
-  "loc.input.label.properties": "Custom properties",
-  "loc.input.help.properties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'"
+  "loc.input.label.properties": "사용자 지정 속성",
+  "loc.input.help.properties": "아티팩트와 연결할 사용자 정의 특성을 입력하세요. 접두사가 'user-'인 모든 키에 유효한 JSON 문자열이 필요합니다."
 }
