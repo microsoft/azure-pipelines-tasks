@@ -1,18 +1,24 @@
 # Initialize Rest API Helpers.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-function Get-AccessToken([string]$connectedServiceName, [string]$asAccountName, [bool]$UseAad)
+function Get-AccessToken()
 {
-    [string]$PersonalAccessToken = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.PAT')
-    Write-Host "connectedServiceName: $connectedServiceName"
+    param (
+        [string]$ConnectedServiceName,
+        [string]$AsAccountName,
+        [bool]$UseAad
+    )
 
-    if($connectedServiceName)
+    [string]$PersonalAccessToken = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.PAT')
+    Write-Host "connectedServiceName: $ConnectedServiceName"
+
+    if($ConnectedServiceName)
     {
-        Write-Host "connectedServiceName is specified. Using it to get the access token. - $connectedServiceName"
-        $PersonalAccessToken = Get-ConnectedServiceNameAccessToken($connectedServiceName);
+        Write-Host "connectedServiceName is specified. Using it to get the access token. - $ConnectedServiceName"
+        $PersonalAccessToken = Get-ConnectedServiceNameAccessToken($ConnectedServiceName);
     }
-    elseif ($asAccountName) {
+    elseif ($AsAccountName) {
         Write-Host "PAT access token"
-        $PersonalAccessToken = Get-PATToken([string]$asAccountName, [bool]$UseAad);
+        $PersonalAccessToken = Get-PATToken([string]$AsAccountName, [bool]$UseAad);
     }
     else {
         Write-Host "System access token"
@@ -37,16 +43,9 @@ function Get-ConnectedServiceNameAccessToken([string]$connectedServiceName)
     $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
     Write-Host "vstsAccessToken";
 
-    if (Get-Module Az.Accounts -ListAvailable) {
-        Write-Host "Az.Accounts: -ListAvailable";
-        $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
-        Write-Host "Initialize-AzModule";
-        Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
-    }
-    else {
-        Write-Verbose "No module found with name: Az.Accounts"
-        throw ("Could not find the module Az.Accounts with given version. If the module was recently installed, retry after restarting the Azure Pipelines task agent.")
-    }
+    # Initialize-AzModule will import/install Az.Accounts module if RETIRE_AZURERM_POWERSHELL_MODULE is true
+    $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
+    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
 
     Write-Host "Get Token: az account get-access-token --query accessToken --resource 499b84ac-1321-427f-aa17-267ca6975798 -o tsv";
     $accessToken = az account get-access-token --query accessToken --resource 499b84ac-1321-427f-aa17-267ca6975798 -o tsv

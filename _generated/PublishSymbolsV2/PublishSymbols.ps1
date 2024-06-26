@@ -14,6 +14,7 @@ Trace-VstsEnteringInvocation $MyInvocation
 
 $ErrorActionPreference = "Stop"
 Import-Module $PSScriptRoot\ps_modules\PowershellHelpers\PowershellHelpers.psm1
+$env:RETIRE_AZURERM_POWERSHELL_MODULE = $true;
 
 function Get-SymbolServiceUri ([string]$collectionUri)
 {
@@ -185,14 +186,16 @@ try {
 
         . $PSScriptRoot\Auth.ps1
 
-        [string]$connectedServiceName = Get-VstsInput -Name 'ConnectedServiceName' -Default 'None'
+        $connectedServiceName = Get-VstsInput -Name ConnectedServiceName
+        Write-Host "Symbol Request Name = $connectedServiceName"
         [string]$asAccountName = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.AccountName')
         [string]$PersonalAccessToken = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.PAT')
         [bool]$UseAad = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.UseAad' -AsBool)
         [string]$IndexableFileFormats = (Get-VstsInput -Name 'IndexableFileFormats')
 
         Write-Host "Get the access token"
-        [string]$PersonalAccessToken = Get-AccessToken($connectedServiceName, $asAccountName, $UseAad)
+        Write-Host "Get-AccessToken -ConnectedServiceName $connectedServiceName -AsAccountName $asAccountName -UseAad $UseAad"
+        [string]$PersonalAccessToken = Get-AccessToken -ConnectedServiceName $connectedServiceName -AsAccountName $asAccountName -UseAad $UseAad
 
         if ($asAccountName) {
             [string]$SymbolServiceUri = "https://" + [System.Web.HttpUtility]::UrlEncode($asAccountName) + ".artifacts.visualstudio.com"
