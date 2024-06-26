@@ -80,5 +80,7 @@
   "loc.messages.NoDataWrittenOnFile": "Данные не были записаны в файл %s",
   "loc.messages.FileContentSynced": "Содержимое файла синхронизировано с диском. Содержимое: %s.",
   "loc.messages.ImageNameWithoutTag": "Имя образа указано без тега; передаются все теги указанного образа.",
-  "loc.messages.WritingDockerConfigToTempFile": "Запись конфигурации Docker во временный файл. Путь к файлу: %s, конфигурация Docker: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "Запись конфигурации Docker во временный файл. Путь к файлу: %s, конфигурация Docker: %s",
+  "loc.messages.InvalidProjectName": "The project name \"%s\" must be a valid docker compose project name. Follow the link for more details: https://docs.docker.com/compose/project-name/#set-a-project-name",
+  "loc.messages.MigrateToDockerComposeV2": "The task is utilizing Docker Compose V1, but there are plans to transition to Docker Compose V2. It's necessary to investigate how to adapt your project to Docker Compose V2. For guidance on this migration, you can refer to the official Docker Compose documentation at the provided link: https://docs.docker.com/compose/migrate/"
 }
