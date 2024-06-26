@@ -20,10 +20,13 @@
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Publish pipeline artifact]]></Val>
+          <Val><![CDATA[Publish Pipeline Artifacts]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Публикация артефакта конвейера]]></Val>
+            <Val><![CDATA[Публикация артефактов конвейера]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Publish pipeline artifact]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -50,15 +53,6 @@
           <Val><![CDATA[Choose whether to store the artifact in Azure Pipelines, or to copy it to a file share that must be accessible from the pipeline agent.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Выберите, нужно ли сохранить артефакт в Azure Pipelines либо скопировать его в общую папку, которая должна быть доступна из агента конвейера.]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";loc.input.help.customProperties" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-']]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Введите настраиваемые свойства для связи с артефактом. Требуется допустимая строка JSON со всеми ключами и префиксом "user-"]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -99,6 +93,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.properties" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Введите настраиваемые свойства для связи с артефактом. Требуется допустимая строка JSON со всеми ключами и префиксом "user-"]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.artifactName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Artifact name]]></Val>
@@ -113,15 +116,6 @@
           <Val><![CDATA[Artifact publish location]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Расположение публикации артефакта]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";loc.input.label.customProperties" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Custom properties]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Настраиваемые свойства]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -158,6 +152,15 @@
           <Val><![CDATA[File or directory path]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Путь к файлу или каталогу]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.properties" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Custom properties]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Настраиваемые свойства]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

@@ -45,7 +45,7 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.input.help.customProperties" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.input.help.properties" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
@@ -72,12 +72,9 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.input.label.customProperties" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.input.label.properties" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Custom properties]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[自訂屬性]]></Val>
-          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

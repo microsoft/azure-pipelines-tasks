@@ -20,10 +20,13 @@
       </Item>
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Publish pipeline artifact]]></Val>
+          <Val><![CDATA[Publish Pipeline Artifacts]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Pipelineartefakt veröffentlichen]]></Val>
+            <Val><![CDATA[Pipelineartefakte veröffentlichen]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Publish pipeline artifact]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -50,15 +53,6 @@
           <Val><![CDATA[Choose whether to store the artifact in Azure Pipelines, or to copy it to a file share that must be accessible from the pipeline agent.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Wählen Sie aus, ob Sie das Artefakt in Azure Pipelines speichern oder in eine Dateifreigabe kopieren möchten, die vom Pipeline-Agent aus zugänglich sein muss.]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";loc.input.help.customProperties" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-']]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Geben Sie benutzerdefinierte Eigenschaften ein, die dem Artefakt zugeordnet werden sollen. Gültige JSON-Zeichenfolge mit allen Schlüsseln mit dem Präfix "user-" erwartet]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -99,6 +93,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.properties" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Geben Sie benutzerdefinierte Eigenschaften ein, die dem Artefakt zugeordnet werden sollen. Gültige JSON-Zeichenfolge mit allen Schlüsseln mit dem Präfix "user-" erwartet]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.artifactName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Artifact name]]></Val>
@@ -113,15 +116,6 @@
           <Val><![CDATA[Artifact publish location]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Veröffentlichungsort für Artefakte]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";loc.input.label.customProperties" ItemType="0" PsrId="306" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Custom properties]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Benutzerdefinierte Eigenschaften]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -158,6 +152,15 @@
           <Val><![CDATA[File or directory path]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Datei- oder Verzeichnispfad]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.properties" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Custom properties]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Benutzerdefinierte Eigenschaften]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
