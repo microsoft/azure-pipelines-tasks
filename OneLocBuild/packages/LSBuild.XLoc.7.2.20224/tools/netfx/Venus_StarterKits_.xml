@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<!DOCTYPE _locDefinition SYSTEM "locXML.dtd">
-
-<!-- Used by Venus_StarterKits_ EDBs, for web.sitemap, to be parsed by pomxml parser instead of pomhtml -->
-
-<_locDefinition>
-	<_locTag _loc = "locNone" _locAttrData = "title">siteMapNode</_locTag>
-</_locDefinition>
