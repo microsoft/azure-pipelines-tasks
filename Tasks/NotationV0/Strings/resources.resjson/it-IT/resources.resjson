@@ -10,7 +10,7 @@
   "loc.input.help.command": "example: install",
   "loc.input.label.isCustomVersion": "Custom Version",
   "loc.input.help.isCustomVersion": "If checked, you can provide a custom version for the task",
-  "loc.input.label.version": "Version",
+  "loc.input.label.version": "Versione",
   "loc.input.help.version": "The version of Notation to install. Example: 1.0.0, 1, 1.0, 1.0.0",
   "loc.input.label.url": "Download URL",
   "loc.input.help.url": "example: https://github.com/notaryproject/notation/releases/download/v1.0.0/notation_1.0.0_linux_amd64.tar.gz",
@@ -68,7 +68,7 @@
   "loc.messages.UnsupportedVersion": "Unsupported version: %s.",
   "loc.messages.UseAuthenticationMethod": "Use %s to access Azure Key Vault.",
   "loc.messages.UnknownCommand": "Unknown command: %s.",
-  "loc.messages.UnknownError": "An unknown error occurred.",
+  "loc.messages.UnknownError": "Si è verificato un errore sconosciuto.",
   "loc.messages.UnknownPlugin": "Unknown plugin: %s.",
   "loc.messages.UnsupportedAuthScheme": "Unsupported authentication scheme: %s."
 }

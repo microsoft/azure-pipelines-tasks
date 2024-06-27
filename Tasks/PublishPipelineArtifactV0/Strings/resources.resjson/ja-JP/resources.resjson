@@ -7,6 +7,6 @@
   "loc.input.help.artifactName": "この成果物の名前。",
   "loc.input.label.targetPath": "公開するためのパス",
   "loc.input.help.targetPath": "公開するフォルダーまたはファイルのパスです。これは、完全修飾パスまたはリポジトリのルートからの相対パスです。ワイルドカードはサポートされていません。[変数](https://go.microsoft.com/fwlink/?LinkID=550988) はサポートされています。",
-  "loc.input.label.properties": "Custom properties",
+  "loc.input.label.properties": "カスタム プロパティ",
   "loc.input.help.properties": "成果物に関連付けるカスタム プロパティを入力します。プレフィックス 'user-' を持つすべてのキーに有効な JSON 文字列が必要です"
 }

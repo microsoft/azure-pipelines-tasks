@@ -1,10 +1,10 @@
 {
-  "loc.friendlyName": "Publish Pipeline Artifacts",
+  "loc.friendlyName": "Pubblica artefatti della pipeline",
   "loc.helpMarkDown": "Pubblica (carica) un file o una directory come artefatto denominato per l'esecuzione corrente. Per scaricare gli artefatti pubblicati in altri processi, fasi o pipeline, usare l'attività \"Scarica artefatto della pipeline\".",
   "loc.description": "Pubblica (carica) un file o una directory come artefatto denominato per l'esecuzione corrente",
   "loc.instanceNameFormat": "Pubblica artefatto della pipeline",
   "loc.input.label.path": "Percorso del file o della directory",
-  "loc.input.help.path": "The path of the file or directory to publish. Can be absolute or relative to the default working directory. Can include [variables](https://go.microsoft.com/fwlink/?LinkID=550988), but wildcards are not supported.",
+  "loc.input.help.path": "Percorso del file o della directory da pubblicare. Può essere assoluto o relativo alla directory di lavoro predefinita. Può includere [variabili](https://go.microsoft.com/fwlink/?LinkID=550988), ma i caratteri jolly non sono supportati.",
   "loc.input.label.artifactName": "Nome dell'artefatto",
   "loc.input.help.artifactName": "Nome dell'artefatto da pubblicare. Se non è impostato, il valore predefinito è un ID univoco il cui ambito è il processo.",
   "loc.input.label.artifactType": "Percorso di pubblicazione degli artefatti",
@@ -15,6 +15,6 @@
   "loc.input.help.parallel": "Consente di scegliere se copiare i file in parallelo usando più thread per una maggiore velocità effettiva potenziale. Se questa impostazione non è abilitata, verrà usato un solo thread.",
   "loc.input.label.parallelCount": "Conteggio parallelo",
   "loc.input.help.parallelCount": "Consente di immettere il grado di parallelismo o il numero di thread usati per eseguire la copia. Il valore deve essere almeno 1 e non superare 128.",
-  "loc.input.label.properties": "Custom properties",
+  "loc.input.label.properties": "Proprietà personalizzate",
   "loc.input.help.properties": "Immettere le proprietà personalizzate da associare all'artefatto. È prevista una stringa JSON valida con tutte le chiavi con prefisso 'user-'"
 }

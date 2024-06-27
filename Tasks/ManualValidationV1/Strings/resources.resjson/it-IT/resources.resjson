@@ -1,14 +1,14 @@
 {
-  "loc.friendlyName": "Manual validation",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/manual-validation)",
-  "loc.description": "[PREVIEW] Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.",
-  "loc.instanceNameFormat": "Manual Validation",
-  "loc.input.label.notifyUsers": "Notify users",
+  "loc.friendlyName": "Convalida manuale",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://aka.ms/manual-validation)",
+  "loc.description": "[ANTEPRIMA] Sospende l'esecuzione di una pipeline in attesa dell'interazione manuale. Funziona solo con pipeline YAML.",
+  "loc.instanceNameFormat": "Convalida manuale",
+  "loc.input.label.notifyUsers": "Invia notifica agli utenti",
   "loc.input.help.notifyUsers": "Send a manual validation pending email to specific users (or groups). Only users specified in approvers can act on a manual validation.",
   "loc.input.label.approvers": "Approvers",
   "loc.input.help.approvers": "Specify users/groups/project teams separated by commas to act on a manual validation. In absence of input, users with queue build permission will be able to take action.",
   "loc.input.label.instructions": "Instructions",
-  "loc.input.help.instructions": "These instructions will be shown to the user for resuming or rejecting the manual validation. Based on these instructions the user will take an informed decision about this manual validation.",
+  "loc.input.help.instructions": "Queste istruzioni verranno visualizzate agli utenti per consentire loro di riprendere o rifiutare la convalida manuale. Usando queste istruzioni l'utente potrà prendere una decisione basata su informazioni aggiornate in merito a questa convalida manuale.",
   "loc.input.label.onTimeout": "On timeout",
-  "loc.input.help.onTimeout": "Reject or resume this manual validation automatically after it is pending for the specified timeout or 30 days, whichever is earlier."
+  "loc.input.help.onTimeout": "Rifiuta o riprende automaticamente questa convalida manuale dopo che è rimasta in sospeso per il timeout specificato o per 30 giorni, a seconda di quale sia la data più vicina."
 }

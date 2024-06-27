@@ -68,7 +68,7 @@
   "loc.messages.UnsupportedVersion": "Unsupported version: %s.",
   "loc.messages.UseAuthenticationMethod": "Use %s to access Azure Key Vault.",
   "loc.messages.UnknownCommand": "Unknown command: %s.",
-  "loc.messages.UnknownError": "An unknown error occurred.",
+  "loc.messages.UnknownError": "Unbekannter Fehler.",
   "loc.messages.UnknownPlugin": "Unknown plugin: %s.",
   "loc.messages.UnsupportedAuthScheme": "Unsupported authentication scheme: %s."
 }
