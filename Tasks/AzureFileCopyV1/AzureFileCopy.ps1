@@ -67,7 +67,7 @@ Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.Distri
 
 if ($featureFlags.retireAzureRM)
 {
-    CleanUp-PSModulePathForHostedAgent
+    Modify-PSModulePathForHostedAgent
 }
 
 # Initialize Azure.

@@ -74,7 +74,7 @@ Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 
 if ($featureFlags.retireAzureRM)
 {
-    CleanUp-PSModulePathForHostedAgent
+    Modify-PSModulePathForHostedAgent
 }
 
 $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
