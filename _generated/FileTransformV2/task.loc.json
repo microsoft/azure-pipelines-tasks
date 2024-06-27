@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 242,
-    "Patch": 1
+    "Patch": 0
   },
   "preview": "true",
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -72,10 +72,6 @@
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "filetransform.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
       "target": "filetransform.js",
       "argumentFormat": ""
     }
