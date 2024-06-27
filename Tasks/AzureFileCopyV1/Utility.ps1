@@ -1455,3 +1455,27 @@ function Check-ContainerNameAndArgs
         Write-Warning (Get-vstsLocString -Key "AFC_RootContainerAndDirectory")
     }
 }
+
+
+function Import-AzModule
+{
+    param([string]$moduleName)
+
+    if (!(Get-Module $moduleName))
+    {
+        $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+        if (!$module) {
+            Write-Verbose "No module found with name: $moduleName"
+        }
+        else {
+            # Import the module.
+            Write-Host "##[command]Import-Module -Name $($module.Path) -Global"
+            $module = Import-Module -Name $module.Path -Global -PassThru -Force
+        }
+    }
+}
+
+Import-AzModule -moduleName "Az.Resources"
+Import-AzModule -moduleName "Az.Storage"
+Import-AzModule -moduleName "Az.Compute"
+Import-AzModule -moduleName "Az.Network"
