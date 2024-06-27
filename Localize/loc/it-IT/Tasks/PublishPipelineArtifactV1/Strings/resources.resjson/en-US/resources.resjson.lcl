@@ -21,8 +21,8 @@
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Publish Pipeline Artifacts]]></Val>
-          <Tgt Cat="Text" Stat="Update" Orig="New">
-            <Val><![CDATA[Pubblica artefatto della pipeline]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Pubblica artefatti della pipeline]]></Val>
           </Tgt>
           <Prev Cat="Text">
             <Val><![CDATA[Publish pipeline artifact]]></Val>
@@ -88,7 +88,7 @@
         <Str Cat="Text">
           <Val><![CDATA[The path of the file or directory to publish. Can be absolute or relative to the default working directory. Can include [variables]5D;(https://go.microsoft.com/fwlink/?LinkID=550988), but wildcards are not supported.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Percorso del file o della directory da pubblicare. Può essere assoluto o relativo alla directory di lavoro predefinita. Può includere [variabili]5D; (https://go.microsoft.com/fwlink/?LinkID=550988), ma i caratteri jolly non sono supportati.]]></Val>
+            <Val><![CDATA[Percorso del file o della directory da pubblicare. Può essere assoluto o relativo alla directory di lavoro predefinita. Può includere [variabili]5D;(https://go.microsoft.com/fwlink/?LinkID=550988), ma i caratteri jolly non sono supportati.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -159,6 +159,9 @@
       <Item ItemId=";loc.input.label.properties" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Custom properties]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Proprietà personalizzate]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
