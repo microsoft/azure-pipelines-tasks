@@ -202,9 +202,6 @@ function Import-AzAccountsModule {
             }
         }
 
-        Write-Verbose "Check Az.Accounts module availability."
-        Get-Module -Name $moduleName -ListAvailable
-
         # Install Az if not found
         if (!$module) {
             Write-Verbose "No module found with name: $moduleName"
