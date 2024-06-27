@@ -259,6 +259,8 @@ Tasks/GulpV1/      @microsoft/akvelon-build-task-team
 
 Tasks/HelmDeployV0/       @microsoft/release-management-task-team @manolerazvan 
 
+Tasks/HelmDeployV1/       @microsoft/release-management-task-team @manolerazvan 
+
 Tasks/HelmInstallerV0/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/HelmInstallerV1/    @microsoft/release-management-task-team @manolerazvan 
