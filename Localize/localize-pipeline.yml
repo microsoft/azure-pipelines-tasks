@@ -55,8 +55,9 @@ stages:
       inputs:
         locProj: 'Localize/LocProject.json'
         outDir: '$(Build.ArtifactStagingDirectory)'
+        dependencyPackageSource: 'https://mseng.pkgs.visualstudio.com/PipelinesLocalization/_packaging/LocTools/nuget/v3/index.json'
         packageSourceAuth: 'patAuth'
-        patVariable: '$(OneLocBuildPAT)'
+        patVariable: ''
         isCreatePrSelected: $(shouldCreatePR)
         repoType: 'gitHub'
         prSourceBranchPrefix: 'Localize'
