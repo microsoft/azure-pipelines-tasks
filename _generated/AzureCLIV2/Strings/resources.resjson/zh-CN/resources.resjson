@@ -29,6 +29,10 @@
   "loc.input.help.failOnStandardError": "如果这为 true，在任何错误写入到 StandardError 流时，此任务将失败。取消选中此复选框可忽略标准错误，并依赖退出代码来确定状态",
   "loc.input.label.powerShellIgnoreLASTEXITCODE": "忽略 $LASTEXITCODE",
   "loc.input.help.powerShellIgnoreLASTEXITCODE": "如果为 false，行 \"if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }\" 将追加到脚本的末尾。这将导致外部命令中的最后一个退出代码传播为 powershell 的退出代码。否则，行将不会追加到脚本的末尾。",
+  "loc.input.label.visibleAzLogin": "Az 登录输出可见性",
+  "loc.input.help.visibleAzLogin": "如果此项设置为 true，则 Az 登录命令将输出到任务。将其设置为 false 将禁止 Az 登录输出",
+  "loc.input.label.keepAzSessionActive": "[Experimental] 保持 Azure CLI 会话处于活动状态",
+  "loc.input.help.keepAzSessionActive": "启用后，此任务将持续登录到 Azure，以避免在请求访问超过 IdToken 到期日期的令牌时出现 AADSTS700024 错误。请注意，此功能是实验性的，可能无法在某些场景中运行，并且你将在不受任何保证的情况下使用它。仅对使用工作负载联合身份验证身份验证方案的服务连接有效。",
   "loc.messages.ScriptReturnCode": "脚本已退出，返回代码: %d",
   "loc.messages.ScriptFailed": "脚本失败，出现错误: %s",
   "loc.messages.ScriptFailedStdErr": "脚本具有到 stderr 的输出。失败，因为 failOnStdErr 设置为 true。",
@@ -46,5 +50,9 @@
   "loc.messages.JS_InvalidErrorActionPreference": "无效的 ErrorActionPreference“%s”。值必须为下列之一: \"Stop\"、\"Continue\" 或 \"SilentlyContinue\"",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "对于低于 2.115.0 的代理版本，只能使用全局 Azure CLI 配置",
   "loc.messages.UnacceptedScriptLocationValue": "%s 不是任务输入“脚本位置”(YAML 中为 scriptLocation)的有效值。值可以是 \"inlineScript\" 或 \"scriptPath\"",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "机密已过期，请在 %s 更新服务连接。若要详细了解如何转换到无机密服务连接，请参阅 https://aka.ms/azdo-rm-workload-identity-conversion。",
+  "loc.messages.ProxyConfig": "Az 工具配置为将 %s 用作代理服务器",
+  "loc.messages.FailedToRefreshAzSession": "尝试刷新 az-cli 会话时出现以下错误：%s",
+  "loc.messages.RefreshingAzSession": "正在尝试刷新 az-cli 会话...",
+  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "“keepAzSessionActive”输入可能只能用于工作负载联合身份验证 ARM 服务连接。引用的服务终结点身份验证方案异常：%s。更改方案或删除“keepAzSessionActive”输入。"
 }
