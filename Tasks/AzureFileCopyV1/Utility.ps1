@@ -1457,6 +1457,8 @@ function Check-ContainerNameAndArgs
 }
 
 function Modify-PSModulePathForHostedAgent {
+    $newEnvPSModulePath = $env:PSModulePath
+
     if (Test-Path "C:\Modules\az_*") {
         $azPSModulePath = (Get-ChildItem "C:\Modules\az_*" -Directory `
             | Sort-Object { [version]$_.Name.Split('_')[-1] } `
