@@ -24,6 +24,11 @@ export let TestEnvVars = {
     canaryimage: "__canaryimage__",
     upgradetiller: "__upgradetiller__",
     updatedependency: "__updatedependency__",
+    caFile: "__caFile__",
+    certFile: "__certFile__",
+    insecureSkipTlsVerify: "__insecureSkipTlsVerify__",
+    keyFile: "__keyFile__",
+    plainHttp: "__plainHttp__",
     save: "__save__",
     install: "__install__",
     recreate: "__recreate__",
@@ -41,6 +46,7 @@ export let Commands = {
     install: "install",
     upgrade: "upgrade",
     package: "package",
+    push: "push",
     save: "save",
     init: "init"
 };
@@ -66,6 +72,7 @@ export const testChartPath = "test/testChartPath";
 export const testChartVersion = "1.1.1";
 export const testReleaseName = "testReleaseName";
 export const isHelmV3 = "__isHelmV3__";
+export const isHelmV37 = "__isHelmV37__";
 export const testNamespace = "testNamespace";
 export const testDestinationPath = "testDestinationPath";
 export const testChartNameForACR = "testChartNameForACR";

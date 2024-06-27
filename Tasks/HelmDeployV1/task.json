@@ -459,7 +459,7 @@
       "type": "filePath",
       "helpMarkDown": "Path to the chart directory.",
       "defaultValue": "",
-      "visibleRule": "command == save",
+      "visibleRule": "command == save || command == push",
       "required": "true",
       "groupName": "commands"
     }
@@ -557,6 +557,7 @@
     "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
     "SaveSupportedInHelmsV3Only": "Save chart to Azure Container Registry is only supported in Helms V3.",
+    "PackageSupportedInHelmsV37Only": "Helm package to Azure Container Registry is only supported in Helms V3.7+.",
     "OutputVariableDataSizeExceeded": "Output variable not set as Helm command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
     "KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
   }

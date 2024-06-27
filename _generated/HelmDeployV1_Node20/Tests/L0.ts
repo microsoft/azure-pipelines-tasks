@@ -5,7 +5,7 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as shared from './TestShared';
 import * as tl from 'azure-pipelines-task-lib';
 
-describe("HelmDeployV0 Suite", function () {
+describe("HelmDeployV1 Suite", function () {
     this.timeout(30000);
 
     before(async () => {
@@ -17,12 +17,19 @@ describe("HelmDeployV0 Suite", function () {
         delete process.env[shared.TestEnvVars.valueFile];
         delete process.env[shared.TestEnvVars.overrideValues];
         delete process.env[shared.TestEnvVars.updatedependency];
+        delete process.env[shared.TestEnvVars.caFile];
+        delete process.env[shared.TestEnvVars.certFile];
+        delete process.env[shared.TestEnvVars.insecureSkipTlsVerify];
+        delete process.env[shared.TestEnvVars.keyFile];
+        delete process.env[shared.TestEnvVars.plainHttp];
         delete process.env[shared.isHelmV3];
+        delete process.env[shared.isHelmV37];
         delete process.env[shared.TestEnvVars.releaseName];
         delete process.env[shared.TestEnvVars.waitForExecution];
         delete process.env[shared.TestEnvVars.arguments];
         delete process.env[shared.TestEnvVars.chartName];
         delete process.env[shared.TestEnvVars.chartPath];
+        delete process.env[shared.TestEnvVars.chartPathForACR];
         delete process.env[shared.TestEnvVars.connectionType];
         delete process.env[shared.TestEnvVars.command];
         delete process.env[shared.TestEnvVars.chartType];
@@ -224,43 +231,4 @@ describe("HelmDeployV0 Suite", function () {
         assert(tr.stdout.indexOf(`Successfully packaged chart and saved it to: ${shared.testDestinationPath}/testChartName.tgz`) != -1, "Chart should have been successfully packaged");
         assert(tr.succeeded, "task should have succeeded");
     });
-
-    it("Run successfully with Helm save command (version 3)", async function () {
-        const tp = path.join(__dirname, "TestSetup.js");
-        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.command] = shared.Commands.save;
-        process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.None;
-        process.env[shared.TestEnvVars.chartPathForACR] = shared.testChartPathForACR;
-        process.env[shared.TestEnvVars.chartNameForACR] = shared.testChartNameForACR;
-        process.env[shared.TestEnvVars.azureSubscriptionEndpointForACR] = shared.testAzureSubscriptionEndpointForACR;
-        process.env[shared.testEndpointAuthVar] = "ServicePrincipal";
-        process.env[shared.TestEnvVars.azureResourceGroupForACR] = shared.testAzureResourceGroupForACR;
-        process.env[shared.TestEnvVars.azureContainerRegistry] = shared.testAzureContainerRegistry;
-        process.env[shared.TestEnvVars.failOnStderr] = "false";
-        process.env[shared.isHelmV3] = "true";
-
-        await tr.runAsync();
-        assert(tr.stdout.indexOf("Successfully saved the helm chart to local registry cache.") != -1, "Chart should have been successfully saved to local registry cache.");
-        assert(tr.stdout.indexOf(`Successfully logged in to  ${process.env[shared.TestEnvVars.azureContainerRegistry]}.`) != -1, "Azure container registry login should have been successful.");
-        assert(tr.stdout.indexOf("Successfully pushed to the chart to container registry.") != -1, "Chart should have been successfully pushed to container registry.");
-        assert(tr.stdout.indexOf("Successfully removed the chart from local cache.") != -1, "Chart should have been successfully removed from local cache.");
-        assert(tr.succeeded, "task should have succeeded");
-    });
-
-    it("Helm same should fail (version 2)", async function () {
-        const tp = path.join(__dirname, "TestSetup.js");
-        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.command] = shared.Commands.save;
-        process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.None;
-        process.env[shared.TestEnvVars.chartPathForACR] = shared.testChartPathForACR;
-        process.env[shared.TestEnvVars.chartNameForACR] = shared.testChartNameForACR;
-        process.env[shared.TestEnvVars.azureSubscriptionEndpointForACR] = shared.testAzureSubscriptionEndpointForACR;
-        process.env[shared.TestEnvVars.azureResourceGroupForACR] = shared.testAzureResourceGroupForACR;
-        process.env[shared.TestEnvVars.azureContainerRegistry] = shared.testAzureContainerRegistry;
-        process.env[shared.TestEnvVars.failOnStderr] = "false";
-
-        await tr.runAsync();
-        assert(tr.failed, "task should have failed");
-        assert(tr.stdout.indexOf("loc_mock_SaveSupportedInHelmsV3Only") != -1, "Chart save should have failed when helm version is not 3.");
-    })
 });

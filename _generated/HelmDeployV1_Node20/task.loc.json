@@ -459,7 +459,7 @@
       "type": "filePath",
       "helpMarkDown": "ms-resource:loc.input.help.chartPathForACR",
       "defaultValue": "",
-      "visibleRule": "command == save",
+      "visibleRule": "command == save || command == push",
       "required": "true",
       "groupName": "commands"
     }
@@ -569,6 +569,7 @@
     "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "SaveSupportedInHelmsV3Only": "ms-resource:loc.messages.SaveSupportedInHelmsV3Only",
+    "PackageSupportedInHelmsV37Only": "ms-resource:loc.messages.PackageSupportedInHelmsV37Only",
     "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   },

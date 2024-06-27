@@ -66,7 +66,6 @@ export const testChartPath = "test/testChartPath";
 export const testChartVersion = "1.1.1";
 export const testReleaseName = "testReleaseName";
 export const isHelmV3 = "__isHelmV3__";
-export const isHelmV37Plus = "__isHelmV37Plus__";
 export const testNamespace = "testNamespace";
 export const testDestinationPath = "testDestinationPath";
 export const testChartNameForACR = "testChartNameForACR";

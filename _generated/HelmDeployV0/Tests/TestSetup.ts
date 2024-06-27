@@ -246,13 +246,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.package) {
 }
 
 const helmVersionCommand = "helm version --client --short";
-if (process.env[shared.isHelmV37Plus]) {
-    a.exec[helmVersionCommand] = {
-        "code": 0,
-        "stdout": "v3.7.0+ge29ce2a"
-    };
-}
-else if (process.env[shared.isHelmV3]) {
+if (process.env[shared.isHelmV3]) {
     a.exec[helmVersionCommand] = {
         "code": 0,
         "stdout": "v3.2.1+ge29ce2a"

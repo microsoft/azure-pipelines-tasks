@@ -60,23 +60,6 @@ async function getKubeConfigFile(): Promise<string> {
     });
 }
 
-async function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnStderr: boolean): Promise<void> {
-    if (!helmCli.isHelmV3()) {
-        //helm chart save and push commands are only supported in Helms v3  
-        throw new Error(tl.loc("SaveSupportedInHelmsV3Only"));
-    }
-    process.env.HELM_EXPERIMENTAL_OCI="1";
-    await runHelm(helmCli, "saveChart", kubectlCli, failOnStderr);
-    helmCli.resetArguments();
-    const chartRef = getHelmChartRef(tl.getVariable("helmOutput"));
-    tl.setVariable("helmChartRef", chartRef);
-    await runHelm(helmCli, "registry", kubectlCli, false);
-    helmCli.resetArguments();
-    await runHelm(helmCli, "pushChart", kubectlCli, failOnStderr);
-    helmCli.resetArguments();
-    await runHelm(helmCli, "removeChart", kubectlCli, failOnStderr);
-}
-
 async function run() {
     var command = tl.getInput("command", true).toLowerCase();
     var connectionType = tl.getInput("connectionType", true);
@@ -119,7 +102,7 @@ async function run() {
 
     console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
         "TaskEndpointId",
-        "HelmDeployV0",
+        "HelmDeployV1",
         JSON.stringify(telemetry));
 
     try {
@@ -129,9 +112,6 @@ async function run() {
                 break;
             case "logout":
                 kubectlCli.unsetKubeConfigEnvVariable();
-                break;
-            case "save":
-                await runHelmSaveCommand(helmCli, kubectlCli, failOnStderr);
                 break;
             default:
                 await runHelm(helmCli, command, kubectlCli, failOnStderr);
@@ -154,10 +134,8 @@ async function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetes
         "init": "./helmcommands/helminit",
         "install": "./helmcommands/helminstall",
         "package": "./helmcommands/helmpackage",
-        "pushChart": "./helmcommands/helmchartpush",
+        "push": "./helmcommands/helmpush",
         "registry": "./helmcommands/helmregistrylogin",
-        "removeChart": "./helmcommands/helmchartremove",
-        "saveChart": "./helmcommands/helmchartsave",
         "upgrade": "./helmcommands/helmupgrade"
     }
 
@@ -167,11 +145,7 @@ async function runHelm(helmCli: helmcli, command: string, kubectlCli: kubernetes
     }
 
     //set command
-    if (command === "saveChart" || command === "pushChart" || command === "removeChart") {
-        helmCli.setCommand("chart");
-    } else {
-        helmCli.setCommand(command);
-    }
+    helmCli.setCommand(command);
 
     // add arguments
     commonCommandOptions.addArguments(helmCli);
