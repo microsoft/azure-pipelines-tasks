@@ -83,7 +83,7 @@ async function run() {
         }
         if (endpointObject.scheme === 'WorkloadIdentityFederation') {
             const oidc_token = await endpointObject.applicationTokenCredentials.getFederatedToken();
-            initAzCommand += ` -clientAssertionJwt  ${oidc_token}`;
+            initAzCommand += ` -clientAssertionJwt ${oidc_token} -serviceConnectionId ${serviceName}`;
         }
         contents.push(initAzCommand);
 

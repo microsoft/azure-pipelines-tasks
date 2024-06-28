@@ -6,7 +6,7 @@
                 "dest": "./"
             },
             {
-                "url": "https://testmanagementstorage.blob.core.windows.net/testmanagementcontainer/27389761/TestAgent.zip",
+                "url": "https://testmanagementstore.blob.core.windows.net/testmanagementcontainer/28213918/TestAgent.zip",
                 "dest": "./Modules"
             },
             {

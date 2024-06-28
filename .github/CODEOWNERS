@@ -259,6 +259,8 @@ Tasks/GulpV1/      @microsoft/akvelon-build-task-team
 
 Tasks/HelmDeployV0/       @microsoft/release-management-task-team @manolerazvan 
 
+Tasks/HelmDeployV1/       @microsoft/release-management-task-team @manolerazvan 
+
 Tasks/HelmInstallerV0/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/HelmInstallerV1/    @microsoft/release-management-task-team @manolerazvan 
@@ -298,6 +300,8 @@ Tasks/KubernetesManifestV1/    @microsoft/release-management-task-team @manolera
 Tasks/ManualInterventionV8/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/ManualValidationV0/      @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/ManualValidationV1/      @microsoft/release-management-task-team @manolerazvan
 
 Tasks/MavenAuthenticateV0/     @microsoft/azure-artifacts-packages
 
@@ -381,6 +385,8 @@ Tasks/PublishTestResultsV2/    @shailesh-sk
 Tasks/ContainerStructureTestV0/    @rasunkar
 
 Tasks/PublishToAzureServiceBusV1/     @microsoft/release-management-task-team @manolerazvan
+
+Tasks/PublishToAzureServiceBusV2/     @microsoft/release-management-task-team @manolerazvan
 
 Tasks/PyPIPublisherV0/     @microsoft/akvelon-build-task-team
 

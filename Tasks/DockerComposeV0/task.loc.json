@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
-    "Patch": 0
+    "Minor": 242,
+    "Patch": 2
   },
   "demands": [],
   "preview": "false",
@@ -335,11 +335,11 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "dockercompose.js",
       "argumentFormat": ""
     },
-    "Node16": {
+    "Node10": {
       "target": "dockercompose.js",
       "argumentFormat": ""
     }
@@ -355,6 +355,8 @@
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
     "ImageNameWithoutTag": "ms-resource:loc.messages.ImageNameWithoutTag",
-    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile",
+    "InvalidProjectName": "ms-resource:loc.messages.InvalidProjectName",
+    "MigrateToDockerComposeV2": "ms-resource:loc.messages.MigrateToDockerComposeV2"
   }
 }
