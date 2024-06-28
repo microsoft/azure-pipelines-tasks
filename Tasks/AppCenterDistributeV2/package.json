@@ -23,7 +23,7 @@
     "azure-pipelines-task-lib": "^4.0.0-preview",
     "@azure/storage-blob": "^12.10.0",
     "jszip": "^3.10.0",
-    "typed-rest-client": "^1.8.9"
+    "typed-rest-client": "^1.8.11"
   },
   "devDependencies": {
     "typescript": "4.0.2"
