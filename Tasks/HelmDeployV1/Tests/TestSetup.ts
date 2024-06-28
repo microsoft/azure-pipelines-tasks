@@ -229,7 +229,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.package) {
         helmPackageCommand = helmPackageCommand.concat(" --dependency-update");
 
     if (process.env[shared.TestEnvVars.save]) {
-        if (process.env[shared.isHelmV3])
+        if (process.env[shared.isHelmV37])
             helmPackageCommand = helmPackageCommand.concat(" --save");
     }
 
@@ -250,38 +250,13 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.package) {
     }
 }
 
-if (process.env[shared.TestEnvVars.command] === shared.Commands.push) {
-    let helmPushCommand = `helm push${formatDebugFlag()}`;
-
-    if (process.env[shared.TestEnvVars.caFile])
-        helmPushCommand = helmPushCommand.concat(` --ca-file ${process.env[shared.TestEnvVars.caFile]}`);
-
-    if (process.env[shared.TestEnvVars.certFile]) {
-        helmPushCommand = helmPushCommand.concat(` --cert-file ${process.env[shared.TestEnvVars.certFile]}`);
-    }
-
-    if (process.env[shared.TestEnvVars.insecureSkipTlsVerify])
-        helmPushCommand = helmPushCommand.concat(` --insecure-skip-tls-verify`);
-
-    if (process.env[shared.TestEnvVars.keyFile])
-        helmPushCommand = helmPushCommand.concat(` --key-file ${process.env[shared.TestEnvVars.keyFile]}`);
-
-    if (process.env[shared.TestEnvVars.plainHttp])
-        helmPushCommand = helmPushCommand.concat(` --plain-http`);
-
-    if (process.env[shared.TestEnvVars.arguments])
-        helmPushCommand = helmPushCommand.concat(` ${process.env[shared.TestEnvVars.arguments]}`);
-
-    if (process.env[shared.TestEnvVars.chartPathForACR])
-        helmPushCommand = helmPushCommand.concat(` ${process.env[shared.TestEnvVars.chartPathForACR]}`);
-    a.exec[helmPushCommand] = {
-        "code": 0,
-        "stdout": "Successfully pushed chart to ACR"
-    }
-}
-
 const helmVersionCommand = "helm version --client --short";
-if (process.env[shared.isHelmV3]) {
+if (process.env[shared.isHelmV37]) {
+    a.exec[helmVersionCommand] = {
+        "code": 0,
+        "stdout": "v3.7.0+ge29ce2a"
+    };
+} else if (process.env[shared.isHelmV3]) {
     a.exec[helmVersionCommand] = {
         "code": 0,
         "stdout": "v3.2.1+ge29ce2a"
