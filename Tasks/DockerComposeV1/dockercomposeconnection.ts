@@ -19,11 +19,9 @@ export default class DockerComposeConnection extends ContainerConnection {
     private requireAdditionalDockerComposeFiles: boolean;
     private projectName: string;
     private finalComposeFile: string;
-    private useDockerComposeV2: boolean;
 
     constructor() {
         super();
-        this.useDockerComposeV2 = tl.getBoolFeatureFlag("USE_DOCKER_COMPOSE_V2_COMPATIBLE_MODE");
         this.setDockerComposePath();
         this.dockerComposeFile = DockerComposeUtils.findDockerFile(tl.getInput("dockerComposeFile", true), tl.getInput("cwd"));
         if (!this.dockerComposeFile) {
@@ -95,11 +93,8 @@ export default class DockerComposeConnection extends ContainerConnection {
     public createComposeCommand(): tr.ToolRunner {
         var command = tl.tool(this.dockerComposePath);
 
-        if (this.useDockerComposeV2 && !tl.getInput('dockerComposePath')) {
-            command.arg("compose");
-            process.env["COMPOSE_COMPATIBILITY"] = "true";
-        }
-
+        command.arg("compose");
+        process.env["COMPOSE_COMPATIBILITY"] = "true";
         command.arg(["-f", this.dockerComposeFile]);
         var basePath = path.dirname(this.dockerComposeFile);
         this.additionalDockerComposeFiles.forEach(file => {
@@ -186,12 +181,7 @@ export default class DockerComposeConnection extends ContainerConnection {
         //Priority to docker-compose path provided by user
         this.dockerComposePath = tl.getInput('dockerComposePath');
         if (!this.dockerComposePath) {
-            // If not use the docker-compose avilable on agent
-            if (this.useDockerComposeV2) {
-                this.dockerComposePath = tl.which("docker");
-            } else {
-                this.dockerComposePath = tl.which("docker-compose");
-            }
+            this.dockerComposePath = tl.which("docker");
 
             if (!this.dockerComposePath) {
                 throw new Error("Docker Compose was not found. You can provide the path to docker-compose via 'dockerComposePath' ");
@@ -203,11 +193,6 @@ export default class DockerComposeConnection extends ContainerConnection {
 
     private validateProjectNameDockerComposeV2() {
         tl.debug(`Start validating project name ${this.projectName}`);
-
-        if (this.dockerComposePath.includes("docker-compose") || !this.useDockerComposeV2) {
-            tl.warning(tl.loc("MigrateToDockerComposeV2"));
-            return;
-        }
 
         // The regular expression pattern is taken from compose-spec.json
         // https://github.com/compose-spec/compose-spec/blob/864b24c24f7f24a26aa2c2b8a89a82478ce03a32/schema/compose-spec.json#L16
