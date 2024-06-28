@@ -31,6 +31,9 @@
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[[Learn more about this task]5D;(https://aka.ms/azurefilecopyreadme) and to report any issues with this new version of the task [here]5D;(https://github.com/microsoft/azure-pipelines-tasks/issues/new?assignees=&labels=regression%2Cbug&projects=&template=1.regression.yml&title=%5BREGRESSION%5D%3A+)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[[Altre informazioni su questa attività]5D;(https://aka.ms/azurefilecopyreadme) e [qui]5D;(https://github.com/microsoft/azure-pipelines-tasks/issues/new?assignees=&labels=regression%2Cbug&projects=&template=1.regression.yml&title=%5BREGRESSION%5D%3A+) per segnalare eventuali problemi relativi alla nuova versione dell’attività]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -811,6 +814,9 @@
       <Item ItemId=";loc.releaseNotes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[What's new in Version 6.0: <br/>&nbsp;&nbsp; Support Workload identity federation and [Azure RBAC]5D;(https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal), also use [AzCopy.exe]5D;(https://github.com/Azure/azure-storage-azcopy/tree/v10.24.0) with version 10.24.0, for more info:[here]5D;(https://github.com/Azure/azure-storage-azcopy/releases)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Novità della versione 6.0: <br/>&nbsp;&nbsp; Supporto della federazione delle identità del carico di lavoro e del [Controllo degli accessi in base al ruolo di Azure]5D;(https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal), Utilizzo anche di [AzCopy.exe]5D;(https://github.com/Azure/azure-storage-azcopy/tree/v10.24.0) con la versione 10.24.0; per altre informazioni:[qui]5D;(https://github.com/Azure/azure-storage-azcopy/releases)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

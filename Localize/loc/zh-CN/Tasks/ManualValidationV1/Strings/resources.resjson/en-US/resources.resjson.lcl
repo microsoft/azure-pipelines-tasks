@@ -40,6 +40,9 @@
       <Item ItemId=";loc.input.help.approvers" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Specify users/groups/project teams separated by commas to act on a manual validation. In absence of input, users with queue build permission will be able to take action.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[指定用户/组/项目团队(以逗号分隔)，以执行手动验证。如果没有输入，则具有队列生成权限的用户将能够执行操作。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -55,6 +58,9 @@
       <Item ItemId=";loc.input.help.notifyUsers" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Send a manual validation pending email to specific users (or groups). Only users specified in approvers can act on a manual validation.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[将手动验证挂起电子邮件发送到特定用户(或组)。只有审批者中指定的用户才能执行手动验证。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -70,12 +76,18 @@
       <Item ItemId=";loc.input.label.approvers" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Approvers]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[审批者]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.instructions" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Instructions]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[说明]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -91,6 +103,9 @@
       <Item ItemId=";loc.input.label.onTimeout" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[On timeout]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[超时时]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
