@@ -47,7 +47,6 @@ export let Commands = {
     upgrade: "upgrade",
     package: "package",
     push: "push",
-    save: "save",
     init: "init"
 };
 

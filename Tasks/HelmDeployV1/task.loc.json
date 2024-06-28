@@ -22,7 +22,7 @@
       "name": "cluster",
       "displayName": "ms-resource:loc.group.displayName.cluster",
       "isExpanded": true,
-      "visibleRule": "command != logout && command != package && command != save"
+      "visibleRule": "command != logout && command != package"
     },
     {
       "name": "commands",
@@ -33,19 +33,19 @@
       "name": "azureContainerRegistry",
       "displayName": "ms-resource:loc.group.displayName.azureContainerRegistry",
       "isExpanded": true,
-      "visibleRule": "command == save"
+      "visibleRule": "command == login || command == package || command == push"
     },
     {
       "name": "tls",
       "displayName": "ms-resource:loc.group.displayName.tls",
       "isExpanded": false,
-      "visibleRule": "command != login && command != logout && command != package && command != save"
+      "visibleRule": "command != login && command != logout && command != package"
     },
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false,
-      "visibleRule": "command != login && command != logout && command != package && command != save"
+      "visibleRule": "command != login && command != logout && command != package"
     }
   ],
   "inputs": [
@@ -181,8 +181,8 @@
         "logout": "logout",
         "ls": "ls",
         "package": "package",
+        "push": "push",
         "rollback": "rollback",
-        "save": "save",
         "upgrade": "upgrade",
         "uninstall": "uninstall"
       },
@@ -449,7 +449,7 @@
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.chartNameForACR",
       "defaultValue": "",
-      "visibleRule": "command == save",
+      "visibleRule": "command == package || command == push",
       "required": "true",
       "groupName": "commands"
     },
@@ -459,7 +459,7 @@
       "type": "filePath",
       "helpMarkDown": "ms-resource:loc.input.help.chartPathForACR",
       "defaultValue": "",
-      "visibleRule": "command == save || command == push",
+      "visibleRule": "command == package || command == push",
       "required": "true",
       "groupName": "commands"
     }
