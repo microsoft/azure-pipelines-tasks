@@ -31,7 +31,7 @@ export async function run(clientToolFilePath: string): Promise<void> {
         let symbolServiceUri = "https://" + encodeURIComponent(AsAccountName) + ".artifacts.visualstudio.com"
         let personalAccessToken;
         const usePat : boolean = (AsAccountName) ? true : false;
-        const connectedServiceName: string = tl.getInput("ConnectedServiceName", usePat);
+        const connectedServiceName: string = tl.getInput("ConnectedServiceName", !usePat);
         tl.debug("connectedServiceName: " + connectedServiceName);
         if(connectedServiceName){
             tl.debug("connectedServiceName: " + connectedServiceName);

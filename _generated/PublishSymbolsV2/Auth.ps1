@@ -1,5 +1,5 @@
-# Initialize Rest API Helpers.
-Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
+
 function Get-AccessToken()
 {
     param (
@@ -14,50 +14,97 @@ function Get-AccessToken()
     if($ConnectedServiceName)
     {
         Write-Host "connectedServiceName is specified. Using it to get the access token. - $ConnectedServiceName"
-        $PersonalAccessToken = Get-ConnectedServiceNameAccessToken($ConnectedServiceName);
+        $accessToken = Get-ConnectedServiceNameAccessToken -connectedServiceName $ConnectedServiceName;
+        $PersonalAccessToken = $accessToken.access_token;
+        Write-Host "accessToken.access_token. - $accessToken.access_token"
     }
     elseif ($AsAccountName) {
         Write-Host "PAT access token"
-        $PersonalAccessToken = Get-PATToken([string]$AsAccountName, [bool]$UseAad);
+        $PersonalAccessToken = Get-PATToken -AsAccountName $AsAccountName -UseAad $UseAad;
     }
     else {
+        <# Action when all if and elseif conditions are false #>
         Write-Host "System access token"
-        $PersonalAccessToken = Get-SystemAccessToken([string]$PersonalAccessToken, [bool]$UseAad);<# Action when all if and elseif conditions are false #>
+        $PersonalAccessToken = Get-SystemAccessToken -PersonalAccessToken $PersonalAccessToken -UseAad $UseAad;
     }
 
+    Write-Host "Received PersonalAccessToken: $PersonalAccessToken"
     return $PersonalAccessToken;
 }
 
-function Get-ConnectedServiceNameAccessToken([string]$connectedServiceName)
+function Get-ConnectedServiceNameAccessToken()
 {
-    # Initialize Azure.
-    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+    param (
+        [string]$connectedServiceName
+    )
+
+    $accessToken = @{
+        token_type = $null
+        access_token = $null
+        expires_on = $null
+    }
+    Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_ -Force
 
     Write-Host "endpoint for connectedServiceName: $connectedServiceName";
-    $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
+    $vstsEndpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
     Write-Host "endpoint: $endpoint";
 
-    Write-Host "vstsEndpoint for SystemVssConnection";
-    $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
-    Write-Host "vstsEndpoint: $vstsEndpoint";
-    $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
-    Write-Host "vstsAccessToken";
+    $result = Get-AccessTokenMSALWithCustomScope -endpoint $vstsEndpoint `
+        -connectedServiceNameARM $connectedServiceName `
+        -scope "499b84ac-1321-427f-aa17-267ca6975798"
 
-    # Initialize-AzModule will import/install Az.Accounts module if RETIRE_AZURERM_POWERSHELL_MODULE is true
-    $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
-    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
+    $accessToken.token_type = $result.TokenType
+    $accessToken.access_token = $result.AccessToken
+    $accessToken.expires_on = $result.ExpiresOn.ToUnixTimeSeconds()
 
-    Write-Host "Get Token: az account get-access-token --query accessToken --resource 499b84ac-1321-427f-aa17-267ca6975798 -o tsv";
-    $accessToken = az account get-access-token --query accessToken --resource 499b84ac-1321-427f-aa17-267ca6975798 -o tsv
+    Write-Host "Get-ConnectedServiceNameAccessToken: Received accessToken";
 
-    return $accessToken
+    return $accessToken;
 }
 
-function Get-PATToken([string]$asAccountName, [bool]$UseAad)
+# Get the Bearer Access Token - MSAL
+function Get-ADOAccessTokenMSAL()
 {
+    param(
+        [Object] [Parameter(Mandatory = $true)] $endpoint,
+        [string] [Parameter(Mandatory=$false)] $connectedServiceNameARM
+    )
+
+    Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_ -Force
+
+    Get-MSALInstance $endpoint $connectedServiceNameARM
+
+    # prepare MSAL scopes
+    [string] $azureDevOpsResourceId = "499b84ac-1321-427f-aa17-267ca6975798";
+    $azureDevOpsResourceId = $azureDevOpsResourceId + "/.default"
+    $scopes = [Collections.Generic.List[string]]@($azureDevOpsResourceId)
+
+    try {
+        Write-Verbose "Fetching Access Token - MSAL"
+        $tokenResult = $script:msalClientInstance.AcquireTokenForClient($scopes).ExecuteAsync().GetAwaiter().GetResult()
+        return $tokenResult
+    }
+    catch {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        $parsedException = Parse-Exception($_.Exception)
+        if ($parsedException) {
+            $exceptionMessage = $parsedException
+        }
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AccessTokenMSAL)"
+        throw (Get-VstsLocString -Key AZ_SpnAccessTokenFetchFailure -ArgumentList $endpoint.Auth.Parameters.TenantId)
+    }
+}
+
+function Get-PATToken()
+{
+    param(
+        [string] [Parameter(Mandatory = $true)] $AsAccountName,
+        [string] [Parameter(Mandatory=$true)] $UseAad
+    )
+
     [string]$PersonalAccessToken = (Get-VstsTaskVariable -Name 'ArtifactServices.Symbol.PAT')
 
-    if ( $asAccountName ) {
+    if ( $AsAccountName ) {
         if ( $PersonalAccessToken ) {
             if ( $UseAad ) {
                 throw "If AccountName is specified, then only one of PAT or UseAad should be present"
@@ -77,8 +124,12 @@ function Get-PATToken([string]$asAccountName, [bool]$UseAad)
     return $PersonalAccessToken;
 }
 
-function Get-SystemAccessToken([string]$PersonalAccessToken, [bool]$UseAad)
+function Get-SystemAccessToken()
 {
+    param(
+        [string] [Parameter(Mandatory = $true)] $PersonalAccessToken,
+        [string] [Parameter(Mandatory=$true)] $UseAad
+    )
     if ( $PersonalAccessToken -or $UseAad ) {
         throw "If PAT or UseAad is specified, then AccountName needs to be present"
     }
