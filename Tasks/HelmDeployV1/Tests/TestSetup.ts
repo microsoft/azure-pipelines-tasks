@@ -46,6 +46,11 @@ tr.setInput("destination", process.env[shared.TestEnvVars.destination] || "");
 tr.setInput("canaryimage", process.env[shared.TestEnvVars.canaryimage] || "");
 tr.setInput("upgradetiller", process.env[shared.TestEnvVars.upgradetiller] || "");
 tr.setInput("updatedependency", process.env[shared.TestEnvVars.updatedependency] || "");
+tr.setInput("caFile", process.env[shared.TestEnvVars.caFile] || "");
+tr.setInput("certFile", process.env[shared.TestEnvVars.certFile] || "");
+tr.setInput("insecureSkipTlsVerify", process.env[shared.TestEnvVars.insecureSkipTlsVerify] || "");
+tr.setInput("keyFile", process.env[shared.TestEnvVars.keyFile] || "");
+tr.setInput("plainHttp", process.env[shared.TestEnvVars.plainHttp] || "");
 tr.setInput("save", process.env[shared.TestEnvVars.save] || "");
 tr.setInput("install", process.env[shared.TestEnvVars.install] || "");
 tr.setInput("recreate", process.env[shared.TestEnvVars.recreate] || "");
@@ -224,7 +229,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.package) {
         helmPackageCommand = helmPackageCommand.concat(" --dependency-update");
 
     if (process.env[shared.TestEnvVars.save]) {
-        if (process.env[shared.isHelmV3])
+        if (process.env[shared.isHelmV37])
             helmPackageCommand = helmPackageCommand.concat(" --save");
     }
 
@@ -246,7 +251,12 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.package) {
 }
 
 const helmVersionCommand = "helm version --client --short";
-if (process.env[shared.isHelmV3]) {
+if (process.env[shared.isHelmV37]) {
+    a.exec[helmVersionCommand] = {
+        "code": 0,
+        "stdout": "v3.7.0+ge29ce2a"
+    };
+} else if (process.env[shared.isHelmV3]) {
     a.exec[helmVersionCommand] = {
         "code": 0,
         "stdout": "v3.2.1+ge29ce2a"
@@ -294,8 +304,8 @@ a.exec[kubectlClusterInfo] = {
     "stdout": `Kubernetes master is running at https://shigupt-cluster-dns-7489360e.hcp.southindia.azmk8s.io:443 \nhealthmodel-replicaset-service is running at https://shigupt-cluster-dns-7489360e.hcp.southindia.azmk8s.io:443/api/v1/namespaces/kube-system/services/healthmodel-replicaset-service/proxy \nCoreDNS is running at https://shigupt-cluster-dns-7489360e.hcp.southindia.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy \nkubernetes-dashboard is running at https://shigupt-cluster-dns-7489360e.hcp.southindia.azmk8s.io:443/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy \nMetrics-server is running at https://shigupt-cluster-dns-7489360e.hcp.southindia.azmk8s.io:443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy\n\nTo further debug and diagnose cluster problems, use "kubectl cluster-info dump".\n`
 }
 
-const helmSaveCommand = `helm chart${formatDebugFlag()} save ${process.env[shared.TestEnvVars.chartPathForACR]} ${process.env[shared.TestEnvVars.azureContainerRegistry]}/helm/${process.env[shared.TestEnvVars.chartNameForACR]}`;
-a.exec[helmSaveCommand] = {
+const helmPackageCommand = `helm package${formatDebugFlag()} ${process.env[shared.TestEnvVars.chartPathForACR]} ${process.env[shared.TestEnvVars.azureContainerRegistry]}/helm/${process.env[shared.TestEnvVars.chartNameForACR]}`;
+a.exec[helmPackageCommand] = {
     "code": 0,
     "stdout": `ref:    ${process.env[shared.TestEnvVars.azureContainerRegistry]}/helm/${process.env[shared.TestEnvVars.chartNameForACR]}:0.1.0 \n Successfully saved the helm chart to local registry cache.`
 }
@@ -306,16 +316,10 @@ a.exec[helmRegistryLoginCommand] = {
     "stdout": `Successfully logged in to  ${process.env[shared.TestEnvVars.azureContainerRegistry]}.`
 };
 
-const helmChartPushCommand = `helm chart${formatDebugFlag()} push ${process.env[shared.TestEnvVars.azureContainerRegistry]}/helm/${process.env[shared.TestEnvVars.chartNameForACR]}:0.1.0`;
-a.exec[helmChartPushCommand] = {
+const helmPushCommand = `helm push${formatDebugFlag()} ${process.env[shared.TestEnvVars.azureContainerRegistry]}/helm/${process.env[shared.TestEnvVars.chartNameForACR]}:0.1.0`;
+a.exec[helmPushCommand] = {
     "code": 0,
     "stdout": "Successfully pushed to the chart to container registry."
-}
-
-const helmChartRemoveCommand = `helm chart${formatDebugFlag()} remove ${process.env[shared.TestEnvVars.azureContainerRegistry]}/helm/${process.env[shared.TestEnvVars.chartNameForACR]}:0.1.0`;
-a.exec[helmChartRemoveCommand] = {
-    "code": 0,
-    "stdout": "Successfully removed the chart from local cache."
 }
 
 tr.setAnswers(<any>a);
