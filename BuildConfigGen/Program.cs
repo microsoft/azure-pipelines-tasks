@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using BuildConfigGen.Debugging;
 
 namespace BuildConfigGen
 {
@@ -63,11 +65,12 @@ namespace BuildConfigGen
         /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
         /// <param name="allTasks"></param>
         /// <param name="getTaskVersionTable"></param>
-        static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false, bool getTaskVersionTable = false)
+        /// <param name="debugAgentDir">When set to the local pipeline agent directory, this tool will produce tasks in debug mode with the corresponding visual studio launch configurations that can be used to attach to built tasks running on this agent</param>
+        static void Main(string? task = null, string? configs = null, int? currentSprint = null, bool writeUpdates = false, bool allTasks = false, bool getTaskVersionTable = false, string? debugAgentDir = null)
         {
             try
             {
-                MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable);
+                MainInner(task, configs, currentSprint, writeUpdates, allTasks, getTaskVersionTable, debugAgentDir);
             }
             catch (Exception e2)
             {
@@ -85,7 +88,7 @@ namespace BuildConfigGen
             }
         }
 
-        private static void MainInner(string? task, string? configs, int? currentSprint, bool writeUpdates, bool allTasks, bool getTaskVersionTable)
+        private static void MainInner(string? task, string? configs, int? currentSprint, bool writeUpdates, bool allTasks, bool getTaskVersionTable, string? debugAgentDir)
         {
             if (allTasks)
             {
@@ -98,11 +101,10 @@ namespace BuildConfigGen
                 NotNullOrThrow(configs, "Configs is required");
             }
 
+            string currentDir = Environment.CurrentDirectory;
+            string gitRootPath = GitUtil.GetGitRootPath(currentDir);
             if (getTaskVersionTable)
             {
-                string currentDir = Environment.CurrentDirectory;
-                string gitRootPath = GitUtil.GetGitRootPath(currentDir);
-
                 var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
 
                 Console.WriteLine("config\ttask\tversion");
@@ -120,15 +122,16 @@ namespace BuildConfigGen
                 return;
             }
 
+            IDebugConfigGenerator debugConfGen = string.IsNullOrEmpty(debugAgentDir)
+                ? new NoDebugConfigGenerator()
+                : new VsCodeLaunchConfigGenerator(gitRootPath, debugAgentDir);
+
             if (allTasks)
             {
-                string currentDir = Environment.CurrentDirectory;
-                string gitRootPath = GitUtil.GetGitRootPath(currentDir);
-
                 var tasks = MakeOptionsReader.ReadMakeOptions(gitRootPath);
                 foreach (var t in tasks.Values)
                 {
-                    MainUpdateTask(t.Name, string.Join('|', t.Configs), writeUpdates, currentSprint);
+                    MainUpdateTask(t.Name, string.Join('|', t.Configs), writeUpdates, currentSprint, debugConfGen);
                 }
             }
             else
@@ -139,9 +142,11 @@ namespace BuildConfigGen
                 // 3. Ideally default windows exception will occur and errors reported to WER/watson.  I'm not sure this is happening, perhaps DragonFruit is handling the exception
                 foreach (var t in task!.Split(',', '|'))
                 {
-                    MainUpdateTask(t, configs!, writeUpdates, currentSprint);
+                    MainUpdateTask(t, configs!, writeUpdates, currentSprint, debugConfGen);
                 }
             }
+
+            debugConfGen.WriteLaunchConfigurations();
 
             if (notSyncronizedDependencies.Count > 0)
             {
@@ -225,7 +230,12 @@ namespace BuildConfigGen
             }
         }
 
-        private static void MainUpdateTask(string task, string configsString, bool writeUpdates, int? currentSprint)
+        private static void MainUpdateTask(
+            string task,
+            string configsString,
+            bool writeUpdates,
+            int? currentSprint,
+            IDebugConfigGenerator debugConfigGen)
         {
             if (string.IsNullOrEmpty(task))
             {
@@ -265,7 +275,7 @@ namespace BuildConfigGen
             {
                 ensureUpdateModeVerifier = new EnsureUpdateModeVerifier(!writeUpdates);
 
-                MainUpdateTaskInner(task, currentSprint, targetConfigs);
+                MainUpdateTaskInner(task, currentSprint, targetConfigs, debugConfigGen);
 
                 ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(task, skipContentCheck: false);
             }
@@ -309,7 +319,11 @@ namespace BuildConfigGen
             }
         }
 
-        private static void MainUpdateTaskInner(string task, int? currentSprint, HashSet<Config.ConfigRecord> targetConfigs)
+        private static void MainUpdateTaskInner(
+            string task,
+            int? currentSprint,
+            HashSet<Config.ConfigRecord> targetConfigs,
+            IDebugConfigGenerator debugConfigGen)
         {
             if (!currentSprint.HasValue)
             {
@@ -387,7 +401,8 @@ namespace BuildConfigGen
                     EnsureBuildConfigFileOverrides(config, taskTargetPath);
                 }
 
-                var taskConfigExists = File.Exists(Path.Combine(taskOutput, "task.json"));
+                var taskConfigPath = Path.Combine(taskOutput, "task.json");
+                var taskConfigExists = File.Exists(taskConfigPath);
 
                 // only update task output if a new version was added, the config exists, or the task contains preprocessor instructions
                 // Note: CheckTaskInputContainsPreprocessorInstructions is expensive, so only call if needed
@@ -423,6 +438,9 @@ namespace BuildConfigGen
                         Path.Combine(taskTargetPath, buildConfigs, configTaskPath, "package.json"));
                     WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript);
                 }
+
+                debugConfigGen.WriteTypescriptConfig(taskOutput);
+                debugConfigGen.AddForTask(taskConfigPath);
             }
 
             // delay updating version map file until after buildconfigs generated
