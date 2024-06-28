@@ -60,6 +60,21 @@ async function getKubeConfigFile(): Promise<string> {
     });
 }
 
+async function runHelmSaveCommand(helmCli: helmcli, kubectlCli: kubernetescli, failOnStderr: boolean): Promise<void> {
+    if (!helmCli.isHelmV37Plus()) {
+        //helm chart commands are removed in Helms v3.7+
+        throw new Error(tl.loc("PackageSupportedInHelmsV37Only"));
+    }
+    process.env.HELM_EXPERIMENTAL_OCI="1";
+    await runHelm(helmCli, "package", kubectlCli, failOnStderr);
+    helmCli.resetArguments();
+    const chartRef = getHelmChartRef(tl.getVariable("helmOutput"));
+    tl.setVariable("helmChartRef", chartRef);
+    await runHelm(helmCli, "registry", kubectlCli, false);
+    helmCli.resetArguments();
+    await runHelm(helmCli, "push", kubectlCli, failOnStderr);
+}
+
 async function run() {
     var command = tl.getInput("command", true).toLowerCase();
     var connectionType = tl.getInput("connectionType", true);
@@ -113,6 +128,9 @@ async function run() {
             case "logout":
                 kubectlCli.unsetKubeConfigEnvVariable();
                 break;
+            case "save":
+            await runHelmSaveCommand(helmCli, kubectlCli, failOnStderr);
+            break;
             default:
                 await runHelm(helmCli, command, kubectlCli, failOnStderr);
         }
