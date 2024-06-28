@@ -40,6 +40,9 @@
       <Item ItemId=";loc.input.help.approvers" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Specify users/groups/project teams separated by commas to act on a manual validation. In absence of input, users with queue build permission will be able to take action.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[手動検証を操作するには、ユーザー/グループ/プロジェクト チームをコンマで区切って指定します。入力がない場合、キュー ビルドのアクセス許可を持つユーザーがアクションを実行できます。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -55,6 +58,9 @@
       <Item ItemId=";loc.input.help.notifyUsers" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Send a manual validation pending email to specific users (or groups). Only users specified in approvers can act on a manual validation.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[手動検証の保留のメールを特定のユーザー (またはグループ) に送信します。承認者に指定されたユーザーのみが手動検証を操作できます。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -70,12 +76,18 @@
       <Item ItemId=";loc.input.label.approvers" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Approvers]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[承認者]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.instructions" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Instructions]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[手順]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -91,6 +103,9 @@
       <Item ItemId=";loc.input.label.onTimeout" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[On timeout]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[タイムアウト時]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

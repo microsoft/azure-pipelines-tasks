@@ -40,6 +40,9 @@
       <Item ItemId=";loc.input.help.approvers" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Specify users/groups/project teams separated by commas to act on a manual validation. In absence of input, users with queue build permission will be able to take action.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Especifique usuarios, grupos o equipos de proyecto separados por comas para actuar en una validación manual. En ausencia de entrada, los usuarios con permiso para crear colas podrán actuar.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -55,6 +58,9 @@
       <Item ItemId=";loc.input.help.notifyUsers" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Send a manual validation pending email to specific users (or groups). Only users specified in approvers can act on a manual validation.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Envíe un correo electrónico de validación manual pendiente a usuarios (o grupos) específicos. Solo los usuarios especificados en los aprobadores pueden actuar en una validación manual.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -70,12 +76,18 @@
       <Item ItemId=";loc.input.label.approvers" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Approvers]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Aprobadores]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.label.instructions" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Instructions]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Instrucciones]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -91,6 +103,9 @@
       <Item ItemId=";loc.input.label.onTimeout" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[On timeout]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Al agotarse el tiempo de espera]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

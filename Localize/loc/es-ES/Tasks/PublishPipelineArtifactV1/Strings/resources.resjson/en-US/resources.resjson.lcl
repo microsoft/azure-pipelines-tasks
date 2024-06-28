@@ -21,8 +21,8 @@
       <Item ItemId=";loc.friendlyName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Publish Pipeline Artifacts]]></Val>
-          <Tgt Cat="Text" Stat="Update" Orig="New">
-            <Val><![CDATA[Publicar artefacto de canalización]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Publicación de artefactos de canalización]]></Val>
           </Tgt>
           <Prev Cat="Text">
             <Val><![CDATA[Publish pipeline artifact]]></Val>
@@ -159,6 +159,9 @@
       <Item ItemId=";loc.input.label.properties" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Custom properties]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Propiedades personalizadas]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
