@@ -31,6 +31,9 @@
       <Item ItemId=";loc.helpMarkDown" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[[Learn more about this task]5D;(https://aka.ms/azurefilecopyreadme) and to report any issues with this new version of the task [here]5D;(https://github.com/microsoft/azure-pipelines-tasks/issues/new?assignees=&labels=regression%2Cbug&projects=&template=1.regression.yml&title=%5BREGRESSION%5D%3A+)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[[详细了解此任务]5D;(https://aka.ms/azurefilecopyreadme)并在[此处]5D;(https://github.com/microsoft/azure-pipelines-tasks/issues/new?assignees=&labels=regression%2Cbug&projects=&template=1.regression.yml&title=%5BREGRESSION%5D%3A+)报告有关此新版本任务的任何问题]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -811,6 +814,9 @@
       <Item ItemId=";loc.releaseNotes" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[What's new in Version 6.0: <br/>&nbsp;&nbsp; Support Workload identity federation and [Azure RBAC]5D;(https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal), also use [AzCopy.exe]5D;(https://github.com/Azure/azure-storage-azcopy/tree/v10.24.0) with version 10.24.0, for more info:[here]5D;(https://github.com/Azure/azure-storage-azcopy/releases)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[版本 6.0 中的最新变动: <br/>&nbsp;&nbsp; 支持工作负载联合身份验证和 [Azure RBAC]5D;(https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal)，还可以使用 [AzCopy.exe]5D;(https://github.com/Azure/azure-storage-azcopy/tree/v10.24.0) 版本 10.24.0，如需了解详细信息，请访问[此处]5D;(https://github.com/Azure/azure-storage-azcopy/releases)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
