@@ -22,8 +22,11 @@
     "appcenter-file-upload-client-node": "1.0.0",
     "azure-pipelines-task-lib": "^4.13.0",
     "@azure/storage-blob": "^12.10.0",
+    "appcenter-file-upload-client-node": "1.2.11",
+    "azure-pipelines-task-lib": "^4.0.0-preview",
+    "@azure/storage-blob": "^12.23.0",
     "jszip": "^3.10.0",
-    "typed-rest-client": "^1.8.9"
+    "typed-rest-client": "^1.8.11"
   },
   "devDependencies": {
     "typescript": "4.0.2"
