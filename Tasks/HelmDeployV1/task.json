@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 242,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "groups": [
@@ -22,7 +22,7 @@
       "name": "cluster",
       "displayName": "Kubernetes Cluster",
       "isExpanded": true,
-      "visibleRule": "command != logout && command != package && command != save"
+      "visibleRule": "command != logout && command != package"
     },
     {
       "name": "commands",
@@ -33,19 +33,19 @@
       "name": "azureContainerRegistry",
       "displayName": "Azure Container Registry",
       "isExpanded": true,
-      "visibleRule": "command == save"
+      "visibleRule": "command == login || command == package || command == push"
     },
     {
       "name": "tls",
       "displayName": "TLS",
       "isExpanded": false,
-      "visibleRule": "command != login && command != logout && command != package && command != save"
+      "visibleRule": "command != login && command != logout && command != package"
     },
     {
       "name": "advanced",
       "displayName": "Advanced",
       "isExpanded": false,
-      "visibleRule": "command != login && command != logout && command != package && command != save"
+      "visibleRule": "command != login && command != logout && command != package"
     }
   ],
   "inputs": [
@@ -181,8 +181,8 @@
         "logout": "logout",
         "ls": "ls",
         "package": "package",
+        "push": "push",
         "rollback": "rollback",
-        "save": "save",
         "upgrade": "upgrade",
         "uninstall": "uninstall"
       },
@@ -449,7 +449,7 @@
       "type": "string",
       "helpMarkDown": "Chart name with which the chart will be stored in Azure Container Registry.",
       "defaultValue": "",
-      "visibleRule": "command == save",
+      "visibleRule": "command == package || command == push",
       "required": "true",
       "groupName": "commands"
     },
@@ -459,7 +459,7 @@
       "type": "filePath",
       "helpMarkDown": "Path to the chart directory.",
       "defaultValue": "",
-      "visibleRule": "command == save",
+      "visibleRule": "command == package || command == push",
       "required": "true",
       "groupName": "commands"
     }
@@ -557,6 +557,7 @@
     "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
     "SaveSupportedInHelmsV3Only": "Save chart to Azure Container Registry is only supported in Helms V3.",
+    "PackageSupportedInHelmsV37Only": "Helm package to Azure Container Registry is only supported in Helms V3.7+.",
     "OutputVariableDataSizeExceeded": "Output variable not set as Helm command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",
     "KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
   }
