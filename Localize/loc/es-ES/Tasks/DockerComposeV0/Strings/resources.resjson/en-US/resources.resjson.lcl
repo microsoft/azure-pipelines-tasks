@@ -729,6 +729,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidProjectName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The project name "%s" must be a valid docker compose project name. Follow the link for more details: https://docs.docker.com/compose/project-name/#set-a-project-name]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[El nombre del proyecto "%s" debe ser un nombre de proyecto de docker compose válido. Siga el vínculo para más detalles: https://docs.docker.com/compose/project-name/#set-a-project-name]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.MigrateToDockerComposeV2" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The task is utilizing Docker Compose V1, but there are plans to transition to Docker Compose V2. It's necessary to investigate how to adapt your project to Docker Compose V2. For guidance on this migration, you can refer to the official Docker Compose documentation at the provided link: https://docs.docker.com/compose/migrate/]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La tarea está usando Docker Compose V1, pero hay planes de transición a Docker Compose V2. Es necesario investigar cómo adaptar el proyecto a Docker Compose V2. Para obtener instrucciones sobre esta migración, puede consultar la documentación oficial de Docker Compose en el vínculo proporcionado: https://docs.docker.com/compose/migrate/]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.NoDataWrittenOnFile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No data was written into the file %s]]></Val>
