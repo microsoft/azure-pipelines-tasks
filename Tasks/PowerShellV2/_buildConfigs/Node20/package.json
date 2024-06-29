@@ -15,9 +15,9 @@
   "license": "MIT",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^20.3.1",
+    "@types/node": "^20.14.2",
     "azure-pipelines-task-lib": "^4.13.0",
-    "azure-pipelines-tasks-utility-common": "^3.235.0",
+    "azure-pipelines-tasks-utility-common": "^3.238.0",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
