@@ -19,15 +19,15 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^16.18.98",
-    "@types/q": "1.0.7",
+    "@types/q": "1.5.8",
     "agent-base": "^6.0.2",
     "azure-devops-node-api": "11.2.0",
     "azure-pipelines-task-lib": "^4.11.0",
-    "azure-pipelines-tasks-azure-arm-rest": "^3.223.4",
-    "azure-pipelines-tasks-webdeployment-common": "^4.219.1",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.239.0",
+    "azure-pipelines-tasks-webdeployment-common": "^4.236.0",
     "moment": "2.29.4",
     "q": "1.4.1",
-    "uuid": "3.1.0",
+    "uuid": "3.4.0",
     "xml2js": "^0.6.0"
   },
   "devDependencies": {
