@@ -21,7 +21,7 @@
     "@types/q": "^1.0.7",
     "@types/mocha": "^9.1.1",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-task-lib": "^4.1.0",
+    "azure-pipelines-task-lib": "^4.13.0",
     "azure-pipelines-tasks-docker-common": "2.198.1",
     "azure-pipelines-tasks-utility-common": "^3.212.0",
     "azure-devops-node-api": "^12.2.0",
