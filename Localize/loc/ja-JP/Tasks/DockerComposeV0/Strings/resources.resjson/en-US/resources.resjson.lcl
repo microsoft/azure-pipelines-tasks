@@ -729,6 +729,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidProjectName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The project name "%s" must be a valid docker compose project name. Follow the link for more details: https://docs.docker.com/compose/project-name/#set-a-project-name]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[プロジェクト名 "%s" は、有効な Docker Compose プロジェクト名である必要があります。詳細については、次のリンクを参照してください。 https://docs.docker.com/compose/project-name/#set-a-project-name]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.MigrateToDockerComposeV2" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The task is utilizing Docker Compose V1, but there are plans to transition to Docker Compose V2. It's necessary to investigate how to adapt your project to Docker Compose V2. For guidance on this migration, you can refer to the official Docker Compose documentation at the provided link: https://docs.docker.com/compose/migrate/]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[タスクは Docker Compose V1 を利用していますが、Docker Compose V2 に移行する予定があります。プロジェクトを Docker Compose V2 に適合させる方法を調査する必要があります。この移行に関するガイダンスについては、提供されているリンクにある公式の Docker Compose ドキュメントを参照してください。https://docs.docker.com/compose/migrate/]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.NoDataWrittenOnFile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[No data was written into the file %s]]></Val>
