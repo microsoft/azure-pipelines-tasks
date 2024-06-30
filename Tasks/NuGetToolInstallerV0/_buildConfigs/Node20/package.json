@@ -27,7 +27,7 @@
     "@types/node": "^20.14.2",
     "@types/uuid": "^8.3.0",
     "azure-pipelines-tasks-packaging-common": "^3.221.0",
-    "azure-pipelines-tasks-utility-common": "^3.210.0"
+    "azure-pipelines-tasks-utility-common": "^3.238.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"
