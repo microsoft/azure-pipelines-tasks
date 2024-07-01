@@ -13,6 +13,8 @@ describe('Docker Compose Suite', function() {
         } else {
             composeCommand = "docker-compose";
         }
+
+        console.log("composeCommand: " + composeCommand);
     })
 
     beforeEach(() => {
