@@ -352,8 +352,8 @@
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
     "ImageNameWithoutTag": "ms-resource:loc.messages.ImageNameWithoutTag",
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile",
-    "DeprecationMessage": "The DockerCompose@0 task is deprecated. The task uses docker-compose v1 which no longer receives update since July 2023. To use docker compose v2, use the DockerCompose@1 task.",
-    "InvalidProjectName": "The project name \"%s\" must be a valid docker compose project name. Follow the link for more details: https://docs.docker.com/compose/project-name/#set-a-project-name",
-    "MigrateToDockerComposeV2": "The task is using Docker Compose V1, which is end-of-life and will be removed from Microsoft-hosted agents July 24. Pipelines running on Microsoft-hosted agents should be updated for Docker Compose v2 compatibility e.g. use compatible container names. For guidance on required updates, please refer to the official Docker Compose documentation at https://docs.docker.com/compose/migrate/"
+    "DeprecationMessage": "ms-resource:loc.messages.DeprecationMessage",
+    "InvalidProjectName": "ms-resource:loc.messages.InvalidProjectName",
+    "MigrateToDockerComposeV2": "ms-resource:loc.messages.MigrateToDockerComposeV2"
   }
 }
