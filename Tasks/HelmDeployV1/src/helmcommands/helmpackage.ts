@@ -17,7 +17,7 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
         helmCli.addArgument("--dependency-update");
     }
 
-    if (save && !helmCli.isHelmV3()) {
+    if (save && !helmCli.isHelmV37Plus()) {
         helmCli.addArgument("--save ");
     }
 
