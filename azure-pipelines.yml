@@ -35,6 +35,7 @@ variables:
   taskName: ${{ parameters.task_name }}
   taskNameIsSet: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
   runCodeQl: ${{ eq(parameters.enableCodeQL, true) }}
+  isScheduled: ${{ eq(variables['build.reason'], 'Schedule') }}
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
@@ -93,7 +94,7 @@ extends:
         displayName: Publish
         dependsOn:
         - build_all_windows
-        condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
+        condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables.isScheduled, true))
         pool:
           name: 1ES-ABTT-Shared-Pool
           image: abtt-windows-2022
