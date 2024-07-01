@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 242,
-    "Patch": 2
+    "Patch": 4
   },
   "demands": [],
   "preview": "false",
@@ -356,11 +356,12 @@
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
     "ImageNameWithoutTag": "ms-resource:loc.messages.ImageNameWithoutTag",
     "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile",
+    "DeprecationMessage": "ms-resource:loc.messages.DeprecationMessage",
     "InvalidProjectName": "ms-resource:loc.messages.InvalidProjectName",
     "MigrateToDockerComposeV2": "ms-resource:loc.messages.MigrateToDockerComposeV2"
   },
   "_buildConfigMapping": {
-    "Default": "0.242.2",
-    "Node20_229_2": "0.242.3"
+    "Default": "0.242.4",
+    "Node20_229_2": "0.242.5"
   }
 }
