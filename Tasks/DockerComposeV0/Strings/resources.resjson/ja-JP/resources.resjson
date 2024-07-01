@@ -81,6 +81,6 @@
   "loc.messages.FileContentSynced": "ファイルの内容がディスクに同期されました。内容は %s です。",
   "loc.messages.ImageNameWithoutTag": "イメージ名がタグに指定されていません。指定されたイメージのすべてのタグをプッシュしています。",
   "loc.messages.WritingDockerConfigToTempFile": "Docker 構成を一時ファイルに書き込んでいます。ファイル パス: %s、Docker 構成: %s",
-  "loc.messages.InvalidProjectName": "The project name \"%s\" must be a valid docker compose project name. Follow the link for more details: https://docs.docker.com/compose/project-name/#set-a-project-name",
-  "loc.messages.MigrateToDockerComposeV2": "The task is utilizing Docker Compose V1, but there are plans to transition to Docker Compose V2. It's necessary to investigate how to adapt your project to Docker Compose V2. For guidance on this migration, you can refer to the official Docker Compose documentation at the provided link: https://docs.docker.com/compose/migrate/"
+  "loc.messages.InvalidProjectName": "プロジェクト名 \"%s\" は、有効な Docker Compose プロジェクト名である必要があります。詳細については、次のリンクを参照してください。 https://docs.docker.com/compose/project-name/#set-a-project-name",
+  "loc.messages.MigrateToDockerComposeV2": "タスクは Docker Compose V1 を利用していますが、Docker Compose V2 に移行する予定があります。プロジェクトを Docker Compose V2 に適合させる方法を調査する必要があります。この移行に関するガイダンスについては、提供されているリンクにある公式の Docker Compose ドキュメントを参照してください。https://docs.docker.com/compose/migrate/"
 }
