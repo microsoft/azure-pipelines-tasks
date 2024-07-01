@@ -8,9 +8,9 @@ describe('Docker Compose Suite', function() {
     let composeCommand: string;
 
     before(() => {
-        composeCommand = "docker compose";
-
-        if (!tl.which(composeCommand)) {
+        if (tl.which("docker")) {
+            composeCommand = "docker compose";
+        } else {
             composeCommand = "docker-compose";
         }
     })

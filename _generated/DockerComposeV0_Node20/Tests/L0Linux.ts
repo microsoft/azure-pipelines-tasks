@@ -52,7 +52,7 @@ let a: any = <any>{
             "code": 0,
             "stdout": "sucessfully built the service images"
         },
-        "docker compose --compatibility -f /tmp/tempdir/100/docker-compose.yml build" :{
+        "docker compose -f /tmp/tempdir/100/docker-compose.yml build" :{
             "code": 0,
             "stdout": "sucessfully built the service images"
         },
@@ -64,7 +64,7 @@ let a: any = <any>{
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: /tmp/tempdir/100\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - /tmp/tempdir/100:/code:rw\nversion: '2.0'"
         },
-        "docker compose --compatibility -f /tmp/tempdir/100/docker-compose.yml config" :{
+        "docker compose -f /tmp/tempdir/100/docker-compose.yml config" :{
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: /tmp/tempdir/100\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - /tmp/tempdir/100:/code:rw\nversion: '2.0'"
         },
@@ -80,7 +80,7 @@ let a: any = <any>{
             "code": 0,
             "stdout": "sucessfully ran services"
         },
-        "docker compose --compatibility -f /tmp/tempdir/100/docker-compose.yml up": {
+        "docker compose -f /tmp/tempdir/100/docker-compose.yml up": {
             "code": 0,
             "stdout": "sucessfully ran services"
         },
@@ -92,7 +92,7 @@ let a: any = <any>{
             "code": 0,
             "stdout": "successfully ran up command"
         },
-        "docker compose --compatibility -f /tmp/tempdir/100/docker-compose.yml -f /tmp/tempdir/100/docker-compose.override.yml up -d":{
+        "docker compose -f /tmp/tempdir/100/docker-compose.yml -f /tmp/tempdir/100/docker-compose.override.yml up -d":{
             "code": 0,
             "stdout": "successfully ran up command"
         },
@@ -100,7 +100,7 @@ let a: any = <any>{
             "code": 0,
             "stdout": "successfully ran up command"
         },
-        "docker compose --compatibility -f /tmp/tempdir/100/docker-compose.yml up -d":{
+        "docker compose -f /tmp/tempdir/100/docker-compose.yml up -d":{
             "code": 0,
             "stdout": "successfully ran up command"
         },
@@ -108,7 +108,7 @@ let a: any = <any>{
             "code": 0,
             "stdout": "sucessfully built the service images"
         },
-        "docker compose --compatibility -f /tmp/tempdir/100/docker-compose.yml build --pull --parallel" :{
+        "docker compose -f /tmp/tempdir/100/docker-compose.yml build --pull --parallel" :{
             "code": 0,
             "stdout": "sucessfully built the service images"
         },
@@ -116,7 +116,7 @@ let a: any = <any>{
             "code": 0,
             "stdout": "successfully pulled the passed service images"
         },
-        "docker compose --compatibility -f /tmp/tempdir/100/docker-compose.yml pull service1 service2" :{
+        "docker compose -f /tmp/tempdir/100/docker-compose.yml pull service1 service2" :{
             "code": 0,
             "stdout": "successfully pulled the passed service images"
         },
@@ -124,7 +124,7 @@ let a: any = <any>{
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: /tmp/tempdir/100\n    image: ajgtestacr1.azurecr.io/100_web\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - /tmp/tempdir/100:/code:rw\nversion: '2.0'"
         },
-        "docker compose --compatibility -f /tmp/tempdir/100/docker-compose.yml -f /tmp/tempdir/100/.docker-compose.12345.yml config":{
+        "docker compose -f /tmp/tempdir/100/docker-compose.yml -f /tmp/tempdir/100/.docker-compose.12345.yml config":{
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: /tmp/tempdir/100\n    image: ajgtestacr1.azurecr.io/100_web\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - /tmp/tempdir/100:/code:rw\nversion: '2.0'"
         },
@@ -132,7 +132,7 @@ let a: any = <any>{
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: /tmp/tempdir/100\n    image: ajgtestacr1.azurecr.io/100_web\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - /tmp/tempdir/100:/code:rw\nversion: '2.0'"
         },
-        "docker compose --compatibility -f /tmp/tempdir/100/docker-compose.yml -f /tmp/tempdir/100/docker-compose.override.yml config":{
+        "docker compose -f /tmp/tempdir/100/docker-compose.yml -f /tmp/tempdir/100/docker-compose.override.yml config":{
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: /tmp/tempdir/100\n    image: ajgtestacr1.azurecr.io/100_web\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - /tmp/tempdir/100:/code:rw\nversion: '2.0'"
         }
