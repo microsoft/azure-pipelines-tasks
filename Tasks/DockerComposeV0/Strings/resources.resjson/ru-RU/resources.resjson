@@ -82,5 +82,5 @@
   "loc.messages.ImageNameWithoutTag": "Имя образа указано без тега; передаются все теги указанного образа.",
   "loc.messages.WritingDockerConfigToTempFile": "Запись конфигурации Docker во временный файл. Путь к файлу: %s, конфигурация Docker: %s",
   "loc.messages.InvalidProjectName": "Имя проекта \"%s\" должно быть допустимым именем проекта Docker Compose. Дополнительные сведения см. по ссылке: https://docs.docker.com/compose/project-name/#set-a-project-name",
-  "loc.messages.MigrateToDockerComposeV2": "Задача использует Docker Compose V1, но планируется переход на Docker Compose V2. Необходимо изучить, как адаптировать проект к Docker Compose V2. Инструкции по этой миграции можно найти в официальной документации Docker Compose по ссылке https://docs.docker.com/compose/migrate/"
+  "loc.messages.MigrateToDockerComposeV2": "The task is using Docker Compose V1, which is end-of-life and will be removed from Microsoft-hosted agents July 24. Pipelines running on Microsoft-hosted agents should be updated for Docker Compose v2 compatibility e.g. use compatible container names. For guidance on required updates, please refer to the official Docker Compose documentation at https://docs.docker.com/compose/migrate/"
 }
