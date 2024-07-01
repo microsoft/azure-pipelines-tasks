@@ -8,14 +8,8 @@ describe('Docker Compose Suite', function() {
     let composeCommand: string;
 
     before(() => {
-        if (tl.which("docker")) {
-            composeCommand = "docker compose";
-        } else {
-            composeCommand = "docker-compose";
-        }
-
-        console.log("composeCommand: " + composeCommand);
-    })
+        composeCommand = "docker compose";
+    });
 
     beforeEach(() => {
         delete process.env["__command__"];
@@ -35,8 +29,6 @@ describe('Docker Compose Suite', function() {
             process.env["__command__"] = "Build services";
 
             await tr.runAsync();
-            console.log(tr.stdout);
-            console.log(tr.stderr);
 
             assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -56,7 +48,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]docker-compose-userdefined -f F:\\dir2\\docker-compose.yml build") != -1, "docker compose build should run");
-            
         });
 
         it('Runs successfully for windows docker compose push service', async () => {
@@ -70,7 +61,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]docker push dir2_web") != -1, "docker compose push should run");
-            
         });
 
         it('Runs successfully for windows docker compose run service', async() => {
@@ -84,7 +74,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]" + composeCommand + " -f F:\\dir2\\docker-compose.yml up") != -1, "docker compose push should run");
-            
         });
 
         it('Runs successfully for windows docker compose push service with ACR', async () => {
@@ -100,7 +89,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]docker push ajgtestacr1.azurecr.io/dir2_web") != -1, "docker compose push should run");
-            
         });
 
         it('Runs successfully for windows docker compose up command with ACR and additional docker compose file', async () => {
@@ -117,7 +105,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]" + composeCommand + " -f F:\\dir2\\docker-compose.yml -f F:\\dir2\\docker-compose.override.yml up -d") != -1, "successfully ran up command");
-            
         });
 
         it('Runs successfully for windows docker compose up command with ACR and additional docker compose file not present warning', async () => {
@@ -135,7 +122,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]" + composeCommand + " -f F:\\dir2\\docker-compose.yml up -d") != -1, "successfully ran up command");
             assert(tr.stdout.indexOf("vso[task.issue type=warning;source=TaskInternal;]loc_mock_AdditionalDockerComposeFileDoesNotExists F:\\dir2\\docker-compose.override-notpresent.yml") != -1, "successfully identified missing override file.");
-            
         });
 
         it('Runs successfully for windows docker compose command with arguments', async () => {
@@ -152,7 +138,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]" + composeCommand + " -f F:\\dir2\\docker-compose.yml pull service1 service2") != -1, "docker compose <command> should run with arguments");
-            
         });
 
         it('Runs successfully for windows docker compose up command with ACR and additional docker compose relative file path', async () => {
@@ -169,7 +154,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]" + composeCommand + " -f F:\\dir2\\docker-compose.yml -f F:\\dir2\\docker-compose.override.yml up -d") != -1, "successfully ran up command");
-            
         });
 
         it('Runs successfully for windows docker compose service build with arguments', async () => {
@@ -184,7 +168,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]" + composeCommand + " -f F:\\dir2\\docker-compose.yml build --pull --parallel") != -1, "docker compose build should run with argumentss");
-            
         });
     } else {
         it('Runs successfully for linux docker compose service build', async () => {
@@ -198,7 +181,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]" + composeCommand + " -f /tmp/tempdir/100/docker-compose.yml build") != -1, "docker compose build should run");
-            
         });
 
         it('Runs successfully for linux docker compose service build, using user defined docker compose path', async () => {
@@ -213,7 +195,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]docker-compose-userdefined -f /tmp/tempdir/100/docker-compose.yml build") != -1, "docker compose build should run");
-            
         });
 
         it('Runs successfully for linux docker compose push service', async () => {
@@ -227,7 +208,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]docker push 100_web") != -1, "docker compose push should run");
-            
         });
 
         it('Runs successfully for linux docker compose run service', async () => {
@@ -241,7 +221,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]" + composeCommand + " -f /tmp/tempdir/100/docker-compose.yml up") != -1, "docker compose push should run");
-            
         });
 
         it('Runs successfully for linux docker compose push service with ACR', async () => {
@@ -257,7 +236,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]docker push ajgtestacr1.azurecr.io/100_web") != -1, "docker compose push should run");
-            
         });
 
         it('Runs successfully for linux docker compose up command with ACR and additonal compose file', async () => {
@@ -274,7 +252,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]" + composeCommand + " -f /tmp/tempdir/100/docker-compose.yml -f /tmp/tempdir/100/docker-compose.override.yml up -d") != -1, "successfully ran up command");
-            
         });
 
         it('Runs successfully for linux docker compose up command with ACR and additonal compose file not present warning', async () => {
@@ -292,7 +269,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]" + composeCommand + " -f /tmp/tempdir/100/docker-compose.yml up -d") != -1, "successfully ran up command");
             assert(tr.stdout.indexOf("vso[task.issue type=warning;source=TaskInternal;]loc_mock_AdditionalDockerComposeFileDoesNotExists /tmp/tempdir/100/docker-compose.override-notpresent.yml") != -1, "successfully identifed missing additional compose file.");
-            
         });
 
         it('Runs successfully for linux docker compose up command with ACR and additonal compose relative file path', async () => {
@@ -309,7 +285,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]" + composeCommand + " -f /tmp/tempdir/100/docker-compose.yml -f /tmp/tempdir/100/docker-compose.override.yml up -d") != -1, "successfully ran up command");
-            
         });
 
         it('Runs successfully for linux docker compose service build with arguments', async () => {
@@ -324,7 +299,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]" + composeCommand + " -f /tmp/tempdir/100/docker-compose.yml build --pull --parallel") != -1, "docker compose build should run with argumentss");
-            
         });
 
         it('Runs successfully for linux docker compose command with arguments', async () => {
@@ -341,7 +315,6 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]" + composeCommand + " -f /tmp/tempdir/100/docker-compose.yml pull service1 service2") != -1, "docker compose <command> should run with arguments");
-            
         });
     }
 });
