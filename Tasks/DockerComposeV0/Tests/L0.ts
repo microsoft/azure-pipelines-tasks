@@ -7,9 +7,13 @@ describe('Docker Compose Suite', function() {
     this.timeout(30000);
     let composeCommand: string;
 
-    before(async() => {
-        composeCommand = "docker-compose";
-    });
+    before(() => {
+        composeCommand = "docker compose";
+
+        if (!tl.which(composeCommand)) {
+            composeCommand = "docker-compose";
+        }
+    })
 
     beforeEach(() => {
         delete process.env["__command__"];
@@ -22,7 +26,7 @@ describe('Docker Compose Suite', function() {
         delete process.env["__dockerComposePath__"];
     });
 
-    if (tl.osType().match(/^Win/)) {
+    if (tl.getPlatform() === tl.Platform.Windows) {
         it('Runs successfully for windows docker compose service build', async () => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -121,9 +125,6 @@ describe('Docker Compose Suite', function() {
             process.env["__dockerComposeCommand__"] = "up -d"
 
             await tr.runAsync();
-
-            console.log(tr.stdout);
-            console.log(tr.stderr);
 
             assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
