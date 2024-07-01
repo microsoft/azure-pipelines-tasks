@@ -76,6 +76,14 @@ let a: any = <any>{
             "code": 0,
             "stdout": "sucessfully pushed dir2_web"
         },
+        "docker-compose -f F:\\dir2\\docker-compose.yml up": {
+            "code": 0,
+            "stdout": "sucessfully ran services"
+        },
+        "docker compose -f F:\\dir2\\docker-compose.yml up": {
+            "code": 0,
+            "stdout": "sucessfully ran services"
+        },
         "docker-compose -f F:\\dir2\\docker-compose.yml build --pull --parallel" : {
             "code": 0,
             "stdout": "sucessfully built the service images"
