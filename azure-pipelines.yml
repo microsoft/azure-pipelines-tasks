@@ -149,11 +149,11 @@ extends:
         dependsOn:
         - courtesy_push
         - build_all_windows
-          condition: |
-            or(
-              and(succeeded(dependencies.courtesy_push), succeeded(dependencies.build_all_windows)),
-              eq(variables['Build.Reason'], 'Schedule')
-            )
+        condition: |
+          or(
+            and(succeeded(dependencies.courtesy_push), succeeded(dependencies.build_all_windows)),
+            eq(variables['Build.Reason'], 'Schedule')
+          )
         timeoutInMinutes: 360
         pool:
           name: 1ES-ABTT-Shared-Pool
