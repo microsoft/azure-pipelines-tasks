@@ -35,7 +35,6 @@ variables:
   taskName: ${{ parameters.task_name }}
   taskNameIsSet: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
   runCodeQl: ${{ eq(parameters.enableCodeQL, true) }}
-  isScheduled: ${{ eq(variables['build.reason'], 'Schedule') }}
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
@@ -94,7 +93,7 @@ extends:
         displayName: Publish
         dependsOn:
         - build_all_windows
-        condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), ne(variables.isScheduled, true))
+        condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
         pool:
           name: 1ES-ABTT-Shared-Pool
           image: abtt-windows-2022
@@ -150,7 +149,11 @@ extends:
         dependsOn:
         - courtesy_push
         - build_all_windows
-        condition: succeeded()
+          condition: |
+            or(
+              and(succeeded(dependencies.courtesy_push), succeeded(dependencies.build_all_windows)),
+              eq(variables['Build.Reason'], 'Schedule')
+            )
         timeoutInMinutes: 360
         pool:
           name: 1ES-ABTT-Shared-Pool
@@ -165,7 +168,13 @@ extends:
             PathtoPublish: _package/tasks.zip
             ArtifactName: allTasks
         steps:
-        - template: /ci/build-all-tasks.yml@self
+        - template: /ci/build-scheduled-tasks.yml@self
+          condition: and(and(succeeded(dependencies.courtesy_push), succeeded(dependencies.build_all_windows)),eq(variables['Build.Reason'], 'Schedule'))
+          parameters:
+            deploy_all_tasks: true
+
+        - template: /ci/build-regular-tasks.yml@self
+          condition: ne(variables['Build.Reason'], 'Schedule')
           parameters:
             deploy_all_tasks: ${{ parameters.deploy_all_tasks }}
 
