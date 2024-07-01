@@ -4,11 +4,11 @@
   "loc.description": "[VISTA PREVIA] Pausa una ejecución de canalización para esperar la interacción manual. Solo funciona con las canalizaciones de YAML.",
   "loc.instanceNameFormat": "Validación manual",
   "loc.input.label.notifyUsers": "Notificar a los usuarios",
-  "loc.input.help.notifyUsers": "Send a manual validation pending email to specific users (or groups). Only users specified in approvers can act on a manual validation.",
-  "loc.input.label.approvers": "Approvers",
-  "loc.input.help.approvers": "Specify users/groups/project teams separated by commas to act on a manual validation. In absence of input, users with queue build permission will be able to take action.",
-  "loc.input.label.instructions": "Instructions",
+  "loc.input.help.notifyUsers": "Envíe un correo electrónico de validación manual pendiente a usuarios (o grupos) específicos. Solo los usuarios especificados en los aprobadores pueden actuar en una validación manual.",
+  "loc.input.label.approvers": "Aprobadores",
+  "loc.input.help.approvers": "Especifique usuarios, grupos o equipos de proyecto separados por comas para actuar en una validación manual. En ausencia de entrada, los usuarios con permiso para crear colas podrán actuar.",
+  "loc.input.label.instructions": "Instrucciones",
   "loc.input.help.instructions": "Estas instrucciones se mostrarán al usuario para reanudar o rechazar la validación manual. En función de ellas, el usuario tomará una decisión informada sobre esta validación manual.",
-  "loc.input.label.onTimeout": "On timeout",
+  "loc.input.label.onTimeout": "Al agotarse el tiempo de espera",
   "loc.input.help.onTimeout": "Rechaza o reanuda automáticamente esta validación manual después de estar pendiente durante el tiempo de espera especificado o 30 días, el que ocurra antes."
 }

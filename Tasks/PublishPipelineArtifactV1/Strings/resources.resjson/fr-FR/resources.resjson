@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Publish Pipeline Artifacts",
+  "loc.friendlyName": "Publier des artefacts de pipeline",
   "loc.helpMarkDown": "Publiez (chargez) un fichier ou un répertoire en tant qu'artefact nommé pour l'exécution actuelle. Les artefacts publiés peuvent être téléchargés dans d'autres travaux, phases ou pipelines à l'aide de la tâche \"Télécharger un artefact de pipeline\".",
   "loc.description": "Publier (charger) un fichier ou un répertoire en tant qu'artefact nommé pour l'exécution actuelle",
   "loc.instanceNameFormat": "Publier l'artefact de pipeline",
@@ -15,6 +15,6 @@
   "loc.input.help.parallel": "Choisissez s'il est nécessaire de copier les fichiers en parallèle à l'aide de plusieurs threads pour un meilleur débit potentiel. Si ce paramètre n'est pas activé, un seul thread est utilisé.",
   "loc.input.label.parallelCount": "Nombre parallèle",
   "loc.input.help.parallelCount": "Entrez le degré de parallélisme ou le nombre de threads utilisés pour effectuer la copie. La valeur doit être au moins égal à 1 et inférieur à 128.",
-  "loc.input.label.properties": "Custom properties",
+  "loc.input.label.properties": "Propriétés personnalisées",
   "loc.input.help.properties": "Entrez les propriétés personnalisées à associer à l’artefact. Chaîne JSON valide attendue avec toutes les clés ayant le préfixe 'user-'"
 }
