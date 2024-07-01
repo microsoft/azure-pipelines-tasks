@@ -26,31 +26,26 @@ function Initialize-AzModule {
         Write-Verbose "Importing Az Modules."
         
         if ($featureFlags.retireAzureRM) {
-            $azInitialized = $false;
-
-            # Supress breaking changes messages
-            Set-Item -Path Env:\SuppressAzurePowerShellBreakingChangeWarnings -Value $true
+            $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
             
-            try {
-                Write-Verbose "Trying to import Az modules"
-                $azAccountsVersion = Initialize-AzModules 
-                $azInitialized = $true;
-            } catch {
-                Write-Verbose -Message $_.Exception.Message
-                Write-VstsTaskWarning -Message (Get-VstsLocString -Key AZ_ModuleInitFailWarning) -AsOutput
+            # Update-AzConfig is a part of Az.Accounts
+            if (Get-Command Update-AzConfig -ErrorAction SilentlyContinue) {
+                Write-Verbose "Supressing breaking changes warnings of Az module."
+                Write-Host "##[command]Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az"
+                Update-AzConfig -DisplayBreakingChangeWarning $false -AppliesTo Az
+            } else {
+                Write-Verbose "Update-AzConfig cmdlet is not available."
             }
 
-            try {
-                if ($azInitialized -eq $false) {
-                    Write-Verbose "Trying to install Az modules"
-                    $azAccountsVersion = Initialize-AzModules -tryInstallModule
-                    $azInitialized = $true;
-                }
-
-            } catch {
-                Write-VstsTaskError -Message $_.Exception.Message
-                throw (Get-VstsLocString -Key AZ_ModuleInstallFail)
+            # Enable-AzureRmAlias for azureRm compability
+            if (Get-Command Enable-AzureRmAlias -ErrorAction SilentlyContinue) {
+                Write-Verbose "Enable-AzureRmAlias for backward compability"
+                Write-Host "##[command]Enable-AzureRmAlias -Scope Process"
+                Enable-AzureRmAlias -Scope Process
+            } else {
+                Write-Verbose "Enable-AzureRmAlias cmdlet is not available."
             }
+
         } else  {
             # We are only looking for Az.Accounts module becasue all the command required for initialize the azure PS session is in Az.Accounts module.
             $azAccountsVersion = Import-AzAccountsModule -azVersion $azVersion
@@ -78,6 +73,7 @@ function Initialize-AzModule {
     }
 }
 
+# Not used, keep now in case if we need to revert back to the old implementation.
 function Initialize-AzModules {
     [CmdletBinding()]
     param(

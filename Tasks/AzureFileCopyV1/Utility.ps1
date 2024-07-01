@@ -1455,3 +1455,39 @@ function Check-ContainerNameAndArgs
         Write-Warning (Get-vstsLocString -Key "AFC_RootContainerAndDirectory")
     }
 }
+
+function Modify-PSModulePathForHostedAgent {
+    $newEnvPSModulePath = $env:PSModulePath
+
+    if (Test-Path "C:\Modules\az_*") {
+        $azPSModulePath = (Get-ChildItem "C:\Modules\az_*" -Directory `
+            | Sort-Object { [version]$_.Name.Split('_')[-1] } `
+            | Select-Object -Last 1).FullName
+
+        Write-Verbose "Found Az module path $azPSModulePath, will be used"
+        $env:PSModulePath = ($azPSModulePath + ";" + $newEnvPSModulePath).Trim(";")
+    }
+
+    Import-AzModule -moduleName "Az.Resources"
+    Import-AzModule -moduleName "Az.Storage"
+    Import-AzModule -moduleName "Az.Compute"
+    Import-AzModule -moduleName "Az.Network"
+}
+
+function Import-AzModule
+{
+    param([string]$moduleName)
+
+    if (!(Get-Module $moduleName))
+    {
+        $module = Get-Module -Name $moduleName -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+        if (!$module) {
+            Write-Verbose "No module found with name: $moduleName"
+        }
+        else {
+            # Import the module.
+            Write-Host "##[command]Import-Module -Name $($module.Path) -Global"
+            $module = Import-Module -Name $module.Path -Global -PassThru -Force
+        }
+    }
+}
