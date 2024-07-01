@@ -35,6 +35,8 @@ describe('Docker Compose Suite', function() {
             process.env["__command__"] = "Build services";
 
             await tr.runAsync();
+            console.log(tr.stdout);
+            console.log(tr.stderr);
 
             assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
