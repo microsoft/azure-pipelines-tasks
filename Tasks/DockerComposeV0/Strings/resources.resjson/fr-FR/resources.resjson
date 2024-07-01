@@ -82,5 +82,5 @@
   "loc.messages.ImageNameWithoutTag": "Nom d'image non spécifié avec l'étiquette. Envoi (push) de toutes les étiquettes de l'image spécifiée.",
   "loc.messages.WritingDockerConfigToTempFile": "Écriture de la configuration Docker dans le fichier temporaire. Chemin de fichier : %s. Configuration Docker : %s",
   "loc.messages.InvalidProjectName": "Le nom de projet « %s » doit être un nom de projet Docker Compose valide. Suivez le lien pour plus d’informations : https://docs.docker.com/compose/project-name/#set-a-project-name",
-  "loc.messages.MigrateToDockerComposeV2": "La tâche utilise Docker Compose V1, mais il est prévu de passer à Docker Compose V2. Il est nécessaire d’examiner comment adapter votre projet à Docker Compose V2. Pour obtenir de l’aide sur cette migration, vous pouvez consulter la documentation Docker Compose officielle sur le lien fourni : https://docs.docker.com/compose/migrate/"
+  "loc.messages.MigrateToDockerComposeV2": "The task is using Docker Compose V1, which is end-of-life and will be removed from Microsoft-hosted agents July 24. Pipelines running on Microsoft-hosted agents should be updated for Docker Compose v2 compatibility e.g. use compatible container names. For guidance on required updates, please refer to the official Docker Compose documentation at https://docs.docker.com/compose/migrate/"
 }

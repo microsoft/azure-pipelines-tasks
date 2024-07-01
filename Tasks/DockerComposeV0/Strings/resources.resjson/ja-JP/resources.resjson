@@ -82,5 +82,5 @@
   "loc.messages.ImageNameWithoutTag": "イメージ名がタグに指定されていません。指定されたイメージのすべてのタグをプッシュしています。",
   "loc.messages.WritingDockerConfigToTempFile": "Docker 構成を一時ファイルに書き込んでいます。ファイル パス: %s、Docker 構成: %s",
   "loc.messages.InvalidProjectName": "プロジェクト名 \"%s\" は、有効な Docker Compose プロジェクト名である必要があります。詳細については、次のリンクを参照してください。 https://docs.docker.com/compose/project-name/#set-a-project-name",
-  "loc.messages.MigrateToDockerComposeV2": "タスクは Docker Compose V1 を利用していますが、Docker Compose V2 に移行する予定があります。プロジェクトを Docker Compose V2 に適合させる方法を調査する必要があります。この移行に関するガイダンスについては、提供されているリンクにある公式の Docker Compose ドキュメントを参照してください。https://docs.docker.com/compose/migrate/"
+  "loc.messages.MigrateToDockerComposeV2": "The task is using Docker Compose V1, which is end-of-life and will be removed from Microsoft-hosted agents July 24. Pipelines running on Microsoft-hosted agents should be updated for Docker Compose v2 compatibility e.g. use compatible container names. For guidance on required updates, please refer to the official Docker Compose documentation at https://docs.docker.com/compose/migrate/"
 }
