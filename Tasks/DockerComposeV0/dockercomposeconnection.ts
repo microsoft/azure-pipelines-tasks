@@ -186,7 +186,7 @@ export default class DockerComposeConnection extends ContainerConnection {
         if (!this.dockerComposePath) {
             this.dockerComposePath = tl.which("docker");
 
-            if (this.dockerComposePath === '') {
+            if (!this.dockerComposePath) {
                 this.dockerComposePath = tl.which("docker-compose");
             }
 
