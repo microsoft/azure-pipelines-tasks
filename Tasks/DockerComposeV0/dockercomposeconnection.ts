@@ -19,11 +19,9 @@ export default class DockerComposeConnection extends ContainerConnection {
     private requireAdditionalDockerComposeFiles: boolean;
     private projectName: string;
     private finalComposeFile: string;
-    private useDockerComposeV2: boolean;
 
     constructor() {
         super();
-        this.useDockerComposeV2 = tl.getBoolFeatureFlag("USE_DOCKER_COMPOSE_V2_COMPATIBLE_MODE");
         this.setDockerComposePath();
         this.dockerComposeFile = DockerComposeUtils.findDockerFile(tl.getInput("dockerComposeFile", true), tl.getInput("cwd"));
         if (!this.dockerComposeFile) {
@@ -95,7 +93,7 @@ export default class DockerComposeConnection extends ContainerConnection {
     public createComposeCommand(): tr.ToolRunner {
         var command = tl.tool(this.dockerComposePath);
 
-        if (this.useDockerComposeV2 && !tl.getInput('dockerComposePath')) {
+        if (!tl.getInput('dockerComposePath')) {
             command.arg("compose");
             process.env["COMPOSE_COMPATIBILITY"] = "true";
         }
@@ -186,10 +184,9 @@ export default class DockerComposeConnection extends ContainerConnection {
         //Priority to docker-compose path provided by user
         this.dockerComposePath = tl.getInput('dockerComposePath');
         if (!this.dockerComposePath) {
-            // If not use the docker-compose avilable on agent
-            if (this.useDockerComposeV2) {
-                this.dockerComposePath = tl.which("docker");
-            } else {
+            this.dockerComposePath = tl.which("docker");
+
+            if (!this.dockerComposePath) {
                 this.dockerComposePath = tl.which("docker-compose");
             }
 
@@ -204,7 +201,7 @@ export default class DockerComposeConnection extends ContainerConnection {
     private validateProjectNameDockerComposeV2() {
         tl.debug(`Start validating project name ${this.projectName}`);
 
-        if (this.dockerComposePath.includes("docker-compose") || !this.useDockerComposeV2) {
+        if (this.dockerComposePath.includes("docker-compose")) {
             tl.warning(tl.loc("MigrateToDockerComposeV2"));
             return;
         }
