@@ -1,5 +1,6 @@
 import tl = require('azure-pipelines-task-lib/task');
 import util = require('./mavenutils');
+import * as os from "os"
 
 import * as path from 'path';
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
@@ -25,7 +26,7 @@ async function run(): Promise<void> {
 
         let userM2FolderPath: string = "";
 
-        if (tl.osType().match(/^Win/)) {
+        if (os.type() == "Windows_NT") {
             userM2FolderPath = path.join(process.env.USERPROFILE, M2FolderName);
         } else {
             userM2FolderPath = path.join(process.env.HOME, M2FolderName);

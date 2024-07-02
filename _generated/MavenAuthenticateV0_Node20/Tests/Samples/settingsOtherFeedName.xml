@@ -11,5 +11,16 @@
         </httpHeaders>
       </configuration>
     </server>
+    <server>
+      <id>feedName1</id>
+      <configuration>
+        <httpHeaders>
+          <property>
+            <name>Authorization2</name>
+            <value>Basic ${env.ENV_MAVEN_ACCESS_TOKEN}</value>
+          </property>
+        </httpHeaders>
+      </configuration>
+    </server>
   </servers>
 </settings>
