@@ -522,7 +522,7 @@ CLI.test = async function(/** @type {{ suite: string; node: string; task: string
                 await util.installNodeAsync(nodeVersion);
 
 
-                if (isNodeTask && !isReportWasFormed && nodeVersion >= 10 && false) {
+                if (isNodeTask && !isReportWasFormed && nodeVersion >= 10) {
                     run('nyc --all -n ' + taskPath + ' --report-dir ' + coverageTasksPath + ' mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
                     util.renameCodeCoverageOutput(coverageTasksPath, taskName);
                     isReportWasFormed = true;

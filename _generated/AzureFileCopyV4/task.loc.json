@@ -14,7 +14,7 @@
   "version": {
     "Major": 4,
     "Minor": 242,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [
     "azureps"
@@ -301,7 +301,7 @@
     "ServicePrincipalError": "ms-resource:loc.messages.ServicePrincipalError"
   },
   "_buildConfigMapping": {
-    "Default": "4.242.0",
-    "Node20_229_2": "4.242.1"
+    "Default": "4.242.2",
+    "Node20_229_2": "4.242.3"
   }
 }
