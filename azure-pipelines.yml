@@ -150,7 +150,11 @@ extends:
         dependsOn:
         - courtesy_push
         - build_all_windows
-        condition: succeeded()
+        condition: |
+          or(
+            and(succeeded(dependencies.courtesy_push), succeeded(dependencies.build_all_windows)),
+            eq(variables['Build.Reason'], 'Schedule')
+          )
         timeoutInMinutes: 360
         pool:
           name: 1ES-ABTT-Shared-Pool
@@ -165,9 +169,14 @@ extends:
             PathtoPublish: _package/tasks.zip
             ArtifactName: allTasks
         steps:
-        - template: /ci/build-all-tasks.yml@self
-          parameters:
-            deploy_all_tasks: ${{ parameters.deploy_all_tasks }}
+        - ${{ if and(and(succeeded(dependencies.courtesy_push), succeeded(dependencies.build_all_windows)),eq(variables['Build.Reason'], 'Schedule')) }}:
+          - template: /ci/build-scheduled-tasks.yml@self
+            parameters:
+              deploy_all_tasks: ${{ parameters.deploy_all_tasks }}
+        - ${{ if ne(variables['Build.Reason'], 'Schedule') }}:
+          - template: /ci/build-regular-tasks.yml@self
+            parameters:
+              deploy_all_tasks: ${{ parameters.deploy_all_tasks }}
 
       # All tasks on Linux
       - job: build_all_linux
