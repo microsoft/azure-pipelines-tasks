@@ -17,9 +17,9 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks",
   "dependencies": {
-    "@azure/storage-blob": "^12.10.0",
+    "@azure/storage-blob": "^12.23.0",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^16.11.39",
+    "@types/node": "^16.18.98",
     "appcenter-file-upload-client-node": "^1.2.11",
     "azure-pipelines-task-lib": "^4.0.1-preview",
     "jszip": "^3.10.0",

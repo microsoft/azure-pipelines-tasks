@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^20.3.1",
+    "@types/node": "^20.14.2",
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^4.13.0",
     "azure-pipelines-tasks-azure-arm-rest": "3.239.0",

@@ -1,12 +1,12 @@
-name: 🐞 Bug
-description: Something doesn't work as expected.
-title: "[BUG]: "
-labels: ["bug"]
+name: 😱 Regression
+description: This used to work, but a change in the service/tasks broke it. (Please make sure you know the last known working version)
+title: "[REGRESSION]: "
+labels: ["regression", "bug"]
 body:
   - type: markdown
     attributes:
       value: |
-        Use this form if you would like to report a bug related to one of the tasks. [List of the tasks](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks)
+        You can use this form if you would like to report a regression related to one of the tasks. [List of the tasks](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks)
 
   - type: checkboxes
     id: new-issue-checklist
@@ -26,17 +26,23 @@ body:
       placeholder: E.g. AzurePowerShell
 
   - type: input
-    id: task-version
+    id: breaking-task-version
     attributes:
-      label: Task version
+      label: Breaking task version
+      placeholder: x.x.x
+
+  - type: input
+    id: working-task-version
+    attributes:
+      label: Last working task version
       placeholder: x.x.x
 
   - type: textarea
     id: what-happened
     attributes:
-      label: Issue Description
-      description: Tell us what you see, and what did you expect to happen?
-      value: "A bug happened!"
+      label: Regression Description
+      description: Tell us what you see and expect to happen.
+      value: "A regression happened!"
     validations:
       required: true
 
@@ -50,7 +56,7 @@ body:
   - type: checkboxes
     id: environment-type
     attributes:
-      label: Environment type (Please select at least one enviroment where you face this issue)
+      label: Environment type (Please select at least one environment where you face this issue)
       options:
         - label: Self-Hosted
         - label: Microsoft Hosted
@@ -63,7 +69,7 @@ body:
       label: Azure DevOps Server type
       options:
         - dev.azure.com (formerly visualstudio.com)
-        - Azure DevOps Server (Please specify exact version in the textbox below)
+        - Azure DevOps Server (Please specify the exact version in the textbox below)
     validations:
       required: true
 
@@ -106,6 +112,12 @@ body:
         Please copy and paste full task logs.
       value: |
         <details>
+          <summary>UNSUCCESSFUL RUN</summary>
+          <pre> [REPLACE THIS WITH YOUR INFORMATION] </pre>
+        </details>
+
+        <details>
+          <summary>SUCCESSFUL RUN</summary>
           <pre> [REPLACE THIS WITH YOUR INFORMATION] </pre>
         </details>
 
