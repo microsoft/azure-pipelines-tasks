@@ -4,7 +4,7 @@
 
 **Documentation changes required:** (Y/N) <Please mark if documentation changes are required>
 
-**Added unit tests:** (Y/N) <Please mark if unit tests were added or updated according changes>
+**Added unit tests:** (Y/N) <Please mark if unit tests were added or updated according to changes>
 
 **Attached related issue:** (Y/N) <Please add link to related issue here>
 
