@@ -4,8 +4,8 @@
 ## Overview
 This repo contains the tasks that are provided out-of-the-box with Azure Pipelines and Team Foundation Server.
 
-This provides open examples on how we write tasks which will help you write other tasks which can be uploaded to your account or server.  See **Writing Tasks** below.
-Check Deprecation.md file for the list of task which are no longer supported.
+This provides open examples of how we write tasks which will help you write other tasks that can be uploaded to your account or server.  See **Writing Tasks** below.
+Check the Deprecation.md file for the list of tasks that are no longer supported.
 
 ## Status
 |   | Build & Test |
@@ -31,7 +31,7 @@ See the documentation for [Continuous integration and deployment](https://aka.ms
 
 If you need custom functionality in your build/release, it is usually simpler to use the existing script running tasks such as the PowerShell or Bash tasks.  Writing a new task may be appropriate if you need deeper integration or reusability in many build definitions
 
-Tasks are simply tool runners.  They know how to run MSBuild, VSTest, etc... in a first class way and handle return codes, how to treat std/err out, and how to write timeline records based on expected output.  They also get access to credentials to write back to TFS/Azure Pipelines. 
+Tasks are simply tool runners.  They know how to run MSBuild, VSTest, etc... in a first-class way and handle return codes, treat std/err out, and write timeline records based on expected output.  They also get access to credentials to write back to TFS/Azure Pipelines. 
 
 For uploading custom tasks to Azure Pipelines use the [TFS Cross Platform Command Line utility](https://github.com/Microsoft/tfs-cli).
 
