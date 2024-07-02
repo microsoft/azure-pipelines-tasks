@@ -1,0 +1,580 @@
+{
+  "id": "AFA7D54D-537B-4DC8-B60A-E0EEEA2C9A87",
+  "name": "HelmDeploy",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/azpipes-helm-tsg",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 242,
+    "Patch": 3
+  },
+  "demands": [],
+  "groups": [
+    {
+      "name": "cluster",
+      "displayName": "ms-resource:loc.group.displayName.cluster",
+      "isExpanded": true,
+      "visibleRule": "command != logout && command != package"
+    },
+    {
+      "name": "commands",
+      "displayName": "ms-resource:loc.group.displayName.commands",
+      "isExpanded": true
+    },
+    {
+      "name": "azureContainerRegistry",
+      "displayName": "ms-resource:loc.group.displayName.azureContainerRegistry",
+      "isExpanded": true,
+      "visibleRule": "command == login || command == package || command == push"
+    },
+    {
+      "name": "tls",
+      "displayName": "ms-resource:loc.group.displayName.tls",
+      "isExpanded": false,
+      "visibleRule": "command != login && command != logout && command != package"
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false,
+      "visibleRule": "command != login && command != logout && command != package"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "connectionType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.connectionType",
+      "defaultValue": "Azure Resource Manager",
+      "required": true,
+      "options": {
+        "Azure Resource Manager": "Azure Resource Manager",
+        "Kubernetes Service Connection": "Kubernetes Service Connection",
+        "None": "None"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.connectionType",
+      "groupName": "cluster"
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "cluster"
+    },
+    {
+      "name": "azureResourceGroup",
+      "label": "ms-resource:loc.input.label.azureResourceGroup",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "cluster",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "kubernetesCluster",
+      "label": "ms-resource:loc.input.label.kubernetesCluster",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesCluster",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "cluster",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "useClusterAdmin",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useClusterAdmin",
+      "defaultValue": "false",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "groupName": "cluster",
+      "helpMarkDown": "ms-resource:loc.input.help.useClusterAdmin"
+    },
+    {
+      "name": "kubernetesServiceEndpoint",
+      "aliases": [
+        "kubernetesServiceConnection"
+      ],
+      "type": "connectedService:kubernetes",
+      "label": "ms-resource:loc.input.label.kubernetesServiceEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceEndpoint",
+      "visibleRule": "connectionType = Kubernetes Service Connection",
+      "required": true,
+      "groupName": "cluster"
+    },
+    {
+      "name": "namespace",
+      "label": "ms-resource:loc.input.label.namespace",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.namespace",
+      "defaultValue": "",
+      "groupName": "cluster"
+    },
+    {
+      "name": "azureSubscriptionEndpointForACR",
+      "aliases": [
+        "azureSubscriptionForACR"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpointForACR",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpointForACR",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "azureContainerRegistry"
+    },
+    {
+      "name": "azureResourceGroupForACR",
+      "label": "ms-resource:loc.input.label.azureResourceGroupForACR",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroupForACR",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "azureContainerRegistry",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "azureContainerRegistry",
+      "label": "ms-resource:loc.input.label.azureContainerRegistry",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.azureContainerRegistry",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "azureContainerRegistry"
+    },
+    {
+      "name": "command",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.command",
+      "defaultValue": "ls",
+      "required": true,
+      "options": {
+        "create": "create",
+        "delete": "delete",
+        "expose": "expose",
+        "get": "get",
+        "init": "init",
+        "install": "install",
+        "login": "login",
+        "logout": "logout",
+        "ls": "ls",
+        "package": "package",
+        "push": "push",
+        "rollback": "rollback",
+        "upgrade": "upgrade",
+        "uninstall": "uninstall"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.command",
+      "groupName": "commands",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "chartType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.chartType",
+      "required": true,
+      "options": {
+        "Name": "Name",
+        "FilePath": "File Path"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.chartType",
+      "groupName": "commands",
+      "visibleRule": "command == install || command == upgrade",
+      "defaultValue": "Name",
+      "properties": {
+        "EditableOptions": "False"
+      }
+    },
+    {
+      "name": "chartName",
+      "label": "ms-resource:loc.input.label.chartName",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.chartName",
+      "defaultValue": "",
+      "visibleRule": "chartType == Name",
+      "required": "true",
+      "groupName": "commands"
+    },
+    {
+      "name": "chartPath",
+      "label": "ms-resource:loc.input.label.chartPath",
+      "type": "filePath",
+      "helpMarkDown": "ms-resource:loc.input.help.chartPath",
+      "defaultValue": "",
+      "visibleRule": "chartType == FilePath || command == package",
+      "required": "true",
+      "groupName": "commands"
+    },
+    {
+      "name": "version",
+      "label": "ms-resource:loc.input.label.version",
+      "aliases": [
+        "chartVersion"
+      ],
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.version",
+      "defaultValue": "",
+      "visibleRule": "command == package || command == install || command == upgrade",
+      "groupName": "commands"
+    },
+    {
+      "name": "releaseName",
+      "label": "ms-resource:loc.input.label.releaseName",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseName",
+      "defaultValue": "",
+      "visibleRule": "command == install || command == upgrade",
+      "groupName": "commands"
+    },
+    {
+      "name": "overrideValues",
+      "label": "ms-resource:loc.input.label.overrideValues",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.overrideValues",
+      "defaultValue": "",
+      "visibleRule": "command == install || command == upgrade",
+      "groupName": "commands"
+    },
+    {
+      "name": "valueFile",
+      "label": "ms-resource:loc.input.label.valueFile",
+      "type": "filePath",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.valueFile",
+      "visibleRule": "command == install || command == upgrade",
+      "groupName": "commands"
+    },
+    {
+      "name": "destination",
+      "label": "ms-resource:loc.input.label.destination",
+      "type": "string",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)",
+      "helpMarkDown": "ms-resource:loc.input.help.destination",
+      "visibleRule": "command == package",
+      "groupName": "commands"
+    },
+    {
+      "name": "canaryimage",
+      "aliases": [
+        "canaryImage"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.canaryimage",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.canaryimage",
+      "visibleRule": "command == init",
+      "groupName": "commands"
+    },
+    {
+      "name": "upgradetiller",
+      "aliases": [
+        "upgradeTiller"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.upgradetiller",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.upgradetiller",
+      "visibleRule": "command == init",
+      "groupName": "commands"
+    },
+    {
+      "name": "updatedependency",
+      "aliases": [
+        "updateDependency"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.updatedependency",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.updatedependency",
+      "visibleRule": "command == install || command == package",
+      "groupName": "commands"
+    },
+    {
+      "name": "save",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.save",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.save",
+      "visibleRule": "command == package",
+      "groupName": "commands"
+    },
+    {
+      "name": "install",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.install",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.install",
+      "visibleRule": "command == upgrade",
+      "groupName": "commands"
+    },
+    {
+      "name": "recreate",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.recreate",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.recreate",
+      "visibleRule": "command == upgrade",
+      "groupName": "commands"
+    },
+    {
+      "name": "resetValues",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.resetValues",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.resetValues",
+      "visibleRule": "command == upgrade",
+      "groupName": "commands"
+    },
+    {
+      "name": "force",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.force",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.force",
+      "visibleRule": "command == upgrade",
+      "groupName": "commands"
+    },
+    {
+      "name": "waitForExecution",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.waitForExecution",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.waitForExecution",
+      "visibleRule": "command == init || command == install || command == upgrade",
+      "groupName": "commands"
+    },
+    {
+      "name": "arguments",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "2"
+      },
+      "label": "ms-resource:loc.input.label.arguments",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments",
+      "groupName": "commands",
+      "visibleRule": "command != login && command != logout"
+    },
+    {
+      "name": "enableTls",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enableTls",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.enableTls",
+      "groupName": "tls"
+    },
+    {
+      "name": "caCert",
+      "type": "secureFile",
+      "label": "ms-resource:loc.input.label.caCert",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.caCert",
+      "visibleRule": "enableTls == true",
+      "groupName": "tls"
+    },
+    {
+      "name": "certificate",
+      "type": "secureFile",
+      "label": "ms-resource:loc.input.label.certificate",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.certificate",
+      "visibleRule": "enableTls == true",
+      "groupName": "tls"
+    },
+    {
+      "name": "privatekey",
+      "type": "secureFile",
+      "label": "ms-resource:loc.input.label.privatekey",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.privatekey",
+      "visibleRule": "enableTls == true",
+      "groupName": "tls"
+    },
+    {
+      "name": "tillernamespace",
+      "aliases": [
+        "tillerNamespace"
+      ],
+      "label": "ms-resource:loc.input.label.tillernamespace",
+      "helpMarkDown": "ms-resource:loc.input.help.tillernamespace",
+      "type": "string",
+      "groupName": "advanced"
+    },
+    {
+      "name": "failOnStderr",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStderr",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
+      "groupName": "advanced"
+    },
+    {
+      "name": "publishPipelineMetadata",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishPipelineMetadata",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.publishPipelineMetadata",
+      "groupName": "advanced"
+    },
+    {
+      "name": "chartNameForACR",
+      "label": "ms-resource:loc.input.label.chartNameForACR",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.chartNameForACR",
+      "defaultValue": "",
+      "visibleRule": "command == package || command == push",
+      "required": "true",
+      "groupName": "commands"
+    },
+    {
+      "name": "chartPathForACR",
+      "label": "ms-resource:loc.input.label.chartPathForACR",
+      "type": "filePath",
+      "helpMarkDown": "ms-resource:loc.input.help.chartPathForACR",
+      "defaultValue": "",
+      "visibleRule": "command == package || command == push",
+      "required": "true",
+      "groupName": "commands"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "kubernetesCluster",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{{{name}}}"
+    },
+    {
+      "target": "azureResourceGroup",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31&$skiptoken={{{skiptoken}}}",
+      "callbackContextTemplate": "{\"skiptoken\": \"{{#getTokenValue response.nextLink}}{{extractUrlQueryParameter %24skiptoken}}{{/getTokenValue}}\"}",
+      "callbackRequiredTemplate": "{{isTokenPresent response.nextLink}}",
+      "initialContextTemplate": "{\"skiptoken\": \"\"}",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
+    },
+    {
+      "target": "azureResourceGroupForACR",
+      "endpointId": "$(azureSubscriptionEndpointForACR)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
+    },
+    {
+      "target": "azureContainerRegistry",
+      "endpointId": "$(azureSubscriptionEndpointForACR)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroupForACR)/providers/Microsoft.ContainerRegistry/registries?api-version=2019-05-01",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{properties.loginServer}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "showEnvironmentVariables": true,
+  "outputVariables": [
+    {
+      "name": "helmExitCode",
+      "description": "Exit code emitted from the execution of specified Helm command"
+    },
+    {
+      "name": "helmOutput",
+      "description": "Output emitted from the execution of specified Helm command"
+    }
+  ],
+  "prejobexecution": {
+    "Node16": {
+      "target": "src//downloadsecurefiles.js",
+      "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "src//downloadsecurefiles.js"
+    },
+    "Node20_1": {
+      "target": "src//downloadsecurefiles.js",
+      "argumentFormat": ""
+    }
+  },
+  "execution": {
+    "Node16": {
+      "target": "src//helm.js",
+      "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "src//helm.js"
+    },
+    "Node20_1": {
+      "target": "src//helm.js",
+      "argumentFormat": ""
+    }
+  },
+  "postjobexecution": {
+    "Node16": {
+      "target": "src//deletesecurefiles.js",
+      "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "src//deletesecurefiles.js"
+    },
+    "Node20_1": {
+      "target": "src//deletesecurefiles.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "CantDownloadAccessProfile": "ms-resource:loc.messages.CantDownloadAccessProfile",
+    "KubeConfigFilePath": "ms-resource:loc.messages.KubeConfigFilePath",
+    "KubernetesClusterInfo": "ms-resource:loc.messages.KubernetesClusterInfo",
+    "KubernetesClusterResourceGroup": "ms-resource:loc.messages.KubernetesClusterResourceGroup",
+    "ClusterNotProvisioned": "ms-resource:loc.messages.ClusterNotProvisioned",
+    "ClusterNotFound": "ms-resource:loc.messages.ClusterNotFound",
+    "FailedToListClusters": "ms-resource:loc.messages.FailedToListClusters",
+    "RetryingRequest": "ms-resource:loc.messages.RetryingRequest",
+    "PatternNotFoundInFilePath": "ms-resource:loc.messages.PatternNotFoundInFilePath",
+    "CantResolvePatternInPath": "ms-resource:loc.messages.CantResolvePatternInPath",
+    "PatternFoundInPath": "ms-resource:loc.messages.PatternFoundInPath",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "SkipDeleteSecureFiles": "ms-resource:loc.messages.SkipDeleteSecureFiles",
+    "SkipDownloadSecureFiles": "ms-resource:loc.messages.SkipDownloadSecureFiles",
+    "FileNotFound": "ms-resource:loc.messages.FileNotFound",
+    "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "SaveSupportedInHelmsV3Only": "ms-resource:loc.messages.SaveSupportedInHelmsV3Only",
+    "PackageSupportedInHelmsV37Only": "ms-resource:loc.messages.PackageSupportedInHelmsV37Only",
+    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
+    "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.242.2",
+    "Node20_229_3": "1.242.3"
+  }
+}

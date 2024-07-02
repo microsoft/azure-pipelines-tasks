@@ -193,6 +193,8 @@ Tasks/DockerV2/    @microsoft/release-management-task-team @manolerazvan
 
 Tasks/DockerComposeV0/     @microsoft/release-management-task-team @manolerazvan 
 
+Tasks/DockerComposeV1/     @microsoft/release-management-task-team @manolerazvan 
+
 Tasks/DockerInstallerV0/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/DotNetCoreCLIV2/     @microsoft/akvelon-build-task-team @DergachevE 
@@ -258,6 +260,8 @@ Tasks/GulpV0/      @microsoft/akvelon-build-task-team
 Tasks/GulpV1/      @microsoft/akvelon-build-task-team
 
 Tasks/HelmDeployV0/       @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/HelmDeployV1/       @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/HelmInstallerV0/    @microsoft/release-management-task-team @manolerazvan 
 

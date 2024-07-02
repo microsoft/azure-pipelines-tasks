@@ -14,10 +14,12 @@
   "version": {
     "Major": 0,
     "Minor": 242,
-    "Patch": 0
+    "Patch": 4
   },
   "demands": [],
   "preview": "false",
+  "deprecated": true,
+  "deprecationMessage": "The DockerCompose@0 task is deprecated. The task uses docker-compose v1 which no longer receives update since July 2023. To use docker compose v2, use the DockerCompose@1 task.",
   "groups": [
     {
       "name": "advanced",
@@ -360,7 +362,7 @@
     "MigrateToDockerComposeV2": "ms-resource:loc.messages.MigrateToDockerComposeV2"
   },
   "_buildConfigMapping": {
-    "Default": "0.242.0",
-    "Node20_229_2": "0.242.1"
+    "Default": "0.242.4",
+    "Node20_229_2": "0.242.5"
   }
 }
