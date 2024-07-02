@@ -451,6 +451,7 @@ function Get-AccessTokenMSAL {
     }
 }
 
+
 # @DEPRECATED
 function Get-SpnAccessToken {
     [CmdletBinding()]
@@ -1441,6 +1442,38 @@ function Get-VstsFederatedToken {
     return $federatedToken
 }
 
+
+# Get the Bearer Access Token - MSAL
+function Get-AccessTokenMSALWithCustomScope {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)] $endpoint,
+        [string][Parameter(Mandatory=$false)] $connectedServiceNameARM,
+        [string][Parameter(Mandatory=$false)] $scope
+    )
+
+    Get-MSALInstance $endpoint $connectedServiceNameARM
+
+    # prepare MSAL scopes
+    [string] $resourceId = $scope + "/.default"
+    $scopes = [Collections.Generic.List[string]]@($resourceId)
+
+    try {
+        Write-Verbose "Fetching Access Token - MSAL"
+        $tokenResult = $script:msalClientInstance.AcquireTokenForClient($scopes).ExecuteAsync().GetAwaiter().GetResult()
+        return $tokenResult
+    }
+    catch {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        $parsedException = Parse-Exception($_.Exception)
+        if ($parsedException) {
+            $exceptionMessage = $parsedException
+        }
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AccessTokenMSAL)"
+        throw (Get-VstsLocString -Key AZ_SpnAccessTokenFetchFailure -ArgumentList $endpoint.Auth.Parameters.TenantId)
+    }
+}
+
 # Export only the public function.
 Export-ModuleMember -Function Add-AzureSqlDatabaseServerFirewallRule
 Export-ModuleMember -Function Remove-AzureSqlDatabaseServerFirewallRule
@@ -1458,3 +1491,4 @@ Export-ModuleMember -Function Get-AzureLoadBalancerDetails
 Export-ModuleMember -Function Get-AzureRMLoadBalancerFrontendIpConfigDetails
 Export-ModuleMember -Function Get-AzureRMLoadBalancerInboundNatRuleConfigDetails
 Export-ModuleMember -Function Get-AzureRMAccessToken
+Export-ModuleMember -Function Get-AccessTokenMSALWithCustomScope
