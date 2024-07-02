@@ -76,6 +76,7 @@
         "DockerV1",
         "DockerV2",
         "DockerComposeV0",
+        "DockerComposeV1",
         "DockerInstallerV0",
         "DotNetCoreCLIV2",
         "DotNetCoreInstallerV0",
