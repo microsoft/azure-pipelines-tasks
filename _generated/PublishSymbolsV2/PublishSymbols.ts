@@ -1,6 +1,5 @@
 import * as fs from "fs";
 import * as path from "path";
-import * as uuidV4 from 'uuid/v4';
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
 import * as clientToolRunner from "azure-pipelines-tasks-packaging-common/universal/ClientToolRunner";
@@ -9,6 +8,7 @@ import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunn
 import { getAccessToken } from './Auth';
 
 const symbolRequestAlreadyExistsError = 17;
+const {"v4": uuidV4} = require('uuid');
 
 interface IClientToolOptions {
     clientToolFilePath: string;
