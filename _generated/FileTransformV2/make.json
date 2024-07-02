@@ -1,0 +1,11 @@
+{
+    "externals": {
+        "archivePackages": [
+            {
+                "archiveName": "ctt.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/ctt/1.6/ctt.zip",
+                "dest": "./"
+            }
+        ]
+    }
+}

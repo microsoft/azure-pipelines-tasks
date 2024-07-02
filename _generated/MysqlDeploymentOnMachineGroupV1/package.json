@@ -18,10 +18,10 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^16.11.39",
+    "@types/node": "16.18.39",
     "@types/q": "1.0.7",
-    "azure-pipelines-task-lib": "^4.3.1",
-    "azure-pipelines-tasks-webdeployment-common": "^4.222.0",
+    "azure-pipelines-task-lib": "4.3.1",
+    "azure-pipelines-tasks-webdeployment-common": "^4.242.0",
     "compress-commons": "1.1.0",
     "crc32-stream": "1.0.0",
     "normalize-path": "2.0.1",

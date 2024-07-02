@@ -18,9 +18,9 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^16.11.39",
+    "@types/node": "16.18.3",
     "@types/q": "1.0.7",
-    "azure-pipelines-tasks-webdeployment-common": "^4.230.6",
+    "azure-pipelines-tasks-webdeployment-common": "^4.242.0",
     "q": "1.4.1"
   },
   "devDependencies": {
