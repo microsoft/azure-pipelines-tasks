@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 242,
     "Patch": 1
   },
   "runsOn": [
@@ -35,7 +35,7 @@
     "AddingAuthChannel": "ms-resource:loc.messages.AddingAuthChannel"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20_229_1": "0.238.1"
+    "Default": "0.242.0",
+    "Node20_229_1": "0.242.1"
   }
 }

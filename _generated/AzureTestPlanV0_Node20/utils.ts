@@ -43,3 +43,14 @@ export function separateGoTestName(inputString) {
         return inputString;
     }
 }
+
+export function separateJestTestName(inputString) {
+    const lastDotIndex = inputString.lastIndexOf('.');
+
+    if (lastDotIndex !== -1) {
+        const testName = inputString.slice(lastDotIndex + 1);
+        return testName;
+    } else {
+        return inputString;
+    }
+}
