@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Use this form if you would like to report a regression related to one of the tasks. [List of the tasks](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks)
+        You can use this form if you would like to report a regression related to one of the tasks. [List of the tasks](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks)
 
   - type: checkboxes
     id: new-issue-checklist
@@ -41,7 +41,7 @@ body:
     id: what-happened
     attributes:
       label: Regression Description
-      description: Tell us what you see, and what did you expect to happen?
+      description: Tell us what you see and expect to happen.
       value: "A regression happened!"
     validations:
       required: true
@@ -56,7 +56,7 @@ body:
   - type: checkboxes
     id: environment-type
     attributes:
-      label: Environment type (Please select at least one enviroment where you face this issue)
+      label: Environment type (Please select at least one environment where you face this issue)
       options:
         - label: Self-Hosted
         - label: Microsoft Hosted
@@ -69,7 +69,7 @@ body:
       label: Azure DevOps Server type
       options:
         - dev.azure.com (formerly visualstudio.com)
-        - Azure DevOps Server (Please specify exact version in the textbox below)
+        - Azure DevOps Server (Please specify the exact version in the textbox below)
     validations:
       required: true
 
