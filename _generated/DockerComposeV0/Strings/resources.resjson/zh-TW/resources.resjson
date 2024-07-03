@@ -80,5 +80,7 @@
   "loc.messages.NoDataWrittenOnFile": "沒有任何資料寫入檔案 %s",
   "loc.messages.FileContentSynced": "檔案內容已同步到磁碟。內容為 %s。",
   "loc.messages.ImageNameWithoutTag": "未使用標籤指定映像名稱，因此會推送指定映像的所有標籤。",
-  "loc.messages.WritingDockerConfigToTempFile": "正在將 Docker 設定寫入暫存檔案。檔案路徑: %s，Docker 設定: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "正在將 Docker 設定寫入暫存檔案。檔案路徑: %s，Docker 設定: %s",
+  "loc.messages.InvalidProjectName": "專案名稱 \"%s\" 必須是有效的 docker compose 專案名稱。如需詳細資料，請遵循連結: https://docs.docker.com/compose/project-name/#set-a-project-name",
+  "loc.messages.MigrateToDockerComposeV2": "The task is using Docker Compose V1, which is end-of-life and will be removed from Microsoft-hosted agents July 24. Pipelines running on Microsoft-hosted agents should be updated for Docker Compose v2 compatibility e.g. use compatible container names. For guidance on required updates, please refer to the official Docker Compose documentation at https://docs.docker.com/compose/migrate/"
 }

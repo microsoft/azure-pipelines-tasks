@@ -102,11 +102,11 @@ $AzureFileCopyRemoteJob = {
         if ($useSanitizerActivate) {
             # Splitting arguments on space, but not on space inside quotes
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
-            Write-DetailLogs "##[command] & azcopy copy `"$containerURL*****`" `"$targetPath`" $sanitizedArguments"
-            & azcopy copy "$containerURL/" "$targetPath" $sanitizedArguments
+            Write-DetailLogs "##[command] & azcopy copy `"$containerURL`" `"$targetPath`" $sanitizedArguments"
+            & azcopy copy "$containerURL/*" "$targetPath" $sanitizedArguments
         } else {
-            Write-DetailLogs "##[command] & `"$azCopyExeLocation`" copy `"$containerURL*****`" `"$targetPath`" $additionalArguments"
-            $azCopyCommand = "& azcopy copy `"$containerURL/`" `"$targetPath`" $additionalArguments"
+            Write-DetailLogs "##[command] & azcopy copy `"$containerURL`" `"$targetPath`" $additionalArguments"
+            $azCopyCommand = "& azcopy copy `"$containerURL/*`" `"$targetPath`" $additionalArguments"
             Invoke-Expression $azCopyCommand
         }
     }

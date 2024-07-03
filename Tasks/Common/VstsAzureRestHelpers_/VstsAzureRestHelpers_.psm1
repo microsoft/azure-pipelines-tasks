@@ -929,6 +929,10 @@ function Get-AzureSqlDatabaseServerResourceId {
     $serverType = "Microsoft.Sql/servers"
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
+    if ($serverName -ne $null -and $serverName -ne '') {
+        $serverName = $serverName.ToLower()
+} 
+
     Write-Verbose "[Azure Rest Call] Get Resource Groups"
     $method = "GET"
     $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resources?api-version=$apiVersion"
