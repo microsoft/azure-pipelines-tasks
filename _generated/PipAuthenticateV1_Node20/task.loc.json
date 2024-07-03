@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 242,
     "Patch": 1
   },
   "runsOn": [
@@ -41,6 +41,27 @@
         "EditableOptions": "True",
         "MultiSelectFlatList": "True"
       }
+    },
+    {
+      "name": "workloadIdentityServiceConnection",
+      "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
+      "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
+      "type": "connectedService:workloadidentityuser",
+      "required": false,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      },
+      "groupName": "feedAuthentication"
+    },
+    {
+      "name": "feedUrl",
+      "label": "ms-resource:loc.input.label.feedUrl",
+      "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
+      "type": "string",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "feedAuthentication"
     },
     {
       "name": "pythonDownloadServiceConnections",
@@ -93,17 +114,20 @@
   "messages": {
     "Info_AddingInternalFeeds": "ms-resource:loc.messages.Info_AddingInternalFeeds",
     "Info_AddingExternalFeeds": "ms-resource:loc.messages.Info_AddingExternalFeeds",
+    "Info_AddingFederatedFeedAuth": "ms-resource:loc.messages.Info_AddingFederatedFeedAuth",
     "Info_SuccessAddingAuth": "ms-resource:loc.messages.Info_SuccessAddingAuth",
+    "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth",
     "Info_AddingPasswordAuthEntry": "ms-resource:loc.messages.Info_AddingPasswordAuthEntry",
     "Info_AddingTokenAuthEntry": "ms-resource:loc.messages.Info_AddingTokenAuthEntry",
     "Error_FailedToParseFeedUrlAndAuth": "ms-resource:loc.messages.Error_FailedToParseFeedUrlAndAuth",
     "FailedToGetPackagingUri": "ms-resource:loc.messages.FailedToGetPackagingUri",
+    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
     "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
     "Warn_TooManyFeedEntries": "ms-resource:loc.messages.Warn_TooManyFeedEntries",
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
   },
   "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_1": "1.238.1"
+    "Default": "1.242.0",
+    "Node20_229_1": "1.242.1"
   }
 }

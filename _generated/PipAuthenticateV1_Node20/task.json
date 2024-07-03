@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 242,
     "Patch": 1
   },
   "runsOn": [
@@ -41,6 +41,27 @@
         "EditableOptions": "True",
         "MultiSelectFlatList": "True"
       }
+    },
+    {
+      "name": "workloadIdentityServiceConnection",
+      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+      "helpMarkDown": "If this is set, feedUrl is required. All other inputs are ignored.",
+      "type": "connectedService:workloadidentityuser",
+      "required": false,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      },
+      "groupName": "feedAuthentication"
+    },
+    {
+      "name": "feedUrl",
+      "label": "Azure Artifacts Feeds url.",
+      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonDownloadServiceConnections. ",
+      "type": "string",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "feedAuthentication"
     },
     {
       "name": "pythonDownloadServiceConnections",
@@ -93,17 +114,20 @@
   "messages": {
     "Info_AddingInternalFeeds": "Adding auth information for %s internal feed(s).",
     "Info_AddingExternalFeeds": "Adding auth information for %s external endpoint.",
+    "Info_AddingFederatedFeedAuth": "Adding auth information from service connection %s for feed %s",
     "Info_SuccessAddingAuth": "Successfully added auth for %s internal feeds and %s external endpoint.",
+    "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s.",
     "Info_AddingPasswordAuthEntry": "Adding username password auth entry for feed %s",
     "Info_AddingTokenAuthEntry": "Adding token auth entry for feed %s",
     "Error_FailedToParseFeedUrlAndAuth": "Failed to parse the feed url and add auth information. %s",
     "FailedToGetPackagingUri": "Unable to get packaging uri, using default collection uri.",
+    "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
     "FailedToAddAuthentication": "Failed to add authentication.",
     "Warn_TooManyFeedEntries": "Too many feed entries for auth. Please reduce the number of repositories in the task.",
     "Warning_SessionCreationFailed": "Could not create provenance session: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_1": "1.238.1"
+    "Default": "1.242.0",
+    "Node20_229_1": "1.242.1"
   }
 }

@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 242,
     "Patch": 0
   },
   "runsOn": [
@@ -41,6 +41,27 @@
         "EditableOptions": "True",
         "MultiSelectFlatList": "True"
       }
+    },
+    {
+      "name": "workloadIdentityServiceConnection",
+      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+      "helpMarkDown": "If this is set, feedUrl is required. All other inputs are ignored.",
+      "type": "connectedService:workloadidentityuser",
+      "required": false,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      },
+      "groupName": "feedAuthentication"
+    },
+    {
+      "name": "feedUrl",
+      "label": "Azure Artifacts Feeds url.",
+      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonDownloadServiceConnections. ",
+      "type": "string",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "feedAuthentication"
     },
     {
       "name": "pythonDownloadServiceConnections",
@@ -89,12 +110,15 @@
   "messages": {
     "Info_AddingInternalFeeds": "ms-resource:loc.messages.Info_AddingInternalFeeds",
     "Info_AddingExternalFeeds": "ms-resource:loc.messages.Info_AddingExternalFeeds",
+    "Info_AddingFederatedFeedAuth": "ms-resource:loc.messages.Info_AddingFederatedFeedAuth",
     "Info_SuccessAddingAuth": "ms-resource:loc.messages.Info_SuccessAddingAuth",
+    "Info_SuccessAddingFederatedFeedAuth": "ms-resource:loc.messages.Info_SuccessAddingFederatedFeedAuth",
     "Info_AddingPasswordAuthEntry": "ms-resource:loc.messages.Info_AddingPasswordAuthEntry",
     "Info_AddingTokenAuthEntry": "ms-resource:loc.messages.Info_AddingTokenAuthEntry",
     "Error_FailedToParseFeedUrlAndAuth": "ms-resource:loc.messages.Error_FailedToParseFeedUrlAndAuth",
     "FailedToGetPackagingUri": "ms-resource:loc.messages.FailedToGetPackagingUri",
     "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
+    "FailedToGetServiceConnectionAuth" : "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
     "Warn_TooManyFeedEntries": "ms-resource:loc.messages.Warn_TooManyFeedEntries",
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
   }
