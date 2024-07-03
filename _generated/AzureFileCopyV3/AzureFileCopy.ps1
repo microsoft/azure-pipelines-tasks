@@ -67,11 +67,19 @@ Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 
+# Import the loc strings.
+Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
+
+# Load all dependent files for execution
+. "$PSScriptRoot\AzureFileCopyRemoteJob.ps1"
+. "$PSScriptRoot\Utility.ps1"
+
 $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
 $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
 if ($featureFlags.retireAzureRM) {
+    CleanUp-PSModulePathForHostedAgent
     Write-Verbose "Initializing Az Module."
     $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
     Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
@@ -86,13 +94,6 @@ if ($featureFlags.retireAzureRM) {
         Initialize-AzureRMModule -Endpoint $endpoint
     }
 }
-
-# Import the loc strings.
-Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
-
-# Load all dependent files for execution
-. "$PSScriptRoot\AzureFileCopyRemoteJob.ps1"
-. "$PSScriptRoot\Utility.ps1"
 
 # Enabling detailed logging only when system.debug is true
 $enableDetailedLogging = ($env:system_debug -eq "true")
