@@ -4,6 +4,8 @@
   "loc.description": "Index your source code and publish symbols to a file share or Azure Artifacts symbol server",
   "loc.instanceNameFormat": "Publish symbols path",
   "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.ConnectedServiceName": "Azure Resource Manager connection",
+  "loc.input.help.ConnectedServiceName": "Name of the Azure Resource Manager service connection. Supported authentication type is currently only workload identity federation.",
   "loc.input.label.SymbolsFolder": "Path to symbols folder",
   "loc.input.help.SymbolsFolder": "The path to the folder that is searched for symbol files.  The default is $(Build.SourcesDirectory).  Otherwise specify a rooted path, for example: $(Build.BinariesDirectory)/MyProject",
   "loc.input.label.SearchPattern": "Search pattern",
