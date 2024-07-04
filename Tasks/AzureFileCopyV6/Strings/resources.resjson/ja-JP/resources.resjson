@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[このタスクの詳細](https://aka.ms/azurefilecopyreadme) およびこの新しいバージョンのタスクに関する問題を報告するには [こちら](https://github.com/microsoft/azure-pipelines-tasks/issues/new?assignees=&labels=regression%2Cbug&projects=&template=1.regression.yml&title=%5BREGRESSION%5D%3A+)",
   "loc.description": "Azure Blob Storage または仮想マシンにファイルをコピーします",
   "loc.instanceNameFormat": "$(Destination) ファイル コピー",
-  "loc.releaseNotes": "バージョン 6.0 の新機能: <br/>&nbsp;&nbsp; ワークロード ID フェデレーションと [Azure RBAC](https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal) もサポートしています。バージョン 10.24.0 には [AzCopy.exe](https://github.com/Azure/azure-storage-azcopy/tree/v10.24.0) を使用してください。昭和い情報は :[こちら](https://github.com/Azure/azure-storage-azcopy/releases)",
+  "loc.releaseNotes": "バージョン 6.0 の新機能: <br/>&nbsp;&nbsp; ワークロード ID フェデレーションと [Azure RBAC](https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal) もサポートしています。バージョン 10.25.1 には [AzCopy.exe](https://github.com/Azure/azure-storage-azcopy/tree/v10.25.1) を使用してください。昭和い情報は :[こちら](https://github.com/Azure/azure-storage-azcopy/releases)",
   "loc.input.label.SourcePath": "ソース",
   "loc.input.help.SourcePath": "ソース フォルダーまたはローカル コンピューター上のファイルの絶対パス、もしくは UNC 共有。式は単一のフォルダーまたはファイルを返す必要があります。ワイルド カード記号 (*) はファイル パスまたはファイル名の任意の場所で使用できます。",
   "loc.input.label.ConnectedServiceNameARM": "Azure サブスクリプション",
