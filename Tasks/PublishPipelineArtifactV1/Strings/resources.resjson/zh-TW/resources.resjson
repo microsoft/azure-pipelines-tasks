@@ -14,5 +14,7 @@
   "loc.input.label.parallel": "平行複製",
   "loc.input.help.parallel": "選取是否要使用多重執行緒平行複製檔案，以追求更高的輸送量。若此設定未啟用，則只會使用一個執行緒。",
   "loc.input.label.parallelCount": "平行計數",
-  "loc.input.help.parallelCount": "輸入平行處理的程度或使用的執行緒數量，以執行複製。該值必須至少為 1 且不大於 128。"
+  "loc.input.help.parallelCount": "輸入平行處理的程度或使用的執行緒數量，以執行複製。該值必須至少為 1 且不大於 128。",
+  "loc.input.label.properties": "自訂屬性",
+  "loc.input.help.properties": "輸入要與成品關聯的自訂屬性。所有具有首碼 'user-' 的索引鍵都預期為有效 JSON 字串"
 }
