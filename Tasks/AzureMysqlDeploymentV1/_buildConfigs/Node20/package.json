@@ -30,7 +30,7 @@
     "normalize-path": "2.0.1",
     "q": "1.4.1",
     "semver": "5.4.1",
-    "tar-stream": "1.5.2",
+    "tar-stream": "1.6.2",
     "winreg": "1.2.2",
     "zip-stream": "1.1.0"
   },
