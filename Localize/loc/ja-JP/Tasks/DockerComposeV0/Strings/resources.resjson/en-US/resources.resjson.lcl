@@ -740,10 +740,13 @@
       </Item>
       <Item ItemId=";loc.messages.MigrateToDockerComposeV2" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The task is utilizing Docker Compose V1, but there are plans to transition to Docker Compose V2. It's necessary to investigate how to adapt your project to Docker Compose V2. For guidance on this migration, you can refer to the official Docker Compose documentation at the provided link: https://docs.docker.com/compose/migrate/]]></Val>
+          <Val><![CDATA[The task is using Docker Compose V1, which is end-of-life and will be removed from Microsoft-hosted agents July 24. Pipelines running on Microsoft-hosted agents should be updated for Docker Compose v2 compatibility e.g. use compatible container names. For guidance on required updates, please refer to the official Docker Compose documentation at https://docs.docker.com/compose/migrate/]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[タスクは Docker Compose V1 を利用していますが、Docker Compose V2 に移行する予定があります。プロジェクトを Docker Compose V2 に適合させる方法を調査する必要があります。この移行に関するガイダンスについては、提供されているリンクにある公式の Docker Compose ドキュメントを参照してください。https://docs.docker.com/compose/migrate/]]></Val>
+            <Val><![CDATA[このタスクが使用している Docker Compose V1 は、製品寿命が切れ Microsoft がホストするエージェントから 7 月 24 日に削除されます。Microsoft がホストするエージェントで実行されているパイプラインは、互換性のあるコンテナー名を使用するなどして、Docker Compose v2 互換に更新する必要があります。必要な更新プログラムのガイダンスについては、https://docs.docker.com/compose/migrate/ で公式の Docker Compose ドキュメントを参照してください]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The task is utilizing Docker Compose V1, but there are plans to transition to Docker Compose V2. It's necessary to investigate how to adapt your project to Docker Compose V2. For guidance on this migration, you can refer to the official Docker Compose documentation at the provided link: https://docs.docker.com/compose/migrate/]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

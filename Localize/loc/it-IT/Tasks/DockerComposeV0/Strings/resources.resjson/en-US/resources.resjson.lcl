@@ -740,10 +740,13 @@
       </Item>
       <Item ItemId=";loc.messages.MigrateToDockerComposeV2" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The task is utilizing Docker Compose V1, but there are plans to transition to Docker Compose V2. It's necessary to investigate how to adapt your project to Docker Compose V2. For guidance on this migration, you can refer to the official Docker Compose documentation at the provided link: https://docs.docker.com/compose/migrate/]]></Val>
+          <Val><![CDATA[The task is using Docker Compose V1, which is end-of-life and will be removed from Microsoft-hosted agents July 24. Pipelines running on Microsoft-hosted agents should be updated for Docker Compose v2 compatibility e.g. use compatible container names. For guidance on required updates, please refer to the official Docker Compose documentation at https://docs.docker.com/compose/migrate/]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[L'attività sta usando Docker Compose V1, ma è prevista la transizione a Docker Compose V2. È necessario esaminare come adattare il progetto a Docker Compose V2. Per indicazioni su questa migrazione, puoi fare riferimento alla documentazione ufficiale di Docker Compose al collegamento fornito: https://docs.docker.com/compose/migrate/]]></Val>
+            <Val><![CDATA[L'attività usa Docker Compose V1, che è alla fine del ciclo di vita e verrà rimosso dagli agenti ospitati da Microsoft il 24 luglio. Le pipeline in esecuzione in agenti ospitati da Microsoft devono essere aggiornate per Docker Compose compatibilità v2, ad esempio usare nomi di contenitori compatibili. Per indicazioni sull’aggiornamento richiesto, fare rifermento alla documentazione ufficiale di Docker Compose al collegamento fornito: https://docs.docker.com/compose/migrate/]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The task is utilizing Docker Compose V1, but there are plans to transition to Docker Compose V2. It's necessary to investigate how to adapt your project to Docker Compose V2. For guidance on this migration, you can refer to the official Docker Compose documentation at the provided link: https://docs.docker.com/compose/migrate/]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

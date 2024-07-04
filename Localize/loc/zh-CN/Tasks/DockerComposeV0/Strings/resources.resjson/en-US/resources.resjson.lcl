@@ -740,10 +740,13 @@
       </Item>
       <Item ItemId=";loc.messages.MigrateToDockerComposeV2" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The task is utilizing Docker Compose V1, but there are plans to transition to Docker Compose V2. It's necessary to investigate how to adapt your project to Docker Compose V2. For guidance on this migration, you can refer to the official Docker Compose documentation at the provided link: https://docs.docker.com/compose/migrate/]]></Val>
+          <Val><![CDATA[The task is using Docker Compose V1, which is end-of-life and will be removed from Microsoft-hosted agents July 24. Pipelines running on Microsoft-hosted agents should be updated for Docker Compose v2 compatibility e.g. use compatible container names. For guidance on required updates, please refer to the official Docker Compose documentation at https://docs.docker.com/compose/migrate/]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[该任务正在利用 Docker Compose V1，但有过渡到 Docker Compose V2 的计划。必须研究如何调整项目以适应 Docker Compose V2。有关此迁移的指南，可以参阅官方 Docker Compose 文档，提供的链接为: https://docs.docker.com/compose/migrate/]]></Val>
+            <Val><![CDATA[该任务正在使用 Docker Compose V1，此服务的生命周期已结束，将于 7 月 24 日从 Microsoft 托管代理中删除。应更新在 Microsoft 托管代理上运行的管道，以实现 Docker Compose v2 兼容性，例如使用兼容的容器名称。有关必需更新的指南，请参阅官方 Docker Compose 文档(https://docs.docker.com/compose/migrate/)]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The task is utilizing Docker Compose V1, but there are plans to transition to Docker Compose V2. It's necessary to investigate how to adapt your project to Docker Compose V2. For guidance on this migration, you can refer to the official Docker Compose documentation at the provided link: https://docs.docker.com/compose/migrate/]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
