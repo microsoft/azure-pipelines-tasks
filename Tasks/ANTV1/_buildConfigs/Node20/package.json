@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "azure-pipelines-task-lib": "^5.0.0-preview.0",
-    "azure-pipelines-tasks-java-common": "2.198.1",
+    "azure-pipelines-tasks-java-common": "2.219.1",
     "azure-pipelines-tasks-codecoverage-tools": "2.201.0",
     "xml2js": "^0.4.16",
     "@types/node": "^20.3.1",
