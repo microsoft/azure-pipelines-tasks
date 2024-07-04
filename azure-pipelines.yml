@@ -35,7 +35,6 @@ variables:
   taskName: ${{ parameters.task_name }}
   taskNameIsSet: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
   runCodeQl: ${{ eq(parameters.enableCodeQL, true) }}
-  system.debug: true
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
@@ -84,6 +83,10 @@ extends:
                 )
               PathtoPublish: _package/tasks.zip
               ArtifactName: package
+            - output: buildArtifacts
+              displayName: 'Publish package artifact'
+              PathtoPublish: _package/tasks.zip
+              ArtifactName: allTasks
         steps:
         - template: /ci/build-all-steps.yml@self
           parameters:
@@ -108,42 +111,42 @@ extends:
         steps:
         - template: /ci/publish-steps.yml@self
 
-      # Courtesy Push
-      - job: courtesy_push
-        displayName: Courtesy Push
-        pool:
-          name: 1ES-ABTT-Shared-Pool
-          image: abtt-windows-2022
-          os: windows
-        dependsOn:
-        - publish
-        condition: |
-          and(
-            succeeded(),
-            eq(variables['COURTESY_PUSH'], 'true'),
-            or(
-              eq(variables['build.reason'], 'Schedule'),
-              and(
-                eq(variables['build.reason'], 'Manual'),
-                eq(variables['FORCE_COURTESY_PUSH'], 'true')
-              )
-            )
-          )
-        templateContext:
-          outputs:
-          - output: nuget
-            packagesToPush:  '$(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded/IndividualNugetPackages/*/*.nupkg'
-            packageParentPath: '$(Build.SourcesDirectory)'
-            publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
-            nuGetFeedType: internal
-            displayName: Push Nuget package
-            allowPackageConflicts: $(COURTESY_PUSH)
-        steps:
-        - checkout: AzureDevOps
-          fetchDepth: 1
-          persistCredentials: true
-        - checkout: self
-        - template: /ci/courtesy-push.yml@self
+      # # Courtesy Push
+      # - job: courtesy_push
+      #   displayName: Courtesy Push
+      #   pool:
+      #     name: 1ES-ABTT-Shared-Pool
+      #     image: abtt-windows-2022
+      #     os: windows
+      #   dependsOn:
+      #   - publish
+      #   condition: |
+      #     and(
+      #       succeeded(),
+      #       eq(variables['COURTESY_PUSH'], 'true'),
+      #       or(
+      #         eq(variables['build.reason'], 'Schedule'),
+      #         and(
+      #           eq(variables['build.reason'], 'Manual'),
+      #           eq(variables['FORCE_COURTESY_PUSH'], 'true')
+      #         )
+      #       )
+      #     )
+      #   templateContext:
+      #     outputs:
+      #     - output: nuget
+      #       packagesToPush:  '$(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded/IndividualNugetPackages/*/*.nupkg'
+      #       packageParentPath: '$(Build.SourcesDirectory)'
+      #       publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
+      #       nuGetFeedType: internal
+      #       displayName: Push Nuget package
+      #       allowPackageConflicts: $(COURTESY_PUSH)
+      #   steps:
+      #   - checkout: AzureDevOps
+      #     fetchDepth: 1
+      #     persistCredentials: true
+      #   - checkout: self
+      #   - template: /ci/courtesy-push.yml@self
 
       - job: build_all_tasks_for_deployments
         displayName: Build all tasks for deployments (Windows)
