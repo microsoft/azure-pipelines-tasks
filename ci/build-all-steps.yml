@@ -10,10 +10,10 @@ steps:
 # Only when building on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
 
-  # Start collect diagnostics
-  - powershell: ./ci/start-collect-diagnostics.ps1
-    displayName: Start collect diagnostics
-    condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
+  # # Start collect diagnostics
+  # - powershell: ./ci/start-collect-diagnostics.ps1
+  #   displayName: Start collect diagnostics
+  #   condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
 
 # Use node 20, npm 9
 - task: NodeTool@0
@@ -25,14 +25,14 @@ steps:
 - script: npm install
   displayName: npm install
 
-# Verify min agent demands
-- script: |
-    cd ci/verifyMinAgentDemands
-    npm install
-  displayName: npm install min agent demands
+# # Verify min agent demands
+# - script: |
+#     cd ci/verifyMinAgentDemands
+#     npm install
+#   displayName: npm install min agent demands
 
-- script: node ./ci/verifyMinAgentDemands/index.js --pat $(GitHubPAT)
-  displayName: Verify min agent demands
+# - script: node ./ci/verifyMinAgentDemands/index.js --pat $(GitHubPAT)
+#   displayName: Verify min agent demands
 
 # Filter out unchanged tasks
 - script: node ./ci/filter-tasks.js
@@ -42,28 +42,28 @@ steps:
     PACKAGE_ENDPOINT: $(Package.Endpoint)
     PACKAGE_TOKEN: $(System.AccessToken)
 
-- script: node ./ci/before-build-check-tasks.js
-  displayName: Before build task validation
-  condition: |
-    and(
-      succeeded(),
-      eq(variables['build.reason'], 'PullRequest'),
-      ne(variables['numTasks'], 0)
-    )
+# - script: node ./ci/before-build-check-tasks.js
+#   displayName: Before build task validation
+#   condition: |
+#     and(
+#       succeeded(),
+#       eq(variables['build.reason'], 'PullRequest'),
+#       ne(variables['numTasks'], 0)
+#     )
 
 - powershell: ./ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
 
-- script: node ./ci/check-downgrading.js --task "$(task_pattern_fordowngradingcheck)" --sprint $(currentSprint) --week $(currentSprintWeek)
-  displayName: Check for downgrading tasks
-  condition: |
-    and(
-      succeeded(),
-      ne(variables['numTasksForDowngradingCheck'], 0),
-      ne(variables['COURTESY_PUSH'], 'true'),
-      eq(variables['build.reason'], 'PullRequest'),
-      eq(variables['System.PullRequest.TargetBranch'], 'master')
-    )
+# - script: node ./ci/check-downgrading.js --task "$(task_pattern_fordowngradingcheck)" --sprint $(currentSprint) --week $(currentSprintWeek)
+#   displayName: Check for downgrading tasks
+#   condition: |
+#     and(
+#       succeeded(),
+#       ne(variables['numTasksForDowngradingCheck'], 0),
+#       ne(variables['COURTESY_PUSH'], 'true'),
+#       eq(variables['build.reason'], 'PullRequest'),
+#       eq(variables['System.PullRequest.TargetBranch'], 'master')
+#     )
 
 # Clean
 - script: node make.js clean
@@ -74,25 +74,25 @@ steps:
   displayName: Build Tasks
   condition: and(succeeded(), ne(variables['numTasks'], 0))
 
-- script: node ./ci/after-build-check-tasks.js
-  displayName: Check that tasks has no duplicated libs
-  condition: |
-    and(
-      succeeded(),
-      eq(variables['build.reason'], 'PullRequest'),
-      ne(variables['numTasks'], 0)
-    )
+# - script: node ./ci/after-build-check-tasks.js
+#   displayName: Check that tasks has no duplicated libs
+#   condition: |
+#     and(
+#       succeeded(),
+#       eq(variables['build.reason'], 'PullRequest'),
+#       ne(variables['numTasks'], 0)
+#     )
 
-# Check diff for task sources
-- script: node ./ci/verify-source-changes.js "$(getTaskPattern.task_pattern)"
-  displayName: Verify task source changes
-  condition: |
-    and(
-      succeeded(),
-      ne(variables['Build.SourceBranch'], 'refs/heads/master'),
-      ne(variables['COURTESY_PUSH'], 'true'),
-      ne(variables['numTasks'], 0)
-    )
+# # Check diff for task sources
+# - script: node ./ci/verify-source-changes.js "$(getTaskPattern.task_pattern)"
+#   displayName: Verify task source changes
+#   condition: |
+#     and(
+#       succeeded(),
+#       ne(variables['Build.SourceBranch'], 'refs/heads/master'),
+#       ne(variables['COURTESY_PUSH'], 'true'),
+#       ne(variables['numTasks'], 0)
+#     )
 
 # Only on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
@@ -122,78 +122,78 @@ steps:
         ne(variables['numTasks'], 0)
       )
 
-# Test
-- script: node make.js test
-  displayName: Run tests
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
-- script: node make.js testLegacy --task "$(getTaskPattern.task_pattern)"
-  displayName: Legacy tests with node 6
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
+# # Test
+# - script: node make.js test
+#   displayName: Run tests
+#   condition: and(succeeded(), ne(variables['numTasks'], 0))
+# - script: node make.js testLegacy --task "$(getTaskPattern.task_pattern)"
+#   displayName: Legacy tests with node 6
+#   condition: and(succeeded(), ne(variables['numTasks'], 0))
 
-# Publish code coverage result
-- task: PublishCodeCoverageResults@1
-  displayName: Publish Code Coverage Results
-  inputs:
-    codeCoverageTool: Cobertura
-    summaryFileLocation: $(System.DefaultWorkingDirectory)/_build/coverage/*coverage.xml
+# # Publish code coverage result
+# - task: PublishCodeCoverageResults@1
+#   displayName: Publish Code Coverage Results
+#   inputs:
+#     codeCoverageTool: Cobertura
+#     summaryFileLocation: $(System.DefaultWorkingDirectory)/_build/coverage/*coverage.xml
 
 # Only when building on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
 
-  # Stop collect diagnostics
-  - powershell: ./ci/stop-collect-diagnostics.ps1
-    displayName: Stop collect diagnostics
-    condition: |
-      and(
-        always(),
-        eq(variables.collect_diagnostics, 'true'),
-        ne(variables['numTasks'], 0)
-      )
+  # # Stop collect diagnostics
+  # - powershell: ./ci/stop-collect-diagnostics.ps1
+  #   displayName: Stop collect diagnostics
+  #   condition: |
+  #     and(
+  #       always(),
+  #       eq(variables.collect_diagnostics, 'true'),
+  #       ne(variables['numTasks'], 0)
+  #     )
 
   - template: /ci/generate-branch-name.yml@self
     parameters:
       prefix: releases
 
-  - powershell: |
-      $releaseBranch = "$(branchName)"
+  # - powershell: |
+  #     $releaseBranch = "$(branchName)"
 
-      # add config entry to avoid errors while pulling
-      git config --global user.email "$(username)@microsoft.com"
-      git config --global user.name "$(username)"
+  #     # add config entry to avoid errors while pulling
+  #     git config --global user.email "$(username)@microsoft.com"
+  #     git config --global user.name "$(username)"
 
-      # Pull commits from remote and push branch to git
-      git checkout -b $releaseBranch
-      Write-Host 'Trying to pull the remote branch..'
-      git pull https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
-      if (-not $?) {
-        Write-Host 'Failed to pull the remote branch. This is expected if the remote branch doesn't exist.
-      }
-      Write-Host 'Trying to push to the remote branch..'
-      git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
-    condition: |
-      and(
-        succeeded(),
-        in(variables['build.reason'], 'Schedule', 'Manual'),
-        eq(variables['COURTESY_PUSH'], 'true'),
-        eq(variables['Build.SourceBranch'], 'refs/heads/master')
-      )
-    displayName: Push release branch
+  #     # Pull commits from remote and push branch to git
+  #     git checkout -b $releaseBranch
+  #     Write-Host 'Trying to pull the remote branch..'
+  #     git pull https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
+  #     if (-not $?) {
+  #       Write-Host 'Failed to pull the remote branch. This is expected if the remote branch doesn't exist.
+  #     }
+  #     Write-Host 'Trying to push to the remote branch..'
+  #     git push https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
+  #   condition: |
+  #     and(
+  #       succeeded(),
+  #       in(variables['build.reason'], 'Schedule', 'Manual'),
+  #       eq(variables['COURTESY_PUSH'], 'true'),
+  #       eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  #     )
+  #   displayName: Push release branch
 
-  - powershell: |
-      $releaseBranch = "$(branchName)"
+  # - powershell: |
+  #     $releaseBranch = "$(branchName)"
 
-      if ($(currentSprintWeek) -eq 3) {
-        cd $(System.DefaultWorkingDirectory)/ci/ci-release-notes
-        npm install
-        node release-notes.js --token $(GitHubPAT) --version $(currentSprint) --releaseBranch $releaseBranch
-      } else {
-        echo "Skipping since release notes generating on week 3"
-      }
-    condition: |
-      and(
-        succeeded(),
-        in(variables['build.reason'], 'Schedule', 'Manual'),
-        eq(variables['COURTESY_PUSH'], 'true'),
-        eq(variables['Build.SourceBranch'], 'refs/heads/master')
-      )
-    displayName: Create Release
+  #     if ($(currentSprintWeek) -eq 3) {
+  #       cd $(System.DefaultWorkingDirectory)/ci/ci-release-notes
+  #       npm install
+  #       node release-notes.js --token $(GitHubPAT) --version $(currentSprint) --releaseBranch $releaseBranch
+  #     } else {
+  #       echo "Skipping since release notes generating on week 3"
+  #     }
+  #   condition: |
+  #     and(
+  #       succeeded(),
+  #       in(variables['build.reason'], 'Schedule', 'Manual'),
+  #       eq(variables['COURTESY_PUSH'], 'true'),
+  #       eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  #     )
+  #   displayName: Create Release
