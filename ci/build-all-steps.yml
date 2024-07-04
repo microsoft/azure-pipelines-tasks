@@ -113,7 +113,7 @@ steps:
       layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
   # Stage all the tasks into a single zip for upload
-  - script: node ./ci/stage-package.js
+  - script: node ./ci/stage-package.js true
     displayName: Stage all the tasks into a single zip for upload
     condition: |
       and(
