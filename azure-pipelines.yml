@@ -148,29 +148,29 @@ extends:
       #   - checkout: self
       #   - template: /ci/courtesy-push.yml@self
 
-      - job: build_all_tasks_for_deployments
-        displayName: Build all tasks for deployments (Windows)
-        dependsOn:
-        - courtesy_push
-        - build_all_windows
-        condition: succeeded()
-        timeoutInMinutes: 360
-        pool:
-          name: 1ES-ABTT-Shared-Pool
-          image: abtt-windows-2022
-          os: windows
-        variables:
-          task_pattern: $[dependencies.build_all_windows.outputs['getTaskPattern.task_pattern']]
-        templateContext:
-          outputs:
-          - output: buildArtifacts
-            displayName: 'Publish package artifact'
-            PathtoPublish: _package/tasks.zip
-            ArtifactName: allTasks
-        steps:
-        - template: /ci/build-all-tasks.yml@self
-          parameters:
-            deploy_all_tasks: ${{ parameters.deploy_all_tasks }}
+      # - job: build_all_tasks_for_deployments
+      #   displayName: Build all tasks for deployments (Windows)
+      #   dependsOn:
+      #   - courtesy_push
+      #   - build_all_windows
+      #   condition: succeeded()
+      #   timeoutInMinutes: 360
+      #   pool:
+      #     name: 1ES-ABTT-Shared-Pool
+      #     image: abtt-windows-2022
+      #     os: windows
+      #   variables:
+      #     task_pattern: $[dependencies.build_all_windows.outputs['getTaskPattern.task_pattern']]
+      #   templateContext:
+      #     outputs:
+      #     - output: buildArtifacts
+      #       displayName: 'Publish package artifact'
+      #       PathtoPublish: _package/tasks.zip
+      #       ArtifactName: allTasks
+      #   steps:
+      #   - template: /ci/build-all-tasks.yml@self
+      #     parameters:
+      #       deploy_all_tasks: ${{ parameters.deploy_all_tasks }}
 
       # All tasks on Linux
       - job: build_all_linux
