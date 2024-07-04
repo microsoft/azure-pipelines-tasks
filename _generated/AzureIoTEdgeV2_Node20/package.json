@@ -3,7 +3,7 @@
   "version": "1.1.2",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^20.3.1",
+    "@types/node": "^20.14.2",
     "@types/q": "^1.5.4",
     "applicationinsights": "^1.0.2",
     "azure-pipelines-task-lib": "^4.4.0",
