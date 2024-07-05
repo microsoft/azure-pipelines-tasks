@@ -14,5 +14,7 @@
   "loc.input.label.parallel": "병렬 복사",
   "loc.input.help.parallel": "잠재적인 처리량 증대를 위해 다중 스레드를 사용하여 파일을 병렬 복사할지 여부를 선택합니다. 이 설정을 사용하도록 설정하지 않으면 하나의 스레드가 사용됩니다.",
   "loc.input.label.parallelCount": "병렬 개수",
-  "loc.input.help.parallelCount": "병렬 처리 수준, 즉 복사를 수행하는 데 사용되는 스레드 수를 입력합니다. 값은 1에서 128 사이여야 합니다."
+  "loc.input.help.parallelCount": "병렬 처리 수준, 즉 복사를 수행하는 데 사용되는 스레드 수를 입력합니다. 값은 1에서 128 사이여야 합니다.",
+  "loc.input.label.properties": "사용자 지정 속성",
+  "loc.input.help.properties": "아티팩트와 연결할 사용자 정의 특성을 입력하세요. 접두사가 'user-'인 모든 키에 유효한 JSON 문자열이 필요합니다."
 }
