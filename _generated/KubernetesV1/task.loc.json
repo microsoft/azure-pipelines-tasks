@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 241,
-    "Patch": 0
+    "Patch": 4
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -450,10 +450,10 @@
     }
   ],
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "src//kubernetes.js"
     },
-    "Node16": {
+    "Node10": {
       "target": "src//kubernetes.js"
     }
   },
@@ -492,7 +492,7 @@
     "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   },
   "_buildConfigMapping": {
-    "Default": "1.241.0",
-    "Node20_229_3": "1.241.1"
+    "Default": "1.241.4",
+    "Node20_229_3": "1.241.5"
   }
 }

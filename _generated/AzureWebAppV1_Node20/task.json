@@ -231,6 +231,9 @@
   ],
   "instanceNameFormat": "Azure Web App Deploy: $(appName)",
   "execution": {
+    "Node20": {
+      "target": "azurermwebappdeployment.js"
+    },
     "Node10": {
       "target": "azurermwebappdeployment.js"
     },

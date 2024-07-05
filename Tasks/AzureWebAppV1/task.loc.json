@@ -231,6 +231,9 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
+    "Node20": {
+      "target": "azurermwebappdeployment.js"
+    },
     "Node10": {
       "target": "azurermwebappdeployment.js"
     }

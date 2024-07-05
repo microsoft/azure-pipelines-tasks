@@ -236,8 +236,9 @@ function Upload-FilesToAzureContainer
 
         if ($useSanitizerActivate) {
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
-            Write-Output "##[command] & azcopy copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
-            & azcopy copy $sourcePath $containerURL$containerSasToken $sanitizedArguments
+            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
+            $uploadCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
+            Invoke-Expression $uploadCommand
         } else {
             Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
             $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"
@@ -1347,27 +1348,28 @@ function Get-InvokeRemoteScriptParameters
 }
 
 function CleanUp-PSModulePathForHostedAgent {
+
+    # Define the module paths to clean up
+    $modulePaths = @(
+        "C:\Modules\azurerm_2.1.0",
+        "C:\\Modules\azurerm_2.1.0",
+        "C:\Modules\azure_2.1.0",
+        "C:\\Modules\azure_2.1.0"
+    )
+    
     # Clean up PSModulePath for hosted agent
-    $azureRMModulePath = "C:\Modules\azurerm_2.1.0"
-    $azureModulePath = "C:\Modules\azure_2.1.0"
     $newEnvPSModulePath = $env:PSModulePath
-
-    if ($newEnvPSModulePath.split(";") -contains $azureRMModulePath) {
-        $newEnvPSModulePath = (($newEnvPSModulePath).Split(";") | ? { $_ -ne $azureRMModulePath }) -join ";"
-        write-verbose "$azureRMModulePath removed. Restart the prompt for the changes to take effect."
+   
+    foreach ($modulePath in $modulePaths) {
+        if ($newEnvPSModulePath.split(";") -contains $modulePath) {
+            $newEnvPSModulePath = (($newEnvPSModulePath).Split(";") | ? { $_ -ne $modulePath }) -join ";"
+            Write-Verbose "$modulePath removed. Restart the prompt for the changes to take effect."
+        }
+        else {
+            Write-Verbose "$modulePath is not present in $newEnvPSModulePath"
+        }
     }
-    else {
-        write-verbose "$azureRMModulePath is not present in $newEnvPSModulePath"
-    }
-
-    if ($newEnvPSModulePath.split(";") -contains $azureModulePath) {
-        $newEnvPSModulePath = (($newEnvPSModulePath).Split(";") | ? { $_ -ne $azureModulePath }) -join ";"
-        write-verbose "$azureModulePath removed. Restart the prompt for the changes to take effect."
-    }
-    else {
-        write-verbose "$azureModulePath is not present in $newEnvPSModulePath"
-    }
-
+   
     if (Test-Path "C:\Modules\az_*") {
         $azPSModulePath = (Get-ChildItem "C:\Modules\az_*" -Directory `
             | Sort-Object { [version]$_.Name.Split('_')[-1] } `

@@ -19,7 +19,7 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 241,
+    "Minor": 242,
     "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
@@ -180,6 +180,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.visibleAzLogin",
       "groupName": "advanced"
+    },
+    {
+      "name": "keepAzSessionActive",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.keepAzSessionActive",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.keepAzSessionActive",
+      "groupName": "advanced"
     }
   ],
   "execution": {
@@ -211,6 +220,9 @@
     "GlobalCliConfigAgentVersionWarning": "ms-resource:loc.messages.GlobalCliConfigAgentVersionWarning",
     "UnacceptedScriptLocationValue": "ms-resource:loc.messages.UnacceptedScriptLocationValue",
     "ExpiredServicePrincipalMessageWithLink": "ms-resource:loc.messages.ExpiredServicePrincipalMessageWithLink",
-    "ProxyConfig": "ms-resource:loc.messages.ProxyConfig"
+    "ProxyConfig": "ms-resource:loc.messages.ProxyConfig",
+    "FailedToRefreshAzSession": "ms-resource:loc.messages.FailedToRefreshAzSession",
+    "RefreshingAzSession": "ms-resource:loc.messages.RefreshingAzSession",
+    "KeepingAzSessionActiveUnsupportedScheme": "ms-resource:loc.messages.KeepingAzSessionActiveUnsupportedScheme"
   }
 }

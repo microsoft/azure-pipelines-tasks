@@ -165,12 +165,12 @@
   ],
   "instanceNameFormat": "Azure Web App on Container Deploy: $(appName)",
   "execution": {
-    "Node10": {
-      "target": "azurermwebappdeployment.js"
-    },
     "Node16": {
       "target": "azurermwebappdeployment.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "azurermwebappdeployment.js"
     },
     "Node20_1": {
       "target": "azurermwebappdeployment.js",

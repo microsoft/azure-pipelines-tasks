@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 238,
-    "Patch": 1
+    "Minor": 241,
+    "Patch": 3
   },
   "demands": [],
   "releaseNotes": "Simplified the task by:<br/>&nbsp;- Providing an option to simply select or type a command.<br/>&nbsp;- Retaining the useful input fields and providing an option to pass the rest as an argument to the command.",
@@ -382,10 +382,10 @@
   "instanceNameFormat": "$(command)",
   "showEnvironmentVariables": true,
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "container.js"
     },
-    "Node16": {
+    "Node10": {
       "target": "container.js"
     },
     "Node20_1": {
@@ -408,7 +408,7 @@
     "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_2": "1.238.1"
+    "Default": "1.241.2",
+    "Node20_229_2": "1.241.3"
   }
 }

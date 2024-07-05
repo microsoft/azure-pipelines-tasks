@@ -157,12 +157,12 @@
   ],
   "instanceNameFormat": "Azure Function App on Container Deploy: $(appName)",
   "execution": {
-    "Node10": {
-      "target": "azurefunctiononcontainerdeployment.js"
-    },
     "Node16": {
       "target": "azurefunctiononcontainerdeployment.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "azurefunctiononcontainerdeployment.js"
     }
   },
   "messages": {

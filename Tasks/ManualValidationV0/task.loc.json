@@ -15,10 +15,9 @@
   ],
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 242,
     "Patch": 0
   },
-  "preview": true,
   "inputs": [
     {
       "name": "notifyUsers",

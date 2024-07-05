@@ -69,7 +69,7 @@ if (semver.lt(process.versions.node, minNodeVer)) {
 // Node 14 is supported by the build system, but not currently by the agent. Block it for now
 var supportedNodeTargets = ["Node", "Node10"/*, "Node14"*/];
 var node10Version = '10.24.1';
-var node20Version = '20.11.0';
+var node20Version = '20.14.0';
 
 // add node modules .bin to the path so we can dictate version of tsc etc...
 if (!test('-d', binPath)) {
@@ -190,6 +190,11 @@ CLI.build = async function(/** @type {{ task: string }} */ argv)
     await CLI.serverBuild(argv);
 }
 
+CLI.buildandtest = async function (/** @type {{ task: string }} */ argv) {
+    await CLI.build(argv);
+    await CLI.test(argv);
+}
+
 CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     ensureBuildTasksAndRemoveTestPath();
     ensureTool('tsc', '--version', 'Version 4.0.2');
@@ -203,7 +208,7 @@ CLI.serverBuild = async function(/** @type {{ task: string }} */ argv) {
     const makeOptions = fileToJson(makeOptionsPath);
 
     // Verify generated files across tasks are up-to-date
-    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint);
+    util.processGeneratedTasks(baseConfigToolPath, taskList, makeOptions, writeUpdatedsFromGenTasks, argv.sprint, argv['debug-agent-dir']);
 
     const allTasks = getTaskList(taskList);
 
@@ -1020,7 +1025,7 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
 var command  = argv._[0];
 
 if (typeof CLI[command] !== 'function') {
-  fail('Invalid CLI command: "' + command + '"\r\nValid commands:' + Object.keys(CLI));
+  fail(`Invalid CLI command: "${command}"\r\nValid commands: ${Object.keys(CLI).join(', ')}`);
 }
 
 CLI[command](argv);
