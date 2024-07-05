@@ -3,7 +3,7 @@
   "main": "main.js",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^16.11.39",
+    "@types/node": "^16.18.98",
     "@types/q": "^1.0.7",
     "agent-base": "^6.0.2",
     "azure-pipelines-task-lib": "^4.13.0",
