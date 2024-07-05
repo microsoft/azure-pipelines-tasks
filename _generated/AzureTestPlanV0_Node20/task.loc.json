@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 241,
-    "Patch": 9
+    "Minor": 242,
+    "Patch": 1
   },
   "preview": true,
   "demands": [],
@@ -182,7 +182,7 @@
     "MultipleMatchingGradlewFound": "ms-resource:loc.messages.MultipleMatchingGradlewFound"
   },
   "_buildConfigMapping": {
-    "Default": "0.241.8",
-    "Node20-225": "0.241.9"
+    "Default": "0.242.0",
+    "Node20-225": "0.242.1"
   }
 }

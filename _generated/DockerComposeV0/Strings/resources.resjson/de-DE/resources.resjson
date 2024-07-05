@@ -80,5 +80,7 @@
   "loc.messages.NoDataWrittenOnFile": "In die Datei \"%s\" wurden keine Daten geschrieben. ",
   "loc.messages.FileContentSynced": "Der Inhalt der Datei wurde auf dem Datenträger synchronisiert. Der Inhalt ist \"%s\".",
   "loc.messages.ImageNameWithoutTag": "Imagename nicht mit Tag angegeben, Übertragung aller Imagetags mithilfe von Push angegeben.",
-  "loc.messages.WritingDockerConfigToTempFile": "Die Docker-Konfiguration wird in eine temporäre Datei geschrieben. Dateipfad: %s, Docker-Konfiguration: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "Die Docker-Konfiguration wird in eine temporäre Datei geschrieben. Dateipfad: %s, Docker-Konfiguration: %s",
+  "loc.messages.InvalidProjectName": "Der Projektname „%s“ muss ein gültiger Docker Compose-Projektname sein. Folgen Sie dem Link, um weitere Informationen zu erhalten: https://docs.docker.com/compose/project-name/#set-a-project-name",
+  "loc.messages.MigrateToDockerComposeV2": "The task is using Docker Compose V1, which is end-of-life and will be removed from Microsoft-hosted agents July 24. Pipelines running on Microsoft-hosted agents should be updated for Docker Compose v2 compatibility e.g. use compatible container names. For guidance on required updates, please refer to the official Docker Compose documentation at https://docs.docker.com/compose/migrate/"
 }
