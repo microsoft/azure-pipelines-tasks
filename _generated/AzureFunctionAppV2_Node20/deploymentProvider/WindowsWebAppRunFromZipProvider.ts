@@ -42,7 +42,7 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
         var isNewValueUpdated: boolean = await this.appServiceUtilityExt.updateAndMonitorAppSettings(addCustomApplicationSetting, deleteCustomApplicationSetting);
         
         // add Output for isNewValueUpdated  
-        tl.debug(" Ouutput the value for isNewValueUpdated : " + isNewValueUpdated);
+        tl.debug(" Ouutput the value for App Settings isNewValueUpdated : " + isNewValueUpdated);
 
 
         if(!isNewValueUpdated) {

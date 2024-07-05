@@ -23,7 +23,7 @@
     "agent-base": "6.0.2",
     "azure-devops-node-api": "11.2.0",
     "azure-pipelines-task-lib": "^4.4.0",
-    "azure-pipelines-tasks-azure-arm-rest": "^3.226.0",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.239.0",
     "azure-pipelines-tasks-webdeployment-common": "^4.222.2",
     "azure-storage": "2.10.7",
     "moment": "^2.29.4",
