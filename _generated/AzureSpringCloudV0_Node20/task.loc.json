@@ -18,7 +18,7 @@
   "preview": false,
   "version": {
     "Major": 0,
-    "Minor": 241,
+    "Minor": 242,
     "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
@@ -343,7 +343,7 @@
     "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern"
   },
   "_buildConfigMapping": {
-    "Default": "0.241.0",
-    "Node20_229_5": "0.241.1"
+    "Default": "0.242.0",
+    "Node20_229_5": "0.242.1"
   }
 }
