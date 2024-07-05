@@ -81,6 +81,6 @@
   "loc.messages.FileContentSynced": "檔案內容已同步到磁碟。內容為 %s。",
   "loc.messages.ImageNameWithoutTag": "未使用標籤指定映像名稱，因此會推送指定映像的所有標籤。",
   "loc.messages.WritingDockerConfigToTempFile": "正在將 Docker 設定寫入暫存檔案。檔案路徑: %s，Docker 設定: %s",
-  "loc.messages.InvalidProjectName": "專案名稱 \"%s\" 必須是有效的 docker compose 專案名稱。如需詳細資料，請遵循連結: https://docs.docker.com/compose/project-name/#set-a-project-name",
-  "loc.messages.MigrateToDockerComposeV2": "工作正在使用 Docker Compose V1，但有轉換為 Docker Compose V2 的計劃。必須調查如何將您的專案調整為 Docker Compose V2。如需此移轉的指引，您可以在提供的連結參閱官方Docker Compose 文件: https://docs.docker.com/compose/migrate/"
+  "loc.messages.InvalidProjectName": "The project name \"%s\" must be a valid docker compose project name. Follow the link for more details: https://aka.ms/azdo-docker-compose-v1",
+  "loc.messages.MigrateToDockerComposeV2": "此工作使用 Docker Compose V1，該版本已終止服務且將於 7 月 24 日從 Microsoft 裝載代理程式中移除。應更新在 Microsoft 裝載代理程式上執行的 Pipelines 以實現 Docker Compose v2 相容性 (例如使用相容的容器名稱)。如需所需更新的指引，請於 https://docs.docker.com/compose/migrate/ 參閱官方 Docker Compose 文件"
 }

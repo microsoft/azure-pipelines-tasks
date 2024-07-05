@@ -81,6 +81,6 @@
   "loc.messages.FileContentSynced": "Содержимое файла синхронизировано с диском. Содержимое: %s.",
   "loc.messages.ImageNameWithoutTag": "Имя образа указано без тега; передаются все теги указанного образа.",
   "loc.messages.WritingDockerConfigToTempFile": "Запись конфигурации Docker во временный файл. Путь к файлу: %s, конфигурация Docker: %s",
-  "loc.messages.InvalidProjectName": "Имя проекта \"%s\" должно быть допустимым именем проекта Docker Compose. Дополнительные сведения см. по ссылке: https://docs.docker.com/compose/project-name/#set-a-project-name",
-  "loc.messages.MigrateToDockerComposeV2": "Задача использует Docker Compose V1, но планируется переход на Docker Compose V2. Необходимо изучить, как адаптировать проект к Docker Compose V2. Инструкции по этой миграции можно найти в официальной документации Docker Compose по ссылке https://docs.docker.com/compose/migrate/"
+  "loc.messages.InvalidProjectName": "The project name \"%s\" must be a valid docker compose project name. Follow the link for more details: https://aka.ms/azdo-docker-compose-v1",
+  "loc.messages.MigrateToDockerComposeV2": "Задача использует Docker Compose версии 1, у которого заканчивается срок службы и который будет удален 24 июля из агентов с размещением в Майкрософт. Конвейеры, работающие на агентах с размещением в Майкрософт, следует обновить для совместимости с Docker Compose версии 2, например использовать совместимые имена контейнеров. Инструкции по необходимым обновлениям можно найти в официальной документации Docker Compose на странице https://docs.docker.com/compose/migrate/"
 }
