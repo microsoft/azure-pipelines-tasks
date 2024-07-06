@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Publicar artefacto de canalización",
+  "loc.friendlyName": "Publicación de artefactos de canalización",
   "loc.helpMarkDown": "Publique (cargue) un archivo o directorio como artefacto con nombre para la ejecución actual. Los artefactos publicados pueden descargarse en otros trabajos, fases o canalizaciones mediante la tarea \"Descargar artefactos de canalización\".",
   "loc.description": "Publica (carga) un archivo o directorio como artefacto con nombre para la ejecución actual.",
   "loc.instanceNameFormat": "Publicar artefacto de canalización",
@@ -14,5 +14,7 @@
   "loc.input.label.parallel": "Copia en paralelo",
   "loc.input.help.parallel": "Seleccione si quiere copiar los archivos en paralelo con varios subprocesos para obtener un mayor rendimiento potencial. Si esta configuración no está habilitada, se usará un subproceso.",
   "loc.input.label.parallelCount": "Recuento de elementos en paralelo",
-  "loc.input.help.parallelCount": "Especifique el grado de paralelismo o el número de subprocesos usados para realizar la copia. Debe ser un valor entre 1 y 128."
+  "loc.input.help.parallelCount": "Especifique el grado de paralelismo o el número de subprocesos usados para realizar la copia. Debe ser un valor entre 1 y 128.",
+  "loc.input.label.properties": "Propiedades personalizadas",
+  "loc.input.help.properties": "Escriba las propiedades personalizadas para asociar con el artefacto. Se esperaba una cadena JSON válida con todas las claves con el prefijo \"user-\"."
 }

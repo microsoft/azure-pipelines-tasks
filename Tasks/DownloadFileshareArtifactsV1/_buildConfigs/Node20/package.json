@@ -20,8 +20,8 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.14.2",
     "@types/uuid": "^8.3.0",
-    "artifact-engine": "^1.5.2",
-    "azure-pipelines-task-lib": "^4.4.0"
+    "artifact-engine": "^1.5.3",
+    "azure-pipelines-task-lib": "^4.13.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"
