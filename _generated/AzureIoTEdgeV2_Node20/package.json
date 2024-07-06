@@ -9,7 +9,7 @@
     "azure-pipelines-task-lib": "^4.4.0",
     "azure-pipelines-tasks-artifacts-common": "^2.225.0",
     "azure-pipelines-tasks-docker-common": "2.226.0",
-    "azure-pipelines-tasks-utility-common": "^3.210.0",
+    "azure-pipelines-tasks-utility-common": "^3.241.0",
     "minimatch": "^3.1.2"
   },
   "devDependencies": {
