@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 242,
-    "Patch": 4
+    "Patch": 8
   },
   "demands": [],
   "preview": "false",
@@ -358,11 +358,11 @@
     "FileContentSynced": "Synced the file content to the disk. The content is %s.",
     "ImageNameWithoutTag": "Image name not specified with tag, pushing all tags of the image specified.",
     "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s",
-    "InvalidProjectName": "The project name \"%s\" must be a valid docker compose project name. Follow the link for more details: https://docs.docker.com/compose/project-name/#set-a-project-name",
+    "InvalidProjectName": "The project name \"%s\" must be a valid docker compose project name. Follow the link for more details: https://aka.ms/azdo-docker-compose-v1",
     "MigrateToDockerComposeV2": "The task is using Docker Compose V1, which is end-of-life and will be removed from Microsoft-hosted agents July 24. Pipelines running on Microsoft-hosted agents should be updated for Docker Compose v2 compatibility e.g. use compatible container names. For guidance on required updates, please refer to the official Docker Compose documentation at https://docs.docker.com/compose/migrate/"
   },
   "_buildConfigMapping": {
-    "Default": "0.242.4",
-    "Node20_229_2": "0.242.5"
+    "Default": "0.242.8",
+    "Node20_229_2": "0.242.9"
   }
 }
