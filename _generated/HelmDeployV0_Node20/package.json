@@ -6,7 +6,7 @@
     "@types/uuid": "^8.3.0",
     "agent-base": "6.0.2",
     "azure-pipelines-task-lib": "^4.13.0",
-    "azure-pipelines-tasks-azure-arm-rest": "3.239.0",
+    "azure-pipelines-tasks-azure-arm-rest": "3.241.2",
     "azure-pipelines-tasks-docker-common": "^2.241.1",
     "azure-pipelines-tasks-kubernetes-common": "^2.224.1",
     "azure-pipelines-tasks-securefiles-common": "^2.207.0",
