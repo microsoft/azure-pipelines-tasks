@@ -11,7 +11,7 @@
     "azure-pipelines-tasks-utility-common": "^3.210.0",
     "brace-expansion": "1.1.8",
     "browserify-mime": "1.2.9",
-    "glob": "7.1.2",
+    "glob": "7.2.3",
     "q": "1.4.1",
     "semver": "5.4.1",
     "typed-rest-client": "^1.8.9",
