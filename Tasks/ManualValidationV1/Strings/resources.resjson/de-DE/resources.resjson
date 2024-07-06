@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Manuelle Überprüfung",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://aka.ms/manual-validation)",
+  "loc.description": "[VORSCHAU] Hiermit wird eine Pipelineausführung angehalten, um auf eine manuelle Interaktion zu warten. Dies funktioniert nur bei YAML-Pipelines.",
+  "loc.instanceNameFormat": "Manuelle Validierung",
+  "loc.input.label.notifyUsers": "Benutzer benachrichtigen",
+  "loc.input.help.notifyUsers": "Senden Sie eine E-Mail an bestimmte Benutzer (oder Gruppen), um diese über ausstehende manuelle Überprüfungen zu informieren. Nur in den genehmigenden Personen angegebene Benutzer können eine manuelle Überprüfung durchführen.",
+  "loc.input.label.approvers": "Genehmigende Personen",
+  "loc.input.help.approvers": "Geben Sie Benutzer/Gruppen/Projektteams durch Kommas getrennt an, um auf eine manuelle Überprüfung zu reagieren. Wenn keine Eingabe vorhanden ist, können Benutzer mit der Berechtigung zum Erstellen einer Warteschlange Maßnahmen ergreifen.",
+  "loc.input.label.instructions": "Anleitung",
+  "loc.input.help.instructions": "Diese Anweisungen werden dem Benutzer angezeigt, damit dieser die manuelle Überprüfung fortsetzen oder ablehnen kann. Basierend auf diesen Anweisungen kann der Benutzer eine fundierte Entscheidung zu dieser manuellen Überprüfung treffen.",
+  "loc.input.label.onTimeout": "Bei Zeitlimit",
+  "loc.input.help.onTimeout": "Hiermit wird diese manuelle Überprüfung automatisch abgelehnt oder fortgesetzt, wenn sie für das angegebene Zeitlimit oder seit 30 Tagen aussteht, je nachdem, was zuerst eintritt."
+}

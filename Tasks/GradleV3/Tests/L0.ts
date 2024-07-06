@@ -107,86 +107,76 @@ function createTemporaryFolders(): void {
 describe('Gradle L0 Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
-    before((done) => {
+    before(async () => {
         process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";
         process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
-        done();
     });
 
-    /* tslint:disable:no-empty */
-    after(function () { });
-    /* tslint:enable:no-empty */
-
-    it('run gradle with all default inputs', (done) => {
+    it('run gradle with all default inputs', async () => {
         let tp: string = path.join(__dirname, 'L0AllDefaultInputs.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.ran(gradleWrapper + ' build'), 'it should have run gradlew build');
             assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
             assert(tr.stderr.length === 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf('GRADLE_OPTS is now set to -Xmx2048m') > 0);
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('run gradle with missing wrapperScript', (done) => {
+    it('run gradle with missing wrapperScript', async () => {
         let tp: string = path.join(__dirname, 'L0MissingWrapperScript.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.invokedToolCount === 0, 'should not have run gradle');
             assert(tr.stdout.length > 0, 'should have written to stdout');
             assert(tr.failed, 'task should have failed');
             assert(tr.stdout.indexOf('Input required: wrapperScript') >= 0, 'wrong error message: "' + tr.stdout + '"');
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('run gradle with INVALID wrapperScript', (done) => {
+    it('run gradle with INVALID wrapperScript', async () => {
         let tp: string = path.join(__dirname, 'L0InvalidWrapperScript.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.invokedToolCount === 0, 'should not have run gradle');
             assert(tr.stdout.length > 0, 'should have written to stdout');
             assert(tr.failed, 'task should have failed');
             // /home/gradlew is from L0InvalidWrapperScript.ts
             assert(tr.stdout.indexOf('Not found /home/gradlew') >= 0, 'wrong error message: "' + tr.stdout + '"');
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('run gradle with cwd set to valid path', (done) => {
+    it('run gradle with cwd set to valid path', async () => {
         let tp: string = path.join(__dirname, 'L0ValidCwdPath.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.ran(gradleWrapper + ' build'), 'it should have run gradlew build');
             assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
@@ -194,213 +184,194 @@ describe('Gradle L0 Suite', function () {
             assert(tr.succeeded, 'task should have succeeded');
             // /home/repo/src is from L0ValidCwdPath.ts
             assert(tr.stdout.indexOf('cwd=/home/repo/src') > 0);
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('run gradle with cwd set to INVALID path', (done) => {
+    it('run gradle with cwd set to INVALID path', async () => {
         let tp: string = path.join(__dirname, 'L0InvalidPath.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.invokedToolCount === 0, 'should not have run gradle');
             assert(tr.stdout.length > 0, 'should have written to stdout');
             assert(tr.failed, 'task should have failed');
             // /home/repo/src2 is from L0InvalidPath.ts
             assert(tr.stdout.indexOf('Not found /home/repo/src2') >= 0, 'wrong error message: "' + tr.stdout + '"');
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('run gradle with options set', (done) => {
+    it('run gradle with options set', async () => {
         let tp: string = path.join(__dirname, 'L0OptionsSet.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
-            tr.run();
+            await tr.runAsync();
 
             // ' /o /p t i /o /n /s build' is from L0OptionsSet.ts
             assert(tr.ran(gradleWrapper + ' /o /p t i /o /n /s build'), 'it should have run gradlew /o /p t i /o /n /s build');
             assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
             assert(tr.stderr.length === 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('run gradle with tasks not set', (done) => {
+    it('run gradle with tasks not set', async () => {
         let tp: string = path.join(__dirname, 'L0TasksNotSet.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.invokedToolCount === 0, 'should not have run gradle');
             assert(tr.stdout.length > 0, 'should have written to stdout');
             assert(tr.failed, 'task should have failed');
             assert(tr.stdout.indexOf('Input required: tasks') >= 0, 'wrong error message: "' + tr.stdout + '"');
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('run gradle with tasks set to multiple', (done) => {
+    it('run gradle with tasks set to multiple', async () => {
         let tp: string = path.join(__dirname, 'L0MultipleTasks.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.ran(gradleWrapper + ' /o /p t i /o /n /s build test deploy'), 'it should have run gradlew /o /p t i /o /n /s build test deploy');
             assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
             assert(tr.stderr.length === 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('run gradle with missing publishJUnitResults input', (done) => {
+    it('run gradle with missing publishJUnitResults input', async () => {
         let tp: string = path.join(__dirname, 'L0MissingPublishJUnitResultsInput.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.ran(gradleWrapper + ' build'), 'it should have run gradlew build');
             assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
             assert(tr.stderr.length === 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('run gradle with publishJUnitResults set to "garbage"', (done) => {
+    it('run gradle with publishJUnitResults set to "garbage"', async () => {
         let tp: string = path.join(__dirname, 'L0GarbagePublishJUnitResults.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.ran(gradleWrapper + ' build'), 'it should have run gradlew build');
             assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
             assert(tr.stderr.length === 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('fails if missing testResultsFiles input', (done) => {
+    it('fails if missing testResultsFiles input', async () => {
         let tp: string = path.join(__dirname, 'L0MissingTestResultsFilesInput.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.invokedToolCount === 0, 'should not have run gradle');
             assert(tr.stdout.length > 0, 'should have written to stdout');
             assert(tr.failed, 'task should have failed');
             assert(tr.stdout.indexOf('Input required: testResultsFiles') >= 0, 'wrong error message: "' + tr.stdout + '"');
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('fails if missing javaHomeSelection input', (done) => {
+    it('fails if missing javaHomeSelection input', async () => {
         let tp: string = path.join(__dirname, 'L0MissingJavaHomeSelectionInput.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.invokedToolCount === 0, 'should not have run gradle');
             assert(tr.stdout.length > 0, 'should have written to stdout');
             assert(tr.failed, 'task should have failed');
             assert(tr.stdout.indexOf('Input required: javaHomeSelection') >= 0, 'wrong error message: "' + tr.stdout + '"');
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('run gradle with jdkVersion set to 1.8', (done) => {
+    it('run gradle with jdkVersion set to 1.8', async () => {
         let tp: string = path.join(__dirname, 'L0JDKVersion18.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.ran(gradleWrapper + ' build'), 'it should have run gradlew build');
             assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
             assert(tr.stderr.length === 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf('Set JAVA_HOME to /user/local/bin/Java8') >= 0, 'JAVA_HOME not set correctly');
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('run gradle with jdkVersion set to 1.5', (done) => {
+    it('run gradle with jdkVersion set to 1.5', async () => {
         let tp: string = path.join(__dirname, 'L0JDKVersion15.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
-            tr.run();
+            await tr.runAsync();
 
             if (isWindows) {
                 // should have run reg query toolrunner once
@@ -410,22 +381,20 @@ describe('Gradle L0 Suite', function () {
             }
             assert(tr.failed, 'task should have failed');
             assert(tr.stdout.indexOf('loc_mock_FailedToLocateSpecifiedJVM') >= 0, 'JAVA_HOME set?');
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('run gradle with Valid inputs but it fails', (done) => {
+    it('run gradle with Valid inputs but it fails', async () => {
         let tp: string = path.join(__dirname, 'L0ValidInputsFailure.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.ran(gradleWrapper + ' build FAIL'), 'it should have run gradlew build FAIL');
             assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
@@ -433,65 +402,59 @@ describe('Gradle L0 Suite', function () {
             assert(tr.failed, 'task should have failed');
             assert(tr.stdout.indexOf('FAILED') >= 0, 'It should have failed');
             assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;publishRunAttachments=true;resultFiles=\/user\/build\/fun\/test-results\/test-123.xml;\]/) >= 0);
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('Gradle build with publish test results.', (done) => {
+    it('Gradle build with publish test results.', async () => {
         let tp: string = path.join(__dirname, 'L0PublishTestResults.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;publishRunAttachments=true;resultFiles=\/user\/build\/fun\/test-123.xml;\]/) >= 0);
             assert(tr.stderr.length === 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('Gradle build with publish test results with no matching test result files.', (done) => {
+    it('Gradle build with publish test results with no matching test result files.', async () => {
         let tp: string = path.join(__dirname, 'L0PublishTestResultsNoMatchingResultFiles.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.stdout.search(/##vso\[results.publish\]/) < 0, 'publish test results should not have got called.');
             assert(tr.stderr.length === 0, 'should not have written to stderr');
             assert(tr.stdout.search(/NoTestResults/) >= 0, 'should have produced a verbose message.');
             assert(tr.succeeded, 'task should have succeeded');
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('Gradle with SonarQube - Should run Gradle with all default inputs when SonarQube analysis disabled', function (done) {
+    it('Gradle with SonarQube - Should run Gradle with all default inputs when SonarQube analysis disabled', async function() {
         let tp: string = path.join(__dirname, 'L0SQGradleDefaultSQDisabled.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
             createTemporaryFolders();
 
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
@@ -500,17 +463,15 @@ describe('Gradle L0 Suite', function () {
             assert(tr.ran(gradleWrapper + ' build'), 'it should have run only the default settings');
 
             cleanTemporaryFolders();
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('Gradle with SonarQube - Should run Gradle with SonarQube', function (done) {
+    it('Gradle with SonarQube - Should run Gradle with SonarQube', async function() {
         let tp: string = path.join(__dirname, 'L0SQ.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -518,7 +479,7 @@ describe('Gradle L0 Suite', function () {
             createTemporaryFolders();
             let testStgDir: string = path.join(__dirname, '_temp');
 
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
@@ -527,17 +488,15 @@ describe('Gradle L0 Suite', function () {
             assert(tr.ran(gradleWrapper + ` build -I ${gradleFile} sonarqube`), 'should have run the gradle wrapper with the appropriate SonarQube arguments');
 
             cleanTemporaryFolders();
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('Single Module Gradle with Checkstyle and FindBugs and PMD', function (done) {
+    it('Single Module Gradle with Checkstyle and FindBugs and PMD', async function() {
         let tp: string = path.join(__dirname, 'L0SingleModuleCheckstyleFindBugsPMD.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -546,7 +505,7 @@ describe('Gradle L0 Suite', function () {
 
             let testStgDir: string = path.join(__dirname, '_temp');
 
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
@@ -575,17 +534,15 @@ describe('Gradle L0 Suite', function () {
             assertFileExistsInDir(codeAnalysisStgDir, '/root/14_test_PMD.xml');
 
             cleanTemporaryFolders();
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('Gradle with code analysis - Only shows empty results for tools which are enabled', function (done) {
+    it('Gradle with code analysis - Only shows empty results for tools which are enabled', async function() {
         let tp: string = path.join(__dirname, 'L0CAEmptyResultsEnabledTools.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -594,7 +551,7 @@ describe('Gradle L0 Suite', function () {
 
             let testStgDir: string = path.join(__dirname, '_temp');
 
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
@@ -616,17 +573,15 @@ describe('Gradle L0 Suite', function () {
             assertFileDoesNotExistInDir(codeAnalysisStgDir, 'CA');
 
             cleanTemporaryFolders();
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('Gradle with code analysis - Does not upload artifacts if code analysis reports were empty', function (done) {
+    it('Gradle with code analysis - Does not upload artifacts if code analysis reports were empty', async function() {
         let tp: string = path.join(__dirname, 'L0CANoUploadArtifactsIfReportsEmpty.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -636,7 +591,7 @@ describe('Gradle L0 Suite', function () {
             //var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule-noviolations');
             let testStgDir: string = path.join(__dirname, '_temp');
 
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.stdout.length > 0, 'should have written to stdout');
             assert(tr.stderr.length === 0, 'should not have written to stderr');
@@ -661,17 +616,15 @@ describe('Gradle L0 Suite', function () {
             assertFileDoesNotExistInDir(codeAnalysisStgDir, 'CA');
 
             cleanTemporaryFolders();
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('Gradle with code analysis - Does nothing if the tools were not enabled', function (done) {
+    it('Gradle with code analysis - Does nothing if the tools were not enabled', async function() {
         let tp: string = path.join(__dirname, 'L0CANoToolsEnabled.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -681,7 +634,7 @@ describe('Gradle L0 Suite', function () {
 
             createTemporaryFolders();
 
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.stdout.length > 0, 'should have written to stdout');
             assert(tr.stderr.length === 0, 'should not have written to stderr');
@@ -697,17 +650,15 @@ describe('Gradle L0 Suite', function () {
             assertFileDoesNotExistInDir(testStgDir, '.codeAnalysis');
 
             cleanTemporaryFolders();
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('Multi Module Gradle with Checkstyle and FindBugs and PMD', function (done) {
+    it('Multi Module Gradle with Checkstyle and FindBugs and PMD', async function() {
         let tp: string = path.join(__dirname, 'L0MultiModuleCheckstyleFindBugsPMD.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -716,7 +667,7 @@ describe('Gradle L0 Suite', function () {
 
             let testStgDir: string = path.join(__dirname, '_temp');
 
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
@@ -750,17 +701,15 @@ describe('Gradle L0 Suite', function () {
             // None - the pmd reports have no violations and are not uploaded
 
             cleanTemporaryFolders();
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('No Code Coverage results succeed', function (done) {
+    it('No Code Coverage results succeed', async function() {
         let tp: string = path.join(__dirname, 'L0NoCodeCoverageSucceed.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -769,7 +718,7 @@ describe('Gradle L0 Suite', function () {
 
             let testStgDir: string = path.join(__dirname, '_temp');
 
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.invokedToolCount === 3, 'should have only run gradle 3 times');
@@ -777,17 +726,15 @@ describe('Gradle L0 Suite', function () {
             assert(tr.ran(gradleWrapper + ` properties`), 'should have run Gradle with properties');
             assert(tr.ran(gradleWrapper + ` clean build jacocoTestReport`), 'should have run Gradle with code coverage');
             cleanTemporaryFolders();
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('No Code Coverage results fail', function (done) {
+    it('No Code Coverage results fail', async function() {
         let tp: string = path.join(__dirname, 'L0NoCodeCoverageFail.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
@@ -796,7 +743,7 @@ describe('Gradle L0 Suite', function () {
 
             let testStgDir: string = path.join(__dirname, '_temp');
 
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.failed, 'task should have failed');
             assert(tr.invokedToolCount === 3, 'should have only run gradle 3 times');
@@ -805,24 +752,22 @@ describe('Gradle L0 Suite', function () {
             assert(tr.ran(gradleWrapper + ` properties`), 'should have run Gradle with properties');
             assert(tr.ran(gradleWrapper + ` clean build jacocoTestReport`), 'should have run Gradle with code coverage');
             cleanTemporaryFolders();
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('Appends correct code coverage data when gradle is 5.x or higher', function (done) {
+    it('Appends correct code coverage data when gradle is 5.x or higher', async function() {
         let tp: string = path.join(__dirname, 'L0JacocoGradle5x.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
             createTemporaryFolders();
 
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.invokedToolCount === 3, 'should have only run gradle 3 times');
@@ -831,24 +776,22 @@ describe('Gradle L0 Suite', function () {
             assert(tr.ran(`${gradleWrapper} clean build jacocoTestReport`), 'should have run Gradle with code coverage');
             assert(tr.stdOutContained('Code coverage package is appending correct data (gradle 5.x and higher)'), 'should have appended correct code coverage plugin data');
             cleanTemporaryFolders();
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
-    it('Appends correct code coverage data when gradle is 4.x or lower', function (done) {
+    it('Appends correct code coverage data when gradle is 4.x or lower', async function() {
         let tp: string = path.join(__dirname, 'L0JacocoGradle4x.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         try {
             createTemporaryFolders();
 
-            tr.run();
+            await tr.runAsync();
 
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.invokedToolCount === 3, 'should have only run gradle 3 times');
@@ -857,13 +800,11 @@ describe('Gradle L0 Suite', function () {
             assert(tr.ran(`${gradleWrapper} clean build jacocoTestReport`), 'should have run Gradle with code coverage');
             assert(tr.stdOutContained('Code coverage package is appending correct data (gradle 4.x and lower)'), 'should have appended correct code coverage plugin data');
             cleanTemporaryFolders();
-
-            done();
         } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
-            done(err);
+            throw err;
         }
     });
 
@@ -884,7 +825,7 @@ describe('Gradle L0 Suite', function () {
         }
     }
 
-    it('Checkstyle tool retrieves results', function (done) {
+    it('Checkstyle tool retrieves results', async function() {
         let testSrcDir: string = path.join(__dirname, 'data', 'multimodule');
 
         let buildOutput: BuildOutput = new BuildOutput(testSrcDir, BuildEngine.Gradle);
@@ -895,11 +836,9 @@ describe('Gradle L0 Suite', function () {
         assert(results.length === 2, 'Unexpected number of results. note that module-three has no tool results ');
         verifyModuleResult(results, 'module-one', 34, 2, ['main.xml', 'main.html', 'test.xml', 'test.html'] );
         verifyModuleResult(results, 'module-two', 0, 0, [] /* empty report files are not copied in */);
-
-        done();
     });
 
-    it('Pmd tool retrieves results', function (done) {
+    it('Pmd tool retrieves results', async function() {
         let testSrcDir: string = path.join(__dirname, 'data', 'multimodule');
 
         let buildOutput: BuildOutput = new BuildOutput(testSrcDir, BuildEngine.Gradle);
@@ -910,11 +849,9 @@ describe('Gradle L0 Suite', function () {
         assert(results.length === 2, 'Unexpected number of results. note that module-three has no tool results ');
         verifyModuleResult(results, 'module-one', 2, 1, ['main.xml', 'main.html'] );
         verifyModuleResult(results, 'module-three', 0, 0, [] /* empty report files are not copied in */);
-
-        done();
     });
 
-    it('FindBugs tool retrieves results', function (done) {
+    it('FindBugs tool retrieves results', async function() {
         let testSrcDir: string = path.join(__dirname, 'data', 'multimodule');
 
         let buildOutput: BuildOutput = new BuildOutput(testSrcDir, BuildEngine.Gradle);
@@ -924,12 +861,10 @@ describe('Gradle L0 Suite', function () {
 
         assert(results.length === 1, 'Unexpected number of results. Expected 1 (only module-three has a findbugs XML), actual ' + results.length);
         verifyModuleResult(results, 'module-three', 5, 1, ['main.xml'] /* empty report files are not copied in */);
-
-        done();
     });
     // /* END Tools tests */
 
-    it('extractGradleVersion returns correct results', (done) => {
+    it('extractGradleVersion returns correct results', async () => {
         const log1: string = 'Gradle 4.0.1';
         const log2: string = 'Gradle 4.0';
         const log3: string = 'Gradle 3.5-rc-2';
@@ -944,7 +879,5 @@ describe('Gradle L0 Suite', function () {
         assert(extractGradleVersion(log5) === '8.5-20230916222118-0000', 'extractGradleVersion should return 8.5-20230916222118-0000');
         assert(extractGradleVersion(log6) === '8.4-branch-ljacomet_kotlin_kotlin_1_9_10-20230901164331+0000', 'extractGradleVersion should return 8.4-branch-ljacomet_kotlin_kotlin_1_9_10-20230901164331+0000');
         assert(extractGradleVersion(log7) === 'unknown', 'extractGradleVersion should return unknown');
-
-        done();
     });
 });
