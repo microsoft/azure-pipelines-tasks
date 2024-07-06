@@ -2,7 +2,7 @@
     "id": "2003AD3A-104A-451A-9238-60474AB294E6",
     "name": "ManualValidation",
     "friendlyName": "Manual validation",
-    "description": "[PREVIEW] Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.",
+    "description": "Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.",
     "helpUrl": "https://aka.ms/manual-validation",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/manual-validation)",
     "category": "Deploy",
@@ -15,10 +15,9 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 241,
+        "Minor": 242,
         "Patch": 0
     },
-    "preview": true,
     "inputs": [
         {
             "name": "notifyUsers",
