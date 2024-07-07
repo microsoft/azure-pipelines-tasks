@@ -2,11 +2,11 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.14.2",
-    "@types/q": "^1.5.0",
+    "@types/q": "^1.5.8",
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^4.0.0-preview",
-    "azure-pipelines-tasks-kubernetes-common": "2.209.1",
-    "azure-pipelines-tool-lib": "2.0.0-preview",
+    "azure-pipelines-tasks-kubernetes-common": "2.235.0",
+    "azure-pipelines-tool-lib": "2.0.7",
     "del": "2.2.0",
     "js-yaml": "4.1.0",
     "typed-rest-client": "1.8.9"
