@@ -6,7 +6,7 @@
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^4.0.0-preview",
     "azure-pipelines-tasks-kubernetes-common": "2.209.1",
-    "azure-pipelines-tool-lib": "2.0.0-preview",
+    "azure-pipelines-tool-lib": "2.0.7",
     "del": "2.2.0",
     "js-yaml": "4.1.0",
     "typed-rest-client": "1.8.9"
