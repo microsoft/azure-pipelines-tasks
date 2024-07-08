@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 242,
-    "Patch": 9
+    "Patch": 11
   },
   "demands": [],
   "preview": "false",
@@ -366,7 +366,7 @@
     "MigrateToDockerComposeV2": "The task is using Docker Compose V1, which is end-of-life and will be removed from Microsoft-hosted agents July 24. Pipelines running on Microsoft-hosted agents should be updated for Docker Compose v2 compatibility e.g. use compatible container names. For guidance on required updates, please refer to the official Docker Compose documentation at https://docs.docker.com/compose/migrate/"
   },
   "_buildConfigMapping": {
-    "Default": "0.242.8",
-    "Node20_229_2": "0.242.9"
+    "Default": "0.242.10",
+    "Node20_229_2": "0.242.11"
   }
 }

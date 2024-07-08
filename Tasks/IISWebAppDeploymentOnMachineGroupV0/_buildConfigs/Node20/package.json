@@ -20,7 +20,7 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.14.2",
     "@types/q": "1.5.8",
-    "azure-pipelines-tasks-webdeployment-common": "^4.230.6",
+    "azure-pipelines-tasks-webdeployment-common": "^4.242.0",
     "q": "1.4.1"
   },
   "devDependencies": {
