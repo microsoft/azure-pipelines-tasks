@@ -18,15 +18,15 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^20.3.1",
-    "@types/q": "1.0.7",
+    "@types/node": "^20.14.2",
+    "@types/q": "1.5.8",
     "agent-base": "^6.0.2",
-    "azure-pipelines-task-lib": "4.11.0",
+    "azure-pipelines-task-lib": "4.13.0",
     "azure-pipelines-tasks-azure-arm-rest": "^3.239.0",
-    "azure-pipelines-tasks-webdeployment-common": "4.230.6",
+    "azure-pipelines-tasks-webdeployment-common": "4.236.0",
     "moment": "^2.29.4",
     "q": "1.4.1",
-    "uuid": "3.1.0",
+    "uuid": "3.4.0",
     "xml2js": "^0.6.0"
   },
   "devDependencies": {

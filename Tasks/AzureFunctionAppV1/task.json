@@ -239,7 +239,6 @@
     },
     "Node10": {
       "target": "azurermwebappdeployment.js"
-    }
   },
   "messages": {
     "Invalidwebapppackageorfolderpathprovided": "Invalid App Service package or folder path provided: %s",

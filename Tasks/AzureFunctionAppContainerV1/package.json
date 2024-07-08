@@ -18,7 +18,7 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "16.18.39",
+    "@types/node": "^16.18.98",
     "@types/q": "1.0.7",
     "agent-base": "^6.0.2",
     "azure-devops-node-api": "11.2.0",
