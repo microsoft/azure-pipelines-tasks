@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Validación manual",
   "loc.helpMarkDown": "[Obtener más información acerca de esta tarea](https://aka.ms/manual-validation)",
-  "loc.description": "[VISTA PREVIA] Pausa una ejecución de canalización para esperar la interacción manual. Solo funciona con las canalizaciones de YAML.",
+  "loc.description": "Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.",
   "loc.instanceNameFormat": "Validación manual",
   "loc.input.label.notifyUsers": "Notificar a los usuarios",
   "loc.input.help.notifyUsers": "Envíe un correo electrónico de validación manual pendiente a usuarios (o grupos) específicos. Solo los usuarios con permiso para poner la compilación en cola pueden realizar una validación manual.",

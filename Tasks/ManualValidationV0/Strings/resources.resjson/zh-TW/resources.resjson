@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "手動驗證",
   "loc.helpMarkDown": "[深入了解此工作](https://aka.ms/manual-validation)",
-  "loc.description": "[預覽] 暫停管線執行以待手動互動。僅適用於 YAML 管線。",
+  "loc.description": "Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.",
   "loc.instanceNameFormat": "手動驗證",
   "loc.input.label.notifyUsers": "通知使用者",
   "loc.input.help.notifyUsers": "將手動驗證暫止電子郵件傳送給特定使用者 (或群組)。只有具有佇列組建權限的使用者，才能對手動驗證採取行動。",
