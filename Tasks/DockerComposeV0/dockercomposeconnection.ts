@@ -93,7 +93,7 @@ export default class DockerComposeConnection extends ContainerConnection {
     public createComposeCommand(): tr.ToolRunner {
         var command = tl.tool(this.dockerComposePath);
 
-        if (!tl.getInput('dockerComposePath')) {
+        if (!tl.getInput('dockerComposePath') && !this.dockerComposePath.includes("docker-compose")) {
             command.arg("compose");
             process.env["COMPOSE_COMPATIBILITY"] = "true";
         }
@@ -184,10 +184,10 @@ export default class DockerComposeConnection extends ContainerConnection {
         //Priority to docker-compose path provided by user
         this.dockerComposePath = tl.getInput('dockerComposePath');
         if (!this.dockerComposePath) {
-            this.dockerComposePath = tl.which("docker");
+            this.dockerComposePath = tl.which("docker-compose");
 
             if (!this.dockerComposePath) {
-                this.dockerComposePath = tl.which("docker-compose");
+                this.dockerComposePath = tl.which("docker");
             }
 
             if (!this.dockerComposePath) {
