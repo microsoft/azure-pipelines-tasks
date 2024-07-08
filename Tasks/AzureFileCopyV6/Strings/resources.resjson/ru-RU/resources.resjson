@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Узнайте больше об этой задаче](https://aka.ms/azurefilecopyreadme) и сообщайте о любых проблемах с новой версией задачи [здесь](https://github.com/microsoft/azure-pipelines-tasks/issues/new?assignees=&labels=regression%2Cbug&projects=&template=1.regression.yml&title=%5BREGRESSION%5D%3A+)",
   "loc.description": "Копировать файлы в хранилище BLOB-объектов Azure или виртуальные машины",
   "loc.instanceNameFormat": "Копирование файлов $(Destination)",
-  "loc.releaseNotes": "Новые возможности версии 6.0: <br/>&nbsp;&nbsp; Поддержка федерации удостоверений рабочей нагрузки и [Azure RBAC](https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal), также использование [AzCopy.exe](https://github.com/Azure/azure-storage-azcopy/tree/v10.24.0) с версией 10.24.0. Дополнительные сведения см. [здесь](https://github.com/Azure/azure-storage-azcopy/releases)",
+  "loc.releaseNotes": "What's new in Version 6.0: <br/>&nbsp;&nbsp; Support Workload identity federation and [Azure RBAC](https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal), also use [AzCopy.exe](https://github.com/Azure/azure-storage-azcopy/tree/v10.25.1) with version 10.25.1, for more info:[here](https://github.com/Azure/azure-storage-azcopy/releases)",
   "loc.input.label.SourcePath": "Источник",
   "loc.input.help.SourcePath": "Абсолютный путь к исходной папке или файлу на локальном компьютере или общему ресурсу UNC. Выражение должно возвращать одну папку или один файл. Подстановочный знак (*) поддерживается в любом месте пути к файлу или имени файла.",
   "loc.input.label.ConnectedServiceNameARM": "Подписка Azure",

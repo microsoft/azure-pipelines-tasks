@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Más información sobre esta tarea](https://aka.ms/azurefilecopyreadme) y para notificar cualquier problema con esta nueva versión de la tarea [aquí](https://github.com/microsoft/azure-pipelines-tasks/issues/new?assignees=&labels=regression%2Cbug&projects=&template=1.regression.yml&title=%5BREGRESSION%5D%3A+)",
   "loc.description": "Copiar archivos en Azure Blob Storage o en máquinas virtuales",
   "loc.instanceNameFormat": "Copia de archivo $(Destination)",
-  "loc.releaseNotes": "Novedades de la versión 6.0: <br/>&nbsp;&nbsp; Compatibilidad con la federación de identidades de carga de trabajo y [RBAC de Azure](https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal), use también [AzCopy.exe](https://github.com/Azure/azure-storage-azcopy/tree/v10.24.0) con la versión 10.24.0 para obtener más información:[aquí](https://github.com/Azure/azure-storage-azcopy/releases)",
+  "loc.releaseNotes": "What's new in Version 6.0: <br/>&nbsp;&nbsp; Support Workload identity federation and [Azure RBAC](https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal), also use [AzCopy.exe](https://github.com/Azure/azure-storage-azcopy/tree/v10.25.1) with version 10.25.1, for more info:[here](https://github.com/Azure/azure-storage-azcopy/releases)",
   "loc.input.label.SourcePath": "Origen",
   "loc.input.help.SourcePath": "Ruta de acceso absoluta de la carpeta de origen, archivo en la máquina local o recurso compartido UNC. La expresión debe devolver un único archivo o carpeta. El uso del símbolo de comodín (*) se admite en cualquier parte de la ruta de acceso del archivo o del nombre de este.",
   "loc.input.label.ConnectedServiceNameARM": "Suscripción a Azure",

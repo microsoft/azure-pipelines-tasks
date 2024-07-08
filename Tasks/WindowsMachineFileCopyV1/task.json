@@ -1,125 +1,125 @@
 {
-  "id": "731004D4-1D66-4F70-8C05-638018B22210",
-  "name": "WindowsMachineFileCopy",
-  "friendlyName": "Windows machine file copy",
-  "description": "Copy files to remote Windows machines",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/windows-machine-file-copy",
-  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=627415)",
-  "category": "Deploy",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "author": "Microsoft Corporation",
-  "version": {
-    "Major": 1,
-    "Minor": 239,
-    "Patch": 0
-  },
-  "minimumAgentVersion": "1.104.0",
-  "groups": [
-    {
-      "name": "advanced",
-      "displayName": "Advanced Options",
-      "isExpanded": false
+    "id": "731004D4-1D66-4F70-8C05-638018B22210",
+    "name": "WindowsMachineFileCopy",
+    "friendlyName": "Windows machine file copy",
+    "description": "Copy files to remote Windows machines",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/windows-machine-file-copy",
+    "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=627415)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 242,
+        "Patch": 1
+    },
+    "minimumAgentVersion": "1.104.0",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced Options",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "SourcePath",
+            "type": "filePath",
+            "label": "Source",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Absolute path of the source folder or file on the local machine, or a UNC Share like c:\\fabrikamfiber or \\\\\\\\fabrikamshare\\fabrikamfiber."
+        },
+        {
+            "name": "EnvironmentName",
+            "type": "multiLine",
+            "label": "Machines",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs. <br>Eg: dbserver.fabrikam.com,192.168.12.34 <br>Or provide output variable of other tasks. Eg: $(variableName)"
+        },
+        {
+            "name": "AdminUserName",
+            "type": "string",
+            "label": "Admin Login",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Administrator login for the target machines."
+        },
+        {
+            "name": "AdminPassword",
+            "type": "string",
+            "label": "Password",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Password for administrator login for the target machines. <br>It can accept a variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark variable as 'secret' to secure it. "
+        },
+        {
+            "name": "TargetPath",
+            "type": "string",
+            "label": "Destination Folder",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Local Path on the target machines or an accessible UNC path for copying the files from the source like d:\\fabrikam or \\\\\\\\fabrikam\\Web."
+        },
+        {
+            "name": "CleanTargetBeforeCopy",
+            "type": "boolean",
+            "label": "Clean Target",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Selecting it will clean the destination folder before copying the files."
+        },
+        {
+            "name": "CopyFilesInParallel",
+            "type": "boolean",
+            "label": "Copy Files in Parallel",
+            "defaultValue": "true",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Selecting it will copy files in parallel to the machines."
+        },
+        {
+            "name": "AdditionalArguments",
+            "type": "multiLine",
+            "label": "Additional Arguments",
+            "required": false,
+            "groupName": "advanced",
+            "defaultValue": "",
+            "helpMarkDown": "Additional robocopy arguments that will be applied when copying files like, /min:33553332 /l."
+        },
+        {
+            "name": "ResourceFilteringMethod",
+            "type": "radio",
+            "label": "Select Machines By",
+            "required": false,
+            "defaultValue": "machineNames",
+            "groupName": "advanced",
+            "options": {
+                "machineNames": "Machine Names",
+                "tags": "Tags"
+            }
+        },
+        {
+            "name": "MachineNames",
+            "type": "string",
+            "label": "Filter Criteria",
+            "defaultValue": "",
+            "groupName": "advanced",
+            "required": false,
+            "helpMarkDown": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
+        }
+    ],
+    "instanceNameFormat": "Copy files from $(SourcePath)",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\WindowsMachineFileCopy.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
     }
-  ],
-  "inputs": [
-    {
-      "name": "SourcePath",
-      "type": "filePath",
-      "label": "Source",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Absolute path of the source folder or file on the local machine, or a UNC Share like c:\\fabrikamfiber or \\\\\\\\fabrikamshare\\fabrikamfiber."
-    },
-    {
-      "name": "EnvironmentName",
-      "type": "multiLine",
-      "label": "Machines",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs. <br>Eg: dbserver.fabrikam.com,192.168.12.34 <br>Or provide output variable of other tasks. Eg: $(variableName)"
-    },
-    {
-      "name": "AdminUserName",
-      "type": "string",
-      "label": "Admin Login",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Administrator login for the target machines."
-    },
-    {
-      "name": "AdminPassword",
-      "type": "string",
-      "label": "Password",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Password for administrator login for the target machines. <br>It can accept a variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark variable as 'secret' to secure it. "
-    },
-    {
-      "name": "TargetPath",
-      "type": "string",
-      "label": "Destination Folder",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Local Path on the target machines or an accessible UNC path for copying the files from the source like d:\\fabrikam or \\\\\\\\fabrikam\\Web."
-    },
-    {
-      "name": "CleanTargetBeforeCopy",
-      "type": "boolean",
-      "label": "Clean Target",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "advanced",
-      "helpMarkDown": "Selecting it will clean the destination folder before copying the files."
-    },
-    {
-      "name": "CopyFilesInParallel",
-      "type": "boolean",
-      "label": "Copy Files in Parallel",
-      "defaultValue": "true",
-      "required": false,
-      "groupName": "advanced",
-      "helpMarkDown": "Selecting it will copy files in parallel to the machines."
-    },
-    {
-      "name": "AdditionalArguments",
-      "type": "multiLine",
-      "label": "Additional Arguments",
-      "required": false,
-      "groupName": "advanced",
-      "defaultValue": "",
-      "helpMarkDown": "Additional robocopy arguments that will be applied when copying files like, /min:33553332 /l."
-    },
-    {
-      "name": "ResourceFilteringMethod",
-      "type": "radio",
-      "label": "Select Machines By",
-      "required": false,
-      "defaultValue": "machineNames",
-      "groupName": "advanced",
-      "options": {
-        "machineNames": "Machine Names",
-        "tags": "Tags"
-      }
-    },
-    {
-      "name": "MachineNames",
-      "type": "string",
-      "label": "Filter Criteria",
-      "defaultValue": "",
-      "groupName": "advanced",
-      "required": false,
-      "helpMarkDown": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
-    }
-  ],
-  "instanceNameFormat": "Copy files from $(SourcePath)",
-  "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\WindowsMachineFileCopy.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
-    }
-  }
 }

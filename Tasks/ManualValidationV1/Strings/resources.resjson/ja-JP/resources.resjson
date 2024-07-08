@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "手動検証",
   "loc.helpMarkDown": "[このタスクの詳細を表示](https://aka.ms/manual-validation)",
-  "loc.description": "[プレビュー] パイプライン実行を一時停止し、対話式操作を行うために待機します。YAML パイプラインでのみ機能します。",
+  "loc.description": "Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.",
   "loc.instanceNameFormat": "手動検証",
   "loc.input.label.notifyUsers": "ユーザーに通知",
   "loc.input.help.notifyUsers": "手動検証の保留のメールを特定のユーザー (またはグループ) に送信します。承認者に指定されたユーザーのみが手動検証を操作できます。",

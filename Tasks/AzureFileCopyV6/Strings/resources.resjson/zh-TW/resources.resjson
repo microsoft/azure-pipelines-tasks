@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[深入了解此工作](https://aka.ms/azurefilecopyreadme)。若要回報此工作之新版本 [這裡](https://github.com/microsoft/azure-pipelines-tasks/issues/new?assignees=&labels=regression%2Cbug&projects=&template=1.regression.yml&title=%5BREGRESSION%5D%3A+)",
   "loc.description": "將檔案複製到 Azure Blob 儲存體或虛擬機器",
   "loc.instanceNameFormat": "$(Destination) 檔案複製",
-  "loc.releaseNotes": "6.0 版的新功能： <br/>&nbsp;&nbsp; 支援工作負載身分識別同盟 [Azure RBAC](https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal)，亦會使用 10.24.0 版的 [AzCopy.exe](https://github.com/Azure/azure-storage-azcopy/tree/v10.24.0)。如需詳細資訊：[here](https://github.com/Azure/azure-storage-azcopy/releases)",
+  "loc.releaseNotes": "What's new in Version 6.0: <br/>&nbsp;&nbsp; Support Workload identity federation and [Azure RBAC](https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal), also use [AzCopy.exe](https://github.com/Azure/azure-storage-azcopy/tree/v10.25.1) with version 10.25.1, for more info:[here](https://github.com/Azure/azure-storage-azcopy/releases)",
   "loc.input.label.SourcePath": "來源",
   "loc.input.help.SourcePath": "來源資料夾、本機電腦檔案或 UNC 共用的絕對路徑。運算式應該傳回單一資料夾或檔案。支援在檔案路徑或檔案名稱的任何位置使用萬用字元符號 (*)。",
   "loc.input.label.ConnectedServiceNameARM": "Azure 訂用帳戶",

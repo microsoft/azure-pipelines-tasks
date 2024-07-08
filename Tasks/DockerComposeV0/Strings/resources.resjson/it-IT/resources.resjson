@@ -81,6 +81,6 @@
   "loc.messages.FileContentSynced": "Il contenuto del file è stato sincronizzato con il disco. Il contenuto è %s.",
   "loc.messages.ImageNameWithoutTag": "Il nome dell'immagine non è specificato con tag. Verrà eseguito il push di tutti i tag dell'immagine specificata.",
   "loc.messages.WritingDockerConfigToTempFile": "Scrittura della configurazione di Docker nel file temporaneo. Percorso del file: %s. Configurazione di Docker: %s",
-  "loc.messages.InvalidProjectName": "Il nome del progetto \"%s\" deve essere un nome di progetto Docker Compose valido. Per altre informazioni, seleziona il collegamento: https://docs.docker.com/compose/project-name/#set-a-project-name",
-  "loc.messages.MigrateToDockerComposeV2": "L'attività sta usando Docker Compose V1, ma è prevista la transizione a Docker Compose V2. È necessario esaminare come adattare il progetto a Docker Compose V2. Per indicazioni su questa migrazione, puoi fare riferimento alla documentazione ufficiale di Docker Compose al collegamento fornito: https://docs.docker.com/compose/migrate/"
+  "loc.messages.InvalidProjectName": "The project name \"%s\" must be a valid docker compose project name. Follow the link for more details: https://aka.ms/azdo-docker-compose-v1",
+  "loc.messages.MigrateToDockerComposeV2": "L'attività usa Docker Compose V1, che è alla fine del ciclo di vita e verrà rimosso dagli agenti ospitati da Microsoft il 24 luglio. Le pipeline in esecuzione in agenti ospitati da Microsoft devono essere aggiornate per Docker Compose compatibilità v2, ad esempio usare nomi di contenitori compatibili. Per indicazioni sull’aggiornamento richiesto, fare rifermento alla documentazione ufficiale di Docker Compose al collegamento fornito: https://docs.docker.com/compose/migrate/"
 }

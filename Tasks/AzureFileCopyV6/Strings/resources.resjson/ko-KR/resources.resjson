@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[여기](https://github.com/microsoft/azure-pipelines-tasks/issues/new?assignees=&labels=regression%2Cbug&projects=&template=1.regression.yml&title=%5BREGRESSION%5D%3A+)에서 [이 작업에 대한 자세한 정보](https://aka.ms/azurefilecopyreadme)를 알아보고 이 새 버전의 작업과 관련된 문제를 보고하세요.",
   "loc.description": "Azure Blob Storage 또는 가상 머신에 파일을 복사합니다.",
   "loc.instanceNameFormat": "$(Destination) 파일 복사",
-  "loc.releaseNotes": "버전 6.0의 새로운 기능: <br/>&nbsp;&nbsp; 워크로드 ID 페더레이션 및 [Azure RBAC](https://learn.microsoft.com/ko-kr/azure/storage/blobs/assign-azure-role-data-access?tabs=portal)를 지원하고 버전 10.24.0의 [AzCopy.exe](https://github.com/Azure/azure-storage-azcopy/tree/v10.24.0)를 사용합니다. 자세한 정보는 [여기](https://github.com/Azure/azure-storage-azcopy/releases)에서 확인할 수 있습니다.",
+  "loc.releaseNotes": "What's new in Version 6.0: <br/>&nbsp;&nbsp; Support Workload identity federation and [Azure RBAC](https://learn.microsoft.com/en-us/azure/storage/blobs/assign-azure-role-data-access?tabs=portal), also use [AzCopy.exe](https://github.com/Azure/azure-storage-azcopy/tree/v10.25.1) with version 10.25.1, for more info:[here](https://github.com/Azure/azure-storage-azcopy/releases)",
   "loc.input.label.SourcePath": "원본",
   "loc.input.help.SourcePath": "소스 폴더, 로컬 머신의 파일 또는 UNC 공유에 대한 절대 경로입니다. 식은 단일 폴더 또는 파일을 반환해야 합니다. 와일드카드 기호(*)는 파일 경로 또는 파일 이름의 모든 위치에서 지원됩니다.",
   "loc.input.label.ConnectedServiceNameARM": "Azure 구독",
