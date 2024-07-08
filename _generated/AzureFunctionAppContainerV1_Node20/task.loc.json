@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 242,
     "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
@@ -157,12 +157,12 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
-      "target": "azurefunctiononcontainerdeployment.js"
-    },
     "Node16": {
       "target": "azurefunctiononcontainerdeployment.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "azurefunctiononcontainerdeployment.js"
     },
     "Node20_1": {
       "target": "azurefunctiononcontainerdeployment.js",
@@ -326,7 +326,7 @@
     "FailedToRestartAppServiceSlot": "ms-resource:loc.messages.FailedToRestartAppServiceSlot"
   },
   "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_2": "1.238.1"
+    "Default": "1.242.0",
+    "Node20_229_2": "1.242.1"
   }
 }

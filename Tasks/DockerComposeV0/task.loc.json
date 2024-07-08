@@ -13,11 +13,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
-    "Patch": 0
+    "Minor": 242,
+    "Patch": 10
   },
   "demands": [],
   "preview": "false",
+  "deprecated": true,
+  "deprecationMessage": "The DockerCompose@0 task is deprecated. The task uses docker-compose v1 which no longer receives update since July 2023. To use docker compose v2, use the DockerCompose@1 task.",
   "groups": [
     {
       "name": "advanced",
@@ -335,11 +337,11 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "dockercompose.js",
       "argumentFormat": ""
     },
-    "Node16": {
+    "Node10": {
       "target": "dockercompose.js",
       "argumentFormat": ""
     }
@@ -355,6 +357,8 @@
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
     "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
     "ImageNameWithoutTag": "ms-resource:loc.messages.ImageNameWithoutTag",
-    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile"
+    "WritingDockerConfigToTempFile": "ms-resource:loc.messages.WritingDockerConfigToTempFile",
+    "InvalidProjectName": "ms-resource:loc.messages.InvalidProjectName",
+    "MigrateToDockerComposeV2": "ms-resource:loc.messages.MigrateToDockerComposeV2"
   }
 }

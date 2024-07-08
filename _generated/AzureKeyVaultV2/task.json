@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 238,
-    "Patch": 0
+    "Minor": 240,
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -74,21 +74,21 @@
   ],
   "instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
   "prejobexecution": {
-    "Node10": {
-      "target": "runprejob.js"
-    },
     "Node16": {
       "target": "runprejob.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "runprejob.js"
     }
   },
   "execution": {
-    "Node10": {
-      "target": "run.js"
-    },
     "Node16": {
       "target": "run.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "run.js"
     }
   },
   "messages": {
@@ -130,7 +130,7 @@
     "InvalidKeyVaultName": "%s is an invalid KeyVault name."
   },
   "_buildConfigMapping": {
-    "Default": "2.238.0",
-    "Node20_229_2": "2.238.1"
+    "Default": "2.240.2",
+    "Node20_229_2": "2.240.3"
   }
 }

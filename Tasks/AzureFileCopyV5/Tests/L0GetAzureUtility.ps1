@@ -19,4 +19,8 @@ Assert-AreEqual $azureUtilityFile "AzureUtilityAz1.0.ps1"
 Unregister-Mock Get-Module
 Register-Mock Get-Module { return }
 $azureUtilityFile = Get-AzureUtility -connectedServiceName $connectedServiceName
-Assert-AreEqual $azureUtilityFile "AzureUtilityARM.ps1"
+if ($featureFlags.retireAzureRM) {
+  Assert-AreEqual $azureUtilityFile "AzureUtilityAz1.0.ps1"
+} else {
+  Assert-AreEqual $azureUtilityFile "AzureUtilityARM.ps1"
+}

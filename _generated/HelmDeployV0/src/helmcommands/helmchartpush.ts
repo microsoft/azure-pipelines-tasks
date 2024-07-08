@@ -7,7 +7,7 @@ import helmcli from "../helmcli";
 Pushes a helm chart to ACR
 */
 
-export function addArguments(helmCli: helmcli): void {
+export async function addArguments(helmCli: helmcli): Promise<void> {
     helmCli.addArgument("push");
 
     helmCli.addArgument(tl.getVariable("helmChartRef"));

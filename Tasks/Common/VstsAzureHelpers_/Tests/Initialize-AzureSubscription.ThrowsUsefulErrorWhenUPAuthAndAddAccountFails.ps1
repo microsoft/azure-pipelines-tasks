@@ -1,6 +1,10 @@
 [CmdletBinding()]
 param()
 
+$featureFlags = @{
+    retireAzureRM = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 Microsoft.PowerShell.Core\Import-Module Microsoft.PowerShell.Security
@@ -26,6 +30,10 @@ $variableSets = @(
     @{ Classic = $false }
 )
 foreach ($variableSet in $variableSets) {
+    if (-not $variableSet.Classic -and $featureFlags.retireAzureRM) {
+        continue
+    }
+
     Write-Verbose ('-' * 80)
     Unregister-Mock Add-AzureAccount
     Unregister-Mock Add-AzureRMAccount

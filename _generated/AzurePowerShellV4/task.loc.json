@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 238,
-    "Patch": 4
+    "Minor": 242,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -191,11 +191,11 @@
         "windows"
       ]
     },
-    "Node10": {
+    "Node16": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
     },
-    "Node16": {
+    "Node10": {
       "target": "azurepowershell.js",
       "argumentFormat": ""
     }
@@ -211,7 +211,7 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   },
   "_buildConfigMapping": {
-    "Default": "4.238.4",
-    "Node20_229_2": "4.238.5"
+    "Default": "4.242.0",
+    "Node20_229_2": "4.242.1"
   }
 }

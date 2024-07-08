@@ -28,14 +28,14 @@
     "externals": {
         "archivePackages": [
             {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/azcopy/10.24/AzCopy.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/azcopy/10.25.1/AzCopy.zip",
                 "dest": "./"
             }
         ],
         "nugetv2": [
             {
                 "name": "VstsTaskSdk",
-                "version": "0.10.0",
+                "version": "0.21.0",
                 "repository": "https://www.powershellgallery.com/api/v2/",
                 "cp": [
                     {

@@ -1,4 +1,5 @@
 const argv = require('minimist')(process.argv.slice(2));
+const path = require('path');
 
 const util = require('../ci-util');
 const tempGen = require('./template-generator');
@@ -9,8 +10,7 @@ const OWNER = 'microsoft';
 const REPO = 'azure-pipelines-tasks';
 const GIT = 'git';
 const VALID_RELEASE_RE = /^[0-9]{1,3}$/;
-
-if (!argv.token) throw Error('token is required');
+// if (!argv.token) throw Error('token is required');
 
 const octokit = new Octokit({ auth: argv.token });
 
@@ -43,15 +43,14 @@ async function verifyNewReleaseTagOk(newRelease) {
  * Function to check that the release branch has no changes.
  */
 function checkGitStatus() {
-    var git_status = util.run(`${GIT} status --untracked-files=no --porcelain`);
-    if (git_status) {
+    const diffString = util.run(`${GIT} diff --name-only ${util.genTaskPath} ${util.tasksSourcePath}`);
+    if (diffString.trim().length) {
         console.log('You have uncommited changes in this clone. Aborting.');
-        console.log(git_status);
         process.exit(-1);
     } else {
         console.log('Git repo is clean.');
     }
-    return git_status;
+    return diffString;
 }
 
 /**
@@ -218,4 +217,5 @@ async function main() {
     }
 }
 
-main();
+// main();
+checkGitStatus();

@@ -18,8 +18,7 @@ function Get-AzureStorageKeyFromARM
 {
     param([string]$storageAccountName,
         [object]$endpoint,
-        [string][Parameter(Mandatory=$false)]$connectedServiceNameARM,
-        [string][Parameter(Mandatory=$false)]$vstsAccessToken)
+        [string][Parameter(Mandatory=$false)]$connectedServiceNameARM)
 }
 
 # creates azureStorageContext object for given storageaccount and storagekey
@@ -42,8 +41,7 @@ function Get-AzureBlobStorageEndpointFromARM
 {
     param([string]$storageAccountName,
         [object]$endpoint,
-        [string]$connectedServiceNameARM,
-        [string]$vstsAccessToken)
+        [string]$connectedServiceNameARM)
 }
 
 # return account type for given ARM storage account
@@ -51,8 +49,7 @@ function Get-AzureStorageAccountTypeFromARM
 {
     param([string]$storageAccountName,
         [object]$endpoint,
-        [string]$connectedServiceNameARM,
-        [string]$vstsAccessToken)
+        [string]$connectedServiceNameARM)
 }
 
 # return account type for given classic storage account
@@ -137,8 +134,7 @@ function Get-AzureMachineCustomScriptExtension
         [string]$vmName,
         [string]$name,
         [object]$endpoint,
-        [string]$connectedServiceNameARM,
-        [string]$vstsAccessToken)
+        [string]$connectedServiceNameARM)
 }
 
 # Returns details of the custom script extension $name executed on VM $vmName present in ResourceGroup $resourceGroupName
@@ -160,6 +156,5 @@ function Remove-AzureMachineCustomScriptExtension
         [string]$vmName,
         [string]$name,
         [object]$endpoint,
-        [string]$connectedServiceNameARM,
-        [string]$vstsAccessToken)
+        [string]$connectedServiceNameARM)
 }

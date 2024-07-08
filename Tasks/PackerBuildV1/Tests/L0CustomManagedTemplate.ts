@@ -13,7 +13,7 @@ tr.setInput("additionalBuilderParameters", "{}");
 tr.setInput("customTemplateParameters", "{\"client_id\": \"abcdef\", \"drop-location\":\"C:\\\\folder 1\\\\folder-2\"}");
 
 process.env["RELEASE_RELEASENAME"] = "Release-1";
-
+process.env['AGENT_TEMPDIRECTORY'] = '.';
 // provide answers for task mock
 let a: any = <any>{
     "which": {
@@ -26,11 +26,11 @@ let a: any = <any>{
     "exec": {
         "packer --version": {
             "code": 0,
-            "stdout": "1.2.4"
+            "stdout": "1.5.4"
         },
         "packer -machine-readable --version": {
             "code": 0,
-            "stdout": "1234567,,version,1.2.4"
+            "stdout": "1234567,,version,1.5.4"
         },
         "packer fix -validate=false C:\\custom.template.json": {
             "code": 0,

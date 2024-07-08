@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 242,
     "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
@@ -233,12 +233,12 @@
   ],
   "instanceNameFormat": "Azure Function App Deploy: $(appName)",
   "execution": {
-    "Node10": {
-      "target": "azurermwebappdeployment.js"
-    },
     "Node16": {
       "target": "azurermwebappdeployment.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "azurermwebappdeployment.js"
     }
   },
   "messages": {
@@ -400,7 +400,7 @@
     "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_9": "1.238.1"
+    "Default": "1.242.0",
+    "Node20_229_9": "1.242.1"
   }
 }

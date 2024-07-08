@@ -18,8 +18,8 @@
   "preview": false,
   "version": {
     "Major": 0,
-    "Minor": 238,
-    "Patch": 0
+    "Minor": 242,
+    "Patch": 2
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -304,12 +304,12 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
-      "target": "azurespringappsdeployment.js"
-    },
     "Node16": {
       "target": "azurespringappsdeployment.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "azurespringappsdeployment.js"
     }
   },
   "messages": {
@@ -339,7 +339,7 @@
     "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20_229_5": "0.238.1"
+    "Default": "0.242.2",
+    "Node20_229_5": "0.242.3"
   }
 }

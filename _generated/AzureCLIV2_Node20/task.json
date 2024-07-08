@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 238,
-    "Patch": 3
+    "Minor": 242,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -171,6 +171,24 @@
       "visibleRule": "scriptType = ps || scriptType = pscore",
       "helpMarkDown": "If this is false, the line `if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }` is appended to the end of your script. This will cause the last exit code from an external command to be propagated as the exit code of powershell. Otherwise the line is not appended to the end of your script.",
       "groupName": "advanced"
+    },
+    {
+      "name": "visibleAzLogin",
+      "type": "boolean",
+      "label": "az login output visibility",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "If this is set to true, az login command will output to the task. Setting it to false will suppress the az login output",
+      "groupName": "advanced"
+    },
+    {
+      "name": "keepAzSessionActive",
+      "type": "boolean",
+      "label": "[Experimental] Keep Azure CLI session active",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "When enabled, this task will continuously sign into Azure to avoid AADSTS700024 errors when requesting access tokens beyond the IdToken expiry date. Note that this feature is EXPERIMENTAL, may not work in all scenarios and you are using it without any guarantees. Valid only for service connections using the Workload Identity Federation authentication scheme.",
+      "groupName": "advanced"
     }
   ],
   "execution": {
@@ -205,10 +223,14 @@
     "JS_InvalidErrorActionPreference": "Invalid ErrorActionPreference '%s'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
     "GlobalCliConfigAgentVersionWarning": "For agent version < 2.115.0, only global Azure CLI configuration can be used",
     "UnacceptedScriptLocationValue": "%s is not a valid value for task input 'Script Location' (scriptLocation in YAML). Value can either be'inlineScript' or 'scriptPath'",
-    "ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at\u00A0%s See\u00A0https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
+    "ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at\u00A0%s See\u00A0https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections.",
+    "ProxyConfig": "az tool is configured to use %s as proxy server",
+    "FailedToRefreshAzSession": "The following error occurred while trying to refresh az-cli session: %s",
+    "RefreshingAzSession": "Attempting to refresh az-cli session...",
+    "KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input."
   },
   "_buildConfigMapping": {
-    "Default": "2.238.2",
-    "Node20_229_2": "2.238.3"
+    "Default": "2.242.0",
+    "Node20_229_2": "2.242.1"
   }
 }

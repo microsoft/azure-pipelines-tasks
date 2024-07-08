@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 238,
+    "Minor": 242,
     "Patch": 0
   },
   "demands": [],
@@ -188,12 +188,12 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
-      "target": "azuremysqldeploy.js"
-    },
     "Node16": {
       "target": "azuremysqldeploy.js",
       "argumentFormat": ""
+    },
+    "Node10": {
+      "target": "azuremysqldeploy.js"
     }
   },
   "messages": {
@@ -232,7 +232,7 @@
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern"
   },
   "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_2": "1.238.1"
+    "Default": "1.242.0",
+    "Node20_229_2": "1.242.1"
   }
 }

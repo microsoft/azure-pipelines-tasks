@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
+    "Minor": 241,
     "Patch": 1
   },
   "runsOn": [
@@ -59,7 +59,7 @@
     "AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.0",
-    "Node20_229_1": "0.238.1"
+    "Default": "0.241.0",
+    "Node20_229_1": "0.241.1"
   }
 }

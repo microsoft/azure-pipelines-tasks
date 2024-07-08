@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 238,
-    "Patch": 8
+    "Minor": 242,
+    "Patch": 0
   },
   "preview": true,
   "demands": [],
@@ -79,10 +79,9 @@
       "options": {
         "Java-Maven": "Java-Maven",
         "Java-Gradle": "Java-Gradle",
-        "Python": "Python"
-      },
-      "properties": {
-        "MultiSelectFlatList": "True"
+        "Python": "Python",
+        "Go": "Go",
+        "Jest": "Jest"
       }
     },
     {
@@ -179,7 +178,7 @@
     "MultipleMatchingGradlewFound": "Multiple gradlew files found. Selecting the first matched instance"
   },
   "_buildConfigMapping": {
-    "Default": "0.238.8",
-    "Node20-225": "0.238.9"
+    "Default": "0.242.0",
+    "Node20-225": "0.242.1"
   }
 }
