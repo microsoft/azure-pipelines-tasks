@@ -2,10 +2,9 @@
 ![Tasks](/taskbanner.png "Tasks")
 
 ## Overview
-This repo contains the tasks that are provided out-of-the-box with Azure Pipelines and Team Foundation Server.
-
-This provides open examples of how we write tasks which will help you write other tasks that can be uploaded to your account or server.  See **Writing Tasks** below.
-Check the Deprecation.md file for the list of tasks that are no longer supported.
+This repo contains the tasks provided out-of-the-box with Azure Pipelines and Team Foundation Server.
+This provides open examples of how we write tasks which will help you write other functions that can be uploaded to your account or server.  See **Writing Tasks** below.
+Check Deprecation.md file for the list of no longer supported tasks.
 
 ## Status
 |   | Build & Test |
