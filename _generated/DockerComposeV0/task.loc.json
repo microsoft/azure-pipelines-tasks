@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 242,
-    "Patch": 6
+    "Patch": 10
   },
   "demands": [],
   "preview": "false",
@@ -362,7 +362,7 @@
     "MigrateToDockerComposeV2": "ms-resource:loc.messages.MigrateToDockerComposeV2"
   },
   "_buildConfigMapping": {
-    "Default": "0.242.6",
-    "Node20_229_2": "0.242.7"
+    "Default": "0.242.10",
+    "Node20_229_2": "0.242.11"
   }
 }
