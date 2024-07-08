@@ -1,0 +1,30 @@
+parameters:
+- name: BuildSourceVersion
+  type: string
+
+steps:
+- bash: |
+    git init
+    git remote add origin https://github.com/microsoft/azure-pipelines-tasks
+    git fetch --force --tags --prune --prune-tags --progress --no-recurse-submodules origin --depth=1 +${{ parameters.BuildSourceVersion }}:refs/remotes/origin/${{ parameters.BuildSourceVersion }}
+    git checkout --progress --force refs/remotes/origin/${{ parameters.BuildSourceVersion }}
+  displayName: Checkout ${{ parameters.BuildSourceVersion }}
+
+# Use node 20, npm 9
+- task: NodeTool@0
+  displayName: Use node 20
+  inputs:
+    versionSpec: 20.11.0
+
+# npm install
+- script: npm install
+  displayName: Npm install
+
+# Verify min agent demands
+- script: |
+    cd ci/verifyMinAgentDemands
+    npm install
+  displayName: Npm install min agent demands
+
+- script: node ./ci/verifyMinAgentDemands/index.js --pat $(GitHubPAT)
+  displayName: Verify min agent demands

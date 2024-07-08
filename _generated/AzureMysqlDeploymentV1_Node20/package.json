@@ -1,0 +1,40 @@
+{
+  "name": "vsts-tasks-azuremysql",
+  "version": "1.0.3",
+  "description": "Azure Pipelines Azure MySQL",
+  "main": "azuremysqldeploy.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^20.3.1",
+    "@types/q": "1.0.7",
+    "agent-base": "^6.0.2",
+    "azure-pipelines-task-lib": "4.11.0",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.239.0",
+    "azure-pipelines-tasks-webdeployment-common": "^4.242.0",
+    "compress-commons": "1.1.0",
+    "crc32-stream": "1.0.0",
+    "moment": "^2.29.4",
+    "normalize-path": "2.0.1",
+    "q": "1.4.1",
+    "semver": "5.4.1",
+    "tar-stream": "1.5.2",
+    "winreg": "1.2.2",
+    "zip-stream": "1.1.0"
+  },
+  "devDependencies": {
+    "typescript": "5.1.6"
+  }
+}

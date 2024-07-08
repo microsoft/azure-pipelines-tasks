@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 200,
+        "Minor": 238,
         "Patch": 0
     },
     "demands": [
@@ -160,6 +160,10 @@
     ],
     "execution": {
         "Node10": {
+            "target": "grunttask.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
             "target": "grunttask.js",
             "argumentFormat": ""
         }

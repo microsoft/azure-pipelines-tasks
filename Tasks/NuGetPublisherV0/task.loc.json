@@ -9,8 +9,8 @@
   "author": "Lawrence Gripper",
   "version": {
     "Major": 0,
-    "Minor": 208,
-    "Patch": 1
+    "Minor": 238,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -19,8 +19,10 @@
   "demands": [
     "Cmd"
   ],
-  "minimumAgentVersion": "2.115.0",
+  "minimumAgentVersion": "2.144.0",
   "deprecated": true,
+  "removalDate": "2024-01-31",
+  "deprecationMessage": "The NuGetPublisher@0 (NuGet publisher) task has been deprecated and will soon be retired. Use the NuGetCommand@2 task instead.",
   "groups": [
     {
       "name": "advanced",
@@ -125,7 +127,11 @@
     }
   ],
   "execution": {
-    "Node": {
+    "Node10": {
+      "target": "nugetpublisher.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "nugetpublisher.js",
       "argumentFormat": ""
     }

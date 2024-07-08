@@ -4,11 +4,11 @@ steps:
 - checkout: self
   clean: true
 
-# Use node 8, npm 5
+# Use node 20, npm 9
 - task: NodeTool@0
-  displayName: Use node 8
+  displayName: Use node 20
   inputs:
-    versionSpec: "8.x"
+    versionSpec: 20.11.0
 
 # Use NuGet 4
 - task: NuGetToolInstaller@0
@@ -41,14 +41,7 @@ steps:
   env:
     COURTESY_PUSH: $(courtesyPush)
 
-# Publish per task NuGet package artifact
-- task: PublishBuildArtifacts@1
-  displayName: Publish per task NuGet package artifact
-  inputs:
-    pathToPublish: _package/nuget-packages
-    artifactName: IndividualNuGetPackages
-    publishLocation: container
-
 # Update build number
-- script: "echo ##vso[build.updatebuildnumber]$(aggregate_version)"
+- powershell: |
+    Write-Host "##vso[build.updatebuildnumber]$(aggregate_version)"
   displayName: Update build number

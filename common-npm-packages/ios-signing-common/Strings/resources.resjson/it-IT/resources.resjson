@@ -1,7 +1,0 @@
-{
-  "loc.messages.SignIdNotFound": "L'identità di firma iOS non è stata trovata. Verificare le informazioni specificate su identità e provisioning.",
-  "loc.messages.TempKeychainSetupFailed": "Non è stato possibile aggiungere la keychain temporanea al percorso di ricerca delle keychain.",
-  "loc.messages.ProvProfileDetailsNotFound": "I dettagli del profilo di provisioning non sono stati trovati: %s",
-  "loc.messages.ProvProfileUUIDNotFound": "L'UUID del profilo di provisioning non è stato trovato: %s",
-  "loc.messages.ProvProfileNameNotFound": "Non è stato possibile trovare il nome del profilo di provisioning: %s"
-}

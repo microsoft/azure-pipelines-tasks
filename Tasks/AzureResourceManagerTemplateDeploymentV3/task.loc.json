@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 208,
+    "Minor": 240,
     "Patch": 0
   },
   "demands": [],
@@ -225,6 +225,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.addSpnToEnvironment",
       "groupName": "Advanced"
+    },
+    {
+      "name": "useWithoutJSON",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useWithoutJSON",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.useWithoutJSON",
+      "groupName": "Advanced"
     }
   ],
   "dataSourceBindings": [
@@ -254,6 +263,10 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
     "Node10": {
       "target": "main.js"
     }
@@ -314,6 +327,12 @@
     "AzureCLINotFound": "ms-resource:loc.messages.AzureCLINotFound",
     "FailedToFetchAzureCLIVersion": "ms-resource:loc.messages.FailedToFetchAzureCLIVersion",
     "BicepBuildFailed": "ms-resource:loc.messages.BicepBuildFailed",
-    "BicepFileCleanupFailed": "ms-resource:loc.messages.BicepFileCleanupFailed"
+    "BicepFileCleanupFailed": "ms-resource:loc.messages.BicepFileCleanupFailed",
+    "LoginFailed": "ms-resource:loc.messages.LoginFailed",
+    "MSILoginFailed": "ms-resource:loc.messages.MSILoginFailed",
+    "AuthSchemeNotSupported": "ms-resource:loc.messages.AuthSchemeNotSupported",
+    "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription",
+    "BicepParamBuildFailed": "ms-resource:loc.messages.BicepParamBuildFailed",
+    "IncompatibleAzureCLIVersionBicepParam": "ms-resource:loc.messages.IncompatibleAzureCLIVersionBicepParam"
   }
 }

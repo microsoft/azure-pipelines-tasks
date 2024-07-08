@@ -1,114 +1,118 @@
 {
-    "id": "8ce97e91-56cc-4743-bfab-9a9315be5f27",
-    "name": "FileTransform",
-    "friendlyName": "File transform",
-    "description": "Replace tokens with variable values in XML or JSON configuration files",
-    "author": "Microsoft Corporation",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/file-transform",
-    "helpMarkDown": "File transformation and variable substitution task: Update tokens in your XML based configuration files and then replaces those tokens with variable values. <br/>Currently only XML, JSON file formats are supported for variable substitution. </br> [Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/file-transform)",
-    "category": "Utility",
-    "visibility": [
-        "Build",
-        "Release"
-    ],
-    "runsOn": [
-        "Agent",
-        "DeploymentGroup"
-    ],
-    "version": {
-        "Major": 1,
-        "Minor": 208,
-        "Patch": 0
-    },
-    "instanceNameFormat": "File Transform: $(Package)",
-    "groups": [
-        {
-            "name": "VariableSubstitution",
-            "displayName": "Variable Substitution",
-            "isExpanded": true
-        }
-    ],
-    "inputs": [
-        {
-            "name": "folderPath",
-            "type": "filePath",
-            "label": "Package or folder",
-            "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
-            "required": true,
-            "helpMarkDown": "File path to the package or a folder.<br />Variables ( [Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
-        },
-        {
-            "name": "enableXmlTransform",
-            "type": "boolean",
-            "label": "XML transformation",
-            "required": false,
-            "defaultValue": false,
-            "helpMarkDown": "Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform."
-        },
-        {
-            "name": "xmlTransformationRules",
-            "type": "multiLine",
-            "label": "Transformation rules",
-            "defaultValue": "-transform **\\*.Release.config -xml **\\*.config",
-            "required": false,
-            "helpMarkDown": "Provide new line separated list of transformation file rules using the syntax: <br/>-transform <pathToTransformFile>  -xml <pathToSourceConfigurationFile>",
-            "visibleRule": "enableXmlTransform == true"
-        },
-        {
-            "name": "fileType",
-            "type": "pickList",
-            "label": "File format",
-            "defaultValue": "",
-            "required": false,
-            "options": {
-                "xml": "XML",
-                "json": "JSON"
-            },
-            "properties": {
-                "EditableOptions": "False"
-            },
-            "groupName": "VariableSubstitution",
-            "helpMarkDown": "Provide file format on which substitution has to be perfformed<br/>For XML, Variables defined in the build or release pipelines will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. Variable Substitution is run after config transforms.<br/>To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build or release pipeline (or release pipeline's environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: only custom variables defined in build/release pipelines are used in substitution. Default/system defined pipeline variables are excluded. <br/>Note: If same variables are defined in the release pipeline and in the stage, then the stage variables will supersede the release pipeline variables."
-        },
-        {
-            "name": "targetFiles",
-            "type": "multiLine",
-            "label": "Target files",
-            "required": false,
-            "defaultValue": "",
-            "groupName": "VariableSubstitution",
-            "visibleRule": "fileType = xml || fileType = json",
-            "helpMarkDown": "Provide new line separated list of files to substitute the variable values. Files names are to be provided relative to the root folder."
-        }
-    ],
-    "execution": {
-        "Node10": {
-            "target": "filetransform.js",
-            "argumentFormat": ""
-        }
-    },
-    "messages": {
-        "JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
-        "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully.",
-        "XDTTransformationsappliedsuccessfully": "XML Transformations applied successfully",
-        "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XML transformations on a non-Windows platform.",
-        "XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",
-        "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
-        "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern: %s.",
-        "FailedToApplyTransformation": "Unable to apply transformation for the given package.",
-        "MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs.",
-        "SubstitutingValueonKey": "Substituting value on key: %s",
-        "SubstitutingValueonKeyWithNumber": "Substituting value on key %s with (number) value: %s",
-        "SubstitutingValueonKeyWithBoolean": "Substituting value on key %s with (boolean) value: %s",
-        "SubstitutingValueonKeyWithObject": "Substituting value on key %s with (object) value: %s",
-        "SubstitutingValueonKeyWithString": "Substituting value on key %s with (string) value: %s",
-        "JSONvariableSubstitution": "Applying JSON variable substitution for %s",
-        "ApplyingXDTtransformation": "Applying XDT Transformation from transformation file %s -> source file %s ",
-        "SubstitutionForXmlNode": "Processing substitution for xml node : %s",
-        "UpdatingKeyWithTokenValue": "Updating value for key= %s with token value: %s",
-        "SubstitutingConnectionStringValue": "Substituting connectionString value for connectionString = %s with token value: %s ",
-        "VariableSubstitutionInitiated": "Initiated variable substitution in config file : %s",
-        "ConfigFileUpdated": "Config file : %s updated.",
-        "SkippedUpdatingFile": "Skipped Updating file: %s"
+  "id": "8ce97e91-56cc-4743-bfab-9a9315be5f27",
+  "name": "FileTransform",
+  "friendlyName": "File transform",
+  "description": "Replace tokens with variable values in XML or JSON configuration files",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/file-transform",
+  "helpMarkDown": "File transformation and variable substitution task: Update tokens in your XML based configuration files and then replaces those tokens with variable values. <br/>Currently only XML, JSON file formats are supported for variable substitution. </br> [Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/file-transform)",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "version": {
+    "Major": 1,
+    "Minor": 242,
+    "Patch": 0
+  },
+  "instanceNameFormat": "File Transform: $(Package)",
+  "groups": [
+    {
+      "name": "VariableSubstitution",
+      "displayName": "Variable Substitution",
+      "isExpanded": true
     }
+  ],
+  "inputs": [
+    {
+      "name": "folderPath",
+      "type": "filePath",
+      "label": "Package or folder",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
+      "required": true,
+      "helpMarkDown": "File path to the package or a folder.<br />Variables ( [Build](https://docs.microsoft.com/vsts/pipelines/build/variables) | [Release](https://docs.microsoft.com/vsts/pipelines/release/variables#default-variables)), wildcards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
+    },
+    {
+      "name": "enableXmlTransform",
+      "type": "boolean",
+      "label": "XML transformation",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform."
+    },
+    {
+      "name": "xmlTransformationRules",
+      "type": "multiLine",
+      "label": "Transformation rules",
+      "defaultValue": "-transform **\\*.Release.config -xml **\\*.config",
+      "required": false,
+      "helpMarkDown": "Provide new line separated list of transformation file rules using the syntax: <br/>-transform <pathToTransformFile>  -xml <pathToSourceConfigurationFile>",
+      "visibleRule": "enableXmlTransform == true"
+    },
+    {
+      "name": "fileType",
+      "type": "pickList",
+      "label": "File format",
+      "defaultValue": "",
+      "required": false,
+      "options": {
+        "xml": "XML",
+        "json": "JSON"
+      },
+      "properties": {
+        "EditableOptions": "False"
+      },
+      "groupName": "VariableSubstitution",
+      "helpMarkDown": "Provide file format on which substitution has to be performed<br/>For XML, Variables defined in the build or release pipelines will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. Variable Substitution is run after config transforms.<br/>To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build or release pipeline (or release pipeline's environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: only custom variables defined in build/release pipelines are used in substitution. Default/system defined pipeline variables are excluded. <br/>Note: If same variables are defined in the release pipeline and in the stage, then the stage variables will supersede the release pipeline variables."
+    },
+    {
+      "name": "targetFiles",
+      "type": "multiLine",
+      "label": "Target files",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "VariableSubstitution",
+      "visibleRule": "fileType = xml || fileType = json",
+      "helpMarkDown": "Provide new line separated list of files to substitute the variable values. Files names are to be provided relative to the root folder."
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "filetransform.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "filetransform.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
+    "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully.",
+    "XDTTransformationsappliedsuccessfully": "XML Transformations applied successfully",
+    "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XML transformations on a non-Windows platform.",
+    "XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",
+    "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
+    "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern: %s.",
+    "FailedToApplyTransformation": "Unable to apply transformation for the given package.",
+    "MissingArgumentsforXMLTransformation": "Incomplete or missing arguments. Expected format -transform <transform file> -xml <source file> -result <destinamtion file>. Transformation and source file are mandatory inputs.",
+    "SubstitutingValueonKey": "Substituting value on key: %s",
+    "SubstitutingValueonKeyWithNumber": "Substituting value on key %s with (number) value: %s",
+    "SubstitutingValueonKeyWithBoolean": "Substituting value on key %s with (boolean) value: %s",
+    "SubstitutingValueonKeyWithObject": "Substituting value on key %s with (object) value: %s",
+    "SubstitutingValueonKeyWithString": "Substituting value on key %s with (string) value: %s",
+    "JSONvariableSubstitution": "Applying JSON variable substitution for %s",
+    "ApplyingXDTtransformation": "Applying XDT Transformation from transformation file %s -> source file %s ",
+    "SubstitutionForXmlNode": "Processing substitution for xml node : %s",
+    "UpdatingKeyWithTokenValue": "Updating value for key= %s with token value: %s",
+    "SubstitutingConnectionStringValue": "Substituting connectionString value for connectionString = %s with token value: %s ",
+    "VariableSubstitutionInitiated": "Initiated variable substitution in config file : %s",
+    "ConfigFileUpdated": "Config file : %s updated.",
+    "SkippedUpdatingFile": "Skipped Updating file: %s"
+  }
 }

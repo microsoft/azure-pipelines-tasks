@@ -1,0 +1,126 @@
+{
+  "id": "e4d58330-c771-11e8-8f8f-81fbb42e2824",
+  "name": "TwineAuthenticate",
+  "friendlyName": "Python twine upload authenticate",
+  "description": "Authenticate for uploading Python distributions using twine. Add '-r FeedName/EndpointName --config-file $(PYPIRC_PATH)' to your twine upload command. For feeds present in this organization, use the feed name as the repository (-r). Otherwise, use the endpoint name defined in the service connection.",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate",
+  "helpMarkDown": "[Learn more about this task](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate) or [see the Twine documentation](https://twine.readthedocs.io/)",
+  "category": "Package",
+  "version": {
+    "Major": 0,
+    "Minor": 238,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "Twine Authenticate $(message)",
+  "groups": [
+    {
+      "name": "feedAuthentication",
+      "displayName": "Feeds and Authentication",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "feedList",
+      "aliases": [
+        "artifactFeeds"
+      ],
+      "type": "pickList",
+      "label": "My feeds (select below)",
+      "helpMarkDown": "Select feeds to authenticate present in this organization.",
+      "defaultValue": "",
+      "required": "false",
+      "groupName": "feedAuthentication",
+      "properties": {
+        "EditableOptions": "True",
+        "MultiSelectFlatList": "True"
+      }
+    },
+    {
+      "name": "externalSources",
+      "aliases": [
+        "externalFeeds"
+      ],
+      "type": "connectedService:externalPythonUploadFeed",
+      "label": "Feeds from external organizations",
+      "required": false,
+      "helpMarkDown": "Select endpoints to authenticate outside this organization. Make sure the endpoints have package upload permissions.",
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "True"
+      },
+      "groupName": "feedAuthentication"
+    },
+    {
+      "name": "publishPackageMetadata",
+      "groupName": "advanced",
+      "type": "boolean",
+      "label": "Publish pipeline metadata",
+      "defaultValue": true,
+      "helpMarkDown": "Associate this build/release pipeline’s metadata (run #, source code information) with the package when uploading to my feeds."
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "feedList",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.name}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "twineauthenticatemain.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "twineauthenticatemain.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Info_AddingInternalFeeds": "Adding auth information for %s internal feed(s).",
+    "Info_AddingExternalFeeds": "Adding auth information for %s external endpoint.",
+    "Info_AddingAuthForRegistry": "Adding authentication to configuration for registry %s",
+    "Info_SuccessAddingAuth": "Successfully added auth for %s internal feeds and %s external endpoint.",
+    "Info_AddingPasswordAuthEntry": "Adding username password auth entry for feed %s",
+    "Info_AddingTokenAuthEntry": "Adding token auth entry for feed %s",
+    "Info_StartParsingExistingPypircFile": "Starting to parse existing .pypirc file at %s",
+    "Error_FailedToParseFeedUrlAndAuth": "Failed to parse the feed url and add auth information. %s",
+    "Warning_DuplicateEntryForInternalFeed": "Duplicate entry found for endpoint name %s. Auth already exists for this feed name. Please make sure all the endpoint names are unique and not colliding with feed names in this organization.",
+    "Error_DuplicateEntryForExternalFeed": "Duplicate entry found for endpoint name %s. Auth entry already exists for this name in .pypirc file. Please make sure all the endpoint names are unique and does not collide with feed names from this organization.",
+    "FailedToGetPackagingUri": "Unable to get packaging uri, using default collection uri.",
+    "FailedToAddAuthentication": "Failed to add authentication.",
+    "FeedTokenUnavailable": "Failed to get the access token for this organization.",
+    "NoPypircFile": "No .pypirc file to clean up.",
+    "VariableSetForPypirc": "Environment variable for .pypirc at %s is set.",
+    "Info_RemovingPypircFile": "Removing .pypirc file from %s",
+    "Warning_SessionCreationFailed": "Could not create provenance session: %s"
+  },
+  "postjobexecution": {
+    "Node10": {
+      "target": "authcleanup.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "authcleanup.js",
+      "argumentFormat": ""
+    }
+  },
+  "_buildConfigMapping": {
+    "Default": "0.238.0",
+    "Node20_229_1": "0.238.1"
+  }
+}

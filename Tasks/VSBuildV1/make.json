@@ -1,15 +1,9 @@
 {
-    "common": [
-        {
-            "module": "../Common/MSBuildHelpers",
-            "type": "ps"
-        }
-    ],
     "externals": {
         "nugetv2": [
             {
                 "name": "VstsTaskSdk",
-                "version": "0.11.0",
+                "version": "0.17.0",
                 "repository": "https://www.powershellgallery.com/api/v2/",
                 "cp": [
                     {
@@ -27,5 +21,13 @@
                 ]
             }
         ]
-    }
+    },
+    "rm": [
+        {
+            "items": [
+                "node_modules/mockery"
+            ],
+            "options": "-Rf"
+        }
+    ]
 }

@@ -13,10 +13,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 200,
-    "Patch": 0
+    "Minor": 235,
+    "Patch": 4
   },
   "deprecated": true,
+  "removalDate": "2024-01-31",
+  "deprecationMessage": "The CondaEnvironment@1 (Conda environment) task has been deprecated since February 13, 2019 and will soon be retired. Use the Conda CLI ('conda') directly from a bash/pwsh/script task.",
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
@@ -85,6 +87,10 @@
     "Node10": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -95,6 +101,11 @@
     "ReactivateExistingEnvironment": "ms-resource:loc.messages.ReactivateExistingEnvironment",
     "ParameterRequired": "ms-resource:loc.messages.ParameterRequired",
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized",
-    "PrependPath": "ms-resource:loc.messages.PrependPath"
+    "PrependPath": "ms-resource:loc.messages.PrependPath",
+    "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.234.2",
+    "Node20-225": "1.234.3"
   }
 }

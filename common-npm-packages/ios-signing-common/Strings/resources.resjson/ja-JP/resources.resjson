@@ -1,7 +1,0 @@
-{
-  "loc.messages.SignIdNotFound": "iOS 署名 ID が見つかりませんでした。指定された署名とプロビジョニングの情報をご確認ください。",
-  "loc.messages.TempKeychainSetupFailed": "一時キーチェーンをキーチェーン検索パスに追加できませんでした。",
-  "loc.messages.ProvProfileDetailsNotFound": "プロビジョニング プロファイルの詳細が見つかりませんでした: %s",
-  "loc.messages.ProvProfileUUIDNotFound": "プロビジョニング プロファイルのプロビジョニング プロファイル UUID が見つかりませんでした: %s",
-  "loc.messages.ProvProfileNameNotFound": "プロビジョニング プロファイルのプロビジョニング プロファイル名が見つかりませんでした: %s"
-}

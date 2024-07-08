@@ -18,7 +18,7 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 208,
+        "Minor": 241,
         "Patch": 0
     },
     "groups": [
@@ -270,6 +270,10 @@
         }
     ],
     "execution": {
+        "Node16": {
+            "target": "jenkinsdownloadartifacts.js",
+            "argumentFormat": ""
+        },
         "Node10": {
             "target": "jenkinsdownloadartifacts.js",
             "argumentFormat": ""

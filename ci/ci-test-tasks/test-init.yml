@@ -1,0 +1,11 @@
+steps:
+- script: |
+    npm install -g tfx-cli@0.14
+  displayName: 'Npm install -g tfx-cli'
+
+- script: |
+    tfx login --auth-type pat --service-url $(ADOUrl) --token $(ADOToken)
+  displayName: 'Tfx login'
+
+- script: npm install axios@0.27.2
+  displayName: 'Npm install axios'

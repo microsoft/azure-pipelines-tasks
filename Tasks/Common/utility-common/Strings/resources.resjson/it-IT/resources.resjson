@@ -1,3 +1,0 @@
-{
-  "loc.messages.TokenUnavailable": "Non è stato possibile recuperare le credenziali dei token per la creazione di pacchetti TFS/Azure Pipelines."
-}

@@ -1,0 +1,3 @@
+{
+  "loc.messages.PS_ScriptArgsSanitized": "Sono stati rilevati caratteri negli argomenti che potrebbero non essere eseguiti correttamente dalla shell. Eseguire l'escape dei caratteri speciali usando l’apice inverso (`). Ulteriori informazioni sono disponibili qui: https://aka.ms/ado/75787"
+}

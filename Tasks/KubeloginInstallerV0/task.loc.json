@@ -1,0 +1,61 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+  "id": "5eeaaa81-40b2-4918-8fc7-e2dfc2318902",
+  "name": "KubeloginInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "helpUrl": "https://azure.github.io/kubelogin/index.html",
+  "category": "Tool",
+  "minimumAgentVersion": "2.144.0",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 241,
+    "Patch": 0
+  },
+  "demands": [],
+  "satisfies": [
+    "Kubelogin"
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "kubeloginVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.kubeloginVersion",
+      "defaultValue": "latest",
+      "helpMarkDown": "ms-resource:loc.input.help.kubeloginVersion"
+    }
+  ],
+  "execution": {
+    "Node16": {
+      "target": "kubelogin.js"
+    },
+    "Node10": {
+      "target": "kubelogin.js"
+    }
+  },
+  "messages": {
+    "Info_VerifyKubeloginInstallation": "ms-resource:loc.messages.Info_VerifyKubeloginInstallation",
+    "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
+    "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
+    "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
+    "Info_CachingTool": "ms-resource:loc.messages.Info_CachingTool",
+    "Info_ToolDownloaded": "ms-resource:loc.messages.Info_ToolDownloaded",
+    "Info_KubeloginRelease": "ms-resource:loc.messages.Info_KubeloginRelease",
+    "Info_KubeloginPlatform": "ms-resource:loc.messages.Info_KubeloginPlatform",
+    "Info_KubeloginVersion": "ms-resource:loc.messages.Info_KubeloginVersion",
+    "Info_KubeloginReleaseURL": "ms-resource:loc.messages.Info_KubeloginReleaseURL",
+    "Info_DownloadingFailed": "ms-resource:loc.messages.Info_DownloadingFailed",
+    "Err_ExtractionFailed": "ms-resource:loc.messages.Err_ExtractionFailed",
+    "Err_VersionNotFound": "ms-resource:loc.messages.Err_VersionNotFound",
+    "Err_NotAValidSemverVersion": "ms-resource:loc.messages.Err_NotAValidSemverVersion",
+    "SucceedMsg": "ms-resource:loc.messages.SucceedMsg",
+    "Info_KubeloginDownloading": "ms-resource:loc.messages.Info_KubeloginDownloading"
+  }
+}

@@ -2,6 +2,8 @@
   "loc.messages.AZ_AzureRMProfileModuleNotFound": "找不到 'AzureRM.Profile' 模組。'AzureRM' 模組的安裝不完整。您可以從提升權限的工作階段執行下列 PowerShell 命令來解決此問題: Import-Module AzureRM ; Install-AzureRM",
   "loc.messages.AZ_CertificateAuthNotSupported": "不支援憑證型驗證。找不到 Azure PowerShell 模組。",
   "loc.messages.AZ_CredentialsError": "部署用的 Azure 認證有錯誤。",
+  "loc.messages.AZ_CouldNotGenerateOidcToken": "無法產生用於同盟登入的用戶端判斷提示。",
+  "loc.messages.AZ_FederatedTokenFailure": "無法為工作負載識別身分同盟擷取同盟權杖。{0}",
   "loc.messages.AZ_ModuleNotFound": "找不到版本為 '{0}' 的模組 '{1}'。若最近才安裝該模組，請重新啟動 Azure Pipelines 工作代理程式，然後重試。",
   "loc.messages.AZ_RequiresMinVersion0": "未安裝所需最低版本 ({0}) 的 Azure PowerShell 模組。",
   "loc.messages.AZ_ServicePrincipalError": "部署用的服務主體有錯誤。",
@@ -11,5 +13,9 @@
   "loc.messages.AZ_InvalidARMEndpoint": "指定的 AzureRM 端點無效。",
   "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "無法擷取受控識別的存取權杖。請設定虛擬機器的受控識別 'https://aka.ms/azure-msi-docs'。狀態碼: '{0}'，錯誤訊息: {1}",
   "loc.messages.AZ_MsiAccessTokenFetchFailure": "無法擷取受控識別的存取權杖。狀態碼: '{0}'，錯誤訊息: {1}",
-  "loc.messages.AZ_MsiFailure": "無法擷取受控識別的存取權杖。{0}"
+  "loc.messages.AZ_MsiFailure": "無法擷取受控識別的存取權杖。{0}",
+  "loc.messages.AZ_ExpiredServicePrincipalMessageWithLink": "祕密已過期，請在 {0} 更新服務連線，參閱 https://aka.ms/azdo-rm-workload-identity-conversion 以深入了解如何轉換為無祕密服務連線。",
+  "loc.messages.AZ_ModuleInitFailWarning": "無法初始化現有的 Az 模組，請後援安裝",
+  "loc.messages.AZ_ModuleInstallFail": "無法安裝 Az 模組",
+  "loc.messages.AZ_RMDeprecationMessage": "您正在使用即將淘汰的 AzureRM，請排程更新。"
 }

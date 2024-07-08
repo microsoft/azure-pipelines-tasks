@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 203,
+    "Minor": 242,
     "Patch": 0
   },
   "demands": [],
@@ -82,6 +82,22 @@
       "helpMarkDown": "ms-resource:loc.input.help.failTaskOnFailedTests"
     },
     {
+      "name": "failTaskOnFailureToPublishResults",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failTaskOnFailureToPublishResults",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failTaskOnFailureToPublishResults"
+    },
+    {
+      "name": "failTaskOnMissingResultsFile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failTaskOnMissingResultsFile",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failTaskOnMissingResultsFile"
+    },
+    {
       "name": "testRunTitle",
       "type": "string",
       "label": "ms-resource:loc.input.label.testRunTitle",
@@ -126,6 +142,10 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {
+      "target": "publishtestresults.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "publishtestresults.js",
       "argumentFormat": ""
     }

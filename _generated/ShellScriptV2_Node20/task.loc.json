@@ -1,0 +1,103 @@
+{
+  "id": "6C731C3C-3C68-459A-A5C9-BDE6E6595B5B",
+  "name": "ShellScript",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/shell-script",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 238,
+    "Patch": 1
+  },
+  "demands": [
+    "sh"
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "scriptPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.scriptPath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.scriptPath"
+    },
+    {
+      "name": "args",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.args",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.args"
+    },
+    {
+      "name": "disableAutoCwd",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.disableAutoCwd",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.disableAutoCwd",
+      "groupName": "advanced"
+    },
+    {
+      "name": "cwd",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "disableAutoCwd = true",
+      "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
+      "name": "failOnStandardError",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStandardError",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStandardError",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "shellscript.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "shellscript.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "shellscript.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "BashReturnCode": "ms-resource:loc.messages.BashReturnCode",
+    "BashFailed": "ms-resource:loc.messages.BashFailed",
+    "BashFailedWithCode137": "ms-resource:loc.messages.BashFailedWithCode137"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.238.0",
+    "Node20-225": "2.238.1"
+  }
+}

@@ -1,0 +1,10 @@
+trailingComma: "none"
+singleQuote: true
+printWidth: 160
+tabWidth: 2
+semi: true
+quoteProps: "as-needed"
+bracketSpacing: true
+arrowParens: "avoid"
+proseWrap: "preserve"
+endOfLine: "lf"

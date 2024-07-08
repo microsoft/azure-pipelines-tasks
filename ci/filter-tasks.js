@@ -3,6 +3,7 @@
 // If its a PR build, all tasks that have been changed will be built.
 // Any other type of build will build all tasks.
 var fs = require('fs');
+var fetch = require('node-fetch');
 var os = require('os');
 var path = require('path');
 var semver = require('semver');
@@ -14,7 +15,7 @@ var makeOptionsPath = path.join(__dirname, '..', 'make-options.json');
 var makeOptions = JSON.parse(fs.readFileSync(makeOptionsPath).toString());
 
 var getTasksToBuildForCI = async function() {
-    // Returns a list of tasks that have different version numbers than their current published version. 
+    // Returns a list of tasks that have different version numbers than their current published version.
     var packageInfo;
     try {
         var packageToken = process.env['PACKAGE_TOKEN'];
@@ -34,14 +35,13 @@ var getTasksToBuildForCI = async function() {
             console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=33;]Failed to get info from package endpoint, returned with status code ${packageInfo.statusCode}`);
             return makeOptions.tasks;
         }
-    }
-    catch (err) {
+    } catch (err) {
         // If unable to reach rest client, build everything.
         console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=39;]Failed to get info from package endpoint, client failed with error ${err.message}`);
         return makeOptions.tasks;
     }
     var packageMap = {};
-    if(!packageInfo.result || !packageInfo.result.value) {
+    if (!packageInfo.result || !packageInfo.result.value) {
         console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=44;]Failed to get info from package endpoint, returned no packages');
         return makeOptions.tasks;
     }
@@ -69,20 +69,18 @@ var getTasksToBuildForCI = async function() {
             }
             if (lowerCaseName in packageMap || taskName.toLowerCase() in packageMap) {
                 if (taskName.toLowerCase() in packageMap) {
-                    lowerCaseName = taskName.toLowerCase();   
+                    lowerCaseName = taskName.toLowerCase();
                 }
                 var packageVersion = packageMap[lowerCaseName];
                 var localVersion = `${taskJson.version.Major}.${taskJson.version.Minor}.${taskJson.version.Patch}`;
-                
+
                 // Build if local version and package version are different.
                 return semver.neq(localVersion, packageVersion);
-            }
-            else {
+            } else {
                 console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=74;]${taskName} has not been published before`);
                 return true;
             }
-        }
-        else {
+        } else {
             console.log(`##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=79;]${taskJsonPath} does not exist`);
             return true;
         }
@@ -111,11 +109,26 @@ var getTasksDependentOnChangedCommonFiles = function(commonFilePaths) {
     return changedTasks;
 }
 
-var getTasksToBuildForPR = function() {
+async function getPullRequestBranches (pullRequestId) {
+    const response = await fetch(`https://api.github.com/repos/microsoft/azure-pipelines-tasks/pulls/${pullRequestId}`);
+    const data = await response.json();
+    return { source: data.head.ref, target: data.base.ref };
+}
+
+async function getTasksToBuildForPR (prId, forDowngradingCheck) {
     // Takes in a git source branch, diffs it with master, and returns a list of tasks that could have been affected by the changes.
-    var sourceBranch = process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH'];
-    var prId = process.env['SYSTEM_PULLREQUEST_PULLREQUESTNUMBER'];
-    var targetBranch = process.env['SYSTEM_PULLREQUEST_TARGETBRANCH'];
+    let sourceBranch, targetBranch;
+
+    if (prId) {
+        const branches = await getPullRequestBranches(prId);
+        sourceBranch = branches.source;
+        targetBranch = branches.target;
+    } else {
+        prId = process.env['SYSTEM_PULLREQUEST_PULLREQUESTNUMBER'];
+        sourceBranch = process.env['SYSTEM_PULLREQUEST_SOURCEBRANCH'];
+        targetBranch = process.env['SYSTEM_PULLREQUEST_TARGETBRANCH'];
+    }
+
     var commonChanges = [];
     var commonTestChanges = [];
     var toBeBuilt = [];
@@ -132,28 +145,36 @@ var getTasksToBuildForPR = function() {
             sourceBranch = sourceBranch.split(':')[1];
         }
         run('git fetch origin pull/' + prId + '/head:' + sourceBranch);
-    }
-    catch (err) {
+    } catch (err) {
         // If unable to reach github, build everything.
         console.log('##vso[task.logissue type=warning;sourcepath=ci/filter-task.js;linenumber=125;]Unable to reach github, building all tasks', err);
         return makeOptions.tasks;
     }
+
     var baseCommit = run('git merge-base ' + sourceBranch + ' origin/' + targetBranch);
-    run('git --no-pager diff --name-only ' + baseCommit + ' ' + sourceBranch)
-        .split('\n')
-        .forEach(filePath => {
+    
+    var diffExtra = "";
+
+    if(forDowngradingCheck)
+    {
+        if (os.platform() == 'win32') {
+            diffExtra = " -- .  :^^**/_buildConfigs/**";
+        } else {
+            diffExtra = " -- .  :^**/_buildConfigs/**";
+        }
+    }
+
+    run('git --no-pager diff --name-only ' + baseCommit + ' ' + sourceBranch + diffExtra).split('\n').forEach(filePath => {
         if (filePath.slice(0, 5) == 'Tasks') {
             var taskPath = filePath.slice(6);
             if(taskPath.slice(0, 6) == 'Common') {
                 var commonName = taskPath.slice(7);
                 if (taskPath.toLowerCase().indexOf('test') > -1) {
                     commonTestChanges.push('../common/' + commonName.slice(0, commonName.indexOf('/')).toLowerCase());
-                }
-                else {
+                } else {
                     commonChanges.push('../common/' + commonName.slice(0, commonName.indexOf('/')).toLowerCase());
                 }
-            }
-            else {
+            } else {
                 var taskName = taskPath.slice(0, taskPath.indexOf('/'));
                 if (!toBeBuilt.includes(taskName)) {
                     toBeBuilt.push(taskName);
@@ -170,10 +191,13 @@ var getTasksToBuildForPR = function() {
             toBeBuilt.push(task);
         }
     });
-    if (shouldBeBumped.length > 0) {
-        throw new Error('The following tasks should have their versions bumped due to changes in common: ' + shouldBeBumped);
+
+    var skipBumpingVersionsDueToChangesInCommon = process.env['SKIPBUMPINGVERSIONSDUETOCHANGESINCOMMON'].toLowerCase() == 'true';
+
+    if (shouldBeBumped.length > 0 && !skipBumpingVersionsDueToChangesInCommon) {
+        throw new Error(`The following tasks should have their versions bumped due to changes in common: ${shouldBeBumped}`);
     }
-    
+
     changedTests.forEach(task => {
         if (!toBeBuilt.includes(task)) {
             toBeBuilt.push(task);
@@ -186,28 +210,72 @@ var getTasksToBuildForPR = function() {
     return toBeBuilt;
 }
 
-var setTaskVariables = function(tasks) {
+var setTaskVariables = function(tasks, tasksForDowngradingCheck) {
     console.log('tasks: ' + JSON.stringify(tasks));
-    console.log('##vso[task.setVariable variable=task_pattern]@(' + tasks.join('|') + ')');
+    console.log('tasksForDowngradingCheck: ' + JSON.stringify(tasksForDowngradingCheck));
+    console.log('##vso[task.setVariable variable=task_pattern;isOutput=true;]@(' + tasks.join('|') + ')');
+    console.log('##vso[task.setVariable variable=task_pattern_fordowngradingcheck]@(' + tasksForDowngradingCheck.join('|') + ')');
     console.log('##vso[task.setVariable variable=numTasks]' + tasks.length);
+    console.log('##vso[task.setVariable variable=numTasksForDowngradingCheck]' + tasksForDowngradingCheck.length);
 }
 
 var buildReason = process.env['BUILD_REASON'].toLowerCase();
-var tasks;
-if (buildReason == 'individualci' || buildReason == 'batchedci') {
-    // If CI, we will compare any tasks that have updated versions.
-    getTasksToBuildForCI().then(tasks => {
-        setTaskVariables(tasks)
-    });
+var forceCourtesyPush = process.env['FORCE_COURTESY_PUSH'] && process.env['FORCE_COURTESY_PUSH'].toLowerCase() === 'true';
+var taskNameIsSet = process.env['TASKNAMEISSET'] && process.env['TASKNAMEISSET'].toLowerCase() === 'true';
+
+if (taskNameIsSet) {
+    var taskName = process.env['TASKNAME'];
+    var tasksFromParameter = taskName.split(',').map(item => item.trim());
 }
-else {
-    if (buildReason == 'pullrequest') {
-        // If PR, we will compare any tasks that could have been affected based on the diff.
-        tasks = getTasksToBuildForPR();
-        setTaskVariables(tasks);
-    }
-    else {
-        // If manual or other, build everything.
-        setTaskVariables(makeOptions.tasks);
+
+const AzpBuildReason = {
+    Individualci: 'individualci',
+    Batchedci: 'batchedci',
+    Schedule: 'schedule',
+    Pullrequest: 'pullrequest',
+    Manual: 'manual'
+};
+
+const ciBuildReasonList = [AzpBuildReason.Individualci, AzpBuildReason.Batchedci, AzpBuildReason.Schedule];
+
+async function filterTasks () {
+    try {
+        if (ciBuildReasonList.includes(buildReason) || (forceCourtesyPush && !taskNameIsSet)) {
+            // If CI, we will compare any tasks that have updated versions.
+            const tasks = await getTasksToBuildForCI();
+            setTaskVariables(tasks, tasks);
+        } else {
+            const buildSourceBranch = process.env['BUILD_SOURCEBRANCH'];
+            // If CI for PR, the `Build.SourceBranch` pipeline variable == `refs/pull/${prId}/merge`
+            const regex = /^refs\/pull\/(\d+)\/merge$/;
+            const prIdMatch = buildSourceBranch.match(regex);
+
+            if (buildReason == AzpBuildReason.Pullrequest) {
+                // If PR, we will compare any tasks that could have been affected based on the diff.
+                const tasks = await getTasksToBuildForPR(null, false);
+                const tasksForDowngradingCheck = await getTasksToBuildForPR(null, true);
+                setTaskVariables(tasks, tasksForDowngradingCheck);
+            } else if (buildReason == AzpBuildReason.Manual && prIdMatch) {
+                // Manual rerun for PR.
+                const prId = prIdMatch[1];
+                const tasks = await getTasksToBuildForPR(prId, false);
+                const tasksForDowngradingCheck = await getTasksToBuildForPR(prId, true);
+                setTaskVariables(tasks, tasksForDowngradingCheck);
+            } else if (buildReason == AzpBuildReason.Manual && taskNameIsSet) {
+                const unknownTasks = tasksFromParameter.filter(task => !makeOptions.tasks.includes(task));
+                if (unknownTasks.length > 0) {
+                    throw new Error(`Can't find "${unknownTasks}" task(s) in the make-options.json file.`);
+                }
+                setTaskVariables(tasksFromParameter, tasksFromParameter);
+            } else {
+                // If other, build everything.
+                setTaskVariables(makeOptions.tasks, makeOptions.tasks);
+            }
+        }
+    } catch (error) {
+        console.log(`##vso[task.logissue type=error]${error}`);
+        console.log('##vso[task.complete result=Failed;]');
     }
 }
+
+filterTasks();

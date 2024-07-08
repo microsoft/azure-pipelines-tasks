@@ -1,0 +1,3 @@
+{
+  "loc.messages.PS_ScriptArgsSanitized": "偵測到引數中可能無法由殼層正確執行的字元。請使用反單引號 (') 逸出特殊字元。如需詳細資訊，請參閱: https://aka.ms/ado/75787"
+}

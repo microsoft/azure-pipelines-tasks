@@ -1,7 +1,0 @@
-{
-  "loc.messages.SearchingRegistryKeys": "正在搜索 JDK %s 的注册表项",
-  "loc.messages.RegistryKeysFound": "找到的注册表项数: %s",
-  "loc.messages.LocateJVMBasedOnVersionAndArch": "为 Java %s %s 查找 JAVA_HOME",
-  "loc.messages.UnsupportedJdkWarning": "JDK 9 和 JDK 10 不受支持。请切换到项目和管道中的更高版本。正在尝试使用 JDK 11 进行生成...",
-  "loc.messages.FailedToLocateSpecifiedJVM": "未能找到指定的 JDK 版本。请确保已在代理上安装指定的 JDK 版本，存在环境变量“%s”，且该变量设置为相应 JDK 的位置，或使用 [Java 工具安装程序](https://docs.microsoft.com/zh-cn/vsts/build-release/tasks/tool/java-tool-installer)任务安装所需的 JDK。"
-}

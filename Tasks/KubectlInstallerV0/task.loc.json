@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 198,
+    "Minor": 238,
     "Patch": 0
   },
   "demands": [],
@@ -34,6 +34,10 @@
   "execution": {
     "Node10": {
       "target": "src//kubectltoolinstaller.js"
+    },
+    "Node16": {
+      "target": "src//kubectltoolinstaller.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 208,
-    "Patch": 1
+    "Minor": 235,
+    "Patch": 0
   },
   "satisfies": [
     "Node",
@@ -50,15 +50,41 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.force32bit"
+    },
+    {
+      "name": "retryCountOnDownloadFails",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.retryCountOnDownloadFails",
+      "defaultValue": "5",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.retryCountOnDownloadFails"
+    },
+    {
+      "name": "delayBetweenRetries",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.delayBetweenRetries",
+      "defaultValue": "1000",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.delayBetweenRetries"
     }
   ],
   "execution": {
     "Node10": {
       "target": "usenode.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "usenode.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
-    "ToolFailed": "ms-resource:loc.messages.ToolFailed"
+    "ToolFailed": "ms-resource:loc.messages.ToolFailed",
+    "TryRosetta": "ms-resource:loc.messages.TryRosetta",
+    "NodeVersionNotFound": "ms-resource:loc.messages.NodeVersionNotFound",
+    "UnexpectedOS": "ms-resource:loc.messages.UnexpectedOS",
+    "AgentTempDirNotSet": "ms-resource:loc.messages.AgentTempDirNotSet"
   }
 }

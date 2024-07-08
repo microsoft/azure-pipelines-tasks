@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 208,
+    "Minor": 242,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -156,6 +156,16 @@
       "groupName": "advanced"
     },
     {
+      "name": "validateScriptSignature",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.validateScriptSignature",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.validateScriptSignature",
+      "groupName": "advanced",
+      "visibleRule": "ScriptType = FilePath"
+    },
+    {
       "name": "workingDirectory",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.workingDirectory",
@@ -172,6 +182,10 @@
       "platforms": [
         "windows"
       ]
+    },
+    "Node16": {
+      "target": "azurepowershell.js",
+      "argumentFormat": ""
     },
     "Node10": {
       "target": "azurepowershell.js",

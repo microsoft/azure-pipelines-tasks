@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 200,
+        "Minor": 238,
         "Patch": 0
     },
     "demands": [],
@@ -57,6 +57,14 @@
             }
         },
         {
+            "name": "MaxArtifactSize",
+            "type": "int",
+            "label": "Max Artifact Size",
+            "defaultValue": 0,
+            "required": false,
+            "helpMarkDown": "Maximum limit on the size of artifacts to be published in bytes. Put 0 if you don't want to set any limit."
+        },
+        {
             "name": "TargetPath",
             "type": "string",
             "label": "File share path",
@@ -84,16 +92,6 @@
             "visibleRule": "ArtifactType = FilePath && Parallel = true"
         },
         {
-            "name": "FileCopyOptions",
-            "type": "string",
-            "label": "File copy options",
-            "defaultValue": "",
-            "groupName": "advanced",
-            "required": false,
-            "helpMarkDown": "Pass additional options to the Robocopy command.",
-            "visibleRule": "ArtifactType = FilePath"
-        },
-        {
             "name": "StoreAsTar",
             "type": "boolean",
             "label": "Tar the artifact before uploading",
@@ -108,6 +106,10 @@
         "Node10": {
             "target": "publishbuildartifacts.js",
             "argumentFormat": ""
+        },
+        "Node16": {
+            "target": "publishbuildartifacts.js",
+            "argumentFormat": ""
         }
     },
     "messages": {
@@ -115,6 +117,7 @@
         "ErrorHostTypeNotSupported": "This task must run in a build to publish artifacts to Azure Pipelines.",
         "PublishBuildArtifactsFailed": "Publishing build artifacts failed with an error: %s",
         "UnexpectedParallelCount": "Unsupported parallel count '%s'. Enter a number between 1 and 128.",
-        "TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows"
+        "TarExtractionNotSupportedInWindows": "Tar extraction is not supported on Windows",
+        "ArtifactSizeExceeded": "The size of artifacts being published is %s bytes which is larger than the maximum limit %s bytes set for the published size of artifacts."
     }
 }

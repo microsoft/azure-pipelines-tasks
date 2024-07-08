@@ -1,3 +1,9 @@
+parameters:
+- name: task
+  type: string
+- name: push
+  type: boolean
+
 steps:
 
 # Clean
@@ -7,71 +13,125 @@ steps:
 # Start collect diagnostics
 - powershell: ./ci/start-collect-diagnostics.ps1
   displayName: Start collect diagnostics
-  condition: and(succeeded(), eq(variables.os, 'Windows_NT'), eq(variables.collect_diagnostics, 'true'))
 
-# Use node 8, npm 5
-- task: NodeTool@0
-  displayName: Use node 8
+# Use .NET SDK 8
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK 8.x'
   inputs:
-    versionSpec: "8.x"
+    version: 8.x
+
+# Use node 20, npm 9
+- task: NodeTool@0
+  displayName: Use node 20
+  inputs:
+    versionSpec: 20.11.0
 
 # npm install
 - script: npm install
   displayName: npm install
 
-# Verify min agent version demands
-- task: Npm@1
-  inputs:
-    command: install
-    workingDir: ci/verifyMinAgentDemands
-  displayName: npm install min agent demands 
+# Verify min agent demands
+- script: |
+    cd ci/verifyMinAgentDemands
+    npm install
+  displayName: npm install min agent demands
 
-- script: node ./ci/verifyMinAgentDemands/index.js
-  displayName: Verify all min agent demands are valid (via npm)
+- script: node ./ci/verifyMinAgentDemands/index.js --pat $(GitHubPAT)
+  displayName: Verify min agent demands
 
-# Build
-- script: node make.js build --task "$(task)"
-  displayName: Build
+- powershell: |
+    $tasks = "${{ parameters.task }}"
+    $taskPattern =  "@(" + ($tasks.split(',').trim() -join ('|')) + ")"
+    Write-Host "##vso[task.setVariable variable=task_pattern]$taskPattern"
+  displayName: Set task_pattern
 
-# Stage hotfix
-- script: node ./ci/stage-hotfix.js individually
-  condition: and(succeeded(), eq(variables.os, 'Windows_NT'))
-  displayName: Stage tasks individually into the package directory
+# Clean
+- script: node make.js clean
+  displayName: Clean tasks
 
-# Sign task zip as nuget packages
-- template: sign-all-tasks.yml
-  parameters:
-    layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+# Build Tasks
+- script: node make.js serverBuild --task "$(task_pattern)"
+  displayName: Build Tasks
 
-# Stage hotfix
-- script: node ./ci/stage-hotfix.js
-  condition: and(succeeded(), eq(variables.os, 'Windows_NT'))
-  displayName: Stage all the tasks into a single zip for upload
-
-# Publish hotfix artifact
-- task: PublishBuildArtifacts@1
-  displayName: Publish hotfix artifact
-  condition: and(succeeded(), eq(variables.os, 'Windows_NT'))
-  inputs:
-    pathToPublish: _package/hotfix-layout
-    artifactName: hotfix
-    publishLocation: container
+# Check diff for task sources
+- script: node ./ci/verify-source-changes.js "$(task_pattern)"
+  displayName: Verify task source changes
 
 # Test
-- script: node make.js test
+- script: node make.js test --task "$(task_pattern)"
   displayName: Run tests
-- script: node make.js testLegacy --task "$(task)"
+- script: node make.js testLegacy --task "$(task_pattern)"
   displayName: Legacy tests with node 6
 
 # Publish test results
 - task: PublishTestResults@2
   displayName: Publish Test Results test-*.xml
   inputs:
-    testResultsFiles: 'test-*.xml'
-    testRunTitle: 'Node 6 Test Results'
-    searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
+    testResultsFiles: test-*.xml
+    testRunTitle: Node 6 Test Results
+    searchFolder: $(System.DefaultWorkingDirectory)/testresults
+
+# Publish code coverage result
+- task: PublishCodeCoverageResults@1
+  displayName: Publish Code Coverage Results
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: $(System.DefaultWorkingDirectory)/_build/coverage/*coverage.xml
+
+# Stage tasks individually into the package directory
+- script: node ./ci/stage-package.js false individually
+  displayName: Stage tasks individually into the package directory
+
+# Sign task zip as nuget package
+- template: /ci/sign-all-tasks.yml@self
+  parameters:
+    layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+
+# Stage all the tasks into a single zip for upload
+- script: node ./ci/stage-package.js false
+  displayName: Stage all the tasks into a single zip for upload
+
+  # Stage hotfix
+- script: node ./ci/stage-hotfix.js "${{ parameters.task }}"
+  displayName: Stage hotfix
+
+- powershell: |
+    cd _package/hotfix-layout
+    2 > .\layout-version.txt
+    Compress-Archive -Path .\layout-version.txt -DestinationPath .\hotfix.zip -Update
+    Remove-Item -Path .\layout-version.txt
+  displayName: Add layout-version.txt to hotfix.zip
+
+- powershell: |
+    mv _package/hotfix-layout hotfix-layout
+  displayName: Move _package/hotfix-layout to hotfix-layout
+
+- ${{ if parameters.push }}:
+
+  # Set variables
+  - powershell: .\ci\set-publish-variables.ps1
+    displayName: Set publish variables
+
+  # Moving Package zip file to be consumed by Milestone staging task
+  - powershell: |
+      mkdir $env:SYSTEM_ARTIFACTSDIRECTORY\package
+      Copy-Item $(Build.SourcesDirectory)\_package\tasks.zip -Destination $env:SYSTEM_ARTIFACTSDIRECTORY\package\tasks.zip
+      Write-Host "Copying from '$(Build.SourcesDirectory)\_package\tasks.zip' to '$env:SYSTEM_ARTIFACTSDIRECTORY\package\tasks.zip'"
+    displayName: Move package zip file
+
+  # Stage Milestone task
+  - script: node .\ci\stage-milestone.js
+    displayName: Stage milestone
+
+  # Stage per task NuGet package
+  - script: npm run package
+    displayName: npm run package
+
+  - powershell: |
+      mv _package/nuget-packages nuget-packages
+    displayName: Move _package/nuget-packages to nuget-packages
 
 # Stop collect diagnostics
 - powershell: ./ci/stop-collect-diagnostics.ps1
   displayName: Stop collect diagnostics
-  condition: and(always(), eq(variables.os, 'Windows_NT'), eq(variables.collect_diagnostics, 'true'))
+  condition: always()

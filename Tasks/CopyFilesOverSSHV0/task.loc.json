@@ -17,11 +17,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 205,
+    "Minor": 240,
     "Patch": 0
   },
   "demands": [],
-  "minimumAgentVersion": "2.182.1",
+  "minimumAgentVersion": "2.206.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -130,10 +130,28 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.flattenFolders",
       "groupName": "advanced"
+    },
+    {
+      "name": "concurrentUploads",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.concurrentUploads",
+      "defaultValue": "10",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.concurrentUploads",
+      "groupName": "advanced"
+    },
+    {
+      "name": "delayBetweenUploads",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.delayBetweenUploads",
+      "defaultValue": "50",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.delayBetweenUploads",
+      "groupName": "advanced"
     }
   ],
   "execution": {
-    "Node10": {
+    "Node16": {
       "target": "copyfilesoverssh.js",
       "argumentFormat": ""
     }
@@ -153,9 +171,13 @@
     "ConnectionFailed": "ms-resource:loc.messages.ConnectionFailed",
     "ConnectionNotSetup": "ms-resource:loc.messages.ConnectionNotSetup",
     "CopyCompleted": "ms-resource:loc.messages.CopyCompleted",
+    "CopyDirectoryCompleted": "ms-resource:loc.messages.CopyDirectoryCompleted",
+    "CopyDirectoryFailed": "ms-resource:loc.messages.CopyDirectoryFailed",
     "CopyingFiles": "ms-resource:loc.messages.CopyingFiles",
     "FailedOnFile": "ms-resource:loc.messages.FailedOnFile",
     "FileExists": "ms-resource:loc.messages.FileExists",
+    "FolderCreated": "ms-resource:loc.messages.FolderCreated",
+    "FoldersCreated": "ms-resource:loc.messages.FoldersCreated",
     "NothingToCopy": "ms-resource:loc.messages.NothingToCopy",
     "NumberFailed": "ms-resource:loc.messages.NumberFailed",
     "RemoteCmdExecutionErr": "ms-resource:loc.messages.RemoteCmdExecutionErr",
@@ -168,6 +190,7 @@
     "TargetNotCreated": "ms-resource:loc.messages.TargetNotCreated",
     "CheckingPathExistance": "ms-resource:loc.messages.CheckingPathExistance",
     "PathExists": "ms-resource:loc.messages.PathExists",
-    "PathNotExists": "ms-resource:loc.messages.PathNotExists"
+    "PathNotExists": "ms-resource:loc.messages.PathNotExists",
+    "UploadFolderFailed": "ms-resource:loc.messages.UploadFolderFailed"
   }
 }

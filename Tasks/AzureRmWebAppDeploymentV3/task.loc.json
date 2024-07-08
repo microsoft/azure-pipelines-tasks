@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 208,
-    "Patch": 0
+    "Minor": 240,
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -77,7 +77,7 @@
       "options": {
         "app": "Web App",
         "applinux": "Linux Web App",
-        "functionapp": "Function App",
+        "functionapp": "Function App (Not Recommended, Use Azure Functions Task)",
         "api": "API App",
         "mobileapp": "Mobile App"
       },
@@ -622,6 +622,10 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
+    "Node16": {
+      "target": "azurermwebappdeployment.js",
+      "argumentFormat": ""
+    },
     "Node10": {
       "target": "azurermwebappdeployment.js"
     }
@@ -761,6 +765,7 @@
     "ASE_WebDeploySSLIssueRecommendation": "ms-resource:loc.messages.ASE_WebDeploySSLIssueRecommendation",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
     "JarNotSupported": "ms-resource:loc.messages.JarNotSupported",
-    "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM"
+    "CorrelationIdForARM": "ms-resource:loc.messages.CorrelationIdForARM",
+    "MSDeployNotSupportTokenAuth": "ms-resource:loc.messages.MSDeployNotSupportTokenAuth"
   }
 }

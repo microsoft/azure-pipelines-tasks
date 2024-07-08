@@ -1,17 +1,18 @@
 {
-    "name": "azure-powershell-v4",
-    "author": {
-        "name": "Microsoft Corporation"
-    },
-    "dependencies": {
-        "@types/mocha": "^5.2.7",
-        "@types/node": "^10.17.0",
-        "@types/q": "1.0.7",
-        "azure-pipelines-task-lib": "3.1.10",
-        "azure-pipelines-tasks-azure-arm-rest-v2": "^2.208.0",
-        "azure-pipelines-tasks-utility-common": "^3.0.3"
-    },
-    "devDependencies": {
-        "typescript": "4.0.2"
-    }
+  "name": "azure-powershell-v4",
+  "author": {
+    "name": "Microsoft Corporation"
+  },
+  "dependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^16.18.98",
+    "@types/q": "1.5.8",
+    "agent-base": "6.0.2",
+    "azure-pipelines-task-lib": "^4.13.0",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.238.0",
+    "azure-pipelines-tasks-utility-common": "^3.238.0"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
+  }
 }

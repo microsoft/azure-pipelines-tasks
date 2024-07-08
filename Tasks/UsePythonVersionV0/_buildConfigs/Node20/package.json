@@ -1,0 +1,38 @@
+{
+  "name": "use-python-version",
+  "version": "0.1.0",
+  "description": "Retrieves the specified version of Python from the tool cache. Optionally add it to PATH.",
+  "main": "usepythonversion.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "keywords": [
+    "Azure",
+    "Pipelines",
+    "Tasks",
+    "Python"
+  ],
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^20.14.2",
+    "@types/q": "^1.5.8",
+    "azure-pipelines-task-lib": "^5.0.0-preview.0",
+    "azure-pipelines-tasks-utility-common": "^3.238.0",
+    "azure-pipelines-tool-lib": "^2.0.7",
+    "semver": "^7.6.2",
+    "typed-rest-client": "^1.8.11"
+  },
+  "devDependencies": {
+    "typescript": "5.1.6"
+  }
+}

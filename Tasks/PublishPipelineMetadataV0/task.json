@@ -3,6 +3,7 @@
     "name": "PublishPipelineMetadata",
     "friendlyName": "Publish Pipeline Metadata",
     "description": "Publish Pipeline Metadata to Evidence store",
+    "helpMarkDown": "Publish Pipeline Metadata to Evidence store.",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -11,14 +12,18 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 201,
+        "Minor": 238,
         "Patch": 0
     },
+    "minimumAgentVersion": "2.144.0",
     "preview": true,
     "instanceNameFormat": "Publishing Metadata for pipeline $(System.DefinitionName) to Evidence store",
     "showEnvironmentVariables": true,
     "execution": {
         "Node10": {
+            "target": "publishmetadata.js"
+        },
+        "Node16": {
             "target": "publishmetadata.js"
         }
     }

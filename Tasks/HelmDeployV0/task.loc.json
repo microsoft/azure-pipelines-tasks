@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 208,
+    "Minor": 242,
     "Patch": 0
   },
   "demands": [],
@@ -475,7 +475,10 @@
     {
       "target": "azureResourceGroup",
       "endpointId": "$(azureSubscriptionEndpoint)",
-      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31&$skiptoken={{{skiptoken}}}",
+      "callbackContextTemplate": "{\"skiptoken\": \"{{#getTokenValue response.nextLink}}{{extractUrlQueryParameter %24skiptoken}}{{/getTokenValue}}\"}",
+      "callbackRequiredTemplate": "{{isTokenPresent response.nextLink}}",
+      "initialContextTemplate": "{\"skiptoken\": \"\"}",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
     },
@@ -507,16 +510,28 @@
     }
   ],
   "prejobexecution": {
+    "Node16": {
+      "target": "src//downloadsecurefiles.js",
+      "argumentFormat": ""
+    },
     "Node10": {
       "target": "src//downloadsecurefiles.js"
     }
   },
   "execution": {
+    "Node16": {
+      "target": "src//helm.js",
+      "argumentFormat": ""
+    },
     "Node10": {
       "target": "src//helm.js"
     }
   },
   "postjobexecution": {
+    "Node16": {
+      "target": "src//deletesecurefiles.js",
+      "argumentFormat": ""
+    },
     "Node10": {
       "target": "src//deletesecurefiles.js"
     }
@@ -542,6 +557,7 @@
     "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "SaveSupportedInHelmsV3Only": "ms-resource:loc.messages.SaveSupportedInHelmsV3Only",
-    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded"
+    "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
+    "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
   }
 }

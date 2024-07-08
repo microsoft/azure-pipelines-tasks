@@ -1,6 +1,6 @@
 {
   "name": "azure-spring-cloud-deployment-tests",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Azure Pipelines Azure Spring Cloud Deployment Task Tests",
   "main": "L0.js",
   "scripts": {
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "nock": "9.0.11",
-    "mocha": "8.3.2"
+    "nock": "9.6.1",
+    "mocha": "10.6.0"
   }
 }

@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 208,
-    "Patch": 0
+    "Minor": 240,
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.182.1",
@@ -74,11 +74,19 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "prejobexecution": {
+    "Node16": {
+      "target": "runprejob.js",
+      "argumentFormat": ""
+    },
     "Node10": {
       "target": "runprejob.js"
     }
   },
   "execution": {
+    "Node16": {
+      "target": "run.js",
+      "argumentFormat": ""
+    },
     "Node10": {
       "target": "run.js"
     }

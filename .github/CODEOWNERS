@@ -7,83 +7,101 @@ Tasks/AndroidSigningV3/    @microsoft/akvelon-build-task-team
 
 Tasks/ANTV1/   @microsoft/akvelon-build-task-team
 
-Tasks/AppCenterDistributeV1/   @thewulf7    @lucen-ms    @DergachevE    @vsebesta
+Tasks/AppCenterDistributeV1/   @imenkov    @lucen-ms    @DergachevE
 
-Tasks/AppCenterDistributeV2/   @thewulf7    @lucen-ms    @DergachevE    @vsebesta
+Tasks/AppCenterDistributeV2/   @imenkov    @lucen-ms    @DergachevE
 
-Tasks/AppCenterDistributeV3/   @thewulf7    @lucen-ms    @DergachevE    @vsebesta
+Tasks/AppCenterDistributeV3/   @imenkov    @lucen-ms    @DergachevE
 
-Tasks/AppCenterTestV1/   @thewulf7    @lucen-ms    @DergachevE    @vsebesta
+Tasks/AppCenterTestV1/   @imenkov    @lucen-ms    @DergachevE
 
 Tasks/ArchiveFilesV2/  @microsoft/akvelon-build-task-team
 
-Tasks/AzureAppServiceManageV0/     @vsebesta   @rvairavelu   @pipeline-environment-team
+# DRI Rotation for @microsoft/release-management-task-team : DRI-ReleaseManagement
 
-Tasks/AzureAppServiceSettingsV1/     @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzureAppServiceManageV0/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureCLIV1/      @rvairavelu @rohit-batra
+Tasks/AzureAppServiceSettingsV1/  @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureCLIV2/      @rvairavelu @rohit-batra
+Tasks/AzureCLIV1/      @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureCloudPowerShellDeploymentV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzureCLIV2/     @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureFileCopyV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzureCloudPowerShellDeploymentV1/  @microsoft/release-management-task-team  @manolerazvan 
 
-Tasks/AzureFileCopyV2/    @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzureCloudPowerShellDeploymentV2/  @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureFileCopyV3/    @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzureContainerAppsV0/    @cormacpayne    @daniv-msft
 
-Tasks/AzureFileCopyV4/    @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzureContainerAppsV1/    @cormacpayne    @daniv-msft
 
-Tasks/AzureFunctionAppV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzureFileCopyV1/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureFunctionAppContainerV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzureFileCopyV2/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureFunctionOnKubernetesV0/     @rvairavelu @rohit-batra
+Tasks/AzureFileCopyV3/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureFunctionV1/     @rvairavelu @rohit-batra
+Tasks/AzureFileCopyV4/   @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/AzureFileCopyV5/   @microsoft/release-management-task-team @manolerazvan
+
+Tasks/AzureFileCopyV6/   @microsoft/release-management-task-team @manolerazvan
+
+Tasks/AzureFunctionAppV1/   @finvamp1 @patelchandni @microsoft/release-management-task-team @manolerazvan  
+
+Tasks/AzureFunctionAppV2/   @finvamp1 @patelchandni @microsoft/release-management-task-team @manolerazvan  
+
+Tasks/AzureFunctionAppContainerV1/   @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/AzureFunctionOnKubernetesV0/     @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/AzureFunctionOnKubernetesV1/     @microsoft/release-management-task-team @manolerazvan @vhavrysh 
+
+Tasks/AzureFunctionV1/     @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/AzureIoTEdgeV2/     @marianan   @tameraw    @pprovost
 
-Tasks/AzureKeyVaultV1/     @rvairavelu @rohit-batra
+Tasks/AzureKeyVaultV1/     @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureKeyVaultV2/     @rvairavelu @rohit-batra
+Tasks/AzureKeyVaultV2/     @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureMonitorAlertsV0/    @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzureMonitorV0/      @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureMonitorV0/      @rvairavelu @rohit-batra
+Tasks/AzureMonitorV1/      @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureMonitorV1/      @rvairavelu @rohit-batra
+Tasks/AzureMysqlDeploymentV1/  @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureMysqlDeploymentV1/  @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzureNLBManagementV1/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureNLBManagementV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzurePolicyV0/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzurePolicyV0/   @rvairavelu @rohit-batra
+Tasks/AzurePowerShellV2/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzurePowerShellV2/   @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzurePowerShellV3/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzurePowerShellV3/   @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzurePowerShellV4/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzurePowerShellV4/   @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzurePowerShellV5/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzurePowerShellV5/   @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzureResourceGroupDeploymentV2/      @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureResourceGroupDeploymentV2/      @rvairavelu @rohit-batra
+Tasks/AzureResourceManagerTemplateDeploymentV3/      @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureResourceManagerTemplateDeploymentV3/      @rvairavelu @rohit-batra
+# DRI rotation: App Service (Web Apps)
+Tasks/AzureRmWebAppDeploymentV3/   @jvano @dannysongg @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureRmWebAppDeploymentV3/   @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzureRmWebAppDeploymentV4/   @jvano @dannysongg @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureRmWebAppDeploymentV4/   @vsebesta   @rvairavelu   @pipeline-environment-team
+# DRI rotation: Azure Spring Apps/AzDMSS-Support
+Tasks/AzureSpringCloudV0    @microsoft/azure-spring-apps @ruoyuwang @menxiao
 
-Tasks/AzureSpringCloudV0    @yevster
+Tasks/AzureStaticWebAppV0/  @microsoft/azure-static-web-apps @mkarmark @joslinmicrosoft
 
-Tasks/AzureStaticWebAppV0/  @miwebst    @brhopcra
+Tasks/AzureTestPlanV0/     @rasunkar  @microsoft\adoautotest
 
-Tasks/AzureWebAppV1/  @vsebesta @rvairavelu @pipeline-environment-team
+Tasks/AzureWebAppV1/  @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/AzureWebAppContainerV1/   @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/AzureWebAppContainerV1/  @jvano @dannysongg @manolerazvan @microsoft/azure-app-service-pipelines-tasks @microsoft/release-management-task-team 
 
 Tasks/AzureVmssDeploymentV0/       @bishal-pdmsft
 
@@ -97,9 +115,11 @@ Tasks/CacheBetaV0/      @johnterickson
 
 Tasks/CacheBetaV1/      @johnterickson
 
-Tasks/ChefV1/      @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/CargoAuthenticateV0/      @microsoft/azure-artifacts-packages
 
-Tasks/ChefKnifeV1/     @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/ChefV1/     @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/ChefKnifeV1/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/CMakeV1/  @microsoft/akvelon-build-task-team
 
@@ -107,19 +127,17 @@ Tasks/CmdLineV2/   @microsoft/akvelon-build-task-team
 
 Tasks/CocoaPodsV0/     @microsoft/akvelon-build-task-team
 
-Tasks/Common/artifacts-common/     @phil-hodgson    @aasim
+Tasks/Common/artifacts-common/     @microsoft/azure-artifacts-packages
 
-Tasks/Common/AzureRmDeploy-common/   @vincentdass  @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/Common/AzureRmDeploy-common/   @vincentdass    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/Common/Deployment/   @bishal-pdMSFT  @vsebesta @rvairavelu 
+Tasks/Common/Deployment/   @bishal-pdMSFT  @microsoft/release-management-task-team @manolerazvan  
 
-Tasks/Common/MSBuildHelpers/    @microsoft/akvelon-build-task-team
-
-Tasks/Common/PowershellHelpers/  @rvairavelu @rohit-batra
+Tasks/Common/PowershellHelpers/  @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/Common/RemoteDeployer/   @arjgupta
 
-Tasks/Common/ServiceFabricHelpers/   @rvairavelu @rohit-batra
+Tasks/Common/ServiceFabricHelpers/   @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/Common/TlsHelper_/   @rajatagrawal-dev   @arjgupta
 
@@ -127,37 +145,31 @@ Tasks/Common/VstsAzureHelpers_/  @rajatagrawal-dev   @vincentdass
 
 Tasks/Common/VstsAzureRestHelpers_/  @Ajay-MS  @rajatagrawal-dev
 
-Tasks/Common/azure-arm-rest/   @rvairavelu @rohit-batra
+Tasks/Common/azure-arm-rest/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/Common/azure-arm-rest-v2/   @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/Common/azure-arm-rest-v2/   @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/Common/azure-blobstorage-artifactProvider/   @omeshp   @hiyadav    @bishal-pdmsft
 
-Tasks/Common/codeanalysis-common/    @microsoft/akvelon-build-task-team
-
 Tasks/Common/coveragepublisher/     @rasunkar  @microsoft\adoautotest
 
-Tasks/Common/docker-common/      @rvairavelu @rohit-batra
-
-Tasks/Common/ios-signing-common/     @microsoft/akvelon-build-task-team   @hashtagchris
-
-Tasks/Common/java-common/        @microsoft/akvelon-build-task-team   @kelliejos
+Tasks/Common/docker-common/      @microsoft/release-management-task-team @manolerazvan
 
 Tasks/Common/kubernetes-common/      @nishubansal    @ds-ms
 
-Tasks/Common/packaging-common/     @phil-hodgson    @aasim
-
-Tasks/Common/securefiles-common/   @microsoft/akvelon-build-task-team   @hashtagchris
+Tasks/Common/packaging-common/     @microsoft/azure-artifacts-packages
 
 Tasks/Common/utility-common/       @nishubansal    @ds-ms
 
-Tasks/Common/webdeployment-common/   @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/Common/webdeployment-common/   @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/CondaAuthenticateV0/      @microsoft/azure-artifacts-packages
 
 Tasks/CondaEnvironmentV0/      @microsoft/akvelon-build-task-team
 
 Tasks/CondaEnvironmentV1/      @microsoft/akvelon-build-task-team
 
-Tasks/ContainerBuildV0/    @rvairavelu @rohit-batra
+Tasks/ContainerBuildV0/    @microsoft/release-management-task-team @manolerazvan
 
 Tasks/CopyFilesV2/  @microsoft/akvelon-build-task-team
 
@@ -167,41 +179,43 @@ Tasks/CUrlUploaderV2/  @microsoft/akvelon-build-task-team
 
 Tasks/DecryptFileV1/  @microsoft/akvelon-build-task-team
 
-Tasks/DelayV1/     @rvairavelu @rohit-batra
+Tasks/DelayV1/     @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/DeleteFilesV1/   @microsoft/akvelon-build-task-team
 
 Tasks/DeployVisualStudioTestAgentV2/    @rasunkar  @microsoft\adoautotest
 
-Tasks/DockerV0/    @rvairavelu @rohit-batra
+Tasks/DockerV0/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/DockerV1/    @rvairavelu @rohit-batra
+Tasks/DockerV1/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/DockerV2/    @rvairavelu @rohit-batra
+Tasks/DockerV2/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/DockerComposeV0/     @rvairavelu @rohit-batra
+Tasks/DockerComposeV0/     @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/DockerInstallerV0/    @rvairavelu @rohit-batra
+Tasks/DockerComposeV1/     @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/DotNetCoreCLIV2/     @rvairavelu @rohit-batra
+Tasks/DockerInstallerV0/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/DotNetCoreInstallerV0/   @rvairavelu @rohit-batra
+Tasks/DotNetCoreCLIV2/     @microsoft/akvelon-build-task-team @DergachevE 
 
-Tasks/DotNetCoreInstallerV1/   @rvairavelu @rohit-batra
+Tasks/DotNetCoreInstallerV0/   @microsoft/akvelon-build-task-team @DergachevE 
 
-Tasks/DownloadBuildArtifactsV0/   @v-nmursapall @rvairavelu
+Tasks/DotNetCoreInstallerV1/   @microsoft/akvelon-build-task-team @DergachevE 
 
-Tasks/DownloadFileshareArtifactsV0/   @v-nmursapall @rvairavelu
+Tasks/DownloadBuildArtifactsV0/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/DownloadGitHubNpmPackageV1/    @v-nmursapall @rvairavelu
+Tasks/DownloadFileshareArtifactsV1/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/DownloadGitHubNugetPackageV1/    @v-nmursapall @rvairavelu
+Tasks/DownloadGitHubNpmPackageV1/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/DownloadGitHubReleaseV0/    @v-nmursapall @rvairavelu
+Tasks/DownloadGitHubNugetPackageV1/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/DownloadPackageV0/       @phil-hodgson    @aasim
+Tasks/DownloadGitHubReleaseV0/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/DownloadPackageV1/       @phil-hodgson    @aasim
+Tasks/DownloadPackageV0/       @microsoft/azure-artifacts-packages
+
+Tasks/DownloadPackageV1/       @microsoft/azure-artifacts-packages
 
 Tasks/DownloadPipelineArtifactV0/      @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
 
@@ -211,31 +225,33 @@ Tasks/DownloadPipelineArtifactV2/      @carl-tanner @fadnavistanmay @b-barthel @
 
 Tasks/DownloadSecureFileV1/    @microsoft/akvelon-build-task-team
 
-Tasks/DuffleInstallerV0/   @rvairavelu @rohit-batra
+Tasks/DuffleInstallerV0/   @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/ExtractFilesV1/      @microsoft/akvelon-build-task-team
 
-Tasks/FileTransformV1/     @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/FileTransformV1/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/FileTransformV2/     @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/FileTransformV2/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/FtpUploadV1/     @microsoft/akvelon-build-task-team
 
 Tasks/FtpUploadV2/     @microsoft/akvelon-build-task-team
 
-Tasks/FuncToolsInstallerV0/     @rvairavelu @rohit-batra
+Tasks/FuncToolsInstallerV0/     @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/GitHubCommentV0/     @ds-ms
 
-Tasks/GitHubReleaseV0/     @rvairavelu @rohit-batra
+Tasks/GitHubReleaseV0/     @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/GitHubReleaseV1/     @rvairavelu @rohit-batra
+Tasks/GitHubReleaseV1/     @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/GoV0/    @rvairavelu @rohit-batra
+Tasks/GoV0/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/GoToolV0/    @rvairavelu @rohit-batra
+Tasks/GoToolV0/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/GradleV2/    @microsoft/akvelon-build-task-team
+
+Tasks/GradleV3/    @microsoft/akvelon-build-task-team
 
 Tasks/GruntV0/     @microsoft/akvelon-build-task-team
 
@@ -243,17 +259,19 @@ Tasks/GulpV0/      @microsoft/akvelon-build-task-team
 
 Tasks/GulpV1/      @microsoft/akvelon-build-task-team
 
-Tasks/HelmDeployV0/    @rvairavelu @rohit-batra
+Tasks/HelmDeployV0/       @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/HelmInstallerV0/     @rvairavelu @rohit-batra
+Tasks/HelmDeployV1/       @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/HelmInstallerV1/     @rvairavelu @rohit-batra
+Tasks/HelmInstallerV0/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/IISWebAppDeployment/     @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/HelmInstallerV1/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/IISWebAppDeploymentOnMachineGroupV0/     @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/IISWebAppDeployment/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/IISWebAppManagementOnMachineGroupV0/     @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/IISWebAppDeploymentOnMachineGroupV0/    @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/IISWebAppManagementOnMachineGroupV0/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/InstallAppleCertificateV2/   @microsoft/akvelon-build-task-team
 
@@ -261,79 +279,92 @@ Tasks/InstallAppleProvisioningProfileV1/   @microsoft/akvelon-build-task-team
 
 Tasks/InstallSSHKeyV0/     @microsoft/akvelon-build-task-team
 
-Tasks/InvokeRestApiV1/     @rvairavelu @rohit-batra
+Tasks/InvokeRestApiV1/     @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/JavaToolInstallerV0/     @microsoft/akvelon-build-task-team
 
-Tasks/JenkinsDownloadArtifactsV1/    @v-nmursapall @rvairavelu
+Tasks/JenkinsDownloadArtifactsV1/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/JenkinsQueueJobV2/   @microsoft/akvelon-build-task-team
 
-Tasks/KubectlInstallerV0/  @rvairavelu @rohit-batra
+Tasks/KubectlInstallerV0/  @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/KubernetesV0/    @rvairavelu @rohit-batra
+Tasks/KubeloginInstallerV0/  @YevheniiKholodkov @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/KubernetesV1/    @rvairavelu @rohit-batra
+Tasks/KubernetesV0/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/KubernetesManifestV0/    @rvairavelu @rohit-batra
+Tasks/KubernetesV1/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/ManualInterventionV8/    @rvairavelu @rohit-batra
+Tasks/KubernetesManifestV0/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/ManualValidationV0/    @rvairavelu @rohit-batra
+Tasks/KubernetesManifestV1/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/MavenAuthenticateV0/     @phil-hodgson    @aasim
+Tasks/ManualInterventionV8/    @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/ManualValidationV0/      @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/ManualValidationV1/      @microsoft/release-management-task-team @manolerazvan
+
+Tasks/MavenAuthenticateV0/     @microsoft/azure-artifacts-packages
 
 Tasks/MavenV2/     @microsoft/akvelon-build-task-team
 
 Tasks/MavenV3/     @microsoft/akvelon-build-task-team
 
+Tasks/MavenV4/     @microsoft/akvelon-build-task-team
+
 Tasks/MSBuildV1/   @microsoft/akvelon-build-task-team
 
-Tasks/MysqlDeploymentOnMachineGroupV1/     @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/MysqlDeploymentOnMachineGroupV1/    @microsoft/release-management-task-team @manolerazvan 
+
+Tasks/NodeTaskRunnerInstallerV0/    @microsoft/akvelon-build-task-team
 
 Tasks/NodeToolV0/ @microsoft/akvelon-build-task-team
 
-Tasks/NpmV0/      @phil-hodgson    @aasim
+# DRI rotation: Azure Container Registry / Triage
+Tasks/NotationV0/ @Azure/azure-container-registry @JeyJeyGao @Two-Hearts @shizhMSFT
 
-Tasks/NpmV1/      @phil-hodgson    @aasim
+Tasks/NpmV0/      @microsoft/azure-artifacts-packages
 
-Tasks/NpmAuthenticateV0/       @phil-hodgson    @aasim
+Tasks/NpmV1/      @microsoft/azure-artifacts-packages
 
-Tasks/NuGetV0/     @phil-hodgson    @aasim
+Tasks/NpmAuthenticateV0/       @microsoft/azure-artifacts-packages
 
-Tasks/NuGetCommandV2/      @phil-hodgson    @aasim
+Tasks/NuGetV0/     @microsoft/azure-artifacts-packages
 
-Tasks/NuGetAuthenticateV1/      @phil-hodgson    @aasim
+Tasks/NuGetCommandV2/      @microsoft/azure-artifacts-packages
 
-Tasks/NuGetInstallerV0/      @phil-hodgson    @aasim
+Tasks/NuGetAuthenticateV1/      @microsoft/azure-artifacts-packages
 
-Tasks/NuGetPackagerV0/     @phil-hodgson    @aasim
+Tasks/NuGetInstallerV0/      @microsoft/azure-artifacts-packages
 
-Tasks/NuGetPublisherV0/    @phil-hodgson    @aasim
+Tasks/NuGetPackagerV0/     @microsoft/azure-artifacts-packages
 
-Tasks/NuGetRestoreV1/    @phil-hodgson    @aasim
+Tasks/NuGetPublisherV0/    @microsoft/azure-artifacts-packages
 
-Tasks/NuGetToolInstallerV0/    @phil-hodgson    @aasim
+Tasks/NuGetRestoreV1/    @microsoft/azure-artifacts-packages
 
-Tasks/NuGetToolInstallerV1/    @phil-hodgson    @aasim
+Tasks/NuGetToolInstallerV0/    @microsoft/azure-artifacts-packages
 
-Tasks/OpenPolicyAgentInstallerV0/    @Anumita
+Tasks/NuGetToolInstallerV1/    @microsoft/azure-artifacts-packages
+
+Tasks/OpenPolicyAgentInstallerV0/
 
 Tasks/PackerBuildV0/   @bishal-pdmsft
 
 Tasks/PackerBuildV1/   @bishal-pdmsft
 
-Tasks/PipAuthenticateV0/     @phil-hodgson    @aasim
+Tasks/PipAuthenticateV0/     @microsoft/azure-artifacts-packages
 
-Tasks/PipAuthenticateV1/     @phil-hodgson    @aasim
+Tasks/PipAuthenticateV1/     @microsoft/azure-artifacts-packages
 
 Tasks/PowerShellV2/    @microsoft/akvelon-build-task-team
 
-Tasks/PowerShellOnTargetMachinesV1/    @vsebesta  @rvairavelu   @pipeline-environment-team
+Tasks/PowerShellOnTargetMachinesV1/  @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/PowerShellOnTargetMachinesV2/    @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/PowerShellOnTargetMachinesV2/  @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/PowerShellOnTargetMachinesV3/    @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/PowerShellOnTargetMachinesV3/  @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/PublishBuildArtifactsV1/     @microsoft/akvelon-build-task-team
 
@@ -345,7 +376,7 @@ Tasks/PublishPipelineArtifactV0/       @carl-tanner @fadnavistanmay @b-barthel @
 
 Tasks/PublishPipelineArtifactV1/       @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
 
-Tasks/PublishPipelineMetadataV0/    @rvairavelu @rohit-batra
+Tasks/PublishPipelineMetadataV0/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/PublishSymbolsV2/    @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
 
@@ -353,15 +384,17 @@ Tasks/PublishTestResultsV1/    @shailesh-sk
 
 Tasks/PublishTestResultsV2/    @shailesh-sk
 
-Tasks/ContainerStructureTestV0/    @shailesh-sk   @navin22
+Tasks/ContainerStructureTestV0/    @rasunkar
 
-Tasks/PublishToAzureServiceBusV1/      @rvairavelu @rohit-batra
+Tasks/PublishToAzureServiceBusV1/     @microsoft/release-management-task-team @manolerazvan
+
+Tasks/PublishToAzureServiceBusV2/     @microsoft/release-management-task-team @manolerazvan
 
 Tasks/PyPIPublisherV0/     @microsoft/akvelon-build-task-team
 
 Tasks/PythonScriptV0/      @microsoft/akvelon-build-task-team
 
-Tasks/QueryWorkItemsV0/    @rvairavelu @rohit-batra
+Tasks/QueryWorkItemsV0/    @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/QuickPerfTestV1/     @rasunkar  @microsoft\adoautotest
 
@@ -373,31 +406,31 @@ Tasks/RunJMeterLoadTestV1/     @rasunkar  @microsoft\adoautotest
 
 Tasks/RunLoadTestV1/   @rasunkar  @microsoft\adoautotest
 
-Tasks/ServiceFabricComposeDeployV0/    @rvairavelu @rohit-batra
+Tasks/ServiceFabricComposeDeployV0/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/ServiceFabricDeployV1/   @rvairavelu @rohit-batra
+Tasks/ServiceFabricDeployV1/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/ServiceFabricPowerShellV1/   @rvairavelu @rohit-batra
+Tasks/ServiceFabricPowerShellV1/  @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/ServiceFabricUpdateManifestsV2/  @rvairavelu @rohit-batra
+Tasks/ServiceFabricUpdateManifestsV2/  @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/ShellScriptV2/ @microsoft/akvelon-build-task-team
 
-Tasks/SqlAzureDacpacDeploymentV1/   @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/SqlAzureDacpacDeploymentV1/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/SqlDacpacDeploymentOnMachineGroupV0/     @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/SqlDacpacDeploymentOnMachineGroupV0/    @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/SqlServerDacpacDeployment/   @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/SqlServerDacpacDeployment/   @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/SshV0/   @microsoft/akvelon-build-task-team
 
-Tasks/TwineAuthenticateV0/     @phil-hodgson    @aasim
+Tasks/TwineAuthenticateV0/     @microsoft/azure-artifacts-packages
 
-Tasks/TwineAuthenticateV1/     @phil-hodgson    @aasim
+Tasks/TwineAuthenticateV1/     @microsoft/azure-artifacts-packages
 
-Tasks/UniversalPackagesV0/     @phil-hodgson    @aasim
+Tasks/UniversalPackagesV0/     @microsoft/azure-artifacts-packages
 
-Tasks/UseDotNetV2/     @rvairavelu @rohit-batra
+Tasks/UseDotNetV2/     @microsoft/akvelon-build-task-team @DergachevE
 
 Tasks/UseNodeV1/    @microsoft/akvelon-build-task-team
 
@@ -411,11 +444,13 @@ Tasks/VsTestV1/    @rasunkar  @microsoft\adoautotest
 
 Tasks/VsTestV2/    @rasunkar  @microsoft\adoautotest
 
+Tasks/VsTestV3/    @rasunkar  @microsoft\adoautotest
+
 Tasks/VsTestPlatformToolInstallerV1/   @rasunkar  @microsoft\adoautotest
 
-Tasks/WindowsMachineFileCopyV1/    @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/WindowsMachineFileCopyV1/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/WindowsMachineFileCopyV2/    @vsebesta   @rvairavelu   @pipeline-environment-team
+Tasks/WindowsMachineFileCopyV2/   @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/XamarinAndroidV1/    @microsoft/akvelon-build-task-team
 

@@ -1,0 +1,32 @@
+{
+  "name": "downloadpackage",
+  "version": "1.0.1",
+  "description": "Download Package Task",
+  "main": "downloadPackages.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^16.18.98",
+    "azure-devops-node-api": "11.2.0",
+    "azure-pipelines-task-lib": "3.4.0",
+    "azure-pipelines-tasks-packaging-common": "3.241.1",
+    "azure-pipelines-tasks-utility-common": "^3.241.0",
+    "decompress-zip": "0.3.3",
+    "tar-fs": "1.16.3"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
+  }
+}

@@ -2,6 +2,8 @@
   "loc.messages.AZ_AzureRMProfileModuleNotFound": "モジュール 'AzureRM.Profile' が見つかりません。'AzureRM' モジュールが完全にインストールされていない可能性があります。管理者特権のセッションから次の PowerShell コマンドを実行すると、問題が解決する場合があります。Import-Module AzureRM ; Install-AzureRM",
   "loc.messages.AZ_CertificateAuthNotSupported": "証明書に基づく認証はサポートされていません。Azure PowerShell モジュールが見つかりません。",
   "loc.messages.AZ_CredentialsError": "配置に使用した Azure 資格情報にエラーがありました。",
+  "loc.messages.AZ_CouldNotGenerateOidcToken": "フェデレーション ログインのクライアント アサーションを生成できませんでした。",
+  "loc.messages.AZ_FederatedTokenFailure": "ワークロード ID フェデレーションのフェデレーション トークンをフェッチできませんでした。{0}",
   "loc.messages.AZ_ModuleNotFound": "バージョン '{0}' のモジュール '{1}' が見つかりませんでした。モジュールを最近インストールした場合は、Azure Pipelines のタスク エージェントを再起動後にもう一度お試しください。",
   "loc.messages.AZ_RequiresMinVersion0": "必要な最小バージョン ({0}) の Azure PowerShell モジュールがインストールされていません。",
   "loc.messages.AZ_ServicePrincipalError": "配置に使用したサービス プリンシパルにエラーがありました。",
@@ -11,5 +13,9 @@
   "loc.messages.AZ_InvalidARMEndpoint": "指定した AzureRM エンドポイントは無効です。",
   "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "マネージド ID のアクセス トークンをフェッチできませんでした。仮想マシンのマネージド ID を構成してください 'https://aka.ms/azure-msi-docs'。状態コード: '{0}'、エラー メッセージ: {1}",
   "loc.messages.AZ_MsiAccessTokenFetchFailure": "マネージド ID のアクセス トークンをフェッチできませんでした。状態コード: '{0}'、エラー メッセージ: {1}",
-  "loc.messages.AZ_MsiFailure": "マネージド ID のアクセス トークンをフェッチできませんでした。{0}"
+  "loc.messages.AZ_MsiFailure": "マネージド ID のアクセス トークンをフェッチできませんでした。{0}",
+  "loc.messages.AZ_ExpiredServicePrincipalMessageWithLink": "シークレットの有効期限が切れました。{0} でサービスの接続を更新してください。シークレットなしのサービス接続への変換については、https://aka.ms/azdo-rm-workload-identity-conversion を参照してください。",
+  "loc.messages.AZ_ModuleInitFailWarning": "既存の Az モジュールを初期化できませんでした。インストールにフォールバックします",
+  "loc.messages.AZ_ModuleInstallFail": "Az モジュールをインストールできませんでした",
+  "loc.messages.AZ_RMDeprecationMessage": "間もなく廃止される AzureRM を使用しています。更新プログラムをスケジュールしてください。"
 }

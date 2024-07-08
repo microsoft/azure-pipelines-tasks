@@ -1,0 +1,171 @@
+{
+  "id": "91443475-df55-4874-944b-39253b558790",
+  "name": "SSH",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/ssh",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 238,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.206.1",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "sshEndpoint",
+      "type": "connectedService:ssh",
+      "label": "ms-resource:loc.input.label.sshEndpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.sshEndpoint"
+    },
+    {
+      "name": "runOptions",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.runOptions",
+      "required": true,
+      "defaultValue": "commands",
+      "options": {
+        "commands": "Commands",
+        "script": "Script File",
+        "inline": "Inline Script"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.runOptions"
+    },
+    {
+      "name": "commands",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.commands",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "runOptions = commands",
+      "helpMarkDown": "ms-resource:loc.input.help.commands",
+      "properties": {
+        "resizable": "true",
+        "rows": "10"
+      }
+    },
+    {
+      "name": "scriptPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.scriptPath",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "runOptions = script",
+      "helpMarkDown": "ms-resource:loc.input.help.scriptPath"
+    },
+    {
+      "name": "inline",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.inline",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "runOptions = inline",
+      "helpMarkDown": "ms-resource:loc.input.help.inline",
+      "properties": {
+        "resizable": "true",
+        "rows": "10"
+      }
+    },
+    {
+      "name": "interpreterCommand",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.interpreterCommand",
+      "defaultValue": "/bin/bash",
+      "required": false,
+      "visibleRule": "runOptions = inline",
+      "helpMarkDown": "ms-resource:loc.input.help.interpreterCommand"
+    },
+    {
+      "name": "args",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.args",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "runOptions = script",
+      "helpMarkDown": "ms-resource:loc.input.help.args"
+    },
+    {
+      "name": "failOnStdErr",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStdErr",
+      "required": false,
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStdErr",
+      "groupName": "advanced"
+    },
+    {
+      "name": "interactiveSession",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.interactiveSession",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.interactiveSession",
+      "groupName": "advanced"
+    },
+    {
+      "name": "readyTimeout",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.readyTimeout",
+      "defaultValue": "20000",
+      "required": true,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.readyTimeout",
+      "validation": {
+        "expression": "isMatch(value, '(^\\d*$)','Multiline')",
+        "message": "Enter a valid value for timeout."
+      }
+    },
+    {
+      "name": "interactiveKeyboardAuthentication",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.interactiveKeyboardAuthentication",
+      "defaultValue": false,
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.interactiveKeyboardAuthentication"
+    }
+  ],
+  "execution": {
+    "Node16": {
+      "target": "ssh.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ConnectionFailed": "ms-resource:loc.messages.ConnectionFailed",
+    "FailedToWriteScript": "ms-resource:loc.messages.FailedToWriteScript",
+    "RemoteCmdExecutionErr": "ms-resource:loc.messages.RemoteCmdExecutionErr",
+    "RemoteCmdNonZeroExitCode": "ms-resource:loc.messages.RemoteCmdNonZeroExitCode",
+    "RemoteCopyFailed": "ms-resource:loc.messages.RemoteCopyFailed",
+    "RemoteScriptFileCleanUpFailed": "ms-resource:loc.messages.RemoteScriptFileCleanUpFailed",
+    "SettingUpSshConnection": "ms-resource:loc.messages.SettingUpSshConnection",
+    "SshConnectionSuccessful": "ms-resource:loc.messages.SshConnectionSuccessful",
+    "UseDefaultPort": "ms-resource:loc.messages.UseDefaultPort",
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.238.0",
+    "Node20-225": "0.238.1"
+  }
+}

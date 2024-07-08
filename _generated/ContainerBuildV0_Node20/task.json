@@ -1,0 +1,93 @@
+{
+  "id": "8413C881-4959-43D5-8840-B4EA0FFC5CFE",
+  "name": "ContainerBuild",
+  "friendlyName": "Container Build",
+  "description": "Container Build Task",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=2107300)",
+  "category": "Build",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 241,
+    "Patch": 3
+  },
+  "demands": [],
+  "satisfies": [
+    "Buildctl"
+  ],
+  "preview": "true",
+  "groups": [],
+  "inputs": [
+    {
+      "name": "dockerRegistryServiceConnection",
+      "type": "connectedService:dockerregistry",
+      "label": "Docker registry service connection",
+      "helpMarkDown": "Select a Docker registry service connection."
+    },
+    {
+      "name": "repository",
+      "label": "Container repository",
+      "type": "string",
+      "helpMarkDown": "Name of the repository within the container registry.",
+      "defaultValue": ""
+    },
+    {
+      "name": "Dockerfile",
+      "type": "filePath",
+      "label": "Dockerfile",
+      "defaultValue": "Dockerfile",
+      "required": true,
+      "helpMarkDown": "Path to Dockerfile."
+    },
+    {
+      "name": "buildContext",
+      "type": "filePath",
+      "label": "Build context",
+      "defaultValue": ".",
+      "helpMarkDown": "Path to Build context."
+    },
+    {
+      "name": "tags",
+      "type": "multiLine",
+      "defaultValue": "$(Build.BuildId)",
+      "properties": {
+        "resizable": "true",
+        "rows": "2"
+      },
+      "label": "Tags",
+      "helpMarkDown": "A list of tags in separate lines. Tags are used while building and pushing the image to container registry."
+    }
+  ],
+  "instanceNameFormat": "Container Build Task",
+  "execution": {
+    "Node10": {
+      "target": "src//buildcontainer.js"
+    },
+    "Node16": {
+      "target": "src//buildcontainer.js"
+    },
+    "Node20_1": {
+      "target": "src//buildcontainer.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ContainerPatternNotFound": "No pattern found in Docker filepath parameter",
+    "CouldNotFindDockerConfig": "Could not find Docker Config. Either DOCKER_CONFIG variable is not set, or the config file is outside the temp directory, or the file does not exist. DOCKER_CONFIG: %s",
+    "BuildctlLatestNotKnown": "Cannot get the latest Buildctl info from %s. Error %s. Using default Buildctl version %s.",
+    "BuildctlDownloadFailed": "Failed to download Buildctl from location %s. Error %s",
+    "BuildctlNotFoundInFolder": "Buildctl executable not found in path %s",
+    "FileContentSynced": "Synced the file content to the disk. The content is %s.",
+    "VerifyBuildctlInstallation": "Verifying Buildctl installation...",
+    "WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.241.2",
+    "Node20_229_2": "0.241.3"
+  }
+}

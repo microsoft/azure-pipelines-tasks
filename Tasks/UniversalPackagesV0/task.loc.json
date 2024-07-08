@@ -4,13 +4,13 @@
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
-  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/universal-packages",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "version": {
     "Major": 0,
-    "Minor": 208,
-    "Patch": 1
+    "Minor": 239,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -364,9 +364,9 @@
     {
       "target": "feedListDownload",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if projectId}}{{{projectId}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "packageListDownload",
@@ -392,9 +392,9 @@
     {
       "target": "feedListPublish",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if projectId}}{{{projectId}}}\\/{{/if}}{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "packageListPublish",
@@ -411,6 +411,10 @@
     "Node10": {
       "target": "universalmain.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "universalmain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -423,6 +427,7 @@
     "PackagesPublishedSuccessfully": "ms-resource:loc.messages.PackagesPublishedSuccessfully",
     "PackagesFailedToPublish": "ms-resource:loc.messages.PackagesFailedToPublish",
     "UnknownFeedType": "ms-resource:loc.messages.UnknownFeedType",
+    "Error_NoVersionOptionSpecifiedForPublish": "ms-resource:loc.messages.Error_NoVersionOptionSpecifiedForPublish",
     "Error_NoSourceSpecifiedForPublish": "ms-resource:loc.messages.Error_NoSourceSpecifiedForPublish",
     "Error_NoSourceSpecifiedForDownload": "ms-resource:loc.messages.Error_NoSourceSpecifiedForDownload",
     "Error_UnexpectedErrorArtifactTool": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactTool",
@@ -451,6 +456,7 @@
     "Warn_CredentialsNotFound": "ms-resource:loc.messages.Warn_CredentialsNotFound",
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed",
     "Error_UniversalPackagesNotSupportedOnPrem": "ms-resource:loc.messages.Error_UniversalPackagesNotSupportedOnPrem",
-    "Error_ProcessorArchitectureNotSupported": "ms-resource:loc.messages.Error_ProcessorArchitectureNotSupported"
+    "Error_ProcessorArchitectureNotSupported": "ms-resource:loc.messages.Error_ProcessorArchitectureNotSupported",
+    "Warning_UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.Warning_UnsupportedServiceConnectionAuth"
   }
 }

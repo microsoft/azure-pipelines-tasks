@@ -31,47 +31,48 @@ answers.find[path.normalize('/srcDir')] = [
 ];
 runner.setAnswers(answers);
 
-fs.existsSync = (itemPath: string) => {
-    switch (itemPath) {
-        case path.normalize('/srcDir/someOtherDir'):
-        case path.normalize('/srcDir/someOtherDir2'):
-        case path.normalize('/srcDir/someOtherDir3'):
-        case path.normalize('/srcDir/someOtherDir/file1.file'):
-        case path.normalize('/srcDir/someOtherDir/file2.file'):
-        case path.normalize('/srcDir/someOtherDir2/file1.file'):
-        case path.normalize('/srcDir/someOtherDir2/file2.file'):
-        case path.normalize('/srcDir/someOtherDir2/file3.file'):
-            return true;
-        default:
-            return false;
+const fsClone = Object.assign({}, fs);
+Object.assign(fsClone, {
+    existsSync(itemPath: string): boolean {
+        switch (itemPath) {
+            case path.normalize('/srcDir/someOtherDir'):
+            case path.normalize('/srcDir/someOtherDir2'):
+            case path.normalize('/srcDir/someOtherDir3'):
+            case path.normalize('/srcDir/someOtherDir/file1.file'):
+            case path.normalize('/srcDir/someOtherDir/file2.file'):
+            case path.normalize('/srcDir/someOtherDir2/file1.file'):
+            case path.normalize('/srcDir/someOtherDir2/file2.file'):
+            case path.normalize('/srcDir/someOtherDir2/file3.file'):
+                return true;
+            default:
+                return false;
+        }
+    },
+    statSync(itemPath: string): fs.Stats {
+        const itemStats: fs.Stats = new fs.Stats();
+        switch (itemPath) {
+            case path.normalize('/srcDir/someOtherDir'):
+            case path.normalize('/srcDir/someOtherDir2'):
+            case path.normalize('/srcDir/someOtherDir3'):
+                itemStats.isDirectory = () => true;
+                break;
+            case path.normalize('/srcDir/someOtherDir/file1.file'):
+            case path.normalize('/srcDir/someOtherDir/file2.file'):
+            case path.normalize('/srcDir/someOtherDir2/file1.file'):
+            case path.normalize('/srcDir/someOtherDir2/file2.file'):
+            case path.normalize('/srcDir/someOtherDir2/file3.file'):
+                itemStats.isDirectory = () => false;
+                break;
+            default:
+                throw { code: 'ENOENT' };
+        }
+        return itemStats;
+    },
+    utimes(targetPath, atime, mtime, err): void {
+        console.log('Calling fs.utimes on', targetPath);
     }
-}
-
-fs.statSync = (itemPath: string) => {
-    const itemStats: fs.Stats = new fs.Stats();
-    switch (itemPath) {
-        case path.normalize('/srcDir/someOtherDir'):
-        case path.normalize('/srcDir/someOtherDir2'):
-        case path.normalize('/srcDir/someOtherDir3'):
-            itemStats.isDirectory = () => true;
-            break;
-        case path.normalize('/srcDir/someOtherDir/file1.file'):
-        case path.normalize('/srcDir/someOtherDir/file2.file'):
-        case path.normalize('/srcDir/someOtherDir2/file1.file'):
-        case path.normalize('/srcDir/someOtherDir2/file2.file'):
-        case path.normalize('/srcDir/someOtherDir2/file3.file'):
-            itemStats.isDirectory = () => false;
-            break;
-        default:
-            throw { code: 'ENOENT' };
-    }
-    return itemStats;
-}
-
-fs.utimes = promisify(function (targetPath, atime, mtime, err) {
-    console.log('Calling fs.utimes on', targetPath);
 });
 
-runner.registerMock('fs', fs);
+runner.registerMock('fs', fsClone);
 
 runner.run();

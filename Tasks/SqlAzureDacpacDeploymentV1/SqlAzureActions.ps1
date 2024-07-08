@@ -311,13 +311,13 @@ function Run-SqlCmd {
 
     if ($sqlcmdAdditionalArguments.ToLower().Contains("-verbose")) {
         $ErrorActionPreference = 'Continue'
-        
+
         (Invoke-Expression $commandToRun -ErrorVariable errors 4>&1) | Out-String | foreach-object { $_ }
-        
+
         if ($errors.Count -gt 0) {
             throw $errMsg
         }
-        
+
         $ErrorActionPreference = 'Stop'
     }
     else {
@@ -406,7 +406,8 @@ function Add-FirewallRule {
         [string] $ipDetectionMethod,
         [string] $startIPAddress,
         [string] $endIPAddress,
-        [String] $token
+        [String] $token,
+        [string] $connectedServiceNameARM
     )
 
     # Test and get IPRange for autoDetect IpDetectionMethod
@@ -425,7 +426,8 @@ function Add-FirewallRule {
     if ($ipAddressRange.Count -ne 0) {
         $serverFriendlyName = $serverName.split(".")[0]
 
-        $firewallSettings = Create-AzureSqlDatabaseServerFirewallRule -startIP $ipAddressRange.StartIPAddress -endIP $ipAddressRange.EndIPAddress -serverName $serverFriendlyName -endpoint $endpoint
+        $firewallSettings = Create-AzureSqlDatabaseServerFirewallRule -startIP $ipAddressRange.StartIPAddress -endIP $ipAddressRange.EndIPAddress `
+            -serverName $serverFriendlyName -endpoint $endpoint -connectedServiceNameARM $connectedServiceNameARM
         Write-Verbose ($firewallSettings | Format-List | Out-String)
 
         $firewallRuleName = $firewallSettings.RuleName

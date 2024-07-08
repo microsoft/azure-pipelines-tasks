@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "IIS Web アプリの管理",
-  "loc.helpMarkDown": "[詳細](https://aka.ms/iis-webapp-management-readme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/iis-webapp-management-readme)",
   "loc.description": "Web サイト、Web アプリ、仮想ディレクトリ、アプリケーション プールを作成または更新します",
   "loc.instanceNameFormat": "$(IISDeploymentType) の管理",
   "loc.group.displayName.Website": "IIS Web サイト",

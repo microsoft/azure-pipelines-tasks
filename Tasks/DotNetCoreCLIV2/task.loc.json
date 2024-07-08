@@ -17,10 +17,10 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 208,
-    "Patch": 1
+    "Minor": 242,
+    "Patch": 0
   },
-  "minimumAgentVersion": "2.115.0",
+  "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -262,7 +262,7 @@
       "name": "verbosityRestore",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.verbosityRestore",
-      "defaultValue": "Detailed",
+      "defaultValue": "Normal",
       "helpMarkDown": "ms-resource:loc.input.help.verbosityRestore",
       "required": "false",
       "groupName": "restoreAdvanced",
@@ -474,7 +474,7 @@
       "name": "verbosityPack",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.verbosityPack",
-      "defaultValue": "Detailed",
+      "defaultValue": "Normal",
       "helpMarkDown": "ms-resource:loc.input.help.verbosityPack",
       "required": "false",
       "groupName": "packAdvanced",
@@ -515,6 +515,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "dotnetcore.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "dotnetcore.js",
       "argumentFormat": ""
     }
@@ -573,6 +577,9 @@
     "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion",
     "Net5Update": "ms-resource:loc.messages.Net5Update",
     "Net5NugetVersionCompat": "ms-resource:loc.messages.Net5NugetVersionCompat",
-    "DeprecatedDotnet2_2_And_3_0": "ms-resource:loc.messages.DeprecatedDotnet2_2_And_3_0"
+    "DeprecatedDotnet2_2_And_3_0": "ms-resource:loc.messages.DeprecatedDotnet2_2_And_3_0",
+    "Warning_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Warning_IncludeNuGetOrgEnabled",
+    "Error_IncludeNuGetOrgEnabled": "ms-resource:loc.messages.Error_IncludeNuGetOrgEnabled",
+    "Warning_UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.Warning_UnsupportedServiceConnectionAuth"
   }
 }

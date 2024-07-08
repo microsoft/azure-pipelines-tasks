@@ -9,8 +9,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 208,
-        "Patch": 1
+        "Minor": 241,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -174,6 +174,9 @@
     "execution": {
         "Node10": {
             "target": "npm.js"
+        },
+        "Node16": {
+            "target": "npm.js"
         }
     },
     "messages": {
@@ -201,6 +204,7 @@
         "OverridingProjectNpmrc": "Overriding project .npmrc: %s",
         "RestoringProjectNpmrc": "Restoring project .npmrc",
         "WorkingDirectoryNotDirectory": "Please change your working directory to a valid directory",
-        "NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region."
+        "NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region.",
+        "UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
     }
 }

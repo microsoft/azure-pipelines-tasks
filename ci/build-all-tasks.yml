@@ -1,0 +1,58 @@
+# This YAML is intended for building ALL tasks and publish them as an artifact 
+# to be used later for Tasks Deployment train
+parameters:
+- name: deploy_all_tasks
+  type: boolean
+
+steps:
+# Clean
+- checkout: self
+  clean: true
+
+# Use .NET SDK 8
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK 8.x'
+  inputs:
+    version: 8.x
+
+# Use node 20, npm 9
+- task: NodeTool@0
+  displayName: Use node 20
+  inputs:
+    versionSpec: 20.11.0
+
+# npm install
+- script: npm install
+  displayName: npm install
+
+# Clean
+- script: node make.js clean
+  displayName: Clean tasks
+
+# Build tasks
+- script: node make.js serverBuild --task "$(task_pattern)"
+  displayName: Build tasks using pattern
+  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', false))
+
+# Build all tasks
+- script: node make.js serverBuild
+  displayName: Build all tasks
+  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', true))
+
+# Stage tasks individually into the package directory
+- script: node ./ci/stage-package.js true individually
+  displayName: Stage tasks individually into the package directory
+
+- script: |
+    rmdir /s /q _build
+    rmdir /s /q _package\nested-zips-layout
+  displayName: Remove _build folder to reduce space
+
+# Sign all task zips as nuget packages
+- template: /ci/sign-all-tasks.yml@self
+  parameters:
+    layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+
+# Stage all the tasks into a single zip for upload
+- script: node ./ci/stage-package.js true
+  displayName: Stage all the tasks into a single zip for upload

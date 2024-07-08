@@ -1,0 +1,88 @@
+{
+  "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
+  "name": "DotNetCoreInstaller",
+  "friendlyName": ".NET Core SDK/runtime installer",
+  "description": "Acquire a specific version of the .NET Core SDK from the internet or local cache and add it to the PATH",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=853651)",
+  "category": "Tool",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 238,
+    "Patch": 1
+  },
+  "satisfies": [
+    "DotNetCore"
+  ],
+  "demands": [],
+  "instanceNameFormat": "Use .NET Core $(packageType) $(version)",
+  "inputs": [
+    {
+      "name": "packageType",
+      "type": "pickList",
+      "label": "Package to install",
+      "defaultValue": "sdk",
+      "required": true,
+      "helpMarkDown": "Please select whether to install only runtime or full SDK.",
+      "options": {
+        "runtime": "Runtime",
+        "sdk": "SDK (contains runtime)"
+      }
+    },
+    {
+      "name": "version",
+      "type": "string",
+      "label": "Version",
+      "defaultValue": "1.0.4",
+      "required": true,
+      "helpMarkDown": "Specify exact version of .NET Core SDK or runtime to install.<br/>Find the value of `version-sdk` for installing SDK, or `version-runtime` for installing Runtime from any releases [here](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json).\n **NOTE: the task will not work with new versions of .NET Core. Kindly upgrade to 2.\\* version of the task to download latest versions od .NET Core.**"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "dotnetcoreinstaller.js"
+    },
+    "Node16": {
+      "target": "dotnetcoreinstaller.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "dotnetcoreinstaller.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ToolFailed": "Tool install failed: %s",
+    "ImplicitVersionNotSupported": "Version should be a valid and explicit version: %s",
+    "getMachinePlatformFailed": "Failed to get machine platform details. Error: %s.",
+    "getDownloadUrlsFailed": "Failed to get download urls. Error: %s.",
+    "UsingCachedTool": "Cached copy of .NET Core exists. No need to install afresh. Cached tool location: %s.",
+    "CheckingToolCache": "Checking if a cached copy exists for this version...",
+    "InstallingAfresh": "The cache does not contain the requested version of .NET Core. Downloading and installing it now.",
+    "GettingDownloadUrl": "Getting URL to download .NET Core %s version: %s.",
+    "CouldNotDetectPlatform": "Could not detect the machine's OS",
+    "NullDownloadUrls": "Could not construct download URL. Please ensure that specified version %s is valid.",
+    "DownloadingUrl": "Downloading .NET Core package from URL: %s",
+    "ExtractingPackage": "Extracting downloaded package %s.",
+    "CachingTool": "Caching this installed tool.",
+    "SuccessfullyInstalled": "Successfully installed .NET Core %s version %s.",
+    "ToolToInstall": "Tool to install: .NET Core %s version %s.",
+    "PrimaryPlatform": "Detected platform (Primary): %s",
+    "LegacyPlatform": "Detected platform (Legacy): %s",
+    "WarningVersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer the link for supported versions => https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreInstallerV0/externals/releases.json. Falling back to creating convention based URL.",
+    "CouldNotDownload": "Could not download installation package from this URL: %s Error: %s",
+    "FailedToDownloadPackage": "Failed to download package for installation",
+    "PrependGlobalToolPath": "Creating global tool path and pre-prending to PATH.",
+    "VersionsFileMalformed": "The specified version's download links are not correctly formed in the supported versions document => %s/",
+    "UpdateToNewerVersion": "Kindly upgrade to new major version of this task 'Use .NET Core (2.*)' for installing newer versions of .NET Core. '0.*' task version might not be able to download newer .NET core versions. To know more about 'Use Dot Net (2.*)', refer https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/dotnet-core-tool-installer?view=azure-devops."
+  },
+  "_buildConfigMapping": {
+    "Default": "0.238.0",
+    "Node20_229_3": "0.238.1"
+  }
+}

@@ -9,12 +9,12 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 203,
-    "Patch": 1
+    "Minor": 242,
+    "Patch": 0
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
-  "minimumAgentVersion": "2.115.0",
+  "minimumAgentVersion": "2.144.0",
   "groups": [
     {
       "name": "advancedOptions",
@@ -34,7 +34,8 @@
         "npm": "Npm",
         "nuget": "NuGet",
         "pypi": "Python",
-        "upack": "Universal"
+        "upack": "Universal",
+        "cargo": "Cargo"
       }
     },
     {
@@ -119,9 +120,9 @@
     {
       "target": "feed",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
       "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{#if projectId}}{{{projectId}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "target": "view",
@@ -167,6 +168,10 @@
     "Node10": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -177,6 +182,7 @@
     "StartingDownloadOfPackage": "ms-resource:loc.messages.StartingDownloadOfPackage",
     "ExtractingPackage": "ms-resource:loc.messages.ExtractingPackage",
     "PackageTypeNotSupported": "ms-resource:loc.messages.PackageTypeNotSupported",
+    "SkippingFileWithNoContent": "ms-resource:loc.messages.SkippingFileWithNoContent",
     "ExtractionFailed": "ms-resource:loc.messages.ExtractionFailed",
     "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
     "RedirectUrlError": "ms-resource:loc.messages.RedirectUrlError",
@@ -185,6 +191,7 @@
     "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
     "Info_DownloadingArtifactTool": "ms-resource:loc.messages.Info_DownloadingArtifactTool",
     "Info_Downloading": "ms-resource:loc.messages.Info_Downloading",
-    "Info_UsingArtifactToolDownload": "ms-resource:loc.messages.Info_UsingArtifactToolDownload"
+    "Info_UsingArtifactToolDownload": "ms-resource:loc.messages.Info_UsingArtifactToolDownload",
+    "Info_ResolvedLatestVersion": "ms-resource:loc.messages.Info_ResolvedLatestVersion"
   }
 }

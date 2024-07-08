@@ -13,7 +13,7 @@
   "preview": false,
   "version": {
     "Major": 2,
-    "Minor": 203,
+    "Minor": 237,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -181,6 +181,10 @@
   "prejobexecution": {
     "Node10": {
       "target": "PreJobExecutionPublishSymbols.js"
+    },
+    "Node16": {
+      "target": "PreJobExecutionPublishSymbols.js",
+      "argumentFormat": ""
     }
   },
   "execution": {
@@ -192,6 +196,10 @@
     },
     "Node10": {
       "target": "clienttoolmain.js"
+    },
+    "Node16": {
+      "target": "clienttoolmain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {

@@ -6,7 +6,8 @@ param (
     [object]$credential,
     [string]$cleanTargetBeforeCopy,
     [string]$additionalArguments,
-    [string]$scriptRoot
+    [string]$scriptRoot,
+    [string]$useSanitizerActivate
     )
     Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" 
     Import-VstsLocStrings -LiteralPath $scriptRoot/Task.json
@@ -237,8 +238,15 @@ param (
     {
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
 
-        $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
-        Invoke-Expression $command
+        if ($useSanitizerActivate -eq "true") {
+            # Splitting arguments on space, but not on space inside quotes
+            $sanitizedArguments = [regex]::Split($robocopyParameters, ' (?=(?:[^"]|"[^"]*")*$)')
+            & robocopy "$sourceDirectory" "$destinationNetworkPath" "$filesToCopy" $sanitizedArguments
+        } else {
+            $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
+            Invoke-Expression $command
+        }
+
         if ($LASTEXITCODE -ge 8)
         {
             $errorMessage = Get-VstsLocString -Key "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails"
@@ -249,6 +257,10 @@ param (
             $message = (Get-VstsLocString -Key "WFC_CopyingRecurivelyFrom0to1MachineSucceed" -ArgumentList $sourcePath, $targetPath, $fqdn)
             Write-Output $message
         }
+    }
+    catch {
+        Write-VstsTaskError -Message $_.Exception.Message
+        Write-VstsSetResult -Result 'Failed' -Message "Error detected" -DoNotThrow
     }
     finally
     {

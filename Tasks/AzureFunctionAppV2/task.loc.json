@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 208,
-    "Patch": 1
+    "Minor": 242,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -27,7 +27,7 @@
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "appType != functionAppLinux && appType != \"\" && package NotEndsWith .war && Package NotEndsWith .jar"
+      "visibleRule": "appType != \"\" && package NotEndsWith .war && Package NotEndsWith .jar"
     },
     {
       "name": "ApplicationAndConfigurationSettings",
@@ -38,6 +38,9 @@
   "inputs": [
     {
       "name": "azureSubscription",
+      "aliases": [
+        "connectedServiceNameARM"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.azureSubscription",
       "defaultValue": "",
@@ -53,7 +56,8 @@
       "options": {
         "functionApp": "Function App on Windows",
         "functionAppLinux": "Function App on Linux"
-      }
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.appType"
     },
     {
       "name": "appName",
@@ -117,20 +121,22 @@
         "EditableOptions": "True"
       },
       "options": {
-        "DOTNET|2.2": "DOTNET|2.2 (functionapp v2)",
-        "DOTNET|3.1": "DOTNET|3.1 (functionapp v3)",
-        "DOTNET|6.0": "DOTNET|6.0 (functionapp v4)",
-        "JAVA|8": "JAVA|8 (functionapp v2/v3/v4)",
-        "JAVA|11": "JAVA|11  (functionapp v3/v4)",
-        "NODE|8": "NODE|8 (functionapp v2)",
-        "NODE|10": "NODE|10 (functionapp v2/v3)",
-        "NODE|12": "NODE|12 (functionapp v3)",
-        "NODE|14": "NODE|14 (functionapp v3/v4)",
-        "NODE|16": "NODE|16 (functionapp v4)",
-        "PYTHON|3.6": "PYTHON|3.6 (functionapp v2/v3)",
-        "PYTHON|3.7": "PYTHON|3.7 (functionapp v2/v3/v4)",
-        "PYTHON|3.8": "PYTHON|3.8 (functionapp v3/v4)",
-        "PYTHON|3.9": "PYTHON|3.9 (functionapp v3/v4)"
+        "DOTNET|6.0": "DOTNET|6.0",
+        "DOTNET-ISOLATED|6.0": "DOTNET-ISOLATED|6.0",
+        "DOTNET-ISOLATED|7.0": "DOTNET-ISOLATED|7.0",
+        "DOTNET-ISOLATED|8.0": "DOTNET-ISOLATED|8.0",
+        "JAVA|8": "JAVA|8",
+        "JAVA|11": "JAVA|11",
+        "JAVA|17": "JAVA|17",
+        "JAVA|21": "JAVA|21",
+        "NODE|14": "NODE|14",
+        "NODE|16": "NODE|16",
+        "NODE|18": "NODE|18",
+        "NODE|20": "NODE|20",
+        "PYTHON|3.8": "PYTHON|3.8",
+        "PYTHON|3.9": "PYTHON|3.9",
+        "PYTHON|3.10": "PYTHON|3.10",
+        "PYTHON|3.11": "PYTHON|3.11"
       },
       "visibleRule": "appType = functionAppLinux",
       "helpMarkDown": "ms-resource:loc.input.help.runtimeStack"
@@ -198,6 +204,10 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
+    "Node16": {
+      "target": "azurermwebappdeployment.js",
+      "argumentFormat": ""
+    },
     "Node10": {
       "target": "azurermwebappdeployment.js"
     }
@@ -352,6 +362,7 @@
     "FailedToSyncTriggers": "ms-resource:loc.messages.FailedToSyncTriggers",
     "SyncingFunctionTriggers": "ms-resource:loc.messages.SyncingFunctionTriggers",
     "SyncFunctionTriggersSuccess": "ms-resource:loc.messages.SyncFunctionTriggersSuccess",
-    "UpdatedRunFromPackageSettings": "ms-resource:loc.messages.UpdatedRunFromPackageSettings"
+    "UpdatedRunFromPackageSettings": "ms-resource:loc.messages.UpdatedRunFromPackageSettings",
+    "DeploymentTypeNotSupportedForLinuxConsumption": "ms-resource:loc.messages.DeploymentTypeNotSupportedForLinuxConsumption"
   }
 }

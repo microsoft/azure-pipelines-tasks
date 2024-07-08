@@ -1,0 +1,69 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+  "id": "5eeaaa81-40b2-4918-8fc7-e2dfc2318902",
+  "name": "KubeloginInstaller",
+  "friendlyName": "Kubelogin tool installer",
+  "description": "Helps to install kubelogin",
+  "helpMarkDown": "[Learn more about this task](https://learn.microsoft.com/azure/devops/pipelines/tasks/reference/kubelogin-installer-v0) or [see the Kubelogin documentation](https://azure.github.io/kubelogin/index.html)",
+  "helpUrl": "https://azure.github.io/kubelogin/index.html",
+  "category": "Tool",
+  "minimumAgentVersion": "2.144.0",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 241,
+    "Patch": 1
+  },
+  "demands": [],
+  "satisfies": [
+    "Kubelogin"
+  ],
+  "instanceNameFormat": "Install Kubelogin $(kubeloginVersion)",
+  "inputs": [
+    {
+      "name": "kubeloginVersion",
+      "type": "string",
+      "label": "kubelogin version",
+      "defaultValue": "latest",
+      "helpMarkDown": "The version of kubelogin to use"
+    }
+  ],
+  "execution": {
+    "Node16": {
+      "target": "kubelogin.js"
+    },
+    "Node10": {
+      "target": "kubelogin.js"
+    },
+    "Node20_1": {
+      "target": "kubelogin.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Info_VerifyKubeloginInstallation": "Verifying kubelogin installation...",
+    "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+    "Info_UsingToolPath": "Using tool path: %s",
+    "Info_UsingVersion": "Using version: %s",
+    "Info_CachingTool": "Caching kubelog version: %s",
+    "Info_ToolDownloaded": "Release successfully downloaded to %s",
+    "Info_KubeloginRelease": "Kubelogin release:     %s",
+    "Info_KubeloginPlatform": "Kubelogin platform:    %s",
+    "Info_KubeloginVersion": "Kubelogin version:     %s",
+    "Info_KubeloginReleaseURL": "Kubelogin release URL: %s",
+    "Info_DownloadingFailed": "Failed to download kubelogin, exception %s",
+    "Err_ExtractionFailed": "Failed to extract package with error %s",
+    "Err_VersionNotFound": "Kubelogin version %s was not found",
+    "Err_NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
+    "SucceedMsg": "Kubelogin has been successfully installed",
+    "Info_KubeloginDownloading": "Downloading kubelogin"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.241.0",
+    "Node20_229_3": "0.241.1"
+  }
+}

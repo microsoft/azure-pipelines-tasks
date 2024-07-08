@@ -1,0 +1,68 @@
+{
+    "id": "2003AD3A-104A-451A-9238-60474AB294E6",
+    "name": "ManualValidation",
+    "friendlyName": "Manual validation",
+    "description": "Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.",
+    "helpUrl": "https://aka.ms/manual-validation",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/manual-validation)",
+    "category": "Deploy",
+    "visibility": [
+        "Build"
+    ],
+    "author": "Microsoft Corporation",
+    "runsOn": [
+        "Server"
+    ],
+    "version": {
+        "Major": 1,
+        "Minor": 242,
+        "Patch": 1
+    },
+    "inputs": [
+        {
+            "name": "notifyUsers",
+            "type": "multiLine",
+            "label": "Notify users",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Send a manual validation pending email to specific users (or groups). Only users specified in approvers can act on a manual validation."
+        },
+        {
+            "name": "approvers",
+            "type": "multiLine",
+            "label": "Approvers",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specify users/groups/project teams separated by commas to act on a manual validation. In absence of input, users with queue build permission will be able to take action."
+        },
+        {
+            "name": "instructions",
+            "type": "multiLine",
+            "label": "Instructions",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "These instructions will be shown to the user for resuming or rejecting the manual validation. Based on these instructions the user will take an informed decision about this manual validation.",
+            "properties": {
+                "resizable": "true",
+                "rows": "10",
+                "maxLength": "4000"
+            }
+        },
+        {
+            "name": "onTimeout",
+            "type": "radio",
+            "label": "On timeout",
+            "defaultValue": "reject",
+            "required": false,
+            "options": {
+                "reject": "Reject",
+                "resume": "Resume"
+            },
+            "helpMarkDown": "Reject or resume this manual validation automatically after it is pending for the specified timeout or 30 days, whichever is earlier."
+        }
+    ],
+    "instanceNameFormat": "Manual Validation",
+    "execution": {
+        "ManualValidationV1": {}
+    }
+}

@@ -14,5 +14,7 @@
   "loc.input.label.parallel": "並列コピー",
   "loc.input.help.parallel": "スループット向上を期待して複数のスレッドを使って並列でファイルをコピーするかどうかを選択します。この設定が無効の場合は、1 つのスレッドが使用されます。",
   "loc.input.label.parallelCount": "並列数",
-  "loc.input.help.parallelCount": "コピーを実行するための並列処理の程度、つまり使用するスレッド数を入力します。この値は 1 以上 128 以下でなければなりません。"
+  "loc.input.help.parallelCount": "コピーを実行するための並列処理の程度、つまり使用するスレッド数を入力します。この値は 1 以上 128 以下でなければなりません。",
+  "loc.input.label.properties": "カスタム プロパティ",
+  "loc.input.help.properties": "成果物に関連付けるカスタム プロパティを入力します。プレフィックス 'user-' を持つすべてのキーに有効な JSON 文字列が必要です"
 }

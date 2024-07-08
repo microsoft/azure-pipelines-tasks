@@ -13,9 +13,10 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 200,
+    "Minor": 241,
     "Patch": 0
   },
+  "minimumAgentVersion": "2.206.1",
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
     {
@@ -226,7 +227,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node": {
+    "Node16": {
       "target": "appcenterdistribute.js",
       "argumentFormat": ""
     }

@@ -1,0 +1,15 @@
+{
+  "name": "AzureFileCopyV6",
+  "dependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10.17.0",
+    "@types/q": "1.5.8",
+    "azure-pipelines-task-lib": "^4.11.0",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.238.0",
+    "moment": "^2.29.4",
+    "uuid": "^8.3.0"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
+  }
+}

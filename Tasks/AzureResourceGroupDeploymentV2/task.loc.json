@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 208,
+    "Minor": 241,
     "Patch": 0
   },
   "demands": [],
@@ -306,6 +306,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.addSpnToEnvironment",
       "groupName": "Advanced"
+    },
+    {
+      "name": "useWithoutJSON",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useWithoutJSON",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.useWithoutJSON",
+      "groupName": "Advanced"
     }
   ],
   "dataSourceBindings": [
@@ -337,6 +346,10 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
     "Node10": {
       "target": "main.js"
     }

@@ -1,0 +1,141 @@
+{
+  "id": "0f9f66ca-250e-40fd-9678-309bcd439d5e",
+  "name": "InstallAppleProvisioningProfile",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/install-apple-provisioning-profile",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 238,
+    "Patch": 1
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [
+    "xcode"
+  ],
+  "minimumAgentVersion": "2.182.1",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "provisioningProfileLocation",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.provisioningProfileLocation",
+      "defaultValue": "secureFiles",
+      "required": true,
+      "options": {
+        "secureFiles": "Secure Files",
+        "sourceRepository": "Source Repository"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.provisioningProfileLocation"
+    },
+    {
+      "name": "provProfileSecureFile",
+      "type": "secureFile",
+      "label": "ms-resource:loc.input.label.provProfileSecureFile",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.provProfileSecureFile",
+      "visibleRule": "provisioningProfileLocation == secureFiles"
+    },
+    {
+      "name": "provProfileSourceRepository",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.provProfileSourceRepository",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.provProfileSourceRepository",
+      "visibleRule": "provisioningProfileLocation == sourceRepository"
+    },
+    {
+      "name": "removeProfile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.removeProfile",
+      "defaultValue": true,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.removeProfile"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "provisioningProfileUuid",
+      "description": "The UUID property for the selected provisioning profile."
+    },
+    {
+      "name": "provisioningProfileName",
+      "description": "The Name property for the selected provisioning profile."
+    }
+  ],
+  "prejobexecution": {
+    "Node10": {
+      "target": "preinstallprovprofile.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "preinstallprovprofile.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "preinstallprovprofile.js",
+      "argumentFormat": ""
+    }
+  },
+  "execution": {
+    "Node10": {
+      "target": "installprovprofile.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "installprovprofile.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "installprovprofile.js",
+      "argumentFormat": ""
+    }
+  },
+  "postjobexecution": {
+    "Node10": {
+      "target": "postinstallprovprofile.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "postinstallprovprofile.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "postinstallprovprofile.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "provisioningProfileUuid",
+        "provisioningProfileName",
+        "APPLE_PROV_PROFILE_UUID"
+      ]
+    }
+  },
+  "messages": {
+    "InputProvisioningProfileNotFound": "ms-resource:loc.messages.InputProvisioningProfileNotFound",
+    "InstallRequiresMac": "ms-resource:loc.messages.InstallRequiresMac",
+    "InvalidMobileProvisionFileExtension": "ms-resource:loc.messages.InvalidMobileProvisionFileExtension"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.238.0",
+    "Node20-225": "1.238.1"
+  }
+}

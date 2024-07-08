@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 200,
+    "Minor": 242,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -156,6 +156,21 @@
       "groupName": "preferenceVariables"
     },
     {
+      "name": "progressPreference",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.progressPreference",
+      "required": false,
+      "defaultValue": "silentlyContinue",
+      "options": {
+        "default": "Default",
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.progressPreference",
+      "groupName": "preferenceVariables"
+    },
+    {
       "name": "failOnStderr",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.failOnStderr",
@@ -221,6 +236,10 @@
     "Node10": {
       "target": "powershell.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "powershell.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -236,6 +255,7 @@
     "PS_InvalidActionPreference": "ms-resource:loc.messages.PS_InvalidActionPreference",
     "PS_InvalidFilePath": "ms-resource:loc.messages.PS_InvalidFilePath",
     "PS_UnableToDetermineExitCode": "ms-resource:loc.messages.PS_UnableToDetermineExitCode",
-    "PS_InvalidTargetType": "ms-resource:loc.messages.PS_InvalidTargetType"
+    "PS_InvalidTargetType": "ms-resource:loc.messages.PS_InvalidTargetType",
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   }
 }

@@ -1,0 +1,123 @@
+{
+  "id": "8d6e8f7e-267d-442d-8c92-1f586864c62f",
+  "name": "DownloadPackage",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-package",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "author": "ms-vscs-rm",
+  "version": {
+    "Major": 0,
+    "Minor": 241,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.144.0",
+  "deprecated": true,
+  "removalDate": "2023-12-11",
+  "deprecationMessage": "The DownloadPackage@0 (Download package) task has been deprecated and will soon be retired. Use the DownloadPackage@1 task instead.",
+  "inputs": [
+    {
+      "name": "feed",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.feed",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.feed"
+    },
+    {
+      "name": "definition",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.definition",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.definition"
+    },
+    {
+      "name": "version",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.version",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.version"
+    },
+    {
+      "name": "downloadPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.downloadPath",
+      "defaultValue": "$(System.ArtifactsDirectory)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.downloadPath"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "feed",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{#if project}}{{{project.id}}}{{/if}}\\/{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "target": "definition",
+      "endpointId": "tfs:feed",
+      "parameters": {
+        "feed": "$(feed)"
+      },
+      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]+/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages?includeUrls=false",
+      "resultSelector": "jsonpath:$.value[?(@.protocolType=='NuGet')]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    },
+    {
+      "target": "version",
+      "endpointId": "tfs:feed",
+      "parameters": {
+        "feed": "$(feed)",
+        "definition": "$(definition)"
+      },
+      "endpointUrl": "{{endpoint.url}}/{{ #regex ([a-fA-F0-9\\-]*/)[a-fA-F0-9\\-]+ feed }}_apis/Packaging/Feeds/{{ #regex [a-fA-F0-9\\-]*/([a-fA-F0-9\\-]+) feed }}{{#if view}}@{{{view}}}{{/if}}/Packages/{{{definition}}}/Versions?includeUrls=false&protocolType={{{packageType}}}",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{version}}}\" }"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "download.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "download.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "FailedToGetPackageMetadata": "ms-resource:loc.messages.FailedToGetPackageMetadata",
+    "FailedToDownloadNugetPackage": "ms-resource:loc.messages.FailedToDownloadNugetPackage",
+    "PackageDownloadSuccessful": "ms-resource:loc.messages.PackageDownloadSuccessful",
+    "CredentialsNotFound": "ms-resource:loc.messages.CredentialsNotFound",
+    "StartingDownloadOfPackage": "ms-resource:loc.messages.StartingDownloadOfPackage",
+    "ExtractingNugetPackage": "ms-resource:loc.messages.ExtractingNugetPackage",
+    "PackageTypeNotSupported": "ms-resource:loc.messages.PackageTypeNotSupported",
+    "ExtractionFailed": "ms-resource:loc.messages.ExtractionFailed",
+    "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
+    "OperationFailed": "ms-resource:loc.messages.OperationFailed",
+    "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
+    "UnsupportedProjectScopedFeeds": "ms-resource:loc.messages.UnsupportedProjectScopedFeeds",
+    "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.241.0",
+    "Node20_229_1": "0.241.1"
+  }
+}

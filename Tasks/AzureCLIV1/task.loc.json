@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 198,
-    "Patch": 0
+    "Minor": 238,
+    "Patch": 4
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -139,6 +139,10 @@
     "Node10": {
       "target": "azureclitask.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "azureclitask.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -153,6 +157,7 @@
     "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription",
     "SettingAzureConfigDir": "ms-resource:loc.messages.SettingAzureConfigDir",
     "SettingAzureCloud": "ms-resource:loc.messages.SettingAzureCloud",
-    "GlobalCliConfigAgentVersionWarning": "ms-resource:loc.messages.GlobalCliConfigAgentVersionWarning"
+    "GlobalCliConfigAgentVersionWarning": "ms-resource:loc.messages.GlobalCliConfigAgentVersionWarning",
+    "ExpiredServicePrincipalMessageWithLink": "ms-resource:loc.messages.ExpiredServicePrincipalMessageWithLink"
   }
 }

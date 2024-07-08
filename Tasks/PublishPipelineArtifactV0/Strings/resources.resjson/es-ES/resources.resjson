@@ -6,5 +6,7 @@
   "loc.input.label.artifactName": "Nombre del artefacto",
   "loc.input.help.artifactName": "Nombre de este artefacto.",
   "loc.input.label.targetPath": "Ruta de acceso para publicar",
-  "loc.input.help.targetPath": "La ruta de acceso del archivo o la carpeta para publicar. Puede ser una ruta de acceso completa o relativa a la raíz del repositorio. No se admiten caracteres comodín. Se admiten [variables](https://go.microsoft.com/fwlink/?LinkID=550988)."
+  "loc.input.help.targetPath": "La ruta de acceso del archivo o la carpeta para publicar. Puede ser una ruta de acceso completa o relativa a la raíz del repositorio. No se admiten caracteres comodín. Se admiten [variables](https://go.microsoft.com/fwlink/?LinkID=550988).",
+  "loc.input.label.properties": "Propiedades personalizadas",
+  "loc.input.help.properties": "Escriba las propiedades personalizadas para asociar con el artefacto. Se esperaba una cadena JSON válida con todas las claves con el prefijo \"user-\"."
 }
