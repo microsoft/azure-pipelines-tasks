@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 241,
+    "Minor": 242,
     "Patch": 0
   },
   "demands": [],
@@ -502,7 +502,7 @@
     "TroubleshootingGuide": "Check out the troubleshooting guide to see if your issue is addressed: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
   },
   "_buildConfigMapping": {
-    "Default": "2.241.0",
-    "Node20_229_2": "2.241.1"
+    "Default": "2.242.0",
+    "Node20_229_2": "2.242.1"
   }
 }

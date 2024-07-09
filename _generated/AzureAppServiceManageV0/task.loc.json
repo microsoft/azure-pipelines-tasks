@@ -18,7 +18,7 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 241,
+    "Minor": 242,
     "Patch": 0
   },
   "minimumAgentVersion": "1.102.0",
@@ -438,7 +438,7 @@
     "InvalidActionForPublishProfileEndpoint": "ms-resource:loc.messages.InvalidActionForPublishProfileEndpoint"
   },
   "_buildConfigMapping": {
-    "Default": "0.241.0",
-    "Node20_229_2": "0.241.1"
+    "Default": "0.242.0",
+    "Node20_229_2": "0.242.1"
   }
 }

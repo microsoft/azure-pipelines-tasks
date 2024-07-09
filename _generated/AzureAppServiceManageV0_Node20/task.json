@@ -18,7 +18,7 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 241,
+    "Minor": 242,
     "Patch": 1
   },
   "minimumAgentVersion": "1.102.0",
@@ -442,7 +442,7 @@
     "InvalidActionForPublishProfileEndpoint": "Invalid Action selected to use with publish profile endpoint!. Supported actions are 'Start/Stop all continuous webjobs' & 'Install Extensions'"
   },
   "_buildConfigMapping": {
-    "Default": "0.241.0",
-    "Node20_229_2": "0.241.1"
+    "Default": "0.242.0",
+    "Node20_229_2": "0.242.1"
   }
 }
