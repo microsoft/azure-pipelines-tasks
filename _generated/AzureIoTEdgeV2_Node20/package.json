@@ -3,8 +3,8 @@
   "version": "1.1.2",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^20.14.2",
-    "@types/q": "^1.5.4",
+    "@types/node": "^20.14.4",
+    "@types/q": "^1.5.8",
     "applicationinsights": "^1.0.2",
     "azure-pipelines-task-lib": "^4.13.0",
     "azure-pipelines-tasks-artifacts-common": "^2.225.0",
