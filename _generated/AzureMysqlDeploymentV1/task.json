@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 242,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -232,7 +232,7 @@
     "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern"
   },
   "_buildConfigMapping": {
-    "Default": "1.242.0",
-    "Node20_229_2": "1.242.1"
+    "Default": "1.242.2",
+    "Node20_229_2": "1.242.3"
   }
 }
