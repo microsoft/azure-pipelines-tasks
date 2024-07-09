@@ -29,6 +29,9 @@ parameters:
   displayName: Enable CodeQL for run
   type: boolean
   default: false
+- name : buildReasonTemp
+  type: string
+  default: Schedule
 
 variables:
   currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
@@ -79,7 +82,7 @@ extends:
               condition: >
                 and(
                   succeeded(),
-                  ne(variables['build.reason'], 'PullRequest'),
+                  ne(variables['buildReasonTemp'], 'PullRequest'),
                   ne(variables['numTasks'], 0)
                 )
               PathtoPublish: _package/tasks.zip
@@ -88,13 +91,17 @@ extends:
         - template: /ci/build-all-steps.yml@self
           parameters:
             os: Windows_NT
-
+        - ${{ if ne(variables['COURTESY_PUSH'], 'true')}}:
+          - template: /ci/build-all-tasks.yml@self
+            parameters:
+              deploy_all_tasks: true
+              
       # Publish
       - job: publish
         displayName: Publish
         dependsOn:
         - build_all_windows
-        condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
+        condition: and(succeeded(), ne(variables['buildReasonTemp'], 'PullRequest'))
         pool:
           name: 1ES-ABTT-Shared-Pool
           image: abtt-windows-2022
@@ -122,9 +129,9 @@ extends:
             succeeded(),
             eq(variables['COURTESY_PUSH'], 'true'),
             or(
-              eq(variables['build.reason'], 'Schedule'),
+              eq(variables['buildReasonTemp'], 'Schedule'),
               and(
-                eq(variables['build.reason'], 'Manual'),
+                eq(variables['buildReasonTemp'], 'Manual'),
                 eq(variables['FORCE_COURTESY_PUSH'], 'true')
               )
             )

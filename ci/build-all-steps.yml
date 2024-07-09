@@ -47,7 +47,7 @@ steps:
   condition: |
     and(
       succeeded(),
-      eq(variables['build.reason'], 'PullRequest'),
+      eq(variables['buildReasonTemp'], 'PullRequest'),
       ne(variables['numTasks'], 0)
     )
 
@@ -61,7 +61,7 @@ steps:
       succeeded(),
       ne(variables['numTasksForDowngradingCheck'], 0),
       ne(variables['COURTESY_PUSH'], 'true'),
-      eq(variables['build.reason'], 'PullRequest'),
+      eq(variables['buildReasonTemp'], 'PullRequest'),
       eq(variables['System.PullRequest.TargetBranch'], 'master')
     )
 
@@ -79,7 +79,7 @@ steps:
   condition: |
     and(
       succeeded(),
-      eq(variables['build.reason'], 'PullRequest'),
+      eq(variables['buildReasonTemp'], 'PullRequest'),
       ne(variables['numTasks'], 0)
     )
 
@@ -103,7 +103,7 @@ steps:
     condition: |
       and(
         succeeded(),
-        ne(variables['build.reason'], 'PullRequest'),
+        ne(variables['buildReasonTemp'], 'PullRequest'),
         ne(variables['numTasks'], 0)
       )
 
@@ -118,7 +118,7 @@ steps:
     condition: |
       and(
         succeeded(),
-        ne(variables['build.reason'], 'PullRequest'),
+        ne(variables['buildReasonTemp'], 'PullRequest'),
         ne(variables['numTasks'], 0)
       )
 
@@ -173,7 +173,7 @@ steps:
     condition: |
       and(
         succeeded(),
-        in(variables['build.reason'], 'Schedule', 'Manual'),
+        in(variables['buildReasonTemp'], 'Schedule', 'Manual'),
         eq(variables['COURTESY_PUSH'], 'true'),
         eq(variables['Build.SourceBranch'], 'refs/heads/master')
       )
@@ -192,7 +192,7 @@ steps:
     condition: |
       and(
         succeeded(),
-        in(variables['build.reason'], 'Schedule', 'Manual'),
+        in(variables['buildReasonTemp'], 'Schedule', 'Manual'),
         eq(variables['COURTESY_PUSH'], 'true'),
         eq(variables['Build.SourceBranch'], 'refs/heads/master')
       )
