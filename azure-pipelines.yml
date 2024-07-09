@@ -91,10 +91,7 @@ extends:
         - template: /ci/build-all-steps.yml@self
           parameters:
             os: Windows_NT
-        - ${{ if ne(variables['COURTESY_PUSH'], 'true')}}:
-          - template: /ci/build-all-tasks.yml@self
-            parameters:
-              deploy_all_tasks: true
+
               
       # Publish
       - job: publish
