@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 235,
+    "Minor": 243,
     "Patch": 0
   },
   "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -517,7 +517,7 @@
     "NoTestResults": "No test result files matching %s were found, so publishing JUnit test results is being skipped."
   },
   "_buildConfigMapping": {
-    "Default": "4.235.0",
-    "Node20-225": "4.235.1"
+    "Default": "4.243.0",
+    "Node20-225": "4.243.1"
   }
 }
