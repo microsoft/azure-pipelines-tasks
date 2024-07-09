@@ -22,7 +22,7 @@ export async function run(packagingLocation: PackagingLocation): Promise<void> {
     const npm = new NpmToolRunner(workingDir, npmrc, true);
     npm.line('publish');
 
-    npm.execSync();
+    await npm.exec();
 
     tl.rmRF(npmrc);
     tl.rmRF(util.getTempPath());
