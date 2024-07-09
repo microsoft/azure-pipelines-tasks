@@ -403,5 +403,14 @@
     ],
     "Node20_229_14": [
         "PublishSymbolsV2"
+    ],
+    "wif_242": [
+        "CargoAuthenticateV0",
+        "CondaAuthenticateV0",
+        "MavenAuthenticateV0",
+        "NpmAuthenticateV0",
+        "NuGetAuthenticateV1",
+        "PipAuthenticateV1",
+        "TwineAuthenticateV1"
     ]
 }

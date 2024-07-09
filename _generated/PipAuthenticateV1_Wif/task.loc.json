@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 238,
-    "Patch": 0
+    "Minor": 242,
+    "Patch": 16
   },
   "runsOn": [
     "Agent",
@@ -26,6 +26,27 @@
     }
   ],
   "inputs": [
+    {
+      "name": "workloadIdentityServiceConnection",
+      "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
+      "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
+      "type": "connectedService:workloadidentityuser",
+      "required": false,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      },
+      "groupName": "feedAuthentication"
+    },
+    {
+      "name": "feedUrl",
+      "label": "ms-resource:loc.input.label.feedUrl",
+      "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
+      "type": "string",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "feedAuthentication"
+    },
     {
       "name": "artifactFeeds",
       "aliases": [
@@ -82,6 +103,10 @@
       "argumentFormat": ""
     },
     "Node16": {
+      "target": "pipauthenticatemain.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
       "target": "pipauthenticatemain.js",
       "argumentFormat": ""
     }

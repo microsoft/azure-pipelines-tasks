@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 242,
-    "Patch": 15
+    "Minor": 238,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -26,6 +26,27 @@
     }
   ],
   "inputs": [
+    {
+      "name": "workloadIdentityServiceConnection",
+      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+      "helpMarkDown": "If this is set, feedUrl is required. All other inputs are ignored.",
+      "type": "connectedService:workloadidentityuser",
+      "required": false,
+      "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+      },
+      "groupName": "feedAuthentication"
+    },
+    {
+      "name": "feedUrl",
+      "label": "Azure Artifacts Feeds url.",
+      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonDownloadServiceConnections. ",
+      "type": "string",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "feedAuthentication"
+    },
     {
       "name": "artifactFeeds",
       "aliases": [
@@ -84,10 +105,6 @@
     "Node16": {
       "target": "pipauthenticatemain.js",
       "argumentFormat": ""
-    },
-    "Node20_1": {
-      "target": "pipauthenticatemain.js",
-      "argumentFormat": ""
     }
   },
   "messages": {
@@ -101,9 +118,5 @@
     "FailedToAddAuthentication": "Failed to add authentication.",
     "Warn_TooManyFeedEntries": "Too many feed entries for auth. Please reduce the number of repositories in the task.",
     "Warning_SessionCreationFailed": "Could not create provenance session: %s"
-  },
-  "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_1": "1.242.15"
   }
 }
