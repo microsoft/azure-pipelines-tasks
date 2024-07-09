@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 242,
-    "Patch": 0
+    "Patch": 2
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -400,7 +400,7 @@
     "UpdatedRunFromPackageSettings": "Updated WEBSITE_RUN_FROM_PACKAGE Application setting to %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.242.0",
-    "Node20_229_9": "1.242.1"
+    "Default": "1.242.2",
+    "Node20_229_9": "1.242.3"
   }
 }

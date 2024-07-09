@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 242,
-    "Patch": 1
+    "Patch": 3
   },
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -404,7 +404,7 @@
     "UpdatedRunFromPackageSettings": "ms-resource:loc.messages.UpdatedRunFromPackageSettings"
   },
   "_buildConfigMapping": {
-    "Default": "1.242.0",
-    "Node20_229_9": "1.242.1"
+    "Default": "1.242.2",
+    "Node20_229_9": "1.242.3"
   }
 }
