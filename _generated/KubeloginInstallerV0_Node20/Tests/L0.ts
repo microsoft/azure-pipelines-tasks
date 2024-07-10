@@ -32,7 +32,8 @@ describe('TestUtils', function () {
     assert(tr.stdOutContained(TestString.PlatformCorrectv0_0_29), 'should have printed: ' + TestString.PlatformCorrectv0_0_29);
     assert(tr.stdOutContained(TestString.ReleaseUrlValidv0_0_29), 'should have printed: ' + TestString.ReleaseUrlValidv0_0_29);
     assert(tr.stdOutContained(TestString.CheckSumValidv0_0_29), 'should have printed: ' + TestString.CheckSumValidv0_0_29);
-    assert(tr.stdOutContained(TestString.Foundlatest), 'should have printed: ' + TestString.Foundlatest);
+    //assert(tr.stdOutContained(TestString.Foundlatest), 'should have printed: ' + TestString.Foundlatest);
+    assert(tr.stdOutContained(TestString.Foundlatest), tr.stdout);
     assert(tr.stdOutContained(TestString.PlatformCorrectlatest), 'should have printed: ' + TestString.PlatformCorrectlatest);
     assert(tr.stdOutContained(TestString.ReleaseUrlValidlatest), 'should have printed: ' + TestString.ReleaseUrlValidlatest);
     assert(tr.stdOutContained(TestString.CheckSumValidlatest), 'should have printed: ' + TestString.CheckSumValidlatest);
