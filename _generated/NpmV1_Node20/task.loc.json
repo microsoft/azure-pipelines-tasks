@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 241,
+    "Minor": 242,
     "Patch": 1
   },
   "runsOn": [
@@ -212,7 +212,7 @@
     "UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.UnsupportedServiceConnectionAuth"
   },
   "_buildConfigMapping": {
-    "Default": "1.241.0",
-    "Node20_229_1": "1.241.1"
+    "Default": "1.242.0",
+    "Node20_229_1": "1.242.1"
   }
 }
