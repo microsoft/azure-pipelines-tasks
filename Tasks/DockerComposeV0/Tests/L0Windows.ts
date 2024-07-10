@@ -48,27 +48,27 @@ let a: any = <any>{
         "docker-compose": true
     },
     "exec": {
-        "docker-compose -f F:\\dir2\\docker-compose.yml build" : {
+        "docker-compose -f F:\\dir2\\docker-compose.yml build": {
             "code": 0,
             "stdout": "sucessfully built the service images"
         },
-        "docker compose -f F:\\dir2\\docker-compose.yml build" : {
+        "docker compose -f F:\\dir2\\docker-compose.yml build": {
             "code": 0,
             "stdout": "sucessfully built the service images"
         },
-        "docker-compose-userdefined -f F:\\dir2\\docker-compose.yml build" : {
+        "docker-compose-userdefined -f F:\\dir2\\docker-compose.yml build": {
             "code": 0,
             "stdout": "sucessfully built the service images"
         },
-        "docker-compose -f F:\\dir2\\docker-compose.yml config" : {
+        "docker-compose -f F:\\dir2\\docker-compose.yml config": {
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: C:\\docketest\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - C:\\docketest:/code:rw\nversion: '2.0'"
         },
-        "docker compose -f F:\\dir2\\docker-compose.yml config" : {
+        "docker compose -f F:\\dir2\\docker-compose.yml config": {
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: C:\\docketest\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - C:\\docketest:/code:rw\nversion: '2.0'"
         },
-        "docker-compose-userdefined -f F:\\dir2\\docker-compose.yml config" : {
+        "docker-compose-userdefined -f F:\\dir2\\docker-compose.yml config": {
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: C:\\docketest\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - C:\\docketest:/code:rw\nversion: '2.0'"
         },
@@ -84,11 +84,11 @@ let a: any = <any>{
             "code": 0,
             "stdout": "sucessfully ran services"
         },
-        "docker-compose -f F:\\dir2\\docker-compose.yml build --pull --parallel" : {
+        "docker-compose -f F:\\dir2\\docker-compose.yml build --pull --parallel": {
             "code": 0,
             "stdout": "sucessfully built the service images"
         },
-        "docker compose -f F:\\dir2\\docker-compose.yml build --pull --parallel" : {
+        "docker compose -f F:\\dir2\\docker-compose.yml build --pull --parallel": {
             "code": 0,
             "stdout": "sucessfully built the service images"
         },
@@ -128,11 +128,11 @@ let a: any = <any>{
             "code": 0,
             "stdout": "successfully ran up command"
         },
-        "docker-compose -f F:\\dir2\\docker-compose.yml pull service1 service2" : {
+        "docker-compose -f F:\\dir2\\docker-compose.yml pull service1 service2": {
             "code": 0,
             "stdout": "successfully pulled the passed service images"
         },
-        "docker compose -f F:\\dir2\\docker-compose.yml pull service1 service2" : {
+        "docker compose -f F:\\dir2\\docker-compose.yml pull service1 service2": {
             "code": 0,
             "stdout": "successfully pulled the passed service images"
         }

@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Pipelineartefakt veröffentlichen",
+  "loc.friendlyName": "Pipelineartefakte veröffentlichen",
   "loc.helpMarkDown": "Hiermit wird eine Datei oder Verzeichnis als benanntes Artefakt für die aktuelle Ausführung veröffentlicht (hochgeladen). Veröffentlichte Artefakte können mit der Aufgabe \"Pipelineartefakt herunterladen\" in andere Aufträge, Stages oder Pipelines heruntergeladen werden.",
   "loc.description": "Hiermit wird eine Datei oder Verzeichnis als benanntes Artefakt für die aktuelle Ausführung veröffentlicht (hochgeladen).",
   "loc.instanceNameFormat": "Pipelineartefakt veröffentlichen",
@@ -14,5 +14,7 @@
   "loc.input.label.parallel": "Paralleles Kopieren",
   "loc.input.help.parallel": "Wählen Sie aus, ob Dateien mithilfe mehrerer Threads parallel kopiert werden sollen, um einen höheren Durchsatz zu erzielen. Wenn diese Einstellung nicht aktiviert ist, wird nur ein Thread verwendet.",
   "loc.input.label.parallelCount": "Parallele Anzahl",
-  "loc.input.help.parallelCount": "Geben Sie den Parallelitätsgrad oder die Anzahl von Threads zum Durchführen des Kopiervorgangs ein. Der Wert muss mindestens 1 lauten und darf nicht größer sein als 128."
+  "loc.input.help.parallelCount": "Geben Sie den Parallelitätsgrad oder die Anzahl von Threads zum Durchführen des Kopiervorgangs ein. Der Wert muss mindestens 1 lauten und darf nicht größer sein als 128.",
+  "loc.input.label.properties": "Benutzerdefinierte Eigenschaften",
+  "loc.input.help.properties": "Geben Sie benutzerdefinierte Eigenschaften ein, die dem Artefakt zugeordnet werden sollen. Gültige JSON-Zeichenfolge mit allen Schlüsseln mit dem Präfix \"user-\" erwartet"
 }
