@@ -73,12 +73,12 @@ steps:
 # Build Tasks
 - script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)"
   displayName: Build Tasks
-  condition: and(succeeded(), and(ne(variables['numTasks'], 0), ne(variables['COURTESY_PUSH'], 'true')))
+  condition: and(succeeded(), and(ne(variables['numTasks'], 0), and(ne(variables['COURTESY_PUSH'], 'true'), ne(variables['buildReasonTemp'], 'Schedule'))))
 
 # Build Tasks
 - script: node make.js serverBuild
   displayName: Build Tasks
-  condition: and(succeeded(), eq(variables['COURTESY_PUSH'], 'true'))
+  condition: and(succeeded(), eq(variables['buildReasonTemp'], 'Schedule'))
 
 - script: node ./ci/after-build-check-tasks.js
   displayName: Check that tasks has no duplicated libs
