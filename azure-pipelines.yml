@@ -39,7 +39,7 @@ variables:
   taskNameIsSet: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
   runCodeQl: ${{ eq(parameters.enableCodeQL, true) }}
   system.debug: true
-  weekly_run: ${{and(eq(variables['COURTESY_PUSH'], 'true'), eq(parameters.buildReasonTemp, 'Schedule'))}}
+  weekly_run: ${{and(ne(variables['COURTESY_PUSH'], 'true'), eq(parameters.buildReasonTemp, 'Schedule'))}}
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
