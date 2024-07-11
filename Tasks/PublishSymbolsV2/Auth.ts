@@ -1,8 +1,27 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import * as clientToolUtils from "azure-pipelines-tasks-packaging-common/universal/ClientToolUtilities";
-import * as msal from "@azure/msal-node";
-
+//import * as msal from "@azure/msal-node";
 import { getFederatedToken } from "azure-pipelines-tasks-artifacts-common/webapi";
+
+const semver = require("semver");
+function GetSpecificMsalNode()
+{
+  let msalPackage = null;
+
+  if (semver.lt(process.version, "16.0.0")) {
+    console.log("node less than 16.0.0 use msal-node1");
+    msalPackage = require("msal-node1"); 
+  }
+  else{
+    console.log("node greater than 16.0.0 use msal-node2");
+    msalPackage = require("msal-node2");
+  }
+
+  console.log(`returning msal with version: ${msalPackage.version}`); 
+
+  return msalPackage;
+}
+let msal = GetSpecificMsalNode();
 
 export async function getAccessToken(): Promise<string> {
   try {
@@ -37,6 +56,7 @@ export async function getAccessToken(): Promise<string> {
     throw err;
   }
 }
+
 
 async function getAccessTokenViaWorkloadIdentityFederation(connectedService: string): Promise<string> {
   // workloadidentityfederation
