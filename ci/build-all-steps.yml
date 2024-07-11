@@ -25,6 +25,9 @@ steps:
 - script: npm install
   displayName: npm install
 
+- script: |
+    echo "The value of weekly_run is: $(weekly_run)"
+
 # Verify min agent demands
 - script: |
     cd ci/verifyMinAgentDemands
