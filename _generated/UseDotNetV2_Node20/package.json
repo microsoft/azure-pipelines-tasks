@@ -26,10 +26,8 @@
   "dependencies": {
     "@types/mocha": "^5.2.6",
     "@types/node": "^20.3.1",
-
     "@types/semver": "6.2.7",
     "azure-pipelines-task-lib": "^4.13.0",
-
     "azure-pipelines-tasks-packaging-common": "^2.198.1",
     "azure-pipelines-tasks-utility-common": "^3.198.1",
     "azure-pipelines-tool-lib": "^2.0.4",
