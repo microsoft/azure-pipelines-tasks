@@ -31,7 +31,7 @@ parameters:
   default: false
 - name: buildReasonTemp
   type: string
-  defaul: Schedule
+  default: Schedule
 
 variables:
   currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
