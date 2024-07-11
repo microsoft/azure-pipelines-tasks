@@ -72,7 +72,7 @@ steps:
 # Build Tasks
 - script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)"
   displayName: Build Tasks
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
+  condition: and(succeeded(), and(ne(variables['numTasks'], 0), eq(variables['weekly_run'], False)))
 
 # Build Tasks 
 - script: node make.js serverBuild
