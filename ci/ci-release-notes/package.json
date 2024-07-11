@@ -8,7 +8,8 @@
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "@octokit/rest": "^16.43.2"
+  "dependencies": {
+    "@octokit/rest": "^16.43.2",
+    "axios": "^1.7.2"
   }
 }
