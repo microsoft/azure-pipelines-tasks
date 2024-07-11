@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 241,
-    "Patch": 5
+    "Minor": 242,
+    "Patch": 1
   },
   "demands": [],
   "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
@@ -496,7 +496,7 @@
     "KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.241.4",
-    "Node20_229_3": "1.241.5"
+    "Default": "1.242.0",
+    "Node20_229_3": "1.242.1"
   }
 }
