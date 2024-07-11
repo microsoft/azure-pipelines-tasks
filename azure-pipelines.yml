@@ -111,6 +111,7 @@ extends:
       # Courtesy Push
       - job: courtesy_push
         displayName: Courtesy Push
+        timeoutInMinutes: 180
         pool:
           name: 1ES-ABTT-Shared-Pool
           image: abtt-windows-2022

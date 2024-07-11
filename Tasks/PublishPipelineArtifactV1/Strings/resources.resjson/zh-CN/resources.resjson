@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "发布管道工件",
+  "loc.friendlyName": "发布管道项目",
   "loc.helpMarkDown": "将文件或目录作为当前运行的命名项目进行发布(上传)。可使用“下载管道项目”任务在其他作业、阶段或管道中下载已发布的项目。",
   "loc.description": "将文件或目录作为当前运行的命名项目进行发布(上传)",
   "loc.instanceNameFormat": "发布管道工件",
@@ -14,5 +14,7 @@
   "loc.input.label.parallel": "并行复制",
   "loc.input.help.parallel": "选择是否要使用多个线程并行复制文件以获得更大的潜在吞吐量。如果未启用此设置，将使用一个线程。",
   "loc.input.label.parallelCount": "并行计数",
-  "loc.input.help.parallelCount": "输入执行复制的并行度或所使用的线程数。该值必须至少为 1 且不能大于 128。"
+  "loc.input.help.parallelCount": "输入执行复制的并行度或所使用的线程数。该值必须至少为 1 且不能大于 128。",
+  "loc.input.label.properties": "自定义属性",
+  "loc.input.help.properties": "输入要与项目关联的自定义属性。应提供所有键都具有前缀 “user-” 的有效 JSON 字符串"
 }
