@@ -25,9 +25,6 @@ steps:
 - script: npm install
   displayName: npm install
 
-- script: |
-    echo "The value of weekly_run is: $(weekly_run)"
-
 # Verify min agent demands
 - script: |
     cd ci/verifyMinAgentDemands
@@ -76,6 +73,11 @@ steps:
 - script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)"
   displayName: Build Tasks
   condition: and(succeeded(), ne(variables['numTasks'], 0))
+
+# Build Tasks 
+- script: node make.js serverBuild
+  displayName: Build Tasks
+  condition: and(succeeded(), eq(variables['weekly_run'], True))
 
 - script: node ./ci/after-build-check-tasks.js
   displayName: Check that tasks has no duplicated libs
