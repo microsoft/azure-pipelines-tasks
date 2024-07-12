@@ -1,4 +1,4 @@
-# Symbol Publish
+# PublishSymbolV2
 
 ## Overview
 
@@ -16,7 +16,7 @@ The task requires Powershell version 3.0 or greater.
 
 **TypeScript**
 
-The task requires either Node v16 or Node v20 to run. Node v10 support is no longer supported, starting 07/31/2024.
+The task requires either Node v16 or Node v20 to run. The task does not support Node v10 starting 07/31/2024.
 
 ### Parameters of the task:
 
@@ -61,11 +61,12 @@ The task requires either Node v16 or Node v20 to run. Node v10 support is no lon
 5) Run command "npm i" at ".\Tasks\PublishSymbolsV2\
 6) Run command at root "npm i"
 7) Run command at root "node make.js build --task PublishSymbolsV2"
-8) Refer files generated at ".\_build" to test locally
-9) Check-in files changed at ".\Tasks\PublishSymbolsV2\" and files generated at ".\_generated"
+8) Refer files generated at "_build" to test locally
+9) Check-in files changed at ".\Tasks\PublishSymbolsV2\" and files generated at "_generated"
 
 ```yaml
-With PAT support
+
+Using PAT
 - task: PublishSymbols@2
   inputs:
     DetailedLog: true
@@ -75,7 +76,7 @@ With PAT support
     IndexSources: false
   name: PublishSymbols
 
- with WIF support
+ Using Service Connection
 - task: PublishSymbols@2
   inputs:
     ConnectedServiceName: 'TestServiceConnection'
@@ -85,11 +86,12 @@ With PAT support
     IndexSources: false
     SymbolExpirationInDays: '365'
   name: PublishSymbols
+
 ```
 
 ## Known Limitations :
 
-* Node v10 support is no longer supported, starting 07/31/2024.
+* The task does not support Node v10 starting 07/31/2024.
 
 ## Earlier Versions
 
