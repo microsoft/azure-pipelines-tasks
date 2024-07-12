@@ -1,22 +1,22 @@
 # Symbol Publish
 
-### Overview
+## Overview
 
 The task is used to publish symbols. 
 
-### Contact Information
+## Contact Information
 
-Please report a problem at [Stackoverflow](https://stackoverflow.microsoft.com/posts/tagged/20485) if you are facing problems in making this task work.  You can also share feedback about the task like, what more functionality should be added to the task, what other tasks you would like to have, at the same place.
+Please report a problem at [Github Repo Issues](https://github.com/microsoft/azure-pipelines-tasks/issues) if you are facing problems in making this task work.  You can also share feedback about the task like, what more functionality should be added to the task, what other tasks you would like to have, at the same place.
 
-### Prerequisite for the task
+## Prerequisite for the task
 
 **PowerShell**
 
-The task needs at least version 3.0 of Powershell on the target machine.
+The task requires Powershell version 3.0 or greater.
 
 **TypeScript**
 
-The task needs at least node16/node20 agent on the target machine. Node10 support is going to stop on 07/31/2024.
+The task requires either Node v16 or Node v20 to run. Node v10 support is no longer supported, starting 07/31/2024.
 
 ### Parameters of the task:
 
@@ -40,21 +40,21 @@ The parameters of the task are described in details, including examples, to show
 
   * **IndexableFileFormats**: Which debug formats to publish to the symbol server. Effective when "PublishSymbols = true && SymbolServerType = TeamServices"
 
-**DetailedLog**: Use verbose logging. 
+* **DetailedLog**: Use verbose logging. 
 
-**TreatNotIndexedAsWarning**: Indicates whether to warn if sources are not indexed for a PDB file. Otherwise the messages are logged as normal output.
+* **TreatNotIndexedAsWarning**: Indicates whether to warn if sources are not indexed for a PDB file. Otherwise the messages are logged as normal output.
 
-**UseNetCoreClientTool**: Indicates whether to use version of the symbol upload tool that supports DWARF and ELF files. This option only matters on Windows agents. On non-Windows agents, the version of the symbol upload tool that supports DWARF and ELF files will always be used. 
+* **UseNetCoreClientTool**: Indicates whether to use version of the symbol upload tool that supports DWARF and ELF files. This option only matters on Windows agents. On non-Windows agents, the version of the symbol upload tool that supports DWARF and ELF files will always be used. 
 
-**SymbolsMaximumWaitTime**: The number of minutes to wait before failing this task.
+* **SymbolsMaximumWaitTime**: The number of minutes to wait before failing this task.
 
-**SymbolsProduct**: Specify the product parameter to symstore.exe.  The default is $(Build.DefinitionName)
+* **SymbolsProduct**: Specify the product parameter to symstore.exe.  The default is $(Build.DefinitionName)
 
-**SymbolsVersion**: Specify the version parameter to symstore.exe.  The default is $(Build.BuildNumber)
+* **SymbolsVersion**: Specify the version parameter to symstore.exe.  The default is $(Build.BuildNumber)
 
-**SymbolsArtifactName**: Specify the artifact name to use for the Symbols artifact.  The default is Symbols_$(BuildConfiguration)
+* **SymbolsArtifactName**: Specify the artifact name to use for the Symbols artifact.  The default is Symbols_$(BuildConfiguration)
 
-### How to build task locally:
+## How to build task locally:
 
 1) Create new branch from master
 2) Use Node 10.24.1 and npm 6.14.12 when building the task (you can use nvm to quickly and easily switch between different Node versions)
@@ -89,10 +89,10 @@ With PAT support
   name: PublishSymbols
 ```
 
-### Known Limitations :
+## Known Limitations :
 
 * This task does not support node10 anymore.
 
-### Earlier Versions
+## Earlier Versions
 
 If you want to work with earlier version of this task, please refer README.md present at https://github.com/microsoft/azure-pipelines-tasks/tree/releases/m195/Tasks/PublishSymbolsV2 .
