@@ -8,7 +8,6 @@ import * as tl from "azure-pipelines-task-lib/task";
 import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
-console.log(nodeVersion);
 if(nodeVersion < 16) {
     console.warn("Support for symbolpublish task with node version less than 16 is ending at 07/31/2024. Please upgrade your agent to node 16 and above to avoid any failures in pipeline related to the task.");
 }
