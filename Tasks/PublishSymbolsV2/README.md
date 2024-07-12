@@ -53,7 +53,19 @@ The parameters of the task are described in details, including examples, to show
 **SymbolsVersion**: Specify the version parameter to symstore.exe.  The default is $(Build.BuildNumber)
 
 **SymbolsArtifactName**: Specify the artifact name to use for the Symbols artifact.  The default is Symbols_$(BuildConfiguration)
- 
+
+### How to build task locally:
+
+1) Create new branch from master
+2) Use Node 10.24.1 and npm 6.14.12 when building the task (you can use nvm to quickly and easily switch between different Node versions)
+3) Update your changes
+4) Update "package.json" and "_buildConfigs/Node20/"
+5) Run command "npm i" at ".\Tasks\PublishSymbolsV2\
+6) Run command at root "npm i"
+7) Run command at root "node make.js build --task PublishSymbolsV2"
+8) Refer files generated at ".\_build"
+9) Check-in files changed at ".\Tasks\PublishSymbolsV2\" and files generated at ".\_generated"
+
 ```yaml
 With PAT support
 - task: PublishSymbols@2
