@@ -18,7 +18,7 @@ import trm = require('azure-pipelines-task-lib/toolrunner');
 
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
-tl.setResourcePath(path.join( __dirname, '../node_modules/azure-pipelines-tasks-azure-arm-rest/module.json'));
+tl.setResourcePath(path.join( __dirname, '../node_modules/azure-pipelines-tasks-azure-arm-rest/module.json'),true);
 // Change to any specified working directory
 tl.cd(tl.getInput("cwd"));
 
