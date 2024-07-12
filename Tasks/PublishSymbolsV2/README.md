@@ -20,8 +20,6 @@ The task requires either Node v16 or Node v20 to run. Node v10 support is no lon
 
 ### Parameters of the task:
 
-The parameters of the task are described in details, including examples, to show how to input the parameters. The parameters listed with a * are required parameters for the task:
-
 * **SymbolsFolder**: The path to the folder that is searched for symbol files.  The default is $(Build.SourcesDirectory).  Otherwise specify a rooted path, for example: $(Build.BinariesDirectory)/MyProject
 
 * **SearchPattern**: The pattern used to discover the pdb files to publish. 
@@ -91,7 +89,7 @@ With PAT support
 
 ## Known Limitations :
 
-* This task does not support node10 anymore.
+* Node v10 support is no longer supported, starting 07/31/2024.
 
 ## Earlier Versions
 
