@@ -7,7 +7,6 @@ import * as clientToolRunner from "azure-pipelines-tasks-packaging-common/univer
 import * as tl from "azure-pipelines-task-lib/task";
 import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunner";
 
-
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 console.log(nodeVersion);
 if(nodeVersion < 16) {
