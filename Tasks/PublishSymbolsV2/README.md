@@ -55,13 +55,13 @@ The task requires either Node v16 or Node v20 to run. Node v10 support is no lon
 ## How to build task locally:
 
 1) Create new branch from master
-2) Use Node 10.24.1 and npm 6.14.12 when building the task (you can use nvm to quickly and easily switch between different Node versions)
+2) Use Node v10.24.1 and npm v6.14.12 when building the task (you can use 'nvm' to quickly and easily switch between different Node versions)
 3) Update your changes
 4) Update "package.json" and "_buildConfigs/Node20/"
 5) Run command "npm i" at ".\Tasks\PublishSymbolsV2\
 6) Run command at root "npm i"
 7) Run command at root "node make.js build --task PublishSymbolsV2"
-8) Refer files generated at ".\_build"
+8) Refer files generated at ".\_build" to test locally
 9) Check-in files changed at ".\Tasks\PublishSymbolsV2\" and files generated at ".\_generated"
 
 ```yaml
