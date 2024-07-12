@@ -237,6 +237,7 @@
     "UnableToIndexSources": "ms-resource:loc.messages.UnableToIndexSources",
     "UnexpectedDbghelpdllExpected0Actual1": "ms-resource:loc.messages.UnexpectedDbghelpdllExpected0Actual1",
     "UnsupportedSourceProvider0": "ms-resource:loc.messages.UnsupportedSourceProvider0",
-    "Win32Error0FromMethod1": "ms-resource:loc.messages.Win32Error0FromMethod1"
+    "Win32Error0FromMethod1": "ms-resource:loc.messages.Win32Error0FromMethod1",
+    "Node10NotSupported": "ms-resource:loc.messages.Node10NotSupported"
   }
 }
