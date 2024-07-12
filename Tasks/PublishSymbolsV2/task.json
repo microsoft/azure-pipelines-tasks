@@ -237,6 +237,7 @@
     "UnableToIndexSources": "Unable to index sources.",
     "UnexpectedDbghelpdllExpected0Actual1": "Library dbghelp.dll is already loaded from an unexpected path. Expected '{0}'. Actual '{0}'.",
     "UnsupportedSourceProvider0": "Unsupported source provider '{0}' for source indexing.",
-    "Win32Error0FromMethod1": "Encountered Win32 error '{0}' from method '{1}'."
+    "Win32Error0FromMethod1": "Encountered Win32 error '{0}' from method '{1}'.",
+    "Node10NotSupported": "Node 10 is not supported for this task. Please use Node 16 or later. Please update your agent to use Node 16 or later."
   }
 }
