@@ -30,13 +30,13 @@ The task requires either Node v16 or Node v20 to run. The task does not support 
 
   * **SymbolServerType**: Choose where to publish symbols. Symbols published to the Azure Artifacts symbol server are accessible by any user with access to the organization/collection. Azure DevOps Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to use Symbol Server in Azure Artifacts. Effective when "PublishSymbols = true"
 
-  * * **SymbolsPath**: The file share that hosts your symbols. This value will be used in the call to `symstore.exe add` as the `/s` parameter.. Effective when "PublishSymbols = true && SymbolServerType = FileShare"
+    * **SymbolsPath**: The file share that hosts your symbols. This value will be used in the call to `symstore.exe add` as the `/s` parameter.. Effective when "PublishSymbols = true && SymbolServerType = FileShare"
 
-  * * **CompressSymbols**: Compress symbols when publishing to file share. Effective when "SymbolServerType = FileShare"
+    * **CompressSymbols**: Compress symbols when publishing to file share. Effective when "SymbolServerType = FileShare"
 
-  * * **SymbolExpirationInDays**: The number of days that symbols should be retained. Effective when "PublishSymbols = true && SymbolServerType = TeamServices"
+    * **SymbolExpirationInDays**: The number of days that symbols should be retained. Effective when "PublishSymbols = true && SymbolServerType = TeamServices"
 
-  * * **IndexableFileFormats**: Which debug formats to publish to the symbol server. Effective when "PublishSymbols = true && SymbolServerType = TeamServices"
+    * **IndexableFileFormats**: Which debug formats to publish to the symbol server. Effective when "PublishSymbols = true && SymbolServerType = TeamServices"
 
 * **DetailedLog**: Use verbose logging. 
 
