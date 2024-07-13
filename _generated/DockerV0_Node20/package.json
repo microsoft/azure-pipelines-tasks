@@ -7,8 +7,8 @@
     "agent-base": "^6.0.2",
     "azure-pipelines-task-lib": "^4.11.0",
     "azure-pipelines-tasks-docker-common": "2.241.1",
-    "del": "2.2.0",
-    "esprima": "2.7.1",
+    "del": "2.2.2",
+    "esprima": "2.7.3",
     "js-yaml": "4.1.0"
   },
   "devDependencies": {
