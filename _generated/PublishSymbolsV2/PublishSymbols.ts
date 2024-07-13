@@ -9,7 +9,7 @@ import { IExecSyncResult, IExecOptions } from "azure-pipelines-task-lib/toolrunn
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if(nodeVersion < 16) {
-    tl.warning(tl.loc('Node10NotSupported', nodeVersion));
+    tl.warning(tl.loc('NodeVersionSupport', nodeVersion));
 }
 
 
