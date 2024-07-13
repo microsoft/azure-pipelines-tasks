@@ -246,7 +246,7 @@
     "UnexpectedDbghelpdllExpected0Actual1": "Library dbghelp.dll is already loaded from an unexpected path. Expected '{0}'. Actual '{0}'.",
     "UnsupportedSourceProvider0": "Unsupported source provider '{0}' for source indexing.",
     "Win32Error0FromMethod1": "Encountered Win32 error '{0}' from method '{1}'.",
-    "Node10NotSupported": "Node v{0} is no longer supported starting 07/31/2024. Please update pipeline agent to use Node 16 or later."
+    "Node10NotSupported": "Node v{0} is no longer supported starting 07/31/2024. Please upgrade pipeline agent to latest version for Node 16 or later."
   },
   "_buildConfigMapping": {
     "Default": "2.242.108",
