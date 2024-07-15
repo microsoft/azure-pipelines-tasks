@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE _locDefinition SYSTEM "locXML.dtd">
+<_locDefinition>
+	
+	<!-- For Office XAML  -->
+  <_locTag _loc="locNone" _locIDAttr="Name" _locAttrData="DisplayName,Description">Rule</_locTag>
+  <_locTag _loc="locNone" _locIDAttr="Name" _locAttrData="DisplayName,Description">Category</_locTag>
+  <_locTag _loc="locNone" _locIDAttr="Name" _locAttrData="DisplayName,Description">StringProperty</_locTag>
+  <_locTag _loc="locNone" _locIDAttr="Name" _locAttrData="DisplayName,Description">BoolProperty</_locTag>
+  <_locTag _loc="locNone" _locIDAttr="Name" _locAttrData="DisplayName,Description">StringListProperty</_locTag>
+  <_locTag _loc="locNone" _locIDAttr="Name" _locAttrData="DisplayName,Description">EnumProperty</_locTag>
+  <_locTag _loc="locNone" _locIDAttr="Name" _locAttrData="DisplayName,Description">EnumValue</_locTag>
+  <_locTag _loc="locNone" _locIDAttr="Name" _locAttrData="DisplayName,Description">ValueEditor</_locTag>
+  <_locTag _loc="locNone" _locIDAttr="Name" _locAttrData="DisplayName,Description">ItemType</_locTag>
+  <_locTag _loc="locNone" _locIDAttr="Name" _locAttrData="DisplayName,Description">ContentType</_locTag>
+  <_locTag _loc="locNone" _locIDAttr="Name" _locAttrData="DisplayName,Description">DynamicEnumProperty</_locTag>
+  <_locTag _loc="locNone" _locIDAttr="Name" _locAttrData="DisplayName,Description">IntProperty</_locTag>
+  <_locTag _loc="locNone" _locIDAttr="Persistence" _locAttrData="Label">DataSource</_locTag>
+</_locDefinition>

@@ -68,7 +68,7 @@ function enableCodeCoverage(wrapperScript: string, isCodeCoverageOpted: boolean,
                             classFilter: string, classFilesDirectories: string,
                             codeCoverageTool: string, workingDirectory: string,
                             reportDirectoryName: string, summaryFileName: string,
-                            isMultiModule: boolean, gradle5xOrHigher: boolean): Q.Promise<boolean> {
+                            isMultiModule: boolean, gradle5xOrHigher: boolean): Q.Promise<string> {
     let buildProps: { [key: string]: string } = {};
     buildProps['buildfile'] = path.join(workingDirectory, 'build.gradle');
     buildProps['classfilter'] = classFilter;
