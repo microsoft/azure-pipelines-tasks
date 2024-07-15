@@ -97,7 +97,7 @@ steps:
       ne(variables['Build.SourceBranch'], 'refs/heads/master'),
       ne(variables['COURTESY_PUSH'], 'true'),
       ne(variables['numTasks'], 0),
-      ne(variables['weekly_run'], True))
+      ne(variables['weekly_run'], True)
     )
 
 # Only on Windows:
@@ -111,7 +111,7 @@ steps:
         succeeded(),
         ne(variables['build.reason'], 'PullRequest'),
         ne(variables['numTasks'], 0),
-        ne(variables['weekly_run'], True))
+        ne(variables['weekly_run'], True)
       )
 
   # Sign all task zips as nuget packages
@@ -127,7 +127,7 @@ steps:
         succeeded(),
         ne(variables['build.reason'], 'PullRequest'),
         ne(variables['numTasks'], 0),
-        ne(variables['weekly_run'], True))
+        ne(variables['weekly_run'], True)
       )
 
 # Test
