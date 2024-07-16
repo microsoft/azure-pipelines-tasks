@@ -41,7 +41,8 @@ steps:
     and(
       succeeded(),
       ne(variables['build.reason'], 'PullRequest'),
-      ne(variables['numTasks'], 0), eq(variables.os, 'Windows_NT')
+      ne(variables['numTasks'], 0), eq(variables.os, 'Windows_NT'),
+      ne(variables['weekly_run'], True)
     )
 
 - script: del ${{ parameters.layoutRoot }}\CodeSignSummary*.md
@@ -51,5 +52,6 @@ steps:
       succeeded(),
       ne(variables['build.reason'], 'PullRequest'),
       ne(variables['numTasks'], 0), eq(variables.os, 'Windows_NT')
+      ne(variables['weekly_run'], True)
     )
 
