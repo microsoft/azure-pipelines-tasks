@@ -21,7 +21,7 @@
     "@types/uuid": "^9.0.0",
     "azure-pipelines-task-lib": "^4.11.0",
     "agent-base": "^6.0.2",
-    "azure-pipelines-tasks-azure-arm-rest": "3.239.0",
+    "azure-pipelines-tasks-azure-arm-rest": "3.242.2",
     "azure-pipelines-tasks-docker-common": "^2.226.0",
     "azure-pipelines-tasks-kubernetes-common": "^2.235.0",
     "azure-pipelines-tool-lib": "^2.0.7",
