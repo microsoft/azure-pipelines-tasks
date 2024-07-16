@@ -81,7 +81,8 @@ extends:
                 and(
                   succeeded(),
                   ne(variables['build.reason'], 'PullRequest'),
-                  ne(variables['numTasks'], 0)
+                  ne(variables['numTasks'], 0),
+                  ne(variables['weekly_run'], True)
                 )
               PathtoPublish: _package/tasks.zip
               ArtifactName: package
