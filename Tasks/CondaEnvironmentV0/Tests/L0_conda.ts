@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as path from 'path';
 
-import * as mockery from 'mockery';
+import * as libMocker from 'azure-pipelines-task-lib/lib-mocker';
 import * as sinon from 'sinon';
 
 import * as mockTask from 'azure-pipelines-task-lib/mock-task';
@@ -16,33 +16,33 @@ function reload(module: '../conda'): typeof condaEnvironment {
 }
 
 before(function () {
-    mockery.enable({
+    libMocker.enable({
         useCleanCache: true,
         warnOnUnregistered: false
     });
 });
 
 after(function () {
-    mockery.disable();
+    libMocker.disable();
 });
 
 afterEach(function () {
-    mockery.deregisterAll();
-    mockery.resetCache();
+    libMocker.deregisterAll();
+    libMocker.resetCache();
 });
 
 it('creates and activates environment', async function () {
-    mockery.registerMock('fs', {
+    libMocker.registerMock('fs', {
         existsSync: () => false
     });
 
-    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
+    libMocker.registerMock('azure-pipelines-task-lib/task', mockTask);
 
     const findConda = sinon.stub().returns('path-to-conda');
     const prependCondaToPath = sinon.spy();
     const createEnvironment = sinon.spy();
     const activateEnvironment = sinon.spy();
-    mockery.registerMock('./conda_internal', {
+    libMocker.registerMock('./conda_internal', {
         findConda,
         prependCondaToPath,
         createEnvironment,
@@ -64,18 +64,18 @@ it('creates and activates environment', async function () {
 
 
 it('updates Conda if the user requests it', async function () {
-    mockery.registerMock('fs', {
+    libMocker.registerMock('fs', {
         existsSync: () => false
     });
 
-    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
+    libMocker.registerMock('azure-pipelines-task-lib/task', mockTask);
 
     const findConda = sinon.stub().returns('path-to-conda');
     const prependCondaToPath = sinon.spy();
     const updateConda = sinon.spy()
     const createEnvironment = sinon.spy();
     const activateEnvironment = sinon.spy();
-    mockery.registerMock('./conda_internal', {
+    libMocker.registerMock('./conda_internal', {
         findConda,
         prependCondaToPath,
         updateConda,
@@ -98,17 +98,17 @@ it('updates Conda if the user requests it', async function () {
 });
 
 it('fails if `conda` is not found', async function () {
-    mockery.registerMock('fs', {
+    libMocker.registerMock('fs', {
         existsSync: () => false
     });
 
-    mockery.registerMock('azure-pipelines-task-lib/task', mockTask)
+    libMocker.registerMock('azure-pipelines-task-lib/task', mockTask)
 
     const findConda = sinon.stub().returns(null);
     const prependCondaToPath = sinon.spy();
     const createEnvironment = sinon.spy();
     const activateEnvironment = sinon.spy();
-    mockery.registerMock('./conda_internal', {
+    libMocker.registerMock('./conda_internal', {
         findConda,
         createEnvironment,
         activateEnvironment
@@ -120,12 +120,20 @@ it('fails if `conda` is not found', async function () {
         updateConda: false
     };
 
+#if NODE20
+    let error: any | undefined;
+#endif
     try {
         await uut.condaEnvironment(parameters, Platform.Windows);
 
         throw new Error('should not have succeeded');
     } catch (e) {
+#if NODE20
+        error = e;
+        assert.strictEqual(error.message, 'loc_mock_CondaNotFound');
+#else
         assert.strictEqual(e.message, 'loc_mock_CondaNotFound');
+#endif
         assert(findConda.calledOnceWithExactly(Platform.Windows));
         assert(prependCondaToPath.notCalled);
         assert(createEnvironment.notCalled);

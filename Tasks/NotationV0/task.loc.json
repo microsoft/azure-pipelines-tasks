@@ -1,0 +1,252 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+  "id": "c7d56ba6-35a6-453d-8192-8b602bf234bd",
+  "name": "Notation",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "author": "Notation Developers",
+  "minimumAgentVersion": "2.144.0",
+  "version": {
+    "Major": 0,
+    "Minor": 241,
+    "Patch": 0
+  },
+  "groups": [
+    {
+      "name": "commandConfig",
+      "displayName": "ms-resource:loc.group.displayName.commandConfig",
+      "isExpanded": true
+    },
+    {
+      "name": "pluginConfig",
+      "displayName": "ms-resource:loc.group.displayName.pluginConfig",
+      "isExpanded": true,
+      "visibleRule": "command = sign"
+    },
+    {
+      "name": "advancedConfig",
+      "displayName": "ms-resource:loc.group.displayName.advancedConfig",
+      "isExpanded": false,
+      "visibleRule": "command = sign || command = verify"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "command",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.command",
+      "defaultValue": "install",
+      "helpMarkDown": "ms-resource:loc.input.help.command",
+      "required": true,
+      "options": {
+        "install": "Install",
+        "sign": "Sign",
+        "verify": "Verify"
+      }
+    },
+    {
+      "name": "isCustomVersion",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isCustomVersion",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.isCustomVersion",
+      "visibleRule": "command = install",
+      "groupName": "commandConfig"
+    },
+    {
+      "name": "version",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.version",
+      "defaultValue": "1.1.1",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.version",
+      "visibleRule": "command = install && isCustomVersion = false",
+      "groupName": "commandConfig"
+    },
+    {
+      "name": "url",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.url",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.url",
+      "groupName": "commandConfig",
+      "visibleRule": "command = install && isCustomVersion = true"
+    },
+    {
+      "name": "checksum",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.checksum",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.checksum",
+      "groupName": "commandConfig",
+      "visibleRule": "command = install && isCustomVersion = true"
+    },
+    {
+      "name": "artifactRefs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.artifactRefs",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "command = verify || command = sign",
+      "helpMarkDown": "ms-resource:loc.input.help.artifactRefs",
+      "groupName": "commandConfig"
+    },
+    {
+      "name": "signatureFormat",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.signatureFormat",
+      "defaultValue": "cose",
+      "required": false,
+      "options": {
+        "cose": "COSE",
+        "jws": "JWS"
+      },
+      "visibleRule": "command = sign",
+      "helpMarkDown": "ms-resource:loc.input.help.signatureFormat",
+      "groupName": "advancedConfig"
+    },
+    {
+      "name": "allowReferrersAPI",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowReferrersAPI",
+      "defaultValue": false,
+      "required": false,
+      "visibleRule": "command = sign || command = verify",
+      "helpMarkDown": "ms-resource:loc.input.help.allowReferrersAPI",
+      "groupName": "advancedConfig"
+    },
+    {
+      "name": "plugin",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.plugin",
+      "defaultValue": "azureKeyVault",
+      "required": true,
+      "options": {
+        "azureKeyVault": "Azure Key Vault Plugin"
+      },
+      "groupName": "pluginConfig"
+    },
+    {
+      "name": "akvPluginVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.akvPluginVersion",
+      "defaultValue": "1.2.0",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.akvPluginVersion",
+      "visibleRule": "plugin = azureKeyVault",
+      "groupName": "pluginConfig"
+    },
+    {
+      "name": "azurekvServiceConection",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azurekvServiceConection",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.azurekvServiceConection",
+      "visibleRule": "plugin = azureKeyVault",
+      "groupName": "pluginConfig"
+    },
+    {
+      "name": "keyid",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.keyid",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.keyid",
+      "visibleRule": "plugin = azureKeyVault",
+      "groupName": "pluginConfig"
+    },
+    {
+      "name": "caCertBundle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.caCertBundle",
+      "required": false,
+      "defaultValue": "",
+      "visibleRule": "plugin = azureKeyVault",
+      "helpMarkDown": "ms-resource:loc.input.help.caCertBundle",
+      "groupName": "pluginConfig"
+    },
+    {
+      "name": "selfSigned",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.selfSigned",
+      "required": false,
+      "defaultValue": false,
+      "visibleRule": "plugin = azureKeyVault",
+      "groupName": "pluginConfig"
+    },
+    {
+      "name": "trustPolicy",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.trustPolicy",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "command = verify",
+      "helpMarkDown": "ms-resource:loc.input.help.trustPolicy",
+      "groupName": "commandConfig"
+    },
+    {
+      "name": "trustStore",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.trustStore",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "command = verify",
+      "helpMarkDown": "ms-resource:loc.input.help.trustStore",
+      "groupName": "commandConfig"
+    }
+  ],
+  "execution": {
+    "Node16": {
+      "target": "src/index.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "src/index.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ArtifactRefs": "ms-resource:loc.messages.ArtifactRefs",
+    "ArtifactRefsNotSpecified": "ms-resource:loc.messages.ArtifactRefsNotSpecified",
+    "APPDATANotSet": "ms-resource:loc.messages.APPDATANotSet",
+    "AzureKVPluginAlreadyInstalled": "ms-resource:loc.messages.AzureKVPluginAlreadyInstalled",
+    "CannotFindTrustStore": "ms-resource:loc.messages.CannotFindTrustStore",
+    "ChecksumValidated": "ms-resource:loc.messages.ChecksumValidated",
+    "ChecksumValidationFailed": "ms-resource:loc.messages.ChecksumValidationFailed",
+    "FailedArtifacts": "ms-resource:loc.messages.FailedArtifacts",
+    "FailedToAddCertToTrustStore": "ms-resource:loc.messages.FailedToAddCertToTrustStore",
+    "FailedToGetWorkloadIdToken": "ms-resource:loc.messages.FailedToGetWorkloadIdToken",
+    "FailedToImportTrustPolicy": "ms-resource:loc.messages.FailedToImportTrustPolicy",
+    "FailedToListTrustStore": "ms-resource:loc.messages.FailedToListTrustStore",
+    "FailedToShowTrustPolicy": "ms-resource:loc.messages.FailedToShowTrustPolicy",
+    "TryToGetArtifactRefsFromDockerTask": "ms-resource:loc.messages.TryToGetArtifactRefsFromDockerTask",
+    "InvalidResourceURI": "ms-resource:loc.messages.InvalidResourceURI",
+    "InvalidVersionPrefix": "ms-resource:loc.messages.InvalidVersionPrefix",
+    "ResultSummary": "ms-resource:loc.messages.ResultSummary",
+    "RepeatedArtifactRef": "ms-resource:loc.messages.RepeatedArtifactRef",
+    "SucceededArtifacts": "ms-resource:loc.messages.SucceededArtifacts",
+    "TempDirectoryNotSet": "ms-resource:loc.messages.TempDirectoryNotSet",
+    "TempDirectoryOrWorkingDirectoryNotSet": "ms-resource:loc.messages.TempDirectoryOrWorkingDirectoryNotSet",
+    "NoAuthScheme": "ms-resource:loc.messages.NoAuthScheme",
+    "NotationAlreadyInstalled": "ms-resource:loc.messages.NotationAlreadyInstalled",
+    "NotationInstalledFromURL": "ms-resource:loc.messages.NotationInstalledFromURL",
+    "NotationInstalledFromVersion": "ms-resource:loc.messages.NotationInstalledFromVersion",
+    "NoServiceConnection": "ms-resource:loc.messages.NoServiceConnection",
+    "UnsupportedArchitecture": "ms-resource:loc.messages.UnsupportedArchitecture",
+    "UnsupportedFileExtension": "ms-resource:loc.messages.UnsupportedFileExtension",
+    "UnsupportedPlatform": "ms-resource:loc.messages.UnsupportedPlatform",
+    "UnsupportedVersion": "ms-resource:loc.messages.UnsupportedVersion",
+    "UseAuthenticationMethod": "ms-resource:loc.messages.UseAuthenticationMethod",
+    "UnknownCommand": "ms-resource:loc.messages.UnknownCommand",
+    "UnknownError": "ms-resource:loc.messages.UnknownError",
+    "UnknownPlugin": "ms-resource:loc.messages.UnknownPlugin",
+    "UnsupportedAuthScheme": "ms-resource:loc.messages.UnsupportedAuthScheme"
+  }
+}

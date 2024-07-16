@@ -18,9 +18,7 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "devDependencies": {
     "@types/mocha": "^5.2.0",
-    "@types/mockery": "^1.4.29",
     "@types/sinon": "^4.3.1",
-    "mockery": "^2.1.0",
     "sinon": "^4.5.0"
   }
 }

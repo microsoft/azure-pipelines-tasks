@@ -58,11 +58,14 @@ function Get-AzureStoragePrimaryKey($storageAccount, [bool]$isArm)
     if ($isArm)
     {
         $storageAccountResource = Get-AzureRmResource | where-object { $_.Name -eq $storageAccount -and $_.ResourceType -eq "Microsoft.Storage/storageAccounts" }
+        
         if (!$storageAccountResource)
         {
             Write-Error -Message "Could not find resource $storageAccount that has a type of Microsoft.Storage/storageAccounts"
         }
+
         $storageAccountKeys = Get-AzureRmStorageAccountKey -ResourceGroupName $storageAccountResource.ResourceGroupName -Name $storageAccount
+        
         if(!$storageAccountKeys)
         {
             Write-Error -Message "Could not retrieve storage account keys from storage account resource $Storage"
@@ -75,6 +78,18 @@ function Get-AzureStoragePrimaryKey($storageAccount, [bool]$isArm)
     }
 
     return $primaryStorageKey
+}
+
+function Get-SplitConfigStorageAccountName($publicConfigStorageAccountName)
+{
+    if(-not ([string]::IsNullOrEmpty($publicConfigStorageAccountName)) -and $publicConfigStorageAccountName.Contains("AccountKey"))
+    {
+        $publicConfig_StorageAccountName = $publicConfigStorageAccountName -split ";"
+        return $publicConfig_StorageAccountName[0]
+    }
+    else{
+        return $publicConfigStorageAccountName
+    }
 }
 
 function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAccountKeysMap, [switch]$useArmStorage)
@@ -119,6 +134,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                     {
                         #We found a StorageAccount in the role's diagnostics configuration.  Use it.
                         $publicConfigStorageAccountName = $publicConfig.PublicConfig.StorageAccount
+                        $publicConfigStorageAccountName = Get-SplitConfigStorageAccountName $publicConfigStorageAccountName
                         Write-Verbose "Found PublicConfig.StorageAccount= '$publicConfigStorageAccountName'"
 
                         if ($storageAccountKeysMap.containsKey($role))

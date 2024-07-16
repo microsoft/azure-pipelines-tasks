@@ -1,0 +1,122 @@
+{
+  "id": "e4d58330-c771-11e8-8f8f-81fbb42e2824",
+  "name": "TwineAuthenticate",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/twine-authenticate",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "version": {
+    "Major": 1,
+    "Minor": 238,
+    "Patch": 1
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.144.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "feedAuthentication",
+      "displayName": "ms-resource:loc.group.displayName.feedAuthentication",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "artifactFeed",
+      "aliases": [
+        "artifactFeed"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.artifactFeed",
+      "helpMarkDown": "ms-resource:loc.input.help.artifactFeed",
+      "defaultValue": "",
+      "required": "false",
+      "groupName": "feedAuthentication",
+      "properties": {
+        "EditableOptions": "False"
+      }
+    },
+    {
+      "name": "pythonUploadServiceConnection",
+      "aliases": [
+        "pythonUploadServiceConnection"
+      ],
+      "type": "connectedService:externalPythonUploadFeed",
+      "label": "ms-resource:loc.input.label.pythonUploadServiceConnection",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pythonUploadServiceConnection",
+      "properties": {
+        "EditableOptions": "False"
+      },
+      "groupName": "feedAuthentication"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "artifactFeed",
+      "endpointId": "tfs:feed",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{#if projectName}}{{{projectName}}}\\/{{/if}}{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "twineauthenticatemain.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "twineauthenticatemain.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "twineauthenticatemain.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Info_AddingInternalFeeds": "ms-resource:loc.messages.Info_AddingInternalFeeds",
+    "Info_AddingExternalFeeds": "ms-resource:loc.messages.Info_AddingExternalFeeds",
+    "Info_AddingAuthForRegistry": "ms-resource:loc.messages.Info_AddingAuthForRegistry",
+    "Info_SuccessAddingAuth": "ms-resource:loc.messages.Info_SuccessAddingAuth",
+    "Info_AddingPasswordAuthEntry": "ms-resource:loc.messages.Info_AddingPasswordAuthEntry",
+    "Info_AddingTokenAuthEntry": "ms-resource:loc.messages.Info_AddingTokenAuthEntry",
+    "Error_FailedToParseFeedUrlAndAuth": "ms-resource:loc.messages.Error_FailedToParseFeedUrlAndAuth",
+    "Warning_OnlyOneFeedAllowed": "ms-resource:loc.messages.Warning_OnlyOneFeedAllowed",
+    "Warning_OnlyOneServiceConnectionAllowed": "ms-resource:loc.messages.Warning_OnlyOneServiceConnectionAllowed",
+    "Error_DuplicateEntryForFeed": "ms-resource:loc.messages.Error_DuplicateEntryForFeed",
+    "FailedToGetPackagingUri": "ms-resource:loc.messages.FailedToGetPackagingUri",
+    "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
+    "NoPypircFile": "ms-resource:loc.messages.NoPypircFile",
+    "VariableSetForPypirc": "ms-resource:loc.messages.VariableSetForPypirc",
+    "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile"
+  },
+  "postjobexecution": {
+    "Node10": {
+      "target": "authcleanup.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "authcleanup.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "authcleanup.js",
+      "argumentFormat": ""
+    }
+  },
+  "_buildConfigMapping": {
+    "Default": "1.238.0",
+    "Node20_229_1": "1.238.1"
+  }
+}

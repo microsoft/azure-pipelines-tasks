@@ -1,0 +1,62 @@
+name: ❓ Ask a Question
+description: Raise a question
+title: "[Question]: "
+labels: ["help wanted"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form if you are looking for help
+        tasks. [List of the tasks](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks)
+  - type: input
+    id: task-name
+    attributes:
+      label: Task name
+  - type: input
+    id: task-version
+    attributes:
+      label: Task version
+      placeholder: x.x.x
+  - type: markdown
+    attributes:
+      value: |
+        ## Environment 
+  - type: checkboxes
+    id: environment-type
+    attributes:
+      label: Environment type (Please select at least one enviroment where you face this issue)
+      options:
+        - label: Self-Hosted
+        - label: Microsoft Hosted
+        - label: VMSS Pool
+        - label: Container
+  - type: dropdown
+    id: azure-devops-type
+    attributes:
+      label: Azure DevOps Server type
+      options:
+        - dev.azure.com (formerly visualstudio.com)
+        - Azure DevOps Server (Please specify exact version in the textbox below)
+    validations:
+      required: true
+  - type: input
+    id: azure-devops-server-datails
+    attributes:
+      label: Azure DevOps Server Version (if applicable)
+      placeholder: Azure DevOps Server 2019.1
+  - type: input
+    id: operation-system
+    attributes:
+      label: Operation system
+      placeholder: Windows 11, Ubuntu 20.04...
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: |
+        Please write your question here 
+      render: shell
+    validations:
+      required: true

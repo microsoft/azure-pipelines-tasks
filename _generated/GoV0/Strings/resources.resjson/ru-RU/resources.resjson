@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Go",
+  "loc.helpMarkDown": "[См. дополнительные сведения об этой задаче](https://go.microsoft.com/fwlink/?linkid=867582)",
+  "loc.description": "Получите, создайте или протестируйте приложение Go либо выполните пользовательскую команду Go",
+  "loc.instanceNameFormat": "go $(command)",
+  "loc.group.displayName.advanced": "Дополнительно",
+  "loc.input.label.command": "Команда",
+  "loc.input.help.command": "Выберите команду Go для выполнения. Выберите \"Пользовательская\", чтобы использовать команду, отсутствующую в списке.",
+  "loc.input.label.customCommand": "Пользовательская команда",
+  "loc.input.help.customCommand": "Пользовательская команда Go, которую необходимо выполнить. Например, чтобы выполнить команду go version, введите \"version\".",
+  "loc.input.label.arguments": "Аргументы",
+  "loc.input.help.arguments": "Необязательные аргументы для выбранной команды. Например, аргументы времени сборки для команды go build.",
+  "loc.input.label.workingDirectory": "Рабочий каталог",
+  "loc.input.help.workingDirectory": "Рабочий каталог, в котором будет выполнена команда. Если не задано, используется корень репозитория (для сборок) или артефактов (для выпусков), то есть значение переменной \"$(System.DefaultWorkingDirectory)\".",
+  "loc.messages.TaskFailedWithError": "Не удалось выполнить задачу Go из-за ошибки: %s"
+}

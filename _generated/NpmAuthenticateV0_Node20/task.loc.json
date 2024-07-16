@@ -1,0 +1,91 @@
+{
+  "id": "ad884ca2-732e-4b85-b2d3-ed71bcbd2788",
+  "name": "npmAuthenticate",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/npm-authenticate",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 242,
+    "Patch": 1
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.115.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "workingFile",
+      "label": "ms-resource:loc.input.label.workingFile",
+      "helpMarkDown": "ms-resource:loc.input.help.workingFile",
+      "type": "filePath",
+      "required": true
+    },
+    {
+      "name": "customEndpoint",
+      "label": "ms-resource:loc.input.label.customEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.customEndpoint",
+      "type": "connectedService:externalnpmregistry",
+      "properties": {
+        "MultiSelectFlatList": "true"
+      }
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "npmauth.js"
+    },
+    "Node16": {
+      "target": "npmauth.js"
+    },
+    "Node20_1": {
+      "target": "npmauth.js",
+      "argumentFormat": ""
+    }
+  },
+  "postjobexecution": {
+    "Node10": {
+      "target": "npmauthcleanup.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "npmauthcleanup.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "npmauthcleanup.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "FoundBuildCredentials": "ms-resource:loc.messages.FoundBuildCredentials",
+    "NoBuildCredentials": "ms-resource:loc.messages.NoBuildCredentials",
+    "ServiceEndpointNotDefined": "ms-resource:loc.messages.ServiceEndpointNotDefined",
+    "NpmrcNotNpmrc": "ms-resource:loc.messages.NpmrcNotNpmrc",
+    "ServiceEndpointUrlNotDefined": "ms-resource:loc.messages.ServiceEndpointUrlNotDefined",
+    "SavingFile": "ms-resource:loc.messages.SavingFile",
+    "RestoringFile": "ms-resource:loc.messages.RestoringFile",
+    "AddingAuthRegistry": "ms-resource:loc.messages.AddingAuthRegistry",
+    "FoundLocalRegistries": "ms-resource:loc.messages.FoundLocalRegistries",
+    "AddingLocalCredentials": "ms-resource:loc.messages.AddingLocalCredentials",
+    "AddingEndpointCredentials": "ms-resource:loc.messages.AddingEndpointCredentials",
+    "AuthenticatingThisNpmrc": "ms-resource:loc.messages.AuthenticatingThisNpmrc",
+    "IgnoringRegistry": "ms-resource:loc.messages.IgnoringRegistry",
+    "ForcePackagingUrl": "ms-resource:loc.messages.ForcePackagingUrl",
+    "CheckedInCredentialsOverriden": "ms-resource:loc.messages.CheckedInCredentialsOverriden",
+    "NoIndexJsonFile": "ms-resource:loc.messages.NoIndexJsonFile",
+    "RevertedChangesToNpmrc": "ms-resource:loc.messages.RevertedChangesToNpmrc",
+    "NpmrcDoesNotExist": "ms-resource:loc.messages.NpmrcDoesNotExist",
+    "SuccessfulPush": "ms-resource:loc.messages.SuccessfulPush",
+    "SuccessfulAppend": "ms-resource:loc.messages.SuccessfulAppend"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.242.0",
+    "Node20_229_1": "0.242.1"
+  }
+}

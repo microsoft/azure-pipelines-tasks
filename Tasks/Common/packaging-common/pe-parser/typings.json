@@ -1,9 +1,0 @@
-{
-  "globalDependencies": {
-    "node": "registry:env/node#6.0.0+20160813135048",
-    "q": "registry:dt/q#0.0.0+20160613154756"
-  },
-  "globalDevDependencies": {
-    "mocha": "registry:env/mocha#2.2.5+20160723033700"
-  }
-}

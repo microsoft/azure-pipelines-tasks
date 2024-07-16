@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Dateikopiervorgang auf Windows-Computer",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[Weitere Informationen zu dieser Aufgabe](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "Hiermit werden Dateien auf Windows-Remotecomputer kopiert.",
   "loc.instanceNameFormat": "Dateien kopieren aus $(SourcePath)",
   "loc.releaseNotes": "Neuigkeiten in Version 2.0: <br/>Proxys werden ab sofort unterstützt. <br/>Die Unterstützung von Legacy-DTL-Computern wurde eingestellt.",

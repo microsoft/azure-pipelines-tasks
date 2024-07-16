@@ -26,6 +26,8 @@ $endpoint = @{
 Register-Mock Get-VstsWebProxy { }
 Register-Mock Add-Tls12InSession { }
 Register-Mock Add-AzAccount { 'Add-AzAccount' }
+Register-Mock Connect-AzAccount { 'Connect-AzAccount' }
+Register-Mock Set-CurrentAzSubscription { 'Set-CurrentAzSubscription' }
 Register-Mock Set-CurrentAzureRMSubscription { 'Set-CurrentAzureRMSubscription' }
 Register-Mock Set-UserAgent { }
 Register-Mock Add-Certificate { }

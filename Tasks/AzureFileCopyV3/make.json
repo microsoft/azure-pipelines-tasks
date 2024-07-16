@@ -1,4 +1,13 @@
 {
+    "rm": [
+        {
+            "items": [
+                "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/azure-pipelines-task-lib",
+                "node_modules/https-proxy-agent/node_modules/agent-base"
+            ],
+            "options": "-Rf"
+        }
+    ],
     "common": [
         {
             "module": "../Common/VstsAzureHelpers_",
@@ -19,6 +28,10 @@
         {
             "module": "../Common/RemoteDeployer",
             "type": "ps"
+        },
+        {
+            "module": "../Common/Sanitizer",
+            "type": "ps"
         }
     ],
     "externals": {
@@ -31,7 +44,7 @@
         "nugetv2": [
             {
                 "name": "VstsTaskSdk",
-                "version": "0.10.0",
+                "version": "0.21.0",
                 "repository": "https://www.powershellgallery.com/api/v2/",
                 "cp": [
                     {

@@ -1,6 +1,10 @@
 [CmdletBinding()]
 param()
 
+$featureFlags = @{
+    retireAzureRM = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 Unregister-Mock Import-Module
@@ -51,19 +55,29 @@ foreach ($variableSet in $variableSets) {
         Register-Mock Import-Module { $variableSet.Modules[1] } -- -Name $variableSet.Modules[1].Path -Global -PassThru -Force
     }
 
-    # Act.
-    $result = & $module Import-FromModulePath -Classic:($variableSet.Classic) -azurePsVersion "4.1.0"
-
-    # Assert.
-    Assert-AreEqual $true $result
-    Assert-WasCalled Import-Module -- -Name $variableSet.Modules[0].Path -Global -PassThru -Force
-    if ($variableSet.Modules.Length -eq 2) {
-        Assert-WasCalled Import-Module -- -Name $variableSet.Modules[1].Path -Global -PassThru -Force
-    }
-
-    if ($variableSet.Classic) {
-        Assert-AreEqual $variableSet.Modules[0] (& $module { $script:azureModule })
+    if ($featureFlags.retireAzureRM) {
+        $isModuleExists = $false;
+        Get-Command -Module $module | ForEach-Object {
+            if ($_.name -match "Import-FromModulePath") {
+                $isModuleExists = $true;
+            }
+        }
+        Assert-AreEqual -Expected $false -Actual $isModuleExists -Message "Property should not exists"
     } else {
-        Assert-AreEqual $variableSet.Modules[1] (& $module { $script:azureRMProfileModule })
+        # Act.
+        $result = & $module Import-FromModulePath -Classic:($variableSet.Classic) -azurePsVersion "4.1.0"
+
+        # Assert.
+        Assert-AreEqual $true $result
+        Assert-WasCalled Import-Module -- -Name $variableSet.Modules[0].Path -Global -PassThru -Force
+        if ($variableSet.Modules.Length -eq 2) {
+            Assert-WasCalled Import-Module -- -Name $variableSet.Modules[1].Path -Global -PassThru -Force
+        }
+
+        if ($variableSet.Classic) {
+            Assert-AreEqual $variableSet.Modules[0] (& $module { $script:azureModule })
+        } else {
+            Assert-AreEqual $variableSet.Modules[1] (& $module { $script:azureRMProfileModule })
+        }
     }
 }

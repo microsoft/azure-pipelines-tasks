@@ -1,4 +1,3 @@
-
 $validInputSourcePath = Join-Path $env:windir "Source"
 $validInputAzureBlobDestinationType = "AzureBlob"
 $validInputAzureVmsDestinationType = "AzureVms"

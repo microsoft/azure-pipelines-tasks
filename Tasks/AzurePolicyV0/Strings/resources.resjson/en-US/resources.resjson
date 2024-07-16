@@ -3,10 +3,13 @@
   "loc.helpMarkDown": "",
   "loc.description": "Security and compliance assessment for Azure Policy",
   "loc.instanceNameFormat": "Check Policy Compliance",
+  "loc.group.displayName.advancedOptions": "Advanced",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription to enforce the policies.",
   "loc.input.label.ResourceGroupName": "Resource group",
   "loc.input.help.ResourceGroupName": "Provide name of a resource group.",
   "loc.input.label.Resources": "Resource name",
-  "loc.input.help.Resources": "Select name of Azure resources for which you want to check the policy compliance."
+  "loc.input.help.Resources": "Select name of Azure resources for which you want to check the policy compliance.",
+  "loc.input.label.RetryDuration": "Retry duration",
+  "loc.input.help.RetryDuration": "Defines period which task will wait until it retry to call Azure API in case that previous response code was \"Accepted\"​. Minimal period is 2 minutes."
 }

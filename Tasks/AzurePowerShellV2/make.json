@@ -13,7 +13,7 @@
         "nugetv2": [
             {
                 "name": "VstsTaskSdk",
-                "version": "0.10.0",
+                "version": "0.20.1",
                 "repository": "https://www.powershellgallery.com/api/v2/",
                 "cp": [
                     {
@@ -33,7 +33,7 @@
         ],
         "archivePackages": [
             {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/7zip/1/7zip.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/7zip/4/7zip.zip",
                 "dest": "./"
             }
         ]

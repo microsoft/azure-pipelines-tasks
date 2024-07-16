@@ -1,0 +1,28 @@
+{
+  "name": "dynamic-resource-task",
+  "version": "1.0.0",
+  "description": "Azure Pipelines Dynamic Resource Task",
+  "main": "run.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/node": "^20.3.1",
+    "@types/mocha": "^5.2.7",
+    "@types/uuid": "^8.3.0",
+    "azure-pipelines-task-lib": "^4.0.1-preview"
+  },
+  "devDependencies": {
+    "typescript": "5.1.6"
+  }
+}

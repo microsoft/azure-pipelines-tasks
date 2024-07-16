@@ -15,9 +15,16 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 198,
-        "Patch": 0
+        "Minor": 221,
+        "Patch": 1
     },
+    "groups": [
+        {
+            "name": "advancedOptions",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
     "inputs": [
         {
             "name": "ConnectedServiceName",
@@ -49,6 +56,15 @@
                 "DisableManageLink": "True",
                 "EditableOptions": "False"
             }
+        },
+        {
+            "name": "RetryDuration",
+            "type": "string",
+            "label": "Retry duration",
+            "defaultValue": "00:02:00",
+            "required": false,
+            "helpMarkDown": "Defines period which task will wait until it retry to call Azure API in case that previous response code was \"Accepted\"​. Minimal period is 2 minutes.",
+            "groupName": "advancedOptions"
         }
     ],
     "dataSourceBindings": [
@@ -90,6 +106,10 @@
                         "EndpointUrl": "$(locationUrl)",
                         "Method": "GET",
                         "Expression": "and(eq(response['statuscode'], 'OK'), eq(response['content']['status'], 'Succeeded'))"
+                    },
+                    "ExecutionOptions": {
+                        "ContinuePollingExpression": "eq(response['statuscode'], 'Accepted')",
+                        "DurationBetweenRetries": "$(RetryDuration)"
                     }
                 },
                 {

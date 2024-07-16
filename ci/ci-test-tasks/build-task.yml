@@ -1,0 +1,45 @@
+parameters:
+- name: task
+  type: string
+- name: patchVersion
+  type: boolean
+- name: version
+  type: string
+
+steps:
+- ${{ if parameters.patchVersion }}:
+  - script: node ci/patch-task-version.js --task=${{ parameters.task }} --version=${{ parameters.version }}
+    displayName: ${{ parameters.task }} patch task version
+
+# Use .NET SDK 8
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK 8.x'
+  inputs:
+    version: 8.x
+
+# Clean
+- script: node make.js clean
+  displayName: Clean tasks
+
+# Build
+- script: node make.js serverBuild --task "${{ parameters.task }}"
+  displayName: ${{ parameters.task }} build
+
+# Check diff for task sources
+#- script: node ./ci/verify-source-changes.js "${{ parameters.task }}"
+#  displayName: Verify task source changes
+
+# Test
+- script: node make.js test --task "${{ parameters.task }}"
+  displayName: ${{ parameters.task }} run tests
+
+- script: node make.js testLegacy --task "${{ parameters.task }}"
+  displayName: ${{ parameters.task }} legacy (node 6) tests
+
+# Publish test results
+- task: PublishTestResults@2
+  displayName: Publish Test Results test-*.xml
+  inputs:
+    testResultsFiles: test-*.xml
+    testRunTitle: Node 6 Test Results
+    searchFolder: $(System.DefaultWorkingDirectory)/testresults

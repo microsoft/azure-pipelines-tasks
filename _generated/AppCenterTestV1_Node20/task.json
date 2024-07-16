@@ -1,0 +1,509 @@
+{
+  "id": "AD5CD22A-BE4E-48BB-ADCE-181A32432DA5",
+  "name": "AppCenterTest",
+  "friendlyName": "App Center test",
+  "description": "Test app packages with Visual Studio App Center",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/test/app-center-test",
+  "helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport).",
+  "category": "Test",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 241,
+    "Patch": 1
+  },
+  "minimumAgentVersion": "2.206.1",
+  "groups": [
+    {
+      "name": "prepare",
+      "displayName": "Prepare Tests",
+      "isExpanded": true
+    },
+    {
+      "name": "run",
+      "displayName": "Run Tests",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "app",
+      "aliases": [
+        "appFile"
+      ],
+      "type": "filePath",
+      "label": "Binary application file path",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Relative path from the repo root to the APK or IPA file you want to test."
+    },
+    {
+      "name": "artifactsDir",
+      "aliases": [
+        "artifactsDirectory"
+      ],
+      "type": "filePath",
+      "label": "Artifacts directory",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)/AppCenterTest",
+      "required": true,
+      "helpMarkDown": "Where to place the artifacts produced by the prepare step and used by the run step. This directory will be created if it does not exist."
+    },
+    {
+      "name": "enablePrepare",
+      "aliases": [
+        "prepareTests"
+      ],
+      "type": "boolean",
+      "label": "Prepare tests",
+      "defaultValue": true,
+      "groupName": "prepare"
+    },
+    {
+      "name": "framework",
+      "aliases": [
+        "frameworkOption"
+      ],
+      "type": "pickList",
+      "label": "Test framework",
+      "defaultValue": "appium",
+      "visibleRule": "enablePrepare = true",
+      "required": true,
+      "groupName": "prepare",
+      "options": {
+        "appium": "Appium",
+        "espresso": "Espresso",
+        "calabash": "Calabash",
+        "uitest": "Xamarin UI Test",
+        "xcuitest": "XCUITest"
+      }
+    },
+    {
+      "name": "appiumBuildDir",
+      "aliases": [
+        "appiumBuildDirectory"
+      ],
+      "type": "string",
+      "label": "Build directory",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = appium",
+      "required": true,
+      "helpMarkDown": "Path to directory with Appium tests.",
+      "groupName": "prepare"
+    },
+    {
+      "name": "espressoBuildDir",
+      "aliases": [
+        "espressoBuildDirectory"
+      ],
+      "type": "string",
+      "label": "Build directory",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = espresso",
+      "required": false,
+      "helpMarkDown": "Path to Espresso output directory.",
+      "groupName": "prepare"
+    },
+    {
+      "name": "espressoTestApkPath",
+      "aliases": [
+        "espressoTestApkFile"
+      ],
+      "type": "string",
+      "label": "Test APK path",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = espresso",
+      "required": false,
+      "helpMarkDown": "Path to APK file with Espresso tests. If not set, build-dir is used to discover it. Wildcard is allowed.",
+      "groupName": "prepare"
+    },
+    {
+      "name": "calabashProjectDir",
+      "aliases": [
+        "calabashProjectDirectory"
+      ],
+      "type": "string",
+      "label": "Project directory",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = calabash",
+      "required": true,
+      "helpMarkDown": "Path to Calabash workspace directory.",
+      "groupName": "prepare"
+    },
+    {
+      "name": "calabashConfigFile",
+      "type": "filePath",
+      "label": "Cucumber config file",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = calabash",
+      "required": false,
+      "helpMarkDown": "Path to Cucumber configuration file, usually cucumber.yml.",
+      "groupName": "prepare"
+    },
+    {
+      "name": "calabashProfile",
+      "type": "string",
+      "label": "Profile to run",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = calabash",
+      "required": false,
+      "helpMarkDown": "Profile to run.  This value must exists in the Cucumber configuration file.",
+      "groupName": "prepare"
+    },
+    {
+      "name": "calabashSkipConfigCheck",
+      "type": "boolean",
+      "label": "Skip Configuration Check",
+      "defaultValue": false,
+      "visibleRule": "enablePrepare = true && framework = calabash",
+      "required": false,
+      "helpMarkDown": "Force running without Cucumber profile.",
+      "groupName": "prepare"
+    },
+    {
+      "name": "uitestBuildDir",
+      "aliases": [
+        "uiTestBuildDirectory"
+      ],
+      "type": "string",
+      "label": "Build directory",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = uitest",
+      "required": true,
+      "helpMarkDown": "Path to directory with built test assemblies.",
+      "groupName": "prepare"
+    },
+    {
+      "name": "uitestStorePath",
+      "type": "string",
+      "label": "Store file",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = uitest",
+      "required": false,
+      "groupName": "prepare"
+    },
+    {
+      "name": "uitestStorePass",
+      "aliases": [
+        "uiTestStorePassword"
+      ],
+      "type": "string",
+      "label": "Store password",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = uitest",
+      "required": false,
+      "groupName": "prepare"
+    },
+    {
+      "name": "uitestKeyAlias",
+      "type": "string",
+      "label": "Key alias",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = uitest",
+      "required": false,
+      "groupName": "prepare"
+    },
+    {
+      "name": "uitestKeyPass",
+      "aliases": [
+        "uiTestKeyPassword"
+      ],
+      "type": "string",
+      "label": "Key password",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = uitest",
+      "required": false,
+      "groupName": "prepare"
+    },
+    {
+      "name": "uitestToolsDir",
+      "aliases": [
+        "uiTestToolsDirectory"
+      ],
+      "type": "string",
+      "label": "Test tools directory",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = uitest",
+      "helpMarkDown": "Path to directory with Xamarin UI test tools that contains test-cloud.exe.",
+      "required": false,
+      "groupName": "prepare"
+    },
+    {
+      "name": "signInfo",
+      "type": "string",
+      "label": "Signing information",
+      "defaultValue": "",
+      "visibleRule": "framework = calabash || framework = uitest",
+      "required": false,
+      "helpMarkDown": "Use Signing Infor for signing the test server.",
+      "groupName": "prepare"
+    },
+    {
+      "name": "xcuitestBuildDir",
+      "aliases": [
+        "xcUITestBuildDirectory"
+      ],
+      "type": "string",
+      "label": "Build directory",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = xcuitest",
+      "required": false,
+      "helpMarkDown": "Path to the build output directory (usually $(ProjectDir)/Build/Products/Debug-iphoneos).",
+      "groupName": "prepare"
+    },
+    {
+      "name": "xcuitestTestIpaPath",
+      "aliases": [
+        "xcUITestIpaFile"
+      ],
+      "type": "string",
+      "label": "Test IPA path",
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true && framework = xcuitest",
+      "required": false,
+      "helpMarkDown": "Path to the *.ipa file with the XCUITest tests.",
+      "groupName": "prepare"
+    },
+    {
+      "name": "prepareOpts",
+      "aliases": [
+        "prepareOptions"
+      ],
+      "type": "string",
+      "label": "Additional options",
+      "required": false,
+      "defaultValue": "",
+      "visibleRule": "enablePrepare = true",
+      "helpMarkDown": "Additional arguments passed to the App Center test prepare step.",
+      "groupName": "prepare"
+    },
+    {
+      "name": "enableRun",
+      "aliases": [
+        "runTests"
+      ],
+      "type": "boolean",
+      "label": "Run tests",
+      "defaultValue": true,
+      "groupName": "run"
+    },
+    {
+      "name": "credsType",
+      "aliases": [
+        "credentialsOption"
+      ],
+      "type": "pickList",
+      "label": "Authentication method",
+      "defaultValue": "serviceEndpoint",
+      "visibleRule": "enableRun = true",
+      "required": true,
+      "groupName": "run",
+      "helpMarkDown": "Use App Center service connection or enter credentials to connect to Visual Studio App Center.",
+      "options": {
+        "serviceEndpoint": "App Center service connection",
+        "inputs": "Credentials"
+      }
+    },
+    {
+      "name": "serverEndpoint",
+      "type": "connectedService:vsmobilecenter",
+      "label": "App Center service connection",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "run",
+      "helpMarkDown": "Select the service connection for Visual Studio App Center. To create one, click the Manage link and create a new service connection.",
+      "visibleRule": "enableRun = true && credsType = serviceEndpoint"
+    },
+    {
+      "name": "username",
+      "type": "string",
+      "label": "App Center username",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "run",
+      "helpMarkDown": "Visit https://appcenter.ms/settings/profile to get your username.",
+      "visibleRule": "enableRun = true && credsType = inputs"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "label": "App Center password",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "run",
+      "helpMarkDown": "Visit https://appcenter.ms/settings/profile to set your password. It can accept a variable defined in build or release pipelines as '$(passwordVariable)'. You may mark variable type as 'secret' to secure it.",
+      "visibleRule": "enableRun = true && credsType = inputs"
+    },
+    {
+      "name": "appSlug",
+      "type": "string",
+      "label": "App slug",
+      "defaultValue": "",
+      "visibleRule": "enableRun = true",
+      "required": true,
+      "groupName": "run",
+      "helpMarkDown": "The app slug is in the format of {username}/{app_identifier}.  To locate {username} and {app_identifier} for an app, click on its name from https://appcenter.ms/apps, and the resulting URL is in the format of https://appcenter.ms/users/{username}/apps/{app_identifier}."
+    },
+    {
+      "name": "devices",
+      "type": "string",
+      "label": "Devices",
+      "visibleRule": "enableRun = true",
+      "required": true,
+      "groupName": "run",
+      "defaultValue": "",
+      "helpMarkDown": "String to identify what devices this test will run against.  Copy and paste this string when you define a new test run from App Center Test beacon."
+    },
+    {
+      "name": "series",
+      "type": "string",
+      "label": "Test series",
+      "defaultValue": "master",
+      "visibleRule": "enableRun = true",
+      "required": false,
+      "groupName": "run",
+      "helpMarkDown": "The series name for organizing test runs (e.g. master, production, beta)."
+    },
+    {
+      "name": "dsymDir",
+      "aliases": [
+        "dsymDirectory"
+      ],
+      "type": "string",
+      "label": "dSYM directory",
+      "defaultValue": "",
+      "visibleRule": "enableRun = true",
+      "required": false,
+      "groupName": "run",
+      "helpMarkDown": "Path to iOS symbol files."
+    },
+    {
+      "name": "locale",
+      "aliases": [
+        "localeOption"
+      ],
+      "type": "pickList",
+      "label": "System language",
+      "defaultValue": "en_US",
+      "visibleRule": "enableRun = true",
+      "required": true,
+      "groupName": "run",
+      "options": {
+        "da_DK": "Danish (Denmark)",
+        "nl_NL": "Dutch (Netherlands)",
+        "en_GB": "English (United Kingdom)",
+        "en_US": "English (United States)",
+        "fr_FR": "French (France)",
+        "de_DE": "German (Germany)",
+        "ja_JP": "Japanese (Japan)",
+        "ru_RU": "Russian (Russia)",
+        "es_MX": "Spanish (Mexico)",
+        "es_ES": "Spanish (Spain)",
+        "user": "Other"
+      },
+      "helpMarkDown": "If your language isn't displayed, select 'Other' and enter its locale below, such as en_US."
+    },
+    {
+      "name": "userDefinedLocale",
+      "type": "string",
+      "label": "Other locale",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "run",
+      "visibleRule": "enableRun = true && locale = user",
+      "helpMarkDown": "Enter any two-letter ISO-639 language code along with any two-letter ISO 3166 country code in the format [language]_[country], such as en_US."
+    },
+    {
+      "name": "loginOpts",
+      "aliases": [
+        "loginOptions"
+      ],
+      "type": "string",
+      "label": "Additional options for login",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "run",
+      "helpMarkDown": "Additional arguments passed to the App Center login step.",
+      "visibleRule": "enableRun = true && credsType = inputs"
+    },
+    {
+      "name": "runOpts",
+      "aliases": [
+        "runOptions"
+      ],
+      "type": "string",
+      "label": "Additional options for run",
+      "required": false,
+      "defaultValue": "",
+      "visibleRule": "enableRun = true",
+      "groupName": "run",
+      "helpMarkDown": "Additional arguments passed to the App Center test run."
+    },
+    {
+      "name": "async",
+      "aliases": [
+        "skipWaitingForResults"
+      ],
+      "type": "boolean",
+      "label": "Do not wait for test result",
+      "defaultValue": false,
+      "visibleRule": "enableRun = true",
+      "required": false,
+      "groupName": "run",
+      "helpMarkDown": "Execute command asynchronously, exit when tests are uploaded, without waiting for test results."
+    },
+    {
+      "name": "cliLocationOverride",
+      "aliases": [
+        "cliFile"
+      ],
+      "type": "filePath",
+      "label": "App Center CLI location",
+      "groupName": "advanced",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Path to the App Center CLI on the build or release agent."
+    },
+    {
+      "name": "debug",
+      "aliases": [
+        "showDebugOutput"
+      ],
+      "type": "boolean",
+      "label": "Enable debug output",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Add --debug to the App Center CLI."
+    }
+  ],
+  "instanceNameFormat": "Test with Visual Studio App Center",
+  "execution": {
+    "Node16": {
+      "target": "appcentertest.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "appcentertest.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Succeeded": "Visual Studio App Center Test task succeeded.",
+    "CannotDecodeEndpoint": "Could not decode the endpoint.",
+    "CannotLocateAppCenterCLI": "Could not find the App Center CLI. Install appcenter-cli using npm.",
+    "CannotFindAnyFile": "Cannot find any file based on %s.",
+    "FoundMultipleFiles": "Found multiple files matching %s."
+  },
+  "_buildConfigMapping": {
+    "Default": "1.241.0",
+    "Node20_229_7": "1.241.1"
+  }
+}

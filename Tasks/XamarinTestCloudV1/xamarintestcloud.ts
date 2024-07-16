@@ -268,3 +268,9 @@ var submitToTestCloud = function (index) {
 }
 
 submitToTestCloud(appFileIndex);
+
+let shouldFail = tl.getVariable('FAIL_DEPRECATED_BUILD_TASK');
+
+if (shouldFail != null && shouldFail.toLowerCase() === 'true') {
+	throw new Error(tl.loc("DeprecatedTask"));
+}

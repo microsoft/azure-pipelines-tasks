@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BuildConfigGen": {
+      "commandName": "Project",
+      "commandLineArgs": "--write-updates --configs \"Node20\" --task MavenV3"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "PowerShell on Target Machines",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627414)",
-  "loc.description": "Execute PowerShell scripts on remote machine(s)",
+  "loc.friendlyName": "PowerShell on target machines",
+  "loc.helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=627414)",
+  "loc.description": "Execute PowerShell scripts on remote machines",
   "loc.instanceNameFormat": "Run PowerShell on $(EnvironmentName)",
   "loc.releaseNotes": "What's new in Version 2.0: <br/>&nbsp;&nbsp; Removed support of legacy DTL machines.",
   "loc.group.displayName.deployment": "Deployment",

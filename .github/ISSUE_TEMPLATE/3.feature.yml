@@ -1,0 +1,21 @@
+name: 🚀 Feature request
+description: Use this template to submit a feature request
+title: "[enhancement]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to raise a question
+  - type: input
+    id: task-name
+    attributes:
+      label: Task name
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Describe your feature request here
+      placeholder: Put your question here.
+      description: Please try to provide as much details as possible
+    validations:
+      required: true

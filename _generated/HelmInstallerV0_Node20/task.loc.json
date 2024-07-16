@@ -1,0 +1,107 @@
+{
+  "id": "068D5909-43E6-48C5-9E01-7C8A94816220",
+  "name": "HelmInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/helm-installer",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 238,
+    "Patch": 1
+  },
+  "demands": [],
+  "satisfies": [
+    "Helm"
+  ],
+  "minimumAgentVersion": "2.115.0",
+  "groups": [
+    {
+      "name": "prerequisite",
+      "displayName": "ms-resource:loc.group.displayName.prerequisite",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "helmVersion",
+      "label": "ms-resource:loc.input.label.helmVersion",
+      "type": "string",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.helmVersion",
+      "defaultValue": "2.14.1"
+    },
+    {
+      "name": "checkLatestHelmVersion",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkLatestHelmVersion",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.checkLatestHelmVersion"
+    },
+    {
+      "name": "installKubeCtl",
+      "aliases": [
+        "installKubectl"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.installKubeCtl",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.installKubeCtl",
+      "required": true,
+      "groupName": "prerequisite"
+    },
+    {
+      "name": "kubectlVersion",
+      "label": "ms-resource:loc.input.label.kubectlVersion",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.kubectlVersion",
+      "defaultValue": "1.8.9",
+      "visibleRule": "installKubeCtl == true",
+      "groupName": "prerequisite"
+    },
+    {
+      "name": "checkLatestKubeCtl",
+      "aliases": [
+        "checkLatestKubectl"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkLatestKubeCtl",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.checkLatestKubeCtl",
+      "visibleRule": "installKubeCtl == true",
+      "groupName": "prerequisite"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node10": {
+      "target": "src//helmtoolinstaller.js"
+    },
+    "Node16": {
+      "target": "src//helmtoolinstaller.js"
+    },
+    "Node20_1": {
+      "target": "src//helmtoolinstaller.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
+    "DownloadKubectlFailedFromLocation": "ms-resource:loc.messages.DownloadKubectlFailedFromLocation",
+    "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
+    "HelmNotFoundInFolder": "ms-resource:loc.messages.HelmNotFoundInFolder",
+    "HelmDownloadFailed": "ms-resource:loc.messages.HelmDownloadFailed",
+    "HelmLatestNotKnown": "ms-resource:loc.messages.HelmLatestNotKnown",
+    "VerifyHelmInstallation": "ms-resource:loc.messages.VerifyHelmInstallation"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.238.0",
+    "Node20_229_3": "0.238.1"
+  }
+}

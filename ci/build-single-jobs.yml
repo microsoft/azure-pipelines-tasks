@@ -1,0 +1,76 @@
+parameters:
+- name: task_name
+  type: string
+- name: push_to_feed
+  type: boolean
+- name: generate_prs
+  type: boolean
+- name: enableCodeQL
+  displayName: Enable CodeQL for run
+  type: boolean
+  default: false
+
+jobs:
+# Build Single Task and stage hotfix
+- job: build_single_task
+  displayName: Build hotfix
+  pool: 
+    name: 1ES-ABTT-Shared-Pool
+    image: abtt-windows-2022
+    os: windows
+  templateContext:
+    outputs:
+    - output: buildArtifacts
+      displayName: 'Publish hotfix artifact'
+      PathtoPublish: hotfix-layout
+      ArtifactName: hotfix
+    - ${{ if parameters.push_to_feed }}:
+      - output: buildArtifacts
+        displayName: 'Publish per task NuGet package artifact'
+        PathtoPublish: nuget-packages
+        ArtifactName: IndividualNuGetPackages
+      - output: nuget
+        packagesToPush:  '$(Build.SourcesDirectory)/nuget-packages/*/*.nupkg'
+        packageParentPath: '$(Build.SourcesDirectory)'
+        publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/e10d0795-57cd-4d7f-904e-5f39703cb096'
+        nuGetFeedType: internal
+        displayName: Push Nuget package
+        allowPackageConflicts: $(COURTESY_PUSH)
+
+  steps:
+  - template: /ci/build-single-steps.yml@self
+    parameters:
+      task: ${{ parameters.task_name }}
+      push: ${{ parameters.push_to_feed }}
+
+- ${{ if parameters.generate_prs }}:
+  # Create a hotfix PR and Release
+  - job: create_hotfix
+    displayName: Create HotFix PR
+    dependsOn: build_single_task
+    variables:
+      ONEES_ENFORCED_CODEQL_ENABLED: ${{ eq(parameters.enableCodeQL, true) }}
+    pool: 
+      name: 1ES-ABTT-Shared-Pool
+      image: abtt-windows-2022
+      os: windows
+    steps:
+    - template: /ci/build-single-cc-pr-steps.yml@self
+      parameters:
+        task_name: ${{ parameters.task_name }}
+
+  - ${{ if parameters.push_to_feed }}:
+    # Create PR in AzureDevOps to update UnifiedDependencies.xml
+    - job: create_ado_pr
+      displayName: Update UnifiedDependencies.xml
+      dependsOn: build_single_task
+      variables:
+        ONEES_ENFORCED_CODEQL_ENABLED: ${{ eq(parameters.enableCodeQL, true) }}
+      pool: 
+        name: 1ES-ABTT-Shared-Pool
+        image: abtt-windows-2022
+        os: windows
+      steps:
+      - template: /ci/build-single-ado-pr-steps.yml@self
+        parameters:
+          task_name: ${{ parameters.task_name }}

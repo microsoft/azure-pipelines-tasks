@@ -40,6 +40,7 @@ $faultyEndpoint = @{
     }
 }
 
+Register-Mock Get-VstsTaskVariable { "false" } -- -Name "USE_MSAL"
 Register-Mock Add-Tls12InSession
 Register-Mock Get-EnvironmentAuthUrl { return "https://login.windows.net/" }
 Register-Mock Get-AzureActiverDirectoryResourceId { return "https://management.azure.com/" }

@@ -1,7 +1,0 @@
-{
-  "loc.messages.SearchingRegistryKeys": "JDK %s のレジストリ キーを検索しています",
-  "loc.messages.RegistryKeysFound": "見つかったレジストリ キーの数: %s",
-  "loc.messages.LocateJVMBasedOnVersionAndArch": "Java %s %s の JAVA_HOME を検索する",
-  "loc.messages.UnsupportedJdkWarning": "JDK 9 および JDK 10 はサポートされていません。プロジェクトとパイプラインで新しいバージョンに切り替えてください。JDK 11 でのビルドを試行しています...",
-  "loc.messages.FailedToLocateSpecifiedJVM": "指定された JDK バージョンが見つかりませんでした。指定された JDK バージョンがエージェントにインストールされていることと、環境変数 '%s' が存在し、対応する JDK の場所に設定されていることを確認するか、[Java ツール インストーラー](https://docs.microsoft.com/ja-JP/vsts/build-release/tasks/tool/java-tool-installer) タスクを使用して必要な JDK をインストールしてください。"
-}

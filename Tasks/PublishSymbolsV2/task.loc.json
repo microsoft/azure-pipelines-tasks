@@ -13,7 +13,7 @@
   "preview": false,
   "version": {
     "Major": 2,
-    "Minor": 210,
+    "Minor": 243,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -181,6 +181,10 @@
   "prejobexecution": {
     "Node10": {
       "target": "PreJobExecutionPublishSymbols.js"
+    },
+    "Node16": {
+      "target": "PreJobExecutionPublishSymbols.js",
+      "argumentFormat": ""
     }
   },
   "execution": {
@@ -192,6 +196,10 @@
     },
     "Node10": {
       "target": "clienttoolmain.js"
+    },
+    "Node16": {
+      "target": "clienttoolmain.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -229,6 +237,7 @@
     "UnableToIndexSources": "ms-resource:loc.messages.UnableToIndexSources",
     "UnexpectedDbghelpdllExpected0Actual1": "ms-resource:loc.messages.UnexpectedDbghelpdllExpected0Actual1",
     "UnsupportedSourceProvider0": "ms-resource:loc.messages.UnsupportedSourceProvider0",
-    "Win32Error0FromMethod1": "ms-resource:loc.messages.Win32Error0FromMethod1"
+    "Win32Error0FromMethod1": "ms-resource:loc.messages.Win32Error0FromMethod1",
+    "NodeVersionSupport": "ms-resource:loc.messages.NodeVersionSupport"
   }
 }

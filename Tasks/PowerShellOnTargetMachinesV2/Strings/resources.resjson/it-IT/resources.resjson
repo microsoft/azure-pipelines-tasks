@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell in computer di destinazione",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=627414)",
+  "loc.helpMarkDown": "[Altre informazioni su questa attività](https://go.microsoft.com/fwlink/?linkid=627414)",
   "loc.description": "Consente di eseguire script PowerShell nei computer remoti",
   "loc.instanceNameFormat": "Esegui PowerShell in $(EnvironmentName)",
   "loc.releaseNotes": "Novità della versione 2.0: <br/>&nbsp;&nbsp; Rimozione del supporto per computer DTL legacy.",

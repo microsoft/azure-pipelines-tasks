@@ -24,7 +24,11 @@ export class JobQueue {
         this.TaskOptions = taskOptions;
     }
 
+#if NODE20
+    private intervalId: NodeJS.Timeout;
+#else
     private intervalId: NodeJS.Timer;
+#endif
     private intervalMillis: number = 100;
 
     public Start(): void {

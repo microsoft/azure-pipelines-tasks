@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const semver = require('semver');
 const tl = require('azure-pipelines-task-lib/task');
+const { pat } = require('minimist')(process.argv.slice(2));
 
 const fileToJson = (...filePath) => {
     const file = path.join(...filePath);
@@ -16,8 +17,13 @@ const verifyMinAgentDemands = async () => {
     console.log('Verifying min agent demands.');
     const octokit = new Octokit();
     const response = await octokit.repos.getLatestRelease({
-        owner: 'microsoft', 
-        repo: 'azure-pipelines-agent'
+        owner: 'microsoft',
+        repo: 'azure-pipelines-agent',
+        ...(pat ? {
+            headers: {
+                authorization: `token ${pat}`
+            }
+        } : null)
     });
 
     // Find the version of the agent that is fully rolled out

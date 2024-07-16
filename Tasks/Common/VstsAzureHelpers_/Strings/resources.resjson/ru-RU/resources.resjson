@@ -2,6 +2,8 @@
   "loc.messages.AZ_AzureRMProfileModuleNotFound": "Модуль \"AzureRM.Profile\" не найден. Возможно, модуль \"AzureRM\" установлен не полностью. Выполнение следующих команд PowerShell из сеанса с повышенными правами может разрешить эту проблему: Import-Module AzureRM; Install-AzureRM",
   "loc.messages.AZ_CertificateAuthNotSupported": "Проверка подлинности на основе сертификатов не поддерживается. Модуль Azure PowerShell не найден.",
   "loc.messages.AZ_CredentialsError": "Произошла ошибка с учетными данными Azure, используемыми для развертывания.",
+  "loc.messages.AZ_CouldNotGenerateOidcToken": "Не удалось создать утверждение клиента для федеративного входа.",
+  "loc.messages.AZ_FederatedTokenFailure": "Не удалось получить федеративный токен для федерации удостоверений рабочей нагрузки. {0}",
   "loc.messages.AZ_ModuleNotFound": "Не удалось найти модули \"{1}\" с версией \"{0}\". Если модуль был установлен недавно, повторите попытку, перезапустив агент задач Azure Pipelines.",
   "loc.messages.AZ_RequiresMinVersion0": "Минимальная требуемая версия ({0}) модуля Azure PowerShell не установлена.",
   "loc.messages.AZ_ServicePrincipalError": "Произошла ошибка с субъектом-службой, используемой для развертывания.",
@@ -11,5 +13,9 @@
   "loc.messages.AZ_InvalidARMEndpoint": "Указана недопустимая конечная точка AzureRM.",
   "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Не удалось получить маркер доступа для управляемого удостоверения. Настройте управляемое удостоверение для виртуальной машины \"https://aka.ms/azure-msi-docs\". Код состояния: \"{0}\", сообщения о состоянии: {1}",
   "loc.messages.AZ_MsiAccessTokenFetchFailure": "Не удалось получить маркер доступа для управляемого удостоверения. Код состояния: '{0}', сообщение о состоянии: {1}",
-  "loc.messages.AZ_MsiFailure": "Не удалось получить маркер доступа для управляемого удостоверения. {0}"
+  "loc.messages.AZ_MsiFailure": "Не удалось получить маркер доступа для управляемого удостоверения. {0}",
+  "loc.messages.AZ_ExpiredServicePrincipalMessageWithLink": "Срок действия секрета истек. Обновите подключение службы по адресу {0}. Подробнее о преобразовании в подключения служб без секретов см. по ссылке https://aka.ms/azdo-rm-workload-identity-conversion.",
+  "loc.messages.AZ_ModuleInitFailWarning": "Не удалось инициализировать существующие модули Az. Откат к установке",
+  "loc.messages.AZ_ModuleInstallFail": "Не удалось установить модули Az",
+  "loc.messages.AZ_RMDeprecationMessage": "Вы используете модуль AzureRM, поддержка которого скоро будет прекращена. Запланируйте обновление."
 }

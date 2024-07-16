@@ -14,16 +14,20 @@ const commitInfo = util.run('git log -1 --format=oneline');
 
 // create the script
 fs.mkdirSync(util.hotfixLayoutPath);
-const scriptPath = path.join(util.hotfixLayoutPath, `${task}.ps1`);
+console.log(`Creating ${util.hotfixLayoutPath}`)
+const scriptPath = path.join(util.hotfixLayoutPath, 'hotfix.ps1');
 const scriptContent = `
 # Hotfix created from branch: ${branch}
 # Commit: ${commitInfo}
+# Hotfixing tasks: ${task}
 $ErrorActionPreference='Stop'
-Update-DistributedTaskDefinitions -TaskZip $PSScriptRoot/${task}.zip
+Update-DistributedTaskDefinitions -TaskZip $PSScriptRoot/hotfix.zip
 `;
 
+console.log(`Writing script into ${scriptPath}`)
 fs.writeFileSync(scriptPath, scriptContent);
 
-// link the non-aggregate tasks zip
-const zipDestPath = path.join(util.hotfixLayoutPath, `${task}.zip`);
-fs.linkSync(util.tasksZipPath, zipDestPath);
+// copy non-aggregate tasks zip
+const zipDestPath = path.join(util.hotfixLayoutPath, 'hotfix.zip');
+console.log(`Copy from ${util.tasksZipPath} to ${zipDestPath}`)
+fs.copyFileSync(util.tasksZipPath, zipDestPath);

@@ -1,0 +1,120 @@
+{
+  "id": "5e1e3830-fbfb-11e5-aab1-090c92bc4988",
+  "name": "ExtractFiles",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/extract-files",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [],
+  "minimumAgentVersion": "2.182.1",
+  "version": {
+    "Major": 1,
+    "Minor": 231,
+    "Patch": 0
+  },
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "archiveFilePatterns",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.archiveFilePatterns",
+      "defaultValue": "**/*.zip",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.archiveFilePatterns",
+      "properties": {
+        "resizable": "true",
+        "rows": "4"
+      }
+    },
+    {
+      "name": "destinationFolder",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.destinationFolder",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.destinationFolder"
+    },
+    {
+      "name": "cleanDestinationFolder",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.cleanDestinationFolder",
+      "required": true,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationFolder"
+    },
+    {
+      "name": "overwriteExistingFiles",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.overwriteExistingFiles",
+      "required": true,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.overwriteExistingFiles"
+    },
+    {
+      "name": "pathToSevenZipTool",
+      "type": "string",
+      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.pathToSevenZipTool",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pathToSevenZipTool"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "extractfilestask.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "extractfilestask.js",
+      "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
+  },
+  "messages": {
+    "ExtractDirFailedinFindFiles": "ms-resource:loc.messages.ExtractDirFailedinFindFiles",
+    "ExtractNotFileFailed": "ms-resource:loc.messages.ExtractNotFileFailed",
+    "ExtractNotAccessibleFile": "ms-resource:loc.messages.ExtractNotAccessibleFile",
+    "SearchInDir": "ms-resource:loc.messages.SearchInDir",
+    "SearchNonExistDir": "ms-resource:loc.messages.SearchNonExistDir",
+    "SearchNonDir": "ms-resource:loc.messages.SearchNonDir",
+    "NoSearchPatternPath": "ms-resource:loc.messages.NoSearchPatternPath",
+    "ResolveRelativePath": "ms-resource:loc.messages.ResolveRelativePath",
+    "UnzipExtractFile": "ms-resource:loc.messages.UnzipExtractFile",
+    "SevenZipExtractFile": "ms-resource:loc.messages.SevenZipExtractFile",
+    "TarExtractFile": "ms-resource:loc.messages.TarExtractFile",
+    "ExtractFileFailedMsg": "ms-resource:loc.messages.ExtractFileFailedMsg",
+    "ExtractNonExistFile": "ms-resource:loc.messages.ExtractNonExistFile",
+    "ExtractDirFailed": "ms-resource:loc.messages.ExtractDirFailed",
+    "CreateTempDir": "ms-resource:loc.messages.CreateTempDir",
+    "TempDir": "ms-resource:loc.messages.TempDir",
+    "DecompressedTempTar": "ms-resource:loc.messages.DecompressedTempTar",
+    "RemoveTempDir": "ms-resource:loc.messages.RemoveTempDir",
+    "ExtractFailedCannotCreate": "ms-resource:loc.messages.ExtractFailedCannotCreate",
+    "NoFilesFound": "ms-resource:loc.messages.NoFilesFound",
+    "FoundFiles": "ms-resource:loc.messages.FoundFiles",
+    "CleanDestDir": "ms-resource:loc.messages.CleanDestDir",
+    "CreateDestDir": "ms-resource:loc.messages.CreateDestDir",
+    "SucceedMsg": "ms-resource:loc.messages.SucceedMsg"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.231.0",
+    "Node20-225": "1.231.1"
+  }
+}

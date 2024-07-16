@@ -2,7 +2,7 @@
     "externals": {
         "archivePackages": [
             {
-                "url": "https://coveragepublisher.blob.core.windows.net/coveragepublisher/10650781/CoveragePublisher.zip",
+                "url": "https://testmanagementstore.blob.core.windows.net/testmanagementcoverage/28229563/CoveragePublisher.zip",
                 "dest": "./"
             }
         ]

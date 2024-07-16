@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "azure-devops-node-api": "^12.1.0"
+  },
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.2",
+    "@types/node": "^20.9.1",
+    "typescript": "^5.2.2"
+  }
+}

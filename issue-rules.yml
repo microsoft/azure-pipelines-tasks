@@ -394,17 +394,17 @@ tags:
   addLabels: ['route']
 
 pathMappings:
-- path: 'AzureDevOps\VSTS\Pipelines\Platform'
+- path: 'AzureDevOps\Pipelines\Pipelines Platform'
   labels: ['Area: Core']
-- path: 'AzureDevOps\VSTS\Pipelines\Application'
+- path: 'AzureDevOps\Pipelines\Application'
   labels: ['Area: Build']
-- path: 'AzureDevOps\VSTS\Pipelines\Integration'
+- path: 'AzureDevOps\Pipelines\Integration'
   labels: ['Area: CrossPlatform']
-- path: 'AzureDevOps\VSTS\Artifacts'
+- path: 'AzureDevOps\Artifacts'
   labels: ['Area: Artifacts', 'Area: ArtifactsCore', 'Area: ArtifactsPackages', 'Area: PipelineArtifact', 'Area: PipelineCaching', 'Area: Symbols']
-- path: 'AzureDevOps\VSTS\Pipelines\RM-Service'
+- path: 'AzureDevOps\Pipelines\Pipelines CD and RM\RM-Service'
   labels: ['Area: Release', 'Area: AzureAppService']
-- path: 'AzureDevOps\VSTS\Pipelines\Test Management and Reporting'
+- path: 'AzureDevOps\Testing\Test Management and Reporting'
   labels: ['Area: Test', 'Area: TestManagement', 'Area: CodeCoverage']
 # TODO - AppCenter owned by teams in AzureDevOps org - probably nothing to be done, worth thinking about
 # - path: 

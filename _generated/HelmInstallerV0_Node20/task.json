@@ -1,0 +1,107 @@
+{
+  "id": "068D5909-43E6-48C5-9E01-7C8A94816220",
+  "name": "HelmInstaller",
+  "friendlyName": "Helm tool installer",
+  "description": "Install Helm and Kubernetes on an agent machine",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/tool/helm-installer",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "category": "Tool",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 238,
+    "Patch": 1
+  },
+  "demands": [],
+  "satisfies": [
+    "Helm"
+  ],
+  "minimumAgentVersion": "2.115.0",
+  "groups": [
+    {
+      "name": "prerequisite",
+      "displayName": "Prerequisite",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "helmVersion",
+      "label": "Helm Version Spec",
+      "type": "string",
+      "required": true,
+      "helpMarkDown": "Specify the version of Helm to install",
+      "defaultValue": "2.14.1"
+    },
+    {
+      "name": "checkLatestHelmVersion",
+      "type": "boolean",
+      "label": "Check for latest version of Helm",
+      "defaultValue": "true",
+      "helpMarkDown": "Check for latest version of Helm."
+    },
+    {
+      "name": "installKubeCtl",
+      "aliases": [
+        "installKubectl"
+      ],
+      "type": "boolean",
+      "label": "Install Kubectl",
+      "defaultValue": "true",
+      "helpMarkDown": "Install Kubectl.",
+      "required": true,
+      "groupName": "prerequisite"
+    },
+    {
+      "name": "kubectlVersion",
+      "label": "Kubectl Version Spec",
+      "type": "string",
+      "helpMarkDown": "Specify the version of Kubectl to install",
+      "defaultValue": "1.8.9",
+      "visibleRule": "installKubeCtl == true",
+      "groupName": "prerequisite"
+    },
+    {
+      "name": "checkLatestKubeCtl",
+      "aliases": [
+        "checkLatestKubectl"
+      ],
+      "type": "boolean",
+      "label": "Check for latest version of kubectl",
+      "defaultValue": "true",
+      "helpMarkDown": "Check for latest version of kubectl.",
+      "visibleRule": "installKubeCtl == true",
+      "groupName": "prerequisite"
+    }
+  ],
+  "instanceNameFormat": "Install Helm $(helmVersion)",
+  "execution": {
+    "Node10": {
+      "target": "src//helmtoolinstaller.js"
+    },
+    "Node16": {
+      "target": "src//helmtoolinstaller.js"
+    },
+    "Node20_1": {
+      "target": "src//helmtoolinstaller.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "DownloadStableVersionFailed": "Failed to read latest kubectl version from stable.txt. From URL %s. Using default stable version %s.",
+    "DownloadKubectlFailedFromLocation": "Failed to download kubectl from location %s. Error %s",
+    "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
+    "HelmNotFoundInFolder": "Helm executable not found in path %s",
+    "HelmDownloadFailed": "Failed to download Helm from location %s. Error %s",
+    "HelmLatestNotKnown": "Cannot get the latest Helm info from %s. Error %s. Using default Helm version %s.",
+    "VerifyHelmInstallation": "Verifying helm installation..."
+  },
+  "_buildConfigMapping": {
+    "Default": "0.238.0",
+    "Node20_229_3": "0.238.1"
+  }
+}

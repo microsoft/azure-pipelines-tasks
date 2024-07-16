@@ -1,0 +1,88 @@
+{
+  "id": "34B37FDD-BBF7-4EF1-B37C-9652CA7BB355",
+  "name": "Go",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/build/go",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "author": "Microsoft Corporation",
+  "category": "Build",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "version": {
+    "Major": 0,
+    "Minor": 238,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "name": "advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "command",
+      "label": "ms-resource:loc.input.label.command",
+      "helpMarkDown": "ms-resource:loc.input.help.command",
+      "type": "pickList",
+      "required": true,
+      "options": {
+        "get": "get",
+        "build": "build",
+        "test": "test",
+        "custom": "custom"
+      },
+      "defaultValue": "get"
+    },
+    {
+      "name": "customCommand",
+      "label": "ms-resource:loc.input.label.customCommand",
+      "helpMarkDown": "ms-resource:loc.input.help.customCommand",
+      "required": true,
+      "type": "string",
+      "visibleRule": "command == custom"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    },
+    {
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingDirectory",
+      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
+      "required": "false",
+      "groupName": "advanced"
+    }
+  ],
+  "dataSourceBindings": [],
+  "execution": {
+    "Node10": {
+      "target": "main.js"
+    },
+    "Node16": {
+      "target": "main.js"
+    }
+  },
+  "messages": {
+    "TaskFailedWithError": "ms-resource:loc.messages.TaskFailedWithError"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.238.0",
+    "Node20_229_3": "0.238.1"
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "id": "6C731C3C-3C68-459A-A5C9-BDE6E6595B5B",
+  "name": "ShellScript",
+  "friendlyName": "Shell script",
+  "description": "Run a shell script using Bash",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/shell-script",
+  "helpMarkDown": "[Learn more about this task](https://go.microsoft.com/fwlink/?LinkID=613738)",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 238,
+    "Patch": 0
+  },
+  "demands": [
+    "sh"
+  ],
+  "instanceNameFormat": "Shell Script $(scriptPath)",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "scriptPath",
+      "type": "filePath",
+      "label": "Script Path",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Relative path from repo root of the shell script file to run."
+    },
+    {
+      "name": "args",
+      "type": "string",
+      "label": "Arguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Arguments passed to the shell script"
+    },
+    {
+      "name": "disableAutoCwd",
+      "type": "boolean",
+      "label": "Specify Working Directory",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "The default behavior is to set the working directory to the script location. This enables you to optionally specify a different working directory.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "cwd",
+      "type": "filePath",
+      "label": "Working Directory",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "disableAutoCwd = true",
+      "helpMarkDown": "Current working directory where the script is run.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory).",
+      "groupName": "advanced"
+    },
+    {
+      "name": "failOnStandardError",
+      "type": "boolean",
+      "label": "Fail on Standard Error",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "If this is true, this task will fail if any errors are written to the StandardError stream.",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "shellscript.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "shellscript.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "BashReturnCode": "Bash exited with return code: %d",
+    "BashFailed": "Bash failed with error: %s",
+    "BashFailedWithCode137": "Bash exited with code 137, which means it ran out of memory. Make sure the agent (container) host has sufficient memory configured."
+  },
+  "_buildConfigMapping": {
+    "Default": "2.238.0",
+    "Node20-225": "2.238.1"
+  }
+}

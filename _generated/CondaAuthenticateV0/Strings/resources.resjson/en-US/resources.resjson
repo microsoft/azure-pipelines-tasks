@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "Conda authenticate (for task runners)",
+  "loc.helpMarkDown": "",
+  "loc.description": "Authentication task for the conda client",
+  "loc.instanceNameFormat": "Conda Authenticate",
+  "loc.messages.FailedToAddAuthentication": "Failed to add authentication.",
+  "loc.messages.AddingAuthChannel": "Adding auth for the token %s"
+}

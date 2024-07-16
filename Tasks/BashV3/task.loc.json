@@ -17,11 +17,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 211,
+    "Minor": 241,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
-  "minimumAgentVersion": "2.206.1",
+  "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "showEnvironmentVariables": true,
   "groups": [
@@ -116,11 +116,13 @@
   "messages": {
     "GeneratingScript": "ms-resource:loc.messages.GeneratingScript",
     "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
+    "JS_ExitCode_137": "ms-resource:loc.messages.JS_ExitCode_137",
     "JS_FormattedCommand": "ms-resource:loc.messages.JS_FormattedCommand",
     "JS_InvalidFilePath": "ms-resource:loc.messages.JS_InvalidFilePath",
     "JS_ScriptContents": "ms-resource:loc.messages.JS_ScriptContents",
     "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
     "JS_TranslatePathFailed": "ms-resource:loc.messages.JS_TranslatePathFailed",
-    "JS_BashEnvAlreadyDefined": "ms-resource:loc.messages.JS_BashEnvAlreadyDefined"
+    "JS_BashEnvAlreadyDefined": "ms-resource:loc.messages.JS_BashEnvAlreadyDefined",
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
   }
 }

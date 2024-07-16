@@ -1,0 +1,16 @@
+{
+  "loc.friendlyName": "Installer Azure Functions Core Tools",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://aka.ms/func-tools-installer)",
+  "loc.description": "Installer Azure Functions Core Tools",
+  "loc.instanceNameFormat": "Installer Azure Functions Core Tools - $(version)",
+  "loc.input.label.version": "Version",
+  "loc.input.help.version": "Spécifier la version d'Azure Functions Core Tools à installer. Exemple :<br><br>2.7.1575<br>v2.7.1575<br>latest",
+  "loc.messages.ErrorFetchingLatestVersion": "Une erreur s'est produite durant la récupération (fetch) des informations relatives à la dernière version de %s. Erreur : %s. Téléchargement de la version stable par défaut : %s.",
+  "loc.messages.FindingLatestFuncToolsVersion": "Recherche de la dernière version d'Azure Functions Core Tools...",
+  "loc.messages.FuncDownloadFailed": "Échec du téléchargement d'Azure Functions Core Tools à partir de l'emplacement %s. Erreur %s.",
+  "loc.messages.LatestFuncToolsVersion": "La dernière version est %s",
+  "loc.messages.NotAValidSemverVersion": "Version non spécifiée au format approprié. Exemple : 2.7.1575, v2.7.1575, latest",
+  "loc.messages.SuccessfullyDownloaded": "Téléchargement réussi d'Azure Functions Core Tools %s. Chemin de téléchargement : %s.",
+  "loc.messages.VerifyingFuncToolsInstallation": "Vérification de l'installation d'Azure Functions Core Tools...",
+  "loc.messages.VersionAlreadyInstalled": "Azure Functions Core Tools version %s est déjà installé. Chemin d'installation : %s."
+}

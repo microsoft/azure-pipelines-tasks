@@ -1,6 +1,9 @@
 $rollForwardTable = @{
     "5.0.0" = "5.1.1";
 };
+$featureFlags = @{
+    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
 
 function Get-SavedModuleContainerPath {
     return $env:SystemDrive + "\Modules";
@@ -30,25 +33,32 @@ function Update-PSModulePathForHostedAgent {
             $hostedAgentAzureModulePath = Get-SavedModulePath -azurePowerShellVersion $targetAzurePs -Classic
         }
         else {
-            $hostedAgentAzureRmModulePath = Get-LatestModule -patternToMatch "^azurerm_[0-9]+\.[0-9]+\.[0-9]+$" -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$" -Classic:$false
-            $hostedAgentAzureModulePath  =  Get-LatestModule -patternToMatch "^azure_[0-9]+\.[0-9]+\.[0-9]+$"   -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$" -Classic:$true
+            $hostedAgentAzureRmModulePath = Get-LatestModule -patternToMatch "^azurerm_[0-9]+\.[0-9]+\.[0-9]+$" -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$" -moduleName:'AzureRM'
+            $hostedAgentAzureModulePath  =  Get-LatestModule -patternToMatch "^azure_[0-9]+\.[0-9]+\.[0-9]+$"   -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$" -moduleName:'Azure'
         }
 
-        if($authScheme -eq 'ServicePrincipal' -or $authScheme -eq 'ManagedServiceIdentity' -or $authScheme -eq '')
-        {
+        if ($authScheme -eq 'WorkloadIdentityFederation' -or $featureFlags.retireAzureRM) {
+            if ($targetAzurePs) {
+                $hostedAgentAzureAzModulePath = (Get-SavedModuleContainerPath) + "\az_" + $targetAzurePs
+            }
+            else {
+                $hostedAgentAzureAzModulePath = Get-LatestModule -patternToMatch "^az_[0-9]+\.[0-9]+\.[0-9]+$" -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$" -moduleName:'Az'
+            }
+            $env:PSModulePath = $hostedAgentAzureAzModulePath + ";" + $env:PSModulePath
+            $env:PSModulePath = $env:PSModulePath.TrimStart(';')
+        } elseif ($authScheme -eq 'ServicePrincipal' -or $authScheme -eq '') {
             $env:PSModulePath = $hostedAgentAzureModulePath + ";" + $env:PSModulePath
             $env:PSModulePath = $env:PSModulePath.TrimStart(';')
             $env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $env:PSModulePath
             $env:PSModulePath = $env:PSModulePath.TrimStart(';')
         }
-        else
-        {
+        else {
             $env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $env:PSModulePath
             $env:PSModulePath = $env:PSModulePath.TrimStart(';')
             $env:PSModulePath = $hostedAgentAzureModulePath + ";" + $env:PSModulePath
             $env:PSModulePath = $env:PSModulePath.TrimStart(';')
         }
-       
+
     } finally {
         Write-Verbose "The updated value of the PSModulePath is: $($env:PSModulePath)"
         Trace-VstsLeavingInvocation $MyInvocation
@@ -59,8 +69,8 @@ function Get-LatestModule {
     [CmdletBinding()]
     param([string] $patternToMatch,
           [string] $patternToExtract,
-          [switch] $Classic)
-    
+          [string] $moduleName)
+
     $resultFolder = ""
     $regexToMatch = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $patternToMatch
     $regexToExtract = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $patternToExtract
@@ -71,11 +81,7 @@ function Get-LatestModule {
         foreach ($moduleFolder in $moduleFolders) {
             $moduleVersion = [version] $($regexToExtract.Match($moduleFolder.Name).Groups[0].Value)
             if($moduleVersion -gt $maxVersion) {
-                if($Classic) {
-                    $modulePath = [System.IO.Path]::Combine($moduleFolder.FullName,"Azure\$moduleVersion\Azure.psm1")
-                } else {
-                    $modulePath = [System.IO.Path]::Combine($moduleFolder.FullName,"AzureRM\$moduleVersion\AzureRM.psm1")
-                }
+                $modulePath = [System.IO.Path]::Combine($moduleFolder.FullName,"$moduleName\$moduleVersion\$moduleName.psm1")
 
                 if(Test-Path -LiteralPath $modulePath -PathType Leaf) {
                     $maxVersion = $moduleVersion

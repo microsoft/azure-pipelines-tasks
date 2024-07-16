@@ -1,3 +1,0 @@
-{
-  "loc.messages.TokenUnavailable": "無法擷取權杖認證供 TFS/Azure Pipelines 封裝之用。"
-}

@@ -1,0 +1,52 @@
+schedules:
+- cron: "0 0 * * *"
+  displayName: Daily
+  branches:
+    include:
+    - master
+  always: true
+
+trigger: none
+pr: none
+
+jobs:
+- job: set_tasks
+  displayName: Set tasks to test
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - bash: |
+      npm i minimist
+    displayName: npm i minimist
+  - bash: |
+      tasks=$(node ./ci/ci-test-tasks/get-tasks.js --exclude "$(TASKS_TO_EXCLUDE)")
+      echo "##vso[task.setvariable variable=tasks;isoutput=true]${tasks}"
+    displayName: Set tasks to test
+    name: set
+
+- job: run_main_test_pipeline
+  displayName: Run main test pipeline
+  dependsOn: set_tasks
+  timeoutInMinutes: 360
+  variables:
+  - name: tasks
+    value: $[dependencies.set_tasks.outputs['set.tasks']]
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - task: NodeTool@0
+    displayName: Use Node 20.x
+    inputs:
+      versionSpec: 20.x
+
+  - script: |
+      cd ./ci/ci-test-tasks/test-and-verify-v2
+      npm i
+      npm run build
+    displayName: 'Build test pipelines runner'
+
+  - bash: |
+      echo "Tasks to test: $(tasks)"
+      node ./ci/ci-test-tasks/test-and-verify-v2 $(ADOToken) $(ADOUrl) $(System.TeamProject) $(tasks)
+    displayName: Run test pipelines and verify results
+    failOnStderr: true

@@ -3,13 +3,13 @@
   "name": "MavenAuthenticate",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://go.microsoft.com/fwlink/?linkid=2099968",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 213,
+    "Minor": 238,
     "Patch": 0
   },
   "runsOn": [
@@ -44,7 +44,7 @@
     {
       "target": "artifactsFeeds",
       "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds?includeUrls=False",
+      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feedids",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }

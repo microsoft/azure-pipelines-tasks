@@ -1,0 +1,51 @@
+parameters:
+- name: task_name
+  type: string
+
+steps:
+- checkout: self
+  fetchDepth: 1
+
+- checkout: AzureDevOps
+  fetchDepth: 1
+
+- task: NodeTool@0
+  displayName: Use node 20
+  inputs:
+    versionSpec: 20.11.0
+
+- script: |
+    cd azure-pipelines-tasks
+    npm install
+  displayName: npm install
+
+- script: |
+    cd azure-pipelines-tasks/ci/courtesy-push
+    npm install
+  displayName: npm install for courtesy push
+
+- task: DownloadBuildArtifacts@0
+  inputs:
+    artifactName: IndividualNugetPackages
+    downloadPath: $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded
+  displayName: Download Artifact
+
+- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps $(Build.SourcesDirectory)/IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
+  displayName: Update unified deps
+
+- powershell: ./azure-pipelines-tasks/ci/set-sprint-variables.ps1
+  displayName: Set currentSprint variables
+
+# returns branchName
+- template: /ci/generate-branch-name.yml@self
+
+- bash: |
+    cd azure-pipelines-tasks/ci/courtesy-push
+    node push-hotfix-branch.js
+    node open-hotfix-pr.js
+  displayName: Create PR
+  env:
+    TOKEN: $(System.AccessToken)
+    TASK_NAME: ${{ parameters.task_name }}
+    REPOSITORY: AzureDevOps
+    BRANCH: $(branchName)

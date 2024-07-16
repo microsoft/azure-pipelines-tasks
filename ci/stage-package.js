@@ -1,6 +1,6 @@
 const util = require('./ci-util');
 
-const hotfix = process.argv[2] == 'true';
+const hotfix = process.argv[2].toLowerCase() == 'true';
 const individually = process.argv[3] == 'individually';
 
 if (individually) {

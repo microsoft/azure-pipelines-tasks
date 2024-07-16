@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "REST API の呼び出し",
-  "loc.helpMarkDown": "[詳細情報](https://go.microsoft.com/fwlink/?linkid=870236)",
+  "loc.helpMarkDown": "[このタスクの詳細](https://go.microsoft.com/fwlink/?linkid=870236)",
   "loc.description": "パイプラインの一部として REST API を呼び出します。",
   "loc.instanceNameFormat": "REST API $(method) の呼び出し",
   "loc.group.displayName.completionOptions": "詳細設定",

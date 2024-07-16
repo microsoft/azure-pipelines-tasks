@@ -1,0 +1,11 @@
+parameters:
+- name: prefix
+  type: string
+  default: "users/$(username)"
+steps:
+- powershell: |
+    $postfix =  if("$(taskNameIsSet)" -eq $true) { "hotfix-buildId-$(Build.BuildId)" } else { "courtesypush" }
+    $branchName = "${{ parameters.prefix }}/m$(currentSprint).$(currentDate)/$postfix"
+    Write-Host $branchName
+    Write-Host "##vso[task.setVariable variable=branchName]$branchName"
+  displayName: Generate branch name

@@ -1,0 +1,93 @@
+{
+  "id": "03DD16C3-43E0-4667-BA84-40515D27A410",
+  "name": "CondaEnvironment",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/package/conda-environment",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 235,
+    "Patch": 0
+  },
+  "demands": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "environmentName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.environmentName",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.environmentName"
+    },
+    {
+      "name": "packageSpecs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packageSpecs",
+      "required": false,
+      "defaultValue": "python=3",
+      "helpMarkDown": "ms-resource:loc.input.help.packageSpecs"
+    },
+    {
+      "name": "updateConda",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.updateConda",
+      "required": false,
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.updateConda"
+    },
+    {
+      "name": "createOptions",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.createOptions",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.createOptions",
+      "groupName": "advanced"
+    },
+    {
+      "name": "cleanEnvironment",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.cleanEnvironment",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cleanEnvironment",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "CleanEnvironment": "ms-resource:loc.messages.CleanEnvironment",
+    "CreateFailed": "ms-resource:loc.messages.CreateFailed",
+    "CondaNotFound": "ms-resource:loc.messages.CondaNotFound",
+    "ReactivateExistingEnvironment": "ms-resource:loc.messages.ReactivateExistingEnvironment",
+    "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized"
+  },
+  "_buildConfigMapping": {
+    "Default": "0.235.0",
+    "Node20-225": "0.235.1"
+  }
+}

@@ -3,10 +3,13 @@
   "loc.helpMarkDown": "",
   "loc.description": "Azure Policy 的安全性与符合性评估",
   "loc.instanceNameFormat": "检查策略合规性",
+  "loc.group.displayName.advancedOptions": "高级",
   "loc.input.label.ConnectedServiceName": "Azure 订阅",
   "loc.input.help.ConnectedServiceName": "选择要强制实施策略的 Azure 资源管理器订阅。",
   "loc.input.label.ResourceGroupName": "资源组",
   "loc.input.help.ResourceGroupName": "提供资源组的名称。",
   "loc.input.label.Resources": "资源名称",
-  "loc.input.help.Resources": "选择要检查其策略符合性的 Azure 资源的名称。"
+  "loc.input.help.Resources": "选择要检查其策略符合性的 Azure 资源的名称。",
+  "loc.input.label.RetryDuration": "重试持续时间",
+  "loc.input.help.RetryDuration": "定义当以前的响应代码为“已接受”时，任务将等待其重试调用 Azure API 的时间段。最短时间段为 2 分钟。"
 }

@@ -3,6 +3,10 @@ param()
 
 Trace-VstsEnteringInvocation $MyInvocation
 
+$featureFlags = @{
+    retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
 # Get inputs for the task
 $connectedServiceNameSelector = Get-VstsInput -Name ConnectedServiceNameSelector -Require
 $sourcePath = Get-VstsInput -Name SourcePath -Require
@@ -50,10 +54,6 @@ $containerName = $containerName.Trim().ToLower()
 $azCopyExeLocation = 'AzCopy\AzCopy.exe'
 $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
 
-# Initialize Azure.
-Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-Initialize-Azure
-
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 
@@ -65,6 +65,15 @@ Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.Distri
 . "$PSScriptRoot\AzureFileCopyJob.ps1"
 . "$PSScriptRoot\Utility.ps1"
 
+if ($featureFlags.retireAzureRM)
+{
+    Modify-PSModulePathForHostedAgent
+}
+
+# Initialize Azure.
+Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+Initialize-Azure
+
 # Enabling detailed logging only when system.debug is true
 $enableDetailedLoggingString = $env:system_debug
 if ($enableDetailedLoggingString -ne "true")
@@ -74,6 +83,19 @@ if ($enableDetailedLoggingString -ne "true")
 
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
+
+# Sanitizer
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+$useSanitizerCall = Get-SanitizerCallStatus
+$useSanitizerActivate = Get-SanitizerActivateStatus
+
+if ($useSanitizerCall) {
+    $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "AzureFileCopyV1"
+}
+
+if ($useSanitizerActivate) {
+    $additionalArguments = $sanitizedArguments -join " "
+}
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
 try {
@@ -97,9 +119,9 @@ try {
 
         # creating storage context to be used while creating container, sas token, deleting container
         $storageContext = Create-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
-        
+
         # Geting Azure Storage Account type
-        $storageAccountType = Get-StorageAccountType -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
+        $storageAccountType = Get-StorageAccountType $storageAccount $connectionType $connectedServiceName
         Write-Verbose "Obtained Storage Account type: $storageAccountType"
         if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.Contains('Premium'))
         {
@@ -112,7 +134,7 @@ try {
             $containerName = [guid]::NewGuid().ToString()
             Create-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage
         }
-        
+
         # Geting Azure Blob Storage Endpoint
 
         $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
@@ -152,13 +174,21 @@ try {
         }
         if(-not [string]::IsNullOrEmpty($outputStorageContainerSASToken))
         {
-            $storageContainerSaSToken = New-AzureStorageContainerSASToken -Container $containerName -Context $storageContext -Permission r -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours)
+            if ($featureFlags.retireAzureRM)
+            {
+                $storageContainerSaSToken = New-AzStorageContainerSASToken -Name $containerName -Context $storageContext -Permission r -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours)
+            }
+            else
+            {
+                $storageContainerSaSToken = New-AzureStorageContainerSASToken -Container $containerName -Context $storageContext -Permission r -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours)
+            }
+
             Write-Host "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken"
         }
 
         Remove-EndpointSecrets
         Write-Verbose "Completed Azure File Copy Task for Azure Blob Destination"
-        
+
         return
     }
 
@@ -168,11 +198,12 @@ try {
         # Normalize admin username
         if($vmsAdminUserName -and (-not $vmsAdminUserName.StartsWith(".\")) -and ($vmsAdminUserName.IndexOf("\") -eq -1) -and ($vmsAdminUserName.IndexOf("@") -eq -1))
         {
-            $vmsAdminUserName = ".\" + $vmsAdminUserName 
+            $vmsAdminUserName = ".\" + $vmsAdminUserName
         }
         # getting azure vms properties(name, fqdn, winrmhttps port)
         $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName -connectionType $connectionType `
-        -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites -connectedServiceName $connectedServiceName
+            -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites `
+            -connectedServiceName $connectedServiceName
 
         $skipCACheckOption = Get-SkipCACheckOption -skipCACheck $skipCACheck
         $azureVMsCredentials = Get-AzureVMsCredentials -vmsAdminUserName $vmsAdminUserName -vmsAdminPassword $vmsAdminPassword
@@ -180,12 +211,12 @@ try {
         # generate container sas token with full permissions
         $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInHours $defaultSasTokenTimeOutInHours
 
-        #copies files on azureVMs 
+        #copies files on azureVMs
         Copy-FilesToAzureVMsFromStorageContainer `
             -storageAccountName $storageAccount -containerName $containerName -containerSasToken $containerSasToken -blobStorageEndpoint $blobStorageEndpoint -targetPath $targetPath -azCopyLocation $azCopyLocation `
             -resourceGroupName $environmentName -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
             -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $useHttpsProtocolOption -skipCACheckOption $skipCACheckOption `
-            -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -copyFilesInParallel $copyFilesInParallel -connectionType $connectionType
+            -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -copyFilesInParallel $copyFilesInParallel -connectionType $connectionType -useSanitizerActivate $useSanitizerActivate
     }
     catch
     {

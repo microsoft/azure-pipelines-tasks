@@ -1,6 +1,10 @@
 [CmdletBinding()]
 param()
 
+$featureFlags = @{
+    retireAzureRM = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
+}
+
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 Microsoft.PowerShell.Core\Import-Module Microsoft.PowerShell.Security
@@ -63,6 +67,11 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Set-CurrentAzureSubscription
     Register-Mock Set-CurrentAzureRMSubscription
     Register-Mock Set-UserAgent
+
+    Register-Mock Add-AzAccount
+    Register-Mock Connect-AzAccount 
+    Register-Mock Set-CurrentAzSubscription 
+
     & $module {
         $script:azureModule = $null
         $script:azureRMProfileModule = $null
@@ -91,7 +100,7 @@ foreach ($variableSet in $variableSets) {
         Assert-WasCalled Set-CurrentAzureSubscription -- -SubscriptionId $endpoint.Data.SubscriptionId -StorageAccount $variableSet.StorageAccount
     }
 
-    if ($variableSet.AzureRM) {
+    if ($variableSet.AzureRM -and (-not $featureFlags.retireAzureRM)) {
         Assert-WasCalled Add-AzureRMAccount -ArgumentsEvaluator {
             $args.Length -eq 2 -and
             $args[0] -eq '-Credential' -and

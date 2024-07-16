@@ -1,9 +1,15 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import * as path from "path";
 import * as fs from "fs";
+#if NODE20
+import * as extract from 'extract-zip'
+#else
+var DecompressZip = require('decompress-zip');
+#endif
+
 var tar = require("tar-fs");
 var zlib = require("zlib");
-var DecompressZip = require('decompress-zip');
+
 
 export class PackageFile {
     public readonly win: boolean;
@@ -40,6 +46,7 @@ export class PackageFile {
         const fileEnding = path.parse(this.initialLocation).ext;
         switch (fileEnding) {
             case ".zip":
+            case ".crate":
             case ".nupkg":
                 return this.unzip(this.initialLocation, this.finalLocation);
             case ".tgz":
@@ -61,7 +68,14 @@ export class PackageFile {
     private async unzip(zipLocation: string, unzipLocation: string): Promise<void> {
         return new Promise<void>(function(resolve, reject) {
             tl.debug("Extracting " + zipLocation + " to " + unzipLocation);
-
+#if NODE20
+            tl.debug(`Using extract-zip package for extracting archive`);
+            extract(zipLocation, { dir: unzipLocation }).then(() => {
+                resolve();
+            }).catch((error) => {
+                reject(error);
+            });
+#else
             var unzipper = new DecompressZip(zipLocation);
             unzipper.on("error", err => {
                 return reject(tl.loc("ExtractionFailed", err));
@@ -74,6 +88,7 @@ export class PackageFile {
             unzipper.extract({
                 path: path.normalize(unzipLocation)
             });
+#endif
         });
     }
 }

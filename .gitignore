@@ -5,12 +5,6 @@ _temp/
 gulp-tsc-tmp-*
 .gulp-tsc-tmp-*
 
-common-npm-packages/**/*.js
-!common-npm-packages/**/make.js
-!common-npm-packages/**/publish.js
-!common-npm-packages/build-scripts/**.js
-common-npm-packages/**/*openssl.zip
-common-npm-packages/utility-common-v2/tools/*
 [Tt]asks/**/*.js
 [Tt]ests/**/*.js
 !**/mock_node_modules/**/*.js
@@ -84,6 +78,11 @@ dlldata.c
 *.pidb
 *.svclog
 *.scc
+
+!_generated/PublishTestResultsV1_Node20/Tests/data/a.log
+!_generated/PublishTestResultsV1_Node20/Tests/data/b.log
+!_generated/PublishTestResultsV1_Node20/Tests/data/rec/a.log
+!_generated/PublishTestResultsV1_Node20/Tests/data/rec/b.log
 
 # Chutzpah Test files
 _Chutzpah*
@@ -217,3 +216,9 @@ ModelManifest.xml
 /Package
 LoadTest.code-workspace
 .idea/
+.nyc_output/
+_dotnetsdk/
+
+# BuildConfigGen files
+FilesOverriddenForConfigGoHereREADME.txt
+

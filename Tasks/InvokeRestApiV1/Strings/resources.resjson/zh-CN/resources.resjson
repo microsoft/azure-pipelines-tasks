@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "调用 REST API",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=870236)",
+  "loc.helpMarkDown": "[详细了解此任务](https://go.microsoft.com/fwlink/?linkid=870236)",
   "loc.description": "在管道中调用 REST API。",
   "loc.instanceNameFormat": "调用 REST API: $(method)",
   "loc.group.displayName.completionOptions": "高级",

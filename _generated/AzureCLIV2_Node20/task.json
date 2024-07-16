@@ -1,0 +1,236 @@
+{
+  "id": "46E4BE58-730B-4389-8A2F-EA10B3E5E815",
+  "name": "AzureCLI",
+  "friendlyName": "Azure CLI",
+  "description": "Run Azure CLI commands against an Azure subscription in a PowerShell Core/Shell script when running on Linux agent or PowerShell/PowerShell Core/Batch script when running on Windows agent.",
+  "author": "Microsoft Corporation",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/deploy/azure-cli",
+  "helpMarkDown": "[Learn more about this task](http://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureCLIV2/Readme.md) or [see the Azure CLI documentation](https://docs.microsoft.com/cli/azure/)",
+  "releaseNotes": "What's new in Version 2.0:\n- Support for PowerShell and PowerShell Core script. \n- PowerShell Core works with cross-platform agents (Linux, macOS, or Windows), make sure the agent has PowerShell version 6 or more. \n- Powershell script works with only Windows agent, make sure the agent has PowerShell version 5 or below.",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [],
+  "version": {
+    "Major": 2,
+    "Minor": 242,
+    "Patch": 1
+  },
+  "minimumAgentVersion": "2.0.0",
+  "instanceNameFormat": "Azure CLI $(scriptPath)",
+  "showEnvironmentVariables": true,
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "connectedServiceNameARM",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "Azure Resource Manager connection",
+      "required": true,
+      "helpMarkDown": "Select an Azure Resource Manager service connection for the deployment",
+      "properties": {
+        "EndpointFilterRule": ""
+      }
+    },
+    {
+      "name": "scriptType",
+      "type": "pickList",
+      "label": "Script Type",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Type of script: PowerShell/PowerShell Core/Bat/Shell script. Select Shell/PowerShell Core script when running on Linux agent or Batch/PowerShell/PowerShell Core script when running on Windows agent. PowerShell Core script can run on cross-platform agents (Linux, macOS, or Windows).",
+      "options": {
+        "ps": "PowerShell",
+        "pscore": "PowerShell Core",
+        "batch": "Batch",
+        "bash": "Shell"
+      }
+    },
+    {
+      "name": "scriptLocation",
+      "type": "pickList",
+      "label": "Script Location",
+      "defaultValue": "scriptPath",
+      "required": true,
+      "helpMarkDown": "Path to script: File path or Inline script",
+      "options": {
+        "inlineScript": "Inline script",
+        "scriptPath": "Script path"
+      }
+    },
+    {
+      "name": "scriptPath",
+      "type": "filePath",
+      "label": "Script Path",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "scriptLocation = scriptPath",
+      "helpMarkDown": "Fully qualified path of the script(.ps1 or .bat or .cmd when using Windows based agent else .ps1 or .sh when using linux based agent) or a path relative to the the default working directory"
+    },
+    {
+      "name": "inlineScript",
+      "type": "multiLine",
+      "label": "Inline Script",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "scriptLocation = inlineScript",
+      "helpMarkDown": "You can write your scripts inline here. When using Windows agent, use PowerShell or PowerShell Core or batch scripting whereas use PowerShell Core or shell scripting when using Linux based agents. For batch files use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for PowerShell/PowerShellCore/shell: \naz --version \naz account show \n\n example for batch:\ncall  az --version \ncall az account show",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000"
+      }
+    },
+    {
+      "name": "scriptArguments",
+      "aliases": [
+        "arguments"
+      ],
+      "type": "string",
+      "label": "Script Arguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Arguments passed to the script",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      }
+    },
+    {
+      "name": "powerShellErrorActionPreference",
+      "type": "pickList",
+      "label": "ErrorActionPreference",
+      "required": false,
+      "defaultValue": "stop",
+      "options": {
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "visibleRule": "scriptType = ps || scriptType = pscore",
+      "helpMarkDown": "Prepends the line `$ErrorActionPreference = 'VALUE'` at the top of your powershell/powershell core script."
+    },
+    {
+      "name": "addSpnToEnvironment",
+      "type": "boolean",
+      "label": "Access service principal details in script",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Adds service principal id, service principal key and tenant id of the Azure endpoint you chose to the script's execution environment. You can use variables: `servicePrincipalId`, `servicePrincipalKey` and `tenantId` in your script.\n\nThis is honored only when the Azure endpoint has Service Principal authentication scheme.\n\nSyntax to access environment variables based on script type.\n\nPowershell script: $env:servicePrincipalId\n\nBatch script: %servicePrincipalId% \n\nShell script: $servicePrincipalId",
+      "groupName": "advanced"
+    },
+    {
+      "name": "useGlobalConfig",
+      "type": "boolean",
+      "label": "Use global Azure CLI configuration",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "If this is false, this task will use its own separate [Azure CLI configuration directory](https://docs.microsoft.com/en-us/cli/azure/azure-cli-configuration?view=azure-cli-latest#cli-configuration-file). This can be used to run Azure CLI tasks in *parallel* releases",
+      "groupName": "advanced"
+    },
+    {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
+      "type": "filePath",
+      "label": "Working Directory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Current working directory where the script is run.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
+      "groupName": "advanced"
+    },
+    {
+      "name": "failOnStandardError",
+      "type": "boolean",
+      "label": "Fail on Standard Error",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "If this is true, this task will fail when any errors are written to the StandardError stream. Unselect the checkbox to ignore standard errors and rely on exit codes to determine the status",
+      "groupName": "advanced"
+    },
+    {
+      "name": "powerShellIgnoreLASTEXITCODE",
+      "type": "boolean",
+      "label": "Ignore $LASTEXITCODE",
+      "required": false,
+      "defaultValue": "false",
+      "visibleRule": "scriptType = ps || scriptType = pscore",
+      "helpMarkDown": "If this is false, the line `if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }` is appended to the end of your script. This will cause the last exit code from an external command to be propagated as the exit code of powershell. Otherwise the line is not appended to the end of your script.",
+      "groupName": "advanced"
+    },
+    {
+      "name": "visibleAzLogin",
+      "type": "boolean",
+      "label": "az login output visibility",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "If this is set to true, az login command will output to the task. Setting it to false will suppress the az login output",
+      "groupName": "advanced"
+    },
+    {
+      "name": "keepAzSessionActive",
+      "type": "boolean",
+      "label": "[Experimental] Keep Azure CLI session active",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "When enabled, this task will continuously sign into Azure to avoid AADSTS700024 errors when requesting access tokens beyond the IdToken expiry date. Note that this feature is EXPERIMENTAL, may not work in all scenarios and you are using it without any guarantees. Valid only for service connections using the Workload Identity Federation authentication scheme.",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "azureclitask.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "azureclitask.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "azureclitask.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ScriptReturnCode": "Script exited with return code: %d",
+    "ScriptFailed": "Script failed with error: %s",
+    "ScriptFailedStdErr": "Script has output to stderr. Failing as failOnStdErr is set to true.",
+    "ScriptFailedWithExitCode": "Script failed with exit code: %d",
+    "UnsupportedEndpointScheme": "Unsupported service connection authorization scheme: Service Principal for AzureRM",
+    "AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
+    "FailedToLogout": "The following error occurred while logging out: %s",
+    "LoginFailed": "Azure login failed",
+    "MSILoginFailed": "Azure login failed using Managed Service Identity",
+    "AuthSchemeNotSupported": "Auth Scheme %s is not supported",
+    "ErrorInSettingUpSubscription": "Error in setting up subscription",
+    "SettingAzureConfigDir": "Setting AZURE_CONFIG_DIR env variable to: %s",
+    "SettingAzureCloud": "Setting active cloud to: %s",
+    "JS_InvalidFilePath": "Script file could not be found at specified script location: '%s'. Please verify the script exists at the specified path. If you want to use inline script, specify input `Script Location` as `inlineScript`.",
+    "JS_InvalidErrorActionPreference": "Invalid ErrorActionPreference '%s'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
+    "GlobalCliConfigAgentVersionWarning": "For agent version < 2.115.0, only global Azure CLI configuration can be used",
+    "UnacceptedScriptLocationValue": "%s is not a valid value for task input 'Script Location' (scriptLocation in YAML). Value can either be'inlineScript' or 'scriptPath'",
+    "ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at\u00A0%s See\u00A0https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections.",
+    "ProxyConfig": "az tool is configured to use %s as proxy server",
+    "FailedToRefreshAzSession": "The following error occurred while trying to refresh az-cli session: %s",
+    "RefreshingAzSession": "Attempting to refresh az-cli session...",
+    "KeepingAzSessionActiveUnsupportedScheme": "The 'keepAzSessionActive' input might be used only for workload identity federation ARM service connection. The referenced service endpoint auth scheme was unexpected: %s. Change the scheme or remove 'keepAzSessionActive' input."
+  },
+  "_buildConfigMapping": {
+    "Default": "2.242.0",
+    "Node20_229_2": "2.242.1"
+  }
+}

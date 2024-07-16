@@ -1,0 +1,68 @@
+{
+  "id": "2003AD3A-104A-451A-9238-60474AB294E6",
+  "name": "ManualValidation",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://aka.ms/manual-validation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "runsOn": [
+    "Server"
+  ],
+  "version": {
+    "Major": 1,
+    "Minor": 242,
+    "Patch": 1
+  },
+  "inputs": [
+    {
+      "name": "notifyUsers",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.notifyUsers",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.notifyUsers"
+    },
+    {
+      "name": "approvers",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.approvers",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.approvers"
+    },
+    {
+      "name": "instructions",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.instructions",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.instructions",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "4000"
+      }
+    },
+    {
+      "name": "onTimeout",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.onTimeout",
+      "defaultValue": "reject",
+      "required": false,
+      "options": {
+        "reject": "Reject",
+        "resume": "Resume"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.onTimeout"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "ManualValidationV1": {}
+  }
+}

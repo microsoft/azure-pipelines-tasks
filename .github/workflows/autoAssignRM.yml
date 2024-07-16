@@ -1,0 +1,22 @@
+name: Auto Assign RM to Project Board
+
+on:
+  issues:
+    types:
+      - opened
+      - labeled
+
+jobs:
+  assign_one_project:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    name: Assign to RM Project
+    steps:
+    - name: "Assign issues with 'Area: RM' label to project board"
+      uses: actions/add-to-project@v0.4.1
+      with:
+        project-url: https://github.com/orgs/microsoft/projects/892
+        github-token: ${{ secrets.RM_TOKEN }} #reach-out to v-mohithgc@microsoft.com / razvanmanole@microsoft.com if any issues with the token.
+        labeled: Area:RM, Task:AzureAppService, Task:AzureCLI, Task:AzureCloudPowerShell, Task:AzureFileCopy, Task:AzureKeyVault, Task:AzureMonitor, Task:AzureMysqlDeployment, Task:AzurePowerShell, Task:AzureRmWebAppDeployment, Task:AzureWebApp, Task:Docker, Task:DotNetCore, Task:FileTransform, Task:Helm, Task:Kubernetes
+        label-operator: OR

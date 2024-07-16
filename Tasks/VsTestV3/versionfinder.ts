@@ -117,6 +117,14 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
 
     const vsVersion: number = parseFloat(testConfig.vsTestVersion);
 
+    if (vsVersion === 17.0) {                                                       //Visual Studio 2022
+        const vstestconsolePath = getVSTestConsolePath('17.0', '18.0');
+        if (vstestconsolePath) {
+            return path.join(vstestconsolePath, 'Common7', 'IDE', 'Extensions', 'TestPlatform');
+        }
+        throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
+    }
+
     if (vsVersion === 16.0) {
         const vstestconsolePath = getVSTestConsolePath('16.0', '17.0');
         if (vstestconsolePath) {
