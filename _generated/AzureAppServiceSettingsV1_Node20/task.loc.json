@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 242,
+    "Minor": 243,
     "Patch": 1
   },
   "minimumAgentVersion": "2.104.1",
@@ -188,7 +188,7 @@
     "ConnectionStringInvalidJSON": "ms-resource:loc.messages.ConnectionStringInvalidJSON"
   },
   "_buildConfigMapping": {
-    "Default": "1.242.0",
-    "Node20_229_2": "1.242.1"
+    "Default": "1.243.0",
+    "Node20_229_2": "1.243.1"
   }
 }
