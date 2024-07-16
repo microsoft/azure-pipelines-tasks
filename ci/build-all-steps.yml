@@ -75,7 +75,7 @@ steps:
   condition: and(succeeded(), and(ne(variables['numTasks'], 0), eq(variables['weekly_run'], False)))
 
 # Build Tasks 
-- script: node make.js serverBuild
+- script: node make.js serverBuild --task ArchiveFilesV2 # TODO temporary build task which has vulnerable package
   displayName: Build Tasks
   condition: and(succeeded(), eq(variables['weekly_run'], True))
 
