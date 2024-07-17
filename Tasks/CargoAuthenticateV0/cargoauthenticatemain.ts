@@ -92,7 +92,7 @@ async function main(): Promise<void> {
                     }      
                 }
                 // Default to internal registry if no token has been set yet
-                if (!currentRegistry) {
+                if (!currentRegistry && !tl.getVariable(tokenName)) {
                     tl.debug(tl.loc('AddingAuthRegistry', registry, tokenName));
                     setSecretEnvVariable(tokenName, localAccesstoken);
                     tl.setVariable(credProviderName, "cargo:token");
