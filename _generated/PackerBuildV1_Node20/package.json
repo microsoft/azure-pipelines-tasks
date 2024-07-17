@@ -7,7 +7,7 @@
     "@types/q": "^1.0.7",
     "agent-base": "^6.0.2",
     "azure-pipelines-task-lib": "^4.12.0",
-    "azure-pipelines-tasks-azure-arm-rest": "3.239.0",
+    "azure-pipelines-tasks-azure-arm-rest": "3.242.2",
     "decompress-zip": "^0.3.3",
     "extract-zip": "2.0.1"
   },
