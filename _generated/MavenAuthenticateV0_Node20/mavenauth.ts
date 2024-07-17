@@ -44,12 +44,15 @@ async function run(): Promise<void> {
 
         if (tl.exist(userSettingsXmlPath)) {
             tl.debug(tl.loc("Info_SettingsXmlRead", userSettingsXmlPath));
-            tl.cp(userSettingsXmlPath, backupSettingsXmlPath);
-            tl.setTaskVariable("backupUserM2SettingsFilePath", backupSettingsXmlPath);
+            if (!tl.getVariable('FIRST_RUN_SETTINGS_XML_EXISTS_PATH') && !tl.exist(backupSettingsXmlPath)) {
+                tl.cp(userSettingsXmlPath, backupSettingsXmlPath);
+                tl.setTaskVariable("backupUserM2SettingsFilePath", backupSettingsXmlPath);
+            }
             settingsJson = await util.readXmlFileAsJson(userSettingsXmlPath);
         }
         else {
             tl.debug(tl.loc("Info_CreatingSettingsXml", userSettingsXmlPath));
+            tl.setVariable('FIRST_RUN_SETTINGS_XML_EXISTS_PATH', userSettingsXmlPath);
         }
 
         for (let serverElement of newServerElements) {
