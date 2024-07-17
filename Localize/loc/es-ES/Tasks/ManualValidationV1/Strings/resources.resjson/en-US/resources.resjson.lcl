@@ -12,10 +12,13 @@
       <Disp Icon="Str" Disp="true" LocTbl="false" />
       <Item ItemId=";loc.description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[[PREVIEW]5D; Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.]]></Val>
+          <Val><![CDATA[Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[[VISTA PREVIA]5D; Pausa una ejecución de canalización para esperar la interacción manual. Solo funciona con las canalizaciones de YAML.]]></Val>
+            <Val><![CDATA[Pausa una ejecución de canalización para esperar la interacción manual. Solo funciona con las canalizaciones de YAML.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[[PREVIEW]5D; Pause a pipeline run to wait for manual interaction. Works only with YAML pipelines.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
