@@ -9,7 +9,7 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 242,
+    "Minor": 243,
     "Patch": 0
   },
   "runsOn": [
@@ -44,8 +44,8 @@
     },
     {
       "name": "workloadIdentityServiceConnection",
-      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-      "helpMarkDown": "If this is set, feedUrl is required. All other inputs are ignored.",
+      "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
+      "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
       "type": "connectedService:workloadidentityuser",
       "required": false,
       "properties": {
@@ -56,8 +56,8 @@
     },
     {
       "name": "feedUrl",
-      "label": "Azure Artifacts Feeds url.",
-      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonDownloadServiceConnections. ",
+      "label": "ms-resource:loc.input.label.feedUrl",
+      "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
       "type": "string",
       "defaultValue": "",
       "required": false,
@@ -117,18 +117,13 @@
     "Info_AddingTokenAuthEntry": "ms-resource:loc.messages.Info_AddingTokenAuthEntry",
     "Error_FailedToParseFeedUrlAndAuth": "ms-resource:loc.messages.Error_FailedToParseFeedUrlAndAuth",
     "FailedToGetPackagingUri": "ms-resource:loc.messages.FailedToGetPackagingUri",
-    "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
     "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
+    "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
     "Warn_TooManyFeedEntries": "ms-resource:loc.messages.Warn_TooManyFeedEntries",
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
   },
   "_buildConfigMapping": {
-<<<<<<< HEAD
-    "Default": "1.242.0",
-    "Node20_229_1": "1.242.1"
-=======
-    "Default": "1.238.0",
-    "wif_242": "1.242.16"
->>>>>>> origin/users/embetten/wif-build-gen
+    "Default": "1.243.0",
+    "wif_242": "1.243.8"
   }
 }

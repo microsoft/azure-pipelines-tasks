@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 242,
-    "Patch": 1
+    "Minor": 243,
+    "Patch": 7
   },
   "runsOn": [
     "Agent",
@@ -127,7 +127,7 @@
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
   },
   "_buildConfigMapping": {
-    "Default": "1.238.0",
-    "Node20_229_1": "1.242.1"
+    "Default": "1.243.0",
+    "Node20_229_1": "1.243.7"
   }
 }

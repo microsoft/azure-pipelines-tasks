@@ -15,7 +15,7 @@ describe('Pip Authenticate V1 Suite', function () {
         let tp = path.join(__dirname, './setAuthInternalFeed.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        tr.runAsync();
         assert(tr.invokedToolCount == 0, 'no tool should be invoked.');
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
