@@ -54,10 +54,6 @@ $containerName = $containerName.Trim().ToLower()
 $azCopyExeLocation = 'AzCopy\AzCopy.exe'
 $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
 
-# Initialize Azure.
-Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-Initialize-Azure
-
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 
@@ -68,6 +64,15 @@ Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.Distri
 # Load all dependent files for execution
 . "$PSScriptRoot\AzureFileCopyJob.ps1"
 . "$PSScriptRoot\Utility.ps1"
+
+if ($featureFlags.retireAzureRM)
+{
+    Modify-PSModulePathForHostedAgent
+}
+
+# Initialize Azure.
+Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+Initialize-Azure
 
 # Enabling detailed logging only when system.debug is true
 $enableDetailedLoggingString = $env:system_debug

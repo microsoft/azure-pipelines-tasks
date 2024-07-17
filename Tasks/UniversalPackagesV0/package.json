@@ -20,9 +20,9 @@
         "@types/mocha": "^5.2.7",
         "@types/node": "^16.11.39",
         "@types/uuid": "^8.3.0",
-        "azure-pipelines-task-lib": "^4.1.0",
-        "azure-pipelines-tasks-packaging-common": "^3.239.0",
-        "azure-pipelines-tasks-utility-common": "^3.212.0"
+        "azure-pipelines-task-lib": "^4.13.0",
+        "azure-pipelines-tasks-packaging-common": "^3.230.0",
+        "azure-pipelines-tasks-utility-common": "^3.238.0"
     },
     "devDependencies": {
         "typescript": "4.0.2"

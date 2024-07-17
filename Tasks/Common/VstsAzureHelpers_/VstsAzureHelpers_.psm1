@@ -55,7 +55,7 @@ function Initialize-Azure {
         $WarningPreference = "SilentlyContinue"
 
         if ($featureFlags.retireAzureRM) {
-            Initialize-AzModule -Endpoint $endpoint -azVersion $azurePsVersion
+            Initialize-AzModule -Endpoint $endpoint
         }
         else {
             # Determine which modules are preferred.

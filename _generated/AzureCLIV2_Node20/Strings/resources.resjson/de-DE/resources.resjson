@@ -29,6 +29,10 @@
   "loc.input.help.failOnStandardError": "Bei aktivierter Option kann diese Aufgabe nicht erfolgreich ausgeführt werden, wenn Fehler in den StandardError-Stream geschrieben werden. Deaktivieren Sie das Kontrollkästchen, um Standardfehler zu ignorieren, und bestimmen Sie den Status mithilfe von Exitcodes.",
   "loc.input.label.powerShellIgnoreLASTEXITCODE": "$LASTEXITCODE ignorieren",
   "loc.input.help.powerShellIgnoreLASTEXITCODE": "Wenn dieser Wert FALSE ist, wird am Ende Ihres Skripts die Zeile \"if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }\" angehängt. Dadurch wird der letzte Exitcode aus einem externen Befehl als Exitcode der PowerShell weitergegeben. Andernfalls wird die Zeile nicht an das Ende Ihres Skripts angehängt.",
+  "loc.input.label.visibleAzLogin": "Ausgabesichtbarkeit der az-Anmeldung",
+  "loc.input.help.visibleAzLogin": "Durch Festlegen auf „true“ wird der az-Anmeldebefehl an die Aufgabe ausgegeben. Durch Festlegen auf „false“ wird die Ausgabe der az-Anmeldung unterdrückt.",
+  "loc.input.label.keepAzSessionActive": "[Experimentell] Azure CLI-Sitzung aktiv halten",
+  "loc.input.help.keepAzSessionActive": "Wenn diese Option aktiviert ist, meldet die Aufgabe sich kontinuierlich bei Azure an, um AADSTS700024 Fehler beim Anfordern von Zugriffstoken über das IdToken-Ablaufdatum hinaus zu vermeiden. Beachten Sie, dass dieses Feature EXPERIMENTELL ist und möglicherweise nicht in allen Szenarien funktioniert und Sie es ohne jegliche Gewährleistungen verwenden. Gilt nur für Dienstverbindungen, die das Authentifizierungsschema des Workloadidentitätsverbunds verwenden.",
   "loc.messages.ScriptReturnCode": "Skript wurde mit Rückgabecode beendet: %d",
   "loc.messages.ScriptFailed": "Skriptfehler: %s",
   "loc.messages.ScriptFailedStdErr": "Das Skript weist Ausgabe in stderr auf. Dies verursacht einen Fehler, weil \"failOnStdErr\" auf TRUE festgelegt ist.",
@@ -46,5 +50,9 @@
   "loc.messages.JS_InvalidErrorActionPreference": "ErrorActionPreference \"%s\" ungültig. Der Wert muss \"Stop\", \"Continue\" oder \"SilentlyContinue\" sein.",
   "loc.messages.GlobalCliConfigAgentVersionWarning": "Für Agent-Versionen vor 2.115.0 kann nur die globale Azure CLI-Konfiguration verwendet werden.",
   "loc.messages.UnacceptedScriptLocationValue": "\"%s\" ist kein gültiger Wert für die Aufgabeneingabe für den Skriptspeicherort (\"scriptLocation\" in YAML). Der Wert kann entweder \"inlineScript\"oder \"scriptPath\" lauten.",
-  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Secret expired, update service connection at %s See https://aka.ms/azdo-rm-workload-identity-conversion to learn more about conversion to secret-less service connections."
+  "loc.messages.ExpiredServicePrincipalMessageWithLink": "Das Geheimnis ist abgelaufen. Aktualisieren Sie die Dienstverbindung unter %s. Weitere Informationen zur Konvertierung in Dienstverbindungen ohne Geheimnis finden Sie unter https://aka.ms/azdo-rm-workload-identity-conversion.",
+  "loc.messages.ProxyConfig": "Das az-Tool ist für die Verwendung von „%s“ als Proxyserver konfiguriert.",
+  "loc.messages.FailedToRefreshAzSession": "Fehler beim Aktualisieren der AZ-CLI-Sitzung: %s",
+  "loc.messages.RefreshingAzSession": "Es wird versucht, die AZ-CLI-Sitzung zu aktualisieren...",
+  "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "Die Eingabe \"keepAzSessionActive\" kann nur für die ARM-Dienstverbindung des Workloadidentitätsverbunds verwendet werden. Das Authentifizierungsschema des Dienstendpunkts, auf das verwiesen wird, war unerwartet: %s. Ändern Sie das Schema, oder entfernen Sie die Eingabe \"keepAzSessionActive\"."
 }

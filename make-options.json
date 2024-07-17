@@ -76,6 +76,7 @@
         "DockerV1",
         "DockerV2",
         "DockerComposeV0",
+        "DockerComposeV1",
         "DockerInstallerV0",
         "DotNetCoreCLIV2",
         "DotNetCoreInstallerV0",
@@ -110,6 +111,7 @@
         "GulpV0",
         "GulpV1",
         "HelmDeployV0",
+        "HelmDeployV1",
         "HelmInstallerV0",
         "HelmInstallerV1",
         "IISWebAppDeployment",
@@ -341,6 +343,7 @@
         "GoV0",
         "GoToolV0",
         "HelmDeployV0",
+        "HelmDeployV1",
         "HelmInstallerV0",
         "HelmInstallerV1",
         "IISWebAppDeploymentOnMachineGroupV0",
@@ -400,5 +403,14 @@
     ],
     "Node20_229_14": [
         "PublishSymbolsV2"
+    ],
+    "wif_242": [
+        "CargoAuthenticateV0",
+        "CondaAuthenticateV0",
+        "MavenAuthenticateV0",
+        "NpmAuthenticateV0",
+        "NuGetAuthenticateV1",
+        "PipAuthenticateV1",
+        "TwineAuthenticateV1"
     ]
 }

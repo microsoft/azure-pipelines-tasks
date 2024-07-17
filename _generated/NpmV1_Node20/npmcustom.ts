@@ -26,7 +26,7 @@ export async function run(packagingLocation: PackagingLocation, command?: string
     const npm = new NpmToolRunner(workingDir, npmrc, overrideNpmrc);
     npm.line(command || tl.getInput(NpmTaskInput.CustomCommand, true));
 
-    npm.execSync();
+    await npm.exec();
 
     tl.rmRF(npmrc);
     tl.rmRF(util.getTempPath());

@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "手动验证",
+  "loc.helpMarkDown": "[详细了解此任务](https://aka.ms/manual-validation)",
+  "loc.description": "[PREVIEW] 暂停管道运行以等待手动交互。仅适用于 YAML 管道。",
+  "loc.instanceNameFormat": "手动验证",
+  "loc.input.label.notifyUsers": "通知用户",
+  "loc.input.help.notifyUsers": "将手动验证挂起电子邮件发送到特定用户(或组)。只有审批者中指定的用户才能执行手动验证。",
+  "loc.input.label.approvers": "审批者",
+  "loc.input.help.approvers": "指定用户/组/项目团队(以逗号分隔)，以执行手动验证。如果没有输入，则具有队列生成权限的用户将能够执行操作。",
+  "loc.input.label.instructions": "说明",
+  "loc.input.help.instructions": "将向用户显示这些说明，以便恢复或拒绝手动验证。用户根据这些说明，对此手动验证作出知情的决策。",
+  "loc.input.label.onTimeout": "超时时",
+  "loc.input.help.onTimeout": "手动验证的挂起状态超过指定超时或 30 天后，系统将自动拒绝或继续此手动验证，以首先达到的条件为准。"
+}

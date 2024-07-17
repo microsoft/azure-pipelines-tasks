@@ -71,6 +71,12 @@ Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 
 . "$PSScriptRoot\Utility.ps1"
+
+if ($featureFlags.retireAzureRM)
+{
+    Modify-PSModulePathForHostedAgent
+}
+
 $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
 Update-PSModulePathForHostedAgentWithLatestModule -Endpoint $endpoint
 Initialize-Azure

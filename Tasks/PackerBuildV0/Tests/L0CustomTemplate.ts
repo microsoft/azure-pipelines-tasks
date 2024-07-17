@@ -13,7 +13,7 @@ tr.setInput("additionalBuilderParameters", "{}");
 tr.setInput("customTemplateParameters", "{\"client_id\": \"abcdef\", \"drop-location\":\"C:\\\\folder 1\\\\folder-2\"}");
 
 process.env["RELEASE_RELEASENAME"] = "Release-1";
-
+process.env['AGENT_TEMPDIRECTORY'] = '.';
 // provide answers for task mock
 let a: any = <any>{
     "which": {

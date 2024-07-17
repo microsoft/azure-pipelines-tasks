@@ -1294,3 +1294,36 @@ function Get-InvokeRemoteScriptParameters
         sessionOption = $sessionOption
     }
 }
+
+function CleanUp-PSModulePathForHostedAgent {
+
+    # Define the module paths to clean up
+    $modulePaths = @(
+        "C:\Modules\azurerm_2.1.0",
+        "C:\\Modules\azurerm_2.1.0",
+        "C:\Modules\azure_2.1.0",
+        "C:\\Modules\azure_2.1.0"
+    )
+    
+    # Clean up PSModulePath for hosted agent
+    $newEnvPSModulePath = $env:PSModulePath
+   
+    foreach ($modulePath in $modulePaths) {
+        if ($newEnvPSModulePath.split(";") -contains $modulePath) {
+            $newEnvPSModulePath = (($newEnvPSModulePath).Split(";") | ? { $_ -ne $modulePath }) -join ";"
+            Write-Verbose "$modulePath removed. Restart the prompt for the changes to take effect."
+        }
+        else {
+            Write-Verbose "$modulePath is not present in $newEnvPSModulePath"
+        }
+    }
+   
+    if (Test-Path "C:\Modules\az_*") {
+        $azPSModulePath = (Get-ChildItem "C:\Modules\az_*" -Directory `
+            | Sort-Object { [version]$_.Name.Split('_')[-1] } `
+            | Select-Object -Last 1).FullName
+
+        Write-Verbose "Found Az module path $azPSModulePath, will be used"
+        $env:PSModulePath = ($azPSModulePath + ";" + $newEnvPSModulePath).Trim(";")
+    }
+}

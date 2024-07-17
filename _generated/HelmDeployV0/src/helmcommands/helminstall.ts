@@ -18,7 +18,7 @@ chart reference and repo url: helm install –repo https://example.com/charts/ n
 
  */
 
-export function addArguments(helmCli: helmcli): void {
+export async function addArguments(helmCli: helmcli): Promise<void> {
     var chartType = tl.getInput("chartType", true);
     var releaseName = tl.getInput("releaseName", false);
     var overrideValues = tl.getInput("overrideValues", false);

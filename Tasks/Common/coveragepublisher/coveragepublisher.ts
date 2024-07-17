@@ -71,7 +71,8 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
             "BUILD_CONTAINERID": taskLib.getVariable('Build.ContainerId'),
             "AGENT_TEMPPATH": taskLib.getVariable('Agent.TempPath'),
             "SYSTEM_TEAMPROJECTID": taskLib.getVariable('System.TeamProjectId'),
-            "PIPELINES_COVERAGEPUBLISHER_DEBUG": taskLib.getVariable('PIPELINES_COVERAGEPUBLISHER_DEBUG')
+            "PIPELINES_COVERAGEPUBLISHER_DEBUG": taskLib.getVariable('PIPELINES_COVERAGEPUBLISHER_DEBUG'),
+            "DOTNET_SYSTEM_GLOBALIZATION_INVARIANT": taskLib.getVariable('DOTNET_SYSTEM_GLOBALIZATION_INVARIANT')
         };
 
         await dotnet.exec({

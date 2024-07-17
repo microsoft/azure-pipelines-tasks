@@ -8,7 +8,7 @@ let taskPath = path.join(__dirname, '..', 'src', 'main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 process.env['MOCK_NORMALIZE_SLASHES'] = 'true';
-
+process.env['AGENT_TEMPDIRECTORY'] = '.';
 tr.setInput('templateType', process.env["__template_type__"] || 'builtin');
 tr.setInput('azureResourceGroup', 'testrg');
 tr.setInput('storageAccountName', 'teststorage');

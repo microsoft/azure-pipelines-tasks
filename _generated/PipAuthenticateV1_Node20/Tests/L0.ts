@@ -1,7 +1,6 @@
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import * as tl from "azure-pipelines-task-lib";
 
 describe('Pip Authenticate V1 Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 10000);

@@ -127,7 +127,7 @@
     "Warning_SessionCreationFailed": "Could not create provenance session: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.242.0",
+    "Default": "1.238.0",
     "Node20_229_1": "1.242.1"
   }
 }

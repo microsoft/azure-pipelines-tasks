@@ -123,7 +123,12 @@
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
   },
   "_buildConfigMapping": {
+<<<<<<< HEAD
     "Default": "1.242.0",
     "Node20_229_1": "1.242.1"
+=======
+    "Default": "1.238.0",
+    "wif_242": "1.242.16"
+>>>>>>> origin/users/embetten/wif-build-gen
   }
 }

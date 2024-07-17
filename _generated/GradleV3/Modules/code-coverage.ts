@@ -11,9 +11,9 @@ const TESTRUN_SYSTEM = 'VSTS - gradle';
 /**
  * Setup amd enable code coverage tool
  * @param {ICodeCoverageSettings} settings  - collection of settings to setup and enable code coverage
- * @returns {Q.Promise<boolean>} status of code coverage enabler
+ * @returns {Q.Promise<string>} status of code coverage enabler
  */
-export function enableCodeCoverageAsync(settings: ICodeCoverageSettings): Q.Promise<boolean> {
+export function enableCodeCoverageAsync(settings: ICodeCoverageSettings): Q.Promise<string> {
     const buildProperties: { [key: string]: string } = {};
 
     buildProperties['buildfile'] = path.join(settings.workingDirectory, 'build.gradle');
