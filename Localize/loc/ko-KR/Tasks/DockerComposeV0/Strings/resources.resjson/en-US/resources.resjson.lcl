@@ -731,10 +731,13 @@
       </Item>
       <Item ItemId=";loc.messages.InvalidProjectName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The project name "%s" must be a valid docker compose project name. Follow the link for more details: https://docs.docker.com/compose/project-name/#set-a-project-name]]></Val>
+          <Val><![CDATA[The project name "%s" must be a valid docker compose project name. Follow the link for more details: https://aka.ms/azdo-docker-compose-v1]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[프로젝트 이름 "%s"은(는) 올바른 Docker Compose 프로젝트 이름이어야 합니다. 자세한 내용은 링크(https://docs.docker.com/compose/project-name/#set-a-project-name)를 참조하세요.]]></Val>
+            <Val><![CDATA["%s" 프로젝트 이름은 올바른 Docker Compose 프로젝트 이름이어야 합니다. 자세한 내용을 보려면 링크(https://aka.ms/azdo-docker-compose-v1)를 방문하세요.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The project name "%s" must be a valid docker compose project name. Follow the link for more details: https://docs.docker.com/compose/project-name/#set-a-project-name]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

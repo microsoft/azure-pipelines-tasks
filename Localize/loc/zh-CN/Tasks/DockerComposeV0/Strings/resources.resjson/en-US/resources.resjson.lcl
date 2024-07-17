@@ -731,10 +731,13 @@
       </Item>
       <Item ItemId=";loc.messages.InvalidProjectName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The project name "%s" must be a valid docker compose project name. Follow the link for more details: https://docs.docker.com/compose/project-name/#set-a-project-name]]></Val>
+          <Val><![CDATA[The project name "%s" must be a valid docker compose project name. Follow the link for more details: https://aka.ms/azdo-docker-compose-v1]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[项目名称“%s”必须是有效的 docker compose 项目名称。请访问以下链接了解更多详细信息: https://docs.docker.com/compose/project-name/#set-a-project-name]]></Val>
+            <Val><![CDATA[项目名称“%s”必须是有效的 docker compose 项目名称。请按照链接了解更多详细信息: https://aka.ms/azdo-docker-compose-v1]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The project name "%s" must be a valid docker compose project name. Follow the link for more details: https://docs.docker.com/compose/project-name/#set-a-project-name]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
