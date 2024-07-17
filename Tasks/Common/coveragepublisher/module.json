@@ -1,4 +1,7 @@
 {
+    "$schema" : "../module.schema.json",
+    "moduleType": "node",
+    "compile": true,
     "messages": {
         "InstallDotNetCoreForPublishing": "Please install dotnet core to run this task.",
         "ErrorWhilePublishing": "Error occured while publishing coverage: ",
