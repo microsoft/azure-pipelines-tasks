@@ -56,7 +56,8 @@
     "ConfigTomlMissingRegistry": "ms-resource:loc.messages.ConfigTomlMissingRegistry",
     "AuthenticatingThisConfigToml": "ms-resource:loc.messages.AuthenticatingThisConfigToml",
     "AddingAuthRegistry": "ms-resource:loc.messages.AddingAuthRegistry",
-    "AddingAuthExternalRegistry": "ms-resource:loc.messages.AddingAuthExternalRegistry"
+    "AddingAuthExternalRegistry": "ms-resource:loc.messages.AddingAuthExternalRegistry",
+    "ConnectionAlreadySet": "ms-resource:loc.messages.ConnectionAlreadySet"
   },
   "_buildConfigMapping": {
     "Default": "0.243.0",

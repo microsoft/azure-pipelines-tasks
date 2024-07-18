@@ -79,6 +79,9 @@ async function main(): Promise<void> {
             const registryConfigName = registry.toLocaleUpperCase().replace(/-/g, "_");
             const tokenName = `CARGO_REGISTRIES_${registryConfigName}_TOKEN`;
             const credProviderName = `CARGO_REGISTRIES_${registryConfigName}_CREDENTIAL_PROVIDER`;
+            if (tl.getVariable(tokenName)) {
+                tl.warning(tl.getVariable(tokenName).indexOf('Basic') !== -1 ? tl.loc('ConnectionAlreadySet', tokenName, 'external') : tl.loc('ConnectionAlreadySet', tokenName, 'internal'))
+            }
             if (registryUrl && registryUrl.host && collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0) {
                 let currentRegistry : string;
                 for (let serviceConnection of externalServiceConnections) {

@@ -56,7 +56,8 @@
     "ConfigTomlMissingRegistry": "The config.toml file you selected must contain registries table",
     "AuthenticatingThisConfigToml": "Adding authentication for registry listed in this config.toml file at %s",
     "AddingAuthRegistry": "Adding auth for registry: %s with token name: %s",
-    "AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s"
+    "AddingAuthExternalRegistry": "Adding auth for external registry: %s with token name: %s",
+    "ConnectionAlreadySet": "%s registry is already set for an %s connection"
   },
   "_buildConfigMapping": {
     "Default": "0.243.0",
