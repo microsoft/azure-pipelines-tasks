@@ -15,9 +15,9 @@ body:
       description: |
         Please make sure you've completed the following tasks before submitting your issue. Thanks!
       options:
-        - label: I searched for [existing GitHub issues](https://github.com/microsoft/azure-pipelines-tasks/issues)
-        - label: I read [pipeline troubleshooting guide](https://docs.microsoft.com/vsts/build-release/actions/troubleshooting)
-        - label: I checked [how to collect logs](https://learn.microsoft.com/azure/devops/pipelines/troubleshooting/review-logs?view=azure-devops)
+        - label: I searched for [existing GitHub issues](https://github.com/microsoft/azure-pipelines-tasks/issues).
+        - label: I read [pipeline troubleshooting guide](https://docs.microsoft.com/vsts/build-release/actions/troubleshooting).
+        - label: I checked [how to collect logs](https://learn.microsoft.com/azure/devops/pipelines/troubleshooting/review-logs?view=azure-devops).
 
   - type: input
     id: task-name
