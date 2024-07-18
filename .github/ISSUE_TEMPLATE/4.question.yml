@@ -6,8 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Use this form if you are looking for help
-        tasks. [List of the tasks](https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks)
+        Please feel free to use this form if you are looking for help with tasks. [List of the tasks(https://github.com/Microsoft/azure-pipelines-tasks/tree/master/Tasks)
   - type: input
     id: task-name
     attributes:
@@ -24,7 +23,7 @@ body:
   - type: checkboxes
     id: environment-type
     attributes:
-      label: Environment type (Please select at least one enviroment where you face this issue)
+      label: Environment type (Please select at least one environment where you face this issue).
       options:
         - label: Self-Hosted
         - label: Microsoft Hosted
@@ -35,8 +34,8 @@ body:
     attributes:
       label: Azure DevOps Server type
       options:
-        - dev.azure.com (formerly visualstudio.com)
-        - Azure DevOps Server (Please specify exact version in the textbox below)
+        - dev.azure.com (formerly visualstudio.com).
+        - Azure DevOps Server (Please specify the exact version in the textbox below).
     validations:
       required: true
   - type: input
