@@ -80,7 +80,7 @@ async function main(): Promise<void> {
             const tokenName = `CARGO_REGISTRIES_${registryConfigName}_TOKEN`;
             const credProviderName = `CARGO_REGISTRIES_${registryConfigName}_CREDENTIAL_PROVIDER`;
             if (tl.getVariable(tokenName)) {
-                tl.warning(tl.getVariable(tokenName).indexOf('Basic') !== -1 ? tl.loc('ConnectionAlreadySet', tokenName, 'external') : tl.loc('ConnectionAlreadySet', tokenName, 'internal'))
+                tl.debug(tl.loc('ConnectionAlreadySet', registry, tl.getVariable(tokenName).indexOf('Basic') !== -1 ? 'external' : 'internal'));
             }
             if (registryUrl && registryUrl.host && collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0) {
                 let currentRegistry : string;
