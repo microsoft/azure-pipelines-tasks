@@ -118,4 +118,9 @@ export default class TaskParameters {
         var azureEndpoint = await new AzureRMEndpoint.AzureRMEndpoint(connectedService).getEndpoint(true);
         return azureEndpoint.applicationTokenCredentials;
     }
+
+    public async getEndpoint(connectedService: string) {
+        const endpoint =  await new AzureRMEndpoint.AzureRMEndpoint(connectedService).getEndpoint();
+        return endpoint;
+    }
 }

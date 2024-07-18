@@ -56,3 +56,5 @@ export var BuiltinWindowsDefaultImageTemplateKey = BuiltInTemplateOSTypeWindows 
 export var BuiltinWindowsCustomImageTemplateKey = BuiltInTemplateOSTypeWindows + '-' + BaseImageSourceCustomVhd;
 export var BuiltinLinuxDefaultImageTemplateKey = BuiltInTemplateOSTypeLinux + '-' + BaseImageSourceDefault;
 export var BuiltinLinuxCustomImageTemplateKey = BuiltInTemplateOSTypeLinux + '-' + BaseImageSourceCustomVhd;
+
+export var TemplateVariableClientjwtName = "client_jwt";
