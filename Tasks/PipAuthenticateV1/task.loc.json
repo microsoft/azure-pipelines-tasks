@@ -43,27 +43,6 @@
       }
     },
     {
-      "name": "workloadIdentityServiceConnection",
-      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
-      "helpMarkDown": "If this is set, feedUrl is required. All other inputs are ignored.",
-      "type": "connectedService:workloadidentityuser",
-      "required": false,
-      "properties": {
-        "EditableOptions": "False",
-        "MultiSelectFlatList": "False"
-      },
-      "groupName": "feedAuthentication"
-    },
-    {
-      "name": "feedUrl",
-      "label": "Azure Artifacts Feeds url.",
-      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonDownloadServiceConnections. ",
-      "type": "string",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "feedAuthentication"
-    },
-    {
       "name": "pythonDownloadServiceConnections",
       "aliases": [
         "pythonDownloadServiceConnections"
