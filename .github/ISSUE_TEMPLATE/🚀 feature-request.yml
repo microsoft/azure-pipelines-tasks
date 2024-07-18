@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to raise a question.
+       Thanks for taking the time to raise a question.
   - type: input
     id: task-name
     attributes:
