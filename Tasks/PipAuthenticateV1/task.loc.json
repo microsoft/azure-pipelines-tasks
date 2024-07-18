@@ -117,8 +117,8 @@
     "Info_AddingTokenAuthEntry": "ms-resource:loc.messages.Info_AddingTokenAuthEntry",
     "Error_FailedToParseFeedUrlAndAuth": "ms-resource:loc.messages.Error_FailedToParseFeedUrlAndAuth",
     "FailedToGetPackagingUri": "ms-resource:loc.messages.FailedToGetPackagingUri",
+    "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
     "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
-    "FailedToGetServiceConnectionAuth" : "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
     "Warn_TooManyFeedEntries": "ms-resource:loc.messages.Warn_TooManyFeedEntries",
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
   }
