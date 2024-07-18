@@ -176,9 +176,6 @@ async function runTaskPipelines(taskName: string): Promise<Promise<BuildResult |
 async function startTestPipeline(pipeline: BuildDefinitionReference, config = ''): Promise<Build | null> {
   console.log(`Run ${pipeline.name} pipeline, pipelineId: ${pipeline.id}`);
 
-  process.env.BUILD_SOURCEVERSION = "647f658251ff94e3cacd223a2d474e0f3b3672fe";
-  process.env.CANARY_TEST_NODE_VERSION = "10.x";
-
   const { BUILD_SOURCEVERSION: branch, CANARY_TEST_NODE_VERSION: nodeVersion } = process.env;
   if (!branch || !nodeVersion) {
     throw new Error('Cannot run test pipeline. Environment variables BUILD_SOURCEVERSION or CANARY_TEST_NODE_VERSION are not defined');
