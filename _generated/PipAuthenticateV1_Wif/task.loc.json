@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 243,
-    "Patch": 20
+    "Patch": 22
   },
   "runsOn": [
     "Agent",
@@ -28,8 +28,8 @@
   "inputs": [
     {
       "name": "workloadIdentityServiceConnection",
-      "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",
-      "helpMarkDown": "ms-resource:loc.input.help.workloadIdentityServiceConnection",
+      "label": "'Entra Workload ID-backed Azure DevOps user' Service Connection",
+      "helpMarkDown": "If this is set, feedUrl is required. All other inputs are ignored.",
       "type": "connectedService:workloadidentityuser",
       "required": false,
       "properties": {
@@ -40,8 +40,8 @@
     },
     {
       "name": "feedUrl",
-      "label": "ms-resource:loc.input.label.feedUrl",
-      "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
+      "label": "Azure Artifacts Feeds url.",
+      "helpMarkDown": "If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonDownloadServiceConnections.",
       "type": "string",
       "defaultValue": "",
       "required": false,
@@ -125,6 +125,6 @@
   },
   "_buildConfigMapping": {
     "Default": "1.243.0",
-    "wif_242": "1.243.20"
+    "wif_242": "1.243.22"
   }
 }
