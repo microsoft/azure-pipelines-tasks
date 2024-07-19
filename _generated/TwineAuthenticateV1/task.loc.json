@@ -96,7 +96,7 @@
     "NoPypircFile": "ms-resource:loc.messages.NoPypircFile",
     "VariableSetForPypirc": "ms-resource:loc.messages.VariableSetForPypirc",
     "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile",
-    "DuplicateRegistry": "ms-resource:loc.messages.DuplicateRegistry"
+    "DuplicateRegistry": "%s registry is already authenticated"
   },
   "postjobexecution": {
     "Node10": {
@@ -110,6 +110,6 @@
   },
   "_buildConfigMapping": {
     "Default": "1.243.3",
-    "Node20_229_1": "1.243.12"
+    "Node20-225": "1.243.15"
   }
 }
