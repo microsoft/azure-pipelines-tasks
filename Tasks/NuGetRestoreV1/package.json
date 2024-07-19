@@ -20,9 +20,9 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^16.11.39",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-task-lib": "^4.3.1",
+    "azure-pipelines-task-lib": "^4.7.0",
     "azure-pipelines-tasks-packaging-common": "^3.220.0",
-    "azure-pipelines-tasks-utility-common": "3.198.1",
+    "azure-pipelines-tasks-utility-common": "3.212.0",
     "xmlreader": "^0.2.3"
   },
   "devDependencies": {
