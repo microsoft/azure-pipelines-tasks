@@ -18,8 +18,8 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 241,
-    "Patch": 0
+    "Minor": 243,
+    "Patch": 2
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -438,7 +438,7 @@
     "InvalidActionForPublishProfileEndpoint": "ms-resource:loc.messages.InvalidActionForPublishProfileEndpoint"
   },
   "_buildConfigMapping": {
-    "Default": "0.241.0",
-    "Node20_229_2": "0.241.1"
+    "Default": "0.243.2",
+    "Node20_229_2": "0.243.3"
   }
 }
