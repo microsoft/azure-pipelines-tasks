@@ -95,7 +95,8 @@
     "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
     "NoPypircFile": "ms-resource:loc.messages.NoPypircFile",
     "VariableSetForPypirc": "ms-resource:loc.messages.VariableSetForPypirc",
-    "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile"
+    "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile",
+    "DuplicateRegistry": "%s registry is already authenticated"
   },
   "postjobexecution": {
     "Node10": {

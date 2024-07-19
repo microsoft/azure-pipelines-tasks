@@ -95,7 +95,8 @@
     "FailedToAddAuthentication": "Failed to add authentication.",
     "NoPypircFile": "No .pypirc file to clean up.",
     "VariableSetForPypirc": "Environment variable for .pypirc at %s is set.",
-    "Info_RemovingPypircFile": "Removing .pypirc file from %s"
+    "Info_RemovingPypircFile": "Removing .pypirc file from %s",
+    "DuplicateRegistry": "%s registry is already authenticated"
   },
   "postjobexecution": {
     "Node10": {
@@ -109,6 +110,6 @@
   },
   "_buildConfigMapping": {
     "Default": "1.243.3",
-    "Node20-225": "1.243.11"
+    "Node20_229_1": "1.243.12"
   }
 }
