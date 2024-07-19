@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 238,
-    "Patch": 1
+    "Minor": 243,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -117,6 +117,6 @@
   },
   "_buildConfigMapping": {
     "Default": "1.238.0",
-    "Node20_229_1": "1.238.1"
+    "Node20-225": "1.243.2"
   }
 }
