@@ -96,7 +96,7 @@
     "NoPypircFile": "ms-resource:loc.messages.NoPypircFile",
     "VariableSetForPypirc": "ms-resource:loc.messages.VariableSetForPypirc",
     "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile",
-    "DuplicateRegistry": "%s registry is already authenticated"
+    "DuplicateRegistry": "ms-messages:loc.messages.DuplicateRegistry"
   },
   "postjobexecution": {
     "Node10": {

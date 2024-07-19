@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 243,
-    "Patch": 15
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -78,10 +78,6 @@
     "Node16": {
       "target": "twineauthenticatemain.js",
       "argumentFormat": ""
-    },
-    "Node20_1": {
-      "target": "twineauthenticatemain.js",
-      "argumentFormat": ""
     }
   },
   "messages": {
@@ -100,7 +96,7 @@
     "NoPypircFile": "ms-resource:loc.messages.NoPypircFile",
     "VariableSetForPypirc": "ms-resource:loc.messages.VariableSetForPypirc",
     "Info_RemovingPypircFile": "ms-resource:loc.messages.Info_RemovingPypircFile",
-    "DuplicateRegistry": "%s registry is already authenticated"
+    "DuplicateRegistry": "ms-messages:loc.messages.DuplicateRegistry"
   },
   "postjobexecution": {
     "Node10": {
@@ -110,14 +106,6 @@
     "Node16": {
       "target": "authcleanup.js",
       "argumentFormat": ""
-    },
-    "Node20_1": {
-      "target": "authcleanup.js",
-      "argumentFormat": ""
     }
-  },
-  "_buildConfigMapping": {
-    "Default": "1.243.3",
-    "Node20-225": "1.243.15"
   }
 }
