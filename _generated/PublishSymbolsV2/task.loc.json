@@ -13,7 +13,7 @@
   "preview": false,
   "version": {
     "Major": 2,
-    "Minor": 242,
+    "Minor": 243,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -237,10 +237,11 @@
     "UnableToIndexSources": "ms-resource:loc.messages.UnableToIndexSources",
     "UnexpectedDbghelpdllExpected0Actual1": "ms-resource:loc.messages.UnexpectedDbghelpdllExpected0Actual1",
     "UnsupportedSourceProvider0": "ms-resource:loc.messages.UnsupportedSourceProvider0",
-    "Win32Error0FromMethod1": "ms-resource:loc.messages.Win32Error0FromMethod1"
+    "Win32Error0FromMethod1": "ms-resource:loc.messages.Win32Error0FromMethod1",
+    "NodeVersionSupport": "ms-resource:loc.messages.NodeVersionSupport"
   },
   "_buildConfigMapping": {
-    "Default": "2.242.0",
-    "Node20_229_14": "2.242.1"
+    "Default": "2.243.0",
+    "Node20_229_14": "2.243.1"
   }
 }
