@@ -23,6 +23,5 @@
   "loc.messages.FailedToAddAuthentication": "Failed to add authentication.",
   "loc.messages.NoPypircFile": "No .pypirc file to clean up.",
   "loc.messages.VariableSetForPypirc": "Environment variable for .pypirc at %s is set.",
-  "loc.messages.Info_RemovingPypircFile": "Removing .pypirc file from %s",
-  "loc.messages.DuplicateRegistry": "%s registry is already authenticated"
+  "loc.messages.Info_RemovingPypircFile": "Removing .pypirc file from %s"
 }
