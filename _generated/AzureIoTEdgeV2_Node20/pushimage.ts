@@ -18,7 +18,7 @@ async function getRegistryAuthenticationToken(): Promise<AuthenticationToken> {
   let token : AuthenticationToken;
 
   if (registryType == "Azure Container Registry") {
-    authenticationProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpointForSecrets"), tl.getInput("azureContainerRegistry"));
+    authenticationProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint"), tl.getInput("azureContainerRegistry"));
     token = authenticationProvider.getAuthenticationToken();
   }
   else {
