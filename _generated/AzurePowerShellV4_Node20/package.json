@@ -5,7 +5,7 @@
   },
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^20.3.1",
+    "@types/node": "^20.14.9",
     "@types/q": "1.0.7",
     "agent-base": "6.0.2",
     "azure-pipelines-task-lib": "^4.11.0",
