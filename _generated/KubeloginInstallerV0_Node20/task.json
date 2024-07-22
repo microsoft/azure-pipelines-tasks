@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 243,
-    "Patch": 3
+    "Patch": 5
   },
   "demands": [],
   "satisfies": [
@@ -63,7 +63,7 @@
     "Info_KubeloginDownloading": "Downloading kubelogin"
   },
   "_buildConfigMapping": {
-    "Default": "0.243.2",
-    "Node20_229_3": "0.243.3"
+    "Default": "0.243.4",
+    "Node20_229_3": "0.243.5"
   }
 }
